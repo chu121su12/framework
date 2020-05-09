@@ -175,8 +175,8 @@ class StartSession
         if ($this->sessionIsPersistent($config = $this->manager->getSessionConfig())) {
             $response->headers->setCookie(new Cookie(
                 $session->getName(), $session->getId(), $this->getCookieExpirationDate(),
-                $config['path'], $config['domain'], $config['secure'] ?? false,
-                $config['http_only'] ?? true, false, $config['same_site'] ?? null
+                $config['path'], $config['domain'], isset($config['secure']) ? $config['secure'] : false,
+                isset($config['http_only']) ? $config['http_only'] : true, false, isset($config['same_site']) ? $config['same_site'] : null
             ));
         }
     }
@@ -188,7 +188,9 @@ class StartSession
      */
     protected function getSessionLifetimeInSeconds()
     {
-        return ($this->manager->getSessionConfig()['lifetime'] ?? null) * 60;
+        $sessionConfig = $this->manager->getSessionConfig();
+
+        return (isset($sessionConfig['lifetime']) ? $sessionConfig['lifetime'] : null) * 60;
     }
 
     /**
@@ -210,7 +212,9 @@ class StartSession
      */
     protected function sessionConfigured()
     {
-        return ! is_null($this->manager->getSessionConfig()['driver'] ?? null);
+        $sessionConfig = $this->manager->getSessionConfig();
+
+        return ! is_null(isset($sessionConfig['driver']) ? $sessionConfig['driver'] : null);
     }
 
     /**

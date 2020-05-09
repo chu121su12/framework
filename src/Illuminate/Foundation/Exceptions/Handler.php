@@ -247,7 +247,7 @@ class Handler implements ExceptionHandlerContract
      */
     protected function invalid($request, ValidationException $exception)
     {
-        $url = $exception->redirectTo ?? url()->previous();
+        $url = isset($exception->redirectTo) ? $exception->redirectTo : url()->previous();
 
         return redirect($url)
                 ->withInput($request->except($this->dontFlash))
@@ -313,7 +313,7 @@ class Handler implements ExceptionHandlerContract
                     ? $this->renderExceptionWithWhoops($e)
                     : $this->renderExceptionWithSymfony($e, config('app.debug'));
         } catch (Exception $e) {
-            $content = $content ?? $this->renderExceptionWithSymfony($e, config('app.debug'));
+            $content = isset($content) ? $content : $this->renderExceptionWithSymfony($e, config('app.debug'));
         }
 
         return SymfonyResponse::create(

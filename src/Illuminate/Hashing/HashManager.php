@@ -82,6 +82,8 @@ class HashManager extends Manager implements Hasher
      */
     public function getDefaultDriver()
     {
-        return $this->app['config']['hashing.driver'] ?? 'bcrypt';
+        return isset($this->app['config']) && isset($this->app['config']['hashing.driver'])
+            ? $this->app['config']['hashing.driver']
+            : 'bcrypt';
     }
 }

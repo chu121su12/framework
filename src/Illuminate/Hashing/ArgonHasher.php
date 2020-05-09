@@ -144,7 +144,7 @@ class ArgonHasher implements HasherContract
      */
     protected function memory($options)
     {
-        return $options['memory'] ?? $this->memory;
+        return isset($options['memory']) ? $options['memory'] : $this->memory;
     }
 
     /**
@@ -155,7 +155,7 @@ class ArgonHasher implements HasherContract
      */
     protected function time($options)
     {
-        return $options['time'] ?? $this->time;
+        return isset($options['time']) ? $options['time'] : $this->time;
     }
 
     /**
@@ -166,6 +166,6 @@ class ArgonHasher implements HasherContract
      */
     protected function processors($options)
     {
-        return $options['processors'] ?? $this->processors;
+        return isset($options['processors']) ? $options['processors'] : $this->processors;
     }
 }

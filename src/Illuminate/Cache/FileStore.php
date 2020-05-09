@@ -46,7 +46,9 @@ class FileStore implements Store
      */
     public function get($key)
     {
-        return $this->getPayload($key)['data'] ?? null;
+        $payload = $this->getPayload($key)
+
+        return isset($payload['data']) ? $payload['data'] : null;
     }
 
     /**

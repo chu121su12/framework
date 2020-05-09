@@ -35,7 +35,7 @@ class Connector
     public function createConnection($dsn, array $config, array $options)
     {
         list($username, $password) = [
-            $config['username'] ?? null, $config['password'] ?? null,
+            isset($config['username']) ? $config['username'] : null, isset($config['password']) ? $config['password'] : null,
         ];
 
         try {
@@ -108,7 +108,7 @@ class Connector
      */
     public function getOptions(array $config)
     {
-        $options = $config['options'] ?? [];
+        $options = isset($config['options']) ? $config['options'] : [];
 
         return array_diff_key($this->options, $options) + $options;
     }

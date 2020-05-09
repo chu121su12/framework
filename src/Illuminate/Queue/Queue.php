@@ -120,8 +120,8 @@ abstract class Queue
         return [
             'displayName' => $this->getDisplayName($job),
             'job' => 'Illuminate\Queue\CallQueuedHandler@call',
-            'maxTries' => $job->tries ?? null,
-            'timeout' => $job->timeout ?? null,
+            'maxTries' => isset($job->tries) ? $job->tries : null,
+            'timeout' => isset($job->timeout) ? $job->timeout : null,
             'timeoutAt' => $this->getJobExpiration($job),
             'data' => [
                 'commandName' => get_class($job),
@@ -154,7 +154,7 @@ abstract class Queue
             return;
         }
 
-        $expiration = $job->timeoutAt ?? $job->retryUntil();
+        $expiration = isset($job->timeoutAt) ? $job->timeoutAt : $job->retryUntil();
 
         return $expiration instanceof DateTimeInterface
                         ? $expiration->getTimestamp() : $expiration;

@@ -183,7 +183,7 @@ trait HasRelationships
         );
 
         return new MorphTo(
-            $instance->newQuery(), $this, $id, $ownerKey ?? $instance->getKeyName(), $type, $name
+            $instance->newQuery(), $this, $id, isset($ownerKey) ? $ownerKey : $instance->getKeyName(), $type, $name
         );
     }
 

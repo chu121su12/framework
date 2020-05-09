@@ -34,10 +34,10 @@ class DatabaseConnector implements ConnectorInterface
     public function connect(array $config)
     {
         return new DatabaseQueue(
-            $this->connections->connection($config['connection'] ?? null),
+            $this->connections->connection(isset($config['connection']) ? $config['connection'] : null),
             $config['table'],
             $config['queue'],
-            $config['retry_after'] ?? 60
+            isset($config['retry_after']) ? $config['retry_after'] : 60
         );
     }
 }

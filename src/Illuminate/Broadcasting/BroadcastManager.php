@@ -158,7 +158,7 @@ class BroadcastManager implements FactoryContract
      */
     protected function get($name)
     {
-        return $this->drivers[$name] ?? $this->resolve($name);
+        return isset($this->drivers[$name]) ? $this->drivers[$name] : $this->resolve($name);
     }
 
     /**
@@ -211,7 +211,7 @@ class BroadcastManager implements FactoryContract
     {
         return new PusherBroadcaster(
             new Pusher($config['key'], $config['secret'],
-            $config['app_id'], $config['options'] ?? [])
+            $config['app_id'], isset($config['options']) ? $config['options'] : [])
         );
     }
 
@@ -224,7 +224,7 @@ class BroadcastManager implements FactoryContract
     protected function createRedisDriver(array $config)
     {
         return new RedisBroadcaster(
-            $this->app->make('redis'), $config['connection'] ?? null
+            $this->app->make('redis'), isset($config['connection']) ? $config['connection'] : null
         );
     }
 

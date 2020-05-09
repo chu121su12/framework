@@ -54,10 +54,10 @@ class PaginatedResourceResponse extends ResourceResponse
     protected function paginationLinks($paginated)
     {
         return [
-            'first' => $paginated['first_page_url'] ?? null,
-            'last' => $paginated['last_page_url'] ?? null,
-            'prev' => $paginated['prev_page_url'] ?? null,
-            'next' => $paginated['next_page_url'] ?? null,
+            'first' => isset($paginated['first_page_url']) ? $paginated['first_page_url'] : null,
+            'last' => isset($paginated['last_page_url']) ? $paginated['last_page_url'] : null,
+            'prev' => isset($paginated['prev_page_url']) ? $paginated['prev_page_url'] : null,
+            'next' => isset($paginated['next_page_url']) ? $paginated['next_page_url'] : null,
         ];
     }
 

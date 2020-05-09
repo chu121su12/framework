@@ -40,8 +40,8 @@ class Markdown
     public function __construct(ViewFactory $view, array $options = [])
     {
         $this->view = $view;
-        $this->theme = $options['theme'] ?? 'default';
-        $this->loadComponentsFrom($options['paths'] ?? []);
+        $this->theme = isset($options['theme']) ? $options['theme'] : 'default';
+        $this->loadComponentsFrom(isset($options['paths']) ? $options['paths'] : []);
     }
 
     /**

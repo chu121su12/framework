@@ -201,7 +201,9 @@ abstract class Job
      */
     public function maxTries()
     {
-        return $this->payload()['maxTries'] ?? null;
+        $payload = $this->payload();
+
+        return isset($payload['maxTries']) ? isset($payload['maxTries']) : null;
     }
 
     /**
@@ -211,7 +213,9 @@ abstract class Job
      */
     public function timeout()
     {
-        return $this->payload()['timeout'] ?? null;
+        $payload = $this->payload();
+
+        return isset($payload['timeout']) ? isset($payload['timeout']) : null;
     }
 
     /**
@@ -221,7 +225,9 @@ abstract class Job
      */
     public function timeoutAt()
     {
-        return $this->payload()['timeoutAt'] ?? null;
+        $payload = $this->payload();
+
+        return isset($payload['timeoutAt']) ? isset($payload['timeoutAt']) : null;
     }
 
     /**

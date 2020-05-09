@@ -215,7 +215,7 @@ trait QueriesRelationships
             // Finally we will add the proper result column alias to the query and run the subselect
             // statement against the query builder. Then we will return the builder instance back
             // to the developer for further constraint chaining that needs to take place on it.
-            $column = $alias ?? Str::snake($name.'_count');
+            $column = isset($alias) ? $alias : Str::snake($name.'_count');
 
             $this->selectSub($query->toBase(), $column);
         }
@@ -250,7 +250,9 @@ trait QueriesRelationships
      */
     public function mergeConstraintsFrom(Builder $from)
     {
-        $whereBindings = $from->getQuery()->getRawBindings()['where'] ?? [];
+        $rawBindings = $from->getQuery()->getRawBindings();
+
+        $whereBindings = isset($rawBindings['where']) ? $rawBindings['where'] : [];
 
         // Here we have some other query that we want to merge the where constraints from. We will
         // copy over any where constraints on the query as well as remove any global scopes the

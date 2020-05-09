@@ -66,7 +66,7 @@ class PackageManifest
     public function providers()
     {
         return collect($this->getManifest())->flatMap(function ($configuration) {
-            return (array) ($configuration['providers'] ?? []);
+            return (array) (isset($configuration['providers']) ? $configuration['providers'] : []);
         })->filter()->all();
     }
 
@@ -78,7 +78,7 @@ class PackageManifest
     public function aliases()
     {
         return collect($this->getManifest())->flatMap(function ($configuration) {
-            return (array) ($configuration['aliases'] ?? []);
+            return (array) (isset($configuration['aliases']) ? $configuration['aliases'] : []);
         })->filter()->all();
     }
 
@@ -117,9 +117,13 @@ class PackageManifest
         $ignoreAll = in_array('*', $ignore = $this->packagesToIgnore());
 
         $this->write(collect($packages)->mapWithKeys(function ($package) {
-            return [$this->format($package['name']) => $package['extra']['laravel'] ?? []];
+            return [$this->format($package['name']) =>
+                isset($package['extra']) && isset(isset($package['extra']['laravel']))
+                ? $package['extra']['laravel']
+                : []
+            ];
         })->each(function ($configuration) use (&$ignore) {
-            $ignore += $configuration['dont-discover'] ?? [];
+            $ignore += isset($configuration['dont-discover']) ? $configuration['dont-discover'] : [];
         })->reject(function ($configuration, $package) use ($ignore, $ignoreAll) {
             return $ignoreAll || in_array($package, $ignore);
         })->filter()->all());
@@ -147,9 +151,17 @@ class PackageManifest
             return [];
         }
 
-        return json_decode(file_get_contents(
+        $jsonContent = json_decode(file_get_contents(
             $this->basePath.'/composer.json'
-        ), true)['extra']['laravel']['dont-discover'] ?? [];
+        ), true);
+
+        if (isset($jsonContent['extra'])
+            && isset($jsonContent['extra']['laravel'])
+            && isset($jsonContent['extra']['laravel']['dont-discover'])) {
+            return $jsonContent['extra']['laravel']['dont-discover'];
+        }
+
+        return [];
     }
 
     /**

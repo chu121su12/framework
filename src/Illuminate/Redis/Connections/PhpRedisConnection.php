@@ -241,8 +241,8 @@ class PhpRedisConnection extends Connection
     public function zinterstore($output, $keys, $options = [])
     {
         return $this->zInter($output, $keys,
-            $options['weights'] ?? null,
-            $options['aggregate'] ?? 'sum'
+            isset($options['weights']) ? $options['weights'] : null,
+            isset($options['aggregate']) ? $options['aggregate'] : 'sum'
         );
     }
 
@@ -257,8 +257,8 @@ class PhpRedisConnection extends Connection
     public function zunionstore($output, $keys, $options = [])
     {
         return $this->zUnion($output, $keys,
-            $options['weights'] ?? null,
-            $options['aggregate'] ?? 'sum'
+            isset($options['weights']) ? $options['weights'] : null,
+            isset($options['aggregate']) ? $options['aggregate'] : 'sum'
         );
     }
 

@@ -765,7 +765,7 @@ class BelongsToMany extends Relation
     public function saveMany($models, array $pivotAttributes = [])
     {
         foreach ($models as $key => $model) {
-            $this->save($model, (array) ($pivotAttributes[$key] ?? []), false);
+            $this->save($model, (array) (isset($pivotAttributes[$key]) ? $pivotAttributes[$key] : []), false);
         }
 
         $this->touchIfTouching();
@@ -807,7 +807,7 @@ class BelongsToMany extends Relation
         $instances = [];
 
         foreach ($records as $key => $record) {
-            $instances[] = $this->create($record, (array) ($joinings[$key] ?? []), false);
+            $instances[] = $this->create($record, (array) (isset($joinings[$key]) ? $joinings[$key] : []), false);
         }
 
         $this->touchIfTouching();

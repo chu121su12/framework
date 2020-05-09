@@ -73,7 +73,7 @@ class RedisManager implements Factory
     {
         $name = $name ?: 'default';
 
-        $options = $this->config['options'] ?? [];
+        $options = isset($this->config['options']) ? $this->config['options'] : [];
 
         if (isset($this->config[$name])) {
             return $this->connector()->connect($this->config[$name], $options);
@@ -96,10 +96,12 @@ class RedisManager implements Factory
      */
     protected function resolveCluster($name)
     {
-        $clusterOptions = $this->config['clusters']['options'] ?? [];
+        $clusterOptions = isset($this->config['clusters']) && isset($this->config['clusters']['options'])
+            ? $this->config['clusters']['options']
+            : [];
 
         return $this->connector()->connectToCluster(
-            $this->config['clusters'][$name], $clusterOptions, $this->config['options'] ?? []
+            $this->config['clusters'][$name], $clusterOptions, isset($this->config['options']) ? $this->config['options'] : []
         );
     }
 

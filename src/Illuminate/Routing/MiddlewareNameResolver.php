@@ -39,7 +39,7 @@ class MiddlewareNameResolver
         // which may be run using the Pipeline which accepts this string format.
         list($name, $parameters) = array_pad(explode(':', $name, 2), 2, null);
 
-        return ($map[$name] ?? $name).(! is_null($parameters) ? ':'.$parameters : '');
+        return (isset($map[$name]) ? $map[$name] : $name).(! is_null($parameters) ? ':'.$parameters : '');
     }
 
     /**

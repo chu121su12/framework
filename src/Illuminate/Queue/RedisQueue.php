@@ -103,7 +103,9 @@ class RedisQueue extends Queue implements QueueContract
     {
         $this->getConnection()->rpush($this->getQueue($queue), $payload);
 
-        return json_decode($payload, true)['id'] ?? null;
+        $jsonContent = json_decode($payload, true);
+
+        return isset($jsonContent['id']) ? $jsonContent['id'] : null;
     }
 
     /**
@@ -134,7 +136,9 @@ class RedisQueue extends Queue implements QueueContract
             $this->getQueue($queue).':delayed', $this->availableAt($delay), $payload
         );
 
-        return json_decode($payload, true)['id'] ?? null;
+        $jsonContent = json_decode($payload, true);
+
+        return isset($jsonContent['id']) ? $jsonContent['id'] : null;
     }
 
     /**

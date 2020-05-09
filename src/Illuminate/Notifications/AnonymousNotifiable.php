@@ -46,7 +46,7 @@ class AnonymousNotifiable
      */
     public function routeNotificationFor($driver)
     {
-        return $this->routes[$driver] ?? null;
+        return isset($this->routes[$driver]) ? $this->routes[$driver] : null;
     }
 
     /**

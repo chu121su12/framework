@@ -117,8 +117,10 @@ class CallQueuedHandler
         $class = $job->resolveName();
 
         try {
-            $shouldDelete = (new ReflectionClass($class))
-                    ->getDefaultProperties()['deleteWhenMissingModels'] ?? false;
+            $properties = (new ReflectionClass($class))->getDefaultProperties();
+            $shouldDelete = isset($properties['deleteWhenMissingModels'])
+                ? $properties['deleteWhenMissingModels']
+                : false;
         } catch (Exception $e) {
             $shouldDelete = false;
         }

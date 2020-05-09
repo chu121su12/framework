@@ -576,7 +576,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     {
         $this->fireModelEvent('saved', false);
 
-        if ($this->isDirty() && ($options['touch'] ?? true)) {
+        if ($this->isDirty() && (isset($options['touch']) ? $options['touch'] : true)) {
             $this->touchOwners();
         }
 
@@ -641,8 +641,9 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      */
     protected function getKeyForSaveQuery()
     {
-        return $this->original[$this->getKeyName()]
-                        ?? $this->getKey();
+        $keyName = $this->getKeyName();
+
+        return isset($this->original[$keyName]) ? $this->original[$keyName] : $this->getKey();
     }
 
     /**

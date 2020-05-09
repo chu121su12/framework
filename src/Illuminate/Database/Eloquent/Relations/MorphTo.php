@@ -120,7 +120,7 @@ class MorphTo extends BelongsTo
     {
         $instance = $this->createModelByType($type);
 
-        $ownerKey = $this->ownerKey ?? $instance->getKeyName();
+        $ownerKey = isset($this->ownerKey) ? $this->ownerKey : $instance->getKeyName();
 
         $query = $this->replayMacros($instance->newQuery())
                             ->mergeConstraintsFrom($this->getQuery())

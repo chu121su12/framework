@@ -122,7 +122,7 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
     {
         $response = new StreamedResponse;
 
-        $disposition = $response->headers->makeDisposition($disposition, $name ?? basename($path));
+        $disposition = $response->headers->makeDisposition($disposition, isset($name) ? $name : basename($path));
 
         $response->headers->replace($headers + [
             'Content-Type' => $this->mimeType($path),
@@ -506,8 +506,8 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
     {
         return $adapter->getContainer()->getObject($path)->getTemporaryUrl(
             Carbon::now()->diffInSeconds($expiration),
-            $options['method'] ?? 'GET',
-            $options['forcePublicUrl'] ?? true
+            isset($options['method']) ? $options['method'] : 'GET',
+            isset($options['forcePublicUrl']) ? $options['forcePublicUrl'] : true
         );
     }
 
