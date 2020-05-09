@@ -8,6 +8,74 @@ use Illuminate\Contracts\Debug\ExceptionHandler;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements ExceptionHandler
+{
+    protected $except;
+    protected $originalHandler;
+
+    /**
+     * Create a new class instance.
+     *
+     * @param  \Illuminate\Contracts\Debug\ExceptionHandler  $originalHandler
+     * @param  array  $except
+     * @return void
+     */
+    public function __construct($originalHandler, $except = [])
+    {
+        $this->except = $except;
+        $this->originalHandler = $originalHandler;
+    }
+
+    /**
+     * Report the given exception.
+     *
+     * @param  \Exception  $e
+     * @return void
+     */
+    public function report(Exception $e)
+    {
+        //
+    }
+
+    /**
+     * Render the given exception.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Exception  $e
+     * @return mixed
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException|\Exception
+     */
+    public function render($request, Exception $e)
+    {
+        if ($e instanceof NotFoundHttpException) {
+            throw new NotFoundHttpException(
+                "{$request->method()} {$request->url()}", null, $e->getCode()
+            );
+        }
+
+        foreach ($this->except as $class) {
+            if ($e instanceof $class) {
+                return $this->originalHandler->render($request, $e);
+            }
+        }
+
+        throw $e;
+    }
+
+    /**
+     * Render the exception for the console.
+     *
+     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
+     * @param  \Exception  $e
+     * @return void
+     */
+    public function renderForConsole($output, Exception $e)
+    {
+        (new ConsoleApplication)->renderException($e, $output);
+    }
+}
+
 trait InteractsWithExceptionHandling
 {
     /**
@@ -64,72 +132,11 @@ trait InteractsWithExceptionHandling
             $this->originalExceptionHandler = app(ExceptionHandler::class);
         }
 
-        $this->app->instance(ExceptionHandler::class, new class($this->originalExceptionHandler, $except) implements ExceptionHandler {
-            protected $except;
-            protected $originalHandler;
-
-            /**
-             * Create a new class instance.
-             *
-             * @param  \Illuminate\Contracts\Debug\ExceptionHandler  $originalHandler
-             * @param  array  $except
-             * @return void
-             */
-            public function __construct($originalHandler, $except = [])
-            {
-                $this->except = $except;
-                $this->originalHandler = $originalHandler;
-            }
-
-            /**
-             * Report the given exception.
-             *
-             * @param  \Exception  $e
-             * @return void
-             */
-            public function report(Exception $e)
-            {
-                //
-            }
-
-            /**
-             * Render the given exception.
-             *
-             * @param  \Illuminate\Http\Request  $request
-             * @param  \Exception  $e
-             * @return mixed
-             *
-             * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException|\Exception
-             */
-            public function render($request, Exception $e)
-            {
-                if ($e instanceof NotFoundHttpException) {
-                    throw new NotFoundHttpException(
-                        "{$request->method()} {$request->url()}", null, $e->getCode()
-                    );
-                }
-
-                foreach ($this->except as $class) {
-                    if ($e instanceof $class) {
-                        return $this->originalHandler->render($request, $e);
-                    }
-                }
-
-                throw $e;
-            }
-
-            /**
-             * Render the exception for the console.
-             *
-             * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-             * @param  \Exception  $e
-             * @return void
-             */
-            public function renderForConsole($output, Exception $e)
-            {
-                (new ConsoleApplication)->renderException($e, $output);
-            }
-        });
+        $this->app->instance(ExceptionHandler::class,
+            new InteractsWithExceptionHandling_withoutExceptionHandling_Class(
+                $this->originalExceptionHandler, $except
+            )
+        );
 
         return $this;
     }

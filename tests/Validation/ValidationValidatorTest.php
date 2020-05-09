@@ -15,6 +15,62 @@ use Illuminate\Contracts\Validation\Rule;
 use Symfony\Component\HttpFoundation\File\File;
 use Illuminate\Contracts\Validation\ImplicitRule;
 
+class ValidationValidatorTest_testCustomValidationObject_passing_Class implements Rule
+{
+    public function passes($attribute, $value)
+    {
+        return $value === 'taylor';
+    }
+
+    public function message()
+    {
+        return ':attribute must be taylor';
+    }
+}
+
+class ValidationValidatorTest_testCustomValidationObject_failing_Class implements Rule
+{
+    public function passes($attribute, $value)
+    {
+        return $value === 'taylor';
+    }
+
+    public function message()
+    {
+        return ':attribute must be taylor';
+    }
+}
+
+class ValidationValidatorTest_testCustomValidationObject_complex_failing_Class implements Rule
+{
+    public function passes($attribute, $value)
+    {
+        return in_array($value, ['AK', 'HI']);
+    }
+
+    public function message()
+    {
+        return ':attribute must be AR or TX';
+    }
+}
+
+class ValidationValidatorTest_testImplicitCustomValidationObjects_passing_Class implements ImplicitRule
+{
+    public $called = false;
+
+    public function passes($attribute, $value)
+    {
+        $this->called = true;
+
+        return true;
+    }
+
+    public function message()
+    {
+        return 'message';
+    }
+}
+
 class ValidationValidatorTest extends TestCase
 {
     public function tearDown()
@@ -3692,17 +3748,7 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator(
             $this->getIlluminateArrayTranslator(),
             ['name' => 'taylor'],
-            ['name' => new class implements Rule {
-                public function passes($attribute, $value)
-                {
-                    return $value === 'taylor';
-                }
-
-                public function message()
-                {
-                    return ':attribute must be taylor';
-                }
-            }]
+            ['name' => new ValidationValidatorTest_testCustomValidationObject_passing_Class]
         );
 
         $this->assertTrue($v->passes());
@@ -3711,17 +3757,7 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator(
             $this->getIlluminateArrayTranslator(),
             ['name' => 'adam'],
-            ['name' => [new class implements Rule {
-                public function passes($attribute, $value)
-                {
-                    return $value === 'taylor';
-                }
-
-                public function message()
-                {
-                    return ':attribute must be taylor';
-                }
-            }]]
+            ['name' => [new ValidationValidatorTest_testCustomValidationObject_failing_Class]]
         );
 
         $this->assertTrue($v->fails());
@@ -3759,17 +3795,7 @@ class ValidationValidatorTest extends TestCase
             $this->getIlluminateArrayTranslator(),
             ['name' => 'taylor', 'states' => ['AR', 'TX'], 'number' => 9],
             [
-                'states.*' => new class implements Rule {
-                    public function passes($attribute, $value)
-                    {
-                        return in_array($value, ['AK', 'HI']);
-                    }
-
-                    public function message()
-                    {
-                        return ':attribute must be AR or TX';
-                    }
-                },
+                'states.*' => new ValidationValidatorTest_testCustomValidationObject_complex_failing_Class,
                 'name' => function ($attribute, $value, $fail) {
                     if ($value !== 'taylor') {
                         $fail(':attribute must be taylor');
@@ -3799,21 +3825,7 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator(
             $this->getIlluminateArrayTranslator(),
             ['name' => ''],
-            ['name' => $rule = new class implements ImplicitRule {
-                public $called = false;
-
-                public function passes($attribute, $value)
-                {
-                    $this->called = true;
-
-                    return true;
-                }
-
-                public function message()
-                {
-                    return 'message';
-                }
-            }]
+            ['name' => $rule = new ValidationValidatorTest_testImplicitCustomValidationObjects_passing_Class]
         );
 
         $this->assertTrue($v->passes());

@@ -11,6 +11,30 @@ use Illuminate\Support\Str;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Support\Optional;
 
+class SupportHelpersTest_testOptional_Class
+{
+    public function something()
+    {
+        return 10;
+    }
+}
+
+class SupportHelpersTest_testOptionalIsMacroable_ClassInner
+{
+    public function something()
+    {
+        return '$10.00';
+    }
+}
+
+class SupportHelpersTest_testOptionalIsMacroable_Class
+{
+    public function present()
+    {
+        return new SupportHelpersTest_testOptionalIsMacroable_ClassInner;
+    }
+}
+
 class SupportHelpersTest extends TestCase
 {
     public function tearDown()
@@ -766,12 +790,7 @@ class SupportHelpersTest extends TestCase
     {
         $this->assertNull(optional(null)->something());
 
-        $this->assertEquals(10, optional(new class {
-            public function something()
-            {
-                return 10;
-            }
-        })->something());
+        $this->assertEquals(10, optional(new SupportHelpersTest_testOptional_Class)->something());
     }
 
     public function testOptionalIsMacroable()
@@ -786,17 +805,7 @@ class SupportHelpersTest extends TestCase
 
         $this->assertNull(optional(null)->present()->something());
 
-        $this->assertEquals('$10.00', optional(new class {
-            public function present()
-            {
-                return new class {
-                    public function something()
-                    {
-                        return '$10.00';
-                    }
-                };
-            }
-        })->present()->something());
+        $this->assertEquals('$10.00', optional(new SupportHelpersTest_testOptionalIsMacroable_Class)->present()->something());
     }
 
     public function testTransform()

@@ -285,7 +285,7 @@ class BelongsToMany extends Relation
      * @param  string  $accessor
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function as($accessor)
+    public function aliasAs($accessor)
     {
         $this->accessor = $accessor;
 

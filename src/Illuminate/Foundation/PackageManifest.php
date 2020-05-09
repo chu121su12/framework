@@ -118,7 +118,7 @@ class PackageManifest
 
         $this->write(collect($packages)->mapWithKeys(function ($package) {
             return [$this->format($package['name']) =>
-                isset($package['extra']) && isset(isset($package['extra']['laravel']))
+                isset($package['extra']) && isset($package['extra']['laravel'])
                 ? $package['extra']['laravel']
                 : []
             ];

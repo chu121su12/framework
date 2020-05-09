@@ -151,8 +151,8 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
             return;
         }
 
-        $values = (isset($key) ? $this->pluck($key) : $this)
-                    ->sort()->values();
+        $filtered = isset($key) ? $this->pluck($key) : $this;
+        $values = $filtered->sort()->values();
 
         $middle = (int) ($count / 2);
 

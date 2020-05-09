@@ -391,7 +391,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      * @param  callable  $callback
      * @return void
      */
-    public function if($name, callable $callback)
+    public function iff($name, callable $callback)
     {
         $this->conditions[$name] = $callback;
 

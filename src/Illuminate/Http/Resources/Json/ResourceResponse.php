@@ -64,7 +64,7 @@ class ResourceResponse implements Responsable
             $data = [$this->wrapper() => $data];
         } elseif ($this->haveAdditionalInformationAndDataIsUnwrapped($data, $with, $additional)) {
             $wrapper = $this->wrapper();
-            $data = [isset($wrapper) ? $wrapper : 'data') => $data];
+            $data = [(isset($wrapper) ? $wrapper : 'data') => $data];
         }
 
         return array_merge_recursive($data, $with, $additional);
@@ -103,7 +103,9 @@ class ResourceResponse implements Responsable
      */
     protected function wrapper()
     {
-        return get_class($this->resource)::$wrap;
+        $resourceClass = get_class($this->resource);
+
+        return $resourceClass::$wrap;
     }
 
     /**

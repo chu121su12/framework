@@ -9,6 +9,14 @@ use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\File\UploadedFile as SymfonyUploadedFile;
 
+class MakesHttpRequests_withoutMiddleware_Class
+{
+    public function handle($request, $next)
+    {
+        return $next($request);
+    }
+}
+
 trait MakesHttpRequests
 {
     /**
@@ -99,12 +107,7 @@ trait MakesHttpRequests
         }
 
         foreach ((array) $middleware as $abstract) {
-            $this->app->instance($abstract, new class {
-                public function handle($request, $next)
-                {
-                    return $next($request);
-                }
-            });
+            $this->app->instance($abstract, new MakesHttpRequests_withoutMiddleware_Class);
         }
 
         return $this;

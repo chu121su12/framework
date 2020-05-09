@@ -97,6 +97,8 @@
             "tests/Database/stubs/MigrationCreatorFakeMigration.php"
         ],
         "psr-4": {
+            "PHPUnit\\": "cr/patch/PHPUnit/",
+            "Orchestra\\": "cr/patch/Orchestra/",
             "Illuminate\\Tests\\": "tests/"
         }
     },
