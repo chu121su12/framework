@@ -46,6 +46,11 @@ class LogServiceProvider extends ServiceProvider
      */
     protected function channel()
     {
+        if ($this->app->bound('config') &&
+            $channel = $this->app->make('config')->get('app.log_channel')) {
+            return $channel;
+        }
+
         return $this->app->bound('env') ? $this->app->environment() : 'production';
     }
 
@@ -96,7 +101,7 @@ class LogServiceProvider extends ServiceProvider
      */
     protected function configureSyslogHandler(Writer $log)
     {
-        $log->useSyslog('laravel', $this->logLevel());
+        $log->useSyslog($this->app->make('config')->get('app.name'), $this->logLevel());
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Illuminate\Tests\Foundation;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\ServiceProvider;
 
 class FoundationApplicationTest extends TestCase
 {
@@ -16,11 +17,11 @@ class FoundationApplicationTest extends TestCase
     public function testSetLocaleSetsLocaleAndFiresLocaleChangedEvent()
     {
         $app = new Application;
-        $app['config'] = $config = m::mock('StdClass');
+        $app['config'] = $config = m::mock('stdClass');
         $config->shouldReceive('set')->once()->with('app.locale', 'foo');
-        $app['translator'] = $trans = m::mock('StdClass');
+        $app['translator'] = $trans = m::mock('stdClass');
         $trans->shouldReceive('setLocale')->once()->with('foo');
-        $app['events'] = $events = m::mock('StdClass');
+        $app['events'] = $events = m::mock('stdClass');
         $events->shouldReceive('dispatch')->once()->with(m::type('Illuminate\Foundation\Events\LocaleUpdated'));
 
         $app->setLocale('foo');
@@ -35,6 +36,30 @@ class FoundationApplicationTest extends TestCase
         $app->register($provider);
 
         $this->assertTrue(in_array($class, $app->getLoadedProviders()));
+    }
+
+    public function testClassesAreBoundWhenServiceProviderIsRegistered()
+    {
+        $app = new Application;
+        $provider = new ServiceProviderForTestingThree($app);
+        $app->register($provider);
+
+        $this->assertTrue(in_array(get_class($provider), $app->getLoadedProviders()));
+
+        $this->assertInstanceOf(ConcreteClass::class, $app->make(AbstractClass::class));
+    }
+
+    public function testSingletonsAreCreatedWhenServiceProviderIsRegistered()
+    {
+        $app = new Application;
+        $provider = new ServiceProviderForTestingThree($app);
+        $app->register($provider);
+
+        $this->assertTrue(in_array(get_class($provider), $app->getLoadedProviders()));
+
+        $instance = $app->make(AbstractClass::class);
+
+        $this->assertSame($instance, $app->make(AbstractClass::class));
     }
 
     public function testServiceProvidersAreCorrectlyRegisteredWhenRegisterMethodIsNotPresent()
@@ -63,8 +88,8 @@ class FoundationApplicationTest extends TestCase
         $this->assertTrue($app->bound('foo'));
         $one = $app->make('foo');
         $two = $app->make('foo');
-        $this->assertInstanceOf('StdClass', $one);
-        $this->assertInstanceOf('StdClass', $two);
+        $this->assertInstanceOf('stdClass', $one);
+        $this->assertInstanceOf('stdClass', $two);
         $this->assertSame($one, $two);
     }
 
@@ -83,9 +108,18 @@ class FoundationApplicationTest extends TestCase
         $app = new Application;
         $app->setDeferredServices(['foo' => 'Illuminate\Tests\Foundation\ApplicationDeferredServiceProviderCountStub']);
         $obj = $app->make('foo');
-        $this->assertInstanceOf('StdClass', $obj);
+        $this->assertInstanceOf('stdClass', $obj);
         $this->assertSame($obj, $app->make('foo'));
         $this->assertEquals(1, ApplicationDeferredServiceProviderCountStub::$count);
+    }
+
+    public function testDeferredServiceDontRunWhenInstanceSet()
+    {
+        $app = new Application;
+        $app->setDeferredServices(['foo' => 'Illuminate\Tests\Foundation\ApplicationDeferredServiceProviderStub']);
+        $app->instance('foo', 'bar');
+        $instance = $app->make('foo');
+        $this->assertEquals($instance, 'bar');
     }
 
     public function testDeferredServicesAreLazilyInitialized()
@@ -193,7 +227,7 @@ class ApplicationDeferredSharedServiceProviderStub extends \Illuminate\Support\S
     public function register()
     {
         $this->app->singleton('foo', function () {
-            return new \StdClass;
+            return new \stdClass;
         });
     }
 }
@@ -206,7 +240,7 @@ class ApplicationDeferredServiceProviderCountStub extends \Illuminate\Support\Se
     public function register()
     {
         static::$count++;
-        $this->app['foo'] = new \StdClass;
+        $this->app['foo'] = new \stdClass;
     }
 }
 
@@ -249,4 +283,33 @@ class ApplicationMultiProviderStub extends \Illuminate\Support\ServiceProvider
             return $app['foo'].'bar';
         });
     }
+}
+
+class ServiceProviderForTestingThree extends ServiceProvider
+{
+    public $bind = [
+        AbstractClass::class => ConcreteClass::class,
+    ];
+
+    public $singletons = [
+        AbstractClass::class => ConcreteClass::class,
+    ];
+
+    public function register()
+    {
+    }
+
+    public function boot()
+    {
+    }
+}
+
+abstract class AbstractClass
+{
+    //
+}
+
+class ConcreteClass extends AbstractClass
+{
+    //
 }
