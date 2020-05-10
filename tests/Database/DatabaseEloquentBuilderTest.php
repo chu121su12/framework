@@ -128,6 +128,17 @@ class DatabaseEloquentBuilderTest extends TestCase
         $builder->findOrFail([1, 2], ['column']);
     }
 
+    public function testFindOrFailMethodWithManyUsingCollectionThrowsModelNotFoundException()
+    {
+        $this->expectException(ModelNotFoundException::class);
+
+        $builder = m::mock(Builder::class.'[get]', [$this->getMockQueryBuilder()]);
+        $builder->setModel($this->getMockModel());
+        $builder->getQuery()->shouldReceive('whereIn')->once()->with('foo_table.foo', [1, 2]);
+        $builder->shouldReceive('get')->with(['column'])->andReturn(new Collection([1]));
+        $builder->findOrFail(new Collection([1, 2]), ['column']);
+    }
+
     public function testFirstOrFailMethodThrowsModelNotFoundException()
     {
         $this->expectException(ModelNotFoundException::class);
@@ -433,6 +444,7 @@ class DatabaseEloquentBuilderTest extends TestCase
         });
         $result = $builder->fooBar();
 
+        $this->assertTrue($builder->hasMacro('fooBar'));
         $this->assertEquals($builder, $result);
         $this->assertEquals($builder, $_SERVER['__test.builder']);
         unset($_SERVER['__test.builder']);
@@ -448,6 +460,7 @@ class DatabaseEloquentBuilderTest extends TestCase
 
         $builder = $this->getBuilder();
 
+        $this->assertTrue(Builder::hasGlobalMacro('foo'));
         $this->assertEquals($builder->foo('bar'), 'bar');
         $this->assertEquals($builder->bam(), $builder->getQuery());
     }
@@ -624,6 +637,11 @@ class DatabaseEloquentBuilderTest extends TestCase
         $builder->getQuery()->shouldReceive('insertUsing')->once()->with(['bar'], 'baz')->andReturn('foo');
 
         $this->assertSame('foo', $builder->insertUsing(['bar'], 'baz'));
+
+        $builder = $this->getBuilder();
+        $builder->getQuery()->shouldReceive('raw')->once()->with('bar')->andReturn('foo');
+
+        $this->assertSame('foo', $builder->raw('bar'));
     }
 
     public function testQueryScopes()
@@ -643,7 +661,7 @@ class DatabaseEloquentBuilderTest extends TestCase
         $nestedRawQuery = $this->getMockQueryBuilder();
         $nestedQuery->shouldReceive('getQuery')->once()->andReturn($nestedRawQuery);
         $model = $this->getMockModel()->makePartial();
-        $model->shouldReceive('newModelQuery')->once()->andReturn($nestedQuery);
+        $model->shouldReceive('newQueryWithoutRelationships')->once()->andReturn($nestedQuery);
         $builder = $this->getBuilder();
         $builder->getQuery()->shouldReceive('from');
         $builder->setModel($model);
@@ -664,6 +682,17 @@ class DatabaseEloquentBuilderTest extends TestCase
             $query->where('baz', '>', 9000);
         });
         $this->assertSame('select * from "table" where "foo" = ? and ("baz" > ?) and "table"."deleted_at" is null', $query->toSql());
+        $this->assertEquals(['bar', 9000], $query->getBindings());
+    }
+
+    public function testRealNestedWhereWithScopesMacro()
+    {
+        $model = new EloquentBuilderTestNestedStub;
+        $this->mockConnectionForModel($model, 'SQLite');
+        $query = $model->newQuery()->where('foo', '=', 'bar')->where(function ($query) {
+            $query->where('baz', '>', 9000)->onlyTrashed();
+        })->withTrashed();
+        $this->assertSame('select * from "table" where "foo" = ? and ("baz" > ? and "table"."deleted_at" is not null)', $query->toSql());
         $this->assertEquals(['bar', 9000], $query->getBindings());
     }
 

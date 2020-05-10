@@ -72,7 +72,7 @@ class Builder
      */
     protected $passthru = [
         'insert', 'insertOrIgnore', 'insertGetId', 'insertUsing', 'getBindings', 'toSql', 'dump', 'dd',
-        'exists', 'doesntExist', 'count', 'min', 'max', 'avg', 'average', 'sum', 'getConnection',
+        'exists', 'doesntExist', 'count', 'min', 'max', 'avg', 'average', 'sum', 'getConnection', 'raw',
     ];
 
     /**
@@ -104,7 +104,7 @@ class Builder
      * Create and return an un-saved model instance.
      *
      * @param  array  $attributes
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \Illuminate\Database\Eloquent\Model|static
      */
     public function make(array $attributes = [])
     {
@@ -222,8 +222,8 @@ class Builder
      */
     public function where($column, $operator = null, $value = null, $boolean = 'and')
     {
-        if ($column instanceof Closure) {
-            $column($query = $this->model->newModelQuery());
+        if ($column instanceof Closure && is_null($operator)) {
+            $column($query = $this->model->newQueryWithoutRelationships());
 
             $this->query->addNestedWhereQuery($query->getQuery(), $boolean);
         } else {
@@ -362,6 +362,8 @@ class Builder
     {
         $result = $this->find($id, $columns);
 
+        $id = $id instanceof Arrayable ? $id->toArray() : $id;
+
         if (is_array($id)) {
             if (count($result) === count(array_unique($id))) {
                 return $result;
@@ -398,7 +400,7 @@ class Builder
      * @param  array  $values
      * @return \Illuminate\Database\Eloquent\Model|static
      */
-    public function firstOrNew(array $attributes, array $values = [])
+    public function firstOrNew(array $attributes = [], array $values = [])
     {
         if (! is_null($instance = $this->where($attributes)->first())) {
             return $instance;
@@ -1097,7 +1099,7 @@ class Builder
 
                 list($name, $constraints) = Str::contains($name, ':')
                             ? $this->createSelectWithConstraint($name)
-                            : [$name, function () {
+                            : [$name, static function () {
                                 //
                             }];
             }
@@ -1121,7 +1123,7 @@ class Builder
      */
     protected function createSelectWithConstraint($name)
     {
-        return [explode(':', $name)[0], function ($query) use ($name) {
+        return [explode(':', $name)[0], static function ($query) use ($name) {
             $query->select(explode(',', explode(':', $name)[1]));
         }];
     }
@@ -1144,7 +1146,7 @@ class Builder
             $progress[] = $segment;
 
             if (! isset($results[$last = implode('.', $progress)])) {
-                $results[$last] = function () {
+                $results[$last] = static function () {
                     //
                 };
             }
@@ -1267,6 +1269,39 @@ class Builder
     }
 
     /**
+     * Checks if a macro is registered.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    public function hasMacro($name)
+    {
+        return isset($this->localMacros[$name]);
+    }
+
+    /**
+     * Get the given global macro by name.
+     *
+     * @param  string  $name
+     * @return \Closure
+     */
+    public static function getGlobalMacro($name)
+    {
+        return Arr::get(static::$macros, $name);
+    }
+
+    /**
+     * Checks if a global macro is registered.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    public static function hasGlobalMacro($name)
+    {
+        return isset(static::$macros[$name]);
+    }
+
+    /**
      * Dynamically access builder proxies.
      *
      * @param  string  $key
@@ -1298,13 +1333,13 @@ class Builder
             return;
         }
 
-        if (isset($this->localMacros[$method])) {
+        if ($this->hasMacro($method)) {
             array_unshift($parameters, $this);
 
             return $this->localMacros[$method](...$parameters);
         }
 
-        if (isset(static::$macros[$method])) {
+        if (static::hasGlobalMacro($method)) {
             if (static::$macros[$method] instanceof Closure) {
                 return call_user_func_array(static::$macros[$method]->bindTo($this, static::class), $parameters);
             }
@@ -1342,7 +1377,7 @@ class Builder
             return;
         }
 
-        if (! isset(static::$macros[$method])) {
+        if (! static::hasGlobalMacro($method)) {
             static::throwBadMethodCallException($method);
         }
 

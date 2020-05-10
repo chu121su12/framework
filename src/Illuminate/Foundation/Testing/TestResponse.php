@@ -90,6 +90,38 @@ class TestResponse
     }
 
     /**
+     * Assert that the response has a 201 status code.
+     *
+     * @return $this
+     */
+    public function assertCreated()
+    {
+        $actual = $this->getStatusCode();
+
+        PHPUnit::assertTrue(
+            201 === $actual,
+            'Response status code ['.$actual.'] does not match expected 201 status code.'
+        );
+
+        return $this;
+    }
+
+    /**
+     * Assert that the response has the given status code and no content.
+     *
+     * @param  int  $status
+     * @return $this
+     */
+    public function assertNoContent($status = 204)
+    {
+        $this->assertStatus($status);
+
+        PHPUnit::assertEmpty($this->getContent(), 'Response content is not empty.');
+
+        return $this;
+    }
+
+    /**
      * Assert that the response has a not found status code.
      *
      * @return $this
@@ -462,6 +494,20 @@ class TestResponse
             "[{$expected}]".PHP_EOL.PHP_EOL.
             'within response JSON:'.PHP_EOL.PHP_EOL.
             "[{$actual}].".PHP_EOL.PHP_EOL;
+    }
+
+    /**
+     * Assert that the expected value and type exists at the given path in the response.
+     *
+     * @param  string  $path
+     * @param  mixed  $expect
+     * @return $this
+     */
+    public function assertJsonPath($path, $expect)
+    {
+        PHPUnit::assertSame($expect, $this->json($path));
+
+        return $this;
     }
 
     /**

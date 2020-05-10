@@ -210,7 +210,7 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Get the items in the collection that are not present in the given items.
+     * Get the items in the collection that are not present in the given items, using the callback.
      *
      * @param  mixed  $items
      * @param  callable  $callback
@@ -233,7 +233,7 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Get the items in the collection whose keys and values are not present in the given items.
+     * Get the items in the collection whose keys and values are not present in the given items, using the callback.
      *
      * @param  mixed  $items
      * @param  callable  $callback
@@ -256,9 +256,9 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Get the items in the collection whose keys are not present in the given items.
+     * Get the items in the collection whose keys are not present in the given items, using the callback.
      *
-     * @param  mixed   $items
+     * @param  mixed  $items
      * @param  callable  $callback
      * @return static
      */

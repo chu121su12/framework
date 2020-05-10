@@ -1168,6 +1168,11 @@ class Router implements BindingRegistrar, RegistrarContract
             $this->resetPassword();
         }
 
+        // Password Confirmation Routes...
+        if ($options['confirm'] ?? true) {
+            $this->confirmPassword();
+        }
+
         // Email Verification Routes...
         if (isset($options['verify']) ? $options['verify'] : false) {
             $this->emailVerification();
@@ -1185,6 +1190,17 @@ class Router implements BindingRegistrar, RegistrarContract
         $this->post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
         $this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
         $this->post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+    }
+
+    /**
+     * Register the typical confirm password routes for an application.
+     *
+     * @return void
+     */
+    public function confirmPassword()
+    {
+        $this->get('password/confirm', 'Auth\ConfirmPasswordController@showConfirmForm')->name('password.confirm');
+        $this->post('password/confirm', 'Auth\ConfirmPasswordController@confirm');
     }
 
     /**

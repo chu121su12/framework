@@ -59,16 +59,16 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
      */
     public function render($request, Exception $e)
     {
-        if ($e instanceof NotFoundHttpException) {
-            throw new NotFoundHttpException(
-                "{$request->method()} {$request->url()}", null, $e->getCode()
-            );
-        }
-
         foreach ($this->except as $class) {
             if ($e instanceof $class) {
                 return $this->originalHandler->render($request, $e);
             }
+        }
+
+        if ($e instanceof NotFoundHttpException) {
+            throw new NotFoundHttpException(
+                "{$request->method()} {$request->url()}", null, $e->getCode()
+            );
         }
 
         throw $e;
@@ -143,7 +143,7 @@ trait InteractsWithExceptionHandling
             $this->originalExceptionHandler = app(ExceptionHandler::class);
         }
 
-
+        $this->app->instance(ExceptionHandler::class, new InteractsWithExceptionHandling_withoutExceptionHandling_Class($this->originalExceptionHandler, $except));
 
         return $this;
     }

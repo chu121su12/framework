@@ -518,7 +518,7 @@ class Str
     public static function startsWith($haystack, $needles)
     {
         foreach ((array) $needles as $needle) {
-            if ($needle !== '' && substr($haystack, 0, strlen($needle)) === (string) $needle) {
+            if ((string) $needle !== '' && substr($haystack, 0, strlen($needle)) === (string) $needle) {
                 return true;
             }
         }
@@ -609,7 +609,7 @@ class Str
     /**
      * Set the callable that will be used to generate UUIDs.
      *
-     * @param  callable
+     * @param  callable  $factory
      * @return void
      */
     public static function createUuidsUsing(callable $factory = null)
