@@ -2,10 +2,10 @@
 
 namespace Illuminate\Foundation\Support\Providers;
 
+use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Traits\ForwardsCalls;
-use Illuminate\Contracts\Routing\UrlGenerator;
 
 /**
  * @mixin \Illuminate\Routing\Router
@@ -86,16 +86,6 @@ class RouteServiceProvider extends ServiceProvider
         if (method_exists($this, 'map')) {
             $this->app->call([$this, 'map']);
         }
-    }
-
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
     }
 
     /**

@@ -2,10 +2,11 @@
 
 namespace Illuminate\Tests\Integration\Database\EloquentTouchParentWithGlobalScopeTest;
 
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Illuminate\Tests\Integration\Database\DatabaseTestCase;
 
 /**
@@ -17,13 +18,13 @@ class EloquentTouchParentWithGlobalScopeTest extends DatabaseTestCase
     {
         parent::setUp();
 
-        Schema::create('posts', function ($table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
             $table->timestamps();
         });
 
-        Schema::create('comments', function ($table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('post_id');
             $table->string('title');
@@ -33,15 +34,15 @@ class EloquentTouchParentWithGlobalScopeTest extends DatabaseTestCase
         Carbon::setTestNow(null);
     }
 
-    public function test_basic_create_and_retrieve()
+    public function testBasicCreateAndRetrieve()
     {
         $post = Post::create(['title' => Str::random(), 'updated_at' => '2016-10-10 10:10:10']);
 
-        $this->assertEquals('2016-10-10', $post->fresh()->updated_at->toDateString());
+        $this->assertSame('2016-10-10', $post->fresh()->updated_at->toDateString());
 
         $post->comments()->create(['title' => Str::random()]);
 
-        $this->assertNotEquals('2016-10-10', $post->fresh()->updated_at->toDateString());
+        $this->assertNotSame('2016-10-10', $post->fresh()->updated_at->toDateString());
     }
 }
 

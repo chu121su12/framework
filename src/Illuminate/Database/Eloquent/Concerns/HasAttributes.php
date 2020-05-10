@@ -2,17 +2,17 @@
 
 namespace Illuminate\Database\Eloquent\Concerns;
 
-use LogicException;
-use DateTimeInterface;
 use Carbon\CarbonInterface;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Date;
+use DateTimeInterface;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Database\Eloquent\JsonEncodingException;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Str;
+use LogicException;
 
 trait HasAttributes
 {
@@ -195,6 +195,10 @@ trait HasAttributes
             if ($attributes[$key] && $this->isCustomDateTimeCast($value)) {
                 $attributes[$key] = $attributes[$key]->format(explode(':', $value, 2)[1]);
             }
+
+            if ($attributes[$key] instanceof Arrayable) {
+                $attributes[$key] = $attributes[$key]->toArray();
+            }
         }
 
         return $attributes;
@@ -372,9 +376,7 @@ trait HasAttributes
      */
     protected function getAttributeFromArray($key)
     {
-        if (isset($this->attributes[$key])) {
-            return $this->attributes[$key];
-        }
+        return $this->attributes[$key] ?? null;
     }
 
     /**
@@ -413,6 +415,12 @@ trait HasAttributes
         $relation = $this->$method();
 
         if (! $relation instanceof Relation) {
+            if (is_null($relation)) {
+                throw new LogicException(sprintf(
+                    '%s::%s must return a relationship instance, but "null" was returned. Was the "return" keyword used?', static::class, $method
+                ));
+            }
+
             throw new LogicException(sprintf(
                 '%s::%s must return a relationship instance.', static::class, $method
             ));
@@ -619,7 +627,7 @@ trait HasAttributes
      */
     protected function isDateAttribute($key)
     {
-        return in_array($key, $this->getDates()) ||
+        return in_array($key, $this->getDates(), true) ||
                                     $this->isDateCastable($key);
     }
 
@@ -792,12 +800,17 @@ trait HasAttributes
             return Date::instance(Carbon::createFromFormat('Y-m-d', $value)->startOfDay());
         }
 
+        $format = $this->getDateFormat();
+
+        // https://bugs.php.net/bug.php?id=75577
+        if (version_compare(PHP_VERSION, '7.3.0-dev', '<')) {
+            $format = str_replace('.v', '.u', $format);
+        }
+
         // Finally, we will just assume this date is in the format used by default on
         // the database connection and use that format to create the Carbon object
         // that is returned back out to the developers after we convert it here.
-        return Date::createFromFormat(
-            str_replace('.v', '.u', $this->getDateFormat()), $value
-        );
+        return Date::createFromFormat($format, $value);
     }
 
     /**

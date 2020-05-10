@@ -2,20 +2,21 @@
 
 namespace Illuminate\Tests\Integration\Notifications;
 
-use Illuminate\Mail\Mailable;
-use Illuminate\Support\Carbon;
-use Orchestra\Testbench\TestCase;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Notifications\Notification;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Events\LocaleUpdated;
+use Illuminate\Mail\Mailable;
 use Illuminate\Notifications\Channels\MailChannel;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Contracts\Translation\HasLocalePreference;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification as NotificationFacade;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
+use Orchestra\Testbench\TestCase;
 
 /**
  * @group integration
@@ -57,14 +58,14 @@ class SendingNotificationsWithLocaleTest extends TestCase
     {
         parent::setUp();
 
-        Schema::create('users', function ($table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('email');
             $table->string('name')->nullable();
         });
     }
 
-    public function test_mail_is_sent_with_default_locale()
+    public function testMailIsSentWithDefaultLocale()
     {
         $user = NotifiableLocalizedUser::forceCreate([
             'email' => 'taylor@laravel.com',
@@ -78,7 +79,7 @@ class SendingNotificationsWithLocaleTest extends TestCase
         );
     }
 
-    public function test_mail_is_sent_with_facade_selected_locale()
+    public function testMailIsSentWithFacadeSelectedLocale()
     {
         $user = NotifiableLocalizedUser::forceCreate([
             'email' => 'taylor@laravel.com',
@@ -92,7 +93,7 @@ class SendingNotificationsWithLocaleTest extends TestCase
         );
     }
 
-    public function test_mail_is_sent_with_notification_selected_locale()
+    public function testMailIsSentWithNotificationSelectedLocale()
     {
         $users = [
             NotifiableLocalizedUser::forceCreate([
@@ -116,7 +117,7 @@ class SendingNotificationsWithLocaleTest extends TestCase
         );
     }
 
-    public function test_mailable_is_sent_with_selected_locale()
+    public function testMailableIsSentWithSelectedLocale()
     {
         $user = NotifiableLocalizedUser::forceCreate([
             'email' => 'taylor@laravel.com',
@@ -130,7 +131,7 @@ class SendingNotificationsWithLocaleTest extends TestCase
         );
     }
 
-    public function test_mail_is_sent_with_locale_updated_listeners_called()
+    public function testMailIsSentWithLocaleUpdatedListenersCalled()
     {
         Carbon::setTestNow('2018-07-25');
 
@@ -158,7 +159,7 @@ class SendingNotificationsWithLocaleTest extends TestCase
         $this->assertSame('en', Carbon::getLocale());
     }
 
-    public function test_locale_is_sent_with_notifiable_preferred_locale()
+    public function testLocaleIsSentWithNotifiablePreferredLocale()
     {
         $recipient = new NotifiableEmailLocalePreferredUser([
             'email' => 'test@mail.com',
@@ -172,7 +173,7 @@ class SendingNotificationsWithLocaleTest extends TestCase
         );
     }
 
-    public function test_locale_is_sent_with_notifiable_preferred_locale_for_multiple_recipients()
+    public function testLocaleIsSentWithNotifiablePreferredLocaleForMultipleRecipients()
     {
         $recipients = [
             new NotifiableEmailLocalePreferredUser([
@@ -203,7 +204,7 @@ class SendingNotificationsWithLocaleTest extends TestCase
         );
     }
 
-    public function test_locale_is_sent_with_notification_selected_locale_overriding_notifiable_preferred_locale()
+    public function testLocaleIsSentWithNotificationSelectedLocaleOverridingNotifiablePreferredLocale()
     {
         $recipient = new NotifiableEmailLocalePreferredUser([
             'email' => 'test@mail.com',
@@ -219,7 +220,7 @@ class SendingNotificationsWithLocaleTest extends TestCase
         );
     }
 
-    public function test_locale_is_sent_with_facade_selected_locale_overriding_notifiable_preferred_locale()
+    public function testLocaleIsSentWithFacadeSelectedLocaleOverridingNotifiablePreferredLocale()
     {
         $recipient = new NotifiableEmailLocalePreferredUser([
             'email' => 'test@mail.com',

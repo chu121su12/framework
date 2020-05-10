@@ -3,11 +3,11 @@
 namespace Illuminate\Session\Middleware;
 
 use Closure;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
+use Illuminate\Session\SessionManager;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
-use Illuminate\Session\SessionManager;
-use Illuminate\Contracts\Session\Session;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,7 +41,7 @@ class StartSession
     public function handle($request, Closure $next)
     {
         if (! $this->sessionConfigured()) {
-            return next($request);
+            return $next($request);
         }
 
         // If a session driver has been configured, we will need to start the session here
@@ -53,16 +53,16 @@ class StartSession
 
         $this->collectGarbage($session);
 
+        $response = $next($request);
+
         $this->storeCurrentUrl($request, $session);
 
-        $this->addCookieToResponse(
-            $response = $next($request), $session
-        );
+        $this->addCookieToResponse($response, $session);
 
         // Again, if the session has been configured we will need to close out the session
         // so that the attributes may be persisted to some storage medium. We will also
         // add the session identifier cookie to the application response headers now.
-        $this->manager->driver()->save();
+        $this->saveSession($request);
 
         return $response;
     }
@@ -157,6 +157,17 @@ class StartSession
                 isset($config['http_only']) ? $config['http_only'] : true, false, isset($config['same_site']) ? $config['same_site'] : null
             ));
         }
+    }
+
+    /**
+     * Save the session data to storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function saveSession($request)
+    {
+        $this->manager->driver()->save();
     }
 
     /**

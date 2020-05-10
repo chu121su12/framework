@@ -2,13 +2,14 @@
 
 namespace Illuminate\Tests\Integration\Queue;
 
-use Schema;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Queue\SerializesModels;
 use LogicException;
 use Orchestra\Testbench\TestCase;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Schema;
 
 /**
  * @group integration
@@ -38,41 +39,41 @@ class ModelSerializationTest extends TestCase
     {
         parent::setUp();
 
-        Schema::create('users', function ($table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('email');
         });
 
-        Schema::connection('custom')->create('users', function ($table) {
+        Schema::connection('custom')->create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('email');
         });
 
-        Schema::create('orders', function ($table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
         });
 
-        Schema::create('lines', function ($table) {
+        Schema::create('lines', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('order_id');
             $table->unsignedInteger('product_id');
         });
 
-        Schema::create('products', function ($table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
         });
 
-        Schema::create('roles', function ($table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->increments('id');
         });
 
-        Schema::create('role_user', function ($table) {
+        Schema::create('role_user', function (Blueprint $table) {
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('role_id');
         });
     }
 
-    public function test_it_serialize_user_on_default_connection()
+    public function testItSerializeUserOnDefaultConnection()
     {
         $user = ModelSerializationTestUser::create([
             'email' => 'mohamed@laravel.com',
@@ -86,20 +87,20 @@ class ModelSerializationTest extends TestCase
 
         $unSerialized = unserialize($serialized);
 
-        $this->assertEquals('testbench', $unSerialized->user->getConnectionName());
-        $this->assertEquals('mohamed@laravel.com', $unSerialized->user->email);
+        $this->assertSame('testbench', $unSerialized->user->getConnectionName());
+        $this->assertSame('mohamed@laravel.com', $unSerialized->user->email);
 
         $serialized = serialize(new ModelSerializationTestClass(ModelSerializationTestUser::on('testbench')->get()));
 
         $unSerialized = unserialize($serialized);
 
-        $this->assertEquals('testbench', $unSerialized->user[0]->getConnectionName());
-        $this->assertEquals('mohamed@laravel.com', $unSerialized->user[0]->email);
-        $this->assertEquals('testbench', $unSerialized->user[1]->getConnectionName());
-        $this->assertEquals('taylor@laravel.com', $unSerialized->user[1]->email);
+        $this->assertSame('testbench', $unSerialized->user[0]->getConnectionName());
+        $this->assertSame('mohamed@laravel.com', $unSerialized->user[0]->email);
+        $this->assertSame('testbench', $unSerialized->user[1]->getConnectionName());
+        $this->assertSame('taylor@laravel.com', $unSerialized->user[1]->email);
     }
 
-    public function test_it_serialize_user_on_different_connection()
+    public function testItSerializeUserOnDifferentConnection()
     {
         $user = ModelSerializationTestUser::on('custom')->create([
             'email' => 'mohamed@laravel.com',
@@ -113,20 +114,20 @@ class ModelSerializationTest extends TestCase
 
         $unSerialized = unserialize($serialized);
 
-        $this->assertEquals('custom', $unSerialized->user->getConnectionName());
-        $this->assertEquals('mohamed@laravel.com', $unSerialized->user->email);
+        $this->assertSame('custom', $unSerialized->user->getConnectionName());
+        $this->assertSame('mohamed@laravel.com', $unSerialized->user->email);
 
         $serialized = serialize(new ModelSerializationTestClass(ModelSerializationTestUser::on('custom')->get()));
 
         $unSerialized = unserialize($serialized);
 
-        $this->assertEquals('custom', $unSerialized->user[0]->getConnectionName());
-        $this->assertEquals('mohamed@laravel.com', $unSerialized->user[0]->email);
-        $this->assertEquals('custom', $unSerialized->user[1]->getConnectionName());
-        $this->assertEquals('taylor@laravel.com', $unSerialized->user[1]->email);
+        $this->assertSame('custom', $unSerialized->user[0]->getConnectionName());
+        $this->assertSame('mohamed@laravel.com', $unSerialized->user[0]->email);
+        $this->assertSame('custom', $unSerialized->user[1]->getConnectionName());
+        $this->assertSame('taylor@laravel.com', $unSerialized->user[1]->email);
     }
 
-    public function test_it_fails_if_models_on_multi_connections()
+    public function testItFailsIfModelsOnMultiConnections()
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Queueing collections with multiple model connections is not supported.');
@@ -146,7 +147,7 @@ class ModelSerializationTest extends TestCase
         unserialize($serialized);
     }
 
-    public function test_it_reloads_relationships()
+    public function testItReloadsRelationships()
     {
         $order = tap(Order::create(), function (Order $order) {
             $order->wasRecentlyCreated = false;
@@ -166,7 +167,7 @@ class ModelSerializationTest extends TestCase
         $this->assertEquals($unSerialized->order->getRelations(), $order->getRelations());
     }
 
-    public function test_it_reloads_nested_relationships()
+    public function testItReloadsNestedRelationships()
     {
         $order = tap(Order::create(), function (Order $order) {
             $order->wasRecentlyCreated = false;
@@ -189,7 +190,7 @@ class ModelSerializationTest extends TestCase
     /**
      * Regression test for https://github.com/laravel/framework/issues/23068.
      */
-    public function test_it_can_unserialize_nested_relationships_without_pivot()
+    public function testItCanUnserializeNestedRelationshipsWithoutPivot()
     {
         $user = tap(User::create([
             'email' => 'taylor@laravel.com',
@@ -211,13 +212,62 @@ class ModelSerializationTest extends TestCase
         unserialize($serialized);
     }
 
-    public function test_it_serializes_an_empty_collection()
+    public function testItSerializesAnEmptyCollection()
     {
         $serialized = serialize(new ModelSerializationTestClass(
             new Collection([])
         ));
 
         unserialize($serialized);
+    }
+
+    public function testItSerializesACollectionInCorrectOrder()
+    {
+        ModelSerializationTestUser::create(['email' => 'mohamed@laravel.com']);
+        ModelSerializationTestUser::create(['email' => 'taylor@laravel.com']);
+
+        $serialized = serialize(new CollectionSerializationTestClass(
+            ModelSerializationTestUser::orderByDesc('email')->get()
+        ));
+
+        $unserialized = unserialize($serialized);
+
+        $this->assertEquals($unserialized->users->first()->email, 'taylor@laravel.com');
+        $this->assertEquals($unserialized->users->last()->email, 'mohamed@laravel.com');
+    }
+
+    public function testItCanUnserializeACollectionInCorrectOrderAndHandleDeletedModels()
+    {
+        ModelSerializationTestUser::create(['email' => '2@laravel.com']);
+        ModelSerializationTestUser::create(['email' => '3@laravel.com']);
+        ModelSerializationTestUser::create(['email' => '1@laravel.com']);
+
+        $serialized = serialize(new CollectionSerializationTestClass(
+            ModelSerializationTestUser::orderByDesc('email')->get()
+        ));
+
+        ModelSerializationTestUser::where(['email' => '2@laravel.com'])->delete();
+
+        $unserialized = unserialize($serialized);
+
+        $this->assertCount(2, $unserialized->users);
+
+        $this->assertEquals($unserialized->users->first()->email, '3@laravel.com');
+        $this->assertEquals($unserialized->users->last()->email, '1@laravel.com');
+    }
+
+    public function testItCanUnserializeCustomCollection()
+    {
+        ModelSerializationTestCustomUser::create(['email' => 'mohamed@laravel.com']);
+        ModelSerializationTestCustomUser::create(['email' => 'taylor@laravel.com']);
+
+        $serialized = serialize(new CollectionSerializationTestClass(
+            ModelSerializationTestCustomUser::all()
+        ));
+
+        $unserialized = unserialize($serialized);
+
+        $this->assertInstanceOf(ModelSerializationTestCustomUserCollection::class, $unserialized->users);
     }
 }
 
@@ -226,6 +276,23 @@ class ModelSerializationTestUser extends Model
     public $table = 'users';
     public $guarded = ['id'];
     public $timestamps = false;
+}
+
+class ModelSerializationTestCustomUserCollection extends Collection
+{
+    //
+}
+
+class ModelSerializationTestCustomUser extends Model
+{
+    public $table = 'users';
+    public $guarded = ['id'];
+    public $timestamps = false;
+
+    public function newCollection(array $models = [])
+    {
+        return new ModelSerializationTestCustomUserCollection($models);
+    }
 }
 
 class Order extends Model
@@ -327,5 +394,17 @@ class ModelRelationSerializationTestClass
     public function __construct($order)
     {
         $this->order = $order;
+    }
+}
+
+class CollectionSerializationTestClass
+{
+    use SerializesModels;
+
+    public $users;
+
+    public function __construct($users)
+    {
+        $this->users = $users;
     }
 }

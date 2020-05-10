@@ -2,8 +2,8 @@
 
 namespace Illuminate\Tests\Http;
 
-use PHPUnit\Framework\TestCase;
 use Illuminate\Http\Testing\MimeType;
+use PHPUnit\Framework\TestCase;
 
 class HttpMimeTypeTest extends TestCase
 {
@@ -33,7 +33,7 @@ class HttpMimeTypeTest extends TestCase
     {
         $this->assertIsArray(MimeType::get());
         $this->assertArrayHasKey('jpg', MimeType::get());
-        $this->assertEquals('image/jpeg', MimeType::get()['jpg']);
+        $this->assertSame('image/jpeg', MimeType::get()['jpg']);
     }
 
     public function testSearchExtensionFromMimeType()

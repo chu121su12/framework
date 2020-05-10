@@ -2,12 +2,12 @@
 
 namespace Illuminate\Tests\Database;
 
-use Mockery as m;
-use LogicException;
-use PHPUnit\Framework\TestCase;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as BaseCollection;
+use LogicException;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentCollectionTest extends TestCase
 {
@@ -159,7 +159,7 @@ class DatabaseEloquentCollectionTest extends TestCase
     {
         $c = $this->getMockBuilder(Collection::class)->setMethods(['first'])->setConstructorArgs([['foo']])->getMock();
         $mockItem = m::mock(stdClass::class);
-        $c->expects($this->once())->method('first')->will($this->returnValue($mockItem));
+        $c->expects($this->once())->method('first')->willReturn($mockItem);
         $mockItem->shouldReceive('newQueryWithoutRelationships')->once()->andReturn($mockItem);
         $mockItem->shouldReceive('with')->with(['bar', 'baz'])->andReturn($mockItem);
         $mockItem->shouldReceive('eagerLoadRelations')->once()->with(['foo'])->andReturn(['results']);
@@ -245,6 +245,28 @@ class DatabaseEloquentCollectionTest extends TestCase
         $this->assertEquals(new Collection([$one]), $c1->diff($c2));
     }
 
+    public function testCollectionReturnsDuplicateBasedOnlyOnKeys()
+    {
+        $one = new TestEloquentCollectionModel();
+        $two = new TestEloquentCollectionModel();
+        $three = new TestEloquentCollectionModel();
+        $four = new TestEloquentCollectionModel();
+        $one->id = 1;
+        $one->someAttribute = '1';
+        $two->id = 1;
+        $two->someAttribute = '2';
+        $three->id = 1;
+        $three->someAttribute = '3';
+        $four->id = 2;
+        $four->someAttribute = '4';
+
+        $duplicates = Collection::make([$one, $two, $three, $four])->duplicates()->all();
+        $this->assertSame([1 => $two, 2 => $three], $duplicates);
+
+        $duplicates = Collection::make([$one, $two, $three, $four])->duplicatesStrict()->all();
+        $this->assertSame([1 => $two, 2 => $three], $duplicates);
+    }
+
     public function testCollectionIntersectsWithGivenCollection()
     {
         $one = m::mock(Model::class);
@@ -273,6 +295,28 @@ class DatabaseEloquentCollectionTest extends TestCase
         $c = new Collection([$one, $two, $two]);
 
         $this->assertEquals(new Collection([$one, $two]), $c->unique());
+    }
+
+    public function testCollectionReturnsUniqueStrictBasedOnKeysOnly()
+    {
+        $one = new TestEloquentCollectionModel();
+        $two = new TestEloquentCollectionModel();
+        $three = new TestEloquentCollectionModel();
+        $four = new TestEloquentCollectionModel();
+        $one->id = 1;
+        $one->someAttribute = '1';
+        $two->id = 1;
+        $two->someAttribute = '2';
+        $three->id = 1;
+        $three->someAttribute = '3';
+        $four->id = 2;
+        $four->someAttribute = '4';
+
+        $uniques = Collection::make([$one, $two, $three, $four])->unique()->all();
+        $this->assertSame([$three, $four], $uniques);
+
+        $uniques = Collection::make([$one, $two, $three, $four])->unique(null, true)->all();
+        $this->assertSame([$three, $four], $uniques);
     }
 
     public function testOnlyReturnsCollectionWithGivenModelKeys()

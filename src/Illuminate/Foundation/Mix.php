@@ -3,8 +3,8 @@
 namespace Illuminate\Foundation;
 
 use Exception;
-use Illuminate\Support\Str;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 
 class Mix
 {
@@ -52,13 +52,17 @@ class Mix
         $manifest = $manifests[$manifestPath];
 
         if (! isset($manifest[$path])) {
-            report(new Exception("Unable to locate Mix file: {$path}."));
+            $exception = new Exception("Unable to locate Mix file: {$path}.");
 
             if (! app('config')->get('app.debug')) {
+                report($exception);
+
                 return $path;
+            } else {
+                throw $exception;
             }
         }
 
-        return new HtmlString($manifestDirectory.$manifest[$path]);
+        return new HtmlString(app('config')->get('app.mix_url').$manifestDirectory.$manifest[$path]);
     }
 }

@@ -3,10 +3,9 @@
 namespace Illuminate\Contracts\Container;
 
 use Closure;
-use ArrayAccess;
 use Psr\Container\ContainerInterface;
 
-interface Container extends ArrayAccess, ContainerInterface
+interface Container extends ContainerInterface
 {
     /**
      * Determine if the given abstract type has been bound.
@@ -72,6 +71,15 @@ interface Container extends ArrayAccess, ContainerInterface
      * @return void
      */
     public function singleton($abstract, $concrete = null);
+
+    /**
+     * Register a shared binding if it hasn't already been registered.
+     *
+     * @param  string  $abstract
+     * @param  \Closure|string|null  $concrete
+     * @return void
+     */
+    public function singletonIf($abstract, $concrete = null);
 
     /**
      * "Extend" an abstract type in the container.

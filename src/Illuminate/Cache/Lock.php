@@ -2,10 +2,10 @@
 
 namespace Illuminate\Cache;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\InteractsWithTime;
 use Illuminate\Contracts\Cache\Lock as LockContract;
 use Illuminate\Contracts\Cache\LockTimeoutException;
+use Illuminate\Support\InteractsWithTime;
+use Illuminate\Support\Str;
 
 abstract class Lock implements LockContract
 {
@@ -61,7 +61,7 @@ abstract class Lock implements LockContract
     /**
      * Release the lock.
      *
-     * @return void
+     * @return bool
      */
     abstract public function release();
 
@@ -76,7 +76,7 @@ abstract class Lock implements LockContract
      * Attempt to acquire the lock.
      *
      * @param  callable|null  $callback
-     * @return bool
+     * @return mixed
      */
     public function get($callback = null)
     {
@@ -115,9 +115,11 @@ abstract class Lock implements LockContract
         }
 
         if (is_callable($callback)) {
-            return tap($callback(), function () {
+            try {
+                return $callback();
+            } finally {
                 $this->release();
-            });
+            }
         }
 
         return true;

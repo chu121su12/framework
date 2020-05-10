@@ -2,9 +2,10 @@
 
 namespace Illuminate\Tests\Integration\Database\EloquentBelongsToTest;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Illuminate\Tests\Integration\Database\DatabaseTestCase;
 
 /**
@@ -16,7 +17,7 @@ class EloquentBelongsToTest extends DatabaseTestCase
     {
         parent::setUp();
 
-        Schema::create('users', function ($table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('slug')->nullable();
             $table->unsignedInteger('parent_id')->nullable();
@@ -27,21 +28,21 @@ class EloquentBelongsToTest extends DatabaseTestCase
         User::create(['parent_id' => $user->id, 'parent_slug' => $user->slug]);
     }
 
-    public function test_has_self()
+    public function testHasSelf()
     {
         $users = User::has('parent')->get();
 
         $this->assertEquals(1, $users->count());
     }
 
-    public function test_has_self_custom_owner_key()
+    public function testHasSelfCustomOwnerKey()
     {
         $users = User::has('parentBySlug')->get();
 
         $this->assertEquals(1, $users->count());
     }
 
-    public function test_associate_with_model()
+    public function testAssociateWithModel()
     {
         $parent = User::doesntHave('parent')->first();
         $child = User::has('parent')->first();
@@ -52,7 +53,7 @@ class EloquentBelongsToTest extends DatabaseTestCase
         $this->assertEquals($child->id, $parent->parent->id);
     }
 
-    public function test_associate_with_id()
+    public function testAssociateWithId()
     {
         $parent = User::doesntHave('parent')->first();
         $child = User::has('parent')->first();
@@ -63,7 +64,7 @@ class EloquentBelongsToTest extends DatabaseTestCase
         $this->assertEquals($child->id, $parent->parent->id);
     }
 
-    public function test_associate_with_id_unsets_loaded_relation()
+    public function testAssociateWithIdUnsetsLoadedRelation()
     {
         $child = User::has('parent')->with('parent')->first();
 

@@ -2,20 +2,20 @@
 
 namespace Illuminate\Tests\Auth;
 
-use stdClass;
-use Mockery as m;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Router;
-use PHPUnit\Framework\TestCase;
-use Illuminate\Auth\Access\Gate;
-use Illuminate\Events\Dispatcher;
-use Illuminate\Container\Container;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Auth\Middleware\Authorize;
-use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Auth\Access\Gate;
+use Illuminate\Auth\Middleware\Authorize;
+use Illuminate\Container\Container;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use Illuminate\Contracts\Routing\Registrar;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Events\Dispatcher;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Routing\Router;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class AuthorizeMiddlewareTest extends TestCase
 {
@@ -47,6 +47,8 @@ class AuthorizeMiddlewareTest extends TestCase
     protected function tearDown()
     {
         m::close();
+
+        Container::setInstance(null);
     }
 
     public function testSimpleAbilityUnauthorized()
@@ -132,7 +134,7 @@ class AuthorizeMiddlewareTest extends TestCase
             return $post;
         });
 
-        $this->gate()->define('view-comments', function ($user, $model = null) use ($post) {
+        $this->gate()->define('view-comments', function ($user, $model = null) {
             return true;
         });
 

@@ -2,13 +2,13 @@
 
 namespace Illuminate\Tests\Support;
 
-use PHPUnit\Framework\TestCase;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Notifications\Notification;
-use PHPUnit\Framework\ExpectationFailedException;
-use PHPUnit\Framework\Constraint\ExceptionMessage;
 use Illuminate\Support\Testing\Fakes\NotificationFake;
-use Illuminate\Contracts\Translation\HasLocalePreference;
+use PHPUnit\Framework\Constraint\ExceptionMessage;
+use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\TestCase;
 
 class SupportTestingNotificationFakeTest extends TestCase
 {
@@ -65,22 +65,20 @@ class SupportTestingNotificationFakeTest extends TestCase
 
     public function testResettingNotificationId()
     {
-        $notification = new NotificationStub;
+        $this->fake->send($this->user, $this->notification);
 
-        $this->fake->send($this->user, $notification);
+        $id = $this->notification->id;
 
-        $id = $notification->id;
+        $this->fake->send($this->user, $this->notification);
 
-        $this->fake->send($this->user, $notification);
+        $this->assertSame($id, $this->notification->id);
 
-        $this->assertSame($id, $notification->id);
+        $this->notification->id = null;
 
-        $notification->id = null;
+        $this->fake->send($this->user, $this->notification);
 
-        $this->fake->send($this->user, $notification);
-
-        $this->assertNotNull($notification->id);
-        $this->assertNotSame($id, $notification->id);
+        $this->assertNotNull($this->notification->id);
+        $this->assertNotSame($id, $this->notification->id);
     }
 
     public function testAssertTimesSent()

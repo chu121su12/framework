@@ -3,9 +3,10 @@
 namespace Illuminate\Tests\Integration\Foundation;
 
 use Exception;
+use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
-use Illuminate\Contracts\Debug\ExceptionHandler;
 
 class HelpersTest_test_rescue_Class
 {
@@ -20,7 +21,7 @@ class HelpersTest_test_rescue_Class
  */
 class FoundationHelpersTest extends TestCase
 {
-    public function test_rescue()
+    public function testRescue()
     {
         $this->assertEquals(rescue(function () {
             throw new Exception;
@@ -57,51 +58,51 @@ class FoundationHelpersTest extends TestCase
         unlink($manifest);
     }
 
-    // public function testMixSilentlyFailsWhenAssetIsMissingFromManifestWhenNotInDebugMode()
-    // {
-    //     $this->app['config']->set('app.debug', false);
-    //     $manifest = $this->makeManifest();
+    public function testMixSilentlyFailsWhenAssetIsMissingFromManifestWhenNotInDebugMode()
+    {
+        $this->app['config']->set('app.debug', false);
+        $manifest = $this->makeManifest();
 
-    //     $path = mix('missing.js');
+        $path = mix('missing.js');
 
-    //     $this->assertSame('/missing.js', $path);
+        $this->assertSame('/missing.js', $path);
 
-    //     unlink($manifest);
-    // }
+        unlink($manifest);
+    }
 
-    // public function testMixThrowsExceptionWhenAssetIsMissingFromManifestWhenInDebugMode()
-    // {
-    //     $this->expectException(Exception::class);
-    //     $this->expectExceptionMessage('Unable to locate Mix file: /missing.js.');
+    public function testMixThrowsExceptionWhenAssetIsMissingFromManifestWhenInDebugMode()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Unable to locate Mix file: /missing.js.');
 
-    //     $this->app['config']->set('app.debug', true);
-    //     $manifest = $this->makeManifest();
+        $this->app['config']->set('app.debug', true);
+        $manifest = $this->makeManifest();
 
-    //     try {
-    //         mix('missing.js');
-    //     } catch (\Exception $e) {
-    //         throw $e;
-    //     } finally { // make sure we can cleanup the file
-    //         unlink($manifest);
-    //     }
-    // }
+        try {
+            mix('missing.js');
+        } catch (Exception $e) {
+            throw $e;
+        } finally { // make sure we can cleanup the file
+            unlink($manifest);
+        }
+    }
 
-    // public function testMixOnlyThrowsAndReportsOneExceptionWhenAssetIsMissingFromManifestWhenInDebugMode()
-    // {
-    //     $handler = new FakeHandler;
-    //     $this->app->instance(ExceptionHandler::class, $handler);
-    //     $this->app['config']->set('app.debug', true);
-    //     $manifest = $this->makeManifest();
-    //     Route::get('test-route', function () {
-    //         mix('missing.js');
-    //     });
+    public function testMixOnlyThrowsAndReportsOneExceptionWhenAssetIsMissingFromManifestWhenInDebugMode()
+    {
+        $handler = new FakeHandler;
+        $this->app->instance(ExceptionHandler::class, $handler);
+        $this->app['config']->set('app.debug', true);
+        $manifest = $this->makeManifest();
+        Route::get('test-route', function () {
+            mix('missing.js');
+        });
 
-    //     $this->get('/test-route');
+        $this->get('/test-route');
 
-    //     $this->assertCount(1, $handler->reported);
+        $this->assertCount(1, $handler->reported);
 
-    //     unlink($manifest);
-    // }
+        unlink($manifest);
+    }
 
     protected function makeManifest($directory = '')
     {

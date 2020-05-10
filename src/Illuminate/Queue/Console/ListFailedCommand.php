@@ -2,8 +2,8 @@
 
 namespace Illuminate\Queue\Console;
 
-use Illuminate\Support\Arr;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 
 class ListFailedCommand extends Command
 {
@@ -102,7 +102,11 @@ class ListFailedCommand extends Command
             return $matches[1];
         }
 
-        return isset($payload['job']) ? $payload['job'] : null;
+        if (isset($payload['job'])) {
+            return $payload['job'];
+        }
+
+        return null;
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace Illuminate\Tests\Support;
 
-use stdClass;
-use PHPUnit\Framework\TestCase;
 use Illuminate\Support\Optional;
+use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class SupportOptionalTest extends TestCase
 {
@@ -79,6 +79,7 @@ class SupportOptionalTest extends TestCase
         $optional = new Optional($targetArr);
 
         $this->assertTrue(isset($optional['item']));
+        $this->assertTrue(isset($optional->item));
     }
 
     public function testIssetNotExistItemOnArray()
@@ -88,5 +89,15 @@ class SupportOptionalTest extends TestCase
         $optional = new Optional($targetArr);
 
         $this->assertFalse(isset($optional['item']));
+        $this->assertFalse(isset($optional->item));
+    }
+
+    public function testIssetExistItemOnNull()
+    {
+        $targetNull = null;
+
+        $optional = new Optional($targetNull);
+
+        $this->assertFalse(isset($optional->item));
     }
 }

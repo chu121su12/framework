@@ -3,8 +3,8 @@
 namespace Illuminate\Redis\Limiters;
 
 use Exception;
-use Illuminate\Support\Str;
 use Illuminate\Contracts\Redis\LimiterTimeoutException;
+use Illuminate\Support\Str;
 
 class ConcurrencyLimiter
 {
@@ -95,8 +95,7 @@ class ConcurrencyLimiter
     /**
      * Attempt to acquire the lock.
      *
-     * @param string $id A unique identifier for this lock
-     *
+     * @param  string  $id  A unique identifier for this lock
      * @return mixed
      */
     protected function acquire($id)
@@ -136,8 +135,8 @@ LUA;
     /**
      * Release the lock.
      *
-     * @param  string $key
-     * @param  string $id
+     * @param  string  $key
+     * @param  string  $id
      * @return void
      */
     protected function release($key, $id)

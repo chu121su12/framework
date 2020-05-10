@@ -2,11 +2,12 @@
 
 namespace Illuminate\Tests\Integration\Database;
 
-use Illuminate\Support\Str;
-use Orchestra\Testbench\TestCase;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
+use Orchestra\Testbench\TestCase;
 
 /**
  * @group integration
@@ -30,13 +31,13 @@ class EloquentUpdateTest extends TestCase
     {
         parent::setUp();
 
-        Schema::create('test_model1', function ($table) {
+        Schema::create('test_model1', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->nullable();
             $table->string('title')->nullable();
         });
 
-        Schema::create('test_model2', function ($table) {
+        Schema::create('test_model2', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('job')->nullable();
@@ -44,7 +45,7 @@ class EloquentUpdateTest extends TestCase
             $table->timestamps();
         });
 
-        Schema::create('test_model3', function ($table) {
+        Schema::create('test_model3', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('counter');
             $table->softDeletes();
@@ -72,8 +73,8 @@ class EloquentUpdateTest extends TestCase
 
         TestUpdateModel1::latest('id')->limit(3)->update(['title'=>'Dr.']);
 
-        $this->assertEquals('Dr.', TestUpdateModel1::find(8)->title);
-        $this->assertNotEquals('Dr.', TestUpdateModel1::find(7)->title);
+        $this->assertSame('Dr.', TestUpdateModel1::find(8)->title);
+        $this->assertNotSame('Dr.', TestUpdateModel1::find(7)->title);
     }
 
     public function testUpdatedAtWithJoins()
@@ -94,7 +95,7 @@ class EloquentUpdateTest extends TestCase
 
         $record = TestUpdateModel2::find(1);
 
-        $this->assertEquals('Engineer: Abdul', $record->job.': '.$record->name);
+        $this->assertSame('Engineer: Abdul', $record->job.': '.$record->name);
     }
 
     public function testSoftDeleteWithJoins()

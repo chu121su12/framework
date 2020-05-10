@@ -2,15 +2,15 @@
 
 namespace Illuminate\Tests\Database;
 
-use PHPUnit\Framework\TestCase;
 use Illuminate\Container\Container;
-use Illuminate\Support\Facades\Facade;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Grammars\MySqlGrammar;
-use Illuminate\Database\Schema\Grammars\SQLiteGrammar;
 use Illuminate\Database\Schema\Grammars\PostgresGrammar;
+use Illuminate\Database\Schema\Grammars\SQLiteGrammar;
 use Illuminate\Database\Schema\Grammars\SqlServerGrammar;
+use Illuminate\Support\Facades\Facade;
+use PHPUnit\Framework\TestCase;
 
 class DatabaseSchemaBlueprintIntegrationTest extends TestCase
 {
@@ -71,6 +71,43 @@ class DatabaseSchemaBlueprintIntegrationTest extends TestCase
         ];
 
         $this->assertEquals($expected, $queries);
+    }
+
+    public function testChangingColumnWithCollationWorks()
+    {
+        $this->db->connection()->getSchemaBuilder()->create('users', function ($table) {
+            $table->string('age');
+        });
+
+        $blueprint = new Blueprint('users', function ($table) {
+            $table->integer('age')->collation('RTRIM')->change();
+        });
+
+        $blueprint2 = new Blueprint('users', function ($table) {
+            $table->integer('age')->collation('NOCASE')->change();
+        });
+
+        $queries = $blueprint->toSql($this->db->connection(), new SQLiteGrammar);
+        $queries2 = $blueprint2->toSql($this->db->connection(), new SQLiteGrammar);
+
+        $expected = [
+            'CREATE TEMPORARY TABLE __temp__users AS SELECT age FROM users',
+            'DROP TABLE users',
+            'CREATE TABLE users (age INTEGER NOT NULL COLLATE RTRIM)',
+            'INSERT INTO users (age) SELECT age FROM __temp__users',
+            'DROP TABLE __temp__users',
+        ];
+
+        $expected2 = [
+            'CREATE TEMPORARY TABLE __temp__users AS SELECT age FROM users',
+            'DROP TABLE users',
+            'CREATE TABLE users (age INTEGER NOT NULL COLLATE NOCASE)',
+            'INSERT INTO users (age) SELECT age FROM __temp__users',
+            'DROP TABLE __temp__users',
+        ];
+
+        $this->assertEquals($expected, $queries);
+        $this->assertEquals($expected2, $queries2);
     }
 
     public function testRenameIndexWorks()

@@ -2,12 +2,13 @@
 
 namespace Illuminate\Tests\Support;
 
+use BadMethodCallException;
 use Illuminate\Bus\Queueable;
-use PHPUnit\Framework\TestCase;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Testing\Fakes\QueueFake;
-use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\Constraint\ExceptionMessage;
+use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\TestCase;
 
 class SupportTestingQueueFakeTest extends TestCase
 {
@@ -225,6 +226,17 @@ class SupportTestingQueueFakeTest extends TestCase
             $this->fail();
         } catch (ExpectationFailedException $e) {
             $this->assertThat($e, new ExceptionMessage('The expected chain was not pushed'));
+        }
+    }
+
+    public function testCallUndefinedMethodErrorHandling()
+    {
+        try {
+            $this->fake->undefinedMethod();
+        } catch (BadMethodCallException $e) {
+            $this->assertThat($e, new ExceptionMessage(sprintf(
+                'Call to undefined method %s::%s()', get_class($this->fake), 'undefinedMethod'
+            )));
         }
     }
 }

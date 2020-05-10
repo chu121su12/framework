@@ -2,10 +2,11 @@
 
 namespace Illuminate\Tests\Integration\Database;
 
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * @group integration
@@ -16,19 +17,19 @@ class EloquentModelTest extends DatabaseTestCase
     {
         parent::setUp();
 
-        Schema::create('test_model1', function ($table) {
+        Schema::create('test_model1', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamp('nullable_date')->nullable();
         });
 
-        Schema::create('test_model2', function ($table) {
+        Schema::create('test_model2', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('title');
         });
     }
 
-    public function test_user_can_update_nullable_date()
+    public function testUserCanUpdateNullableDate()
     {
         $user = TestModel1::create([
             'nullable_date' => null,
@@ -43,7 +44,7 @@ class EloquentModelTest extends DatabaseTestCase
         $this->assertEquals($now->toDateString(), $user->nullable_date->toDateString());
     }
 
-    public function test_attribute_changes()
+    public function testAttributeChanges()
     {
         $user = TestModel2::create([
             'name' => Str::random(), 'title' => Str::random(),

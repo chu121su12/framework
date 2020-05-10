@@ -2,14 +2,14 @@
 
 namespace Illuminate\Tests\Queue;
 
-use Mockery as m;
-use Illuminate\Support\Carbon;
-use PHPUnit\Framework\TestCase;
-use Illuminate\Queue\RedisQueue;
 use Illuminate\Container\Container;
-use Illuminate\Queue\Jobs\RedisJob;
-use Illuminate\Support\InteractsWithTime;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithRedis;
+use Illuminate\Queue\Jobs\RedisJob;
+use Illuminate\Queue\RedisQueue;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\InteractsWithTime;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
 class RedisQueueIntegrationTest extends TestCase
 {
@@ -63,6 +63,48 @@ class RedisQueueIntegrationTest extends TestCase
 
         $this->assertEquals(1, $this->redis[$driver]->connection()->zcard('queues:default:delayed'));
         $this->assertEquals(3, $this->redis[$driver]->connection()->zcard('queues:default:reserved'));
+    }
+
+    /**
+     * @dataProvider redisDriverProvider
+     *
+     * @param  mixed  $driver
+     *
+     * @throws \Exception
+     */
+    public function testBlockingPop($driver)
+    {
+        $this->tearDownRedis();
+        if ($pid = pcntl_fork() > 0) {
+            $this->setUpRedis();
+            $this->setQueue($driver, 'default', null, 60, 10);
+            $this->assertEquals(12, unserialize(json_decode($this->queue->pop()->getRawBody())->data->command)->i);
+        } elseif ($pid == 0) {
+            $this->setUpRedis();
+            $this->setQueue('phpredis');
+            sleep(1);
+            $this->queue->push(new RedisQueueIntegrationTestJob(12));
+            die;
+        } else {
+            $this->fail('Cannot fork');
+        }
+    }
+
+    /**
+     * @dataProvider redisDriverProvider
+     *
+     * @param  string  $driver
+     */
+    public function testMigrateMoreThan100Jobs($driver)
+    {
+        $this->setQueue($driver);
+        for ($i = -1; $i >= -201; $i--) {
+            $this->queue->later($i, new RedisQueueIntegrationTestJob($i));
+        }
+        for ($i = -201; $i <= -1; $i++) {
+            $this->assertEquals($i, unserialize(json_decode($this->queue->pop()->getRawBody())->data->command)->i);
+            $this->assertEquals(-$i - 1, $this->redis[$driver]->llen('queues:default:notify'));
+        }
     }
 
     /**
@@ -154,6 +196,52 @@ class RedisQueueIntegrationTest extends TestCase
         $this->assertLessThanOrEqual($score, $before);
         $this->assertGreaterThanOrEqual($score, $after);
         $this->assertEquals($job, unserialize(json_decode($reservedJob)->data->command));
+    }
+
+    /**
+     * @dataProvider redisDriverProvider
+     *
+     * @param string $driver
+     */
+    public function testBlockingPopProperlyPopsJobOffOfRedis($driver)
+    {
+        $this->setQueue($driver, 'default', null, 60, 5);
+
+        // Push an item into queue
+        $job = new RedisQueueIntegrationTestJob(10);
+        $this->queue->push($job);
+
+        // Pop and check it is popped correctly
+        /** @var RedisJob $redisJob */
+        $redisJob = $this->queue->pop();
+
+        $this->assertNotNull($redisJob);
+        $this->assertEquals($job, unserialize(json_decode($redisJob->getReservedJob())->data->command));
+    }
+
+    /**
+     * @dataProvider redisDriverProvider
+     *
+     * @param string $driver
+     */
+    public function testBlockingPopProperlyPopsExpiredJobs($driver)
+    {
+        $this->setQueue($driver, 'default', null, 60, 5);
+
+        $jobs = [
+            new RedisQueueIntegrationTestJob(0),
+            new RedisQueueIntegrationTestJob(1),
+        ];
+
+        $this->queue->later(-200, $jobs[0]);
+        $this->queue->later(-200, $jobs[1]);
+
+        $this->assertEquals($jobs[0], unserialize(json_decode($this->queue->pop()->getRawBody())->data->command));
+        $this->assertEquals($jobs[1], unserialize(json_decode($this->queue->pop()->getRawBody())->data->command));
+
+        $this->assertEquals(0, $this->redis[$driver]->connection()->llen('queues:default:notify'));
+        $this->assertEquals(0, $this->redis[$driver]->connection()->zcard('queues:default:delayed'));
+        $this->assertEquals(2, $this->redis[$driver]->connection()->zcard('queues:default:reserved'));
     }
 
     /**
@@ -336,10 +424,14 @@ class RedisQueueIntegrationTest extends TestCase
 
     /**
      * @param string $driver
+     * @param  string  $default
+     * @param  string  $connection
+     * @param  int  $retryAfter
+     * @param  int|null  $blockFor
      */
-    private function setQueue($driver)
+    private function setQueue($driver, $default = 'default', $connection = null, $retryAfter = 60, $blockFor = null)
     {
-        $this->queue = new RedisQueue($this->redis[$driver]);
+        $this->queue = new RedisQueue($this->redis[$driver], $default, $connection, $retryAfter, $blockFor);
         $this->queue->setContainer(m::mock(Container::class));
     }
 }

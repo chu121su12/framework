@@ -2,18 +2,18 @@
 
 namespace Illuminate\Tests\Log;
 
-use ReflectionProperty;
 use Illuminate\Log\Logger;
 use Illuminate\Log\LogManager;
-use Monolog\Logger as Monolog;
-use Orchestra\Testbench\TestCase;
-use Monolog\Handler\StreamHandler;
-use Monolog\Handler\SyslogHandler;
 use Monolog\Formatter\HtmlFormatter;
 use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\NewRelicHandler;
-use Monolog\Handler\LogEntriesHandler;
 use Monolog\Formatter\NormalizerFormatter;
+use Monolog\Handler\LogEntriesHandler;
+use Monolog\Handler\NewRelicHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\SyslogHandler;
+use Monolog\Logger as Monolog;
+use Orchestra\Testbench\TestCase;
+use ReflectionProperty;
 
 class LogManagerTest extends TestCase
 {
@@ -27,6 +27,51 @@ class LogManagerTest extends TestCase
         $this->assertSame($logger1, $logger2);
     }
 
+    public function testStackChannel()
+    {
+        $config = $this->app['config'];
+
+        $config->set('logging.channels.stack', [
+            'driver' => 'stack',
+            'channels' => ['stderr', 'stdout'],
+        ]);
+
+        $config->set('logging.channels.stderr', [
+            'driver' => 'monolog',
+            'handler' => StreamHandler::class,
+            'level' => 'notice',
+            'with' => [
+                'stream' => 'php://stderr',
+                'bubble' => false,
+            ],
+        ]);
+
+        $config->set('logging.channels.stdout', [
+            'driver' => 'monolog',
+            'handler' => StreamHandler::class,
+            'level' => 'info',
+            'with' => [
+                'stream' => 'php://stdout',
+                'bubble' => true,
+            ],
+        ]);
+
+        $manager = new LogManager($this->app);
+
+        // create logger with handler specified from configuration
+        $logger = $manager->channel('stack');
+        $handlers = $logger->getLogger()->getHandlers();
+
+        $this->assertInstanceOf(Logger::class, $logger);
+        $this->assertCount(2, $handlers);
+        $this->assertInstanceOf(StreamHandler::class, $handlers[0]);
+        $this->assertInstanceOf(StreamHandler::class, $handlers[1]);
+        $this->assertEquals(Monolog::NOTICE, $handlers[0]->getLevel());
+        $this->assertEquals(Monolog::INFO, $handlers[1]->getLevel());
+        $this->assertFalse($handlers[0]->getBubble());
+        $this->assertTrue($handlers[1]->getBubble());
+    }
+
     public function testLogManagerCreatesConfiguredMonologHandler()
     {
         $config = $this->app['config'];
@@ -34,9 +79,9 @@ class LogManagerTest extends TestCase
             'driver' => 'monolog',
             'name' => 'foobar',
             'handler' => StreamHandler::class,
+            'level' => 'notice',
             'with' => [
                 'stream' => 'php://stderr',
-                'level' => Monolog::NOTICE,
                 'bubble' => false,
             ],
         ]);
@@ -48,7 +93,7 @@ class LogManagerTest extends TestCase
         $handlers = $logger->getLogger()->getHandlers();
 
         $this->assertInstanceOf(Logger::class, $logger);
-        $this->assertEquals('foobar', $logger->getName());
+        $this->assertSame('foobar', $logger->getName());
         $this->assertCount(1, $handlers);
         $this->assertInstanceOf(StreamHandler::class, $handlers[0]);
         $this->assertEquals(Monolog::NOTICE, $handlers[0]->getLevel());
@@ -56,7 +101,7 @@ class LogManagerTest extends TestCase
 
         $url = new ReflectionProperty(get_class($handlers[0]), 'url');
         $url->setAccessible(true);
-        $this->assertEquals('php://stderr', $url->getValue($handlers[0]));
+        $this->assertSame('php://stderr', $url->getValue($handlers[0]));
 
         $config->set('logging.channels.logentries', [
             'driver' => 'monolog',
@@ -74,7 +119,7 @@ class LogManagerTest extends TestCase
         $logToken->setAccessible(true);
 
         $this->assertInstanceOf(LogEntriesHandler::class, $handlers[0]);
-        $this->assertEquals('123456789', $logToken->getValue($handlers[0]));
+        $this->assertSame('123456789', $logToken->getValue($handlers[0]));
     }
 
     public function testLogManagerCreatesMonologHandlerWithConfiguredFormatter()
@@ -116,7 +161,7 @@ class LogManagerTest extends TestCase
         $dateFormat = new ReflectionProperty(get_class($formatter), 'dateFormat');
         $dateFormat->setAccessible(true);
 
-        $this->assertEquals('Y/m/d--test', $dateFormat->getValue($formatter));
+        $this->assertSame('Y/m/d--test', $dateFormat->getValue($formatter));
     }
 
     public function testLogManagerCreateSingleDriverWithConfiguredFormatter()
@@ -158,7 +203,7 @@ class LogManagerTest extends TestCase
         $dateFormat = new ReflectionProperty(get_class($formatter), 'dateFormat');
         $dateFormat->setAccessible(true);
 
-        $this->assertEquals('Y/m/d--test', $dateFormat->getValue($formatter));
+        $this->assertSame('Y/m/d--test', $dateFormat->getValue($formatter));
     }
 
     public function testLogManagerCreateDailyDriverWithConfiguredFormatter()
@@ -200,7 +245,7 @@ class LogManagerTest extends TestCase
         $dateFormat = new ReflectionProperty(get_class($formatter), 'dateFormat');
         $dateFormat->setAccessible(true);
 
-        $this->assertEquals('Y/m/d--test', $dateFormat->getValue($formatter));
+        $this->assertSame('Y/m/d--test', $dateFormat->getValue($formatter));
     }
 
     public function testLogManagerCreateSyslogDriverWithConfiguredFormatter()
@@ -240,6 +285,6 @@ class LogManagerTest extends TestCase
         $dateFormat = new ReflectionProperty(get_class($formatter), 'dateFormat');
         $dateFormat->setAccessible(true);
 
-        $this->assertEquals('Y/m/d--test', $dateFormat->getValue($formatter));
+        $this->assertSame('Y/m/d--test', $dateFormat->getValue($formatter));
     }
 }

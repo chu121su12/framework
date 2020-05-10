@@ -3,23 +3,23 @@
 namespace Illuminate\Tests\View;
 
 use Closure;
-use stdClass;
-use Mockery as m;
 use ErrorException;
-use ReflectionFunction;
-use Illuminate\View\View;
-use Illuminate\View\Factory;
-use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
-use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Contracts\View\Engine;
-use Illuminate\View\Engines\PhpEngine;
-use Illuminate\View\ViewFinderInterface;
+use Illuminate\Events\Dispatcher;
+use Illuminate\View\Compilers\CompilerInterface;
 use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Engines\EngineResolver;
-use Illuminate\View\Compilers\CompilerInterface;
-use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
+use Illuminate\View\Engines\PhpEngine;
+use Illuminate\View\Factory;
+use Illuminate\View\View;
+use Illuminate\View\ViewFinderInterface;
+use InvalidArgumentException;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
+use ReflectionFunction;
+use stdClass;
 
 class ViewFactoryTest_testAddingLoopDoesNotCloseGenerator_Class
 {
@@ -114,7 +114,7 @@ class ViewFactoryTest extends TestCase
 
         $result = $factory->renderEach('foo', ['bar' => 'baz', 'breeze' => 'boom'], 'value');
 
-        $this->assertEquals('daylerees', $result);
+        $this->assertSame('daylerees', $result);
     }
 
     public function testEmptyViewsCanBeReturnedFromRenderEach()
@@ -123,12 +123,12 @@ class ViewFactoryTest extends TestCase
         $factory->shouldReceive('make')->once()->with('foo')->andReturn($mockView = m::mock(stdClass::class));
         $mockView->shouldReceive('render')->once()->andReturn('empty');
 
-        $this->assertEquals('empty', $factory->renderEach('view', [], 'iterator', 'foo'));
+        $this->assertSame('empty', $factory->renderEach('view', [], 'iterator', 'foo'));
     }
 
     public function testRawStringsMayBeReturnedFromRenderEach()
     {
-        $this->assertEquals('foo', $this->getFactory()->renderEach('foo', [], 'item', 'raw|foo'));
+        $this->assertSame('foo', $this->getFactory()->renderEach('foo', [], 'item', 'raw|foo'));
     }
 
     public function testEnvironmentAddsExtensionWithCustomResolver()
@@ -159,8 +159,8 @@ class ViewFactoryTest extends TestCase
         $factory->addExtension('foo', 'bar');
 
         $extensions = $factory->getExtensions();
-        $this->assertEquals('bar', reset($extensions));
-        $this->assertEquals('foo', key($extensions));
+        $this->assertSame('bar', reset($extensions));
+        $this->assertSame('foo', key($extensions));
     }
 
     public function testPrependedExtensionOverridesExistingExtensions()
@@ -173,8 +173,8 @@ class ViewFactoryTest extends TestCase
         $factory->addExtension('baz', 'bar');
 
         $extensions = $factory->getExtensions();
-        $this->assertEquals('bar', reset($extensions));
-        $this->assertEquals('baz', key($extensions));
+        $this->assertSame('bar', reset($extensions));
+        $this->assertSame('baz', key($extensions));
     }
 
     public function testComposersAreProperlyRegistered()
@@ -186,7 +186,7 @@ class ViewFactoryTest extends TestCase
         });
         $callback = $callback[0];
 
-        $this->assertEquals('bar', $callback());
+        $this->assertSame('bar', $callback());
     }
 
     public function testComposersCanBeMassRegistered()
@@ -219,7 +219,7 @@ class ViewFactoryTest extends TestCase
         $callback = $factory->composer('foo', 'FooComposer');
         $callback = $callback[0];
 
-        $this->assertEquals('composed', $callback('view'));
+        $this->assertSame('composed', $callback('view'));
     }
 
     public function testClassCallbacksWithMethods()
@@ -232,7 +232,7 @@ class ViewFactoryTest extends TestCase
         $callback = $factory->composer('foo', 'FooComposer@doComposer');
         $callback = $callback[0];
 
-        $this->assertEquals('composed', $callback('view'));
+        $this->assertSame('composed', $callback('view'));
     }
 
     public function testCallComposerCallsProperEvent()
@@ -265,13 +265,13 @@ class ViewFactoryTest extends TestCase
     public function testYieldDefault()
     {
         $factory = $this->getFactory();
-        $this->assertEquals('hi', $factory->yieldContent('foo', 'hi'));
+        $this->assertSame('hi', $factory->yieldContent('foo', 'hi'));
     }
 
     public function testYieldDefaultIsEscaped()
     {
         $factory = $this->getFactory();
-        $this->assertEquals('&lt;p&gt;hi&lt;/p&gt;', $factory->yieldContent('foo', '<p>hi</p>'));
+        $this->assertSame('&lt;p&gt;hi&lt;/p&gt;', $factory->yieldContent('foo', '<p>hi</p>'));
     }
 
     public function testYieldDefaultViewIsNotEscapedTwice()
@@ -279,7 +279,7 @@ class ViewFactoryTest extends TestCase
         $factory = $this->getFactory();
         $view = m::mock(View::class);
         $view->shouldReceive('__toString')->once()->andReturn('<p>hi</p>&lt;p&gt;already escaped&lt;/p&gt;');
-        $this->assertEquals('<p>hi</p>&lt;p&gt;already escaped&lt;/p&gt;', $factory->yieldContent('foo', $view));
+        $this->assertSame('<p>hi</p>&lt;p&gt;already escaped&lt;/p&gt;', $factory->yieldContent('foo', $view));
     }
 
     public function testBasicSectionHandling()
@@ -288,21 +288,21 @@ class ViewFactoryTest extends TestCase
         $factory->startSection('foo');
         echo 'hi';
         $factory->stopSection();
-        $this->assertEquals('hi', $factory->yieldContent('foo'));
+        $this->assertSame('hi', $factory->yieldContent('foo'));
     }
 
     public function testBasicSectionDefault()
     {
         $factory = $this->getFactory();
         $factory->startSection('foo', 'hi');
-        $this->assertEquals('hi', $factory->yieldContent('foo'));
+        $this->assertSame('hi', $factory->yieldContent('foo'));
     }
 
     public function testBasicSectionDefaultIsEscaped()
     {
         $factory = $this->getFactory();
         $factory->startSection('foo', '<p>hi</p>');
-        $this->assertEquals('&lt;p&gt;hi&lt;/p&gt;', $factory->yieldContent('foo'));
+        $this->assertSame('&lt;p&gt;hi&lt;/p&gt;', $factory->yieldContent('foo'));
     }
 
     public function testBasicSectionDefaultViewIsNotEscapedTwice()
@@ -311,7 +311,7 @@ class ViewFactoryTest extends TestCase
         $view = m::mock(View::class);
         $view->shouldReceive('__toString')->once()->andReturn('<p>hi</p>&lt;p&gt;already escaped&lt;/p&gt;');
         $factory->startSection('foo', $view);
-        $this->assertEquals('<p>hi</p>&lt;p&gt;already escaped&lt;/p&gt;', $factory->yieldContent('foo'));
+        $this->assertSame('<p>hi</p>&lt;p&gt;already escaped&lt;/p&gt;', $factory->yieldContent('foo'));
     }
 
     public function testSectionExtending()
@@ -324,7 +324,7 @@ class ViewFactoryTest extends TestCase
         $factory->startSection('foo');
         echo 'there';
         $factory->stopSection();
-        $this->assertEquals('hi there', $factory->yieldContent('foo'));
+        $this->assertSame('hi there', $factory->yieldContent('foo'));
     }
 
     public function testSectionMultipleExtending()
@@ -340,7 +340,7 @@ class ViewFactoryTest extends TestCase
         $factory->startSection('foo');
         echo 'friend';
         $factory->stopSection();
-        $this->assertEquals('hello my friend nice to see you my friend', $factory->yieldContent('foo'));
+        $this->assertSame('hello my friend nice to see you my friend', $factory->yieldContent('foo'));
     }
 
     public function testComponentHandling()
@@ -356,21 +356,21 @@ class ViewFactoryTest extends TestCase
         $factory->endSlot();
         echo 'component';
         $contents = $factory->renderComponent();
-        $this->assertEquals('title<hr> component Taylor laravel.com', $contents);
+        $this->assertSame('title<hr> component Taylor laravel.com', $contents);
     }
 
     public function testTranslation()
     {
         $container = new Container;
         $container->instance('translator', $translator = m::mock(stdClass::class));
-        $translator->shouldReceive('getFromJson')->with('Foo', ['name' => 'taylor'])->andReturn('Bar');
+        $translator->shouldReceive('get')->with('Foo', ['name' => 'taylor'])->andReturn('Bar');
         $factory = $this->getFactory();
         $factory->setContainer($container);
         $factory->startTranslation(['name' => 'taylor']);
         echo 'Foo';
         $string = $factory->renderTranslation();
 
-        $this->assertEquals('Bar', $string);
+        $this->assertSame('Bar', $string);
     }
 
     public function testSingleStackPush()
@@ -379,7 +379,7 @@ class ViewFactoryTest extends TestCase
         $factory->startPush('foo');
         echo 'hi';
         $factory->stopPush();
-        $this->assertEquals('hi', $factory->yieldPushContent('foo'));
+        $this->assertSame('hi', $factory->yieldPushContent('foo'));
     }
 
     public function testMultipleStackPush()
@@ -391,7 +391,7 @@ class ViewFactoryTest extends TestCase
         $factory->startPush('foo');
         echo ', Hello!';
         $factory->stopPush();
-        $this->assertEquals('hi, Hello!', $factory->yieldPushContent('foo'));
+        $this->assertSame('hi, Hello!', $factory->yieldPushContent('foo'));
     }
 
     public function testSessionAppending()
@@ -403,7 +403,7 @@ class ViewFactoryTest extends TestCase
         $factory->startSection('foo');
         echo 'there';
         $factory->appendSection();
-        $this->assertEquals('hithere', $factory->yieldContent('foo'));
+        $this->assertSame('hithere', $factory->yieldContent('foo'));
     }
 
     public function testYieldSectionStopsAndYields()
@@ -411,14 +411,14 @@ class ViewFactoryTest extends TestCase
         $factory = $this->getFactory();
         $factory->startSection('foo');
         echo 'hi';
-        $this->assertEquals('hi', $factory->yieldSection());
+        $this->assertSame('hi', $factory->yieldSection());
     }
 
     public function testInjectStartsSectionWithContent()
     {
         $factory = $this->getFactory();
         $factory->inject('foo', 'hi');
-        $this->assertEquals('hi', $factory->yieldContent('foo'));
+        $this->assertSame('hi', $factory->yieldContent('foo'));
     }
 
     public function testEmptyStringIsReturnedForNonSections()
@@ -459,9 +459,9 @@ class ViewFactoryTest extends TestCase
         echo 'hi';
         $factory->stopSection();
 
-        $this->assertEquals('hi', $factory->getSection('foo'));
+        $this->assertSame('hi', $factory->getSection('foo'));
         $this->assertNull($factory->getSection('bar'));
-        $this->assertEquals('default', $factory->getSection('bar', 'default'));
+        $this->assertSame('default', $factory->getSection('bar', 'default'));
     }
 
     public function testMakeWithSlashAndDot()
@@ -549,6 +549,8 @@ class ViewFactoryTest extends TestCase
             'count' => 3,
             'first' => true,
             'last' => false,
+            'odd' => false,
+            'even' => true,
             'depth' => 1,
             'parent' => null,
         ];
@@ -564,6 +566,8 @@ class ViewFactoryTest extends TestCase
             'count' => 4,
             'first' => true,
             'last' => false,
+            'odd' => false,
+            'even' => true,
             'depth' => 2,
             'parent' => (object) $expectedLoop,
         ];
@@ -600,6 +604,8 @@ class ViewFactoryTest extends TestCase
             'count' => null,
             'first' => true,
             'last' => null,
+            'odd' => false,
+            'even' => true,
             'depth' => 1,
             'parent' => null,
         ];
@@ -615,11 +621,19 @@ class ViewFactoryTest extends TestCase
 
         $factory->incrementLoopIndices();
 
+        $this->assertEquals(1, $factory->getLoopStack()[0]['iteration']);
+        $this->assertEquals(0, $factory->getLoopStack()[0]['index']);
+        $this->assertEquals(3, $factory->getLoopStack()[0]['remaining']);
+        $this->assertTrue($factory->getLoopStack()[0]['odd']);
+        $this->assertFalse($factory->getLoopStack()[0]['even']);
+
         $factory->incrementLoopIndices();
 
         $this->assertEquals(2, $factory->getLoopStack()[0]['iteration']);
         $this->assertEquals(1, $factory->getLoopStack()[0]['index']);
         $this->assertEquals(2, $factory->getLoopStack()[0]['remaining']);
+        $this->assertFalse($factory->getLoopStack()[0]['odd']);
+        $this->assertTrue($factory->getLoopStack()[0]['even']);
     }
 
     public function testReachingEndOfLoop()
@@ -658,7 +672,7 @@ class ViewFactoryTest extends TestCase
         $factory->macro('getFoo', function () {
             return 'Hello World';
         });
-        $this->assertEquals('Hello World', $factory->getFoo());
+        $this->assertSame('Hello World', $factory->getFoo());
     }
 
     protected function getFactory()

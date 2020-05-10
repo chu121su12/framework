@@ -3,19 +3,21 @@
 namespace Illuminate\Tests\Queue;
 
 use Exception;
-use Mockery as m;
-use Illuminate\Queue\SyncQueue;
-use PHPUnit\Framework\TestCase;
-use Illuminate\Queue\Jobs\SyncJob;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Queue\QueueableEntity;
+use Illuminate\Queue\Jobs\SyncJob;
+use Illuminate\Queue\SyncQueue;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
 class QueueSyncQueueTest extends TestCase
 {
     protected function tearDown()
     {
         m::close();
+
+        Container::setInstance(null);
     }
 
     public function testPushShouldFireJobInstantly()

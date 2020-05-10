@@ -3,8 +3,8 @@
 namespace Illuminate\Auth;
 
 use Closure;
-use InvalidArgumentException;
 use Illuminate\Contracts\Auth\Factory as FactoryContract;
+use InvalidArgumentException;
 
 class AuthManager implements FactoryContract
 {
@@ -58,7 +58,7 @@ class AuthManager implements FactoryContract
     /**
      * Attempt to get the guard from the local cache.
      *
-     * @param  string  $name
+     * @param  string|null  $name
      * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
      */
     public function guard($name = null)
@@ -96,7 +96,9 @@ class AuthManager implements FactoryContract
             return $this->{$driverMethod}($name, $config);
         }
 
-        throw new InvalidArgumentException("Auth driver [{$config['driver']}] for guard [{$name}] is not defined.");
+        throw new InvalidArgumentException(
+            "Auth driver [{$config['driver']}] for guard [{$name}] is not defined."
+        );
     }
 
     /**
@@ -155,8 +157,13 @@ class AuthManager implements FactoryContract
         // that takes an API token field from the request and matches it to the
         // user in the database or another persistence layer where users are.
         $guard = new TokenGuard(
-            $this->createUserProvider(isset($config['provider']) ? $config['provider'] : null),
-            $this->app['request']
+            $this->createUserProvider(
+                isset($config['provider']) ? $config['provider'] : null
+            ),
+            $this->app['request'],
+            isset($config['input_key']) ? $config['input_key'] : 'api_token',
+            isset($config['storage_key']) ? $config['storage_key'] : 'api_token',
+            isset($config['hash']) ? $config['hash'] : false
         );
 
         $this->app->refresh('request', $guard, 'setRequest');

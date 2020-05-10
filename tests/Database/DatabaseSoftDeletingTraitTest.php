@@ -2,10 +2,10 @@
 
 namespace Illuminate\Tests\Database;
 
-use Mockery as m;
-use Illuminate\Support\Carbon;
-use PHPUnit\Framework\TestCase;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
 class DatabaseSoftDeletingTraitTest extends TestCase
 {
@@ -19,7 +19,7 @@ class DatabaseSoftDeletingTraitTest extends TestCase
         $model = m::mock(DatabaseSoftDeletingTraitStub::class);
         $model->makePartial();
         $model->shouldReceive('newModelQuery')->andReturn($query = m::mock(stdClass::class));
-        $query->shouldReceive('where')->once()->with('id', 1)->andReturn($query);
+        $query->shouldReceive('where')->once()->with('id', '=', 1)->andReturn($query);
         $query->shouldReceive('update')->once()->with([
             'deleted_at' => 'date-time',
             'updated_at' => 'date-time',
@@ -103,5 +103,17 @@ class DatabaseSoftDeletingTraitStub
     public function getUpdatedAtColumn()
     {
         return defined('static::UPDATED_AT') ? static::UPDATED_AT : 'updated_at';
+    }
+
+    public function setKeysForSaveQuery($query)
+    {
+        $query->where($this->getKeyName(), '=', $this->getKeyForSaveQuery());
+
+        return $query;
+    }
+
+    protected function getKeyForSaveQuery()
+    {
+        return 1;
     }
 }

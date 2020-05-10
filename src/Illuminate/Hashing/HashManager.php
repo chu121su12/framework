@@ -2,8 +2,8 @@
 
 namespace Illuminate\Hashing;
 
-use Illuminate\Support\Manager;
 use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Support\Manager;
 
 class HashManager extends Manager implements Hasher
 {
@@ -14,11 +14,8 @@ class HashManager extends Manager implements Hasher
      */
     public function createBcryptDriver()
     {
-        if (isset($this->app['config']) && isset($this->app['config']['hashing.bcrypt'])) {
-            return new BcryptHasher($this->app['config']['hashing.bcrypt']);
-        }
-
-        return new BcryptHasher([]);
+        $config = $this->config->get('hashing.bcrypt');
+        return new BcryptHasher(isset($config) ? $config : []);
     }
 
     /**
@@ -28,11 +25,8 @@ class HashManager extends Manager implements Hasher
      */
     public function createArgonDriver()
     {
-        if (isset($this->app['config']) && isset($this->app['config']['hashing.argon'])) {
-            return new ArgonHasher($this->app['config']['hashing.argon']);
-        }
-
-        return new ArgonHasher([]);
+        $config = $this->config->get('hashing.argon');
+        return new ArgonHasher(isset($config) ? $config : []);
     }
 
     /**
@@ -42,11 +36,8 @@ class HashManager extends Manager implements Hasher
      */
     public function createArgon2idDriver()
     {
-        if (isset($this->app['config']) && isset($this->app['config']['hashing.argon'])) {
-            return new Argon2IdHasher($this->app['config']['hashing.argon']);
-        }
-
-        return new Argon2IdHasher([]);
+        $config = $this->config->get('hashing.argon');
+        return new Argon2IdHasher(isset($config) ? $config : []);
     }
 
     /**
@@ -104,8 +95,6 @@ class HashManager extends Manager implements Hasher
      */
     public function getDefaultDriver()
     {
-        return isset($this->app['config']) && isset($this->app['config']['hashing.driver'])
-            ? $this->app['config']['hashing.driver']
-            : 'bcrypt';
+        return $this->config->get('hashing.driver', 'bcrypt');
     }
 }

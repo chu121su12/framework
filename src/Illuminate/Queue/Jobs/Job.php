@@ -2,10 +2,10 @@
 
 namespace Illuminate\Queue\Jobs;
 
-use Illuminate\Queue\Events\JobFailed;
-use Illuminate\Support\InteractsWithTime;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\ManuallyFailedException;
+use Illuminate\Support\InteractsWithTime;
 
 abstract class Job
 {
@@ -48,6 +48,8 @@ abstract class Job
 
     /**
      * The name of the connection the job belongs to.
+     *
+     * @var string
      */
     protected $connectionName;
 
@@ -215,6 +217,16 @@ abstract class Job
     }
 
     /**
+     * Get the resolved job handler instance.
+     *
+     * @return mixed
+     */
+    public function getResolvedJob()
+    {
+        return $this->instance;
+    }
+
+    /**
      * Get the decoded body of the job.
      *
      * @return array
@@ -234,6 +246,16 @@ abstract class Job
         $payload = $this->payload();
 
         return isset($payload['maxTries']) ? isset($payload['maxTries']) : null;
+    }
+
+    /**
+     * Get the number of seconds to delay a failed job before retrying it.
+     *
+     * @return int|null
+     */
+    public function delaySeconds()
+    {
+        return $this->payload()['delay'] ?? null;
     }
 
     /**

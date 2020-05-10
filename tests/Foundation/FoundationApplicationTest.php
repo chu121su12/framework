@@ -2,13 +2,14 @@
 
 namespace Illuminate\Tests\Foundation;
 
-use stdClass;
+use Illuminate\Contracts\Support\DeferrableProvider;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Bootstrap\RegisterFacades;
+use Illuminate\Foundation\Events\LocaleUpdated;
+use Illuminate\Support\ServiceProvider;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Foundation\Events\LocaleUpdated;
-use Illuminate\Foundation\Bootstrap\RegisterFacades;
+use stdClass;
 
 class FoundationApplicationTest_testClassesAreBoundWhenServiceProviderIsRegistered_Class extends ServiceProvider
 {
@@ -81,11 +82,11 @@ class FoundationApplicationTest extends TestCase
         $this->assertSame($instance, $app->make(AbstractClass::class));
     }
 
-    public function testServiceProvidersAreCorrectlyRegisteredWhenRegisterMethodIsNotPresent()
+    public function testServiceProvidersAreCorrectlyRegisteredWhenRegisterMethodIsNotFilled()
     {
         $provider = m::mock(ServiceProvider::class);
         $class = get_class($provider);
-        $provider->shouldReceive('register')->never();
+        $provider->shouldReceive('register')->once();
         $app = new Application;
         $app->register($provider);
 
@@ -97,7 +98,7 @@ class FoundationApplicationTest extends TestCase
         $app = new Application;
         $app->setDeferredServices(['foo' => ApplicationDeferredServiceProviderStub::class]);
         $this->assertTrue($app->bound('foo'));
-        $this->assertEquals('foo', $app->make('foo'));
+        $this->assertSame('foo', $app->make('foo'));
     }
 
     public function testDeferredServicesAreSharedProperly()
@@ -119,7 +120,7 @@ class FoundationApplicationTest extends TestCase
         $app->extend('foo', function ($instance, $container) {
             return $instance.'bar';
         });
-        $this->assertEquals('foobar', $app->make('foo'));
+        $this->assertSame('foobar', $app->make('foo'));
     }
 
     public function testDeferredServiceProviderIsRegisteredOnlyOnce()
@@ -152,7 +153,7 @@ class FoundationApplicationTest extends TestCase
             return $instance.'bar';
         });
         $this->assertFalse(ApplicationDeferredServiceProviderStub::$initialized);
-        $this->assertEquals('foobar', $app->make('foo'));
+        $this->assertSame('foobar', $app->make('foo'));
         $this->assertTrue(ApplicationDeferredServiceProviderStub::$initialized);
     }
 
@@ -173,8 +174,8 @@ class FoundationApplicationTest extends TestCase
             'foo' => ApplicationMultiProviderStub::class,
             'bar' => ApplicationMultiProviderStub::class,
         ]);
-        $this->assertEquals('foo', $app->make('foo'));
-        $this->assertEquals('foobar', $app->make('bar'));
+        $this->assertSame('foo', $app->make('foo'));
+        $this->assertSame('foobar', $app->make('bar'));
     }
 
     public function testEnvironment()
@@ -182,7 +183,7 @@ class FoundationApplicationTest extends TestCase
         $app = new Application;
         $app['env'] = 'foo';
 
-        $this->assertEquals('foo', $app->environment());
+        $this->assertSame('foo', $app->environment());
 
         $this->assertTrue($app->environment('foo'));
         $this->assertTrue($app->environment('f*'));
@@ -193,6 +194,30 @@ class FoundationApplicationTest extends TestCase
         $this->assertFalse($app->environment('q*'));
         $this->assertFalse($app->environment('qux', 'bar'));
         $this->assertFalse($app->environment(['qux', 'bar']));
+    }
+
+    public function testEnvironmentHelpers()
+    {
+        $local = new Application;
+        $local['env'] = 'local';
+
+        $this->assertTrue($local->isLocal());
+        $this->assertFalse($local->isProduction());
+        $this->assertFalse($local->runningUnitTests());
+
+        $production = new Application;
+        $production['env'] = 'production';
+
+        $this->assertTrue($production->isProduction());
+        $this->assertFalse($production->isLocal());
+        $this->assertFalse($production->runningUnitTests());
+
+        $testing = new Application;
+        $testing['env'] = 'testing';
+
+        $this->assertTrue($testing->runningUnitTests());
+        $this->assertFalse($testing->isLocal());
+        $this->assertFalse($testing->isProduction());
     }
 
     public function testMethodAfterLoadingEnvironmentAddsClosure()
@@ -315,6 +340,98 @@ class FoundationApplicationTest extends TestCase
 
         $this->assertEquals(4, $counter);
     }
+
+    public function testGetNamespace()
+    {
+        $app1 = new Application(realpath(__DIR__.'/fixtures/laravel1'));
+        $app2 = new Application(realpath(__DIR__.'/fixtures/laravel2'));
+
+        $this->assertSame('Laravel\\One\\', $app1->getNamespace());
+        $this->assertSame('Laravel\\Two\\', $app2->getNamespace());
+    }
+
+    public function testCachePathsResolveToBootstrapCacheDirectory()
+    {
+        $app = new Application('/base/path');
+
+        $this->assertSame('/base/path/bootstrap/cache/services.php', $app->getCachedServicesPath());
+        $this->assertSame('/base/path/bootstrap/cache/packages.php', $app->getCachedPackagesPath());
+        $this->assertSame('/base/path/bootstrap/cache/config.php', $app->getCachedConfigPath());
+        $this->assertSame('/base/path/bootstrap/cache/routes.php', $app->getCachedRoutesPath());
+        $this->assertSame('/base/path/bootstrap/cache/events.php', $app->getCachedEventsPath());
+    }
+
+    public function testEnvPathsAreUsedForCachePathsWhenSpecified()
+    {
+        $app = new Application('/base/path');
+        $_SERVER['APP_SERVICES_CACHE'] = '/absolute/path/services.php';
+        $_SERVER['APP_PACKAGES_CACHE'] = '/absolute/path/packages.php';
+        $_SERVER['APP_CONFIG_CACHE'] = '/absolute/path/config.php';
+        $_SERVER['APP_ROUTES_CACHE'] = '/absolute/path/routes.php';
+        $_SERVER['APP_EVENTS_CACHE'] = '/absolute/path/events.php';
+
+        $this->assertSame('/absolute/path/services.php', $app->getCachedServicesPath());
+        $this->assertSame('/absolute/path/packages.php', $app->getCachedPackagesPath());
+        $this->assertSame('/absolute/path/config.php', $app->getCachedConfigPath());
+        $this->assertSame('/absolute/path/routes.php', $app->getCachedRoutesPath());
+        $this->assertSame('/absolute/path/events.php', $app->getCachedEventsPath());
+
+        unset(
+            $_SERVER['APP_SERVICES_CACHE'],
+            $_SERVER['APP_PACKAGES_CACHE'],
+            $_SERVER['APP_CONFIG_CACHE'],
+            $_SERVER['APP_ROUTES_CACHE'],
+            $_SERVER['APP_EVENTS_CACHE']
+        );
+    }
+
+    public function testEnvPathsAreUsedAndMadeAbsoluteForCachePathsWhenSpecifiedAsRelative()
+    {
+        $app = new Application('/base/path');
+        $_SERVER['APP_SERVICES_CACHE'] = 'relative/path/services.php';
+        $_SERVER['APP_PACKAGES_CACHE'] = 'relative/path/packages.php';
+        $_SERVER['APP_CONFIG_CACHE'] = 'relative/path/config.php';
+        $_SERVER['APP_ROUTES_CACHE'] = 'relative/path/routes.php';
+        $_SERVER['APP_EVENTS_CACHE'] = 'relative/path/events.php';
+
+        $this->assertSame('/base/path/relative/path/services.php', $app->getCachedServicesPath());
+        $this->assertSame('/base/path/relative/path/packages.php', $app->getCachedPackagesPath());
+        $this->assertSame('/base/path/relative/path/config.php', $app->getCachedConfigPath());
+        $this->assertSame('/base/path/relative/path/routes.php', $app->getCachedRoutesPath());
+        $this->assertSame('/base/path/relative/path/events.php', $app->getCachedEventsPath());
+
+        unset(
+            $_SERVER['APP_SERVICES_CACHE'],
+            $_SERVER['APP_PACKAGES_CACHE'],
+            $_SERVER['APP_CONFIG_CACHE'],
+            $_SERVER['APP_ROUTES_CACHE'],
+            $_SERVER['APP_EVENTS_CACHE']
+        );
+    }
+
+    public function testEnvPathsAreUsedAndMadeAbsoluteForCachePathsWhenSpecifiedAsRelativeWithNullBasePath()
+    {
+        $app = new Application();
+        $_SERVER['APP_SERVICES_CACHE'] = 'relative/path/services.php';
+        $_SERVER['APP_PACKAGES_CACHE'] = 'relative/path/packages.php';
+        $_SERVER['APP_CONFIG_CACHE'] = 'relative/path/config.php';
+        $_SERVER['APP_ROUTES_CACHE'] = 'relative/path/routes.php';
+        $_SERVER['APP_EVENTS_CACHE'] = 'relative/path/events.php';
+
+        $this->assertSame('/relative/path/services.php', $app->getCachedServicesPath());
+        $this->assertSame('/relative/path/packages.php', $app->getCachedPackagesPath());
+        $this->assertSame('/relative/path/config.php', $app->getCachedConfigPath());
+        $this->assertSame('/relative/path/routes.php', $app->getCachedRoutesPath());
+        $this->assertSame('/relative/path/events.php', $app->getCachedEventsPath());
+
+        unset(
+            $_SERVER['APP_SERVICES_CACHE'],
+            $_SERVER['APP_PACKAGES_CACHE'],
+            $_SERVER['APP_CONFIG_CACHE'],
+            $_SERVER['APP_ROUTES_CACHE'],
+            $_SERVER['APP_EVENTS_CACHE']
+        );
+    }
 }
 
 class ApplicationBasicServiceProviderStub extends ServiceProvider
@@ -330,10 +447,8 @@ class ApplicationBasicServiceProviderStub extends ServiceProvider
     }
 }
 
-class ApplicationDeferredSharedServiceProviderStub extends ServiceProvider
+class ApplicationDeferredSharedServiceProviderStub extends ServiceProvider implements DeferrableProvider
 {
-    protected $defer = true;
-
     public function register()
     {
         $this->app->singleton('foo', function () {
@@ -342,10 +457,9 @@ class ApplicationDeferredSharedServiceProviderStub extends ServiceProvider
     }
 }
 
-class ApplicationDeferredServiceProviderCountStub extends ServiceProvider
+class ApplicationDeferredServiceProviderCountStub extends ServiceProvider implements DeferrableProvider
 {
     public static $count = 0;
-    protected $defer = true;
 
     public function register()
     {
@@ -354,10 +468,9 @@ class ApplicationDeferredServiceProviderCountStub extends ServiceProvider
     }
 }
 
-class ApplicationDeferredServiceProviderStub extends ServiceProvider
+class ApplicationDeferredServiceProviderStub extends ServiceProvider implements DeferrableProvider
 {
     public static $initialized = false;
-    protected $defer = true;
 
     public function register()
     {
@@ -366,10 +479,8 @@ class ApplicationDeferredServiceProviderStub extends ServiceProvider
     }
 }
 
-class ApplicationFactoryProviderStub extends ServiceProvider
+class ApplicationFactoryProviderStub extends ServiceProvider implements DeferrableProvider
 {
-    protected $defer = true;
-
     public function register()
     {
         $this->app->bind('foo', function () {
@@ -380,10 +491,8 @@ class ApplicationFactoryProviderStub extends ServiceProvider
     }
 }
 
-class ApplicationMultiProviderStub extends ServiceProvider
+class ApplicationMultiProviderStub extends ServiceProvider implements DeferrableProvider
 {
-    protected $defer = true;
-
     public function register()
     {
         $this->app->singleton('foo', function () {

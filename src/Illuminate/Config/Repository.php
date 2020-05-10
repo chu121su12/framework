@@ -2,10 +2,11 @@
 
 namespace Illuminate\Config;
 
-use Illuminate\Support\Arr;
+use ArrayAccess;
 use Illuminate\Contracts\Config\Repository as ConfigContract;
+use Illuminate\Support\Arr;
 
-class Repository implements ConfigContract
+class Repository implements ArrayAccess, ConfigContract
 {
     /**
      * All of the configuration items.
