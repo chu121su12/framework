@@ -16,7 +16,7 @@ class CacheManager implements FactoryContract
     /**
      * The application instance.
      *
-     * @var \Illuminate\Foundation\Application
+     * @var \Illuminate\Contracts\Foundation\Application
      */
     protected $app;
 
@@ -37,7 +37,7 @@ class CacheManager implements FactoryContract
     /**
      * Create a new Cache manager instance.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
      * @return void
      */
     public function __construct($app)
@@ -61,8 +61,8 @@ class CacheManager implements FactoryContract
     /**
      * Get a cache driver instance.
      *
-     * @param  string  $driver
-     * @return mixed
+     * @param  string|null  $driver
+     * @return \Illuminate\Contracts\Cache\Repository
      */
     public function driver($driver = null)
     {
@@ -276,6 +276,25 @@ class CacheManager implements FactoryContract
     public function setDefaultDriver($name)
     {
         $this->app['config']['cache.default'] = $name;
+    }
+
+    /**
+     * Unset the given driver instances.
+     *
+     * @param  array|string|null  $name
+     * @return $this
+     */
+    public function forgetDriver($name = null)
+    {
+        $name = $name ?? $this->getDefaultDriver();
+
+        foreach ((array) $name as $cacheName) {
+            if (isset($this->stores[$cacheName])) {
+                unset($this->stores[$cacheName]);
+            }
+        }
+
+        return $this;
     }
 
     /**

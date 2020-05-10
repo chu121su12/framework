@@ -5,6 +5,7 @@ namespace Illuminate\Tests\Support;
 use stdClass;
 use ArrayObject;
 use Illuminate\Support\Arr;
+use InvalidArgumentException;
 use Illuminate\Support\Carbon;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Support\Collection;
@@ -83,7 +84,7 @@ class SupportArrTest extends TestCase
 
     public function testDivide()
     {
-        list($keys, $values) = Arr::divide(['name' => 'Desk']);
+        [$keys, $values] = Arr::divide(['name' => 'Desk']);
         $this->assertEquals(['name'], $keys);
         $this->assertEquals(['Desk'], $values);
     }
@@ -157,7 +158,7 @@ class SupportArrTest extends TestCase
     {
         // Flat arrays are unaffected
         $array = ['#foo', '#bar', '#baz'];
-        $this->assertEquals(['#foo', '#bar', '#baz'], Arr::flatten(['#foo', '#bar', '#baz']));
+        $this->assertEquals(['#foo', '#bar', '#baz'], Arr::flatten($array));
 
         // Nested arrays are flattened with existing flat items
         $array = [['#foo', '#bar'], '#baz'];
@@ -419,6 +420,16 @@ class SupportArrTest extends TestCase
         $this->assertEquals(['emails' => ['joe@example.com' => 'Joe', 'jane@localhost' => 'Jane']], $array);
     }
 
+    public function testQuery()
+    {
+        $this->assertSame('', Arr::query([]));
+        $this->assertSame('foo=bar', Arr::query(['foo' => 'bar']));
+        $this->assertSame('foo=bar&bar=baz', Arr::query(['foo' => 'bar', 'bar' => 'baz']));
+        $this->assertSame('foo=bar&bar=1', Arr::query(['foo' => 'bar', 'bar' => true]));
+        $this->assertSame('foo=bar', Arr::query(['foo' => 'bar', 'bar' => null]));
+        $this->assertSame('foo=bar&bar=', Arr::query(['foo' => 'bar', 'bar' => '']));
+    }
+
     public function testRandom()
     {
         $random = Arr::random(['foo', 'bar', 'baz']);
@@ -472,19 +483,19 @@ class SupportArrTest extends TestCase
 
         try {
             Arr::random([]);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $exceptions++;
         }
 
         try {
             Arr::random([], 1);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $exceptions++;
         }
 
         try {
             Arr::random([], 2);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $exceptions++;
         }
 
@@ -496,6 +507,14 @@ class SupportArrTest extends TestCase
         $array = ['products' => ['desk' => ['price' => 100]]];
         Arr::set($array, 'products.desk.price', 200);
         $this->assertEquals(['products' => ['desk' => ['price' => 200]]], $array);
+    }
+
+    public function testShuffleWithSeed()
+    {
+        $this->assertEquals(
+            Arr::shuffle(range(0, 100, 10), 1234),
+            Arr::shuffle(range(0, 100, 10), 1234)
+        );
     }
 
     public function testSort()

@@ -4,7 +4,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Optional;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Debug\Dumper;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\HigherOrderTapProxy;
 
@@ -390,7 +389,7 @@ if (! function_exists('class_basename')) {
 
 if (! function_exists('class_uses_recursive')) {
     /**
-     * Returns all traits used by a class, its subclasses and trait of their traits.
+     * Returns all traits used by a class, its parent classes and trait of their traits.
      *
      * @param  object|string  $class
      * @return array
@@ -464,7 +463,11 @@ if (! function_exists('data_get')) {
                     return value($default);
                 }
 
-                $result = Arr::pluck($target, $key);
+                $result = [];
+
+                foreach ($target as $item) {
+                    $result[] = data_get($item, $key);
+                }
 
                 return in_array('*', $key) ? Arr::collapse($result) : $result;
             }
@@ -544,25 +547,6 @@ if (! function_exists('data_set')) {
     }
 }
 
-if (! function_exists('dd')) {
-    /**
-     * Dump the passed variables and end the script.
-     *
-     * @param  mixed  $args
-     * @return void
-     */
-    function dd(...$args)
-    {
-        http_response_code(500);
-
-        foreach ($args as $x) {
-            (new Dumper)->dump($x);
-        }
-
-        die(1);
-    }
-}
-
 if (! function_exists('e')) {
     /**
      * Escape HTML special characters in a string.
@@ -571,7 +555,7 @@ if (! function_exists('e')) {
      * @param  bool  $doubleEncode
      * @return string
      */
-    function e($value, $doubleEncode = false)
+    function e($value, $doubleEncode = true)
     {
         if ($value instanceof Htmlable) {
             return $value->toHtml();
@@ -626,7 +610,7 @@ if (! function_exists('env')) {
                 return;
         }
 
-        if (strlen($value) > 1 && Str::startsWith($value, '"') && Str::endsWith($value, '"')) {
+        if (($valueLength = strlen($value)) > 1 && $value[0] === '"' && $value[$valueLength - 1] === '"') {
             return substr($value, 1, -1);
         }
 
@@ -718,11 +702,16 @@ if (! function_exists('optional')) {
      * Provide access to optional objects.
      *
      * @param  mixed  $value
+     * @param  callable|null  $callback
      * @return mixed
      */
-    function optional($value = null)
+    function optional($value = null, callable $callback = null)
     {
-        return new Optional($value);
+        if (is_null($callback)) {
+            return new Optional($value);
+        } elseif (! is_null($value)) {
+            return $callback($value);
+        }
     }
 }
 
@@ -758,11 +747,14 @@ if (! function_exists('retry')) {
      */
     function retry($times, callable $callback, $sleep = 0)
     {
+        $attempts = 0;
         $times--;
 
         beginning:
+        $attempts++;
+
         try {
-            return $callback();
+            return $callback($attempts);
         } catch (Exception $e) {
             if (! $times) {
                 throw $e;
@@ -1049,6 +1041,7 @@ if (! function_exists('throw_if')) {
      * @param  \Throwable|string  $exception
      * @param  array  ...$parameters
      * @return mixed
+     *
      * @throws \Throwable
      */
     function throw_if($condition, $exception, ...$parameters)

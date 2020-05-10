@@ -81,7 +81,7 @@ trait InteractsWithExceptionHandling
     /**
      * The original exception handler.
      *
-     * @var ExceptionHandler|null
+     * @var \Illuminate\Contracts\Debug\ExceptionHandler|null
      */
     protected $originalExceptionHandler;
 
@@ -132,11 +132,7 @@ trait InteractsWithExceptionHandling
             $this->originalExceptionHandler = app(ExceptionHandler::class);
         }
 
-        $this->app->instance(ExceptionHandler::class,
-            new InteractsWithExceptionHandling_withoutExceptionHandling_Class(
-                $this->originalExceptionHandler, $except
-            )
-        );
+
 
         return $this;
     }

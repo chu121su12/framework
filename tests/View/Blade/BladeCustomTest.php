@@ -50,6 +50,34 @@ class BladeCustomTest extends AbstractBladeTestCase
         $this->assertEquals($expected, $this->compiler->compileString($string));
     }
 
+    public function testValidCustomNames()
+    {
+        $this->assertNull($this->compiler->directive('custom', function () {
+        }));
+        $this->assertNull($this->compiler->directive('custom_custom', function () {
+        }));
+        $this->assertNull($this->compiler->directive('customCustom', function () {
+        }));
+        $this->assertNull($this->compiler->directive('custom::custom', function () {
+        }));
+    }
+
+    public function testInvalidCustomNames()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The directive name [custom-custom] is not valid.');
+        $this->compiler->directive('custom-custom', function () {
+        });
+    }
+
+    public function testInvalidCustomNames2()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The directive name [custom:custom] is not valid.');
+        $this->compiler->directive('custom:custom', function () {
+        });
+    }
+
     public function testCustomExtensionOverwritesCore()
     {
         $this->compiler->directive('foreach', function ($expression) {
@@ -91,6 +119,21 @@ class BladeCustomTest extends AbstractBladeTestCase
         $this->assertEquals($expected, $this->compiler->compileString($string));
     }
 
+    public function testCustomConditionsAccepts0AsArgument()
+    {
+        $this->compiler->if('custom', function ($number) {
+            return true;
+        });
+
+        $string = '@custom(0)
+@elsecustom(0)
+@endcustom';
+        $expected = '<?php if (\Illuminate\Support\Facades\Blade::check(\'custom\', 0)): ?>
+<?php elseif (\Illuminate\Support\Facades\Blade::check(\'custom\', 0)): ?>
+<?php endif; ?>';
+        $this->assertEquals($expected, $this->compiler->compileString($string));
+    }
+
     public function testCustomComponents()
     {
         $this->compiler->component('app.components.alert', 'alert');
@@ -121,6 +164,53 @@ class BladeCustomTest extends AbstractBladeTestCase
 @endalert';
         $expected = '<?php $__env->startComponent(\'app.components.alert\'); ?>
 <?php echo $__env->renderComponent(); ?>';
+        $this->assertEquals($expected, $this->compiler->compileString($string));
+    }
+
+    public function testCustomComponentsWithExistingDirective()
+    {
+        $this->compiler->component('app.components.foreach');
+
+        $string = '@foreach
+@endforeach';
+        $expected = '<?php $__env->startComponent(\'app.components.foreach\'); ?>
+<?php echo $__env->renderComponent(); ?>';
+        $this->assertEquals($expected, $this->compiler->compileString($string));
+    }
+
+    public function testCustomIncludes()
+    {
+        $this->compiler->include('app.includes.input', 'input');
+
+        $string = '@input';
+        $expected = '<?php echo $__env->make(\'app.includes.input\', [], \Illuminate\Support\Arr::except(get_defined_vars(), array(\'__data\', \'__path\')))->render(); ?>';
+        $this->assertEquals($expected, $this->compiler->compileString($string));
+    }
+
+    public function testCustomIncludesWithData()
+    {
+        $this->compiler->include('app.includes.input', 'input');
+
+        $string = '@input([\'type\' => \'email\'])';
+        $expected = '<?php echo $__env->make(\'app.includes.input\', [\'type\' => \'email\'], \Illuminate\Support\Arr::except(get_defined_vars(), array(\'__data\', \'__path\')))->render(); ?>';
+        $this->assertEquals($expected, $this->compiler->compileString($string));
+    }
+
+    public function testCustomIncludesDefaultAlias()
+    {
+        $this->compiler->include('app.includes.input');
+
+        $string = '@input';
+        $expected = '<?php echo $__env->make(\'app.includes.input\', [], \Illuminate\Support\Arr::except(get_defined_vars(), array(\'__data\', \'__path\')))->render(); ?>';
+        $this->assertEquals($expected, $this->compiler->compileString($string));
+    }
+
+    public function testCustomIncludesWithExistingDirective()
+    {
+        $this->compiler->include('app.includes.foreach');
+
+        $string = '@foreach';
+        $expected = '<?php echo $__env->make(\'app.includes.foreach\', [], \Illuminate\Support\Arr::except(get_defined_vars(), array(\'__data\', \'__path\')))->render(); ?>';
         $this->assertEquals($expected, $this->compiler->compileString($string));
     }
 }

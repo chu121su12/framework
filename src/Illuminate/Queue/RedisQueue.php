@@ -40,9 +40,9 @@ class RedisQueue extends Queue implements QueueContract
     /**
      * The maximum number of seconds to block for a job.
      *
-     * @var int
+     * @var int|null
      */
-    private $blockFor = 0;
+    protected $blockFor = null;
 
     /**
      * Create a new Redis queue instance.
@@ -51,10 +51,10 @@ class RedisQueue extends Queue implements QueueContract
      * @param  string  $default
      * @param  string  $connection
      * @param  int  $retryAfter
-     * @param  int  $blockFor
+     * @param  int|null  $blockFor
      * @return void
      */
-    public function __construct(Redis $redis, $default = 'default', $connection = null, $retryAfter = 60, $blockFor = 0)
+    public function __construct(Redis $redis, $default = 'default', $connection = null, $retryAfter = 60, $blockFor = null)
     {
         $this->redis = $redis;
         $this->default = $default;
@@ -88,7 +88,7 @@ class RedisQueue extends Queue implements QueueContract
      */
     public function push($job, $data = '', $queue = null)
     {
-        return $this->pushRaw($this->createPayload($job, $data), $queue);
+        return $this->pushRaw($this->createPayload($job, $this->getQueue($queue), $data), $queue);
     }
 
     /**
@@ -119,7 +119,7 @@ class RedisQueue extends Queue implements QueueContract
      */
     public function later($delay, $job, $data = '', $queue = null)
     {
-        return $this->laterRaw($delay, $this->createPayload($job, $data), $queue);
+        return $this->laterRaw($delay, $this->createPayload($job, $this->getQueue($queue), $data), $queue);
     }
 
     /**
@@ -145,12 +145,13 @@ class RedisQueue extends Queue implements QueueContract
      * Create a payload string from the given job and data.
      *
      * @param  string  $job
+     * @param  string   $queue
      * @param  mixed   $data
      * @return string
      */
-    protected function createPayloadArray($job, $data = '')
+    protected function createPayloadArray($job, $queue, $data = '')
     {
-        return array_merge(parent::createPayloadArray($job, $data), [
+        return array_merge(parent::createPayloadArray($job, $queue, $data), [
             'id' => $this->getRandomId(),
             'attempts' => 0,
         ]);
@@ -166,7 +167,11 @@ class RedisQueue extends Queue implements QueueContract
     {
         $this->migrate($prefixed = $this->getQueue($queue));
 
-        list($job, $reserved) = $this->retrieveNextJob($prefixed);
+        if (empty($nextJob = $this->retrieveNextJob($prefixed))) {
+            return;
+        }
+
+        [$job, $reserved] = $nextJob;
 
         if ($reserved) {
             return new RedisJob(
@@ -213,7 +218,7 @@ class RedisQueue extends Queue implements QueueContract
      */
     protected function retrieveNextJob($queue)
     {
-        if ($this->blockFor >= 1) {
+        if (! is_null($this->blockFor)) {
             return $this->blockingPop($queue);
         }
 
@@ -233,7 +238,7 @@ class RedisQueue extends Queue implements QueueContract
     {
         $rawBody = $this->getConnection()->blpop($queue, $this->blockFor);
 
-        if (! is_null($rawBody)) {
+        if (! empty($rawBody)) {
             $payload = json_decode($rawBody[1], true);
 
             $payload['attempts']++;

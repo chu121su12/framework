@@ -5,6 +5,7 @@ namespace Illuminate\Tests\Integration\Database;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @group integration
@@ -40,6 +41,12 @@ class EloquentDeleteTest extends TestCase
             $table->integer('post_id');
             $table->timestamps();
         });
+
+        Schema::create('roles', function ($table) {
+            $table->increments('id');
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 
     public function testOnlyDeleteWhatGiven()
@@ -51,10 +58,24 @@ class EloquentDeleteTest extends TestCase
         }
 
         Post::latest('id')->limit(1)->delete();
-        $this->assertEquals(9, Post::all()->count());
+        $this->assertCount(9, Post::all());
 
         Post::join('comments', 'comments.post_id', '=', 'posts.id')->where('posts.id', '>', 1)->orderBy('posts.id')->limit(1)->delete();
-        $this->assertEquals(8, Post::all()->count());
+        $this->assertCount(8, Post::all());
+    }
+
+    public function testForceDeletedEventIsFired()
+    {
+        $role = Role::create([]);
+        $this->assertInstanceOf(Role::class, $role);
+        Role::observe(new RoleObserver);
+
+        $role->delete();
+        $this->assertNull(RoleObserver::$model);
+
+        $role->forceDelete();
+
+        $this->assertEquals($role->id, RoleObserver::$model->id);
     }
 }
 
@@ -67,4 +88,21 @@ class Comment extends Model
 {
     public $table = 'comments';
     protected $fillable = ['post_id'];
+}
+
+class Role extends Model
+{
+    use SoftDeletes;
+    public $table = 'roles';
+    protected $guarded = [];
+}
+
+class RoleObserver
+{
+    public static $model;
+
+    public function forceDeleted($model)
+    {
+        static::$model = $model;
+    }
 }

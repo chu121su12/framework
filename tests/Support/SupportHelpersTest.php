@@ -10,6 +10,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Support\Optional;
+use Illuminate\Contracts\Support\Htmlable;
 
 class SupportHelpersTest_testOptional_Class
 {
@@ -160,7 +161,7 @@ class SupportHelpersTest extends TestCase
     public function testArrayDivide()
     {
         $array = ['name' => 'taylor'];
-        list($keys, $values) = Arr::divide($array);
+        [$keys, $values] = Arr::divide($array);
         $this->assertEquals(['name'], $keys);
         $this->assertEquals(['taylor'], $values);
     }
@@ -278,7 +279,7 @@ class SupportHelpersTest extends TestCase
     {
         $str = 'A \'quote\' is <b>bold</b>';
         $this->assertEquals('A &#039;quote&#039; is &lt;b&gt;bold&lt;/b&gt;', e($str));
-        $html = m::mock('Illuminate\Contracts\Support\Htmlable');
+        $html = m::mock(Htmlable::class);
         $html->shouldReceive('toHtml')->andReturn($str);
         $this->assertEquals($str, e($html));
     }
@@ -724,17 +725,17 @@ class SupportHelpersTest extends TestCase
     public function testClassUsesRecursiveShouldReturnTraitsOnParentClasses()
     {
         $this->assertSame([
-            'Illuminate\Tests\Support\SupportTestTraitTwo' => 'Illuminate\Tests\Support\SupportTestTraitTwo',
-            'Illuminate\Tests\Support\SupportTestTraitOne' => 'Illuminate\Tests\Support\SupportTestTraitOne',
+            SupportTestTraitTwo::class => SupportTestTraitTwo::class,
+            SupportTestTraitOne::class => SupportTestTraitOne::class,
         ],
-        class_uses_recursive('Illuminate\Tests\Support\SupportTestClassTwo'));
+        class_uses_recursive(SupportTestClassTwo::class));
     }
 
     public function testClassUsesRecursiveAcceptsObject()
     {
         $this->assertSame([
-            'Illuminate\Tests\Support\SupportTestTraitTwo' => 'Illuminate\Tests\Support\SupportTestTraitTwo',
-            'Illuminate\Tests\Support\SupportTestTraitOne' => 'Illuminate\Tests\Support\SupportTestTraitOne',
+            SupportTestTraitTwo::class => SupportTestTraitTwo::class,
+            SupportTestTraitOne::class => SupportTestTraitOne::class,
         ],
         class_uses_recursive(new SupportTestClassTwo));
     }
@@ -742,9 +743,9 @@ class SupportHelpersTest extends TestCase
     public function testClassUsesRecursiveReturnParentTraitsFirst()
     {
         $this->assertSame([
-            'Illuminate\Tests\Support\SupportTestTraitTwo' => 'Illuminate\Tests\Support\SupportTestTraitTwo',
-            'Illuminate\Tests\Support\SupportTestTraitOne' => 'Illuminate\Tests\Support\SupportTestTraitOne',
-            'Illuminate\Tests\Support\SupportTestTraitThree' => 'Illuminate\Tests\Support\SupportTestTraitThree',
+            SupportTestTraitTwo::class => SupportTestTraitTwo::class,
+            SupportTestTraitOne::class => SupportTestTraitOne::class,
+            SupportTestTraitThree::class => SupportTestTraitThree::class,
         ],
         class_uses_recursive(SupportTestClassThree::class));
     }
@@ -803,17 +804,31 @@ class SupportHelpersTest extends TestCase
         $this->assertEquals(10, optional(new SupportHelpersTest_testOptional_Class)->something());
     }
 
+    public function testOptionalWithCallback()
+    {
+        $this->assertNull(optional(null, function () {
+            throw new RuntimeException(
+                'The optional callback should not be called for null'
+            );
+        }));
+
+        $this->assertEquals(10, optional(5, function ($number) {
+            return $number * 2;
+        }));
+    }
+
     public function testOptionalWithArray()
     {
-        $this->assertNull(optional(null)['missing']);
-
         $this->assertEquals('here', optional(['present' => 'here'])['present']);
+        $this->assertNull(optional(null)['missing']);
+        $this->assertNull(optional(['present' => 'here'])->missing);
     }
 
     public function testOptionalReturnsObjectPropertyOrNull()
     {
         $this->assertSame('bar', optional((object) ['foo' => 'bar'])->foo);
         $this->assertNull(optional(['foo' => 'bar'])->foo);
+        $this->assertNull(optional((object) ['foo' => 'bar'])->bar);
     }
 
     public function testOptionalDeterminesWhetherKeyIsSet()
@@ -862,6 +877,25 @@ class SupportHelpersTest extends TestCase
         $this->assertEquals('$10.00', optional(new SupportHelpersTest_testOptionalIsMacroable_Class)->present()->something());
     }
 
+    public function testRetry()
+    {
+        $startTime = microtime(true);
+
+        $attempts = retry(2, function ($attempts) {
+            if ($attempts > 1) {
+                return $attempts;
+            }
+
+            throw new RuntimeException;
+        }, 100);
+
+        // Make sure we made two attempts
+        $this->assertEquals(2, $attempts);
+
+        // Make sure we waited 100ms for the first attempt
+        $this->assertTrue(microtime(true) - $startTime >= 0.1);
+    }
+
     public function testTransform()
     {
         $this->assertEquals(10, transform(5, function ($value) {
@@ -873,6 +907,19 @@ class SupportHelpersTest extends TestCase
         }));
     }
 
+    public function testTransformDefaultWhenBlank()
+    {
+        $this->assertEquals('baz', transform(null, function () {
+            return 'bar';
+        }, 'baz'));
+
+        $this->assertEquals('baz', transform('', function () {
+            return 'bar';
+        }, function () {
+            return 'baz';
+        }));
+    }
+
     public function testWith()
     {
         $this->assertEquals(10, with(10));
@@ -881,10 +928,62 @@ class SupportHelpersTest extends TestCase
             return $five + 5;
         }));
     }
+
+    public function testEnv()
+    {
+        putenv('foo=bar');
+        $this->assertEquals('bar', env('foo'));
+    }
+
+    public function testEnvWithQuotes()
+    {
+        putenv('foo="bar"');
+        $this->assertEquals('bar', env('foo'));
+    }
+
+    public function testEnvTrue()
+    {
+        putenv('foo=true');
+        $this->assertTrue(env('foo'));
+
+        putenv('foo=(true)');
+        $this->assertTrue(env('foo'));
+    }
+
+    public function testEnvFalse()
+    {
+        putenv('foo=false');
+        $this->assertFalse(env('foo'));
+
+        putenv('foo=(false)');
+        $this->assertFalse(env('foo'));
+    }
+
+    public function testEnvEmpty()
+    {
+        putenv('foo=');
+        $this->assertEquals('', env('foo'));
+
+        putenv('foo=empty');
+        $this->assertEquals('', env('foo'));
+
+        putenv('foo=(empty)');
+        $this->assertEquals('', env('foo'));
+    }
+
+    public function testEnvNull()
+    {
+        putenv('foo=null');
+        $this->assertEquals('', env('foo'));
+
+        putenv('foo=(null)');
+        $this->assertEquals('', env('foo'));
+    }
 }
 
 trait SupportTestTraitOne
 {
+    //
 }
 
 trait SupportTestTraitTwo
@@ -899,10 +998,12 @@ class SupportTestClassOne
 
 class SupportTestClassTwo extends SupportTestClassOne
 {
+    //
 }
 
 trait SupportTestTraitThree
 {
+    //
 }
 
 class SupportTestClassThree extends SupportTestClassTwo

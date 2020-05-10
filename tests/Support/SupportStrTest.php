@@ -2,8 +2,8 @@
 
 namespace Illuminate\Tests\Support;
 
-use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Str;
+use Ramsey\Uuid\UuidInterface;
 use PHPUnit\Framework\TestCase;
 
 class SupportStrTest extends TestCase
@@ -142,6 +142,7 @@ class SupportStrTest extends TestCase
         $this->assertEquals('hello-world', Str::slug('hello_world'));
         $this->assertEquals('hello_world', Str::slug('hello_world', '_'));
         $this->assertEquals('user-at-host', Str::slug('user@host'));
+        $this->assertEquals('سلام-دنیا', Str::slug('سلام دنیا', '-', null));
     }
 
     public function testFinish()
@@ -289,8 +290,8 @@ class SupportStrTest extends TestCase
 
     public function testUuid()
     {
-        $this->assertInstanceOf(Uuid::class, Str::uuid());
-        $this->assertInstanceOf(Uuid::class, Str::orderedUuid());
+        $this->assertInstanceOf(UuidInterface::class, Str::uuid());
+        $this->assertInstanceOf(UuidInterface::class, Str::orderedUuid());
     }
 }
 

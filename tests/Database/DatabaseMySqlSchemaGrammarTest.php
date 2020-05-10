@@ -4,7 +4,10 @@ namespace Illuminate\Tests\Database;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Illuminate\Database\Connection;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Grammars\MySqlGrammar;
 
 class DatabaseMySqlSchemaGrammarTest extends TestCase
 {
@@ -28,7 +31,7 @@ class DatabaseMySqlSchemaGrammarTest extends TestCase
         $statements = $blueprint->toSql($conn, $this->getGrammar());
 
         $this->assertCount(1, $statements);
-        $this->assertEquals('create table `users` (`id` int unsigned not null auto_increment primary key, `email` varchar(255) not null) default character set utf8 collate utf8_unicode_ci', $statements[0]);
+        $this->assertEquals("create table `users` (`id` int unsigned not null auto_increment primary key, `email` varchar(255) not null) default character set utf8 collate 'utf8_unicode_ci'", $statements[0]);
 
         $blueprint = new Blueprint('users');
         $blueprint->increments('id');
@@ -58,7 +61,7 @@ class DatabaseMySqlSchemaGrammarTest extends TestCase
         $statements = $blueprint->toSql($conn, $this->getGrammar());
 
         $this->assertCount(1, $statements);
-        $this->assertEquals('create table `users` (`id` int unsigned not null auto_increment primary key, `email` varchar(255) not null) default character set utf8 collate utf8_unicode_ci engine = InnoDB', $statements[0]);
+        $this->assertEquals("create table `users` (`id` int unsigned not null auto_increment primary key, `email` varchar(255) not null) default character set utf8 collate 'utf8_unicode_ci' engine = InnoDB", $statements[0]);
 
         $blueprint = new Blueprint('users');
         $blueprint->create();
@@ -73,7 +76,7 @@ class DatabaseMySqlSchemaGrammarTest extends TestCase
         $statements = $blueprint->toSql($conn, $this->getGrammar());
 
         $this->assertCount(1, $statements);
-        $this->assertEquals('create table `users` (`id` int unsigned not null auto_increment primary key, `email` varchar(255) not null) default character set utf8 collate utf8_unicode_ci engine = InnoDB', $statements[0]);
+        $this->assertEquals("create table `users` (`id` int unsigned not null auto_increment primary key, `email` varchar(255) not null) default character set utf8 collate 'utf8_unicode_ci' engine = InnoDB", $statements[0]);
     }
 
     public function testCharsetCollationCreateTable()
@@ -91,7 +94,7 @@ class DatabaseMySqlSchemaGrammarTest extends TestCase
         $statements = $blueprint->toSql($conn, $this->getGrammar());
 
         $this->assertCount(1, $statements);
-        $this->assertEquals('create table `users` (`id` int unsigned not null auto_increment primary key, `email` varchar(255) not null) default character set utf8mb4 collate utf8mb4_unicode_ci', $statements[0]);
+        $this->assertEquals("create table `users` (`id` int unsigned not null auto_increment primary key, `email` varchar(255) not null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'", $statements[0]);
 
         $blueprint = new Blueprint('users');
         $blueprint->create();
@@ -106,7 +109,7 @@ class DatabaseMySqlSchemaGrammarTest extends TestCase
         $statements = $blueprint->toSql($conn, $this->getGrammar());
 
         $this->assertCount(1, $statements);
-        $this->assertEquals('create table `users` (`id` int unsigned not null auto_increment primary key, `email` varchar(255) character set utf8mb4 collate utf8mb4_unicode_ci not null) default character set utf8 collate utf8_unicode_ci', $statements[0]);
+        $this->assertEquals("create table `users` (`id` int unsigned not null auto_increment primary key, `email` varchar(255) character set utf8mb4 collate 'utf8mb4_unicode_ci' not null) default character set utf8 collate 'utf8_unicode_ci'", $statements[0]);
     }
 
     public function testBasicCreateTableWithPrefix()
@@ -258,6 +261,17 @@ class DatabaseMySqlSchemaGrammarTest extends TestCase
         $this->assertEquals('alter table `users` drop `created_at`, drop `updated_at`', $statements[0]);
     }
 
+    public function testDropMorphs()
+    {
+        $blueprint = new Blueprint('photos');
+        $blueprint->dropMorphs('imageable');
+        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+
+        $this->assertCount(2, $statements);
+        $this->assertEquals('alter table `photos` drop index `photos_imageable_type_imageable_id_index`', $statements[0]);
+        $this->assertEquals('alter table `photos` drop `imageable_type`, drop `imageable_id`', $statements[1]);
+    }
+
     public function testRenameTable()
     {
         $blueprint = new Blueprint('users');
@@ -266,6 +280,16 @@ class DatabaseMySqlSchemaGrammarTest extends TestCase
 
         $this->assertCount(1, $statements);
         $this->assertEquals('rename table `users` to `foo`', $statements[0]);
+    }
+
+    public function testRenameIndex()
+    {
+        $blueprint = new Blueprint('users');
+        $blueprint->renameIndex('foo', 'bar');
+        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+
+        $this->assertCount(1, $statements);
+        $this->assertEquals('alter table `users` rename index `foo` to `bar`', $statements[0]);
     }
 
     public function testAddingPrimaryKey()
@@ -434,7 +458,7 @@ class DatabaseMySqlSchemaGrammarTest extends TestCase
         $this->assertEquals('alter table `users` add `foo` varchar(100) null default \'bar\'', $statements[0]);
 
         $blueprint = new Blueprint('users');
-        $blueprint->string('foo', 100)->nullable()->default(new \Illuminate\Database\Query\Expression('CURRENT TIMESTAMP'));
+        $blueprint->string('foo', 100)->nullable()->default(new Expression('CURRENT TIMESTAMP'));
         $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
         $this->assertCount(1, $statements);
@@ -909,7 +933,7 @@ class DatabaseMySqlSchemaGrammarTest extends TestCase
         $blueprint->string('foo')->comment("Escape ' when using words like it's");
         $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
-        $this->assertEquals(1, count($statements));
+        $this->assertCount(1, $statements);
         $this->assertEquals("alter table `users` add `foo` varchar(255) not null comment 'Escape \\' when using words like it\\'s'", $statements[0]);
     }
 
@@ -920,13 +944,32 @@ class DatabaseMySqlSchemaGrammarTest extends TestCase
         $this->assertEquals('drop table `alpha`,`beta`,`gamma`', $statement);
     }
 
+    public function testDropAllViews()
+    {
+        $statement = $this->getGrammar()->compileDropAllViews(['alpha', 'beta', 'gamma']);
+
+        $this->assertEquals('drop view `alpha`,`beta`,`gamma`', $statement);
+    }
+
+    public function testGrammarsAreMacroable()
+    {
+        // compileReplace macro.
+        $this->getGrammar()::macro('compileReplace', function () {
+            return true;
+        });
+
+        $c = $this->getGrammar()::compileReplace();
+
+        $this->assertTrue($c);
+    }
+
     protected function getConnection()
     {
-        return m::mock('Illuminate\Database\Connection');
+        return m::mock(Connection::class);
     }
 
     public function getGrammar()
     {
-        return new \Illuminate\Database\Schema\Grammars\MySqlGrammar;
+        return new MySqlGrammar;
     }
 }

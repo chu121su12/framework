@@ -81,12 +81,12 @@ class DatabaseEloquentPolymorphicRelationsIntegrationTest extends TestCase
         $post->tags()->attach($tag2->id);
         $image->tags()->attach($tag->id);
 
-        $this->assertEquals(2, $post->tags->count());
-        $this->assertEquals(1, $image->tags->count());
-        $this->assertEquals(1, $tag->posts->count());
-        $this->assertEquals(1, $tag->images->count());
-        $this->assertEquals(1, $tag2->posts->count());
-        $this->assertEquals(0, $tag2->images->count());
+        $this->assertCount(2, $post->tags);
+        $this->assertCount(1, $image->tags);
+        $this->assertCount(1, $tag->posts);
+        $this->assertCount(1, $tag->images);
+        $this->assertCount(1, $tag2->posts);
+        $this->assertCount(0, $tag2->images);
     }
 
     public function testEagerLoading()
@@ -139,7 +139,7 @@ class EloquentManyToManyPolymorphicTestPost extends Eloquent
 
     public function tags()
     {
-        return $this->morphToMany('Illuminate\Tests\Database\EloquentManyToManyPolymorphicTestTag', 'taggable');
+        return $this->morphToMany(EloquentManyToManyPolymorphicTestTag::class, 'taggable');
     }
 }
 
@@ -150,7 +150,7 @@ class EloquentManyToManyPolymorphicTestImage extends Eloquent
 
     public function tags()
     {
-        return $this->morphToMany('Illuminate\Tests\Database\EloquentManyToManyPolymorphicTestTag', 'taggable');
+        return $this->morphToMany(EloquentManyToManyPolymorphicTestTag::class, 'taggable');
     }
 }
 
@@ -161,11 +161,11 @@ class EloquentManyToManyPolymorphicTestTag extends Eloquent
 
     public function posts()
     {
-        return $this->morphedByMany('Illuminate\Tests\Database\EloquentManyToManyPolymorphicTestPost', 'taggable');
+        return $this->morphedByMany(EloquentManyToManyPolymorphicTestPost::class, 'taggable');
     }
 
     public function images()
     {
-        return $this->morphedByMany('Illuminate\Tests\Database\EloquentManyToManyPolymorphicTestImage', 'taggable');
+        return $this->morphedByMany(EloquentManyToManyPolymorphicTestImage::class, 'taggable');
     }
 }

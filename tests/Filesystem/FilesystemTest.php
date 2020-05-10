@@ -2,6 +2,8 @@
 
 namespace Illuminate\Tests\Filesystem;
 
+use SplFileInfo;
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use League\Flysystem\Adapter\Ftp;
 use Illuminate\Filesystem\Filesystem;
@@ -20,6 +22,8 @@ class FilesystemTest extends TestCase
 
     public function tearDown()
     {
+        m::close();
+
         $files = new Filesystem;
         $files->deleteDirectory($this->tempDir);
     }
@@ -38,13 +42,53 @@ class FilesystemTest extends TestCase
         $this->assertStringEqualsFile($this->tempDir.'/file.txt', 'Hello World');
     }
 
+    public function testReplaceStoresFiles()
+    {
+        $tempFile = "{$this->tempDir}/file.txt";
+        $symlinkDir = "{$this->tempDir}/symlink_dir";
+        $symlink = "{$symlinkDir}/symlink.txt";
+
+        mkdir($symlinkDir);
+        symlink($tempFile, $symlink);
+
+        // Prevent changes to symlink_dir
+        chmod($symlinkDir, 0555);
+
+        // Test with a weird non-standard umask.
+        $umask = 0131;
+        $originalUmask = umask($umask);
+
+        $filesystem = new Filesystem;
+
+        // Test replacing non-existent file.
+        $filesystem->replace($tempFile, 'Hello World');
+        $this->assertStringEqualsFile($tempFile, 'Hello World');
+        $this->assertEquals($umask, 0777 - $this->getFilePermissions($tempFile));
+
+        // Test replacing existing file.
+        $filesystem->replace($tempFile, 'Something Else');
+        $this->assertStringEqualsFile($tempFile, 'Something Else');
+        $this->assertEquals($umask, 0777 - $this->getFilePermissions($tempFile));
+
+        // Test replacing symlinked file.
+        $filesystem->replace($symlink, 'Yet Something Else Again');
+        $this->assertStringEqualsFile($tempFile, 'Yet Something Else Again');
+        $this->assertEquals($umask, 0777 - $this->getFilePermissions($tempFile));
+
+        umask($originalUmask);
+
+        // Reset changes to symlink_dir
+        chmod($symlinkDir, 0777 - $originalUmask);
+    }
+
     public function testSetChmod()
     {
         file_put_contents($this->tempDir.'/file.txt', 'Hello World');
         $files = new Filesystem;
         $files->chmod($this->tempDir.'/file.txt', 0755);
         $filePermission = substr(sprintf('%o', fileperms($this->tempDir.'/file.txt')), -4);
-        $this->assertEquals('0755', $filePermission);
+        $expectedPermissions = DIRECTORY_SEPARATOR == '\\' ? '0666' : '0755';
+        $this->assertEquals($expectedPermissions, $filePermission);
     }
 
     public function testGetChmod()
@@ -53,8 +97,9 @@ class FilesystemTest extends TestCase
         chmod($this->tempDir.'/file.txt', 0755);
 
         $files = new Filesystem;
-        $filePermisson = $files->chmod($this->tempDir.'/file.txt');
-        $this->assertEquals('0755', $filePermisson);
+        $filePermission = $files->chmod($this->tempDir.'/file.txt');
+        $expectedPermissions = DIRECTORY_SEPARATOR == '\\' ? '0666' : '0755';
+        $this->assertEquals($expectedPermissions, $filePermission);
     }
 
     public function testDeleteRemovesFiles()
@@ -97,6 +142,14 @@ class FilesystemTest extends TestCase
         $this->assertFileNotExists($this->tempDir.'/foo/file.txt');
     }
 
+    public function testDeleteDirectoryReturnFalseWhenNotADirectory()
+    {
+        mkdir($this->tempDir.'/foo');
+        file_put_contents($this->tempDir.'/foo/file.txt', 'Hello World');
+        $files = new Filesystem;
+        $this->assertFalse($files->deleteDirectory($this->tempDir.'/foo/file.txt'));
+    }
+
     public function testCleanDirectory()
     {
         mkdir($this->tempDir.'/foo');
@@ -126,8 +179,8 @@ class FilesystemTest extends TestCase
         mkdir($this->tempDir.'/foo/bar');
         $files = new Filesystem;
         $results = $files->files($this->tempDir.'/foo');
-        $this->assertInstanceOf('SplFileInfo', $results[0]);
-        $this->assertInstanceOf('SplFileInfo', $results[1]);
+        $this->assertInstanceOf(SplFileInfo::class, $results[0]);
+        $this->assertInstanceOf(SplFileInfo::class, $results[1]);
         unset($files);
     }
 
@@ -195,6 +248,17 @@ class FilesystemTest extends TestCase
         $this->assertDirectoryNotExists($this->tempDir.'/tmp');
     }
 
+    public function testMoveDirectoryReturnsFalseWhileOverwritingAndUnableToDeleteDestinationDirectory()
+    {
+        mkdir($this->tempDir.'/tmp', 0777, true);
+        file_put_contents($this->tempDir.'/tmp/foo.txt', '');
+        mkdir($this->tempDir.'/tmp2', 0777, true);
+
+        $files = m::mock(Filesystem::class)->makePartial();
+        $files->shouldReceive('deleteDirectory')->once()->andReturn(false);
+        $this->assertFalse($files->moveDirectory($this->tempDir.'/tmp', $this->tempDir.'/tmp2', true));
+    }
+
     /**
      * @expectedException \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
@@ -237,6 +301,13 @@ class FilesystemTest extends TestCase
         $files->move($this->tempDir.'/foo.txt', $this->tempDir.'/bar.txt');
         $this->assertFileExists($this->tempDir.'/bar.txt');
         $this->assertFileNotExists($this->tempDir.'/foo.txt');
+    }
+
+    public function testNameReturnsName()
+    {
+        file_put_contents($this->tempDir.'/foobar.txt', 'foo');
+        $filesystem = new Filesystem;
+        $this->assertEquals('foobar', $filesystem->name($this->tempDir.'/foobar.txt'));
     }
 
     public function testExtensionReturnsExtension()
@@ -428,9 +499,7 @@ class FilesystemTest extends TestCase
         file_put_contents($this->tempDir.'/foo/2.txt', '2');
         mkdir($this->tempDir.'/foo/bar');
         $files = new Filesystem;
-        foreach ($files->files($this->tempDir.'/foo') as $file) {
-            $this->assertInstanceOf(\SplFileInfo::class, $file);
-        }
+        $this->assertContainsOnlyInstancesOf(SplFileInfo::class, $files->files($this->tempDir.'/foo'));
         unset($files);
     }
 
@@ -439,21 +508,18 @@ class FilesystemTest extends TestCase
         file_put_contents($this->tempDir.'/foo.txt', 'foo');
         file_put_contents($this->tempDir.'/bar.txt', 'bar');
         $files = new Filesystem;
-        $allFiles = [];
-        foreach ($files->allFiles($this->tempDir) as $file) {
-            $this->assertInstanceOf(\SplFileInfo::class, $file);
-        }
+        $this->assertContainsOnlyInstancesOf(SplFileInfo::class, $files->allFiles($this->tempDir));
     }
 
     public function testCreateFtpDriver()
     {
-        $filesystem = new FilesystemManager(new Application());
+        $filesystem = new FilesystemManager(new Application);
 
         $driver = $filesystem->createFtpDriver([
             'host' => 'ftp.example.com',
             'username' => 'admin',
             'permPublic' => 0700,
-            'unsopertedParam' => true,
+            'unsupportedParam' => true,
         ]);
 
         /** @var Ftp $adapter */
@@ -461,5 +527,24 @@ class FilesystemTest extends TestCase
         $this->assertEquals(0700, $adapter->getPermPublic());
         $this->assertEquals('ftp.example.com', $adapter->getHost());
         $this->assertEquals('admin', $adapter->getUsername());
+    }
+
+    public function testHash()
+    {
+        file_put_contents($this->tempDir.'/foo.txt', 'foo');
+        $filesystem = new Filesystem;
+        $this->assertEquals('acbd18db4cc2f85cedef654fccc4a4d8', $filesystem->hash($this->tempDir.'/foo.txt'));
+    }
+
+    /**
+     * @param string $file
+     * @return int
+     */
+    private function getFilePermissions($file)
+    {
+        $filePerms = fileperms($file);
+        $filePerms = substr(sprintf('%o', $filePerms), -3);
+
+        return (int) base_convert($filePerms, 8, 10);
     }
 }

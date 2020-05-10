@@ -4,6 +4,8 @@ namespace Illuminate\Tests\View;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Illuminate\View\FileViewFinder;
+use Illuminate\Filesystem\Filesystem;
 
 class ViewFileViewFinderTest extends TestCase
 {
@@ -143,8 +145,26 @@ class ViewFileViewFinderTest extends TestCase
         $this->assertFalse($finder->hasHintInformation('::foo.bar'));
     }
 
+    public function pathsProvider()
+    {
+        return [
+            ['incorrect_path', 'incorrect_path'],
+        ];
+    }
+
+    /**
+     * @dataProvider pathsProvider
+     */
+    public function testNormalizedPaths($originalPath, $exceptedPath)
+    {
+        $finder = $this->getFinder();
+        $finder->prependLocation($originalPath);
+        $normalizedPath = $finder->getPaths()[0];
+        $this->assertSame($exceptedPath, $normalizedPath);
+    }
+
     protected function getFinder()
     {
-        return new \Illuminate\View\FileViewFinder(m::mock('Illuminate\Filesystem\Filesystem'), [__DIR__]);
+        return new FileViewFinder(m::mock(Filesystem::class), [__DIR__]);
     }
 }

@@ -2,9 +2,13 @@
 
 namespace Illuminate\Tests\Database;
 
+use Mockery as m;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\TestCase;
+use Illuminate\Console\OutputStyle;
+use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Facade;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Migrations\DatabaseMigrationRepository;
@@ -12,6 +16,7 @@ use Illuminate\Database\Migrations\DatabaseMigrationRepository;
 class DatabaseMigratorIntegrationTest extends TestCase
 {
     protected $db;
+    protected $migrator;
 
     /**
      * Bootstrap Eloquent.
@@ -29,15 +34,25 @@ class DatabaseMigratorIntegrationTest extends TestCase
 
         $db->setAsGlobal();
 
-        $container = new \Illuminate\Container\Container;
+        $container = new Container;
         $container->instance('db', $db->getDatabaseManager());
-        \Illuminate\Support\Facades\Facade::setFacadeApplication($container);
+
+        $container->bind('db.schema', function ($c) {
+            return $c['db']->connection()->getSchemaBuilder();
+        });
+
+        Facade::setFacadeApplication($container);
 
         $this->migrator = new Migrator(
             $repository = new DatabaseMigrationRepository($db->getDatabaseManager(), 'migrations'),
             $db->getDatabaseManager(),
             new Filesystem
         );
+
+        $output = m::mock(OutputStyle::class);
+        $output->shouldReceive('writeln');
+
+        $this->migrator->setOutput($output);
 
         if (! $repository->repositoryExists()) {
             $repository->createRepository();
@@ -46,8 +61,8 @@ class DatabaseMigratorIntegrationTest extends TestCase
 
     public function tearDown()
     {
-        \Illuminate\Support\Facades\Facade::clearResolvedInstances();
-        \Illuminate\Support\Facades\Facade::setFacadeApplication(null);
+        Facade::clearResolvedInstances();
+        Facade::setFacadeApplication(null);
     }
 
     public function testBasicMigrationOfSingleFolder()

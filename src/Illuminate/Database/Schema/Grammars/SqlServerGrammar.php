@@ -278,6 +278,21 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
+     * Compile a rename index command.
+     *
+     * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+     * @param  \Illuminate\Support\Fluent $command
+     * @return string
+     */
+    public function compileRenameIndex(Blueprint $blueprint, Fluent $command)
+    {
+        return sprintf("sp_rename N'%s', %s, N'INDEX'",
+            $this->wrap($blueprint->getTable().'.'.$command->from),
+            $this->wrap($command->to)
+        );
+    }
+
+    /**
      * Compile the command to enable foreign key constraints.
      *
      * @return string
@@ -507,7 +522,7 @@ class SqlServerGrammar extends Grammar
      */
     protected function typeDateTime(Fluent $column)
     {
-        return $column->precision ? "datetime2($column->precision)" : 'datetime';
+        return $this->typeTimestamp($column);
     }
 
     /**
@@ -518,7 +533,7 @@ class SqlServerGrammar extends Grammar
      */
     protected function typeDateTimeTz(Fluent $column)
     {
-        return $column->precision ? "datetimeoffset($column->precision)" : 'datetimeoffset';
+        return $this->typeTimestampTz($column);
     }
 
     /**
@@ -566,13 +581,9 @@ class SqlServerGrammar extends Grammar
      */
     protected function typeTimestampTz(Fluent $column)
     {
-        if ($column->useCurrent) {
-            $columnType = $column->precision ? "datetimeoffset($column->precision)" : 'datetimeoffset';
+        $columnType = $column->precision ? "datetimeoffset($column->precision)" : 'datetimeoffset';
 
-            return "$columnType default CURRENT_TIMESTAMP";
-        }
-
-        return "datetimeoffset($column->precision)";
+        return $column->useCurrent ? "$columnType default CURRENT_TIMESTAMP" : $columnType;
     }
 
     /**

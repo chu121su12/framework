@@ -2,8 +2,8 @@
 
 namespace Illuminate\Console\Scheduling;
 
-use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Date;
 
 class ScheduleRunCommand extends Command
 {
@@ -52,7 +52,7 @@ class ScheduleRunCommand extends Command
     {
         $this->schedule = $schedule;
 
-        $this->startedAt = Carbon::now();
+        $this->startedAt = Date::now();
 
         parent::__construct();
     }
@@ -86,7 +86,7 @@ class ScheduleRunCommand extends Command
     /**
      * Run the given single server event.
      *
-     * @param  \Illuminate\Support\Collection  $event
+     * @param  \Illuminate\Console\Scheduling\Event  $event
      * @return void
      */
     protected function runSingleServerEvent($event)
@@ -101,7 +101,7 @@ class ScheduleRunCommand extends Command
     /**
      * Run the given event.
      *
-     * @param  \Illuminate\Support\Collection  $event
+     * @param  \Illuminate\Console\Scheduling\Event  $event
      * @return void
      */
     protected function runEvent($event)

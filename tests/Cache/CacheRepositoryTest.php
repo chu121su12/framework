@@ -8,6 +8,12 @@ use Mockery as m;
 use DateTimeImmutable;
 use Illuminate\Support\Carbon;
 use PHPUnit\Framework\TestCase;
+use Illuminate\Cache\ArrayStore;
+use Illuminate\Cache\RedisStore;
+use Illuminate\Cache\Repository;
+use Illuminate\Events\Dispatcher;
+use Illuminate\Container\Container;
+use Illuminate\Contracts\Cache\Store;
 
 class CacheRepositoryTest extends TestCase
 {
@@ -63,6 +69,16 @@ class CacheRepositoryTest extends TestCase
 
         $this->assertTrue($repo->has('bar'));
         $this->assertFalse($repo->has('foo'));
+    }
+
+    public function testMissingMethod()
+    {
+        $repo = $this->getRepository();
+        $repo->getStore()->shouldReceive('get')->once()->with('foo')->andReturn(null);
+        $repo->getStore()->shouldReceive('get')->once()->with('bar')->andReturn('bar');
+
+        $this->assertTrue($repo->missing('foo'));
+        $this->assertFalse($repo->missing('bar'));
     }
 
     public function testRememberMethodCallsPutAndReturnsDefault()
@@ -140,9 +156,9 @@ class CacheRepositoryTest extends TestCase
 
     public function testCacheAddCallsRedisStoreAdd()
     {
-        $store = m::mock(\Illuminate\Cache\RedisStore::class);
+        $store = m::mock(RedisStore::class);
         $store->shouldReceive('add')->once()->with('k', 'v', 60)->andReturn(true);
-        $repository = new \Illuminate\Cache\Repository($store);
+        $repository = new Repository($store);
         $this->assertTrue($repository->add('k', 'v', 60));
     }
 
@@ -228,10 +244,21 @@ class CacheRepositoryTest extends TestCase
         $repo->deleteMultiple(['a-key', 'a-second-key']);
     }
 
+    public function testAllTagsArePassedToTaggableStore()
+    {
+        $store = m::mock(ArrayStore::class);
+        $repo = new Repository($store);
+
+        $taggedCache = m::mock();
+        $taggedCache->shouldReceive('setDefaultCacheTime');
+        $store->shouldReceive('tags')->once()->with(['foo', 'bar', 'baz'])->andReturn($taggedCache);
+        $repo->tags('foo', 'bar', 'baz');
+    }
+
     protected function getRepository()
     {
-        $dispatcher = new \Illuminate\Events\Dispatcher(m::mock('Illuminate\Container\Container'));
-        $repository = new \Illuminate\Cache\Repository(m::mock('Illuminate\Contracts\Cache\Store'));
+        $dispatcher = new Dispatcher(m::mock(Container::class));
+        $repository = new Repository(m::mock(Store::class));
 
         $repository->setEventDispatcher($dispatcher);
 

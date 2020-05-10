@@ -4,6 +4,7 @@ namespace Illuminate\Tests\Support;
 
 use DateTime;
 use DateTimeInterface;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Carbon;
 use PHPUnit\Framework\TestCase;
 use Carbon\Carbon as BaseCarbon;
@@ -58,7 +59,7 @@ class SupportCarbonTest extends TestCase
 
     /**
      * @expectedException \BadMethodCallException
-     * @expectedExceptionMessage Method nonExistingStaticMacro does not exist.
+     * @expectedExceptionMessage nonExistingStaticMacro does not exist.
      */
     public function testCarbonRaisesExceptionWhenStaticMacroIsNotFound()
     {
@@ -67,7 +68,7 @@ class SupportCarbonTest extends TestCase
 
     /**
      * @expectedException \BadMethodCallException
-     * @expectedExceptionMessage Method nonExistingMacro does not exist.
+     * @expectedExceptionMessage nonExistingMacro does not exist.
      */
     public function testCarbonRaisesExceptionWhenMacroIsNotFound()
     {
@@ -87,7 +88,7 @@ class SupportCarbonTest extends TestCase
 
     public function testCarbonCanSerializeToJson()
     {
-        $this->assertSame([
+        $this->assertSame(class_exists(CarbonImmutable::class) ? '2017-06-27T13:14:15.000000Z' : [
             'date' => '2017-06-27 13:14:15.000000',
             'timezone_type' => 3,
             'timezone' => 'UTC',

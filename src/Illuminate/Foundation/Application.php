@@ -29,7 +29,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
      *
      * @var string
      */
-    const VERSION = '5.7-dev';
+    const VERSION = '5.8-dev';
 
     /**
      * The base path for the Laravel installation.
@@ -95,13 +95,6 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
     protected $deferredServices = [];
 
     /**
-     * A custom callback used to configure Monolog.
-     *
-     * @var callable|null
-     */
-    protected $monologConfigurator;
-
-    /**
      * The custom database path defined by the developer.
      *
      * @var string
@@ -149,9 +142,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
         }
 
         $this->registerBaseBindings();
-
         $this->registerBaseServiceProviders();
-
         $this->registerCoreContainerAliases();
     }
 
@@ -177,6 +168,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
         $this->instance('app', $this);
 
         $this->instance(Container::class, $this);
+        $this->singleton(Mix::class);
 
         $this->instance(PackageManifest::class, new PackageManifest(
             new Filesystem, $this->basePath(), $this->getCachedPackagesPath()
@@ -191,9 +183,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
     protected function registerBaseServiceProviders()
     {
         $this->register(new EventServiceProvider($this));
-
         $this->register(new LogServiceProvider($this));
-
         $this->register(new RoutingServiceProvider($this));
     }
 
@@ -208,11 +198,11 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
         $this->hasBeenBootstrapped = true;
 
         foreach ($bootstrappers as $bootstrapper) {
-            $this['events']->fire('bootstrapping: '.$bootstrapper, [$this]);
+            $this['events']->dispatch('bootstrapping: '.$bootstrapper, [$this]);
 
             $this->make($bootstrapper)->bootstrap($this);
 
-            $this['events']->fire('bootstrapped: '.$bootstrapper, [$this]);
+            $this['events']->dispatch('bootstrapped: '.$bootstrapper, [$this]);
         }
     }
 
@@ -475,26 +465,21 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
      */
     public function environmentFilePath()
     {
-        return $this->environmentPath().'/'.$this->environmentFile();
+        return $this->environmentPath().DIRECTORY_SEPARATOR.$this->environmentFile();
     }
 
     /**
      * Get or check the current application environment.
      *
+     * @param  string|array  $environments
      * @return string|bool
      */
-    public function environment()
+    public function environment(...$environments)
     {
-        if (func_num_args() > 0) {
-            $patterns = is_array(func_get_arg(0)) ? func_get_arg(0) : func_get_args();
+        if (count($environments) > 0) {
+            $patterns = is_array($environments[0]) ? $environments[0] : $environments;
 
-            foreach ($patterns as $pattern) {
-                if (Str::is($pattern, $this['env'])) {
-                    return true;
-                }
-            }
-
-            return false;
+            return Str::is($patterns, $this['env']);
         }
 
         return $this['env'];
@@ -507,7 +492,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
      */
     public function isLocal()
     {
-        return $this['env'] == 'local';
+        return $this['env'] === 'local';
     }
 
     /**
@@ -530,7 +515,11 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
      */
     public function runningInConsole()
     {
-        return php_sapi_name() == 'cli' || php_sapi_name() == 'phpdbg';
+        if (isset($_ENV['APP_RUNNING_IN_CONSOLE'])) {
+            return $_ENV['APP_RUNNING_IN_CONSOLE'] === 'true';
+        }
+
+        return php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg';
     }
 
     /**
@@ -540,7 +529,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
      */
     public function runningUnitTests()
     {
-        return $this['env'] == 'testing';
+        return $this['env'] === 'testing';
     }
 
     /**
@@ -565,11 +554,10 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
      * Register a service provider with the application.
      *
      * @param  \Illuminate\Support\ServiceProvider|string  $provider
-     * @param  array  $options
      * @param  bool   $force
      * @return \Illuminate\Support\ServiceProvider
      */
-    public function register($provider, $options = [], $force = false)
+    public function register($provider, $force = false)
     {
         if (($registered = $this->getProvider($provider)) && ! $force) {
             return $registered;
@@ -1047,39 +1035,6 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
     }
 
     /**
-     * Define a callback to be used to configure Monolog.
-     *
-     * @param  callable  $callback
-     * @return $this
-     */
-    public function configureMonologUsing(callable $callback)
-    {
-        $this->monologConfigurator = $callback;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the application has a custom Monolog configurator.
-     *
-     * @return bool
-     */
-    public function hasMonologConfigurator()
-    {
-        return ! is_null($this->monologConfigurator);
-    }
-
-    /**
-     * Get the custom Monolog configurator for the application.
-     *
-     * @return callable
-     */
-    public function getMonologConfigurator()
-    {
-        return $this->monologConfigurator;
-    }
-
-    /**
      * Get the current application locale.
      *
      * @return string
@@ -1140,6 +1095,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
             'filesystem.disk'      => [\Illuminate\Contracts\Filesystem\Filesystem::class],
             'filesystem.cloud'     => [\Illuminate\Contracts\Filesystem\Cloud::class],
             'hash'                 => [\Illuminate\Hashing\HashManager::class],
+            'hash.driver'          => [\Illuminate\Contracts\Hashing\Hasher::class],
             'translator'           => [\Illuminate\Translation\Translator::class, \Illuminate\Contracts\Translation\Translator::class],
             'log'                  => [\Illuminate\Log\LogManager::class, \Psr\Log\LoggerInterface::class],
             'mailer'               => [\Illuminate\Mail\Mailer::class, \Illuminate\Contracts\Mail\Mailer::class, \Illuminate\Contracts\Mail\MailQueue::class],

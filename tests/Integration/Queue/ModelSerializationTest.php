@@ -4,7 +4,9 @@ namespace Illuminate\Tests\Integration\Queue;
 
 use Schema;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * @group integration
@@ -59,10 +61,7 @@ class ModelSerializationTest extends TestCase
         });
     }
 
-    /**
-     * @test
-     */
-    public function it_serialize_user_on_default_connection()
+    public function test_it_serialize_user_on_default_connection()
     {
         $user = ModelSerializationTestUser::create([
             'email' => 'mohamed@laravel.com',
@@ -89,16 +88,13 @@ class ModelSerializationTest extends TestCase
         $this->assertEquals('taylor@laravel.com', $unSerialized->user[1]->email);
     }
 
-    /**
-     * @test
-     */
-    public function it_serialize_user_on_different_connection()
+    public function test_it_serialize_user_on_different_connection()
     {
         $user = ModelSerializationTestUser::on('custom')->create([
             'email' => 'mohamed@laravel.com',
         ]);
 
-        $user2 = ModelSerializationTestUser::on('custom')->create([
+        ModelSerializationTestUser::on('custom')->create([
             'email' => 'taylor@laravel.com',
         ]);
 
@@ -120,11 +116,10 @@ class ModelSerializationTest extends TestCase
     }
 
     /**
-     * @test
      * @expectedException \LogicException
      * @expectedExceptionMessage  Queueing collections with multiple model connections is not supported.
      */
-    public function it_fails_if_models_on_multi_connections()
+    public function test_it_fails_if_models_on_multi_connections()
     {
         $user = ModelSerializationTestUser::on('custom')->create([
             'email' => 'mohamed@laravel.com',
@@ -135,18 +130,17 @@ class ModelSerializationTest extends TestCase
         ]);
 
         $serialized = serialize(new ModelSerializationTestClass(
-            new \Illuminate\Database\Eloquent\Collection([$user, $user2])
+            new Collection([$user, $user2])
         ));
 
         unserialize($serialized);
     }
 
-    /**
-     * @test
-     */
-    public function it_reloads_relationships()
+    public function test_it_reloads_relationships()
     {
-        $order = Order::create();
+        $order = tap(Order::create(), function (Order $order) {
+            $order->wasRecentlyCreated = false;
+        });
 
         $product1 = Product::create();
         $product2 = Product::create();
@@ -154,7 +148,7 @@ class ModelSerializationTest extends TestCase
         Line::create(['order_id' => $order->id, 'product_id' => $product1->id]);
         Line::create(['order_id' => $order->id, 'product_id' => $product2->id]);
 
-        $order->load('line', 'lines');
+        $order->load('line', 'lines', 'products');
 
         $serialized = serialize(new ModelRelationSerializationTestClass($order));
         $unSerialized = unserialize($serialized);
@@ -162,12 +156,11 @@ class ModelSerializationTest extends TestCase
         $this->assertEquals($unSerialized->order->getRelations(), $order->getRelations());
     }
 
-    /**
-     * @test
-     */
-    public function it_reloads_nested_relationships()
+    public function test_it_reloads_nested_relationships()
     {
-        $order = Order::create();
+        $order = tap(Order::create(), function (Order $order) {
+            $order->wasRecentlyCreated = false;
+        });
 
         $product1 = Product::create();
         $product2 = Product::create();
@@ -175,7 +168,7 @@ class ModelSerializationTest extends TestCase
         Line::create(['order_id' => $order->id, 'product_id' => $product1->id]);
         Line::create(['order_id' => $order->id, 'product_id' => $product2->id]);
 
-        $order->load('line.product', 'lines', 'lines.product');
+        $order->load('line.product', 'lines', 'lines.product', 'products');
 
         $nestedSerialized = serialize(new ModelRelationSerializationTestClass($order));
         $nestedUnSerialized = unserialize($nestedSerialized);
@@ -183,11 +176,10 @@ class ModelSerializationTest extends TestCase
         $this->assertEquals($nestedUnSerialized->order->getRelations(), $order->getRelations());
     }
 
-    /** @test */
-    public function it_serializes_an_empty_collection()
+    public function test_it_serializes_an_empty_collection()
     {
         $serialized = serialize(new ModelSerializationTestClass(
-            new \Illuminate\Database\Eloquent\Collection([])
+            new Collection([])
         ));
 
         unserialize($serialized);
@@ -215,6 +207,11 @@ class Order extends Model
     {
         return $this->hasMany(Line::class);
     }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'lines');
+    }
 }
 
 class Line extends Model
@@ -236,7 +233,7 @@ class Product extends Model
 
 class ModelSerializationTestClass
 {
-    use \Illuminate\Queue\SerializesModels;
+    use SerializesModels;
 
     public $user;
 
@@ -248,7 +245,7 @@ class ModelSerializationTestClass
 
 class ModelRelationSerializationTestClass
 {
-    use \Illuminate\Queue\SerializesModels;
+    use SerializesModels;
 
     public $order;
 

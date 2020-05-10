@@ -153,7 +153,7 @@ class Str
      */
     public static function is($pattern, $value)
     {
-        $patterns = is_array($pattern) ? $pattern : (array) $pattern;
+        $patterns = Arr::wrap($pattern);
 
         if (empty($patterns)) {
             return false;
@@ -278,6 +278,22 @@ class Str
     public static function plural($value, $count = 2)
     {
         return Pluralizer::plural($value, $count);
+    }
+
+    /**
+     * Pluralize the last word of an English, studly caps case string.
+     *
+     * @param  string  $value
+     * @param  int     $count
+     * @return string
+     */
+    public static function pluralStudly($value, $count = 2)
+    {
+        $parts = preg_split('/(.)(?=[A-Z])/u', $value, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+        $lastWord = array_pop($parts);
+
+        return implode('', $parts).self::plural($lastWord, $count);
     }
 
     /**
@@ -412,15 +428,15 @@ class Str
      *
      * @param  string  $title
      * @param  string  $separator
-     * @param  string  $language
+     * @param  string|null  $language
      * @return string
      */
     public static function slug($title, $separator = '-', $language = 'en')
     {
-        $title = static::ascii($title, $language);
+        $title = $language ? static::ascii($title, $language) : $title;
 
         // Convert all dashes/underscores into separator
-        $flip = $separator == '-' ? '_' : '-';
+        $flip = $separator === '-' ? '_' : '-';
 
         $title = preg_replace('!['.preg_quote($flip).']+!u', $separator, $title);
 
@@ -524,7 +540,7 @@ class Str
     /**
      * Generate a UUID (version 4).
      *
-     * @return \Ramsey\Uuid\Uuid
+     * @return \Ramsey\Uuid\UuidInterface
      */
     public static function uuid()
     {
@@ -534,7 +550,7 @@ class Str
     /**
      * Generate a time-ordered UUID (version 4).
      *
-     * @return \Ramsey\Uuid\Uuid
+     * @return \Ramsey\Uuid\UuidInterface
      */
     public static function orderedUuid()
     {

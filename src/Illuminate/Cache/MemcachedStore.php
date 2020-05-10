@@ -4,13 +4,19 @@ namespace Illuminate\Cache;
 
 use Memcached;
 use ReflectionMethod;
-use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\InteractsWithTime;
 use Illuminate\Contracts\Cache\LockProvider;
 
-class MemcachedStore extends TaggableStore implements LockProvider, Store
+class MemcachedStore extends TaggableStore implements LockProvider
 {
     use InteractsWithTime;
+
+    /**
+     * The maximum value that can be specified as an expiration delta.
+     *
+     * @var int
+     */
+    const REALTIME_MAXDELTA_IN_MINUTES = 43200;
 
     /**
      * The Memcached instance.
@@ -103,7 +109,9 @@ class MemcachedStore extends TaggableStore implements LockProvider, Store
      */
     public function put($key, $value, $minutes)
     {
-        $this->memcached->set($this->prefix.$key, $value, $this->toTimestamp($minutes));
+        $this->memcached->set(
+            $this->prefix.$key, $value, $this->calculateExpiration($minutes)
+        );
     }
 
     /**
@@ -121,7 +129,9 @@ class MemcachedStore extends TaggableStore implements LockProvider, Store
             $prefixedValues[$this->prefix.$key] = $value;
         }
 
-        $this->memcached->setMulti($prefixedValues, $this->toTimestamp($minutes));
+        $this->memcached->setMulti(
+            $prefixedValues, $this->calculateExpiration($minutes)
+        );
     }
 
     /**
@@ -134,7 +144,9 @@ class MemcachedStore extends TaggableStore implements LockProvider, Store
      */
     public function add($key, $value, $minutes)
     {
-        return $this->memcached->add($this->prefix.$key, $value, $this->toTimestamp($minutes));
+        return $this->memcached->add(
+            $this->prefix.$key, $value, $this->calculateExpiration($minutes)
+        );
     }
 
     /**
@@ -204,6 +216,17 @@ class MemcachedStore extends TaggableStore implements LockProvider, Store
     public function flush()
     {
         return $this->memcached->flush();
+    }
+
+    /**
+     * Get the expiration time of the key.
+     *
+     * @param  int  $minutes
+     * @return int
+     */
+    protected function calculateExpiration($minutes)
+    {
+        return $this->toTimestamp($minutes);
     }
 
     /**

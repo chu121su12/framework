@@ -4,7 +4,9 @@ namespace Illuminate\Tests\Database;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Grammars\SqlServerGrammar;
 
 class DatabaseSqlServerSchemaGrammarTest extends TestCase
 {
@@ -183,6 +185,17 @@ class DatabaseSqlServerSchemaGrammarTest extends TestCase
         $this->assertEquals('alter table "users" drop column "created_at", "updated_at"', $statements[0]);
     }
 
+    public function testDropMorphs()
+    {
+        $blueprint = new Blueprint('photos');
+        $blueprint->dropMorphs('imageable');
+        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+
+        $this->assertCount(2, $statements);
+        $this->assertEquals('drop index "photos_imageable_type_imageable_id_index" on "photos"', $statements[0]);
+        $this->assertEquals('alter table "photos" drop column "imageable_type", "imageable_id"', $statements[1]);
+    }
+
     public function testRenameTable()
     {
         $blueprint = new Blueprint('users');
@@ -191,6 +204,16 @@ class DatabaseSqlServerSchemaGrammarTest extends TestCase
 
         $this->assertCount(1, $statements);
         $this->assertEquals('sp_rename "users", "foo"', $statements[0]);
+    }
+
+    public function testRenameIndex()
+    {
+        $blueprint = new Blueprint('users');
+        $blueprint->renameIndex('foo', 'bar');
+        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+
+        $this->assertCount(1, $statements);
+        $this->assertEquals('sp_rename N\'"users"."foo"\', "bar", N\'INDEX\'', $statements[0]);
     }
 
     public function testAddingPrimaryKey()
@@ -587,7 +610,7 @@ class DatabaseSqlServerSchemaGrammarTest extends TestCase
         $blueprint->timestampTz('created_at');
         $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
         $this->assertCount(1, $statements);
-        $this->assertEquals('alter table "users" add "created_at" datetimeoffset(0) not null', $statements[0]);
+        $this->assertEquals('alter table "users" add "created_at" datetimeoffset not null', $statements[0]);
     }
 
     public function testAddingTimestampTzWithPrecision()
@@ -614,7 +637,7 @@ class DatabaseSqlServerSchemaGrammarTest extends TestCase
         $blueprint->timestampsTz();
         $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
         $this->assertCount(1, $statements);
-        $this->assertEquals('alter table "users" add "created_at" datetimeoffset(0) null, "updated_at" datetimeoffset(0) null', $statements[0]);
+        $this->assertEquals('alter table "users" add "created_at" datetimeoffset null, "updated_at" datetimeoffset null', $statements[0]);
     }
 
     public function testAddingRememberToken()
@@ -747,13 +770,25 @@ class DatabaseSqlServerSchemaGrammarTest extends TestCase
         $this->assertEquals('alter table "geo" add "coordinates" geography not null', $statements[0]);
     }
 
+    public function testGrammarsAreMacroable()
+    {
+        // compileReplace macro.
+        $this->getGrammar()::macro('compileReplace', function () {
+            return true;
+        });
+
+        $c = $this->getGrammar()::compileReplace();
+
+        $this->assertTrue($c);
+    }
+
     protected function getConnection()
     {
-        return m::mock('Illuminate\Database\Connection');
+        return m::mock(Connection::class);
     }
 
     public function getGrammar()
     {
-        return new \Illuminate\Database\Schema\Grammars\SqlServerGrammar;
+        return new SqlServerGrammar;
     }
 }

@@ -13,7 +13,7 @@ class AuthManager implements FactoryContract
     /**
      * The application instance.
      *
-     * @var \Illuminate\Foundation\Application
+     * @var \Illuminate\Contracts\Foundation\Application
      */
     protected $app;
 
@@ -43,7 +43,7 @@ class AuthManager implements FactoryContract
     /**
      * Create a new Auth manager instance.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
      * @return void
      */
     public function __construct($app)
@@ -96,7 +96,7 @@ class AuthManager implements FactoryContract
             return $this->{$driverMethod}($name, $config);
         }
 
-        throw new InvalidArgumentException("Auth guard driver [{$name}] is not defined.");
+        throw new InvalidArgumentException("Auth driver [{$config['driver']}] for guard [{$name}] is not defined.");
     }
 
     /**

@@ -78,7 +78,7 @@ abstract class Job
     {
         $payload = $this->payload();
 
-        list($class, $method) = JobName::parse($payload['job']);
+        [$class, $method] = JobName::parse($payload['job']);
 
         $this->instance = $this->resolve($class);
         $this->instance->{$method}($this, $payload['data']);
@@ -167,7 +167,7 @@ abstract class Job
 
         $payload = $this->payload();
 
-        list($class, $method) = JobName::parse($payload['job']);
+        [$class, $method] = JobName::parse($payload['job']);
 
         if (method_exists($this->instance = $this->resolve($class), 'failed')) {
             $this->instance->failed($payload['data'], $e);
