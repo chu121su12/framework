@@ -16,6 +16,8 @@
     ],
     "require": {
         "php": ">=5.6.4",
+        "symfony/polyfill-mbstring": "^1.0",
+        "symfony/translation": "^3.4",
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
@@ -96,6 +98,7 @@
             "src/Illuminate/Support/helpers.php"
         ],
         "psr-4": {
+            "Carbon\\": "cr/patch/carbon-src/Carbon/",
             "Illuminate\\": "src/Illuminate/"
         }
     },
@@ -104,9 +107,8 @@
             "tests/Database/stubs/MigrationCreatorFakeMigration.php"
         ],
         "psr-4": {
-            "Carbon\\": "cr/patch/Carbon/",
-            "PHPUnit\\": "cr/patch/PHPUnit/",
-            "Orchestra\\": "cr/patch/Orchestra/",
+            "PHPUnit\\": "cr/patch/phpunit-src/PHPUnit/",
+            "Orchestra\\": "cr/patch/orchestra-src/Orchestra/",
             "Illuminate\\Tests\\": "tests/"
         }
     },
