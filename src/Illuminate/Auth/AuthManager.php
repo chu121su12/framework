@@ -67,7 +67,7 @@ class AuthManager implements FactoryContract
 
         return isset($this->guards[$name])
                     ? $this->guards[$name]
-                    : $this->guards[$name] = $this->resolve($name);
+                    : ($this->guards[$name] = $this->resolve($name));
     }
 
     /**

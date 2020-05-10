@@ -385,12 +385,16 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     /**
      * Get all items except for those with the specified keys.
      *
-     * @param  mixed  $keys
+     * @param  \Illuminate\Support\Collection|mixed  $keys
      * @return static
      */
     public function except($keys)
     {
-        $keys = is_array($keys) ? $keys : func_get_args();
+        if ($keys instanceof self) {
+            $keys = $keys->keys()->all();
+        } elseif (! is_array($keys)) {
+            $keys = func_get_args();
+        }
 
         return new static(Arr::except($this->items, $keys));
     }
@@ -452,13 +456,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
      */
     public function where($key, $operator, $value = null)
     {
-        if (func_num_args() == 2) {
-            $value = $operator;
-
-            $operator = '=';
-        }
-
-        return $this->filter($this->operatorForWhere($key, $operator, $value));
+        return $this->filter($this->operatorForWhere(...func_get_args()));
     }
 
     /**
@@ -644,11 +642,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
      */
     public function get($key, $default = null)
     {
-        if ($this->offsetExists($key)) {
-            return $this->items[$key];
-        }
-
-        return value($default);
+        return Arr::get($this->items, $key, $default);
     }
 
     /**
@@ -1076,14 +1070,18 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     /**
      * Partition the collection into two arrays using the given callback or key.
      *
-     * @param  callable|string  $callback
+     * @param  callable|string  $key
+     * @param  mixed  $operator
+     * @param  mixed  $value
      * @return static
      */
-    public function partition($callback)
+    public function partition($key, $operator = null, $value = null)
     {
         $partitions = [new static, new static];
 
-        $callback = $this->valueRetriever($callback);
+        $callback = func_num_args() == 1
+                ? $this->valueRetriever($key)
+                : $this->operatorForWhere(...func_get_args());
 
         foreach ($this->items as $key => $item) {
             $partitions[(int) ! $callback($item, $key)][$key] = $item;
@@ -1606,9 +1604,9 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
                 return json_decode($value->toJson(), true);
             } elseif ($value instanceof Arrayable) {
                 return $value->toArray();
-            } else {
-                return $value;
             }
+
+            return $value;
         }, $this->items);
     }
 

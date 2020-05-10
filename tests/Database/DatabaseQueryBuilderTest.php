@@ -293,6 +293,13 @@ class DatabaseQueryBuilderTest extends TestCase
         $this->assertEquals('select * from `users` where year(`created_at`) = ?', $builder->toSql());
     }
 
+    public function testDateBasedWheresExpressionIsNotBound()
+    {
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users')->whereDate('created_at', new Raw('NOW()'))->where('admin', true);
+        $this->assertEquals([true], $builder->getBindings());
+    }
+
     public function testWhereDayMySql()
     {
         $builder = $this->getMySqlBuilder();
@@ -322,6 +329,22 @@ class DatabaseQueryBuilderTest extends TestCase
         $builder = $this->getMySqlBuilder();
         $builder->select('*')->from('users')->whereTime('created_at', '>=', '22:00');
         $this->assertEquals('select * from `users` where time(`created_at`) >= ?', $builder->toSql());
+        $this->assertEquals([0 => '22:00'], $builder->getBindings());
+    }
+
+    public function testWhereTimeOperatorOptionalMySql()
+    {
+        $builder = $this->getMySqlBuilder();
+        $builder->select('*')->from('users')->whereTime('created_at', '22:00');
+        $this->assertEquals('select * from `users` where time(`created_at`) = ?', $builder->toSql());
+        $this->assertEquals([0 => '22:00'], $builder->getBindings());
+    }
+
+    public function testWhereTimeOperatorOptionalPostgres()
+    {
+        $builder = $this->getPostgresBuilder();
+        $builder->select('*')->from('users')->whereTime('created_at', '22:00');
+        $this->assertEquals('select * from "users" where extract(time from "created_at") = ?', $builder->toSql());
         $this->assertEquals([0 => '22:00'], $builder->getBindings());
     }
 
@@ -1485,12 +1508,17 @@ class DatabaseQueryBuilderTest extends TestCase
     public function testUpdateMethodWithJoinsOnSQLite()
     {
         $builder = $this->getSQLiteBuilder();
-        $builder->getConnection()->shouldReceive('update')->once()->with('update "users" inner join "orders" on "users"."id" = "orders"."user_id" set "email" = ?, "name" = ? where "users"."id" = ?', ['foo', 'bar', 1])->andReturn(1);
+        $builder->getConnection()->shouldReceive('update')->once()->with('update "users" set "email" = ?, "name" = ? where "rowid" in (select "users"."rowid" from "users" where "users"."id" > ? order by "id" asc limit 3)', ['foo', 'bar', 1])->andReturn(1);
+        $result = $builder->from('users')->where('users.id', '>', 1)->limit(3)->oldest('id')->update(['email' => 'foo', 'name' => 'bar']);
+        $this->assertEquals(1, $result);
+
+        $builder = $this->getSQLiteBuilder();
+        $builder->getConnection()->shouldReceive('update')->once()->with('update "users" set "email" = ?, "name" = ? where "rowid" in (select "users"."rowid" from "users" inner join "orders" on "users"."id" = "orders"."user_id" where "users"."id" = ?)', ['foo', 'bar', 1])->andReturn(1);
         $result = $builder->from('users')->join('orders', 'users.id', '=', 'orders.user_id')->where('users.id', '=', 1)->update(['email' => 'foo', 'name' => 'bar']);
         $this->assertEquals(1, $result);
 
         $builder = $this->getSQLiteBuilder();
-        $builder->getConnection()->shouldReceive('update')->once()->with('update "users" inner join "orders" on "users"."id" = "orders"."user_id" and "users"."id" = ? set "email" = ?, "name" = ?', [1, 'foo', 'bar'])->andReturn(1);
+        $builder->getConnection()->shouldReceive('update')->once()->with('update "users" set "email" = ?, "name" = ? where "rowid" in (select "users"."rowid" from "users" inner join "orders" on "users"."id" = "orders"."user_id" and "users"."id" = ?)', ['foo', 'bar', 1])->andReturn(1);
         $result = $builder->from('users')->join('orders', function ($join) {
             $join->on('users.id', '=', 'orders.user_id')
                 ->where('users.id', '=', 1);

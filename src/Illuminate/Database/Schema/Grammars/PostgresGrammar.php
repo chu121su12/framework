@@ -342,7 +342,7 @@ class PostgresGrammar extends Grammar
         return sprintf('comment on column %s.%s is %s',
             $this->wrapTable($blueprint),
             $this->wrap($command->column->name),
-            "'".addslashes($command->value)."'"
+            "'".str_replace("'", "''", $command->value)."'"
         );
     }
 
@@ -627,6 +627,17 @@ class PostgresGrammar extends Grammar
         $columnType = "timestamp($column->precision) with time zone";
 
         return $column->useCurrent ? "$columnType default CURRENT_TIMESTAMP" : $columnType;
+    }
+
+    /**
+     * Create the column definition for a year type.
+     *
+     * @param  \Illuminate\Support\Fluent  $column
+     * @return string
+     */
+    protected function typeYear(Fluent $column)
+    {
+        return $this->typeInteger($column);
     }
 
     /**

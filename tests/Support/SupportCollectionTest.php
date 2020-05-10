@@ -979,9 +979,11 @@ class SupportCollectionTest extends TestCase
 
         $this->assertEquals(['first' => 'Taylor'], $data->except(['last', 'email', 'missing'])->all());
         $this->assertEquals(['first' => 'Taylor'], $data->except('last', 'email', 'missing')->all());
+        $this->assertEquals(['first' => 'Taylor'], $data->except(collect(['last' => 'Otwell', 'email' => 'taylorotwell@gmail.com', 'missing']))->all());
 
         $this->assertEquals(['first' => 'Taylor', 'email' => 'taylorotwell@gmail.com'], $data->except(['last'])->all());
         $this->assertEquals(['first' => 'Taylor', 'email' => 'taylorotwell@gmail.com'], $data->except('last')->all());
+        $this->assertEquals(['first' => 'Taylor', 'email' => 'taylorotwell@gmail.com'], $data->except(collect(['last' => 'Otwell']))->all());
     }
 
     public function testPluckWithArrayAndObjectValues()
@@ -2315,6 +2317,40 @@ class SupportCollectionTest extends TestCase
         $this->assertSame([['free' => false, 'title' => 'Premium']], $premium->values()->toArray());
     }
 
+    public function testPartitionWithOperators()
+    {
+        $collection = new Collection([
+            ['name' => 'Tim', 'age' => 17],
+            ['name' => 'Agatha', 'age' => 62],
+            ['name' => 'Kristina', 'age' => 33],
+            ['name' => 'Tim', 'age' => 41],
+        ]);
+
+        list($tims, $others) = $collection->partition('name', 'Tim');
+
+        $this->assertEquals($tims->values()->all(), [
+            ['name' => 'Tim', 'age' => 17],
+            ['name' => 'Tim', 'age' => 41],
+        ]);
+
+        $this->assertEquals($others->values()->all(), [
+            ['name' => 'Agatha', 'age' => 62],
+            ['name' => 'Kristina', 'age' => 33],
+        ]);
+
+        list($adults, $minors) = $collection->partition('age', '>=', 18);
+
+        $this->assertEquals($adults->values()->all(), [
+            ['name' => 'Agatha', 'age' => 62],
+            ['name' => 'Kristina', 'age' => 33],
+            ['name' => 'Tim', 'age' => 41],
+        ]);
+
+        $this->assertEquals($minors->values()->all(), [
+            ['name' => 'Tim', 'age' => 17],
+        ]);
+    }
+
     public function testPartitionPreservesKeys()
     {
         $courses = new Collection([
@@ -2425,6 +2461,27 @@ class SupportCollectionTest extends TestCase
         });
 
         $this->assertSame(['michael', 'tom', 'taylor'], $collection->toArray());
+    }
+
+    public function testGetNestedValue()
+    {
+        $collection = new Collection([
+            'foo' => [
+                'bar' => 'baz',
+                'books' => [
+                    'Book 1',
+                    'Book 2',
+                ],
+                'todos' => [
+                    'first' => 'Todo 1',
+                    'second' => 'Todo 2',
+                ],
+            ],
+        ]);
+
+        $this->assertEquals('baz', $collection->get('foo.bar'));
+        $this->assertEquals('Book 1', $collection->get('foo.books.0'));
+        $this->assertEquals('Todo 2', $collection->get('foo.todos.second'));
     }
 }
 

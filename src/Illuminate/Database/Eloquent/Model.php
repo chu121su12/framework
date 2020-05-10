@@ -230,7 +230,9 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
             if ($this->isFillable($key)) {
                 $this->setAttribute($key, $value);
             } elseif ($totallyGuarded) {
-                throw new MassAssignmentException($key);
+                throw new MassAssignmentException(
+                    "Add [{$key}] to fillable property to allow mass assignment."
+                );
             }
         }
 
@@ -1158,9 +1160,9 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     public function getTable()
     {
         if (! isset($this->table)) {
-            $this->setTable(str_replace(
+            return str_replace(
                 '\\', '', Str::snake(Str::plural(class_basename($this)))
-            ));
+            );
         }
 
         return $this->table;

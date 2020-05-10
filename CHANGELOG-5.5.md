@@ -2,14 +2,81 @@
 
 ## [Unreleased]
 
+### Changed
+- Use `Arr::get()` in `Collection::get()` ([#22554](https://github.com/laravel/framework/pull/22554))
+- Pass entire config to `FtpAdapter` ([#22539](https://github.com/laravel/framework/pull/22539))
+
+
+## v5.5.28 (2017-12-26)
+
+### Added
+- Added `AnonymousNotifiable::notifyNow()` method ([#22530](https://github.com/laravel/framework/pull/22530))
+- Added `EventFake::assertDispatchedTimes()` method ([#22528](https://github.com/laravel/framework/pull/22528))
+
+### Changed
+- Check for `--no-interaction` flag on command calls ([#22515](https://github.com/laravel/framework/pull/22515), [ba5e31d](https://github.com/laravel/framework/commit/ba5e31dde341884b3bf03178d1a529abd55e7886))
+
+### Fixed
+- Fix Validator not handling properly inline messages for `size` rules ([#22518](https://github.com/laravel/framework/pull/22518), [690d9fc](https://github.com/laravel/framework/commit/690d9fcc380252806cd19c164af843ccb3e801d9))
+
+
+## v5.5.27 (2017-12-20)
+
+### Added
+- Allow `HtmlString` as line in `MailMessage` ([#22473](https://github.com/laravel/framework/pull/22473))
+- Allow chaining of the `Request::merge()` calls ([#22479](https://github.com/laravel/framework/pull/22479))
+
+### Changed
+- Reverted performance improvements of `Model::getTable()` ([#22478](https://github.com/laravel/framework/pull/22478))
+
+
+## v5.5.26 (2017-12-18)
+
+### Added
+- Support passing collections to `Collection::except()` ([#22399](https://github.com/laravel/framework/pull/22399))
+- Made `Command` class macroable ([#22426](https://github.com/laravel/framework/pull/22426), [#22434](https://github.com/laravel/framework/pull/22434))
+- Added `ProcessUtils` class for command argument escaping ([#22448](https://github.com/laravel/framework/pull/22448))
+- Added array support to `Optional` helper class ([#22417](https://github.com/laravel/framework/pull/22417))
+
+### Changed
+- Added "cattle" as an uncountable word ([#22415](https://github.com/laravel/framework/pull/22415))
+- Added `Dispatcher` contract on `NotificationFake` and return fake object from `Notification::fake()` ([#22396](https://github.com/laravel/framework/pull/22396))
+- Only add value as query binding if it isn't an `Expression` ([#22451](https://github.com/laravel/framework/pull/22451))
+
+### Fixed
+- Fixed database queue transactions wrapped in closures ([#22394](https://github.com/laravel/framework/pull/22394))
+- Fixed an issue with multiple `dont-discover` packages ([#22443](https://github.com/laravel/framework/pull/22443))
+- Fixed incorrect description type in `Console/Parser` ([#22449](https://github.com/laravel/framework/pull/22449))
+
+
+## v5.5.25 (2017-12-11)
+
+### Added
+- Added support for Flysystem caching ([#22310](https://github.com/laravel/framework/pull/22310), [0657496](https://github.com/laravel/framework/commit/06574964c677c4205668def84ede22e3ca5eee9c))
+- Added support for `year` data type ([#22377](https://github.com/laravel/framework/pull/22377))
+- Added support for setting Whoops debug editor ([#22350](https://github.com/laravel/framework/pull/22350), [c6e3a73](https://github.com/laravel/framework/commit/c6e3a73d28ca91a3119a6eb51ef14dd332a64719))
+
+### Changed
+- Use `Model::newQueryWithoutRelationships()` in `Collection::load()` ([#22363](https://github.com/laravel/framework/pull/22363))
+- Respect `schema` config in `PostgresBuilder` ([#22365](https://github.com/laravel/framework/pull/22365), [de561cb](https://github.com/laravel/framework/commit/de561cb0c3de5d793a2bf93c5353dcec00c9544b))
+
+### Fixed
+- Fixed SQS queue driver for PHP 7.2 ([#22374](https://github.com/laravel/framework/pull/22374))
+
+
+## v5.5.24 (2017-12-06)
+
 ### Added
 - Added `WithFaker` testing trait ([#22280](https://github.com/laravel/framework/pull/22280), [4841089](https://github.com/laravel/framework/commit/4841089645e1772e64b501a4f69478b2ee7f4550), [5c72698](https://github.com/laravel/framework/commit/5c726986ae1ecb926ae9d77e28848bb38d020041))
 
 ### Changed
 - Made `Relation::$morphMap` public ([e44596f](https://github.com/laravel/framework/commit/e44596f65667962af69fd9cd9e63beb927fecaa1))
+- Trim return value of `ValidatesAttributes::shouldBlockPhpUpload()` ([90a8faf](https://github.com/laravel/framework/commit/90a8fafd6b70d8f059e86010de996c5db6da4c37))
 
 ### Fixed
 - Fixed an issue with queueable notifications ([#22275](https://github.com/laravel/framework/pull/22275))
+- Fixed `NullSessionDriver` upstream issues ([#22314](https://github.com/laravel/framework/pull/22314))
+- Move `payload` to the end of the insert array of a job ([#22334](https://github.com/laravel/framework/pull/22334))
 
 
 ## v5.5.23 (2017-12-04)

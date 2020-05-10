@@ -123,7 +123,9 @@ class PackageManifest
                 : []
             ];
         })->each(function ($configuration) use (&$ignore) {
-            $ignore += isset($configuration['dont-discover']) ? $configuration['dont-discover'] : [];
+            $ignore = array_merge(
+                $ignore, isset($configuration['dont-discover']) ? $configuration['dont-discover'] : []
+            );
         })->reject(function ($configuration, $package) use ($ignore, $ignoreAll) {
             return $ignoreAll || in_array($package, $ignore);
         })->filter()->all());
