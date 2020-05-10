@@ -12,6 +12,8 @@ use Illuminate\Support\Collection;
 
 class SupportArrTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     public function testAccessible()
     {
         $this->assertTrue(Arr::accessible([]));

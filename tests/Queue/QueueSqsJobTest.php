@@ -12,7 +12,7 @@ use Illuminate\Container\Container;
 
 class QueueSqsJobTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->key = 'AMAZONSQSKEY';
         $this->secret = 'AmAz0n+SqSsEcReT+aLpHaNuM3R1CsTr1nG';
@@ -50,7 +50,7 @@ class QueueSqsJobTest extends TestCase
         ];
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

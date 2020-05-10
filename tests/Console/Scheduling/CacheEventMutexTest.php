@@ -31,7 +31,7 @@ class CacheEventMutexTest extends TestCase
      */
     protected $cacheRepository;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

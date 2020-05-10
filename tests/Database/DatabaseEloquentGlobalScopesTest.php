@@ -11,7 +11,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 class DatabaseEloquentGlobalScopesTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -21,7 +21,7 @@ class DatabaseEloquentGlobalScopesTest extends TestCase
         ])->bootEloquent();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
 

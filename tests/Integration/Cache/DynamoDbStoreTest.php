@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Cache;
  */
 class DynamoDbStoreTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

@@ -38,7 +38,7 @@ class ClearCommandTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -52,7 +52,7 @@ class ClearCommandTest extends TestCase
         $this->command->setLaravel($app);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

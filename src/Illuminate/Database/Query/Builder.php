@@ -2638,7 +2638,7 @@ class Builder
      */
     public function insertUsing(array $columns, $query)
     {
-        [$sql, $bindings] = $this->createSub($query);
+        list($sql, $bindings) = $this->createSub($query);
 
         return $this->connection->insert(
             $this->grammar->compileInsertUsing($this, $columns, $sql),

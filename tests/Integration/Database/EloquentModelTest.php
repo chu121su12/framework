@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class EloquentModelTest extends DatabaseTestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

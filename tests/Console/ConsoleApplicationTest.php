@@ -12,7 +12,7 @@ use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 class ConsoleApplicationTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

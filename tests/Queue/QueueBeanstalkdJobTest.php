@@ -15,7 +15,7 @@ use Illuminate\Contracts\Events\Dispatcher;
 
 class QueueBeanstalkdJobTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

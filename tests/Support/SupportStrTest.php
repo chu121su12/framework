@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 
 class SupportStrTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     public function testStringCanBeLimitedByWords()
     {
         $this->assertEquals('Taylor...', Str::words('Taylor Otwell', 1));

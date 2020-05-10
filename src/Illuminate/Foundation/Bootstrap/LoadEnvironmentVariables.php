@@ -41,11 +41,14 @@ class LoadEnvironmentVariables
      */
     protected function checkForSpecificEnvironmentFile($app)
     {
-        if ($app->runningInConsole() && ($input = new ArgvInput)->hasParameterOption('--env')) {
-            if ($this->setEnvironmentFilePath(
-                $app, $app->environmentFile().'.'.$input->getParameterOption('--env')
-            )) {
-                return;
+        if ($app->runningInConsole()) {
+            $input = new ArgvInput;
+            if ($input->hasParameterOption('--env')) {
+                if ($this->setEnvironmentFilePath(
+                    $app, $app->environmentFile().'.'.$input->getParameterOption('--env')
+                )) {
+                    return;
+                }
             }
         }
 
@@ -99,7 +102,8 @@ class LoadEnvironmentVariables
      */
     protected function writeErrorAndDie(InvalidFileException $e)
     {
-        $output = (new ConsoleOutput)->getErrorOutput();
+        $output = new ConsoleOutput;
+        $output = $output->getErrorOutput();
 
         $output->writeln('The environment file is invalid!');
         $output->writeln($e->getMessage());

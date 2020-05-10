@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class DatabaseEloquentTimestampsTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         $db = new DB;
 
@@ -56,7 +56,7 @@ class DatabaseEloquentTimestampsTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->schema()->drop('users');
         $this->schema()->drop('users_created_at');

@@ -14,7 +14,7 @@ use Illuminate\Cache\RedisTaggedCache;
 
 class CacheTaggedCacheTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

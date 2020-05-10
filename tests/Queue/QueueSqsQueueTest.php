@@ -13,12 +13,12 @@ use Illuminate\Container\Container;
 
 class QueueSqsQueueTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }
 
-    protected function setUp(): void
+    protected function setUp()
     {
         // Use Mockery to mock the SqsClient
         $this->sqs = m::mock(SqsClient::class);

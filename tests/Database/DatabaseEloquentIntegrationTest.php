@@ -25,12 +25,14 @@ use Illuminate\Pagination\AbstractPaginator as Paginator;
 
 class DatabaseEloquentIntegrationTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     /**
      * Setup the database schema.
      *
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $db = new DB;
 
@@ -130,7 +132,7 @@ class DatabaseEloquentIntegrationTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         foreach (['default', 'second_connection'] as $connection) {
             $this->schema($connection)->drop('users');

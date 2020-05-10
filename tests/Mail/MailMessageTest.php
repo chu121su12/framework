@@ -20,7 +20,7 @@ class MailMessageTest extends TestCase
      */
     protected $message;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -28,7 +28,7 @@ class MailMessageTest extends TestCase
         $this->message = new Message($this->swift);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

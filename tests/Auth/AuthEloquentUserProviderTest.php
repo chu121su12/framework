@@ -11,7 +11,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 
 class AuthEloquentUserProviderTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

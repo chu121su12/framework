@@ -23,7 +23,7 @@ class AuthorizeMiddlewareTest extends TestCase
     protected $user;
     protected $router;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -44,7 +44,7 @@ class AuthorizeMiddlewareTest extends TestCase
         });
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

@@ -123,7 +123,7 @@ trait ResponseTrait
      */
     public function getCallback()
     {
-        return $this->callback ?? null;
+        return isset($this->callback) ? $this->callback : null;
     }
 
     /**

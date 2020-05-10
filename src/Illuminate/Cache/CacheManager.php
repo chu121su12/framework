@@ -241,9 +241,9 @@ class CacheManager implements FactoryContract
             new DynamoDbStore(
                 new DynamoDbClient($dynamoConfig),
                 $config['table'],
-                $config['attributes']['key'] ?? 'key',
-                $config['attributes']['value'] ?? 'value',
-                $config['attributes']['expiration'] ?? 'expires_at',
+                isset($config['attributes']) && isset($config['attributes']['key']) ? $config['attributes']['key'] : 'key',
+                isset($config['attributes']) && isset($config['attributes']['value']) ? $config['attributes']['value'] : 'value',
+                isset($config['attributes']) && isset($config['attributes']['expiration']) ? $config['attributes']['expiration'] : 'expires_at',
                 $this->getPrefix($config)
             )
         );

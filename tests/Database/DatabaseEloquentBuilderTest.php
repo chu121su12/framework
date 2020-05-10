@@ -23,7 +23,9 @@ use Illuminate\Database\Eloquent\RelationNotFoundException;
 
 class DatabaseEloquentBuilderTest extends TestCase
 {
-    protected function tearDown(): void
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
+    protected function tearDown()
     {
         m::close();
     }

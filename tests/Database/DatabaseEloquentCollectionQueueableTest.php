@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class DatabaseEloquentCollectionQueueableTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         Mockery::close();
     }

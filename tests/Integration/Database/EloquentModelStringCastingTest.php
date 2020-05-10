@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  */
 class EloquentModelStringCastingTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         $db = new DB;
 
@@ -49,7 +49,7 @@ class EloquentModelStringCastingTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->schema()->drop('casting_table');
     }

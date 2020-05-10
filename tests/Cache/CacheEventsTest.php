@@ -15,7 +15,7 @@ use Illuminate\Cache\Events\KeyForgotten;
 
 class CacheEventsTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

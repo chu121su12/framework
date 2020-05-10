@@ -11,7 +11,7 @@ use Illuminate\Tests\Integration\Database\DatabaseTestCase;
  */
 class EloquentPaginateTest extends DatabaseTestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

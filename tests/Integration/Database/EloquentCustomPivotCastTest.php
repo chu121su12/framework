@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class EloquentCustomPivotCastTest extends DatabaseTestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

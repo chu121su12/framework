@@ -11,7 +11,7 @@ use Illuminate\Contracts\Translation\Loader;
 
 class TranslationTranslatorTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Date;
 
 class DateFacadeTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         parent::tearDown();
         DateFactory::useHandler(Carbon::class);

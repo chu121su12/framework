@@ -18,7 +18,7 @@ class AuthenticateMiddlewareTest extends TestCase
 {
     protected $auth;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $container = Container::setInstance(new Container);
 
@@ -29,7 +29,7 @@ class AuthenticateMiddlewareTest extends TestCase
         });
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

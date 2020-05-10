@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class DatabaseEloquentMorphTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         Relation::morphMap([], false);
 

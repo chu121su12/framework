@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CookieTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

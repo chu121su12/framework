@@ -13,14 +13,16 @@ use Illuminate\Auth\Passwords\DatabaseTokenRepository;
 
 class AuthDatabaseTokenRepositoryTest extends TestCase
 {
-    protected function setUp(): void
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
+    protected function setUp()
     {
         parent::setUp();
 
         Carbon::setTestNow(Carbon::now());
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         parent::tearDown();
 

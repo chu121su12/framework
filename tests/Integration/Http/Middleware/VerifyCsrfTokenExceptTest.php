@@ -11,7 +11,7 @@ class VerifyCsrfTokenExceptTest extends TestCase
     private $stub;
     private $request;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

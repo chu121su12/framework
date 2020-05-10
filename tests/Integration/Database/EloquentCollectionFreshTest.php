@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class EloquentCollectionFreshTest extends DatabaseTestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

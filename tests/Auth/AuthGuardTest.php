@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class AuthGuardTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }
@@ -313,7 +313,7 @@ class AuthGuardTest extends TestCase
 
     public function testLogoutDoesNotSetRememberTokenIfNotPreviouslySet()
     {
-        [$session, $provider, $request] = $this->getMocks();
+        list($session, $provider, $request) = $this->getMocks();
         $mock = $this->getMockBuilder(SessionGuard::class)->setMethods(['clearUserDataFromStorage'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
         $user = m::mock(Authenticatable::class);
 

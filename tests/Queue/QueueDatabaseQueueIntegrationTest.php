@@ -27,7 +27,7 @@ class QueueDatabaseQueueIntegrationTest extends TestCase
      */
     protected $container;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $db = new DB;
 
@@ -95,7 +95,7 @@ class QueueDatabaseQueueIntegrationTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->schema()->drop('jobs');
     }

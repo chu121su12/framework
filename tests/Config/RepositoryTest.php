@@ -17,7 +17,7 @@ class RepositoryTest extends TestCase
      */
     protected $config;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->repository = new Repository($this->config = [
             'foo' => 'bar',

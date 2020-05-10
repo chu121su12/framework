@@ -10,7 +10,7 @@ use Illuminate\Contracts\Auth\UserProvider;
 
 class AuthTokenGuardTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

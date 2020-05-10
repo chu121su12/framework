@@ -11,7 +11,7 @@ use Illuminate\Contracts\Encryption\Encrypter;
 
 class EncryptedSessionStoreTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

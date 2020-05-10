@@ -12,19 +12,21 @@ use Illuminate\Contracts\Events\Dispatcher;
 
 class RouteRegistrarTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     /**
      * @var \Illuminate\Routing\Router
      */
     protected $router;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
         $this->router = new Router(m::mock(Dispatcher::class), Container::getInstance());
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

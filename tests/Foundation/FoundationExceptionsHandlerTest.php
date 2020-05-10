@@ -21,6 +21,8 @@ use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 
 class FoundationExceptionsHandlerTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     protected $config;
 
     protected $container;
@@ -29,7 +31,7 @@ class FoundationExceptionsHandlerTest extends TestCase
 
     protected $request;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->config = m::mock(Config::class);
 
@@ -51,7 +53,7 @@ class FoundationExceptionsHandlerTest extends TestCase
         $this->handler = new Handler($this->container);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

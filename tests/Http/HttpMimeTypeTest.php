@@ -7,6 +7,8 @@ use Illuminate\Http\Testing\MimeType;
 
 class HttpMimeTypeTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     public function testMimeTypeFromFileNameExistsTrue()
     {
         $this->assertSame('image/jpeg', MimeType::from('foo.jpg'));

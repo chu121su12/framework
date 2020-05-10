@@ -12,6 +12,8 @@ use PHPUnit\Framework\Constraint\ArraySubset;
  */
 abstract class Assert extends PHPUnit
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     /**
      * Asserts that an array has a specified subset.
      *
@@ -25,7 +27,7 @@ abstract class Assert extends PHPUnit
      *
      * @link https://github.com/sebastianbergmann/phpunit/issues/3494
      */
-    public static function assertArraySubset($subset, $array, bool $checkForObjectIdentity = false, string $message = ''): void
+    public static function assertArraySubset($subset, $array, $checkForObjectIdentity = false, $message = '')
     {
         if (! (is_array($subset) || $subset instanceof ArrayAccess)) {
             throw InvalidArgumentHelper::factory(1, 'array or ArrayAccess');

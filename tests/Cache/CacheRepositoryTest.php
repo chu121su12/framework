@@ -17,7 +17,7 @@ use Illuminate\Contracts\Cache\Store;
 
 class CacheRepositoryTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
         Carbon::setTestNow();

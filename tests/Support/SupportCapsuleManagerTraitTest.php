@@ -13,7 +13,7 @@ class SupportCapsuleManagerTraitTest extends TestCase
 {
     use CapsuleManagerTrait;
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

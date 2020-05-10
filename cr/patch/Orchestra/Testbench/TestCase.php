@@ -20,7 +20,8 @@ use Illuminate\Foundation\Testing\Concerns\InteractsWithExceptionHandling;
 
 abstract class TestCase extends BaseTestCase implements Contracts\TestCase
 {
-    use InteractsWithExceptionHandling,
+    use \PHPUnit\Framework\PhpUnit8Assert,
+        InteractsWithExceptionHandling,
         InteractsWithAuthentication,
         InteractsWithConsole,
         InteractsWithContainer,

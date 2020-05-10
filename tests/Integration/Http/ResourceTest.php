@@ -26,7 +26,6 @@ use Illuminate\Tests\Integration\Http\Fixtures\PostResourceWithOptionalRelations
 use Illuminate\Tests\Integration\Http\Fixtures\AuthorResourceWithOptionalRelationship;
 use Illuminate\Tests\Integration\Http\Fixtures\PostResourceWithOptionalPivotRelationship;
 
-
 class ResourceTest_test_leading_merge__keyed_value_is_merged_correctly_Class
 {
     use ConditionallyLoadsAttributes;
@@ -122,6 +121,58 @@ class ResourceTest_test_nested_merges_Class
             [
                 'Fourth',
             ],
+        ]);
+    }
+}
+
+class ResourceTest_test_leading_merge_keyed_value_is_merged_correctly_when_first_value_is_missing_Class
+{
+    use ConditionallyLoadsAttributes;
+
+    public function work()
+    {
+        return $this->filter([
+            new MergeValue([
+                0 => new MissingValue,
+                'name' => 'mohamed',
+                'location' => 'hurghada',
+            ]),
+        ]);
+    }
+}
+
+class ResourceTest_test_merge_value_can_merge_json_serializable_Class
+{
+    use ConditionallyLoadsAttributes;
+
+    public function work()
+    {
+        $postResource = new PostResource(new Post([
+            'id' => 1,
+            'title' => 'Test Title 1',
+        ]));
+
+        return $this->filter([
+            new MergeValue($postResource),
+            'user' => 'test user',
+            'age' => 'test age',
+        ]);
+    }
+}
+
+class ResourceTest_test_merge_value_can_merge_collection_of_json_serializable_Class
+{
+    use ConditionallyLoadsAttributes;
+
+    public function work()
+    {
+        $posts = collect([
+            new Post(['id' => 1, 'title' => 'Test title 1']),
+            new Post(['id' => 2, 'title' => 'Test title 2']),
+        ]);
+
+        return $this->filter([
+            new MergeValue(PostResource::collection($posts)),
         ]);
     }
 }
@@ -742,20 +793,7 @@ class ResourceTest extends TestCase
 
     public function test_leading_merge_keyed_value_is_merged_correctly_when_first_value_is_missing()
     {
-        $filter = new class {
-            use ConditionallyLoadsAttributes;
-
-            public function work()
-            {
-                return $this->filter([
-                    new MergeValue([
-                        0 => new MissingValue,
-                        'name' => 'mohamed',
-                        'location' => 'hurghada',
-                    ]),
-                ]);
-            }
-        };
+        $filter = new ResourceTest_test_leading_merge_keyed_value_is_merged_correctly_when_first_value_is_missing_Class;
 
         $results = $filter->work();
 
@@ -799,23 +837,7 @@ class ResourceTest extends TestCase
 
     public function test_merge_value_can_merge_json_serializable()
     {
-        $filter = new class {
-            use ConditionallyLoadsAttributes;
-
-            public function work()
-            {
-                $postResource = new PostResource(new Post([
-                    'id' => 1,
-                    'title' => 'Test Title 1',
-                ]));
-
-                return $this->filter([
-                    new MergeValue($postResource),
-                    'user' => 'test user',
-                    'age' => 'test age',
-                ]);
-            }
-        };
+        $filter = new ResourceTest_test_merge_value_can_merge_json_serializable_Class;
 
         $results = $filter->work();
 
@@ -830,21 +852,7 @@ class ResourceTest extends TestCase
 
     public function test_merge_value_can_merge_collection_of_json_serializable()
     {
-        $filter = new class {
-            use ConditionallyLoadsAttributes;
-
-            public function work()
-            {
-                $posts = collect([
-                    new Post(['id' => 1, 'title' => 'Test title 1']),
-                    new Post(['id' => 2, 'title' => 'Test title 2']),
-                ]);
-
-                return $this->filter([
-                    new MergeValue(PostResource::collection($posts)),
-                ]);
-            }
-        };
+        $filter = new ResourceTest_test_merge_value_can_merge_collection_of_json_serializable_Class;
 
         $results = $filter->work();
 

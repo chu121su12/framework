@@ -34,7 +34,7 @@ class CacheArrayStoreTest extends TestCase
         ], $store->many(['foo', 'fizz', 'quz', 'norf']));
     }
 
-    public function testItemsCanExpire(): void
+    public function testItemsCanExpire()
     {
         Carbon::setTestNow(Carbon::now());
         $store = new ArrayStore;

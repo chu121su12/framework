@@ -31,16 +31,17 @@ use Illuminate\Database\Eloquent\MassAssignmentException;
 
 class DatabaseEloquentModelTest extends TestCase
 {
-    use InteractsWithTime;
+    use InteractsWithTime,
+        \PHPUnit\Framework\PhpUnit8Assert;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
         Carbon::setTestNow(Carbon::now());
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         parent::tearDown();
 

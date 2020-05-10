@@ -16,13 +16,13 @@ class FilesystemAdapterTest extends TestCase
     private $tempDir;
     private $filesystem;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->tempDir = __DIR__.'/tmp';
         $this->filesystem = new Filesystem(new Local($this->tempDir));
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $filesystem = new Filesystem(new Local(dirname($this->tempDir)));
         $filesystem->deleteDir(basename($this->tempDir));

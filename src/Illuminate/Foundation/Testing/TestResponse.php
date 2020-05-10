@@ -638,7 +638,8 @@ class TestResponse
      */
     public function assertJsonValidationErrors($keys)
     {
-        $errors = $this->json()['errors'] ?? [];
+        $json = $this->json();
+        $errors = isset($json['errors']) ? $json['errors'] : [];
 
         foreach (Arr::wrap($keys) as $key) {
             PHPUnit::assertArrayHasKey(

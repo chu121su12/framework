@@ -725,7 +725,7 @@ class AccessGateTestClassForGuest
         return true;
     }
 
-    public function bar(?stdClass $user)
+    public function bar(stdClass $user = null)
     {
         static::$calledMethod = 'bar got invoked';
 
@@ -773,7 +773,7 @@ class AccessGateTestGuestNullableInvokable
 {
     public static $calledMethod = null;
 
-    public function __invoke(?StdClass $user)
+    public function __invoke(StdClass $user = null)
     {
         static::$calledMethod = 'Nullable __invoke was called';
 

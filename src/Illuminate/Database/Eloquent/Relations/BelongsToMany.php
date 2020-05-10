@@ -693,11 +693,11 @@ class BelongsToMany extends Relation
     {
         $this->query->addSelect($this->shouldSelect());
 
-        $column = $column ?? $this->getRelated()->qualifyColumn(
+        $column = isset($column) ? $column : $this->getRelated()->qualifyColumn(
             $this->getRelatedKeyName()
         );
 
-        $alias = $alias ?? $this->getRelatedKeyName();
+        $alias = isset($alias) ? $alias : $this->getRelatedKeyName();
 
         return $this->query->chunkById($count, function ($results) use ($callback) {
             $this->hydratePivotRelation($results->all());

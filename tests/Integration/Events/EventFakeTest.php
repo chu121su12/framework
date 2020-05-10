@@ -36,7 +36,7 @@ class EventFakeTest extends TestCase
      *
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -53,7 +53,7 @@ class EventFakeTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         Schema::dropIfExists('posts');
 

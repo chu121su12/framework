@@ -40,6 +40,8 @@ class SupportCollectionTest_testHigherOrderFilter_active_false_Class
 
 class SupportCollectionTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     public function testFirstReturnsFirstItemInCollection()
     {
         $c = new Collection(['foo', 'bar']);

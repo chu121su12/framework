@@ -15,7 +15,7 @@ class SupportFacadesEventTest extends TestCase
 {
     private $events;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -27,7 +27,7 @@ class SupportFacadesEventTest extends TestCase
         Facade::setFacadeApplication($container);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         Event::clearResolvedInstances();
 

@@ -110,11 +110,15 @@ class DynamoDbStore implements Store
         }
 
         if (isset($response['Item'][$this->valueAttribute])) {
-            return $this->unserialize(
-                $response['Item'][$this->valueAttribute]['S'] ??
-                $response['Item'][$this->valueAttribute]['N'] ??
-                null
-            );
+            if (isset($response['Item'][$this->valueAttribute]['S'])) {
+                return $this->unserialize($response['Item'][$this->valueAttribute]['S']);
+            }
+
+            if (isset($response['Item'][$this->valueAttribute]['N'])) {
+                return $this->unserialize($response['Item'][$this->valueAttribute]['N']);
+            }
+
+            return $this->unserialize(null);
         }
     }
 
@@ -155,11 +159,17 @@ class DynamoDbStore implements Store
             if ($this->isExpired($response, $now)) {
                 $value = null;
             } else {
-                $value = $this->unserialize(
-                    $response[$this->valueAttribute]['S'] ??
-                    $response[$this->valueAttribute]['N'] ??
-                    null
-                );
+                if (isset($response[$this->valueAttribute])) {
+                    if (isset($response[$this->valueAttribute]['S'])) {
+                        $value = $this->unserialize($response[$this->valueAttribute]['S']);
+                    } elseif (isset($response[$this->valueAttribute]['N'])) {
+                        $value = $this->unserialize($response[$this->valueAttribute]['N']);
+                    } else {
+                        $value = $this->unserialize(null);
+                    }
+                } else {
+                    $value = $this->unserialize(null);
+                }
             }
 
             return [Str::replaceFirst($this->prefix, '', $response[$this->keyAttribute]['S']) => $value];

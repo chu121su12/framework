@@ -31,6 +31,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RoutingRouteTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     public function testBasicDispatchingOfRoutes()
     {
         $router = $this->getRouter();

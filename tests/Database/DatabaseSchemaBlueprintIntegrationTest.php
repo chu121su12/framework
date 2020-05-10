@@ -21,7 +21,7 @@ class DatabaseSchemaBlueprintIntegrationTest extends TestCase
      *
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->db = $db = new DB;
 
@@ -37,7 +37,7 @@ class DatabaseSchemaBlueprintIntegrationTest extends TestCase
         Facade::setFacadeApplication($container);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         Facade::clearResolvedInstances();
         Facade::setFacadeApplication(null);

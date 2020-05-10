@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class DatabaseEloquentHasManyThroughIntegrationTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         $db = new DB;
 
@@ -63,7 +63,7 @@ class DatabaseEloquentHasManyThroughIntegrationTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->schema()->drop('users');
         $this->schema()->drop('posts');

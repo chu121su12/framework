@@ -33,7 +33,7 @@ class ViewFactoryTest_testAddingLoopDoesNotCloseGenerator_Class
 
 class ViewFactoryTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

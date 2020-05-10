@@ -8,7 +8,7 @@ use Illuminate\Contracts\Console\Kernel;
 
 class ConsoleApplicationTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

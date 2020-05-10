@@ -15,7 +15,7 @@ class DatabaseEloquentBelongsToTest extends TestCase
 
     protected $related;
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

@@ -25,7 +25,9 @@ use Illuminate\Database\Query\Builder as BaseBuilder;
 
 class DatabaseConnectionTest extends TestCase
 {
-    protected function tearDown(): void
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
+    protected function tearDown()
     {
         m::close();
     }

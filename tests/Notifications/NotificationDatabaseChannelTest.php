@@ -10,7 +10,7 @@ use Illuminate\Notifications\Messages\DatabaseMessage;
 
 class NotificationDatabaseChannelTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

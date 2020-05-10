@@ -34,7 +34,7 @@ class ModelSerializationTest extends TestCase
         ]);
     }
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

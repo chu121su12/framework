@@ -110,7 +110,7 @@ class ValidationValidatorTest_testCustomValidationObject_multiple implements Rul
 
 class ValidationValidatorTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         Carbon::setTestNow();
         m::close();

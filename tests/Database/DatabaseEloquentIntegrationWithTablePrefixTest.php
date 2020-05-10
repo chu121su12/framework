@@ -15,7 +15,7 @@ class DatabaseEloquentIntegrationWithTablePrefixTest extends TestCase
      *
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $db = new DB;
 
@@ -66,7 +66,7 @@ class DatabaseEloquentIntegrationWithTablePrefixTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         foreach (['default'] as $connection) {
             $this->schema($connection)->drop('users');

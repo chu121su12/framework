@@ -29,7 +29,7 @@ class JobChainingTest extends TestCase
         ]);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         JobChainingTestFirstJob::$ran = false;
         JobChainingTestSecondJob::$ran = false;

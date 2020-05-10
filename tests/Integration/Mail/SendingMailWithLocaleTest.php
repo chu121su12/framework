@@ -18,7 +18,9 @@ use Illuminate\Contracts\Translation\HasLocalePreference;
  */
 class SendingMailWithLocaleTest extends TestCase
 {
-    protected function tearDown(): void
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
+    protected function tearDown()
     {
         parent::tearDown();
 
@@ -46,7 +48,7 @@ class SendingMailWithLocaleTest extends TestCase
         ]);
     }
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
     }

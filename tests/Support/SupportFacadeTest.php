@@ -11,13 +11,13 @@ use Illuminate\Support\Facades\Facade;
 
 class SupportFacadeTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         Facade::clearResolvedInstances();
         FacadeStub::setFacadeApplication(null);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

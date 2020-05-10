@@ -19,7 +19,9 @@ use Illuminate\Support\Testing\Fakes\QueueFake;
 
 class MailableQueuedTest extends TestCase
 {
-    protected function tearDown(): void
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
+    protected function tearDown()
     {
         m::close();
     }

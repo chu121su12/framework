@@ -9,7 +9,7 @@ use Illuminate\Contracts\Cache\Repository as Cache;
 
 class CacheRateLimiterTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

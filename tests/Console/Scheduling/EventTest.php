@@ -9,7 +9,7 @@ use Illuminate\Console\Scheduling\EventMutex;
 
 class EventTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }
