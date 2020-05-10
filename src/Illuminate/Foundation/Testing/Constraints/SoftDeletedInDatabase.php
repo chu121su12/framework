@@ -43,7 +43,7 @@ class SoftDeletedInDatabase extends Constraint
      * @param  string  $deletedAtColumn
      * @return void
      */
-    public function __construct(Connection $database, array $data, string $deletedAtColumn)
+    public function __construct(Connection $database, array $data, $deletedAtColumn)
     {
         $this->data = $data;
 

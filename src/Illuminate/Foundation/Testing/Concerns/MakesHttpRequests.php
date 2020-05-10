@@ -168,7 +168,7 @@ trait MakesHttpRequests
      * @param  string  $value
      * @return $this
      */
-    public function withCookie(string $name, string $value)
+    public function withCookie($name, $value)
     {
         $this->defaultCookies[$name] = $value;
 
