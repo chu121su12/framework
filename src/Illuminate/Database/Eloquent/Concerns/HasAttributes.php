@@ -735,9 +735,20 @@ trait HasAttributes
      */
     public function fromDateTime($value)
     {
-        return empty($value) ? $value : $this->asDateTime($value)->format(
-            $this->getDateFormat()
-        );
+        return empty($value) ? $value : $this->fromDateTimeWithMilisecond($this->asDateTime($value));
+    }
+
+    protected function fromDateTimeWithMilisecond($value)
+    {
+        $format = $this->getDateFormat();
+
+        if (Str::endsWith($format, '.v')) {
+            $format = preg_replace('/\.v$/', '.u', $format);
+
+            return preg_replace('/\d{3}$/', '', $value->format($format));
+        }
+
+        return $value->format($format);
     }
 
     /**
