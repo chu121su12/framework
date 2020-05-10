@@ -740,7 +740,7 @@ trait Date
     public function carbonize($date = null)
     {
         if ($date instanceof DateInterval) {
-            return $this->copy()->add($date);
+            return $this->copy()->addValue($date);
         }
 
         if ($date instanceof DatePeriod || $date instanceof CarbonPeriod) {
@@ -1456,7 +1456,7 @@ trait Date
      */
     public function setDateTime($year, $month, $day, $hour, $minute, $second = 0, $microseconds = 0)
     {
-        return $this->setDate($year, $month, $day)->setTime((int) $hour, (int) $minute, (int) $second, (int) $microseconds);
+        return $this->setDate($year, $month, $day)->setTimeValue((int) $hour, (int) $minute, (int) $second, (int) $microseconds);
     }
 
     /**
@@ -1596,7 +1596,7 @@ trait Date
     {
         $date = $this->resolveCarbon($date);
 
-        return $this->setTime($date->hour, $date->minute, $date->second, $date->microsecond);
+        return $this->setTimeValue($date->hour, $date->minute, $date->second, $date->microsecond);
     }
 
     /**
@@ -2370,7 +2370,7 @@ trait Date
             $unit = 'micro';
         }
 
-        return $this->setTime(...array_map(function ($name) use ($unit, $value) {
+        return $this->setTimeValue(...array_map(function ($name) use ($unit, $value) {
             return (int) ($name === $unit ? $value : $this->$name);
         }, $units));
     }

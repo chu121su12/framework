@@ -62,7 +62,7 @@ trait Modifiers
      */
     public function midDay()
     {
-        return $this->setTime(static::$midDayAt, 0, 0, 0);
+        return $this->setTimeValue(static::$midDayAt, 0, 0, 0);
     }
 
     /**

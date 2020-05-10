@@ -44,7 +44,7 @@ trait Boundaries
      */
     public function startOfDay()
     {
-        return $this->setTime(0, 0, 0, 0);
+        return $this->setTimeValue(0, 0, 0, 0);
     }
 
     /**
@@ -59,7 +59,7 @@ trait Boundaries
      */
     public function endOfDay()
     {
-        return $this->setTime(static::HOURS_PER_DAY - 1, static::MINUTES_PER_HOUR - 1, static::SECONDS_PER_MINUTE - 1, static::MICROSECONDS_PER_SECOND - 1);
+        return $this->setTimeValue(static::HOURS_PER_DAY - 1, static::MINUTES_PER_HOUR - 1, static::SECONDS_PER_MINUTE - 1, static::MICROSECONDS_PER_SECOND - 1);
     }
 
     /**
@@ -316,7 +316,7 @@ trait Boundaries
      */
     public function startOfHour()
     {
-        return $this->setTime($this->hour, 0, 0, 0);
+        return $this->setTimeValue($this->hour, 0, 0, 0);
     }
 
     /**
@@ -331,7 +331,7 @@ trait Boundaries
      */
     public function endOfHour()
     {
-        return $this->setTime($this->hour, static::MINUTES_PER_HOUR - 1, static::SECONDS_PER_MINUTE - 1, static::MICROSECONDS_PER_SECOND - 1);
+        return $this->setTimeValue($this->hour, static::MINUTES_PER_HOUR - 1, static::SECONDS_PER_MINUTE - 1, static::MICROSECONDS_PER_SECOND - 1);
     }
 
     /**
@@ -346,7 +346,7 @@ trait Boundaries
      */
     public function startOfMinute()
     {
-        return $this->setTime($this->hour, $this->minute, 0, 0);
+        return $this->setTimeValue($this->hour, $this->minute, 0, 0);
     }
 
     /**
@@ -361,7 +361,7 @@ trait Boundaries
      */
     public function endOfMinute()
     {
-        return $this->setTime($this->hour, $this->minute, static::SECONDS_PER_MINUTE - 1, static::MICROSECONDS_PER_SECOND - 1);
+        return $this->setTimeValue($this->hour, $this->minute, static::SECONDS_PER_MINUTE - 1, static::MICROSECONDS_PER_SECOND - 1);
     }
 
     /**
@@ -378,7 +378,7 @@ trait Boundaries
      */
     public function startOfSecond()
     {
-        return $this->setTime($this->hour, $this->minute, $this->second, 0);
+        return $this->setTimeValue($this->hour, $this->minute, $this->second, 0);
     }
 
     /**
@@ -395,7 +395,7 @@ trait Boundaries
      */
     public function endOfSecond()
     {
-        return $this->setTime($this->hour, $this->minute, $this->second, static::MICROSECONDS_PER_SECOND - 1);
+        return $this->setTimeValue($this->hour, $this->minute, $this->second, static::MICROSECONDS_PER_SECOND - 1);
     }
 
     /**
