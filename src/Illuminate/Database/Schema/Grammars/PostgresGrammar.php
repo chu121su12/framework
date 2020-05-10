@@ -853,7 +853,7 @@ class PostgresGrammar extends Grammar
      * @param  string  $type
      * @return string
      */
-    private function formatPostGisType(string $type)
+    private function formatPostGisType($type)
     {
         return "geography($type, 4326)";
     }

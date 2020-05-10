@@ -60,7 +60,7 @@ trait MakesHttpRequests
      * @param  string $value
      * @return $this
      */
-    public function withHeader(string $name, string $value)
+    public function withHeader($name, $value)
     {
         $this->defaultHeaders[$name] = $value;
 
@@ -152,7 +152,7 @@ trait MakesHttpRequests
      * @param  string  $url
      * @return $this
      */
-    public function from(string $url)
+    public function from($url)
     {
         $this->app['session']->setPreviousUrl($url);
 
