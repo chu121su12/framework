@@ -1,0 +1,4254 @@
+PHPUnit 5.7.27 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 5.6.40
+Configuration: Z:\.d\l\dev\http\laravel-prev\phpunit.xml.dist
+
+........................................E...................   60 / 4651 (  1%)
+............................................................  120 / 4651 (  2%)
+............................................................  180 / 4651 (  3%)
+............................................................  240 / 4651 (  5%)
+............................................................  300 / 4651 (  6%)
+............................................................  360 / 4651 (  7%)
+.................SSSSSSSSSSSS...............................  420 / 4651 (  9%)
+..........................................SSSSSS............  480 / 4651 ( 10%)
+....................................F.......................  540 / 4651 ( 11%)
+............................................................  600 / 4651 ( 12%)
+............................................................  660 / 4651 ( 14%)
+............................................................  720 / 4651 ( 15%)
+............................................................  780 / 4651 ( 16%)
+............................................................  840 / 4651 ( 18%)
+.....................................EEEEEE..EEEEEEEEE......  900 / 4651 ( 19%)
+............................................................  960 / 4651 ( 20%)
+............................................................ 1020 / 4651 ( 21%)
+...........................S................................ 1080 / 4651 ( 23%)
+............................................................ 1140 / 4651 ( 24%)
+............................................................ 1200 / 4651 ( 25%)
+............................................................ 1260 / 4651 ( 27%)
+............................................................ 1320 / 4651 ( 28%)
+............................................................ 1380 / 4651 ( 29%)
+............................................................ 1440 / 4651 ( 30%)
+............................................................ 1500 / 4651 ( 32%)
+........................E................................... 1560 / 4651 ( 33%)
+............................................................ 1620 / 4651 ( 34%)
+............................................................ 1680 / 4651 ( 36%)
+............................................................ 1740 / 4651 ( 37%)
+............................................................ 1800 / 4651 ( 38%)
+...........................................................E 1860 / 4651 ( 39%)
+.....................FFF..................E................. 1920 / 4651 ( 41%)
+.................S.....................................F.FF. 1980 / 4651 ( 42%)
+..............E............................................. 2040 / 4651 ( 43%)
+............................................................ 2100 / 4651 ( 45%)
+..........EEE.SSS........................................... 2160 / 4651 ( 46%)
+............................................................ 2220 / 4651 ( 47%)
+............................EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE 2280 / 4651 ( 49%)
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE 2340 / 4651 ( 50%)
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE..EEEEEEEEEEEEEEEE 2400 / 4651 ( 51%)
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE 2460 / 4651 ( 52%)
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE 2520 / 4651 ( 54%)
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE 2580 / 4651 ( 55%)
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE....EEEEEEEEE....... 2640 / 4651 ( 56%)
+............................................................ 2700 / 4651 ( 58%)
+..................
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+In Container.php line 810:
+                                       
+  Target class [auth] does not exist.  
+                                       
+
+In Container.php line 808:
+                             
+  Class auth does not exist  
+                             
+
+
+Fatal error: Class 'Carbon\CarbonImmutable' not found in Z:\.d\l\dev\http\laravel-prev\tests\Queue\DynamoDbFailedJobProviderTest.php on line 30
