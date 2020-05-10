@@ -2328,7 +2328,7 @@ class DatabaseQueryBuilderTest extends TestCase
         $builder->shouldReceive('forPage')->once()->with($page, $perPage)->andReturnSelf();
         $builder->shouldReceive('get')->once()->andReturn($results);
 
-        Paginator::currentPageResolver(function () use ($path) {
+        Paginator::currentPageResolver(function () {
             return 1;
         });
 
@@ -2359,7 +2359,7 @@ class DatabaseQueryBuilderTest extends TestCase
         $builder->shouldNotReceive('forPage');
         $builder->shouldNotReceive('get');
 
-        Paginator::currentPageResolver(function () use ($path) {
+        Paginator::currentPageResolver(function () {
             return 1;
         });
 
@@ -2373,6 +2373,26 @@ class DatabaseQueryBuilderTest extends TestCase
             'path' => $path,
             'pageName' => $pageName,
         ]), $result);
+    }
+
+    public function testWhereRowValues()
+    {
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('orders')->whereRowValues(['last_update', 'order_number'], '<', [1, 2]);
+        $this->assertEquals('select * from "orders" where (last_update, order_number) < (?, ?)', $builder->toSql());
+
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('orders')->where('company_id', 1)->orWhereRowValues(['last_update', 'order_number'], '<', [1, 2]);
+        $this->assertEquals('select * from "orders" where "company_id" = ? or (last_update, order_number) < (?, ?)', $builder->toSql());
+    }
+
+    public function testWhereRowValuesArityMismatch()
+    {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('The number of columns must match the number of values');
+
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('orders')->whereRowValues(['last_update'], '<', [1, 2]);
     }
 
     protected function getBuilder()

@@ -267,6 +267,16 @@ class BelongsToMany extends Relation
     }
 
     /**
+     * Get the class being used for pivot models.
+     *
+     * @return string
+     */
+    public function getPivotClass()
+    {
+        return $this->using ?? Pivot::class;
+    }
+
+    /**
      * Specify the custom pivot model to use for the relationship.
      *
      * @param  string  $class
@@ -959,7 +969,7 @@ class BelongsToMany extends Relation
      */
     public function getQualifiedParentKeyName()
     {
-        return $this->parent->getTable().'.'.$this->parentKey;
+        return $this->parent->qualifyColumn($this->parentKey);
     }
 
     /**

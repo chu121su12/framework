@@ -480,7 +480,7 @@ class Builder
      * Add a basic where clause to the query.
      *
      * @param  string|array|\Closure  $column
-     * @param  string|null  $operator
+     * @param  mixed   $operator
      * @param  mixed   $value
      * @param  string  $boolean
      * @return $this
@@ -1237,6 +1237,43 @@ class Builder
         $this->addBinding($query->getBindings(), 'where');
 
         return $this;
+    }
+
+    /**
+     * Adds a where condition using row values.
+     *
+     * @param  array   $columns
+     * @param  string  $operator
+     * @param  array   $values
+     * @param  string  $boolean
+     * @return $this
+     */
+    public function whereRowValues($columns, $operator, $values, $boolean = 'and')
+    {
+        if (count($columns) != count($values)) {
+            throw new InvalidArgumentException('The number of columns must match the number of values');
+        }
+
+        $type = 'RowValues';
+
+        $this->wheres[] = compact('type', 'columns', 'operator', 'values', 'boolean');
+
+        $this->addBinding($values);
+
+        return $this;
+    }
+
+    /**
+     * Adds a or where condition using row values.
+     *
+     * @param  array   $columns
+     * @param  string  $operator
+     * @param  array   $values
+     * @return $this
+     */
+    public function orWhereRowValues($columns, $operator, $values)
+    {
+        return $this->whereRowValues($columns, $operator, $values, 'or');
     }
 
     /**

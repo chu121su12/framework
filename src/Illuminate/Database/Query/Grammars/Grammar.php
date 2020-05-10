@@ -152,7 +152,7 @@ class Grammar extends BaseGrammar
      */
     protected function compileJoins(Builder $query, $joins)
     {
-        return collect($joins)->map(function ($join) use ($query) {
+        return collect($joins)->map(function ($join) {
             $table = $this->wrapTable($join->table);
 
             return trim("{$join->type} join {$table} {$this->compileWheres($join)}");
@@ -471,6 +471,20 @@ class Grammar extends BaseGrammar
     protected function whereNotExists(Builder $query, $where)
     {
         return 'not exists ('.$this->compileSelect($where['query']).')';
+    }
+
+    /**
+     * Compile a where row values condition.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereRowValues(Builder $query, $where)
+    {
+        $values = $this->parameterize($where['values']);
+
+        return '('.implode(', ', $where['columns']).') '.$where['operator'].' ('.$values.')';
     }
 
     /**

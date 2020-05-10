@@ -1937,6 +1937,7 @@ class ValidationValidatorTest extends TestCase
             ['rtsp://fully.qualified.domain/path'],
             ['rtsps://fully.qualified.domain/path'],
             ['rtspu://fully.qualified.domain/path'],
+            ['s3://fully.qualified.domain/path'],
             ['secondlife://fully.qualified.domain/path'],
             ['service://fully.qualified.domain/path'],
             ['session://fully.qualified.domain/path'],
