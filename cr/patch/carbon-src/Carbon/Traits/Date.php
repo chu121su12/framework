@@ -1473,6 +1473,10 @@ trait Date
      */
     public function setTimeValue($hour, $minute, $second = 0, $microseconds = 0)
     {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            return parent::setTime((int) $hour, (int) $minute, (int) $second);
+        }
+
         return parent::setTime((int) $hour, (int) $minute, (int) $second, (int) $microseconds);
     }
 
