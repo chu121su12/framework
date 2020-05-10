@@ -93,7 +93,7 @@ class AuthAccessGateTest extends TestCase
             //
         });
 
-        $gate->define('foo', function (StdClass $user = null) {
+        $gate->define('foo', function (stdClass $user = null) {
             return true;
         });
 
