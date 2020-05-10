@@ -344,7 +344,18 @@ class Translator extends Translation\Translator
             };
 
             usort($locales, function ($first, $second) use ($getScore) {
-                return $getScore($second) <=> $getScore($first);
+                $firstScore = $getScore($first);
+                $secondScore = $getScore($second);
+
+                if ($secondScore > $firstScore) {
+                    return 1;
+                }
+
+                if ($secondScore < $firstScore) {
+                    return -1;
+                }
+
+                return 0;
             });
 
             $locale = $locales[0];

@@ -6,7 +6,7 @@ use BadMethodCallException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Testing\Fakes\QueueFake;
-use PHPUnit\Framework\Constraint\ExceptionMessage;
+use PHPUnit_Framework_Constraint_ExceptionMessage as ExceptionMessage;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 

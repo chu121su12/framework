@@ -266,7 +266,9 @@ class Factory
 
     public function __call($name, $arguments)
     {
-        $result = $this->className::$name(...$arguments);
+        $className = $this->className;
+
+        $result = $className::$name(...$arguments);
 
         return $result instanceof CarbonInterface ? $result->settings($this->settings) : $result;
     }
