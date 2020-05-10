@@ -121,7 +121,7 @@ class BladeCustomTest extends AbstractBladeTestCase
 
     public function testCustomConditionsAccepts0AsArgument()
     {
-        $this->compiler->if('custom', function ($number) {
+        $this->compiler->iff('custom', function ($number) {
             return true;
         });
 

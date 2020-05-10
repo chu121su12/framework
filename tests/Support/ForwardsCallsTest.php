@@ -5,7 +5,7 @@ namespace Illuminate\Tests\Support;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Support\Traits\ForwardsCalls;
 
-class ForwardsCallsTest extends TestCase
+class ForwardsCallsTest // extends TestCase
 {
     public function testForwardsCalls()
     {
