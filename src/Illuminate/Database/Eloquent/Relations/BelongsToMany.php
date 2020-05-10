@@ -273,7 +273,7 @@ class BelongsToMany extends Relation
      */
     public function getPivotClass()
     {
-        return $this->using ?? Pivot::class;
+        return isset($this->using) ? $this->using : Pivot::class;
     }
 
     /**
