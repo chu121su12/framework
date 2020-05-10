@@ -4,6 +4,8 @@ namespace Illuminate\Tests\Database;
 
 use stdClass;
 use Mockery as m;
+use RuntimeException;
+use BadMethodCallException;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Database\Query\Builder;
@@ -22,7 +24,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 class DatabaseQueryBuilderTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }
@@ -982,6 +984,14 @@ class DatabaseQueryBuilderTest extends TestCase
         $this->assertEquals('select * from "users" order by "name" desc', $builder->toSql());
     }
 
+    public function testOrderByInvalidDirectionParam()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users')->orderBy('age', 'asec');
+    }
+
     public function testHavings()
     {
         $builder = $this->getBuilder();
@@ -1009,6 +1019,10 @@ class DatabaseQueryBuilderTest extends TestCase
         $builder = $this->getBuilder();
         $builder->select(['category', new Raw('count(*) as "total"')])->from('item')->where('department', '=', 'popular')->groupBy('category')->having('total', '>', 3);
         $this->assertEquals('select "category", count(*) as "total" from "item" where "department" = ? group by "category" having "total" > ?', $builder->toSql());
+
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users')->havingBetween('last_login_date', ['2018-11-16', '2018-12-16']);
+        $this->assertEquals('select * from "users" having "last_login_date" between ? and ?', $builder->toSql());
     }
 
     public function testHavingShortcut()
@@ -1051,6 +1065,10 @@ class DatabaseQueryBuilderTest extends TestCase
         $builder = $this->getBuilder();
         $builder->select('*')->from('users')->having('baz', '=', 1)->orHavingRaw('user_foo < user_bar');
         $this->assertEquals('select * from "users" having "baz" = ? or user_foo < user_bar', $builder->toSql());
+
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users')->havingBetween('last_login_date', ['2018-11-16', '2018-12-16'])->orHavingRaw('user_foo < user_bar');
+        $this->assertEquals('select * from "users" having "last_login_date" between ? and ? or user_foo < user_bar', $builder->toSql());
     }
 
     public function testLimitsAndOffsets()
@@ -1760,6 +1778,21 @@ class DatabaseQueryBuilderTest extends TestCase
         $this->assertTrue($result);
     }
 
+    public function testInsertUsingMethod()
+    {
+        $builder = $this->getBuilder();
+        $builder->getConnection()->shouldReceive('insert')->once()->with('insert into "table1" ("foo") select "bar" from "table2" where "foreign_id" = ?', [5])->andReturn(true);
+
+        $result = $builder->from('table1')->insertUsing(
+            ['foo'],
+            function (Builder $query) {
+                $query->select(['bar'])->from('table2')->where('foreign_id', '=', 5);
+            }
+        );
+
+        $this->assertTrue($result);
+    }
+
     public function testInsertGetIdMethod()
     {
         $builder = $this->getBuilder();
@@ -2332,11 +2365,10 @@ class DatabaseQueryBuilderTest extends TestCase
         $this->assertCount(2, $builder->wheres);
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     */
     public function testBuilderThrowsExpectedExceptionWithUndefinedMethod()
     {
+        $this->expectException(BadMethodCallException::class);
+
         $builder = $this->getBuilder();
         $builder->getConnection()->shouldReceive('select');
         $builder->getProcessor()->shouldReceive('processSelect')->andReturn([]);
@@ -2843,11 +2875,10 @@ class DatabaseQueryBuilderTest extends TestCase
         $this->assertEquals([1], $builder->getBindings());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testWhereJsonContainsSqlite()
     {
+        $this->expectException(RuntimeException::class);
+
         $builder = $this->getSQLiteBuilder();
         $builder->select('*')->from('users')->whereJsonContains('options->languages', ['en'])->toSql();
     }
@@ -2896,11 +2927,10 @@ class DatabaseQueryBuilderTest extends TestCase
         $this->assertEquals([1], $builder->getBindings());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testWhereJsonDoesntContainSqlite()
     {
+        $this->expectException(RuntimeException::class);
+
         $builder = $this->getSQLiteBuilder();
         $builder->select('*')->from('users')->whereJsonDoesntContain('options->languages', ['en'])->toSql();
     }

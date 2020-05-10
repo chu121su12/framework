@@ -19,7 +19,7 @@ class DatabaseEloquentHasOneTest extends TestCase
 
     protected $parent;
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }
@@ -127,27 +127,6 @@ class DatabaseEloquentHasOneTest extends TestCase
         $created->expects($this->once())->method('setAttribute')->with('foreign_key', 1);
 
         $this->assertEquals($created, $relation->create(['name' => 'taylor']));
-    }
-
-    public function testUpdateMethodUpdatesModelsWithTimestamps()
-    {
-        $relation = $this->getRelation();
-        $relation->getRelated()->shouldReceive('usesTimestamps')->once()->andReturn(true);
-        $relation->getRelated()->shouldReceive('freshTimestampString')->once()->andReturn(100);
-        $relation->getRelated()->shouldReceive('getUpdatedAtColumn')->andReturn('updated_at');
-        $relation->getQuery()->shouldReceive('update')->once()->with(['foo' => 'bar', 'updated_at' => 100])->andReturn('results');
-
-        $this->assertEquals('results', $relation->update(['foo' => 'bar']));
-    }
-
-    public function testUpdateMethodUpdatesModelsWithNullUpdatedAt()
-    {
-        $relation = $this->getRelation();
-        $relation->getRelated()->shouldReceive('usesTimestamps')->once()->andReturn(true);
-        $relation->getRelated()->shouldReceive('getUpdatedAtColumn')->andReturn(null);
-        $relation->getQuery()->shouldReceive('update')->once()->with(['foo' => 'bar'])->andReturn('results');
-
-        $this->assertEquals('results', $relation->update(['foo' => 'bar']));
     }
 
     public function testRelationIsProperlyInitialized()

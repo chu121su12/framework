@@ -3,6 +3,7 @@
 namespace Illuminate\Tests\Mail;
 
 use Monolog\Logger;
+use Psr\Log\NullLogger;
 use Psr\Log\LoggerInterface;
 use Orchestra\Testbench\TestCase;
 use Monolog\Handler\StreamHandler;
@@ -23,11 +24,20 @@ class MailLogTransportTest extends TestCase
         $transport = $manager->driver('log');
         $this->assertInstanceOf(LogTransport::class, $transport);
 
-        $logger = $this->readAttribute($transport, 'logger');
+        $logger = $transport->logger();
         $this->assertInstanceOf(LoggerInterface::class, $logger);
 
         $this->assertInstanceOf(Logger::class, $monolog = $logger->getLogger());
         $this->assertCount(1, $handlers = $monolog->getHandlers());
         $this->assertInstanceOf(StreamHandler::class, $handler = $handlers[0]);
+    }
+
+    public function testGetLogTransportWithPsrLogger()
+    {
+        $logger = $this->app->instance('log', new NullLogger());
+
+        $manager = $this->app['swift.transport'];
+
+        $this->assertEquals($logger, $manager->driver('log')->logger());
     }
 }

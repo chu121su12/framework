@@ -9,18 +9,19 @@ use League\Flysystem\Adapter\Ftp;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
 use Illuminate\Filesystem\FilesystemManager;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class FilesystemTest extends TestCase
 {
     private $tempDir;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->tempDir = __DIR__.'/tmp';
         mkdir($this->tempDir);
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         m::close();
 
@@ -259,11 +260,10 @@ class FilesystemTest extends TestCase
         $this->assertFalse($files->moveDirectory($this->tempDir.'/tmp', $this->tempDir.'/tmp2', true));
     }
 
-    /**
-     * @expectedException \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
     public function testGetThrowsExceptionNonexisitingFile()
     {
+        $this->expectException(FileNotFoundException::class);
+
         $files = new Filesystem;
         $files->get($this->tempDir.'/unknown-file.txt');
     }
@@ -275,11 +275,10 @@ class FilesystemTest extends TestCase
         $this->assertEquals('Howdy?', $files->getRequire($this->tempDir.'/file.php'));
     }
 
-    /**
-     * @expectedException \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    public function testGetRequireThrowsExceptionNonexisitingFile()
+    public function testGetRequireThrowsExceptionNonExistingFile()
     {
+        $this->expectException(FileNotFoundException::class);
+
         $files = new Filesystem;
         $files->getRequire($this->tempDir.'/file.php');
     }
@@ -433,6 +432,10 @@ class FilesystemTest extends TestCase
      */
     public function testSharedGet()
     {
+        if (PHP_OS == 'Darwin') {
+            $this->markTestSkipped('Skipping on MacOS');
+        }
+
         if (! function_exists('pcntl_fork')) {
             $this->markTestSkipped('Skipping since the pcntl extension is not available');
         }

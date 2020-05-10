@@ -22,6 +22,8 @@ interface Container extends ArrayAccess, ContainerInterface
      * @param  string  $abstract
      * @param  string  $alias
      * @return void
+     *
+     * @throws \LogicException
      */
     public function alias($abstract, $alias);
 
@@ -38,7 +40,7 @@ interface Container extends ArrayAccess, ContainerInterface
      * Resolve all of the bindings for a given tag.
      *
      * @param  string  $tag
-     * @return array
+     * @return iterable
      */
     public function tagged($tag);
 
@@ -130,6 +132,8 @@ interface Container extends ArrayAccess, ContainerInterface
      * @param  string  $abstract
      * @param  array  $parameters
      * @return mixed
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function make($abstract, array $parameters = []);
 

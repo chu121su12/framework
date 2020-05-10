@@ -10,7 +10,7 @@ use Symfony\Component\Process\Process;
 
 class QueueListenerTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }
@@ -44,7 +44,7 @@ class QueueListenerTest extends TestCase
         $options->memory = 2;
         $options->timeout = 3;
         $process = $listener->makeProcess('connection', 'queue', $options);
-        $escape = '\\' === DIRECTORY_SEPARATOR ? '"' : '\'';
+        $escape = '\\' === DIRECTORY_SEPARATOR ? '' : '\'';
 
         $this->assertInstanceOf(Process::class, $process);
         $this->assertEquals(__DIR__, $process->getWorkingDirectory());
@@ -60,7 +60,7 @@ class QueueListenerTest extends TestCase
         $options->memory = 2;
         $options->timeout = 3;
         $process = $listener->makeProcess('connection', 'queue', $options);
-        $escape = '\\' === DIRECTORY_SEPARATOR ? '"' : '\'';
+        $escape = '\\' === DIRECTORY_SEPARATOR ? '' : '\'';
 
         $this->assertInstanceOf(Process::class, $process);
         $this->assertEquals(__DIR__, $process->getWorkingDirectory());
@@ -76,7 +76,7 @@ class QueueListenerTest extends TestCase
         $options->memory = 2;
         $options->timeout = 3;
         $process = $listener->makeProcess(null, 'queue', $options);
-        $escape = '\\' === DIRECTORY_SEPARATOR ? '"' : '\'';
+        $escape = '\\' === DIRECTORY_SEPARATOR ? '' : '\'';
 
         $this->assertInstanceOf(Process::class, $process);
         $this->assertEquals(__DIR__, $process->getWorkingDirectory());

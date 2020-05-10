@@ -3,8 +3,8 @@
 namespace Illuminate\Tests\Integration\Foundation;
 
 use Exception;
+use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 
 class HelpersTest_test_rescue_Class
@@ -69,12 +69,11 @@ class FoundationHelpersTest extends TestCase
     //     unlink($manifest);
     // }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage Unable to locate Mix file: /missing.js.
-     */
     // public function testMixThrowsExceptionWhenAssetIsMissingFromManifestWhenInDebugMode()
     // {
+    //     $this->expectException(Exception::class);
+    //     $this->expectExceptionMessage('Unable to locate Mix file: /missing.js.');
+
     //     $this->app['config']->set('app.debug', true);
     //     $manifest = $this->makeManifest();
 
@@ -110,7 +109,7 @@ class FoundationHelpersTest extends TestCase
             return __DIR__;
         });
 
-        $path = public_path(str_finish($directory, '/').'mix-manifest.json');
+        $path = public_path(Str::finish($directory, '/').'mix-manifest.json');
 
         touch($path);
 

@@ -6,6 +6,7 @@ use DateTime;
 use Mockery as m;
 use DateTimeImmutable;
 use Illuminate\Support\Arr;
+use InvalidArgumentException;
 use Illuminate\Support\Carbon;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Container\Container;
@@ -16,6 +17,7 @@ use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\Rules\Unique;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\ValidationData;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\File\File;
 use Illuminate\Contracts\Validation\ImplicitRule;
 use Illuminate\Validation\PresenceVerifierInterface;
@@ -108,7 +110,7 @@ class ValidationValidatorTest_testCustomValidationObject_multiple implements Rul
 
 class ValidationValidatorTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         Carbon::setTestNow();
         m::close();
@@ -157,11 +159,10 @@ class ValidationValidatorTest extends TestCase
         $this->assertTrue($v->passes());
     }
 
-    /**
-     * @expectedException \Illuminate\Validation\ValidationException
-     */
     public function testValidateThrowsOnFail()
     {
+        $this->expectException(ValidationException::class);
+
         $trans = $this->getIlluminateArrayTranslator();
         $v = new Validator($trans, ['foo' => 'bar'], ['baz' => 'required']);
 
@@ -512,6 +513,15 @@ class ValidationValidatorTest extends TestCase
         $this->assertFalse($v->passes());
         $v->messages()->setFormat(':message');
         $this->assertEquals('type must be included in Short, Long.', $v->messages()->first('type'));
+
+        //date_equals:tomorrow
+        $trans = $this->getIlluminateArrayTranslator();
+        $trans->addLines(['validation.date_equals' => 'The :attribute must be a date equal to :date.'], 'en');
+        $trans->addLines(['validation.values.date.tomorrow' => 'the day after today'], 'en');
+        $v = new Validator($trans, ['date' => date('Y-m-d')], ['date' => 'date_equals:tomorrow']);
+        $this->assertFalse($v->passes());
+        $v->messages()->setFormat(':message');
+        $this->assertEquals('The date must be a date equal to the day after today.', $v->messages()->first('date'));
 
         // test addCustomValues
         $trans = $this->getIlluminateArrayTranslator();
@@ -1131,6 +1141,9 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator($trans, ['foo' => 'bar', 'baz' => 'boom'], ['foo' => 'Different:baz']);
         $this->assertTrue($v->passes());
 
+        $v = new Validator($trans, ['foo' => 'bar', 'baz' => null], ['foo' => 'Different:baz']);
+        $this->assertTrue($v->passes());
+
         $v = new Validator($trans, ['foo' => 'bar'], ['foo' => 'Different:baz']);
         $this->assertFalse($v->passes());
 
@@ -1295,6 +1308,18 @@ class ValidationValidatorTest extends TestCase
         $trans = $this->getIlluminateArrayTranslator();
         $v = new Validator($trans, ['x' => 'hello world'], ['x' => 'starts_with:world,hello']);
         $this->assertTrue($v->passes());
+
+        $trans = $this->getIlluminateArrayTranslator();
+        $trans->addLines(['validation.starts_with' => 'The :attribute must start with one of the following values :values'], 'en');
+        $v = new Validator($trans, ['url' => 'laravel.com'], ['url' => 'starts_with:http']);
+        $this->assertFalse($v->passes());
+        $this->assertEquals('The url must start with one of the following values http', $v->messages()->first('url'));
+
+        $trans = $this->getIlluminateArrayTranslator();
+        $trans->addLines(['validation.starts_with' => 'The :attribute must start with one of the following values :values'], 'en');
+        $v = new Validator($trans, ['url' => 'laravel.com'], ['url' => 'starts_with:http,https']);
+        $this->assertFalse($v->passes());
+        $this->assertEquals('The url must start with one of the following values http, https', $v->messages()->first('url'));
     }
 
     public function testValidateString()
@@ -3322,12 +3347,11 @@ class ValidationValidatorTest extends TestCase
         $this->assertTrue($v->passes());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Validation rule required_if requires at least 2 parameters.
-     */
     public function testExceptionThrownOnIncorrectParameterCount()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Validation rule required_if requires at least 2 parameters.');
+
         $trans = $this->getTranslator();
         $v = new Validator($trans, [], ['foo' => 'required_if:foo']);
         $v->passes();

@@ -314,6 +314,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     /**
      * Dump the collection and end the script.
      *
+     * @param  mixed  ...$args
      * @return void
      */
     public function dd(...$args)
@@ -681,6 +682,32 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     }
 
     /**
+     * Filter items such that the value of the given key is between the given values.
+     *
+     * @param  string  $key
+     * @param  array  $values
+     * @return static
+     */
+    public function whereBetween($key, $values)
+    {
+        return $this->where($key, '>=', reset($values))->where($key, '<=', end($values));
+    }
+
+    /**
+     * Filter items such that the value of the given key is not between the given values.
+     *
+     * @param  string  $key
+     * @param  array  $values
+     * @return static
+     */
+    public function whereNotBetween($key, $values)
+    {
+        return $this->filter(function ($item) use ($key, $values) {
+            return data_get($item, $key) < reset($values) || data_get($item, $key) > end($values);
+        });
+    }
+
+    /**
      * Filter items by the given key value pair.
      *
      * @param  string  $key
@@ -802,7 +829,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     /**
      * Group an associative array by a field or using a callback.
      *
-     * @param  callable|string  $groupBy
+     * @param  array|callable|string  $groupBy
      * @param  bool  $preserveKeys
      * @return static
      */
@@ -1321,7 +1348,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     /**
      * Push all of the given items onto the collection.
      *
-     * @param  \Traversable|array  $source
+     * @param  iterable  $source
      * @return static
      */
     public function concat($source)
@@ -1396,16 +1423,14 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
      * @param  callable|mixed  $callback
      * @return static
      */
-    public function reject($callback)
+    public function reject($callback = true)
     {
-        if ($this->useAsCallable($callback)) {
-            return $this->filter(function ($value, $key) use ($callback) {
-                return ! $callback($value, $key);
-            });
-        }
+        $useAsCallable = $this->useAsCallable($callback);
 
-        return $this->filter(function ($item) use ($callback) {
-            return $item != $callback;
+        return $this->filter(function ($value, $key) use ($callback, $useAsCallable) {
+            return $useAsCallable
+                ? ! $callback($value, $key)
+                : $value != $callback;
         });
     }
 
@@ -1865,6 +1890,19 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     public function count()
     {
         return count($this->items);
+    }
+
+    /**
+     * Add an item to the collection.
+     *
+     * @param  mixed  $item
+     * @return $this
+     */
+    public function add($item)
+    {
+        $this->items[] = $item;
+
+        return $this;
     }
 
     /**

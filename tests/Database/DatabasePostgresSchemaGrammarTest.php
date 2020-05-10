@@ -10,7 +10,7 @@ use Illuminate\Database\Schema\Grammars\PostgresGrammar;
 
 class DatabasePostgresSchemaGrammarTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }
@@ -729,6 +729,13 @@ class DatabasePostgresSchemaGrammarTest extends TestCase
 
         $this->assertCount(1, $statements);
         $this->assertEquals('alter table "users" add constraint "users_parent_id_foreign" foreign key ("parent_id") references "parents" ("id") on delete cascade deferrable initially deferred', $statements[0]);
+
+        $blueprint = new Blueprint('users');
+        $blueprint->foreign('parent_id')->references('id')->on('parents')->onDelete('cascade')->deferrable()->notValid();
+        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+
+        $this->assertCount(1, $statements);
+        $this->assertEquals('alter table "users" add constraint "users_parent_id_foreign" foreign key ("parent_id") references "parents" ("id") on delete cascade deferrable not valid', $statements[0]);
     }
 
     public function testAddingGeometry()

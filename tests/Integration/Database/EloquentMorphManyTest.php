@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Integration\Database\EloquentMorphManyTest;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Tests\Integration\Database\DatabaseTestCase;
  */
 class EloquentMorphManyTest extends DatabaseTestCase
 {
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -35,7 +36,7 @@ class EloquentMorphManyTest extends DatabaseTestCase
 
     public function test_update_model_with_default_withCount()
     {
-        $post = Post::create(['title' => str_random()]);
+        $post = Post::create(['title' => Str::random()]);
 
         $post->update(['title' => 'new name']);
 

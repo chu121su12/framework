@@ -99,8 +99,8 @@ class Handler implements ExceptionHandlerContract
             return;
         }
 
-        if (method_exists($e, 'report')) {
-            return $e->report();
+        if (is_callable($reportCallable = [$e, 'report'])) {
+            return $this->container->call($reportCallable);
         }
 
         try {
@@ -212,7 +212,7 @@ class Handler implements ExceptionHandlerContract
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Auth\AuthenticationException  $exception
-     * @return \Illuminate\Http\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {

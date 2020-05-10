@@ -11,7 +11,7 @@ use Illuminate\Contracts\Translation\Loader;
 
 class TranslationTranslatorTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }
@@ -48,7 +48,8 @@ class TranslationTranslatorTest extends TestCase
     public function testGetMethodProperlyLoadsAndRetrievesItem()
     {
         $t = new Translator($this->getLoader(), 'en');
-        $t->getLoader()->shouldReceive('load')->once()->with('en', 'bar', 'foo')->andReturn(['foo' => 'foo', 'baz' => 'breeze :foo']);
+        $t->getLoader()->shouldReceive('load')->once()->with('en', 'bar', 'foo')->andReturn(['foo' => 'foo', 'baz' => 'breeze :foo', 'qux' => ['tree :foo', 'breeze :foo']]);
+        $this->assertEquals(['tree bar', 'breeze bar'], $t->get('foo::bar.qux', ['foo' => 'bar'], 'en'));
         $this->assertEquals('breeze bar', $t->get('foo::bar.baz', ['foo' => 'bar'], 'en'));
         $this->assertEquals('foo', $t->get('foo::bar.foo'));
     }

@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Integration\Database\EloquentTouchParentWithGlobalScopeTest;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Tests\Integration\Database\DatabaseTestCase;
  */
 class EloquentTouchParentWithGlobalScopeTest extends DatabaseTestCase
 {
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -34,11 +35,11 @@ class EloquentTouchParentWithGlobalScopeTest extends DatabaseTestCase
 
     public function test_basic_create_and_retrieve()
     {
-        $post = Post::create(['title' => str_random(), 'updated_at' => '2016-10-10 10:10:10']);
+        $post = Post::create(['title' => Str::random(), 'updated_at' => '2016-10-10 10:10:10']);
 
         $this->assertEquals('2016-10-10', $post->fresh()->updated_at->toDateString());
 
-        $post->comments()->create(['title' => str_random()]);
+        $post->comments()->create(['title' => Str::random()]);
 
         $this->assertNotEquals('2016-10-10', $post->fresh()->updated_at->toDateString());
     }

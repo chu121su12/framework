@@ -3,6 +3,7 @@
 namespace Illuminate\Support;
 
 use Illuminate\Console\Application as Artisan;
+use Illuminate\Contracts\Support\DeferrableProvider;
 
 abstract class ServiceProvider
 {
@@ -15,6 +16,8 @@ abstract class ServiceProvider
 
     /**
      * Indicates if loading of the provider is deferred.
+     *
+     * @deprecated Implement the \Illuminate\Contracts\Support\DeferrableProvider interface instead. Will be removed in Laravel 5.9.
      *
      * @var bool
      */
@@ -297,6 +300,6 @@ abstract class ServiceProvider
      */
     public function isDeferred()
     {
-        return $this->defer;
+        return $this->defer || $this instanceof DeferrableProvider;
     }
 }

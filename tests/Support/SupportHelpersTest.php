@@ -38,7 +38,7 @@ class SupportHelpersTest_testOptionalIsMacroable_Class
 
 class SupportHelpersTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }
@@ -263,7 +263,7 @@ class SupportHelpersTest extends TestCase
     public function testStrRandom()
     {
         $result = Str::random(20);
-        $this->assertInternalType('string', $result);
+        $this->assertIsString($result);
         $this->assertEquals(20, strlen($result));
     }
 
@@ -294,9 +294,9 @@ class SupportHelpersTest extends TestCase
 
     public function testStrAfter()
     {
-        $this->assertEquals('nah', str_after('hannah', 'han'));
-        $this->assertEquals('nah', str_after('hannah', 'n'));
-        $this->assertEquals('hannah', str_after('hannah', 'xxxx'));
+        $this->assertEquals('nah', Str::after('hannah', 'han'));
+        $this->assertEquals('nah', Str::after('hannah', 'n'));
+        $this->assertEquals('hannah', Str::after('hannah', 'xxxx'));
     }
 
     public function testStrContains()
@@ -775,11 +775,10 @@ class SupportHelpersTest extends TestCase
         $this->assertEquals($mock, tap($mock)->foo());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testThrow()
     {
+        $this->expectException(RuntimeException::class);
+
         throw_if(true, new RuntimeException);
     }
 
@@ -788,12 +787,11 @@ class SupportHelpersTest extends TestCase
         $this->assertSame('foo', throw_unless('foo', new RuntimeException));
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Test Message
-     */
     public function testThrowWithString()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Test Message');
+
         throw_if(true, RuntimeException::class, 'Test Message');
     }
 
@@ -931,53 +929,47 @@ class SupportHelpersTest extends TestCase
 
     public function testEnv()
     {
-        putenv('foo=bar');
-        $this->assertEquals('bar', env('foo'));
-    }
-
-    public function testEnvWithQuotes()
-    {
-        putenv('foo="bar"');
-        $this->assertEquals('bar', env('foo'));
+        $_SERVER['foo'] = 'bar';
+        $this->assertSame('bar', env('foo'));
     }
 
     public function testEnvTrue()
     {
-        putenv('foo=true');
+        $_SERVER['foo'] = 'true';
         $this->assertTrue(env('foo'));
 
-        putenv('foo=(true)');
+        $_SERVER['foo'] = '(true)';
         $this->assertTrue(env('foo'));
     }
 
     public function testEnvFalse()
     {
-        putenv('foo=false');
+        $_SERVER['foo'] = 'false';
         $this->assertFalse(env('foo'));
 
-        putenv('foo=(false)');
+        $_SERVER['foo'] = '(false)';
         $this->assertFalse(env('foo'));
     }
 
     public function testEnvEmpty()
     {
-        putenv('foo=');
-        $this->assertEquals('', env('foo'));
+        $_SERVER['foo'] = '';
+        $this->assertSame('', env('foo'));
 
-        putenv('foo=empty');
-        $this->assertEquals('', env('foo'));
+        $_SERVER['foo'] = 'empty';
+        $this->assertSame('', env('foo'));
 
-        putenv('foo=(empty)');
-        $this->assertEquals('', env('foo'));
+        $_SERVER['foo'] = '(empty)';
+        $this->assertSame('', env('foo'));
     }
 
     public function testEnvNull()
     {
-        putenv('foo=null');
-        $this->assertEquals('', env('foo'));
+        $_SERVER['foo'] = 'null';
+        $this->assertNull(env('foo'));
 
-        putenv('foo=(null)');
-        $this->assertEquals('', env('foo'));
+        $_SERVER['foo'] = '(null)';
+        $this->assertNull(env('foo'));
     }
 }
 

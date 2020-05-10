@@ -15,6 +15,7 @@ use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\SlackWebhookHandler;
+use Monolog\Handler\WhatFailureGroupHandler;
 
 class LogManager implements LoggerInterface
 {
@@ -217,6 +218,10 @@ class LogManager implements LoggerInterface
             return $this->channel($channel)->getHandlers();
         })->all();
 
+        if (isset($config['ignore_exceptions']) ? $config['ignore_exceptions'] : false) {
+            $handlers = [new WhatFailureGroupHandler($handlers)];
+        }
+
         return new Monolog($this->parseChannel($config), $handlers);
     }
 
@@ -236,7 +241,7 @@ class LogManager implements LoggerInterface
                     isset($config['bubble']) ? $config['bubble'] : true,
                     isset($config['permission']) ? $config['permission'] : null,
                     isset($config['locking']) ? $config['locking'] : false
-                )
+                ), $config
             ),
         ]);
     }
@@ -257,7 +262,7 @@ class LogManager implements LoggerInterface
                 isset($config['bubble']) ? $config['bubble'] : true,
                 isset($config['permission']) ? $config['permission'] : null,
                 isset($config['locking']) ? $config['locking'] : false
-            )),
+            ), $config),
         ]);
     }
 
@@ -295,8 +300,10 @@ class LogManager implements LoggerInterface
     {
         return new Monolog($this->parseChannel($config), [
             $this->prepareHandler(new SyslogHandler(
-                Str::snake($this->app['config']['app.name'], '-'), isset($config['facility']) ? $config['facility'] : LOG_USER, $this->level($config))
-            ),
+                Str::snake($this->app['config']['app.name'], '-'),
+                isset($config['facility']) ? $config['facility'] : LOG_USER,
+                $this->level($config)
+            ), $config),
         ]);
     }
 
@@ -310,8 +317,9 @@ class LogManager implements LoggerInterface
     {
         return new Monolog($this->parseChannel($config), [
             $this->prepareHandler(new ErrorLogHandler(
-                isset($config['type']) ? $config['type'] : ErrorLogHandler::OPERATING_SYSTEM, $this->level($config))
-            ),
+                isset($config['type']) ? $config['type'] : ErrorLogHandler::OPERATING_SYSTEM, 
+                $this->level($config)
+            )),
         ]);
     }
 
@@ -332,7 +340,10 @@ class LogManager implements LoggerInterface
             );
         }
 
-        $with = array_merge(isset($config['with']) ? $config['with'] : [], isset($config['handler_with']) ? $config['handler_with'] : []);
+        $with = array_merge(
+            isset($config['with']) ? $config['with'] : [], 
+            isset($config['handler_with']) ? $config['handler_with'] : []
+       	);
 
         return new Monolog($this->parseChannel($config), [$this->prepareHandler(
             $this->app->make($config['handler'], $with), $config
@@ -366,7 +377,10 @@ class LogManager implements LoggerInterface
         if (! isset($config['formatter'])) {
             $handler->setFormatter($this->formatter());
         } elseif ($config['formatter'] !== 'default') {
-            $handler->setFormatter($this->app->make($config['formatter'], isset($config['formatter_with']) ? $config['formatter_with'] : []));
+            $handler->setFormatter($this->app->make(
+                $config['formatter'], 
+                isset($config['formatter_with']) ? $config['formatter_with'] : []
+            ));
         }
 
         return $handler;

@@ -246,6 +246,17 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     }
 
     /**
+     * Determine if the request is the result of an prefetch call.
+     *
+     * @return bool
+     */
+    public function prefetch()
+    {
+        return strcasecmp($this->server->get('HTTP_X_MOZ'), 'prefetch') === 0 ||
+               strcasecmp($this->headers->get('Purpose'), 'prefetch') === 0;
+    }
+
+    /**
      * Determine if the request is over HTTPS.
      *
      * @return bool
@@ -384,6 +395,8 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
             $from->getContent()
         );
 
+        $request->headers->replace($from->headers->all());
+
         $request->setJson($from->json());
 
         if ($session = $from->getSession()) {
@@ -411,16 +424,18 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
 
         $content = $request->content;
 
-        $request = (new static)->duplicate(
+        $newRequest = (new static)->duplicate(
             $request->query->all(), $request->request->all(), $request->attributes->all(),
             $request->cookies->all(), $request->files->all(), $request->server->all()
         );
 
-        $request->content = $content;
+        $newRequest->headers->replace($request->headers->all());
 
-        $request->request = $request->getInputSource();
+        $newRequest->content = $content;
 
-        return $request;
+        $newRequest->request = $newRequest->getInputSource();
+
+        return $newRequest;
     }
 
     /**

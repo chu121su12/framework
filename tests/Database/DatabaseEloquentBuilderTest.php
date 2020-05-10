@@ -6,6 +6,7 @@ use Closure;
 use stdClass;
 use Mockery as m;
 use Carbon\Carbon;
+use BadMethodCallException;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,10 +18,12 @@ use Illuminate\Database\Query\Processors\Processor;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Database\Query\Builder as BaseBuilder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\RelationNotFoundException;
 
 class DatabaseEloquentBuilderTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }
@@ -67,11 +70,10 @@ class DatabaseEloquentBuilderTest extends TestCase
         $this->assertInstanceOf(Model::class, $result);
     }
 
-    /**
-     * @expectedException \Illuminate\Database\Eloquent\ModelNotFoundException
-     */
     public function testFindOrFailMethodThrowsModelNotFoundException()
     {
+        $this->expectException(ModelNotFoundException::class);
+
         $builder = m::mock(Builder::class.'[first]', [$this->getMockQueryBuilder()]);
         $builder->setModel($this->getMockModel());
         $builder->getQuery()->shouldReceive('where')->once()->with('foo_table.foo', '=', 'bar');
@@ -79,11 +81,10 @@ class DatabaseEloquentBuilderTest extends TestCase
         $builder->findOrFail('bar', ['column']);
     }
 
-    /**
-     * @expectedException \Illuminate\Database\Eloquent\ModelNotFoundException
-     */
     public function testFindOrFailMethodWithManyThrowsModelNotFoundException()
     {
+        $this->expectException(ModelNotFoundException::class);
+
         $builder = m::mock(Builder::class.'[get]', [$this->getMockQueryBuilder()]);
         $builder->setModel($this->getMockModel());
         $builder->getQuery()->shouldReceive('whereIn')->once()->with('foo_table.foo', [1, 2]);
@@ -91,11 +92,10 @@ class DatabaseEloquentBuilderTest extends TestCase
         $builder->findOrFail([1, 2], ['column']);
     }
 
-    /**
-     * @expectedException \Illuminate\Database\Eloquent\ModelNotFoundException
-     */
     public function testFirstOrFailMethodThrowsModelNotFoundException()
     {
+        $this->expectException(ModelNotFoundException::class);
+
         $builder = m::mock(Builder::class.'[first]', [$this->getMockQueryBuilder()]);
         $builder->setModel($this->getMockModel());
         $builder->shouldReceive('first')->with(['column'])->andReturn(null);
@@ -416,12 +416,11 @@ class DatabaseEloquentBuilderTest extends TestCase
         $this->assertEquals($builder->bam(), $builder->getQuery());
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     * @expectedExceptionMessage Call to undefined method Illuminate\Database\Eloquent\Builder::missingMacro()
-     */
     public function testMissingStaticMacrosThrowsProperException()
     {
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage('Call to undefined method Illuminate\Database\Eloquent\Builder::missingMacro()');
+
         Builder::missingMacro();
     }
 
@@ -508,11 +507,10 @@ class DatabaseEloquentBuilderTest extends TestCase
         $builder->getRelation('ordersGroups');
     }
 
-    /**
-     * @expectedException \Illuminate\Database\Eloquent\RelationNotFoundException
-     */
     public function testGetRelationThrowsException()
     {
+        $this->expectException(RelationNotFoundException::class);
+
         $builder = $this->getBuilder();
         $builder->setModel($this->getMockModel());
 
@@ -627,6 +625,22 @@ class DatabaseEloquentBuilderTest extends TestCase
         });
         $this->assertEquals('select * from "table" where "foo" = ? and ("baz" > ?) and "table"."deleted_at" is null', $query->toSql());
         $this->assertEquals(['bar', 9000], $query->getBindings());
+    }
+
+    public function testRealQueryHigherOrderOrWhereScopes()
+    {
+        $model = new EloquentBuilderTestHigherOrderWhereScopeStub;
+        $this->mockConnectionForModel($model, 'SQLite');
+        $query = $model->newQuery()->one()->orWhere->two();
+        $this->assertEquals('select * from "table" where "one" = ? or ("two" = ?)', $query->toSql());
+    }
+
+    public function testRealQueryChainedHigherOrderOrWhereScopes()
+    {
+        $model = new EloquentBuilderTestHigherOrderWhereScopeStub;
+        $this->mockConnectionForModel($model, 'SQLite');
+        $query = $model->newQuery()->one()->orWhere->two()->orWhere->three();
+        $this->assertEquals('select * from "table" where "one" = ? or ("two" = ?) or ("three" = ?)', $query->toSql());
     }
 
     public function testSimpleWhere()
@@ -865,7 +879,7 @@ class DatabaseEloquentBuilderTest extends TestCase
 
         $sql = preg_replace($aliasRegex, $alias, $sql);
 
-        $this->assertContains('"self_alias_hash"."id" = "self_related_stubs"."parent_id"', $sql);
+        $this->assertStringContainsString('"self_alias_hash"."id" = "self_related_stubs"."parent_id"', $sql);
     }
 
     public function testDoesntHave()
@@ -1081,12 +1095,40 @@ class DatabaseEloquentBuilderTest extends TestCase
         $this->mockConnectionForModel($model, '');
         $builder->setModel($model);
         $builder->getConnection()->shouldReceive('update')->once()
-            ->with('update "table" set "table"."updated_at" = ?, "foo" = ?', [$now, 'bar'])->andReturn(1);
+            ->with('update "table" set "foo" = ?, "table"."updated_at" = ?', ['bar', $now])->andReturn(1);
 
         $result = $builder->update(['foo' => 'bar']);
         $this->assertEquals(1, $result);
 
         Carbon::setTestNow(null);
+    }
+
+    public function testUpdateWithTimestampValue()
+    {
+        $query = new BaseBuilder(m::mock(ConnectionInterface::class), new Grammar, m::mock(Processor::class));
+        $builder = new Builder($query);
+        $model = new EloquentBuilderTestStub;
+        $this->mockConnectionForModel($model, '');
+        $builder->setModel($model);
+        $builder->getConnection()->shouldReceive('update')->once()
+            ->with('update "table" set "foo" = ?, "table"."updated_at" = ?', ['bar', null])->andReturn(1);
+
+        $result = $builder->update(['foo' => 'bar', 'updated_at' => null]);
+        $this->assertEquals(1, $result);
+    }
+
+    public function testUpdateWithoutTimestamp()
+    {
+        $query = new BaseBuilder(m::mock(ConnectionInterface::class), new Grammar, m::mock(Processor::class));
+        $builder = new Builder($query);
+        $model = new EloquentBuilderTestStubWithoutTimestamp;
+        $this->mockConnectionForModel($model, '');
+        $builder->setModel($model);
+        $builder->getConnection()->shouldReceive('update')->once()
+            ->with('update "table" set "foo" = ?', ['bar'])->andReturn(1);
+
+        $result = $builder->update(['foo' => 'bar']);
+        $this->assertEquals(1, $result);
     }
 
     protected function mockConnectionForModel($model, $database)
@@ -1096,6 +1138,9 @@ class DatabaseEloquentBuilderTest extends TestCase
         $grammar = new $grammarClass;
         $processor = new $processorClass;
         $connection = m::mock(ConnectionInterface::class, ['getQueryGrammar' => $grammar, 'getPostProcessor' => $processor]);
+        $connection->shouldReceive('query')->andReturnUsing(function () use ($connection, $grammar, $processor) {
+            return new BaseBuilder($connection, $grammar, $processor);
+        });
         $resolver = m::mock(ConnectionResolverInterface::class, ['connection' => $connection]);
         $class = get_class($model);
         $class::setConnectionResolver($resolver);
@@ -1135,6 +1180,26 @@ class EloquentBuilderTestScopeStub extends Model
     public function scopeApproved($query)
     {
         $query->where('foo', 'bar');
+    }
+}
+
+class EloquentBuilderTestHigherOrderWhereScopeStub extends Model
+{
+    protected $table = 'table';
+
+    public function scopeOne($query)
+    {
+        $query->where('one', 'foo');
+    }
+
+    public function scopeTwo($query)
+    {
+        $query->where('two', 'bar');
+    }
+
+    public function scopeThree($query)
+    {
+        $query->where('three', 'baz');
     }
 }
 
@@ -1248,4 +1313,11 @@ class EloquentBuilderTestModelSelfRelatedStub extends Model
     {
         return $this->hasMany(EloquentBuilderTestModelFarRelatedStub::class, 'foreign_key', 'id', 'bar');
     }
+}
+
+class EloquentBuilderTestStubWithoutTimestamp extends Model
+{
+    const UPDATED_AT = null;
+
+    protected $table = 'table';
 }

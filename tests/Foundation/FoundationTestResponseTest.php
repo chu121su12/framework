@@ -11,6 +11,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Model;
 use PHPUnit\Framework\AssertionFailedError;
 use Illuminate\Foundation\Testing\TestResponse;
+use PHPUnit\Framework\ExpectationFailedException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FoundationTestResponseTest_testAssertViewHasModel_Class extends Model
@@ -28,7 +29,7 @@ class FoundationTestResponseTest extends TestCase
         $response = $this->makeMockResponse([
             'render' => 'hello world',
             'getData' => ['foo' => 'bar'],
-            'getName' => 'dir.my-view',
+            'name' => 'dir.my-view',
         ]);
 
         $response->assertViewIs('dir.my-view');
@@ -146,12 +147,11 @@ class FoundationTestResponseTest extends TestCase
         $response->assertHeader('Location', '/bar');
     }
 
-    /**
-     * @expectedException \PHPUnit\Framework\ExpectationFailedException
-     * @expectedExceptionMessage Unexpected header [Location] is present on response.
-     */
     public function testAssertHeaderMissing()
     {
+        $this->expectException(ExpectationFailedException::class);
+        $this->expectExceptionMessage('Unexpected header [Location] is present on response.');
+
         $baseResponse = tap(new Response, function ($response) {
             $response->header('Location', '/foo');
         });
@@ -164,6 +164,18 @@ class FoundationTestResponseTest extends TestCase
     public function testAssertJsonWithArray()
     {
         $response = TestResponse::fromBaseResponse(new Response(new JsonSerializableSingleResourceStub));
+
+        $resource = new JsonSerializableSingleResourceStub;
+
+        $response->assertJson($resource->jsonSerialize());
+    }
+
+    public function testAssertJsonWithNull()
+    {
+        $response = TestResponse::fromBaseResponse(new Response(null));
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('Invalid JSON was returned from the route.');
 
         $resource = new JsonSerializableSingleResourceStub;
 
@@ -227,6 +239,9 @@ class FoundationTestResponseTest extends TestCase
         // Wildcard (repeating structure)
         $response->assertJsonStructure(['bars' => ['*' => ['bar', 'foo']]]);
 
+        // Wildcard (numeric keys)
+        $response->assertJsonStructure(['numeric_keys' => ['*' => ['bar', 'foo']]]);
+
         // Nested after wildcard
         $response->assertJsonStructure(['baz' => ['*' => ['foo', 'bar' => ['foo', 'bar']]]]);
 
@@ -289,6 +304,49 @@ class FoundationTestResponseTest extends TestCase
         $response->assertJsonMissingExact(['id' => 20, 'foo' => 'bar']);
     }
 
+    public function testAssertJsonValidationErrors()
+    {
+        $data = [
+            'status' => 'ok',
+            'errors' => ['foo' => 'oops'],
+        ];
+
+        $testResponse = TestResponse::fromBaseResponse(
+            (new Response)->setContent(json_encode($data))
+        );
+
+        $testResponse->assertJsonValidationErrors('foo');
+    }
+
+    public function testAssertJsonValidationErrorsCanFail()
+    {
+        $this->expectException(AssertionFailedError::class);
+
+        $data = [
+            'status' => 'ok',
+            'errors' => ['foo' => 'oops'],
+        ];
+
+        $testResponse = TestResponse::fromBaseResponse(
+            (new Response)->setContent(json_encode($data))
+        );
+
+        $testResponse->assertJsonValidationErrors('bar');
+    }
+
+    public function testAssertJsonValidationErrorsCanFailWhenThereAreNoErrors()
+    {
+        $this->expectException(AssertionFailedError::class);
+
+        $data = ['status' => 'ok'];
+
+        $testResponse = TestResponse::fromBaseResponse(
+            (new Response)->setContent(json_encode($data))
+        );
+
+        $testResponse->assertJsonValidationErrors('bar');
+    }
+
     public function testAssertJsonMissingValidationErrors()
     {
         $baseResponse = tap(new Response, function ($response) {
@@ -345,6 +403,41 @@ class FoundationTestResponseTest extends TestCase
         $response->assertJsonMissingValidationErrors('bar');
     }
 
+    public function testAssertJsonMissingValidationErrorsWithoutArgument()
+    {
+        $data = ['status' => 'ok'];
+
+        $testResponse = TestResponse::fromBaseResponse(
+            (new Response)->setContent(json_encode($data))
+        );
+
+        $testResponse->assertJsonMissingValidationErrors();
+    }
+
+    public function testAssertJsonMissingValidationErrorsWithoutArgumentWhenErrorsIsEmpty()
+    {
+        $data = ['status' => 'ok', 'errors' => []];
+
+        $testResponse = TestResponse::fromBaseResponse(
+            (new Response)->setContent(json_encode($data))
+        );
+
+        $testResponse->assertJsonMissingValidationErrors();
+    }
+
+    public function testAssertJsonMissingValidationErrorsWithoutArgumentCanFail()
+    {
+        $this->expectException(AssertionFailedError::class);
+
+        $data = ['errors' => ['foo' => []]];
+
+        $testResponse = TestResponse::fromBaseResponse(
+            (new Response)->setContent(json_encode($data))
+        );
+
+        $testResponse->assertJsonMissingValidationErrors();
+    }
+
     public function testMacroable()
     {
         TestResponse::macro('foo', function () {
@@ -398,17 +491,17 @@ class JsonSerializableMixedResourcesStub implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'foo'    => 'bar',
+            'foo' => 'bar',
             'foobar' => [
                 'foobar_foo' => 'foo',
                 'foobar_bar' => 'bar',
             ],
-            'bars'   => [
+            'bars' => [
                 ['bar' => 'foo 0', 'foo' => 'bar 0'],
                 ['bar' => 'foo 1', 'foo' => 'bar 1'],
                 ['bar' => 'foo 2', 'foo' => 'bar 2'],
             ],
-            'baz'    => [
+            'baz' => [
                 ['foo' => 'bar 0', 'bar' => ['foo' => 'bar 0', 'bar' => 'foo 0']],
                 ['foo' => 'bar 1', 'bar' => ['foo' => 'bar 1', 'bar' => 'foo 1']],
             ],
@@ -416,6 +509,11 @@ class JsonSerializableMixedResourcesStub implements JsonSerializable
                 ['bar' => ['bar' => 'foo 0']],
                 ['bar' => ['bar' => 'foo 0', 'bar' => 'foo 0']],
                 ['bar' => ['foo' => 'bar 0', 'bar' => 'foo 0', 'rab' => 'rab 0']],
+            ],
+            'numeric_keys' => [
+                2 => ['bar' => 'foo 0', 'foo' => 'bar 0'],
+                3 => ['bar' => 'foo 1', 'foo' => 'bar 1'],
+                4 => ['bar' => 'foo 2', 'foo' => 'bar 2'],
             ],
         ];
     }

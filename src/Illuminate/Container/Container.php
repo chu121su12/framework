@@ -195,7 +195,7 @@ class Container implements ContainerContract
     public function isShared($abstract)
     {
         return isset($this->instances[$abstract]) ||
-              (isset($this->bindings[$abstract]['shared']) &&
+               (isset($this->bindings[$abstract]['shared']) &&
                $this->bindings[$abstract]['shared'] === true);
     }
 
@@ -260,7 +260,9 @@ class Container implements ContainerContract
                 return $container->build($concrete);
             }
 
-            return $container->make($concrete, $parameters);
+            return $container->resolve(
+                $concrete, $parameters, $raiseEvents = false
+            );
         };
     }
 
@@ -454,19 +456,19 @@ class Container implements ContainerContract
      * Resolve all of the bindings for a given tag.
      *
      * @param  string  $tag
-     * @return array
+     * @return iterable
      */
     public function tagged($tag)
     {
-        $results = [];
-
-        if (isset($this->tags[$tag])) {
-            foreach ($this->tags[$tag] as $abstract) {
-                $results[] = $this->make($abstract);
-            }
+        if (! isset($this->tags[$tag])) {
+            return [];
         }
 
-        return $results;
+        return new RewindableGenerator(function () use ($tag) {
+            foreach ($this->tags[$tag] as $abstract) {
+                yield $this->make($abstract);
+            }
+        }, count($this->tags[$tag]));
     }
 
     /**
@@ -475,9 +477,15 @@ class Container implements ContainerContract
      * @param  string  $abstract
      * @param  string  $alias
      * @return void
+     *
+     * @throws \LogicException
      */
     public function alias($abstract, $alias)
     {
+        if ($alias === $abstract) {
+            throw new LogicException("[{$abstract}] is aliased to itself.");
+        }
+
         $this->aliases[$alias] = $abstract;
 
         $this->abstractAliases[$abstract][] = $alias;
@@ -602,6 +610,8 @@ class Container implements ContainerContract
      * @param  string  $abstract
      * @param  array  $parameters
      * @return mixed
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function make($abstract, array $parameters = [])
     {
@@ -629,9 +639,12 @@ class Container implements ContainerContract
      *
      * @param  string  $abstract
      * @param  array  $parameters
+     * @param  bool   $raiseEvents
      * @return mixed
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function resolve($abstract, $parameters = [])
+    protected function resolve($abstract, $parameters = [], $raiseEvents = true)
     {
         $abstract = $this->getAlias($abstract);
 
@@ -673,7 +686,9 @@ class Container implements ContainerContract
             $this->instances[$abstract] = $object;
         }
 
-        $this->fireResolvingCallbacks($abstract, $object);
+        if ($raiseEvents) {
+            $this->fireResolvingCallbacks($abstract, $object);
+        }
 
         // Before returning, we will also set the resolved flag to "true" and pop off
         // the parameter overrides for this build. After those two things are done
@@ -778,7 +793,7 @@ class Container implements ContainerContract
         $reflector = new ReflectionClass($concrete);
 
         // If the type is not instantiable, the developer is attempting to resolve
-        // an abstract type such as an Interface of Abstract Class and there is
+        // an abstract type such as an Interface or Abstract Class and there is
         // no binding registered for the abstractions so we need to bail out.
         if (! $reflector->isInstantiable()) {
             return $this->notInstantiable($concrete);
@@ -816,6 +831,8 @@ class Container implements ContainerContract
      *
      * @param  array  $dependencies
      * @return array
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     protected function resolveDependencies(array $dependencies)
     {
@@ -1084,17 +1101,11 @@ class Container implements ContainerContract
      *
      * @param  string  $abstract
      * @return string
-     *
-     * @throws \LogicException
      */
     public function getAlias($abstract)
     {
         if (! isset($this->aliases[$abstract])) {
             return $abstract;
-        }
-
-        if ($this->aliases[$abstract] === $abstract) {
-            throw new LogicException("[{$abstract}] is aliased to itself.");
         }
 
         return $this->getAlias($this->aliases[$abstract]);
