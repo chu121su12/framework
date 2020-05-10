@@ -172,7 +172,7 @@ class Application extends SymfonyApplication implements ApplicationContract
      */
     public function call($command, array $parameters = [], $outputBuffer = null)
     {
-        [$command, $input] = $this->parseCommand($command, $parameters);
+        list($command, $input) = $this->parseCommand($command, $parameters);
 
         if (! $this->has($command)) {
             throw new CommandNotFoundException(sprintf('The command "%s" does not exist.', $command));
@@ -212,7 +212,7 @@ class Application extends SymfonyApplication implements ApplicationContract
             $input = new ArrayInput($parameters);
         }
 
-        return [$command, $input ?? null];
+        return [$command, isset($input) ? $input : null];
     }
 
     /**

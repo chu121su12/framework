@@ -118,7 +118,7 @@ class DateFactory
      *
      * @throws \InvalidArgumentException
      */
-    public static function use($handler)
+    public static function useHandler($handler)
     {
         if (is_callable($handler) && is_object($handler)) {
             return static::useCallable($handler);

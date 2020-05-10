@@ -180,7 +180,7 @@ class BladeCustomTest extends AbstractBladeTestCase
 
     public function testCustomIncludes()
     {
-        $this->compiler->include('app.includes.input', 'input');
+        $this->compiler->includes('app.includes.input', 'input');
 
         $string = '@input';
         $expected = '<?php echo $__env->make(\'app.includes.input\', [], \Illuminate\Support\Arr::except(get_defined_vars(), array(\'__data\', \'__path\')))->render(); ?>';
@@ -189,7 +189,7 @@ class BladeCustomTest extends AbstractBladeTestCase
 
     public function testCustomIncludesWithData()
     {
-        $this->compiler->include('app.includes.input', 'input');
+        $this->compiler->includes('app.includes.input', 'input');
 
         $string = '@input([\'type\' => \'email\'])';
         $expected = '<?php echo $__env->make(\'app.includes.input\', [\'type\' => \'email\'], \Illuminate\Support\Arr::except(get_defined_vars(), array(\'__data\', \'__path\')))->render(); ?>';
@@ -198,7 +198,7 @@ class BladeCustomTest extends AbstractBladeTestCase
 
     public function testCustomIncludesDefaultAlias()
     {
-        $this->compiler->include('app.includes.input');
+        $this->compiler->includes('app.includes.input');
 
         $string = '@input';
         $expected = '<?php echo $__env->make(\'app.includes.input\', [], \Illuminate\Support\Arr::except(get_defined_vars(), array(\'__data\', \'__path\')))->render(); ?>';
@@ -207,7 +207,7 @@ class BladeCustomTest extends AbstractBladeTestCase
 
     public function testCustomIncludesWithExistingDirective()
     {
-        $this->compiler->include('app.includes.foreach');
+        $this->compiler->includes('app.includes.foreach');
 
         $string = '@foreach';
         $expected = '<?php echo $__env->make(\'app.includes.foreach\', [], \Illuminate\Support\Arr::except(get_defined_vars(), array(\'__data\', \'__path\')))->render(); ?>';

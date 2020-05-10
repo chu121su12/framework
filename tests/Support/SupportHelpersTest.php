@@ -161,7 +161,7 @@ class SupportHelpersTest extends TestCase
     public function testArrayDivide()
     {
         $array = ['name' => 'taylor'];
-        [$keys, $values] = Arr::divide($array);
+        list($keys, $values) = Arr::divide($array);
         $this->assertEquals(['name'], $keys);
         $this->assertEquals(['taylor'], $values);
     }

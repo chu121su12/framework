@@ -29,7 +29,7 @@ trait InteractsWithRedis
      */
     public function setUpRedis()
     {
-        $app = $this->app ?? new Application;
+        $app = isset($this->app) ? $this->app : new Application;
         $host = getenv('REDIS_HOST') ?: '127.0.0.1';
         $port = getenv('REDIS_PORT') ?: 6379;
 

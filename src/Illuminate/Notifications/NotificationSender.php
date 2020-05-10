@@ -115,7 +115,15 @@ class NotificationSender
      */
     protected function preferredLocale($notifiable, $notification)
     {
-        return $notification->locale ?? $this->locale ?? value(function () use ($notifiable) {
+        if (isset($notification->locale)) {
+            return $notification->locale;
+        }
+
+        if (isset($this->locale)) {
+            return $this->locale;
+        }
+
+        return value(function () use ($notifiable) {
             if ($notifiable instanceof HasLocalePreference) {
                 return $notifiable->preferredLocale();
             }

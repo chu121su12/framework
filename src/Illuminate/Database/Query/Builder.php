@@ -235,7 +235,7 @@ class Builder
      */
     public function selectSub($query, $as)
     {
-        [$query, $bindings] = $this->createSub($query);
+        list($query, $bindings) = $this->createSub($query);
 
         return $this->selectRaw(
             '('.$query.') as '.$this->grammar->wrap($as), $bindings
@@ -271,7 +271,7 @@ class Builder
      */
     public function fromSub($query, $as)
     {
-        [$query, $bindings] = $this->createSub($query);
+        list($query, $bindings) = $this->createSub($query);
 
         return $this->fromRaw('('.$query.') as '.$this->grammar->wrap($as), $bindings);
     }
@@ -440,7 +440,7 @@ class Builder
      */
     public function joinSub($query, $as, $first, $operator = null, $second = null, $type = 'inner', $where = false)
     {
-        [$query, $bindings] = $this->createSub($query);
+        list($query, $bindings) = $this->createSub($query);
 
         $expression = '('.$query.') as '.$this->grammar->wrap($as);
 
@@ -592,7 +592,7 @@ class Builder
         // Here we will make some assumptions about the operator. If only 2 values are
         // passed to the method, we will assume that the operator is an equals sign
         // and keep going. Otherwise, we'll require the operator to be passed in.
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -607,7 +607,7 @@ class Builder
         // assume that the developer is just short-cutting the '=' operators and
         // we will set the operators to '=' and set the values appropriately.
         if ($this->invalidOperator($operator)) {
-            [$value, $operator] = [$operator, '='];
+            list($value, $operator) = [$operator, '='];
         }
 
         // If the value is a Closure, it means the developer is performing an entire
@@ -726,7 +726,7 @@ class Builder
      */
     public function orWhere($column, $operator = null, $value = null)
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -755,7 +755,7 @@ class Builder
         // assume that the developer is just short-cutting the '=' operators and
         // we will set the operators to '=' and set the values appropriately.
         if ($this->invalidOperator($operator)) {
-            [$second, $operator] = [$operator, '='];
+            list($second, $operator) = [$operator, '='];
         }
 
         // Finally, we will add this where clause into this array of clauses that we
@@ -831,7 +831,7 @@ class Builder
         if ($values instanceof self ||
             $values instanceof EloquentBuilder ||
             $values instanceof Closure) {
-            [$query, $bindings] = $this->createSub($values);
+            list($query, $bindings) = $this->createSub($values);
 
             $values = [new Expression($query)];
 
@@ -1095,7 +1095,7 @@ class Builder
      */
     public function whereDate($column, $operator, $value = null, $boolean = 'and')
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -1116,7 +1116,7 @@ class Builder
      */
     public function orWhereDate($column, $operator, $value = null)
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -1134,7 +1134,7 @@ class Builder
      */
     public function whereTime($column, $operator, $value = null, $boolean = 'and')
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -1155,7 +1155,7 @@ class Builder
      */
     public function orWhereTime($column, $operator, $value = null)
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -1173,7 +1173,7 @@ class Builder
      */
     public function whereDay($column, $operator, $value = null, $boolean = 'and')
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -1194,7 +1194,7 @@ class Builder
      */
     public function orWhereDay($column, $operator, $value = null)
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -1212,7 +1212,7 @@ class Builder
      */
     public function whereMonth($column, $operator, $value = null, $boolean = 'and')
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -1233,7 +1233,7 @@ class Builder
      */
     public function orWhereMonth($column, $operator, $value = null)
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -1251,7 +1251,7 @@ class Builder
      */
     public function whereYear($column, $operator, $value = null, $boolean = 'and')
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -1272,7 +1272,7 @@ class Builder
      */
     public function orWhereYear($column, $operator, $value = null)
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -1554,7 +1554,7 @@ class Builder
     {
         $type = 'JsonLength';
 
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -1577,7 +1577,7 @@ class Builder
      */
     public function orWhereJsonLength($column, $operator, $value = null)
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -1680,7 +1680,7 @@ class Builder
         // Here we will make some assumptions about the operator. If only 2 values are
         // passed to the method, we will assume that the operator is an equals sign
         // and keep going. Otherwise, we'll require the operator to be passed in.
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -1688,7 +1688,7 @@ class Builder
         // assume that the developer is just short-cutting the '=' operators and
         // we will set the operators to '=' and set the values appropriately.
         if ($this->invalidOperator($operator)) {
-            [$value, $operator] = [$operator, '='];
+            list($value, $operator) = [$operator, '='];
         }
 
         $this->havings[] = compact('type', 'column', 'operator', 'value', 'boolean');
@@ -1710,7 +1710,7 @@ class Builder
      */
     public function orHaving($column, $operator = null, $value = null)
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 

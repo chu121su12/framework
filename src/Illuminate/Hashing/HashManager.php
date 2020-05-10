@@ -14,7 +14,11 @@ class HashManager extends Manager implements Hasher
      */
     public function createBcryptDriver()
     {
-        return new BcryptHasher($this->app['config']['hashing.bcrypt'] ?? []);
+        if (isset($this->app['config']) && isset($this->app['config']['hashing.bcrypt'])) {
+            return new BcryptHasher($this->app['config']['hashing.bcrypt']);
+        }
+
+        return new BcryptHasher([]);
     }
 
     /**
@@ -24,7 +28,11 @@ class HashManager extends Manager implements Hasher
      */
     public function createArgonDriver()
     {
-        return new ArgonHasher($this->app['config']['hashing.argon'] ?? []);
+        if (isset($this->app['config']) && isset($this->app['config']['hashing.argon'])) {
+            return new ArgonHasher($this->app['config']['hashing.argon']);
+        }
+
+        return new ArgonHasher([]);
     }
 
     /**
@@ -34,7 +42,11 @@ class HashManager extends Manager implements Hasher
      */
     public function createArgon2idDriver()
     {
-        return new Argon2IdHasher($this->app['config']['hashing.argon'] ?? []);
+        if (isset($this->app['config']) && isset($this->app['config']['hashing.argon'])) {
+            return new Argon2IdHasher($this->app['config']['hashing.argon']);
+        }
+
+        return new Argon2IdHasher([]);
     }
 
     /**

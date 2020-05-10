@@ -283,7 +283,7 @@ abstract class Broadcaster implements BroadcasterContract
     {
         $options = $this->retrieveChannelOptions($channel);
 
-        $guards = $options['guards'] ?? null;
+        $guards = isset($options['guards']) ? $options['guards'] : null;
 
         if (is_null($guards)) {
             return $request->user();

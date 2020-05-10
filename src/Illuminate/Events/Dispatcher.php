@@ -182,7 +182,7 @@ class Dispatcher implements DispatcherContract
         // When the given "event" is actually an object we will assume it is an event
         // object and use the class as the event name and this event itself as the
         // payload to the handler, which makes object based events quite simple.
-        [$event, $payload] = $this->parseEventAndPayload(
+        list($event, $payload) = $this->parseEventAndPayload(
             $event, $payload
         );
 
@@ -225,7 +225,7 @@ class Dispatcher implements DispatcherContract
     protected function parseEventAndPayload($event, $payload)
     {
         if (is_object($event)) {
-            [$payload, $event] = [[$event], get_class($event)];
+            list($payload, $event) = [[$event], get_class($event)];
         }
 
         return [$event, Arr::wrap($payload)];
@@ -279,7 +279,9 @@ class Dispatcher implements DispatcherContract
 
         $listeners = array_merge(
             $listeners,
-            $this->wildcardsCache[$eventName] ?? $this->getWildcardListeners($eventName)
+            isset($this->wildcardsCache[$eventName])
+                ? $this->wildcardsCache[$eventName]
+                : $this->getWildcardListeners($eventName)
         );
 
         return class_exists($eventName, false)
@@ -376,7 +378,7 @@ class Dispatcher implements DispatcherContract
      */
     protected function createClassCallable($listener)
     {
-        [$class, $method] = $this->parseClassCallable($listener);
+        list($class, $method) = $this->parseClassCallable($listener);
 
         if ($this->handlerShouldBeQueued($class)) {
             return $this->createQueuedHandlerCallable($class, $method);
@@ -459,7 +461,7 @@ class Dispatcher implements DispatcherContract
      */
     protected function queueHandler($class, $method, $arguments)
     {
-        [$listener, $job] = $this->createListenerAndJob($class, $method, $arguments);
+        list($listener, $job) = $this->createListenerAndJob($class, $method, $arguments);
 
         $connection = $this->resolveQueue()->connection(
             isset($listener->connection) ? $listener->connection : null

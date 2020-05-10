@@ -21,7 +21,7 @@ class ArrayStore extends TaggableStore
      */
     public function get($key)
     {
-        return $this->storage[$key] ?? null;
+        return isset($this->storage[$key]) ? $this->storage[$key] : null;
     }
 
     /**

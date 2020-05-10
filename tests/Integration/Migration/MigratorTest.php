@@ -30,7 +30,7 @@ class MigratorTest extends TestCase
         $this->assertTrue($this->tableExists('members'));
     }
 
-    private function tableExists($table): bool
+    private function tableExists($table)
     {
         try {
             $this->app->make('db')->select("SELECT COUNT(*) FROM $table");

@@ -84,7 +84,7 @@ class SupportArrTest extends TestCase
 
     public function testDivide()
     {
-        [$keys, $values] = Arr::divide(['name' => 'Desk']);
+        list($keys, $values) = Arr::divide(['name' => 'Desk']);
         $this->assertEquals(['name'], $keys);
         $this->assertEquals(['Desk'], $values);
     }

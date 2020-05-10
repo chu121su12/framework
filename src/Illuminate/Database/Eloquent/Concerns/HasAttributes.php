@@ -632,7 +632,7 @@ trait HasAttributes
      */
     public function fillJsonAttribute($key, $value)
     {
-        [$key, $path] = explode('->', $key, 2);
+        list($key, $path) = explode('->', $key, 2);
 
         $this->attributes[$key] = $this->asJson($this->getArrayAttributeWithValue(
             $path, $key, $value
@@ -826,9 +826,8 @@ trait HasAttributes
     {
         $format = $this->getDateFormat();
 
-        if (Str::endsWith($format, '.v')) {
+        if (version_compare(PHP_VERSION, '7.0.0', '<') && Str::endsWith($format, '.v')) {
             $format = preg_replace('/\.v$/', '.u', $format);
-
             return preg_replace('/\d{3}$/', '', $value->format($format));
         }
 

@@ -24,6 +24,106 @@ use Illuminate\Tests\Integration\Http\Fixtures\PostResourceWithOptionalRelations
 use Illuminate\Tests\Integration\Http\Fixtures\AuthorResourceWithOptionalRelationship;
 use Illuminate\Tests\Integration\Http\Fixtures\PostResourceWithOptionalPivotRelationship;
 
+
+class ResourceTest_test_leading_merge__keyed_value_is_merged_correctly_Class
+{
+    use ConditionallyLoadsAttributes;
+
+    public function work()
+    {
+        return $this->filter([
+            new MergeValue(['name' => 'mohamed', 'location' => 'hurghada']),
+        ]);
+    }
+}
+
+class ResourceTest_test_leading_merge_value_is_merged_correctly_Class
+{
+    use ConditionallyLoadsAttributes;
+
+    public function work()
+    {
+        return $this->filter([
+            new MergeValue(['First', 'Second']),
+            'Taylor',
+            'Mohamed',
+            new MergeValue(['Adam', 'Matt']),
+            'Jeffrey',
+            new MergeValue(['Abigail', 'Lydia']),
+        ]);
+    }
+}
+
+class ResourceTest_test_merge_values_may_be_missing_Class
+{
+    use ConditionallyLoadsAttributes;
+
+    public function work()
+    {
+        return $this->filter([
+            new MergeValue(['First', 'Second']),
+            'Taylor',
+            'Mohamed',
+            $this->mergeWhen(false, ['Adam', 'Matt']),
+            'Jeffrey',
+            new MergeValue(['Abigail', 'Lydia']),
+        ]);
+    }
+}
+
+class ResourceTest_test_initial_merge_values_may_be_missing_Class
+{
+    use ConditionallyLoadsAttributes;
+
+    public function work()
+    {
+        return $this->filter([
+            $this->mergeWhen(false, ['First', 'Second']),
+            'Taylor',
+            'Mohamed',
+            $this->mergeWhen(true, ['Adam', 'Matt']),
+            'Jeffrey',
+            new MergeValue(['Abigail', 'Lydia']),
+        ]);
+    }
+}
+
+class ResourceTest_test_all_merge_values_may_be_missing_Class
+{
+    use ConditionallyLoadsAttributes;
+
+    public function work()
+    {
+        return $this->filter([
+            $this->mergeWhen(false, ['First', 'Second']),
+            'Taylor',
+            'Mohamed',
+            $this->mergeWhen(false, ['Adam', 'Matt']),
+            'Jeffrey',
+            $this->mergeWhen(false, (['Abigail', 'Lydia'])),
+        ]);
+    }
+}
+
+class ResourceTest_test_nested_merges_Class
+{
+    use ConditionallyLoadsAttributes;
+
+    public function work()
+    {
+        return $this->filter([
+            $this->mergeWhen(true, [['Something']]),
+            [
+                $this->mergeWhen(true, ['First', $this->mergeWhen(true, ['Second'])]),
+                'Third',
+            ],
+            [
+                'Fourth',
+            ],
+        ]);
+    }
+}
+
 /**
  * @group integration
  */
@@ -591,16 +691,7 @@ class ResourceTest extends TestCase
 
     public function test_leading_merge__keyed_value_is_merged_correctly()
     {
-        $filter = new class {
-            use ConditionallyLoadsAttributes;
-
-            public function work()
-            {
-                return $this->filter([
-                    new MergeValue(['name' => 'mohamed', 'location' => 'hurghada']),
-                ]);
-            }
-        };
+        $filter = new ResourceTest_test_leading_merge__keyed_value_is_merged_correctly_Class;
 
         $results = $filter->work();
 
@@ -611,21 +702,7 @@ class ResourceTest extends TestCase
 
     public function test_leading_merge_value_is_merged_correctly()
     {
-        $filter = new class {
-            use ConditionallyLoadsAttributes;
-
-            public function work()
-            {
-                return $this->filter([
-                    new MergeValue(['First', 'Second']),
-                    'Taylor',
-                    'Mohamed',
-                    new MergeValue(['Adam', 'Matt']),
-                    'Jeffrey',
-                    new MergeValue(['Abigail', 'Lydia']),
-                ]);
-            }
-        };
+        $filter = new ResourceTest_test_leading_merge_value_is_merged_correctly_Class;
 
         $results = $filter->work();
 
@@ -636,21 +713,7 @@ class ResourceTest extends TestCase
 
     public function test_merge_values_may_be_missing()
     {
-        $filter = new class {
-            use ConditionallyLoadsAttributes;
-
-            public function work()
-            {
-                return $this->filter([
-                    new MergeValue(['First', 'Second']),
-                    'Taylor',
-                    'Mohamed',
-                    $this->mergeWhen(false, ['Adam', 'Matt']),
-                    'Jeffrey',
-                    new MergeValue(['Abigail', 'Lydia']),
-                ]);
-            }
-        };
+        $filter = new ResourceTest_test_merge_values_may_be_missing_Class;
 
         $results = $filter->work();
 
@@ -661,21 +724,7 @@ class ResourceTest extends TestCase
 
     public function test_initial_merge_values_may_be_missing()
     {
-        $filter = new class {
-            use ConditionallyLoadsAttributes;
-
-            public function work()
-            {
-                return $this->filter([
-                    $this->mergeWhen(false, ['First', 'Second']),
-                    'Taylor',
-                    'Mohamed',
-                    $this->mergeWhen(true, ['Adam', 'Matt']),
-                    'Jeffrey',
-                    new MergeValue(['Abigail', 'Lydia']),
-                ]);
-            }
-        };
+        $filter = new ResourceTest_test_initial_merge_values_may_be_missing_Class;
 
         $results = $filter->work();
 
@@ -686,21 +735,7 @@ class ResourceTest extends TestCase
 
     public function test_all_merge_values_may_be_missing()
     {
-        $filter = new class {
-            use ConditionallyLoadsAttributes;
-
-            public function work()
-            {
-                return $this->filter([
-                    $this->mergeWhen(false, ['First', 'Second']),
-                    'Taylor',
-                    'Mohamed',
-                    $this->mergeWhen(false, ['Adam', 'Matt']),
-                    'Jeffrey',
-                    $this->mergeWhen(false, (['Abigail', 'Lydia'])),
-                ]);
-            }
-        };
+        $filter = new ResourceTest_test_all_merge_values_may_be_missing_Class;
 
         $results = $filter->work();
 
@@ -711,23 +746,7 @@ class ResourceTest extends TestCase
 
     public function test_nested_merges()
     {
-        $filter = new class {
-            use ConditionallyLoadsAttributes;
-
-            public function work()
-            {
-                return $this->filter([
-                    $this->mergeWhen(true, [['Something']]),
-                    [
-                        $this->mergeWhen(true, ['First', $this->mergeWhen(true, ['Second'])]),
-                        'Third',
-                    ],
-                    [
-                        'Fourth',
-                    ],
-                ]);
-            }
-        };
+        $filter = new ResourceTest_test_nested_merges_Class;
 
         $results = $filter->work();
 

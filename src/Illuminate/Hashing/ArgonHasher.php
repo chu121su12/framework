@@ -43,10 +43,10 @@ class ArgonHasher extends AbstractHasher implements HasherContract
      */
     public function __construct(array $options = [])
     {
-        $this->time = $options['time'] ?? $this->time;
-        $this->memory = $options['memory'] ?? $this->memory;
-        $this->threads = $options['threads'] ?? $this->threads;
-        $this->verifyAlgorithm = $options['verify'] ?? $this->verifyAlgorithm;
+        $this->time = isset($options['time']) ? $options['time'] : $this->time;
+        $this->memory = isset($options['memory']) ? $options['memory'] : $this->memory;
+        $this->threads = isset($options['threads']) ? $options['threads'] : $this->threads;
+        $this->verifyAlgorithm = isset($options['verify']) ? $options['verify'] : $this->verifyAlgorithm;
     }
 
     /**

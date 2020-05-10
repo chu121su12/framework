@@ -10,6 +10,20 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Events\LocaleUpdated;
 use Illuminate\Foundation\Bootstrap\RegisterFacades;
 
+class FoundationApplicationTest_testClassesAreBoundWhenServiceProviderIsRegistered_Class extends ServiceProvider
+{
+    public $bindings = [
+        AbstractClass::class => ConcreteClass::class,
+    ];
+}
+
+class FoundationApplicationTest_testSingletonsAreCreatedWhenServiceProviderIsRegistered_Class extends ServiceProvider
+{
+    public $singletons = [
+        AbstractClass::class => ConcreteClass::class,
+    ];
+}
+
 class FoundationApplicationTest extends TestCase
 {
     public function tearDown()
@@ -44,11 +58,7 @@ class FoundationApplicationTest extends TestCase
     public function testClassesAreBoundWhenServiceProviderIsRegistered()
     {
         $app = new Application;
-        $app->register($provider = new class($app) extends ServiceProvider {
-            public $bindings = [
-                AbstractClass::class => ConcreteClass::class,
-            ];
-        });
+        $app->register($provider = new FoundationApplicationTest_testClassesAreBoundWhenServiceProviderIsRegistered_Class($app));
 
         $this->assertArrayHasKey(get_class($provider), $app->getLoadedProviders());
 
@@ -61,11 +71,7 @@ class FoundationApplicationTest extends TestCase
     public function testSingletonsAreCreatedWhenServiceProviderIsRegistered()
     {
         $app = new Application;
-        $app->register($provider = new class($app) extends ServiceProvider {
-            public $singletons = [
-                AbstractClass::class => ConcreteClass::class,
-            ];
-        });
+        $app->register($provider = new FoundationApplicationTest_testSingletonsAreCreatedWhenServiceProviderIsRegistered_Class($app));
 
         $this->assertArrayHasKey(get_class($provider), $app->getLoadedProviders());
 

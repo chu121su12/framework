@@ -48,7 +48,7 @@ class MailgunTransport extends Transport
     {
         $this->key = $key;
         $this->client = $client;
-        $this->endpoint = $endpoint ?? 'api.mailgun.net';
+        $this->endpoint = isset($endpoint) ? $endpoint : 'api.mailgun.net';
 
         $this->setDomain($domain);
     }

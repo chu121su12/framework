@@ -229,7 +229,7 @@ class Mailable implements MailableContract, Renderable
         if (isset($this->html)) {
             return array_filter([
                 'html' => new HtmlString($this->html),
-                'text' => $this->textView ?? null,
+                'text' => isset($this->textView) ? $this->textView : null,
             ]);
         }
 
@@ -394,7 +394,7 @@ class Mailable implements MailableContract, Renderable
 
             $message->attachData(
                 $storage->get($attachment['path']),
-                $attachment['name'] ?? basename($attachment['path']),
+                isset($attachment['name']) ? $attachment['name'] : basename($attachment['path']),
                 array_merge(['mime' => $storage->mimeType($attachment['path'])], $attachment['options'])
             );
         }
@@ -780,7 +780,7 @@ class Mailable implements MailableContract, Renderable
         $this->diskAttachments[] = [
             'disk' => $disk,
             'path' => $path,
-            'name' => $name ?? basename($path),
+            'name' => isset($name) ? $name : basename($path),
             'options' => $options,
         ];
 

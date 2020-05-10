@@ -98,8 +98,8 @@ class Schedule
 
             if ($job instanceof ShouldQueue) {
                 dispatch($job)
-                    ->onConnection($connection ?? $job->connection)
-                    ->onQueue($queue ?? $job->queue);
+                    ->onConnection(isset($connection) ? $connection : $job->connection)
+                    ->onQueue(isset($queue) ? $queue : $job->queue);
             } else {
                 dispatch_now($job);
             }

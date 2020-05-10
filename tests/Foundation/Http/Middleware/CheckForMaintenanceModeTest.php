@@ -9,6 +9,16 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode;
 
+class CheckForMaintenanceModeTest_testApplicationAllowsSomeURIs_Class extends CheckForMaintenanceMode
+{
+    public function __construct($app)
+    {
+        parent::__construct($app);
+
+        $this->except = ['foo/bar'];
+    }
+}
+
 class CheckForMaintenanceModeTest extends TestCase
 {
     /**
@@ -104,14 +114,7 @@ class CheckForMaintenanceModeTest extends TestCase
     {
         $app = $this->createMaintenanceApplication();
 
-        $middleware = new class($app) extends CheckForMaintenanceMode {
-            public function __construct($app)
-            {
-                parent::__construct($app);
-
-                $this->except = ['foo/bar'];
-            }
-        };
+        $middleware = new CheckForMaintenanceModeTest_testApplicationAllowsSomeURIs_Class($app);
 
         $result = $middleware->handle(Request::create('/foo/bar'), function ($request) {
             return 'Excepting /foo/bar';

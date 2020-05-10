@@ -20,6 +20,16 @@ use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Compilers\CompilerInterface;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 
+class ViewFactoryTest_testAddingLoopDoesNotCloseGenerator_Class
+{
+    public function generate()
+    {
+        for ($count = 0; $count < 3; $count++) {
+            yield ['a', 'b'];
+        }
+    }
+}
+
 class ViewFactoryTest extends TestCase
 {
     public function tearDown()
@@ -572,14 +582,7 @@ class ViewFactoryTest extends TestCase
     {
         $factory = $this->getFactory();
 
-        $data = (new class {
-            public function generate()
-            {
-                for ($count = 0; $count < 3; $count++) {
-                    yield ['a', 'b'];
-                }
-            }
-        })->generate();
+        $data = (new ViewFactoryTest_testAddingLoopDoesNotCloseGenerator_Class)->generate();
 
         $factory->addLoop($data);
 

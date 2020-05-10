@@ -115,7 +115,7 @@ class NotificationFake implements NotificationFactory, NotificationDispatcher
         $actualCount = collect($this->notifications)
             ->flatten(1)
             ->reduce(function ($count, $sent) use ($notification) {
-                return $count + count($sent[$notification] ?? []);
+                return $count + count(isset($sent[$notification]) ? $sent[$notification] : []);
             }, 0);
 
         PHPUnit::assertSame(
@@ -207,15 +207,23 @@ class NotificationFake implements NotificationFactory, NotificationDispatcher
                 $notification->id = Str::uuid()->toString();
             }
 
+            if (isset($notification->locale)) {
+                $locale = $notification->locale;
+            } elseif (isset($this->locale)) {
+                $locale = $this->locale;
+            } else {
+                $locale = value(function () use ($notifiable) {
+                    if ($notifiable instanceof HasLocalePreference) {
+                        return $notifiable->preferredLocale();
+                    }
+                });
+            }
+
             $this->notifications[get_class($notifiable)][$notifiable->getKey()][get_class($notification)][] = [
                 'notification' => $notification,
                 'channels' => $notification->via($notifiable),
                 'notifiable' => $notifiable,
-                'locale' => $notification->locale ?? $this->locale ?? value(function () use ($notifiable) {
-                    if ($notifiable instanceof HasLocalePreference) {
-                        return $notifiable->preferredLocale();
-                    }
-                }),
+                'locale' => $locale,
             ];
         }
     }

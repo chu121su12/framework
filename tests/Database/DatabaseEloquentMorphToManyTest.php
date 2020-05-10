@@ -77,7 +77,7 @@ class DatabaseEloquentMorphToManyTest extends TestCase
 
     public function getRelation()
     {
-        [$builder, $parent] = $this->getRelationArguments();
+        list($builder, $parent) = $this->getRelationArguments();
 
         return new MorphToMany($builder, $parent, 'taggable', 'taggables', 'taggable_id', 'tag_id', 'id', 'id');
     }

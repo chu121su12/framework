@@ -766,11 +766,13 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
     public function testGrammarsAreMacroable()
     {
         // compileReplace macro.
-        $this->getGrammar()::macro('compileReplace', function () {
+        $grammar = $this->getGrammar();
+        $grammar::macro('compileReplace', function () {
             return true;
         });
 
-        $c = $this->getGrammar()::compileReplace();
+        $grammar = $this->getGrammar();
+        $c = $grammar::compileReplace();
 
         $this->assertTrue($c);
     }

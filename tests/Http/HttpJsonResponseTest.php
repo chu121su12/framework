@@ -16,7 +16,7 @@ class HttpJsonResponseTest extends TestCase
      *
      * @param  $data
      */
-    public function testSetAndRetrieveData($data): void
+    public function testSetAndRetrieveData($data)
     {
         $response = new JsonResponse($data);
 
@@ -24,7 +24,7 @@ class HttpJsonResponseTest extends TestCase
         $this->assertEquals('bar', $response->getData()->foo);
     }
 
-    public function setAndRetrieveDataProvider(): array
+    public function setAndRetrieveDataProvider()
     {
         return [
             'Jsonable data' => [new JsonResponseTestJsonableObject],

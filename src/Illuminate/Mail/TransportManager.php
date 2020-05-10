@@ -79,7 +79,7 @@ class TransportManager extends Manager
 
         return new SesTransport(
             new SesClient($this->addSesCredentials($config)),
-            $config['options'] ?? []
+            isset($config['options']) ? $config['options'] : []
         );
     }
 
@@ -121,7 +121,7 @@ class TransportManager extends Manager
             $this->guzzle($config),
             $config['secret'],
             $config['domain'],
-            $config['endpoint'] ?? null
+            isset($config['endpoint']) ? $config['endpoint'] : null
         );
     }
 

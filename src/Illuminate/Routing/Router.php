@@ -1158,18 +1158,18 @@ class Router implements RegistrarContract, BindingRegistrar
         $this->post('logout', 'Auth\LoginController@logout')->name('logout');
 
         // Registration Routes...
-        if ($options['register'] ?? true) {
+        if (isset($options['register']) ? $options['register'] : true) {
             $this->get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
             $this->post('register', 'Auth\RegisterController@register');
         }
 
         // Password Reset Routes...
-        if ($options['reset'] ?? true) {
+        if (isset($options['reset']) ? $options['reset'] : true) {
             $this->resetPassword();
         }
 
         // Email Verification Routes...
-        if ($options['verify'] ?? false) {
+        if (isset($options['verify']) ? $options['verify'] : false) {
             $this->emailVerification();
         }
     }

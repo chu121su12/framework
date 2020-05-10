@@ -78,6 +78,34 @@ class ValidationValidatorTest_testImplicitCustomValidationObjects_passing_Class 
     }
 }
 
+class ValidationValidatorTest_testCustomValidationObject_failing implements Rule
+{
+    public function passes($attribute, $value)
+    {
+        return $value === 'taylor';
+    }
+
+    public function message()
+    {
+        return [':attribute must be taylor', ':attribute must be a first name'];
+    }
+}
+
+class ValidationValidatorTest_testCustomValidationObject_multiple implements Rule
+{
+    public function passes($attribute, $value)
+    {
+        return $value === 'taylor';
+    }
+
+    public function message()
+    {
+        return [':attribute must be taylor', ':attribute must be a first name'];
+    }
+}
+
+
+
 class ValidationValidatorTest extends TestCase
 {
     public function tearDown()
@@ -4191,17 +4219,7 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator(
             $this->getIlluminateArrayTranslator(),
             ['name' => 42],
-            ['name' => new class implements Rule {
-                public function passes($attribute, $value)
-                {
-                    return $value === 'taylor';
-                }
-
-                public function message()
-                {
-                    return [':attribute must be taylor', ':attribute must be a first name'];
-                }
-            }]
+            ['name' => new ValidationValidatorTest_testCustomValidationObject_failing]
         );
 
         $this->assertTrue($v->fails());
@@ -4212,17 +4230,7 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator(
             $this->getIlluminateArrayTranslator(),
             ['name' => 42],
-            ['name' => [new class implements Rule {
-                public function passes($attribute, $value)
-                {
-                    return $value === 'taylor';
-                }
-
-                public function message()
-                {
-                    return [':attribute must be taylor', ':attribute must be a first name'];
-                }
-            }, 'string']]
+            ['name' => [new ValidationValidatorTest_testCustomValidationObject_multiple, 'string']]
         );
 
         $this->assertTrue($v->fails());

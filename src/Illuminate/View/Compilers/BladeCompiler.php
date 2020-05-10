@@ -273,7 +273,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      */
     protected function parseToken($token)
     {
-        [$id, $content] = $token;
+        list($id, $content) = $token;
 
         if ($id == T_INLINE_HTML) {
             foreach ($this->compilers as $type) {
@@ -454,7 +454,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      * @param  string  $alias
      * @return void
      */
-    public function include($path, $alias = null)
+    public function includes($path, $alias = null)
     {
         $alias = $alias ?: Arr::last(explode('.', $path));
 

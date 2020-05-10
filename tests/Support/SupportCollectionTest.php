@@ -2589,7 +2589,7 @@ class SupportCollectionTest extends TestCase
     {
         $collection = new Collection(range(1, 10));
 
-        [$firstPartition, $secondPartition] = $collection->partition(function ($i) {
+        list($firstPartition, $secondPartition) = $collection->partition(function ($i) {
             return $i <= 5;
         });
 
@@ -2601,7 +2601,7 @@ class SupportCollectionTest extends TestCase
     {
         $collection = new Collection(['zero', 'one', 'two', 'three']);
 
-        [$even, $odd] = $collection->partition(function ($item, $index) {
+        list($even, $odd) = $collection->partition(function ($item, $index) {
             return $index % 2 === 0;
         });
 
@@ -2616,7 +2616,7 @@ class SupportCollectionTest extends TestCase
             ['free' => true, 'title' => 'Basic'], ['free' => false, 'title' => 'Premium'],
         ]);
 
-        [$free, $premium] = $courses->partition('free');
+        list($free, $premium) = $courses->partition('free');
 
         $this->assertSame([['free' => true, 'title' => 'Basic']], $free->values()->toArray());
 
@@ -2632,7 +2632,7 @@ class SupportCollectionTest extends TestCase
             ['name' => 'Tim', 'age' => 41],
         ]);
 
-        [$tims, $others] = $collection->partition('name', 'Tim');
+        list($tims, $others) = $collection->partition('name', 'Tim');
 
         $this->assertEquals($tims->values()->all(), [
             ['name' => 'Tim', 'age' => 17],
@@ -2644,7 +2644,7 @@ class SupportCollectionTest extends TestCase
             ['name' => 'Kristina', 'age' => 33],
         ]);
 
-        [$adults, $minors] = $collection->partition('age', '>=', 18);
+        list($adults, $minors) = $collection->partition('age', '>=', 18);
 
         $this->assertEquals($adults->values()->all(), [
             ['name' => 'Agatha', 'age' => 62],
@@ -2663,7 +2663,7 @@ class SupportCollectionTest extends TestCase
             'a' => ['free' => true], 'b' => ['free' => false], 'c' => ['free' => true],
         ]);
 
-        [$free, $premium] = $courses->partition('free');
+        list($free, $premium) = $courses->partition('free');
 
         $this->assertSame(['a' => ['free' => true], 'c' => ['free' => true]], $free->toArray());
 
@@ -2685,7 +2685,7 @@ class SupportCollectionTest extends TestCase
             'a' => ['free' => true], 'b' => ['free' => false], 'c' => ['free' => true],
         ]);
 
-        [$free, $premium] = $courses->partition->free;
+        list($free, $premium) = $courses->partition->free;
 
         $this->assertSame(['a' => ['free' => true], 'c' => ['free' => true]], $free->toArray());
 

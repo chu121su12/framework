@@ -143,7 +143,8 @@ class SparkPostTransport extends Transport
      */
     public function getEndpoint()
     {
-        return $this->getOptions()['endpoint'] ?? 'https://api.sparkpost.com/api/v1/transmissions';
+        $options = $this->getOptions();
+        return isset($options['endpoint']) ? $options['endpoint'] : 'https://api.sparkpost.com/api/v1/transmissions';
     }
 
     /**

@@ -29,8 +29,8 @@ class BcryptHasher extends AbstractHasher implements HasherContract
      */
     public function __construct(array $options = [])
     {
-        $this->rounds = $options['rounds'] ?? $this->rounds;
-        $this->verifyAlgorithm = $options['verify'] ?? $this->verifyAlgorithm;
+        $this->rounds = isset($options['rounds']) ? $options['rounds'] : $this->rounds;
+        $this->verifyAlgorithm = isset($options['verify']) ? $options['verify'] : $this->verifyAlgorithm;
     }
 
     /**

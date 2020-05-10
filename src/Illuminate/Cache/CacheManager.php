@@ -286,7 +286,7 @@ class CacheManager implements FactoryContract
      */
     public function forgetDriver($name = null)
     {
-        $name = $name ?? $this->getDefaultDriver();
+        $name = isset($name) ? $name : $this->getDefaultDriver();
 
         foreach ((array) $name as $cacheName) {
             if (isset($this->stores[$cacheName])) {

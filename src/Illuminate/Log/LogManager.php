@@ -86,7 +86,7 @@ class LogManager implements LoggerInterface
      */
     public function driver($driver = null)
     {
-        return $this->get($driver ?? $this->getDefaultDriver());
+        return $this->get(isset($driver) ? $driver : $this->getDefaultDriver());
     }
 
     /**
@@ -98,7 +98,7 @@ class LogManager implements LoggerInterface
     protected function get($name)
     {
         try {
-            return $this->channels[$name] ?? with($this->resolve($name), function ($logger) use ($name) {
+            return isset($this->channels[$name]) ? $this->channels[$name] : with($this->resolve($name), function ($logger) use ($name) {
                 return $this->channels[$name] = $this->tap($name, new Logger($logger, $this->app['events']));
             });
         } catch (Throwable $e) {
@@ -119,8 +119,9 @@ class LogManager implements LoggerInterface
      */
     protected function tap($name, Logger $logger)
     {
-        foreach ($this->configurationFor($name)['tap'] ?? [] as $tap) {
-            [$class, $arguments] = $this->parseTap($tap);
+        $configuration = $this->configurationFor($name);
+        foreach ((isset($configuration['tap']) ? $configuration['tap'] : []) as $tap) {
+            list($class, $arguments) = $this->parseTap($tap);
 
             $this->app->make($class)->__invoke($logger, ...explode(',', $arguments));
         }
@@ -230,8 +231,11 @@ class LogManager implements LoggerInterface
         return new Monolog($this->parseChannel($config), [
             $this->prepareHandler(
                 new StreamHandler(
-                    $config['path'], $this->level($config),
-                    $config['bubble'] ?? true, $config['permission'] ?? null, $config['locking'] ?? false
+                    $config['path'],
+                    $this->level($config),
+                    isset($config['bubble']) ? $config['bubble'] : true,
+                    isset($config['permission']) ? $config['permission'] : null,
+                    isset($config['locking']) ? $config['locking'] : false
                 )
             ),
         ]);
@@ -247,8 +251,12 @@ class LogManager implements LoggerInterface
     {
         return new Monolog($this->parseChannel($config), [
             $this->prepareHandler(new RotatingFileHandler(
-                $config['path'], $config['days'] ?? 7, $this->level($config),
-                $config['bubble'] ?? true, $config['permission'] ?? null, $config['locking'] ?? false
+                $config['path'],
+                isset($config['days']) ? $config['days'] : 7,
+                $this->level($config),
+                isset($config['bubble']) ? $config['bubble'] : true,
+                isset($config['permission']) ? $config['permission'] : null,
+                isset($config['locking']) ? $config['locking'] : false
             )),
         ]);
     }
@@ -264,15 +272,15 @@ class LogManager implements LoggerInterface
         return new Monolog($this->parseChannel($config), [
             $this->prepareHandler(new SlackWebhookHandler(
                 $config['url'],
-                $config['channel'] ?? null,
-                $config['username'] ?? 'Laravel',
-                $config['attachment'] ?? true,
-                $config['emoji'] ?? ':boom:',
-                $config['short'] ?? false,
-                $config['context'] ?? true,
+                isset($config['channel']) ? $config['channel'] : null,
+                isset($config['username']) ? $config['username'] : 'Laravel',
+                isset($config['attachment']) ? $config['attachment'] : true,
+                isset($config['emoji']) ? $config['emoji'] : ':boom:',
+                isset($config['short']) ? $config['short'] : false,
+                isset($config['context']) ? $config['context'] : true,
                 $this->level($config),
-                $config['bubble'] ?? true,
-                $config['exclude_fields'] ?? []
+                isset($config['bubble']) ? $config['bubble'] : true,
+                isset($config['exclude_fields']) ? $config['exclude_fields'] : []
             ), $config),
         ]);
     }
@@ -287,7 +295,7 @@ class LogManager implements LoggerInterface
     {
         return new Monolog($this->parseChannel($config), [
             $this->prepareHandler(new SyslogHandler(
-                Str::snake($this->app['config']['app.name'], '-'), $config['facility'] ?? LOG_USER, $this->level($config))
+                Str::snake($this->app['config']['app.name'], '-'), isset($config['facility']) ? $config['facility'] : LOG_USER, $this->level($config))
             ),
         ]);
     }
@@ -302,7 +310,7 @@ class LogManager implements LoggerInterface
     {
         return new Monolog($this->parseChannel($config), [
             $this->prepareHandler(new ErrorLogHandler(
-                $config['type'] ?? ErrorLogHandler::OPERATING_SYSTEM, $this->level($config))
+                isset($config['type']) ? $config['type'] : ErrorLogHandler::OPERATING_SYSTEM, $this->level($config))
             ),
         ]);
     }
@@ -324,7 +332,7 @@ class LogManager implements LoggerInterface
             );
         }
 
-        $with = array_merge($config['with'] ?? [], $config['handler_with'] ?? []);
+        $with = array_merge(isset($config['with']) ? $config['with'] : [], isset($config['handler_with']) ? $config['handler_with'] : []);
 
         return new Monolog($this->parseChannel($config), [$this->prepareHandler(
             $this->app->make($config['handler'], $with), $config
@@ -358,7 +366,7 @@ class LogManager implements LoggerInterface
         if (! isset($config['formatter'])) {
             $handler->setFormatter($this->formatter());
         } elseif ($config['formatter'] !== 'default') {
-            $handler->setFormatter($this->app->make($config['formatter'], $config['formatter_with'] ?? []));
+            $handler->setFormatter($this->app->make($config['formatter'], isset($config['formatter_with']) ? $config['formatter_with'] : []));
         }
 
         return $handler;

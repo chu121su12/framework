@@ -13,6 +13,14 @@ use PHPUnit\Framework\AssertionFailedError;
 use Illuminate\Foundation\Testing\TestResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
+class FoundationTestResponseTest_testAssertViewHasModel_Class extends Model
+{
+    public function is($model)
+    {
+        return $this == $model;
+    }
+}
+
 class FoundationTestResponseTest extends TestCase
 {
     public function testAssertViewIs()
@@ -38,12 +46,7 @@ class FoundationTestResponseTest extends TestCase
 
     public function testAssertViewHasModel()
     {
-        $model = new class extends Model {
-            public function is($model)
-            {
-                return $this == $model;
-            }
-        };
+        $model = new FoundationTestResponseTest_testAssertViewHasModel_Class;
 
         $response = $this->makeMockResponse([
             'render' => 'hello world',

@@ -36,7 +36,7 @@ class Unique
         }
 
         $this->ignore = $id;
-        $this->idColumn = $idColumn ?? 'id';
+        $this->idColumn = isset($idColumn) ? $idColumn : 'id';
 
         return $this;
     }
@@ -50,7 +50,7 @@ class Unique
      */
     public function ignoreModel($model, $idColumn = null)
     {
-        $this->idColumn = $idColumn ?? $model->getKeyName();
+        $this->idColumn = isset($idColumn) ? $idColumn : $model->getKeyName();
         $this->ignore = $model->{$this->idColumn};
 
         return $this;

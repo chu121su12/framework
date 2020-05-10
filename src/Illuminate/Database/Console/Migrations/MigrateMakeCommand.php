@@ -84,7 +84,7 @@ class MigrateMakeCommand extends BaseCommand
         // "create" in the name. This will allow us to provide a convenient way
         // of creating migrations that create new tables for the application.
         if (! $table) {
-            [$table, $create] = TableGuesser::guess($name);
+            list($table, $create) = TableGuesser::guess($name);
         }
 
         // Now we are ready to write the migration out to disk. Once we've written

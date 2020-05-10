@@ -236,7 +236,7 @@ class FilesystemManager implements FactoryContract
     {
         $client = new Rackspace($config['endpoint'], [
             'username' => $config['username'], 'apiKey' => $config['key'],
-        ], $config['options'] ?? []);
+        ], isset($config['options']) ? $config['options'] : []);
 
         $root = isset($config['root']) ? $config['root'] : null;
 

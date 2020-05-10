@@ -99,7 +99,7 @@ class MailableQueableStub extends Mailable implements ShouldQueue
 {
     use Queueable;
 
-    public function build(): self
+    public function build()
     {
         $this
             ->subject('lorem ipsum')
