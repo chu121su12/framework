@@ -333,7 +333,7 @@ class LogManager implements LoggerInterface
     {
         return new Monolog($this->parseChannel($config), [
             $this->prepareHandler(new ErrorLogHandler(
-                isset($config['type']) ? $config['type'] : ErrorLogHandler::OPERATING_SYSTEM, 
+                isset($config['type']) ? $config['type'] : ErrorLogHandler::OPERATING_SYSTEM,
                 $this->level($config)
             )),
         ]);
@@ -358,7 +358,7 @@ class LogManager implements LoggerInterface
 
         $with = array_merge(
             ['level' => $this->level($config)],
-            isset($config['with']) ? $config['with'] : [], 
+            isset($config['with']) ? $config['with'] : [],
             isset($config['handler_with']) ? $config['handler_with'] : []
         );
 
@@ -487,7 +487,7 @@ class LogManager implements LoggerInterface
      */
     public function forgetChannel($driver = null)
     {
-        $driver = $driver ?? $this->getDefaultDriver();
+        $driver = isset($driver) ? $driver : $this->getDefaultDriver();
 
         if (isset($this->channels[$driver])) {
             unset($this->channels[$driver]);

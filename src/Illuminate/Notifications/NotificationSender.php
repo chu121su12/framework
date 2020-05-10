@@ -204,7 +204,7 @@ class NotificationSender
                             ->through(
                                 array_merge(
                                     method_exists($notification, 'middleware') ? $notification->middleware() : [],
-                                    $notification->middleware ?? []
+                                    isset($notification->middleware) ? $notification->middleware : []
                                 )
                             )
                 );

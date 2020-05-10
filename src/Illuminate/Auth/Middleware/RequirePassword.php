@@ -47,7 +47,7 @@ class RequirePassword
     {
         if ($this->shouldConfirmPassword($request)) {
             return $this->responseFactory->redirectGuest(
-                $this->urlGenerator->route($redirectToRoute ?? 'password.confirm')
+                $this->urlGenerator->route(isset($redirectToRoute) ? $redirectToRoute : 'password.confirm')
             );
         }
 

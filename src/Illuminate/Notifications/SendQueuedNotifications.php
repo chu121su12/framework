@@ -122,7 +122,7 @@ class SendQueuedNotifications implements ShouldQueue
             return;
         }
 
-        return $this->notification->timeoutAt ?? $this->notification->retryUntil();
+        return isset($this->notification->timeoutAt) ? $this->notification->timeoutAt : $this->notification->retryUntil();
     }
 
     /**

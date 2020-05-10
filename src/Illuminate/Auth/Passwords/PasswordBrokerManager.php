@@ -96,7 +96,7 @@ class PasswordBrokerManager implements FactoryContract
             $config['table'],
             $key,
             $config['expire'],
-            $config['throttle'] ?? 0
+            isset($config['throttle']) ? $config['throttle'] : 0
         );
     }
 

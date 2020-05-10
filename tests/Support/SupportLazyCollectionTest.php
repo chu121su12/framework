@@ -72,7 +72,9 @@ class SupportLazyCollectionTest extends TestCase
         $source = [1, 2, 3, 4, 5];
 
         $data = LazyCollection::make(function () use (&$source) {
-            yield from $source;
+            foreach ($source as $yieldedFrom) {
+                yield $yieldedFrom;
+            }
         })->eager();
 
         $source[] = 6;

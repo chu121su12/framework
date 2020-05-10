@@ -1169,7 +1169,7 @@ class Router implements BindingRegistrar, RegistrarContract
         }
 
         // Password Confirmation Routes...
-        if ($options['confirm'] ?? true) {
+        if (isset($options['confirm']) ? $options['confirm'] : true) {
             $this->confirmPassword();
         }
 

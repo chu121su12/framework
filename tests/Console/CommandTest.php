@@ -12,6 +12,29 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\NullOutput;
 
+class CommandTest_testGettingCommandArgumentsAndOptionsByClass_Class extends Command
+{
+    public function handle()
+    {
+    }
+
+    protected function getArguments()
+    {
+        return [
+            new InputArgument('argument-one', InputArgument::REQUIRED, 'first test argument'),
+            ['argument-two', InputArgument::OPTIONAL, 'a second test argument'],
+        ];
+    }
+
+    protected function getOptions()
+    {
+        return [
+            new InputOption('option-one', 'o', InputOption::VALUE_OPTIONAL, 'first test option'),
+            ['option-two', 't', InputOption::VALUE_REQUIRED, 'second test option'],
+        ];
+    }
+}
+
 class CommandTest extends TestCase
 {
     protected function tearDown()
@@ -47,27 +70,7 @@ class CommandTest extends TestCase
 
     public function testGettingCommandArgumentsAndOptionsByClass()
     {
-        $command = new class extends Command {
-            public function handle()
-            {
-            }
-
-            protected function getArguments()
-            {
-                return [
-                    new InputArgument('argument-one', InputArgument::REQUIRED, 'first test argument'),
-                    ['argument-two', InputArgument::OPTIONAL, 'a second test argument'],
-                ];
-            }
-
-            protected function getOptions()
-            {
-                return [
-                    new InputOption('option-one', 'o', InputOption::VALUE_OPTIONAL, 'first test option'),
-                    ['option-two', 't', InputOption::VALUE_REQUIRED, 'second test option'],
-                ];
-            }
-        };
+        $command = new CommandTest_testGettingCommandArgumentsAndOptionsByClass_Class;
 
         $application = app();
         $command->setLaravel($application);
