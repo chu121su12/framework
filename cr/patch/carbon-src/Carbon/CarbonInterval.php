@@ -485,7 +485,7 @@ class CarbonInterval extends DateInterval
      *
      * @return static
      */
-    public static function createFromFormat(string $format, ?string $interval)
+    public static function createFromFormat($format, ?string $interval)
     {
         $instance = new static(0);
         $length = mb_strlen($format);
@@ -554,7 +554,7 @@ class CarbonInterval extends DateInterval
      *
      * @return static
      */
-    public function clone()
+    public function cloneCopy()
     {
         return $this->copy();
     }
@@ -815,7 +815,7 @@ class CarbonInterval extends DateInterval
         return static::fromString(Carbon::translateTimeString($interval, $locale, 'en'));
     }
 
-    private static function castIntervalToClass(DateInterval $interval, string $className)
+    private static function castIntervalToClass(DateInterval $interval, $className)
     {
         $mainClass = DateInterval::class;
 
@@ -853,7 +853,7 @@ class CarbonInterval extends DateInterval
      *
      * @return DateInterval
      */
-    public function cast(string $className)
+    public function cast($className)
     {
         return self::castIntervalToClass($this, $className);
     }
@@ -1385,7 +1385,7 @@ class CarbonInterval extends DateInterval
         return [$syntax, $short, $parts, $options, $join, $aUnit, $altNumbers, $interpolations, $minimumUnit];
     }
 
-    protected static function getRoundingMethodFromOptions(int $options): ?string
+    protected static function getRoundingMethodFromOptions($options)
     {
         if ($options & CarbonInterface::ROUND) {
             return 'round';
@@ -2138,7 +2138,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function eq($interval): bool
+    public function eq($interval)
     {
         return $this->equalTo($interval);
     }
@@ -2150,7 +2150,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function equalTo($interval): bool
+    public function equalTo($interval)
     {
         $interval = $this->resolveInterval($interval);
 
@@ -2166,7 +2166,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function ne($interval): bool
+    public function ne($interval)
     {
         return $this->notEqualTo($interval);
     }
@@ -2178,7 +2178,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function notEqualTo($interval): bool
+    public function notEqualTo($interval)
     {
         return !$this->eq($interval);
     }
@@ -2192,7 +2192,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function gt($interval): bool
+    public function gt($interval)
     {
         return $this->greaterThan($interval);
     }
@@ -2204,7 +2204,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function greaterThan($interval): bool
+    public function greaterThan($interval)
     {
         $interval = $this->resolveInterval($interval);
 
@@ -2220,7 +2220,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function gte($interval): bool
+    public function gte($interval)
     {
         return $this->greaterThanOrEqualTo($interval);
     }
@@ -2232,7 +2232,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function greaterThanOrEqualTo($interval): bool
+    public function greaterThanOrEqualTo($interval)
     {
         return $this->greaterThan($interval) || $this->equalTo($interval);
     }
@@ -2246,7 +2246,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function lt($interval): bool
+    public function lt($interval)
     {
         return $this->lessThan($interval);
     }
@@ -2258,7 +2258,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function lessThan($interval): bool
+    public function lessThan($interval)
     {
         $interval = $this->resolveInterval($interval);
 
@@ -2274,7 +2274,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function lte($interval): bool
+    public function lte($interval)
     {
         return $this->lessThanOrEqualTo($interval);
     }
@@ -2286,7 +2286,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function lessThanOrEqualTo($interval): bool
+    public function lessThanOrEqualTo($interval)
     {
         return $this->lessThan($interval) || $this->equalTo($interval);
     }
@@ -2312,7 +2312,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function between($interval1, $interval2, $equal = true): bool
+    public function between($interval1, $interval2, $equal = true)
     {
         return $equal
             ? $this->greaterThanOrEqualTo($interval1) && $this->lessThanOrEqualTo($interval2)
@@ -2334,7 +2334,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function betweenIncluded($interval1, $interval2): bool
+    public function betweenIncluded($interval1, $interval2)
     {
         return $this->between($interval1, $interval2, true);
     }
@@ -2354,7 +2354,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function betweenExcluded($interval1, $interval2): bool
+    public function betweenExcluded($interval1, $interval2)
     {
         return $this->between($interval1, $interval2, false);
     }
@@ -2376,7 +2376,7 @@ class CarbonInterval extends DateInterval
      *
      * @return bool
      */
-    public function isBetween($interval1, $interval2, $equal = true): bool
+    public function isBetween($interval1, $interval2, $equal = true)
     {
         return $this->between($interval1, $interval2, $equal);
     }

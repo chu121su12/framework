@@ -668,7 +668,7 @@ trait Date
      *
      * @return static
      */
-    public function clone()
+    public function cloneCopy()
     {
         return clone $this;
     }
@@ -909,11 +909,29 @@ trait Date
 
             // @property-read int 0 through 6
             case $name === 'firstWeekDay':
-                return $this->localTranslator ? ($this->getTranslationMessage('first_day_of_week') ?? 0) : static::getWeekStartsAt();
+                if ($this->localTranslator) {
+                    $translation = $this->getTranslationMessage('first_day_of_week');
+                    if (! isset($translation)) {
+                        $translation = 0;
+                    }
+
+                    return $translation;
+                }
+
+                return static::getWeekStartsAt();
 
             // @property-read int 0 through 6
             case $name === 'lastWeekDay':
-                return $this->localTranslator ? (($this->getTranslationMessage('first_day_of_week') ?? 0) + static::DAYS_PER_WEEK - 1) % static::DAYS_PER_WEEK : static::getWeekEndsAt();
+                if ($this->localTranslator) {
+                    $translation = $this->getTranslationMessage('first_day_of_week');
+                    if (! isset($translation)) {
+                        $translation = 0;
+                    }
+
+                    return ($translation + static::DAYS_PER_WEEK - 1) % static::DAYS_PER_WEEK;
+                }
+
+                return static::getWeekEndsAt();
 
             // @property int 1 through 366
             case $name === 'dayOfYear':
@@ -1021,7 +1039,11 @@ trait Date
     {
         try {
             $this->__get($name);
-        } catch (InvalidArgumentException | ReflectionException $e) {
+        } catch (InvalidArgumentException $e) {
+        } catch (ReflectionException $e) {
+        }
+
+        if (isset($e)) {
             return false;
         }
 
@@ -1107,7 +1129,7 @@ trait Date
             case 'hour':
             case 'minute':
             case 'second':
-                [$year, $month, $day, $hour, $minute, $second] = array_map('intval', explode('-', $this->rawFormat('Y-n-j-G-i-s')));
+                list($year, $month, $day, $hour, $minute, $second) = array_map('intval', explode('-', $this->rawFormat('Y-n-j-G-i-s')));
                 $$name = $value;
                 $this->setDateTime($year, $month, $day, $hour, $minute, $second);
 
@@ -1173,7 +1195,7 @@ trait Date
                     break;
                 }
 
-                if ($this->localStrictModeEnabled ?? static::isStrictModeEnabled()) {
+                if (isset($this->localStrictModeEnabled) ? $this->localStrictModeEnabled : static::isStrictModeEnabled()) {
                     throw new InvalidArgumentException(sprintf("Unknown setter '%s'", $name));
                 }
 
@@ -1290,7 +1312,8 @@ trait Date
      */
     public function weekday($value = null)
     {
-        $dayOfWeek = ($this->dayOfWeek + 7 - intval($this->getTranslationMessage('first_day_of_week') ?? 0)) % 7;
+        $translation = $this->getTranslationMessage('first_day_of_week');
+        $dayOfWeek = ($this->dayOfWeek + 7 - intval(isset($translation) ? $translation : 0)) % 7;
 
         return is_null($value) ? $dayOfWeek : $this->addDays($value - $dayOfWeek);
     }
@@ -1333,7 +1356,11 @@ trait Date
             }
 
             return $date;
-        } catch (BadMethodCallException | ReflectionException $exception) {
+        } catch (BadMethodCallException $exception) {
+        } catch (ReflectionException $exception) {
+        }
+
+        if (isset($exception)) {
             throw new InvalidArgumentException("Unknown unit '$valueUnit'", 0, $exception);
         }
     }
@@ -1373,7 +1400,7 @@ trait Date
      *
      * @return int|static
      */
-    public function utcOffset(int $offset = null)
+    public function utcOffset($offset = null)
     {
         if (func_num_args() < 1) {
             return $this->offsetMinutes;
@@ -1444,9 +1471,9 @@ trait Date
      *
      * @return static
      */
-    public function setTime($hour, $minute, $second = 0, $microseconds = 0)
+    public function setTimeValue($hour, $minute, $second = 0, $microseconds = 0)
     {
-        return parent::setTime((int) $hour, (int) $minute, (int) $second, (int) $microseconds);
+        return parent::setTimeValue((int) $hour, (int) $minute, (int) $second, (int) $microseconds);
     }
 
     /**
@@ -1944,7 +1971,7 @@ trait Date
      *
      * @return string
      */
-    public function ordinal(string $key, string $period = null): string
+    public function ordinal($key, $period = null)
     {
         $number = $this->$key;
         $result = $this->translate('ordinal', [
@@ -1962,7 +1989,7 @@ trait Date
      *
      * @return string
      */
-    public function meridiem(bool $isLower = false): string
+    public function meridiem($isLower = false)
     {
         $hour = $this->hour;
         $index = $hour < 12 ? 0 : 1;
@@ -2002,7 +2029,7 @@ trait Date
      *
      * @return string
      */
-    public function getAltNumber(string $key): string
+    public function getAltNumber($key)
     {
         return $this->translateNumber(strlen($key) > 1 ? $this->$key : $this->rawFormat('h'));
     }
@@ -2015,7 +2042,7 @@ trait Date
      *
      * @return string
      */
-    public function isoFormat(string $format, string $originalFormat = null): string
+    public function isoFormat($format, $originalFormat = null)
     {
         $result = '';
         $length = mb_strlen($format);
@@ -2059,12 +2086,12 @@ trait Date
                 }
 
                 $code = $match[0];
-                $sequence = $formats[$code] ?? preg_replace_callback(
+                $sequence = isset($formats[$code]) ? $formats[$code] : preg_replace_callback(
                     '/MMMM|MM|DD|dddd/',
                     function ($code) {
                         return mb_substr($code[0], 1);
                     },
-                    $formats[strtoupper($code)] ?? ''
+                    isset($formats[strtoupper($code)]) ? $formats[strtoupper($code)] : ''
                 );
                 $rest = mb_substr($format, $i + mb_strlen($code));
                 $format = mb_substr($format, 0, $i).$sequence.$rest;
@@ -2079,18 +2106,23 @@ trait Date
                     $units = static::getIsoUnits();
                 }
 
-                $sequence = $units[$code] ?? '';
+                $sequence = isset($units[$code]) ? $units[$code] : '';
 
                 if ($sequence instanceof Closure) {
                     $sequence = $sequence($this, $originalFormat);
                 } elseif (is_array($sequence)) {
                     try {
                         $sequence = $this->{$sequence[0]}(...$sequence[1]);
-                    } catch (ReflectionException | InvalidArgumentException | BadMethodCallException $e) {
+                    } catch (ReflectionException $e) {
+                    } catch (InvalidArgumentException $e) {
+                    } catch (BadMethodCallException $e) {
+                    }
+
+                    if (isset($e)) {
                         $sequence = '';
                     }
                 } elseif (is_string($sequence)) {
-                    $sequence = $this->$sequence ?? $code;
+                    $sequence = isset($this->$sequence) ? $this->$sequence : $code;
                 }
 
                 $format = mb_substr($format, 0, $i).$sequence.mb_substr($format, $i + mb_strlen($code));
@@ -2171,7 +2203,7 @@ trait Date
      *
      * @return string
      */
-    public function translatedFormat(string $format): string
+    public function translatedFormat($format)
     {
         $replacements = static::getFormatsToIsoReplacements();
         $context = '';
@@ -2224,7 +2256,7 @@ trait Date
                 }
 
                 $isoFormat .= '['.$this->rawFormat($char).']';
-                $context .= $contextReplacements[$char] ?? ' ';
+                $context .= isset($contextReplacements[$char]) ? $contextReplacements[$char] : ' ';
 
                 continue;
             }
@@ -2350,7 +2382,7 @@ trait Date
      *
      * @return string
      */
-    public static function singularUnit(string $unit): string
+    public static function singularUnit($unit)
     {
         $unit = rtrim(mb_strtolower($unit), 's');
 
@@ -2372,7 +2404,7 @@ trait Date
      *
      * @return string
      */
-    public static function pluralUnit(string $unit): string
+    public static function pluralUnit($unit)
     {
         $unit = rtrim(strtolower($unit), 's');
 
@@ -2525,7 +2557,7 @@ trait Date
         }
 
         if (static::isModifiableUnit($unit)) {
-            return $this->{"${action}Unit"}($unit, $parameters[0] ?? 1, $overflow);
+            return $this->{"${action}Unit"}($unit, isset($parameters[0]) ? $parameters[0] : 1, $overflow);
         }
 
         $sixFirstLetters = substr($unit, 0, 6);
@@ -2555,7 +2587,9 @@ trait Date
         if (substr($unit, 0, 9) === 'isCurrent') {
             try {
                 return $this->isCurrentUnit(strtolower(substr($unit, 9)));
-            } catch (BadUnitException | BadMethodCallException $exception) {
+            } catch (BadUnitException $exception) {
+                // Try next
+            } catch (BadMethodCallException $exception) {
                 // Try next
             }
         }
@@ -2564,7 +2598,7 @@ trait Date
             try {
                 $unit = static::singularUnit(substr($method, 0, -5));
 
-                return $this->range($parameters[0] ?? $this, $parameters[1] ?? 1, $unit);
+                return $this->range(isset($parameters[0]) ? $parameters[0] : $this, isset($parameters[1]) ? $parameters[1] : 1, $unit);
             } catch (InvalidArgumentException $exception) {
                 // Try macros
             }
@@ -2584,7 +2618,7 @@ trait Date
                     }
                 }
 
-                if ($this->localStrictModeEnabled ?? static::isStrictModeEnabled()) {
+                if (isset($this->localStrictModeEnabled) ? $this->localStrictModeEnabled : static::isStrictModeEnabled()) {
                     throw new BadMethodCallException("Method $method does not exist.");
                 }
 

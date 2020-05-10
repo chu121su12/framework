@@ -273,7 +273,7 @@ trait Boundaries
     public function startOfWeek($weekStartsAt = null)
     {
         $date = $this;
-        while ($date->dayOfWeek !== ($weekStartsAt ?? $this->firstWeekDay)) {
+        while ($date->dayOfWeek !== (isset($weekStartsAt) ? $weekStartsAt : $this->firstWeekDay)) {
             $date = $date->subDay();
         }
 
@@ -297,7 +297,7 @@ trait Boundaries
     public function endOfWeek($weekEndsAt = null)
     {
         $date = $this;
-        while ($date->dayOfWeek !== ($weekEndsAt ?? $this->lastWeekDay)) {
+        while ($date->dayOfWeek !== (isset($weekEndsAt) ? $weekEndsAt : $this->lastWeekDay)) {
             $date = $date->addDay();
         }
 

@@ -114,7 +114,7 @@ trait Converter
      */
     public function __toString()
     {
-        $format = $this->localToStringFormat ?? static::$toStringFormat;
+        $format = isset($this->localToStringFormat) ? $this->localToStringFormat : static::$toStringFormat;
 
         return $format instanceof Closure
             ? $format($this)

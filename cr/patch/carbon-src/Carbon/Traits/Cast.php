@@ -19,7 +19,7 @@ trait Cast
      *
      * @return DateTimeInterface
      */
-    public function cast(string $className)
+    public function cast($className)
     {
         if (!method_exists($className, 'instance')) {
             if (is_a($className, DateTimeInterface::class, true)) {

@@ -678,7 +678,7 @@ trait Creator
     public static function createFromIsoFormat($format, $time, $tz = null, $locale = 'en', $translator = null)
     {
         $format = preg_replace_callback('/(?<!\\\\)(\\\\{2})*(LTS|LT|[Ll]{1,4})/', function ($match) use ($locale, $translator) {
-            [$code] = $match;
+            list($code) = $match;
 
             static $formats = null;
 
@@ -695,17 +695,17 @@ trait Creator
                 ];
             }
 
-            return $formats[$code] ?? preg_replace_callback(
+            return isset($formats[$code]) ? $formats[$code] : preg_replace_callback(
                 '/MMMM|MM|DD|dddd/',
                 function ($code) {
                     return mb_substr($code[0], 1);
                 },
-                $formats[strtoupper($code)] ?? ''
+                isset($formats[strtoupper($code)]) ? $formats[strtoupper($code)] : ''
             );
         }, $format);
 
         $format = preg_replace_callback('/(?<!\\\\)(\\\\{2})*('.CarbonInterface::ISO_FORMAT_REGEXP.'|[A-Za-z])/', function ($match) {
-            [$code] = $match;
+            list($code) = $match;
 
             static $replacements = null;
 
@@ -792,7 +792,7 @@ trait Creator
                 ];
             }
 
-            $format = $replacements[$code] ?? '?';
+            $format = isset($replacements[$code]) ? $replacements[$code] : '?';
 
             if ($format === '!') {
                 throw new InvalidArgumentException("Format $code not supported for creation.");

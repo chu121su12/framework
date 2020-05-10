@@ -182,7 +182,7 @@ trait Localization
      *
      * @return string
      */
-    public static function getTranslationMessageWith($translator, string $key, string $locale = null, string $default = null)
+    public static function getTranslationMessageWith($translator, $key, $locale = null, $default = null)
     {
         if (!($translator instanceof TranslatorBagInterface && $translator instanceof TranslatorInterface)) {
             throw new InvalidArgumentException(
@@ -209,7 +209,7 @@ trait Localization
      *
      * @return string
      */
-    public function getTranslationMessage(string $key, string $locale = null, string $default = null, $translator = null)
+    public function getTranslationMessage($key, $locale = null, $default = null, $translator = null)
     {
         return static::getTranslationMessageWith($translator ?: $this->getLocalTranslator(), $key, $locale, $default);
     }
@@ -224,7 +224,7 @@ trait Localization
      *
      * @return string
      */
-    public static function translateWith(TranslatorInterface $translator, string $key, array $parameters = [], $number = null): string
+    public static function translateWith(TranslatorInterface $translator, $key, array $parameters = [], $number = null)
     {
         $message = static::getTranslationMessageWith($translator, $key, null, $key);
         if ($message instanceof Closure) {
@@ -257,7 +257,7 @@ trait Localization
      *
      * @return string
      */
-    public function translate(string $key, array $parameters = [], $number = null, TranslatorInterface $translator = null, bool $altNumbers = false): string
+    public function translate($key, array $parameters = [], $number = null, TranslatorInterface $translator = null, $altNumbers = false)
     {
         $translation = static::translateWith($translator ?: $this->getLocalTranslator(), $key, $parameters, $number);
 
@@ -275,7 +275,7 @@ trait Localization
      *
      * @return string
      */
-    public function translateNumber(int $number): string
+    public function translateNumber($number)
     {
         $translateKey = "alt_numbers.$number";
         $symbol = $this->translate($translateKey);
@@ -366,11 +366,11 @@ trait Localization
             $messages = $translations[$language];
             $months = $messages['months'];
             $weekdays = $messages['weekdays'];
-            $meridiem = $messages['meridiem'] ?? ['AM', 'PM'];
+            $meridiem = isset($messages['meridiem']) ? $messages['meridiem'] : ['AM', 'PM'];
 
             if ($key === 'from') {
                 foreach (['months', 'weekdays'] as $variable) {
-                    $list = $messages[$variable.'_standalone'] ?? null;
+                    $list = isset($messages[$variable.'_standalone']) ? $messages[$variable.'_standalone'] : null;
 
                     if ($list) {
                         foreach ($$variable as $index => &$name) {
@@ -411,11 +411,11 @@ trait Localization
         }
 
         return substr(preg_replace_callback('/(?<=[\d\s+.\/,_-])('.implode('|', $fromTranslations).')(?=[\d\s+.\/,_-])/i', function ($match) use ($fromTranslations, $toTranslations) {
-            [$chunk] = $match;
+            list($chunk) = $match;
 
             foreach ($fromTranslations as $index => $word) {
                 if (preg_match("/^$word\$/i", $chunk)) {
-                    return $toTranslations[$index] ?? '';
+                    return isset($toTranslations[$index]) ? $toTranslations[$index] : '';
                 }
             }
 
@@ -435,7 +435,8 @@ trait Localization
         $date = static::now();
 
         for ($i = 0; $i < $length; $i++) {
-            $list[] = $translation($date, $timeString, $i) ?? $filler;
+            $translated = $translation($date, $timeString, $i);
+            $list[] = isset($translated) ? $translated : $filler;
         }
 
         return $list;
@@ -462,7 +463,7 @@ trait Localization
      *
      * @return $this|string
      */
-    public function locale(string $locale = null, ...$fallbackLocales)
+    public function locale($locale = null, ...$fallbackLocales)
     {
         if ($locale === null) {
             return $this->getTranslatorLocale();
@@ -528,9 +529,12 @@ trait Localization
 
             if ($translator instanceof Translator) {
                 $preferredLocale = $translator->getLocale();
+                $translatorMessages = $translator->getMessages();
+                $translatorLocaleMessages = Translator::get($locale)->getMessages();
+
                 $translator->setMessages($preferredLocale, array_replace_recursive(
-                    $translator->getMessages()[$locale] ?? [],
-                    Translator::get($locale)->getMessages()[$locale] ?? [],
+                    isset($translatorMessages[$locale]) ? $translatorMessages[$locale] : [],
+                    isset($translatorLocaleMessages[$locale]) ? $translatorLocaleMessages[$locale] : [],
                     $translator->getMessages($preferredLocale)
                 ));
             }
@@ -549,7 +553,8 @@ trait Localization
         $translator = static::getTranslator();
 
         if (method_exists($translator, 'getFallbackLocales')) {
-            return $translator->getFallbackLocales()[0] ?? null;
+            $fallbackLocales = $translator->getFallbackLocales();
+            return isset($fallbackLocales[0]) ? $fallbackLocales[0] : null;
         }
 
         return null;
@@ -712,7 +717,7 @@ trait Localization
         return $languages;
     }
 
-    protected function getTranslatorLocale($translator = null): ?string
+    protected function getTranslatorLocale($translator = null)
     {
         if (func_num_args() === 0) {
             $translator = $this->getLocalTranslator();

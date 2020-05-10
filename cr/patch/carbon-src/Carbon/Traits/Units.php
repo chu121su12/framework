@@ -123,7 +123,7 @@ trait Units
                 break;
 
             default:
-                if ($this->localStrictModeEnabled ?? static::isStrictModeEnabled()) {
+                if (isset($this->localStrictModeEnabled) ? $this->localStrictModeEnabled : static::isStrictModeEnabled()) {
                     throw new InvalidArgumentException("Invalid unit for real timestamp add/sub: '$unit'");
                 }
 
@@ -179,18 +179,18 @@ trait Units
      *
      * @return static
      */
-    public function add($unit, $value = 1, $overflow = null)
+    public function addValue($unit, $value = 1, $overflow = null)
     {
         if (is_string($unit) && func_num_args() === 1) {
             $unit = CarbonInterval::make($unit);
         }
 
         if ($unit instanceof DateInterval) {
-            return parent::add($unit);
+            return parent::addValue($unit);
         }
 
         if (is_numeric($unit)) {
-            [$value, $unit] = [$unit, $value];
+            list($value, $unit) = [$unit, $value];
         }
 
         return $this->addUnit($unit, $value, $overflow);
@@ -221,7 +221,7 @@ trait Units
         ];
 
         if (isset($metaUnits[$unit])) {
-            [$factor, $unit] = $metaUnits[$unit];
+            list($factor, $unit) = $metaUnits[$unit];
             $value *= $factor;
         }
 
@@ -254,7 +254,7 @@ trait Units
             ]) && ($overflow === false || (
                 $overflow === null &&
                 ($ucUnit = ucfirst($unit).'s') &&
-                !($this->{'local'.$ucUnit.'Overflow'} ?? static::{'shouldOverflow'.$ucUnit}())
+                !(isset($this->{'local'.$ucUnit.'Overflow'}) ? $this->{'local'.$ucUnit.'Overflow'} : static::{'shouldOverflow'.$ucUnit}())
             ))) {
             $day = $date->day;
         }
@@ -318,18 +318,18 @@ trait Units
      *
      * @return static
      */
-    public function sub($unit, $value = 1, $overflow = null)
+    public function subValue($unit, $value = 1, $overflow = null)
     {
         if (is_string($unit) && func_num_args() === 1) {
             $unit = CarbonInterval::make($unit);
         }
 
         if ($unit instanceof DateInterval) {
-            return parent::sub($unit);
+            return parent::subValue($unit);
         }
 
         if (is_numeric($unit)) {
-            [$value, $unit] = [$unit, $value];
+            list($value, $unit) = [$unit, $value];
         }
 
         return $this->addUnit($unit, -floatval($value), $overflow);

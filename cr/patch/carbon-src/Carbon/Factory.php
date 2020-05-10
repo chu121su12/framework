@@ -215,7 +215,7 @@ class Factory
 
     protected $settings = [];
 
-    public function __construct(array $settings = [], string $className = null)
+    public function __construct(array $settings = [], $className = null)
     {
         if ($className) {
             $this->className = $className;
@@ -228,14 +228,14 @@ class Factory
         return $this->className;
     }
 
-    public function setClassName(string $className)
+    public function setClassName($className)
     {
         $this->className = $className;
 
         return $this;
     }
 
-    public function className(string $className = null)
+    public function className($className = null)
     {
         return $className === null ? $this->getClassName() : $this->setClassName($className);
     }

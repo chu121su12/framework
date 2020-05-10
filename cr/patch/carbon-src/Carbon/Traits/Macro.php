@@ -119,7 +119,7 @@ trait Macro
      */
     public static function getMacro($name)
     {
-        return static::$globalMacros[$name] ?? null;
+        return isset(static::$globalMacros[$name]) ? static::$globalMacros[$name] : null;
     }
 
     /**
@@ -143,6 +143,7 @@ trait Macro
      */
     public function getLocalMacro($name)
     {
-        return ($this->localMacros ?? [])[$name] ?? static::getMacro($name);
+        $localMacros = isset($this->localMacros) ? $this->localMacros : [];
+        return isset($localMacros[$name]) ? $localMacros[$name] : static::getMacro($name);
     }
 }

@@ -63,7 +63,7 @@ trait Rounding
         }
 
         if (isset($metaUnits[$normalizedUnit])) {
-            [$factor, $normalizedUnit] = $metaUnits[$normalizedUnit];
+            list($factor, $normalizedUnit) = $metaUnits[$normalizedUnit];
         }
 
         $precision *= $factor;
@@ -78,7 +78,9 @@ trait Rounding
         $factor = $this->year < 0 ? -1 : 1;
         $changes = [];
 
-        foreach ($ranges as $unit => [$minimum, $maximum]) {
+        foreach ($ranges as $unit => $loop) {
+            list($minimum, $maximum) = $loop;
+
             if ($normalizedUnit === $unit) {
                 $arguments = [$this->$unit, $minimum];
                 $fraction = $precision - floor($precision);
@@ -103,7 +105,7 @@ trait Rounding
             }
         }
 
-        [$value, $minimum] = $arguments;
+        list($value, $minimum) = $arguments;
         /** @var CarbonInterface $result */
         $result = $this->$normalizedUnit(floor(call_user_func($function, ($value - $minimum) / $precision) * $precision + $minimum));
 
@@ -157,7 +159,7 @@ trait Rounding
         }
 
         if (is_string($precision) && preg_match('/^\s*(?<precision>\d+)?\s*(?<unit>\w+)(?<other>\W.*)?$/', $precision, $match)) {
-            if (trim($match['other'] ?? '') !== '') {
+            if (trim(isset($match['other']) ? $match['other'] : '') !== '') {
                 throw new InvalidArgumentException('Rounding is only possible with single unit intervals.');
             }
 

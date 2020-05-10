@@ -348,15 +348,15 @@ trait Options
      */
     public function settings(array $settings)
     {
-        $this->localStrictModeEnabled = $settings['strictMode'] ?? null;
-        $this->localMonthsOverflow = $settings['monthOverflow'] ?? null;
-        $this->localYearsOverflow = $settings['yearOverflow'] ?? null;
-        $this->localHumanDiffOptions = $settings['humanDiffOptions'] ?? null;
-        $this->localToStringFormat = $settings['toStringFormat'] ?? null;
-        $this->localSerializer = $settings['toJsonFormat'] ?? null;
-        $this->localMacros = $settings['macros'] ?? null;
-        $this->localGenericMacros = $settings['genericMacros'] ?? null;
-        $this->localFormatFunction = $settings['formatFunction'] ?? null;
+        $this->localStrictModeEnabled = isset($settings['strictMode']) ? $settings['strictMode'] : null;
+        $this->localMonthsOverflow = isset($settings['monthOverflow']) ? $settings['monthOverflow'] : null;
+        $this->localYearsOverflow = isset($settings['yearOverflow']) ? $settings['yearOverflow'] : null;
+        $this->localHumanDiffOptions = isset($settings['humanDiffOptions']) ? $settings['humanDiffOptions'] : null;
+        $this->localToStringFormat = isset($settings['toStringFormat']) ? $settings['toStringFormat'] : null;
+        $this->localSerializer = isset($settings['toJsonFormat']) ? $settings['toJsonFormat'] : null;
+        $this->localMacros = isset($settings['macros']) ? $settings['macros'] : null;
+        $this->localGenericMacros = isset($settings['genericMacros']) ? $settings['genericMacros'] : null;
+        $this->localFormatFunction = isset($settings['formatFunction']) ? $settings['formatFunction'] : null;
 
         if (isset($settings['locale'])) {
             $locales = $settings['locale'];
@@ -397,7 +397,7 @@ trait Options
             'localFormatFunction' => 'formatFunction',
         ];
         foreach ($map as $property => $key) {
-            $value = $this->$property ?? null;
+            $value = isset($this->$property) ? $this->$property : null;
             if ($value !== null) {
                 $settings[$key] = $value;
             }
