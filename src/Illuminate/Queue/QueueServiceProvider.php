@@ -233,7 +233,7 @@ class QueueServiceProvider extends ServiceProvider implements DeferrableProvider
         $dynamoConfig = [
             'region' => $config['region'],
             'version' => 'latest',
-            'endpoint' => $config['endpoint'] ?? null,
+            'endpoint' => isset($config['endpoint']) ? $config['endpoint'] : null,
         ];
 
         if (! empty($config['key']) && ! empty($config['secret'])) {

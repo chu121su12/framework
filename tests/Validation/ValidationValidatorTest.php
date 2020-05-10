@@ -106,7 +106,21 @@ class ValidationValidatorTest_testCustomValidationObject_multiple implements Rul
     }
 }
 
+class ValidationValidatorTest_testValidateEmail_email_invalid_Class
+{
+    public function __toString()
+    {
+        return 'aslsdlks';
+    }
+}
 
+class ValidationValidatorTest_testValidateEmail_email_valid_Class
+{
+    public function __toString()
+    {
+        return 'foo@gmail.com';
+    }
+}
 
 class ValidationValidatorTest extends TestCase
 {
@@ -2264,20 +2278,10 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator($trans, ['x' => ['not a string']], ['x' => 'Email']);
         $this->assertFalse($v->passes());
 
-        $v = new Validator($trans, ['x' => new class {
-            public function __toString()
-            {
-                return 'aslsdlks';
-            }
-        }], ['x' => 'Email']);
+        $v = new Validator($trans, ['x' => new ValidationValidatorTest_testValidateEmail_email_invalid_Class], ['x' => 'Email']);
         $this->assertFalse($v->passes());
 
-        $v = new Validator($trans, ['x' => new class {
-            public function __toString()
-            {
-                return 'foo@gmail.com';
-            }
-        }], ['x' => 'Email']);
+        $v = new Validator($trans, ['x' => new ValidationValidatorTest_testValidateEmail_email_valid_Class], ['x' => 'Email']);
         $this->assertTrue($v->passes());
 
         $v = new Validator($trans, ['x' => 'foo@gmail.com'], ['x' => 'Email']);

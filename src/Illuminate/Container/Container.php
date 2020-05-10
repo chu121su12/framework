@@ -561,7 +561,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     protected function getReboundCallbacks($abstract)
     {
-        return $this->reboundCallbacks[$abstract] ?? [];
+        return isset($this->reboundCallbacks[$abstract]) ? $this->reboundCallbacks[$abstract] : [];
     }
 
     /**
@@ -768,7 +768,11 @@ class Container implements ArrayAccess, ContainerContract
      */
     protected function findInContextualBindings($abstract)
     {
-        return $this->contextual[end($this->buildStack)][$abstract] ?? null;
+        $endOfStack = end($this->buildStack);
+
+        return isset($this->contextual[$endOfStack]) && isset($this->contextual[$endOfStack][$abstract])
+            ? $this->contextual[$endOfStack][$abstract]
+            : null;
     }
 
     /**
@@ -1139,7 +1143,7 @@ class Container implements ArrayAccess, ContainerContract
     {
         $abstract = $this->getAlias($abstract);
 
-        return $this->extenders[$abstract] ?? [];
+        return isset($this->extenders[$abstract]) ? $this->extenders[$abstract] : [];
     }
 
     /**

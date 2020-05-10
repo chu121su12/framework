@@ -357,7 +357,8 @@ class Str
         $result = array_shift($segments);
 
         foreach ($segments as $segment) {
-            $result .= (array_shift($replace) ?? $search).$segment;
+            $shift = array_shift($replace);
+            $result .= (isset($shift) ? $shift : $search).$segment;
         }
 
         return $result;

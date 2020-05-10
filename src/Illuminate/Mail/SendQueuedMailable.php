@@ -86,7 +86,7 @@ class SendQueuedMailable
             return;
         }
 
-        return $this->mailable->retryAfter ?? $this->mailable->retryAfter();
+        return isset($this->mailable->retryAfter) ? $this->mailable->retryAfter : $this->mailable->retryAfter();
     }
 
     /**

@@ -52,7 +52,7 @@ trait ManagesFrequencies
      */
     private function inTimeInterval($startTime, $endTime)
     {
-        [$now, $startTime, $endTime] = [
+        list($now, $startTime, $endTime) = [
             Carbon::now($this->timezone),
             Carbon::parse($startTime, $this->timezone),
             Carbon::parse($endTime, $this->timezone),

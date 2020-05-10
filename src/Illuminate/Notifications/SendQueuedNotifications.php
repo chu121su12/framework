@@ -107,7 +107,7 @@ class SendQueuedNotifications implements ShouldQueue
             return;
         }
 
-        return $this->notification->retryAfter ?? $this->notification->retryAfter();
+        return isset($this->notification->retryAfter) ? $this->notification->retryAfter : $this->notification->retryAfter();
     }
 
     /**

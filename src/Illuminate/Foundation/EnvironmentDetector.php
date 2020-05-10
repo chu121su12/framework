@@ -63,7 +63,7 @@ class EnvironmentDetector
     {
         foreach ($args as $i => $value) {
             if ($value === '--env') {
-                return $args[$i + 1] ?? null;
+                return isset($args[$i + 1]) ? $args[$i + 1] : null;
             }
 
             if (Str::startsWith($value, '--env')) {

@@ -12,7 +12,7 @@ class BladeErrorTest extends AbstractBladeTestCase
 @enderror';
         $expected = '
 <?php $__errorArgs = [\'email\'];
-$__bag = $errors->getBag($__errorArgs[1] ?? \'default\');
+$__bag = $errors->getBag(isset($__errorArgs[1]) ? $__errorArgs[1] : \'default\');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
@@ -33,7 +33,7 @@ unset($__errorArgs, $__bag); ?>';
 @enderror';
         $expected = '
 <?php $__errorArgs = [\'email\', \'customBag\'];
-$__bag = $errors->getBag($__errorArgs[1] ?? \'default\');
+$__bag = $errors->getBag(isset($__errorArgs[1]) ? $__errorArgs[1] : \'default\');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>

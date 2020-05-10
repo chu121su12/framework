@@ -31,7 +31,7 @@ class LazyCollection implements Enumerable
         if ($source instanceof Closure || $source instanceof self) {
             $this->source = $source;
         } elseif (is_null($source)) {
-            $this->source = static::empty();
+            $this->source = static::emptyCollection();
         } else {
             $this->source = $this->getArrayableItems($source);
         }
@@ -42,7 +42,7 @@ class LazyCollection implements Enumerable
      *
      * @return static
      */
-    public static function empty()
+    public static function emptyCollection()
     {
         return new static([]);
     }
@@ -359,9 +359,14 @@ class LazyCollection implements Enumerable
                 if (! is_array($item) && ! $item instanceof Enumerable) {
                     yield $item;
                 } elseif ($depth === 1) {
-                    yield from $item;
+                    foreach ($item as $yieldedFrom) {
+                        yield $yieldedFrom;
+                    }
                 } else {
-                    yield from (new static($item))->flatten($depth - 1);
+                    $currentCollection = new static($item);
+                    foreach ($currentCollection->flatten($depth - 1) as $yieldedFrom) {
+                        yield $yieldedFrom;
+                    }
                 }
             }
         });
@@ -560,7 +565,7 @@ class LazyCollection implements Enumerable
     public function pluck($value, $key = null)
     {
         return new static(function () use ($value, $key) {
-            [$value, $key] = $this->explodePluckParameters($value, $key);
+            list($value, $key) = $this->explodePluckParameters($value, $key);
 
             foreach ($this as $item) {
                 $itemValue = data_get($item, $value);
@@ -620,7 +625,10 @@ class LazyCollection implements Enumerable
     {
         return new static(function () use ($callback) {
             foreach ($this as $key => $value) {
-                yield from $callback($value, $key);
+                $callbackResult = $callback($value, $key);
+                foreach ($callbackResult as $yieldedFrom) {
+                    yield $yieldedFrom;
+                }
             }
         });
     }
@@ -727,7 +735,9 @@ class LazyCollection implements Enumerable
 
         return new static(function () use ($keys) {
             if (is_null($keys)) {
-                yield from $this;
+                foreach ($this as $yieldedFrom) {
+                    yield $yieldedFrom;
+                }
             } else {
                 $keys = array_flip($keys);
 
@@ -755,8 +765,12 @@ class LazyCollection implements Enumerable
     public function concat($source)
     {
         return (new static(function () use ($source) {
-            yield from $this;
-            yield from $source;
+            foreach ($this as $yieldedFrom) {
+                yield $yieldedFrom;
+            }
+            foreach ($source as $yieldedFrom) {
+                yield $yieldedFrom;
+            }
         }))->values();
     }
 
@@ -937,7 +951,7 @@ class LazyCollection implements Enumerable
     public function chunk($size)
     {
         if ($size <= 0) {
-            return static::empty();
+            return static::emptyCollection();
         }
 
         return new static(function () use ($size) {
@@ -1209,7 +1223,10 @@ class LazyCollection implements Enumerable
     protected function passthru($method, array $params)
     {
         return new static(function () use ($method, $params) {
-            yield from $this->collect()->$method(...$params);
+            $collected = $this->collect()->$method(...$params);
+            foreach ($collected as $yieldedFrom) {
+                yield $yieldedFrom;
+            }
         });
     }
 }

@@ -19,7 +19,7 @@ use Orchestra\Testbench\TestCase;
  */
 class EventPingTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         parent::tearDown();
 

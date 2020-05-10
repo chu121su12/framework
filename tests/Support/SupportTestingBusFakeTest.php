@@ -14,13 +14,13 @@ class SupportTestingBusFakeTest extends TestCase
     /** @var \Illuminate\Support\Testing\Fakes\BusFake */
     protected $fake;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->fake = new BusFake(m::mock(Dispatcher::class));
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         parent::tearDown();
         m::close();

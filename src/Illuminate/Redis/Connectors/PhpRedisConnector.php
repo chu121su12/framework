@@ -133,10 +133,10 @@ class PhpRedisConnector implements Connector
             return new RedisCluster(
                 null,
                 array_values($servers),
-                $options['timeout'] ?? 0,
-                $options['read_timeout'] ?? 0,
+                isset($options['timeout']) ? $options['timeout'] : 0,
+                isset($options['read_timeout']) ? $options['read_timeout'] : 0,
                 isset($options['persistent']) && $options['persistent'],
-                $options['password'] ?? null
+                isset($options['password']) ? $options['password'] : null
             );
         }
 

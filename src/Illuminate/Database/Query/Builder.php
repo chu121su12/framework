@@ -1809,7 +1809,7 @@ class Builder
         if ($column instanceof self ||
             $column instanceof EloquentBuilder ||
             $column instanceof Closure) {
-            [$query, $bindings] = $this->createSub($column);
+            list($field, $path) = $this->createSub($column);
 
             $column = new Expression('('.$query.')');
 
@@ -2253,9 +2253,13 @@ class Builder
         }
 
         return new LazyCollection(function () {
-            yield from $this->connection->cursor(
+            $cursor = $this->connection->cursor(
                 $this->toSql(), $this->getBindings(), ! $this->useWritePdo
             );
+
+            foreach ($cursor as $yieldedFrom) {
+                yield $yieldedFrom;
+            }
         });
     }
 

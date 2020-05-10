@@ -165,7 +165,7 @@ abstract class Queue
             return;
         }
 
-        $delay = $job->retryAfter ?? $job->retryAfter();
+        $delay = isset($job->retryAfter) ? $job->retryAfter : $job->retryAfter();
 
         return $delay instanceof DateTimeInterface
                         ? $this->secondsUntil($delay) : $delay;

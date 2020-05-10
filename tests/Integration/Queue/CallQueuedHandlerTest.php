@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\Event;
 use Mockery as m;
 use Orchestra\Testbench\TestCase;
 
+class CallQueuedHandlerTestJobWithMiddleware_middleware_Class
+{
+    public function handle($command, $next)
+    {
+        CallQueuedHandlerTestJobWithMiddleware::$middlewareCommand = $command;
+
+        return $next($command);
+    }
+}
+
 /**
  * @group integration
  */
@@ -156,14 +166,7 @@ class CallQueuedHandlerTestJobWithMiddleware
     public function middleware()
     {
         return [
-            new class {
-                public function handle($command, $next)
-                {
-                    CallQueuedHandlerTestJobWithMiddleware::$middlewareCommand = $command;
-
-                    return $next($command);
-                }
-            },
+            new CallQueuedHandlerTestJobWithMiddleware_middleware_Class,
         ];
     }
 }

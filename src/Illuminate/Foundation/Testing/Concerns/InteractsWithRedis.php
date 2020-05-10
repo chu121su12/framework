@@ -74,10 +74,10 @@ trait InteractsWithRedis
      */
     public function tearDownRedis()
     {
-        // if (is_null($this->redis['phpredis'])) {
-        //     $this->markTestSkipped('Cannot connect to predis @'.__CLASS__);
-        //     return;
-        // }
+        if (is_null($this->redis['phpredis'])) {
+            $this->markTestSkipped('Cannot connect to predis @'.__CLASS__);
+            return;
+        }
 
         $this->redis['phpredis']->connection()->flushdb();
 

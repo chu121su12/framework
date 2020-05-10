@@ -661,7 +661,8 @@ class TestResponse
 
         PHPUnit::assertNotEmpty($errors, 'No validation errors were provided.');
 
-        $jsonErrors = $this->json()[$responseKey] ?? [];
+        $json = $this->json();
+        $jsonErrors = isset($json[$responseKey]) ? $json[$responseKey] : [];
 
         $errorMessage = $jsonErrors
                 ? 'Response has the following JSON validation errors:'.

@@ -22,7 +22,7 @@ class ConcurrentLimiterTest extends TestCase
         $this->setUpRedis();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         parent::tearDown();
 

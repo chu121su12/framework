@@ -227,7 +227,7 @@ class MySqlGrammar extends Grammar
      */
     protected function wrapJsonSelector($value)
     {
-        [$field, $path] = $this->wrapJsonFieldAndPath($value);
+        list($field, $path) = $this->wrapJsonFieldAndPath($value);
 
         return 'json_unquote(json_extract('.$field.$path.'))';
     }

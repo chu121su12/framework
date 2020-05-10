@@ -57,6 +57,6 @@ trait ParsesLogConfiguration
      */
     protected function parseChannel(array $config)
     {
-        return $config['name'] ?? $this->getFallbackChannelName();
+        return isset($config['name']) ? $config['name'] : $this->getFallbackChannelName();
     }
 }

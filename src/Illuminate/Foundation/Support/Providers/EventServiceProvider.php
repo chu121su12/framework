@@ -62,7 +62,7 @@ class EventServiceProvider extends ServiceProvider
         if ($this->app->eventsAreCached()) {
             $cache = require $this->app->getCachedEventsPath();
 
-            return $cache[get_class($this)] ?? [];
+            return isset($cache[get_class($this)]) ? $cache[get_class($this)] : [];
         } else {
             return array_merge_recursive(
                 $this->discoveredEvents(),

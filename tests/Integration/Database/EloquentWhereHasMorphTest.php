@@ -15,7 +15,7 @@ use Illuminate\Tests\Integration\Database\DatabaseTestCase;
  */
 class EloquentWhereHasMorphTest extends DatabaseTestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

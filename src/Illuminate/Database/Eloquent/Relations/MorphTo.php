@@ -120,7 +120,7 @@ class MorphTo extends BelongsTo
                             ->mergeConstraintsFrom($this->getQuery())
                             ->with(array_merge(
                                 $this->getQuery()->getEagerLoads(),
-                                (array) ($this->morphableEagerLoads[get_class($instance)] ?? [])
+                                (array) (isset($this->morphableEagerLoads[get_class($instance)]) ? $this->morphableEagerLoads[get_class($instance)] : [])
                             ));
 
         $whereIn = $this->whereInMethod($instance, $ownerKey);

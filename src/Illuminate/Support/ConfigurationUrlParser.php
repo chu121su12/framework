@@ -31,7 +31,7 @@ class ConfigurationUrlParser
             $config = ['url' => $config];
         }
 
-        $url = $config['url'] ?? null;
+        $url = isset($config['url']) ? $config['url'] : null;
 
         $config = Arr::except($config, 'url');
 
@@ -59,10 +59,10 @@ class ConfigurationUrlParser
         return array_filter([
             'driver' => $this->getDriver($url),
             'database' => $this->getDatabase($url),
-            'host' => $url['host'] ?? null,
-            'port' => $url['port'] ?? null,
-            'username' => $url['user'] ?? null,
-            'password' => $url['pass'] ?? null,
+            'host' => isset($url['host']) ? $url['host'] : null,
+            'port' => isset($url['port']) ? $url['port'] : null,
+            'username' => isset($url['user']) ? $url['user'] : null,
+            'password' => isset($url['pass']) ? $url['pass'] : null,
         ], function ($value) {
             return ! is_null($value);
         });
@@ -76,13 +76,13 @@ class ConfigurationUrlParser
      */
     protected function getDriver($url)
     {
-        $alias = $url['scheme'] ?? null;
+        $alias = isset($url['scheme']) ? $url['scheme'] : null;
 
         if (! $alias) {
             return;
         }
 
-        return static::$driverAliases[$alias] ?? $alias;
+        return isset(static::$driverAliases[$alias]) ? static::$driverAliases[$alias] : $alias;
     }
 
     /**
@@ -93,7 +93,7 @@ class ConfigurationUrlParser
      */
     protected function getDatabase($url)
     {
-        $path = $url['path'] ?? null;
+        $path = isset($url['path']) ? $url['path'] : null;
 
         return $path ? substr($path, 1) : null;
     }
@@ -106,7 +106,7 @@ class ConfigurationUrlParser
      */
     protected function getQueryOptions($url)
     {
-        $queryString = $url['query'] ?? null;
+        $queryString = isset($url['query']) ? $url['query'] : null;
 
         if (! $queryString) {
             return [];

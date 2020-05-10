@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class FoundationAuthorizesRequestsTraitTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         Container::setInstance(null);
     }

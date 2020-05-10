@@ -11,7 +11,7 @@ class SupportLazyCollectionTest extends TestCase
     public function testCanCreateEmptyCollection()
     {
         $this->assertSame([], LazyCollection::make()->all());
-        $this->assertSame([], LazyCollection::empty()->all());
+        $this->assertSame([], LazyCollection::emptyCollection()->all());
     }
 
     public function testCanCreateCollectionFromArray()

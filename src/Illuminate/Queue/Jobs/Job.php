@@ -255,7 +255,9 @@ abstract class Job
      */
     public function delaySeconds()
     {
-        return $this->payload()['delay'] ?? null;
+        $payload = $this->payload();
+
+        return isset($payload['delay']) ? isset($payload['delay']) : null;
     }
 
     /**

@@ -129,8 +129,8 @@ class RedisManager implements Factory
             array_map(function ($config) {
                 return $this->parseConnectionConfiguration($config);
             }, $this->config['clusters'][$name]),
-            isset($this->config['clusters']) && isset($this->config['clusters']['options']) 
-                ? $this->config['clusters']['options'] 
+            isset($this->config['clusters']) && isset($this->config['clusters']['options'])
+                ? $this->config['clusters']['options']
                 : [],
             isset($this->config['options']) ? $this->config['options'] : []
         );
@@ -161,7 +161,7 @@ class RedisManager implements Factory
      */
     protected function connector()
     {
-        $customCreator = $this->customCreators[$this->driver] ?? null;
+        $customCreator = isset($this->customCreators[$this->driver]) ? $this->customCreators[$this->driver] : null;
 
         if ($customCreator) {
             return $customCreator();

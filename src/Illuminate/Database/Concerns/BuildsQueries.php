@@ -77,9 +77,9 @@ trait BuildsQueries
      */
     public function chunkById($count, callable $callback, $column = null, $alias = null)
     {
-        $column = $column ?? $this->defaultKeyName();
+        $column = isset($column) ? $column : $this->defaultKeyName();
 
-        $alias = $alias ?? $column;
+        $alias = isset($alias) ? $alias : $column;
 
         $lastId = null;
 

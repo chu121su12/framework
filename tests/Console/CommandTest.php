@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\NullOutput;
 
 class CommandTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

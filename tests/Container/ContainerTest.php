@@ -11,7 +11,7 @@ use stdClass;
 
 class ContainerTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         Container::setInstance(null);
     }

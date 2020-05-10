@@ -311,20 +311,20 @@ class QueueWorkerTest extends TestCase
     /**
      * Helpers...
      */
-    private function getWorker($connectionName = 'default', $jobs = [], ?callable $isInMaintenanceMode = null)
+    private function getWorker($connectionName = 'default', $jobs = [], $isInMaintenanceMode = null)
     {
         return new InsomniacWorker(
             ...$this->workerDependencies($connectionName, $jobs, $isInMaintenanceMode)
         );
     }
 
-    private function workerDependencies($connectionName = 'default', $jobs = [], ?callable $isInMaintenanceMode = null)
+    private function workerDependencies($connectionName = 'default', $jobs = [], $isInMaintenanceMode = null)
     {
         return [
             new WorkerFakeManager($connectionName, new WorkerFakeConnection($jobs)),
             $this->events,
             $this->exceptionHandler,
-            $isInMaintenanceMode ?? function () {
+            isset($isInMaintenanceMode) ? $isInMaintenanceMode : function () {
                 return false;
             },
         ];
@@ -363,7 +363,8 @@ class InsomniacWorker extends Worker
 
     public function daemonShouldRun(WorkerOptions $options, $connectionName, $queue)
     {
-        return ! ($this->isDownForMaintenance)();
+        $isDownForMaintenance = $this->isDownForMaintenance;
+        return ! $isDownForMaintenance();
     }
 }
 

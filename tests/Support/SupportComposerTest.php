@@ -10,7 +10,7 @@ use Symfony\Component\Process\Process;
 
 class SupportComposerTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }
