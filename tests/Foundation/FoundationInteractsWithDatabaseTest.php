@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
-use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithDatabase;
 
 class FoundationInteractsWithDatabaseTest extends TestCase

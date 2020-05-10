@@ -38,7 +38,7 @@ class Connector
     public function createConnection($dsn, array $config, array $options)
     {
         list($username, $password) = [
-            isset($config['username']) ? $config['username'] : null, 
+            isset($config['username']) ? $config['username'] : null,
             isset($config['password']) ? $config['password'] : null,
         ];
 
@@ -95,7 +95,7 @@ class Connector
      *
      * @throws \Exception
      */
-    protected function tryAgainIfCausedByLostConnection(Throwable $e, $dsn, $username, $password, $options)
+    protected function tryAgainIfCausedByLostConnection($e, $dsn, $username, $password, $options)
     {
         if ($this->causedByLostConnection($e)) {
             return $this->createPdoConnection($dsn, $username, $password, $options);

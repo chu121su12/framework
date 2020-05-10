@@ -9,7 +9,7 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
-use PHPUnit\Framework\ExpectationFailedException;
+use \PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
 
 /**
  * Logical NOT.

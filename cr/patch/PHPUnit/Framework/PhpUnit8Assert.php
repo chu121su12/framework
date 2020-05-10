@@ -26,6 +26,40 @@ trait PhpUnit8Assert
     }
 
     /**
+     * Asserts that a variable is of type bool.
+     *
+     * @throws ExpectationFailedException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     *
+     * @psalm-assert bool $actual
+     */
+    public static function assertIsBool($actual, $message = '')
+    {
+        static::assertThat(
+            $actual,
+            new IsType(IsType::TYPE_BOOL),
+            $message
+        );
+    }
+
+    /**
+     * Asserts that a variable is of type float.
+     *
+     * @throws ExpectationFailedException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     *
+     * @psalm-assert float $actual
+     */
+    public static function assertIsFloat($actual, $message = '')
+    {
+        static::assertThat(
+            $actual,
+            new IsType(IsType::TYPE_FLOAT),
+            $message
+        );
+    }
+
+    /**
      * Asserts that a variable is of type int.
      *
      * @throws ExpectationFailedException
@@ -55,6 +89,23 @@ trait PhpUnit8Assert
         static::assertThat(
             $actual,
             new IsType(IsType::TYPE_NUMERIC),
+            $message
+        );
+    }
+
+    /**
+     * Asserts that a variable is of type object.
+     *
+     * @throws ExpectationFailedException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     *
+     * @psalm-assert object $actual
+     */
+    public static function assertIsObject($actual, $message = '')
+    {
+        static::assertThat(
+            $actual,
+            new IsType(IsType::TYPE_OBJECT),
             $message
         );
     }

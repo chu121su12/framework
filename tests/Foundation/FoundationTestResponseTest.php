@@ -9,9 +9,9 @@ use PHPUnit\Framework\TestCase;
 use Illuminate\Contracts\View\View;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Model;
-use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit_Framework_AssertionFailedError as AssertionFailedError;
 use Illuminate\Foundation\Testing\TestResponse;
-use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FoundationTestResponseTest_testAssertViewHasModel_Class extends Model

@@ -122,7 +122,7 @@ class ArgonHasher extends AbstractHasher implements HasherContract
      * @param  int  $memory
      * @return $this
      */
-    public function setMemory(int $memory)
+    public function setMemory($memory)
     {
         $this->memory = $memory;
 
@@ -135,7 +135,7 @@ class ArgonHasher extends AbstractHasher implements HasherContract
      * @param  int  $time
      * @return $this
      */
-    public function setTime(int $time)
+    public function setTime($time)
     {
         $this->time = $time;
 
@@ -148,7 +148,7 @@ class ArgonHasher extends AbstractHasher implements HasherContract
      * @param  int  $threads
      * @return $this
      */
-    public function setThreads(int $threads)
+    public function setThreads($threads)
     {
         $this->threads = $threads;
 

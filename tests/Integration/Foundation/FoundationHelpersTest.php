@@ -9,7 +9,7 @@ use Illuminate\Contracts\Debug\ExceptionHandler;
 
 class HelpersTest_test_rescue_Class
 {
-    public function test(int $a)
+    public function test($a)
     {
         return $a;
     }

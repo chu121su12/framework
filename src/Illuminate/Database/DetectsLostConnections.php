@@ -13,7 +13,7 @@ trait DetectsLostConnections
      * @param  \Throwable  $e
      * @return bool
      */
-    protected function causedByLostConnection(Throwable $e)
+    protected function causedByLostConnection($e)
     {
         $message = $e->getMessage();
 

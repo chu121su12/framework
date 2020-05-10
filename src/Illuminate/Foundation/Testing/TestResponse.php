@@ -611,7 +611,7 @@ class TestResponse
      * @param  string|null  $key
      * @return $this
      */
-    public function assertJsonCount(int $count, $key = null)
+    public function assertJsonCount($count, $key = null)
     {
         if ($key) {
             PHPUnit::assertCount(
