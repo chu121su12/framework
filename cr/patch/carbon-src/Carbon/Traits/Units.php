@@ -186,7 +186,7 @@ trait Units
         }
 
         if ($unit instanceof DateInterval) {
-            return parent::addValue($unit);
+            return parent::add($unit);
         }
 
         if (is_numeric($unit)) {
@@ -325,7 +325,7 @@ trait Units
         }
 
         if ($unit instanceof DateInterval) {
-            return parent::subValue($unit);
+            return parent::sub($unit);
         }
 
         if (is_numeric($unit)) {
