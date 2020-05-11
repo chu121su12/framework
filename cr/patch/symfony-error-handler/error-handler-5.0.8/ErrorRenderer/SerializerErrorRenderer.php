@@ -75,7 +75,7 @@ class SerializerErrorRenderer implements ErrorRendererInterface
         }
     }
 
-    public static function getPreferredFormat(RequestStack $requestStack): \Closure
+    public static function getPreferredFormat(RequestStack $requestStack)
     {
         return static function () use ($requestStack) {
             if (!$request = $requestStack->getCurrentRequest()) {

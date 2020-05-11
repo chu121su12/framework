@@ -65,7 +65,7 @@ class Email extends Message
         return $this->setHeaderBody('Date', 'Date', $dateTime);
     }
 
-    public function getDate(): ?\DateTimeImmutable
+    public function getDate()
     {
         return $this->getHeaders()->getHeaderBody('Date');
     }

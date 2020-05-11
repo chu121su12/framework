@@ -35,12 +35,12 @@ final class DateHeader extends AbstractHeader
         $this->setDateTime($body);
     }
 
-    public function getBody(): \DateTimeImmutable
+    public function getBody()
     {
         return $this->getDateTime();
     }
 
-    public function getDateTime(): \DateTimeImmutable
+    public function getDateTime()
     {
         return $this->dateTime;
     }

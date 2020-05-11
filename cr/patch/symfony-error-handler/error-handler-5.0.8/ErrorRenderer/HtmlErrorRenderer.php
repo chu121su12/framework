@@ -93,7 +93,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return $this->include('assets/css/exception.css');
     }
 
-    public static function isDebug(RequestStack $requestStack, $debug): \Closure
+    public static function isDebug(RequestStack $requestStack, $debug)
     {
         return static function () use ($requestStack, $debug): bool {
             if (!$request = $requestStack->getCurrentRequest()) {
@@ -104,7 +104,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         };
     }
 
-    public static function getAndCleanOutputBuffer(RequestStack $requestStack): \Closure
+    public static function getAndCleanOutputBuffer(RequestStack $requestStack)
     {
         return static function () use ($requestStack): string {
             if (!$request = $requestStack->getCurrentRequest()) {
