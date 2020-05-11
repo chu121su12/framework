@@ -100,6 +100,7 @@
         ],
         "psr-4": {
             "Symfony\\Component\\ErrorHandler\\": "cr/patch/symfony-error-handler/error-handler-5.0.8/",
+            "Symfony\\Component\\Mime\\": "cr/patch/symfony-mime/mime-5.0.8/",
             "Carbon\\": "cr/patch/carbon-src/Carbon/",
             "Illuminate\\": "src/Illuminate/"
         }
