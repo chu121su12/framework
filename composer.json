@@ -39,6 +39,7 @@
         "symfony/polyfill": "^1.16",
         "symfony/process": "^3.4",
         "symfony/routing": "^3.4",
+        "symfony/translation": "^3.4",
         "symfony/var-dumper": "^3.4",
         "tijsverkoyen/css-to-inline-styles": "^2.2.2",
         "vlucas/phpdotenv": "^4.0",
