@@ -10,6 +10,9 @@ use PHPUnit\Framework\TestCase;
 
 class HttpClientTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+    // use \PHPUnit\Framework\PhpUnit8Expect;
+
     /**
      * @var \Illuminate\Http\Client\Factory
      */

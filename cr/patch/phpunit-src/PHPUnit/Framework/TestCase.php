@@ -64,7 +64,7 @@ use DeepCopy\DeepCopy;
  */
 abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert implements PHPUnit_Framework_Test, PHPUnit_Framework_SelfDescribing
 {
-    use TestCaseExtraTrait;
+    use PhpUnit8Expect;
 
     /**
      * Enable or disable the backup and restoration of the $GLOBALS array.

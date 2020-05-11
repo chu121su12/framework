@@ -14,7 +14,7 @@ use stdClass;
 
 class FoundationProviderRepositoryTest extends TestCase
 {
-    use \PHPUnit\Framework\TestCaseExtraTrait;
+    use \PHPUnit\Framework\PhpUnit8Expect;
 
     protected function tearDown()
     {

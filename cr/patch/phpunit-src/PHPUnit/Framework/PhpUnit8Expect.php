@@ -2,7 +2,7 @@
 
 namespace PHPUnit\Framework;
 
-trait TestCaseExtraTrait
+trait PhpUnit8Expect
 {
     public function expectExceptionMessageMatches($regularExpression)
     {
