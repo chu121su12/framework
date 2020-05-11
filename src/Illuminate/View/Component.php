@@ -181,9 +181,17 @@ abstract class Component
      */
     protected function createVariableFromMethod(ReflectionMethod $method)
     {
-        return $method->getNumberOfParameters() === 0
-                        ? $this->{$method->getName()}()
-                        : Closure::fromCallable([$this, $method->getName()]);
+        if ($method->getNumberOfParameters() === 0) {
+            return $this->{$method->getName()}();
+        }
+
+        if (! version_compare(PHP_VERSION, '7.0.0', '<')) {
+            return Closure::fromCallable([$this, $method->getName()]);
+        }
+
+        return function () use ($method) {
+            return call_user_func([$this, $method->getName()]);
+        };
     }
 
     /**
