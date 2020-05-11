@@ -88,7 +88,8 @@ trait CompiledUrlMatcherTrait
         $supportsRedirections = 'GET' === $canonicalMethod && $this instanceof RedirectableUrlMatcherInterface;
 
         foreach (isset($this->staticRoutes[$trimmedPathinfo]) ? $this->staticRoutes[$trimmedPathinfo] : [] as list($ret, $requiredHost, $requiredMethods, $requiredSchemes, $hasTrailingSlash, , $condition)) {
-            if ($condition && !($this->checkCondition)($condition, $context, 0 < $condition ? isset($request) ? $request : $request = $this->request ?: $this->createRequest($pathinfo) : null)) {
+            $checkCondition = $this->checkCondition;
+            if ($condition && !$checkCondition($condition, $context, 0 < $condition ? isset($request) ? $request : $request = $this->request ?: $this->createRequest($pathinfo) : null)) {
                 continue;
             }
 
@@ -132,7 +133,8 @@ trait CompiledUrlMatcherTrait
                         if (0 === $condition) { // marks the last route in the regexp
                             continue 3;
                         }
-                        if (!($this->checkCondition)($condition, $context, 0 < $condition ? isset($request) ? $request : $request = $this->request ?: $this->createRequest($pathinfo) : null)) {
+                        $checkCondition = $this->checkCondition;
+                        if (!$checkCondition($condition, $context, 0 < $condition ? isset($request) ? $request : $request = $this->request ?: $this->createRequest($pathinfo) : null)) {
                             continue;
                         }
                     }

@@ -338,7 +338,8 @@ class DebugClassLoader
                     return;
                 }
             } else {
-                ($this->classLoader)($class);
+                $classLoader = $this->classLoader;
+                $classLoader($class);
                 $file = '';
             }
         } finally {

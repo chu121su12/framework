@@ -125,7 +125,8 @@ class HtmlErrorRenderer implements ErrorRendererInterface
 
     private function renderException(FlattenException $exception, $debugTemplate = 'views/exception_full.html.php')
     {
-        $debug = \is_bool($this->debug) ? $this->debug : ($this->debug)($exception);
+        $thisDebug = $this->debug;
+        $debug = \is_bool($thisDebug) ? $thisDebug : $thisDebug($exception);
         $statusText = $this->escape($exception->getStatusText());
         $statusCode = $this->escape($exception->getStatusCode());
 
@@ -138,13 +139,14 @@ class HtmlErrorRenderer implements ErrorRendererInterface
 
         $exceptionMessage = $this->escape($exception->getMessage());
 
+        $outputBuffer = $this->outputBuffer;
         return $this->include($debugTemplate, [
             'exception' => $exception,
             'exceptionMessage' => $exceptionMessage,
             'statusText' => $statusText,
             'statusCode' => $statusCode,
             'logger' => $this->logger instanceof DebugLoggerInterface ? $this->logger : null,
-            'currentContent' => \is_string($this->outputBuffer) ? $this->outputBuffer : ($this->outputBuffer)(),
+            'currentContent' => \is_string($outputBuffer) ? $outputBuffer : $outputBuffer(),
         ]);
     }
 
