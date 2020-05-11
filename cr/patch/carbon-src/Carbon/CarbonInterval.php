@@ -282,7 +282,8 @@ class CarbonInterval extends DateInterval
         if (!self::$flipCascadeFactors) {
             self::$flipCascadeFactors = [];
 
-            foreach (static::getCascadeFactors() as $to => [$factor, $from]) {
+            foreach (static::getCascadeFactors() as $to => $loop) {
+                list($factor, $from) = $loop;
                 self::$flipCascadeFactors[self::standardizeUnit($from)] = [self::standardizeUnit($to), $factor];
             }
         }
@@ -377,7 +378,7 @@ class CarbonInterval extends DateInterval
         $target = self::standardizeUnit($target);
         $factors = static::getFlipCascadeFactors();
         if (isset($factors[$source])) {
-            [$to, $factor] = $factors[$source];
+            list($to, $factor) = $factors[$source];
             if ($to === $target) {
                 return $factor;
             }
@@ -485,7 +486,7 @@ class CarbonInterval extends DateInterval
      *
      * @return static
      */
-    public static function createFromFormat($format, ?string $interval)
+    public static function createFromFormat($format, $interval = null)
     {
         $instance = new static(0);
         $length = mb_strlen($format);
@@ -500,7 +501,7 @@ class CarbonInterval extends DateInterval
         for ($index = 0; $index < $length; $index++) {
             $expected = mb_substr($format, $index, 1);
             $nextCharacter = mb_substr($interval, 0, 1);
-            $unit = static::$formats[$expected] ?? null;
+            $unit = isset(static::$formats[$expected]) ? static::$formats[$expected] : null;
 
             if ($unit) {
                 if (!preg_match('/^-?\d+/', $interval, $match)) {
@@ -661,7 +662,9 @@ class CarbonInterval extends DateInterval
         $pattern = '/(\d+(?:\.\d+)?)\h*([^\d\h]*)/i';
         preg_match_all($pattern, $intervalDefinition, $parts, PREG_SET_ORDER);
 
-        while ([$part, $value, $unit] = array_shift($parts)) {
+        while ($loop = array_shift($parts)) {
+            list($part, $value, $unit) = $loop;
+
             $intValue = intval($value);
             $fraction = floatval($value) - $intValue;
 
@@ -1060,7 +1063,7 @@ class CarbonInterval extends DateInterval
                 break;
 
             default:
-                if ($this->localStrictModeEnabled ?? Carbon::isStrictModeEnabled()) {
+                if (isset($this->localStrictModeEnabled) ? $this->localStrictModeEnabled : Carbon::isStrictModeEnabled()) {
                     throw new InvalidArgumentException(sprintf("Unknown setter '%s'", $name));
                 }
 
@@ -1272,7 +1275,7 @@ class CarbonInterval extends DateInterval
                 break;
 
             default:
-                if ($this->localStrictModeEnabled ?? Carbon::isStrictModeEnabled()) {
+                if (isset($this->localStrictModeEnabled) ? $this->localStrictModeEnabled : Carbon::isStrictModeEnabled()) {
                     throw new BadMethodCallException(sprintf("Unknown fluent setter '%s'", $method));
                 }
         }
@@ -1314,7 +1317,16 @@ class CarbonInterval extends DateInterval
     protected function getForHumansParameters($syntax = null, $short = false, $parts = -1, $options = null)
     {
         $optionalSpace = ' ';
-        $default = $this->getTranslationMessage('list.0') ?? $this->getTranslationMessage('list') ?? ' ';
+
+        $translationDefault = $this->getTranslationMessage('list.0');
+        if (!isset($translationDefault)) {
+            $translationDefault = $this->getTranslationMessage('list');
+            if (!isset($translationDefault)) {
+                $translationDefault = ' ';
+            }
+        }
+
+        $default = $translationDefault;
         $join = $default === '' ? '' : ' ';
         $altNumbers = false;
         $aUnit = false;
@@ -1336,9 +1348,10 @@ class CarbonInterval extends DateInterval
         if ($join === false) {
             $join = ' ';
         } elseif ($join === true) {
+            $translationList = $this->getTranslationMessage('list.1');
             $join = [
                 $default,
-                $this->getTranslationMessage('list.1') ?? $default,
+                isset($translationList) ? $translationList : $default,
             ];
         }
 
@@ -1350,7 +1363,7 @@ class CarbonInterval extends DateInterval
         }
 
         if (is_array($join)) {
-            [$default, $last] = $join;
+            list($default, $last) = $join;
 
             if ($default !== ' ') {
                 $optionalSpace = '';
@@ -1510,7 +1523,7 @@ class CarbonInterval extends DateInterval
      */
     public function forHumans($syntax = null, $short = false, $parts = -1, $options = null)
     {
-        [$syntax, $short, $parts, $options, $join, $aUnit, $altNumbers, $interpolations, $minimumUnit] = $this->getForHumansParameters($syntax, $short, $parts, $options);
+        list($syntax, $short, $parts, $options, $join, $aUnit, $altNumbers, $interpolations, $minimumUnit) = $this->getForHumansParameters($syntax, $short, $parts, $options);
 
         $interval = [];
 
@@ -1758,7 +1771,7 @@ class CarbonInterval extends DateInterval
     public function add($unit, $value = 1)
     {
         if (is_numeric($unit)) {
-            [$value, $unit] = [$unit, $value];
+            list($value, $unit) = [$unit, $value];
         }
 
         if (is_string($unit) && !preg_match('/^\s*\d/', $unit)) {
@@ -1801,7 +1814,7 @@ class CarbonInterval extends DateInterval
     public function sub($unit, $value = 1)
     {
         if (is_numeric($unit)) {
-            [$value, $unit] = [$unit, $value];
+            list($value, $unit) = [$unit, $value];
         }
 
         return $this->addValue($unit, -floatval($value));
@@ -2020,7 +2033,9 @@ class CarbonInterval extends DateInterval
      */
     public function cascade()
     {
-        foreach (static::getFlipCascadeFactors() as $source => [$target, $factor]) {
+        foreach (static::getFlipCascadeFactors() as $source => $loop) {
+            list($target, $factor) = $loop;
+
             if ($source === 'dayz' && $target === 'weeks') {
                 continue;
             }
@@ -2079,7 +2094,8 @@ class CarbonInterval extends DateInterval
             $values['weeks'] = 0;
         }
 
-        foreach ($factors as $source => [$target, $factor]) {
+        foreach ($factors as $source => $loop) {
+            list($target, $factor) = $loop;
             if ($source === $realUnit) {
                 $unitFound = true;
                 $value = $values[$source];
@@ -2445,7 +2461,7 @@ class CarbonInterval extends DateInterval
         }
 
         if (is_string($precision) && preg_match('/^\s*(?<precision>\d+)?\s*(?<unit>\w+)(?<other>\W.*)?$/', $precision, $match)) {
-            if (trim($match['other'] ?? '') !== '') {
+            if (trim(isset($match['other']) ? $match['other'] : '') !== '') {
                 throw new InvalidArgumentException('Rounding is only possible with single unit intervals.');
             }
 
