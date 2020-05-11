@@ -559,7 +559,7 @@ class Worker
      */
     protected function supportsAsyncSignals()
     {
-        return extension_loaded('pcntl');
+        return extension_loaded('pcntl') && function_exists('pcntl_async_signals');
     }
 
     /**
