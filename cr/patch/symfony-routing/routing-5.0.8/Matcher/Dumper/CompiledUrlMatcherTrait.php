@@ -141,7 +141,7 @@ trait CompiledUrlMatcherTrait
 
                     $hasTrailingVar = $trimmedPathinfo !== $pathinfo && $hasTrailingVar;
 
-                    if ($hasTrailingVar && ($hasTrailingSlash || (null === $n = isset($matches[\count($vars)]) ? $matches[\count($vars)] : null) || '/' !== (isset($n[-1]) ? $n[-1] : '/')) && preg_match($regex, $this->matchHost ? $host.'.'.$trimmedPathinfo : $trimmedPathinfo, $n) && $m === (int) $n['MARK']) {
+                    if ($hasTrailingVar && ($hasTrailingSlash || (null === $n = isset($matches[\count($vars)]) ? $matches[\count($vars)] : null) || '/' !== (strlen($n) > 0 ? substr($n, -1) : '/')) && preg_match($regex, $this->matchHost ? $host.'.'.$trimmedPathinfo : $trimmedPathinfo, $n) && $m === (int) $n['MARK']) {
                         if ($hasTrailingSlash) {
                             $matches = $n;
                         } else {

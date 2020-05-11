@@ -101,7 +101,7 @@ class TraceableUrlMatcher extends UrlMatcher
 
             $hasTrailingVar = $trimmedPathinfo !== $pathinfo && preg_match('#\{\w+\}/?$#', $route->getPath());
 
-            if ($hasTrailingVar && ($hasTrailingSlash || (null === $m = isset($matches[\count($compiledRoute->getPathVariables())]) ? $matches[\count($compiledRoute->getPathVariables())] : null) || '/' !== (isset($m[-1]) ? $m[-1] : '/')) && preg_match($regex, $trimmedPathinfo, $m)) {
+            if ($hasTrailingVar && ($hasTrailingSlash || (null === $m = isset($matches[\count($compiledRoute->getPathVariables())]) ? $matches[\count($compiledRoute->getPathVariables())] : null) || '/' !== (strlen($m) > 0 ? substr($m, -1) : '/')) && preg_match($regex, $trimmedPathinfo, $m)) {
                 if ($hasTrailingSlash) {
                     $matches = $m;
                 } else {
