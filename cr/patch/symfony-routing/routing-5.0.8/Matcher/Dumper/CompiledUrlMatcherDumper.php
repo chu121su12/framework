@@ -391,7 +391,8 @@ EOF;
                 continue;
             }
 
-            list($name, $regex, $vars, $route, $hasTrailingSlash, $hasTrailingVar) = $route;
+            $tempRoute = $route;
+            list($name, $regex, $vars, $route, $hasTrailingSlash, $hasTrailingVar) = $tempRoute;
             $compiledRoute = $route->compile();
             $vars = array_merge($state->hostVars, $vars);
 
