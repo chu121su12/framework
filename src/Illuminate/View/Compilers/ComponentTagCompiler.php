@@ -45,7 +45,7 @@ class ComponentTagCompiler
      * @param  \Illuminate\View\Compilers\BladeCompiler|null
      * @return void
      */
-    public function __construct(array $aliases = [], ?BladeCompiler $blade = null)
+    public function __construct(array $aliases = [], BladeCompiler $blade = null)
     {
         $this->aliases = $aliases;
 

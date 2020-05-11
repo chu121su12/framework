@@ -19,7 +19,6 @@ class BladeComponentTagCompilerTest_testAttributeSanitization_Class
     }
 }
 
-
 class BladeComponentTagCompilerTest extends AbstractBladeTestCase
 {
     public function tearDown()
@@ -29,8 +28,7 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
 
     public function testSlotsCanBeCompiled()
     {
-        $result = $this->compiler()->compileSlots('<x-slot name="foo">
-</x-slot>');
+        $result = $this->compiler()->compileSlots('<x-slot name="foo">'."\n".'</x-slot>');
 
         $this->assertSame("@slot('foo') \n".' @endslot', trim($result));
     }

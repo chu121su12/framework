@@ -6,8 +6,7 @@ class BladeExtendsTest extends AbstractBladeTestCase
 {
     public function testExtendsAreCompiled()
     {
-        $string = '@extends(\'foo\')
-test';
+        $string = '@extends(\'foo\')'."\n".'test';
         $expected = "test\n".'<?php echo $__env->make(\'foo\', \Illuminate\Support\Arr::except(get_defined_vars(), [\'__data\', \'__path\']))->render(); ?>';
         $this->assertEquals($expected, $this->compiler->compileString($string));
 
@@ -18,8 +17,7 @@ test';
 
     public function testSequentialCompileStringCalls()
     {
-        $string = '@extends(\'foo\')
-test';
+        $string = '@extends(\'foo\')'."\n".'test';
         $expected = "test\n".'<?php echo $__env->make(\'foo\', \Illuminate\Support\Arr::except(get_defined_vars(), [\'__data\', \'__path\']))->render(); ?>';
         $this->assertEquals($expected, $this->compiler->compileString($string));
 

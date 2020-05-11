@@ -515,7 +515,7 @@ class PendingRequest
      */
     protected function parseRequestData($method, $url, array $options)
     {
-        $laravelData = isset($options[$this->bodyFormat]) ? $options[$this->bodyFormat] : isset($options['query']) ? $options['query'] : [];
+        $laravelData = isset($options[$this->bodyFormat]) ? $options[$this->bodyFormat] : (isset($options['query']) ? $options['query'] : []);
 
         $urlString = Str::of($url);
 

@@ -14,6 +14,13 @@ use PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
+class TestResponseTest_testAssertViewHasModel_Class extends Model {
+    public function is($model)
+    {
+        return $this == $model;
+    }
+}
+
 class TestResponseTest extends TestCase
 {
     public function testAssertViewIs()
@@ -39,7 +46,7 @@ class TestResponseTest extends TestCase
 
     public function testAssertViewHasModel()
     {
-        $model = new FoundationTestResponseTest_testAssertViewHasModel_Class;
+        $model = new TestResponseTest_testAssertViewHasModel_Class;
 
         $response = $this->makeMockResponse([
             'render' => 'hello world',

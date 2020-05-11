@@ -495,7 +495,8 @@ class ViewFactoryTest extends TestCase
 
     public function testExceptionsInSectionsAreThrown()
     {
-        $this->expectException(ErrorException::class);
+        // $this->expectException(ErrorException::class);
+        $this->expectException(\Exception::class);
         $this->expectExceptionMessage('section exception message');
 
         $engine = new CompilerEngine(m::mock(CompilerInterface::class));
