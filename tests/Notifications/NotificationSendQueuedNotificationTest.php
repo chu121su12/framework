@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 
 class NotificationSendQueuedNotificationTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     protected function tearDown()
     {
         m::close();
