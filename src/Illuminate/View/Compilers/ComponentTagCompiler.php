@@ -47,7 +47,7 @@ class ComponentTagCompiler
      * @param  string  $value
      * @return string
      */
-    public function compile(string $value)
+    public function compile($value)
     {
         $value = $this->compileSlots($value);
 
@@ -62,7 +62,7 @@ class ComponentTagCompiler
      *
      * @throws \InvalidArgumentException
      */
-    public function compileTags(string $value)
+    public function compileTags($value)
     {
         $value = $this->compileSelfClosingTags($value);
         $value = $this->compileOpeningTags($value);
@@ -79,7 +79,7 @@ class ComponentTagCompiler
      *
      * @throws \InvalidArgumentException
      */
-    protected function compileOpeningTags(string $value)
+    protected function compileOpeningTags($value)
     {
         $pattern = "/
             <
@@ -123,7 +123,7 @@ class ComponentTagCompiler
      *
      * @throws \InvalidArgumentException
      */
-    protected function compileSelfClosingTags(string $value)
+    protected function compileSelfClosingTags($value)
     {
         $pattern = "/
             <
@@ -168,11 +168,11 @@ class ComponentTagCompiler
      *
      * @throws \InvalidArgumentException
      */
-    protected function componentString(string $component, array $attributes)
+    protected function componentString($component, array $attributes)
     {
         $class = $this->componentClass($component);
 
-        [$data, $attributes] = $this->partitionDataAndAttributes($class, $attributes);
+        list($data, $attributes) = $this->partitionDataAndAttributes($class, $attributes);
 
         $data = $data->mapWithKeys(function ($value, $key) {
             return [Str::camel($key) => $value];
@@ -205,7 +205,7 @@ class ComponentTagCompiler
      *
      * @throws \InvalidArgumentException
      */
-    protected function componentClass(string $component)
+    protected function componentClass($component)
     {
         $viewFactory = Container::getInstance()->make(Factory::class);
 
@@ -242,7 +242,7 @@ class ComponentTagCompiler
      * @param  string  $component
      * @return string
      */
-    public function guessClassName(string $component)
+    public function guessClassName($component)
     {
         $namespace = Container::getInstance()
                     ->make(Application::class)
@@ -288,7 +288,7 @@ class ComponentTagCompiler
      * @param  string  $value
      * @return string
      */
-    protected function compileClosingTags(string $value)
+    protected function compileClosingTags($value)
     {
         return preg_replace("/<\/\s*x[-\:][\w\-\:\.]*\s*>/", ' @endcomponentClass ', $value);
     }
@@ -299,7 +299,7 @@ class ComponentTagCompiler
      * @param  string  $value
      * @return string
      */
-    public function compileSlots(string $value)
+    public function compileSlots($value)
     {
         $value = preg_replace_callback('/<\s*x[\-\:]slot\s+name=(?<name>(\"[^\"]+\"|\\\'[^\\\']+\\\'|[^\s>]+))\s*>/', function ($matches) {
             return " @slot('".$this->stripQuotes($matches['name'])."') ";
@@ -314,7 +314,7 @@ class ComponentTagCompiler
      * @param  string  $attributeString
      * @return array
      */
-    protected function getAttributesFromAttributeString(string $attributeString)
+    protected function getAttributesFromAttributeString($attributeString)
     {
         $attributeString = $this->parseBindAttributes($attributeString);
 
@@ -340,7 +340,7 @@ class ComponentTagCompiler
 
         return collect($matches)->mapWithKeys(function ($match) {
             $attribute = $match['attribute'];
-            $value = $match['value'] ?? null;
+            $value = isset($match['value']) ? $match['value'] : null;
 
             if (is_null($value)) {
                 $value = 'true';
@@ -368,7 +368,7 @@ class ComponentTagCompiler
      * @param  string  $attributeString
      * @return string
      */
-    protected function parseBindAttributes(string $attributeString)
+    protected function parseBindAttributes($attributeString)
     {
         $pattern = "/
             (?:^|\s+)     # start of the string or whitespace between attributes
@@ -390,7 +390,7 @@ class ComponentTagCompiler
     protected function attributesToString(array $attributes, $escapeBound = true)
     {
         return collect($attributes)
-                ->map(function (string $value, string $attribute) use ($escapeBound) {
+                ->map(function ($value, $attribute) use ($escapeBound) {
                     return $escapeBound && isset($this->boundAttributes[$attribute]) && $value !== 'true' && ! is_numeric($value)
                                 ? "'{$attribute}' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute({$value})"
                                 : "'{$attribute}' => {$value}";
@@ -404,7 +404,7 @@ class ComponentTagCompiler
      * @param  string  $value
      * @return string
      */
-    public function stripQuotes(string $value)
+    public function stripQuotes($value)
     {
         return Str::startsWith($value, ['"', '\''])
                     ? substr($value, 1, -1)

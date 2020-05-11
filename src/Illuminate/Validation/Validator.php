@@ -385,7 +385,7 @@ class Validator implements ValidatorContract
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function validateWithBag(string $errorBag)
+    public function validateWithBag($errorBag)
     {
         try {
             return $this->validate();
@@ -722,7 +722,7 @@ class Validator implements ValidatorContract
      * @param  string  $attribute
      * @return void
      */
-    protected function excludeAttribute(string $attribute)
+    protected function excludeAttribute($attribute)
     {
         $this->excludeAttributes[] = $attribute;
 

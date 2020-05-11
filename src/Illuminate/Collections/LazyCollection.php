@@ -607,7 +607,7 @@ class LazyCollection implements Enumerable
     public function pluck($value, $key = null)
     {
         return new static(function () use ($value, $key) {
-            [$value, $key] = $this->explodePluckParameters($value, $key);
+            list($value, $key) = $this->explodePluckParameters($value, $key);
 
             foreach ($this as $item) {
                 $itemValue = data_get($item, $value);

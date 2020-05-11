@@ -81,7 +81,9 @@ abstract class Job
      */
     public function uuid()
     {
-        return $this->payload()['uuid'] ?? null;
+        $payload = $this->payload();
+
+        return isset($payload['uuid']) ? isset($payload['uuid']) : null;
     }
 
     /**
@@ -265,7 +267,9 @@ abstract class Job
      */
     public function maxExceptions()
     {
-        return $this->payload()['maxExceptions'] ?? null;
+        $payload = $this->payload();
+
+        return isset($payload['maxExceptions']) ? isset($payload['maxExceptions']) : null;
     }
 
     /**

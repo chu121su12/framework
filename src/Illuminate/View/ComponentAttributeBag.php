@@ -39,7 +39,7 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      */
     public function get($key, $default = null)
     {
-        return $this->attributes[$key] ?? value($default);
+        return isset($this->attributes[$key]) ? $this->attributes[$key] : value($default);
     }
 
     /**
@@ -126,7 +126,7 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
             }
 
             $attributes[$key] = implode(' ', array_unique(
-                array_filter([$attributeDefaults[$key] ?? '', $value])
+                array_filter([isset($attributeDefaults[$key]) ? $attributeDefaults[$key] : '', $value])
             ));
         }
 

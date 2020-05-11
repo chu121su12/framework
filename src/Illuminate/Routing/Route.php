@@ -487,7 +487,7 @@ class Route
     {
         $fields = is_int($parameter) ? array_values($this->bindingFields) : $this->bindingFields;
 
-        return $fields[$parameter] ?? null;
+        return isset($fields[$parameter]) ? $fields[$parameter] : null;
     }
 
     /**
@@ -497,7 +497,7 @@ class Route
      */
     public function bindingFields()
     {
-        return $this->bindingFields ?? [];
+        return isset($this->bindingFields) ? $this->bindingFields : [];
     }
 
     /**
@@ -726,7 +726,7 @@ class Route
      */
     protected function updatePrefixOnAction($prefix)
     {
-        if (! empty($newPrefix = trim(rtrim($prefix, '/').'/'.ltrim($this->action['prefix'] ?? '', '/'), '/'))) {
+        if (! empty($newPrefix = trim(rtrim($prefix, '/').'/'.ltrim(isset($this->action['prefix']) ? $this->action['prefix'] : '', '/'), '/'))) {
             $this->action['prefix'] = $newPrefix;
         }
     }
@@ -956,7 +956,7 @@ class Route
     public function withoutMiddleware($middleware)
     {
         $this->action['excluded_middleware'] = array_merge(
-            (array) ($this->action['excluded_middleware'] ?? []), Arr::wrap($middleware)
+            (array) (isset($this->action['excluded_middleware']) ? $this->action['excluded_middleware'] : []), Arr::wrap($middleware)
         );
 
         return $this;
@@ -969,7 +969,7 @@ class Route
      */
     public function excludedMiddleware()
     {
-        return (array) ($this->action['excluded_middleware'] ?? []);
+        return (array) (isset($this->action['excluded_middleware']) ? $this->action['excluded_middleware'] : []);
     }
 
     /**

@@ -12,7 +12,7 @@ abstract class DatabaseMySqlTestCase extends TestCase
         $app['config']->set('database.default', 'mysql');
     }
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

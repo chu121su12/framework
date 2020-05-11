@@ -5076,7 +5076,7 @@ class ValidationValidatorTest extends TestCase
             );
         }
 
-        $this->assertTrue($passes, $message ?? '');
+        $this->assertTrue($passes, isset($message) ? $message : '');
 
         $this->assertSame($expectedValidatedData, $validator->validated());
     }
@@ -5188,7 +5188,7 @@ class ValidationValidatorTest extends TestCase
             );
         }
 
-        $this->assertTrue($fails, $message ?? '');
+        $this->assertTrue($fails, isset($message) ? $message : '');
 
         $this->assertSame($expectedMessages, $validator->messages()->toArray());
     }

@@ -7,6 +7,30 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Contracts\Database\Eloquent\CastsInboundAttributes;
 use Illuminate\Database\Eloquent\Model;
 
+class ValueObject_castUsing_Class implements CastsAttributes
+{
+    private $argument;
+
+    public function __construct($argument = null)
+    {
+        $this->argument = $argument;
+    }
+
+    public function get($model, $key, $value, $attributes)
+    {
+        if ($this->argument) {
+            return $this->argument;
+        }
+
+        return unserialize($value);
+    }
+
+    public function set($model, $key, $value, $attributes)
+    {
+        return serialize($value);
+    }
+}
+
 /**
  * @group integration
  */
@@ -245,35 +269,14 @@ class ValueObject implements Castable
 {
     public $name;
 
-    public function __construct(string $name)
+    public function __construct($name)
     {
         $this->name = $name;
     }
 
     public static function castUsing(array $arguments)
     {
-        return new class(...$arguments) implements CastsAttributes {
-            private $argument;
-
-            public function __construct($argument = null)
-            {
-                $this->argument = $argument;
-            }
-
-            public function get($model, $key, $value, $attributes)
-            {
-                if ($this->argument) {
-                    return $this->argument;
-                }
-
-                return unserialize($value);
-            }
-
-            public function set($model, $key, $value, $attributes)
-            {
-                return serialize($value);
-            }
-        };
+        return new ValueObject_castUsing_Class(...$arguments);
     }
 }
 

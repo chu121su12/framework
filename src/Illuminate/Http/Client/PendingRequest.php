@@ -117,7 +117,7 @@ class PendingRequest
      * @param  string  $url
      * @return $this
      */
-    public function baseUrl(string $url)
+    public function baseUrl($url)
     {
         $this->baseUrl = $url;
 
@@ -183,7 +183,7 @@ class PendingRequest
      * @param  string  $format
      * @return $this
      */
-    public function bodyFormat(string $format)
+    public function bodyFormat($format)
     {
         return tap($this, function ($request) use ($format) {
             $this->bodyFormat = $format;
@@ -196,7 +196,7 @@ class PendingRequest
      * @param  string  $contentType
      * @return $this
      */
-    public function contentType(string $contentType)
+    public function contentType($contentType)
     {
         return $this->withHeaders(['Content-Type' => $contentType]);
     }
@@ -244,7 +244,7 @@ class PendingRequest
      * @param  string  $password
      * @return $this
      */
-    public function withBasicAuth(string $username, string $password)
+    public function withBasicAuth($username, $password)
     {
         return tap($this, function ($request) use ($username, $password) {
             return $this->options['auth'] = [$username, $password];
@@ -286,7 +286,7 @@ class PendingRequest
      * @param  string  $domain
      * @return $this
      */
-    public function withCookies(array $cookies, string $domain)
+    public function withCookies(array $cookies, $domain)
     {
         return tap($this, function ($request) use ($cookies, $domain) {
             return $this->options = array_merge_recursive($this->options, [
@@ -325,7 +325,7 @@ class PendingRequest
      * @param  int  $seconds
      * @return $this
      */
-    public function timeout(int $seconds)
+    public function timeout($seconds)
     {
         return tap($this, function () use ($seconds) {
             $this->options['timeout'] = $seconds;
@@ -339,7 +339,7 @@ class PendingRequest
      * @param  int  $sleep
      * @return $this
      */
-    public function retry(int $times, int $sleep = 0)
+    public function retry($times, $sleep = 0)
     {
         $this->tries = $times;
         $this->retryDelay = $sleep;
@@ -380,7 +380,7 @@ class PendingRequest
      * @param  array|string|null  $query
      * @return \Illuminate\Http\Client\Response
      */
-    public function get(string $url, $query = null)
+    public function get($url, $query = null)
     {
         return $this->send('GET', $url, [
             'query' => $query,
@@ -394,7 +394,7 @@ class PendingRequest
      * @param  array  $data
      * @return \Illuminate\Http\Client\Response
      */
-    public function post(string $url, array $data = [])
+    public function post($url, array $data = [])
     {
         return $this->send('POST', $url, [
             $this->bodyFormat => $data,
@@ -453,7 +453,7 @@ class PendingRequest
      *
      * @throws \Exception
      */
-    public function send(string $method, string $url, array $options = [])
+    public function send($method, $url, array $options = [])
     {
         $url = ltrim(rtrim($this->baseUrl, '/').'/'.ltrim($url, '/'), '/');
 
@@ -469,7 +469,7 @@ class PendingRequest
 
         $this->pendingFiles = [];
 
-        return retry($this->tries ?? 1, function () use ($method, $url, $options) {
+        return retry(isset($this->tries) ? $this->tries : 1, function () use ($method, $url, $options) {
             try {
                 $laravelData = $this->parseRequestData($method, $url, $options);
 
@@ -489,7 +489,7 @@ class PendingRequest
             } catch (ConnectException $e) {
                 throw new ConnectionException($e->getMessage(), 0, $e);
             }
-        }, $this->retryDelay ?? 100);
+        }, isset($this->retryDelay) ? $this->retryDelay : 100);
     }
 
     /**
@@ -515,7 +515,7 @@ class PendingRequest
      */
     protected function parseRequestData($method, $url, array $options)
     {
-        $laravelData = $options[$this->bodyFormat] ?? $options['query'] ?? [];
+        $laravelData = isset($options[$this->bodyFormat]) ? $options[$this->bodyFormat] : isset($options['query']) ? $options['query'] : [];
 
         $urlString = Str::of($url);
 
@@ -605,7 +605,7 @@ class PendingRequest
     {
         return function ($handler) {
             return function ($request, $options) use ($handler) {
-                $response = ($this->stubCallbacks ?? collect())
+                $response = (isset($this->stubCallbacks) ? $this->stubCallbacks : collect())
                      ->map
                      ->__invoke((new Request($request))->withData($options['laravel_data']), $options)
                      ->filter()

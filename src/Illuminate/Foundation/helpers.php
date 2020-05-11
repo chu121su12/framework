@@ -247,7 +247,7 @@ if (! function_exists('cache')) {
             );
         }
 
-        return app('cache')->put(key($arguments[0]), reset($arguments[0]), $arguments[1] ?? null);
+        return app('cache')->put(key($arguments[0]), reset($arguments[0]), isset($arguments[1]) ? $arguments[1] : null);
     }
 }
 

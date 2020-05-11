@@ -25,7 +25,7 @@ class DatabaseSchemaBuilderAlterTableWithEnumTest extends DatabaseMySqlTestCase
         $this->assertEquals('integer', Schema::getColumnType('users', 'age'));
     }
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -37,7 +37,7 @@ class DatabaseSchemaBuilderAlterTableWithEnumTest extends DatabaseMySqlTestCase
         });
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         Schema::drop('users');
 

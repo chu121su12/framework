@@ -561,8 +561,8 @@ trait HasAttributes
             $caster = $this->resolveCasterClass($key);
 
             return $this->classCastCache[$key] = $caster instanceof CastsInboundAttributes
-                ? ($this->attributes[$key] ?? null)
-                : $caster->get($this, $key, $this->attributes[$key] ?? null, $this->attributes);
+                ? (isset($this->attributes[$key]) ? $this->attributes[$key] : null)
+                : $caster->get($this, $key, isset($this->attributes[$key]) ? $this->attributes[$key] : null, $this->attributes);
         }
     }
 

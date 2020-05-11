@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class EventsSubscriberTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }

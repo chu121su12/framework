@@ -298,7 +298,7 @@ class Arr
         }
 
         if (strpos($key, '.') === false) {
-            return $array[$key] ?? value($default);
+            return isset($array[$key]) ? $array[$key] : value($default);
         }
 
         foreach (explode('.', $key) as $segment) {
@@ -417,7 +417,7 @@ class Arr
     {
         $results = [];
 
-        [$value, $key] = static::explodePluckParameters($value, $key);
+        list($value, $key) = static::explodePluckParameters($value, $key);
 
         foreach ($array as $item) {
             $itemValue = data_get($item, $value);

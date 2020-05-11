@@ -143,7 +143,7 @@ class CacheManager implements FactoryContract
      */
     protected function createArrayDriver(array $config)
     {
-        return $this->repository(new ArrayStore($config['serialize'] ?? false));
+        return $this->repository(new ArrayStore(isset($config['serialize']) ? $config['serialize'] : false));
     }
 
     /**
@@ -154,7 +154,7 @@ class CacheManager implements FactoryContract
      */
     protected function createFileDriver(array $config)
     {
-        return $this->repository(new FileStore($this->app['files'], $config['path'], $config['permission'] ?? null));
+        return $this->repository(new FileStore($this->app['files'], $config['path'], isset($config['permission']) ? $config['permission'] : null));
     }
 
     /**

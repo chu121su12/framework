@@ -53,8 +53,11 @@ class StorageLinkCommand extends Command
      */
     protected function links()
     {
-        return $this->laravel['config']['filesystems.links'] ??
-               [public_path('storage') => storage_path('app/public')];
+        if (isset($this->laravel['config']) && isset($this->laravel['config']['filesystems.links'])) {
+            return $this->laravel['config']['filesystems.links'];
+        }
+
+        return [public_path('storage') => storage_path('app/public')];
     }
 
     /**

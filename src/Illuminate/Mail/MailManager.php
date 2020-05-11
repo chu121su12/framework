@@ -91,7 +91,7 @@ class MailManager implements FactoryContract
      */
     protected function get($name)
     {
-        return $this->mailers[$name] ?? $this->resolve($name);
+        return isset($this->mailers[$name]) ? $this->mailers[$name] : $this->resolve($name);
     }
 
     /**
@@ -142,7 +142,7 @@ class MailManager implements FactoryContract
      */
     protected function createSwiftMailer(array $config)
     {
-        if ($config['domain'] ?? false) {
+        if (isset($config['domain']) ? $config['domain'] : false) {
             Swift_DependencyContainer::getInstance()
                 ->register('mime.idgenerator.idright')
                 ->asValue($config['domain']);
@@ -162,7 +162,7 @@ class MailManager implements FactoryContract
         // Here we will check if the "transport" key exists and if it doesn't we will
         // assume an application is still using the legacy mail configuration file
         // format and use the "mail.driver" configuration option instead for BC.
-        $transport = $config['transport'] ??
+        $transport = isset($config['transport']) ? $config['transport'] :
             $this->app['config']['mail.driver'];
 
         if (isset($this->customCreators[$transport])) {
@@ -245,7 +245,7 @@ class MailManager implements FactoryContract
     protected function createSendmailTransport(array $config)
     {
         return new SendmailTransport(
-            $config['path'] ?? $this->app['config']->get('mail.sendmail')
+            isset($config['path']) ? $config['path'] : $this->app['config']->get('mail.sendmail')
         );
     }
 
@@ -267,7 +267,7 @@ class MailManager implements FactoryContract
 
         return new SesTransport(
             new SesClient($this->addSesCredentials($config)),
-            $config['options'] ?? []
+            isset($config['options']) ? $config['options'] : []
         );
     }
 
@@ -312,7 +312,7 @@ class MailManager implements FactoryContract
             $this->guzzle($config),
             $config['secret'],
             $config['domain'],
-            $config['endpoint'] ?? null
+            isset($config['endpoint']) ? $config['endpoint'] : null
         );
     }
 
@@ -325,7 +325,7 @@ class MailManager implements FactoryContract
     protected function createPostmarkTransport(array $config)
     {
         return tap(new PostmarkTransport(
-            $config['token'] ?? $this->app['config']->get('services.postmark.token')
+            isset($config['token']) ? $config['token'] : $this->app['config']->get('services.postmark.token')
         ), function ($transport) {
             $transport->registerPlugin(new ThrowExceptionOnFailurePlugin());
         });
@@ -343,7 +343,7 @@ class MailManager implements FactoryContract
 
         if ($logger instanceof LogManager) {
             $logger = $logger->channel(
-                $config['channel'] ?? $this->app['config']->get('mail.log_channel')
+                isset($config['channel']) ? $config['channel'] : $this->app['config']->get('mail.log_channel')
             );
         }
 
@@ -369,7 +369,7 @@ class MailManager implements FactoryContract
     protected function guzzle(array $config)
     {
         return new HttpClient(Arr::add(
-            $config['guzzle'] ?? [],
+            isset($config['guzzle']) ? $config['guzzle'] : [],
             'connect_timeout',
             60
         ));
@@ -383,7 +383,7 @@ class MailManager implements FactoryContract
      * @param  string  $type
      * @return void
      */
-    protected function setGlobalAddress($mailer, array $config, string $type)
+    protected function setGlobalAddress($mailer, array $config, $type)
     {
         $address = Arr::get($config, $type, $this->app['config']['mail.'.$type]);
 
@@ -398,7 +398,7 @@ class MailManager implements FactoryContract
      * @param  string  $name
      * @return array
      */
-    protected function getConfig(string $name)
+    protected function getConfig($name)
     {
         // Here we will check if the "driver" key exists and if it does we will use
         // the entire mail configuration file as the "driver" config in order to
@@ -418,8 +418,11 @@ class MailManager implements FactoryContract
         // Here we will check if the "driver" key exists and if it does we will use
         // that as the default driver in order to provide support for old styles
         // of the Laravel mail configuration file for backwards compatibility.
-        return $this->app['config']['mail.driver'] ??
-            $this->app['config']['mail.default'];
+        if (isset($this->app['config']) && isset($this->app['config']['mail.driver'])) {
+            return $this->app['config']['mail.driver'];
+        }
+
+        return $this->app['config']['mail.default'];
     }
 
     /**
@@ -428,7 +431,7 @@ class MailManager implements FactoryContract
      * @param  string  $name
      * @return void
      */
-    public function setDefaultDriver(string $name)
+    public function setDefaultDriver($name)
     {
         if ($this->app['config']['mail.driver']) {
             $this->app['config']['mail.driver'] = $name;

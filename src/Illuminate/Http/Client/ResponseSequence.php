@@ -46,7 +46,7 @@ class ResponseSequence
      * @param  array  $headers
      * @return $this
      */
-    public function push($body = '', int $status = 200, array $headers = [])
+    public function push($body = '', $status = 200, array $headers = [])
     {
         $body = is_array($body) ? json_encode($body) : $body;
 
@@ -62,7 +62,7 @@ class ResponseSequence
      * @param  array  $headers
      * @return $this
      */
-    public function pushStatus(int $status, array $headers = [])
+    public function pushStatus($status, array $headers = [])
     {
         return $this->pushResponse(
             Factory::response('', $status, $headers)
@@ -77,7 +77,7 @@ class ResponseSequence
      * @param  array  $headers
      * @return $this
      */
-    public function pushFile(string $filePath, int $status = 200, array $headers = [])
+    public function pushFile($filePath, $status = 200, array $headers = [])
     {
         $string = file_get_contents($filePath);
 
@@ -145,7 +145,7 @@ class ResponseSequence
         }
 
         if (! $this->failWhenEmpty && count($this->responses) === 0) {
-            return value($this->emptyResponse ?? Factory::response());
+            return value(isset($this->emptyResponse) ? $this->emptyResponse : Factory::response());
         }
 
         return array_shift($this->responses);

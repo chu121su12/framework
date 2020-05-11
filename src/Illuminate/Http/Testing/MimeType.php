@@ -49,7 +49,8 @@ class MimeType
      */
     public static function get($extension)
     {
-        return Arr::first(self::getMimeTypes()->getMimeTypes($extension)) ?? 'application/octet-stream';
+        $mime = Arr::first(self::getMimeTypes()->getMimeTypes($extension));
+        return isset($mime) ? $mime : 'application/octet-stream';
     }
 
     /**

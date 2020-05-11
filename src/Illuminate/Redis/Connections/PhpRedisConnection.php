@@ -304,8 +304,8 @@ class PhpRedisConnection extends Connection implements ConnectionContract
     public function scan($cursor, $options = [])
     {
         $result = $this->client->scan($cursor,
-            $options['match'] ?? '*',
-            $options['count'] ?? 10
+            isset($options['match']) ? $options['match'] : '*',
+            isset($options['count']) ? $options['count'] : 10
         );
 
         return empty($result) ? $result : [$cursor, $result];
@@ -322,8 +322,8 @@ class PhpRedisConnection extends Connection implements ConnectionContract
     public function zscan($key, $cursor, $options = [])
     {
         $result = $this->client->zscan($key, $cursor,
-            $options['match'] ?? '*',
-            $options['count'] ?? 10
+            isset($options['match']) ? $options['match'] : '*',
+            isset($options['count']) ? $options['count'] : 10
         );
 
         return $result === false ? [0, []] : [$cursor, $result];
@@ -340,8 +340,8 @@ class PhpRedisConnection extends Connection implements ConnectionContract
     public function hscan($key, $cursor, $options = [])
     {
         $result = $this->client->hscan($key, $cursor,
-            $options['match'] ?? '*',
-            $options['count'] ?? 10
+            isset($options['match']) ? $options['match'] : '*',
+            isset($options['count']) ? $options['count'] : 10
         );
 
         return $result === false ? [0, []] : [$cursor, $result];
@@ -358,8 +358,8 @@ class PhpRedisConnection extends Connection implements ConnectionContract
     public function sscan($key, $cursor, $options = [])
     {
         $result = $this->client->sscan($key, $cursor,
-            $options['match'] ?? '*',
-            $options['count'] ?? 10
+            isset($options['match']) ? $options['match'] : '*',
+            isset($options['count']) ? $options['count'] : 10
         );
 
         return $result === false ? [0, []] : [$cursor, $result];

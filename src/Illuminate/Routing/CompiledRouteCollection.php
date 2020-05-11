@@ -171,7 +171,8 @@ class CompiledRouteCollection extends AbstractRouteCollection
      */
     public function get($method = null)
     {
-        return $this->getRoutesByMethod()[$method] ?? [];
+        $routes = $this->getRoutesByMethod();
+        return isset($routes[$method]) ? $routes[$method] : [];
     }
 
     /**
@@ -280,7 +281,7 @@ class CompiledRouteCollection extends AbstractRouteCollection
      */
     protected function newRoute(array $attributes)
     {
-        if (empty($attributes['action']['prefix'] ?? '')) {
+        if (empty(isset($attributes['action']) && isset($attributes['action']['prefix']) ? $attributes['action']['prefix'] : '')) {
             $baseUri = $attributes['uri'];
         } else {
             $prefix = trim($attributes['action']['prefix'], '/');

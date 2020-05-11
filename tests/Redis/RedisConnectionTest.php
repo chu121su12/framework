@@ -562,7 +562,7 @@ class RedisConnectionTest extends TestCase
             $iterator = null;
 
             do {
-                [$cursor, $returnedKeys] = $redis->scan($iterator);
+                list($cursor, $returnedKeys) = $redis->scan($iterator);
 
                 if (! is_array($returnedKeys)) {
                     $returnedKeys = [$returnedKeys];
@@ -590,7 +590,7 @@ class RedisConnectionTest extends TestCase
             $result = [];
 
             do {
-                [$iterator, $returnedMembers] = $redis->zscan('set', $iterator);
+                list($iterator, $returnedMembers) = $redis->zscan('set', $iterator);
 
                 if (! is_array($returnedMembers)) {
                     $returnedMembers = [$returnedMembers];
@@ -607,11 +607,11 @@ class RedisConnectionTest extends TestCase
             $this->assertCount(2, $result);
 
             $iterator = null;
-            [$iterator, $returned] = $redis->zscan('set', $iterator, ['match' => 'test:unmatch:*']);
+            list($iterator, $returned) = $redis->zscan('set', $iterator, ['match' => 'test:unmatch:*']);
             $this->assertEmpty($returned);
 
             $iterator = null;
-            [$iterator, $returned] = $redis->zscan('set', $iterator, ['count' => 5]);
+            list($iterator, $returned) = $redis->zscan('set', $iterator, ['count' => 5]);
             $this->assertCount(2, $returned);
 
             $redis->flushAll();
@@ -631,7 +631,7 @@ class RedisConnectionTest extends TestCase
             $result = [];
 
             do {
-                [$iterator, $returnedFields] = $redis->hscan('hash', $iterator);
+                list($iterator, $returnedFields) = $redis->hscan('hash', $iterator);
 
                 foreach ($returnedFields as $field => $value) {
                     $this->assertArrayHasKey($field, $fields);
@@ -644,11 +644,11 @@ class RedisConnectionTest extends TestCase
             $this->assertCount(2, $result);
 
             $iterator = null;
-            [$iterator, $returned] = $redis->hscan('hash', $iterator, ['match' => 'test:unmatch:*']);
+            list($iterator, $returned) = $redis->hscan('hash', $iterator, ['match' => 'test:unmatch:*']);
             $this->assertEmpty($returned);
 
             $iterator = null;
-            [$iterator, $returned] = $redis->hscan('hash', $iterator, ['count' => 5]);
+            list($iterator, $returned) = $redis->hscan('hash', $iterator, ['count' => 5]);
             $this->assertCount(2, $returned);
 
             $redis->flushAll();
@@ -668,7 +668,7 @@ class RedisConnectionTest extends TestCase
             $result = [];
 
             do {
-                [$iterator, $returnedMembers] = $redis->sscan('set', $iterator);
+                list($iterator, $returnedMembers) = $redis->sscan('set', $iterator);
 
                 foreach ($returnedMembers as $member) {
                     $this->assertContains($member, $members);
@@ -679,11 +679,11 @@ class RedisConnectionTest extends TestCase
             $this->assertCount(2, $result);
 
             $iterator = null;
-            [$iterator, $returned] = $redis->sscan('set', $iterator, ['match' => 'test:unmatch:*']);
+            list($iterator, $returned) = $redis->sscan('set', $iterator, ['match' => 'test:unmatch:*']);
             $this->assertEmpty($returned);
 
             $iterator = null;
-            [$iterator, $returned] = $redis->sscan('set', $iterator, ['count' => 5]);
+            list($iterator, $returned) = $redis->sscan('set', $iterator, ['count' => 5]);
             $this->assertCount(2, $returned);
 
             $redis->flushAll();

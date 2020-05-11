@@ -25,7 +25,7 @@ class MySqlGrammar extends Grammar
     protected function whereNull(Builder $query, $where)
     {
         if ($this->isJsonSelector($where['column'])) {
-            [$field, $path] = $this->wrapJsonFieldAndPath($where['column']);
+            list($field, $path) = $this->wrapJsonFieldAndPath($where['column']);
 
             return '(json_extract('.$field.$path.') is null OR json_type(json_extract('.$field.$path.')) = \'NULL\')';
         }
@@ -43,7 +43,7 @@ class MySqlGrammar extends Grammar
     protected function whereNotNull(Builder $query, $where)
     {
         if ($this->isJsonSelector($where['column'])) {
-            [$field, $path] = $this->wrapJsonFieldAndPath($where['column']);
+            list($field, $path) = $this->wrapJsonFieldAndPath($where['column']);
 
             return '(json_extract('.$field.$path.') is not null AND json_type(json_extract('.$field.$path.')) != \'NULL\')';
         }

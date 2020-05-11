@@ -828,7 +828,7 @@ trait ValidatesAttributes
 
             $table = $model->getTable();
 
-            $connection = $connection ?? $model->getConnectionName();
+            $connection = isset($connection) ? $connection : $model->getConnectionName();
         }
 
         return [$connection, $table];
@@ -1401,7 +1401,7 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(2, $parameters, 'required_if');
 
-        [$values, $other] = $this->prepareValuesAndOther($parameters);
+        list($values, $other) = $this->prepareValuesAndOther($parameters);
 
         if (in_array($other, $values)) {
             return $this->validateRequired($attribute, $value);
@@ -1422,7 +1422,7 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(2, $parameters, 'exclude_if');
 
-        [$values, $other] = $this->prepareValuesAndOther($parameters);
+        list($values, $other) = $this->prepareValuesAndOther($parameters);
 
         return ! in_array($other, $values);
     }
@@ -1439,7 +1439,7 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(2, $parameters, 'exclude_unless');
 
-        [$values, $other] = $this->prepareValuesAndOther($parameters);
+        list($values, $other) = $this->prepareValuesAndOther($parameters);
 
         return in_array($other, $values);
     }

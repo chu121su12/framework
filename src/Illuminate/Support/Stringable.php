@@ -303,7 +303,7 @@ class Stringable
             return new static;
         }
 
-        return new static($matches[1] ?? $matches[0]);
+        return new static(isset($matches[1]) ? $matches[1] : $matches[0]);
     }
 
     /**
@@ -320,7 +320,7 @@ class Stringable
             return collect();
         }
 
-        return collect($matches[1] ?? $matches[0]);
+        return collect(isset($matches[1]) ? $matches[1] : $matches[0]);
     }
 
     /**

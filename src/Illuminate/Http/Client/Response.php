@@ -77,7 +77,7 @@ class Response implements ArrayAccess
      * @param  string  $header
      * @return string
      */
-    public function header(string $header)
+    public function header($header)
     {
         return $this->response->getHeaderLine($header);
     }

@@ -259,7 +259,7 @@ class RouteCollection extends AbstractRouteCollection
      */
     public function toCompiledRouteCollection(Router $router, Container $container)
     {
-        ['compiled' => $compiled, 'attributes' => $attributes] = $this->compile();
+        list('compiled' => $compiled, 'attributes' => $attributes) = $this->compile();
 
         return (new CompiledRouteCollection($compiled, $attributes))
             ->setRouter($router)

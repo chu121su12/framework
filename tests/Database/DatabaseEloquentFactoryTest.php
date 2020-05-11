@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentFactoryTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         Container::getInstance()->singleton(\Faker\Generator::class, function ($app, $parameters) {
             return \Faker\Factory::create('en_US');
@@ -76,7 +76,7 @@ class DatabaseEloquentFactoryTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->schema()->drop('users');
     }

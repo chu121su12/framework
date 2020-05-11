@@ -213,7 +213,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      */
     public function compileString($value)
     {
-        [$this->footer, $result] = [[], ''];
+        list($this->footer, $result) = [[], ''];
 
         // First we will compile the Blade component tags. This is a precompile style
         // step which compiles the component Blade tags into @component directives
@@ -539,7 +539,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
     public function component($class, $alias = null, $prefix = '')
     {
         if (! is_null($alias) && Str::contains($alias, '\\')) {
-            [$class, $alias] = [$alias, $class];
+            list($class, $alias) = [$alias, $class];
         }
 
         if (is_null($alias)) {

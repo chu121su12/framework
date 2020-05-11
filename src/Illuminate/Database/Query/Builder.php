@@ -660,7 +660,7 @@ class Builder
         // assume the developer wants to run a subquery and then compare the result
         // of that subquery with the given value that was provided to the method.
         if ($this->isQueryable($column) && ! is_null($operator)) {
-            [$sub, $bindings] = $this->createSub($column);
+            list($sub, $bindings) = $this->createSub($column);
 
             return $this->addBinding($bindings, 'where')
                 ->where(new Expression('('.$sub.')'), $operator, $value, $boolean);

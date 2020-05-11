@@ -21,7 +21,7 @@ trait CompilesComponents
      */
     protected function compileComponent($expression)
     {
-        [$component, $data] = strpos($expression, ',') !== false
+        list($component, $data) = strpos($expression, ',') !== false
                     ? array_map('trim', explode(',', trim($expression, '()'), 2))
                     : [trim($expression, '()'), ''];
 
@@ -42,7 +42,7 @@ trait CompilesComponents
      * @param  string  $component
      * @return string
      */
-    public static function newComponentHash(string $component)
+    public static function newComponentHash($component)
     {
         static::$componentHashStack[] = $hash = sha1($component);
 
@@ -57,7 +57,7 @@ trait CompilesComponents
      * @param  string  $hash
      * @return string
      */
-    public static function compileClassComponentOpening(string $component, string $data, string $hash)
+    public static function compileClassComponentOpening($component, $data, $hash)
     {
         return implode("\n", [
             '<?php if (isset($component)) { $__componentOriginal'.$hash.' = $component; } ?>',
@@ -149,7 +149,7 @@ trait CompilesComponents
     {
         return "<?php \$attributes = \$attributes->exceptProps{$expression}; ?>
 <?php foreach (array_filter({$expression}, 'is_string', ARRAY_FILTER_USE_KEY) as \$__key => \$__value) {
-    \$\$__key = \$\$__key ?? \$__value;
+    \$\$__key = \$\isset($__key) ? $__key : \$__value;
 } ?>
 <?php \$__defined_vars = get_defined_vars(); ?>
 <?php foreach (\$attributes as \$__key => \$__value) {

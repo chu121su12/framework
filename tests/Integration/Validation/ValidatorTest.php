@@ -39,7 +39,7 @@ class ValidatorTest extends DatabaseTestCase
         $validator = new Validator($translator, [['name' => 1]], ['*.name' => 'string']);
 
         $validator->setImplicitAttributesFormatter(function ($attribute) {
-            [$line, $attribute] = explode('.', $attribute);
+            list($line, $attribute) = explode('.', $attribute);
 
             return sprintf('%s at line %d', $attribute, $line + 1);
         });

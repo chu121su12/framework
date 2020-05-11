@@ -202,7 +202,7 @@ trait MakesHttpRequests
      * @param  string  $value
      * @return $this
      */
-    public function withUnencryptedCookie(string $name, string $value)
+    public function withUnencryptedCookie($name, $value)
     {
         $this->unencryptedCookies[$name] = $value;
 

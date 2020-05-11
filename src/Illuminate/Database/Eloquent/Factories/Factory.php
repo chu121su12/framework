@@ -151,7 +151,7 @@ abstract class Factory
      * @param  int  $count
      * @return static
      */
-    public static function times(int $count)
+    public static function times($count)
     {
         return new static($count);
     }
@@ -491,7 +491,7 @@ abstract class Factory
      * @param  int  $count
      * @return static
      */
-    public function count(int $count)
+    public function count($count)
     {
         return $this->newInstance(['count' => $count]);
     }
@@ -502,7 +502,7 @@ abstract class Factory
      * @param  string  $connection
      * @return static
      */
-    public function connection(string $connection)
+    public function connection($connection)
     {
         return $this->newInstance(['connection' => $connection]);
     }
@@ -570,7 +570,7 @@ abstract class Factory
      * @param  string  $namespace
      * @return void
      */
-    public static function useNamespace(string $namespace)
+    public static function useNamespace($namespace)
     {
         static::$namespace = $namespace;
     }
@@ -581,7 +581,7 @@ abstract class Factory
      * @param  string  $modelName
      * @return static
      */
-    public static function factoryForModel(string $modelName)
+    public static function factoryForModel($modelName)
     {
         $resolver = static::$factoryNameResolver ?: function ($modelName) {
             return static::$namespace.Str::singular(class_basename($modelName)).'Factory';
@@ -629,12 +629,12 @@ abstract class Factory
         $factory = static::factoryForModel(Str::singular(Str::substr($method, 3)));
 
         if (Str::startsWith($method, 'for')) {
-            return $this->for($factory->state($parameters[0] ?? []));
+            return $this->for($factory->state(isset($parameters[0]) ? $parameters[0] : []));
         } elseif (Str::startsWith($method, 'has')) {
             return $this->has(
                 $factory
-                    ->count(is_numeric($parameters[0] ?? null) ? $parameters[0] : 1)
-                    ->state(is_array($parameters[0] ?? null) ? $parameters[0] : ($parameters[1] ?? []))
+                    ->count(is_numeric(isset($parameters[0]) ? $parameters[0] : null) ? $parameters[0] : 1)
+                    ->state(is_array(isset($parameters[0]) ? $parameters[0] : null) ? $parameters[0] : (isset($parameters[1]) ? $parameters[1] : []))
             );
         }
     }
