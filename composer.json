@@ -28,6 +28,7 @@
         "opis/closure": "^3.1",
         "paragonie/random_compat": "~1.4|~2.0",
         "psr/container": "^1.0",
+        "psr/log": "^1.0",
         "psr/simple-cache": "^1.0",
         "ramsey/uuid": "^3.7",
         "swiftmailer/swiftmailer": "^5.4",
@@ -36,7 +37,7 @@
         "symfony/finder": "^3.4",
         "symfony/http-foundation": "^3.4",
         "symfony/http-kernel": "^3.4",
-        "symfony/polyfill-mbstring": "^1.0",
+        "symfony/polyfill": "^1.16",
         "symfony/process": "^3.4",
         "symfony/routing": "^3.4",
         "symfony/translation": "^3.4",
@@ -100,6 +101,7 @@
             "src/Illuminate/Support/helpers.php"
         ],
         "psr-4": {
+            "Symfony\\Component\\ErrorHandler\\": "cr/patch/symfony-error-handler/error-handler-5.0.8/",
             "Carbon\\": "cr/patch/carbon-src/Carbon/",
             "Illuminate\\": "src/Illuminate/"
         }
