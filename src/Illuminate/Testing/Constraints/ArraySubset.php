@@ -31,7 +31,7 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          * @param  bool  $strict
          * @return void
          */
-        public function __construct(iterable $subset, $strict = false)
+        public function __construct($subset, $strict = false)
         {
             $this->strict = $strict;
             $this->subset = $subset;
@@ -55,7 +55,7 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          * @throws \PHPUnit\Framework\ExpectationFailedException
          * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
          */
-        public function evaluate($other, $description = '', $returnResult = false): ?bool
+        public function evaluate($other, $description = '', $returnResult = false)
         {
             // type cast $other & $this->subset as an array to allow
             // support in standard array functions.
@@ -166,7 +166,7 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          * @param  bool  $strict
          * @return void
          */
-        public function __construct(iterable $subset, $strict = false)
+        public function __construct($subset, $strict = false)
         {
             $this->strict = $strict;
             $this->subset = $subset;
@@ -258,7 +258,7 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          * @param  iterable  $other
          * @return array
          */
-        private function toArray(iterable $other)
+        private function toArray($other)
         {
             if (is_array($other)) {
                 return $other;
