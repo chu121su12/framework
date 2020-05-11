@@ -84,6 +84,12 @@ class Str
             return $subject;
         }
 
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            if (strlen($subject) === $position + strlen($search)) {
+                return '';
+            }
+        }
+
         return substr($subject, $position + strlen($search));
     }
 
@@ -657,6 +663,24 @@ class Str
      */
     public static function substrCount($haystack, $needle, $offset = 0, $length = null)
     {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            if ($offset < 0) {
+                $offset = -$offset - 1;
+                $haystack = strrev($haystack);
+                $needle = strrev($needle);
+            }
+
+            if (! is_null($length)) {
+                if ($length < 0) {
+                    $length = $offset + strlen($haystack) + $length;
+                }
+
+                return substr_count($haystack, $needle, $offset, $length);
+            } else {
+                return substr_count($haystack, $needle, $offset);
+            }
+        }
+
         if (! is_null($length)) {
             return substr_count($haystack, $needle, $offset, $length);
         } else {

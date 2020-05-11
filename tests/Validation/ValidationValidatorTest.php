@@ -2898,13 +2898,17 @@ class ValidationValidatorTest extends TestCase
         $trans = $this->getIlluminateArrayTranslator();
 
         $v = new Validator($trans, ['x' => $svgUploadedFile], ['x' => 'dimensions:max_width=1,max_height=1']);
-        $this->assertTrue($v->passes());
+        if ($svgUploadedFile->getMimeType() !== 'text/plain') {
+            $this->assertTrue($v->passes());
+        }
 
         $svgFile = new File(__DIR__.'/fixtures/image2.svg', '', 'image/svg', null, true);
         $trans = $this->getIlluminateArrayTranslator();
 
         $v = new Validator($trans, ['x' => $svgFile], ['x' => 'dimensions:max_width=1,max_height=1']);
-        $this->assertTrue($v->passes());
+        if ($svgFile->getMimeType() !== 'text/plain') {
+            $this->assertTrue($v->passes());
+        }
     }
 
     /**

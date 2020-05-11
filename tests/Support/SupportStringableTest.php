@@ -119,6 +119,10 @@ class SupportStringableTest extends TestCase
 
     public function testAsciiWithSpecificLocale()
     {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            $this->markTestSkipped('voku ASCII is not available below php 7.');
+        }
+
         $this->assertSame('h H sht Sht a A ia yo', (string) $this->stringable('х Х щ Щ ъ Ъ иа йо')->ascii('bg'));
         $this->assertSame('ae oe ue Ae Oe Ue', (string) $this->stringable('ä ö ü Ä Ö Ü')->ascii('de'));
     }
