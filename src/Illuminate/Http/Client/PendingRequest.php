@@ -483,7 +483,7 @@ class PendingRequest
                     $response->transferStats = $this->transferStats;
 
                     if ($this->tries > 1 && ! $response->successful()) {
-                        $response->throw();
+                        $response->throwThrowable();
                     }
                 });
             } catch (ConnectException $e) {
@@ -605,9 +605,11 @@ class PendingRequest
     {
         return function ($handler) {
             return function ($request, $options) use ($handler) {
-                $response = (isset($this->stubCallbacks) ? $this->stubCallbacks : collect())
+                $collection = isset($this->stubCallbacks) ? $this->stubCallbacks : collect();
+                $requestInstance = new Request($request);
+                $response = $collection
                      ->map
-                     ->__invoke((new Request($request))->withData($options['laravel_data']), $options)
+                     ->__invoke($requestInstance->withData($options['laravel_data']), $options)
                      ->filter()
                      ->first();
 

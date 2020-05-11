@@ -14,6 +14,8 @@ use stdClass;
 
 class FoundationProviderRepositoryTest extends TestCase
 {
+    use \PHPUnit\Framework\TestCaseExtraTrait;
+
     protected function tearDown()
     {
         m::close();

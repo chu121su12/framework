@@ -191,7 +191,7 @@ class Response implements ArrayAccess
      *
      * @throws \Illuminate\Http\Client\RequestException
      */
-    public function throw()
+    public function throwThrowable()
     {
         if ($this->serverError() || $this->clientError()) {
             throw new RequestException($this);
