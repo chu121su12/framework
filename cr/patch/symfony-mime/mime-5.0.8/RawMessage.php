@@ -83,6 +83,6 @@ class RawMessage implements \Serializable
 
     public function __unserialize(array $data)
     {
-        [$this->message] = $data;
+        list($this->message) = $data;
     }
 }

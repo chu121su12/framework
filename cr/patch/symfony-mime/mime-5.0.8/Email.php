@@ -432,7 +432,7 @@ class Email extends Message
     {
         $this->ensureValidity();
 
-        [$htmlPart, $attachmentParts, $inlineParts] = $this->prepareParts();
+        list($htmlPart, $attachmentParts, $inlineParts) = $this->prepareParts();
 
         $part = null === $this->text ? null : new TextPart($this->text, $this->textCharset);
         if (null !== $htmlPart) {
@@ -592,7 +592,7 @@ class Email extends Message
      */
     public function __unserialize(array $data)
     {
-        [$this->text, $this->textCharset, $this->html, $this->htmlCharset, $this->attachments, $parentData] = $data;
+        list($this->text, $this->textCharset, $this->html, $this->htmlCharset, $this->attachments, $parentData) = $data;
 
         parent::__unserialize($parentData);
     }

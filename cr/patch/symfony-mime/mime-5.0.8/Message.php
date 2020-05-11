@@ -153,6 +153,6 @@ class Message extends RawMessage
 
     public function __unserialize(array $data)
     {
-        [$this->headers, $this->body] = $data;
+        list($this->headers, $this->body) = $data;
     }
 }
