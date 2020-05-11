@@ -576,7 +576,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     }
 
     /**
-     * @param int|string $code
+     * @param null|int|string $code
      *
      * @throws PHPUnit_Framework_Exception
      */
@@ -586,8 +586,8 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             $this->expectedException = \Exception::class;
         }
 
-        if (!is_int($code) && !is_string($code)) {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'integer or string');
+        if (!is_null($code) && !is_int($code) && !is_string($code)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'null, integer or string');
         }
 
         $this->expectedExceptionCode = $code;
