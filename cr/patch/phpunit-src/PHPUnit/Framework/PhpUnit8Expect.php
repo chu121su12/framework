@@ -8,4 +8,12 @@ trait PhpUnit8Expect
     {
         $this->expectedExceptionMessageRegExp = $regularExpression;
     }
+
+    public function expectExceptionObject($exception)
+    {
+        $this->expectException(\get_class($exception));
+        $this->expectExceptionMessage($exception->getMessage());
+        $this->expectExceptionCode($exception->getCode());
+    }
+
 }

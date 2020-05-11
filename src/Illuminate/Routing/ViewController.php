@@ -2,7 +2,7 @@
 
 namespace Illuminate\Routing;
 
-use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 
 class ViewController extends Controller
 {
@@ -19,7 +19,7 @@ class ViewController extends Controller
      * @param  \Illuminate\Contracts\Routing\ResponseFactory  $response
      * @return void
      */
-    public function __construct(ResponseFactory $response)
+    public function __construct(ResponseFactoryContract $response)
     {
         $this->response = $response;
     }

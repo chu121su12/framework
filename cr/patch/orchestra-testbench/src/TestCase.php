@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase as PHPUnit;
 abstract class TestCase extends PHPUnit implements Contracts\TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert,
+        \PHPUnit\Framework\PhpUnit8Expect,
         Concerns\Testing,
         InteractsWithAuthentication,
         InteractsWithConsole,

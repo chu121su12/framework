@@ -529,6 +529,7 @@ trait Date
     use Options;
     use Rounding;
     use Serialization;
+    use StaticTranslator;
     use Test;
     use Timestamp;
     use Units;

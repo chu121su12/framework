@@ -166,6 +166,7 @@ use InvalidArgumentException;
  */
 class CarbonInterval extends DateInterval
 {
+    use Traits\StaticTranslator;
     use Options, Mixin {
         Mixin::mixin as baseMixin;
     }
@@ -187,7 +188,7 @@ class CarbonInterval extends DateInterval
      *
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
-    protected static $translator;
+    // protected static $translator;
 
     /**
      * @var array|null
