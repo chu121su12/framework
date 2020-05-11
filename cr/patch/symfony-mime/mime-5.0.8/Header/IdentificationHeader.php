@@ -44,7 +44,7 @@ final class IdentificationHeader extends AbstractHeader
         $this->setId($body);
     }
 
-    public function getBody(): array
+    public function getBody()
     {
         return $this->getIds();
     }
@@ -93,12 +93,12 @@ final class IdentificationHeader extends AbstractHeader
      *
      * @return string[]
      */
-    public function getIds(): array
+    public function getIds()
     {
         return $this->ids;
     }
 
-    public function getBodyAsString(): string
+    public function getBodyAsString()
     {
         $addrs = [];
         foreach ($this->idsAsAddresses as $address) {

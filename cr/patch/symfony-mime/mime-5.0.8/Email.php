@@ -123,7 +123,7 @@ class Email extends Message
     /**
      * @return Address[]
      */
-    public function getFrom(): array
+    public function getFrom()
     {
         return $this->getHeaders()->getHeaderBody('From') ?: [];
     }
@@ -151,7 +151,7 @@ class Email extends Message
     /**
      * @return Address[]
      */
-    public function getReplyTo(): array
+    public function getReplyTo()
     {
         return $this->getHeaders()->getHeaderBody('Reply-To') ?: [];
     }
@@ -179,7 +179,7 @@ class Email extends Message
     /**
      * @return Address[]
      */
-    public function getTo(): array
+    public function getTo()
     {
         return $this->getHeaders()->getHeaderBody('To') ?: [];
     }
@@ -207,7 +207,7 @@ class Email extends Message
     /**
      * @return Address[]
      */
-    public function getCc(): array
+    public function getCc()
     {
         return $this->getHeaders()->getHeaderBody('Cc') ?: [];
     }
@@ -235,7 +235,7 @@ class Email extends Message
     /**
      * @return Address[]
      */
-    public function getBcc(): array
+    public function getBcc()
     {
         return $this->getHeaders()->getHeaderBody('Bcc') ?: [];
     }
@@ -264,7 +264,7 @@ class Email extends Message
      * The returned value is an integer where 1 is the highest priority and 5
      * is the lowest.
      */
-    public function getPriority(): int
+    public function getPriority()
     {
         list($priority) = sscanf($this->getHeaders()->getHeaderBody('X-Priority'), '%[1-5]');
 
@@ -380,7 +380,7 @@ class Email extends Message
     /**
      * @return DataPart[]
      */
-    public function getAttachments(): array
+    public function getAttachments()
     {
         $parts = [];
         foreach ($this->attachments as $attachment) {
@@ -390,7 +390,7 @@ class Email extends Message
         return $parts;
     }
 
-    public function getBody(): AbstractPart
+    public function getBody()
     {
         if (null !== $body = parent::getBody()) {
             return $body;
@@ -428,7 +428,7 @@ class Email extends Message
      *         |
      *          ------------> application/pdf (with content)
      */
-    private function generateBody(): AbstractPart
+    private function generateBody()
     {
         $this->ensureValidity();
 
@@ -502,7 +502,7 @@ class Email extends Message
         return [$htmlPart, $attachmentParts, array_values($inlineParts)];
     }
 
-    private function createDataPart(array $attachment): DataPart
+    private function createDataPart(array $attachment)
     {
         if (isset($attachment['part'])) {
             return $attachment['part'];
@@ -523,7 +523,7 @@ class Email extends Message
     /**
      * @return $this
      */
-    private function setHeaderBody(string $type, string $name, $body): object
+    private function setHeaderBody(string $type, string $name, $body)
     {
         $this->getHeaders()->setHeaderBody($type, $name, $body);
 
@@ -556,7 +556,7 @@ class Email extends Message
     /**
      * @internal
      */
-    public function __serialize(): array
+    public function __serialize()
     {
         if (\is_resource($this->text)) {
             if (stream_get_meta_data($this->text)['seekable'] ?? false) {
@@ -590,7 +590,7 @@ class Email extends Message
     /**
      * @internal
      */
-    public function __unserialize(array $data): void
+    public function __unserialize(array $data)
     {
         [$this->text, $this->textCharset, $this->html, $this->htmlCharset, $this->attachments, $parentData] = $data;
 

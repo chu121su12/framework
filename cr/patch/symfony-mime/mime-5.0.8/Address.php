@@ -56,17 +56,17 @@ final class Address
         }
     }
 
-    public function getAddress(): string
+    public function getAddress()
     {
         return $this->address;
     }
 
-    public function getName(): string
+    public function getName()
     {
         return $this->name;
     }
 
-    public function getEncodedAddress(): string
+    public function getEncodedAddress()
     {
         if (null === self::$encoder) {
             self::$encoder = new IdnAddressEncoder();
@@ -75,7 +75,7 @@ final class Address
         return self::$encoder->encodeString($this->address);
     }
 
-    public function toString(): string
+    public function toString()
     {
         return ($n = $this->getName()) ? $n.' <'.$this->getEncodedAddress().'>' : $this->getEncodedAddress();
     }
@@ -83,7 +83,7 @@ final class Address
     /**
      * @param Address|string $address
      */
-    public static function create($address): self
+    public static function create($address)
     {
         if ($address instanceof self) {
             return $address;
@@ -100,7 +100,7 @@ final class Address
      *
      * @return Address[]
      */
-    public static function createArray(array $addresses): array
+    public static function createArray(array $addresses)
     {
         $addrs = [];
         foreach ($addresses as $address) {
@@ -110,7 +110,7 @@ final class Address
         return $addrs;
     }
 
-    public static function fromString(string $string): self
+    public static function fromString(string $string)
     {
         if (false === strpos($string, '<')) {
             return new self($string, '');

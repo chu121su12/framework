@@ -48,7 +48,7 @@ final class MailboxListHeader extends AbstractHeader
      *
      * @return Address[]
      */
-    public function getBody(): array
+    public function getBody()
     {
         return $this->getAddresses();
     }
@@ -91,7 +91,7 @@ final class MailboxListHeader extends AbstractHeader
     /**
      * @return Address[]
      */
-    public function getAddresses(): array
+    public function getAddresses()
     {
         return $this->addresses;
     }
@@ -103,7 +103,7 @@ final class MailboxListHeader extends AbstractHeader
      *
      * @return string[]
      */
-    public function getAddressStrings(): array
+    public function getAddressStrings()
     {
         $strings = [];
         foreach ($this->addresses as $address) {
@@ -117,7 +117,7 @@ final class MailboxListHeader extends AbstractHeader
         return $strings;
     }
 
-    public function getBodyAsString(): string
+    public function getBodyAsString()
     {
         return implode(', ', $this->getAddressStrings());
     }
@@ -129,7 +129,7 @@ final class MailboxListHeader extends AbstractHeader
      *
      * @see RFC 2822 3.2.1
      */
-    protected function tokenNeedsEncoding(string $token): bool
+    protected function tokenNeedsEncoding(string $token)
     {
         return preg_match('/[()<>\[\]:;@\,."]/', $token) || parent::tokenNeedsEncoding($token);
     }

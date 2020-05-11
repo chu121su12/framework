@@ -43,7 +43,7 @@ final class MailboxHeader extends AbstractHeader
     /**
      * @throws RfcComplianceException
      */
-    public function getBody(): Address
+    public function getBody()
     {
         return $this->getAddress();
     }
@@ -56,12 +56,12 @@ final class MailboxHeader extends AbstractHeader
         $this->address = $address;
     }
 
-    public function getAddress(): Address
+    public function getAddress()
     {
         return $this->address;
     }
 
-    public function getBodyAsString(): string
+    public function getBodyAsString()
     {
         $str = $this->address->getEncodedAddress();
         if ($name = $this->address->getName()) {
@@ -78,7 +78,7 @@ final class MailboxHeader extends AbstractHeader
      *
      * @see RFC 2822 3.2.1
      */
-    protected function tokenNeedsEncoding(string $token): bool
+    protected function tokenNeedsEncoding(string $token)
     {
         return preg_match('/[()<>\[\]:;@\,."]/', $token) || parent::tokenNeedsEncoding($token);
     }

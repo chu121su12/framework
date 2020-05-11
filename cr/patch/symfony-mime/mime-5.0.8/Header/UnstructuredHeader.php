@@ -46,7 +46,7 @@ class UnstructuredHeader extends AbstractHeader
     /**
      * Get the (unencoded) value of this header.
      */
-    public function getValue(): string
+    public function getValue()
     {
         return $this->value;
     }
@@ -62,7 +62,7 @@ class UnstructuredHeader extends AbstractHeader
     /**
      * Get the value of this header prepared for rendering.
      */
-    public function getBodyAsString(): string
+    public function getBodyAsString()
     {
         return $this->encodeWords($this, $this->value);
     }

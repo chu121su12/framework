@@ -16,7 +16,7 @@ namespace Symfony\Component\ErrorHandler;
  */
 class ThrowableUtils
 {
-    public static function getSeverity(\Throwable $throwable): int
+    public static function getSeverity(\Throwable $throwable)
     {
         if ($throwable instanceof \ErrorException) {
             return $throwable->getSeverity();

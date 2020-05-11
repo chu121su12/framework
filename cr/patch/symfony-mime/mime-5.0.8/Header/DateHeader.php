@@ -59,7 +59,7 @@ final class DateHeader extends AbstractHeader
         $this->dateTime = $dateTime;
     }
 
-    public function getBodyAsString(): string
+    public function getBodyAsString()
     {
         return $this->dateTime->format(\DateTime::RFC2822);
     }

@@ -98,7 +98,7 @@ class QpEncoder implements EncoderInterface
         }
     }
 
-    protected function initSafeMap(): void
+    protected function initSafeMap()
     {
         foreach (array_merge([0x09, 0x20], range(0x21, 0x3C), range(0x3E, 0x7E)) as $byte) {
             $this->safeMap[$byte] = \chr($byte);
@@ -114,7 +114,7 @@ class QpEncoder implements EncoderInterface
      * If the first line needs to be shorter, indicate the difference with
      * $firstLineOffset.
      */
-    public function encodeString(string $string, ?string $charset = 'utf-8', int $firstLineOffset = 0, int $maxLineLength = 0): string
+    public function encodeString(string $string, ?string $charset = 'utf-8', int $firstLineOffset = 0, int $maxLineLength = 0)
     {
         if ($maxLineLength > 76 || $maxLineLength <= 0) {
             $maxLineLength = 76;
@@ -161,7 +161,7 @@ class QpEncoder implements EncoderInterface
     /**
      * Encode the given byte array into a verbatim QP form.
      */
-    private function encodeByteSequence(array $bytes, int &$size): string
+    private function encodeByteSequence(array $bytes, int &$size)
     {
         $ret = '';
         $size = 0;
@@ -181,7 +181,7 @@ class QpEncoder implements EncoderInterface
     /**
      * Make sure CRLF is correct and HT/SPACE are in valid places.
      */
-    private function standardize(string $string): string
+    private function standardize(string $string)
     {
         $string = str_replace(["\t=0D=0A", ' =0D=0A', '=0D=0A'], ["=09\r\n", "=20\r\n", "\r\n"], $string);
         switch ($end = \ord(substr($string, -1))) {

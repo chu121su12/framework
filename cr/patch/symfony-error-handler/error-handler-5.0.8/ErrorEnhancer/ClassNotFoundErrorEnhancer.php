@@ -84,7 +84,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
      *
      * Returns an array of possible fully qualified class names
      */
-    private function getClassCandidates(string $class): array
+    private function getClassCandidates(string $class)
     {
         if (!\is_array($functions = spl_autoload_functions())) {
             return [];
@@ -124,7 +124,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         return array_unique($classes);
     }
 
-    private function findClassInPath(string $path, string $class, string $prefix): array
+    private function findClassInPath(string $path, string $class, string $prefix)
     {
         if (!$path = realpath($path.'/'.strtr($prefix, '\\_', '//')) ?: realpath($path.'/'.\dirname(strtr($prefix, '\\_', '//'))) ?: realpath($path)) {
             return [];
@@ -186,7 +186,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         return null;
     }
 
-    private function classExists(string $class): bool
+    private function classExists(string $class)
     {
         return class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false);
     }

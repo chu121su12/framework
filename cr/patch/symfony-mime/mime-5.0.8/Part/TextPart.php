@@ -57,12 +57,12 @@ class TextPart extends AbstractPart
         }
     }
 
-    public function getMediaType(): string
+    public function getMediaType()
     {
         return 'text';
     }
 
-    public function getMediaSubtype(): string
+    public function getMediaSubtype()
     {
         return $this->subtype;
     }
@@ -91,7 +91,7 @@ class TextPart extends AbstractPart
         return $this;
     }
 
-    public function getBody(): string
+    public function getBody()
     {
         if (!\is_resource($this->body)) {
             return $this->body;
@@ -104,12 +104,12 @@ class TextPart extends AbstractPart
         return stream_get_contents($this->body) ?: '';
     }
 
-    public function bodyToString(): string
+    public function bodyToString()
     {
         return $this->getEncoder()->encodeString($this->getBody(), $this->charset);
     }
 
-    public function bodyToIterable(): iterable
+    public function bodyToIterable()
     {
         if (\is_resource($this->body)) {
             if (stream_get_meta_data($this->body)['seekable'] ?? false) {
@@ -121,7 +121,7 @@ class TextPart extends AbstractPart
         }
     }
 
-    public function getPreparedHeaders(): Headers
+    public function getPreparedHeaders()
     {
         $headers = parent::getPreparedHeaders();
 
@@ -144,7 +144,7 @@ class TextPart extends AbstractPart
         return $headers;
     }
 
-    public function asDebugString(): string
+    public function asDebugString()
     {
         $str = parent::asDebugString();
         if (null !== $this->charset) {
@@ -157,7 +157,7 @@ class TextPart extends AbstractPart
         return $str;
     }
 
-    private function getEncoder(): ContentEncoderInterface
+    private function getEncoder()
     {
         if ('8bit' === $this->encoding) {
             return self::$encoders[$this->encoding] ?? (self::$encoders[$this->encoding] = new EightBitContentEncoder());
@@ -170,7 +170,7 @@ class TextPart extends AbstractPart
         return self::$encoders[$this->encoding] ?? (self::$encoders[$this->encoding] = new Base64ContentEncoder());
     }
 
-    private function chooseEncoding(): string
+    private function chooseEncoding()
     {
         if (null === $this->charset) {
             return 'base64';

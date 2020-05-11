@@ -36,7 +36,7 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
     /**
      * {@inheritdoc}
      */
-    public function isGuesserSupported(): bool
+    public function isGuesserSupported()
     {
         return \function_exists('finfo_open');
     }

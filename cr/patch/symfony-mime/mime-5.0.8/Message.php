@@ -64,12 +64,12 @@ class Message extends RawMessage
         return $this;
     }
 
-    public function getHeaders(): Headers
+    public function getHeaders()
     {
         return $this->headers;
     }
 
-    public function getPreparedHeaders(): Headers
+    public function getPreparedHeaders()
     {
         $headers = clone $this->headers;
 
@@ -101,7 +101,7 @@ class Message extends RawMessage
         return $headers;
     }
 
-    public function toString(): string
+    public function toString()
     {
         if (null === $body = $this->getBody()) {
             $body = new TextPart('');
@@ -110,7 +110,7 @@ class Message extends RawMessage
         return $this->getPreparedHeaders()->toString().$body->toString();
     }
 
-    public function toIterable(): iterable
+    public function toIterable()
     {
         if (null === $body = $this->getBody()) {
             $body = new TextPart('');
@@ -133,7 +133,7 @@ class Message extends RawMessage
         parent::ensureValidity();
     }
 
-    public function generateMessageId(): string
+    public function generateMessageId()
     {
         if ($this->headers->has('Sender')) {
             $sender = $this->headers->get('Sender')->getAddress();
@@ -146,12 +146,12 @@ class Message extends RawMessage
         return bin2hex(random_bytes(16)).strstr($sender->getAddress(), '@');
     }
 
-    public function __serialize(): array
+    public function __serialize()
     {
         return [$this->headers, $this->body];
     }
 
-    public function __unserialize(array $data): void
+    public function __unserialize(array $data)
     {
         [$this->headers, $this->body] = $data;
     }

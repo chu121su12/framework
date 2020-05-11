@@ -43,17 +43,17 @@ final class FormDataPart extends AbstractMultipartPart
         $this->getHeaders()->setMaxLineLength(PHP_INT_MAX);
     }
 
-    public function getMediaSubtype(): string
+    public function getMediaSubtype()
     {
         return 'form-data';
     }
 
-    public function getParts(): array
+    public function getParts()
     {
         return $this->prepareFields($this->fields);
     }
 
-    private function prepareFields(array $fields): array
+    private function prepareFields(array $fields)
     {
         $values = [];
 
@@ -74,7 +74,7 @@ final class FormDataPart extends AbstractMultipartPart
         return $values;
     }
 
-    private function preparePart(string $name, $value): TextPart
+    private function preparePart(string $name, $value)
     {
         if (\is_string($value)) {
             return $this->configurePart($name, new TextPart($value, 'utf-8', 'plain', '8bit'));
@@ -83,7 +83,7 @@ final class FormDataPart extends AbstractMultipartPart
         return $this->configurePart($name, $value);
     }
 
-    private function configurePart(string $name, TextPart $part): TextPart
+    private function configurePart(string $name, TextPart $part)
     {
         static $r;
 

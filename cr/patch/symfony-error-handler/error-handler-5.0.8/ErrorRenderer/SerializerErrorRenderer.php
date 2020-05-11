@@ -53,7 +53,7 @@ class SerializerErrorRenderer implements ErrorRendererInterface
     /**
      * {@inheritdoc}
      */
-    public function render(\Throwable $exception): FlattenException
+    public function render(\Throwable $exception)
     {
         $flattenException = FlattenException::createFromThrowable($exception);
 

@@ -24,7 +24,7 @@ final class DigestPart extends AbstractMultipartPart
         parent::__construct(...$parts);
     }
 
-    public function getMediaSubtype(): string
+    public function getMediaSubtype()
     {
         return 'digest';
     }

@@ -25,12 +25,12 @@ abstract class AbstractPart
         $this->headers = new Headers();
     }
 
-    public function getHeaders(): Headers
+    public function getHeaders()
     {
         return $this->headers;
     }
 
-    public function getPreparedHeaders(): Headers
+    public function getPreparedHeaders()
     {
         $headers = clone $this->headers;
         $headers->setHeaderBody('Parameterized', 'Content-Type', $this->getMediaType().'/'.$this->getMediaSubtype());
@@ -38,19 +38,19 @@ abstract class AbstractPart
         return $headers;
     }
 
-    public function toString(): string
+    public function toString()
     {
         return $this->getPreparedHeaders()->toString()."\r\n".$this->bodyToString();
     }
 
-    public function toIterable(): iterable
+    public function toIterable()
     {
         yield $this->getPreparedHeaders()->toString();
         yield "\r\n";
         yield from $this->bodyToIterable();
     }
 
-    public function asDebugString(): string
+    public function asDebugString()
     {
         return $this->getMediaType().'/'.$this->getMediaSubtype();
     }

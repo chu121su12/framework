@@ -39,7 +39,7 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
     /**
      * {@inheritdoc}
      */
-    public function isGuesserSupported(): bool
+    public function isGuesserSupported()
     {
         static $supported = null;
 

@@ -151,7 +151,7 @@ final class CharacterStream
         return null;
     }
 
-    public function setPointer(int $charOffset): void
+    public function setPointer(int $charOffset)
     {
         if ($this->charCount < $charOffset) {
             $charOffset = $this->charCount;
@@ -159,7 +159,7 @@ final class CharacterStream
         $this->currentPos = $charOffset;
     }
 
-    public function write(string $chars): void
+    public function write(string $chars)
     {
         $ignored = '';
         $this->data .= $chars;
@@ -174,7 +174,7 @@ final class CharacterStream
         $this->dataSize = \strlen($this->data) - \strlen($ignored);
     }
 
-    private function getUtf8CharPositions(string $string, int $startOffset, string &$ignoredChars): int
+    private function getUtf8CharPositions(string $string, int $startOffset, string &$ignoredChars)
     {
         $strlen = \strlen($string);
         $charPos = \count($this->map['p']);

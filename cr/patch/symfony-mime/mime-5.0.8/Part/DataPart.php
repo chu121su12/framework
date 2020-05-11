@@ -44,7 +44,7 @@ class DataPart extends TextPart
         $this->setDisposition('attachment');
     }
 
-    public static function fromPath(string $path, string $name = null, string $contentType = null): self
+    public static function fromPath(string $path, string $name = null, string $contentType = null)
     {
         // FIXME: if file is not readable, exception?
 
@@ -73,22 +73,22 @@ class DataPart extends TextPart
         return $this->setDisposition('inline');
     }
 
-    public function getContentId(): string
+    public function getContentId()
     {
         return $this->cid ?: $this->cid = $this->generateContentId();
     }
 
-    public function hasContentId(): bool
+    public function hasContentId()
     {
         return null !== $this->cid;
     }
 
-    public function getMediaType(): string
+    public function getMediaType()
     {
         return $this->mediaType;
     }
 
-    public function getPreparedHeaders(): Headers
+    public function getPreparedHeaders()
     {
         $headers = parent::getPreparedHeaders();
 
@@ -103,7 +103,7 @@ class DataPart extends TextPart
         return $headers;
     }
 
-    public function asDebugString(): string
+    public function asDebugString()
     {
         $str = parent::asDebugString();
         if (null !== $this->filename) {
@@ -113,7 +113,7 @@ class DataPart extends TextPart
         return $str;
     }
 
-    private function generateContentId(): string
+    private function generateContentId()
     {
         return bin2hex(random_bytes(16)).'@symfony';
     }

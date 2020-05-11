@@ -81,7 +81,7 @@ class FatalError extends \Error
     /**
      * {@inheritdoc}
      */
-    public function getError(): array
+    public function getError()
     {
         return $this->error;
     }

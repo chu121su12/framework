@@ -46,7 +46,7 @@ final class ParameterizedHeader extends UnstructuredHeader
         $this->setParameters(array_merge($this->getParameters(), [$parameter => $value]));
     }
 
-    public function getParameter(string $parameter): string
+    public function getParameter(string $parameter)
     {
         return $this->getParameters()[$parameter] ?? '';
     }
@@ -62,12 +62,12 @@ final class ParameterizedHeader extends UnstructuredHeader
     /**
      * @return string[]
      */
-    public function getParameters(): array
+    public function getParameters()
     {
         return $this->parameters;
     }
 
-    public function getBodyAsString(): string
+    public function getBodyAsString()
     {
         $body = parent::getBodyAsString();
         foreach ($this->parameters as $name => $value) {
@@ -85,7 +85,7 @@ final class ParameterizedHeader extends UnstructuredHeader
      * This doesn't need to be overridden in theory, but it is for implementation
      * reasons to prevent potential breakage of attributes.
      */
-    protected function toTokens(string $string = null): array
+    protected function toTokens(string $string = null)
     {
         $tokens = parent::toTokens(parent::getBodyAsString());
 
@@ -104,7 +104,7 @@ final class ParameterizedHeader extends UnstructuredHeader
     /**
      * Render a RFC 2047 compliant header parameter from the $name and $value.
      */
-    private function createParameter(string $name, string $value): string
+    private function createParameter(string $name, string $value)
     {
         $origValue = $value;
 
@@ -156,7 +156,7 @@ final class ParameterizedHeader extends UnstructuredHeader
      *
      * @param string $value to append
      */
-    private function getEndOfParameterValue(string $value, bool $encoded = false, bool $firstLine = false): string
+    private function getEndOfParameterValue(string $value, bool $encoded = false, bool $firstLine = false)
     {
         if (!preg_match('/^'.self::TOKEN_REGEX.'$/D', $value)) {
             $value = '"'.$value.'"';

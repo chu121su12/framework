@@ -21,7 +21,7 @@ use Symfony\Component\Mime\Part\SMimePart;
  */
 abstract class SMime
 {
-    protected function normalizeFilePath(string $path): string
+    protected function normalizeFilePath(string $path)
     {
         if (!file_exists($path)) {
             throw new RuntimeException(sprintf('File does not exist: "%s".', $path));
@@ -30,14 +30,14 @@ abstract class SMime
         return 'file://'.str_replace('\\', '/', realpath($path));
     }
 
-    protected function iteratorToFile(iterable $iterator, $stream): void
+    protected function iteratorToFile(iterable $iterator, $stream)
     {
         foreach ($iterator as $chunk) {
             fwrite($stream, $chunk);
         }
     }
 
-    protected function convertMessageToSMimePart($stream, string $type, string $subtype): SMimePart
+    protected function convertMessageToSMimePart($stream, string $type, string $subtype)
     {
         rewind($stream);
 
@@ -62,14 +62,14 @@ abstract class SMime
         return new SMimePart($this->getStreamIterator($stream), $type, $subtype, $this->getParametersFromHeader($headers['content-type']));
     }
 
-    protected function getStreamIterator($stream): iterable
+    protected function getStreamIterator($stream)
     {
         while (!feof($stream)) {
             yield str_replace("\n", "\r\n", str_replace("\r\n", "\n", fread($stream, 16372)));
         }
     }
 
-    private function getMessageHeaders(string $headerData): array
+    private function getMessageHeaders(string $headerData)
     {
         $headers = [];
         $headerLines = explode("\r\n", str_replace("\n", "\r\n", str_replace("\r\n", "\n", $headerData)));
@@ -96,7 +96,7 @@ abstract class SMime
         return $headers;
     }
 
-    private function getParametersFromHeader(string $header): array
+    private function getParametersFromHeader(string $header)
     {
         $params = [];
 

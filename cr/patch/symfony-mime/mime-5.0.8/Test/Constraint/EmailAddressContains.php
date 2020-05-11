@@ -30,7 +30,7 @@ final class EmailAddressContains extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function toString(): string
+    public function toString()
     {
         return sprintf('contains address "%s" with value "%s"', $this->headerName, $this->expectedValue);
     }
@@ -40,7 +40,7 @@ final class EmailAddressContains extends Constraint
      *
      * {@inheritdoc}
      */
-    protected function matches($message): bool
+    protected function matches($message)
     {
         if (RawMessage::class === \get_class($message)) {
             throw new \LogicException('Unable to test a message address on a RawMessage instance.');
@@ -67,7 +67,7 @@ final class EmailAddressContains extends Constraint
      *
      * {@inheritdoc}
      */
-    protected function failureDescription($message): string
+    protected function failureDescription($message)
     {
         return sprintf('the Email %s (value is %s)', $this->toString(), $message->getHeaders()->get($this->headerName)->getBodyAsString());
     }

@@ -28,7 +28,7 @@ class RawMessage implements \Serializable
         $this->message = $message;
     }
 
-    public function toString(): string
+    public function toString()
     {
         if (\is_string($this->message)) {
             return $this->message;
@@ -37,7 +37,7 @@ class RawMessage implements \Serializable
         return $this->message = implode('', iterator_to_array($this->message, false));
     }
 
-    public function toIterable(): iterable
+    public function toIterable()
     {
         if (\is_string($this->message)) {
             yield $this->message;
@@ -63,7 +63,7 @@ class RawMessage implements \Serializable
     /**
      * @internal
      */
-    final public function serialize(): string
+    final public function serialize()
     {
         return serialize($this->__serialize());
     }
@@ -76,12 +76,12 @@ class RawMessage implements \Serializable
         $this->__unserialize(unserialize($serialized));
     }
 
-    public function __serialize(): array
+    public function __serialize()
     {
         return [$this->message];
     }
 
-    public function __unserialize(array $data): void
+    public function __unserialize(array $data)
     {
         [$this->message] = $data;
     }

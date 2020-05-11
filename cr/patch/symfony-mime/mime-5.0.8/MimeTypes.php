@@ -63,7 +63,7 @@ final class MimeTypes implements MimeTypesInterface
         self::$default = $default;
     }
 
-    public static function getDefault(): self
+    public static function getDefault()
     {
         return self::$default ?? self::$default = new self();
     }
@@ -81,7 +81,7 @@ final class MimeTypes implements MimeTypesInterface
     /**
      * {@inheritdoc}
      */
-    public function getExtensions(string $mimeType): array
+    public function getExtensions(string $mimeType)
     {
         if ($this->extensions) {
             $extensions = $this->extensions[$mimeType] ?? $this->extensions[$lcMimeType = strtolower($mimeType)] ?? null;
@@ -93,7 +93,7 @@ final class MimeTypes implements MimeTypesInterface
     /**
      * {@inheritdoc}
      */
-    public function getMimeTypes(string $ext): array
+    public function getMimeTypes(string $ext)
     {
         if ($this->mimeTypes) {
             $mimeTypes = $this->mimeTypes[$ext] ?? $this->mimeTypes[$lcExt = strtolower($ext)] ?? null;
@@ -105,7 +105,7 @@ final class MimeTypes implements MimeTypesInterface
     /**
      * {@inheritdoc}
      */
-    public function isGuesserSupported(): bool
+    public function isGuesserSupported()
     {
         foreach ($this->guessers as $guesser) {
             if ($guesser->isGuesserSupported()) {

@@ -26,7 +26,7 @@ final class MessageConverter
     /**
      * @throws RuntimeException when unable to convert the message to an email
      */
-    public static function toEmail(Message $message): Email
+    public static function toEmail(Message $message)
     {
         if ($message instanceof Email) {
             return $message;
@@ -64,7 +64,7 @@ final class MessageConverter
         throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', \get_class($message)));
     }
 
-    private static function createEmailFromTextPart(Message $message, TextPart $part): Email
+    private static function createEmailFromTextPart(Message $message, TextPart $part)
     {
         if ('text' === $part->getMediaType() && 'plain' === $part->getMediaSubtype()) {
             return (new Email(clone $message->getHeaders()))->text($part->getBody(), $part->getPreparedHeaders()->getHeaderParameter('Content-Type', 'charset') ?: 'utf-8');
@@ -76,7 +76,7 @@ final class MessageConverter
         throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', \get_class($message)));
     }
 
-    private static function createEmailFromAlternativePart(Message $message, AlternativePart $part): Email
+    private static function createEmailFromAlternativePart(Message $message, AlternativePart $part)
     {
         $parts = $part->getParts();
         if (
@@ -93,7 +93,7 @@ final class MessageConverter
         throw new RuntimeException(sprintf('Unable to create an Email from an instance of "%s" as the body is too complex.', \get_class($message)));
     }
 
-    private static function createEmailFromRelatedPart(Message $message, RelatedPart $part): Email
+    private static function createEmailFromRelatedPart(Message $message, RelatedPart $part)
     {
         $parts = $part->getParts();
         if ($parts[0] instanceof AlternativePart) {
@@ -107,7 +107,7 @@ final class MessageConverter
         return self::attachParts($email, \array_slice($parts, 1));
     }
 
-    private static function attachParts(Email $email, array $parts): Email
+    private static function attachParts(Email $email, array $parts)
     {
         foreach ($parts as $part) {
             if (!$part instanceof DataPart) {

@@ -55,7 +55,7 @@ final class SMimeSigner extends SMime
         $this->privateKeyPassphrase = $privateKeyPassphrase;
     }
 
-    public function sign(Message $message): Message
+    public function sign(Message $message)
     {
         $bufferFile = tmpfile();
         $outputFile = tmpfile();

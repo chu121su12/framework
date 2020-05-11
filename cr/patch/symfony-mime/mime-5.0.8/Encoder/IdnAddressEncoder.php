@@ -31,7 +31,7 @@ final class IdnAddressEncoder implements AddressEncoderInterface
      *
      * @throws AddressEncoderException If local-part contains non-ASCII characters
      */
-    public function encodeString(string $address): string
+    public function encodeString(string $address)
     {
         $i = strrpos($address, '@');
         if (false !== $i) {

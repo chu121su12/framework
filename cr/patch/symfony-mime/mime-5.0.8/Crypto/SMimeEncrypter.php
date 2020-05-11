@@ -41,7 +41,7 @@ final class SMimeEncrypter extends SMime
         $this->cipher = $cipher ?? OPENSSL_CIPHER_AES_256_CBC;
     }
 
-    public function encrypt(Message $message): Message
+    public function encrypt(Message $message)
     {
         $bufferFile = tmpfile();
         $outputFile = tmpfile();
