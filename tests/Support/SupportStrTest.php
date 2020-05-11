@@ -75,6 +75,9 @@ class SupportStrTest extends TestCase
         $this->assertTrue(Str::startsWith('Malmö', 'Malmö'));
         $this->assertFalse(Str::startsWith('Jönköping', 'Jonko'));
         $this->assertFalse(Str::startsWith('Malmö', 'Malmo'));
+        $this->assertTrue(Str::startsWith('你好', '你'));
+        $this->assertFalse(Str::startsWith('你好', '好'));
+        $this->assertFalse(Str::startsWith('你好', 'a'));
     }
 
     public function testEndsWith()
@@ -102,6 +105,9 @@ class SupportStrTest extends TestCase
         $this->assertTrue(Str::endsWith('Malmö', 'mö'));
         $this->assertFalse(Str::endsWith('Jönköping', 'oping'));
         $this->assertFalse(Str::endsWith('Malmö', 'mo'));
+        $this->assertTrue(Str::endsWith('你好', '好'));
+        $this->assertFalse(Str::endsWith('你好', '你'));
+        $this->assertFalse(Str::endsWith('你好', 'a'));
     }
 
     public function testStrBefore()
@@ -129,6 +135,21 @@ class SupportStrTest extends TestCase
         $this->assertSame('yv2et', Str::beforeLast('yv2et2te', 2));
     }
 
+    public function testStrBetween()
+    {
+        $this->assertSame('abc', Str::between('abc', '', 'c'));
+        $this->assertSame('abc', Str::between('abc', 'a', ''));
+        $this->assertSame('abc', Str::between('abc', '', ''));
+        $this->assertSame('b', Str::between('abc', 'a', 'c'));
+        $this->assertSame('b', Str::between('dddabc', 'a', 'c'));
+        $this->assertSame('b', Str::between('abcddd', 'a', 'c'));
+        $this->assertSame('b', Str::between('dddabcddd', 'a', 'c'));
+        $this->assertSame('nn', Str::between('hannah', 'ha', 'ah'));
+        $this->assertSame('a]ab[b', Str::between('[a]ab[b]', '[', ']'));
+        $this->assertSame('foo', Str::between('foofoobar', 'foo', 'bar'));
+        $this->assertSame('bar', Str::between('foobarbar', 'foo', 'bar'));
+    }
+
     public function testStrAfter()
     {
         $this->assertSame('nah', Str::after('hannah', 'han'));
@@ -152,6 +173,7 @@ class SupportStrTest extends TestCase
         $this->assertSame('te', Str::afterLast('yv0et0te', '0'));
         $this->assertSame('te', Str::afterLast('yv0et0te', 0));
         $this->assertSame('te', Str::afterLast('yv2et2te', 2));
+        $this->assertSame('foo', Str::afterLast('----foo', '---'));
     }
 
     public function testStrContains()
@@ -176,6 +198,7 @@ class SupportStrTest extends TestCase
     {
         $this->assertEquals(['Class', 'method'], Str::parseCallback('Class@method', 'foo'));
         $this->assertEquals(['Class', 'foo'], Str::parseCallback('Class', 'foo'));
+        $this->assertEquals(['Class', null], Str::parseCallback('Class'));
     }
 
     public function testSlug()
@@ -186,6 +209,9 @@ class SupportStrTest extends TestCase
         $this->assertSame('hello_world', Str::slug('hello_world', '_'));
         $this->assertSame('user-at-host', Str::slug('user@host'));
         $this->assertSame('سلام-دنیا', Str::slug('سلام دنیا', '-', null));
+        $this->assertSame('sometext', Str::slug('some text', ''));
+        $this->assertSame('', Str::slug('', ''));
+        $this->assertSame('', Str::slug(''));
     }
 
     public function testStrStart()
@@ -235,8 +261,24 @@ class SupportStrTest extends TestCase
         $this->assertTrue(Str::is('foo/bar/baz', $valueObject));
         $this->assertTrue(Str::is($patternObject, $valueObject));
 
-        //empty patterns
+        // empty patterns
         $this->assertFalse(Str::is([], 'test'));
+    }
+
+    /**
+     * @dataProvider validUuidList
+     */
+    public function testIsUuidWithValidUuid($uuid)
+    {
+        $this->assertTrue(Str::isUuid($uuid));
+    }
+
+    /**
+     * @dataProvider invalidUuidList
+     */
+    public function testIsUuidWithInvalidUuid($uuid)
+    {
+        $this->assertFalse(Str::isUuid($uuid));
     }
 
     public function testKebab()
@@ -384,6 +426,20 @@ class SupportStrTest extends TestCase
         $this->assertEmpty(Str::substr('Б', 2));
     }
 
+    public function testSubstrCount()
+    {
+        $this->assertSame(3, Str::substrCount('laravelPHPFramework', 'a'));
+        $this->assertSame(0, Str::substrCount('laravelPHPFramework', 'z'));
+        $this->assertSame(1, Str::substrCount('laravelPHPFramework', 'l', 2));
+        $this->assertSame(0, Str::substrCount('laravelPHPFramework', 'z', 2));
+        $this->assertSame(1, Str::substrCount('laravelPHPFramework', 'k', -1));
+        $this->assertSame(1, Str::substrCount('laravelPHPFramework', 'k', -1));
+        $this->assertSame(1, Str::substrCount('laravelPHPFramework', 'a', 1, 2));
+        $this->assertSame(1, Str::substrCount('laravelPHPFramework', 'a', 1, 2));
+        $this->assertSame(3, Str::substrCount('laravelPHPFramework', 'a', 1, -2));
+        $this->assertSame(1, Str::substrCount('laravelPHPFramework', 'a', -10, -3));
+    }
+
     public function testUcfirst()
     {
         $this->assertSame('Laravel', Str::ucfirst('laravel'));
@@ -396,6 +452,45 @@ class SupportStrTest extends TestCase
     {
         $this->assertInstanceOf(UuidInterface::class, Str::uuid());
         $this->assertInstanceOf(UuidInterface::class, Str::orderedUuid());
+    }
+
+    public function testAsciiNull()
+    {
+        $this->assertSame('', Str::ascii(null));
+        $this->assertTrue(Str::isAscii(null));
+        $this->assertSame('', Str::slug(null));
+    }
+
+    public function validUuidList()
+    {
+        return [
+            ['a0a2a2d2-0b87-4a18-83f2-2529882be2de'],
+            ['145a1e72-d11d-11e8-a8d5-f2801f1b9fd1'],
+            ['00000000-0000-0000-0000-000000000000'],
+            ['e60d3f48-95d7-4d8d-aad0-856f29a27da2'],
+            ['ff6f8cb0-c57d-11e1-9b21-0800200c9a66'],
+            ['ff6f8cb0-c57d-21e1-9b21-0800200c9a66'],
+            ['ff6f8cb0-c57d-31e1-9b21-0800200c9a66'],
+            ['ff6f8cb0-c57d-41e1-9b21-0800200c9a66'],
+            ['ff6f8cb0-c57d-51e1-9b21-0800200c9a66'],
+            ['FF6F8CB0-C57D-11E1-9B21-0800200C9A66'],
+        ];
+    }
+
+    public function invalidUuidList()
+    {
+        return [
+            ['not a valid uuid so we can test this'],
+            ['zf6f8cb0-c57d-11e1-9b21-0800200c9a66'],
+            ['145a1e72-d11d-11e8-a8d5-f2801f1b9fd1'.PHP_EOL],
+            ['145a1e72-d11d-11e8-a8d5-f2801f1b9fd1 '],
+            [' 145a1e72-d11d-11e8-a8d5-f2801f1b9fd1'],
+            ['145a1e72-d11d-11e8-a8d5-f2z01f1b9fd1'],
+            ['3f6f8cb0-c57d-11e1-9b21-0800200c9a6'],
+            ['af6f8cb-c57d-11e1-9b21-0800200c9a66'],
+            ['af6f8cb0c57d11e19b210800200c9a66'],
+            ['ff6f8cb0-c57da-51e1-9b21-0800200c9a66'],
+        ];
     }
 }
 

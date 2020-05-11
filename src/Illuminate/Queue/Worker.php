@@ -134,6 +134,10 @@ class Worker
                 $this->sleep($options->sleep);
             }
 
+            if ($this->supportsAsyncSignals()) {
+                $this->resetTimeoutHandler();
+            }
+
             // Finally, we will check to see if we have exceeded our memory limits or if
             // the queue should restart based on other indications. If so, we'll stop
             // this worker and let whatever is "monitoring" it restart the process.
@@ -166,6 +170,16 @@ class Worker
         pcntl_alarm(
             max($this->timeoutForJob($job, $options), 0)
         );
+    }
+
+    /**
+     * Reset the worker timeout handler.
+     *
+     * @return void
+     */
+    protected function resetTimeoutHandler()
+    {
+        pcntl_alarm(0);
     }
 
     /**
@@ -370,6 +384,10 @@ class Worker
                 $this->markJobAsFailedIfWillExceedMaxAttempts(
                     $connectionName, $job, (int) $options->maxTries, $e
                 );
+
+                $this->markJobAsFailedIfWillExceedMaxExceptions(
+                    $connectionName, $job, $e
+                );
             }
 
             $this->raiseExceptionOccurredJobEvent(
@@ -438,6 +456,33 @@ class Worker
         }
 
         if ($maxTries > 0 && $job->attempts() >= $maxTries) {
+            $this->failJob($job, $e);
+        }
+    }
+
+    /**
+     * Mark the given job as failed if it has exceeded the maximum allowed attempts.
+     *
+     * @param  string  $connectionName
+     * @param  \Illuminate\Contracts\Queue\Job  $job
+     * @param  int  $maxTries
+     * @param  \Throwable  $e
+     * @return void
+     */
+    protected function markJobAsFailedIfWillExceedMaxExceptions($connectionName, $job, Throwable $e)
+    {
+        if (! $this->cache || is_null($uuid = $job->uuid()) ||
+            is_null($maxExceptions = $job->maxExceptions())) {
+            return;
+        }
+
+        if (! $this->cache->get('job-exceptions:'.$uuid)) {
+            $this->cache->put('job-exceptions:'.$uuid, 0, Carbon::now()->addDay());
+        }
+
+        if ($maxExceptions <= $this->cache->increment('job-exceptions:'.$uuid)) {
+            $this->cache->forget('job-exceptions:'.$uuid);
+
             $this->failJob($job, $e);
         }
     }

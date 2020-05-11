@@ -13,6 +13,8 @@ class BelongsTo extends Relation
 
     /**
      * The child model instance of the relation.
+     *
+     * @var \Illuminate\Database\Eloquent\Model
      */
     protected $child;
 
@@ -284,7 +286,7 @@ class BelongsTo extends Relation
     protected function relationHasIncrementingId()
     {
         return $this->related->getIncrementing() &&
-                                $this->related->getKeyType() === 'int';
+            in_array($this->related->getKeyType(), ['int', 'integer']);
     }
 
     /**

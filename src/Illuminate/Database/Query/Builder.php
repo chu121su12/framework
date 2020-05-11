@@ -54,12 +54,13 @@ class Builder
      */
     public $bindings = [
         'select' => [],
-        'from'   => [],
-        'join'   => [],
-        'where'  => [],
+        'from' => [],
+        'join' => [],
+        'where' => [],
+        'groupBy' => [],
         'having' => [],
-        'order'  => [],
-        'union'  => [],
+        'order' => [],
+        'union' => [],
         'unionOrder' => [],
     ];
 
@@ -655,11 +656,11 @@ class Builder
             return $this->whereNested($column, $boolean);
         }
 
-        // If the column is a Closure instance and there an operator set, we will
-        // assume the developer wants to run a subquery and then compare the
-        // results of the subquery with the value that was provided.
-        if ($column instanceof Closure && ! is_null($operator)) {
-            list($sub, $bindings) = $this->createSub($column);
+        // If the column is a Closure instance and there is an operator value, we will
+        // assume the developer wants to run a subquery and then compare the result
+        // of that subquery with the given value that was provided to the method.
+        if ($this->isQueryable($column) && ! is_null($operator)) {
+            [$sub, $bindings] = $this->createSub($column);
 
             return $this->addBinding($bindings, 'where')
                 ->where(new Expression('('.$sub.')'), $operator, $value, $boolean);
@@ -1696,6 +1697,22 @@ class Builder
     }
 
     /**
+     * Add a raw groupBy clause to the query.
+     *
+     * @param  string  $sql
+     * @param  array  $bindings
+     * @return $this
+     */
+    public function groupByRaw($sql, array $bindings = [])
+    {
+        $this->groups[] = new Expression($sql);
+
+        $this->addBinding($bindings, 'groupBy');
+
+        return $this;
+    }
+
+    /**
      * Add a "having" clause to the query.
      *
      * @param  string  $column
@@ -1802,7 +1819,7 @@ class Builder
     /**
      * Add an "order by" clause to the query.
      *
-     * @param  \Closure|\Illuminate\Database\Query\Builder|string  $column
+     * @param  \Closure|\Illuminate\Database\Query\Builder|\Illuminate\Database\Query\Expression|string  $column
      * @param  string  $direction
      * @return $this
      *
@@ -1957,7 +1974,7 @@ class Builder
      */
     public function forPage($page, $perPage = 15)
     {
-        return $this->skip(($page - 1) * $perPage)->take($perPage);
+        return $this->offset(($page - 1) * $perPage)->limit($perPage);
     }
 
     /**
@@ -1977,7 +1994,7 @@ class Builder
         }
 
         return $this->orderBy($column, 'desc')
-                    ->take($perPage);
+                    ->limit($perPage);
     }
 
     /**
@@ -1997,7 +2014,26 @@ class Builder
         }
 
         return $this->orderBy($column, 'asc')
-                    ->take($perPage);
+                    ->limit($perPage);
+    }
+
+    /**
+     * Remove all existing orders and optionally add a new order.
+     *
+     * @return $this
+     */
+    public function reorder($column = null, $direction = 'asc')
+    {
+        $this->orders = null;
+        $this->unionOrders = null;
+        $this->bindings['order'] = [];
+        $this->bindings['unionOrder'] = [];
+
+        if ($column) {
+            return $this->orderBy($column, $direction);
+        }
+
+        return $this;
     }
 
     /**
@@ -2181,7 +2217,7 @@ class Builder
     {
         $page = $page ?: Paginator::resolveCurrentPage($pageName);
 
-        $this->skip(($page - 1) * $perPage)->take($perPage + 1);
+        $this->offset(($page - 1) * $perPage)->limit($perPage + 1);
 
         return $this->simplePaginator($this->get($columns), $perPage, $page, [
             'path' => Paginator::resolveCurrentPath(),
@@ -2324,7 +2360,13 @@ class Builder
      */
     protected function stripTableForPluck($column)
     {
-        return is_null($column) ? $column : last(preg_split('~\.| ~', $column));
+        if (is_null($column)) {
+            return $column;
+        }
+
+        $separator = strpos(strtolower($column), ' as ') !== false ? ' as ' : '\.';
+
+        return last(preg_split('~'.$separator.'~i', $column));
     }
 
     /**
@@ -2735,7 +2777,7 @@ class Builder
             return true;
         }
 
-        return (bool) $this->take(1)->update($values);
+        return (bool) $this->limit(1)->update($values);
     }
 
     /**

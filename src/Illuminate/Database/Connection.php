@@ -327,8 +327,9 @@ class Connection implements ConnectionInterface
             // For select statements, we'll simply execute the query and return an array
             // of the database result set. Each element in the array will be a single
             // row from the database table, and will either be an array or objects.
-            $statement = $this->prepared($this->getPdoForSelect($useReadPdo)
-                              ->prepare($query));
+            $statement = $this->prepared(
+                $this->getPdoForSelect($useReadPdo)->prepare($query)
+            );
 
             $this->bindValues($statement, $this->prepareBindings($bindings));
 
@@ -576,7 +577,8 @@ class Connection implements ConnectionInterface
     {
         foreach ($bindings as $key => $value) {
             $statement->bindValue(
-                is_string($key) ? $key : $key + 1, $value,
+                is_string($key) ? $key : $key + 1,
+                $value,
                 is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR
             );
         }
@@ -904,7 +906,7 @@ class Connection implements ConnectionInterface
 
             $this->doctrineConnection = new DoctrineConnection(array_filter([
                 'pdo' => $this->getPdo(),
-                'dbname' => $this->getConfig('database'),
+                'dbname' => $this->getDatabaseName(),
                 'driver' => $driver->getName(),
                 'serverVersion' => $this->getConfig('server_version'),
             ]), $driver);
@@ -928,6 +930,16 @@ class Connection implements ConnectionInterface
     }
 
     /**
+     * Get the current PDO connection parameter without executing any reconnect logic.
+     *
+     * @return \PDO|\Closure|null
+     */
+    public function getRawPdo()
+    {
+        return $this->pdo;
+    }
+
+    /**
      * Get the current PDO connection used for reading.
      *
      * @return \PDO
@@ -947,6 +959,16 @@ class Connection implements ConnectionInterface
         }
 
         return $this->readPdo ?: $this->getPdo();
+    }
+
+    /**
+     * Get the current read PDO connection parameter without executing any reconnect logic.
+     *
+     * @return \PDO|\Closure|null
+     */
+    public function getRawReadPdo()
+    {
+        return $this->readPdo;
     }
 
     /**

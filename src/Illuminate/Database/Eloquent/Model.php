@@ -10,6 +10,7 @@ use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Database\ConnectionResolverInterface as Resolver;
+use Illuminate\Database\Eloquent\Relations\Concerns\AsPivot;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection as BaseCollection;
@@ -421,6 +422,8 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
 
         $model->setTable($this->getTable());
 
+        $model->mergeCasts($this->casts);
+
         return $model;
     }
 
@@ -665,6 +668,8 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      */
     public function save(array $options = [])
     {
+        $this->mergeAttributesFromClassCasts();
+
         $query = $this->newModelQuery();
 
         // If the "saving" event returns false we'll bail out of the save and return
@@ -907,6 +912,8 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      */
     public function delete()
     {
+        $this->mergeAttributesFromClassCasts();
+
         if (is_null($this->getKeyName())) {
             throw new Exception('No primary key defined on model.');
         }
@@ -1174,7 +1181,10 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
             static::newQueryWithoutScopes()->findOrFail($this->getKey())->attributes
         );
 
-        $this->load(collect($this->relations)->except('pivot')->keys()->toArray());
+        $this->load(collect($this->relations)->reject(function ($relation) {
+            return $relation instanceof Pivot
+                || in_array(AsPivot::class, class_uses_recursive($relation), true);
+        })->keys()->all());
 
         $this->syncOriginal();
 
@@ -1196,7 +1206,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
         ];
 
         $attributes = Arr::except(
-            $this->attributes, $except ? array_unique(array_merge($except, $defaults)) : $defaults
+            $this->getAttributes(), $except ? array_unique(array_merge($except, $defaults)) : $defaults
         );
 
         return tap(new static, function ($instance) use ($attributes) {
@@ -1495,7 +1505,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     /**
      * Retrieve the model for a bound value.
      *
-     * @param  mixed   $value
+     * @param  mixed  $value
      * @param  string|null  $field
      * @return \Illuminate\Database\Eloquent\Model|null
      */
@@ -1507,14 +1517,14 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     /**
      * Retrieve the child model for a bound value.
      *
-     * @param  string   $childType
-     * @param  mixed   $value
+     * @param  string  $childType
+     * @param  mixed  $value
      * @param  string|null  $field
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function resolveChildRouteBinding($childType, $value, $field)
     {
-        return $this->{Str::plural($childType)}()->where($field, $value)->first();
+        return $this->{Str::plural(Str::camel($childType))}()->where($field, $value)->first();
     }
 
     /**
@@ -1657,7 +1667,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     }
 
     /**
-     * Handle dynamic static method calls into the method.
+     * Handle dynamic static method calls into the model.
      *
      * @param  string  $method
      * @param  array  $parameters
@@ -1676,6 +1686,20 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     public function __toString()
     {
         return $this->toJson();
+    }
+
+    /**
+     * Prepare the object for serialization.
+     *
+     * @return array
+     */
+    public function __sleep()
+    {
+        $this->mergeAttributesFromClassCasts();
+
+        $this->classCastCache = [];
+
+        return array_keys(get_object_vars($this));
     }
 
     /**

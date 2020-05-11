@@ -392,7 +392,7 @@ class Handler implements ExceptionHandlerContract
     {
         $renderer = new HtmlErrorRenderer($debug);
 
-        return $renderer->getBody($renderer->render($e));
+        return $renderer->render($e)->getAsString();
     }
 
     /**
@@ -405,7 +405,7 @@ class Handler implements ExceptionHandlerContract
     {
         $this->registerErrorViewPaths();
 
-        if (view()->exists($view = "errors::{$e->getStatusCode()}")) {
+        if (view()->exists($view = $this->getHttpExceptionView($e))) {
             return response()->view($view, [
                 'errors' => new ViewErrorBag,
                 'exception' => $e,
@@ -427,6 +427,17 @@ class Handler implements ExceptionHandlerContract
         View::replaceNamespace('errors', $paths->map(function ($path) {
             return "{$path}/errors";
         })->push(__DIR__.'/views')->all());
+    }
+
+    /**
+     * Get the view used to render HTTP exceptions.
+     *
+     * @param  \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface  $e
+     * @return string
+     */
+    protected function getHttpExceptionView(HttpExceptionInterface $e)
+    {
+        return "errors::{$e->getStatusCode()}";
     }
 
     /**

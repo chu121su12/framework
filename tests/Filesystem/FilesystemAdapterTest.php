@@ -7,6 +7,7 @@ use Illuminate\Contracts\Filesystem\FileExistsException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Testing\Assert;
 use InvalidArgumentException;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
@@ -44,7 +45,7 @@ class FilesystemAdapterTest extends TestCase
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertSame('Hello World', $content);
-        // $this->assertSame('inline; filename="file.txt"', $response->headers->get('content-disposition'));
+        $this->assertSame('inline; filename=file.txt', $response->headers->get('content-disposition'));
     }
 
     public function testDownload()
@@ -53,7 +54,7 @@ class FilesystemAdapterTest extends TestCase
         $files = new FilesystemAdapter($this->filesystem);
         $response = $files->download('file.txt', 'hello.txt');
         $this->assertInstanceOf(StreamedResponse::class, $response);
-        // $this->assertSame('attachment; filename="hello.txt"', $response->headers->get('content-disposition'));
+        $this->assertSame('attachment; filename=hello.txt', $response->headers->get('content-disposition'));
     }
 
     public function testDownloadNonAsciiFilename()
@@ -145,7 +146,7 @@ class FilesystemAdapterTest extends TestCase
         file_put_contents($this->tempDir.'/file.txt', 'Hello World');
         $filesystemAdapter = new FilesystemAdapter($this->filesystem);
         $this->assertTrue($filesystemAdapter->delete('file.txt'));
-        $this->assertFileNotExists($this->tempDir.'/file.txt');
+        Assert::assertFileDoesNotExist($this->tempDir.'/file.txt');
     }
 
     public function testDeleteReturnsFalseWhenFileNotFound()
@@ -179,7 +180,7 @@ class FilesystemAdapterTest extends TestCase
         $filesystemAdapter = new FilesystemAdapter($this->filesystem);
         $filesystemAdapter->move('/foo/foo.txt', '/foo/foo2.txt');
 
-        $this->assertFileNotExists($this->tempDir.'/foo/foo.txt');
+        Assert::assertFileDoesNotExist($this->tempDir.'/foo/foo.txt');
 
         $this->assertFileExists($this->tempDir.'/foo/foo2.txt');
         $this->assertEquals($data, file_get_contents($this->tempDir.'/foo/foo2.txt'));
@@ -240,7 +241,7 @@ class FilesystemAdapterTest extends TestCase
         @fclose($fileHandle);
 
         $spy->shouldHaveReceived('putStream');
-        $this->assertEquals('some-data', $filesystemAdapter->get('bar.txt'));
+        $this->assertSame('some-data', $filesystemAdapter->get('bar.txt'));
     }
 
     public function testPutFileAs()
@@ -271,5 +272,35 @@ class FilesystemAdapterTest extends TestCase
         $storagePath = $filesystemAdapter->putFileAs('/', $filePath, 'new.txt');
 
         $this->assertSame('normal file content', $filesystemAdapter->read($storagePath));
+    }
+
+    public function testPutFile()
+    {
+        file_put_contents($filePath = $this->tempDir.'/foo.txt', 'uploaded file content');
+
+        $filesystemAdapter = new FilesystemAdapter($this->filesystem);
+
+        $uploadedFile = new UploadedFile($filePath, 'org.txt', null, null, true);
+
+        $storagePath = $filesystemAdapter->putFile('/', $uploadedFile);
+
+        $this->assertSame(44, strlen($storagePath)); // random 40 characters + ".txt"
+
+        $this->assertFileExists($filePath);
+
+        $filesystemAdapter->assertExists($storagePath);
+    }
+
+    public function testPutFileWithAbsoluteFilePath()
+    {
+        file_put_contents($filePath = $this->tempDir.'/foo.txt', 'uploaded file content');
+
+        $filesystemAdapter = new FilesystemAdapter($this->filesystem);
+
+        $storagePath = $filesystemAdapter->putFile('/', $filePath);
+
+        $this->assertSame(44, strlen($storagePath)); // random 40 characters + ".txt"
+
+        $filesystemAdapter->assertExists($storagePath);
     }
 }

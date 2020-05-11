@@ -298,6 +298,29 @@ class DatabaseQueryBuilderTest extends TestCase
         $this->assertEquals([0 => 1], $builder->getBindings());
     }
 
+    public function testWheresWithArrayValue()
+    {
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users')->where('id', [12, 30]);
+        $this->assertSame('select * from "users" where "id" = ?', $builder->toSql());
+        $this->assertEquals([0 => 12, 1 => 30], $builder->getBindings());
+
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users')->where('id', '=', [12, 30]);
+        $this->assertSame('select * from "users" where "id" = ?', $builder->toSql());
+        $this->assertEquals([0 => 12, 1 => 30], $builder->getBindings());
+
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users')->where('id', '!=', [12, 30]);
+        $this->assertSame('select * from "users" where "id" != ?', $builder->toSql());
+        $this->assertEquals([0 => 12, 1 => 30], $builder->getBindings());
+
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users')->where('id', '<>', [12, 30]);
+        $this->assertSame('select * from "users" where "id" <> ?', $builder->toSql());
+        $this->assertEquals([0 => 12, 1 => 30], $builder->getBindings());
+    }
+
     public function testMySqlWrappingProtectsQuotationMarks()
     {
         $builder = $this->getMySqlBuilder();
@@ -989,6 +1012,20 @@ class DatabaseQueryBuilderTest extends TestCase
         $this->assertEquals([0 => 1], $builder->getBindings());
     }
 
+    public function testJsonWhereNullMysql()
+    {
+        $builder = $this->getMySqlBuilder();
+        $builder->select('*')->from('users')->whereNull('items->id');
+        $this->assertSame('select * from `users` where (json_extract(`items`, \'$."id"\') is null OR json_type(json_extract(`items`, \'$."id"\')) = \'NULL\')', $builder->toSql());
+    }
+
+    public function testJsonWhereNotNullMysql()
+    {
+        $builder = $this->getMySqlBuilder();
+        $builder->select('*')->from('users')->whereNotNull('items->id');
+        $this->assertSame('select * from `users` where (json_extract(`items`, \'$."id"\') is not null AND json_type(json_extract(`items`, \'$."id"\')) != \'NULL\')', $builder->toSql());
+    }
+
     public function testArrayWhereNulls()
     {
         $builder = $this->getBuilder();
@@ -1045,6 +1082,15 @@ class DatabaseQueryBuilderTest extends TestCase
         $builder = $this->getBuilder();
         $builder->select('*')->from('users')->groupBy(new Raw('DATE(created_at)'));
         $this->assertSame('select * from "users" group by DATE(created_at)', $builder->toSql());
+
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users')->groupByRaw('DATE(created_at), ? DESC', ['foo']);
+        $this->assertSame('select * from "users" group by DATE(created_at), ? DESC', $builder->toSql());
+        $this->assertEquals(['foo'], $builder->getBindings());
+
+        $builder = $this->getBuilder();
+        $builder->havingRaw('?', ['havingRawBinding'])->groupByRaw('?', ['groupByRawBinding'])->whereRaw('?', ['whereRawBinding']);
+        $this->assertEquals(['whereRawBinding', 'groupByRawBinding', 'havingRawBinding'], $builder->getBindings());
     }
 
     public function testOrderBys()
@@ -1074,6 +1120,35 @@ class DatabaseQueryBuilderTest extends TestCase
             ->orderByRaw('field(category, ?, ?) asc', ['news', 'opinion']);
         $this->assertSame('(select * from "posts" where "public" = ?) union all (select * from "videos" where "public" = ?) order by field(category, ?, ?) asc', $builder->toSql());
         $this->assertEquals([1, 1, 'news', 'opinion'], $builder->getBindings());
+    }
+
+    public function testReorder()
+    {
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users')->orderBy('name');
+        $this->assertSame('select * from "users" order by "name" asc', $builder->toSql());
+        $builder->reorder();
+        $this->assertSame('select * from "users"', $builder->toSql());
+
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users')->orderBy('name');
+        $this->assertSame('select * from "users" order by "name" asc', $builder->toSql());
+        $builder->reorder('email', 'desc');
+        $this->assertSame('select * from "users" order by "email" desc', $builder->toSql());
+
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('first');
+        $builder->union($this->getBuilder()->select('*')->from('second'));
+        $builder->orderBy('name');
+        $this->assertSame('(select * from "first") union (select * from "second") order by "name" asc', $builder->toSql());
+        $builder->reorder();
+        $this->assertSame('(select * from "first") union (select * from "second")', $builder->toSql());
+
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users')->orderByRaw('?', [true]);
+        $this->assertEquals([true], $builder->getBindings());
+        $builder->reorder();
+        $this->assertEquals([], $builder->getBindings());
     }
 
     public function testOrderBySubQueries()
@@ -2515,6 +2590,7 @@ class DatabaseQueryBuilderTest extends TestCase
     public function testSQLiteUpdateWrappingJsonArray()
     {
         $builder = $this->getSQLiteBuilder();
+
         $builder->getConnection()->shouldReceive('update')
             ->with('update "users" set "options" = ?, "group_id" = 45, "created_at" = ?', [
                 json_encode(['2fa' => false, 'presets' => ['laravel', 'vue']]),
@@ -2524,6 +2600,24 @@ class DatabaseQueryBuilderTest extends TestCase
         $builder->from('users')->update([
             'options' => ['2fa' => false, 'presets' => ['laravel', 'vue']],
             'group_id' => new Raw('45'),
+            'created_at' => new DateTime('2019-08-06'),
+        ]);
+    }
+
+    public function testSQLiteUpdateWrappingNestedJsonArray()
+    {
+        $builder = $this->getSQLiteBuilder();
+        $builder->getConnection()->shouldReceive('update')
+            ->with('update "users" set "group_id" = 45, "created_at" = ?, "options" = json_patch(ifnull("options", json(\'{}\')), json(?))', [
+                new DateTime('2019-08-06'),
+                json_encode(['name' => 'Taylor', 'security' => ['2fa' => false, 'presets' => ['laravel', 'vue']], 'sharing' => ['twitter' => 'username']]),
+            ]);
+
+        $builder->from('users')->update([
+            'options->name' => 'Taylor',
+            'group_id' => new Raw('45'),
+            'options->security' => ['2fa' => false, 'presets' => ['laravel', 'vue']],
+            'options->sharing->twitter' => 'username',
             'created_at' => new DateTime('2019-08-06'),
         ]);
     }
@@ -2624,6 +2718,10 @@ SQL;
         $builder = $this->getPostgresBuilder();
         $builder->select('*')->from('users')->where('items->price->in_usd', '=', 1)->where('items->age', '=', 2);
         $this->assertSame('select * from "users" where "items"->\'price\'->>\'in_usd\' = ? and "items"->>\'age\' = ?', $builder->toSql());
+
+        $builder = $this->getPostgresBuilder();
+        $builder->select('*')->from('users')->where('items->prices->0', '=', 1)->where('items->age', '=', 2);
+        $this->assertSame('select * from "users" where "items"->\'prices\'->>0 = ? and "items"->>\'age\' = ?', $builder->toSql());
 
         $builder = $this->getPostgresBuilder();
         $builder->select('*')->from('users')->where('items->available', '=', true);

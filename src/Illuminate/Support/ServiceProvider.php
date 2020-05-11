@@ -2,10 +2,13 @@
 
 namespace Illuminate\Support;
 
+use Closure;
 use Illuminate\Console\Application as Artisan;
 use Illuminate\Contracts\Foundation\CachesConfiguration;
 use Illuminate\Contracts\Foundation\CachesRoutes;
 use Illuminate\Contracts\Support\DeferrableProvider;
+use Illuminate\Database\Eloquent\Factory as ModelFactory;
+use Illuminate\View\Compilers\BladeCompiler;
 
 abstract class ServiceProvider
 {
@@ -15,6 +18,20 @@ abstract class ServiceProvider
      * @var \Illuminate\Contracts\Foundation\Application
      */
     protected $app;
+
+    /**
+     * All of the registered booting callbacks.
+     *
+     * @var array
+     */
+    protected $bootingCallbacks = [];
+
+    /**
+     * All of the registered booted callbacks.
+     *
+     * @var array
+     */
+    protected $bootedCallbacks = [];
 
     /**
      * The paths that should be published.
@@ -49,6 +66,52 @@ abstract class ServiceProvider
     public function register()
     {
         //
+    }
+
+    /**
+     * Register a booting callback to be run before the "boot" method is called.
+     *
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public function booting(Closure $callback)
+    {
+        $this->bootingCallbacks[] = $callback;
+    }
+
+    /**
+     * Register a booted callback to be run after the "boot" method is called.
+     *
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public function booted(Closure $callback)
+    {
+        $this->bootedCallbacks[] = $callback;
+    }
+
+    /**
+     * Call the registered booting callbacks.
+     *
+     * @return void
+     */
+    public function callBootingCallbacks()
+    {
+        foreach ($this->bootingCallbacks as $callback) {
+            $callback();
+        }
+    }
+
+    /**
+     * Call the registered booted callbacks.
+     *
+     * @return void
+     */
+    public function callBootedCallbacks()
+    {
+        foreach ($this->bootedCallbacks as $callback) {
+            $callback();
+        }
     }
 
     /**
@@ -89,18 +152,34 @@ abstract class ServiceProvider
      */
     protected function loadViewsFrom($path, $namespace)
     {
-        $view = $this->app['view'];
-
-        if (isset($this->app->config['view']['paths']) &&
-            is_array($this->app->config['view']['paths'])) {
-            foreach ($this->app->config['view']['paths'] as $viewPath) {
-                if (is_dir($appPath = $viewPath.'/vendor/'.$namespace)) {
-                    $view->addNamespace($namespace, $appPath);
+        $this->callAfterResolving('view', function ($view) use ($path, $namespace) {
+            if (isset($this->app->config['view']['paths']) &&
+                is_array($this->app->config['view']['paths'])) {
+                foreach ($this->app->config['view']['paths'] as $viewPath) {
+                    if (is_dir($appPath = $viewPath.'/vendor/'.$namespace)) {
+                        $view->addNamespace($namespace, $appPath);
+                    }
                 }
             }
-        }
 
-        $view->addNamespace($namespace, $path);
+            $view->addNamespace($namespace, $path);
+        });
+    }
+
+    /**
+     * Register the given view components with a custom prefix.
+     *
+     * @param  string  $prefix
+     * @param  array  $components
+     * @return void
+     */
+    protected function loadViewComponentsAs($prefix, array $components)
+    {
+        $this->callAfterResolving(BladeCompiler::class, function ($blade) use ($prefix, $components) {
+            foreach ($components as $component) {
+                $blade->component($component, null, $prefix);
+            }
+        });
     }
 
     /**
@@ -112,7 +191,9 @@ abstract class ServiceProvider
      */
     protected function loadTranslationsFrom($path, $namespace)
     {
-        $this->app['translator']->addNamespace($namespace, $path);
+        $this->callAfterResolving('translator', function ($translator) use ($path, $namespace) {
+            $translator->addNamespace($namespace, $path);
+        });
     }
 
     /**
@@ -123,22 +204,55 @@ abstract class ServiceProvider
      */
     protected function loadJsonTranslationsFrom($path)
     {
-        $this->app['translator']->addJsonPath($path);
+        $this->callAfterResolving('translator', function ($translator) use ($path) {
+            $translator->addJsonPath($path);
+        });
     }
 
     /**
-     * Register a database migration path.
+     * Register database migration paths.
      *
      * @param  array|string  $paths
      * @return void
      */
     protected function loadMigrationsFrom($paths)
     {
-        $this->app->afterResolving('migrator', function ($migrator) use ($paths) {
+        $this->callAfterResolving('migrator', function ($migrator) use ($paths) {
             foreach ((array) $paths as $path) {
                 $migrator->path($path);
             }
         });
+    }
+
+    /**
+     * Register Eloquent model factory paths.
+     *
+     * @param  array|string  $paths
+     * @return void
+     */
+    protected function loadFactoriesFrom($paths)
+    {
+        $this->callAfterResolving(ModelFactory::class, function ($factory) use ($paths) {
+            foreach ((array) $paths as $path) {
+                $factory->load($path);
+            }
+        });
+    }
+
+    /**
+     * Setup an after resolving listener, or fire immediately if already resolved.
+     *
+     * @param  string  $name
+     * @param  callable  $callback
+     * @return void
+     */
+    protected function callAfterResolving($name, $callback)
+    {
+        $this->app->afterResolving($name, $callback);
+
+        if ($this->app->resolved($name)) {
+            $callback($this->app->make($name), $this->app);
+        }
     }
 
     /**
@@ -193,8 +307,8 @@ abstract class ServiceProvider
     /**
      * Get the paths to publish.
      *
-     * @param  string  $provider
-     * @param  string  $group
+     * @param  string|null  $provider
+     * @param  string|null  $group
      * @return array
      */
     public static function pathsToPublish($provider = null, $group = null)

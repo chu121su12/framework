@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Exception;
 use Foo\Bar\EloquentModelNamespacedStub;
+use Illuminate\Contracts\Database\Eloquent\CastsInboundAttributes;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Connection;
 use Illuminate\Database\ConnectionResolverInterface;
@@ -92,9 +93,20 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertTrue($model->isDirty(['foo', 'bar']));
     }
 
+    public function testIntAndNullComparisonWhenDirty()
+    {
+        $model = new EloquentModelCastingStub();
+        $model->intAttribute = null;
+        $model->syncOriginal();
+        $this->assertFalse($model->isDirty('intAttribute'));
+        $model->forceFill(['intAttribute' => 0]);
+        $this->assertTrue($model->isDirty('intAttribute'));
+    }
+
     public function testDirtyOnCastOrDateAttributes()
     {
         $model = new EloquentModelCastingStub;
+        $model->setDateFormat('Y-m-d H:i:s');
         $model->boolAttribute = 1;
         $model->foo = 1;
         $model->bar = '2017-03-18';
@@ -205,6 +217,16 @@ class DatabaseEloquentModelTest extends TestCase
         $newInstance = $model->newInstance();
 
         $this->assertSame('test', $newInstance->getTable());
+    }
+
+    public function testNewInstanceReturnsNewInstanceWithMergedCasts()
+    {
+        $model = new EloquentModelStub;
+        $model->mergeCasts(['foo' => 'date']);
+        $newInstance = $model->newInstance();
+
+        $this->assertArrayHasKey('foo', $newInstance->getCasts());
+        $this->assertSame('date', $newInstance->getCasts()['foo']);
     }
 
     public function testCreateMethodSavesNewModel()
@@ -320,7 +342,7 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertTrue($model->save());
     }
 
-    public function testSaveIsCancelledIfSavingEventReturnsFalse()
+    public function testSaveIsCanceledIfSavingEventReturnsFalse()
     {
         $model = $this->getMockBuilder(EloquentModelStub::class)->setMethods(['newModelQuery'])->getMock();
         $query = m::mock(Builder::class);
@@ -332,7 +354,7 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertFalse($model->save());
     }
 
-    public function testUpdateIsCancelledIfUpdatingEventReturnsFalse()
+    public function testUpdateIsCanceledIfUpdatingEventReturnsFalse()
     {
         $model = $this->getMockBuilder(EloquentModelStub::class)->setMethods(['newModelQuery'])->getMock();
         $query = m::mock(Builder::class);
@@ -511,10 +533,6 @@ class DatabaseEloquentModelTest extends TestCase
 
     public function testFromDateTimeMilliseconds()
     {
-        if (version_compare(PHP_VERSION, '7.3.0-dev', '<')) {
-            $this->markTestSkipped('Due to https://bugs.php.net/bug.php?id=75577, proper "v" format support can only works since PHP 7.3.');
-        }
-
         $model = $this->getMockBuilder('Illuminate\Tests\Database\EloquentDateModelStub')->setMethods(['getDateFormat'])->getMock();
         $model->expects($this->any())->method('getDateFormat')->willReturn('Y-m-d H:s.vi');
         $model->setRawAttributes([
@@ -567,7 +585,7 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertTrue($model->exists);
     }
 
-    public function testInsertIsCancelledIfCreatingEventReturnsFalse()
+    public function testInsertIsCanceledIfCreatingEventReturnsFalse()
     {
         $model = $this->getMockBuilder(EloquentModelStub::class)->setMethods(['newModelQuery'])->getMock();
         $query = m::mock(Builder::class);
@@ -1317,8 +1335,8 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertFalse($clone->exists);
         $this->assertSame('taylor', $clone->first);
         $this->assertSame('otwell', $clone->last);
-        $this->assertObjectNotHasAttribute('created_at', $clone);
-        $this->assertObjectNotHasAttribute('updated_at', $clone);
+        $this->assertArrayNotHasKey('created_at', $clone->getAttributes());
+        $this->assertArrayNotHasKey('updated_at', $clone->getAttributes());
         $this->assertEquals(['bar'], $clone->foo);
     }
 
@@ -1771,6 +1789,18 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertNan($model->floatAttribute);
     }
 
+    public function testMergeCastsMergesCasts()
+    {
+        $model = new EloquentModelCastingStub;
+
+        $castCount = count($model->getCasts());
+        $this->assertArrayNotHasKey('foo', $model->getCasts());
+
+        $model->mergeCasts(['foo' => 'date']);
+        $this->assertCount($castCount + 1, $model->getCasts());
+        $this->assertArrayHasKey('foo', $model->getCasts());
+    }
+
     public function testUpdatingNonExistentModelFails()
     {
         $model = new EloquentModelStub;
@@ -1958,12 +1988,6 @@ class DatabaseEloquentModelTest extends TestCase
         );
     }
 
-    /**
-     * Test that the getOriginal method on an Eloquent model also uses the casts array.
-     *
-     * @param void
-     * @return void
-     */
     public function testGetOriginalCastsAttributes()
     {
         $model = new EloquentModelCastingStub();
@@ -2011,8 +2035,8 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertEquals(0.443, $model->floatAttribute);
 
         $this->assertIsString($model->getOriginal('stringAttribute'));
-        $this->assertEquals('432', $model->getOriginal('stringAttribute'));
-        $this->assertEquals('12', $model->stringAttribute);
+        $this->assertSame('432', $model->getOriginal('stringAttribute'));
+        $this->assertSame('12', $model->stringAttribute);
 
         $this->assertIsBool($model->getOriginal('boolAttribute'));
         $this->assertTrue($model->getOriginal('boolAttribute'));
@@ -2035,6 +2059,14 @@ class DatabaseEloquentModelTest extends TestCase
 
         $this->assertEquals(['foo' => 'bar'], $model->getOriginal('collectionAttribute')->toArray());
         $this->assertEquals(['foo' => 'bar2'], $model->getAttribute('collectionAttribute')->toArray());
+    }
+
+    public function testUnsavedModel()
+    {
+        $user = new UnsavedModel;
+        $user->name = null;
+
+        $this->assertNull($user->name);
     }
 }
 
@@ -2460,4 +2492,17 @@ class EloquentModelWithUpdatedAtNull extends Model
 {
     protected $table = 'stub';
     const UPDATED_AT = null;
+}
+
+class UnsavedModel extends Model
+{
+    protected $casts = ['name' => Uppercase::class];
+}
+
+class Uppercase implements CastsInboundAttributes
+{
+    public function set($model, string $key, $value, array $attributes)
+    {
+        return is_string($value) ? strtoupper($value) : $value;
+    }
 }

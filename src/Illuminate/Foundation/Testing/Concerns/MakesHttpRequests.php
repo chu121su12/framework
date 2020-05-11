@@ -3,9 +3,9 @@
 namespace Illuminate\Foundation\Testing\Concerns;
 
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
-use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile as SymfonyUploadedFile;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
@@ -32,6 +32,13 @@ trait MakesHttpRequests
      * @var array
      */
     protected $defaultCookies = [];
+
+    /**
+     * Additional cookies will not be encrypted for the request.
+     *
+     * @var array
+     */
+    protected $unencryptedCookies = [];
 
     /**
      * Additional server variables for the request.
@@ -176,6 +183,33 @@ trait MakesHttpRequests
     }
 
     /**
+     * Define additional cookies will not be encrypted before sending with the request.
+     *
+     * @param  array  $cookies
+     * @return $this
+     */
+    public function withUnencryptedCookies(array $cookies)
+    {
+        $this->unencryptedCookies = array_merge($this->unencryptedCookies, $cookies);
+
+        return $this;
+    }
+
+    /**
+     * Add a cookie will not be encrypted before sending with the request.
+     *
+     * @param  string  $name
+     * @param  string  $value
+     * @return $this
+     */
+    public function withUnencryptedCookie(string $name, string $value)
+    {
+        $this->unencryptedCookies[$name] = $value;
+
+        return $this;
+    }
+
+    /**
      * Automatically follow any redirects returned from the response.
      *
      * @return $this
@@ -217,7 +251,7 @@ trait MakesHttpRequests
      *
      * @param  string  $uri
      * @param  array  $headers
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     public function get($uri, array $headers = [])
     {
@@ -232,7 +266,7 @@ trait MakesHttpRequests
      *
      * @param  string  $uri
      * @param  array  $headers
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     public function getJson($uri, array $headers = [])
     {
@@ -245,7 +279,7 @@ trait MakesHttpRequests
      * @param  string  $uri
      * @param  array  $data
      * @param  array  $headers
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     public function post($uri, array $data = [], array $headers = [])
     {
@@ -261,7 +295,7 @@ trait MakesHttpRequests
      * @param  string  $uri
      * @param  array  $data
      * @param  array  $headers
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     public function postJson($uri, array $data = [], array $headers = [])
     {
@@ -274,7 +308,7 @@ trait MakesHttpRequests
      * @param  string  $uri
      * @param  array  $data
      * @param  array  $headers
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     public function put($uri, array $data = [], array $headers = [])
     {
@@ -290,7 +324,7 @@ trait MakesHttpRequests
      * @param  string  $uri
      * @param  array  $data
      * @param  array  $headers
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     public function putJson($uri, array $data = [], array $headers = [])
     {
@@ -303,7 +337,7 @@ trait MakesHttpRequests
      * @param  string  $uri
      * @param  array  $data
      * @param  array  $headers
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     public function patch($uri, array $data = [], array $headers = [])
     {
@@ -319,7 +353,7 @@ trait MakesHttpRequests
      * @param  string  $uri
      * @param  array  $data
      * @param  array  $headers
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     public function patchJson($uri, array $data = [], array $headers = [])
     {
@@ -332,7 +366,7 @@ trait MakesHttpRequests
      * @param  string  $uri
      * @param  array  $data
      * @param  array  $headers
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     public function delete($uri, array $data = [], array $headers = [])
     {
@@ -348,7 +382,7 @@ trait MakesHttpRequests
      * @param  string  $uri
      * @param  array  $data
      * @param  array  $headers
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     public function deleteJson($uri, array $data = [], array $headers = [])
     {
@@ -361,7 +395,7 @@ trait MakesHttpRequests
      * @param  string  $uri
      * @param  array  $data
      * @param  array  $headers
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     public function options($uri, array $data = [], array $headers = [])
     {
@@ -377,7 +411,7 @@ trait MakesHttpRequests
      * @param  string  $uri
      * @param  array  $data
      * @param  array  $headers
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     public function optionsJson($uri, array $data = [], array $headers = [])
     {
@@ -391,7 +425,7 @@ trait MakesHttpRequests
      * @param  string  $uri
      * @param  array  $data
      * @param  array  $headers
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     public function json($method, $uri, array $data = [], array $headers = [])
     {
@@ -420,7 +454,7 @@ trait MakesHttpRequests
      * @param  array  $files
      * @param  array  $server
      * @param  string|null  $content
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     public function call($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
     {
@@ -458,11 +492,7 @@ trait MakesHttpRequests
             $uri = substr($uri, 1);
         }
 
-        if (! Str::startsWith($uri, 'http')) {
-            $uri = config('app.url').'/'.$uri;
-        }
-
-        return trim($uri, '/');
+        return trim(url($uri), '/');
     }
 
     /**
@@ -530,19 +560,19 @@ trait MakesHttpRequests
     protected function prepareCookiesForRequest()
     {
         if (! $this->encryptCookies) {
-            return $this->defaultCookies;
+            return array_merge($this->defaultCookies, $this->unencryptedCookies);
         }
 
         return collect($this->defaultCookies)->map(function ($value) {
             return encrypt($value, false);
-        })->all();
+        })->merge($this->unencryptedCookies)->all();
     }
 
     /**
      * Follow a redirect chain until a non-redirect is received.
      *
      * @param  \Illuminate\Http\Response  $response
-     * @return \Illuminate\Http\Response|\Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Http\Response|\Illuminate\Testing\TestResponse
      */
     protected function followRedirects($response)
     {
@@ -559,7 +589,7 @@ trait MakesHttpRequests
      * Create the test response instance from the given response.
      *
      * @param  \Illuminate\Http\Response  $response
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @return \Illuminate\Testing\TestResponse
      */
     protected function createTestResponse($response)
     {

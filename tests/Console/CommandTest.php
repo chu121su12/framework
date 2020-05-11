@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class CommandTest_testGettingCommandArgumentsAndOptionsByClass_Class extends Command
 {
@@ -86,10 +87,10 @@ class CommandTest extends TestCase
 
         $command->run($input, $output);
 
-        $this->assertEquals('test-first-argument', $command->argument('argument-one'));
-        $this->assertequals('test-second-argument', $command->argument('argument-two'));
-        $this->assertEquals('test-first-option', $command->option('option-one'));
-        $this->assertEquals('test-second-option', $command->option('option-two'));
+        $this->assertSame('test-first-argument', $command->argument('argument-one'));
+        $this->assertSame('test-second-argument', $command->argument('argument-two'));
+        $this->assertSame('test-first-option', $command->option('option-one'));
+        $this->assertSame('test-second-option', $command->option('option-two'));
     }
 
     public function testTheInputSetterOverwrite()
@@ -114,5 +115,31 @@ class CommandTest extends TestCase
         $command->setOutput($output);
 
         $command->info('foo');
+    }
+
+    public function testChoiceIsSingleSelectByDefault()
+    {
+        $output = m::mock(OutputStyle::class);
+        $output->shouldReceive('askQuestion')->once()->withArgs(function (ChoiceQuestion $question) {
+            return $question->isMultiselect() === false;
+        });
+
+        $command = new Command;
+        $command->setOutput($output);
+
+        $command->choice('Do you need further help?', ['yes', 'no']);
+    }
+
+    public function testChoiceWithMultiselect()
+    {
+        $output = m::mock(OutputStyle::class);
+        $output->shouldReceive('askQuestion')->once()->withArgs(function (ChoiceQuestion $question) {
+            return $question->isMultiselect() === true;
+        });
+
+        $command = new Command;
+        $command->setOutput($output);
+
+        $command->choice('Select all that apply.', ['option-1', 'option-2', 'option-3'], null, null, true);
     }
 }
