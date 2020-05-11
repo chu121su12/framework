@@ -17,6 +17,8 @@ use PHPUnit\Util\InvalidArgumentHelper;
  */
 abstract class Assert extends PHPUnit
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     /**
      * Asserts that an array has a specified subset.
      *
