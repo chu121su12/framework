@@ -98,7 +98,9 @@ class Collection implements ArrayAccess, Enumerable
      */
     public function median($key = null)
     {
-        $values = (isset($key) ? $this->pluck($key) : $this)
+        $values = isset($key) ? $this->pluck($key) : $this;
+
+        $values = $values
             ->filter(function ($item) {
                 return ! is_null($item);
             })->sort()->values();
