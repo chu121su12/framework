@@ -324,7 +324,9 @@ class CarbonInterval extends DateInterval
     {
         if ($years instanceof DateInterval) {
             parent::__construct(static::getDateIntervalSpec($years));
-            $this->f = $years->f;
+            if (!version_compare(PHP_VERSION, '7.0.0', '<')) {
+                $this->f = $years->f;
+            }
             static::copyNegativeUnits($years, $this);
 
             return;
@@ -360,7 +362,9 @@ class CarbonInterval extends DateInterval
         parent::__construct($spec);
 
         if (!is_null($microseconds)) {
-            $this->f = $microseconds / Carbon::MICROSECONDS_PER_SECOND;
+            if (!version_compare(PHP_VERSION, '7.0.0', '<')) {
+                $this->f = $microseconds / Carbon::MICROSECONDS_PER_SECOND;
+            }
         }
     }
 
@@ -545,7 +549,9 @@ class CarbonInterval extends DateInterval
     {
         $date = new static($this->spec());
         $date->invert = $this->invert;
-        $date->f = $this->f;
+        if (!version_compare(PHP_VERSION, '7.0.0', '<')) {
+            $date->f = $this->f;
+        }
 
         return $date;
     }
@@ -826,11 +832,15 @@ class CarbonInterval extends DateInterval
             throw new InvalidArgumentException("$className is not a sub-class of $mainClass.");
         }
 
-        $microseconds = $interval->f;
-        $instance = new $className(static::getDateIntervalSpec($interval));
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            $instance = new $className(static::getDateIntervalSpec($interval));
+        } else {
+            $microseconds = $interval->f;
+            $instance = new $className(static::getDateIntervalSpec($interval));
 
-        if ($microseconds) {
-            $instance->f = $microseconds;
+            if ($microseconds) {
+                $instance->f = $microseconds;
+            }
         }
 
         static::copyNegativeUnits($interval, $instance);
@@ -983,11 +993,16 @@ class CarbonInterval extends DateInterval
 
             case 'milli':
             case 'milliseconds':
-                return (int) floor(round($this->f * Carbon::MICROSECONDS_PER_SECOND) / Carbon::MICROSECONDS_PER_MILLISECOND);
+                return version_compare(PHP_VERSION, '7.0.0', '<')
+                    ? 0
+                    : (int) floor(round($this->f * Carbon::MICROSECONDS_PER_SECOND) / Carbon::MICROSECONDS_PER_MILLISECOND);
 
+            case 'f':
             case 'micro':
             case 'microseconds':
-                return (int) round($this->f * Carbon::MICROSECONDS_PER_SECOND);
+                return version_compare(PHP_VERSION, '7.0.0', '<')
+                    ? 0
+                    : (int) round($this->f * Carbon::MICROSECONDS_PER_SECOND);
 
             case 'weeks':
                 return (int) floor($this->d / static::getDaysPerWeek());
