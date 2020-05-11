@@ -136,7 +136,7 @@ class Collection implements ArrayAccess, Enumerable
 
         $collection = isset($key) ? $this->pluck($key) : $this;
 
-        $counts = new self;
+        $counts = new static;
 
         $collection->each(function ($value) use ($counts) {
             $counts[$value] = isset($counts[$value]) ? $counts[$value] + 1 : 1;
@@ -417,7 +417,7 @@ class Collection implements ArrayAccess, Enumerable
             return $this->items[$key];
         }
 
-        return value($default);
+        return Util::value($default);
     }
 
     /**
@@ -980,6 +980,28 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
+     * Skip items in the collection until the given condition is met.
+     *
+     * @param  mixed  $value
+     * @return static
+     */
+    public function skipUntil($value)
+    {
+        return new static($this->lazy()->skipUntil($value)->all());
+    }
+
+    /**
+     * Skip items in the collection while the given condition is met.
+     *
+     * @param  mixed  $value
+     * @return static
+     */
+    public function skipWhile($value)
+    {
+        return new static($this->lazy()->skipWhile($value)->all());
+    }
+
+    /**
      * Slice the underlying collection array.
      *
      * @param  int  $offset
@@ -1184,6 +1206,28 @@ class Collection implements ArrayAccess, Enumerable
         }
 
         return $this->slice(0, $limit);
+    }
+
+    /**
+     * Take items in the collection until the given condition is met.
+     *
+     * @param  mixed  $key
+     * @return static
+     */
+    public function takeUntil($value)
+    {
+        return new static($this->lazy()->takeUntil($value)->all());
+    }
+
+    /**
+     * Take items in the collection while the given condition is met.
+     *
+     * @param  mixed  $key
+     * @return static
+     */
+    public function takeWhile($value)
+    {
+        return new static($this->lazy()->takeWhile($value)->all());
     }
 
     /**

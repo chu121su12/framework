@@ -181,17 +181,22 @@ abstract class Component
      */
     protected function createVariableFromMethod(ReflectionMethod $method)
     {
-        if ($method->getNumberOfParameters() === 0) {
-            return $this->{$method->getName()}();
-        }
+        return $method->getNumberOfParameters() === 0
+                        ? $this->createInvokableVariable($method->getName())
+                        : Closure::fromCallable([$this, $method->getName()]);
+    }
 
-        if (! version_compare(PHP_VERSION, '7.0.0', '<')) {
-            return Closure::fromCallable([$this, $method->getName()]);
-        }
-
-        return function () use ($method) {
-            return call_user_func([$this, $method->getName()]);
-        };
+    /**
+     * Create an invokable, toStringable variable for the given component method.
+     *
+     * @param  string  $method
+     * @return \Illuminate\View\InvokableComponentVariable
+     */
+    protected function createInvokableVariable(string $method)
+    {
+        return new InvokableComponentVariable(function () use ($method) {
+            return $this->{$method}();
+        });
     }
 
     /**
@@ -219,6 +224,7 @@ abstract class Component
             'resolveView',
             'shouldRender',
             'view',
+            'withName',
             'withAttributes',
         ], $this->except);
     }

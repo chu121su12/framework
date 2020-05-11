@@ -3,15 +3,18 @@
 namespace Illuminate\Tests\Integration\Routing;
 
 use ArrayIterator;
+use Illuminate\Collections\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\RouteCollection;
-use Illuminate\Support\Arr;
-use Illuminate\Tests\Integration\IntegrationTest;
+use Orchestra\Testbench\TestCase;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class CompiledRouteCollectionTest extends IntegrationTest
+/**
+ * @group integration
+ */
+class CompiledRouteCollectionTest extends TestCase
 {
     /**
      * @var \Illuminate\Routing\RouteCollection
@@ -400,6 +403,15 @@ class CompiledRouteCollectionTest extends IntegrationTest
         $this->routeCollection->add($this->newRoute('GET', 'foo/bar', ['uses' => 'FooController@index', 'prefix' => '/']));
 
         $route = $this->collection()->getByAction('FooController@index');
+
+        $this->assertSame('foo/bar', $route->uri());
+    }
+
+    public function testRouteWithoutNamespaceIsFound()
+    {
+        $this->routeCollection->add($this->newRoute('GET', 'foo/bar', ['controller' => '\App\FooController']));
+
+        $route = $this->collection()->getByAction('App\FooController');
 
         $this->assertSame('foo/bar', $route->uri());
     }

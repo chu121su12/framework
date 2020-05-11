@@ -1,6 +1,103 @@
 # Release Notes for 6.x
 
-## [Unreleased](https://github.com/laravel/framework/compare/v6.18.2...6.x)
+## [Unreleased](https://github.com/laravel/framework/compare/v6.18.13...6.x)
+
+
+## [v6.18.13 (2020-05-05)](https://github.com/laravel/framework/compare/v6.18.12...v6.18.13)
+
+### Fixed
+- Fixed `Illuminate\Database\Eloquent\Collection::getQueueableRelations()` ([7b32460](https://github.com/laravel/framework/commit/7b32469420258e9e52b24b2ffa7f491e79a3a870))
+
+
+## [v6.18.12 (2020-05-05)](https://github.com/laravel/framework/compare/v6.18.11...v6.18.12)
+
+### Added
+- Add pdo try again as lost connection message ([#32605](https://github.com/laravel/framework/pull/32605))
+
+### Fixed
+- Fixed `Illuminate\Foundation\Testing\TestResponse::assertSessionHasInput()` ([f0639fd](https://github.com/laravel/framework/commit/f0639fda45fc2874986fe409d944dde21d42c6f3))
+- Set relation connection on eager loaded MorphTo ([#32602](https://github.com/laravel/framework/pull/32602))
+- Fixed `Illuminate\Database\Schema\Grammars\SqlServerGrammar::compileDropDefaultConstraint()` was ignoring Table prefixes ([#32606](https://github.com/laravel/framework/pull/32606))
+- Filtering null's in `hasMorph()` ([#32614](https://github.com/laravel/framework/pull/32614))
+- Fixed `Illuminate\Console\Scheduling\Schedule::compileParameters()` ([cfc3ac9](https://github.com/laravel/framework/commit/cfc3ac9c8b0a593d264ae722ab90601fa4882d0e), [36e215d](https://github.com/laravel/framework/commit/36e215dd39cd757a8ffc6b17794de60476b2289d))
+- Fixed bug with model name in `Illuminate\Database\Eloquent\RelationNotFoundException::make()` ([f72a166](https://github.com/laravel/framework/commit/f72a1662ab64cc543c532941b1ab1279001af8e9))
+- Fixed `Illuminate\Foundation\Testing\TestResponse::assertJsonCount()` not accepting falsey keys ([#32655](https://github.com/laravel/framework/pull/32655))
+
+### Changed
+- Changed `Illuminate/Database/Eloquent/Relations/Concerns/AsPivot::fromRawAttributes()` ([6c502c1](https://github.com/laravel/framework/commit/6c502c1135082e8b25f2720931b19d36eeec8f41))
+- Restore оnly common relations ([#32613](https://github.com/laravel/framework/pull/32613), [d82f78b](https://github.com/laravel/framework/commit/d82f78b13631c4a04b9595099da0022ca3d8b94e), [48e4d60](https://github.com/laravel/framework/commit/48e4d602d4f8fe9304e8998c5893206f67504dbf))
+- Use single space if plain email is empty in `Illuminate\Mail\Mailer::addContent()` ([0557622](https://github.com/laravel/framework/commit/055762286132d545cbc064dce645562c0d51532f))
+- Remove wasted file read when loading package manifest in `Illuminate\Foundation\PackageManifest::getManifest()` ([#32646](https://github.com/laravel/framework/pull/32646))
+- Cache `FakerGenerator` instances ([#32585](https://github.com/laravel/framework/pull/32585))
+- Do not change `character` and `collation` for some columns on change ([fccdf7c](https://github.com/laravel/framework/commit/fccdf7c42d5ceb50985b3e8243d7ba650de996d6))
+
+
+## [v6.18.11 (2020-04-28)](https://github.com/laravel/framework/compare/v6.18.10...v6.18.11)
+
+### Fixed
+- Auth with each master on flushdb ([d0afa58](https://github.com/laravel/framework/commit/d0afa5846ca1d85ca07cdb580d3b9e9768ebdf41))
+- Clear resolved facades earlier ([f2ea1a2](https://github.com/laravel/framework/commit/f2ea1a23fdac94d3f0818e7ff514fbaed3f45643))
+- Register opis key so it is not tied to a deferred service provider ([a4574ea](https://github.com/laravel/framework/commit/a4574ea973bab9bd6a2ba34d36dfb8f9b55d5a4a))
+- Pass status code to schedule finish ([b815dc6](https://github.com/laravel/framework/commit/b815dc6c1b1c595f3241c493255f0fbfd67a6131))
+- Fix firstWhere behavior for relations ([#32525](https://github.com/laravel/framework/pull/32525))
+- Fixed boolean value in `Illuminate\Foundation\Testing\TestResponse::assertSessionHasErrors()` ([#32555](https://github.com/laravel/framework/pull/32555))
+
+
+## [v6.18.10 (2020-04-21)](https://github.com/laravel/framework/compare/v6.18.9...v6.18.10)
+
+### Fixed
+- Check if object ([1b0bdb4](https://github.com/laravel/framework/commit/1b0bdb43062a2792befe6fd754140124a8e4dc35))
+
+
+## [v6.18.9 (2020-04-21)](https://github.com/laravel/framework/compare/v6.18.8...v6.18.9)
+
+### Fixed
+- Fix `refresh()` to support `AsPivot` trait ([#32420](https://github.com/laravel/framework/pull/32420))
+- Fix orderBy with callable ([#32471](https://github.com/laravel/framework/pull/32471))
+
+
+## [v6.18.8 (2020-04-15)](https://github.com/laravel/framework/compare/v6.18.7...v6.18.8)
+
+### Fixed
+- Removed dots ([e78d24f](https://github.com/laravel/framework/commit/e78d24f31b84cd81c30b5d8837731d77ec089761))
+- Duplicated mailable in-memory data attachments with different names ([#32392](https://github.com/laravel/framework/pull/32392))
+- Fix a regression caused by #32315 ([#32388](https://github.com/laravel/framework/pull/32388))
+- Duplicated mailable storage attachments with different names ([#32394](https://github.com/laravel/framework/pull/32394))
+
+
+## [v6.18.7 (2020-04-14)](https://github.com/laravel/framework/compare/v6.18.6...v6.18.7)
+
+### Fixed
+- Call setlocale ([1c6a504](https://github.com/laravel/framework/commit/1c6a50424c5558782a55769a226ab834484282e1))
+- Use a map to prevent unnecessary array access ([#32296](https://github.com/laravel/framework/pull/32296))
+- Prevent timestamp update when pivot is not dirty ([#32311](https://github.com/laravel/framework/pull/32311))
+- Add support for the new composer installed.json format ([#32310](https://github.com/laravel/framework/pull/32310))
+- ValidatesAttributes::validateUrl use Symfony/Validator 5.0.7 regex ([#32315](https://github.com/laravel/framework/pull/32315))
+- Fix *scan methods for phpredis ([#32336](https://github.com/laravel/framework/pull/32336))
+- Use the router for absolute urls ([#32345](https://github.com/laravel/framework/pull/32345))
+
+
+## [v6.18.6 (2020-04-08)](https://github.com/laravel/framework/compare/v6.18.5...v6.18.6)
+
+### Security
+- Prevent insecure characters in locale ([c248521](https://github.com/laravel/framework/commit/c248521f502c74c6cea7b0d221639d4aa752d5db))
+
+
+## [v6.18.5 (2020-04-07)](https://github.com/laravel/framework/compare/v6.18.4...v6.18.5)
+
+### Fixed
+- Revert "Fix setting mail header" ([#32278](https://github.com/laravel/framework/pull/32278))
+
+
+## [v6.18.4 (2020-04-07)](https://github.com/laravel/framework/compare/v6.18.3...v6.18.4)
+
+### Fixed
+- Added missing return in the sendNow pending mail fake ([#32095](https://github.com/laravel/framework/pull/32095))
+- Prevent long URLs from breaking email layouts ([#32189](https://github.com/laravel/framework/pull/32189))
+- Fix setting mail header ([#32272](https://github.com/laravel/framework/pull/32272))
+
+
+## [v6.18.3 (2020-03-24)](https://github.com/laravel/framework/compare/v6.18.2...v6.18.3)
 
 ### Fixed
 - Corrected suggested dependencies ([#32072](https://github.com/laravel/framework/pull/32072), [c01a70e](https://github.com/laravel/framework/commit/c01a70e33198e81d06d4b581e36e25a80acf8a68))

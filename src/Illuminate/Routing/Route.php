@@ -3,17 +3,17 @@
 namespace Illuminate\Routing;
 
 use Closure;
+use Illuminate\Collections\Arr;
 use Illuminate\Container\Container;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
+use Illuminate\Macroable\Macroable;
 use Illuminate\Routing\Contracts\ControllerDispatcher as ControllerDispatcherContract;
 use Illuminate\Routing\Matching\HostValidator;
 use Illuminate\Routing\Matching\MethodValidator;
 use Illuminate\Routing\Matching\SchemeValidator;
 use Illuminate\Routing\Matching\UriValidator;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Support\Traits\Macroable;
 use LogicException;
 use ReflectionFunction;
 use Symfony\Component\Routing\Route as SymfonyRoute;
@@ -74,7 +74,7 @@ class Route
     /**
      * The array of matched parameters.
      *
-     * @var array
+     * @var array|null
      */
     public $parameters;
 
@@ -91,6 +91,20 @@ class Route
      * @var array
      */
     protected $originalParameters;
+
+    /**
+     * Indicates the maximum number of seconds the route should acquire a session lock for.
+     *
+     * @var int|null
+     */
+    protected $lockSeconds;
+
+    /**
+     * Indicates the maximum number of seconds the route should wait while attempting to acquire a session lock.
+     *
+     * @var int|null
+     */
+    protected $waitSeconds;
 
     /**
      * The computed gathered middleware.
@@ -347,8 +361,8 @@ class Route
      * Get a given parameter from the route.
      *
      * @param  string  $name
-     * @param  mixed  $default
-     * @return string|object
+     * @param  string|object|null  $default
+     * @return string|object|null
      */
     public function parameter($name, $default = null)
     {
@@ -359,8 +373,8 @@ class Route
      * Get original value of a given parameter from the route.
      *
      * @param  string  $name
-     * @param  mixed  $default
-     * @return string
+     * @param  string|null  $default
+     * @return string|null
      */
     public function originalParameter($name, $default = null)
     {
@@ -371,7 +385,7 @@ class Route
      * Set a parameter to the given value.
      *
      * @param  string  $name
-     * @param  mixed  $value
+     * @param  string|object|null  $value
      * @return void
      */
     public function setParameter($name, $value)
@@ -970,6 +984,51 @@ class Route
     public function excludedMiddleware()
     {
         return (array) (isset($this->action['excluded_middleware']) ? $this->action['excluded_middleware'] : []);
+    }
+
+    /**
+     * Specify that the route should not allow concurrent requests from the same session.
+     *
+     * @param  int|null  $lockSeconds
+     * @param  int|null  $waitSeconds
+     * @return $this
+     */
+    public function block($lockSeconds = 10, $waitSeconds = 10)
+    {
+        $this->lockSeconds = $lockSeconds;
+        $this->waitSeconds = $waitSeconds;
+
+        return $this;
+    }
+
+    /**
+     * Specify that the route should allow concurrent requests from the same session.
+     *
+     * @return $this
+     */
+    public function withoutBlocking()
+    {
+        return $this->block(null, null);
+    }
+
+    /**
+     * Get the maximum number of seconds the route's session lock should be held for.
+     *
+     * @return int|null
+     */
+    public function locksFor()
+    {
+        return $this->lockSeconds;
+    }
+
+    /**
+     * Get the maximum number of seconds to wait while attempting to acquire a session lock.
+     *
+     * @return int|null
+     */
+    public function waitsFor()
+    {
+        return $this->waitSeconds;
     }
 
     /**

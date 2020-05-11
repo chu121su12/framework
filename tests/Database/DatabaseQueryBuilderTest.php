@@ -2355,6 +2355,11 @@ class DatabaseQueryBuilderTest extends TestCase
         $builder->getConnection()->shouldReceive('delete')->once()->with('delete from [users] where [email] = ?', ['foo'])->andReturn(1);
         $result = $builder->from('users')->where('email', '=', 'foo')->delete();
         $this->assertEquals(1, $result);
+
+        $builder = $this->getSqlServerBuilder();
+        $builder->getConnection()->shouldReceive('delete')->once()->with('delete top (1) from [users] where [email] = ?', ['foo'])->andReturn(1);
+        $result = $builder->from('users')->where('email', '=', 'foo')->orderBy('id')->take(1)->delete();
+        $this->assertEquals(1, $result);
     }
 
     public function testDeleteWithJoinMethod()
@@ -3022,6 +3027,22 @@ SQL;
         $this->expectException(InvalidArgumentException::class);
         $builder = $this->getPostgresBuilder();
         $builder->selectSub(['foo'], 'sub');
+    }
+
+    public function testSubSelectResetBindings()
+    {
+        $builder = $this->getPostgresBuilder();
+        $builder->from('one')->selectSub(function ($query) {
+            $query->from('two')->select('baz')->where('subkey', '=', 'subval');
+        }, 'sub');
+
+        $this->assertEquals('select (select "baz" from "two" where "subkey" = ?) as "sub" from "one"', $builder->toSql());
+        $this->assertEquals(['subval'], $builder->getBindings());
+
+        $builder->select('*');
+
+        $this->assertEquals('select * from "one"', $builder->toSql());
+        $this->assertEquals([], $builder->getBindings());
     }
 
     public function testSqlServerWhereDate()

@@ -5,13 +5,13 @@ namespace Illuminate\Mail;
 use Aws\Ses\SesClient;
 use Closure;
 use GuzzleHttp\Client as HttpClient;
+use Illuminate\Collections\Arr;
 use Illuminate\Contracts\Mail\Factory as FactoryContract;
 use Illuminate\Log\LogManager;
 use Illuminate\Mail\Transport\ArrayTransport;
 use Illuminate\Mail\Transport\LogTransport;
 use Illuminate\Mail\Transport\MailgunTransport;
 use Illuminate\Mail\Transport\SesTransport;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Postmark\ThrowExceptionOnFailurePlugin;
@@ -162,14 +162,13 @@ class MailManager implements FactoryContract
         // Here we will check if the "transport" key exists and if it doesn't we will
         // assume an application is still using the legacy mail configuration file
         // format and use the "mail.driver" configuration option instead for BC.
-        $transport = isset($config['transport']) ? $config['transport'] :
-            $this->app['config']['mail.driver'];
+        $transport = isset($config['transport']) ? $config['transport'] : $this->app['config']['mail.driver'];
 
         if (isset($this->customCreators[$transport])) {
             return call_user_func($this->customCreators[$transport], $config);
         }
 
-        if (! method_exists($this, $method = 'create'.ucfirst($transport).'Transport')) {
+        if (trim($transport) === '' || ! method_exists($this, $method = 'create'.ucfirst($transport).'Transport')) {
             throw new InvalidArgumentException("Unsupported mail transport [{$config['transport']}].");
         }
 
@@ -231,6 +230,10 @@ class MailManager implements FactoryContract
 
         if (isset($config['timeout'])) {
             $transport->setTimeout($config['timeout']);
+        }
+
+        if (isset($config['auth_mode'])) {
+            $transport->setAuthMode($config['auth_mode']);
         }
 
         return $transport;
@@ -438,6 +441,19 @@ class MailManager implements FactoryContract
         }
 
         $this->app['config']['mail.default'] = $name;
+    }
+
+    /**
+     * Disconnect the given mailer and remove from local cache.
+     *
+     * @param  string|null  $name
+     * @return void
+     */
+    public function purge($name = null)
+    {
+        $name = $name ?: $this->getDefaultDriver();
+
+        unset($this->mailers[$name]);
     }
 
     /**

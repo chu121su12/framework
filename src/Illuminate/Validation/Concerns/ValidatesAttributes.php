@@ -12,8 +12,8 @@ use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Egulias\EmailValidator\Validation\SpoofCheckValidation;
 use Exception;
+use Illuminate\Collections\Arr;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
@@ -1442,6 +1442,25 @@ trait ValidatesAttributes
         list($values, $other) = $this->prepareValuesAndOther($parameters);
 
         return in_array($other, $values);
+    }
+
+    /**
+     * Indicate that an attribute should be excluded when another attribute is missing.
+     *
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @param  mixed  $parameters
+     * @return bool
+     */
+    public function validateExcludeWithout($attribute, $value, $parameters)
+    {
+        $this->requireParameterCount(1, $parameters, 'exclude_without');
+
+        if ($this->anyFailingRequired($parameters)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

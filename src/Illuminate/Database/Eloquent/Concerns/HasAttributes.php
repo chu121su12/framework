@@ -4,12 +4,13 @@ namespace Illuminate\Database\Eloquent\Concerns;
 
 use Carbon\CarbonInterface;
 use DateTimeInterface;
+use Illuminate\Collections\Arr;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsInboundAttributes;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\InvalidCastException;
 use Illuminate\Database\Eloquent\JsonEncodingException;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Facades\Date;
@@ -477,7 +478,7 @@ trait HasAttributes
     protected function mutateAttributeForArray($key, $value)
     {
         $value = $this->isClassCastable($key)
-                    ? $this->getClassCastableAttributeValue($key)
+                    ? $this->getClassCastableAttributeValue($key, $value)
                     : $this->mutateAttribute($key, $value);
 
         return $value instanceof Arrayable ? $value->toArray() : $value;
@@ -541,7 +542,7 @@ trait HasAttributes
         }
 
         if ($this->isClassCastable($key)) {
-            return $this->getClassCastableAttributeValue($key);
+            return $this->getClassCastableAttributeValue($key, $value);
         }
 
         return $value;
@@ -551,9 +552,10 @@ trait HasAttributes
      * Cast the given attribute using a custom cast class.
      *
      * @param  string  $key
+     * @param  mixed  $value
      * @return mixed
      */
-    protected function getClassCastableAttributeValue($key)
+    protected function getClassCastableAttributeValue($key, $value)
     {
         if (isset($this->classCastCache[$key])) {
             return $this->classCastCache[$key];
@@ -561,8 +563,8 @@ trait HasAttributes
             $caster = $this->resolveCasterClass($key);
 
             return $this->classCastCache[$key] = $caster instanceof CastsInboundAttributes
-                ? (isset($this->attributes[$key]) ? $this->attributes[$key] : null)
-                : $caster->get($this, $key, isset($this->attributes[$key]) ? $this->attributes[$key] : null, $this->attributes);
+                ? $value
+                : $caster->get($this, $key, $value, $this->attributes);
         }
     }
 
@@ -1060,9 +1062,21 @@ trait HasAttributes
      */
     protected function isClassCastable($key)
     {
-        return array_key_exists($key, $this->getCasts()) &&
-                class_exists($class = $this->parseCasterClass($this->getCasts()[$key])) &&
-                ! in_array($class, static::$primitiveCastTypes);
+        if (! array_key_exists($key, $this->getCasts())) {
+            return false;
+        }
+
+        $castType = $this->parseCasterClass($this->getCasts()[$key]);
+
+        if (in_array($castType, static::$primitiveCastTypes)) {
+            return false;
+        }
+
+        if (class_exists($castType)) {
+            return true;
+        }
+
+        throw new InvalidCastException($this->getModel(), $key, $castType);
     }
 
     /**

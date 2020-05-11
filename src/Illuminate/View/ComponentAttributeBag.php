@@ -4,8 +4,8 @@ namespace Illuminate\View;
 
 use ArrayAccess;
 use ArrayIterator;
+use Illuminate\Collections\Arr;
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Support\Arr;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use IteratorAggregate;
@@ -141,6 +141,15 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      */
     public function setAttributes(array $attributes)
     {
+        if (isset($attributes['attributes']) &&
+            $attributes['attributes'] instanceof self) {
+            $parentBag = $attributes['attributes'];
+
+            unset($attributes['attributes']);
+
+            $attributes = $parentBag->merge($attributes);
+        }
+
         $this->attributes = $attributes;
     }
 

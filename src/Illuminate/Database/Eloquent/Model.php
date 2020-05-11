@@ -4,15 +4,17 @@ namespace Illuminate\Database\Eloquent;
 
 use ArrayAccess;
 use Exception;
+use Illuminate\Collections\Arr;
 use Illuminate\Contracts\Queue\QueueableCollection;
 use Illuminate\Contracts\Queue\QueueableEntity;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Database\ConnectionResolverInterface as Resolver;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Concerns\AsPivot;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ForwardsCalls;
@@ -872,7 +874,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     /**
      * Destroy the models for the given IDs.
      *
-     * @param  \Illuminate\Support\Collection|array|int  $ids
+     * @param  \Illuminate\Support\Collection|array|int|string  $ids
      * @return int
      */
     public static function destroy($ids)
@@ -1110,6 +1112,29 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     }
 
     /**
+     * Determine if the model has a given scope.
+     *
+     * @param  string  $scope
+     * @return bool
+     */
+    public function hasNamedScope($scope)
+    {
+        return method_exists($this, 'scope'.ucfirst($scope));
+    }
+
+    /**
+     * Apply the given named scope if possible.
+     *
+     * @param  string  $scope
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function callNamedScope($scope, array $parameters = [])
+    {
+        return $this->{'scope'.ucfirst($scope)}(...$parameters);
+    }
+
+    /**
      * Convert the model instance to an array.
      *
      * @return array
@@ -1183,7 +1208,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
 
         $this->load(collect($this->relations)->reject(function ($relation) {
             return $relation instanceof Pivot
-                || in_array(AsPivot::class, class_uses_recursive($relation), true);
+                || (is_object($relation) && in_array(AsPivot::class, class_uses_recursive($relation), true));
         })->keys()->all());
 
         $this->syncOriginal();
@@ -1524,7 +1549,14 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      */
     public function resolveChildRouteBinding($childType, $value, $field)
     {
-        return $this->{Str::plural(Str::camel($childType))}()->where($field, $value)->first();
+        $relationship = $this->{Str::plural(Str::camel($childType))}();
+
+        if ($relationship instanceof HasManyThrough ||
+            $relationship instanceof BelongsToMany) {
+            return $relationship->where($relationship->getRelated()->getTable().'.'.$field, $value)->first();
+        } else {
+            return $relationship->where($field, $value)->first();
+        }
     }
 
     /**

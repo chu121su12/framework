@@ -3,7 +3,7 @@
 namespace Illuminate\Http\Client;
 
 use ArrayAccess;
-use Illuminate\Support\Traits\Macroable;
+use Illuminate\Macroable\Macroable;
 use LogicException;
 
 class Response implements ArrayAccess
@@ -142,6 +142,16 @@ class Response implements ArrayAccess
     public function redirect()
     {
         return $this->status() >= 300 && $this->status() < 400;
+    }
+
+    /**
+     * Determine if the response indicates a client or server error occurred.
+     *
+     * @return bool
+     */
+    public function failed()
+    {
+        return $this->serverError() || $this->clientError();
     }
 
     /**

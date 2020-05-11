@@ -4,6 +4,7 @@ namespace Illuminate\Tests\Validation;
 
 use DateTime;
 use DateTimeImmutable;
+use Illuminate\Collections\Arr;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
@@ -12,7 +13,6 @@ use Illuminate\Contracts\Translation\Translator as TranslatorContract;
 use Illuminate\Contracts\Validation\ImplicitRule;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Translation\ArrayLoader;
 use Illuminate\Translation\Translator;
@@ -5226,6 +5226,21 @@ class ValidationValidatorTest extends TestCase
         );
         $this->assertTrue($validator->fails());
         $this->assertSame(['mouse' => ['validation.required']], $validator->messages()->toArray());
+    }
+
+    public function testExcludeWithout()
+    {
+        $validator = new Validator(
+            $this->getIlluminateArrayTranslator(),
+            ['region' => 'South'],
+            [
+                'country' => 'exclude_without:region|nullable|required_with:region|string|min:3',
+                'region' => 'exclude_without:country|nullable|required_with:country|string|min:3',
+            ]
+        );
+
+        $this->assertTrue($validator->fails());
+        $this->assertSame(['country' => ['validation.required_with']], $validator->messages()->toArray());
     }
 
     public function testExcludeValuesAreReallyRemoved()

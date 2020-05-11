@@ -3,12 +3,15 @@
 namespace Illuminate\Support\Testing\Fakes;
 
 use Closure;
+use Illuminate\Collections\Arr;
 use Illuminate\Contracts\Bus\QueueingDispatcher;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Traits\ReflectsClosures;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 class BusFake implements QueueingDispatcher
 {
+    use ReflectsClosures;
+
     /**
      * The original Bus dispatcher implementation.
      *
@@ -54,12 +57,16 @@ class BusFake implements QueueingDispatcher
     /**
      * Assert if a job was dispatched based on a truth-test callback.
      *
-     * @param  string  $command
+     * @param  string|\Closure  $command
      * @param  callable|int|null  $callback
      * @return void
      */
     public function assertDispatched($command, $callback = null)
     {
+        if ($command instanceof Closure) {
+            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
+        }
+
         if (is_numeric($callback)) {
             return $this->assertDispatchedTimes($command, $callback);
         }
@@ -92,12 +99,16 @@ class BusFake implements QueueingDispatcher
     /**
      * Determine if a job was dispatched based on a truth-test callback.
      *
-     * @param  string  $command
+     * @param  string|\Closure  $command
      * @param  callable|null  $callback
      * @return void
      */
     public function assertNotDispatched($command, $callback = null)
     {
+        if ($command instanceof Closure) {
+            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
+        }
+
         PHPUnit::assertTrue(
             $this->dispatched($command, $callback)->count() === 0 &&
             $this->dispatchedAfterResponse($command, $callback)->count() === 0,
@@ -108,12 +119,16 @@ class BusFake implements QueueingDispatcher
     /**
      * Assert if a job was dispatched after the response was sent based on a truth-test callback.
      *
-     * @param  string  $command
+     * @param  string|\Closure  $command
      * @param  callable|int|null  $callback
      * @return void
      */
     public function assertDispatchedAfterResponse($command, $callback = null)
     {
+        if ($command instanceof Closure) {
+            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
+        }
+
         if (is_numeric($callback)) {
             return $this->assertDispatchedAfterResponseTimes($command, $callback);
         }
@@ -144,12 +159,16 @@ class BusFake implements QueueingDispatcher
     /**
      * Determine if a job was dispatched based on a truth-test callback.
      *
-     * @param  string  $command
+     * @param  string|\Closure  $command
      * @param  callable|null  $callback
      * @return void
      */
     public function assertNotDispatchedAfterResponse($command, $callback = null)
     {
+        if ($command instanceof Closure) {
+            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
+        }
+
         PHPUnit::assertCount(
             0, $this->dispatchedAfterResponse($command, $callback),
             "The unexpected [{$command}] job was dispatched for after sending the response."
@@ -234,6 +253,24 @@ class BusFake implements QueueingDispatcher
             $this->commands[get_class($command)][] = $command;
         } else {
             return $this->dispatcher->dispatch($command);
+        }
+    }
+
+    /**
+     * Dispatch a command to its appropriate handler in the current process.
+     *
+     * Queuable jobs will be dispatched to the "sync" queue.
+     *
+     * @param  mixed  $command
+     * @param  mixed  $handler
+     * @return mixed
+     */
+    public function dispatchSync($command, $handler = null)
+    {
+        if ($this->shouldFakeJob($command)) {
+            $this->commands[get_class($command)][] = $command;
+        } else {
+            return $this->dispatcher->dispatchSync($command, $handler);
         }
     }
 
