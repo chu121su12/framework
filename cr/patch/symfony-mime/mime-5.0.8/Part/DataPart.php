@@ -53,7 +53,8 @@ class DataPart extends TextPart
             if (null === self::$mimeTypes) {
                 self::$mimeTypes = new MimeTypes();
             }
-            $contentType = self::$mimeTypes->getMimeTypes($ext)[0] ?? 'application/octet-stream';
+            $mimeTypes = self::$mimeTypes->getMimeTypes($ext);
+            $contentType = isset($mimeTypes[0]) ? $mimeTypes[0] : 'application/octet-stream';
         }
 
         if (false === $handle = @fopen($path, 'r', false)) {

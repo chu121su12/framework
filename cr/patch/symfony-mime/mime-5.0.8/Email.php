@@ -465,7 +465,8 @@ class Email extends Message
         $html = $this->html;
         if (null !== $this->html) {
             if (\is_resource($html)) {
-                if (stream_get_meta_data($html)['seekable'] ?? false) {
+                $streamGetMetaData = stream_get_meta_data($html);
+                if (isset($streamGetMetaData['seekable']) ? $streamGetMetaData['seekable'] : false) {
                     rewind($html);
                 }
 
@@ -559,7 +560,8 @@ class Email extends Message
     public function __serialize()
     {
         if (\is_resource($this->text)) {
-            if (stream_get_meta_data($this->text)['seekable'] ?? false) {
+            $streamGetMetaData = stream_get_meta_data($this->text);
+            if (isset($streamGetMetaData['seekable']) ? $streamGetMetaData['seekable'] : false) {
                 rewind($this->text);
             }
 
@@ -567,7 +569,8 @@ class Email extends Message
         }
 
         if (\is_resource($this->html)) {
-            if (stream_get_meta_data($this->html)['seekable'] ?? false) {
+            $streamGetMetaData = stream_get_meta_data($this->html);
+            if (isset($streamGetMetaData['seekable']) ? $streamGetMetaData['seekable'] : false) {
                 rewind($this->html);
             }
 
@@ -576,7 +579,8 @@ class Email extends Message
 
         foreach ($this->attachments as $i => $attachment) {
             if (isset($attachment['body']) && \is_resource($attachment['body'])) {
-                if (stream_get_meta_data($attachment['body'])['seekable'] ?? false) {
+                $streamGetMetaData = stream_get_meta_data($attachment['body']);
+                if (isset($streamGetMetaData['seekable']) ? $streamGetMetaData['seekable'] : false) {
                     rewind($attachment['body']);
                 }
 

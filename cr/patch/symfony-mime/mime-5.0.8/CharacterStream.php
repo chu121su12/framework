@@ -98,7 +98,8 @@ final class CharacterStream
         }
         if (\is_resource($input)) {
             $blocks = 512;
-            if (stream_get_meta_data($input)['seekable'] ?? false) {
+            $streamMetaData = stream_get_meta_data($input);
+            if (isset($streamMetaData['seekable']) ? $streamMetaData['seekable'] : false) {
                 rewind($input);
             }
             while (false !== $read = fread($input, $blocks)) {

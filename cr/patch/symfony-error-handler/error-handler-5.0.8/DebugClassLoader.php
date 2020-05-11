@@ -536,7 +536,14 @@ class DebugClassLoader
                 continue;
             }
 
-            if (null === $ns = self::$methodTraits[$method->getFileName()][$method->getStartLine()] ?? null) {
+
+            $ns = null;
+            $filename = $method->getFileName();
+            if (isset(self::$methodTraits[$filename]) && isset(self::$methodTraits[$filename][$startLine = $method->getStartLine()])) {
+                $ns = self::$methodTraits[$filename][$startLine];
+            }
+
+            if (null === $ns) {
                 $ns = $vendor;
                 $len = $vendorLen;
             } elseif (2 > $len = 1 + (strpos($ns, '\\') ?: strpos($ns, '_'))) {
@@ -591,7 +598,11 @@ class DebugClassLoader
                 ;
             }
 
-            if (null !== ($returnType = self::$returnTypes[$class][$method->name] ?? isset(self::MAGIC_METHODS[$method->name]) ? self::MAGIC_METHODS[$method->name] : null) && !$method->hasReturnType() && !($doc && preg_match('/\n\s+\* @return +(\S+)/', $doc))) {
+            $returnType = isset(self::$returnTypes[$class]) && isset(self::$returnTypes[$class][$method->name])
+                ? self::$returnTypes[$class][$method->name]
+                : (isset(self::MAGIC_METHODS[$method->name]) ? self::MAGIC_METHODS[$method->name] : null);
+
+            if (null !== $returnType && !$method->hasReturnType() && !($doc && preg_match('/\n\s+\* @return +(\S+)/', $doc))) {
                 list($normalizedType, $returnType, $declaringClass, $declaringFile) = \is_string($returnType) ? [$returnType, $returnType, '', ''] : $returnType;
 
                 if ('void' === $normalizedType) {

@@ -23,7 +23,8 @@ final class QpContentEncoder implements ContentEncoderInterface
         }
 
         // we don't use PHP stream filters here as the content should be small enough
-        if (stream_get_meta_data($stream)['seekable'] ?? false) {
+        $streamGetMetaData = stream_get_meta_data($stream);
+        if (isset($streamGetMetaData['seekable']) ? $streamGetMetaData['seekable'] : false) {
             rewind($stream);
         }
 

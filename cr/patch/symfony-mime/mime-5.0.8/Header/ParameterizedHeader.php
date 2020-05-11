@@ -48,7 +48,8 @@ final class ParameterizedHeader extends UnstructuredHeader
 
     public function getParameter($parameter)
     {
-        return $this->getParameters()[$parameter] ?? '';
+        $parameters = $this->getParameters();
+        return isset($parameters[$parameter]) ? $parameters[$parameter] : '';
     }
 
     /**

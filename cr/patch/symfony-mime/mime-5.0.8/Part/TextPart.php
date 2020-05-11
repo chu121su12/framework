@@ -97,7 +97,8 @@ class TextPart extends AbstractPart
             return $this->body;
         }
 
-        if (stream_get_meta_data($this->body)['seekable'] ?? false) {
+        $streamGetMetaData = stream_get_meta_data($this->body);
+        if (isset($streamGetMetaData['seekable']) ? $streamGetMetaData['seekable'] : false) {
             rewind($this->body);
         }
 
@@ -112,7 +113,8 @@ class TextPart extends AbstractPart
     public function bodyToIterable()
     {
         if (\is_resource($this->body)) {
-            if (stream_get_meta_data($this->body)['seekable'] ?? false) {
+            $streamGetMetaData = stream_get_meta_data($this->body);
+            if (isset($streamGetMetaData['seekable']) ? $streamGetMetaData['seekable'] : false) {
                 rewind($this->body);
             }
             yield from $this->getEncoder()->encodeByteStream($this->body);

@@ -32,7 +32,8 @@ final class Base64ContentEncoder extends Base64Encoder implements ContentEncoder
             throw new RuntimeException('Unable to set the base64 content encoder to the filter.');
         }
 
-        if (stream_get_meta_data($stream)['seekable'] ?? false) {
+        $streamGetMetaData = stream_get_meta_data($stream);
+        if (isset($streamGetMetaData['seekable']) ? $streamGetMetaData['seekable'] : false) {
             rewind($stream);
         }
         while (!feof($stream)) {

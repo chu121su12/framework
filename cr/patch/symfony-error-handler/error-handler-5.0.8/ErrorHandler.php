@@ -167,8 +167,10 @@ class ErrorHandler
         set_error_handler(static function ($type, $message, $file, $line) {
             if (__FILE__ === $file) {
                 $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-                $file = $trace[2]['file'] ?? $file;
-                $line = $trace[2]['line'] ?? $line;
+                if (isset($trace[2])) {
+                    $file = isset($trace[2]['file']) ? $trace[2]['file'] : $file;
+                    $line = isset($trace[2]['line']) ? $trace[2]['line'] : $line;
+                }
             }
 
             throw new \ErrorException($message, 0, $type, $file, $line);
@@ -748,7 +750,7 @@ class ErrorHandler
         }
         if (class_exists(DebugClassLoader::class, false)) {
             for ($i = \count($lightTrace) - 2; 0 < $i; --$i) {
-                if (DebugClassLoader::class === ($lightTrace[$i]['class'] ?? null)) {
+                if (DebugClassLoader::class === (isset($lightTrace[$i]) && isset($lightTrace[$i]['class']) ? $lightTrace[$i]['class'] : null)) {
                     array_splice($lightTrace, --$i, 2);
                 }
             }
