@@ -72,7 +72,7 @@ class CompilerEngine extends PhpEngine
      *
      * @throws \Throwable
      */
-    protected function handleViewException(Throwable $e, $obLevel)
+    protected function handleViewException($e, $obLevel)
     {
         $e = new ErrorException($this->getMessage($e), 0, 1, $e->getFile(), $e->getLine(), $e);
 
@@ -85,7 +85,7 @@ class CompilerEngine extends PhpEngine
      * @param  \Throwable  $e
      * @return string
      */
-    protected function getMessage(Throwable $e)
+    protected function getMessage($e)
     {
         return $e->getMessage().' (View: '.realpath(last($this->lastCompiled)).')';
     }

@@ -34,7 +34,7 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
      *
      * @throws \Exception
      */
-    public function report(Exception $e)
+    public function report($e)
     {
         //
     }
@@ -45,7 +45,7 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
      * @param  \Throwable  $e
      * @return bool
      */
-    public function shouldReport(Exception $e)
+    public function shouldReport($e)
     {
         return false;
     }
@@ -59,7 +59,7 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
      *
      * @throws \Throwable
      */
-    public function render($request, Exception $e)
+    public function render($request, $e)
     {
         foreach ($this->except as $class) {
             if ($e instanceof $class) {
@@ -83,7 +83,7 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
      * @param  \Throwable  $e
      * @return void
      */
-    public function renderForConsole($output, Exception $e)
+    public function renderForConsole($output, $e)
     {
         (new ConsoleApplication)->renderThrowable($e, $output);
     }

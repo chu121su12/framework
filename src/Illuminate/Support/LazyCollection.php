@@ -407,13 +407,13 @@ class LazyCollection implements Enumerable
                 if (! is_array($item) && ! $item instanceof Enumerable) {
                     yield $item;
                 } elseif ($depth === 1) {
-                    foreach ($item as $yieldedFrom) {
-                        yield $yieldedFrom;
+                    foreach ($item as $yieldKey => $yieldValue) {
+                        yield $yieldKey => $yieldValue;
                     }
                 } else {
                     $currentCollection = new static($item);
-                    foreach ($currentCollection->flatten($depth - 1) as $yieldedFrom) {
-                        yield $yieldedFrom;
+                    foreach ($currentCollection->flatten($depth - 1) as $yieldKey => $yieldValue) {
+                        yield $yieldKey => $yieldValue;
                     }
                 }
             }
@@ -674,8 +674,8 @@ class LazyCollection implements Enumerable
         return new static(function () use ($callback) {
             foreach ($this as $key => $value) {
                 $callbackResult = $callback($value, $key);
-                foreach ($callbackResult as $yieldedFrom) {
-                    yield $yieldedFrom;
+                foreach ($callbackResult as $yieldKey => $yieldValue) {
+                    yield $yieldKey => $yieldValue;
                 }
             }
         });
@@ -783,8 +783,8 @@ class LazyCollection implements Enumerable
 
         return new static(function () use ($keys) {
             if (is_null($keys)) {
-                foreach ($this as $yieldedFrom) {
-                    yield $yieldedFrom;
+                foreach ($this as $yieldKey => $yieldValue) {
+                    yield $yieldKey => $yieldValue;
                 }
             } else {
                 $keys = array_flip($keys);
@@ -813,11 +813,11 @@ class LazyCollection implements Enumerable
     public function concat($source)
     {
         return (new static(function () use ($source) {
-            foreach ($this as $yieldedFrom) {
-                yield $yieldedFrom;
+            foreach ($this as $yieldKey => $yieldValue) {
+                yield $yieldKey => $yieldValue;
             }
-            foreach ($source as $yieldedFrom) {
-                yield $yieldedFrom;
+            foreach ($source as $yieldKey => $yieldValue) {
+                yield $yieldKey => $yieldValue;
             }
         }))->values();
     }
@@ -1283,8 +1283,8 @@ class LazyCollection implements Enumerable
     {
         return new static(function () use ($method, $params) {
             $collected = $this->collect()->$method(...$params);
-            foreach ($collected as $yieldedFrom) {
-                yield $yieldedFrom;
+            foreach ($collected as $yieldKey => $yieldValue) {
+                yield $yieldKey => $yieldValue;
             }
         });
     }

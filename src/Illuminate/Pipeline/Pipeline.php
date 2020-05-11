@@ -238,7 +238,7 @@ class Pipeline implements PipelineContract
      *
      * @throws \Throwable
      */
-    protected function handleException($passable, Throwable $e)
+    protected function handleException($passable, $e)
     {
         throw $e;
     }

@@ -2259,8 +2259,8 @@ class Builder
                 $this->toSql(), $this->getBindings(), ! $this->useWritePdo
             );
 
-            foreach ($cursor as $yieldedFrom) {
-                yield $yieldedFrom;
+            foreach ($cursor as $yieldKey => $yieldValue) {
+                yield $yieldKey => $yieldValue;
             }
         });
     }

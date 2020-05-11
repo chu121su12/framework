@@ -167,7 +167,7 @@ class LogManager implements LoggerInterface
         $config = $this->configurationFor('emergency');
 
         $handler = new StreamHandler(
-            $config['path'] ?? $this->app->storagePath().'/logs/laravel.log',
+            isset($config['path']) ? $config['path'] : $this->app->storagePath().'/logs/laravel.log',
             $this->level(['level' => 'debug'])
         );
 

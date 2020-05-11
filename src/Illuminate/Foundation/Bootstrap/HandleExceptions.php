@@ -80,7 +80,7 @@ class HandleExceptions
      * @param  \Throwable  $e
      * @return void
      */
-    public function handleException(Throwable $e)
+    public function handleException($e)
     {
         try {
             self::$reservedMemory = null;
@@ -103,7 +103,7 @@ class HandleExceptions
      * @param  \Throwable  $e
      * @return void
      */
-    protected function renderForConsole(Throwable $e)
+    protected function renderForConsole($e)
     {
         $this->getExceptionHandler()->renderForConsole(new ConsoleOutput, $e);
     }
@@ -114,7 +114,7 @@ class HandleExceptions
      * @param  \Throwable  $e
      * @return void
      */
-    protected function renderHttpResponse(Throwable $e)
+    protected function renderHttpResponse($e)
     {
         $this->getExceptionHandler()->render($this->app['request'], $e)->send();
     }

@@ -72,8 +72,8 @@ class SupportLazyCollectionTest extends TestCase
         $source = [1, 2, 3, 4, 5];
 
         $data = LazyCollection::make(function () use (&$source) {
-            foreach ($source as $yieldedFrom) {
-                yield $yieldedFrom;
+            foreach ($source as $yieldKey => $yieldValue) {
+                yield $yieldKey => $yieldValue;
             }
         })->eager();
 
@@ -87,7 +87,9 @@ class SupportLazyCollectionTest extends TestCase
         $source = [1, 2, 3, 4];
 
         $collection = LazyCollection::make(function () use (&$source) {
-            yield from $source;
+            foreach ($source as $yieldKey => $yieldValue) {
+                yield $yieldKey => $yieldValue;
+            }
         })->remember();
 
         $this->assertSame([1, 2, 3, 4], $collection->all());
@@ -102,7 +104,9 @@ class SupportLazyCollectionTest extends TestCase
         $source = [1, 2, 3, 4];
 
         $collection = LazyCollection::make(function () use (&$source) {
-            yield from $source;
+            foreach ($source as $yieldKey => $yieldValue) {
+                yield $yieldKey => $yieldValue;
+            }
         })->remember();
 
         $a = $collection->getIterator();

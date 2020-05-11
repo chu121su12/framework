@@ -499,7 +499,7 @@ class Route
      */
     public function bindingFieldFor($parameter)
     {
-        return $this->bindingFields[$parameter] ?? null;
+        return isset($this->bindingFields[$parameter]) ? $this->bindingFields[$parameter] : null;
     }
 
     public function parentOfParameter($parameter)

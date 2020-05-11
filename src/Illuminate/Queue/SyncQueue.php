@@ -95,7 +95,7 @@ class SyncQueue extends Queue implements QueueContract
      * @param  \Throwable  $e
      * @return void
      */
-    protected function raiseExceptionOccurredJobEvent(Job $job, Throwable $e)
+    protected function raiseExceptionOccurredJobEvent(Job $job, $e)
     {
         if ($this->container->bound('events')) {
             $this->container['events']->dispatch(new JobExceptionOccurred($this->connectionName, $job, $e));
@@ -111,7 +111,7 @@ class SyncQueue extends Queue implements QueueContract
      *
      * @throws \Exception
      */
-    protected function handleException(Job $queueJob, Throwable $e)
+    protected function handleException(Job $queueJob, $e)
     {
         $this->raiseExceptionOccurredJobEvent($queueJob, $e);
 

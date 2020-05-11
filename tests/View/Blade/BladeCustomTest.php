@@ -129,7 +129,7 @@ class BladeCustomTest extends AbstractBladeTestCase
 
     public function testCustomUnlessConditions()
     {
-        $this->compiler->if('custom', function ($anything) {
+        $this->compiler->iff('custom', function ($anything) {
             return true;
         });
 

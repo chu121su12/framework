@@ -96,7 +96,7 @@ class Handler implements ExceptionHandlerContract
      *
      * @throws \Exception
      */
-    public function report(Throwable $e)
+    public function report($e)
     {
         if ($this->shouldntReport($e)) {
             return;
@@ -130,7 +130,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return bool
      */
-    public function shouldReport(Throwable $e)
+    public function shouldReport($e)
     {
         return ! $this->shouldntReport($e);
     }
@@ -141,7 +141,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return bool
      */
-    protected function shouldntReport(Throwable $e)
+    protected function shouldntReport($e)
     {
         $dontReport = array_merge($this->dontReport, $this->internalDontReport);
 
@@ -156,7 +156,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return array
      */
-    protected function exceptionContext(Throwable $e)
+    protected function exceptionContext($e)
     {
         return [];
     }
@@ -187,7 +187,7 @@ class Handler implements ExceptionHandlerContract
      *
      * @throws \Throwable
      */
-    public function render($request, Throwable $e)
+    public function render($request, $e)
     {
         if (method_exists($e, 'render') && $response = $e->render($request)) {
             return Router::toResponse($request, $response);
@@ -216,7 +216,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Throwable
      */
-    protected function prepareException(Throwable $e)
+    protected function prepareException($e)
     {
         if ($e instanceof ModelNotFoundException) {
             $e = new NotFoundHttpException($e->getMessage(), $e);
@@ -303,7 +303,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function prepareResponse($request, Throwable $e)
+    protected function prepareResponse($request, $e)
     {
         if (! $this->isHttpException($e) && config('app.debug')) {
             return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
@@ -324,7 +324,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function convertExceptionToResponse(Throwable $e)
+    protected function convertExceptionToResponse($e)
     {
         return SymfonyResponse::create(
             $this->renderExceptionContent($e),
@@ -339,7 +339,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return string
      */
-    protected function renderExceptionContent(Throwable $e)
+    protected function renderExceptionContent($e)
     {
         try {
             return config('app.debug') && class_exists(Whoops::class)
@@ -356,7 +356,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return string
      */
-    protected function renderExceptionWithWhoops(Throwable $e)
+    protected function renderExceptionWithWhoops($e)
     {
         return tap(new Whoops, function ($whoops) {
             $whoops->appendHandler($this->whoopsHandler());
@@ -388,7 +388,7 @@ class Handler implements ExceptionHandlerContract
      * @param  bool  $debug
      * @return string
      */
-    protected function renderExceptionWithSymfony(Throwable $e, $debug)
+    protected function renderExceptionWithSymfony($e, $debug)
     {
         $renderer = new HtmlErrorRenderer($debug);
 
@@ -436,7 +436,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Illuminate\Http\Response
      */
-    protected function toIlluminateResponse($response, Throwable $e)
+    protected function toIlluminateResponse($response, $e)
     {
         if ($response instanceof SymfonyRedirectResponse) {
             $response = new RedirectResponse(
@@ -458,7 +458,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function prepareJsonResponse($request, Throwable $e)
+    protected function prepareJsonResponse($request, $e)
     {
         return new JsonResponse(
             $this->convertExceptionToArray($e),
@@ -474,7 +474,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return array
      */
-    protected function convertExceptionToArray(Throwable $e)
+    protected function convertExceptionToArray($e)
     {
         return config('app.debug') ? [
             'message' => $e->getMessage(),
@@ -496,7 +496,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return void
      */
-    public function renderForConsole($output, Throwable $e)
+    public function renderForConsole($output, $e)
     {
         (new ConsoleApplication)->renderThrowable($e, $output);
     }
@@ -507,7 +507,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return bool
      */
-    protected function isHttpException(Throwable $e)
+    protected function isHttpException($e)
     {
         return $e instanceof HttpExceptionInterface;
     }

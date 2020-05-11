@@ -360,7 +360,7 @@ class Worker
      *
      * @throws \Throwable
      */
-    protected function handleJobException($connectionName, $job, WorkerOptions $options, Throwable $e)
+    protected function handleJobException($connectionName, $job, WorkerOptions $options, $e)
     {
         try {
             // First, we will go ahead and mark the job as failed if it will exceed the maximum
@@ -429,7 +429,7 @@ class Worker
      * @param  \Throwable  $e
      * @return void
      */
-    protected function markJobAsFailedIfWillExceedMaxAttempts($connectionName, $job, $maxTries, Throwable $e)
+    protected function markJobAsFailedIfWillExceedMaxAttempts($connectionName, $job, $maxTries, $e)
     {
         $maxTries = ! is_null($job->maxTries()) ? $job->maxTries() : $maxTries;
 
@@ -449,7 +449,7 @@ class Worker
      * @param  \Throwable  $e
      * @return void
      */
-    protected function failJob($job, Throwable $e)
+    protected function failJob($job, $e)
     {
         return $job->fail($e);
     }
@@ -490,7 +490,7 @@ class Worker
      * @param  \Throwable  $e
      * @return void
      */
-    protected function raiseExceptionOccurredJobEvent($connectionName, $job, Throwable $e)
+    protected function raiseExceptionOccurredJobEvent($connectionName, $job, $e)
     {
         $this->events->dispatch(new JobExceptionOccurred(
             $connectionName, $job, $e

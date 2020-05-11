@@ -15,7 +15,7 @@ class TypedPropertyTestClass
 
     private array $names;
 
-    public function __construct(ModelSerializationTestUser $user, int $id, array $names)
+    public function __construct(ModelSerializationTestUser $user, $id, array $names)
     {
         $this->user = $user;
         $this->id = $id;

@@ -659,7 +659,7 @@ if (! function_exists('report')) {
      * @param  \Throwable  $exception
      * @return void
      */
-    function report(Throwable $exception)
+    function report($exception)
     {
         app(ExceptionHandler::class)->report($exception);
     }

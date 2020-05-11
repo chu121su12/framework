@@ -362,7 +362,7 @@ class Kernel implements KernelContract
      * @param  \Throwable  $e
      * @return void
      */
-    protected function reportException(Throwable $e)
+    protected function reportException($e)
     {
         $this->app[ExceptionHandler::class]->report($e);
     }
@@ -374,7 +374,7 @@ class Kernel implements KernelContract
      * @param  \Throwable  $e
      * @return void
      */
-    protected function renderException($output, Throwable $e)
+    protected function renderException($output, $e)
     {
         $this->app[ExceptionHandler::class]->renderForConsole($output, $e);
     }

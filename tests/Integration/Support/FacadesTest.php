@@ -7,7 +7,7 @@ use Orchestra\Testbench\TestCase;
 
 class FacadesTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         parent::tearDown();
 

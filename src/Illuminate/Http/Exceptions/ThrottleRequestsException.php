@@ -16,7 +16,7 @@ class ThrottleRequestsException extends HttpException
      * @param  int  $code
      * @return void
      */
-    public function __construct($message = null, Throwable $previous = null, array $headers = [], $code = 0)
+    public function __construct($message = null, $previous = null, array $headers = [], $code = 0)
     {
         parent::__construct(429, $message, $previous, $headers, $code);
     }

@@ -65,7 +65,7 @@ class MigrateProcessor
      *
      * @return void
      */
-    protected function dispatch(string $command)
+    protected function dispatch($command)
     {
         $console = $this->testbench->artisan($command, $this->options);
 

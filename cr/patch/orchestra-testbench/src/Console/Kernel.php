@@ -29,7 +29,7 @@ class Kernel extends \Illuminate\Foundation\Console\Kernel
      *
      * @return void
      */
-    protected function reportException(\Exception $e)
+    protected function reportException($e)
     {
         throw $e;
     }
