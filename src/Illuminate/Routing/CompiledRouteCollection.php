@@ -121,7 +121,11 @@ class CompiledRouteCollection extends AbstractRouteCollection
             if ($result = $matcher->matchRequest($trimmedRequest)) {
                 $route = $this->getByName($result['_route']);
             }
-        } catch (ResourceNotFoundException | MethodNotAllowedException $e) {
+        } catch (ResourceNotFoundException $e) {
+        } catch (MethodNotAllowedException $e) {
+        }
+
+        if (isset($e)) {
             try {
                 return $this->routes->match($request);
             } catch (NotFoundHttpException $e) {
@@ -136,7 +140,11 @@ class CompiledRouteCollection extends AbstractRouteCollection
                 if (! $dynamicRoute->isFallback) {
                     $route = $dynamicRoute;
                 }
-            } catch (NotFoundHttpException | MethodNotAllowedHttpException $e) {
+            } catch (NotFoundHttpException $e2) {
+            } catch (MethodNotAllowedHttpException $e2) {
+            }
+
+            if (isset($e2)) {
                 //
             }
         }
