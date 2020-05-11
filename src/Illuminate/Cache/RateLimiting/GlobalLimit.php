@@ -11,7 +11,7 @@ class GlobalLimit extends Limit
      * @param  int  $decayMinutes
      * @return void
      */
-    public function __construct(int $maxAttempts, int $decayMinutes = 1)
+    public function __construct($maxAttempts, $decayMinutes = 1)
     {
         parent::__construct('', $maxAttempts, $decayMinutes);
     }

@@ -396,7 +396,7 @@ class ComponentTagCompiler
      * @param  string  $attributeString
      * @return string
      */
-    protected function parseAttributeBag(string $attributeString)
+    protected function parseAttributeBag($attributeString)
     {
         $pattern = "/
             (?:^|\s+)                                        # start of the string or whitespace between attributes
@@ -432,7 +432,7 @@ class ComponentTagCompiler
      * @param  string  $attributeString
      * @return string
      */
-    protected function compileAttributeEchos(string $attributeString)
+    protected function compileAttributeEchos($attributeString)
     {
         $value = $this->blade->compileEchos($attributeString);
 
@@ -450,7 +450,7 @@ class ComponentTagCompiler
      * @param  string  $value
      * @return string
      */
-    protected function escapeSingleQuotesOutsideOfPhpBlocks(string $value)
+    protected function escapeSingleQuotesOutsideOfPhpBlocks($value)
     {
         return collect(token_get_all($value))->map(function ($token) {
             if (! is_array($token)) {

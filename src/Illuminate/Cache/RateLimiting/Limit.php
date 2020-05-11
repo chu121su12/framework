@@ -33,7 +33,7 @@ class Limit
      * @param  int  $decayMinutes
      * @return void
      */
-    public function __construct($key = '', int $maxAttempts = 60, int $decayMinutes = 1)
+    public function __construct($key = '', $maxAttempts = 60, $decayMinutes = 1)
     {
         $this->key = $key;
         $this->maxAttempts = $maxAttempts;

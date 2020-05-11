@@ -350,7 +350,7 @@ class FilesystemManager implements FactoryContract
      */
     public function purge($name = null)
     {
-        $name = $name ?? $this->getDefaultDriver();
+        $name = isset($name) ? $name : $this->getDefaultDriver();
 
         unset($this->disks[$name]);
     }

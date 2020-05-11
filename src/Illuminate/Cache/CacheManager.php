@@ -217,8 +217,8 @@ class CacheManager implements FactoryContract
                 $connection,
                 $config['table'],
                 $this->getPrefix($config),
-                $config['lock_table'] ?? 'cache_locks',
-                $config['lock_lottery'] ?? [2, 100]
+                isset($config['lock_table']) ? $config['lock_table'] : 'cache_locks',
+                isset($config['lock_lottery']) ? $config['lock_lottery'] : [2, 100]
             )
         );
     }
@@ -365,7 +365,7 @@ class CacheManager implements FactoryContract
      */
     public function purge($name = null)
     {
-        $name = $name ?? $this->getDefaultDriver();
+        $name = isset($name) ? $name : $this->getDefaultDriver();
 
         unset($this->stores[$name]);
     }

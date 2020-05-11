@@ -125,7 +125,7 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          * @param  iterable  $other
          * @return array
          */
-        private function toArray(iterable $other)
+        private function toArray($other)
         {
             if (is_array($other)) {
                 return $other;

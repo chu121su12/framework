@@ -192,7 +192,7 @@ abstract class Component
      * @param  string  $method
      * @return \Illuminate\View\InvokableComponentVariable
      */
-    protected function createInvokableVariable(string $method)
+    protected function createInvokableVariable($method)
     {
         return new InvokableComponentVariable(function () use ($method) {
             return $this->{$method}();
