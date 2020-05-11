@@ -16,7 +16,7 @@ class LoadConfiguration
      *
      * @return void
      */
-    public function bootstrap(Application $app): void
+    public function bootstrap(Application $app)
     {
         $items = [];
 
@@ -35,7 +35,7 @@ class LoadConfiguration
      *
      * @return void
      */
-    protected function loadConfigurationFiles(Application $app, RepositoryContract $config): void
+    protected function loadConfigurationFiles(Application $app, RepositoryContract $config)
     {
         foreach ($this->getConfigurationFiles($app) as $key => $path) {
             $config->set($key, require $path);
@@ -49,7 +49,7 @@ class LoadConfiguration
      *
      * @return array
      */
-    protected function getConfigurationFiles(Application $app): array
+    protected function getConfigurationFiles(Application $app)
     {
         $files = [];
 

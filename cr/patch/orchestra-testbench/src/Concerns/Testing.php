@@ -62,7 +62,7 @@ trait Testing
      *
      * @return void
      */
-    final protected function setUpTheTestEnvironment(): void
+    final protected function setUpTheTestEnvironment()
     {
         if (! $this->app) {
             $this->refreshApplication();
@@ -84,7 +84,7 @@ trait Testing
      *
      * @return void
      */
-    final protected function tearDownTheTestEnvironment(): void
+    final protected function tearDownTheTestEnvironment()
     {
         if ($this->app) {
             $this->callBeforeApplicationDestroyedCallbacks();
@@ -135,7 +135,7 @@ trait Testing
      *
      * @return array
      */
-    final protected function setUpTheTestEnvironmentTraits(array $uses): array
+    final protected function setUpTheTestEnvironmentTraits(array $uses)
     {
         if (isset($uses[RefreshDatabase::class])) {
             $this->refreshDatabase();
@@ -171,7 +171,7 @@ trait Testing
      *
      * @return void
      */
-    protected function afterApplicationCreated(callable $callback): void
+    protected function afterApplicationCreated(callable $callback)
     {
         $this->afterApplicationCreatedCallbacks[] = $callback;
 
@@ -187,7 +187,7 @@ trait Testing
      *
      * @return void
      */
-    protected function beforeApplicationDestroyed(callable $callback): void
+    protected function beforeApplicationDestroyed(callable $callback)
     {
         \array_unshift($this->beforeApplicationDestroyedCallbacks, $callback);
     }

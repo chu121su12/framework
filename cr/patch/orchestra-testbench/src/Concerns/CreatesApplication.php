@@ -40,7 +40,7 @@ trait CreatesApplication
      *
      * @return void
      */
-    final protected function resolveApplicationBindings($app): void
+    final protected function resolveApplicationBindings($app)
     {
         foreach ($this->overrideApplicationBindings($app) as $original => $replacement) {
             $app->bind($original, $replacement);
@@ -78,14 +78,14 @@ trait CreatesApplication
      *
      * @return array
      */
-    final protected function resolveApplicationAliases($app): array
+    final protected function resolveApplicationAliases($app)
     {
         $aliases = new Collection($this->getApplicationAliases($app));
         $overrides = $this->overrideApplicationAliases($app);
 
         if (! empty($overrides)) {
             $aliases->transform(static function ($alias, $name) use ($overrides) {
-                return $overrides[$name] ?? $alias;
+                return isset($overrides[$name]) ? $overrides[$name] : $alias;
             });
         }
 
@@ -147,14 +147,14 @@ trait CreatesApplication
      *
      * @return array
      */
-    final protected function resolveApplicationProviders($app): array
+    final protected function resolveApplicationProviders($app)
     {
         $providers = new Collection($this->getApplicationProviders($app));
         $overrides = $this->overrideApplicationProviders($app);
 
         if (! empty($overrides)) {
             $providers->transform(static function ($provider) use ($overrides) {
-                return $overrides[$provider] ?? $provider;
+                return isset($overrides[$provider]) ? $overrides[$provider] : $provider;
             });
         }
 
@@ -308,7 +308,7 @@ trait CreatesApplication
 
         if ($this instanceof TestCase) {
             Collection::make($this->getAnnotations())->each(function ($location) use ($app) {
-                Collection::make($location['environment-setup'] ?? [])
+                Collection::make(isset($location['environment-setup']) ? $location['environment-setup'] : [])
                     ->filter(function ($method) {
                         return ! \is_null($method) && \method_exists($this, $method);
                     })->each(function ($method) use ($app) {
