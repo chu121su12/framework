@@ -160,14 +160,14 @@ class TextPart extends AbstractPart
     private function getEncoder()
     {
         if ('8bit' === $this->encoding) {
-            return self::$encoders[$this->encoding] ?? (self::$encoders[$this->encoding] = new EightBitContentEncoder());
+            return isset(self::$encoders[$this->encoding]) ? self::$encoders[$this->encoding] : (self::$encoders[$this->encoding] = new EightBitContentEncoder());
         }
 
         if ('quoted-printable' === $this->encoding) {
-            return self::$encoders[$this->encoding] ?? (self::$encoders[$this->encoding] = new QpContentEncoder());
+            return isset(self::$encoders[$this->encoding]) ? self::$encoders[$this->encoding] : (self::$encoders[$this->encoding] = new QpContentEncoder());
         }
 
-        return self::$encoders[$this->encoding] ?? (self::$encoders[$this->encoding] = new Base64ContentEncoder());
+        return isset(self::$encoders[$this->encoding]) ? self::$encoders[$this->encoding] : (self::$encoders[$this->encoding] = new Base64ContentEncoder());
     }
 
     private function chooseEncoding()

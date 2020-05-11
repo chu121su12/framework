@@ -38,10 +38,10 @@ foreach ($xml as $node) {
     }
 
     $mt = strtolower((string) $node['type']);
-    $new[$mt] = array_merge($new[$mt] ?? [], $exts);
+    $new[$mt] = array_merge(isset($new[$mt]) ? $new[$mt] : [], $exts);
     foreach ($node->alias as $alias) {
         $mt = strtolower((string) $alias['type']);
-        $new[$mt] = array_merge($new[$mt] ?? [], $exts);
+        $new[$mt] = array_merge(isset($new[$mt]) ? $new[$mt] : [], $exts);
     }
 }
 

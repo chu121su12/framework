@@ -431,7 +431,7 @@ class DebugClassLoader
                 foreach ($notice as $method) {
                     $static = '' !== $method[1] && !empty($method[2]);
                     $name = $method[3];
-                    $description = $method[4] ?? null;
+                    $description = isset($method[4]) ? $method[4] : null;
                     if (false === strpos($name, '(')) {
                         $name .= '()';
                     }
@@ -585,8 +585,8 @@ class DebugClassLoader
                     || $refl->isFinal()
                     || $method->isFinal()
                     || $method->isPrivate()
-                    || ('' === (self::$internal[$class] ?? null) && !$refl->isAbstract())
-                    || '' === (self::$final[$class] ?? null)
+                    || ('' === (isset(self::$internal[$class]) ? self::$internal[$class] : null) && !$refl->isAbstract())
+                    || '' === (isset(self::$final[$class]) ? self::$final[$class] : null)
                     || preg_match('/@(final|internal)$/m', $doc)
                 ;
             }
@@ -909,7 +909,7 @@ class DebugClassLoader
         }
 
         $patchedMethods[$file][$startLine] = true;
-        $fileOffset = self::$fileOffsets[$file] ?? 0;
+        $fileOffset = isset(self::$fileOffsets[$file]) ? self::$fileOffsets[$file] : 0;
         $startLine += $fileOffset - 2;
         $nullable = '?' === $normalizedType[0] ? '?' : '';
         $normalizedType = ltrim($normalizedType, '?');
@@ -931,10 +931,10 @@ class DebugClassLoader
                 continue;
             }
 
-            list($namespace, $useOffset, $useMap) = $useStatements[$file] ?? $useStatements[$file] = self::getUseStatements($file);
+            list($namespace, $useOffset, $useMap) = isset($useStatements[$file]) ? $useStatements[$file] : $useStatements[$file] = self::getUseStatements($file);
 
             if ('\\' !== $type[0]) {
-                list($declaringNamespace, , $declaringUseMap) = $useStatements[$declaringFile] ?? $useStatements[$declaringFile] = self::getUseStatements($declaringFile);
+                list($declaringNamespace, , $declaringUseMap) = isset($useStatements[$declaringFile]) ? $useStatements[$declaringFile] : $useStatements[$declaringFile] = self::getUseStatements($declaringFile);
 
                 $p = strpos($type, '\\', 1);
                 $alias = $p ? substr($type, 0, $p) : $type;
@@ -1050,7 +1050,7 @@ EOTXT;
         }
 
         $fixedCode = $code = file($file);
-        $i = (self::$fileOffsets[$file] ?? 0) + $method->getStartLine();
+        $i = (isset(self::$fileOffsets[$file]) ? self::$fileOffsets[$file] : 0) + $method->getStartLine();
 
         if ('?' !== $returnType && 'docblock' !== $this->patchTypes['force']) {
             $fixedCode[$i - 1] = preg_replace('/\)(;?\n)/', "): $returnType\\1", $code[$i - 1]);

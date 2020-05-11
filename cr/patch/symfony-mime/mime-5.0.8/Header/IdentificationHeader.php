@@ -68,7 +68,7 @@ final class IdentificationHeader extends AbstractHeader
      */
     public function getId(): ?string
     {
-        return $this->ids[0] ?? null;
+        return isset($this->ids[0]) ? $this->ids[0] : null;
     }
 
     /**

@@ -46,7 +46,7 @@ class SerializerErrorRenderer implements ErrorRendererInterface
 
         $this->serializer = $serializer;
         $this->format = $format;
-        $this->fallbackErrorRenderer = $fallbackErrorRenderer ?? new HtmlErrorRenderer();
+        $this->fallbackErrorRenderer = isset($fallbackErrorRenderer) ? $fallbackErrorRenderer : new HtmlErrorRenderer();
         $this->debug = $debug;
     }
 

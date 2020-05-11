@@ -268,7 +268,7 @@ class Email extends Message
     {
         list($priority) = sscanf($this->getHeaders()->getHeaderBody('X-Priority'), '%[1-5]');
 
-        return $priority ?? 3;
+        return isset($priority) ? $priority : 3;
     }
 
     /**
@@ -509,9 +509,9 @@ class Email extends Message
         }
 
         if (isset($attachment['body'])) {
-            $part = new DataPart($attachment['body'], $attachment['name'] ?? null, $attachment['content-type'] ?? null);
+            $part = new DataPart($attachment['body'], isset($attachment['name']) ? $attachment['name'] : null, isset($attachment['content-type']) ? $attachment['content-type'] : null);
         } else {
-            $part = DataPart::fromPath($attachment['path'] ?? '', $attachment['name'] ?? null, $attachment['content-type'] ?? null);
+            $part = DataPart::fromPath(isset($attachment['path']) ? $attachment['path'] : '', isset($attachment['name']) ? $attachment['name'] : null, isset($attachment['content-type']) ? $attachment['content-type'] : null);
         }
         if ($attachment['inline']) {
             $part->asInline();
