@@ -81,7 +81,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
         '%7C' => '|',
     ];
 
-    public function __construct(RouteCollection $routes, RequestContext $context, LoggerInterface $logger = null, string $defaultLocale = null)
+    public function __construct(RouteCollection $routes, RequestContext $context, LoggerInterface $logger = null, $defaultLocale = null)
     {
         $this->routes = $routes;
         $this->context = $context;
@@ -108,7 +108,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
     /**
      * {@inheritdoc}
      */
-    public function setStrictRequirements(?bool $enabled)
+    public function setStrictRequirements($enabled = null)
     {
         $this->strictRequirements = $enabled;
     }
@@ -124,12 +124,12 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
     /**
      * {@inheritdoc}
      */
-    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, array $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
         $route = null;
-        $locale = $parameters['_locale']
-            ?? $this->context->getParameter('_locale')
-            ?: $this->defaultLocale;
+        $locale = isset($parameters['_locale'])
+            ? $parameters['_locale']
+            : ($this->context->getParameter('_locale') ?: $this->defaultLocale);
 
         if (null !== $locale) {
             do {
@@ -139,7 +139,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
             } while (false !== $locale = strstr($locale, '_', true));
         }
 
-        if (null === $route = $route ?? $this->routes->get($name)) {
+        if (null === $route = isset($route) ? $route : $this->routes->get($name)) {
             throw new RouteNotFoundException(sprintf('Unable to generate a URL for the named route "%s" as such route does not exist.', $name));
         }
 
@@ -167,7 +167,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
      *
      * @return string
      */
-    protected function doGenerate(array $variables, array $defaults, array $requirements, array $tokens, array $parameters, string $name, int $referenceType, array $hostTokens, array $requiredSchemes = [])
+    protected function doGenerate(array $variables, array $defaults, array $requirements, array $tokens, array $parameters, $name, $referenceType, array $hostTokens, array $requiredSchemes = [])
     {
         $variables = array_flip($variables);
         $mergedParams = array_replace($defaults, $this->context->getParameters(), $parameters);
@@ -184,7 +184,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
             if ('variable' === $token[0]) {
                 $varName = $token[3];
                 // variable is not important by default
-                $important = $token[5] ?? false;
+                $important = isset($token[5]) ? $token[5] : false;
 
                 if (!$optional || $important || !\array_key_exists($varName, $defaults) || (null !== $mergedParams[$varName] && (string) $mergedParams[$varName] !== (string) $defaults[$varName])) {
                     // check requirement (while ignoring look-around patterns)
@@ -295,7 +295,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
         });
 
         // extract fragment
-        $fragment = $defaults['_fragment'] ?? '';
+        $fragment = isset($defaults['_fragment']) ? $defaults['_fragment'] : '';
 
         if (isset($extra['_fragment'])) {
             $fragment = $extra['_fragment'];
@@ -333,7 +333,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
      *
      * @return string The relative target path
      */
-    public static function getRelativePath(string $basePath, string $targetPath)
+    public static function getRelativePath($basePath, $targetPath)
     {
         if ($basePath === $targetPath) {
             return '';

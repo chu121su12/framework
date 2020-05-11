@@ -100,7 +100,7 @@ class RouteCompiler implements RouteCompilerInterface
         );
     }
 
-    private static function compilePattern(Route $route, string $pattern, bool $isHost): array
+    private static function compilePattern(Route $route, $pattern, $isHost)
     {
         $tokens = [];
         $variables = [];
@@ -212,7 +212,7 @@ class RouteCompiler implements RouteCompilerInterface
             for ($i = \count($tokens) - 1; $i >= 0; --$i) {
                 $token = $tokens[$i];
                 // variable is optional when it is not important and has a default value
-                if ('variable' === $token[0] && !($token[5] ?? false) && $route->hasDefault($token[3])) {
+                if ('variable' === $token[0] && !(isset($token[5]) ? $token[5] : false) && $route->hasDefault($token[3])) {
                     $firstOptional = $i;
                 } else {
                     break;
@@ -248,7 +248,7 @@ class RouteCompiler implements RouteCompilerInterface
     /**
      * Determines the longest static prefix possible for a route.
      */
-    private static function determineStaticPrefix(Route $route, array $tokens): string
+    private static function determineStaticPrefix(Route $route, array $tokens)
     {
         if ('text' !== $tokens[0][0]) {
             return ($route->hasDefault($tokens[0][3]) || '/' === $tokens[0][1]) ? '' : $tokens[0][1];
@@ -266,7 +266,7 @@ class RouteCompiler implements RouteCompilerInterface
     /**
      * Returns the next static character in the Route pattern that will serve as a separator (or the empty string when none available).
      */
-    private static function findNextSeparator(string $pattern, bool $useUtf8): string
+    private static function findNextSeparator($pattern, $useUtf8)
     {
         if ('' == $pattern) {
             // return empty string if pattern is empty or false (false which can be returned by substr)
@@ -292,7 +292,7 @@ class RouteCompiler implements RouteCompilerInterface
      *
      * @return string The regexp pattern for a single token
      */
-    private static function computeRegexp(array $tokens, int $index, int $firstOptional): string
+    private static function computeRegexp(array $tokens, $index, $firstOptional)
     {
         $token = $tokens[$index];
         if ('text' === $token[0]) {
@@ -322,7 +322,7 @@ class RouteCompiler implements RouteCompilerInterface
         }
     }
 
-    private static function transformCapturingGroupsToNonCapturings(string $regexp): string
+    private static function transformCapturingGroupsToNonCapturings($regexp)
     {
         for ($i = 0; $i < \strlen($regexp); ++$i) {
             if ('\\' === $regexp[$i]) {

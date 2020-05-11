@@ -92,7 +92,7 @@ class Route
         $this->localizedPaths = $localizedPaths;
     }
 
-    public function getLocalizedPaths(): array
+    public function getLocalizedPaths()
     {
         return $this->localizedPaths;
     }

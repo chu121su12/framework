@@ -61,7 +61,7 @@ EOF;
     /**
      * Generates the arrays for CompiledUrlMatcher's constructor.
      */
-    public function getCompiledRoutes(bool $forDump = false): array
+    public function getCompiledRoutes($forDump = false)
     {
         // Group hosts by same-suffix, re-order when possible
         $matchHost = false;
@@ -129,7 +129,7 @@ EOF;
         return $compiledRoutes;
     }
 
-    private function generateCompiledRoutes(): string
+    private function generateCompiledRoutes()
     {
         list($matchHost, $staticRoutes, $regexpCode, $dynamicRoutes, $checkConditionCode) = $this->getCompiledRoutes(true);
 
@@ -164,7 +164,7 @@ EOF;
     /**
      * Splits static routes from dynamic routes, so that they can be matched first, using a simple switch.
      */
-    private function groupStaticRoutes(RouteCollection $collection): array
+    private function groupStaticRoutes(RouteCollection $collection)
     {
         $staticRoutes = $dynamicRegex = [];
         $dynamicRoutes = new RouteCollection();
@@ -212,7 +212,7 @@ EOF;
      *
      * @throws \LogicException
      */
-    private function compileStaticRoutes(array $staticRoutes, array &$conditions): array
+    private function compileStaticRoutes(array $staticRoutes, array &$conditions)
     {
         if (!$staticRoutes) {
             return [];
@@ -247,7 +247,7 @@ EOF;
      *    matching-but-failing subpattern is blacklisted by replacing its name by "(*F)", which forces a failure-to-match.
      *    To ease this backlisting operation, the name of subpatterns is also the string offset where the replacement should occur.
      */
-    private function compileDynamicRoutes(RouteCollection $collection, bool $matchHost, int $chunkLimit, array &$conditions): array
+    private function compileDynamicRoutes(RouteCollection $collection, $matchHost, $chunkLimit, array &$conditions)
     {
         if (!$collection->all()) {
             return [[], [], ''];
@@ -371,7 +371,7 @@ EOF;
      * @param \stdClass $state A simple state object that keeps track of the progress of the compilation,
      *                         and gathers the generated switch's "case" and "default" statements
      */
-    private function compileStaticPrefixCollection(StaticPrefixCollection $tree, \stdClass $state, int $prefixLen, array &$conditions): string
+    private function compileStaticPrefixCollection(StaticPrefixCollection $tree, \stdClass $state, $prefixLen, array &$conditions)
     {
         $code = '';
         $prevRegex = null;
@@ -416,7 +416,7 @@ EOF;
     /**
      * Compiles a single Route to PHP code used to match it against the path info.
      */
-    private function compileRoute(Route $route, string $name, $vars, bool $hasTrailingSlash, bool $hasTrailingVar, array &$conditions): array
+    private function compileRoute(Route $route, $name, $vars, $hasTrailingSlash, $hasTrailingVar, array &$conditions)
     {
         $defaults = $route->getDefaults();
 
@@ -427,7 +427,7 @@ EOF;
 
         if ($condition = $route->getCondition()) {
             $condition = $this->getExpressionLanguage()->compile($condition, ['context', 'request']);
-            $condition = $conditions[$condition] ?? $conditions[$condition] = (false !== strpos($condition, '$request') ? 1 : -1) * \count($conditions);
+            $condition = isset($conditions[$condition]) ? $conditions[$condition] : $conditions[$condition] = (false !== strpos($condition, '$request') ? 1 : -1) * \count($conditions);
         } else {
             $condition = null;
         }
@@ -443,7 +443,7 @@ EOF;
         ];
     }
 
-    private function getExpressionLanguage(): ExpressionLanguage
+    private function getExpressionLanguage()
     {
         if (null === $this->expressionLanguage) {
             if (!class_exists('Symfony\Component\ExpressionLanguage\ExpressionLanguage')) {
@@ -455,7 +455,7 @@ EOF;
         return $this->expressionLanguage;
     }
 
-    private function indent(string $code, int $level = 1): string
+    private function indent($code, $level = 1)
     {
         return preg_replace('/^./m', str_repeat('    ', $level).'$0', $code);
     }
@@ -463,7 +463,7 @@ EOF;
     /**
      * @internal
      */
-    public static function export($value): string
+    public static function export($value)
     {
         if (null === $value) {
             return 'null';

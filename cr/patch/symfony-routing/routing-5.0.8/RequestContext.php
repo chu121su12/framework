@@ -33,7 +33,7 @@ class RequestContext
     private $queryString;
     private $parameters = [];
 
-    public function __construct(string $baseUrl = '', string $method = 'GET', string $host = 'localhost', string $scheme = 'http', int $httpPort = 80, int $httpsPort = 443, string $path = '/', string $queryString = '')
+    public function __construct($baseUrl = '', $method = 'GET', $host = 'localhost', $scheme = 'http', $httpPort = 80, $httpsPort = 443, $path = '/', $queryString = '')
     {
         $this->setBaseUrl($baseUrl);
         $this->setMethod($method);
@@ -79,7 +79,7 @@ class RequestContext
      *
      * @return $this
      */
-    public function setBaseUrl(string $baseUrl)
+    public function setBaseUrl($baseUrl)
     {
         $this->baseUrl = $baseUrl;
 
@@ -101,7 +101,7 @@ class RequestContext
      *
      * @return $this
      */
-    public function setPathInfo(string $pathInfo)
+    public function setPathInfo($pathInfo)
     {
         $this->pathInfo = $pathInfo;
 
@@ -125,7 +125,7 @@ class RequestContext
      *
      * @return $this
      */
-    public function setMethod(string $method)
+    public function setMethod($method)
     {
         $this->method = strtoupper($method);
 
@@ -149,7 +149,7 @@ class RequestContext
      *
      * @return $this
      */
-    public function setHost(string $host)
+    public function setHost($host)
     {
         $this->host = strtolower($host);
 
@@ -171,7 +171,7 @@ class RequestContext
      *
      * @return $this
      */
-    public function setScheme(string $scheme)
+    public function setScheme($scheme)
     {
         $this->scheme = strtolower($scheme);
 
@@ -193,7 +193,7 @@ class RequestContext
      *
      * @return $this
      */
-    public function setHttpPort(int $httpPort)
+    public function setHttpPort($httpPort)
     {
         $this->httpPort = $httpPort;
 
@@ -215,7 +215,7 @@ class RequestContext
      *
      * @return $this
      */
-    public function setHttpsPort(int $httpsPort)
+    public function setHttpsPort($httpsPort)
     {
         $this->httpsPort = $httpsPort;
 
@@ -237,7 +237,7 @@ class RequestContext
      *
      * @return $this
      */
-    public function setQueryString(?string $queryString)
+    public function setQueryString($queryString = null)
     {
         // string cast to be fault-tolerant, accepting null
         $this->queryString = (string) $queryString;
@@ -274,7 +274,7 @@ class RequestContext
      *
      * @return mixed The parameter value or null if nonexistent
      */
-    public function getParameter(string $name)
+    public function getParameter($name)
     {
         return isset($this->parameters[$name]) ? $this->parameters[$name] : null;
     }
@@ -284,7 +284,7 @@ class RequestContext
      *
      * @return bool True if the parameter value is set, false otherwise
      */
-    public function hasParameter(string $name)
+    public function hasParameter($name)
     {
         return \array_key_exists($name, $this->parameters);
     }
@@ -296,7 +296,7 @@ class RequestContext
      *
      * @return $this
      */
-    public function setParameter(string $name, $parameter)
+    public function setParameter($name, $parameter)
     {
         $this->parameters[$name] = $parameter;
 

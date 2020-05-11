@@ -37,7 +37,7 @@ class CompiledRoute implements \Serializable
      * @param array       $hostVariables An array of host variables
      * @param array       $variables     An array of variables (variables defined in the path and in the host patterns)
      */
-    public function __construct(string $staticPrefix, string $regex, array $tokens, array $pathVariables, string $hostRegex = null, array $hostTokens = [], array $hostVariables = [], array $variables = [])
+    public function __construct($staticPrefix, $regex, array $tokens, array $pathVariables, $hostRegex = null, array $hostTokens = [], array $hostVariables = [], array $variables = [])
     {
         $this->staticPrefix = $staticPrefix;
         $this->regex = $regex;
@@ -49,7 +49,7 @@ class CompiledRoute implements \Serializable
         $this->variables = $variables;
     }
 
-    public function __serialize(): array
+    public function __serialize()
     {
         return [
             'vars' => $this->variables,
@@ -66,12 +66,12 @@ class CompiledRoute implements \Serializable
     /**
      * @internal
      */
-    final public function serialize(): string
+    final public function serialize()
     {
         return serialize($this->__serialize());
     }
 
-    public function __unserialize(array $data): void
+    public function __unserialize(array $data)
     {
         $this->variables = $data['vars'];
         $this->staticPrefix = $data['path_prefix'];

@@ -22,7 +22,7 @@ abstract class RedirectableUrlMatcher extends UrlMatcher implements Redirectable
     /**
      * {@inheritdoc}
      */
-    public function match(string $pathinfo)
+    public function match($pathinfo)
     {
         try {
             return parent::match($pathinfo);
@@ -38,7 +38,7 @@ abstract class RedirectableUrlMatcher extends UrlMatcher implements Redirectable
                 try {
                     $ret = parent::match($pathinfo);
 
-                    return $this->redirect($pathinfo, $ret['_route'] ?? null, $this->context->getScheme()) + $ret;
+                    return $this->redirect($pathinfo, isset($ret['_route']) ? $ret['_route'] : null, $this->context->getScheme()) + $ret;
                 } catch (ExceptionInterface $e2) {
                     throw $e;
                 } finally {
@@ -51,7 +51,7 @@ abstract class RedirectableUrlMatcher extends UrlMatcher implements Redirectable
                     $pathinfo = $trimmedPathinfo === $pathinfo ? $pathinfo.'/' : $trimmedPathinfo;
                     $ret = parent::match($pathinfo);
 
-                    return $this->redirect($pathinfo, $ret['_route'] ?? null) + $ret;
+                    return $this->redirect($pathinfo, isset($ret['_route']) ? $ret['_route'] : null) + $ret;
                 } catch (ExceptionInterface $e2) {
                     if ($this->allowSchemes) {
                         goto redirect_scheme;

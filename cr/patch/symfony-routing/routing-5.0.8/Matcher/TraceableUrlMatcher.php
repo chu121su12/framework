@@ -29,7 +29,7 @@ class TraceableUrlMatcher extends UrlMatcher
 
     protected $traces;
 
-    public function getTraces(string $pathinfo)
+    public function getTraces($pathinfo)
     {
         $this->traces = [];
 
@@ -50,7 +50,7 @@ class TraceableUrlMatcher extends UrlMatcher
         return $traces;
     }
 
-    protected function matchCollection(string $pathinfo, RouteCollection $routes)
+    protected function matchCollection($pathinfo, RouteCollection $routes)
     {
         // HEAD and GET are equivalent as per RFC
         if ('HEAD' === $method = $this->context->getMethod()) {
@@ -101,7 +101,7 @@ class TraceableUrlMatcher extends UrlMatcher
 
             $hasTrailingVar = $trimmedPathinfo !== $pathinfo && preg_match('#\{\w+\}/?$#', $route->getPath());
 
-            if ($hasTrailingVar && ($hasTrailingSlash || (null === $m = $matches[\count($compiledRoute->getPathVariables())] ?? null) || '/' !== ($m[-1] ?? '/')) && preg_match($regex, $trimmedPathinfo, $m)) {
+            if ($hasTrailingVar && ($hasTrailingSlash || (null === $m = isset($matches[\count($compiledRoute->getPathVariables())]) ? $matches[\count($compiledRoute->getPathVariables())] : null) || '/' !== (isset($m[-1]) ? $m[-1] : '/')) && preg_match($regex, $trimmedPathinfo, $m)) {
                 if ($hasTrailingSlash) {
                     $matches = $m;
                 } else {
@@ -152,7 +152,7 @@ class TraceableUrlMatcher extends UrlMatcher
         return [];
     }
 
-    private function addTrace(string $log, int $level = self::ROUTE_DOES_NOT_MATCH, string $name = null, Route $route = null)
+    private function addTrace($log, $level = self::ROUTE_DOES_NOT_MATCH, $name = null, Route $route = null)
     {
         $this->traces[] = [
             'log' => $log,

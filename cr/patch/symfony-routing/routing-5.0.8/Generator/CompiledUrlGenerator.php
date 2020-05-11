@@ -23,7 +23,7 @@ class CompiledUrlGenerator extends UrlGenerator
     private $compiledRoutes = [];
     private $defaultLocale;
 
-    public function __construct(array $compiledRoutes, RequestContext $context, LoggerInterface $logger = null, string $defaultLocale = null)
+    public function __construct(array $compiledRoutes, RequestContext $context, LoggerInterface $logger = null, $defaultLocale = null)
     {
         $this->compiledRoutes = $compiledRoutes;
         $this->context = $context;
@@ -31,15 +31,22 @@ class CompiledUrlGenerator extends UrlGenerator
         $this->defaultLocale = $defaultLocale;
     }
 
-    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, array $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
-        $locale = $parameters['_locale']
-            ?? $this->context->getParameter('_locale')
-            ?: $this->defaultLocale;
+        $locale = isset($parameters['_locale'])
+            ? $parameters['_locale']
+            : ($this->context->getParameter('_locale') ?: $this->defaultLocale);
 
         if (null !== $locale) {
             do {
-                if (($this->compiledRoutes[$name.'.'.$locale][1]['_canonical_route'] ?? null) === $name) {
+                $canonicalRoute = null;
+                if (isset($this->compiledRoutes[$name.'.'.$locale])
+                    && isset($this->compiledRoutes[$name.'.'.$locale][1])
+                    && isset($this->compiledRoutes[$name.'.'.$locale][1]['_canonical_route'])) {
+                    $canonicalRoute = $this->compiledRoutes[$name.'.'.$locale][1]['_canonical_route'];
+                }
+
+                if ($canonicalRoute === $name) {
                     $name .= '.'.$locale;
                     break;
                 }

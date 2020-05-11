@@ -66,7 +66,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
         return \count($this->routes);
     }
 
-    public function add(string $name, Route $route)
+    public function add($name, Route $route)
     {
         unset($this->routes[$name]);
 
@@ -88,7 +88,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * @return Route|null A Route instance or null when not found
      */
-    public function get(string $name)
+    public function get($name)
     {
         return isset($this->routes[$name]) ? $this->routes[$name] : null;
     }
@@ -126,7 +126,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
     /**
      * Adds a prefix to the path of all child routes.
      */
-    public function addPrefix(string $prefix, array $defaults = [], array $requirements = [])
+    public function addPrefix($prefix, array $defaults = [], array $requirements = [])
     {
         $prefix = trim(trim($prefix), '/');
 
@@ -144,7 +144,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
     /**
      * Adds a prefix to the name of all the routes within in the collection.
      */
-    public function addNamePrefix(string $prefix)
+    public function addNamePrefix($prefix)
     {
         $prefixedRoutes = [];
 
@@ -161,7 +161,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
     /**
      * Sets the host pattern on all routes.
      */
-    public function setHost(?string $pattern, array $defaults = [], array $requirements = [])
+    public function setHost($pattern = null, array $defaults = [], array $requirements = [])
     {
         foreach ($this->routes as $route) {
             $route->setHost($pattern);
@@ -175,7 +175,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * Existing conditions will be overridden.
      */
-    public function setCondition(?string $condition)
+    public function setCondition($condition = null)
     {
         foreach ($this->routes as $route) {
             $route->setCondition($condition);

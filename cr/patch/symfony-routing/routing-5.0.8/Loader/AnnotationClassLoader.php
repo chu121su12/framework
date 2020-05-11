@@ -77,7 +77,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
     /**
      * Sets the annotation class to read route properties from.
      */
-    public function setRouteAnnotationClass(string $class)
+    public function setRouteAnnotationClass($class)
     {
         $this->routeAnnotationClass = $class;
     }
@@ -91,7 +91,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
      *
      * @throws \InvalidArgumentException When route can't be parsed
      */
-    public function load($class, string $type = null)
+    public function load($class, $type = null)
     {
         if (!class_exists($class)) {
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
@@ -220,7 +220,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, string $type = null)
+    public function supports($resource, $type = null)
     {
         return \is_string($resource) && preg_match('/^(?:\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)+$/', $resource) && (!$type || 'annotation' === $type);
     }
@@ -309,7 +309,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
         return $globals;
     }
 
-    private function resetGlobals(): array
+    private function resetGlobals()
     {
         return [
             'path' => null,
@@ -325,7 +325,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
         ];
     }
 
-    protected function createRoute(string $path, array $defaults, array $requirements, array $options, ?string $host, array $schemes, array $methods, ?string $condition)
+    protected function createRoute($path, array $defaults, array $requirements, array $options, $host = null, array $schemes, array $methods, $condition = null)
     {
         return new Route($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
     }

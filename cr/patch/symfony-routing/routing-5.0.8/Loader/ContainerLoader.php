@@ -30,7 +30,7 @@ class ContainerLoader extends ObjectLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, string $type = null)
+    public function supports($resource, $type = null)
     {
         return 'service' === $type;
     }
@@ -38,7 +38,7 @@ class ContainerLoader extends ObjectLoader
     /**
      * {@inheritdoc}
      */
-    protected function getObject(string $id)
+    protected function getObject($id)
     {
         return $this->container->get($id);
     }

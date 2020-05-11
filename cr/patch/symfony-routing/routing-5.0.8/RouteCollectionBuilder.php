@@ -54,7 +54,7 @@ class RouteCollectionBuilder
      *
      * @throws LoaderLoadException
      */
-    public function import($resource, string $prefix = '/', string $type = null)
+    public function import($resource, $prefix = '/', $type = null)
     {
         /** @var RouteCollection[] $collections */
         $collections = $this->load($resource, $type);
@@ -87,7 +87,7 @@ class RouteCollectionBuilder
      *
      * @return Route
      */
-    public function add(string $path, string $controller, string $name = null)
+    public function add($path, $controller, $name = null)
     {
         $route = new Route($path);
         $route->setDefault('_controller', $controller);
@@ -109,7 +109,7 @@ class RouteCollectionBuilder
     /**
      * Add a RouteCollectionBuilder.
      */
-    public function mount(string $prefix, self $builder)
+    public function mount($prefix, self $builder)
     {
         $builder->prefix = trim(trim($prefix), '/');
         $this->routes[] = $builder;
@@ -120,7 +120,7 @@ class RouteCollectionBuilder
      *
      * @return $this
      */
-    public function addRoute(Route $route, string $name = null)
+    public function addRoute(Route $route, $name = null)
     {
         if (null === $name) {
             // used as a flag to know which routes will need a name later
@@ -137,7 +137,7 @@ class RouteCollectionBuilder
      *
      * @return $this
      */
-    public function setHost(?string $pattern)
+    public function setHost($pattern = null)
     {
         $this->host = $pattern;
 
@@ -149,7 +149,7 @@ class RouteCollectionBuilder
      *
      * @return $this
      */
-    public function setCondition(?string $condition)
+    public function setCondition($condition = null)
     {
         $this->condition = $condition;
 
@@ -164,7 +164,7 @@ class RouteCollectionBuilder
      *
      * @return $this
      */
-    public function setDefault(string $key, $value)
+    public function setDefault($key, $value)
     {
         $this->defaults[$key] = $value;
 
@@ -179,7 +179,7 @@ class RouteCollectionBuilder
      *
      * @return $this
      */
-    public function setRequirement(string $key, $regex)
+    public function setRequirement($key, $regex)
     {
         $this->requirements[$key] = $regex;
 
@@ -194,7 +194,7 @@ class RouteCollectionBuilder
      *
      * @return $this
      */
-    public function setOption(string $key, $value)
+    public function setOption($key, $value)
     {
         $this->options[$key] = $value;
 
@@ -234,7 +234,7 @@ class RouteCollectionBuilder
      *
      * @return $this
      */
-    private function addResource(ResourceInterface $resource): self
+    private function addResource(ResourceInterface $resource)
     {
         $this->resources[] = $resource;
 
@@ -308,7 +308,7 @@ class RouteCollectionBuilder
     /**
      * Generates a route name based on details of this route.
      */
-    private function generateRouteName(Route $route): string
+    private function generateRouteName(Route $route)
     {
         $methods = implode('_', $route->getMethods()).'_';
 
@@ -332,7 +332,7 @@ class RouteCollectionBuilder
      *
      * @throws LoaderLoadException If no loader is found
      */
-    private function load($resource, string $type = null): array
+    private function load($resource, $type = null)
     {
         if (null === $this->loader) {
             throw new \BadMethodCallException('Cannot import other routing resources: you must pass a LoaderInterface when constructing RouteCollectionBuilder.');

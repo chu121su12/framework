@@ -50,7 +50,7 @@ class Route implements \Serializable
      * @param string|string[] $methods      A required HTTP method or an array of restricted methods
      * @param string|null     $condition    A condition that should evaluate to true for the route to match
      */
-    public function __construct(string $path, array $defaults = [], array $requirements = [], array $options = [], ?string $host = '', $schemes = [], $methods = [], ?string $condition = '')
+    public function __construct($path, array $defaults = [], array $requirements = [], array $options = [], $host = '', $schemes = [], $methods = [], $condition = '')
     {
         $this->setPath($path);
         $this->addDefaults($defaults);
@@ -62,7 +62,7 @@ class Route implements \Serializable
         $this->setCondition($condition);
     }
 
-    public function __serialize(): array
+    public function __serialize()
     {
         return [
             'path' => $this->path,
@@ -80,12 +80,12 @@ class Route implements \Serializable
     /**
      * @internal
      */
-    final public function serialize(): string
+    final public function serialize()
     {
         return serialize($this->__serialize());
     }
 
-    public function __unserialize(array $data): void
+    public function __unserialize(array $data)
     {
         $this->path = $data['path'];
         $this->host = $data['host'];
@@ -128,7 +128,7 @@ class Route implements \Serializable
      *
      * @return $this
      */
-    public function setPath(string $pattern)
+    public function setPath($pattern)
     {
         if (false !== strpbrk($pattern, '?<')) {
             $pattern = preg_replace_callback('#\{(\w++)(<.*?>)?(\?[^\}]*+)?\}#', function ($m) {
@@ -168,7 +168,7 @@ class Route implements \Serializable
      *
      * @return $this
      */
-    public function setHost(?string $pattern)
+    public function setHost($pattern = null)
     {
         $this->host = (string) $pattern;
         $this->compiled = null;
@@ -210,7 +210,7 @@ class Route implements \Serializable
      *
      * @return bool true if the scheme requirement exists, otherwise false
      */
-    public function hasScheme(string $scheme)
+    public function hasScheme($scheme)
     {
         return \in_array(strtolower($scheme), $this->schemes, true);
     }
@@ -296,7 +296,7 @@ class Route implements \Serializable
      *
      * @return $this
      */
-    public function setOption(string $name, $value)
+    public function setOption($name, $value)
     {
         $this->options[$name] = $value;
         $this->compiled = null;
@@ -309,7 +309,7 @@ class Route implements \Serializable
      *
      * @return mixed The option value or null when not given
      */
-    public function getOption(string $name)
+    public function getOption($name)
     {
         return isset($this->options[$name]) ? $this->options[$name] : null;
     }
@@ -319,7 +319,7 @@ class Route implements \Serializable
      *
      * @return bool true if the option is set, false otherwise
      */
-    public function hasOption(string $name)
+    public function hasOption($name)
     {
         return \array_key_exists($name, $this->options);
     }
@@ -378,7 +378,7 @@ class Route implements \Serializable
      *
      * @return mixed The default value or null when not given
      */
-    public function getDefault(string $name)
+    public function getDefault($name)
     {
         return isset($this->defaults[$name]) ? $this->defaults[$name] : null;
     }
@@ -388,7 +388,7 @@ class Route implements \Serializable
      *
      * @return bool true if the default value is set, false otherwise
      */
-    public function hasDefault(string $name)
+    public function hasDefault($name)
     {
         return \array_key_exists($name, $this->defaults);
     }
@@ -400,7 +400,7 @@ class Route implements \Serializable
      *
      * @return $this
      */
-    public function setDefault(string $name, $default)
+    public function setDefault($name, $default)
     {
         if ('_locale' === $name && $this->isLocalized()) {
             return $this;
@@ -466,7 +466,7 @@ class Route implements \Serializable
      *
      * @return string|null The regex or null when not given
      */
-    public function getRequirement(string $key)
+    public function getRequirement($key)
     {
         return isset($this->requirements[$key]) ? $this->requirements[$key] : null;
     }
@@ -476,7 +476,7 @@ class Route implements \Serializable
      *
      * @return bool true if a requirement is specified, false otherwise
      */
-    public function hasRequirement(string $key)
+    public function hasRequirement($key)
     {
         return \array_key_exists($key, $this->requirements);
     }
@@ -486,7 +486,7 @@ class Route implements \Serializable
      *
      * @return $this
      */
-    public function setRequirement(string $key, string $regex)
+    public function setRequirement($key, $regex)
     {
         if ('_locale' === $key && $this->isLocalized()) {
             return $this;
@@ -515,7 +515,7 @@ class Route implements \Serializable
      *
      * @return $this
      */
-    public function setCondition(?string $condition)
+    public function setCondition($condition = null)
     {
         $this->condition = (string) $condition;
         $this->compiled = null;
@@ -544,7 +544,7 @@ class Route implements \Serializable
         return $this->compiled = $class::compile($this);
     }
 
-    private function sanitizeRequirement(string $key, string $regex)
+    private function sanitizeRequirement($key, $regex)
     {
         if ('' !== $regex && '^' === $regex[0]) {
             $regex = (string) substr($regex, 1); // returns false for a single character
@@ -561,8 +561,8 @@ class Route implements \Serializable
         return $regex;
     }
 
-    private function isLocalized(): bool
+    private function isLocalized()
     {
-        return isset($this->defaults['_locale']) && isset($this->defaults['_canonical_route']) && ($this->requirements['_locale'] ?? null) === preg_quote($this->defaults['_locale'], RouteCompiler::REGEX_DELIMITER);
+        return isset($this->defaults['_locale']) && isset($this->defaults['_canonical_route']) && (isset($this->requirements['_locale']) ? $this->requirements['_locale'] : null) === preg_quote($this->defaults['_locale'], RouteCompiler::REGEX_DELIMITER);
     }
 }

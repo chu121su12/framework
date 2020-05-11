@@ -40,12 +40,12 @@ class StaticPrefixCollection
      */
     private $items = [];
 
-    public function __construct(string $prefix = '/')
+    public function __construct($prefix = '/')
     {
         $this->prefix = $prefix;
     }
 
-    public function getPrefix(): string
+    public function getPrefix()
     {
         return $this->prefix;
     }
@@ -53,7 +53,7 @@ class StaticPrefixCollection
     /**
      * @return array[]|self[]
      */
-    public function getRoutes(): array
+    public function getRoutes()
     {
         return $this->items;
     }
@@ -63,7 +63,7 @@ class StaticPrefixCollection
      *
      * @param array|self $route
      */
-    public function addRoute(string $prefix, $route)
+    public function addRoute($prefix, $route)
     {
         list($prefix, $staticPrefix) = $this->getCommonPrefix($prefix, $prefix);
 
@@ -126,7 +126,7 @@ class StaticPrefixCollection
     /**
      * Linearizes back a set of nested routes into a collection.
      */
-    public function populateCollection(RouteCollection $routes): RouteCollection
+    public function populateCollection(RouteCollection $routes)
     {
         foreach ($this->items as $route) {
             if ($route instanceof self) {
@@ -144,7 +144,7 @@ class StaticPrefixCollection
      *
      * The static prefix stops at last at the first opening bracket.
      */
-    private function getCommonPrefix(string $prefix, string $anotherPrefix): array
+    private function getCommonPrefix($prefix, $anotherPrefix)
     {
         $baseLength = \strlen($this->prefix);
         $end = min(\strlen($prefix), \strlen($anotherPrefix));
@@ -153,7 +153,7 @@ class StaticPrefixCollection
 
         for ($i = $baseLength; $i < $end && $prefix[$i] === $anotherPrefix[$i]; ++$i) {
             if ('(' === $prefix[$i]) {
-                $staticLength = $staticLength ?? $i;
+                $staticLength = isset($staticLength) ? $staticLength : $i;
                 for ($j = 1 + $i, $n = 1; $j < $end && 0 < $n; ++$j) {
                     if ($prefix[$j] !== $anotherPrefix[$j]) {
                         break 2;
@@ -170,7 +170,7 @@ class StaticPrefixCollection
                 if (0 < $n) {
                     break;
                 }
-                if (('?' === ($prefix[$j] ?? '') || '?' === ($anotherPrefix[$j] ?? '')) && ($prefix[$j] ?? '') !== ($anotherPrefix[$j] ?? '')) {
+                if (('?' === (isset($prefix[$j]) ? $prefix[$j] : '') || '?' === (isset($anotherPrefix[$j]) ? $anotherPrefix[$j] : '')) && (isset($prefix[$j]) ? $prefix[$j] : '') !== (isset($anotherPrefix[$j]) ? $anotherPrefix[$j] : '')) {
                     break;
                 }
                 $subPattern = substr($prefix, $i, $j - $i);
@@ -192,7 +192,7 @@ class StaticPrefixCollection
             } while (0b10 === (\ord($prefix[$i]) >> 6));
         }
 
-        return [substr($prefix, 0, $i), substr($prefix, 0, $staticLength ?? $i)];
+        return [substr($prefix, 0, $i), substr($prefix, 0, isset($staticLength) ? $staticLength : $i)];
     }
 
     public static function handleError($type, $msg)
