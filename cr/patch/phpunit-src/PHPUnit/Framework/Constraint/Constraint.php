@@ -12,14 +12,13 @@ namespace PHPUnit\Framework\Constraint;
 
 use Countable;
 use \PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
-use \PHPUnit_Framework_SelfDescribing as SelfDescribing;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Exporter\Exporter;
 
 /**
  * Abstract base class for constraints which can be applied to any value.
  */
-abstract class Constraint extends \PHPUnit_Framework_Constraint implements Countable, SelfDescribing
+abstract class Constraint extends \PHPUnit_Framework_Constraint implements Countable, \PHPUnit_Framework_SelfDescribing
 {
     protected $exporter;
 

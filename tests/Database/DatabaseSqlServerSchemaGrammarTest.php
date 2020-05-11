@@ -11,6 +11,8 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseSqlServerSchemaGrammarTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     protected function tearDown()
     {
         m::close();
