@@ -83,10 +83,10 @@ class DatabaseEloquentFactoryTest extends TestCase
 
     public function test_basic_model_can_be_created()
     {
-        $user = FactoryTestUserFactory::new()->create();
+        $user = FactoryTestUserFactory::newUp()->create();
         $this->assertInstanceOf(Eloquent::class, $user);
 
-        $user = FactoryTestUserFactory::new()->create(['name' => 'Taylor Otwell']);
+        $user = FactoryTestUserFactory::newUp()->create(['name' => 'Taylor Otwell']);
         $this->assertInstanceOf(Eloquent::class, $user);
         $this->assertEquals('Taylor Otwell', $user->name);
 
@@ -96,7 +96,7 @@ class DatabaseEloquentFactoryTest extends TestCase
 
     public function test_make_creates_unpersisted_model_instance()
     {
-        $user = FactoryTestUserFactory::new()->make(['name' => 'Taylor Otwell']);
+        $user = FactoryTestUserFactory::newUp()->make(['name' => 'Taylor Otwell']);
 
         $this->assertInstanceOf(Eloquent::class, $user);
         $this->assertEquals('Taylor Otwell', $user->name);
@@ -105,7 +105,7 @@ class DatabaseEloquentFactoryTest extends TestCase
 
     public function test_after_creating_and_making_callbacks_are_called()
     {
-        $user = FactoryTestUserFactory::new()
+        $user = FactoryTestUserFactory::newUp()
                         ->afterMaking(function ($user) {
                             $_SERVER['__test.user.making'] = $user;
                         })
@@ -156,7 +156,7 @@ class DatabaseEloquentFactoryTest extends TestCase
     public function test_belongs_to_relationship()
     {
         $posts = FactoryTestPostFactory::times(3)
-                        ->for(FactoryTestUserFactory::new(['name' => 'Taylor Otwell']), 'user')
+                        ->forParent(FactoryTestUserFactory::newUp(['name' => 'Taylor Otwell']), 'user')
                         ->create();
 
         $this->assertCount(3, $posts->filter(function ($post) {
@@ -170,7 +170,7 @@ class DatabaseEloquentFactoryTest extends TestCase
     public function test_morph_to_relationship()
     {
         $posts = FactoryTestCommentFactory::times(3)
-                        ->for(FactoryTestPostFactory::new(['title' => 'Test Title']), 'commentable')
+                        ->forParent(FactoryTestPostFactory::newUp(['title' => 'Test Title']), 'commentable')
                         ->create();
 
         $this->assertEquals('Test Title', FactoryTestPost::first()->title);
@@ -211,13 +211,13 @@ class DatabaseEloquentFactoryTest extends TestCase
     {
         $users = FactoryTestUserFactory::times(2)->sequence(
             ['name' => 'Taylor Otwell'],
-            ['name' => 'Abigail Otwell'],
+            ['name' => 'Abigail Otwell']
         )->create();
 
         $this->assertEquals('Taylor Otwell', $users[0]->name);
         $this->assertEquals('Abigail Otwell', $users[1]->name);
 
-        $user = FactoryTestUserFactory::new()
+        $user = FactoryTestUserFactory::newUp()
                         ->hasAttached(
                             FactoryTestRoleFactory::times(4),
                             new Sequence(['admin' => 'Y'], ['admin' => 'N']),
@@ -291,7 +291,7 @@ class FactoryTestPostFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => FactoryTestUserFactory::new(),
+            'user_id' => FactoryTestUserFactory::newUp(),
             'title' => $this->faker->name,
         ];
     }
@@ -319,7 +319,7 @@ class FactoryTestCommentFactory extends Factory
     public function definition()
     {
         return [
-            'commentable_id' => FactoryTestPostFactory::new(),
+            'commentable_id' => FactoryTestPostFactory::newUp(),
             'commentable_type' => FactoryTestPost::class,
             'body' => $this->faker->name,
         ];

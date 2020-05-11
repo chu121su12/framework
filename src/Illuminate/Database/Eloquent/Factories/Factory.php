@@ -111,11 +111,11 @@ abstract class Factory
      * @return void
      */
     public function __construct($count = null,
-                                ?Collection $states = null,
-                                ?Collection $has = null,
-                                ?Collection $for = null,
-                                ?Collection $afterMaking = null,
-                                ?Collection $afterCreating = null,
+                                Collection $states = null,
+                                Collection $has = null,
+                                Collection $for = null,
+                                Collection $afterMaking = null,
+                                Collection $afterCreating = null,
                                 $connection = null)
     {
         $this->count = $count;
@@ -140,7 +140,7 @@ abstract class Factory
      * @param  callable|array  $attributes
      * @return static
      */
-    public static function new($attributes = [])
+    public static function newUp($attributes = [])
     {
         return (new static)->state($attributes);
     }
@@ -174,7 +174,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed
      */
-    public function create($attributes = [], ?Model $parent = null)
+    public function create($attributes = [], Model $parent = null)
     {
         if (! empty($attributes)) {
             return $this->state($attributes)->create([], $parent);
@@ -247,7 +247,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed
      */
-    public function make($attributes = [], ?Model $parent = null)
+    public function make($attributes = [], Model $parent = null)
     {
         if (! empty($attributes)) {
             return $this->state($attributes)->make([], $parent);
@@ -278,7 +278,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return \Illuminate\Database\Eloquent\Model
      */
-    protected function makeInstance(?Model $parent)
+    protected function makeInstance(Model $parent = null)
     {
         return Model::unguarded(function () use ($parent) {
             return tap($this->newModel($this->getExpandedAttributes($parent)), function ($instance) {
@@ -294,7 +294,7 @@ abstract class Factory
      *
      * @return mixed
      */
-    protected function getExpandedAttributes(?Model $parent)
+    protected function getExpandedAttributes(Model $parent = null)
     {
         return $this->expandAttributes($this->getRawAttributes($parent));
     }
@@ -305,7 +305,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return array
      */
-    protected function getRawAttributes(?Model $parent)
+    protected function getRawAttributes(Model $parent = null)
     {
         $this->faker = $this->withFaker();
 
@@ -425,7 +425,7 @@ abstract class Factory
      * @param  string|null  $relationship
      * @return static
      */
-    public function for(self $factory, $relationship = null)
+    public function forParent(self $factory, $relationship = null)
     {
         return $this->newInstance(['for' => $this->for->concat([new BelongsToRelationship(
             $factory,
@@ -476,7 +476,7 @@ abstract class Factory
      * @param  \Illuminate\Support\Collection  $instances
      * @return void
      */
-    protected function callAfterCreating(Collection $instances, ?Model $parent = null)
+    protected function callAfterCreating(Collection $instances, Model $parent = null)
     {
         $instances->each(function ($model) use ($parent) {
             $this->afterCreating->each(function ($callback) use ($model, $parent) {
@@ -589,7 +589,7 @@ abstract class Factory
 
         $factory = $resolver($modelName);
 
-        return $factory::new();
+        return $factory::newUp();
     }
 
     /**
@@ -629,7 +629,7 @@ abstract class Factory
         $factory = static::factoryForModel(Str::singular(Str::substr($method, 3)));
 
         if (Str::startsWith($method, 'for')) {
-            return $this->for($factory->state(isset($parameters[0]) ? $parameters[0] : []));
+            return $this->forParent($factory->state(isset($parameters[0]) ? $parameters[0] : []));
         } elseif (Str::startsWith($method, 'has')) {
             return $this->has(
                 $factory

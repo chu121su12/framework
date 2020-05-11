@@ -16,7 +16,7 @@ class ValueObject_castUsing_Class implements CastsAttributes
         $this->argument = $argument;
     }
 
-    public function get($model, $key, $value, $attributes)
+    public function get($model, $key, $value, array $attributes)
     {
         if ($this->argument) {
             return $this->argument;
@@ -25,7 +25,7 @@ class ValueObject_castUsing_Class implements CastsAttributes
         return unserialize($value);
     }
 
-    public function set($model, $key, $value, $attributes)
+    public function set($model, $key, $value, array $attributes)
     {
         return serialize($value);
     }
@@ -196,7 +196,7 @@ class HashCaster implements CastsInboundAttributes
         $this->algorithm = $algorithm;
     }
 
-    public function set($model, $key, $value, $attributes)
+    public function set($model, $key, $value, array $attributes)
     {
         return [$key => hash($this->algorithm, $value)];
     }
@@ -204,12 +204,12 @@ class HashCaster implements CastsInboundAttributes
 
 class UppercaseCaster implements CastsAttributes
 {
-    public function get($model, $key, $value, $attributes)
+    public function get($model, $key, $value, array $attributes)
     {
         return strtoupper($value);
     }
 
-    public function set($model, $key, $value, $attributes)
+    public function set($model, $key, $value, array $attributes)
     {
         return [$key => strtoupper($value)];
     }
@@ -217,12 +217,12 @@ class UppercaseCaster implements CastsAttributes
 
 class AddressCaster implements CastsAttributes
 {
-    public function get($model, $key, $value, $attributes)
+    public function get($model, $key, $value, array $attributes)
     {
         return new Address($attributes['address_line_one'], $attributes['address_line_two']);
     }
 
-    public function set($model, $key, $value, $attributes)
+    public function set($model, $key, $value, array $attributes)
     {
         return ['address_line_one' => $value->lineOne, 'address_line_two' => $value->lineTwo];
     }
@@ -230,12 +230,12 @@ class AddressCaster implements CastsAttributes
 
 class JsonCaster implements CastsAttributes
 {
-    public function get($model, $key, $value, $attributes)
+    public function get($model, $key, $value, array $attributes)
     {
         return json_decode($value, true);
     }
 
-    public function set($model, $key, $value, $attributes)
+    public function set($model, $key, $value, array $attributes)
     {
         return json_encode($value);
     }
@@ -250,7 +250,7 @@ class ValueObjectCaster implements CastsAttributes
         $this->argument = $argument;
     }
 
-    public function get($model, $key, $value, $attributes)
+    public function get($model, $key, $value, array $attributes)
     {
         if ($this->argument) {
             return $this->argument;
@@ -259,7 +259,7 @@ class ValueObjectCaster implements CastsAttributes
         return unserialize($value);
     }
 
-    public function set($model, $key, $value, $attributes)
+    public function set($model, $key, $value, array $attributes)
     {
         return serialize($value);
     }
