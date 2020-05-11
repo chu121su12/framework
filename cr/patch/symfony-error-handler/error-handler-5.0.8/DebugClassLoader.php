@@ -522,7 +522,7 @@ class DebugClassLoader
                 }
             }
 
-            if (null !== (self::INTERNAL_TYPES[$use] ?? null)) {
+            if (null !== (isset(self::INTERNAL_TYPES[$use]) ? self::INTERNAL_TYPES[$use] : null)) {
                 foreach (self::INTERNAL_TYPES[$use] as $method => $returnType) {
                     if ('void' !== $returnType) {
                         self::$returnTypes[$class] += [$method => [$returnType, $returnType, $class, '']];
@@ -577,7 +577,7 @@ class DebugClassLoader
             $forcePatchTypes = $this->patchTypes['force'];
 
             if ($canAddReturnType = null !== $forcePatchTypes && false === strpos($method->getFileName(), \DIRECTORY_SEPARATOR.'vendor'.\DIRECTORY_SEPARATOR)) {
-                if ('void' !== (self::MAGIC_METHODS[$method->name] ?? 'void')) {
+                if ('void' !== (isset(self::MAGIC_METHODS[$method->name]) ? self::MAGIC_METHODS[$method->name] : 'void')) {
                     $this->patchTypes['force'] = $forcePatchTypes ?: 'docblock';
                 }
 
@@ -591,7 +591,7 @@ class DebugClassLoader
                 ;
             }
 
-            if (null !== ($returnType = self::$returnTypes[$class][$method->name] ?? self::MAGIC_METHODS[$method->name] ?? null) && !$method->hasReturnType() && !($doc && preg_match('/\n\s+\* @return +(\S+)/', $doc))) {
+            if (null !== ($returnType = self::$returnTypes[$class][$method->name] ?? isset(self::MAGIC_METHODS[$method->name]) ? self::MAGIC_METHODS[$method->name] : null) && !$method->hasReturnType() && !($doc && preg_match('/\n\s+\* @return +(\S+)/', $doc))) {
                 list($normalizedType, $returnType, $declaringClass, $declaringFile) = \is_string($returnType) ? [$returnType, $returnType, '', ''] : $returnType;
 
                 if ('void' === $normalizedType) {
@@ -619,7 +619,7 @@ class DebugClassLoader
 
             $matches = [];
 
-            if (!$method->hasReturnType() && ((false !== strpos($doc, '@return') && preg_match('/\n\s+\* @return +(\S+)/', $doc, $matches)) || 'void' !== (self::MAGIC_METHODS[$method->name] ?? 'void'))) {
+            if (!$method->hasReturnType() && ((false !== strpos($doc, '@return') && preg_match('/\n\s+\* @return +(\S+)/', $doc, $matches)) || 'void' !== (isset(self::MAGIC_METHODS[$method->name]) ? self::MAGIC_METHODS[$method->name] : 'void'))) {
                 $matches = $matches ?: [1 => self::MAGIC_METHODS[$method->name]];
                 $this->setReturnType($matches[1], $method, $parent);
 
