@@ -2,11 +2,11 @@
 
 namespace Illuminate\Foundation\Testing\Concerns;
 
-use Exception;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Exception;
 
 class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements ExceptionHandler
 {
@@ -27,10 +27,12 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
     }
 
     /**
-     * Report the given exception.
+     * Report or log an exception.
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return void
+     *
+     * @throws \Exception
      */
     public function report(Exception $e)
     {
@@ -40,7 +42,7 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
     /**
      * Determine if the exception should be reported.
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return bool
      */
     public function shouldReport(Exception $e)
@@ -49,13 +51,13 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
     }
 
     /**
-     * Render the given exception.
+     * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $e
-     * @return mixed
+     * @param  \Throwable  $e
+     * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException|\Exception
+     * @throws \Throwable
      */
     public function render($request, Exception $e)
     {
@@ -75,15 +77,15 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
     }
 
     /**
-     * Render the exception for the console.
+     * Render an exception to the console.
      *
      * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      * @return void
      */
     public function renderForConsole($output, Exception $e)
     {
-        (new ConsoleApplication)->renderException($e, $output);
+        (new ConsoleApplication)->renderThrowable($e, $output);
     }
 }
 

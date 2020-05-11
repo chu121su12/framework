@@ -51,12 +51,14 @@ class LoadEnvironmentVariables
             }
         }
 
-        if (! env('APP_ENV')) {
+        $environment = Env::get('APP_ENV');
+
+        if (! $environment) {
             return;
         }
 
         $this->setEnvironmentFilePath(
-            $app, $app->environmentFile().'.'.env('APP_ENV')
+            $app, $app->environmentFile().'.'.$environment
         );
     }
 
@@ -87,9 +89,9 @@ class LoadEnvironmentVariables
     protected function createDotenv($app)
     {
         return Dotenv::create(
+            Env::getRepository(),
             $app->environmentPath(),
-            $app->environmentFile(),
-            Env::getFactory()
+            $app->environmentFile()
         );
     }
 

@@ -57,7 +57,7 @@ trait MakesHttpRequests
     /**
      * Define additional headers to be sent with the request.
      *
-     * @param  array $headers
+     * @param  array  $headers
      * @return $this
      */
     public function withHeaders(array $headers)
@@ -70,8 +70,8 @@ trait MakesHttpRequests
     /**
      * Add a header to be sent with the request.
      *
-     * @param  string $name
-     * @param  string $value
+     * @param  string  $name
+     * @param  string  $value
      * @return $this
      */
     public function withHeader($name, $value)

@@ -504,6 +504,7 @@ class Dispatcher implements DispatcherContract
     {
         return tap($job, function ($job) use ($listener) {
             $job->tries = isset($listener->tries) ? $listener->tries : null;
+            $job->retryAfter = isset($listener->retryAfter) ? $listener->retryAfter : null;
             $job->timeout = isset($listener->timeout) ? $listener->timeout : null;
             $job->timeoutAt = method_exists($listener, 'retryUntil')
                                 ? $listener->retryUntil() : null;

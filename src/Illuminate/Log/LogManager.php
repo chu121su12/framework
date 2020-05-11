@@ -164,9 +164,17 @@ class LogManager implements LoggerInterface
      */
     protected function createEmergencyLogger()
     {
-        return new Logger(new Monolog('laravel', $this->prepareHandlers([new StreamHandler(
-                $this->app->storagePath().'/logs/laravel.log', $this->level(['level' => 'debug'])
-        )])), $this->app['events']);
+        $config = $this->configurationFor('emergency');
+
+        $handler = new StreamHandler(
+            $config['path'] ?? $this->app->storagePath().'/logs/laravel.log',
+            $this->level(['level' => 'debug'])
+        );
+
+        return new Logger(
+            new Monolog('laravel', $this->prepareHandlers([$handler])),
+            $this->app['events']
+        );
     }
 
     /**
@@ -468,7 +476,7 @@ class LogManager implements LoggerInterface
     /**
      * Register a custom driver creator Closure.
      *
-     * @param  string    $driver
+     * @param  string  $driver
      * @param  \Closure  $callback
      * @return $this
      */

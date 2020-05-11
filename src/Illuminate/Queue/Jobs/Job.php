@@ -112,7 +112,7 @@ abstract class Job
     /**
      * Release the job back into the queue.
      *
-     * @param  int   $delay
+     * @param  int  $delay
      * @return void
      */
     public function release($delay = 0)
@@ -163,7 +163,7 @@ abstract class Job
     /**
      * Delete the job, call the "failed" method, and raise the failed job event.
      *
-     * @param  \Throwable|null $e
+     * @param  \Throwable|null  $e
      * @return void
      */
     public function fail($e = null)
@@ -191,7 +191,7 @@ abstract class Job
     /**
      * Process an exception that caused the job to fail.
      *
-     * @param  \Throwable|null $e
+     * @param  \Throwable|null  $e
      * @return void
      */
     protected function failed($e)

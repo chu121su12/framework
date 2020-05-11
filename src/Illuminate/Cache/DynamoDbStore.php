@@ -453,6 +453,8 @@ class DynamoDbStore implements LockProvider, Store
      * Remove all items from the cache.
      *
      * @return bool
+     *
+     * @throws \RuntimeException
      */
     public function flush()
     {
