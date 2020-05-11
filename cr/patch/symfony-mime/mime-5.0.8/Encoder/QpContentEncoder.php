@@ -36,7 +36,7 @@ final class QpContentEncoder implements ContentEncoderInterface
         return 'quoted-printable';
     }
 
-    public function encodeString($string, ?string $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
+    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
     {
         return $this->standardize(quoted_printable_encode($string));
     }

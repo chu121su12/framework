@@ -21,7 +21,7 @@ interface MimeTypeGuesserInterface
     /**
      * Returns true if this guesser is supported.
      */
-    public function isGuesserSupported(): bool;
+    public function isGuesserSupported();
 
     /**
      * Guesses the MIME type of the file with the given path.
@@ -33,5 +33,5 @@ interface MimeTypeGuesserInterface
      * @throws \LogicException           If the guesser is not supported
      * @throws \InvalidArgumentException If the file does not exist or is not readable
      */
-    public function guessMimeType($path): ?string;
+    public function guessMimeType($path);
 }

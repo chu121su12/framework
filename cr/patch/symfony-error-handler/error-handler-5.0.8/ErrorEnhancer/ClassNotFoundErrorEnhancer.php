@@ -24,7 +24,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
     /**
      * {@inheritdoc}
      */
-    public function enhance(\Throwable $error): ?\Throwable
+    public function enhance(\Throwable $error)
     {
         // Some specific versions of PHP produce a fatal error when extending a not found class.
         $message = !$error instanceof FatalError ? $error->getMessage() : $error->getError()['message'];
@@ -141,7 +141,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         return $classes;
     }
 
-    private function convertFileToClass($path, $file, $prefix): ?string
+    private function convertFileToClass($path, $file, $prefix)
     {
         $candidates = [
             // namespaced class

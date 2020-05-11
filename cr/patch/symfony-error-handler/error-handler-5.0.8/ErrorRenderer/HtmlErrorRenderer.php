@@ -193,7 +193,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return sprintf('<abbr title="%s">%s</abbr>', $class, $short);
     }
 
-    private function getFileRelative($file): ?string
+    private function getFileRelative($file)
     {
         $file = str_replace('\\', '/', $file);
 

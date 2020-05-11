@@ -65,7 +65,7 @@ final class CharacterStream
     /**
      * @param resource|string $input
      */
-    public function __construct($input, ?string $charset = 'utf-8')
+    public function __construct($input, $charset = 'utf-8')
     {
         $charset = strtolower(trim($charset)) ?: 'utf-8';
         if ('utf-8' === $charset || 'utf8' === $charset) {
@@ -110,7 +110,7 @@ final class CharacterStream
         }
     }
 
-    public function read($length): ?string
+    public function read($length)
     {
         if ($this->currentPos >= $this->charCount) {
             return null;
@@ -143,7 +143,7 @@ final class CharacterStream
         return $ret;
     }
 
-    public function readBytes($length): ?array
+    public function readBytes($length)
     {
         if (null !== $read = $this->read($length)) {
             return array_map('ord', str_split($read, 1));

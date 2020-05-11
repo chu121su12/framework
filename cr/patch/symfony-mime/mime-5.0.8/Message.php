@@ -49,7 +49,7 @@ class Message extends RawMessage
         return $this;
     }
 
-    public function getBody(): ?AbstractPart
+    public function getBody()
     {
         return $this->body;
     }

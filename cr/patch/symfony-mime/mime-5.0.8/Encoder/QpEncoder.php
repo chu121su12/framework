@@ -114,7 +114,7 @@ class QpEncoder implements EncoderInterface
      * If the first line needs to be shorter, indicate the difference with
      * $firstLineOffset.
      */
-    public function encodeString($string, ?string $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
+    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
     {
         if ($maxLineLength > 76 || $maxLineLength <= 0) {
             $maxLineLength = 76;

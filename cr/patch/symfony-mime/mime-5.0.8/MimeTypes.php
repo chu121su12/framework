@@ -124,7 +124,7 @@ final class MimeTypes implements MimeTypesInterface
      * returns a value that is not null, this method terminates and returns the
      * value.
      */
-    public function guessMimeType($path): ?string
+    public function guessMimeType($path)
     {
         foreach ($this->guessers as $guesser) {
             if (!$guesser->isGuesserSupported()) {

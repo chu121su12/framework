@@ -228,7 +228,7 @@ class FlattenException
         return $this;
     }
 
-    public function getPrevious(): ?self
+    public function getPrevious()
     {
         return $this->previous;
     }
@@ -363,7 +363,7 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setAsString(?string $asString)
+    public function setAsString($asString = null)
     {
         $this->asString = $asString;
 

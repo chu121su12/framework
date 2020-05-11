@@ -41,7 +41,7 @@ final class ParameterizedHeader extends UnstructuredHeader
         }
     }
 
-    public function setParameter($parameter, ?string $value)
+    public function setParameter($parameter, $value = null)
     {
         $this->setParameters(array_merge($this->getParameters(), [$parameter => $value]));
     }

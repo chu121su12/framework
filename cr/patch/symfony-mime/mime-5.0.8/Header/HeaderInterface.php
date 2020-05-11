@@ -38,22 +38,22 @@ interface HeaderInterface
 
     public function setCharset($charset);
 
-    public function getCharset(): ?string;
+    public function getCharset();
 
     public function setLanguage($lang);
 
-    public function getLanguage(): ?string;
+    public function getLanguage();
 
-    public function getName(): string;
+    public function getName();
 
     public function setMaxLineLength($lineLength);
 
-    public function getMaxLineLength(): int;
+    public function getMaxLineLength();
 
     /**
      * Gets this Header rendered as a compliant string.
      */
-    public function toString(): string;
+    public function toString();
 
     /**
      * Gets the header's body, prepared for folding into a final header value.
@@ -61,5 +61,5 @@ interface HeaderInterface
      * This is not necessarily RFC 2822 compliant since folding white space is
      * not added at this stage (see {@link toString()} for that).
      */
-    public function getBodyAsString(): string;
+    public function getBodyAsString();
 }

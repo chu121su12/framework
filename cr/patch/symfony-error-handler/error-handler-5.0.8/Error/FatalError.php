@@ -67,14 +67,25 @@ class FatalError extends \Error
             }
         }
 
-        foreach ([
-            'file' => $error['file'],
-            'line' => $error['line'],
-            'trace' => $trace,
-        ] as $property => $value) {
-            $refl = new \ReflectionProperty(\Error::class, $property);
-            $refl->setAccessible(true);
-            $refl->setValue($this, $value);
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            foreach ([
+                'file' => $error['file'],
+                'line' => $error['line'],
+            ] as $property => $value) {
+                $refl = new \ReflectionProperty(\Error::class, $property);
+                $refl->setAccessible(true);
+                $refl->setValue($this, $value);
+            }
+        } else {
+            foreach ([
+                'file' => $error['file'],
+                'line' => $error['line'],
+                'trace' => $trace,
+            ] as $property => $value) {
+                $refl = new \ReflectionProperty(\Error::class, $property);
+                $refl->setAccessible(true);
+                $refl->setValue($this, $value);
+            }
         }
     }
 

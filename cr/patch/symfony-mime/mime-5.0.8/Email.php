@@ -52,7 +52,7 @@ class Email extends Message
         return $this->setHeaderBody('Text', 'Subject', $subject);
     }
 
-    public function getSubject(): ?string
+    public function getSubject()
     {
         return $this->getHeaders()->getHeaderBody('Subject');
     }
@@ -80,7 +80,7 @@ class Email extends Message
         return $this->setHeaderBody('Path', 'Return-Path', Address::create($address));
     }
 
-    public function getReturnPath(): ?Address
+    public function getReturnPath()
     {
         return $this->getHeaders()->getHeaderBody('Return-Path');
     }
@@ -95,7 +95,7 @@ class Email extends Message
         return $this->setHeaderBody('Mailbox', 'Sender', Address::create($address));
     }
 
-    public function getSender(): ?Address
+    public function getSender()
     {
         return $this->getHeaders()->getHeaderBody('Sender');
     }
@@ -292,7 +292,7 @@ class Email extends Message
         return $this->text;
     }
 
-    public function getTextCharset(): ?string
+    public function getTextCharset()
     {
         return $this->textCharset;
     }
@@ -318,7 +318,7 @@ class Email extends Message
         return $this->html;
     }
 
-    public function getHtmlCharset(): ?string
+    public function getHtmlCharset()
     {
         return $this->htmlCharset;
     }
@@ -458,7 +458,7 @@ class Email extends Message
         return $part;
     }
 
-    private function prepareParts(): ?array
+    private function prepareParts()
     {
         $names = [];
         $htmlPart = null;

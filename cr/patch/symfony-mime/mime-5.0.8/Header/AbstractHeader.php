@@ -39,7 +39,7 @@ abstract class AbstractHeader implements HeaderInterface
         $this->charset = $charset;
     }
 
-    public function getCharset(): ?string
+    public function getCharset()
     {
         return $this->charset;
     }
@@ -54,7 +54,7 @@ abstract class AbstractHeader implements HeaderInterface
         $this->lang = $lang;
     }
 
-    public function getLanguage(): ?string
+    public function getLanguage()
     {
         return $this->lang;
     }

@@ -66,7 +66,7 @@ final class IdentificationHeader extends AbstractHeader
      *
      * If multiple IDs are set only the first is returned.
      */
-    public function getId(): ?string
+    public function getId()
     {
         return isset($this->ids[0]) ? $this->ids[0] : null;
     }

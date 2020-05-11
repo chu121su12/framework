@@ -162,7 +162,7 @@ final class Headers
         return $this;
     }
 
-    public function get($name): ?HeaderInterface
+    public function get($name)
     {
         $name = strtolower($name);
         if (!isset($this->headers[$name])) {
@@ -231,7 +231,7 @@ final class Headers
      */
     public function getHeaderBody($name)
     {
-        return $this->has($name) ? $this->get($name)->getBody() : null;
+        return $this->has($name) ? $this->get($name)->getBody();
     }
 
     /**
@@ -249,7 +249,7 @@ final class Headers
     /**
      * @internal
      */
-    public function getHeaderParameter($name, $parameter): ?string
+    public function getHeaderParameter($name, $parameter)
     {
         if (!$this->has($name)) {
             return null;

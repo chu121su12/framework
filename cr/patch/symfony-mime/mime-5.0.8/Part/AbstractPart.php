@@ -55,11 +55,11 @@ abstract class AbstractPart
         return $this->getMediaType().'/'.$this->getMediaSubtype();
     }
 
-    abstract public function bodyToString(): string;
+    abstract public function bodyToString();
 
-    abstract public function bodyToIterable(): iterable;
+    abstract public function bodyToIterable();
 
-    abstract public function getMediaType(): string;
+    abstract public function getMediaType();
 
-    abstract public function getMediaSubtype(): string;
+    abstract public function getMediaSubtype();
 }

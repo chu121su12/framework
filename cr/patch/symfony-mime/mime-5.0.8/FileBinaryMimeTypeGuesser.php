@@ -61,7 +61,7 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
     /**
      * {@inheritdoc}
      */
-    public function guessMimeType($path): ?string
+    public function guessMimeType($path)
     {
         if (!is_file($path) || !is_readable($path)) {
             throw new InvalidArgumentException(sprintf('The "%s" file does not exist or is not readable.', $path));

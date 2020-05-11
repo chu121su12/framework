@@ -311,9 +311,9 @@ class DebugClassLoader
         return true;
     }
 
-    public function findFile($class): ?string
+    public function findFile($class)
     {
-        return $this->isFinder ? ($this->classLoader[0]->findFile($class) ?: null) : null;
+        return $this->isFinder ? ($this->classLoader[0]->findFile($class) ?: null);
     }
 
     /**
@@ -682,7 +682,7 @@ class DebugClassLoader
         return $deprecations;
     }
 
-    public function checkCase(\ReflectionClass $refl, $file, $class): ?array
+    public function checkCase(\ReflectionClass $refl, $file, $class)
     {
         $real = explode('\\', $class.strrchr($file, '.'));
         $tail = explode(\DIRECTORY_SEPARATOR, str_replace('/', \DIRECTORY_SEPARATOR, $file));
@@ -794,7 +794,7 @@ class DebugClassLoader
      *
      * @return string[]
      */
-    private function getOwnInterfaces($class, ?string $parent)
+    private function getOwnInterfaces($class, $parent = null)
     {
         $ownInterfaces = class_implements($class, false);
 
@@ -813,7 +813,7 @@ class DebugClassLoader
         return $ownInterfaces;
     }
 
-    private function setReturnType($types, \ReflectionMethod $method, ?string $parent)
+    private function setReturnType($types, \ReflectionMethod $method, $parent = null)
     {
         $nullable = false;
         $typesMap = [];
@@ -881,7 +881,7 @@ class DebugClassLoader
         self::$returnTypes[$method->class][$method->name] = [$normalizedType, $returnType, $method->class, $method->getFileName()];
     }
 
-    private function normalizeType($type, $class, ?string $parent)
+    private function normalizeType($type, $class, $parent = null)
     {
         if (isset(self::SPECIAL_RETURN_TYPES[$lcType = strtolower($type)])) {
             if ('parent' === $lcType = self::SPECIAL_RETURN_TYPES[$lcType]) {
