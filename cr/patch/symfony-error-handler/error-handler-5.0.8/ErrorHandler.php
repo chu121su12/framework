@@ -108,7 +108,7 @@ class ErrorHandler
     /**
      * Registers the error handler.
      */
-    public static function register(self $handler = null, bool $replace = true)
+    public static function register(self $handler = null, $replace = true)
     {
         if (null === self::$reservedMemory) {
             self::$reservedMemory = str_repeat('x', 10240);
@@ -164,7 +164,7 @@ class ErrorHandler
      */
     public static function call(callable $function, ...$arguments)
     {
-        set_error_handler(static function (int $type, string $message, string $file, int $line) {
+        set_error_handler(static function ($type, $message, $file, $line) {
             if (__FILE__ === $file) {
                 $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
                 $file = $trace[2]['file'] ?? $file;
@@ -181,7 +181,7 @@ class ErrorHandler
         }
     }
 
-    public function __construct(BufferingLogger $bootstrappingLogger = null, bool $debug = false)
+    public function __construct(BufferingLogger $bootstrappingLogger = null, $debug = false)
     {
         if ($bootstrappingLogger) {
             $this->bootstrappingLogger = $bootstrappingLogger;
@@ -199,7 +199,7 @@ class ErrorHandler
      * @param array|int       $levels  An array map of E_* to LogLevel::* or an integer bit field of E_* constants
      * @param bool            $replace Whether to replace or not any existing logger
      */
-    public function setDefaultLogger(LoggerInterface $logger, $levels = E_ALL, bool $replace = false)
+    public function setDefaultLogger(LoggerInterface $logger, $levels = E_ALL, $replace = false)
     {
         $loggers = [];
 
@@ -300,7 +300,7 @@ class ErrorHandler
      *
      * @return int The previous value
      */
-    public function throwAt(int $levels, bool $replace = false)
+    public function throwAt($levels, $replace = false)
     {
         $prev = $this->thrownErrors;
         $this->thrownErrors = ($levels | E_RECOVERABLE_ERROR | E_USER_ERROR) & ~E_USER_DEPRECATED & ~E_DEPRECATED;
@@ -320,7 +320,7 @@ class ErrorHandler
      *
      * @return int The previous value
      */
-    public function scopeAt(int $levels, bool $replace = false)
+    public function scopeAt($levels, $replace = false)
     {
         $prev = $this->scopedErrors;
         $this->scopedErrors = $levels;
@@ -339,7 +339,7 @@ class ErrorHandler
      *
      * @return int The previous value
      */
-    public function traceAt(int $levels, bool $replace = false)
+    public function traceAt($levels, $replace = false)
     {
         $prev = $this->tracedErrors;
         $this->tracedErrors = (int) $levels;
@@ -358,7 +358,7 @@ class ErrorHandler
      *
      * @return int The previous value
      */
-    public function screamAt(int $levels, bool $replace = false)
+    public function screamAt($levels, $replace = false)
     {
         $prev = $this->screamedErrors;
         $this->screamedErrors = $levels;
@@ -372,7 +372,7 @@ class ErrorHandler
     /**
      * Re-registers as a PHP error handler if levels changed.
      */
-    private function reRegister(int $prev)
+    private function reRegister($prev)
     {
         if ($prev !== $this->thrownErrors | $this->loggedErrors) {
             $handler = set_error_handler('var_dump');
@@ -398,7 +398,7 @@ class ErrorHandler
      *
      * @internal
      */
-    public function handleError(int $type, string $message, string $file, int $line)
+    public function handleError($type, $message, $file, $line)
     {
         if (\PHP_VERSION_ID >= 70300 && E_WARNING === $type && '"' === $message[0] && false !== strpos($message, '" targeting switch is equivalent to "break')) {
             $type = E_DEPRECATED;
@@ -736,7 +736,7 @@ class ErrorHandler
     /**
      * Cleans the trace by removing function arguments and the frames added by the error handler and DebugClassLoader.
      */
-    private function cleanTrace(array $backtrace, int $type, string $file, int $line, bool $throw)
+    private function cleanTrace(array $backtrace, $type, $file, $line, $throw)
     {
         $lightTrace = $backtrace;
 
@@ -766,7 +766,7 @@ class ErrorHandler
      * Parse the error message by removing the anonymous class notation
      * and using the parent class instead if possible.
      */
-    private function parseAnonymousClass(string $message)
+    private function parseAnonymousClass($message)
     {
         return preg_replace_callback('/class@anonymous\x00.*?\.php(?:0x?|:[0-9]++\$)[0-9a-fA-F]++/', static function ($m) {
             return class_exists($m[0], false) ? get_parent_class($m[0]).'@anonymous' : $m[0];

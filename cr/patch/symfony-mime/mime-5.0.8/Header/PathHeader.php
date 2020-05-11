@@ -23,7 +23,7 @@ final class PathHeader extends AbstractHeader
 {
     private $address;
 
-    public function __construct(string $name, Address $address)
+    public function __construct($name, Address $address)
     {
         parent::__construct($name);
 

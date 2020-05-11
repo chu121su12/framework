@@ -28,7 +28,7 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * @see http://www.php.net/manual/en/function.finfo-open.php
      */
-    public function __construct(string $magicFile = null)
+    public function __construct($magicFile = null)
     {
         $this->magicFile = $magicFile;
     }
@@ -44,7 +44,7 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
     /**
      * {@inheritdoc}
      */
-    public function guessMimeType(string $path): ?string
+    public function guessMimeType($path): ?string
     {
         if (!is_file($path) || !is_readable($path)) {
             throw new InvalidArgumentException(sprintf('The "%s" file does not exist or is not readable.', $path));

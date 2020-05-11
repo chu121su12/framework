@@ -45,7 +45,7 @@ final class Headers
         }
     }
 
-    public function setMaxLineLength(int $lineLength)
+    public function setMaxLineLength($lineLength)
     {
         $this->lineLength = $lineLength;
         foreach ($this->all() as $header) {
@@ -63,7 +63,7 @@ final class Headers
      *
      * @return $this
      */
-    public function addMailboxListHeader(string $name, array $addresses)
+    public function addMailboxListHeader($name, array $addresses)
     {
         return $this->add(new MailboxListHeader($name, Address::createArray($addresses)));
     }
@@ -73,7 +73,7 @@ final class Headers
      *
      * @return $this
      */
-    public function addMailboxHeader(string $name, $address)
+    public function addMailboxHeader($name, $address)
     {
         return $this->add(new MailboxHeader($name, Address::create($address)));
     }
@@ -83,7 +83,7 @@ final class Headers
      *
      * @return $this
      */
-    public function addIdHeader(string $name, $ids)
+    public function addIdHeader($name, $ids)
     {
         return $this->add(new IdentificationHeader($name, $ids));
     }
@@ -93,7 +93,7 @@ final class Headers
      *
      * @return $this
      */
-    public function addPathHeader(string $name, $path)
+    public function addPathHeader($name, $path)
     {
         return $this->add(new PathHeader($name, $path instanceof Address ? $path : new Address($path)));
     }
@@ -101,7 +101,7 @@ final class Headers
     /**
      * @return $this
      */
-    public function addDateHeader(string $name, \DateTimeInterface $dateTime)
+    public function addDateHeader($name, \DateTimeInterface $dateTime)
     {
         return $this->add(new DateHeader($name, $dateTime));
     }
@@ -109,7 +109,7 @@ final class Headers
     /**
      * @return $this
      */
-    public function addTextHeader(string $name, string $value)
+    public function addTextHeader($name, $value)
     {
         return $this->add(new UnstructuredHeader($name, $value));
     }
@@ -117,12 +117,12 @@ final class Headers
     /**
      * @return $this
      */
-    public function addParameterizedHeader(string $name, string $value, array $params = [])
+    public function addParameterizedHeader($name, $value, array $params = [])
     {
         return $this->add(new ParameterizedHeader($name, $value, $params));
     }
 
-    public function has(string $name)
+    public function has($name)
     {
         return isset($this->headers[strtolower($name)]);
     }
@@ -162,7 +162,7 @@ final class Headers
         return $this;
     }
 
-    public function get(string $name): ?HeaderInterface
+    public function get($name): ?HeaderInterface
     {
         $name = strtolower($name);
         if (!isset($this->headers[$name])) {
@@ -174,7 +174,7 @@ final class Headers
         return array_shift($values);
     }
 
-    public function all(string $name = null)
+    public function all($name = null)
     {
         if (null === $name) {
             foreach ($this->headers as $name => $collection) {
@@ -194,12 +194,12 @@ final class Headers
         return array_keys($this->headers);
     }
 
-    public function remove(string $name)
+    public function remove($name)
     {
         unset($this->headers[strtolower($name)]);
     }
 
-    public static function isUniqueHeader(string $name)
+    public static function isUniqueHeader($name)
     {
         return \in_array($name, self::$uniqueHeaders, true);
     }
@@ -237,7 +237,7 @@ final class Headers
     /**
      * @internal
      */
-    public function setHeaderBody(string $type, string $name, $body)
+    public function setHeaderBody($type, $name, $body)
     {
         if ($this->has($name)) {
             $this->get($name)->setBody($body);
@@ -249,7 +249,7 @@ final class Headers
     /**
      * @internal
      */
-    public function getHeaderParameter(string $name, string $parameter): ?string
+    public function getHeaderParameter($name, $parameter): ?string
     {
         if (!$this->has($name)) {
             return null;
@@ -266,7 +266,7 @@ final class Headers
     /**
      * @internal
      */
-    public function setHeaderParameter(string $name, string $parameter, $value)
+    public function setHeaderParameter($name, $parameter, $value)
     {
         if (!$this->has($name)) {
             throw new LogicException(sprintf('Unable to set parameter "%s" on header "%s" as the header is not defined.', $parameter, $name));

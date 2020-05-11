@@ -114,7 +114,7 @@ class QpEncoder implements EncoderInterface
      * If the first line needs to be shorter, indicate the difference with
      * $firstLineOffset.
      */
-    public function encodeString(string $string, ?string $charset = 'utf-8', int $firstLineOffset = 0, int $maxLineLength = 0)
+    public function encodeString($string, ?string $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
     {
         if ($maxLineLength > 76 || $maxLineLength <= 0) {
             $maxLineLength = 76;
@@ -181,7 +181,7 @@ class QpEncoder implements EncoderInterface
     /**
      * Make sure CRLF is correct and HT/SPACE are in valid places.
      */
-    private function standardize(string $string)
+    private function standardize($string)
     {
         $string = str_replace(["\t=0D=0A", ' =0D=0A', '=0D=0A'], ["=09\r\n", "=20\r\n", "\r\n"], $string);
         switch ($end = \ord(substr($string, -1))) {

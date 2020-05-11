@@ -43,7 +43,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      * @param bool|callable $debug        The debugging mode as a boolean or a callable that should return it
      * @param bool|callable $outputBuffer The output buffer as a string or a callable that should return it
      */
-    public function __construct($debug = false, string $charset = null, $fileLinkFormat = null, string $projectDir = null, $outputBuffer = '', LoggerInterface $logger = null)
+    public function __construct($debug = false, $charset = null, $fileLinkFormat = null, $projectDir = null, $outputBuffer = '', LoggerInterface $logger = null)
     {
         if (!\is_bool($debug) && !\is_callable($debug)) {
             throw new \TypeError(sprintf('Argument 1 passed to "%s()" must be a boolean or a callable, "%s" given.', __METHOD__, \is_object($debug) ? \get_class($debug) : \gettype($debug)));
@@ -93,7 +93,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return $this->include('assets/css/exception.css');
     }
 
-    public static function isDebug(RequestStack $requestStack, bool $debug): \Closure
+    public static function isDebug(RequestStack $requestStack, $debug): \Closure
     {
         return static function () use ($requestStack, $debug): bool {
             if (!$request = $requestStack->getCurrentRequest()) {
@@ -123,7 +123,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         };
     }
 
-    private function renderException(FlattenException $exception, string $debugTemplate = 'views/exception_full.html.php')
+    private function renderException(FlattenException $exception, $debugTemplate = 'views/exception_full.html.php')
     {
         $debug = \is_bool($this->debug) ? $this->debug : ($this->debug)($exception);
         $statusText = $this->escape($exception->getStatusText());
@@ -180,12 +180,12 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return strip_tags($this->formatArgs($args));
     }
 
-    private function escape(string $string)
+    private function escape($string)
     {
         return htmlspecialchars($string, ENT_COMPAT | ENT_SUBSTITUTE, $this->charset);
     }
 
-    private function abbrClass(string $class)
+    private function abbrClass($class)
     {
         $parts = explode('\\', $class);
         $short = array_pop($parts);
@@ -193,7 +193,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return sprintf('<abbr title="%s">%s</abbr>', $class, $short);
     }
 
-    private function getFileRelative(string $file): ?string
+    private function getFileRelative($file): ?string
     {
         $file = str_replace('\\', '/', $file);
 
@@ -209,7 +209,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      *
      * @return string|false A link or false
      */
-    private function getFileLink(string $file, int $line)
+    private function getFileLink($file, $line)
     {
         if ($fmt = $this->fileLinkFormat) {
             return \is_string($fmt) ? strtr($fmt, ['%f' => $file, '%l' => $line]) : $fmt->format($file, $line);
@@ -225,7 +225,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      * @param int    $line The line number
      * @param string $text Use this text for the link rather than the file path
      */
-    private function formatFile(string $file, int $line, string $text = null)
+    private function formatFile($file, $line, $text = null)
     {
         $file = trim($file);
 
@@ -257,7 +257,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      *
      * @return string An HTML string
      */
-    private function fileExcerpt(string $file, int $line, int $srcContext = 3)
+    private function fileExcerpt($file, $line, $srcContext = 3)
     {
         if (is_file($file) && is_readable($file)) {
             // highlight_file could throw warnings
@@ -286,7 +286,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return '';
     }
 
-    private function fixCodeMarkup(string $line)
+    private function fixCodeMarkup($line)
     {
         // </span> ending tag from previous line
         $opening = strpos($line, '<span');
@@ -305,14 +305,14 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return trim($line);
     }
 
-    private function formatFileFromText(string $text)
+    private function formatFileFromText($text)
     {
         return preg_replace_callback('/in ("|&quot;)?(.+?)\1(?: +(?:on|at))? +line (\d+)/s', function ($match) {
             return 'in '.$this->formatFile($match[2], $match[3]);
         }, $text);
     }
 
-    private function formatLogMessage(string $message, array $context)
+    private function formatLogMessage($message, array $context)
     {
         if ($context && false !== strpos($message, '{')) {
             $replacements = [];
@@ -339,7 +339,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return '<path d="'.self::GHOST_ADDONS[date('m-d')].'" fill="#fff" fill-opacity="0.6"></path>';
     }
 
-    private function include(string $name, array $context = [])
+    private function include($name, array $context = [])
     {
         extract($context, EXTR_SKIP);
         ob_start();

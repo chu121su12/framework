@@ -18,7 +18,7 @@ use Symfony\Component\Mime\Exception\RuntimeException;
  */
 final class Base64ContentEncoder extends Base64Encoder implements ContentEncoderInterface
 {
-    public function encodeByteStream($stream, int $maxLineLength = 0)
+    public function encodeByteStream($stream, $maxLineLength = 0)
     {
         if (!\is_resource($stream)) {
             throw new \TypeError(sprintf('Method "%s" takes a stream as a first argument.', __METHOD__));

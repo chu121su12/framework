@@ -28,7 +28,7 @@ final class ParameterizedHeader extends UnstructuredHeader
     private $encoder;
     private $parameters = [];
 
-    public function __construct(string $name, string $value, array $parameters = [])
+    public function __construct($name, $value, array $parameters = [])
     {
         parent::__construct($name, $value);
 
@@ -41,12 +41,12 @@ final class ParameterizedHeader extends UnstructuredHeader
         }
     }
 
-    public function setParameter(string $parameter, ?string $value)
+    public function setParameter($parameter, ?string $value)
     {
         $this->setParameters(array_merge($this->getParameters(), [$parameter => $value]));
     }
 
-    public function getParameter(string $parameter)
+    public function getParameter($parameter)
     {
         return $this->getParameters()[$parameter] ?? '';
     }
@@ -85,7 +85,7 @@ final class ParameterizedHeader extends UnstructuredHeader
      * This doesn't need to be overridden in theory, but it is for implementation
      * reasons to prevent potential breakage of attributes.
      */
-    protected function toTokens(string $string = null)
+    protected function toTokens($string = null)
     {
         $tokens = parent::toTokens(parent::getBodyAsString());
 
@@ -104,7 +104,7 @@ final class ParameterizedHeader extends UnstructuredHeader
     /**
      * Render a RFC 2047 compliant header parameter from the $name and $value.
      */
-    private function createParameter(string $name, string $value)
+    private function createParameter($name, $value)
     {
         $origValue = $value;
 
@@ -156,7 +156,7 @@ final class ParameterizedHeader extends UnstructuredHeader
      *
      * @param string $value to append
      */
-    private function getEndOfParameterValue(string $value, bool $encoded = false, bool $firstLine = false)
+    private function getEndOfParameterValue($value, $encoded = false, $firstLine = false)
     {
         if (!preg_match('/^'.self::TOKEN_REGEX.'$/D', $value)) {
             $value = '"'.$value.'"';

@@ -23,7 +23,7 @@ final class MailboxHeader extends AbstractHeader
 {
     private $address;
 
-    public function __construct(string $name, Address $address)
+    public function __construct($name, Address $address)
     {
         parent::__construct($name);
 
@@ -78,7 +78,7 @@ final class MailboxHeader extends AbstractHeader
      *
      * @see RFC 2822 3.2.1
      */
-    protected function tokenNeedsEncoding(string $token)
+    protected function tokenNeedsEncoding($token)
     {
         return preg_match('/[()<>\[\]:;@\,."]/', $token) || parent::tokenNeedsEncoding($token);
     }

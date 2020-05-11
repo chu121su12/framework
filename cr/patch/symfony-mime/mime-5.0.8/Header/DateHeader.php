@@ -20,7 +20,7 @@ final class DateHeader extends AbstractHeader
 {
     private $dateTime;
 
-    public function __construct(string $name, \DateTimeInterface $date)
+    public function __construct($name, \DateTimeInterface $date)
     {
         parent::__construct($name);
 

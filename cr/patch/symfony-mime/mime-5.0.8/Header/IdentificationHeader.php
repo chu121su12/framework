@@ -27,7 +27,7 @@ final class IdentificationHeader extends AbstractHeader
     /**
      * @param string|array $ids
      */
-    public function __construct(string $name, $ids)
+    public function __construct($name, $ids)
     {
         parent::__construct($name);
 

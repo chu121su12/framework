@@ -24,5 +24,5 @@ interface AddressEncoderInterface
      * @throws AddressEncoderException if the email cannot be represented in
      *                                 the encoding implemented by this class
      */
-    public function encodeString(string $address): string;
+    public function encodeString($address): string;
 }

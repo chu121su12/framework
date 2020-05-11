@@ -47,7 +47,7 @@ class Email extends Message
     /**
      * @return $this
      */
-    public function subject(string $subject)
+    public function subject($subject)
     {
         return $this->setHeaderBody('Text', 'Subject', $subject);
     }
@@ -247,7 +247,7 @@ class Email extends Message
      *
      * @return $this
      */
-    public function priority(int $priority)
+    public function priority($priority)
     {
         if ($priority > 5) {
             $priority = 5;
@@ -276,7 +276,7 @@ class Email extends Message
      *
      * @return $this
      */
-    public function text($body, string $charset = 'utf-8')
+    public function text($body, $charset = 'utf-8')
     {
         $this->text = $body;
         $this->textCharset = $charset;
@@ -302,7 +302,7 @@ class Email extends Message
      *
      * @return $this
      */
-    public function html($body, string $charset = 'utf-8')
+    public function html($body, $charset = 'utf-8')
     {
         $this->html = $body;
         $this->htmlCharset = $charset;
@@ -328,7 +328,7 @@ class Email extends Message
      *
      * @return $this
      */
-    public function attach($body, string $name = null, string $contentType = null)
+    public function attach($body, $name = null, $contentType = null)
     {
         $this->attachments[] = ['body' => $body, 'name' => $name, 'content-type' => $contentType, 'inline' => false];
 
@@ -338,7 +338,7 @@ class Email extends Message
     /**
      * @return $this
      */
-    public function attachFromPath(string $path, string $name = null, string $contentType = null)
+    public function attachFromPath($path, $name = null, $contentType = null)
     {
         $this->attachments[] = ['path' => $path, 'name' => $name, 'content-type' => $contentType, 'inline' => false];
 
@@ -350,7 +350,7 @@ class Email extends Message
      *
      * @return $this
      */
-    public function embed($body, string $name = null, string $contentType = null)
+    public function embed($body, $name = null, $contentType = null)
     {
         $this->attachments[] = ['body' => $body, 'name' => $name, 'content-type' => $contentType, 'inline' => true];
 
@@ -360,7 +360,7 @@ class Email extends Message
     /**
      * @return $this
      */
-    public function embedFromPath(string $path, string $name = null, string $contentType = null)
+    public function embedFromPath($path, $name = null, $contentType = null)
     {
         $this->attachments[] = ['path' => $path, 'name' => $name, 'content-type' => $contentType, 'inline' => true];
 
@@ -523,14 +523,14 @@ class Email extends Message
     /**
      * @return $this
      */
-    private function setHeaderBody(string $type, string $name, $body)
+    private function setHeaderBody($type, $name, $body)
     {
         $this->getHeaders()->setHeaderBody($type, $name, $body);
 
         return $this;
     }
 
-    private function addListAddressHeaderBody(string $name, array $addresses)
+    private function addListAddressHeaderBody($name, array $addresses)
     {
         if (!$header = $this->getHeaders()->get($name)) {
             return $this->setListAddressHeaderBody($name, $addresses);
@@ -540,7 +540,7 @@ class Email extends Message
         return $this;
     }
 
-    private function setListAddressHeaderBody(string $name, array $addresses)
+    private function setListAddressHeaderBody($name, array $addresses)
     {
         $addresses = Address::createArray($addresses);
         $headers = $this->getHeaders();

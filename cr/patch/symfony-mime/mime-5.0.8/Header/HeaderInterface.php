@@ -36,17 +36,17 @@ interface HeaderInterface
      */
     public function getBody();
 
-    public function setCharset(string $charset);
+    public function setCharset($charset);
 
     public function getCharset(): ?string;
 
-    public function setLanguage(string $lang);
+    public function setLanguage($lang);
 
     public function getLanguage(): ?string;
 
     public function getName(): string;
 
-    public function setMaxLineLength(int $lineLength);
+    public function setMaxLineLength($lineLength);
 
     public function getMaxLineLength(): int;
 

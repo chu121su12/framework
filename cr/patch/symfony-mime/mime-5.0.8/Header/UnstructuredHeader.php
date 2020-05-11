@@ -20,7 +20,7 @@ class UnstructuredHeader extends AbstractHeader
 {
     private $value;
 
-    public function __construct(string $name, string $value)
+    public function __construct($name, $value)
     {
         parent::__construct($name);
 
@@ -54,7 +54,7 @@ class UnstructuredHeader extends AbstractHeader
     /**
      * Set the (unencoded) value of this header.
      */
-    public function setValue(string $value)
+    public function setValue($value)
     {
         $this->value = $value;
     }

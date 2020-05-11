@@ -18,7 +18,7 @@ final class EmailHasHeader extends Constraint
 {
     private $headerName;
 
-    public function __construct(string $headerName)
+    public function __construct($headerName)
     {
         $this->headerName = $headerName;
     }

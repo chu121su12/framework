@@ -26,7 +26,7 @@ final class MailboxListHeader extends AbstractHeader
     /**
      * @param Address[] $addresses
      */
-    public function __construct(string $name, array $addresses)
+    public function __construct($name, array $addresses)
     {
         parent::__construct($name);
 
@@ -129,7 +129,7 @@ final class MailboxListHeader extends AbstractHeader
      *
      * @see RFC 2822 3.2.1
      */
-    protected function tokenNeedsEncoding(string $token)
+    protected function tokenNeedsEncoding($token)
     {
         return preg_match('/[()<>\[\]:;@\,."]/', $token) || parent::tokenNeedsEncoding($token);
     }

@@ -74,7 +74,7 @@ final class FormDataPart extends AbstractMultipartPart
         return $values;
     }
 
-    private function preparePart(string $name, $value)
+    private function preparePart($name, $value)
     {
         if (\is_string($value)) {
             return $this->configurePart($name, new TextPart($value, 'utf-8', 'plain', '8bit'));
@@ -83,7 +83,7 @@ final class FormDataPart extends AbstractMultipartPart
         return $this->configurePart($name, $value);
     }
 
-    private function configurePart(string $name, TextPart $part)
+    private function configurePart($name, TextPart $part)
     {
         static $r;
 

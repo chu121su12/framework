@@ -16,7 +16,7 @@ class ClassNotFoundError extends \Error
     /**
      * {@inheritdoc}
      */
-    public function __construct(string $message, \Throwable $previous)
+    public function __construct($message, \Throwable $previous)
     {
         parent::__construct($message, $previous->getCode(), $previous->getPrevious());
 

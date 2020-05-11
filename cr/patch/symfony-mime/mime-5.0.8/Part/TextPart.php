@@ -35,7 +35,7 @@ class TextPart extends AbstractPart
     /**
      * @param resource|string $body
      */
-    public function __construct($body, ?string $charset = 'utf-8', $subtype = 'plain', string $encoding = null)
+    public function __construct($body, ?string $charset = 'utf-8', $subtype = 'plain', $encoding = null)
     {
         parent::__construct();
 
@@ -72,7 +72,7 @@ class TextPart extends AbstractPart
      *
      * @return $this
      */
-    public function setDisposition(string $disposition)
+    public function setDisposition($disposition)
     {
         $this->disposition = $disposition;
 

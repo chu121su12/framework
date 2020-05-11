@@ -16,7 +16,7 @@ namespace Symfony\Component\Mime\Encoder;
  */
 final class EightBitContentEncoder implements ContentEncoderInterface
 {
-    public function encodeByteStream($stream, int $maxLineLength = 0)
+    public function encodeByteStream($stream, $maxLineLength = 0)
     {
         while (!feof($stream)) {
             yield fread($stream, 16372);
@@ -28,7 +28,7 @@ final class EightBitContentEncoder implements ContentEncoderInterface
         return '8bit';
     }
 
-    public function encodeString(string $string, ?string $charset = 'utf-8', int $firstLineOffset = 0, int $maxLineLength = 0)
+    public function encodeString($string, ?string $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
     {
         return $string;
     }

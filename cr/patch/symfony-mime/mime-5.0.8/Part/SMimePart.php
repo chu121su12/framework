@@ -26,7 +26,7 @@ class SMimePart extends AbstractPart
     /**
      * @param iterable|string $body
      */
-    public function __construct($body, string $type, string $subtype, array $parameters)
+    public function __construct($body, $type, $subtype, array $parameters)
     {
         parent::__construct();
 

@@ -81,7 +81,7 @@ final class MimeTypes implements MimeTypesInterface
     /**
      * {@inheritdoc}
      */
-    public function getExtensions(string $mimeType)
+    public function getExtensions($mimeType)
     {
         if ($this->extensions) {
             $extensions = $this->extensions[$mimeType] ?? $this->extensions[$lcMimeType = strtolower($mimeType)] ?? null;
@@ -93,7 +93,7 @@ final class MimeTypes implements MimeTypesInterface
     /**
      * {@inheritdoc}
      */
-    public function getMimeTypes(string $ext)
+    public function getMimeTypes($ext)
     {
         if ($this->mimeTypes) {
             $mimeTypes = $this->mimeTypes[$ext] ?? $this->mimeTypes[$lcExt = strtolower($ext)] ?? null;
@@ -124,7 +124,7 @@ final class MimeTypes implements MimeTypesInterface
      * returns a value that is not null, this method terminates and returns the
      * value.
      */
-    public function guessMimeType(string $path): ?string
+    public function guessMimeType($path): ?string
     {
         foreach ($this->guessers as $guesser) {
             if (!$guesser->isGuesserSupported()) {

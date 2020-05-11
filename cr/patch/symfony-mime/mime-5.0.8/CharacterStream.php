@@ -109,7 +109,7 @@ final class CharacterStream
         }
     }
 
-    public function read(int $length): ?string
+    public function read($length): ?string
     {
         if ($this->currentPos >= $this->charCount) {
             return null;
@@ -142,7 +142,7 @@ final class CharacterStream
         return $ret;
     }
 
-    public function readBytes(int $length): ?array
+    public function readBytes($length): ?array
     {
         if (null !== $read = $this->read($length)) {
             return array_map('ord', str_split($read, 1));
@@ -151,7 +151,7 @@ final class CharacterStream
         return null;
     }
 
-    public function setPointer(int $charOffset)
+    public function setPointer($charOffset)
     {
         if ($this->charCount < $charOffset) {
             $charOffset = $this->charCount;
@@ -159,7 +159,7 @@ final class CharacterStream
         $this->currentPos = $charOffset;
     }
 
-    public function write(string $chars)
+    public function write($chars)
     {
         $ignored = '';
         $this->data .= $chars;
@@ -174,7 +174,7 @@ final class CharacterStream
         $this->dataSize = \strlen($this->data) - \strlen($ignored);
     }
 
-    private function getUtf8CharPositions(string $string, int $startOffset, string &$ignoredChars)
+    private function getUtf8CharPositions($string, $startOffset, string &$ignoredChars)
     {
         $strlen = \strlen($string);
         $charPos = \count($this->map['p']);

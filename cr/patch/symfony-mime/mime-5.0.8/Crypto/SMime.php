@@ -21,7 +21,7 @@ use Symfony\Component\Mime\Part\SMimePart;
  */
 abstract class SMime
 {
-    protected function normalizeFilePath(string $path)
+    protected function normalizeFilePath($path)
     {
         if (!file_exists($path)) {
             throw new RuntimeException(sprintf('File does not exist: "%s".', $path));
@@ -37,7 +37,7 @@ abstract class SMime
         }
     }
 
-    protected function convertMessageToSMimePart($stream, string $type, string $subtype)
+    protected function convertMessageToSMimePart($stream, $type, $subtype)
     {
         rewind($stream);
 
@@ -69,7 +69,7 @@ abstract class SMime
         }
     }
 
-    private function getMessageHeaders(string $headerData)
+    private function getMessageHeaders($headerData)
     {
         $headers = [];
         $headerLines = explode("\r\n", str_replace("\n", "\r\n", str_replace("\r\n", "\n", $headerData)));
@@ -96,7 +96,7 @@ abstract class SMime
         return $headers;
     }
 
-    private function getParametersFromHeader(string $header)
+    private function getParametersFromHeader($header)
     {
         $params = [];
 

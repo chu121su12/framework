@@ -19,7 +19,7 @@ final class EmailHeaderSame extends Constraint
     private $headerName;
     private $expectedValue;
 
-    public function __construct(string $headerName, string $expectedValue)
+    public function __construct($headerName, $expectedValue)
     {
         $this->headerName = $headerName;
         $this->expectedValue = $expectedValue;

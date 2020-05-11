@@ -19,7 +19,7 @@ final class EmailHtmlBodyContains extends Constraint
 {
     private $expectedText;
 
-    public function __construct(string $expectedText)
+    public function __construct($expectedText)
     {
         $this->expectedText = $expectedText;
     }
