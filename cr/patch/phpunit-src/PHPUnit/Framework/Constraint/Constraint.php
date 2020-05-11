@@ -150,6 +150,10 @@ abstract class Constraint extends \PHPUnit_Framework_Constraint implements Count
      */
     protected function failureDescription($other)
     {
+        if (is_null($this->exporter)) {
+            $this->exporter = new Exporter;
+        }
+
         return $this->exporter->export($other) . ' ' . $this->toString();
     }
 }
