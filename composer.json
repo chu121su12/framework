@@ -90,6 +90,7 @@
         "pda/pheanstalk": "^3.0",
         "phpunit/phpunit": "^5.7",
         "predis/predis": "^1.1.1",
+        "sebastian/exporter": "^2.0",
         "symfony/cache": "^3.4",
         "true/punycode": "^2.1"
     },
