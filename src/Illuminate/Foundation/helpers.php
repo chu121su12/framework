@@ -593,6 +593,11 @@ if (! function_exists('report')) {
      */
     function report($exception)
     {
+        if ($exception instanceof \Throwable &&
+            ! $exception instanceof \Exception) {
+            $exception = new \FatalThrowableError($exception);
+        }
+
         app(ExceptionHandler::class)->report($exception);
     }
 }
