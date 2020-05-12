@@ -440,7 +440,6 @@ trait QueriesRelationships
     public function mergeConstraintsFrom(Builder $from)
     {
         $rawBindings = $from->getQuery()->getRawBindings();
-
         $whereBindings = isset($rawBindings['where']) ? $rawBindings['where'] : [];
 
         // Here we have some other query that we want to merge the where constraints from. We will

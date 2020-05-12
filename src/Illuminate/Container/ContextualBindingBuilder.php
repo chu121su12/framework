@@ -2,7 +2,7 @@
 
 namespace Illuminate\Container;
 
-use Illuminate\Contracts\Container\Container as ContainerContracts;
+use Illuminate\Contracts\Container\Container as ContainerContract;
 use Illuminate\Contracts\Container\ContextualBindingBuilder as ContextualBindingBuilderContract;
 
 class ContextualBindingBuilder implements ContextualBindingBuilderContract
@@ -35,7 +35,7 @@ class ContextualBindingBuilder implements ContextualBindingBuilderContract
      * @param  string|array  $concrete
      * @return void
      */
-    public function __construct(ContainerContracts $container, $concrete)
+    public function __construct(ContainerContract $container, $concrete)
     {
         $this->concrete = $concrete;
         $this->container = $container;

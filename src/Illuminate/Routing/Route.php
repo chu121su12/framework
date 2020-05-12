@@ -970,7 +970,8 @@ class Route
     public function withoutMiddleware($middleware)
     {
         $this->action['excluded_middleware'] = array_merge(
-            (array) (isset($this->action['excluded_middleware']) ? $this->action['excluded_middleware'] : []), Arr::wrap($middleware)
+            (array) (isset($this->action['excluded_middleware']) ? $this->action['excluded_middleware'] : []),
+            Arr::wrap($middleware)
         );
 
         return $this;

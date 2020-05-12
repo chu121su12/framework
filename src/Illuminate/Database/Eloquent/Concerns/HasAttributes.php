@@ -390,6 +390,7 @@ trait HasAttributes
     protected function getAttributeFromArray($key)
     {
         $attributes = $this->getAttributes();
+
         return isset($attributes[$key]) ? $attributes[$key] : null;
     }
 

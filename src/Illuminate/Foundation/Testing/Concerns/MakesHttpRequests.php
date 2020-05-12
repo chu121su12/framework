@@ -128,7 +128,10 @@ trait MakesHttpRequests
         }
 
         foreach ((array) $middleware as $abstract) {
-            $this->app->instance($abstract, new MakesHttpRequests_withoutMiddleware_Class);
+            $this->app->instance(
+                $abstract,
+                new MakesHttpRequests_withoutMiddleware_Class
+            );
         }
 
         return $this;

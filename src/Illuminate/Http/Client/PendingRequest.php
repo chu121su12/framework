@@ -515,7 +515,9 @@ class PendingRequest
      */
     protected function parseRequestData($method, $url, array $options)
     {
-        $laravelData = isset($options[$this->bodyFormat]) ? $options[$this->bodyFormat] : (isset($options['query']) ? $options['query'] : []);
+        $laravelData = isset($options[$this->bodyFormat])
+            ? $options[$this->bodyFormat]
+            : (isset($options['query']) ? $options['query'] : []);
 
         $urlString = Str::of($url);
 
@@ -606,10 +608,10 @@ class PendingRequest
         return function ($handler) {
             return function ($request, $options) use ($handler) {
                 $collection = isset($this->stubCallbacks) ? $this->stubCallbacks : collect();
-                $requestInstance = new Request($request);
+
                 $response = $collection
                      ->map
-                     ->__invoke($requestInstance->withData($options['laravel_data']), $options)
+                     ->__invoke((new Request($request))->withData($options['laravel_data']), $options)
                      ->filter()
                      ->first();
 

@@ -36,13 +36,11 @@ class ArrayLock extends Lock
      */
     public function acquire()
     {
-        if (isset($this->store->locks)
+        $expiration = isset($this->store->locks)
             && isset($this->store->locks[$this->name])
-            && isset($this->store->locks[$this->name]['expiresAt'])) {
-            $expiration = $this->store->locks[$this->name]['expiresAt'];
-        } else {
-            $expiration = Carbon::now()->addSecond();
-        }
+            && isset($this->store->locks[$this->name]['expiresAt'])
+                ? $this->store->locks[$this->name]['expiresAt']
+                : Carbon::now()->addSecond();
 
         if ($this->exists() && $expiration->isFuture()) {
             return false;

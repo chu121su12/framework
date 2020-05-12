@@ -189,8 +189,7 @@ abstract class Component
             return Closure::fromCallable([$this, $method->getName()]);
         }
 
-        $method = new ReflectionMethod($this, $method->getName());
-        return $method->getClosure($this);
+        return (new ReflectionMethod($this, $method->getName()))->getClosure($this);
     }
 
     /**

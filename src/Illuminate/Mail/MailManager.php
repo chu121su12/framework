@@ -421,11 +421,9 @@ class MailManager implements FactoryContract
         // Here we will check if the "driver" key exists and if it does we will use
         // that as the default driver in order to provide support for old styles
         // of the Laravel mail configuration file for backwards compatibility.
-        if (isset($this->app['config']) && isset($this->app['config']['mail.driver'])) {
-            return $this->app['config']['mail.driver'];
-        }
-
-        return $this->app['config']['mail.default'];
+        return isset($this->app['config']) && isset($this->app['config']['mail.driver'])
+            ? $this->app['config']['mail.driver']
+            : $this->app['config']['mail.default'];
     }
 
     /**

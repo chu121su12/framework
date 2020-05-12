@@ -15,6 +15,7 @@ class HashManager extends Manager implements Hasher
     public function createBcryptDriver()
     {
         $config = $this->config->get('hashing.bcrypt');
+
         return new BcryptHasher(isset($config) ? $config : []);
     }
 
@@ -26,6 +27,7 @@ class HashManager extends Manager implements Hasher
     public function createArgonDriver()
     {
         $config = $this->config->get('hashing.argon');
+
         return new ArgonHasher(isset($config) ? $config : []);
     }
 
@@ -37,6 +39,7 @@ class HashManager extends Manager implements Hasher
     public function createArgon2idDriver()
     {
         $config = $this->config->get('hashing.argon');
+
         return new Argon2IdHasher(isset($config) ? $config : []);
     }
 

@@ -180,6 +180,7 @@ class CompiledRouteCollection extends AbstractRouteCollection
     public function get($method = null)
     {
         $routes = $this->getRoutesByMethod();
+
         return isset($routes[$method]) ? $routes[$method] : [];
     }
 

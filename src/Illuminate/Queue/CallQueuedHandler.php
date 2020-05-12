@@ -77,7 +77,10 @@ class CallQueuedHandler
     protected function dispatchThroughMiddleware(Job $job, $command)
     {
         return (new Pipeline($this->container))->send($command)
-                ->through(array_merge(method_exists($command, 'middleware') ? $command->middleware() : [], isset($command->middleware) ? $command->middleware : []))
+                ->through(array_merge(
+                    method_exists($command, 'middleware') ? $command->middleware() : [],
+                    isset($command->middleware) ? $command->middleware : []
+                ))
                 ->then(function ($command) use ($job) {
                     return $this->dispatcher->dispatchNow(
                         $command, $this->resolveHandler($job, $command)
@@ -145,6 +148,7 @@ class CallQueuedHandler
 
         try {
             $properties = (new ReflectionClass($class))->getDefaultProperties();
+
             $shouldDelete = isset($properties['deleteWhenMissingModels'])
                 ? $properties['deleteWhenMissingModels']
                 : false;

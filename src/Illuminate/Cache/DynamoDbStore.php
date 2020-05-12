@@ -111,12 +111,14 @@ class DynamoDbStore implements LockProvider, Store
         }
 
         if (isset($response['Item'][$this->valueAttribute])) {
-            if (isset($response['Item'][$this->valueAttribute]['S'])) {
-                return $this->unserialize($response['Item'][$this->valueAttribute]['S']);
+            $responseItem = $response['Item'][$this->valueAttribute];
+
+            if (isset($responseItem['S'])) {
+                return $this->unserialize($responseItem['S']);
             }
 
-            if (isset($response['Item'][$this->valueAttribute]['N'])) {
-                return $this->unserialize($response['Item'][$this->valueAttribute]['N']);
+            if (isset($responseItem['N'])) {
+                return $this->unserialize($responseItem['N']);
             }
 
             return $this->unserialize(null);
@@ -161,10 +163,11 @@ class DynamoDbStore implements LockProvider, Store
                 $value = null;
             } else {
                 if (isset($response[$this->valueAttribute])) {
-                    if (isset($response[$this->valueAttribute]['S'])) {
-                        $value = $this->unserialize($response[$this->valueAttribute]['S']);
-                    } elseif (isset($response[$this->valueAttribute]['N'])) {
-                        $value = $this->unserialize($response[$this->valueAttribute]['N']);
+                    $responseAttribute = $response[$this->valueAttribute];
+                    if (isset($responseAttribute['S'])) {
+                        $value = $this->unserialize($responseAttribute['S']);
+                    } elseif (isset($responseAttribute['N'])) {
+                        $value = $this->unserialize($responseAttribute['N']);
                     } else {
                         $value = $this->unserialize(null);
                     }

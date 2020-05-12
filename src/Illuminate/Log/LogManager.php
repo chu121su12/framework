@@ -115,9 +115,11 @@ class LogManager implements LoggerInterface
     protected function get($name)
     {
         try {
-            return isset($this->channels[$name]) ? $this->channels[$name] : with($this->resolve($name), function ($logger) use ($name) {
-                return $this->channels[$name] = $this->tap($name, new Logger($logger, $this->app['events']));
-            });
+            return isset($this->channels[$name])
+                ? $this->channels[$name]
+                : with($this->resolve($name), function ($logger) use ($name) {
+                    return $this->channels[$name] = $this->tap($name, new Logger($logger, $this->app['events']));
+                });
         } catch (Throwable $e) {
             return tap($this->createEmergencyLogger(), function ($logger) use ($e) {
                 $logger->emergency('Unable to create configured logger. Using emergency logger.', [

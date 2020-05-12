@@ -66,6 +66,7 @@ class Markdown
             : 'mail::themes.'.$this->theme;
 
         $inlinerObject = $inliner ?: new CssToInlineStyles;
+
         return new HtmlString($inlinerObject->convert(
             $contents, $this->view->make($theme, $data)->render()
         ));
@@ -99,9 +100,7 @@ class Markdown
      */
     public static function parse($text)
     {
-        $parsedown = new Parsedown;
-
-        return new HtmlString($parsedown->text($text));
+        return new HtmlString((new Parsedown)->text($text));
     }
 
     /**

@@ -26,6 +26,7 @@ trait ReflectsClosures
             }
 
             $parameterClass = $parameter->getClass();
+
             return [$parameter->getName() => isset($parameterClass->name) ? $parameterClass->name : null];
         })->all();
     }

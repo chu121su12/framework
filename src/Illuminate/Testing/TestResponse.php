@@ -728,6 +728,7 @@ class TestResponse implements ArrayAccess
         PHPUnit::assertNotEmpty($errors, 'No validation errors were provided.');
 
         $json = $this->json();
+
         $jsonErrors = isset($json[$responseKey]) ? $json[$responseKey] : [];
 
         $errorMessage = $jsonErrors

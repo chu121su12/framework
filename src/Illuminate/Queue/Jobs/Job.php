@@ -98,6 +98,7 @@ abstract class Job
         list($class, $method) = JobName::parse($payload['job']);
 
         $this->instance = $this->resolve($class);
+
         $this->instance->{$method}($this, $payload['data']);
     }
 
