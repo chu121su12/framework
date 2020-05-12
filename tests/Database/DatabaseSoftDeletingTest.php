@@ -7,25 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use PHPUnit\Framework\TestCase;
 
-class DatabaseSoftDeletingTest_testDeletedAtIsUniqueWhenAlreadyExists_class extends SoftDeletingModel {
-            protected $dates = ['deleted_at'];
-        }
-
-class DatabaseSoftDeletingTest_testExistingCastOverridesAddedDateCast_class extends SoftDeletingModel {
-            protected $casts = ['deleted_at' => 'bool'];
-        }
-
-class DatabaseSoftDeletingTest_testExistingMutatorOverridesAddedDateCast_class extends SoftDeletingModel {
-            protected function getDeletedAtAttribute()
-            {
-                return 'expected';
-            }
-        }
-
-class DatabaseSoftDeletingTest_testCastingToStringOverridesAutomaticDateCastingToRetainPreviousBehaviour_class extends SoftDeletingModel {
-            protected $casts = ['deleted_at' => 'string'];
-        }
-
 class DatabaseSoftDeletingTest extends TestCase
 {
     public function testDeletedAtIsAddedToDateCasts()
@@ -85,3 +66,22 @@ class SoftDeletingModel extends Model
 
     protected $dateFormat = 'Y-m-d H:i:s';
 }
+
+class DatabaseSoftDeletingTest_testDeletedAtIsUniqueWhenAlreadyExists_class extends SoftDeletingModel {
+            protected $dates = ['deleted_at'];
+        }
+
+class DatabaseSoftDeletingTest_testExistingCastOverridesAddedDateCast_class extends SoftDeletingModel {
+            protected $casts = ['deleted_at' => 'bool'];
+        }
+
+class DatabaseSoftDeletingTest_testExistingMutatorOverridesAddedDateCast_class extends SoftDeletingModel {
+            protected function getDeletedAtAttribute()
+            {
+                return 'expected';
+            }
+        }
+
+class DatabaseSoftDeletingTest_testCastingToStringOverridesAutomaticDateCastingToRetainPreviousBehaviour_class extends SoftDeletingModel {
+            protected $casts = ['deleted_at' => 'string'];
+        }

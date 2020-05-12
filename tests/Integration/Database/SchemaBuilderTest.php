@@ -32,11 +32,19 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testDropAllViews()
     {
-        DB::statement('create view "view"("id") as select 1');
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            DB::statement('create view "view" as select 1 as "id"');
 
-        Schema::dropAllViews();
+            Schema::dropAllViews();
 
-        DB::statement('create view "view"("id") as select 1');
+            DB::statement('create view "view" as select 1 as "id"');
+        } else {
+            DB::statement('create view "view"("id") as select 1');
+
+            Schema::dropAllViews();
+
+            DB::statement('create view "view"("id") as select 1');
+        }
 
         $this->assertTrue(true);
     }

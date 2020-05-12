@@ -9,10 +9,13 @@ use Illuminate\Http\Response;
 use Illuminate\Testing\TestResponse;
 use JsonSerializable;
 use Mockery as m;
-use PHPUnit_Framework_AssertionFailedError as AssertionFailedError;
-use PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
+use PHPUnit\Framework\AssertionFailedError as PHPUnitAssertionFailedError;
+use PHPUnit\Framework\ExpectationFailedException as PHPUnitExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
+use PHPUnit_Framework_AssertionFailedError as AssertionFailedError;
+use PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
 
 class TestResponseTest_testAssertViewHasModel_class extends Model {
             public function is($model)
