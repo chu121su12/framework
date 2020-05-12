@@ -3,7 +3,7 @@
 namespace Illuminate\Mail\Transport;
 
 use Illuminate\Support\Collection;
-// use Swift_Mime_SimpleMessage;
+use Swift_Mime_SimpleMessage as SwiftMimeSimpleMessage;
 use Swift_Mime_Message as Swift_Mime_SimpleMessage;
 
 class ArrayTransport extends Transport
