@@ -14,7 +14,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     public function expectExceptionCode($code)
     {
         try {
-            parent::expectExceptionCode('[]');
+            parent::expectExceptionCode($code);
         } catch (\PHPUnit_Framework_Exception $e) {
             if (!(is_null($code) && $e->getMessage() === 'Argument #1 (No Value) of PHPUnit_Framework_TestCase::expectExceptionCode() must be a integer or string"')) {
                 throw $e;
