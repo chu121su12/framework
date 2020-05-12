@@ -101,6 +101,7 @@
             "Carbon\\": "cr/patch/carbon/carbon-2.33.0/",
             "Doctrine\\Inflector\\": "cr/patch/doctrine-inflector-src/",
             "Symfony\\Component\\ErrorHandler\\": "cr/patch/symfony-error-handler/error-handler-5.0.8/",
+            "Symfony\\Component\\HttpKernel\\Exception\\": "cr/patch/symfony-http-kernel-exception/http-kernel-5.0.8/Exception/",
             "Symfony\\Component\\Mime\\": "cr/patch/symfony-mime/mime-5.0.8/",
             "Symfony\\Component\\Routing\\": "cr/patch/symfony-routing/routing-5.0.8/",
             "Illuminate\\": "src/Illuminate/"
