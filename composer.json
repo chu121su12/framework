@@ -112,7 +112,7 @@
         ],
         "psr-4": {
             "PHPUnit\\": "cr/patch/phpunit-src/PHPUnit/",
-            "Orchestra\\Testbench\\": "cr/patch/orchestra-testbench/src/",
+            "Orchestra\\Testbench\\": "cr/patch/orchestra-testbench-core/testbench-core-5.1.4/src/",
             "Illuminate\\Tests\\": "tests/"
         }
     },
