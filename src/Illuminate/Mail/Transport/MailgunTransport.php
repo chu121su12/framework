@@ -3,7 +3,8 @@
 namespace Illuminate\Mail\Transport;
 
 use GuzzleHttp\ClientInterface;
-use Swift_Mime_SimpleMessage;
+// use Swift_Mime_SimpleMessage;
+use Swift_Mime_Message as Swift_Mime_SimpleMessage;
 
 class MailgunTransport extends Transport
 {

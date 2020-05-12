@@ -3,7 +3,8 @@
 namespace Illuminate\Mail\Transport;
 
 use Psr\Log\LoggerInterface;
-use Swift_Mime_Message;
+// use Swift_Mime_SimpleMessage;
+use Swift_Mime_Message as Swift_Mime_SimpleMessage;
 use Swift_Mime_SimpleMimeEntity;
 
 class LogTransport extends Transport
@@ -29,7 +30,7 @@ class LogTransport extends Transport
     /**
      * {@inheritdoc}
      */
-    public function send(Swift_Mime_Message $message, &$failedRecipients = null)
+    public function send(Swift_Mime_SimpleMessage $message, &$failedRecipients = null)
     {
         $this->beforeSendPerformed($message);
 
