@@ -203,6 +203,11 @@ trait Testing
             try {
                 \call_user_func($callback);
             } catch (Throwable $e) {
+            } catch (\Error $e) {
+            } catch (\Exception $e) {
+            }
+
+            if (isset($e)) {
                 if (! $this->callbackException) {
                     $this->callbackException = $e;
                 }

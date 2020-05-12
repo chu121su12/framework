@@ -40,6 +40,11 @@ class PhpEngine implements Engine
         try {
             include $__path;
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             $this->handleViewException($e, $obLevel);
         }
 

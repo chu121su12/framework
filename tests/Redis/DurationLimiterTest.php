@@ -46,6 +46,11 @@ class DurationLimiterTest extends TestCase
                 $store[] = 3;
             });
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             $this->assertInstanceOf(LimiterTimeoutException::class, $e);
         }
 
@@ -73,6 +78,11 @@ class DurationLimiterTest extends TestCase
                 $store[] = 2;
             });
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             $this->assertInstanceOf(LimiterTimeoutException::class, $e);
         }
 

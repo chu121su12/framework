@@ -233,6 +233,11 @@ abstract class TestCase extends BaseTestCase
             try {
                 $callback();
             } catch (Throwable $e) {
+            } catch (\Error $e) {
+            } catch (\Exception $e) {
+            }
+
+            if (isset($e)) {
                 if (! $this->callbackException) {
                     $this->callbackException = $e;
                 }

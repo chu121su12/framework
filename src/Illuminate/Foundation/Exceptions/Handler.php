@@ -174,6 +174,11 @@ class Handler implements ExceptionHandlerContract
                 // 'email' => optional(Auth::user())->email,
             ]);
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             return [];
         }
     }
