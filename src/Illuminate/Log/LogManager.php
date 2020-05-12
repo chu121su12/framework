@@ -121,6 +121,11 @@ class LogManager implements LoggerInterface
                     return $this->channels[$name] = $this->tap($name, new Logger($logger, $this->app['events']));
                 });
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             return tap($this->createEmergencyLogger(), function ($logger) use ($e) {
                 $logger->emergency('Unable to create configured logger. Using emergency logger.', [
                     'exception' => $e,

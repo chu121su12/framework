@@ -640,6 +640,11 @@ if (! function_exists('rescue')) {
         try {
             return $callback();
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             if ($report) {
                 report($e);
             }

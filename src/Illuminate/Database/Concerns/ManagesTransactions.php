@@ -25,13 +25,17 @@ trait ManagesTransactions
             // catch any exception we can rollback this transaction so that none of this
             // gets actually persisted to a database or stored in a permanent fashion.
             try {
+                $e = null;
                 $callbackResult = $callback($this);
+            } catch (Throwable $e) {
+            } catch (\Error $e) {
+            } catch (\Exception $e) {
             }
 
             // If we catch an exception we'll rollback this transaction and try again if we
             // are not out of attempts. If we are out of attempts we will just throw the
             // exception back out and let the developer handle an uncaught exceptions.
-            catch (Throwable $e) {
+            if (isset($e)) {
                 $this->handleTransactionException(
                     $e, $currentAttempt, $attempts
                 );
@@ -40,8 +44,14 @@ trait ManagesTransactions
             }
 
             try {
+                $e = null;
                 $this->commit();
             } catch (Throwable $e) {
+            } catch (\Error $e) {
+            } catch (\Exception $e) {
+            }
+
+            if (isset($e)) {
                 $this->handleCommitTransactionException(
                     $e, $currentAttempt, $attempts
                 );
@@ -119,6 +129,11 @@ trait ManagesTransactions
             try {
                 $this->getPdo()->beginTransaction();
             } catch (Throwable $e) {
+            } catch (\Error $e) {
+            } catch (\Exception $e) {
+            }
+
+            if (isset($e)) {
                 $this->handleBeginTransactionException($e);
             }
         } elseif ($this->transactions >= 1 && $this->queryGrammar->supportsSavepoints()) {
@@ -230,6 +245,11 @@ trait ManagesTransactions
         try {
             $this->performRollBack($toLevel);
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             $this->handleRollBackException($e);
         }
 

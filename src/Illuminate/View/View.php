@@ -99,6 +99,11 @@ class View implements ArrayAccess, Htmlable, ViewContract
 
             return ! is_null($response) ? $response : $contents;
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             $this->factory->flushState();
 
             throw $e;

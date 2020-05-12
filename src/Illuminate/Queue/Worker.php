@@ -286,6 +286,11 @@ class Worker
                 }
             }
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             $this->exceptions->report($e);
 
             $this->stopWorkerIfLostConnection($e);
@@ -307,6 +312,11 @@ class Worker
         try {
             return $this->process($connectionName, $job, $options);
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             $this->exceptions->report($e);
 
             $this->stopWorkerIfLostConnection($e);
@@ -359,6 +369,11 @@ class Worker
 
             $this->raiseAfterJobEvent($connectionName, $job);
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             $this->handleJobException($connectionName, $job, $options, $e);
         }
     }

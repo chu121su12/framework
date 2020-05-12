@@ -66,6 +66,11 @@ class ConfigCacheCommand extends Command
         try {
             require $configPath;
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             $this->files->delete($configPath);
 
             throw new LogicException('Your configuration files are not serializable.', 0, $e);
