@@ -98,11 +98,11 @@
             "src/Illuminate/Support/helpers.php"
         ],
         "psr-4": {
+            "Carbon\\": "cr/patch/carbon/carbon-2.33.0/",
+            "Doctrine\\Inflector\\": "cr/patch/doctrine-inflector-src/",
             "Symfony\\Component\\ErrorHandler\\": "cr/patch/symfony-error-handler/error-handler-5.0.8/",
             "Symfony\\Component\\Mime\\": "cr/patch/symfony-mime/mime-5.0.8/",
             "Symfony\\Component\\Routing\\": "cr/patch/symfony-routing/routing-5.0.8/",
-            "Doctrine\\Inflector\\": "cr/patch/doctrine-inflector-src/",
-            "Carbon\\": "cr/patch/carbon/carbon-2.33.0/",
             "Illuminate\\": "src/Illuminate/"
         }
     },
@@ -111,8 +111,8 @@
             "tests/Database/stubs/MigrationCreatorFakeMigration.php"
         ],
         "psr-4": {
-            "PHPUnit\\": "cr/patch/phpunit-src/PHPUnit/",
             "Orchestra\\Testbench\\": "cr/patch/orchestra-testbench-core/testbench-core-5.1.4/src/",
+            "PHPUnit\\": "cr/patch/phpunit-src/PHPUnit/",
             "Illuminate\\Tests\\": "tests/"
         }
     },
