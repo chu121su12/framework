@@ -19,9 +19,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\Support\Testing\Fakes\EventFake;
 use Illuminate\Tests\Integration\Auth\Fixtures\AuthenticationTestUser;
-use Orchestra\Testbench\TestCase as OrchestraTestCase;
-
-use PHPUnit\Orchestra\ResponseTestCase as TestCase;
+use Orchestra\Testbench\TestCase;
 
 /**
  * @group integration
