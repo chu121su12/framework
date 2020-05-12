@@ -531,7 +531,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     {
         $className = get_class($this->{$relation});
 
-        $this->{$relation}->load($relations[$className] ?? []);
+        $this->{$relation}->load(isset($relations[$className]) ? $relations[$className] : []);
 
         return $this;
     }
@@ -577,7 +577,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     {
         $className = get_class($this->{$relation});
 
-        $this->{$relation}->loadCount($relations[$className] ?? []);
+        $this->{$relation}->loadCount(isset($relations[$className]) ? $relations[$className] : []);
 
         return $this;
     }

@@ -128,7 +128,7 @@ class SendQueuedNotifications implements ShouldQueue
             return;
         }
 
-        return isset($this->notification->backoff) ? $this->notification->backoff : $this->notification->backoff();        return $this->notification->backoff ?? $this->notification->backoff();
+        return isset($this->notification->backoff) ? $this->notification->backoff : $this->notification->backoff();
     }
 
     /**

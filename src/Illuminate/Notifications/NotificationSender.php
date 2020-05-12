@@ -201,7 +201,8 @@ class NotificationSender
                 $queue = $notification->queue;
 
                 if (method_exists($notification, 'viaQueues')) {
-                    $queue = $notification->viaQueues()[$channel] ?? null;
+                    $queues = $notification->viaQueues();
+                    $queue = isset($queues[$channel]) ? $queues[$channel] : null;
                 }
 
                 $this->bus->dispatch(
