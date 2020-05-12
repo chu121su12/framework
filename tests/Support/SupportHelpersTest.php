@@ -631,6 +631,7 @@ class SupportHelpersTest extends TestCase
         $this->assertSame('', env('foo', 'default'));
 
         unset($_SERVER['foo']);
+        // this may fail on windows/php5 in full test run
         $this->assertSame('default', env('foo', 'default'));
 
         $_SERVER['foo'] = null;
