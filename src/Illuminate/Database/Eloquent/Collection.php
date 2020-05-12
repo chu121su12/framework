@@ -206,7 +206,7 @@ class Collection extends BaseCollection implements QueueableCollection
                 return get_class($model);
             })
             ->each(function ($models, $className) use ($relations) {
-                static::make($models)->loadCount($relations[$className] ?? []);
+                static::make($models)->loadCount(isset($relations[$className]) ? $relations[$className] : []);
             });
 
         return $this;

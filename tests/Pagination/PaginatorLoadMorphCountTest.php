@@ -7,6 +7,11 @@ use Illuminate\Pagination\AbstractPaginator;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+class PaginatorLoadMorphCountTest_testCollectionLoadMorphCountCanChainOnThePaginator_Class extends AbstractPaginator
+{
+    //
+}
+
 class PaginatorLoadMorphCountTest extends TestCase
 {
     public function testCollectionLoadMorphCountCanChainOnThePaginator()
@@ -19,9 +24,9 @@ class PaginatorLoadMorphCountTest extends TestCase
         $items = m::mock(Collection::class);
         $items->shouldReceive('loadMorphCount')->once()->with('parentable', $relations);
 
-        $p = (new class extends AbstractPaginator {
-            //
-        })->setCollection($items);
+        $pClass = new PaginatorLoadMorphCountTest_testCollectionLoadMorphCountCanChainOnThePaginator_Class;
+
+        $p = $pClass->setCollection($items);
 
         $this->assertSame($p, $p->loadMorphCount('parentable', $relations));
     }
