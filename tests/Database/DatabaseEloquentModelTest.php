@@ -534,7 +534,7 @@ class DatabaseEloquentModelTest extends TestCase
     public function testFromDateTimeMilliseconds()
     {
         if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-            $this->markTestSkipped('No support for milliseconds.');
+            $this->markTestSkipped('Before php 7, v format (milliseconds) is not supported.');
         }
 
         $model = $this->getMockBuilder('Illuminate\Tests\Database\EloquentDateModelStub')->setMethods(['getDateFormat'])->getMock();
