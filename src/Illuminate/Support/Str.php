@@ -672,7 +672,7 @@ class Str
 
             if (! is_null($length)) {
                 if ($length < 0) {
-                    $length = $offset + strlen($haystack) + $length;
+                    $length = strlen($haystack) + $length - $offset;
                 }
 
                 return substr_count($haystack, $needle, $offset, $length);
