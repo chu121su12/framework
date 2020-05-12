@@ -5,7 +5,9 @@ namespace Illuminate\Tests\Integration\Routing;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Tests\Integration\Routing\Fixtures\ApiResourceTaskController;
 use Illuminate\Tests\Integration\Routing\Fixtures\ApiResourceTestController;
-use Orchestra\Testbench\TestCase;
+use Orchestra\Testbench\TestCase as OrchestraTestCase;
+
+use PHPUnit\Orchestra\ResponseTestCase as TestCase;
 
 /**
  * @group integration

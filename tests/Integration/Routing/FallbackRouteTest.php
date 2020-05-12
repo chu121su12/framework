@@ -3,7 +3,9 @@
 namespace Illuminate\Tests\Integration\Routing;
 
 use Illuminate\Support\Facades\Route;
-use Orchestra\Testbench\TestCase;
+use Orchestra\Testbench\TestCase as OrchestraTestCase;
+
+use PHPUnit\Orchestra\ResponseTestCase as TestCase;
 
 /**
  * @group integration
