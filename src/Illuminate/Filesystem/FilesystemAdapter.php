@@ -151,7 +151,11 @@ class FilesystemAdapter implements CloudFilesystemContract
 
         $filename = isset($name) ? $name : basename($path);
 
-        $disposition = $response->headers->makeDisposition(
+        // $disposition = $response->headers->makeDisposition(
+        //     $disposition, $filename, $this->fallbackName($filename)
+        // );
+
+        $disposition = \CR\LaravelBackport\SymfonyHelper::httpFoundationMakeDisposition(
             $disposition, $filename, $this->fallbackName($filename)
         );
 

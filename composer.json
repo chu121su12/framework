@@ -98,6 +98,7 @@
             "src/Illuminate/Support/helpers.php"
         ],
         "psr-4": {
+            "CR\\LaravelBackport\\": "cr/patch/laravel-backport/",
             "Carbon\\": "cr/patch/carbon/carbon-2.33.0/",
             "Doctrine\\Inflector\\": "cr/patch/doctrine-inflector-src/",
             "Symfony\\Component\\ErrorHandler\\": "cr/patch/symfony-error-handler/error-handler-5.0.8/",
