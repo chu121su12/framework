@@ -102,7 +102,7 @@
             "Symfony\\Component\\Mime\\": "cr/patch/symfony-mime/mime-5.0.8/",
             "Symfony\\Component\\Routing\\": "cr/patch/symfony-routing/routing-5.0.8/",
             "Doctrine\\Inflector\\": "cr/patch/doctrine-inflector-src/",
-            "Carbon\\": "cr/patch/carbon-src/Carbon/",
+            "Carbon\\": "cr/patch/carbon/carbon-2.33.0/",
             "Illuminate\\": "src/Illuminate/"
         }
     },
