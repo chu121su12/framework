@@ -11,6 +11,12 @@ use Orchestra\Testbench\TestCase;
 class FoundationHelpersTest_testRescue_class {
             public function test($a)
             {
+                if (! is_int($a)) {
+                    throw class_exists('TypeError')
+                        ? new \TypeError
+                        : new \ErrorException;
+                }
+
                 return $a;
             }
         }
