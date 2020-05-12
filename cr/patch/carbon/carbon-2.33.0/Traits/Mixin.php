@@ -157,6 +157,11 @@ trait Mixin
         try {
             $result = $callable();
         } catch (Throwable $throwable) {
+        } catch (\Error $throwable) {
+        } catch (\Exception $throwable) {
+        }
+
+        if (isset($throwable)) {
             $exception = $throwable;
         }
 

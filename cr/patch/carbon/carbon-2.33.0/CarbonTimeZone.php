@@ -193,6 +193,11 @@ class CarbonTimeZone extends DateTimeZone
         try {
             $offset = @$this->getOffset($date ?: Carbon::now($this)) ?: 0;
         } catch (\Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             $offset = 0;
         }
         // @codeCoverageIgnoreEnd

@@ -577,6 +577,8 @@ class ErrorHandler
             try {
                 $this->loggers[$type][0]->log($this->loggers[$type][1], $message, ['exception' => $exception]);
             } catch (\Throwable $handlerException) {
+            } catch (\Error $handlerException) {
+            } catch (\Exception $handlerException) {
             }
         }
 
