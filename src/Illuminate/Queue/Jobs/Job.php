@@ -273,15 +273,15 @@ abstract class Job
     }
 
     /**
-     * Get the number of seconds to delay a failed job before retrying it.
+     * The number of seconds to wait before retrying a job that encountered an uncaught exception.
      *
      * @return int|null
      */
-    public function delaySeconds()
+    public function backoff()
     {
         $payload = $this->payload();
 
-        return isset($payload['delay']) ? isset($payload['delay']) : null;
+        return isset($payload['backoff']) ? isset($payload['backoff']) : null;
     }
 
     /**
@@ -301,11 +301,11 @@ abstract class Job
      *
      * @return int|null
      */
-    public function timeoutAt()
+    public function retryUntil()
     {
         $payload = $this->payload();
 
-        return isset($payload['timeoutAt']) ? isset($payload['timeoutAt']) : null;
+        return isset($payload['retryUntil']) ? isset($payload['retryUntil']) : null;
     }
 
     /**
