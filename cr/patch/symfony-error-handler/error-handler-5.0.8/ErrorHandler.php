@@ -604,6 +604,8 @@ class ErrorHandler
             }
             $handlerException = $handlerException ?: $exception;
         } catch (\Throwable $handlerException) {
+        } catch (\Error $handlerException) {
+        } catch (\Exception $handlerException) {
         }
         if ($exception === $handlerException && null === $this->exceptionHandler) {
             self::$reservedMemory = null; // Disable the fatal error handler
