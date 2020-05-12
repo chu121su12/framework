@@ -52,6 +52,7 @@ class ThrottleRequestsTest extends TestCase
         try {
             $this->withoutExceptionHandling()->get('/');
         } catch (Throwable $e) {
+        } catch (\Error $e) {
         } catch (\Exception $e) {
         }
 
@@ -94,6 +95,7 @@ class ThrottleRequestsTest extends TestCase
         try {
             $this->withoutExceptionHandling()->get('/');
         } catch (Throwable $e) {
+        } catch (\Error $e) {
         } catch (\Exception $e) {
         }
 

@@ -53,6 +53,11 @@ class ThrottleRequestsWithRedisTest extends TestCase
             try {
                 $this->withoutExceptionHandling()->get('/');
             } catch (Throwable $e) {
+            } catch (\Error $e) {
+            } catch (\Exception $e) {
+            }
+
+            if (isset($e)) {
                 $this->assertEquals(429, $e->getStatusCode());
                 $this->assertEquals(2, $e->getHeaders()['X-RateLimit-Limit']);
                 $this->assertEquals(0, $e->getHeaders()['X-RateLimit-Remaining']);
