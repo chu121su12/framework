@@ -13,23 +13,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function expectExceptionCode($code)
     {
-        if (!$this->expectedException) {
-            $this->expectedException = \Exception::class;
+        try {
+            parent::expectExceptionCode('[]');
+        } catch (\PHPUnit_Framework_Exception $e) {
+            if (!(is_null($code) && $e->getMessage() === 'Argument #1 (No Value) of PHPUnit_Framework_TestCase::expectExceptionCode() must be a integer or string"')) {
+                throw $e;
+            }
         }
-
-        if (!is_null($code) && !is_int($code) && !is_string($code)) {
-            throw \PHPUnit_Util_InvalidArgumentHelper::factory(1, 'null, integer or string');
-        }
-
-        $this->expectedExceptionCode = $code;
     }
-
-    // protected function runTest()
-    // {
-    //     try {
-    //         return parent::runTest();
-    //     } catch (\Exception $e) {
-    //         throw $e;
-    //     }
-    // }
 }
