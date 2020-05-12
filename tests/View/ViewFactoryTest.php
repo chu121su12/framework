@@ -21,15 +21,14 @@ use PHPUnit\Framework\TestCase;
 use ReflectionFunction;
 use stdClass;
 
-class ViewFactoryTest_testAddingLoopDoesNotCloseGenerator_Class
-{
-    public function generate()
-    {
-        for ($count = 0; $count < 3; $count++) {
-            yield ['a', 'b'];
+class ViewFactoryTest_testAddingLoopDoesNotCloseGenerator_class {
+            public function generate()
+            {
+                for ($count = 0; $count < 3; $count++) {
+                    yield ['a', 'b'];
+                }
+            }
         }
-    }
-}
 
 class ViewFactoryTest extends TestCase
 {
@@ -583,7 +582,8 @@ class ViewFactoryTest extends TestCase
     {
         $factory = $this->getFactory();
 
-        $data = (new ViewFactoryTest_testAddingLoopDoesNotCloseGenerator_Class)->generate();
+        $data = (new ViewFactoryTest_testAddingLoopDoesNotCloseGenerator_class)
+            ->generate();
 
         $factory->addLoop($data);
 

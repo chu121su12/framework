@@ -19,25 +19,23 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use stdClass;
 
-class SupportCollectionTest_testHigherOrderFilter_active_true_Class
-{
-    public $name = 'Alex';
+class SupportCollectionTest_testHigherOrderFilter_class_1 {
+                public $name = 'Alex';
 
-    public function active()
-    {
-        return true;
-    }
-}
+                public function active()
+                {
+                    return true;
+                }
+            }
 
-class SupportCollectionTest_testHigherOrderFilter_active_false_Class
-{
-    public $name = 'John';
+class SupportCollectionTest_testHigherOrderFilter_class_2 {
+                public $name = 'John';
 
-    public function active()
-    {
-        return false;
-    }
-}
+                public function active()
+                {
+                    return false;
+                }
+            }
 
 class SupportCollectionTest extends TestCase
 {
@@ -575,8 +573,8 @@ class SupportCollectionTest extends TestCase
     public function testHigherOrderFilter($collection)
     {
         $c = new $collection([
-            new SupportCollectionTest_testHigherOrderFilter_active_true_Class,
-            new SupportCollectionTest_testHigherOrderFilter_active_false_Class,
+            new SupportCollectionTest_testHigherOrderFilter_class_1,
+            new SupportCollectionTest_testHigherOrderFilter_class_2,
         ]);
 
         $this->assertCount(1, $c->filter->active());

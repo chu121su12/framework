@@ -11,29 +11,26 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
 
-class SupportHelpersTest_testOptional_Class
-{
-    public function something()
-    {
-        return 10;
-    }
-}
+class SupportHelpersTest_testOptional_class {
+            public function something()
+            {
+                return 10;
+            }
+        }
 
-class SupportHelpersTest_testOptionalIsMacroable_ClassInner
-{
-    public function something()
-    {
-        return '$10.00';
-    }
-}
+class SupportHelpersTest_testOptionalIsMacroable_class_inner {
+                    public function something()
+                    {
+                        return '$10.00';
+                    }
+                }
 
-class SupportHelpersTest_testOptionalIsMacroable_Class
-{
-    public function present()
-    {
-        return new SupportHelpersTest_testOptionalIsMacroable_ClassInner;
-    }
-}
+class SupportHelpersTest_testOptionalIsMacroable_class {
+            public function present()
+            {
+                return new SupportHelpersTest_testOptionalIsMacroable_class_inner;
+            }
+        }
 
 class SupportHelpersTest extends TestCase
 {
@@ -411,7 +408,9 @@ class SupportHelpersTest extends TestCase
     {
         $this->assertNull(optional(null)->something());
 
-        $this->assertEquals(10, optional(new SupportHelpersTest_testOptional_Class)->something());
+        $this->assertEquals(10, optional(
+            new SupportHelpersTest_testOptional_class
+        )->something());
     }
 
     public function testOptionalWithCallback()
@@ -484,7 +483,9 @@ class SupportHelpersTest extends TestCase
 
         $this->assertNull(optional(null)->present()->something());
 
-        $this->assertSame('$10.00', optional(new SupportHelpersTest_testOptionalIsMacroable_Class)->present()->something());
+        $this->assertSame('$10.00', optional(
+            new SupportHelpersTest_testOptionalIsMacroable_class
+        )->present()->something());
     }
 
     public function testRetry()

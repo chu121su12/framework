@@ -8,13 +8,12 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
 
-class HelpersTest_test_rescue_Class
-{
-    public function test($a)
-    {
-        return $a;
-    }
-}
+class FoundationHelpersTest_testRescue_class {
+            public function test($a)
+            {
+                return $a;
+            }
+        }
 
 /**
  * @group integration
@@ -37,7 +36,7 @@ class FoundationHelpersTest extends TestCase
             return 'no need to rescue';
         }, 'rescued!'), 'no need to rescue');
 
-        $testClass = new HelpersTest_test_rescue_Class;
+        $testClass = new FoundationHelpersTest_testRescue_class;
 
         $this->assertEquals(rescue(function () use ($testClass) {
             $testClass->test([]);

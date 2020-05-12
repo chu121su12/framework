@@ -10,21 +10,19 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class DatabaseEloquentCollectionTest_testQueueableRelationshipsReturnsOnlyRelationsCommonToAllModels_Class_1_getQueueableRelations
-{
-    public function getQueueableRelations()
-    {
-        return ['user'];
-    }
-}
+class DatabaseEloquentCollectionTest_testQueueableRelationshipsReturnsOnlyRelationsCommonToAllModels_class_1 {
+            public function getQueueableRelations()
+            {
+                return ['user'];
+            }
+        }
 
-class DatabaseEloquentCollectionTest_testQueueableRelationshipsReturnsOnlyRelationsCommonToAllModels_Class_2_getQueueableRelations
-{
-    public function getQueueableRelations()
-    {
-        return ['user', 'comments'];
-    }
-}
+class DatabaseEloquentCollectionTest_testQueueableRelationshipsReturnsOnlyRelationsCommonToAllModels_class_2 {
+            public function getQueueableRelations()
+            {
+                return ['user', 'comments'];
+            }
+        }
 
 class DatabaseEloquentCollectionTest extends TestCase
 {
@@ -452,8 +450,8 @@ class DatabaseEloquentCollectionTest extends TestCase
     {
         // This is needed to prevent loading non-existing relationships on polymorphic model collections (#26126)
         $c = new Collection([
-            new DatabaseEloquentCollectionTest_testQueueableRelationshipsReturnsOnlyRelationsCommonToAllModels_Class_1_getQueueableRelations,
-            new DatabaseEloquentCollectionTest_testQueueableRelationshipsReturnsOnlyRelationsCommonToAllModels_Class_2_getQueueableRelations
+            new DatabaseEloquentCollectionTest_testQueueableRelationshipsReturnsOnlyRelationsCommonToAllModels_class_1,
+            new DatabaseEloquentCollectionTest_testQueueableRelationshipsReturnsOnlyRelationsCommonToAllModels_class_2
         ]);
 
         $this->assertEquals(['user'], $c->getQueueableRelations());

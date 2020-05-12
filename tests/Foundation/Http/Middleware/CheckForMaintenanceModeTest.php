@@ -10,15 +10,14 @@ use Illuminate\Http\Request;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
-class CheckForMaintenanceModeTest_testApplicationAllowsSomeURIs_Class extends CheckForMaintenanceMode
-{
-    public function __construct($app)
-    {
-        parent::__construct($app);
+class CheckForMaintenanceModeTest_testApplicationAllowsSomeURIs_class extends CheckForMaintenanceMode {
+            public function __construct($app)
+            {
+                parent::__construct($app);
 
-        $this->except = ['foo/bar'];
-    }
-}
+                $this->except = ['foo/bar'];
+            }
+        }
 
 class CheckForMaintenanceModeTest extends TestCase
 {
@@ -115,7 +114,7 @@ class CheckForMaintenanceModeTest extends TestCase
     {
         $app = $this->createMaintenanceApplication();
 
-        $middleware = new CheckForMaintenanceModeTest_testApplicationAllowsSomeURIs_Class($app);
+        $middleware = new CheckForMaintenanceModeTest_testApplicationAllowsSomeURIs_class($app);
 
         $result = $middleware->handle(Request::create('/foo/bar'), function ($request) {
             return 'Excepting /foo/bar';

@@ -29,103 +29,95 @@ use stdClass;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class ValidationValidatorTest_testCustomValidationObject_passing_Class implements Rule
-{
-    public function passes($attribute, $value)
-    {
-        return $value === 'taylor';
-    }
+class ValidationValidatorTest_testValidateEmail_class_1 {
+            public function __toString()
+            {
+                return 'aslsdlks';
+            }
+        }
 
-    public function message()
-    {
-        return ':attribute must be taylor';
-    }
-}
+class ValidationValidatorTest_testValidateEmail_class_2 {
+            public function __toString()
+            {
+                return 'foo@gmail.com';
+            }
+        }
 
-class ValidationValidatorTest_testCustomValidationObject_failing_Class implements Rule
-{
-    public function passes($attribute, $value)
-    {
-        return $value === 'taylor';
-    }
+class ValidationValidatorTest_testCustomValidationObject_class_passing implements Rule {
+                public function passes($attribute, $value)
+                {
+                    return $value === 'taylor';
+                }
 
-    public function message()
-    {
-        return ':attribute must be taylor';
-    }
-}
+                public function message()
+                {
+                    return ':attribute must be taylor';
+                }
+            }
 
-class ValidationValidatorTest_testCustomValidationObject_complex_failing_Class implements Rule
-{
-    public function passes($attribute, $value)
-    {
-        return in_array($value, ['AK', 'HI']);
-    }
+class ValidationValidatorTest_testCustomValidationObject_class_failing implements Rule {
+                public function passes($attribute, $value)
+                {
+                    return $value === 'taylor';
+                }
 
-    public function message()
-    {
-        return ':attribute must be AR or TX';
-    }
-}
+                public function message()
+                {
+                    return ':attribute must be taylor';
+                }
+            }
 
-class ValidationValidatorTest_testImplicitCustomValidationObjects_passing_Class implements ImplicitRule
-{
-    public $called = false;
+class ValidationValidatorTest_testCustomValidationObject_class_complex_failing implements Rule {
+                    public function passes($attribute, $value)
+                    {
+                        return in_array($value, ['AK', 'HI']);
+                    }
 
-    public function passes($attribute, $value)
-    {
-        $this->called = true;
+                    public function message()
+                    {
+                        return ':attribute must be AR or TX';
+                    }
+                }
 
-        return true;
-    }
+class ValidationValidatorTest_testCustomValidationObject_class_array_of_messages_with_failing implements Rule {
+                public function passes($attribute, $value)
+                {
+                    return $value === 'taylor';
+                }
 
-    public function message()
-    {
-        return 'message';
-    }
-}
+                public function message()
+                {
+                    return [':attribute must be taylor', ':attribute must be a first name'];
+                }
+            }
 
-class ValidationValidatorTest_testCustomValidationObject_failing implements Rule
-{
-    public function passes($attribute, $value)
-    {
-        return $value === 'taylor';
-    }
+class ValidationValidatorTest_testCustomValidationObject_class_array_of_messages_with_multiple_rules_for_one_attribute implements Rule {
+                public function passes($attribute, $value)
+                {
+                    return $value === 'taylor';
+                }
 
-    public function message()
-    {
-        return [':attribute must be taylor', ':attribute must be a first name'];
-    }
-}
+                public function message()
+                {
+                    return [':attribute must be taylor', ':attribute must be a first name'];
+                }
+            }
 
-class ValidationValidatorTest_testCustomValidationObject_multiple implements Rule
-{
-    public function passes($attribute, $value)
-    {
-        return $value === 'taylor';
-    }
+class ValidationValidatorTest_testImplicitCustomValidationObjects_class implements ImplicitRule {
+                public $called = false;
 
-    public function message()
-    {
-        return [':attribute must be taylor', ':attribute must be a first name'];
-    }
-}
+                public function passes($attribute, $value)
+                {
+                    $this->called = true;
 
-class ValidationValidatorTest_testValidateEmail_email_invalid_Class
-{
-    public function __toString()
-    {
-        return 'aslsdlks';
-    }
-}
+                    return true;
+                }
 
-class ValidationValidatorTest_testValidateEmail_email_valid_Class
-{
-    public function __toString()
-    {
-        return 'foo@gmail.com';
-    }
-}
+                public function message()
+                {
+                    return 'message';
+                }
+            }
 
 class ValidationValidatorTest extends TestCase
 {
@@ -2415,10 +2407,16 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator($trans, ['x' => ['not a string']], ['x' => 'Email']);
         $this->assertFalse($v->passes());
 
-        $v = new Validator($trans, ['x' => new ValidationValidatorTest_testValidateEmail_email_invalid_Class], ['x' => 'Email']);
+        $v = new Validator($trans,
+            ['x' => new ValidationValidatorTest_testValidateEmail_class_1],
+            ['x' => 'Email']
+        );
         $this->assertFalse($v->passes());
 
-        $v = new Validator($trans, ['x' => new ValidationValidatorTest_testValidateEmail_email_valid_Class], ['x' => 'Email']);
+        $v = new Validator($trans,
+            ['x' => new ValidationValidatorTest_testValidateEmail_class_2],
+            ['x' => 'Email']
+        );
         $this->assertTrue($v->passes());
 
         $v = new Validator($trans, ['x' => 'foo@gmail.com'], ['x' => 'Email']);
@@ -4638,7 +4636,7 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator(
             $this->getIlluminateArrayTranslator(),
             ['name' => 'taylor'],
-            ['name' => new ValidationValidatorTest_testCustomValidationObject_passing_Class]
+            ['name' => new ValidationValidatorTest_testCustomValidationObject_class_passing]
         );
 
         $this->assertTrue($v->passes());
@@ -4647,7 +4645,7 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator(
             $this->getIlluminateArrayTranslator(),
             ['name' => 'adam'],
-            ['name' => [new ValidationValidatorTest_testCustomValidationObject_failing_Class]]
+            ['name' => [new ValidationValidatorTest_testCustomValidationObject_class_failing]]
         );
 
         $this->assertTrue($v->fails());
@@ -4685,7 +4683,7 @@ class ValidationValidatorTest extends TestCase
             $this->getIlluminateArrayTranslator(),
             ['name' => 'taylor', 'states' => ['AR', 'TX'], 'number' => 9],
             [
-                'states.*' => new ValidationValidatorTest_testCustomValidationObject_complex_failing_Class,
+                'states.*' => new ValidationValidatorTest_testCustomValidationObject_class_complex_failing,
                 'name' => function ($attribute, $value, $fail) {
                     if ($value !== 'taylor') {
                         $fail(':attribute must be taylor');
@@ -4712,7 +4710,7 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator(
             $this->getIlluminateArrayTranslator(),
             ['name' => 42],
-            ['name' => new ValidationValidatorTest_testCustomValidationObject_failing]
+            ['name' => new ValidationValidatorTest_testCustomValidationObject_class_array_of_messages_with_failing]
         );
 
         $this->assertTrue($v->fails());
@@ -4723,7 +4721,7 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator(
             $this->getIlluminateArrayTranslator(),
             ['name' => 42],
-            ['name' => [new ValidationValidatorTest_testCustomValidationObject_multiple, 'string']]
+            ['name' => [new ValidationValidatorTest_testCustomValidationObject_class_array_of_messages_with_multiple_rules_for_one_attribute, 'string']]
         );
 
         $this->assertTrue($v->fails());
@@ -4738,7 +4736,7 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator(
             $this->getIlluminateArrayTranslator(),
             ['name' => ''],
-            ['name' => $rule = new ValidationValidatorTest_testImplicitCustomValidationObjects_passing_Class]
+            ['name' => $rule = new ValidationValidatorTest_testImplicitCustomValidationObjects_class]
         );
 
         $this->assertTrue($v->passes());

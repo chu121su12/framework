@@ -11,19 +11,17 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class FoundationApplicationTest_testClassesAreBoundWhenServiceProviderIsRegistered_Class extends ServiceProvider
-{
-    public $bindings = [
-        AbstractClass::class => ConcreteClass::class,
-    ];
-}
+class FoundationApplicationTest_testClassesAreBoundWhenServiceProviderIsRegistered_class extends ServiceProvider {
+            public $bindings = [
+                AbstractClass::class => ConcreteClass::class,
+            ];
+        }
 
-class FoundationApplicationTest_testSingletonsAreCreatedWhenServiceProviderIsRegistered_Class extends ServiceProvider
-{
-    public $singletons = [
-        AbstractClass::class => ConcreteClass::class,
-    ];
-}
+class FoundationApplicationTest_testSingletonsAreCreatedWhenServiceProviderIsRegistered_class extends ServiceProvider {
+            public $singletons = [
+                AbstractClass::class => ConcreteClass::class,
+            ];
+        }
 
 class FoundationApplicationTest extends TestCase
 {
@@ -59,7 +57,9 @@ class FoundationApplicationTest extends TestCase
     public function testClassesAreBoundWhenServiceProviderIsRegistered()
     {
         $app = new Application;
-        $app->register($provider = new FoundationApplicationTest_testClassesAreBoundWhenServiceProviderIsRegistered_Class($app));
+        $app->register(
+            $provider = new FoundationApplicationTest_testClassesAreBoundWhenServiceProviderIsRegistered_class($app)
+        );
 
         $this->assertArrayHasKey(get_class($provider), $app->getLoadedProviders());
 
@@ -72,7 +72,9 @@ class FoundationApplicationTest extends TestCase
     public function testSingletonsAreCreatedWhenServiceProviderIsRegistered()
     {
         $app = new Application;
-        $app->register($provider = new FoundationApplicationTest_testSingletonsAreCreatedWhenServiceProviderIsRegistered_Class($app));
+        $app->register(
+            $provider = new FoundationApplicationTest_testSingletonsAreCreatedWhenServiceProviderIsRegistered_class($app)
+        );
 
         $this->assertArrayHasKey(get_class($provider), $app->getLoadedProviders());
 

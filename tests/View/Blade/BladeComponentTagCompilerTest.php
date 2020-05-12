@@ -11,13 +11,12 @@ use Illuminate\View\Component;
 use InvalidArgumentException;
 use Mockery;
 
-class BladeComponentTagCompilerTest_testAttributeSanitization_Class
-{
-    public function __toString()
-    {
-        return '<hi>';
-    }
-}
+class BladeComponentTagCompilerTest_testAttributeSanitization_class {
+            public function __toString()
+            {
+                return '<hi>';
+            }
+        }
 
 class BladeComponentTagCompilerTest extends AbstractBladeTestCase
 {
@@ -226,7 +225,7 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
 
     public function testAttributeSanitization()
     {
-        $class = new BladeComponentTagCompilerTest_testAttributeSanitization_Class;
+        $class = new BladeComponentTagCompilerTest_testAttributeSanitization_class;
 
         $this->assertEquals(e('<hi>'), BladeCompiler::sanitizeComponentAttribute('<hi>'));
         $this->assertEquals(e('1'), BladeCompiler::sanitizeComponentAttribute('1'));

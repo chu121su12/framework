@@ -14,28 +14,27 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
-class CommandTest_testGettingCommandArgumentsAndOptionsByClass_Class extends Command
-{
-    public function handle()
-    {
-    }
+class CommandTest_testGettingCommandArgumentsAndOptionsByClass_class extends Command {
+            public function handle()
+            {
+            }
 
-    protected function getArguments()
-    {
-        return [
-            new InputArgument('argument-one', InputArgument::REQUIRED, 'first test argument'),
-            ['argument-two', InputArgument::OPTIONAL, 'a second test argument'],
-        ];
-    }
+            protected function getArguments()
+            {
+                return [
+                    new InputArgument('argument-one', InputArgument::REQUIRED, 'first test argument'),
+                    ['argument-two', InputArgument::OPTIONAL, 'a second test argument'],
+                ];
+            }
 
-    protected function getOptions()
-    {
-        return [
-            new InputOption('option-one', 'o', InputOption::VALUE_OPTIONAL, 'first test option'),
-            ['option-two', 't', InputOption::VALUE_REQUIRED, 'second test option'],
-        ];
-    }
-}
+            protected function getOptions()
+            {
+                return [
+                    new InputOption('option-one', 'o', InputOption::VALUE_OPTIONAL, 'first test option'),
+                    ['option-two', 't', InputOption::VALUE_REQUIRED, 'second test option'],
+                ];
+            }
+        }
 
 class CommandTest extends TestCase
 {
@@ -72,7 +71,7 @@ class CommandTest extends TestCase
 
     public function testGettingCommandArgumentsAndOptionsByClass()
     {
-        $command = new CommandTest_testGettingCommandArgumentsAndOptionsByClass_Class;
+        $command = new CommandTest_testGettingCommandArgumentsAndOptionsByClass_class;
 
         $application = app();
         $command->setLaravel($application);

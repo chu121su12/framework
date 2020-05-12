@@ -28,156 +28,147 @@ use Illuminate\Tests\Integration\Http\Fixtures\SerializablePostResource;
 use Illuminate\Tests\Integration\Http\Fixtures\Subscription;
 use Orchestra\Testbench\TestCase;
 
-class ResourceTest_test_leading_merge__keyed_value_is_merged_correctly_Class
-{
-    use ConditionallyLoadsAttributes;
+class ResourceTest_testLeadingMergeKeyedValueIsMergedCorrectly_class {
+            use ConditionallyLoadsAttributes;
 
-    public function work()
-    {
-        return $this->filter([
-            new MergeValue(['name' => 'mohamed', 'location' => 'hurghada']),
-        ]);
-    }
-}
+            public function work()
+            {
+                return $this->filter([
+                    new MergeValue(['name' => 'mohamed', 'location' => 'hurghada']),
+                ]);
+            }
+        }
 
-class ResourceTest_test_leading_merge_value_is_merged_correctly_Class
-{
-    use ConditionallyLoadsAttributes;
+class ResourceTest_testLeadingMergeKeyedValueIsMergedCorrectlyWhenFirstValueIsMissing_class {
+            use ConditionallyLoadsAttributes;
 
-    public function work()
-    {
-        return $this->filter([
-            new MergeValue(['First', 'Second']),
-            'Taylor',
-            'Mohamed',
-            new MergeValue(['Adam', 'Matt']),
-            'Jeffrey',
-            new MergeValue(['Abigail', 'Lydia']),
-        ]);
-    }
-}
+            public function work()
+            {
+                return $this->filter([
+                    new MergeValue([
+                        0 => new MissingValue,
+                        'name' => 'mohamed',
+                        'location' => 'hurghada',
+                    ]),
+                ]);
+            }
+        }
 
-class ResourceTest_test_merge_values_may_be_missing_Class
-{
-    use ConditionallyLoadsAttributes;
+class ResourceTest_testLeadingMergeValueIsMergedCorrectly_class {
+            use ConditionallyLoadsAttributes;
 
-    public function work()
-    {
-        return $this->filter([
-            new MergeValue(['First', 'Second']),
-            'Taylor',
-            'Mohamed',
-            $this->mergeWhen(false, ['Adam', 'Matt']),
-            'Jeffrey',
-            new MergeValue(['Abigail', 'Lydia']),
-        ]);
-    }
-}
+            public function work()
+            {
+                return $this->filter([
+                    new MergeValue(['First', 'Second']),
+                    'Taylor',
+                    'Mohamed',
+                    new MergeValue(['Adam', 'Matt']),
+                    'Jeffrey',
+                    new MergeValue(['Abigail', 'Lydia']),
+                ]);
+            }
+        }
 
-class ResourceTest_test_initial_merge_values_may_be_missing_Class
-{
-    use ConditionallyLoadsAttributes;
+class ResourceTest_testMergeValuesMayBeMissing_class {
+            use ConditionallyLoadsAttributes;
 
-    public function work()
-    {
-        return $this->filter([
-            $this->mergeWhen(false, ['First', 'Second']),
-            'Taylor',
-            'Mohamed',
-            $this->mergeWhen(true, ['Adam', 'Matt']),
-            'Jeffrey',
-            new MergeValue(['Abigail', 'Lydia']),
-        ]);
-    }
-}
+            public function work()
+            {
+                return $this->filter([
+                    new MergeValue(['First', 'Second']),
+                    'Taylor',
+                    'Mohamed',
+                    $this->mergeWhen(false, ['Adam', 'Matt']),
+                    'Jeffrey',
+                    new MergeValue(['Abigail', 'Lydia']),
+                ]);
+            }
+        }
 
-class ResourceTest_test_all_merge_values_may_be_missing_Class
-{
-    use ConditionallyLoadsAttributes;
+class ResourceTest_testInitialMergeValuesMayBeMissing_class {
+            use ConditionallyLoadsAttributes;
 
-    public function work()
-    {
-        return $this->filter([
-            $this->mergeWhen(false, ['First', 'Second']),
-            'Taylor',
-            'Mohamed',
-            $this->mergeWhen(false, ['Adam', 'Matt']),
-            'Jeffrey',
-            $this->mergeWhen(false, (['Abigail', 'Lydia'])),
-        ]);
-    }
-}
+            public function work()
+            {
+                return $this->filter([
+                    $this->mergeWhen(false, ['First', 'Second']),
+                    'Taylor',
+                    'Mohamed',
+                    $this->mergeWhen(true, ['Adam', 'Matt']),
+                    'Jeffrey',
+                    new MergeValue(['Abigail', 'Lydia']),
+                ]);
+            }
+        }
 
-class ResourceTest_test_nested_merges_Class
-{
-    use ConditionallyLoadsAttributes;
+class ResourceTest_testMergeValueCanMergeJsonSerializable_class {
+            use ConditionallyLoadsAttributes;
 
-    public function work()
-    {
-        return $this->filter([
-            $this->mergeWhen(true, [['Something']]),
-            [
-                $this->mergeWhen(true, ['First', $this->mergeWhen(true, ['Second'])]),
-                'Third',
-            ],
-            [
-                'Fourth',
-            ],
-        ]);
-    }
-}
+            public function work()
+            {
+                $postResource = new PostResource(new Post([
+                    'id' => 1,
+                    'title' => 'Test Title 1',
+                ]));
 
-class ResourceTest_test_leading_merge_keyed_value_is_merged_correctly_when_first_value_is_missing_Class
-{
-    use ConditionallyLoadsAttributes;
+                return $this->filter([
+                    new MergeValue($postResource),
+                    'user' => 'test user',
+                    'age' => 'test age',
+                ]);
+            }
+        }
 
-    public function work()
-    {
-        return $this->filter([
-            new MergeValue([
-                0 => new MissingValue,
-                'name' => 'mohamed',
-                'location' => 'hurghada',
-            ]),
-        ]);
-    }
-}
+class ResourceTest_testMergeValueCanMergeCollectionOfJsonSerializable_class {
+            use ConditionallyLoadsAttributes;
 
-class ResourceTest_test_merge_value_can_merge_json_serializable_Class
-{
-    use ConditionallyLoadsAttributes;
+            public function work()
+            {
+                $posts = collect([
+                    new Post(['id' => 1, 'title' => 'Test title 1']),
+                    new Post(['id' => 2, 'title' => 'Test title 2']),
+                ]);
 
-    public function work()
-    {
-        $postResource = new PostResource(new Post([
-            'id' => 1,
-            'title' => 'Test Title 1',
-        ]));
+                return $this->filter([
+                    new MergeValue(PostResource::collection($posts)),
+                ]);
+            }
+        }
 
-        return $this->filter([
-            new MergeValue($postResource),
-            'user' => 'test user',
-            'age' => 'test age',
-        ]);
-    }
-}
+class ResourceTest_testAllMergeValuesMayBeMissing_class {
+            use ConditionallyLoadsAttributes;
 
-class ResourceTest_test_merge_value_can_merge_collection_of_json_serializable_Class
-{
-    use ConditionallyLoadsAttributes;
+            public function work()
+            {
+                return $this->filter([
+                    $this->mergeWhen(false, ['First', 'Second']),
+                    'Taylor',
+                    'Mohamed',
+                    $this->mergeWhen(false, ['Adam', 'Matt']),
+                    'Jeffrey',
+                    $this->mergeWhen(false, (['Abigail', 'Lydia'])),
+                ]);
+            }
+        }
 
-    public function work()
-    {
-        $posts = collect([
-            new Post(['id' => 1, 'title' => 'Test title 1']),
-            new Post(['id' => 2, 'title' => 'Test title 2']),
-        ]);
+class ResourceTest_testNestedMerges_class {
+            use ConditionallyLoadsAttributes;
 
-        return $this->filter([
-            new MergeValue(PostResource::collection($posts)),
-        ]);
-    }
-}
+            public function work()
+            {
+                return $this->filter([
+                    $this->mergeWhen(true, [['Something']]),
+                    [
+                        $this->mergeWhen(true, ['First', $this->mergeWhen(true, ['Second'])]),
+                        'Third',
+                    ],
+                    [
+                        'Fourth',
+                    ],
+                ]);
+            }
+        }
 
 /**
  * @group integration
@@ -954,7 +945,7 @@ class ResourceTest extends TestCase
 
     public function testLeadingMergeKeyedValueIsMergedCorrectly()
     {
-        $filter = new ResourceTest_test_leading_merge__keyed_value_is_merged_correctly_Class;
+        $filter = new ResourceTest_testLeadingMergeKeyedValueIsMergedCorrectly_class;
 
         $results = $filter->work();
 
@@ -965,7 +956,7 @@ class ResourceTest extends TestCase
 
     public function testLeadingMergeKeyedValueIsMergedCorrectlyWhenFirstValueIsMissing()
     {
-        $filter = new ResourceTest_test_leading_merge_keyed_value_is_merged_correctly_when_first_value_is_missing_Class;
+        $filter = new ResourceTest_testLeadingMergeKeyedValueIsMergedCorrectlyWhenFirstValueIsMissing_class;
 
         $results = $filter->work();
 
@@ -976,7 +967,7 @@ class ResourceTest extends TestCase
 
     public function testLeadingMergeValueIsMergedCorrectly()
     {
-        $filter = new ResourceTest_test_leading_merge_value_is_merged_correctly_Class;
+        $filter = new ResourceTest_testLeadingMergeValueIsMergedCorrectly_class;
 
         $results = $filter->work();
 
@@ -987,7 +978,7 @@ class ResourceTest extends TestCase
 
     public function testMergeValuesMayBeMissing()
     {
-        $filter = new ResourceTest_test_merge_values_may_be_missing_Class;
+        $filter = new ResourceTest_testMergeValuesMayBeMissing_class;
 
         $results = $filter->work();
 
@@ -998,7 +989,7 @@ class ResourceTest extends TestCase
 
     public function testInitialMergeValuesMayBeMissing()
     {
-        $filter = new ResourceTest_test_initial_merge_values_may_be_missing_Class;
+        $filter = new ResourceTest_testInitialMergeValuesMayBeMissing_class;
 
         $results = $filter->work();
 
@@ -1009,7 +1000,7 @@ class ResourceTest extends TestCase
 
     public function testMergeValueCanMergeJsonSerializable()
     {
-        $filter = new ResourceTest_test_merge_value_can_merge_json_serializable_Class;
+        $filter = new ResourceTest_testMergeValueCanMergeJsonSerializable_class;
 
         $results = $filter->work();
 
@@ -1024,7 +1015,7 @@ class ResourceTest extends TestCase
 
     public function testMergeValueCanMergeCollectionOfJsonSerializable()
     {
-        $filter = new ResourceTest_test_merge_value_can_merge_collection_of_json_serializable_Class;
+        $filter = new ResourceTest_testMergeValueCanMergeCollectionOfJsonSerializable_class;
 
         $results = $filter->work();
 
@@ -1036,7 +1027,7 @@ class ResourceTest extends TestCase
 
     public function testAllMergeValuesMayBeMissing()
     {
-        $filter = new ResourceTest_test_all_merge_values_may_be_missing_Class;
+        $filter = new ResourceTest_testAllMergeValuesMayBeMissing_class;
 
         $results = $filter->work();
 
@@ -1047,7 +1038,7 @@ class ResourceTest extends TestCase
 
     public function testNestedMerges()
     {
-        $filter = new ResourceTest_test_nested_merges_Class;
+        $filter = new ResourceTest_testNestedMerges_class;
 
         $results = $filter->work();
 
