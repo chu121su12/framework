@@ -365,6 +365,7 @@ class InsomniacWorker extends Worker
     public function daemonShouldRun(WorkerOptions $options, $connectionName, $queue)
     {
         $isDownForMaintenance = $this->isDownForMaintenance;
+
         return ! $isDownForMaintenance();
     }
 }

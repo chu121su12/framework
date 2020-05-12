@@ -33,8 +33,8 @@ use stdClass;
 
 class DatabaseEloquentModelTest extends TestCase
 {
-    use InteractsWithTime,
-        \PHPUnit\Framework\PhpUnit8Assert;
+    use \PHPUnit\Framework\PhpUnit8Assert,
+        InteractsWithTime;
 
     protected function setUp()
     {
