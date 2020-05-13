@@ -50,7 +50,7 @@ class DescriptorHelper extends Helper
      *
      * @throws InvalidArgumentException when the given format is not supported
      */
-    public function describe(OutputInterface $output, ?object $object, array $options = [])
+    public function describe(OutputInterface $output, $object = null, array $options = [])
     {
         $options = array_merge([
             'raw_text' => false,

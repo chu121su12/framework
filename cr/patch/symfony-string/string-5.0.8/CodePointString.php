@@ -120,7 +120,7 @@ class CodePointString extends AbstractUnicodeString
         return $string === $this->string;
     }
 
-    public function indexOf($needle, $offset = 0): ?int
+    public function indexOf($needle, $offset = 0)
     {
         if ($needle instanceof AbstractString) {
             $needle = $needle->string;
@@ -139,7 +139,7 @@ class CodePointString extends AbstractUnicodeString
         return false === $i ? null : $i;
     }
 
-    public function indexOfLast($needle, $offset = 0): ?int
+    public function indexOfLast($needle, $offset = 0)
     {
         if ($needle instanceof AbstractString) {
             $needle = $needle->string;

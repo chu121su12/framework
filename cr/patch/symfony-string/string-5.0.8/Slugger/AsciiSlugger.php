@@ -105,7 +105,7 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
         ;
     }
 
-    private function createTransliterator($locale): ?\Transliterator
+    private function createTransliterator($locale)
     {
         if (\array_key_exists($locale, $this->transliterators)) {
             return $this->transliterators[$locale];
@@ -113,7 +113,8 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
 
         // Exact locale supported, cache and return
         if ($id = isset(self::LOCALE_TO_TRANSLITERATOR_ID[$locale]) ? self::LOCALE_TO_TRANSLITERATOR_ID[$locale] : null) {
-            return $this->transliterators[$locale] = \Transliterator::create($id.'/BGN') ?? \Transliterator::create($id);
+            $bgnTransliterator = \Transliterator::create($id.'/BGN');
+            return $this->transliterators[$locale] = isset($bgnTransliterator) ? $bgnTransliterator : \Transliterator::create($id);
         }
 
         // Locale not supported and no parent, fallback to any-latin
@@ -125,7 +126,8 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
         $parent = substr($locale, 0, -\strlen($str));
 
         if ($id = isset(self::LOCALE_TO_TRANSLITERATOR_ID[$parent]) ? self::LOCALE_TO_TRANSLITERATOR_ID[$parent] : null) {
-            $transliterator = \Transliterator::create($id.'/BGN') ?? \Transliterator::create($id);
+            $bgnTransliterator = \Transliterator::create($id.'/BGN');
+            $transliterator = isset($bgnTransliterator) ? $bgnTransliterator : \Transliterator::create($id);
         }
 
         return $this->transliterators[$locale] = $this->transliterators[$parent] = isset($transliterator) ? $transliterator : null;

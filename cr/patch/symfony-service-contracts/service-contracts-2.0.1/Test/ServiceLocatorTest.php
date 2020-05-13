@@ -15,13 +15,15 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceLocatorTrait;
 
+class ServiceLocatorTest_getServiceLocator_class implements ContainerInterface {
+            use ServiceLocatorTrait;
+        }
+
 abstract class ServiceLocatorTest extends TestCase
 {
     protected function getServiceLocator(array $factories)
     {
-        return new class($factories) implements ContainerInterface {
-            use ServiceLocatorTrait;
-        };
+        return new ServiceLocatorTest_getServiceLocator_class($factories);
     }
 
     public function testHas()

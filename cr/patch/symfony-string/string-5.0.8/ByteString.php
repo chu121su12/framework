@@ -125,7 +125,7 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function indexOf($needle, $offset = 0): ?int
+    public function indexOf($needle, $offset = 0)
     {
         if ($needle instanceof parent) {
             $needle = $needle->string;
@@ -144,7 +144,7 @@ class ByteString extends AbstractString
         return false === $i ? null : $i;
     }
 
-    public function indexOfLast($needle, $offset = 0): ?int
+    public function indexOfLast($needle, $offset = 0)
     {
         if ($needle instanceof parent) {
             $needle = $needle->string;

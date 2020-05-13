@@ -32,5 +32,5 @@ interface ServiceProviderInterface extends ContainerInterface
      *
      * @return string[] The provided service types, keyed by service names
      */
-    public function getProvidedServices(): array;
+    public function getProvidedServices();
 }

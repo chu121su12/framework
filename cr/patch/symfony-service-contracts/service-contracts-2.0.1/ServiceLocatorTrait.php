@@ -14,6 +14,12 @@ namespace Symfony\Contracts\Service;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+class ServiceLocatorTrait_createNotFoundException_class extends \InvalidArgumentException implements NotFoundExceptionInterface {
+        }
+
+class ServiceLocatorTrait_createCircularReferenceException_class extends \RuntimeException implements ContainerExceptionInterface {
+        }
+
 /**
  * A trait to help implement ServiceProviderInterface.
  *
@@ -110,13 +116,13 @@ trait ServiceLocatorTrait
             $message = sprintf('Service "%s" not found: the current service locator %s', $id, $message);
         }
 
-        return new class($message) extends \InvalidArgumentException implements NotFoundExceptionInterface {
-        };
+        return new ServiceLocatorTrait_createNotFoundException_class($message);
     }
 
     private function createCircularReferenceException($id, array $path)
     {
-        return new class(sprintf('Circular reference detected for service "%s", path: "%s".', $id, implode(' -> ', $path))) extends \RuntimeException implements ContainerExceptionInterface {
-        };
+        return new ServiceLocatorTrait_createCircularReferenceException_class(
+            sprintf('Circular reference detected for service "%s", path: "%s".', $id, implode(' -> ', $path))
+        );
     }
 }
