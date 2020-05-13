@@ -81,7 +81,7 @@ class InputDefinition
      *
      * @param InputArgument[] $arguments An array of InputArgument objects
      */
-    public function addArguments(?array $arguments = [])
+    public function addArguments(array $arguments = [])
     {
         if (null !== $arguments) {
             foreach ($arguments as $argument) {
