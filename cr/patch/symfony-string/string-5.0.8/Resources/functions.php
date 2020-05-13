@@ -14,7 +14,7 @@ namespace Symfony\Component\String;
 /**
  * @experimental in 5.0
  */
-function u(string $string = ''): UnicodeString
+function u($string = '')
 {
     return new UnicodeString($string);
 }
@@ -22,7 +22,7 @@ function u(string $string = ''): UnicodeString
 /**
  * @experimental in 5.0
  */
-function b(string $string = ''): ByteString
+function b($string = '')
 {
     return new ByteString($string);
 }

@@ -34,7 +34,7 @@ use Symfony\Component\String\Exception\InvalidArgumentException;
  */
 class UnicodeString extends AbstractUnicodeString
 {
-    public function __construct(string $string = '')
+    public function __construct($string = '')
     {
         $this->string = normalizer_is_normalized($string) ? $string : normalizer_normalize($string);
 
@@ -43,10 +43,10 @@ class UnicodeString extends AbstractUnicodeString
         }
     }
 
-    public function append(string ...$suffix): AbstractString
+    public function append(string ...$suffix)
     {
         $str = clone $this;
-        $str->string = $this->string.(1 >= \count($suffix) ? ($suffix[0] ?? '') : implode('', $suffix));
+        $str->string = $this->string.(1 >= \count($suffix) ? (isset($suffix[0]) ? $suffix[0] : '') : implode('', $suffix));
         normalizer_is_normalized($str->string) ?: $str->string = normalizer_normalize($str->string);
 
         if (false === $str->string) {
@@ -56,7 +56,7 @@ class UnicodeString extends AbstractUnicodeString
         return $str;
     }
 
-    public function chunk(int $length = 1): array
+    public function chunk($length = 1)
     {
         if (1 > $length) {
             throw new InvalidArgumentException('The chunk length must be greater than zero.');
@@ -84,7 +84,7 @@ class UnicodeString extends AbstractUnicodeString
         return $chunks;
     }
 
-    public function endsWith($suffix): bool
+    public function endsWith($suffix)
     {
         if ($suffix instanceof AbstractString) {
             $suffix = $suffix->string;
@@ -108,7 +108,7 @@ class UnicodeString extends AbstractUnicodeString
         return $suffix === grapheme_extract($this->string, \strlen($suffix), GRAPHEME_EXTR_MAXBYTES, \strlen($this->string) - \strlen($suffix));
     }
 
-    public function equalsTo($string): bool
+    public function equalsTo($string)
     {
         if ($string instanceof AbstractString) {
             $string = $string->string;
@@ -128,7 +128,7 @@ class UnicodeString extends AbstractUnicodeString
         return $string === $this->string;
     }
 
-    public function indexOf($needle, int $offset = 0): ?int
+    public function indexOf($needle, $offset = 0): ?int
     {
         if ($needle instanceof AbstractString) {
             $needle = $needle->string;
@@ -150,7 +150,7 @@ class UnicodeString extends AbstractUnicodeString
         return false === $i ? null : $i;
     }
 
-    public function indexOfLast($needle, int $offset = 0): ?int
+    public function indexOfLast($needle, $offset = 0): ?int
     {
         if ($needle instanceof AbstractString) {
             $needle = $needle->string;
@@ -182,7 +182,7 @@ class UnicodeString extends AbstractUnicodeString
         return false === $i ? null : $i;
     }
 
-    public function join(array $strings, string $lastGlue = null): AbstractString
+    public function join(array $strings, $lastGlue = null)
     {
         $str = parent::join($strings, $lastGlue);
         normalizer_is_normalized($str->string) ?: $str->string = normalizer_normalize($str->string);
@@ -190,7 +190,7 @@ class UnicodeString extends AbstractUnicodeString
         return $str;
     }
 
-    public function length(): int
+    public function length()
     {
         return grapheme_strlen($this->string);
     }
@@ -198,7 +198,7 @@ class UnicodeString extends AbstractUnicodeString
     /**
      * @return static
      */
-    public function normalize(int $form = self::NFC): parent
+    public function normalize($form = self::NFC)
     {
         $str = clone $this;
 
@@ -214,10 +214,10 @@ class UnicodeString extends AbstractUnicodeString
         return $str;
     }
 
-    public function prepend(string ...$prefix): AbstractString
+    public function prepend(string ...$prefix)
     {
         $str = clone $this;
-        $str->string = (1 >= \count($prefix) ? ($prefix[0] ?? '') : implode('', $prefix)).$this->string;
+        $str->string = (1 >= \count($prefix) ? (isset($prefix[0]) ? $prefix[0] : '') : implode('', $prefix)).$this->string;
         normalizer_is_normalized($str->string) ?: $str->string = normalizer_normalize($str->string);
 
         if (false === $str->string) {
@@ -227,7 +227,7 @@ class UnicodeString extends AbstractUnicodeString
         return $str;
     }
 
-    public function replace(string $from, string $to): AbstractString
+    public function replace($from, $to)
     {
         $str = clone $this;
         normalizer_is_normalized($from) ?: $from = normalizer_normalize($from);
@@ -254,7 +254,7 @@ class UnicodeString extends AbstractUnicodeString
         return $str;
     }
 
-    public function replaceMatches(string $fromRegexp, $to): AbstractString
+    public function replaceMatches($fromRegexp, $to)
     {
         $str = parent::replaceMatches($fromRegexp, $to);
         normalizer_is_normalized($str->string) ?: $str->string = normalizer_normalize($str->string);
@@ -262,20 +262,20 @@ class UnicodeString extends AbstractUnicodeString
         return $str;
     }
 
-    public function slice(int $start = 0, int $length = null): AbstractString
+    public function slice($start = 0, $length = null)
     {
         $str = clone $this;
-        $str->string = (string) grapheme_substr($this->string, $start, $length ?? \PHP_INT_MAX);
+        $str->string = (string) grapheme_substr($this->string, $start, isset($length) ? $length : \PHP_INT_MAX);
 
         return $str;
     }
 
-    public function splice(string $replacement, int $start = 0, int $length = null): AbstractString
+    public function splice($replacement, $start = 0, $length = null)
     {
         $str = clone $this;
         $start = $start ? \strlen(grapheme_substr($this->string, 0, $start)) : 0;
-        $length = $length ? \strlen(grapheme_substr($this->string, $start, $length ?? \PHP_INT_MAX)) : $length;
-        $str->string = substr_replace($this->string, $replacement, $start, $length ?? \PHP_INT_MAX);
+        $length = $length ? \strlen(grapheme_substr($this->string, $start, isset($length) ? $length : \PHP_INT_MAX)) : $length;
+        $str->string = substr_replace($this->string, $replacement, $start, isset($length) ? $length : \PHP_INT_MAX);
         normalizer_is_normalized($str->string) ?: $str->string = normalizer_normalize($str->string);
 
         if (false === $str->string) {
@@ -285,9 +285,9 @@ class UnicodeString extends AbstractUnicodeString
         return $str;
     }
 
-    public function split(string $delimiter, int $limit = null, int $flags = null): array
+    public function split($delimiter, $limit = null, $flags = null)
     {
-        if (1 > $limit = $limit ?? \PHP_INT_MAX) {
+        if (1 > $limit = isset($limit) ? $limit : \PHP_INT_MAX) {
             throw new InvalidArgumentException('Split limit must be a positive integer.');
         }
 
@@ -323,7 +323,7 @@ class UnicodeString extends AbstractUnicodeString
         return $chunks;
     }
 
-    public function startsWith($prefix): bool
+    public function startsWith($prefix)
     {
         if ($prefix instanceof AbstractString) {
             $prefix = $prefix->string;

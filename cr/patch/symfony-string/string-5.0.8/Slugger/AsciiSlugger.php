@@ -61,7 +61,7 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
      */
     private $transliterators = [];
 
-    public function __construct(string $defaultLocale = null)
+    public function __construct($defaultLocale = null)
     {
         $this->defaultLocale = $defaultLocale;
     }
@@ -85,9 +85,9 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
     /**
      * {@inheritdoc}
      */
-    public function slug(string $string, string $separator = '-', string $locale = null): AbstractUnicodeString
+    public function slug($string, $separator = '-', $locale = null)
     {
-        $locale = $locale ?? $this->defaultLocale;
+        $locale = isset($locale) ? $locale : $this->defaultLocale;
 
         $transliterator = [];
         if ('de' === $locale || 0 === strpos($locale, 'de_')) {
@@ -105,14 +105,14 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
         ;
     }
 
-    private function createTransliterator(string $locale): ?\Transliterator
+    private function createTransliterator($locale): ?\Transliterator
     {
         if (\array_key_exists($locale, $this->transliterators)) {
             return $this->transliterators[$locale];
         }
 
         // Exact locale supported, cache and return
-        if ($id = self::LOCALE_TO_TRANSLITERATOR_ID[$locale] ?? null) {
+        if ($id = isset(self::LOCALE_TO_TRANSLITERATOR_ID[$locale]) ? self::LOCALE_TO_TRANSLITERATOR_ID[$locale] : null) {
             return $this->transliterators[$locale] = \Transliterator::create($id.'/BGN') ?? \Transliterator::create($id);
         }
 
@@ -124,10 +124,10 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
         // Try to use the parent locale (ie. try "de" for "de_AT") and cache both locales
         $parent = substr($locale, 0, -\strlen($str));
 
-        if ($id = self::LOCALE_TO_TRANSLITERATOR_ID[$parent] ?? null) {
+        if ($id = isset(self::LOCALE_TO_TRANSLITERATOR_ID[$parent]) ? self::LOCALE_TO_TRANSLITERATOR_ID[$parent] : null) {
             $transliterator = \Transliterator::create($id.'/BGN') ?? \Transliterator::create($id);
         }
 
-        return $this->transliterators[$locale] = $this->transliterators[$parent] = $transliterator ?? null;
+        return $this->transliterators[$locale] = $this->transliterators[$parent] = isset($transliterator) ? $transliterator : null;
     }
 }

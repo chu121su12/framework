@@ -25,5 +25,5 @@ interface SluggerInterface
     /**
      * Creates a slug for the given string and locale, using appropriate transliteration when needed.
      */
-    public function slug(string $string, string $separator = '-', string $locale = null): AbstractUnicodeString;
+    public function slug($string, $separator = '-', $locale = null): AbstractUnicodeString;
 }

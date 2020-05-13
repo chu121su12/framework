@@ -27,12 +27,12 @@ use Symfony\Component\String\Exception\RuntimeException;
  */
 class ByteString extends AbstractString
 {
-    public function __construct(string $string = '')
+    public function __construct($string = '')
     {
         $this->string = $string;
     }
 
-    public static function fromRandom(int $length = 16): self
+    public static function fromRandom($length = 16)
     {
         $string = '';
 
@@ -43,22 +43,22 @@ class ByteString extends AbstractString
         return new static(substr($string, 0, $length));
     }
 
-    public function bytesAt(int $offset): array
+    public function bytesAt($offset)
     {
-        $str = $this->string[$offset] ?? '';
+        $str = isset($this->string[$offset]) ? $this->string[$offset] : '';
 
         return '' === $str ? [] : [\ord($str)];
     }
 
-    public function append(string ...$suffix): parent
+    public function append(string ...$suffix)
     {
         $str = clone $this;
-        $str->string .= 1 >= \count($suffix) ? ($suffix[0] ?? '') : implode('', $suffix);
+        $str->string .= 1 >= \count($suffix) ? (isset($suffix[0]) ? $suffix[0] : '') : implode('', $suffix);
 
         return $str;
     }
 
-    public function camel(): parent
+    public function camel()
     {
         $str = clone $this;
         $str->string = lcfirst(str_replace(' ', '', ucwords(preg_replace('/[^a-zA-Z0-9\x7f-\xff]++/', ' ', $this->string))));
@@ -66,7 +66,7 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function chunk(int $length = 1): array
+    public function chunk($length = 1)
     {
         if (1 > $length) {
             throw new InvalidArgumentException('The chunk length must be greater than zero.');
@@ -87,7 +87,7 @@ class ByteString extends AbstractString
         return $chunks;
     }
 
-    public function endsWith($suffix): bool
+    public function endsWith($suffix)
     {
         if ($suffix instanceof parent) {
             $suffix = $suffix->string;
@@ -100,7 +100,7 @@ class ByteString extends AbstractString
         return '' !== $suffix && \strlen($this->string) >= \strlen($suffix) && 0 === substr_compare($this->string, $suffix, -\strlen($suffix), null, $this->ignoreCase);
     }
 
-    public function equalsTo($string): bool
+    public function equalsTo($string)
     {
         if ($string instanceof parent) {
             $string = $string->string;
@@ -117,7 +117,7 @@ class ByteString extends AbstractString
         return $string === $this->string;
     }
 
-    public function folded(): parent
+    public function folded()
     {
         $str = clone $this;
         $str->string = strtolower($str->string);
@@ -125,7 +125,7 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function indexOf($needle, int $offset = 0): ?int
+    public function indexOf($needle, $offset = 0): ?int
     {
         if ($needle instanceof parent) {
             $needle = $needle->string;
@@ -144,7 +144,7 @@ class ByteString extends AbstractString
         return false === $i ? null : $i;
     }
 
-    public function indexOfLast($needle, int $offset = 0): ?int
+    public function indexOfLast($needle, $offset = 0): ?int
     {
         if ($needle instanceof parent) {
             $needle = $needle->string;
@@ -163,12 +163,12 @@ class ByteString extends AbstractString
         return false === $i ? null : $i;
     }
 
-    public function isUtf8(): bool
+    public function isUtf8()
     {
         return '' === $this->string || preg_match('//u', $this->string);
     }
 
-    public function join(array $strings, string $lastGlue = null): parent
+    public function join(array $strings, $lastGlue = null)
     {
         $str = clone $this;
 
@@ -178,12 +178,12 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function length(): int
+    public function length()
     {
         return \strlen($this->string);
     }
 
-    public function lower(): parent
+    public function lower()
     {
         $str = clone $this;
         $str->string = strtolower($str->string);
@@ -191,7 +191,7 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function match(string $regexp, int $flags = 0, int $offset = 0): array
+    public function match($regexp, $flags = 0, $offset = 0)
     {
         $match = ((PREG_PATTERN_ORDER | PREG_SET_ORDER) & $flags) ? 'preg_match_all' : 'preg_match';
 
@@ -220,7 +220,7 @@ class ByteString extends AbstractString
         return $matches;
     }
 
-    public function padBoth(int $length, string $padStr = ' '): parent
+    public function padBoth($length, $padStr = ' ')
     {
         $str = clone $this;
         $str->string = str_pad($this->string, $length, $padStr, STR_PAD_BOTH);
@@ -228,7 +228,7 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function padEnd(int $length, string $padStr = ' '): parent
+    public function padEnd($length, $padStr = ' ')
     {
         $str = clone $this;
         $str->string = str_pad($this->string, $length, $padStr, STR_PAD_RIGHT);
@@ -236,7 +236,7 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function padStart(int $length, string $padStr = ' '): parent
+    public function padStart($length, $padStr = ' ')
     {
         $str = clone $this;
         $str->string = str_pad($this->string, $length, $padStr, STR_PAD_LEFT);
@@ -244,15 +244,15 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function prepend(string ...$prefix): parent
+    public function prepend(string ...$prefix)
     {
         $str = clone $this;
-        $str->string = (1 >= \count($prefix) ? ($prefix[0] ?? '') : implode('', $prefix)).$str->string;
+        $str->string = (1 >= \count($prefix) ? (isset($prefix[0]) ? $prefix[0] : '') : implode('', $prefix)).$str->string;
 
         return $str;
     }
 
-    public function replace(string $from, string $to): parent
+    public function replace($from, $to)
     {
         $str = clone $this;
 
@@ -263,7 +263,7 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function replaceMatches(string $fromRegexp, $to): parent
+    public function replaceMatches($fromRegexp, $to)
     {
         if ($this->ignoreCase) {
             $fromRegexp .= 'i';
@@ -303,15 +303,15 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function slice(int $start = 0, int $length = null): parent
+    public function slice($start = 0, $length = null)
     {
         $str = clone $this;
-        $str->string = (string) substr($this->string, $start, $length ?? \PHP_INT_MAX);
+        $str->string = (string) substr($this->string, $start, isset($length) ? $length : \PHP_INT_MAX);
 
         return $str;
     }
 
-    public function snake(): parent
+    public function snake()
     {
         $str = $this->camel()->title();
         $str->string = strtolower(preg_replace(['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'], '\1_\2', $str->string));
@@ -319,17 +319,17 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function splice(string $replacement, int $start = 0, int $length = null): parent
+    public function splice($replacement, $start = 0, $length = null)
     {
         $str = clone $this;
-        $str->string = substr_replace($this->string, $replacement, $start, $length ?? \PHP_INT_MAX);
+        $str->string = substr_replace($this->string, $replacement, $start, isset($length) ? $length : \PHP_INT_MAX);
 
         return $str;
     }
 
-    public function split(string $delimiter, int $limit = null, int $flags = null): array
+    public function split($delimiter, $limit = null, $flags = null)
     {
-        if (1 > $limit = $limit ?? \PHP_INT_MAX) {
+        if (1 > $limit = isset($limit) ? $limit : \PHP_INT_MAX) {
             throw new InvalidArgumentException('Split limit must be a positive integer.');
         }
 
@@ -354,7 +354,7 @@ class ByteString extends AbstractString
         return $chunks;
     }
 
-    public function startsWith($prefix): bool
+    public function startsWith($prefix)
     {
         if ($prefix instanceof parent) {
             $prefix = $prefix->string;
@@ -365,7 +365,7 @@ class ByteString extends AbstractString
         return '' !== $prefix && 0 === ($this->ignoreCase ? strncasecmp($this->string, $prefix, \strlen($prefix)) : strncmp($this->string, $prefix, \strlen($prefix)));
     }
 
-    public function title(bool $allWords = false): parent
+    public function title($allWords = false)
     {
         $str = clone $this;
         $str->string = $allWords ? ucwords($str->string) : ucfirst($str->string);
@@ -373,12 +373,12 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function toUnicodeString(string $fromEncoding = null): UnicodeString
+    public function toUnicodeString($fromEncoding = null)
     {
         return new UnicodeString($this->toCodePointString($fromEncoding)->string);
     }
 
-    public function toCodePointString(string $fromEncoding = null): CodePointString
+    public function toCodePointString($fromEncoding = null)
     {
         $u = new CodePointString();
 
@@ -392,13 +392,13 @@ class ByteString extends AbstractString
 
         try {
             try {
-                $validEncoding = false !== mb_detect_encoding($this->string, $fromEncoding ?? 'Windows-1252', true);
+                $validEncoding = false !== mb_detect_encoding($this->string, isset($fromEncoding) ? $fromEncoding : 'Windows-1252', true);
             } catch (InvalidArgumentException $e) {
                 if (!\function_exists('iconv')) {
                     throw $e;
                 }
 
-                $u->string = iconv($fromEncoding ?? 'Windows-1252', 'UTF-8', $this->string);
+                $u->string = iconv(isset($fromEncoding) ? $fromEncoding : 'Windows-1252', 'UTF-8', $this->string);
 
                 return $u;
             }
@@ -407,15 +407,15 @@ class ByteString extends AbstractString
         }
 
         if (!$validEncoding) {
-            throw new InvalidArgumentException(sprintf('Invalid "%s" string.', $fromEncoding ?? 'Windows-1252'));
+            throw new InvalidArgumentException(sprintf('Invalid "%s" string.', isset($fromEncoding) ? $fromEncoding : 'Windows-1252'));
         }
 
-        $u->string = mb_convert_encoding($this->string, 'UTF-8', $fromEncoding ?? 'Windows-1252');
+        $u->string = mb_convert_encoding($this->string, 'UTF-8', isset($fromEncoding) ? $fromEncoding : 'Windows-1252');
 
         return $u;
     }
 
-    public function trim(string $chars = " \t\n\r\0\x0B\x0C"): parent
+    public function trim($chars = " \t\n\r\0\x0B\x0C")
     {
         $str = clone $this;
         $str->string = trim($str->string, $chars);
@@ -423,7 +423,7 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function trimEnd(string $chars = " \t\n\r\0\x0B\x0C"): parent
+    public function trimEnd($chars = " \t\n\r\0\x0B\x0C")
     {
         $str = clone $this;
         $str->string = rtrim($str->string, $chars);
@@ -431,7 +431,7 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function trimStart(string $chars = " \t\n\r\0\x0B\x0C"): parent
+    public function trimStart($chars = " \t\n\r\0\x0B\x0C")
     {
         $str = clone $this;
         $str->string = ltrim($str->string, $chars);
@@ -439,7 +439,7 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function upper(): parent
+    public function upper()
     {
         $str = clone $this;
         $str->string = strtoupper($str->string);
@@ -447,7 +447,7 @@ class ByteString extends AbstractString
         return $str;
     }
 
-    public function width(bool $ignoreAnsiDecoration = true): int
+    public function width($ignoreAnsiDecoration = true)
     {
         $width = 0;
         $s = str_replace(["\x00", "\x05", "\x07"], '', $this->string);

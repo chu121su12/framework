@@ -72,7 +72,7 @@ trait ServiceLocatorTrait
     /**
      * {@inheritdoc}
      */
-    public function getProvidedServices(): array
+    public function getProvidedServices()
     {
         if (null === $this->providedTypes) {
             $this->providedTypes = [];
@@ -91,7 +91,7 @@ trait ServiceLocatorTrait
         return $this->providedTypes;
     }
 
-    private function createNotFoundException(string $id): NotFoundExceptionInterface
+    private function createNotFoundException($id)
     {
         if (!$alternatives = array_keys($this->factories)) {
             $message = 'is empty...';
@@ -114,7 +114,7 @@ trait ServiceLocatorTrait
         };
     }
 
-    private function createCircularReferenceException(string $id, array $path): ContainerExceptionInterface
+    private function createCircularReferenceException($id, array $path)
     {
         return new class(sprintf('Circular reference detected for service "%s", path: "%s".', $id, implode(' -> ', $path))) extends \RuntimeException implements ContainerExceptionInterface {
         };
