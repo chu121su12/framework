@@ -524,6 +524,10 @@ class FilesystemTest extends TestCase
 
     public function testCreateFtpDriver()
     {
+        if (! defined('FTP_BINARY')) {
+            $this->markTestSkipped('FTP module not installed');
+        }
+
         $filesystem = new FilesystemManager(new Application);
 
         $driver = $filesystem->createFtpDriver([
