@@ -44,8 +44,8 @@ class SupportStrTest extends TestCase
 
     public function testStringAsciiWithSpecificLocale()
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-            $this->markTestSkipped('voku ASCII is not available below php 7.');
+        if (! class_exists('voku\\helper\\ASCII')) {
+            $this->markTestSkipped('voku ASCII is not available.');
         }
 
         $this->assertSame('h H sht Sht a A ia yo', Str::ascii('х Х щ Щ ъ Ъ иа йо', 'bg'));
