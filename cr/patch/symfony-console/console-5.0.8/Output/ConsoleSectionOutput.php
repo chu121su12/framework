@@ -30,7 +30,7 @@ class ConsoleSectionOutput extends StreamOutput
      * @param resource               $stream
      * @param ConsoleSectionOutput[] $sections
      */
-    public function __construct($stream, array &$sections, int $verbosity, bool $decorated, OutputFormatterInterface $formatter)
+    public function __construct($stream, array &$sections, $verbosity, $decorated, OutputFormatterInterface $formatter)
     {
         parent::__construct($stream, $verbosity, $decorated, $formatter);
         array_unshift($sections, $this);
@@ -43,7 +43,7 @@ class ConsoleSectionOutput extends StreamOutput
      *
      * @param int $lines Number of lines to clear. If null, then the entire output of this section is cleared
      */
-    public function clear(int $lines = null)
+    public function clear($lines = null)
     {
         if (empty($this->content) || !$this->isDecorated()) {
             return;
@@ -72,7 +72,7 @@ class ConsoleSectionOutput extends StreamOutput
         $this->writeln($message);
     }
 
-    public function getContent(): string
+    public function getContent()
     {
         return implode('', $this->content);
     }
@@ -80,7 +80,7 @@ class ConsoleSectionOutput extends StreamOutput
     /**
      * @internal
      */
-    public function addContent(string $input)
+    public function addContent($input)
     {
         foreach (explode(PHP_EOL, $input) as $lineContent) {
             $this->lines += ceil($this->getDisplayLength($lineContent) / $this->terminal->getWidth()) ?: 1;
@@ -112,7 +112,7 @@ class ConsoleSectionOutput extends StreamOutput
      * At initial stage, cursor is at the end of stream output. This method makes cursor crawl upwards until it hits
      * current section. Then it erases content it crawled through. Optionally, it erases part of current section too.
      */
-    private function popStreamContentUntilCurrentSection(int $numberOfLinesToClearFromCurrentSection = 0): string
+    private function popStreamContentUntilCurrentSection($numberOfLinesToClearFromCurrentSection = 0)
     {
         $numberOfLinesToClear = $numberOfLinesToClearFromCurrentSection;
         $erasedContent = [];
@@ -136,7 +136,7 @@ class ConsoleSectionOutput extends StreamOutput
         return implode('', array_reverse($erasedContent));
     }
 
-    private function getDisplayLength(string $text): string
+    private function getDisplayLength($text)
     {
         return Helper::strlenWithoutDecoration($this->getFormatter(), str_replace("\t", '        ', $text));
     }

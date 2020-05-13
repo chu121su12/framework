@@ -25,7 +25,7 @@ class ConfirmationQuestion extends Question
      * @param bool   $default         The default answer to return, true or false
      * @param string $trueAnswerRegex A regex to match the "yes" answer
      */
-    public function __construct(string $question, bool $default = true, string $trueAnswerRegex = '/^y/i')
+    public function __construct($question, $default = true, $trueAnswerRegex = '/^y/i')
     {
         parent::__construct($question, $default);
 
@@ -36,7 +36,7 @@ class ConfirmationQuestion extends Question
     /**
      * Returns the default answer normalizer.
      */
-    private function getDefaultNormalizer(): callable
+    private function getDefaultNormalizer()
     {
         $default = $this->getDefault();
         $regex = $this->trueAnswerRegex;

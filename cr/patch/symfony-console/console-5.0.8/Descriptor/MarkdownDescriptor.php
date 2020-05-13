@@ -44,7 +44,7 @@ class MarkdownDescriptor extends Descriptor
     /**
      * {@inheritdoc}
      */
-    protected function write(string $content, bool $decorated = true)
+    protected function write($content, $decorated = true)
     {
         parent::write($content, $decorated);
     }
@@ -173,7 +173,7 @@ class MarkdownDescriptor extends Descriptor
         }
     }
 
-    private function getApplicationTitle(Application $application): string
+    private function getApplicationTitle(Application $application)
     {
         if ('UNKNOWN' !== $application->getName()) {
             if ('UNKNOWN' !== $application->getVersion()) {

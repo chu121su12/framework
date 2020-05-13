@@ -24,19 +24,19 @@ final class ConsoleTerminateEvent extends ConsoleEvent
 {
     private $exitCode;
 
-    public function __construct(Command $command, InputInterface $input, OutputInterface $output, int $exitCode)
+    public function __construct(Command $command, InputInterface $input, OutputInterface $output, $exitCode)
     {
         parent::__construct($command, $input, $output);
 
         $this->setExitCode($exitCode);
     }
 
-    public function setExitCode(int $exitCode): void
+    public function setExitCode($exitCode)
     {
         $this->exitCode = $exitCode;
     }
 
-    public function getExitCode(): int
+    public function getExitCode()
     {
         return $this->exitCode;
     }

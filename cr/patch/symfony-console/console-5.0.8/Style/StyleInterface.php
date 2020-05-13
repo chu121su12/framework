@@ -21,12 +21,12 @@ interface StyleInterface
     /**
      * Formats a command title.
      */
-    public function title(string $message);
+    public function title($message);
 
     /**
      * Formats a section title.
      */
-    public function section(string $message);
+    public function section($message);
 
     /**
      * Formats a list.
@@ -85,21 +85,21 @@ interface StyleInterface
      *
      * @return mixed
      */
-    public function ask(string $question, ?string $default = null, callable $validator = null);
+    public function ask($question, $default = null, callable $validator = null);
 
     /**
      * Asks a question with the user input hidden.
      *
      * @return mixed
      */
-    public function askHidden(string $question, callable $validator = null);
+    public function askHidden($question, callable $validator = null);
 
     /**
      * Asks for confirmation.
      *
      * @return bool
      */
-    public function confirm(string $question, bool $default = true);
+    public function confirm($question, $default = true);
 
     /**
      * Asks a choice question.
@@ -108,22 +108,22 @@ interface StyleInterface
      *
      * @return mixed
      */
-    public function choice(string $question, array $choices, $default = null);
+    public function choice($question, array $choices, $default = null);
 
     /**
      * Add newline(s).
      */
-    public function newLine(int $count = 1);
+    public function newLine($count = 1);
 
     /**
      * Starts the progress output.
      */
-    public function progressStart(int $max = 0);
+    public function progressStart($max = 0);
 
     /**
      * Advances the progress output X steps.
      */
-    public function progressAdvance(int $step = 1);
+    public function progressAdvance($step = 1);
 
     /**
      * Finishes the progress output.

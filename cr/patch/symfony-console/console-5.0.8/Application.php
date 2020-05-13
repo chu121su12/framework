@@ -77,7 +77,7 @@ class Application implements ResetInterface
     private $singleCommand = false;
     private $initialized;
 
-    public function __construct(string $name = 'UNKNOWN', string $version = 'UNKNOWN')
+    public function __construct($name = 'UNKNOWN', $version = 'UNKNOWN')
     {
         $this->name = $name;
         $this->version = $version;
@@ -118,7 +118,7 @@ class Application implements ResetInterface
             $output = new ConsoleOutput();
         }
 
-        $renderException = function (\Throwable $e) use ($output) {
+        $renderException = function ($e) use ($output) {
             if ($output instanceof ConsoleOutputInterface) {
                 $this->renderThrowable($e, $output->getErrorOutput());
             } else {
@@ -227,6 +227,11 @@ class Application implements ResetInterface
             // the command name MUST be the first element of the input
             $command = $this->find($name);
         } catch (\Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             if (!($e instanceof CommandNotFoundException && !$e instanceof NamespaceNotFoundException) || 1 !== \count($alternatives = $e->getAlternatives()) || !$input->isInteractive()) {
                 if (null !== $this->dispatcher) {
                     $event = new ConsoleErrorEvent($input, $output, $e);
@@ -342,7 +347,7 @@ class Application implements ResetInterface
     /**
      * Sets whether to catch exceptions or not during commands execution.
      */
-    public function setCatchExceptions(bool $boolean)
+    public function setCatchExceptions($boolean)
     {
         $this->catchExceptions = $boolean;
     }
@@ -360,7 +365,7 @@ class Application implements ResetInterface
     /**
      * Sets whether to automatically exit after a command execution or not.
      */
-    public function setAutoExit(bool $boolean)
+    public function setAutoExit($boolean)
     {
         $this->autoExit = $boolean;
     }
@@ -378,7 +383,7 @@ class Application implements ResetInterface
     /**
      * Sets the application name.
      **/
-    public function setName(string $name)
+    public function setName($name)
     {
         $this->name = $name;
     }
@@ -396,7 +401,7 @@ class Application implements ResetInterface
     /**
      * Sets the application version.
      */
-    public function setVersion(string $version)
+    public function setVersion($version)
     {
         $this->version = $version;
     }
@@ -424,7 +429,7 @@ class Application implements ResetInterface
      *
      * @return Command The newly created command
      */
-    public function register(string $name)
+    public function register($name)
     {
         return $this->add(new Command($name));
     }
@@ -486,7 +491,7 @@ class Application implements ResetInterface
      *
      * @throws CommandNotFoundException When given command name does not exist
      */
-    public function get(string $name)
+    public function get($name)
     {
         $this->init();
 
@@ -513,7 +518,7 @@ class Application implements ResetInterface
      *
      * @return bool true if the command exists, false otherwise
      */
-    public function has(string $name)
+    public function has($name)
     {
         $this->init();
 
@@ -552,7 +557,7 @@ class Application implements ResetInterface
      *
      * @throws NamespaceNotFoundException When namespace is incorrect or ambiguous
      */
-    public function findNamespace(string $namespace)
+    public function findNamespace($namespace)
     {
         $allNamespaces = $this->getNamespaces();
         $expr = preg_replace_callback('{([^:]+|)}', function ($matches) { return preg_quote($matches[1]).'[^:]*'; }, $namespace);
@@ -592,7 +597,7 @@ class Application implements ResetInterface
      *
      * @throws CommandNotFoundException When command name is incorrect or ambiguous
      */
-    public function find(string $name)
+    public function find($name)
     {
         $this->init();
 
@@ -702,7 +707,7 @@ class Application implements ResetInterface
      *
      * @return Command[] An array of Command instances
      */
-    public function all(string $namespace = null)
+    public function all($namespace = null)
     {
         $this->init();
 
@@ -757,7 +762,7 @@ class Application implements ResetInterface
         return $abbrevs;
     }
 
-    public function renderThrowable(\Throwable $e, OutputInterface $output): void
+    public function renderThrowable($e, OutputInterface $output)
     {
         $output->writeln('', OutputInterface::VERBOSITY_QUIET);
 
@@ -769,7 +774,7 @@ class Application implements ResetInterface
         }
     }
 
-    protected function doRenderThrowable(\Throwable $e, OutputInterface $output): void
+    protected function doRenderThrowable($e, OutputInterface $output)
     {
         do {
             $message = trim($e->getMessage());
@@ -932,6 +937,11 @@ class Application implements ResetInterface
                 $exitCode = ConsoleCommandEvent::RETURN_CODE_DISABLED;
             }
         } catch (\Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             $event = new ConsoleErrorEvent($input, $output, $e, $command);
             $this->dispatcher->dispatch($event, ConsoleEvents::ERROR);
             $e = $event->getError();
@@ -1009,7 +1019,7 @@ class Application implements ResetInterface
     /**
      * Returns abbreviated suggestions in string format.
      */
-    private function getAbbreviationSuggestions(array $abbrevs): string
+    private function getAbbreviationSuggestions(array $abbrevs)
     {
         return '    '.implode("\n    ", $abbrevs);
     }
@@ -1021,7 +1031,7 @@ class Application implements ResetInterface
      *
      * @return string The namespace of the command
      */
-    public function extractNamespace(string $name, int $limit = null)
+    public function extractNamespace($name, $limit = null)
     {
         $parts = explode(':', $name, -1);
 
@@ -1034,7 +1044,7 @@ class Application implements ResetInterface
      *
      * @return string[] A sorted array of similar string
      */
-    private function findAlternatives(string $name, iterable $collection): array
+    private function findAlternatives($name, $collection)
     {
         $threshold = 1e3;
         $alternatives = [];
@@ -1081,7 +1091,7 @@ class Application implements ResetInterface
      *
      * @return self
      */
-    public function setDefaultCommand(string $commandName, bool $isSingleCommand = false)
+    public function setDefaultCommand($commandName, $isSingleCommand = false)
     {
         $this->defaultCommand = $commandName;
 
@@ -1098,12 +1108,12 @@ class Application implements ResetInterface
     /**
      * @internal
      */
-    public function isSingleCommand(): bool
+    public function isSingleCommand()
     {
         return $this->singleCommand;
     }
 
-    private function splitStringByWidth(string $string, int $width): array
+    private function splitStringByWidth($string, $width)
     {
         // str_split is not suitable for multi-byte characters, we should use preg_split to get char array properly.
         // additionally, array_slice() is not enough as some character has doubled width.
@@ -1144,7 +1154,7 @@ class Application implements ResetInterface
      *
      * @return string[] The namespaces of the command
      */
-    private function extractAllNamespaces(string $name): array
+    private function extractAllNamespaces($name)
     {
         // -1 as third argument is needed to skip the command short name when exploding
         $parts = explode(':', $name, -1);

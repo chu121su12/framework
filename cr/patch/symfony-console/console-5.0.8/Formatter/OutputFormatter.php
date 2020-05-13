@@ -30,7 +30,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      *
      * @return string Escaped text
      */
-    public static function escape(string $text)
+    public static function escape($text)
     {
         $text = preg_replace('/([^\\\\]?)</', '$1\\<', $text);
 
@@ -42,7 +42,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      *
      * @internal
      */
-    public static function escapeTrailingBackslash(string $text): string
+    public static function escapeTrailingBackslash($text)
     {
         if ('\\' === substr($text, -1)) {
             $len = \strlen($text);
@@ -59,7 +59,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      *
      * @param OutputFormatterStyleInterface[] $styles Array of "name => FormatterStyle" instances
      */
-    public function __construct(bool $decorated = false, array $styles = [])
+    public function __construct($decorated = false, array $styles = [])
     {
         $this->decorated = $decorated;
 
@@ -78,7 +78,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function setDecorated(bool $decorated)
+    public function setDecorated($decorated)
     {
         $this->decorated = $decorated;
     }
@@ -94,7 +94,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function setStyle(string $name, OutputFormatterStyleInterface $style)
+    public function setStyle($name, OutputFormatterStyleInterface $style)
     {
         $this->styles[strtolower($name)] = $style;
     }
@@ -102,7 +102,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function hasStyle(string $name)
+    public function hasStyle($name)
     {
         return isset($this->styles[strtolower($name)]);
     }
@@ -110,7 +110,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function getStyle(string $name)
+    public function getStyle($name)
     {
         if (!$this->hasStyle($name)) {
             throw new InvalidArgumentException(sprintf('Undefined style: "%s".', $name));
@@ -122,7 +122,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function format(?string $message)
+    public function format($message = null)
     {
         return $this->formatAndWrap($message, 0);
     }
@@ -130,7 +130,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function formatAndWrap(?string $message, int $width)
+    public function formatAndWrap($message = null, $width)
     {
         $offset = 0;
         $output = '';
@@ -188,7 +188,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
     /**
      * Tries to create new style instance from string.
      */
-    private function createStyleFromString(string $string): ?OutputFormatterStyleInterface
+    private function createStyleFromString($string)
     {
         if (isset($this->styles[$string])) {
             return $this->styles[$string];
@@ -226,7 +226,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
     /**
      * Applies current style from stack to text, if must be applied.
      */
-    private function applyCurrentStyle(string $text, string $current, int $width, int &$currentLineLength): string
+    private function applyCurrentStyle($text, $current, $width, int &$currentLineLength)
     {
         if ('' === $text) {
             return '';
@@ -249,7 +249,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
 
         preg_match('~(\\n)$~', $text, $matches);
         $text = $prefix.preg_replace('~([^\\n]{'.$width.'})\\ *~', "\$1\n", $text);
-        $text = rtrim($text, "\n").($matches[1] ?? '');
+        $text = rtrim($text, "\n").(isset($matches[1]) ? $matches[1] : '');
 
         if (!$currentLineLength && '' !== $current && "\n" !== substr($current, -1)) {
             $text = "\n".$text;

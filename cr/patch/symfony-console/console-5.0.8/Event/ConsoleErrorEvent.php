@@ -25,24 +25,24 @@ final class ConsoleErrorEvent extends ConsoleEvent
     private $error;
     private $exitCode;
 
-    public function __construct(InputInterface $input, OutputInterface $output, \Throwable $error, Command $command = null)
+    public function __construct(InputInterface $input, OutputInterface $output, $error, Command $command = null)
     {
         parent::__construct($command, $input, $output);
 
         $this->error = $error;
     }
 
-    public function getError(): \Throwable
+    public function getError()
     {
         return $this->error;
     }
 
-    public function setError(\Throwable $error): void
+    public function setError($error)
     {
         $this->error = $error;
     }
 
-    public function setExitCode(int $exitCode): void
+    public function setExitCode($exitCode)
     {
         $this->exitCode = $exitCode;
 
@@ -51,7 +51,7 @@ final class ConsoleErrorEvent extends ConsoleEvent
         $r->setValue($this->error, $this->exitCode);
     }
 
-    public function getExitCode(): int
+    public function getExitCode()
     {
         return null !== $this->exitCode ? $this->exitCode : (\is_int($this->error->getCode()) && 0 !== $this->error->getCode() ? $this->error->getCode() : 1);
     }

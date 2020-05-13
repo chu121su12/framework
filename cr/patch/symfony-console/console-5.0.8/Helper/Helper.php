@@ -43,7 +43,7 @@ abstract class Helper implements HelperInterface
      *
      * @return int The length of the string
      */
-    public static function strlen(?string $string)
+    public static function strlen($string = null)
     {
         if (false === $encoding = mb_detect_encoding($string, null, true)) {
             return \strlen($string);
@@ -57,7 +57,7 @@ abstract class Helper implements HelperInterface
      *
      * @return string The string subset
      */
-    public static function substr(string $string, int $from, int $length = null)
+    public static function substr($string, $from, $length = null)
     {
         if (false === $encoding = mb_detect_encoding($string, null, true)) {
             return substr($string, $from, $length);
@@ -95,7 +95,7 @@ abstract class Helper implements HelperInterface
         }
     }
 
-    public static function formatMemory(int $memory)
+    public static function formatMemory($memory)
     {
         if ($memory >= 1024 * 1024 * 1024) {
             return sprintf('%.1f GiB', $memory / 1024 / 1024 / 1024);

@@ -43,14 +43,14 @@ class ApplicationDescription
      */
     private $aliases;
 
-    public function __construct(Application $application, string $namespace = null, bool $showHidden = false)
+    public function __construct(Application $application, $namespace = null, $showHidden = false)
     {
         $this->application = $application;
         $this->namespace = $namespace;
         $this->showHidden = $showHidden;
     }
 
-    public function getNamespaces(): array
+    public function getNamespaces()
     {
         if (null === $this->namespaces) {
             $this->inspectApplication();
@@ -62,7 +62,7 @@ class ApplicationDescription
     /**
      * @return Command[]
      */
-    public function getCommands(): array
+    public function getCommands()
     {
         if (null === $this->commands) {
             $this->inspectApplication();
@@ -74,7 +74,7 @@ class ApplicationDescription
     /**
      * @throws CommandNotFoundException
      */
-    public function getCommand(string $name): Command
+    public function getCommand($name)
     {
         if (!isset($this->commands[$name]) && !isset($this->aliases[$name])) {
             throw new CommandNotFoundException(sprintf('Command "%s" does not exist.', $name));
@@ -111,7 +111,7 @@ class ApplicationDescription
         }
     }
 
-    private function sortCommands(array $commands): array
+    private function sortCommands(array $commands)
     {
         $namespacedCommands = [];
         $globalCommands = [];

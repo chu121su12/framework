@@ -24,7 +24,7 @@ class TableCell
         'colspan' => 1,
     ];
 
-    public function __construct(string $value = '', array $options = [])
+    public function __construct($value = '', array $options = [])
     {
         $this->value = $value;
 

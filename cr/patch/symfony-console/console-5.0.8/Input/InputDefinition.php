@@ -255,7 +255,7 @@ class InputDefinition
      *
      * @throws InvalidArgumentException When option given doesn't exist
      */
-    public function getOption(string $name)
+    public function getOption($name)
     {
         if (!$this->hasOption($name)) {
             throw new InvalidArgumentException(sprintf('The "--%s" option does not exist.', $name));
@@ -272,7 +272,7 @@ class InputDefinition
      *
      * @return bool true if the InputOption object exists, false otherwise
      */
-    public function hasOption(string $name)
+    public function hasOption($name)
     {
         return isset($this->options[$name]);
     }
@@ -292,7 +292,7 @@ class InputDefinition
      *
      * @return bool true if the InputOption object exists, false otherwise
      */
-    public function hasShortcut(string $name)
+    public function hasShortcut($name)
     {
         return isset($this->shortcuts[$name]);
     }
@@ -302,7 +302,7 @@ class InputDefinition
      *
      * @return InputOption An InputOption object
      */
-    public function getOptionForShortcut(string $shortcut)
+    public function getOptionForShortcut($shortcut)
     {
         return $this->getOption($this->shortcutToName($shortcut));
     }
@@ -329,7 +329,7 @@ class InputDefinition
      *
      * @internal
      */
-    public function shortcutToName(string $shortcut): string
+    public function shortcutToName($shortcut)
     {
         if (!isset($this->shortcuts[$shortcut])) {
             throw new InvalidArgumentException(sprintf('The "-%s" option does not exist.', $shortcut));
@@ -343,7 +343,7 @@ class InputDefinition
      *
      * @return string The synopsis
      */
-    public function getSynopsis(bool $short = false)
+    public function getSynopsis($short = false)
     {
         $elements = [];
 

@@ -87,7 +87,7 @@ class ArgvInput extends Input
     /**
      * Parses a short option.
      */
-    private function parseShortOption(string $token)
+    private function parseShortOption($token)
     {
         $name = substr($token, 1);
 
@@ -108,7 +108,7 @@ class ArgvInput extends Input
      *
      * @throws RuntimeException When option given doesn't exist
      */
-    private function parseShortOptionSet(string $name)
+    private function parseShortOptionSet($name)
     {
         $len = \strlen($name);
         for ($i = 0; $i < $len; ++$i) {
@@ -131,7 +131,7 @@ class ArgvInput extends Input
     /**
      * Parses a long option.
      */
-    private function parseLongOption(string $token)
+    private function parseLongOption($token)
     {
         $name = substr($token, 2);
 
@@ -150,7 +150,7 @@ class ArgvInput extends Input
      *
      * @throws RuntimeException When too many arguments are given
      */
-    private function parseArgument(string $token)
+    private function parseArgument($token)
     {
         $c = \count($this->arguments);
 
@@ -180,7 +180,7 @@ class ArgvInput extends Input
      *
      * @throws RuntimeException When option given doesn't exist
      */
-    private function addShortOption(string $shortcut, $value)
+    private function addShortOption($shortcut, $value)
     {
         if (!$this->definition->hasShortcut($shortcut)) {
             throw new RuntimeException(sprintf('The "-%s" option does not exist.', $shortcut));
@@ -194,7 +194,7 @@ class ArgvInput extends Input
      *
      * @throws RuntimeException When option given doesn't exist
      */
-    private function addLongOption(string $name, $value)
+    private function addLongOption($name, $value)
     {
         if (!$this->definition->hasOption($name)) {
             throw new RuntimeException(sprintf('The "--%s" option does not exist.', $name));
@@ -272,7 +272,7 @@ class ArgvInput extends Input
     /**
      * {@inheritdoc}
      */
-    public function hasParameterOption($values, bool $onlyParams = false)
+    public function hasParameterOption($values, $onlyParams = false)
     {
         $values = (array) $values;
 
@@ -297,7 +297,7 @@ class ArgvInput extends Input
     /**
      * {@inheritdoc}
      */
-    public function getParameterOption($values, $default = false, bool $onlyParams = false)
+    public function getParameterOption($values, $default = false, $onlyParams = false)
     {
         $values = (array) $values;
         $tokens = $this->tokens;

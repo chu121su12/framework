@@ -250,7 +250,7 @@ class TextDescriptor extends Descriptor
     /**
      * {@inheritdoc}
      */
-    private function writeText(string $content, array $options = [])
+    private function writeText($content, array $options = [])
     {
         $this->write(
             isset($options['raw_text']) && $options['raw_text'] ? strip_tags($content) : $content,
@@ -261,7 +261,7 @@ class TextDescriptor extends Descriptor
     /**
      * Formats command aliases to show them in the command description.
      */
-    private function getCommandAliasesText(Command $command): string
+    private function getCommandAliasesText(Command $command)
     {
         $text = '';
         $aliases = $command->getAliases();
@@ -278,7 +278,7 @@ class TextDescriptor extends Descriptor
      *
      * @param mixed $default
      */
-    private function formatDefaultValue($default): string
+    private function formatDefaultValue($default)
     {
         if (INF === $default) {
             return 'INF';
@@ -300,7 +300,7 @@ class TextDescriptor extends Descriptor
     /**
      * @param (Command|string)[] $commands
      */
-    private function getColumnWidth(array $commands): int
+    private function getColumnWidth(array $commands)
     {
         $widths = [];
 
@@ -321,7 +321,7 @@ class TextDescriptor extends Descriptor
     /**
      * @param InputOption[] $options
      */
-    private function calculateTotalWidthForOptions(array $options): int
+    private function calculateTotalWidthForOptions(array $options)
     {
         $totalWidth = 0;
         foreach ($options as $option) {

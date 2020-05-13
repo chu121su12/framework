@@ -198,7 +198,7 @@ class QuestionHelper extends Helper
     /**
      * @return string[]
      */
-    protected function formatChoiceQuestionChoices(ChoiceQuestion $question, string $tag)
+    protected function formatChoiceQuestionChoices(ChoiceQuestion $question, $tag)
     {
         $messages = [];
 
@@ -216,7 +216,7 @@ class QuestionHelper extends Helper
     /**
      * Outputs an error message.
      */
-    protected function writeError(OutputInterface $output, \Exception $error)
+    protected function writeError(OutputInterface $output, $error)
     {
         if (null !== $this->getHelperSet() && $this->getHelperSet()->has('formatter')) {
             $message = $this->getHelperSet()->get('formatter')->formatBlock($error->getMessage(), 'error');
@@ -232,7 +232,7 @@ class QuestionHelper extends Helper
      *
      * @param resource $inputStream
      */
-    private function autocomplete(OutputInterface $output, Question $question, $inputStream, callable $autocomplete): string
+    private function autocomplete(OutputInterface $output, Question $question, $inputStream, callable $autocomplete)
     {
         $fullChoice = '';
         $ret = '';
@@ -369,7 +369,7 @@ class QuestionHelper extends Helper
         return $fullChoice;
     }
 
-    private function mostRecentlyEnteredValue(string $entered): string
+    private function mostRecentlyEnteredValue($entered)
     {
         // Determine the most recent value that the user entered
         if (false === strpos($entered, ',')) {
@@ -392,7 +392,7 @@ class QuestionHelper extends Helper
      *
      * @throws RuntimeException In case the fallback is deactivated and the response cannot be hidden
      */
-    private function getHiddenResponse(OutputInterface $output, $inputStream, bool $trimmable = true): string
+    private function getHiddenResponse(OutputInterface $output, $inputStream, $trimmable = true)
     {
         if ('\\' === \DIRECTORY_SEPARATOR) {
             $exe = __DIR__.'/../Resources/bin/hiddeninput.exe';

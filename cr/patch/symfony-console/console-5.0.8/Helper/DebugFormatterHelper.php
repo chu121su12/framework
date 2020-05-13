@@ -29,7 +29,7 @@ class DebugFormatterHelper extends Helper
      *
      * @return string
      */
-    public function start(string $id, string $message, string $prefix = 'RUN')
+    public function start($id, $message, $prefix = 'RUN')
     {
         $this->started[$id] = ['border' => ++$this->count % \count($this->colors)];
 
@@ -41,7 +41,7 @@ class DebugFormatterHelper extends Helper
      *
      * @return string
      */
-    public function progress(string $id, string $buffer, bool $error = false, string $prefix = 'OUT', string $errorPrefix = 'ERR')
+    public function progress($id, $buffer, $error = false, $prefix = 'OUT', $errorPrefix = 'ERR')
     {
         $message = '';
 
@@ -77,7 +77,7 @@ class DebugFormatterHelper extends Helper
      *
      * @return string
      */
-    public function stop(string $id, string $message, bool $successful, string $prefix = 'RES')
+    public function stop($id, $message, $successful, $prefix = 'RES')
     {
         $trailingEOL = isset($this->started[$id]['out']) || isset($this->started[$id]['err']) ? "\n" : '';
 
@@ -92,7 +92,7 @@ class DebugFormatterHelper extends Helper
         return $message;
     }
 
-    private function getBorder(string $id): string
+    private function getBorder($id)
     {
         return sprintf('<bg=%s> </>', $this->colors[$this->started[$id]['border']]);
     }

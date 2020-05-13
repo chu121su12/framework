@@ -34,7 +34,7 @@ class ProcessHelper extends Helper
      *
      * @return Process The process that ran
      */
-    public function run(OutputInterface $output, $cmd, string $error = null, callable $callback = null, int $verbosity = OutputInterface::VERBOSITY_VERY_VERBOSE): Process
+    public function run(OutputInterface $output, $cmd, $error = null, callable $callback = null, $verbosity = OutputInterface::VERBOSITY_VERY_VERBOSE)
     {
         if ($output instanceof ConsoleOutputInterface) {
             $output = $output->getErrorOutput();
@@ -50,10 +50,10 @@ class ProcessHelper extends Helper
             throw new \TypeError(sprintf('The "command" argument of "%s()" must be an array or a "%s" instance, "%s" given.', __METHOD__, Process::class, \is_object($cmd) ? \get_class($cmd) : \gettype($cmd)));
         }
 
-        if (\is_string($cmd[0] ?? null)) {
+        if (\is_string(isset($cmd[0]) ? $cmd[0] : null)) {
             $process = new Process($cmd);
             $cmd = [];
-        } elseif (($cmd[0] ?? null) instanceof Process) {
+        } elseif ((isset($cmd[0]) ? $cmd[0] : null) instanceof Process) {
             $process = $cmd[0];
             unset($cmd[0]);
         } else {
@@ -98,7 +98,7 @@ class ProcessHelper extends Helper
      *
      * @see run()
      */
-    public function mustRun(OutputInterface $output, $cmd, string $error = null, callable $callback = null): Process
+    public function mustRun(OutputInterface $output, $cmd, $error = null, callable $callback = null)
     {
         $process = $this->run($output, $cmd, $error, $callback);
 
@@ -112,7 +112,7 @@ class ProcessHelper extends Helper
     /**
      * Wraps a Process callback to add debugging output.
      */
-    public function wrapCallback(OutputInterface $output, Process $process, callable $callback = null): callable
+    public function wrapCallback(OutputInterface $output, Process $process, callable $callback = null)
     {
         if ($output instanceof ConsoleOutputInterface) {
             $output = $output->getErrorOutput();
@@ -129,7 +129,7 @@ class ProcessHelper extends Helper
         };
     }
 
-    private function escapeString(string $str): string
+    private function escapeString($str)
     {
         return str_replace('<', '\\<', $str);
     }
@@ -137,7 +137,7 @@ class ProcessHelper extends Helper
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public function getName()
     {
         return 'process';
     }

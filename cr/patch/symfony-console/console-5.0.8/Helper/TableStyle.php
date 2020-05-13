@@ -53,7 +53,7 @@ class TableStyle
      *
      * @return $this
      */
-    public function setPaddingChar(string $paddingChar)
+    public function setPaddingChar($paddingChar)
     {
         if (!$paddingChar) {
             throw new LogicException('The padding char must not be empty.');
@@ -88,10 +88,10 @@ class TableStyle
      * ╚═══════════════╧══════════════════════════╧══════════════════╝
      * </code>
      */
-    public function setHorizontalBorderChars(string $outside, string $inside = null): self
+    public function setHorizontalBorderChars($outside, $inside = null)
     {
         $this->horizontalOutsideBorderChar = $outside;
-        $this->horizontalInsideBorderChar = $inside ?? $outside;
+        $this->horizontalInsideBorderChar = isset($inside) ? $inside : $outside;
 
         return $this;
     }
@@ -111,10 +111,10 @@ class TableStyle
      * ╚═══════════════╧══════════════════════════╧══════════════════╝
      * </code>
      */
-    public function setVerticalBorderChars(string $outside, string $inside = null): self
+    public function setVerticalBorderChars($outside, $inside = null)
     {
         $this->verticalOutsideBorderChar = $outside;
-        $this->verticalInsideBorderChar = $inside ?? $outside;
+        $this->verticalInsideBorderChar = isset($inside) ? $inside : $outside;
 
         return $this;
     }
@@ -124,7 +124,7 @@ class TableStyle
      *
      * @internal
      */
-    public function getBorderChars(): array
+    public function getBorderChars()
     {
         return [
             $this->horizontalOutsideBorderChar,
@@ -163,7 +163,7 @@ class TableStyle
      * @param string|null $topMidBottom   Top mid bottom char (see #0' of example), equals to $cross if null
      * @param string|null $topRightBottom Top right bottom char (see #4' of example), equals to $midRight if null
      */
-    public function setCrossingChars(string $cross, string $topLeft, string $topMid, string $topRight, string $midRight, string $bottomRight, string $bottomMid, string $bottomLeft, string $midLeft, string $topLeftBottom = null, string $topMidBottom = null, string $topRightBottom = null): self
+    public function setCrossingChars($cross, $topLeft, $topMid, $topRight, $midRight, $bottomRight, $bottomMid, $bottomLeft, $midLeft, $topLeftBottom = null, $topMidBottom = null, $topRightBottom = null)
     {
         $this->crossingChar = $cross;
         $this->crossingTopLeftChar = $topLeft;
@@ -174,9 +174,9 @@ class TableStyle
         $this->crossingBottomMidChar = $bottomMid;
         $this->crossingBottomLeftChar = $bottomLeft;
         $this->crossingMidLeftChar = $midLeft;
-        $this->crossingTopLeftBottomChar = $topLeftBottom ?? $midLeft;
-        $this->crossingTopMidBottomChar = $topMidBottom ?? $cross;
-        $this->crossingTopRightBottomChar = $topRightBottom ?? $midRight;
+        $this->crossingTopLeftBottomChar = isset($topLeftBottom) ? $topLeftBottom : $midLeft;
+        $this->crossingTopMidBottomChar = isset($topMidBottom) ? $topMidBottom : $cross;
+        $this->crossingTopRightBottomChar = isset($topRightBottom) ? $topRightBottom : $midRight;
 
         return $this;
     }
@@ -186,7 +186,7 @@ class TableStyle
      *
      * @see {@link setCrossingChars()} for setting each crossing individually.
      */
-    public function setDefaultCrossingChar(string $char): self
+    public function setDefaultCrossingChar($char)
     {
         return $this->setCrossingChars($char, $char, $char, $char, $char, $char, $char, $char, $char);
     }
@@ -206,7 +206,7 @@ class TableStyle
      *
      * @internal
      */
-    public function getCrossingChars(): array
+    public function getCrossingChars()
     {
         return [
             $this->crossingChar,
@@ -229,7 +229,7 @@ class TableStyle
      *
      * @return $this
      */
-    public function setCellHeaderFormat(string $cellHeaderFormat)
+    public function setCellHeaderFormat($cellHeaderFormat)
     {
         $this->cellHeaderFormat = $cellHeaderFormat;
 
@@ -251,7 +251,7 @@ class TableStyle
      *
      * @return $this
      */
-    public function setCellRowFormat(string $cellRowFormat)
+    public function setCellRowFormat($cellRowFormat)
     {
         $this->cellRowFormat = $cellRowFormat;
 
@@ -273,7 +273,7 @@ class TableStyle
      *
      * @return $this
      */
-    public function setCellRowContentFormat(string $cellRowContentFormat)
+    public function setCellRowContentFormat($cellRowContentFormat)
     {
         $this->cellRowContentFormat = $cellRowContentFormat;
 
@@ -295,7 +295,7 @@ class TableStyle
      *
      * @return $this
      */
-    public function setBorderFormat(string $borderFormat)
+    public function setBorderFormat($borderFormat)
     {
         $this->borderFormat = $borderFormat;
 
@@ -317,7 +317,7 @@ class TableStyle
      *
      * @return $this
      */
-    public function setPadType(int $padType)
+    public function setPadType($padType)
     {
         if (!\in_array($padType, [STR_PAD_LEFT, STR_PAD_RIGHT, STR_PAD_BOTH], true)) {
             throw new InvalidArgumentException('Invalid padding type. Expected one of (STR_PAD_LEFT, STR_PAD_RIGHT, STR_PAD_BOTH).');
@@ -338,24 +338,24 @@ class TableStyle
         return $this->padType;
     }
 
-    public function getHeaderTitleFormat(): string
+    public function getHeaderTitleFormat()
     {
         return $this->headerTitleFormat;
     }
 
-    public function setHeaderTitleFormat(string $format): self
+    public function setHeaderTitleFormat($format)
     {
         $this->headerTitleFormat = $format;
 
         return $this;
     }
 
-    public function getFooterTitleFormat(): string
+    public function getFooterTitleFormat()
     {
         return $this->footerTitleFormat;
     }
 
-    public function setFooterTitleFormat(string $format): self
+    public function setFooterTitleFormat($format)
     {
         $this->footerTitleFormat = $format;
 

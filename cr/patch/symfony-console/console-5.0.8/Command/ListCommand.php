@@ -78,7 +78,7 @@ EOF
         return 0;
     }
 
-    private function createDefinition(): InputDefinition
+    private function createDefinition()
     {
         return new InputDefinition([
             new InputArgument('namespace', InputArgument::OPTIONAL, 'The namespace name'),
