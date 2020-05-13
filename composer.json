@@ -121,7 +121,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-merge": "5.4"
+            "dev-merge": "5.4-dev"
         }
     },
     "suggest": {
