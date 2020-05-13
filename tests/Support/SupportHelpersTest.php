@@ -504,6 +504,7 @@ class SupportHelpersTest extends TestCase
         $this->assertEquals(2, $attempts);
 
         // Make sure we waited 100ms for the first attempt
+        // this may fail on windows/php5 in full test run
         $this->assertTrue(microtime(true) - $startTime >= 0.1);
     }
 
@@ -630,8 +631,8 @@ class SupportHelpersTest extends TestCase
         $_SERVER['foo'] = '';
         $this->assertSame('', env('foo', 'default'));
 
-        unset($_SERVER['foo']);
         // this may fail on windows/php5 in full test run
+        unset($_SERVER['foo']);
         $this->assertSame('default', env('foo', 'default'));
 
         $_SERVER['foo'] = null;
