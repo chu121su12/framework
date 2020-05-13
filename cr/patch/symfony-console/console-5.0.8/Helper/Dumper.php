@@ -59,6 +59,7 @@ final class Dumper
 
     public function __invoke($var)
     {
-        return ($this->handler)($var);
+        $handler = $this->handler;
+        return $handler($var);
     }
 }

@@ -250,7 +250,8 @@ class Command
         $input->validate();
 
         if ($this->code) {
-            $statusCode = ($this->code)($input, $output);
+            $codeCallable = $this->code;
+            $statusCode = $codeCallable($input, $output);
         } else {
             $statusCode = $this->execute($input, $output);
 

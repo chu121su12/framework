@@ -465,7 +465,8 @@ class QuestionHelper extends Helper
             }
 
             try {
-                return $question->getValidator()($interviewer());
+                $validator = $question->getValidator();
+                return $validator($interviewer());
             } catch (RuntimeException $e) {
                 throw $e;
             } catch (\Exception $error) {
