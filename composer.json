@@ -103,11 +103,13 @@
             "CR\\LaravelBackport\\": "cr/patch/laravel-backport/",
             "Carbon\\": "cr/patch/carbon/carbon-2.33.0/",
             "Doctrine\\Inflector\\": "cr/patch/doctrine-inflector-src/",
+            "Symfony\\Contracts\\Service\\": "cr/patch/symfony-service-contracts/service-contracts-2.0.1/",
             "Symfony\\Component\\Console\\": "cr/patch/symfony-console/console-5.0.8/",
             "Symfony\\Component\\ErrorHandler\\": "cr/patch/symfony-error-handler/error-handler-5.0.8/",
             "Symfony\\Component\\HttpKernel\\Exception\\": "cr/patch/symfony-http-kernel-exception/http-kernel-5.0.8/Exception/",
             "Symfony\\Component\\Mime\\": "cr/patch/symfony-mime/mime-5.0.8/",
             "Symfony\\Component\\Routing\\": "cr/patch/symfony-routing/routing-5.0.8/",
+            "Symfony\\Component\\String\\": "cr/patch/symfony-string/string-5.0.8/",
             "Illuminate\\": "src/Illuminate/"
         }
     },
