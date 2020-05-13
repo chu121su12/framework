@@ -93,6 +93,9 @@
         "symfony/cache": "^3.4"
     },
     "autoload": {
+        "exclude-from-classmap": [
+            "vendor/symfony/http-kernel/Exception"
+        ],
         "files": [
             "src/Illuminate/Foundation/helpers.php",
             "src/Illuminate/Support/helpers.php"
@@ -109,10 +112,12 @@
         }
     },
     "autoload-dev": {
+        "exclude-from-classmap": [
+            "vendor/phpunit/phpunit/src/ForwardCompatibility/TestCase.php"
+        ],
         "files": [
             "tests/Database/stubs/MigrationCreatorFakeMigration.php"
         ],
-        "exclude-from-classmap": ["vendor/phpunit/phpunit/src/ForwardCompatibility/TestCase.php"],
         "psr-4": {
             "Orchestra\\Testbench\\": "cr/patch/orchestra-testbench-core/testbench-core-5.1.4/src/",
             "PHPUnit\\": "cr/patch/phpunit-src/PHPUnit/",
