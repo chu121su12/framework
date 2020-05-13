@@ -48,7 +48,7 @@ class FlattenException
     /**
      * @return static
      */
-    public static function createFromThrowable(\Throwable $exception, $statusCode = null, array $headers = [])
+    public static function createFromThrowable($exception, $statusCode = null, array $headers = [])
     {
         $e = new static();
         $e->setMessage($exception->getMessage());
@@ -265,7 +265,7 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setTraceFromThrowable(\Throwable $throwable)
+    public function setTraceFromThrowable($throwable)
     {
         $this->traceAsString = $throwable->getTraceAsString();
 

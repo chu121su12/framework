@@ -1827,7 +1827,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
                 ));
         }
 
-        if ($this->localStrictModeEnabled ?? Carbon::isStrictModeEnabled()) {
+        if (isset($this->localStrictModeEnabled) ? $this->localStrictModeEnabled : Carbon::isStrictModeEnabled()) {
             throw new BadMethodCallException("Method $method does not exist.");
         }
 
@@ -2228,7 +2228,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
         }
 
         if (is_string($precision) && preg_match('/^\s*(?<precision>\d+)?\s*(?<unit>\w+)(?<other>\W.*)?$/', $precision, $match)) {
-            if (trim($match['other'] ?? '') !== '') {
+            if (trim(isset($match['other']) ? $match['other'] : '') !== '') {
                 throw new InvalidArgumentException('Rounding is only possible with single unit intervals.');
             }
 

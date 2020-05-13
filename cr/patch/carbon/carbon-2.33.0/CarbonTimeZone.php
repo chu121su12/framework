@@ -256,7 +256,7 @@ class CarbonTimeZone extends DateTimeZone
      *
      * @return false|static
      */
-    public static function createFromHourOffset(float $hourOffset)
+    public static function createFromHourOffset($hourOffset)
     {
         return static::createFromMinuteOffset($hourOffset * Carbon::MINUTES_PER_HOUR);
     }
@@ -268,7 +268,7 @@ class CarbonTimeZone extends DateTimeZone
      *
      * @return false|static
      */
-    public static function createFromMinuteOffset(float $minuteOffset)
+    public static function createFromMinuteOffset($minuteOffset)
     {
         return static::instance(static::getOffsetNameFromMinuteOffset($minuteOffset));
     }
@@ -280,7 +280,7 @@ class CarbonTimeZone extends DateTimeZone
      *
      * @return string
      */
-    public static function getOffsetNameFromMinuteOffset(float $minutes)
+    public static function getOffsetNameFromMinuteOffset($minutes)
     {
         $minutes = round($minutes);
         $unsignedMinutes = abs($minutes);

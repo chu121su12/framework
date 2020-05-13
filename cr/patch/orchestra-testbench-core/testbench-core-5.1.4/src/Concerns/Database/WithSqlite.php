@@ -8,6 +8,31 @@ use Illuminate\Database\Schema\SQLiteBuilder;
 use Illuminate\Database\SQLiteConnection;
 use Illuminate\Support\Fluent;
 
+class WithSqlite_hotfixForSqliteSchemaBuilder_class_inner_2 extends Blueprint {
+                                public function dropForeign($index)
+                                {
+                                    return new Fluent();
+                                }
+                            }
+
+class WithSqlite_hotfixForSqliteSchemaBuilder_class_inner_1 extends SQLiteBuilder {
+                        protected function createBlueprint($table, Closure $callback = null)
+                        {
+                            return new WithSqlite_hotfixForSqliteSchemaBuilder_class_inner_2($table, $callback);
+                        }
+                    }
+
+class WithSqlite_hotfixForSqliteSchemaBuilder_class extends SQLiteConnection {
+                public function getSchemaBuilder()
+                {
+                    if ($this->schemaGrammar === null) {
+                        $this->useDefaultSchemaGrammar();
+                    }
+
+                    return new WithSqlite_hotfixForSqliteSchemaBuilder_class_inner_1($this);
+                }
+            }
+
 trait WithSqlite
 {
     /**
@@ -18,26 +43,7 @@ trait WithSqlite
     protected function hotfixForSqliteSchemaBuilder()
     {
         Connection::resolverFor('sqlite', static function ($connection, $database, $prefix, $config) {
-            return new class($connection, $database, $prefix, $config) extends SQLiteConnection {
-                public function getSchemaBuilder()
-                {
-                    if ($this->schemaGrammar === null) {
-                        $this->useDefaultSchemaGrammar();
-                    }
-
-                    return new class($this) extends SQLiteBuilder {
-                        protected function createBlueprint($table, Closure $callback = null)
-                        {
-                            return new class($table, $callback) extends Blueprint {
-                                public function dropForeign($index)
-                                {
-                                    return new Fluent();
-                                }
-                            };
-                        }
-                    };
-                }
-            };
+            return new WithSqlite_hotfixForSqliteSchemaBuilder_class($connection, $database, $prefix, $config);
         });
     }
 }

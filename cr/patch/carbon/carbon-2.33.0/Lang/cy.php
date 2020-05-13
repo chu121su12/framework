@@ -54,13 +54,14 @@ return [
         'sameElse' => 'L',
     ],
     'ordinal' => function ($number) {
+        $ordinals = [
+            '', 'af', 'il', 'ydd', 'ydd', 'ed', 'ed', 'ed', 'fed', 'fed', 'fed', // 1af to 10fed
+            'eg', 'fed', 'eg', 'eg', 'fed', 'eg', 'eg', 'fed', 'eg', 'fed', // 11eg to 20fed
+        ];
         return $number.(
             $number > 20
                 ? (in_array($number, [40, 50, 60, 80, 100]) ? 'fed' : 'ain')
-                : ([
-                    '', 'af', 'il', 'ydd', 'ydd', 'ed', 'ed', 'ed', 'fed', 'fed', 'fed', // 1af to 10fed
-                    'eg', 'fed', 'eg', 'eg', 'fed', 'eg', 'eg', 'fed', 'eg', 'fed', // 11eg to 20fed
-                ])[$number] ?? ''
+                : isset($ordinals[$number]) ? $ordinals[$number] : ''
         );
     },
     'months' => ['Ionawr', 'Chwefror', 'Mawrth', 'Ebrill', 'Mai', 'Mehefin', 'Gorffennaf', 'Awst', 'Medi', 'Hydref', 'Tachwedd', 'Rhagfyr'],

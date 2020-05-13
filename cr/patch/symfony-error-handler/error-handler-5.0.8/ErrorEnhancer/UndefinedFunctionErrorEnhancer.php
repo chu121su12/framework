@@ -22,7 +22,7 @@ class UndefinedFunctionErrorEnhancer implements ErrorEnhancerInterface
     /**
      * {@inheritdoc}
      */
-    public function enhance(\Throwable $error)
+    public function enhance($error)
     {
         if ($error instanceof FatalError) {
             return null;

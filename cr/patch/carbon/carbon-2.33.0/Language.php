@@ -68,7 +68,7 @@ class Language implements JsonSerializable
         if (isset($parts[1])) {
             if (!preg_match('/^[A-Z]+$/', $parts[1])) {
                 $this->variant = $parts[1];
-                $parts[1] = $parts[2] ?? null;
+                $parts[1] = isset($parts[2]) ? $parts[2] : null;
             }
             if ($parts[1]) {
                 $this->region = $parts[1];
@@ -112,7 +112,8 @@ class Language implements JsonSerializable
     public function getNames()
     {
         if (!$this->names) {
-            $this->names = static::all()[$this->code] ?? [
+            $allNames = static::all();
+            $this->names = isset($allNames[$this->code]) ? $allNames[$this->code] : [
                 'isoName' => $this->code,
                 'nativeName' => $this->code,
             ];

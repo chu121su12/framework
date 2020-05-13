@@ -30,7 +30,7 @@ abstract class SMime
         return 'file://'.str_replace('\\', '/', realpath($path));
     }
 
-    protected function iteratorToFile(iterable $iterator, $stream)
+    protected function iteratorToFile($iterator, $stream)
     {
         foreach ($iterator as $chunk) {
             fwrite($stream, $chunk);

@@ -69,7 +69,17 @@ return [
             100 => '-ум',
         ];
 
-        return $number.($suffixes[$number] ?? $suffixes[$number % 10] ?? $suffixes[$number >= 100 ? 100 : -1] ?? '');
+        if (isset($suffixes[$number])) {
+            $appendage = $suffixes[$number];
+        } elseif (isset($suffixes[$key = $number % 10])) {
+            $appendage = $suffixes[$key];
+        } elseif (isset($suffixes[$number >= 100 ? 100 : -1])) {
+            $appendage = $suffixes[$key];
+        } else {
+            $appendage = '';
+        }
+
+        return $number.$appendage;
     },
     'meridiem' => function ($hour) {
         if ($hour < 4) {

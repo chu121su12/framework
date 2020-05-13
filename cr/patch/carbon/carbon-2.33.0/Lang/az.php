@@ -98,7 +98,17 @@ return [
 
         $lastDigit = $number % 10;
 
-        return $number.($suffixes[$lastDigit] ?? $suffixes[$number % 100 - $lastDigit] ?? $suffixes[$number >= 100 ? 100 : -1] ?? '');
+        if (isset($suffixes[$lastDigit])) {
+            $appendage = $suffixes[$lastDigit];
+        } elseif (isset($suffixes[$key = $number % 100 - $lastDigit])) {
+            $appendage = $suffixes[$key];
+        } elseif (isset($suffixes[$key = $number >= 100 ? 100 : -1])) {
+            $appendage = $suffixes[$key];
+        } else {
+            $appendage = '';
+        }
+
+        return $number.$appendage;
     },
     'meridiem' => function ($hour) {
         if ($hour < 4) {

@@ -394,7 +394,7 @@ class PendingRequest
      * @param  array|string|null  $query
      * @return \Illuminate\Http\Client\Response
      */
-    public function head(string $url, $query = null)
+    public function head($url, $query = null)
     {
         return $this->send('HEAD', $url, [
             'query' => $query,
