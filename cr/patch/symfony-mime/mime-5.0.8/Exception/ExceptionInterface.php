@@ -14,6 +14,15 @@ namespace Symfony\Component\Mime\Exception;
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  */
-interface ExceptionInterface
+if (interface_exists('Throwable'))
 {
+    interface ExceptionInterface extends \Throwable
+    {
+    }
+}
+else
+{
+    interface ExceptionInterface
+    {
+    }
 }

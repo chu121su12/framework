@@ -16,6 +16,15 @@ namespace Symfony\Component\Routing\Exception;
  *
  * @author Alexandre Salomé <alexandre.salome@gmail.com>
  */
-interface ExceptionInterface
+if (interface_exists('Throwable'))
 {
+    interface ExceptionInterface extends \Throwable
+    {
+    }
+}
+else
+{
+    interface ExceptionInterface
+    {
+    }
 }

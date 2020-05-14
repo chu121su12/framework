@@ -14,6 +14,15 @@ namespace Symfony\Component\String\Exception;
 /**
  * @experimental in 5.0
  */
-interface ExceptionInterface extends \Throwable
+if (interface_exists('Throwable'))
 {
+    interface ExceptionInterface extends \Throwable
+    {
+    }
+}
+else
+{
+    interface ExceptionInterface
+    {
+    }
 }
