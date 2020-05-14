@@ -1,7 +1,0 @@
-PHPUnit 5.7.27 by Sebastian Bergmann and contributors.
-
-Runtime:       PHP 5.6.40
-Configuration: Z:\.d\l\dev\http\laravel-prev\phpunit.xml.dist
-
-
-Fatal error: Interface 'Symfony\Contracts\Service\ResetInterface' not found in Z:\.d\l\dev\http\laravel-prev\cr\patch\symfony-console\console-5.0.8\Application.php on line 63
