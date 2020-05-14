@@ -8,6 +8,9 @@ use Illuminate\Foundation\Testing\Concerns\InteractsWithRedis;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group redis
+ */
 class RedisCacheIntegrationTest extends TestCase
 {
     use InteractsWithRedis;

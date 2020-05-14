@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Throwable;
 
 /**
+ * @group redis
  * @group redislimiters
  */
 class DurationLimiterTest extends TestCase

@@ -12,6 +12,9 @@ use PHPUnit\Framework\TestCase;
 use Predis\Client;
 use Redis;
 
+/**
+ * @group redis
+ */
 class RedisConnectionTest extends TestCase
 {
     use InteractsWithRedis;

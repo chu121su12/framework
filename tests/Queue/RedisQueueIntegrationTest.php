@@ -12,6 +12,9 @@ use Illuminate\Support\Str;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group redis
+ */
 class RedisQueueIntegrationTest extends TestCase
 {
     use InteractsWithRedis, InteractsWithTime;

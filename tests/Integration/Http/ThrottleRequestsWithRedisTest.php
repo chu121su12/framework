@@ -10,6 +10,7 @@ use Orchestra\Testbench\TestCase;
 use Throwable;
 
 /**
+ * @group redis
  * @group integration
  */
 class ThrottleRequestsWithRedisTest extends TestCase
