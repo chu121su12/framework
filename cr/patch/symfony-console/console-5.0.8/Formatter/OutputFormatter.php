@@ -226,7 +226,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
     /**
      * Applies current style from stack to text, if must be applied.
      */
-    private function applyCurrentStyle($text, $current, $width, int &$currentLineLength)
+    private function applyCurrentStyle($text, $current, $width, &$currentLineLength)
     {
         if ('' === $text) {
             return '';

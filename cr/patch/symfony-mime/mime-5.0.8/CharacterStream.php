@@ -175,7 +175,7 @@ final class CharacterStream
         $this->dataSize = \strlen($this->data) - \strlen($ignored);
     }
 
-    private function getUtf8CharPositions($string, $startOffset, string &$ignoredChars)
+    private function getUtf8CharPositions($string, $startOffset, &$ignoredChars)
     {
         $strlen = \strlen($string);
         $charPos = \count($this->map['p']);

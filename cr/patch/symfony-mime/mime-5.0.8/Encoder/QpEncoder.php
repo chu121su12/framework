@@ -161,7 +161,7 @@ class QpEncoder implements EncoderInterface
     /**
      * Encode the given byte array into a verbatim QP form.
      */
-    private function encodeByteSequence(array $bytes, int &$size)
+    private function encodeByteSequence(array $bytes, &$size)
     {
         $ret = '';
         $size = 0;

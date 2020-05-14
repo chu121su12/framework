@@ -312,7 +312,7 @@ class FlattenException
         return $this;
     }
 
-    private function flattenArgs(array $args, $level = 0, int &$count = 0)
+    private function flattenArgs(array $args, $level = 0, &$count = 0)
     {
         $result = [];
         foreach ($args as $key => $value) {
