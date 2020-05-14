@@ -427,7 +427,7 @@ class PhpRedisConnection extends Connection implements ConnectionContract
      * @param  dynamic  $arguments
      * @return mixed
      */
-    public function eval($script, $numberOfKeys, ...$arguments)
+    public function evaluate($script, $numberOfKeys, ...$arguments)
     {
         return $this->command('eval', [$script, $arguments, $numberOfKeys]);
     }
@@ -484,7 +484,9 @@ class PhpRedisConnection extends Connection implements ConnectionContract
             return $this->command('flushdb');
         }
 
-        foreach ($this->client->_masters() as [$host, $port]) {
+        foreach ($this->client->_masters() as $loop) {
+            list($host, $port) = $loop;
+
             $redis = tap(new Redis)->connect($host, $port);
 
             if (isset($this->config['password']) && ! empty($this->config['password'])) {
