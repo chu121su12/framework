@@ -34,10 +34,6 @@ class DatabaseMySqlConnectionTest extends DatabaseMySqlTestCase
 
     /**
      * @dataProvider floatComparisonsDataProvider
-     *
-     * @param  float  $value        the value to compare against the JSON value
-     * @param  string  $operator    the comparison operator to use. e.g. '<', '>', '='
-     * @param  bool  $shouldMatch   true if the comparison should match, false if not
      */
     public function testJsonFloatComparison($value, $operator, $shouldMatch)
     {

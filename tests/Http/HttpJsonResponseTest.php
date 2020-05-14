@@ -14,8 +14,6 @@ class HttpJsonResponseTest extends TestCase
 {
     /**
      * @dataProvider setAndRetrieveDataProvider
-     *
-     * @param  mixed  $data
      */
     public function testSetAndRetrieveData($data)
     {
@@ -79,8 +77,6 @@ class HttpJsonResponseTest extends TestCase
     }
 
     /**
-     * @param  mixed  $data
-     *
      * @dataProvider jsonErrorDataProvider
      */
     public function testGracefullyHandledSomeJsonErrorsWithPartialOutputOnError($data)
@@ -88,9 +84,6 @@ class HttpJsonResponseTest extends TestCase
         new JsonResponse(['data' => $data], 200, [], JSON_PARTIAL_OUTPUT_ON_ERROR);
     }
 
-    /**
-     * @return array
-     */
     public function jsonErrorDataProvider()
     {
         // Resources can't be encoded

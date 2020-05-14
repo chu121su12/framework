@@ -12,11 +12,6 @@ class RouteRedirectTest extends TestCase
 {
     /**
      * @dataProvider  routeRedirectDataSets
-     *
-     * @param  string  $redirectFrom
-     * @param  string  $redirectTo
-     * @param  string  $requestUri
-     * @param  string  $redirectUri
      */
     public function testRouteRedirect($redirectFrom, $redirectTo, $requestUri, $redirectUri)
     {
