@@ -286,7 +286,7 @@ class ErrorHandler
      *
      * @return callable|null The previous exception handler
      */
-    public function setExceptionHandler(?callable $handler)
+    public function setExceptionHandler(callable $handler = null)
     {
         $prev = $this->exceptionHandler;
         $this->exceptionHandler = $handler;
