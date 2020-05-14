@@ -65,7 +65,7 @@ final class MimeTypes implements MimeTypesInterface
 
     public static function getDefault()
     {
-        return isset(self::$default) ? self::$default : self::$default = new self();
+        return isset(self::$default) ? self::$default : (self::$default = new self());
     }
 
     /**

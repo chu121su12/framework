@@ -89,7 +89,14 @@ trait CompiledUrlMatcherTrait
 
         foreach (isset($this->staticRoutes[$trimmedPathinfo]) ? $this->staticRoutes[$trimmedPathinfo] : [] as list($ret, $requiredHost, $requiredMethods, $requiredSchemes, $hasTrailingSlash, , $condition)) {
             $checkCondition = $this->checkCondition;
-            if ($condition && !$checkCondition($condition, $context, 0 < $condition ? isset($request) ? $request : $request = $this->request ?: $this->createRequest($pathinfo) : null)) {
+            if ($condition && !$checkCondition(
+                $condition, $context,
+                0 < $condition
+                    ? (isset($request)
+                        ? $request
+                        : ($request = ($this->request ?: $this->createRequest($pathinfo))))
+                    : null
+            )) {
                 continue;
             }
 
@@ -134,7 +141,14 @@ trait CompiledUrlMatcherTrait
                             continue 3;
                         }
                         $checkCondition = $this->checkCondition;
-                        if (!$checkCondition($condition, $context, 0 < $condition ? isset($request) ? $request : $request = $this->request ?: $this->createRequest($pathinfo) : null)) {
+                        if (!$checkCondition(
+                            $condition, $context,
+                            0 < $condition
+                                ? (isset($request)
+                                    ? $request
+                                    : ($request = ($this->request ?: $this->createRequest($pathinfo))))
+                                : null
+                        )) {
                             continue;
                         }
                     }

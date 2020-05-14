@@ -34,10 +34,11 @@ final class Dumper
 
         if (class_exists(CliDumper::class)) {
             $this->handler = function ($var) {
-                $dumper = isset($this->dumper) ? $this->dumper : $this->dumper = new CliDumper(null, null, CliDumper::DUMP_LIGHT_ARRAY | CliDumper::DUMP_COMMA_SEPARATOR);
+                $dumper = isset($this->dumper) ? $this->dumper : ($this->dumper = new CliDumper(null, null, CliDumper::DUMP_LIGHT_ARRAY | CliDumper::DUMP_COMMA_SEPARATOR));
                 $dumper->setColors($this->output->isDecorated());
 
-                return rtrim($dumper->dump((isset($this->cloner) ? $this->cloner : $this->cloner = new VarCloner())->cloneVar($var)->withRefHandles(false), true));
+                $cloner = isset($this->cloner) ? $this->cloner : ($this->cloner = new VarCloner());
+                return rtrim($dumper->dump($cloner->cloneVar($var)->withRefHandles(false), true));
             };
         } else {
             $this->handler = function ($var) {

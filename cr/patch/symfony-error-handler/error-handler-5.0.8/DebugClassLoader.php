@@ -943,10 +943,10 @@ class DebugClassLoader
                 continue;
             }
 
-            list($namespace, $useOffset, $useMap) = isset($useStatements[$file]) ? $useStatements[$file] : $useStatements[$file] = self::getUseStatements($file);
+            list($namespace, $useOffset, $useMap) = isset($useStatements[$file]) ? $useStatements[$file] : ($useStatements[$file] = self::getUseStatements($file));
 
             if ('\\' !== $type[0]) {
-                list($declaringNamespace, , $declaringUseMap) = isset($useStatements[$declaringFile]) ? $useStatements[$declaringFile] : $useStatements[$declaringFile] = self::getUseStatements($declaringFile);
+                list($declaringNamespace, , $declaringUseMap) = isset($useStatements[$declaringFile]) ? $useStatements[$declaringFile] : ($useStatements[$declaringFile] = self::getUseStatements($declaringFile));
 
                 $p = strpos($type, '\\', 1);
                 $alias = $p ? substr($type, 0, $p) : $type;

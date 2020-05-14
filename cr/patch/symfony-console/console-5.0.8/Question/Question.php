@@ -145,7 +145,7 @@ class Question
         } elseif ($values instanceof \Traversable) {
             $valueCache = null;
             $callback = static function () use ($values, &$valueCache) {
-                return isset($valueCache) ? $valueCache : $valueCache = iterator_to_array($values, false);
+                return isset($valueCache) ? $valueCache : ($valueCache = iterator_to_array($values, false));
             };
         } else {
             $callback = null;
