@@ -491,7 +491,13 @@ class DebugClassLoader
                             continue;
                         }
                         $realName = substr($name, 0, strpos($name, '('));
-                        if (!$refl->hasMethod($realName) || !($methodRefl = $refl->getMethod($realName))->isPublic() || ($static && !$methodRefl->isStatic()) || (!$static && $methodRefl->isStatic())) {
+                        $hasMethod = $refl->hasMethod($realName);
+                        $methodRefl = $hasMethod ? $refl->getMethod($realName) : null;
+                        if (!$hasMethod
+                            || !$methodRefl->isPublic()
+                            || ($static && !$methodRefl->isStatic())
+                            || (!$static && $methodRefl->isStatic())
+                        ) {
                             $deprecations[] = sprintf('Class "%s" should implement method "%s::%s"%s', $className, ($static ? 'static ' : '').$interface, $name, null == $description ? '.' : ': '.$description);
                         }
                     }
@@ -523,8 +529,9 @@ class DebugClassLoader
                 }
             }
 
-            if (null !== (isset(self::INTERNAL_TYPES[$use]) ? self::INTERNAL_TYPES[$use] : null)) {
-                foreach (self::INTERNAL_TYPES[$use] as $method => $returnType) {
+            $internalTypes = self::INTERNAL_TYPES;
+            if (null !== (isset($internalTypes[$use]) ? $internalTypes[$use] : null)) {
+                foreach ($internalTypes[$use] as $method => $returnType) {
                     if ('void' !== $returnType) {
                         self::$returnTypes[$class] += [$method => [$returnType, $returnType, $class, '']];
                     }
@@ -585,7 +592,8 @@ class DebugClassLoader
             $forcePatchTypes = $this->patchTypes['force'];
 
             if ($canAddReturnType = null !== $forcePatchTypes && false === strpos($method->getFileName(), \DIRECTORY_SEPARATOR.'vendor'.\DIRECTORY_SEPARATOR)) {
-                if ('void' !== (isset(self::MAGIC_METHODS[$method->name]) ? self::MAGIC_METHODS[$method->name] : 'void')) {
+                $magicMethods = self::MAGIC_METHODS;
+                if ('void' !== (isset($magicMethods[$method->name]) ? $magicMethods[$method->name] : 'void')) {
                     $this->patchTypes['force'] = $forcePatchTypes ?: 'docblock';
                 }
 
@@ -599,9 +607,10 @@ class DebugClassLoader
                 ;
             }
 
+            $magicMethods = self::MAGIC_METHODS;
             $returnType = isset(self::$returnTypes[$class]) && isset(self::$returnTypes[$class][$method->name])
                 ? self::$returnTypes[$class][$method->name]
-                : (isset(self::MAGIC_METHODS[$method->name]) ? self::MAGIC_METHODS[$method->name] : null);
+                : (isset($magicMethods[$method->name]) ? $magicMethods[$method->name] : null);
 
             if (null !== $returnType && !$method->hasReturnType() && !($doc && preg_match('/\n\s+\* @return +(\S+)/', $doc))) {
                 list($normalizedType, $returnType, $declaringClass, $declaringFile) = \is_string($returnType) ? [$returnType, $returnType, '', ''] : $returnType;
@@ -630,9 +639,14 @@ class DebugClassLoader
             }
 
             $matches = [];
+            $magicMethods = self::MAGIC_METHODS;
 
-            if (!$method->hasReturnType() && ((false !== strpos($doc, '@return') && preg_match('/\n\s+\* @return +(\S+)/', $doc, $matches)) || 'void' !== (isset(self::MAGIC_METHODS[$method->name]) ? self::MAGIC_METHODS[$method->name] : 'void'))) {
-                $matches = $matches ?: [1 => self::MAGIC_METHODS[$method->name]];
+            if (!$method->hasReturnType()
+                && ((false !== strpos($doc, '@return')
+                    && preg_match('/\n\s+\* @return +(\S+)/', $doc, $matches))
+                || 'void' !== (isset($magicMethods[$method->name]) ? $magicMethods[$method->name] : 'void'))
+            ) {
+                $matches = $matches ?: [1 => $magicMethods[$method->name]];
                 $this->setReturnType($matches[1], $method, $parent);
 
                 if (isset(self::$returnTypes[$class][$method->name][0]) && $canAddReturnType) {
@@ -839,10 +853,11 @@ class DebugClassLoader
         }
 
         $iterable = $object = true;
+        $specialReturnTypes = self::SPECIAL_RETURN_TYPES;
         foreach ($typesMap as $n => $t) {
             if ('null' !== $n) {
                 $iterable = $iterable && (\in_array($n, ['array', 'iterable']) || false !== strpos($n, 'Iterator'));
-                $object = $object && (\in_array($n, ['callable', 'object', '$this', 'static']) || !isset(self::SPECIAL_RETURN_TYPES[$n]));
+                $object = $object && (\in_array($n, ['callable', 'object', '$this', 'static']) || !isset($specialReturnTypes[$n]));
             }
         }
 
@@ -867,9 +882,11 @@ class DebugClassLoader
             }
         }
 
+        $builtinReturnTypes = self::BUILTIN_RETURN_TYPES;
+        $specialReturnTypes = self::SPECIAL_RETURN_TYPES;
         if ('void' === $normalizedType) {
             $nullable = false;
-        } elseif (!isset(self::BUILTIN_RETURN_TYPES[$normalizedType]) && isset(self::SPECIAL_RETURN_TYPES[$normalizedType])) {
+        } elseif (!isset($builtinReturnTypes[$normalizedType]) && isset($specialReturnTypes[$normalizedType])) {
             // ignore other special return types
             return;
         }
@@ -884,8 +901,9 @@ class DebugClassLoader
 
     private function normalizeType($type, $class, $parent = null)
     {
-        if (isset(self::SPECIAL_RETURN_TYPES[$lcType = strtolower($type)])) {
-            if ('parent' === $lcType = self::SPECIAL_RETURN_TYPES[$lcType]) {
+        $specialReturnTypes = self::SPECIAL_RETURN_TYPES;
+        if (isset($specialReturnTypes[$lcType = strtolower($type)])) {
+            if ('parent' === $lcType = $specialReturnTypes[$lcType]) {
                 $lcType = null !== $parent ? '\\'.$parent : 'parent';
             } elseif ('self' === $lcType) {
                 $lcType = '\\'.$class;
@@ -939,7 +957,8 @@ class DebugClassLoader
                 $format = null;
             }
 
-            if (isset(self::SPECIAL_RETURN_TYPES[$type]) || ('\\' === $type[0] && !$p = strrpos($type, '\\', 1))) {
+            $specialReturnTypes = self::SPECIAL_RETURN_TYPES;
+            if (isset($specialReturnTypes[$type]) || ('\\' === $type[0] && !$p = strrpos($type, '\\', 1))) {
                 continue;
             }
 
@@ -980,7 +999,8 @@ class DebugClassLoader
 
             $returnType[$i] = null !== $format ? sprintf($format, $alias) : $alias;
 
-            if (!isset(self::SPECIAL_RETURN_TYPES[$normalizedType]) && !isset(self::SPECIAL_RETURN_TYPES[$returnType[$i]])) {
+            $specialReturnTypes = self::SPECIAL_RETURN_TYPES;
+            if (!isset($specialReturnTypes[$normalizedType]) && !isset($specialReturnTypes[$returnType[$i]])) {
                 $normalizedType = $returnType[$i];
             }
         }

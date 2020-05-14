@@ -88,6 +88,7 @@ class CollectionConfigurator
 
     private function createRoute($path)
     {
-        return (clone $this->route)->setPath($path);
+        $routeClone = clone $this->route;
+        return $routeClone->setPath($path);
     }
 }

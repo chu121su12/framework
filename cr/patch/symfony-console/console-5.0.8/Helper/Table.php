@@ -29,12 +29,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Table
 {
-    private const SEPARATOR_TOP = 0;
-    private const SEPARATOR_TOP_BOTTOM = 1;
-    private const SEPARATOR_MID = 2;
-    private const SEPARATOR_BOTTOM = 3;
-    private const BORDER_OUTSIDE = 0;
-    private const BORDER_INSIDE = 1;
+    const SEPARATOR_TOP = 0;
+    const SEPARATOR_TOP_BOTTOM = 1;
+    const SEPARATOR_MID = 2;
+    const SEPARATOR_BOTTOM = 3;
+    const BORDER_OUTSIDE = 0;
+    const BORDER_INSIDE = 1;
 
     private $headerTitle;
     private $footerTitle;
@@ -568,7 +568,7 @@ class Table
             }
         }
 
-        return new TableRows(function () use ($rows, $unmergedRows): \Traversable {
+        return new TableRows(function () use ($rows, $unmergedRows) {
             foreach ($rows as $rowKey => $row) {
                 yield $this->fillCells($row);
 

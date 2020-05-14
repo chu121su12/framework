@@ -117,7 +117,10 @@ class Message extends RawMessage
         }
 
         yield $this->getPreparedHeaders()->toString();
-        yield from $body->toIterable();
+        $bodyIterable = $body->toIterable();
+        foreach ($bodyIterable as $yieldedKey => $yieldedValue) {
+            yield $yieldedKey => $yieldedValue;
+        }
     }
 
     public function ensureValidity()

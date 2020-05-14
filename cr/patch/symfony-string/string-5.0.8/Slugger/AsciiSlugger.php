@@ -22,7 +22,7 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
  */
 class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
 {
-    private const LOCALE_TO_TRANSLITERATOR_ID = [
+    const LOCALE_TO_TRANSLITERATOR_ID = [
         'am' => 'Amharic-Latin',
         'ar' => 'Arabic-Latin',
         'az' => 'Azerbaijani-Latin',
@@ -111,8 +111,10 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
             return $this->transliterators[$locale];
         }
 
+        $localeToTransliteratorId = self::LOCALE_TO_TRANSLITERATOR_ID;
+
         // Exact locale supported, cache and return
-        if ($id = isset(self::LOCALE_TO_TRANSLITERATOR_ID[$locale]) ? self::LOCALE_TO_TRANSLITERATOR_ID[$locale] : null) {
+        if ($id = isset($localeToTransliteratorId[$locale]) ? $localeToTransliteratorId[$locale] : null) {
             $bgnTransliterator = \Transliterator::create($id.'/BGN');
             return $this->transliterators[$locale] = isset($bgnTransliterator) ? $bgnTransliterator : \Transliterator::create($id);
         }
@@ -125,7 +127,7 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
         // Try to use the parent locale (ie. try "de" for "de_AT") and cache both locales
         $parent = substr($locale, 0, -\strlen($str));
 
-        if ($id = isset(self::LOCALE_TO_TRANSLITERATOR_ID[$parent]) ? self::LOCALE_TO_TRANSLITERATOR_ID[$parent] : null) {
+        if ($id = isset($localeToTransliteratorId[$parent]) ? $localeToTransliteratorId[$parent] : null) {
             $bgnTransliterator = \Transliterator::create($id.'/BGN');
             $transliterator = isset($bgnTransliterator) ? $bgnTransliterator : \Transliterator::create($id);
         }

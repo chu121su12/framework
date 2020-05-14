@@ -9,11 +9,11 @@ class TypedPropertyTestClass
 {
     use SerializesModels;
 
-    public ModelSerializationTestUser $user;
+    public $user;
 
-    protected int $id;
+    protected $id;
 
-    private array $names;
+    private $names;
 
     public function __construct(ModelSerializationTestUser $user, $id, array $names)
     {
@@ -43,7 +43,7 @@ class TypedPropertyCollectionTestClass
 {
     use SerializesModels;
 
-    public Collection $users;
+    public $users;
 
     public function __construct(Collection $users)
     {

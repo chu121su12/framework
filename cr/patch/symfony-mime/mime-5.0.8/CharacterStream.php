@@ -20,7 +20,7 @@ namespace Symfony\Component\Mime;
 final class CharacterStream
 {
     /** Pre-computed for optimization */
-    private const UTF8_LENGTH_MAP = [
+    const UTF8_LENGTH_MAP = [
         "\x00" => 1, "\x01" => 1, "\x02" => 1, "\x03" => 1, "\x04" => 1, "\x05" => 1, "\x06" => 1, "\x07" => 1,
         "\x08" => 1, "\x09" => 1, "\x0a" => 1, "\x0b" => 1, "\x0c" => 1, "\x0d" => 1, "\x0e" => 1, "\x0f" => 1,
         "\x10" => 1, "\x11" => 1, "\x12" => 1, "\x13" => 1, "\x14" => 1, "\x15" => 1, "\x16" => 1, "\x17" => 1,

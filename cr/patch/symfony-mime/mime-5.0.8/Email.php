@@ -30,7 +30,7 @@ class Email extends Message
     const PRIORITY_LOW = 4;
     const PRIORITY_LOWEST = 5;
 
-    private const PRIORITY_MAP = [
+    const PRIORITY_MAP = [
         self::PRIORITY_HIGHEST => 'Highest',
         self::PRIORITY_HIGH => 'High',
         self::PRIORITY_NORMAL => 'Normal',

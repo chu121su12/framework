@@ -1646,11 +1646,11 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
 
         $result = iterator_to_array($this);
 
-        [
+        list(
             $this->key,
             $this->current,
             $this->validationResult
-        ] = $state;
+        ) = $state;
 
         return $result;
     }
@@ -1905,7 +1905,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @param callable $callback
      */
-    public function forEach(callable $callback)
+    public function forEachOf(callable $callback)
     {
         foreach ($this as $date) {
             $callback($date);

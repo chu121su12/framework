@@ -30,7 +30,7 @@ final class Address
      * config, and allows to have more readable config.
      * This does not try to cover all edge cases for address.
      */
-    private const FROM_STRING_PATTERN = '~(?<displayName>[^<]*)<(?<addrSpec>.*)>[^>]*~';
+    const FROM_STRING_PATTERN = '~(?<displayName>[^<]*)<(?<addrSpec>.*)>[^>]*~';
 
     private static $validator;
     private static $encoder;

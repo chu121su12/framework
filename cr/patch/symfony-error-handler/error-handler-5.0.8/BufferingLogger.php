@@ -37,7 +37,8 @@ class BufferingLogger extends AbstractLogger
 
     public function __destruct()
     {
-        foreach ($this->logs as [$level, $message, $context]) {
+        foreach ($this->logs as $loop) {
+            list($level, $message, $context) = $loop;
             if (false !== strpos($message, '{')) {
                 foreach ($context as $key => $val) {
                     if (null === $val || is_scalar($val) || (\is_object($val) && \is_callable([$val, '__toString']))) {

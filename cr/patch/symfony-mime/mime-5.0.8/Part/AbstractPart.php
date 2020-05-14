@@ -47,7 +47,10 @@ abstract class AbstractPart
     {
         yield $this->getPreparedHeaders()->toString();
         yield "\r\n";
-        yield from $this->bodyToIterable();
+        $bodyIterable = $part->bodyToIterable();
+        foreach ($bodyIterable as $yieldedKey => $yieldedValue) {
+            yield $yieldedKey => $yieldedValue;
+        }
     }
 
     public function asDebugString()

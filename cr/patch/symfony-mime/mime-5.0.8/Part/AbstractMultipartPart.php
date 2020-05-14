@@ -68,7 +68,10 @@ abstract class AbstractMultipartPart extends AbstractPart
         $parts = $this->getParts();
         foreach ($parts as $part) {
             yield '--'.$this->getBoundary()."\r\n";
-            yield from $part->toIterable();
+            $partIterable = $part->toIterable();
+            foreach ($partIterable as $yieldedKey => $yieldedValue) {
+                yield $yieldedKey => $yieldedValue;
+            }
             yield "\r\n";
         }
         yield '--'.$this->getBoundary()."--\r\n";

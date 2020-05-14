@@ -27,7 +27,7 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInterface
 {
-    private const QUERY_FRAGMENT_DECODED = [
+    const QUERY_FRAGMENT_DECODED = [
         // RFC 3986 explicitly allows those in the query/fragment to reference other URIs unencoded
         '%2F' => '/',
         '%3F' => '?',
