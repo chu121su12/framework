@@ -511,7 +511,7 @@ use ReflectionException;
  *
  * </autodoc>
  */
-interface CarbonInterface extends DateTimeInterface, JsonSerializable
+interface CarbonInterface extends CarbonSetStateInterface, DateTimeInterface, JsonSerializable
 {
     /**
      * Diff wording options(expressed in octal).
@@ -680,15 +680,6 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @return void
      */
     public function __set($name, $value);
-
-    /**
-     * The __set_state handler.
-     *
-     * @param string|array $dump
-     *
-     * @return static
-     */
-    public static function __set_state();
 
     /**
      * Returns the list of properties to dump on serialize() called on.
