@@ -343,7 +343,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return '<path d="'.self::GHOST_ADDONS[$monthDate].'" fill="#fff" fill-opacity="0.6"></path>';
     }
 
-    private function include($name, array $context = [])
+    private function doInclude($name, array $context = [])
     {
         extract($context, EXTR_SKIP);
         ob_start();
