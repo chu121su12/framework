@@ -48,7 +48,7 @@ use ProxyManager\Proxy\ProxyInterface;
  */
 class DebugClassLoader
 {
-    private const SPECIAL_RETURN_TYPES = [
+    const SPECIAL_RETURN_TYPES = [
         'mixed' => 'mixed',
         'void' => 'void',
         'null' => 'null',
@@ -71,7 +71,7 @@ class DebugClassLoader
         'parent' => 'parent',
     ];
 
-    private const BUILTIN_RETURN_TYPES = [
+    const BUILTIN_RETURN_TYPES = [
         'void' => true,
         'array' => true,
         'bool' => true,
@@ -85,7 +85,7 @@ class DebugClassLoader
         'parent' => true,
     ];
 
-    private const MAGIC_METHODS = [
+    const MAGIC_METHODS = [
         '__set' => 'void',
         '__isset' => 'bool',
         '__unset' => 'void',
@@ -98,7 +98,7 @@ class DebugClassLoader
         '__unserialize' => 'void',
     ];
 
-    private const INTERNAL_TYPES = [
+    const INTERNAL_TYPES = [
         'ArrayAccess' => [
             'offsetExists' => 'bool',
             'offsetSet' => 'void',
@@ -313,7 +313,7 @@ class DebugClassLoader
 
     public function findFile($class)
     {
-        return $this->isFinder ? ($this->classLoader[0]->findFile($class) ?: null);
+        return $this->isFinder ? ($this->classLoader[0]->findFile($class) ?: null) : null;;
     }
 
     /**

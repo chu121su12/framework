@@ -231,7 +231,7 @@ final class Headers
      */
     public function getHeaderBody($name)
     {
-        return $this->has($name) ? $this->get($name)->getBody();
+        return $this->has($name) ? $this->get($name)->getBody() : null;
     }
 
     /**
