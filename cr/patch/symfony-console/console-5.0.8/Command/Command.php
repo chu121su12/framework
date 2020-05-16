@@ -68,6 +68,8 @@ class Command
      */
     public function __construct($name = null)
     {
+        $name = cast_to_string($name, null);
+
         $this->definition = new InputDefinition();
 
         if (null !== $name || null !== $name = static::getDefaultName()) {
@@ -300,6 +302,8 @@ class Command
      */
     public function mergeApplicationDefinition($mergeArgs = true)
     {
+        $mergeArgs = cast_to_bool($mergeArgs);
+
         if (null === $this->application || (true === $this->applicationDefinitionMerged && ($this->applicationDefinitionMergedWithArgs || !$mergeArgs))) {
             return;
         }
@@ -378,6 +382,12 @@ class Command
      */
     public function addArgument($name, $mode = null, $description = '', $default = null)
     {
+        $name = cast_to_string($name);
+
+        $description = cast_to_string($description);
+
+        $mode = cast_to_int($mode, null);
+
         $this->definition->addArgument(new InputArgument($name, $mode, $description, $default));
 
         return $this;
@@ -396,6 +406,12 @@ class Command
      */
     public function addOption($name, $shortcut = null, $mode = null, $description = '', $default = null)
     {
+        $name = cast_to_string($name);
+
+        $description = cast_to_string($description);
+
+        $mode = cast_to_int($mode, null);
+
         $this->definition->addOption(new InputOption($name, $shortcut, $mode, $description, $default));
 
         return $this;
@@ -415,6 +431,8 @@ class Command
      */
     public function setName($name)
     {
+        $name = cast_to_string($name);
+
         $this->validateName($name);
 
         $this->name = $name;
@@ -434,6 +452,8 @@ class Command
      */
     public function setProcessTitle($title)
     {
+        $title = cast_to_string($title);
+
         $this->processTitle = $title;
 
         return $this;
@@ -456,6 +476,8 @@ class Command
      */
     public function setHidden($hidden)
     {
+        $hidden = cast_to_bool($hidden);
+
         $this->hidden = $hidden;
 
         return $this;
@@ -476,6 +498,8 @@ class Command
      */
     public function setDescription($description)
     {
+        $description = cast_to_string($description);
+
         $this->description = $description;
 
         return $this;
@@ -498,6 +522,8 @@ class Command
      */
     public function setHelp($help)
     {
+        $help = cast_to_string($help);
+
         $this->help = $help;
 
         return $this;
@@ -547,6 +573,8 @@ class Command
      */
     public function setAliases($aliases)
     {
+        $aliases = cast_to_iterable($aliases);
+
         foreach ($aliases as $alias) {
             $this->validateName($alias);
         }
@@ -575,6 +603,8 @@ class Command
      */
     public function getSynopsis($short = false)
     {
+        $short = cast_to_bool($short);
+
         $key = $short ? 'short' : 'long';
 
         if (!isset($this->synopsis[$key])) {
@@ -591,6 +621,8 @@ class Command
      */
     public function addUsage($usage)
     {
+        $usage = cast_to_string($usage);
+
         if (0 !== strpos($usage, $this->name)) {
             $usage = sprintf('%s %s', $this->name, $usage);
         }
@@ -620,6 +652,8 @@ class Command
      */
     public function getHelper($name)
     {
+        $name = cast_to_string($name);
+
         if (null === $this->helperSet) {
             throw new LogicException(sprintf('Cannot retrieve helper "%s" because there is no HelperSet defined. Did you forget to add your command to the application or to set the application on the command using the setApplication() method? You can also set the HelperSet directly using the setHelperSet() method.', $name));
         }
@@ -636,6 +670,8 @@ class Command
      */
     private function validateName($name)
     {
+        $name = cast_to_string($name);
+
         if (!preg_match('/^[^\:]++(\:[^\:]++)*$/', $name)) {
             throw new InvalidArgumentException(sprintf('Command name "%s" is invalid.', $name));
         }

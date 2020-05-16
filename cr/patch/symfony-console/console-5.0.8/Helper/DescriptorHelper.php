@@ -72,6 +72,8 @@ class DescriptorHelper extends Helper
      */
     public function register($format, DescriptorInterface $descriptor)
     {
+        $format = cast_to_string($format);
+
         $this->descriptors[$format] = $descriptor;
 
         return $this;

@@ -36,6 +36,10 @@ class BufferedOutput extends Output
      */
     protected function doWrite($message, $newline)
     {
+        $newline = cast_to_bool($newline);
+
+        $message = cast_to_string($message);
+
         $this->buffer .= $message;
 
         if ($newline) {

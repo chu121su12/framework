@@ -89,6 +89,8 @@ class ArgvInput extends Input
      */
     private function parseShortOption($token)
     {
+        $token = cast_to_string($token);
+
         $name = substr($token, 1);
 
         if (\strlen($name) > 1) {
@@ -110,6 +112,8 @@ class ArgvInput extends Input
      */
     private function parseShortOptionSet($name)
     {
+        $name = cast_to_string($name);
+
         $len = \strlen($name);
         for ($i = 0; $i < $len; ++$i) {
             if (!$this->definition->hasShortcut($name[$i])) {
@@ -133,6 +137,8 @@ class ArgvInput extends Input
      */
     private function parseLongOption($token)
     {
+        $token = cast_to_string($token);
+
         $name = substr($token, 2);
 
         if (false !== $pos = strpos($name, '=')) {
@@ -152,6 +158,8 @@ class ArgvInput extends Input
      */
     private function parseArgument($token)
     {
+        $token = cast_to_string($token);
+
         $c = \count($this->arguments);
 
         // if input is expecting another argument, add it
@@ -182,6 +190,8 @@ class ArgvInput extends Input
      */
     private function addShortOption($shortcut, $value)
     {
+        $shortcut = cast_to_string($shortcut);
+
         if (!$this->definition->hasShortcut($shortcut)) {
             throw new RuntimeException(sprintf('The "-%s" option does not exist.', $shortcut));
         }
@@ -196,6 +206,8 @@ class ArgvInput extends Input
      */
     private function addLongOption($name, $value)
     {
+        $name = cast_to_string($name);
+
         if (!$this->definition->hasOption($name)) {
             throw new RuntimeException(sprintf('The "--%s" option does not exist.', $name));
         }
@@ -274,6 +286,8 @@ class ArgvInput extends Input
      */
     public function hasParameterOption($values, $onlyParams = false)
     {
+        $onlyParams = cast_to_bool($onlyParams);
+
         $values = (array) $values;
 
         foreach ($this->tokens as $token) {
@@ -299,6 +313,8 @@ class ArgvInput extends Input
      */
     public function getParameterOption($values, $default = false, $onlyParams = false)
     {
+        $onlyParams = cast_to_bool($onlyParams);
+
         $values = (array) $values;
         $tokens = $this->tokens;
 

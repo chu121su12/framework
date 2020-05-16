@@ -35,6 +35,8 @@ class FactoryCommandLoader implements CommandLoaderInterface
      */
     public function has($name)
     {
+        $name = cast_to_string($name);
+
         return isset($this->factories[$name]);
     }
 
@@ -43,6 +45,8 @@ class FactoryCommandLoader implements CommandLoaderInterface
      */
     public function get($name)
     {
+        $name = cast_to_string($name);
+
         if (!isset($this->factories[$name])) {
             throw new CommandNotFoundException(sprintf('Command "%s" does not exist.', $name));
         }

@@ -27,6 +27,12 @@ class ConfirmationQuestion extends Question
      */
     public function __construct($question, $default = true, $trueAnswerRegex = '/^y/i')
     {
+        $question = cast_to_string($question);
+
+        $trueAnswerRegex = cast_to_string($trueAnswerRegex);
+
+        $default = cast_to_bool($default);
+
         parent::__construct($question, $default);
 
         $this->trueAnswerRegex = $trueAnswerRegex;

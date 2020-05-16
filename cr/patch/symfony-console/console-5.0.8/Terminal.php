@@ -145,6 +145,8 @@ class Terminal
 
     private static function readFromProcess($command)
     {
+        $command = cast_to_string($command);
+
         if (!\function_exists('proc_open')) {
             return null;
         }

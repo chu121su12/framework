@@ -55,6 +55,8 @@ class TableStyle
      */
     public function setPaddingChar($paddingChar)
     {
+        $paddingChar = cast_to_string($paddingChar);
+
         if (!$paddingChar) {
             throw new LogicException('The padding char must not be empty.');
         }
@@ -90,6 +92,10 @@ class TableStyle
      */
     public function setHorizontalBorderChars($outside, $inside = null)
     {
+        $outside = cast_to_string($outside);
+
+        $inside = cast_to_string($inside, null);
+
         $this->horizontalOutsideBorderChar = $outside;
         $this->horizontalInsideBorderChar = isset($inside) ? $inside : $outside;
 
@@ -113,6 +119,10 @@ class TableStyle
      */
     public function setVerticalBorderChars($outside, $inside = null)
     {
+        $outside = cast_to_string($outside);
+
+        $inside = cast_to_string($inside, null);
+
         $this->verticalOutsideBorderChar = $outside;
         $this->verticalInsideBorderChar = isset($inside) ? $inside : $outside;
 
@@ -165,6 +175,30 @@ class TableStyle
      */
     public function setCrossingChars($cross, $topLeft, $topMid, $topRight, $midRight, $bottomRight, $bottomMid, $bottomLeft, $midLeft, $topLeftBottom = null, $topMidBottom = null, $topRightBottom = null)
     {
+        $midLeft = cast_to_string($midLeft);
+
+        $bottomLeft = cast_to_string($bottomLeft);
+
+        $bottomMid = cast_to_string($bottomMid);
+
+        $bottomRight = cast_to_string($bottomRight);
+
+        $midRight = cast_to_string($midRight);
+
+        $topRight = cast_to_string($topRight);
+
+        $topMid = cast_to_string($topMid);
+
+        $topLeft = cast_to_string($topLeft);
+
+        $cross = cast_to_string($cross);
+
+        $topRightBottom = cast_to_string($topRightBottom, null);
+
+        $topMidBottom = cast_to_string($topMidBottom, null);
+
+        $topLeftBottom = cast_to_string($topLeftBottom, null);
+
         $this->crossingChar = $cross;
         $this->crossingTopLeftChar = $topLeft;
         $this->crossingTopMidChar = $topMid;
@@ -188,6 +222,8 @@ class TableStyle
      */
     public function setDefaultCrossingChar($char)
     {
+        $char = cast_to_string($char);
+
         return $this->setCrossingChars($char, $char, $char, $char, $char, $char, $char, $char, $char);
     }
 
@@ -231,6 +267,8 @@ class TableStyle
      */
     public function setCellHeaderFormat($cellHeaderFormat)
     {
+        $cellHeaderFormat = cast_to_string($cellHeaderFormat);
+
         $this->cellHeaderFormat = $cellHeaderFormat;
 
         return $this;
@@ -253,6 +291,8 @@ class TableStyle
      */
     public function setCellRowFormat($cellRowFormat)
     {
+        $cellRowFormat = cast_to_string($cellRowFormat);
+
         $this->cellRowFormat = $cellRowFormat;
 
         return $this;
@@ -275,6 +315,8 @@ class TableStyle
      */
     public function setCellRowContentFormat($cellRowContentFormat)
     {
+        $cellRowContentFormat = cast_to_string($cellRowContentFormat);
+
         $this->cellRowContentFormat = $cellRowContentFormat;
 
         return $this;
@@ -297,6 +339,8 @@ class TableStyle
      */
     public function setBorderFormat($borderFormat)
     {
+        $borderFormat = cast_to_string($borderFormat);
+
         $this->borderFormat = $borderFormat;
 
         return $this;
@@ -319,6 +363,8 @@ class TableStyle
      */
     public function setPadType($padType)
     {
+        $padType = cast_to_int($padType);
+
         if (!\in_array($padType, [STR_PAD_LEFT, STR_PAD_RIGHT, STR_PAD_BOTH], true)) {
             throw new InvalidArgumentException('Invalid padding type. Expected one of (STR_PAD_LEFT, STR_PAD_RIGHT, STR_PAD_BOTH).');
         }
@@ -345,6 +391,8 @@ class TableStyle
 
     public function setHeaderTitleFormat($format)
     {
+        $format = cast_to_string($format);
+
         $this->headerTitleFormat = $format;
 
         return $this;
@@ -357,6 +405,8 @@ class TableStyle
 
     public function setFooterTitleFormat($format)
     {
+        $format = cast_to_string($format);
+
         $this->footerTitleFormat = $format;
 
         return $this;

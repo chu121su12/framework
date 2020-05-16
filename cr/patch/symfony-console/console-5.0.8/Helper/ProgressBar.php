@@ -56,6 +56,10 @@ final class ProgressBar
      */
     public function __construct(OutputInterface $output, $max = 0, $minSecondsBetweenRedraws = 0.1)
     {
+        $minSecondsBetweenRedraws = cast_to_float($minSecondsBetweenRedraws);
+
+        $max = cast_to_int($max);
+
         if ($output instanceof ConsoleOutputInterface) {
             $output = $output->getErrorOutput();
         }
@@ -90,6 +94,8 @@ final class ProgressBar
      */
     public static function setPlaceholderFormatterDefinition($name, callable $callable)
     {
+        $name = cast_to_string($name);
+
         if (!self::$formatters) {
             self::$formatters = self::initPlaceholderFormatters();
         }
@@ -106,6 +112,8 @@ final class ProgressBar
      */
     public static function getPlaceholderFormatterDefinition($name)
     {
+        $name = cast_to_string($name);
+
         if (!self::$formatters) {
             self::$formatters = self::initPlaceholderFormatters();
         }
@@ -123,6 +131,10 @@ final class ProgressBar
      */
     public static function setFormatDefinition($name, $format)
     {
+        $format = cast_to_string($format);
+
+        $name = cast_to_string($name);
+
         if (!self::$formats) {
             self::$formats = self::initFormats();
         }
@@ -139,6 +151,8 @@ final class ProgressBar
      */
     public static function getFormatDefinition($name)
     {
+        $name = cast_to_string($name);
+
         if (!self::$formats) {
             self::$formats = self::initFormats();
         }
@@ -158,11 +172,17 @@ final class ProgressBar
      */
     public function setMessage($message, $name = 'message')
     {
+        $message = cast_to_string($message);
+
+        $name = cast_to_string($name);
+
         $this->messages[$name] = $message;
     }
 
     public function getMessage($name = 'message')
     {
+        $name = cast_to_string($name);
+
         return $this->messages[$name];
     }
 
@@ -198,6 +218,8 @@ final class ProgressBar
 
     public function setBarWidth($size)
     {
+        $size = cast_to_int($size);
+
         $this->barWidth = max(1, $size);
     }
 
@@ -208,6 +230,8 @@ final class ProgressBar
 
     public function setBarCharacter($char)
     {
+        $char = cast_to_string($char);
+
         $this->barChar = $char;
     }
 
@@ -222,6 +246,8 @@ final class ProgressBar
 
     public function setEmptyBarCharacter($char)
     {
+        $char = cast_to_string($char);
+
         $this->emptyBarChar = $char;
     }
 
@@ -232,6 +258,8 @@ final class ProgressBar
 
     public function setProgressCharacter($char)
     {
+        $char = cast_to_string($char);
+
         $this->progressChar = $char;
     }
 
@@ -242,6 +270,8 @@ final class ProgressBar
 
     public function setFormat($format)
     {
+        $format = cast_to_string($format);
+
         $this->format = null;
         $this->internalFormat = $format;
     }
@@ -253,16 +283,22 @@ final class ProgressBar
      */
     public function setRedrawFrequency($freq = null)
     {
+        $freq = cast_to_int($freq, null);
+
         $this->redrawFreq = null !== $freq ? max(1, $freq) : null;
     }
 
     public function minSecondsBetweenRedraws($seconds)
     {
+        $seconds = cast_to_float($seconds);
+
         $this->minSecondsBetweenRedraws = $seconds;
     }
 
     public function maxSecondsBetweenRedraws($seconds)
     {
+        $seconds = cast_to_float($seconds);
+
         $this->maxSecondsBetweenRedraws = $seconds;
     }
 
@@ -273,6 +309,10 @@ final class ProgressBar
      */
     public function iterate($iterable, $max = null)
     {
+        $iterable = cast_to_iterable($iterable);
+
+        $max = cast_to_int($max, null);
+
         $this->start(isset($max) ? $max : (is_countable($iterable) ? \count($iterable) : 0));
 
         foreach ($iterable as $key => $value) {
@@ -291,6 +331,8 @@ final class ProgressBar
      */
     public function start($max = null)
     {
+        $max = cast_to_int($max, null);
+
         $this->startTime = time();
         $this->step = 0;
         $this->percent = 0.0;
@@ -309,6 +351,8 @@ final class ProgressBar
      */
     public function advance($step = 1)
     {
+        $step = cast_to_int($step);
+
         $this->setProgress($this->step + $step);
     }
 
@@ -317,11 +361,15 @@ final class ProgressBar
      */
     public function setOverwrite($overwrite)
     {
+        $overwrite = cast_to_bool($overwrite);
+
         $this->overwrite = $overwrite;
     }
 
     public function setProgress($step)
     {
+        $step = cast_to_int($step);
+
         if ($this->max && $step > $this->max) {
             $this->max = $step;
         } elseif ($step < 0) {
@@ -355,6 +403,8 @@ final class ProgressBar
 
     public function setMaxSteps($max)
     {
+        $max = cast_to_int($max);
+
         $this->format = null;
         $this->max = max(0, $max);
         $this->stepWidth = $this->max ? Helper::strlen((string) $this->max) : 4;
@@ -415,6 +465,8 @@ final class ProgressBar
 
     private function setRealFormat($format)
     {
+        $format = cast_to_string($format);
+
         // try to use the _nomax variant if available
         if (!$this->max && null !== self::getFormatDefinition($format.'_nomax')) {
             $this->format = self::getFormatDefinition($format.'_nomax');
@@ -432,6 +484,8 @@ final class ProgressBar
      */
     private function overwrite($message)
     {
+        $message = cast_to_string($message);
+
         if ($this->previousMessage === $message) {
             return;
         }

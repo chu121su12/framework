@@ -32,6 +32,10 @@ class ConsoleSectionOutput extends StreamOutput
      */
     public function __construct($stream, array &$sections, $verbosity, $decorated, OutputFormatterInterface $formatter)
     {
+        $decorated = cast_to_bool($decorated);
+
+        $verbosity = cast_to_int($verbosity);
+
         parent::__construct($stream, $verbosity, $decorated, $formatter);
         array_unshift($sections, $this);
         $this->sections = &$sections;
@@ -45,6 +49,8 @@ class ConsoleSectionOutput extends StreamOutput
      */
     public function clear($lines = null)
     {
+        $lines = cast_to_int($lines, null);
+
         if (empty($this->content) || !$this->isDecorated()) {
             return;
         }
@@ -82,6 +88,8 @@ class ConsoleSectionOutput extends StreamOutput
      */
     public function addContent($input)
     {
+        $input = cast_to_string($input);
+
         foreach (explode(PHP_EOL, $input) as $lineContent) {
             $this->lines += ceil($this->getDisplayLength($lineContent) / $this->terminal->getWidth()) ?: 1;
             $this->content[] = $lineContent;
@@ -114,6 +122,8 @@ class ConsoleSectionOutput extends StreamOutput
      */
     private function popStreamContentUntilCurrentSection($numberOfLinesToClearFromCurrentSection = 0)
     {
+        $numberOfLinesToClearFromCurrentSection = cast_to_int($numberOfLinesToClearFromCurrentSection);
+
         $numberOfLinesToClear = $numberOfLinesToClearFromCurrentSection;
         $erasedContent = [];
 
@@ -138,6 +148,8 @@ class ConsoleSectionOutput extends StreamOutput
 
     private function getDisplayLength($text)
     {
+        $text = cast_to_string($text);
+
         return Helper::strlenWithoutDecoration($this->getFormatter(), str_replace("\t", '        ', $text));
     }
 }

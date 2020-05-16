@@ -36,6 +36,10 @@ class ProcessHelper extends Helper
      */
     public function run(OutputInterface $output, $cmd, $error = null, callable $callback = null, $verbosity = OutputInterface::VERBOSITY_VERY_VERBOSE)
     {
+        $verbosity = cast_to_int($verbosity);
+
+        $error = cast_to_string($error, null);
+
         if ($output instanceof ConsoleOutputInterface) {
             $output = $output->getErrorOutput();
         }
@@ -100,6 +104,8 @@ class ProcessHelper extends Helper
      */
     public function mustRun(OutputInterface $output, $cmd, $error = null, callable $callback = null)
     {
+        $error = cast_to_string($error, null);
+
         $process = $this->run($output, $cmd, $error, $callback);
 
         if (!$process->isSuccessful()) {
@@ -131,6 +137,8 @@ class ProcessHelper extends Helper
 
     private function escapeString($str)
     {
+        $str = cast_to_string($str);
+
         return str_replace('<', '\\<', $str);
     }
 

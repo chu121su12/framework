@@ -45,6 +45,10 @@ class ApplicationDescription
 
     public function __construct(Application $application, $namespace = null, $showHidden = false)
     {
+        $showHidden = cast_to_bool($showHidden);
+
+        $namespace = cast_to_string($namespace, null);
+
         $this->application = $application;
         $this->namespace = $namespace;
         $this->showHidden = $showHidden;
@@ -76,6 +80,8 @@ class ApplicationDescription
      */
     public function getCommand($name)
     {
+        $name = cast_to_string($name);
+
         if (!isset($this->commands[$name]) && !isset($this->aliases[$name])) {
             throw new CommandNotFoundException(sprintf('Command "%s" does not exist.', $name));
         }

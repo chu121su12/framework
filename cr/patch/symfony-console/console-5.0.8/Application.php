@@ -79,6 +79,10 @@ class Application implements ResetInterface
 
     public function __construct($name = 'UNKNOWN', $version = 'UNKNOWN')
     {
+        $version = cast_to_string($version);
+
+        $name = cast_to_string($name);
+
         $this->name = $name;
         $this->version = $version;
         $this->terminal = new Terminal();
@@ -349,6 +353,8 @@ class Application implements ResetInterface
      */
     public function setCatchExceptions($boolean)
     {
+        $boolean = cast_to_bool($boolean);
+
         $this->catchExceptions = $boolean;
     }
 
@@ -367,6 +373,8 @@ class Application implements ResetInterface
      */
     public function setAutoExit($boolean)
     {
+        $boolean = cast_to_bool($boolean);
+
         $this->autoExit = $boolean;
     }
 
@@ -385,6 +393,8 @@ class Application implements ResetInterface
      **/
     public function setName($name)
     {
+        $name = cast_to_string($name);
+
         $this->name = $name;
     }
 
@@ -403,6 +413,8 @@ class Application implements ResetInterface
      */
     public function setVersion($version)
     {
+        $version = cast_to_string($version);
+
         $this->version = $version;
     }
 
@@ -431,6 +443,8 @@ class Application implements ResetInterface
      */
     public function register($name)
     {
+        $name = cast_to_string($name);
+
         return $this->add(new Command($name));
     }
 
@@ -493,6 +507,8 @@ class Application implements ResetInterface
      */
     public function get($name)
     {
+        $name = cast_to_string($name);
+
         $this->init();
 
         if (!$this->has($name)) {
@@ -520,6 +536,8 @@ class Application implements ResetInterface
      */
     public function has($name)
     {
+        $name = cast_to_string($name);
+
         $this->init();
 
         return isset($this->commands[$name]) || ($this->commandLoader && $this->commandLoader->has($name) && $this->add($this->commandLoader->get($name)));
@@ -559,6 +577,8 @@ class Application implements ResetInterface
      */
     public function findNamespace($namespace)
     {
+        $namespace = cast_to_string($namespace);
+
         $allNamespaces = $this->getNamespaces();
         $expr = preg_replace_callback('{([^:]+|)}', function ($matches) { return preg_quote($matches[1]).'[^:]*'; }, $namespace);
         $namespaces = preg_grep('{^'.$expr.'}', $allNamespaces);
@@ -599,6 +619,8 @@ class Application implements ResetInterface
      */
     public function find($name)
     {
+        $name = cast_to_string($name);
+
         $this->init();
 
         $aliases = [];
@@ -709,6 +731,8 @@ class Application implements ResetInterface
      */
     public function all($namespace = null)
     {
+        $namespace = cast_to_string($namespace, null);
+
         $this->init();
 
         if (null === $namespace) {
@@ -1033,6 +1057,10 @@ class Application implements ResetInterface
      */
     public function extractNamespace($name, $limit = null)
     {
+        $name = cast_to_string($name);
+
+        $limit = cast_to_int($limit, null);
+
         $parts = explode(':', $name, -1);
 
         return implode(':', null === $limit ? $parts : \array_slice($parts, 0, $limit));
@@ -1046,6 +1074,10 @@ class Application implements ResetInterface
      */
     private function findAlternatives($name, $collection)
     {
+        $collection = cast_to_iterable($collection);
+
+        $name = cast_to_string($name);
+
         $threshold = 1e3;
         $alternatives = [];
 
@@ -1093,6 +1125,10 @@ class Application implements ResetInterface
      */
     public function setDefaultCommand($commandName, $isSingleCommand = false)
     {
+        $commandName = cast_to_string($commandName);
+
+        $isSingleCommand = cast_to_bool($isSingleCommand);
+
         $this->defaultCommand = $commandName;
 
         if ($isSingleCommand) {
@@ -1115,6 +1151,10 @@ class Application implements ResetInterface
 
     private function splitStringByWidth($string, $width)
     {
+        $width = cast_to_int($width);
+
+        $string = cast_to_string($string);
+
         // str_split is not suitable for multi-byte characters, we should use preg_split to get char array properly.
         // additionally, array_slice() is not enough as some character has doubled width.
         // we need a function to split string not by character count but by string width
@@ -1156,6 +1196,8 @@ class Application implements ResetInterface
      */
     private function extractAllNamespaces($name)
     {
+        $name = cast_to_string($name);
+
         // -1 as third argument is needed to skip the command short name when exploding
         $parts = explode(':', $name, -1);
         $namespaces = [];

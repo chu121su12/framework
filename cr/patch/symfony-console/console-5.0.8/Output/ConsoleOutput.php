@@ -39,6 +39,10 @@ class ConsoleOutput extends StreamOutput implements ConsoleOutputInterface
      */
     public function __construct($verbosity = self::VERBOSITY_NORMAL, $decorated = null, OutputFormatterInterface $formatter = null)
     {
+        $verbosity = cast_to_int($verbosity);
+
+        $decorated = cast_to_bool($decorated, null);
+
         parent::__construct($this->openOutputStream(), $verbosity, $decorated, $formatter);
 
         $actualDecorated = $this->isDecorated();
@@ -62,6 +66,8 @@ class ConsoleOutput extends StreamOutput implements ConsoleOutputInterface
      */
     public function setDecorated($decorated)
     {
+        $decorated = cast_to_bool($decorated);
+
         parent::setDecorated($decorated);
         $this->stderr->setDecorated($decorated);
     }
@@ -80,6 +86,8 @@ class ConsoleOutput extends StreamOutput implements ConsoleOutputInterface
      */
     public function setVerbosity($level)
     {
+        $level = cast_to_int($level);
+
         parent::setVerbosity($level);
         $this->stderr->setVerbosity($level);
     }

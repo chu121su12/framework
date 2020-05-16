@@ -41,6 +41,10 @@ class StreamOutput extends Output
      */
     public function __construct($stream, $verbosity = self::VERBOSITY_NORMAL, $decorated = null, OutputFormatterInterface $formatter = null)
     {
+        $verbosity = cast_to_int($verbosity);
+
+        $decorated = cast_to_bool($decorated, null);
+
         if (!\is_resource($stream) || 'stream' !== get_resource_type($stream)) {
             throw new InvalidArgumentException('The StreamOutput class needs a stream as its first argument.');
         }
@@ -69,6 +73,10 @@ class StreamOutput extends Output
      */
     protected function doWrite($message, $newline)
     {
+        $newline = cast_to_bool($newline);
+
+        $message = cast_to_string($message);
+
         if ($newline) {
             $message .= PHP_EOL;
         }

@@ -90,6 +90,8 @@ abstract class Input implements InputInterface, StreamableInputInterface
      */
     public function setInteractive($interactive)
     {
+        $interactive = cast_to_bool($interactive);
+
         $this->interactive = $interactive;
     }
 
@@ -146,6 +148,8 @@ abstract class Input implements InputInterface, StreamableInputInterface
      */
     public function getOption($name)
     {
+        $name = cast_to_string($name);
+
         if (!$this->definition->hasOption($name)) {
             throw new InvalidArgumentException(sprintf('The "%s" option does not exist.', $name));
         }
@@ -158,6 +162,8 @@ abstract class Input implements InputInterface, StreamableInputInterface
      */
     public function setOption($name, $value)
     {
+        $name = cast_to_string($name);
+
         if (!$this->definition->hasOption($name)) {
             throw new InvalidArgumentException(sprintf('The "%s" option does not exist.', $name));
         }
@@ -170,6 +176,8 @@ abstract class Input implements InputInterface, StreamableInputInterface
      */
     public function hasOption($name)
     {
+        $name = cast_to_string($name);
+
         return $this->definition->hasOption($name);
     }
 
@@ -180,6 +188,8 @@ abstract class Input implements InputInterface, StreamableInputInterface
      */
     public function escapeToken($token)
     {
+        $token = cast_to_string($token);
+
         return preg_match('{^[\w-]+$}', $token) ? $token : escapeshellarg($token);
     }
 

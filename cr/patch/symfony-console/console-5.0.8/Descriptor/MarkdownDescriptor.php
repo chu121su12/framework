@@ -46,6 +46,10 @@ class MarkdownDescriptor extends Descriptor
      */
     protected function write($content, $decorated = true)
     {
+        $content = cast_to_string($content);
+
+        $decorated = cast_to_bool($decorated);
+
         parent::write($content, $decorated);
     }
 

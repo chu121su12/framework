@@ -40,6 +40,12 @@ class InputArgument
      */
     public function __construct($name, $mode = null, $description = '', $default = null)
     {
+        $name = cast_to_string($name);
+
+        $description = cast_to_string($description);
+
+        $mode = cast_to_int($mode, null);
+
         if (null === $mode) {
             $mode = self::OPTIONAL;
         } elseif ($mode > 7 || $mode < 1) {

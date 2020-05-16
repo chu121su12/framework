@@ -32,6 +32,8 @@ class ChoiceQuestion extends Question
      */
     public function __construct($question, array $choices, $default = null)
     {
+        $question = cast_to_string($question);
+
         if (!$choices) {
             throw new \LogicException('Choice question must have at least 1 choice available.');
         }
@@ -62,6 +64,8 @@ class ChoiceQuestion extends Question
      */
     public function setMultiselect($multiselect)
     {
+        $multiselect = cast_to_bool($multiselect);
+
         $this->multiselect = $multiselect;
         $this->setValidator($this->getDefaultValidator());
 
@@ -95,6 +99,8 @@ class ChoiceQuestion extends Question
      */
     public function setPrompt($prompt)
     {
+        $prompt = cast_to_string($prompt);
+
         $this->prompt = $prompt;
 
         return $this;
@@ -109,6 +115,8 @@ class ChoiceQuestion extends Question
      */
     public function setErrorMessage($errorMessage)
     {
+        $errorMessage = cast_to_string($errorMessage);
+
         $this->errorMessage = $errorMessage;
         $this->setValidator($this->getDefaultValidator());
 

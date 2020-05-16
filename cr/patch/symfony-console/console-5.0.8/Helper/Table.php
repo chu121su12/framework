@@ -105,6 +105,8 @@ class Table
      */
     public static function setStyleDefinition($name, TableStyle $style)
     {
+        $name = cast_to_string($name);
+
         if (!self::$styles) {
             self::$styles = self::initStyles();
         }
@@ -119,6 +121,8 @@ class Table
      */
     public static function getStyleDefinition($name)
     {
+        $name = cast_to_string($name);
+
         if (!self::$styles) {
             self::$styles = self::initStyles();
         }
@@ -163,6 +167,8 @@ class Table
      */
     public function setColumnStyle($columnIndex, $name)
     {
+        $columnIndex = cast_to_int($columnIndex);
+
         $this->columnStyles[$columnIndex] = $this->resolveStyle($name);
 
         return $this;
@@ -177,6 +183,8 @@ class Table
      */
     public function getColumnStyle($columnIndex)
     {
+        $columnIndex = cast_to_int($columnIndex);
+
         return isset($this->columnStyles[$columnIndex]) ? $this->columnStyles[$columnIndex] : $this->getStyle();
     }
 
@@ -187,6 +195,10 @@ class Table
      */
     public function setColumnWidth($columnIndex, $width)
     {
+        $width = cast_to_int($width);
+
+        $columnIndex = cast_to_int($columnIndex);
+
         $this->columnWidths[$columnIndex] = $width;
 
         return $this;
@@ -217,6 +229,10 @@ class Table
      */
     public function setColumnMaxWidth($columnIndex, $width)
     {
+        $width = cast_to_int($width);
+
+        $columnIndex = cast_to_int($columnIndex);
+
         if (!$this->output->getFormatter() instanceof WrappableOutputFormatterInterface) {
             throw new \LogicException(sprintf('Setting a maximum column width is only supported when using a "%s" formatter, got "%s".', WrappableOutputFormatterInterface::class, \get_class($this->output->getFormatter())));
         }
@@ -299,6 +315,8 @@ class Table
 
     public function setHeaderTitle($title = null)
     {
+        $title = cast_to_string($title, null);
+
         $this->headerTitle = $title;
 
         return $this;
@@ -306,6 +324,8 @@ class Table
 
     public function setFooterTitle($title = null)
     {
+        $title = cast_to_string($title, null);
+
         $this->footerTitle = $title;
 
         return $this;
@@ -313,6 +333,8 @@ class Table
 
     public function setHorizontal($horizontal = true)
     {
+        $horizontal = cast_to_bool($horizontal);
+
         $this->horizontal = $horizontal;
 
         return $this;
@@ -407,6 +429,12 @@ class Table
      */
     private function renderRowSeparator($type = self::SEPARATOR_MID, $title = null, $titleFormat = null)
     {
+        $type = cast_to_int($type);
+
+        $titleFormat = cast_to_string($titleFormat, null);
+
+        $title = cast_to_string($title, null);
+
         if (0 === $count = $this->numberOfColumns) {
             return;
         }
@@ -458,6 +486,8 @@ class Table
      */
     private function renderColumnSeparator($type = self::BORDER_OUTSIDE)
     {
+        $type = cast_to_int($type);
+
         $borders = $this->style->getBorderChars();
 
         return sprintf($this->style->getBorderFormat(), self::BORDER_OUTSIDE === $type ? $borders[1] : $borders[3]);
@@ -472,6 +502,10 @@ class Table
      */
     private function renderRow(array $row, $cellFormat, $firstCellFormat = null)
     {
+        $cellFormat = cast_to_string($cellFormat);
+
+        $firstCellFormat = cast_to_string($firstCellFormat, null);
+
         $rowContent = $this->renderColumnSeparator(self::BORDER_OUTSIDE);
         $columns = $this->getRowColumns($row);
         $last = \count($columns) - 1;
@@ -491,6 +525,10 @@ class Table
      */
     private function renderCell(array $row, $column, $cellFormat)
     {
+        $cellFormat = cast_to_string($cellFormat);
+
+        $column = cast_to_int($column);
+
         $cell = isset($row[$column]) ? $row[$column] : '';
         $width = $this->effectiveColumnWidths[$column];
         if ($cell instanceof TableCell && $cell->getColspan() > 1) {
@@ -603,6 +641,8 @@ class Table
      */
     private function fillNextRows(array $rows, $line)
     {
+        $line = cast_to_int($line);
+
         $unmergedRows = [];
         foreach ($rows[$line] as $column => $cell) {
             if (null !== $cell && !$cell instanceof TableCell && !is_scalar($cell) && !(\is_object($cell) && method_exists($cell, '__toString'))) {
@@ -673,6 +713,8 @@ class Table
 
     private function copyRow(array $rows, $line)
     {
+        $line = cast_to_int($line);
+
         $row = $rows[$line];
         foreach ($row as $cellKey => $cellValue) {
             $row[$cellKey] = '';
@@ -718,6 +760,8 @@ class Table
      */
     private function calculateColumnsWidth($rows)
     {
+        $rows = cast_to_iterable($rows);
+
         for ($column = 0; $column < $this->numberOfColumns; ++$column) {
             $lengths = [];
             foreach ($rows as $row) {
@@ -752,6 +796,8 @@ class Table
 
     private function getCellWidth(array $row, $column)
     {
+        $column = cast_to_int($column);
+
         $cellWidth = 0;
 
         if (isset($row[$column])) {

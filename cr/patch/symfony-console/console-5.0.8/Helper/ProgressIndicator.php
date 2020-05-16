@@ -39,6 +39,10 @@ class ProgressIndicator
      */
     public function __construct(OutputInterface $output, $format = null, $indicatorChangeInterval = 100, array $indicatorValues = null)
     {
+        $indicatorChangeInterval = cast_to_int($indicatorChangeInterval);
+
+        $format = cast_to_string($format, null);
+
         $this->output = $output;
 
         if (null === $format) {
@@ -66,6 +70,8 @@ class ProgressIndicator
      */
     public function setMessage($message = null)
     {
+        $message = cast_to_string($message, null);
+
         $this->message = $message;
 
         $this->display();
@@ -76,6 +82,8 @@ class ProgressIndicator
      */
     public function start($message)
     {
+        $message = cast_to_string($message);
+
         if ($this->started) {
             throw new LogicException('Progress indicator already started.');
         }
@@ -121,6 +129,8 @@ class ProgressIndicator
      */
     public function finish($message)
     {
+        $message = cast_to_string($message);
+
         if (!$this->started) {
             throw new LogicException('Progress indicator has not yet been started.');
         }
@@ -138,6 +148,8 @@ class ProgressIndicator
      */
     public static function getFormatDefinition($name)
     {
+        $name = cast_to_string($name);
+
         if (!self::$formats) {
             self::$formats = self::initFormats();
         }
@@ -152,6 +164,8 @@ class ProgressIndicator
      */
     public static function setPlaceholderFormatterDefinition($name, callable $callable)
     {
+        $name = cast_to_string($name);
+
         if (!self::$formatters) {
             self::$formatters = self::initPlaceholderFormatters();
         }
@@ -166,6 +180,8 @@ class ProgressIndicator
      */
     public static function getPlaceholderFormatterDefinition($name)
     {
+        $name = cast_to_string($name);
+
         if (!self::$formatters) {
             self::$formatters = self::initPlaceholderFormatters();
         }
@@ -207,6 +223,8 @@ class ProgressIndicator
      */
     private function overwrite($message)
     {
+        $message = cast_to_string($message);
+
         if ($this->output->isDecorated()) {
             $this->output->write("\x0D\x1B[2K");
             $this->output->write($message);

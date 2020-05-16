@@ -28,6 +28,10 @@ class CommandNotFoundException extends \InvalidArgumentException implements Exce
      */
     public function __construct($message, array $alternatives = [], $code = 0, $previous = null)
     {
+        $message = cast_to_string($message);
+
+        $code = cast_to_int($code);
+
         parent::__construct($message, $code, $previous);
 
         $this->alternatives = $alternatives;

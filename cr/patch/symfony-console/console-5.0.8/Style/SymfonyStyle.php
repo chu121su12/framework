@@ -61,6 +61,16 @@ class SymfonyStyle extends OutputStyle
      */
     public function block($messages, $type = null, $style = null, $prefix = ' ', $padding = false, $escape = true)
     {
+        $escape = cast_to_bool($escape);
+
+        $padding = cast_to_bool($padding);
+
+        $prefix = cast_to_string($prefix);
+
+        $style = cast_to_string($style, null);
+
+        $type = cast_to_string($type, null);
+
         $messages = \is_array($messages) ? array_values($messages) : [$messages];
 
         $this->autoPrependBlock();
@@ -73,6 +83,8 @@ class SymfonyStyle extends OutputStyle
      */
     public function title($message)
     {
+        $message = cast_to_string($message);
+
         $this->autoPrependBlock();
         $this->writeln([
             sprintf('<comment>%s</>', OutputFormatter::escapeTrailingBackslash($message)),
@@ -86,6 +98,8 @@ class SymfonyStyle extends OutputStyle
      */
     public function section($message)
     {
+        $message = cast_to_string($message);
+
         $this->autoPrependBlock();
         $this->writeln([
             sprintf('<comment>%s</>', OutputFormatter::escapeTrailingBackslash($message)),
@@ -256,6 +270,10 @@ class SymfonyStyle extends OutputStyle
      */
     public function ask($question, $default = null, callable $validator = null)
     {
+        $question = cast_to_string($question);
+
+        $default = cast_to_string($default, null);
+
         $question = new Question($question, $default);
         $question->setValidator($validator);
 
@@ -267,6 +285,8 @@ class SymfonyStyle extends OutputStyle
      */
     public function askHidden($question, callable $validator = null)
     {
+        $question = cast_to_string($question);
+
         $question = new Question($question);
 
         $question->setHidden(true);
@@ -288,6 +308,8 @@ class SymfonyStyle extends OutputStyle
      */
     public function choice($question, array $choices, $default = null)
     {
+        $question = cast_to_string($question);
+
         if (null !== $default) {
             $values = array_flip($choices);
             $default = isset($values[$default]) ? $values[$default] : $default;
@@ -301,6 +323,8 @@ class SymfonyStyle extends OutputStyle
      */
     public function progressStart($max = 0)
     {
+        $max = cast_to_int($max);
+
         $this->progressBar = $this->createProgressBar($max);
         $this->progressBar->start();
     }
@@ -310,6 +334,8 @@ class SymfonyStyle extends OutputStyle
      */
     public function progressAdvance($step = 1)
     {
+        $step = cast_to_int($step);
+
         $this->getProgressBar()->advance($step);
     }
 
@@ -328,6 +354,8 @@ class SymfonyStyle extends OutputStyle
      */
     public function createProgressBar($max = 0)
     {
+        $max = cast_to_int($max);
+
         $progressBar = parent::createProgressBar($max);
 
         if ('\\' !== \DIRECTORY_SEPARATOR || 'Hyper' === getenv('TERM_PROGRAM')) {
@@ -367,6 +395,8 @@ class SymfonyStyle extends OutputStyle
      */
     public function writeln($messages, $type = self::OUTPUT_NORMAL)
     {
+        $type = cast_to_int($type);
+
         if (!is_iterable($messages)) {
             $messages = [$messages];
         }
@@ -382,6 +412,10 @@ class SymfonyStyle extends OutputStyle
      */
     public function write($messages, $newline = false, $type = self::OUTPUT_NORMAL)
     {
+        $type = cast_to_int($type);
+
+        $newline = cast_to_bool($newline);
+
         if (!is_iterable($messages)) {
             $messages = [$messages];
         }
@@ -397,6 +431,8 @@ class SymfonyStyle extends OutputStyle
      */
     public function newLine($count = 1)
     {
+        $count = cast_to_int($count);
+
         parent::newLine($count);
         $this->bufferedOutput->write(str_repeat("\n", $count));
     }
@@ -444,6 +480,12 @@ class SymfonyStyle extends OutputStyle
 
     private function writeBuffer($message, $newLine, $type)
     {
+        $type = cast_to_int($type);
+
+        $newLine = cast_to_bool($newLine);
+
+        $message = cast_to_string($message);
+
         // We need to know if the two last chars are PHP_EOL
         // Preserve the last 4 chars inserted (PHP_EOL on windows is two chars) in the history buffer
         $this->bufferedOutput->write(substr($message, -4), $newLine, $type);
@@ -451,6 +493,18 @@ class SymfonyStyle extends OutputStyle
 
     private function createBlock($messages, $type = null, $style = null, $prefix = ' ', $padding = false, $escape = false)
     {
+        $messages = cast_to_iterable($messages);
+
+        $escape = cast_to_bool($escape);
+
+        $padding = cast_to_bool($padding);
+
+        $prefix = cast_to_string($prefix);
+
+        $style = cast_to_string($style, null);
+
+        $type = cast_to_string($type, null);
+
         $indentLength = 0;
         $prefixLength = Helper::strlenWithoutDecoration($this->getFormatter(), $prefix);
         $lines = [];

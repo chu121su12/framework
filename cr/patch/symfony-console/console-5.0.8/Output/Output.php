@@ -39,6 +39,10 @@ abstract class Output implements OutputInterface
      */
     public function __construct($verbosity = self::VERBOSITY_NORMAL, $decorated = false, OutputFormatterInterface $formatter = null)
     {
+        $decorated = cast_to_bool($decorated);
+
+        $verbosity = cast_to_int($verbosity, null);
+
         $this->verbosity = null === $verbosity ? self::VERBOSITY_NORMAL : $verbosity;
         $this->formatter = $formatter ?: new OutputFormatter();
         $this->formatter->setDecorated($decorated);
@@ -65,6 +69,8 @@ abstract class Output implements OutputInterface
      */
     public function setDecorated($decorated)
     {
+        $decorated = cast_to_bool($decorated);
+
         $this->formatter->setDecorated($decorated);
     }
 
@@ -81,6 +87,8 @@ abstract class Output implements OutputInterface
      */
     public function setVerbosity($level)
     {
+        $level = cast_to_int($level);
+
         $this->verbosity = $level;
     }
 
@@ -129,6 +137,8 @@ abstract class Output implements OutputInterface
      */
     public function writeln($messages, $options = self::OUTPUT_NORMAL)
     {
+        $options = cast_to_int($options);
+
         $this->write($messages, true, $options);
     }
 
@@ -137,6 +147,10 @@ abstract class Output implements OutputInterface
      */
     public function write($messages, $newline = false, $options = self::OUTPUT_NORMAL)
     {
+        $options = cast_to_int($options);
+
+        $newline = cast_to_bool($newline);
+
         if (!is_iterable($messages)) {
             $messages = [$messages];
         }

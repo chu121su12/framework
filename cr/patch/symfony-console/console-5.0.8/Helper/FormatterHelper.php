@@ -27,6 +27,12 @@ class FormatterHelper extends Helper
      */
     public function formatSection($section, $message, $style = 'info')
     {
+        $message = cast_to_string($message);
+
+        $section = cast_to_string($section);
+
+        $style = cast_to_string($style);
+
         return sprintf('<%s>[%s]</%s> %s', $style, $section, $style, $message);
     }
 
@@ -39,6 +45,10 @@ class FormatterHelper extends Helper
      */
     public function formatBlock($messages, $style, $large = false)
     {
+        $style = cast_to_string($style);
+
+        $large = cast_to_bool($large);
+
         if (!\is_array($messages)) {
             $messages = [$messages];
         }
@@ -73,6 +83,12 @@ class FormatterHelper extends Helper
      */
     public function truncate($message, $length, $suffix = '...')
     {
+        $length = cast_to_int($length);
+
+        $message = cast_to_string($message);
+
+        $suffix = cast_to_string($suffix);
+
         $computedLength = $length - self::strlen($suffix);
 
         if ($computedLength > self::strlen($message)) {

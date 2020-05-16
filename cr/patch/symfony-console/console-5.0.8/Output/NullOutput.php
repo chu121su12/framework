@@ -46,6 +46,8 @@ class NullOutput implements OutputInterface
      */
     public function setDecorated($decorated)
     {
+        $decorated = cast_to_bool($decorated);
+
         // do nothing
     }
 
@@ -62,6 +64,8 @@ class NullOutput implements OutputInterface
      */
     public function setVerbosity($level)
     {
+        $level = cast_to_int($level);
+
         // do nothing
     }
 
@@ -110,6 +114,8 @@ class NullOutput implements OutputInterface
      */
     public function writeln($messages, $options = self::OUTPUT_NORMAL)
     {
+        $options = cast_to_int($options);
+
         // do nothing
     }
 
@@ -118,6 +124,10 @@ class NullOutput implements OutputInterface
      */
     public function write($messages, $newline = false, $options = self::OUTPUT_NORMAL)
     {
+        $options = cast_to_int($options);
+
+        $newline = cast_to_bool($newline);
+
         // do nothing
     }
 }

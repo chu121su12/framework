@@ -31,6 +31,12 @@ class DebugFormatterHelper extends Helper
      */
     public function start($id, $message, $prefix = 'RUN')
     {
+        $message = cast_to_string($message);
+
+        $id = cast_to_string($id);
+
+        $prefix = cast_to_string($prefix);
+
         $this->started[$id] = ['border' => ++$this->count % \count($this->colors)];
 
         return sprintf("%s<bg=blue;fg=white> %s </> <fg=blue>%s</>\n", $this->getBorder($id), $prefix, $message);
@@ -43,6 +49,16 @@ class DebugFormatterHelper extends Helper
      */
     public function progress($id, $buffer, $error = false, $prefix = 'OUT', $errorPrefix = 'ERR')
     {
+        $buffer = cast_to_string($buffer);
+
+        $id = cast_to_string($id);
+
+        $errorPrefix = cast_to_string($errorPrefix);
+
+        $prefix = cast_to_string($prefix);
+
+        $error = cast_to_bool($error);
+
         $message = '';
 
         if ($error) {
@@ -79,6 +95,14 @@ class DebugFormatterHelper extends Helper
      */
     public function stop($id, $message, $successful, $prefix = 'RES')
     {
+        $successful = cast_to_bool($successful);
+
+        $message = cast_to_string($message);
+
+        $id = cast_to_string($id);
+
+        $prefix = cast_to_string($prefix);
+
         $trailingEOL = isset($this->started[$id]['out']) || isset($this->started[$id]['err']) ? "\n" : '';
 
         if ($successful) {
@@ -94,6 +118,8 @@ class DebugFormatterHelper extends Helper
 
     private function getBorder($id)
     {
+        $id = cast_to_string($id);
+
         return sprintf('<bg=%s> </>', $this->colors[$this->started[$id]['border']]);
     }
 

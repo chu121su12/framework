@@ -83,6 +83,8 @@ class InputDefinition
      */
     public function addArguments(array $arguments = [])
     {
+        $arguments = cast_to_array($arguments, null);
+
         if (null !== $arguments) {
             foreach ($arguments as $argument) {
                 $this->addArgument($argument);
@@ -257,6 +259,8 @@ class InputDefinition
      */
     public function getOption($name)
     {
+        $name = cast_to_string($name);
+
         if (!$this->hasOption($name)) {
             throw new InvalidArgumentException(sprintf('The "--%s" option does not exist.', $name));
         }
@@ -274,6 +278,8 @@ class InputDefinition
      */
     public function hasOption($name)
     {
+        $name = cast_to_string($name);
+
         return isset($this->options[$name]);
     }
 
@@ -294,6 +300,8 @@ class InputDefinition
      */
     public function hasShortcut($name)
     {
+        $name = cast_to_string($name);
+
         return isset($this->shortcuts[$name]);
     }
 
@@ -304,6 +312,8 @@ class InputDefinition
      */
     public function getOptionForShortcut($shortcut)
     {
+        $shortcut = cast_to_string($shortcut);
+
         return $this->getOption($this->shortcutToName($shortcut));
     }
 
@@ -331,6 +341,8 @@ class InputDefinition
      */
     public function shortcutToName($shortcut)
     {
+        $shortcut = cast_to_string($shortcut);
+
         if (!isset($this->shortcuts[$shortcut])) {
             throw new InvalidArgumentException(sprintf('The "-%s" option does not exist.', $shortcut));
         }
@@ -345,6 +357,8 @@ class InputDefinition
      */
     public function getSynopsis($short = false)
     {
+        $short = cast_to_bool($short);
+
         $elements = [];
 
         if ($short && $this->getOptions()) {

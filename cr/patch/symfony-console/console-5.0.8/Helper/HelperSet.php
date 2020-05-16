@@ -39,6 +39,8 @@ class HelperSet implements \IteratorAggregate
 
     public function set(HelperInterface $helper, $alias = null)
     {
+        $alias = cast_to_string($alias, null);
+
         $this->helpers[$helper->getName()] = $helper;
         if (null !== $alias) {
             $this->helpers[$alias] = $helper;
@@ -54,6 +56,8 @@ class HelperSet implements \IteratorAggregate
      */
     public function has($name)
     {
+        $name = cast_to_string($name);
+
         return isset($this->helpers[$name]);
     }
 
@@ -66,6 +70,8 @@ class HelperSet implements \IteratorAggregate
      */
     public function get($name)
     {
+        $name = cast_to_string($name);
+
         if (!$this->has($name)) {
             throw new InvalidArgumentException(sprintf('The helper "%s" is not defined.', $name));
         }

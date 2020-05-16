@@ -26,6 +26,8 @@ class TableCell
 
     public function __construct($value = '', array $options = [])
     {
+        $value = cast_to_string($value);
+
         $this->value = $value;
 
         // check option names

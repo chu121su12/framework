@@ -55,6 +55,8 @@ class ArrayInput extends Input
      */
     public function hasParameterOption($values, $onlyParams = false)
     {
+        $onlyParams = cast_to_bool($onlyParams);
+
         $values = (array) $values;
 
         foreach ($this->parameters as $k => $v) {
@@ -79,6 +81,8 @@ class ArrayInput extends Input
      */
     public function getParameterOption($values, $default = false, $onlyParams = false)
     {
+        $onlyParams = cast_to_bool($onlyParams);
+
         $values = (array) $values;
 
         foreach ($this->parameters as $k => $v) {
@@ -149,6 +153,8 @@ class ArrayInput extends Input
      */
     private function addShortOption($shortcut, $value)
     {
+        $shortcut = cast_to_string($shortcut);
+
         if (!$this->definition->hasShortcut($shortcut)) {
             throw new InvalidOptionException(sprintf('The "-%s" option does not exist.', $shortcut));
         }
@@ -164,6 +170,8 @@ class ArrayInput extends Input
      */
     private function addLongOption($name, $value)
     {
+        $name = cast_to_string($name);
+
         if (!$this->definition->hasOption($name)) {
             throw new InvalidOptionException(sprintf('The "--%s" option does not exist.', $name));
         }

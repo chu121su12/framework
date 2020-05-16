@@ -371,6 +371,8 @@ class QuestionHelper extends Helper
 
     private function mostRecentlyEnteredValue($entered)
     {
+        $entered = cast_to_string($entered);
+
         // Determine the most recent value that the user entered
         if (false === strpos($entered, ',')) {
             return $entered;
@@ -394,6 +396,8 @@ class QuestionHelper extends Helper
      */
     private function getHiddenResponse(OutputInterface $output, $inputStream, $trimmable = true)
     {
+        $trimmable = cast_to_bool($trimmable);
+
         if ('\\' === \DIRECTORY_SEPARATOR) {
             $exe = __DIR__.'/../Resources/bin/hiddeninput.exe';
 

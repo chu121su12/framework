@@ -37,6 +37,8 @@ class Question
      */
     public function __construct($question, $default = null)
     {
+        $question = cast_to_string($question);
+
         $this->question = $question;
         $this->default = $default;
     }
@@ -136,6 +138,8 @@ class Question
      */
     public function setAutocompleterValues($values = null)
     {
+        $values = cast_to_iterable($values, null);
+
         if (\is_array($values)) {
             $values = $this->isAssoc($values) ? array_merge(array_keys($values), array_values($values)) : array_values($values);
 
@@ -213,6 +217,8 @@ class Question
      */
     public function setMaxAttempts($attempts = null)
     {
+        $attempts = cast_to_int($attempts, null);
+
         if (null !== $attempts && $attempts < 1) {
             throw new InvalidArgumentException('Maximum number of attempts must be a positive value.');
         }
@@ -275,6 +281,8 @@ class Question
      */
     public function setTrimmable($trimmable)
     {
+        $trimmable = cast_to_bool($trimmable);
+
         $this->trimmable = $trimmable;
 
         return $this;

@@ -35,6 +35,8 @@ abstract class OutputStyle implements OutputInterface, StyleInterface
      */
     public function newLine($count = 1)
     {
+        $count = cast_to_int($count);
+
         $this->output->write(str_repeat(PHP_EOL, $count));
     }
 
@@ -43,6 +45,8 @@ abstract class OutputStyle implements OutputInterface, StyleInterface
      */
     public function createProgressBar($max = 0)
     {
+        $max = cast_to_int($max);
+
         return new ProgressBar($this->output, $max);
     }
 
@@ -51,6 +55,10 @@ abstract class OutputStyle implements OutputInterface, StyleInterface
      */
     public function write($messages, $newline = false, $type = self::OUTPUT_NORMAL)
     {
+        $type = cast_to_int($type);
+
+        $newline = cast_to_bool($newline);
+
         $this->output->write($messages, $newline, $type);
     }
 
@@ -59,6 +67,8 @@ abstract class OutputStyle implements OutputInterface, StyleInterface
      */
     public function writeln($messages, $type = self::OUTPUT_NORMAL)
     {
+        $type = cast_to_int($type);
+
         $this->output->writeln($messages, $type);
     }
 
@@ -67,6 +77,8 @@ abstract class OutputStyle implements OutputInterface, StyleInterface
      */
     public function setVerbosity($level)
     {
+        $level = cast_to_int($level);
+
         $this->output->setVerbosity($level);
     }
 
@@ -83,6 +95,8 @@ abstract class OutputStyle implements OutputInterface, StyleInterface
      */
     public function setDecorated($decorated)
     {
+        $decorated = cast_to_bool($decorated);
+
         $this->output->setDecorated($decorated);
     }
 

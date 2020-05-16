@@ -31,6 +31,10 @@ class AddConsoleCommandPass implements CompilerPassInterface
 
     public function __construct($commandLoaderServiceId = 'console.command_loader', $commandTag = 'console.command')
     {
+        $commandTag = cast_to_string($commandTag);
+
+        $commandLoaderServiceId = cast_to_string($commandLoaderServiceId);
+
         $this->commandLoaderServiceId = $commandLoaderServiceId;
         $this->commandTag = $commandTag;
     }

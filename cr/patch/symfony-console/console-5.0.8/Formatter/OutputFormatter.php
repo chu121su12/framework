@@ -32,6 +32,8 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      */
     public static function escape($text)
     {
+        $text = cast_to_string($text);
+
         $text = preg_replace('/([^\\\\]?)</', '$1\\<', $text);
 
         return self::escapeTrailingBackslash($text);
@@ -44,6 +46,8 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      */
     public static function escapeTrailingBackslash($text)
     {
+        $text = cast_to_string($text);
+
         if ('\\' === substr($text, -1)) {
             $len = \strlen($text);
             $text = rtrim($text, '\\');
@@ -61,6 +65,8 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      */
     public function __construct($decorated = false, array $styles = [])
     {
+        $decorated = cast_to_bool($decorated);
+
         $this->decorated = $decorated;
 
         $this->setStyle('error', new OutputFormatterStyle('white', 'red'));
@@ -80,6 +86,8 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      */
     public function setDecorated($decorated)
     {
+        $decorated = cast_to_bool($decorated);
+
         $this->decorated = $decorated;
     }
 
@@ -96,6 +104,8 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      */
     public function setStyle($name, OutputFormatterStyleInterface $style)
     {
+        $name = cast_to_string($name);
+
         $this->styles[strtolower($name)] = $style;
     }
 
@@ -104,6 +114,8 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      */
     public function hasStyle($name)
     {
+        $name = cast_to_string($name);
+
         return isset($this->styles[strtolower($name)]);
     }
 
@@ -112,6 +124,8 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      */
     public function getStyle($name)
     {
+        $name = cast_to_string($name);
+
         if (!$this->hasStyle($name)) {
             throw new InvalidArgumentException(sprintf('Undefined style: "%s".', $name));
         }
@@ -124,6 +138,8 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      */
     public function format($message = null)
     {
+        $message = cast_to_string($message, null);
+
         return $this->formatAndWrap($message, 0);
     }
 
@@ -132,6 +148,10 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      */
     public function formatAndWrap($message = null, $width)
     {
+        $width = cast_to_int($width);
+
+        $message = cast_to_string($message, null);
+
         $offset = 0;
         $output = '';
         $tagRegex = '[a-z][^<>]*+';
@@ -190,6 +210,8 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      */
     private function createStyleFromString($string)
     {
+        $string = cast_to_string($string);
+
         if (isset($this->styles[$string])) {
             return $this->styles[$string];
         }
@@ -228,6 +250,14 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      */
     private function applyCurrentStyle($text, $current, $width, &$currentLineLength)
     {
+        $width = cast_to_int($width);
+
+        $current = cast_to_string($current);
+
+        $text = cast_to_string($text);
+
+        $currentLineLength = cast_to_int($currentLineLength);
+
         if ('' === $text) {
             return '';
         }

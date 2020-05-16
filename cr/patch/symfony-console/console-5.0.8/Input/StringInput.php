@@ -32,6 +32,8 @@ class StringInput extends ArgvInput
      */
     public function __construct($input)
     {
+        $input = cast_to_string($input);
+
         parent::__construct([]);
 
         $this->setTokens($this->tokenize($input));
@@ -44,6 +46,8 @@ class StringInput extends ArgvInput
      */
     private function tokenize($input)
     {
+        $input = cast_to_string($input);
+
         $tokens = [];
         $length = \strlen($input);
         $cursor = 0;

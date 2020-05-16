@@ -26,6 +26,8 @@ final class ConsoleTerminateEvent extends ConsoleEvent
 
     public function __construct(Command $command, InputInterface $input, OutputInterface $output, $exitCode)
     {
+        $exitCode = cast_to_int($exitCode);
+
         parent::__construct($command, $input, $output);
 
         $this->setExitCode($exitCode);
@@ -33,6 +35,8 @@ final class ConsoleTerminateEvent extends ConsoleEvent
 
     public function setExitCode($exitCode)
     {
+        $exitCode = cast_to_int($exitCode);
+
         $this->exitCode = $exitCode;
     }
 

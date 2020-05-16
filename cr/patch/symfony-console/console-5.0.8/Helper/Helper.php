@@ -45,6 +45,8 @@ abstract class Helper implements HelperInterface
      */
     public static function strlen($string = null)
     {
+        $string = cast_to_string($string, null);
+
         if (false === $encoding = mb_detect_encoding($string, null, true)) {
             return \strlen($string);
         }
@@ -59,6 +61,12 @@ abstract class Helper implements HelperInterface
      */
     public static function substr($string, $from, $length = null)
     {
+        $from = cast_to_int($from);
+
+        $string = cast_to_string($string);
+
+        $length = cast_to_int($length, null);
+
         if (false === $encoding = mb_detect_encoding($string, null, true)) {
             return substr($string, $from, $length);
         }
@@ -97,6 +105,8 @@ abstract class Helper implements HelperInterface
 
     public static function formatMemory($memory)
     {
+        $memory = cast_to_int($memory);
+
         if ($memory >= 1024 * 1024 * 1024) {
             return sprintf('%.1f GiB', $memory / 1024 / 1024 / 1024);
         }

@@ -64,6 +64,10 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
      */
     public function __construct($foreground = null, $background = null, array $options = [])
     {
+        $background = cast_to_string($background, null);
+
+        $foreground = cast_to_string($foreground, null);
+
         if (null !== $foreground) {
             $this->setForeground($foreground);
         }
@@ -80,6 +84,8 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
      */
     public function setForeground($color = null)
     {
+        $color = cast_to_string($color, null);
+
         if (null === $color) {
             $this->foreground = null;
 
@@ -98,6 +104,8 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
      */
     public function setBackground($color = null)
     {
+        $color = cast_to_string($color, null);
+
         if (null === $color) {
             $this->background = null;
 
@@ -113,6 +121,8 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
 
     public function setHref($url)
     {
+        $url = cast_to_string($url);
+
         $this->href = $url;
     }
 
@@ -121,6 +131,8 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
      */
     public function setOption($option)
     {
+        $option = cast_to_string($option);
+
         if (!isset(static::$availableOptions[$option])) {
             throw new InvalidArgumentException(sprintf('Invalid option specified: "%s". Expected one of (%s).', $option, implode(', ', array_keys(static::$availableOptions))));
         }
@@ -135,6 +147,8 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
      */
     public function unsetOption($option)
     {
+        $option = cast_to_string($option);
+
         if (!isset(static::$availableOptions[$option])) {
             throw new InvalidArgumentException(sprintf('Invalid option specified: "%s". Expected one of (%s).', $option, implode(', ', array_keys(static::$availableOptions))));
         }
@@ -162,6 +176,8 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
      */
     public function apply($text)
     {
+        $text = cast_to_string($text);
+
         $setCodes = [];
         $unsetCodes = [];
 
