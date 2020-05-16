@@ -526,7 +526,9 @@ class Worker
                         : $options->backoff
         );
 
-        return (int) ($backoff[$job->attempts() - 1] ?? last($backoff));
+        $jobAttempts = $job->attempts() - 1;
+
+        return (int) (isset($backoff[$jobAttempts]) ? $backoff[$jobAttempts] : last($backoff));
     }
 
     /**
