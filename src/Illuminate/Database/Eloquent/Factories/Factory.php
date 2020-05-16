@@ -153,6 +153,8 @@ abstract class Factory
      */
     public static function times($count)
     {
+        $count = cast_to_int($count);
+
         return new static($count);
     }
 
@@ -493,6 +495,8 @@ abstract class Factory
      */
     public function count($count)
     {
+        $count = cast_to_int($count);
+
         return $this->newInstance(['count' => $count]);
     }
 
@@ -504,6 +508,8 @@ abstract class Factory
      */
     public function connection($connection)
     {
+        $connection = cast_to_string($connection);
+
         return $this->newInstance(['connection' => $connection]);
     }
 
@@ -572,6 +578,8 @@ abstract class Factory
      */
     public static function useNamespace($namespace)
     {
+        $namespace = cast_to_string($namespace);
+
         static::$namespace = $namespace;
     }
 
@@ -583,6 +591,8 @@ abstract class Factory
      */
     public static function factoryForModel($modelName)
     {
+        $modelName = cast_to_string($modelName);
+
         $resolver = static::$factoryNameResolver ?: function ($modelName) {
             return static::$namespace.Str::singular(class_basename($modelName)).'Factory';
         };

@@ -66,6 +66,8 @@ class ResponseSequence
      */
     public function pushStatus($status, array $headers = [])
     {
+        $status = cast_to_int($status);
+
         return $this->pushResponse(
             Factory::response('', $status, $headers)
         );
@@ -81,6 +83,8 @@ class ResponseSequence
      */
     public function pushFile($filePath, $status = 200, array $headers = [])
     {
+        $filePath = cast_to_string($filePath);
+
         $status = cast_to_int($status);
 
         $string = file_get_contents($filePath);

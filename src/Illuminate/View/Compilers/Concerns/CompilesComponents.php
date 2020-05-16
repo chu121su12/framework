@@ -45,6 +45,8 @@ trait CompilesComponents
      */
     public static function newComponentHash($component)
     {
+        $component = cast_to_string($component);
+
         static::$componentHashStack[] = $hash = sha1($component);
 
         return $hash;
@@ -61,6 +63,14 @@ trait CompilesComponents
      */
     public static function compileClassComponentOpening($component, $alias, $data, $hash)
     {
+        $hash = cast_to_string($hash);
+
+        $data = cast_to_string($data);
+
+        $alias = cast_to_string($alias);
+
+        $component = cast_to_string($component);
+
         return implode("\n", [
             '<?php if (isset($component)) { $__componentOriginal'.$hash.' = $component; } ?>',
             '<?php $component = $__env->getContainer()->make('.Str::finish($component, '::class').', '.($data ?: '[]').'); ?>',

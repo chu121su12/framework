@@ -906,6 +906,8 @@ class Grammar extends BaseGrammar
      */
     public function compileInsertUsing(Builder $query, array $columns, $sql)
     {
+        $sql = cast_to_string($sql);
+
         return "insert into {$this->wrapTable($query->from)} ({$this->columnize($columns)}) $sql";
     }
 

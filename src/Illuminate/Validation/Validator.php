@@ -430,6 +430,8 @@ class Validator implements ValidatorContract
      */
     public function validateWithBag($errorBag)
     {
+        $errorBag = cast_to_string($errorBag);
+
         try {
             return $this->validate();
         } catch (ValidationException $e) {
@@ -767,6 +769,8 @@ class Validator implements ValidatorContract
      */
     protected function excludeAttribute($attribute)
     {
+        $attribute = cast_to_string($attribute);
+
         $this->excludeAttributes[] = $attribute;
 
         $this->excludeAttributes = array_unique($this->excludeAttributes);

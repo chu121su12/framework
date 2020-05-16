@@ -31,6 +31,8 @@ class MySqlSchemaState extends SchemaState
      */
     protected function removeAutoIncrementingState($path)
     {
+        $path = cast_to_string($path);
+
         $this->files->put($path, preg_replace(
             '/\s+AUTO_INCREMENT=[0-9]+/iu',
             '',
@@ -46,6 +48,8 @@ class MySqlSchemaState extends SchemaState
      */
     protected function appendMigrationData($path)
     {
+        $path = cast_to_string($path);
+
         with($process = $this->makeProcess(
             $this->baseDumpCommand().' migrations --no-create-info --skip-extended-insert --skip-routines --compact'
         ))->mustRun(null, array_merge($this->baseVariables($this->connection->getConfig()), [

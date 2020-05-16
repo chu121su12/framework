@@ -119,6 +119,8 @@ class PendingRequest
      */
     public function baseUrl($url)
     {
+        $url = cast_to_string($url);
+
         $this->baseUrl = $url;
 
         return $this;
@@ -185,6 +187,8 @@ class PendingRequest
      */
     public function bodyFormat($format)
     {
+        $format = cast_to_string($format);
+
         return tap($this, function ($request) use ($format) {
             $this->bodyFormat = $format;
         });
@@ -198,6 +202,8 @@ class PendingRequest
      */
     public function contentType($contentType)
     {
+        $contentType = cast_to_string($contentType);
+
         return $this->withHeaders(['Content-Type' => $contentType]);
     }
 
@@ -246,6 +252,10 @@ class PendingRequest
      */
     public function withBasicAuth($username, $password)
     {
+        $password = cast_to_string($password);
+
+        $username = cast_to_string($username);
+
         return tap($this, function ($request) use ($username, $password) {
             return $this->options['auth'] = [$username, $password];
         });
@@ -288,6 +298,8 @@ class PendingRequest
      */
     public function withCookies(array $cookies, $domain)
     {
+        $domain = cast_to_string($domain);
+
         return tap($this, function ($request) use ($cookies, $domain) {
             return $this->options = array_merge_recursive($this->options, [
                 'cookies' => CookieJar::fromArray($cookies, $domain),
@@ -327,6 +339,8 @@ class PendingRequest
      */
     public function timeout($seconds)
     {
+        $seconds = cast_to_int($seconds);
+
         return tap($this, function () use ($seconds) {
             $this->options['timeout'] = $seconds;
         });
@@ -341,6 +355,8 @@ class PendingRequest
      */
     public function retry($times, $sleep = 0)
     {
+        $times = cast_to_int($times);
+
         $sleep = cast_to_int($sleep);
 
         $this->tries = $times;
@@ -384,6 +400,8 @@ class PendingRequest
      */
     public function get($url, $query = null)
     {
+        $url = cast_to_string($url);
+
         return $this->send('GET', $url, [
             'query' => $query,
         ]);
@@ -398,6 +416,8 @@ class PendingRequest
      */
     public function head($url, $query = null)
     {
+        $url = cast_to_string($url);
+
         return $this->send('HEAD', $url, [
             'query' => $query,
         ]);
@@ -412,6 +432,8 @@ class PendingRequest
      */
     public function post($url, array $data = [])
     {
+        $url = cast_to_string($url);
+
         return $this->send('POST', $url, [
             $this->bodyFormat => $data,
         ]);
@@ -471,6 +493,10 @@ class PendingRequest
      */
     public function send($method, $url, array $options = [])
     {
+        $url = cast_to_string($url);
+
+        $method = cast_to_string($method);
+
         $url = ltrim(rtrim($this->baseUrl, '/').'/'.ltrim($url, '/'), '/');
 
         if (isset($options[$this->bodyFormat])) {

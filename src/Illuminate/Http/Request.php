@@ -338,6 +338,8 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      */
     public function get($key, $default = null)
     {
+        $key = cast_to_string($key);
+
         return parent::get($key, $default);
     }
 

@@ -697,6 +697,8 @@ class TestResponse implements ArrayAccess
      */
     public function assertJsonCount($count, $key = null)
     {
+        $count = cast_to_int($count);
+
         if (! is_null($key)) {
             PHPUnit::assertCount(
                 $count, data_get($this->json(), $key),

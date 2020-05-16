@@ -206,6 +206,8 @@ class BusFake implements QueueingDispatcher
      */
     public function dispatchedAfterResponse($command, $callback = null)
     {
+        $command = cast_to_string($command);
+
         if (! $this->hasDispatchedAfterResponse($command)) {
             return collect();
         }

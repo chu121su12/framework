@@ -44,6 +44,8 @@ class RateLimiter
      */
     public function forName($name, Closure $callback)
     {
+        $name = cast_to_string($name);
+
         $this->limiters[$name] = $callback;
 
         return $this;
@@ -57,6 +59,8 @@ class RateLimiter
      */
     public function limiter($name)
     {
+        $name = cast_to_string($name);
+
         return isset($this->limiters[$name]) ? $this->limiters[$name] : null;
     }
 

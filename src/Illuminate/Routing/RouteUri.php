@@ -27,6 +27,8 @@ class RouteUri
      */
     public function __construct($uri, array $bindingFields = [])
     {
+        $uri = cast_to_string($uri);
+
         $this->uri = $uri;
         $this->bindingFields = $bindingFields;
     }

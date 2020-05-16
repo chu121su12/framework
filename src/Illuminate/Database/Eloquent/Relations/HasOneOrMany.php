@@ -290,6 +290,8 @@ abstract class HasOneOrMany extends Relation
      */
     public function createMany($records)
     {
+        $records = cast_to_iterable($records);
+
         $instances = $this->related->newCollection();
 
         foreach ($records as $record) {

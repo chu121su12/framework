@@ -83,6 +83,10 @@ trait MakesHttpRequests
      */
     public function withHeader($name, $value)
     {
+        $value = cast_to_string($value);
+
+        $name = cast_to_string($name);
+
         $this->defaultHeaders[$name] = $value;
 
         return $this;
@@ -180,6 +184,10 @@ trait MakesHttpRequests
      */
     public function withCookie($name, $value)
     {
+        $value = cast_to_string($value);
+
+        $name = cast_to_string($name);
+
         $this->defaultCookies[$name] = $value;
 
         return $this;
@@ -207,6 +215,10 @@ trait MakesHttpRequests
      */
     public function withUnencryptedCookie($name, $value)
     {
+        $value = cast_to_string($value);
+
+        $name = cast_to_string($name);
+
         $this->unencryptedCookies[$name] = $value;
 
         return $this;
@@ -244,6 +256,8 @@ trait MakesHttpRequests
      */
     public function from($url)
     {
+        $url = cast_to_string($url);
+
         $this->app['session']->setPreviousUrl($url);
 
         return $this->withHeader('referer', $url);

@@ -388,6 +388,8 @@ class MailManager implements FactoryContract
      */
     protected function setGlobalAddress($mailer, array $config, $type)
     {
+        $type = cast_to_string($type);
+
         $address = Arr::get($config, $type, $this->app['config']['mail.'.$type]);
 
         if (is_array($address) && isset($address['address'])) {
@@ -403,6 +405,8 @@ class MailManager implements FactoryContract
      */
     protected function getConfig($name)
     {
+        $name = cast_to_string($name);
+
         // Here we will check if the "driver" key exists and if it does we will use
         // the entire mail configuration file as the "driver" config in order to
         // provide "BC" for any Laravel <= 6.x style mail configuration files.
@@ -434,6 +438,8 @@ class MailManager implements FactoryContract
      */
     public function setDefaultDriver($name)
     {
+        $name = cast_to_string($name);
+
         if ($this->app['config']['mail.driver']) {
             $this->app['config']['mail.driver'] = $name;
         }

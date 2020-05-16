@@ -18,6 +18,8 @@ trait InteractsWithViews
      */
     protected function view($view, array $data = [])
     {
+        $view = cast_to_string($view);
+
         return new TestView(view($view, $data));
     }
 
@@ -30,6 +32,8 @@ trait InteractsWithViews
      */
     protected function blade($template, array $data = [])
     {
+        $template = cast_to_string($template);
+
         $tempDirectory = sys_get_temp_dir();
 
         if (! in_array($tempDirectory, ViewFacade::getFinder()->getPaths())) {
@@ -52,6 +56,8 @@ trait InteractsWithViews
      */
     protected function component($componentClass, array $data = [])
     {
+        $componentClass = cast_to_string($componentClass);
+
         $component = $this->app->make($componentClass, $data);
 
         $view = $component->resolveView();

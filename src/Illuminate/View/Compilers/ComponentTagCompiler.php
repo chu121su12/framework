@@ -60,6 +60,8 @@ class ComponentTagCompiler
      */
     public function compile($value)
     {
+        $value = cast_to_string($value);
+
         $value = $this->compileSlots($value);
 
         return $this->compileTags($value);
@@ -75,6 +77,8 @@ class ComponentTagCompiler
      */
     public function compileTags($value)
     {
+        $value = cast_to_string($value);
+
         $value = $this->compileSelfClosingTags($value);
         $value = $this->compileOpeningTags($value);
         $value = $this->compileClosingTags($value);
@@ -92,6 +96,8 @@ class ComponentTagCompiler
      */
     protected function compileOpeningTags($value)
     {
+        $value = cast_to_string($value);
+
         $pattern = "/
             <
                 \s*
@@ -144,6 +150,8 @@ class ComponentTagCompiler
      */
     protected function compileSelfClosingTags($value)
     {
+        $value = cast_to_string($value);
+
         $pattern = "/
             <
                 \s*
@@ -197,6 +205,8 @@ class ComponentTagCompiler
      */
     protected function componentString($component, array $attributes)
     {
+        $component = cast_to_string($component);
+
         $class = $this->componentClass($component);
 
         list($data, $attributes) = $this->partitionDataAndAttributes($class, $attributes);
@@ -233,6 +243,8 @@ class ComponentTagCompiler
      */
     protected function componentClass($component)
     {
+        $component = cast_to_string($component);
+
         $viewFactory = Container::getInstance()->make(Factory::class);
 
         if (isset($this->aliases[$component])) {
@@ -270,6 +282,8 @@ class ComponentTagCompiler
      */
     public function guessClassName($component)
     {
+        $component = cast_to_string($component);
+
         $namespace = Container::getInstance()
                     ->make(Application::class)
                     ->getNamespace();
@@ -316,6 +330,8 @@ class ComponentTagCompiler
      */
     protected function compileClosingTags($value)
     {
+        $value = cast_to_string($value);
+
         return preg_replace("/<\/\s*x[-\:][\w\-\:\.]*\s*>/", ' @endcomponentClass ', $value);
     }
 
@@ -327,6 +343,8 @@ class ComponentTagCompiler
      */
     public function compileSlots($value)
     {
+        $value = cast_to_string($value);
+
         $value = preg_replace_callback('/<\s*x[\-\:]slot\s+name=(?<name>(\"[^\"]+\"|\\\'[^\\\']+\\\'|[^\s>]+))\s*>/', function ($matches) {
             return " @slot('".$this->stripQuotes($matches['name'])."') ";
         }, $value);
@@ -342,6 +360,8 @@ class ComponentTagCompiler
      */
     protected function getAttributesFromAttributeString($attributeString)
     {
+        $attributeString = cast_to_string($attributeString);
+
         $attributeString = $this->parseAttributeBag($attributeString);
 
         $attributeString = $this->parseBindAttributes($attributeString);
@@ -398,6 +418,8 @@ class ComponentTagCompiler
      */
     protected function parseAttributeBag($attributeString)
     {
+        $attributeString = cast_to_string($attributeString);
+
         $pattern = "/
             (?:^|\s+)                                        # start of the string or whitespace between attributes
             \{\{\s*(\\\$attributes(?:[^}]+?(?<!\s))?)\s*\}\} # exact match of attributes variable being echoed
@@ -414,6 +436,8 @@ class ComponentTagCompiler
      */
     protected function parseBindAttributes($attributeString)
     {
+        $attributeString = cast_to_string($attributeString);
+
         $pattern = "/
             (?:^|\s+)     # start of the string or whitespace between attributes
             :             # attribute needs to start with a semicolon
@@ -434,6 +458,8 @@ class ComponentTagCompiler
      */
     protected function compileAttributeEchos($attributeString)
     {
+        $attributeString = cast_to_string($attributeString);
+
         $value = $this->blade->compileEchos($attributeString);
 
         $value = $this->escapeSingleQuotesOutsideOfPhpBlocks($value);
@@ -452,6 +478,8 @@ class ComponentTagCompiler
      */
     protected function escapeSingleQuotesOutsideOfPhpBlocks($value)
     {
+        $value = cast_to_string($value);
+
         return collect(token_get_all($value))->map(function ($token) {
             if (! is_array($token)) {
                 return $token;
@@ -474,6 +502,10 @@ class ComponentTagCompiler
     {
         return collect($attributes)
                 ->map(function ($value, $attribute) use ($escapeBound) {
+                    $attribute = cast_to_string($attribute);
+
+                    $value = cast_to_string($value);
+
                     return $escapeBound && isset($this->boundAttributes[$attribute]) && $value !== 'true' && ! is_numeric($value)
                                 ? "'{$attribute}' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute({$value})"
                                 : "'{$attribute}' => {$value}";
@@ -489,6 +521,8 @@ class ComponentTagCompiler
      */
     public function stripQuotes($value)
     {
+        $value = cast_to_string($value);
+
         return Str::startsWith($value, ['"', '\''])
                     ? substr($value, 1, -1)
                     : $value;

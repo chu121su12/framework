@@ -79,6 +79,8 @@ class Response implements ArrayAccess
      */
     public function header($header)
     {
+        $header = cast_to_string($header);
+
         return $this->response->getHeaderLine($header);
     }
 

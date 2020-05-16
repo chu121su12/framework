@@ -38,6 +38,8 @@ class CountInDatabase extends Constraint
      */
     public function __construct(Connection $database, $expectedCount)
     {
+        $expectedCount = cast_to_int($expectedCount);
+
         $this->expectedCount = $expectedCount;
 
         $this->database = $database;

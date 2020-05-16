@@ -200,6 +200,8 @@ abstract class Component
      */
     protected function createInvokableVariable($method)
     {
+        $method = cast_to_string($method);
+
         return new InvokableComponentVariable(function () use ($method) {
             return $this->{$method}();
         });

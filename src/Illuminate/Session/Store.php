@@ -353,6 +353,8 @@ class Store implements Session
      */
     public function flash($key, $value = true)
     {
+        $key = cast_to_string($key);
+
         $this->put($key, $value);
 
         $this->push('_flash.new', $key);

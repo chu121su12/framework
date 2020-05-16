@@ -33,6 +33,8 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          */
         public function __construct($subset, $strict = false)
         {
+            $subset = cast_to_iterable($subset);
+
             $strict = cast_to_bool($strict);
 
             $this->strict = $strict;
@@ -133,6 +135,8 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          */
         private function toArray($other)
         {
+            $other = cast_to_iterable($other);
+
             if (is_array($other)) {
                 return $other;
             }
@@ -174,6 +178,8 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          */
         public function __construct($subset, $strict = false)
         {
+            $subset = cast_to_iterable($subset);
+
             $strict = cast_to_bool($strict);
 
             $this->strict = $strict;
