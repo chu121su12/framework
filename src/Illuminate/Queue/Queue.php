@@ -173,10 +173,11 @@ abstract class Queue
             return;
         }
 
-        $backoff = isset($job->backoff) ? $job->backoff : $job->backoff();
-
-        return $backoff instanceof DateTimeInterface
-                        ? $this->secondsUntil($backoff) : $backoff;
+        return collect(isset($job->backoff) ? $job->backoff : $job->backoff())
+            ->map(function ($backoff) {
+                return $backoff instanceof DateTimeInterface
+                                ? $this->secondsUntil($backoff) : $backoff;
+            })->implode(',');
     }
 
     /**
