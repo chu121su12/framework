@@ -13,6 +13,8 @@ class GlobalLimit extends Limit
      */
     public function __construct($maxAttempts, $decayMinutes = 1)
     {
+        $decayMinutes = cast_to_int($decayMinutes);
+
         parent::__construct('', $maxAttempts, $decayMinutes);
     }
 }

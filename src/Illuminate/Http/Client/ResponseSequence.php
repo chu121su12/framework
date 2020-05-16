@@ -48,6 +48,8 @@ class ResponseSequence
      */
     public function push($body = '', $status = 200, array $headers = [])
     {
+        $status = cast_to_int($status);
+
         $body = is_array($body) ? json_encode($body) : $body;
 
         return $this->pushResponse(
@@ -79,6 +81,8 @@ class ResponseSequence
      */
     public function pushFile($filePath, $status = 200, array $headers = [])
     {
+        $status = cast_to_int($status);
+
         $string = file_get_contents($filePath);
 
         return $this->pushResponse(

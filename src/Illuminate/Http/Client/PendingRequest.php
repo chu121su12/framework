@@ -341,6 +341,8 @@ class PendingRequest
      */
     public function retry($times, $sleep = 0)
     {
+        $sleep = cast_to_int($sleep);
+
         $this->tries = $times;
         $this->retryDelay = $sleep;
 

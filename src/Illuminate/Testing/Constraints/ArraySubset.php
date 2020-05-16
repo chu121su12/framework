@@ -33,6 +33,8 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          */
         public function __construct($subset, $strict = false)
         {
+            $strict = cast_to_bool($strict);
+
             $this->strict = $strict;
             $this->subset = $subset;
         }
@@ -57,6 +59,10 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          */
         public function evaluate($other, $description = '', $returnResult = false)
         {
+            $returnResult = cast_to_bool($returnResult);
+
+            $description = cast_to_string($description);
+
             // type cast $other & $this->subset as an array to allow
             // support in standard array functions.
             $other = $this->toArray($other);
@@ -168,6 +174,8 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          */
         public function __construct($subset, $strict = false)
         {
+            $strict = cast_to_bool($strict);
+
             $this->strict = $strict;
             $this->subset = $subset;
         }
@@ -192,6 +200,10 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          */
         public function evaluate($other, $description = '', $returnResult = false)
         {
+            $returnResult = cast_to_bool($returnResult);
+
+            $description = cast_to_string($description);
+
             // type cast $other & $this->subset as an array to allow
             // support in standard array functions.
             $other = $this->toArray($other);

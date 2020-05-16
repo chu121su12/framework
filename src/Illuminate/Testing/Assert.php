@@ -30,6 +30,10 @@ abstract class Assert extends PHPUnit
      */
     public static function assertArraySubset($subset, $array, $checkForIdentity = false, $msg = '')
     {
+        $msg = cast_to_string($msg);
+
+        $checkForIdentity = cast_to_bool($checkForIdentity);
+
         if (! (is_array($subset) || $subset instanceof ArrayAccess)) {
             if (class_exists(InvalidArgumentException::class)) {
                 throw InvalidArgumentException::create(1, 'array or ArrayAccess');
@@ -60,6 +64,8 @@ abstract class Assert extends PHPUnit
      */
     public static function assertFileDoesNotExist($filename, $message = '')
     {
+        $message = cast_to_string($message);
+
         static::assertThat($filename, new LogicalNot(new FileExists), $message);
     }
 
@@ -72,6 +78,8 @@ abstract class Assert extends PHPUnit
      */
     public static function assertDirectoryDoesNotExist($directory, $message = '')
     {
+        $message = cast_to_string($message);
+
         static::assertThat($directory, new LogicalNot(new DirectoryExists), $message);
     }
 
@@ -85,6 +93,8 @@ abstract class Assert extends PHPUnit
      */
     public static function assertMatchesRegularExpression($pattern, $string, $message = '')
     {
+        $message = cast_to_string($message);
+
         static::assertThat($string, new RegularExpression($pattern), $message);
     }
 }
