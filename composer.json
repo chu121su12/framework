@@ -95,6 +95,7 @@
             "vendor/symfony/http-kernel/Exception"
         ],
         "files": [
+            "cr/helpers/casts.php",
             "src/Illuminate/Foundation/helpers.php",
             "src/Illuminate/Support/helpers.php"
         ],
