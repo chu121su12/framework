@@ -9,21 +9,12 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseSoftDeletingTest extends TestCase
 {
-    public function testDeletedAtIsAddedToDateCasts()
+    public function testDeletedAtIsAddedToCastsAsDefaultType()
     {
         $model = new SoftDeletingModel;
 
-        $this->assertContains('deleted_at', $model->getDates());
-    }
-
-    public function testDeletedAtIsUniqueWhenAlreadyExists()
-    {
-        $model = new DatabaseSoftDeletingTest_testDeletedAtIsUniqueWhenAlreadyExists_class;
-        $entries = array_filter($model->getDates(), function ($attribute) {
-            return $attribute === 'deleted_at';
-        });
-
-        $this->assertCount(1, $entries);
+        $this->assertArrayHasKey('deleted_at', $model->getCasts());
+        $this->assertSame('datetime', $model->getCasts()['deleted_at']);
     }
 
     public function testDeletedAtIsCastToCarbonInstance()
@@ -66,10 +57,6 @@ class SoftDeletingModel extends Model
 
     protected $dateFormat = 'Y-m-d H:i:s';
 }
-
-class DatabaseSoftDeletingTest_testDeletedAtIsUniqueWhenAlreadyExists_class extends SoftDeletingModel {
-            protected $dates = ['deleted_at'];
-        }
 
 class DatabaseSoftDeletingTest_testExistingCastOverridesAddedDateCast_class extends SoftDeletingModel {
             protected $casts = ['deleted_at' => 'bool'];

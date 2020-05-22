@@ -82,6 +82,8 @@ trait HasAttributes
     /**
      * The attributes that should be mutated to dates.
      *
+     * @deprecated Use the "casts" property
+     *
      * @var array
      */
     protected $dates = [];
@@ -354,7 +356,8 @@ trait HasAttributes
         // If the attribute exists in the attribute array or has a "get" mutator we will
         // get the attribute's value. Otherwise, we will proceed as if the developers
         // are asking for a relationship's value. This covers both types of values.
-        if (array_key_exists($key, $this->getAttributes()) ||
+        if (array_key_exists($key, $this->attributes) ||
+            array_key_exists($key, $this->casts) ||
             $this->hasGetMutator($key) ||
             $this->isClassCastable($key)) {
             return $this->getAttributeValue($key);
@@ -696,7 +699,7 @@ trait HasAttributes
     protected function isDateAttribute($key)
     {
         return in_array($key, $this->getDates(), true) ||
-                                    $this->isDateCastable($key);
+               $this->isDateCastable($key);
     }
 
     /**
