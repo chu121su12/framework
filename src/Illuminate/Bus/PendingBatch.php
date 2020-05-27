@@ -143,8 +143,10 @@ class PendingBatch
      * @param  string  $name
      * @return $this
      */
-    public function name(string $name)
+    public function name($name)
     {
+        $name = cast_to_string($name);
+
         $this->name = $name;
 
         return $this;
@@ -156,8 +158,10 @@ class PendingBatch
      * @param  string  $connection
      * @return $this
      */
-    public function onConnection(string $connection)
+    public function onConnection($connection)
     {
+        $connection = cast_to_string($connection);
+
         $this->options['connection'] = $connection;
 
         return $this;
@@ -179,8 +183,10 @@ class PendingBatch
      * @param  string  $queue
      * @return $this
      */
-    public function onQueue(string $queue)
+    public function onQueue($queue)
     {
+        $queue = cast_to_string($queue);
+
         $this->options['queue'] = $queue;
 
         return $this;

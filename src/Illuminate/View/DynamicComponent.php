@@ -41,8 +41,10 @@ class DynamicComponent extends Component
      *
      * @return void
      */
-    public function __construct(string $component)
+    public function __construct($component)
     {
+        $component = cast_to_string($component);
+
         $this->component = $component;
     }
 
@@ -151,8 +153,10 @@ EOF;
      * @param  string  $class
      * @return array
      */
-    protected function bindings(string $class)
+    protected function bindings($class)
     {
+        $class = cast_to_string($class);
+
         if (! isset(static::$bindings[$class])) {
             list($data, $attributes) = $this->compiler()->partitionDataAndAttributes($class, $this->attributes->getAttributes());
 

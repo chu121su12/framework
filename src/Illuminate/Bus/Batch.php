@@ -200,8 +200,10 @@ class Batch implements Arrayable, JsonSerializable
      * @param  string  $jobId
      * @return void
      */
-    public function recordSuccessfulJob(string $jobId)
+    public function recordSuccessfulJob($jobId)
     {
+        $jobId = cast_to_string($jobId);
+
         $counts = $this->decrementPendingJobs($jobId);
 
         if ($counts->pendingJobs === 0) {
@@ -227,8 +229,10 @@ class Batch implements Arrayable, JsonSerializable
      * @param  string  $jobId
      * @return int
      */
-    public function decrementPendingJobs(string $jobId)
+    public function decrementPendingJobs($jobId)
     {
+        $jobId = cast_to_string($jobId);
+
         return $this->repository->decrementPendingJobs($this->id, $jobId);
     }
 
@@ -279,8 +283,10 @@ class Batch implements Arrayable, JsonSerializable
      * @param  \Throwable  $e
      * @return void
      */
-    public function recordFailedJob(string $jobId, $e)
+    public function recordFailedJob($jobId, $e)
     {
+        $jobId = cast_to_string($jobId);
+
         $counts = $this->incrementFailedJobs($jobId);
 
         if ($counts->failedJobs === 1 && ! $this->allowsFailures()) {
@@ -306,8 +312,10 @@ class Batch implements Arrayable, JsonSerializable
      * @param  string  $jobId
      * @return int
      */
-    public function incrementFailedJobs(string $jobId)
+    public function incrementFailedJobs($jobId)
     {
+        $jobId = cast_to_string($jobId);
+
         return $this->repository->incrementFailedJobs($this->id, $jobId);
     }
 

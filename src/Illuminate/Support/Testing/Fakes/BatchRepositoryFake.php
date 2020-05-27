@@ -30,8 +30,10 @@ class BatchRepositoryFake implements BatchRepository
      * @param  string  $batchId
      * @return \Illuminate\Bus\Batch|null
      */
-    public function find(string $batchId)
+    public function find($batchId)
     {
+        $batchId = cast_to_string($batchId);
+
     }
 
     /**
@@ -63,8 +65,12 @@ class BatchRepositoryFake implements BatchRepository
      * @param  int  $amount
      * @return void
      */
-    public function incrementTotalJobs(string $batchId, int $amount)
+    public function incrementTotalJobs($batchId, $amount)
     {
+        $amount = cast_to_int($amount);
+
+        $batchId = cast_to_string($batchId);
+
     }
 
     /**
@@ -73,8 +79,10 @@ class BatchRepositoryFake implements BatchRepository
      * @param  string  $batchId
      * @return int|null
      */
-    public function decrementPendingJobs(string $batchId)
+    public function decrementPendingJobs($batchId)
     {
+        $batchId = cast_to_string($batchId);
+
         return 0;
     }
 
@@ -84,8 +92,10 @@ class BatchRepositoryFake implements BatchRepository
      * @param  string  $batchId
      * @return int|null
      */
-    public function incrementFailedJobs(string $batchId)
+    public function incrementFailedJobs($batchId)
     {
+        $batchId = cast_to_string($batchId);
+
         return 0;
     }
 
@@ -95,8 +105,10 @@ class BatchRepositoryFake implements BatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function markAsFinished(string $batchId)
+    public function markAsFinished($batchId)
     {
+        $batchId = cast_to_string($batchId);
+
     }
 
     /**
@@ -105,8 +117,10 @@ class BatchRepositoryFake implements BatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function cancel(string $batchId)
+    public function cancel($batchId)
     {
+        $batchId = cast_to_string($batchId);
+
     }
 
     /**
@@ -115,8 +129,10 @@ class BatchRepositoryFake implements BatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function delete(string $batchId)
+    public function delete($batchId)
     {
+        $batchId = cast_to_string($batchId);
+
     }
 
     /**

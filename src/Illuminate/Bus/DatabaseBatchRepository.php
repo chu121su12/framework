@@ -38,8 +38,10 @@ class DatabaseBatchRepository implements BatchRepository
      * @param  \Illuminate\Database\Connection  $connection
      * @param  string  $table
      */
-    public function __construct(BatchFactory $factory, Connection $connection, string $table)
+    public function __construct(BatchFactory $factory, Connection $connection, $table)
     {
+        $table = cast_to_string($table);
+
         $this->factory = $factory;
         $this->connection = $connection;
         $this->table = $table;
@@ -73,8 +75,10 @@ class DatabaseBatchRepository implements BatchRepository
      * @param  string  $batchId
      * @return \Illuminate\Bus\Batch|null
      */
-    public function find(string $batchId)
+    public function find($batchId)
     {
+        $batchId = cast_to_string($batchId);
+
         $batch = $this->connection->table($this->table)
                             ->where('id', $batchId)
                             ->first();
@@ -117,8 +121,12 @@ class DatabaseBatchRepository implements BatchRepository
      * @param  int  $amount
      * @return void
      */
-    public function incrementTotalJobs(string $batchId, int $amount)
+    public function incrementTotalJobs($batchId, $amount)
     {
+        $amount = cast_to_int($amount);
+
+        $batchId = cast_to_string($batchId);
+
         $this->connection->table($this->table)->where('id', $batchId)->update([
             'total_jobs' => new Expression('total_jobs + '.$amount),
             'pending_jobs' => new Expression('pending_jobs + '.$amount),
@@ -133,8 +141,12 @@ class DatabaseBatchRepository implements BatchRepository
      * @param  string  $jobId
      * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
-    public function decrementPendingJobs(string $batchId, string $jobId)
+    public function decrementPendingJobs($batchId, $jobId)
     {
+        $jobId = cast_to_string($jobId);
+
+        $batchId = cast_to_string($batchId);
+
         $values = $this->updateAtomicValues($batchId, function ($batch) use ($jobId) {
             return [
                 'pending_jobs' => $batch->pending_jobs - 1,
@@ -156,8 +168,12 @@ class DatabaseBatchRepository implements BatchRepository
      * @param  string  $jobId
      * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
-    public function incrementFailedJobs(string $batchId, string $jobId)
+    public function incrementFailedJobs($batchId, $jobId)
     {
+        $jobId = cast_to_string($jobId);
+
+        $batchId = cast_to_string($batchId);
+
         $values = $this->updateAtomicValues($batchId, function ($batch) use ($jobId) {
             return [
                 'pending_jobs' => $batch->pending_jobs,
@@ -179,8 +195,10 @@ class DatabaseBatchRepository implements BatchRepository
      * @param  \Closure  $callback
      * @return int|null
      */
-    protected function updateAtomicValues(string $batchId, Closure $callback)
+    protected function updateAtomicValues($batchId, Closure $callback)
     {
+        $batchId = cast_to_string($batchId);
+
         return $this->connection->transaction(function () use ($batchId, $callback) {
             $batch = $this->connection->table($this->table)->where('id', $batchId)
                         ->lockForUpdate()
@@ -198,8 +216,10 @@ class DatabaseBatchRepository implements BatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function markAsFinished(string $batchId)
+    public function markAsFinished($batchId)
     {
+        $batchId = cast_to_string($batchId);
+
         $this->connection->table($this->table)->where('id', $batchId)->update([
             'finished_at' => time(),
         ]);
@@ -211,8 +231,10 @@ class DatabaseBatchRepository implements BatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function cancel(string $batchId)
+    public function cancel($batchId)
     {
+        $batchId = cast_to_string($batchId);
+
         $this->connection->table($this->table)->where('id', $batchId)->update([
             'cancelled_at' => time(),
             'finished_at' => time(),
@@ -225,8 +247,10 @@ class DatabaseBatchRepository implements BatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function delete(string $batchId)
+    public function delete($batchId)
     {
+        $batchId = cast_to_string($batchId);
+
         $this->connection->table($this->table)->where('id', $batchId)->delete();
     }
 

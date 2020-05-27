@@ -368,8 +368,10 @@ class BusFake implements QueueingDispatcher
      * @param  string  $batchId
      * @return \Illuminate\Bus\Batch|null
      */
-    public function findBatch(string $batchId)
+    public function findBatch($batchId)
     {
+        $batchId = cast_to_string($batchId);
+
     }
 
     /**

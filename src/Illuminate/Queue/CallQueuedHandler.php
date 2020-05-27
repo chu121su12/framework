@@ -194,8 +194,10 @@ class CallQueuedHandler
      * @param  string  $uuid
      * @return void
      */
-    public function failed(array $data, $e, string $uuid)
+    public function failed(array $data, $e, $uuid)
     {
+        $uuid = cast_to_string($uuid);
+
         $command = unserialize($data['command']);
 
         $this->ensureFailedBatchJobIsRecorded($uuid, $command, $e);
@@ -213,8 +215,10 @@ class CallQueuedHandler
      * @param  \Throwable  $e
      * @return void
      */
-    protected function ensureFailedBatchJobIsRecorded(string $uuid, $command, $e)
+    protected function ensureFailedBatchJobIsRecorded($uuid, $command, $e)
     {
+        $uuid = cast_to_string($uuid);
+
         if (! in_array(Batchable::class, class_uses_recursive($command)) ||
             is_null($command->batch())) {
             return;
