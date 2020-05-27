@@ -46,6 +46,28 @@ class DatabaseBatchRepository implements BatchRepository
     }
 
     /**
+     * Retrieve a list of batches.
+     *
+     * @param  int  $limit
+     * @param  mixed  $before
+     * @return \Illuminate\Bus\Batch[]
+     */
+    public function get($limit = 50, $before = null)
+    {
+        return $this->connection->table($this->table)
+                            ->orderByDesc('id')
+                            ->take($limit)
+                            ->when($before, function ($q) use ($before) {
+                                return $q->where('id', '<', $before);
+                            })
+                            ->get()
+                            ->map(function ($batch) {
+                                return $this->toBatch($batch);
+                            })
+                            ->all();
+    }
+
+    /**
      * Retrieve information about an existing batch.
      *
      * @param  string  $batchId
@@ -57,22 +79,9 @@ class DatabaseBatchRepository implements BatchRepository
                             ->where('id', $batchId)
                             ->first();
 
-        if (! $batch) {
-            return;
+        if ($batch) {
+            return $this->toBatch($batch);
         }
-
-        return $this->factory->make(
-            $this,
-            $batch->id,
-            (int) $batch->total_jobs,
-            (int) $batch->pending_jobs,
-            (int) $batch->failed_jobs,
-            json_decode($batch->failed_job_ids, true),
-            unserialize($batch->options),
-            CarbonImmutable::createFromTimestamp($batch->created_at),
-            $batch->cancelled_at ? CarbonImmutable::createFromTimestamp($batch->cancelled_at) : $batch->cancelled_at,
-            $batch->finished_at ? CarbonImmutable::createFromTimestamp($batch->finished_at) : $batch->finished_at
-        );
     }
 
     /**
@@ -87,6 +96,7 @@ class DatabaseBatchRepository implements BatchRepository
 
         $this->connection->table($this->table)->insert([
             'id' => $id,
+            'name' => $batch->name,
             'total_jobs' => 0,
             'pending_jobs' => 0,
             'failed_jobs' => 0,
@@ -231,5 +241,28 @@ class DatabaseBatchRepository implements BatchRepository
         return $this->connection->transaction(function () use ($callback) {
             return $callback();
         });
+    }
+
+    /**
+     * Convert the given raw batch to a Batch object.
+     *
+     * @param  object  $batch
+     * @return \Illuminate\Bus\Batch
+     */
+    protected function toBatch($batch)
+    {
+        return $this->factory->make(
+            $this,
+            $batch->id,
+            $batch->name,
+            (int) $batch->total_jobs,
+            (int) $batch->pending_jobs,
+            (int) $batch->failed_jobs,
+            json_decode($batch->failed_job_ids, true),
+            unserialize($batch->options),
+            CarbonImmutable::createFromTimestamp($batch->created_at),
+            $batch->cancelled_at ? CarbonImmutable::createFromTimestamp($batch->cancelled_at) : $batch->cancelled_at,
+            $batch->finished_at ? CarbonImmutable::createFromTimestamp($batch->finished_at) : $batch->finished_at
+        );
     }
 }

@@ -244,9 +244,10 @@ class FilesystemAdapterTest extends TestCase
         $spy = m::spy($this->filesystem);
 
         $filesystemAdapter = new FilesystemAdapter($spy);
-        $stream = new Stream($fileHandle = fopen($this->tempDir.'/foo.txt', 'r'));
-        $filesystemAdapter->put('bar.txt', $stream);
-        @fclose($fileHandle);
+        $stream = fopen($this->tempDir.'/foo.txt', 'r');
+        $guzzleStream = new Stream($stream);
+        $filesystemAdapter->put('bar.txt', $guzzleStream);
+        fclose($stream);
 
         $spy->shouldHaveReceived('putStream');
         $this->assertSame('some-data', $filesystemAdapter->get('bar.txt'));
