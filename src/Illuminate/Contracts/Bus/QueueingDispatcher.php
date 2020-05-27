@@ -10,7 +10,7 @@ interface QueueingDispatcher extends Dispatcher
      * @param  string  $batchId
      * @return \Illuminate\Bus\Batch|null
      */
-    public function findBatch(string $batchId);
+    public function findBatch($batchId);
 
     /**
      * Create a new batch of queueable jobs.

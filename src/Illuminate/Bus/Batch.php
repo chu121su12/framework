@@ -114,17 +114,27 @@ class Batch implements Arrayable, JsonSerializable
      */
     public function __construct(QueueFactory $queue,
                                 BatchRepository $repository,
-                                string $id,
-                                string $name,
-                                int $totalJobs,
-                                int $pendingJobs,
-                                int $failedJobs,
+                                $id,
+                                $name,
+                                $totalJobs,
+                                $pendingJobs,
+                                $failedJobs,
                                 array $failedJobIds,
                                 array $options,
                                 CarbonImmutable $createdAt,
-                                ?CarbonImmutable $cancelledAt = null,
-                                ?CarbonImmutable $finishedAt = null)
+                                CarbonImmutable $cancelledAt = null,
+                                CarbonImmutable $finishedAt = null)
     {
+        $id = cast_to_string($id);
+
+        $name = cast_to_string($name);
+
+        $totalJobs = cast_to_int($totalJobs);
+
+        $pendingJobs = cast_to_int($pendingJobs);
+
+        $failedJobs = cast_to_int($failedJobs);
+
         $this->queue = $queue;
         $this->repository = $repository;
         $this->id = $id;

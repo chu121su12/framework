@@ -2,12 +2,31 @@
 
 namespace PHPUnit\Framework;
 
+use PHPUnit\Framework\Constraint\IsEqualWithDelta;
 use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\Constraint\LogicalNot;
 use PHPUnit\Framework\Constraint\StringContains;
 
 trait PhpUnit8Assert
 {
+    /**
+     * Asserts that two variables are equal (with delta).
+     *
+     * @throws ExpectationFailedException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     *
+     * @see Assert::assertEqualsWithDelta
+     */
+    function assertEqualsWithDelta($expected, $actual, $delta, $message = '')
+    {
+        $constraint = new IsEqualWithDelta(
+            $expected,
+            $delta
+        );
+
+        static::assertThat($actual, $constraint, $message);
+    }
+
     /**
      * Asserts that a variable is of type array.
      *
