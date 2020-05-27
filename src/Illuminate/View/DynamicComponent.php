@@ -154,7 +154,7 @@ EOF;
     protected function bindings(string $class)
     {
         if (! isset(static::$bindings[$class])) {
-            [$data, $attributes] = $this->compiler()->partitionDataAndAttributes($class, $this->attributes->getAttributes());
+            list($data, $attributes) = $this->compiler()->partitionDataAndAttributes($class, $this->attributes->getAttributes());
 
             static::$bindings[$class] = array_keys($data->all());
         }
