@@ -8,18 +8,20 @@ use Illuminate\Container\Container;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+class BusBatchableTest_test_batch_may_be_retrieved_class {
+            use Batchable;
+        }
+
 class BusBatchableTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }
 
     public function test_batch_may_be_retrieved()
     {
-        $class = new class {
-            use Batchable;
-        };
+        $class = new BusBatchableTest_test_batch_may_be_retrieved_class;
 
         $this->assertSame($class, $class->withBatchId('test-batch-id'));
         $this->assertEquals('test-batch-id', $class->batchId);

@@ -299,7 +299,8 @@ class Worker
 
         try {
             if (isset(static::$popCallbacks[$this->name])) {
-                return (static::$popCallbacks[$this->name])($popJobCallback, $queue);
+                $callable = static::$popCallbacks[$this->name];
+                return $callable($popJobCallback, $queue);
             }
 
             foreach (explode(',', $queue) as $queue) {

@@ -16,9 +16,17 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
+class BusBatchTest_test_firstJob_class {
+            use Batchable;
+        }
+
+class BusBatchTest_test_secondJob_class {
+            use Batchable;
+        }
+
 class BusBatchTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         $db = new DB;
 
@@ -63,7 +71,7 @@ class BusBatchTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         unset($_SERVER['__finally.batch']);
         unset($_SERVER['__then.batch']);
@@ -81,13 +89,9 @@ class BusBatchTest extends TestCase
 
         $batch = $this->createTestBatch($queue);
 
-        $job = new class {
-            use Batchable;
-        };
+        $job = new BusBatchTest_test_firstJob_class;
 
-        $secondJob = new class {
-            use Batchable;
-        };
+        $secondJob = new BusBatchTest_test_secondJob_class;
 
         $queue->shouldReceive('connection')->once()
                         ->with('test-connection')
@@ -122,13 +126,9 @@ class BusBatchTest extends TestCase
 
         $batch = $this->createTestBatch($queue);
 
-        $job = new class {
-            use Batchable;
-        };
+        $job = new BusBatchTest_test_firstJob_class;
 
-        $secondJob = new class {
-            use Batchable;
-        };
+        $secondJob = new BusBatchTest_test_secondJob_class;
 
         $queue->shouldReceive('connection')->once()
                         ->with('test-connection')
@@ -158,13 +158,9 @@ class BusBatchTest extends TestCase
 
         $batch = $this->createTestBatch($queue, $allowFailures = false);
 
-        $job = new class {
-            use Batchable;
-        };
+        $job = new BusBatchTest_test_firstJob_class;
 
-        $secondJob = new class {
-            use Batchable;
-        };
+        $secondJob = new BusBatchTest_test_secondJob_class;
 
         $queue->shouldReceive('connection')->once()
                         ->with('test-connection')
@@ -197,13 +193,9 @@ class BusBatchTest extends TestCase
 
         $batch = $this->createTestBatch($queue, $allowFailures = true);
 
-        $job = new class {
-            use Batchable;
-        };
+        $job = new BusBatchTest_test_firstJob_class;
 
-        $secondJob = new class {
-            use Batchable;
-        };
+        $secondJob = new BusBatchTest_test_secondJob_class;
 
         $queue->shouldReceive('connection')->once()
                         ->with('test-connection')

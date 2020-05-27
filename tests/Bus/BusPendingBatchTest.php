@@ -12,9 +12,16 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
 
+class BusPendingBatchTest_test_pending_batch_may_be_configured_and_dispatched_class {
+            use Batchable;
+        }
+
+class BusPendingBatchTest_test_batch_is_deleted_from_storage_if_exception_thrown_during_batching_class {
+        }
+
 class BusPendingBatchTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }
@@ -23,9 +30,9 @@ class BusPendingBatchTest extends TestCase
     {
         $container = new Container;
 
-        $pendingBatch = new PendingBatch($container, new Collection([$job = new class {
-            use Batchable;
-        }]));
+        $pendingBatch = new PendingBatch($container, new Collection([
+            $job = new BusPendingBatchTest_test_pending_batch_may_be_configured_and_dispatched_class
+        ]));
 
         $pendingBatch = $pendingBatch->then(function () {
             //
@@ -53,8 +60,9 @@ class BusPendingBatchTest extends TestCase
 
         $container = new Container;
 
-        $pendingBatch = new PendingBatch($container, new Collection([new class {
-        }]));
+        $pendingBatch = new PendingBatch($container, new Collection([
+            new BusPendingBatchTest_test_batch_is_deleted_from_storage_if_exception_thrown_during_batching_class
+        ]));
 
         $repository = m::mock(BatchRepository::class);
 
