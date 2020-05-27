@@ -163,7 +163,7 @@ class PendingResourceRegistration
     public function withoutMiddleware($middleware)
     {
         $this->options['excluded_middleware'] = array_merge(
-            (array) ($this->options['excluded_middleware'] ?? []), Arr::wrap($middleware)
+            (array) (isset($this->options['excluded_middleware']) ? $this->options['excluded_middleware'] : []), Arr::wrap($middleware)
         );
 
         return $this;

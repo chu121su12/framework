@@ -65,7 +65,7 @@ class PendingBatch
      */
     public function thenCallbacks()
     {
-        return $this->options['then'] ?? [];
+        return isset($this->options['then']) ? $this->options['then'] : [];
     }
 
     /**
@@ -88,7 +88,7 @@ class PendingBatch
      */
     public function catchCallbacks()
     {
-        return $this->options['catch'] ?? [];
+        return isset($this->options['catch']) ? $this->options['catch'] : [];
     }
 
     /**
@@ -111,7 +111,7 @@ class PendingBatch
      */
     public function finallyCallbacks()
     {
-        return $this->options['finally'] ?? [];
+        return isset($this->options['finally']) ? $this->options['finally'] : [];
     }
 
     /**
@@ -170,7 +170,7 @@ class PendingBatch
      */
     public function connection()
     {
-        return $this->options['connection'] ?? null;
+        return isset($this->options['connection']) ? $this->options['connection'] : null;
     }
 
     /**
@@ -193,7 +193,7 @@ class PendingBatch
      */
     public function queue()
     {
-        return $this->options['queue'] ?? null;
+        return isset($this->options['queue']) ? $this->options['queue'] : null;
     }
 
     /**

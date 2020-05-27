@@ -80,7 +80,7 @@ EOF;
                     $this->compileBindings($bindings),
                     class_exists($class) ? '{{ $attributes }}' : '',
                     $this->compileSlots($data['__laravel_slots']),
-                    '{{ $slot ?? "" }}',
+                    '{{ isset($slot) ? $slot : "" }}',
                 ],
                 $template
             );
