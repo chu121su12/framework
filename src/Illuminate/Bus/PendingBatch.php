@@ -216,6 +216,11 @@ class PendingBatch
 
             $batch = $batch->add($this->jobs);
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        if (isset($e)) {
             if (isset($batch)) {
                 $repository->delete($batch->id);
             }
