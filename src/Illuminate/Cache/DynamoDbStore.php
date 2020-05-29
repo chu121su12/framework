@@ -266,6 +266,8 @@ class DynamoDbStore implements LockProvider, Store
      * @param  mixed  $value
      * @param  int  $seconds
      * @return bool
+     *
+     * @throws \Aws\DynamoDb\Exception\DynamoDbException
      */
     public function add($key, $value, $seconds)
     {
@@ -311,6 +313,8 @@ class DynamoDbStore implements LockProvider, Store
      * @param  string  $key
      * @param  mixed  $value
      * @return int|bool
+     *
+     * @throws \Aws\DynamoDb\Exception\DynamoDbException
      */
     public function increment($key, $value = 1)
     {
@@ -356,6 +360,8 @@ class DynamoDbStore implements LockProvider, Store
      * @param  string  $key
      * @param  mixed  $value
      * @return int|bool
+     *
+     * @throws \Aws\DynamoDb\Exception\DynamoDbException
      */
     public function decrement($key, $value = 1)
     {
