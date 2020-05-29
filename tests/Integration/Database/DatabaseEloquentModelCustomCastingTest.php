@@ -346,12 +346,12 @@ class DateObjectCaster implements CastsAttributes
         $this->argument = $argument;
     }
 
-    public function get($model, $key, $value, $attributes)
+    public function get($model, $key, $value, array $attributes)
     {
         return Carbon::parse($value);
     }
 
-    public function set($model, $key, $value, $attributes)
+    public function set($model, $key, $value, array $attributes)
     {
         return $value->format('Y-m-d');
     }
