@@ -321,7 +321,9 @@ class Filesystem
      */
     public function guessExtension($path)
     {
-        return (new MimeTypes)->getExtensions($this->mimeType($path))[0] ?? null;
+        $extensions = (new MimeTypes)->getExtensions($this->mimeType($path));
+
+        return isset($extensions[0]) ? $extensions[0] : null;
     }
 
     /**
