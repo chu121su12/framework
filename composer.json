@@ -90,6 +90,12 @@
         "predis/predis": "^1.1.1",
         "symfony/cache": "^3.4"
     },
+    "provide": {
+        "psr/container-implementation": "1.0"
+    },
+    "conflict": {
+        "tightenco/collect": "<5.5.33"
+    },
     "autoload": {
         "exclude-from-classmap": [
             "vendor/symfony/http-kernel/Exception"

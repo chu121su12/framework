@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Bus\Batch;
 use Illuminate\Bus\BatchRepository;
 use Illuminate\Bus\PendingBatch;
+use Illuminate\Bus\UpdatedBatchJobCounts;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\Str;
 
@@ -77,26 +78,32 @@ class BatchRepositoryFake implements BatchRepository
      * Decrement the total number of pending jobs for the batch.
      *
      * @param  string  $batchId
-     * @return int|null
+     * @param  string  $jobId
+     * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
-    public function decrementPendingJobs($batchId)
+    public function decrementPendingJobs($batchId, $jobId)
     {
         $batchId = cast_to_string($batchId);
 
-        return 0;
+        $jobId = cast_to_string($jobId);
+
+        return new UpdatedBatchJobCounts;
     }
 
     /**
      * Increment the total number of failed jobs for the batch.
      *
      * @param  string  $batchId
-     * @return int|null
+     * @param  string  $jobId
+     * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
-    public function incrementFailedJobs($batchId)
+    public function incrementFailedJobs($batchId, $jobId)
     {
         $batchId = cast_to_string($batchId);
 
-        return 0;
+        $jobId = cast_to_string($jobId);
+
+        return new UpdatedBatchJobCounts;
     }
 
     /**

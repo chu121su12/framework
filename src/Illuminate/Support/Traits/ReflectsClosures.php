@@ -3,6 +3,7 @@
 namespace Illuminate\Support\Traits;
 
 use Closure;
+use Illuminate\Support\Reflector;
 use ReflectionFunction;
 use RuntimeException;
 
@@ -25,9 +26,7 @@ trait ReflectsClosures
                 return [$parameter->getName() => null];
             }
 
-            $parameterClass = $parameter->getClass();
-
-            return [$parameter->getName() => isset($parameterClass->name) ? $parameterClass->name : null];
+            return [$parameter->getName() => Reflector::getParameterClassName($parameter)];
         })->all();
     }
 
