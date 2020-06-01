@@ -46,6 +46,16 @@ class Util
      */
     public static function getParameterClassName($parameter)
     {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            $className = $parameter->getClass();
+
+            if ($className && ($className = $className->getName())) {
+                return in_array($className, ['array', 'callable'], true) ? null : $className;
+            }
+
+            return null;
+        }
+
         $type = $parameter->getType();
 
         return ($type && ! $type->isBuiltin()) ? $type->getName() : null;

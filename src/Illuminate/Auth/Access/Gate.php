@@ -450,6 +450,11 @@ class Gate implements GateContract
      */
     protected function parameterAllowsGuests($parameter)
     {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            return ($parameter->getClass() && $parameter->allowsNull()) ||
+                   ($parameter->isDefaultValueAvailable() && is_null($parameter->getDefaultValue()));
+        }
+
         return ($parameter->hasType() && $parameter->allowsNull()) ||
                ($parameter->isDefaultValueAvailable() && is_null($parameter->getDefaultValue()));
     }
