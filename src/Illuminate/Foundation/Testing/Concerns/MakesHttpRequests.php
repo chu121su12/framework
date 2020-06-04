@@ -99,8 +99,12 @@ trait MakesHttpRequests
      * @param  string  $type
      * @return $this
      */
-    public function withToken(string $token, string $type = 'Bearer')
+    public function withToken($token, $type = 'Bearer')
     {
+        $token = cast_to_string($token);
+
+        $type = cast_to_string($type);
+
         return $this->withHeader('Authorization', $type.' '.$token);
     }
 

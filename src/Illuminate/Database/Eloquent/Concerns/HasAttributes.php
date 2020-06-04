@@ -417,11 +417,15 @@ trait HasAttributes
             return $this->relations[$key];
         }
 
+        $staticClass = get_class($this);
+
         // If the "attribute" exists as a method on the model, we will just assume
         // it is a relationship and will load and return results from the query
         // and hydrate the relationship's value on the "relationships" array.
         if (method_exists($this, $key) ||
-            (static::$relationResolvers[get_class($this)][$key] ?? null)) {
+            (isset(static::$relationResolvers[$staticClass]) && isset(static::$relationResolvers[$staticClass][$key])
+                ? static::$relationResolvers[$staticClass][$key]
+                : null)) {
             return $this->getRelationshipFromMethod($key);
         }
     }
