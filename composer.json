@@ -23,7 +23,7 @@
         "dragonmantank/cron-expression": "^1.2.1",
         "egulias/email-validator": "^2.1.10",
         "erusev/parsedown": "^1.7",
-        "league/flysystem": "^1.0.8",
+        "league/flysystem": "^1.0.34",
         "monolog/monolog": "^1.25",
         "moontoast/math": "^1.1",
         "opis/closure": "^3.5",

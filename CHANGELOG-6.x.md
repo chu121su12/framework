@@ -1,6 +1,18 @@
 # Release Notes for 6.x
 
-## [Unreleased](https://github.com/laravel/framework/compare/v6.18.16...6.x)
+## [Unreleased](https://github.com/laravel/framework/compare/v6.18.18...6.x)
+
+
+## [v6.18.18 (2020-06-03)](https://github.com/laravel/framework/compare/v6.18.17...v6.18.18)
+
+### Fixed
+- Fixed `Illuminate\Database\Eloquent\Relations\MorphToMany::getCurrentlyAttachedPivots()` ([110b129](https://github.com/laravel/framework/commit/110b129531df172f03bf163f561c71123fac6296))
+
+
+## [v6.18.17 (2020-06-02)](https://github.com/laravel/framework/compare/v6.18.16...v6.18.17)
+
+### Added
+- Support PHP 8's reflection API ([#33039](https://github.com/laravel/framework/pull/33039))
 
 ### Fixed
 - Fixed `Illuminate\Database\Eloquent\Collection::getQueueableRelations()` ([00e9ed7](https://github.com/laravel/framework/commit/00e9ed76483ea6ad1264676e7b1095b23e16a433))

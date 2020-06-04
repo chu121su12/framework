@@ -6,6 +6,7 @@ use ErrorException;
 use FilesystemIterator;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Macroable\Macroable;
+use RuntimeException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Mime\MimeTypes;
 
@@ -345,6 +346,12 @@ class Filesystem
      */
     public function guessExtension($path)
     {
+        if (! class_exists(MimeTypes::class)) {
+            throw new RuntimeException(
+                'To enable support for guessing extensions, please install the symfony/mime package.'
+            );
+        }
+
         $extensions = (new MimeTypes)->getExtensions($this->mimeType($path));
 
         return isset($extensions[0]) ? $extensions[0] : null;

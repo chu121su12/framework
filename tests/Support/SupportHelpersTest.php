@@ -504,8 +504,7 @@ class SupportHelpersTest extends TestCase
         $this->assertEquals(2, $attempts);
 
         // Make sure we waited 100ms for the first attempt
-        // this may fail on windows/php5 in full test run // updated, waiting for test
-        $this->assertEqualsWithDelta(0.1, microtime(true) - $startTime, 0.01);
+        $this->assertEqualsWithDelta(0.1, microtime(true) - $startTime, 0.02);
     }
 
     public function testRetryWithPassingWhenCallback()
@@ -526,7 +525,7 @@ class SupportHelpersTest extends TestCase
         $this->assertEquals(2, $attempts);
 
         // Make sure we waited 100ms for the first attempt
-        $this->assertEqualsWithDelta(0.1, microtime(true) - $startTime, 0.01);
+        $this->assertEqualsWithDelta(0.1, microtime(true) - $startTime, 0.02);
     }
 
     public function testRetryWithFailingWhenCallback()

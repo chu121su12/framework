@@ -1,6 +1,22 @@
 # Release Notes for 7.x
 
-## [Unreleased](https://github.com/laravel/framework/compare/v7.13.0...7.x)
+## [Unreleased](https://github.com/laravel/framework/compare/v7.14.1...7.x)
+
+### Added
+- Added extendable relations for models ([#33025](https://github.com/laravel/framework/pull/33025))
+- Added `Illuminate\Foundation\Testing\Concerns\MakesHttpRequests::withToken()` ([#33075](https://github.com/laravel/framework/pull/33075), [79383a1](https://github.com/laravel/framework/commit/79383a129bf213177ff00ec1ba7c396da5d7749b))
+
+
+## [v7.14.1 (2020-06-03)](https://github.com/laravel/framework/compare/v7.14.0...v7.14.1)
+
+### Added
+- Added missing `symfony/mime` suggest ([#33067](https://github.com/laravel/framework/pull/33067))
+
+### Fixed
+- Fixed `Illuminate\Database\Eloquent\Relations\MorphToMany::getCurrentlyAttachedPivots()` ([110b129](https://github.com/laravel/framework/commit/110b129531df172f03bf163f561c71123fac6296))
+
+
+## [v7.14.0 (2020-06-02)](https://github.com/laravel/framework/compare/v7.13.0...v7.14.0)
 
 ### Added
 - Views: make attributes available within render method ([#32978](https://github.com/laravel/framework/pull/32978))
@@ -9,6 +25,7 @@
 - Added `Illuminate\Http\Client\Request::toPsrRequest()` ([#33016](https://github.com/laravel/framework/pull/33016))
 - Added `Illuminate\Support\MessageBag::addIf()` method ([50efe09](https://github.com/laravel/framework/commit/50efe099b59e75563298deb992017b4cabfb021d))
 - Provide `psr/container-implementation` ([#33020](https://github.com/laravel/framework/pull/33020))
+- Support PHP 8's reflection API ([#33039](https://github.com/laravel/framework/pull/33039), [6018c1d](https://github.com/laravel/framework/commit/6018c1d18e7b764c17307c1f98d64482a00a668d))
 
 ### Fixed
 - Restore `app()->getCached*Path()` absolute '/' behavior in Windows ([#32969](https://github.com/laravel/framework/pull/32969))
@@ -20,6 +37,7 @@
 
 ### Changed
 - Use new line for `route:list` middleware ([#32993](https://github.com/laravel/framework/pull/32993))
+- Disallow generation commands with reserved names ([#33037](https://github.com/laravel/framework/pull/33037))
 
 
 ## [v7.13.0 (2020-05-26)](https://github.com/laravel/framework/compare/v7.12.0...v7.13.0)
