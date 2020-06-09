@@ -2,8 +2,9 @@
 
 namespace Illuminate\Database\Eloquent\Concerns;
 
-use Illuminate\Collections\Arr;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Events\NullDispatcher;
+use Illuminate\Support\Arr;
 use InvalidArgumentException;
 
 trait HasEvents
@@ -399,7 +400,9 @@ trait HasEvents
     {
         $dispatcher = static::getEventDispatcher();
 
-        static::unsetEventDispatcher();
+        if ($dispatcher) {
+            static::setEventDispatcher(new NullDispatcher($dispatcher));
+        }
 
         try {
             return $callback();

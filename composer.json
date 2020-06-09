@@ -116,6 +116,7 @@
             "Carbon\\": "cr/patch/carbon/carbon-2.33.0/",
             "Doctrine\\Inflector\\": "cr/patch/doctrine-inflector-src/",
             "Illuminate\\": "src/Illuminate/",
+            "Illuminate\\Support\\": ["src/Illuminate/Macroable/", "src/Illuminate/Collections/"],
             "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/ui-2.0.3/auth-backend/",
             "Laravel\\Ui\\": "cr/patch/laravel-ui/ui-2.0.3/src/",
             "CR\\LaravelBackport\\": "cr/patch/laravel-backport/"

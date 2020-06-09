@@ -2,8 +2,8 @@
 
 namespace Illuminate\Foundation\Exceptions;
 
-use Illuminate\Collections\Arr;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use Whoops\Handler\PrettyPageHandler;
 
 class WhoopsHandler
@@ -60,7 +60,7 @@ class WhoopsHandler
      */
     protected function registerBlacklist($handler)
     {
-        foreach (config('app.debug_blacklist', []) as $key => $secrets) {
+        foreach (config('app.debug_blacklist', config('app.debug_hide', [])) as $key => $secrets) {
             foreach ($secrets as $secret) {
                 $handler->blacklist($key, $secret);
             }

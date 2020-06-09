@@ -6,14 +6,14 @@ use Closure;
 use Cron\CronExpression;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\TransferException;
-use Illuminate\Collections\Arr;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Mail\Mailer;
-use Illuminate\Macroable\Macroable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Stringable;
+use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\ReflectsClosures;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\Process\Process;
@@ -475,7 +475,7 @@ class Event
      */
     protected function emailOutput(Mailer $mailer, $addresses, $onlyIfOutputExists = false)
     {
-        $text = file_exists($this->output) ? file_get_contents($this->output) : '';
+        $text = is_file($this->output) ? file_get_contents($this->output) : '';
 
         if ($onlyIfOutputExists && empty($text)) {
             return;
@@ -837,7 +837,7 @@ class Event
     protected function withOutputCallback(Closure $callback, $onlyIfOutputExists = false)
     {
         return function (Container $container) use ($callback, $onlyIfOutputExists) {
-            $output = $this->output && file_exists($this->output) ? file_get_contents($this->output) : '';
+            $output = $this->output && is_file($this->output) ? file_get_contents($this->output) : '';
 
             return $onlyIfOutputExists && empty($output)
                             ? null

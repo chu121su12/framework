@@ -1,12 +1,17 @@
 <?php
 
-namespace Illuminate\Collections;
+namespace Illuminate\Support\Traits;
 
 use CachingIterator;
 use Closure;
 use Exception;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Enumerable;
+use Illuminate\Support\HigherOrderCollectionProxy;
+use Illuminate\Support\HigherOrderWhenProxy;
 use JsonSerializable;
 use Symfony\Component\VarDumper\VarDumper;
 use Traversable;
@@ -518,7 +523,7 @@ trait EnumeratesValues
     }
 
     /**
-     * Filter items where the given key is not null.
+     * Filter items where the value for the given key is null.
      *
      * @param  string|null  $key
      * @return static
@@ -529,7 +534,7 @@ trait EnumeratesValues
     }
 
     /**
-     * Filter items where the given key is null.
+     * Filter items where the value for the given key is not null.
      *
      * @param  string|null  $key
      * @return static
@@ -740,7 +745,7 @@ trait EnumeratesValues
     /**
      * Collect the values into a collection.
      *
-     * @return \Illuminate\Collections\Collection
+     * @return \Illuminate\Support\Collection
      */
     public function collect()
     {

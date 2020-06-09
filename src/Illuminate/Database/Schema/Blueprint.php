@@ -8,8 +8,8 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Grammars\Grammar;
 use Illuminate\Database\SQLiteConnection;
-use Illuminate\Macroable\Macroable;
 use Illuminate\Support\Fluent;
+use Illuminate\Support\Traits\Macroable;
 
 class Blueprint
 {
@@ -1148,6 +1148,20 @@ class Blueprint
     public function uuid($column)
     {
         return $this->addColumn('uuid', $column);
+    }
+
+    /**
+     * Create a new UUID column on the table with a foreign key constraint.
+     *
+     * @param  string  $column
+     * @return \Illuminate\Database\Schema\ForeignIdColumnDefinition
+     */
+    public function foreignUuid($column)
+    {
+        return $this->columns[] = new ForeignIdColumnDefinition($this, [
+            'type' => 'uuid',
+            'name' => $column,
+        ]);
     }
 
     /**
