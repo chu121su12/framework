@@ -3,7 +3,9 @@
 namespace Illuminate\Bus;
 
 use Closure;
+use Illuminate\Bus\Events\BatchDispatched;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 use Illuminate\Queue\SerializableClosure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -11,6 +13,13 @@ use Throwable;
 
 class PendingBatch
 {
+    /**
+     * The IoC container instance.
+     *
+     * @var \Illuminate\Contracts\Container\Container
+     */
+    protected $container;
+
     /**
      * The batch name.
      *
@@ -227,6 +236,10 @@ class PendingBatch
 
             throw $e;
         }
+
+        $this->container->make(EventDispatcher::class)->dispatch(
+            new BatchDispatched($batch)
+        );
 
         return $batch;
     }

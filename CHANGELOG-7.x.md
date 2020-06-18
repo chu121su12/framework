@@ -1,10 +1,27 @@
 # Release Notes for 7.x
 
-## [Unreleased](https://github.com/laravel/framework/compare/v7.14.1...7.x)
+## [Unreleased](https://github.com/laravel/framework/compare/v7.15.0...7.x)
+
+### Added
+- Added `makeVisibleIf` and `makeHiddenIf` methods to `Illuminate\Database\Eloquent\Concerns\HidesAttributes` ([#33176](https://github.com/laravel/framework/pull/33176), [42383e4](https://github.com/laravel/framework/commit/42383e4ba8806ac0ab69f80d0325fa01fd9c30f4))
+
+### Changed
+- Improved the reflector ([#33184](https://github.com/laravel/framework/pull/33184))
+- Streamline ease of use with relation subquery ([#33180](https://github.com/laravel/framework/pull/33180))
+- Improve event subscribers ([#33191](https://github.com/laravel/framework/pull/33191), [058d92f](https://github.com/laravel/framework/commit/058d92f2842211a0bc60222fd464ca5350965c22), [b80ddf4](https://github.com/laravel/framework/commit/b80ddf458bd08de375d83b716a1309ed927197aa))
+
+
+## [v7.15.0 (2020-06-09)](https://github.com/laravel/framework/compare/v7.14.1...v7.15.0)
 
 ### Added
 - Added extendable relations for models ([#33025](https://github.com/laravel/framework/pull/33025))
 - Added `Illuminate\Foundation\Testing\Concerns\MakesHttpRequests::withToken()` ([#33075](https://github.com/laravel/framework/pull/33075), [79383a1](https://github.com/laravel/framework/commit/79383a129bf213177ff00ec1ba7c396da5d7749b))
+- Added the ability to `Illuminate\Database\Eloquent\Relations\HasOneOrMany::makeMany()` (create many without saving) ([#33021](https://github.com/laravel/framework/pull/33021))
+- Added `Illuminate\Database\Schema\Blueprint::foreignUuid()` ([#33129](https://github.com/laravel/framework/pull/33129))
+- Allow setting the event handler queue via a `viaQueue()` method ([#32770](https://github.com/laravel/framework/pull/32770), [852a927](https://github.com/laravel/framework/commit/852a927d254af9719c9fde6eb31466472fd03dfc)) 
+
+### Fixed
+- Fixed `Model::withoutEvents()` not registering listeners inside boot() ([#33149](https://github.com/laravel/framework/pull/33149), [4bb32ae](https://github.com/laravel/framework/commit/4bb32aea50eec4c3cc8b77f463e4a96213a0af09))
 
 
 ## [v7.14.1 (2020-06-03)](https://github.com/laravel/framework/compare/v7.14.0...v7.14.1)
