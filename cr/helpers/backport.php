@@ -12,3 +12,33 @@ if (! function_exists('backport_json_decode'))
         return json_decode($json, $assoc, $depth, $options);
     }
 }
+
+if (! function_exists('backport_substr_count'))
+{
+    function backport_substr_count($haystack, $needle, $offset = 0, $length = null)
+    {
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
+            if ($offset < 0) {
+                $offset = -$offset - 1;
+                $haystack = strrev($haystack);
+                $needle = strrev($needle);
+            }
+
+            if (! is_null($length)) {
+                if ($length < 0) {
+                    $length = strlen($haystack) + $length - $offset;
+                }
+
+                return substr_count($haystack, $needle, $offset, $length);
+            } else {
+                return substr_count($haystack, $needle, $offset);
+            }
+        }
+
+        if (! is_null($length)) {
+            return substr_count($haystack, $needle, $offset, $length);
+        } else {
+            return substr_count($haystack, $needle, $offset);
+        }
+    }
+}
