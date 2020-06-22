@@ -2183,7 +2183,7 @@ class EloquentModelStub extends Model
 
     public function getListItemsAttribute($value)
     {
-        return json_decode($value, true);
+        return backport_json_decode($value, true);
     }
 
     public function setListItemsAttribute($value)

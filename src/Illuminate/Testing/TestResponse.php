@@ -819,7 +819,7 @@ class TestResponse implements ArrayAccess
      */
     public function decodeResponseJson($key = null)
     {
-        $decodedResponse = json_decode($this->getContent(), true);
+        $decodedResponse = backport_json_decode($this->getContent(), true);
 
         if (is_null($decodedResponse) || $decodedResponse === false) {
             if ($this->exception) {
@@ -1174,7 +1174,7 @@ class TestResponse implements ArrayAccess
     {
         $content = $this->getContent();
 
-        $json = json_decode($content);
+        $json = backport_json_decode($content);
 
         if (json_last_error() === JSON_ERROR_NONE) {
             $content = $json;

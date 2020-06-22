@@ -79,7 +79,7 @@ class ListFailedCommand extends Command
      */
     private function extractJobName($payload)
     {
-        $payload = json_decode($payload, true);
+        $payload = backport_json_decode($payload, true);
 
         if ($payload && (! isset($payload['data']['command']))) {
             return isset($payload['job']) ? $payload['job'] : null;

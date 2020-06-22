@@ -46,7 +46,7 @@ class Mix
                 throw new Exception('The Mix manifest does not exist.');
             }
 
-            $manifests[$manifestPath] = json_decode(file_get_contents($manifestPath), true);
+            $manifests[$manifestPath] = backport_json_decode(file_get_contents($manifestPath), true);
         }
 
         $manifest = $manifests[$manifestPath];

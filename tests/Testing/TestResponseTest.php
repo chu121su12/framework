@@ -899,7 +899,7 @@ class TestResponseTest extends TestCase
 
         $this->assertSame('foo', $response->json('foobar.foobar_foo'));
         $this->assertEquals(
-            json_decode($response->getContent(), true),
+            backport_json_decode($response->getContent(), true),
             $response->json()
         );
     }

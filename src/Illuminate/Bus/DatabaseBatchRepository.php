@@ -151,7 +151,7 @@ class DatabaseBatchRepository implements BatchRepository
             return [
                 'pending_jobs' => $batch->pending_jobs - 1,
                 'failed_jobs' => $batch->failed_jobs,
-                'failed_job_ids' => json_encode(array_values(array_diff(json_decode($batch->failed_job_ids, true), [$jobId]))),
+                'failed_job_ids' => json_encode(array_values(array_diff(backport_json_decode($batch->failed_job_ids, true), [$jobId]))),
             ];
         });
 
@@ -178,7 +178,7 @@ class DatabaseBatchRepository implements BatchRepository
             return [
                 'pending_jobs' => $batch->pending_jobs,
                 'failed_jobs' => $batch->failed_jobs + 1,
-                'failed_job_ids' => json_encode(array_values(array_unique(array_merge(json_decode($batch->failed_job_ids, true), [$jobId])))),
+                'failed_job_ids' => json_encode(array_values(array_unique(array_merge(backport_json_decode($batch->failed_job_ids, true), [$jobId])))),
             ];
         });
 
@@ -282,7 +282,7 @@ class DatabaseBatchRepository implements BatchRepository
             (int) $batch->total_jobs,
             (int) $batch->pending_jobs,
             (int) $batch->failed_jobs,
-            json_decode($batch->failed_job_ids, true),
+            backport_json_decode($batch->failed_job_ids, true),
             unserialize($batch->options),
             CarbonImmutable::createFromTimestamp($batch->created_at),
             $batch->cancelled_at ? CarbonImmutable::createFromTimestamp($batch->cancelled_at) : $batch->cancelled_at,

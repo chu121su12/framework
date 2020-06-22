@@ -1155,7 +1155,7 @@ trait ValidatesAttributes
             return false;
         }
 
-        json_decode($value);
+        backport_json_decode($value);
 
         return json_last_error() === JSON_ERROR_NONE;
     }

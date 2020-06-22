@@ -775,7 +775,7 @@ trait EnumeratesValues
             if ($value instanceof JsonSerializable) {
                 return $value->jsonSerialize();
             } elseif ($value instanceof Jsonable) {
-                return json_decode($value->toJson(), true);
+                return backport_json_decode($value->toJson(), true);
             } elseif ($value instanceof Arrayable) {
                 return $value->toArray();
             }
@@ -878,7 +878,7 @@ trait EnumeratesValues
         } elseif ($items instanceof Arrayable) {
             return $items->toArray();
         } elseif ($items instanceof Jsonable) {
-            return json_decode($items->toJson(), true);
+            return backport_json_decode($items->toJson(), true);
         } elseif ($items instanceof JsonSerializable) {
             return (array) $items->jsonSerialize();
         } elseif ($items instanceof Traversable) {

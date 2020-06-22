@@ -47,7 +47,7 @@ class CheckForMaintenanceMode
     public function handle($request, Closure $next)
     {
         if ($this->app->isDownForMaintenance()) {
-            $data = json_decode(file_get_contents($this->app->storagePath().'/framework/down'), true);
+            $data = backport_json_decode(file_get_contents($this->app->storagePath().'/framework/down'), true);
 
             if (isset($data['allowed']) && IpUtils::checkIp($request->ip(), (array) $data['allowed'])) {
                 return $next($request);

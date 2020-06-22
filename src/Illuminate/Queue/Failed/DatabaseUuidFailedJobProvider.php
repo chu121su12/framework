@@ -55,7 +55,7 @@ class DatabaseUuidFailedJobProvider implements FailedJobProviderInterface
     public function log($connection, $queue, $payload, $exception)
     {
         $this->getTable()->insert([
-            'uuid' => $uuid = json_decode($payload, true)['uuid'],
+            'uuid' => $uuid = backport_json_decode($payload, true)['uuid'],
             'connection' => $connection,
             'queue' => $queue,
             'payload' => $payload,

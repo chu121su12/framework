@@ -51,7 +51,7 @@ class JsonResponse extends BaseJsonResponse
      */
     public function getData($assoc = false, $depth = 512)
     {
-        return json_decode($this->data, $assoc, $depth);
+        return backport_json_decode($this->data, $assoc, $depth);
     }
 
     /**

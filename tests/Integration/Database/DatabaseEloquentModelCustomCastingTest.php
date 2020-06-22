@@ -89,8 +89,8 @@ class DatabaseEloquentModelCustomCastingTest extends DatabaseTestCase
         $this->assertSame('117 Spencer St.', $model->toArray()['address_line_one']);
         $this->assertSame('My Childhood House', $model->toArray()['address_line_two']);
 
-        $this->assertSame('117 Spencer St.', json_decode($model->toJson(), true)['address_line_one']);
-        $this->assertSame('My Childhood House', json_decode($model->toJson(), true)['address_line_two']);
+        $this->assertSame('117 Spencer St.', backport_json_decode($model->toJson(), true)['address_line_one']);
+        $this->assertSame('My Childhood House', backport_json_decode($model->toJson(), true)['address_line_two']);
 
         $model->address = null;
 
@@ -269,7 +269,7 @@ class JsonCaster implements CastsAttributes
 {
     public function get($model, $key, $value, array $attributes)
     {
-        return json_decode($value, true);
+        return backport_json_decode($value, true);
     }
 
     public function set($model, $key, $value, array $attributes)

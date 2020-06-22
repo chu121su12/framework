@@ -120,7 +120,7 @@ class PackageManifest
         $packages = [];
 
         if ($this->files->exists($path = $this->vendorPath.'/composer/installed.json')) {
-            $installed = json_decode($this->files->get($path), true);
+            $installed = backport_json_decode($this->files->get($path), true);
 
             $packages = isset($installed['packages']) ? $installed['packages'] : $installed;
         }
@@ -165,7 +165,7 @@ class PackageManifest
             return [];
         }
 
-        $jsonContent = json_decode(file_get_contents(
+        $jsonContent = backport_json_decode(file_get_contents(
             $this->basePath.'/composer.json'
         ), true);
 

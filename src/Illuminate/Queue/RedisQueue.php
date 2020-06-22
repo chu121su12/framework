@@ -125,7 +125,7 @@ class RedisQueue extends Queue implements QueueContract
             $this->getQueue($queue).':notify', $payload
         );
 
-        $jsonContent = json_decode($payload, true);
+        $jsonContent = backport_json_decode($payload, true);
 
         return isset($jsonContent['id']) ? $jsonContent['id'] : null;
     }
@@ -158,7 +158,7 @@ class RedisQueue extends Queue implements QueueContract
             $this->getQueue($queue).':delayed', $this->availableAt($delay), $payload
         );
 
-        $jsonContent = json_decode($payload, true);
+        $jsonContent = backport_json_decode($payload, true);
 
         return isset($jsonContent['id']) ? $jsonContent['id'] : null;
     }

@@ -79,7 +79,7 @@ class SupportCarbonTest extends TestCase
             return $carbon->getTimestamp();
         });
 
-        $result = json_decode(json_encode($this->now), true);
+        $result = backport_json_decode(json_encode($this->now), true);
 
         $this->assertSame(1498569255, $result);
     }

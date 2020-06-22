@@ -55,7 +55,7 @@ class Response implements ArrayAccess
     public function json()
     {
         if (! $this->decoded) {
-            $this->decoded = json_decode($this->body(), true);
+            $this->decoded = backport_json_decode($this->body(), true);
         }
 
         return $this->decoded;
@@ -68,7 +68,7 @@ class Response implements ArrayAccess
      */
     public function object()
     {
-        return json_decode($this->body(), false);
+        return backport_json_decode($this->body(), false);
     }
 
     /**

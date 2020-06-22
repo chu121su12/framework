@@ -116,7 +116,7 @@ class EncrypterTest extends TestCase
 
         $e = new Encrypter(str_repeat('a', 16));
         $payload = $e->encrypt('foo');
-        $data = json_decode(base64_decode($payload), true);
+        $data = backport_json_decode(base64_decode($payload), true);
         $data['iv'] .= $data['value'][0];
         $data['value'] = substr($data['value'], 1);
         $modified_payload = base64_encode(json_encode($data));
