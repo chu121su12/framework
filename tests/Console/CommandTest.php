@@ -14,6 +14,13 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
+class CommandTest_testCallingClassCommandResolveCommandViaApplicationResolution_class extends Command {
+            public function handle()
+            {
+            }
+        }
+
+
 class CommandTest_testGettingCommandArgumentsAndOptionsByClass_class extends Command {
             public function handle()
             {
@@ -45,11 +52,7 @@ class CommandTest extends TestCase
 
     public function testCallingClassCommandResolveCommandViaApplicationResolution()
     {
-        $command = new class extends Command {
-            public function handle()
-            {
-            }
-        };
+        $command = new CommandTest_testCallingClassCommandResolveCommandViaApplicationResolution_class;
 
         $application = m::mock(Application::class);
         $command->setLaravel($application);
