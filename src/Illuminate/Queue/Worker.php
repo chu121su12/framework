@@ -320,7 +320,7 @@ class Worker
                     return $job;
                 }
             }
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
         } catch (\Error $e) {
         } catch (\Exception $e) {
         }
@@ -346,7 +346,7 @@ class Worker
     {
         try {
             return $this->process($connectionName, $job, $options);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
         } catch (\Error $e) {
         } catch (\Exception $e) {
         }
@@ -403,7 +403,7 @@ class Worker
             $job->fire();
 
             $this->raiseAfterJobEvent($connectionName, $job);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
         } catch (\Error $e) {
         } catch (\Exception $e) {
         }

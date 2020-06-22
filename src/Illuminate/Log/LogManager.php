@@ -120,7 +120,7 @@ class LogManager implements LoggerInterface
                 : with($this->resolve($name), function ($logger) use ($name) {
                     return $this->channels[$name] = $this->tap($name, new Logger($logger, $this->app['events']));
                 });
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
         } catch (\Error $e) {
         } catch (\Exception $e) {
         }

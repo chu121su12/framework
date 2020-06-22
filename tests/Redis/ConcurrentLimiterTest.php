@@ -44,7 +44,7 @@ class ConcurrentLimiterTest extends TestCase
             (new ConcurrencyLimiterMockThatDoesntRelease($this->redis(), 'key', 2, 5))->block(0, function () use (&$store) {
                 $store[] = 3;
             });
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
         } catch (\Error $e) {
         } catch (\Exception $e) {
         }
@@ -87,7 +87,7 @@ class ConcurrentLimiterTest extends TestCase
             $lock->block(0, function () use (&$store) {
                 $store[] = 2;
             });
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
         } catch (\Error $e) {
         } catch (\Exception $e) {
         }
@@ -119,7 +119,7 @@ class ConcurrentLimiterTest extends TestCase
             $lock->block(0, function () use (&$store) {
                 $store[] = 2;
             });
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
         } catch (\Error $e) {
         } catch (\Exception $e) {
         }
@@ -149,7 +149,7 @@ class ConcurrentLimiterTest extends TestCase
             $lock->block(2, function () use (&$store) {
                 $store[] = 2;
             });
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
         } catch (\Error $e) {
         } catch (\Exception $e) {
         }

@@ -126,7 +126,7 @@ class Pipeline implements PipelineContract
         return function ($passable) use ($destination) {
             try {
                 return $destination($passable);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
             } catch (\Error $e) {
             } catch (\Exception $e) {
             }
@@ -173,7 +173,7 @@ class Pipeline implements PipelineContract
                                     : $pipe(...$parameters);
 
                     return $this->handleCarry($carry);
-                } catch (Throwable $e) {
+                } catch (\Throwable $e) {
                 } catch (\Error $e) {
                 } catch (\Exception $e) {
                 }

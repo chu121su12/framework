@@ -27,7 +27,7 @@ trait ManagesTransactions
             try {
                 $e = null;
                 $callbackResult = $callback($this);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
             } catch (\Error $e) {
             } catch (\Exception $e) {
             }
@@ -46,7 +46,7 @@ trait ManagesTransactions
             try {
                 $e = null;
                 $this->commit();
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
             } catch (\Error $e) {
             } catch (\Exception $e) {
             }
@@ -128,7 +128,7 @@ trait ManagesTransactions
 
             try {
                 $this->getPdo()->beginTransaction();
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
             } catch (\Error $e) {
             } catch (\Exception $e) {
             }
@@ -244,7 +244,7 @@ trait ManagesTransactions
         // level that was passed into this method so it will be right from here out.
         try {
             $this->performRollBack($toLevel);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
         } catch (\Error $e) {
         } catch (\Exception $e) {
         }
