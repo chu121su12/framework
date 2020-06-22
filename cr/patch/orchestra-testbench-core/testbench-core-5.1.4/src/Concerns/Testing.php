@@ -202,7 +202,7 @@ trait Testing
         foreach ($this->beforeApplicationDestroyedCallbacks as $callback) {
             try {
                 \call_user_func($callback);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
             } catch (\Error $e) {
             } catch (\Exception $e) {
             }
