@@ -1114,6 +1114,19 @@ class Application extends Container implements ApplicationContract, CachesConfig
     }
 
     /**
+     * Determine if the given service provider is loaded.
+     *
+     * @param  string  $provider
+     * @return bool
+     */
+    public function providerIsLoaded($provider)
+    {
+        $provider = cast_to_string($provider);
+
+        return isset($this->loadedProviders[$provider]);
+    }
+
+    /**
      * Get the application's deferred services.
      *
      * @return array

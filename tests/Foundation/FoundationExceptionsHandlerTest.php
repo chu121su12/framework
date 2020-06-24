@@ -16,6 +16,7 @@ use Illuminate\Routing\ResponseFactory;
 use Illuminate\Support\MessageBag;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Validator;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -28,7 +29,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class FoundationExceptionsHandlerTest extends TestCase
 {
-    use \PHPUnit\Framework\PhpUnit8Assert;
+    use MockeryPHPUnitIntegration,
+        \PHPUnit\Framework\PhpUnit8Assert;
 
     protected $config;
 
@@ -62,8 +64,6 @@ class FoundationExceptionsHandlerTest extends TestCase
 
     protected function tearDown()
     {
-        m::close();
-
         Container::setInstance(null);
     }
 
@@ -71,16 +71,29 @@ class FoundationExceptionsHandlerTest extends TestCase
     {
         $logger = m::mock(LoggerInterface::class);
         $this->container->instance(LoggerInterface::class, $logger);
-        $logger->shouldReceive('error')->withArgs(['Exception message', m::hasKey('exception')]);
+        $logger->shouldReceive('error')->withArgs(['Exception message', m::hasKey('exception')])->once();
 
         $this->handler->report(new RuntimeException('Exception message'));
+    }
+
+    public function testHandlerReportsExceptionWhenUnReportable()
+    {
+        $logger = m::mock(LoggerInterface::class);
+        $this->container->instance(LoggerInterface::class, $logger);
+        $logger->shouldReceive('error')->withArgs(['Exception message', m::hasKey('exception')])->once();
+
+        $this->handler->report(new UnReportableException('Exception message'));
     }
 
     public function testHandlerCallsReportMethodWithDependencies()
     {
         $reporter = m::mock(ReportingService::class);
         $this->container->instance(ReportingService::class, $reporter);
-        $reporter->shouldReceive('send')->withArgs(['Exception message']);
+        $reporter->shouldReceive('send')->withArgs(['Exception message'])->once();
+
+        $logger = m::mock(LoggerInterface::class);
+        $this->container->instance(LoggerInterface::class, $logger);
+        $logger->shouldNotReceive('error');
 
         $this->handler->report(new ReportableException('Exception message'));
     }
@@ -225,6 +238,14 @@ class ReportableException extends Exception
     public function report(ReportingService $reportingService)
     {
         $reportingService->send($this->getMessage());
+    }
+}
+
+class UnReportableException extends Exception
+{
+    public function report()
+    {
+        return false;
     }
 }
 
