@@ -159,7 +159,7 @@ class JobChainingTest extends TestCase
             new JobChainingTestFirstJob(),
             new JobChainingTestFailingJob(),
             new JobChainingTestSecondJob(),
-        ])->catch(static function () {
+        ])->catches(static function () {
             self::$catchCallbackRan = true;
         })->dispatch();
 

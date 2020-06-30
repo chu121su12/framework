@@ -12,7 +12,7 @@ class PendingClosureDispatch extends PendingDispatch
      * @param  \Closure  $callback
      * @return $this
      */
-    public function catch(Closure $callback)
+    public function catches(Closure $callback)
     {
         $this->job->onFailure($callback);
 
