@@ -1736,8 +1736,8 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
 
         $staticClass = get_class($this);
 
-        if ($resolver = (isset(static::$relationResolvers[$staticClass]) && isset(static::$relationResolvers[$staticClass][$key])
-            ? static::$relationResolvers[$staticClass][$key]
+        if ($resolver = (isset(static::$relationResolvers[$staticClass]) && isset(static::$relationResolvers[$staticClass][$method])
+            ? static::$relationResolvers[$staticClass][$method]
             : null)) {
             return $resolver($this);
         }

@@ -236,8 +236,10 @@ class CallQueuedHandler
      * @param  \Throwable  $e
      * @return void
      */
-    protected function ensureChainCatchCallbacksAreInvoked(string $uuid, $command, $e)
+    protected function ensureChainCatchCallbacksAreInvoked($uuid, $command, $e)
     {
+        $uuid = cast_to_string($uuid);
+
         if (method_exists($command, 'invokeChainCatchCallbacks')) {
             $command->invokeChainCatchCallbacks($e);
         }
