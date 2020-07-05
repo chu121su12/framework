@@ -731,17 +731,17 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(1, $parameters, 'unique');
 
-        list($connection, $table) = $this->parseTable($parameters[0]);
+        list($connection, $table, $idColumn) = $this->parseTable($parameters[0]);
 
         // The second parameter position holds the name of the column that needs to
         // be verified as unique. If this parameter isn't specified we will just
         // assume that this column to be verified shares the attribute's name.
         $column = $this->getQueryColumn($parameters, $attribute);
 
-        list($idColumn, $id) = [null, null];
+        $id = null;
 
         if (isset($parameters[2])) {
-            list($idColumn, $id) = $this->getUniqueIds($parameters);
+            list($idColumn, $id) = $this->getUniqueIds($idColumn, $parameters);
 
             if (! is_null($id)) {
                 $id = stripslashes($id);
@@ -767,12 +767,13 @@ trait ValidatesAttributes
     /**
      * Get the excluded ID column and value for the unique rule.
      *
+     * @param  string|null  $idColumn
      * @param  array  $parameters
      * @return array
      */
-    protected function getUniqueIds($parameters)
+    protected function getUniqueIds($idColumn, $parameters)
     {
-        $idColumn = isset($parameters[3]) ? $parameters[3] : 'id';
+        $idColumn = isset($idColumn) ? $idColumn : (isset($parameters[3]) ? $parameters[3] : 'id');
 
         return [$idColumn, $this->prepareUniqueId($parameters[2])];
     }
@@ -829,11 +830,11 @@ trait ValidatesAttributes
             $model = new $table;
 
             $table = $model->getTable();
-
             $connection = isset($connection) ? $connection : $model->getConnectionName();
+            $idColumn = $model->getKeyName();
         }
 
-        return [$connection, $table];
+        return [$connection, $table, isset($idColumn) ? $idColumn : null];
     }
 
     /**
