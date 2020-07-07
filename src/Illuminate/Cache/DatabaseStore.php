@@ -103,6 +103,10 @@ class DatabaseStore implements Store
             return;
         }
 
+        if (!isset($cache->value)) {
+            return $this->unserialize(null);
+        }
+
         return $this->unserialize($cache->value);
     }
 
