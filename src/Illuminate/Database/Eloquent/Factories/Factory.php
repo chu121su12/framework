@@ -642,15 +642,24 @@ abstract class Factory
             static::throwBadMethodCallException($method);
         }
 
-        $factory = static::factoryForModel(Str::singular(Str::substr($method, 3)));
+        $relationship = Str::camel(Str::substr($method, 3));
+
+        $factory = static::factoryForModel(
+            get_class($this->newModel()->{$relationship}()->getRelated())
+        );
 
         if (Str::startsWith($method, 'for')) {
-            return $this->forParent($factory->state(isset($parameters[0]) ? $parameters[0] : []));
+            return $this->for($factory->state(isset($parameters[0]) ? $parameters[0] : []), $relationship);
         } elseif (Str::startsWith($method, 'has')) {
             return $this->has(
                 $factory
                     ->count(is_numeric(isset($parameters[0]) ? $parameters[0] : null) ? $parameters[0] : 1)
-                    ->state(is_array(isset($parameters[0]) ? $parameters[0] : null) ? $parameters[0] : (isset($parameters[1]) ? $parameters[1] : []))
+                    ->state(
+                        (is_callable(isset($parameters[0]) ? $parameters[0] : null)
+                            || is_array(isset($parameters[0]) ? $parameters[0] : null))
+                        ? $parameters[0]
+                        : (isset($parameters[1]) ? $parameters[1] : [])),
+                $relationship
             );
         }
     }
