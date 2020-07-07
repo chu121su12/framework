@@ -428,7 +428,7 @@ abstract class Factory
      * @param  string|null  $relationship
      * @return static
      */
-    public function forParent(self $factory, $relationship = null)
+    public function forr(self $factory, $relationship = null)
     {
         return $this->newInstance(['for' => $this->for->concat([new BelongsToRelationship(
             $factory,

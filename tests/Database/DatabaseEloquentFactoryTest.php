@@ -164,7 +164,7 @@ class DatabaseEloquentFactoryTest extends TestCase
     public function test_belongs_to_relationship()
     {
         $posts = FactoryTestPostFactory::times(3)
-                        ->forParent(FactoryTestUserFactory::newUp(['name' => 'Taylor Otwell']), 'user')
+                        ->forr(FactoryTestUserFactory::newUp(['name' => 'Taylor Otwell']), 'user')
                         ->create();
 
         $this->assertCount(3, $posts->filter(function ($post) {
@@ -178,7 +178,7 @@ class DatabaseEloquentFactoryTest extends TestCase
     public function test_morph_to_relationship()
     {
         $posts = FactoryTestCommentFactory::times(3)
-                        ->forParent(FactoryTestPostFactory::newUp(['title' => 'Test Title']), 'commentable')
+                        ->forr(FactoryTestPostFactory::newUp(['title' => 'Test Title']), 'commentable')
                         ->create();
 
         $this->assertEquals('Test Title', FactoryTestPost::first()->title);
