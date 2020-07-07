@@ -259,11 +259,11 @@ class DatabaseEloquentFactoryTest extends TestCase
             return $model.'Factory';
         });
 
-        $user = FactoryTestUserFactory::new()->hasPosts(3)->create();
+        $user = FactoryTestUserFactory::newUp()->hasPosts(3)->create();
 
         $this->assertCount(3, $user->posts);
 
-        $post = FactoryTestPostFactory::new()
+        $post = FactoryTestPostFactory::newUp()
                             ->forAuthor(['name' => 'Taylor Otwell'])
                             ->hasComments(2)
                             ->create();
