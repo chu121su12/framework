@@ -649,7 +649,7 @@ abstract class Factory
         );
 
         if (Str::startsWith($method, 'for')) {
-            return $this->for($factory->state(isset($parameters[0]) ? $parameters[0] : []), $relationship);
+            return $this->forr($factory->state(isset($parameters[0]) ? $parameters[0] : []), $relationship);
         } elseif (Str::startsWith($method, 'has')) {
             return $this->has(
                 $factory
