@@ -343,18 +343,20 @@ abstract class Factory
      */
     protected function expandAttributes(array $definition)
     {
-        return collect($definition)->map(function ($attribute) use ($definition) {
+        return collect($definition)->map(function ($attribute, $key) use (&$definition) {
             if (is_callable($attribute) && ! is_string($attribute) && ! is_array($attribute)) {
                 $attribute = $attribute($definition);
             }
 
             if ($attribute instanceof self) {
-                return $attribute->create()->getKey();
+                $attribute = $attribute->create()->getKey();
             } elseif ($attribute instanceof Model) {
-                return $attribute->getKey();
-            } else {
-                return $attribute;
+                $attribute = $attribute->getKey();
             }
+
+            $definition[$key] = $attribute;
+
+            return $attribute;
         })->all();
     }
 
@@ -397,9 +399,22 @@ abstract class Factory
     {
         return $this->newInstance([
             'has' => $this->has->concat([new Relationship(
-                $factory, $relationship ?: Str::camel(Str::plural(class_basename($factory->modelName())))
+                $factory, $relationship ?: $this->guessRelationship($factory->modelName())
             )]),
         ]);
+    }
+
+    /**
+     * Attempt to guess the relationship name for a "has" relationship.
+     *
+     * @param  string  $related
+     * @return string
+     */
+    protected function guessRelationship(string $related)
+    {
+        $guess = Str::camel(Str::plural(class_basename($related)));
+
+        return method_exists($this->modelName(), $guess) ? $guess : Str::singular($guess);
     }
 
     /**
