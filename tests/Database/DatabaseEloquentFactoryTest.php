@@ -101,7 +101,7 @@ class DatabaseEloquentFactoryTest extends TestCase
 
     public function test_expanded_closure_attributes_are_resolved_and_passed_to_closures()
     {
-        $user = FactoryTestUserFactory::new()->create([
+        $user = FactoryTestUserFactory::newUp()->create([
             'name' => function () {
                 return 'taylor';
             },

@@ -410,8 +410,10 @@ abstract class Factory
      * @param  string  $related
      * @return string
      */
-    protected function guessRelationship(string $related)
+    protected function guessRelationship($related)
     {
+        $related = cast_to_string($related);
+
         $guess = Str::camel(Str::plural(class_basename($related)));
 
         return method_exists($this->modelName(), $guess) ? $guess : Str::singular($guess);

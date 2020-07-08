@@ -192,8 +192,10 @@ abstract class GeneratorCommand extends Command
      * @param  string  $model
      * @return string
      */
-    protected function qualifyModel(string $model)
+    protected function qualifyModel($model)
     {
+        $model = cast_to_string($model);
+
         $model = ltrim($model, '\\/');
 
         $model = str_replace('/', '\\', $model);

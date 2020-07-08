@@ -122,7 +122,7 @@ class Worker
 
         $lastRestart = $this->getTimestampOfLastQueueRestart();
 
-        [$startTime, $jobsProcessed] = [hrtime(true) / 1e9, 0];
+        list($startTime, $jobsProcessed) = [hrtime(true) / 1e9, 0];
 
         while (true) {
             // Before reserving any jobs, we will make sure this queue is not paused and
