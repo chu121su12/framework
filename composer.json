@@ -103,6 +103,7 @@
         "files": [
             "cr/helpers/backport.php",
             "cr/helpers/casts.php",
+            "src/Illuminate/Events/functions.php",
             "src/Illuminate/Foundation/helpers.php",
             "src/Illuminate/Support/helpers.php"
         ],

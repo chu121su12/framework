@@ -127,6 +127,32 @@ class ValidationValidatorTest extends TestCase
         m::close();
     }
 
+    public function testNestedErrorMessagesAreRetrievedFromLocalArray()
+    {
+        $trans = $this->getIlluminateArrayTranslator();
+        $v = new Validator($trans, [
+            'users' => [
+                [
+                    'name' => 'Taylor Otwell',
+                    'posts' => [
+                        [
+                            'name' => '',
+                        ],
+                    ],
+                ],
+            ],
+        ], [
+            'users.*.name' => ['required'],
+            'users.*.posts.*.name' => ['required'],
+        ], [
+            'users.*.name.required' => 'user name is required',
+            'users.*.posts.*.name.required' => 'post name is required',
+        ]);
+
+        $this->assertFalse($v->passes());
+        $this->assertEquals('post name is required', $v->errors()->all()[0]);
+    }
+
     public function testSometimesWorksOnNestedArrays()
     {
         $trans = $this->getIlluminateArrayTranslator();
@@ -5235,13 +5261,10 @@ class ValidationValidatorTest extends TestCase
                     'vehicles' => [
                         [
                             'type' => 'car', 'wheels' => [
-                                // The shape field for these blue wheels were correctly excluded (if they weren't, they would
-                                // fail the validation). They still appear in the validated data. This behaviour is unrelated
-                                // to the "exclude" type rules.
                                 ['color' => 'red', 'shape' => 'square'],
-                                ['color' => 'blue', 'shape' => 'hexagon'],
+                                ['color' => 'blue'],
                                 ['color' => 'red', 'shape' => 'round', 'junk' => 'no rule, still present'],
-                                ['color' => 'blue', 'shape' => 'triangle'],
+                                ['color' => 'blue'],
                             ],
                         ],
                         ['type' => 'boat'],
