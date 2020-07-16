@@ -348,7 +348,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Throwable
      */
-    protected function mapException(Throwable $e)
+    protected function mapException($e)
     {
         foreach ($this->exceptionMap as $class => $mapper) {
             if (is_a($e, $class)) {

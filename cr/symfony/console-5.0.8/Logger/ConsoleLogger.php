@@ -102,7 +102,7 @@ class ConsoleLogger extends AbstractLogger
      *
      * @author PHP Framework Interoperability Group
      */
-    private function interpolate($message, array $context): string
+    private function interpolate($message, array $context)
     {
         $message = cast_to_string($message);
 
