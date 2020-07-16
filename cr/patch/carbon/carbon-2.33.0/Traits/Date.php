@@ -541,6 +541,8 @@ trait Date
     use Timestamp;
     use Units;
     use Week;
+    use \Carbon\Patch\SetState;
+    use \Carbon\Patch\StaticTranslator;
 
     /**
      * Names of days of the week.

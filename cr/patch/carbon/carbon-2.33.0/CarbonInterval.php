@@ -164,6 +164,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         Mixin::mixin as baseMixin;
     }
     use Options;
+    use Patch\StaticTranslator;
 
     /**
      * Interval spec period designators
@@ -182,7 +183,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
      *
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
-    protected static $translator;
+    // protected static $translator;
 
     /**
      * @var array|null

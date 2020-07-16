@@ -193,7 +193,7 @@ trait Units
      *
      * @return static
      */
-    public function add($unit, $value = 1, $overflow = null)
+    public function add_($unit, $value = 1, $overflow = null)
     {
         if (is_string($unit) && func_num_args() === 1) {
             $unit = CarbonInterval::make($unit);
@@ -352,7 +352,7 @@ trait Units
      *
      * @return static
      */
-    public function sub($unit, $value = 1, $overflow = null)
+    public function sub_($unit, $value = 1, $overflow = null)
     {
         if (is_string($unit) && func_num_args() === 1) {
             $unit = CarbonInterval::make($unit);

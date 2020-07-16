@@ -31,7 +31,7 @@ use Carbon\Exceptions\InvalidFormatException;
  */
 trait Serialization
 {
-    use ObjectInitialisation;
+    // use ObjectInitialisation;
 
     /**
      * The custom Carbon JSON serializer.
@@ -91,7 +91,7 @@ trait Serialization
      *
      * @return static
      */
-    public static function __set_state($dump)
+    public static function __set_state_($dump) // moved as trait
     {
         if (is_string($dump)) {
             return static::parse($dump);

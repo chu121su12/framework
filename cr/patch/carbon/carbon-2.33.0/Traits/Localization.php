@@ -40,7 +40,7 @@ trait Localization
      *
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
-    protected static $translator;
+    // protected static $translator;
 
     /**
      * Specific translator of the current instance.

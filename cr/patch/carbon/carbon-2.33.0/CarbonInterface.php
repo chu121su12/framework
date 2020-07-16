@@ -518,7 +518,7 @@ use Throwable;
  *
  * </autodoc>
  */
-interface CarbonInterface extends DateTimeInterface, JsonSerializable
+interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterface, JsonSerializable
 {
     /**
      * Diff wording options(expressed in octal).
