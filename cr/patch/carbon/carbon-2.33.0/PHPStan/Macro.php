@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+// declare(strict_types=1);
 
 namespace Carbon\PHPStan;
 
@@ -180,7 +180,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getReturnType(): ?ReflectionType
+    public function getReturnType()
     {
         return $this->reflectionFunction->getReturnType();
     }
@@ -231,7 +231,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getReflection(): ?ReflectionMethod
+    public function getReflection()
     {
         return $this->reflectionFunction instanceof ReflectionMethod
             ? $this->reflectionFunction
