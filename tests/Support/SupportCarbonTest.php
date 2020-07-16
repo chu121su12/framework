@@ -51,7 +51,7 @@ class SupportCarbonTest extends TestCase
     public function testCarbonIsMacroableWhenCalledStatically()
     {
         Carbon::macro('twoDaysAgoAtNoon', function () {
-            return Carbon::now()->subDays(2)->setTimeValue(12, 0, 0);
+            return Carbon::now()->subDays(2)->setTime_(12, 0, 0);
         });
 
         $this->assertSame('2017-06-25 12:00:00', Carbon::twoDaysAgoAtNoon()->toDateTimeString());

@@ -42,3 +42,19 @@ if (! function_exists('backport_substr_count'))
         }
     }
 }
+
+if (! function_exists('backport_spaceship_operator'))
+{
+    function backport_spaceship_operator($left, $right)
+    {
+        if ($left > $right) {
+            return 1;
+        }
+
+        if ($left < $right) {
+            return -1;
+        }
+
+        return 0;
+    }
+}
