@@ -87,7 +87,7 @@ class Translator extends Translation\Translator
      *
      * @return array
      */
-    public function getDirectories()
+    public function getDirectories(): array
     {
         return $this->directories;
     }
@@ -113,7 +113,7 @@ class Translator extends Translation\Translator
      *
      * @return $this
      */
-    public function addDirectory($directory)
+    public function addDirectory(string $directory)
     {
         $this->directories[] = $directory;
 
@@ -127,7 +127,7 @@ class Translator extends Translation\Translator
      *
      * @return $this
      */
-    public function removeDirectory($directory)
+    public function removeDirectory(string $directory)
     {
         $search = rtrim(strtr($directory, '\\', '/'), '/');
 
@@ -344,18 +344,7 @@ class Translator extends Translation\Translator
             };
 
             usort($locales, function ($first, $second) use ($getScore) {
-                $firstScore = $getScore($first);
-                $secondScore = $getScore($second);
-
-                if ($secondScore > $firstScore) {
-                    return 1;
-                }
-
-                if ($secondScore < $firstScore) {
-                    return -1;
-                }
-
-                return 0;
+                return $getScore($second) <=> $getScore($first);
             });
 
             $locale = $locales[0];

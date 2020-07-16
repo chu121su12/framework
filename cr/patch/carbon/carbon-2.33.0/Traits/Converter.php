@@ -15,10 +15,10 @@ use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
+use Carbon\Exceptions\UnitException;
 use Closure;
 use DateTime;
 use DateTimeImmutable;
-use InvalidArgumentException;
 
 /**
  * Trait Converter.
@@ -28,7 +28,7 @@ use InvalidArgumentException;
  *
  * Depends on the following methods:
  *
- * @method Carbon|CarbonImmutable copy()
+ * @method static copy()
  */
 trait Converter
 {
@@ -99,12 +99,6 @@ trait Converter
      */
     public function rawFormat($format)
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-            if (strpos($format, 'v') !== false) {
-                return preg_replace('/v/', substr(parent::format('u'), 0, 3), parent::format($format));
-            }
-        }
-
         return parent::format($format);
     }
 
@@ -120,7 +114,7 @@ trait Converter
      */
     public function __toString()
     {
-        $format = isset($this->localToStringFormat) ? $this->localToStringFormat : static::$toStringFormat;
+        $format = $this->localToStringFormat ?? static::$toStringFormat;
 
         return $format instanceof Closure
             ? $format($this)
@@ -217,7 +211,7 @@ trait Converter
                 return 'H:i:s.u';
         }
 
-        throw new InvalidArgumentException('Precision unit expected among: minute, second, millisecond and microsecond.');
+        throw new UnitException('Precision unit expected among: minute, second, millisecond and microsecond.');
     }
 
     /**

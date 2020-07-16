@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-$processHoursFunction = function (\Carbon\CarbonInterface $date, $format) {
+$processHoursFunction = function (\Carbon\CarbonInterface $date, string $format) {
     return $format.'о'.($date->hour === 11 ? 'б' : '').'] LT';
 };
 
@@ -106,8 +106,12 @@ return [
     'after' => ':time після',
     'before' => ':time до',
     'diff_now' => 'щойно',
+    'diff_today' => 'Сьогодні',
+    'diff_today_regexp' => 'Сьогодні(?:\\s+о)?',
     'diff_yesterday' => 'вчора',
+    'diff_yesterday_regexp' => 'Вчора(?:\\s+о)?',
     'diff_tomorrow' => 'завтра',
+    'diff_tomorrow_regexp' => 'Завтра(?:\\s+о)?',
     'diff_before_yesterday' => 'позавчора',
     'diff_after_tomorrow' => 'післязавтра',
     'period_recurrences' => 'один раз|:count рази|:count разів',
@@ -194,7 +198,7 @@ return [
                     : 'nominative'
             );
 
-        return isset($words[$nounCase]) && isset($words[$nounCase][$index]) ? $words[$nounCase][$index] : null;
+        return $words[$nounCase][$index] ?? null;
     },
     'weekdays_short' => ['нд', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],
     'weekdays_min' => ['нд', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],

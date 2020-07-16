@@ -515,7 +515,7 @@ trait Difference
         $ascending = ($start <= $end);
         $sign = $absolute || $ascending ? 1 : -1;
         if (!$ascending) {
-            list($start, $end) = [$end, $start];
+            [$start, $end] = [$end, $start];
         }
         $monthsDiff = $start->diffInMonths($end);
         /** @var Carbon|CarbonImmutable $floorEnd */
@@ -550,7 +550,7 @@ trait Difference
         $ascending = ($start <= $end);
         $sign = $absolute || $ascending ? 1 : -1;
         if (!$ascending) {
-            list($start, $end) = [$end, $start];
+            [$start, $end] = [$end, $start];
         }
         $yearsDiff = $start->diffInYears($end);
         /** @var Carbon|CarbonImmutable $floorEnd */
@@ -639,7 +639,7 @@ trait Difference
         $ascending = ($start <= $end);
         $sign = $absolute || $ascending ? 1 : -1;
         if (!$ascending) {
-            list($start, $end) = [$end, $start];
+            [$start, $end] = [$end, $start];
         }
         $monthsDiff = $start->diffInMonths($end);
         /** @var Carbon|CarbonImmutable $floorEnd */
@@ -674,7 +674,7 @@ trait Difference
         $ascending = ($start <= $end);
         $sign = $absolute || $ascending ? 1 : -1;
         if (!$ascending) {
-            list($start, $end) = [$end, $start];
+            [$start, $end] = [$end, $start];
         }
         $yearsDiff = $start->diffInYears($end);
         /** @var Carbon|CarbonImmutable $floorEnd */
@@ -761,12 +761,12 @@ trait Difference
         if (is_array($other)) {
             $other['syntax'] = array_key_exists('syntax', $other) ? $other['syntax'] : $syntax;
             $syntax = $other;
-            $other = isset($syntax['other']) ? $syntax['other'] : null;
+            $other = $syntax['other'] ?? null;
         }
 
         $intSyntax = &$syntax;
         if (is_array($syntax)) {
-            $syntax['syntax'] = isset($syntax['syntax']) ? $syntax['syntax'] : null;
+            $syntax['syntax'] = $syntax['syntax'] ?? null;
             $intSyntax = &$syntax['syntax'];
         }
         $intSyntax = (int) ($intSyntax === null ? static::DIFF_RELATIVE_AUTO : $intSyntax);
@@ -776,10 +776,7 @@ trait Difference
 
         return $this->diffAsCarbonInterval($other, false)
             ->setLocalTranslator($this->getLocalTranslator())
-            ->forHumans(
-                $syntax, (bool) $short, $parts,
-                isset($options) ? $options : (isset($this->localHumanDiffOptions) ? $this->localHumanDiffOptions : static::getHumanDiffOptions())
-            );
+            ->forHumans($syntax, (bool) $short, $parts, $options ?? $this->localHumanDiffOptions ?? static::getHumanDiffOptions());
     }
 
     /**
@@ -961,7 +958,7 @@ trait Difference
         $other = null;
 
         if ($syntax instanceof DateTimeInterface) {
-            list($other, $syntax, $short, $parts, $options) = array_pad(func_get_args(), 5, null);
+            [$other, $syntax, $short, $parts, $options] = array_pad(func_get_args(), 5, null);
         }
 
         return $this->from($other, $syntax, $short, $parts, $options);
@@ -1033,7 +1030,7 @@ trait Difference
         $other = null;
 
         if ($syntax instanceof DateTimeInterface) {
-            list($other, $syntax, $short, $parts, $options) = array_pad(func_get_args(), 5, null);
+            [$other, $syntax, $short, $parts, $options] = array_pad(func_get_args(), 5, null);
         }
 
         return $this->from($other, $syntax, $short, $parts, $options);
@@ -1087,8 +1084,7 @@ trait Difference
         );
         $format = array_merge($this->getCalendarFormats(), $formats)[$format];
         if ($format instanceof Closure) {
-            $formatted = $format($current, $other);
-            $format = isset($formatted) ? $formatted : '';
+            $format = $format($current, $other) ?? '';
         }
 
         return $this->isoFormat(strval($format));

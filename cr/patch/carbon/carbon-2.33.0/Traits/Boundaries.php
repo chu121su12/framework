@@ -10,7 +10,7 @@
  */
 namespace Carbon\Traits;
 
-use InvalidArgumentException;
+use Carbon\Exceptions\UnknownUnitException;
 
 /**
  * Trait Boundaries.
@@ -44,7 +44,7 @@ trait Boundaries
      */
     public function startOfDay()
     {
-        return $this->setTimeValue(0, 0, 0, 0);
+        return $this->setTime(0, 0, 0, 0);
     }
 
     /**
@@ -59,7 +59,7 @@ trait Boundaries
      */
     public function endOfDay()
     {
-        return $this->setTimeValue(static::HOURS_PER_DAY - 1, static::MINUTES_PER_HOUR - 1, static::SECONDS_PER_MINUTE - 1, static::MICROSECONDS_PER_SECOND - 1);
+        return $this->setTime(static::HOURS_PER_DAY - 1, static::MINUTES_PER_HOUR - 1, static::SECONDS_PER_MINUTE - 1, static::MICROSECONDS_PER_SECOND - 1);
     }
 
     /**
@@ -272,12 +272,7 @@ trait Boundaries
      */
     public function startOfWeek($weekStartsAt = null)
     {
-        $date = $this;
-        while ($date->dayOfWeek !== (isset($weekStartsAt) ? $weekStartsAt : $this->firstWeekDay)) {
-            $date = $date->subDay();
-        }
-
-        return $date->startOfDay();
+        return $this->subDays((7 + $this->dayOfWeek - ($weekStartsAt ?? $this->firstWeekDay)) % 7)->startOfDay();
     }
 
     /**
@@ -296,12 +291,7 @@ trait Boundaries
      */
     public function endOfWeek($weekEndsAt = null)
     {
-        $date = $this;
-        while ($date->dayOfWeek !== (isset($weekEndsAt) ? $weekEndsAt : $this->lastWeekDay)) {
-            $date = $date->addDay();
-        }
-
-        return $date->endOfDay();
+        return $this->addDays((7 - $this->dayOfWeek + ($weekEndsAt ?? $this->lastWeekDay)) % 7)->endOfDay();
     }
 
     /**
@@ -316,7 +306,7 @@ trait Boundaries
      */
     public function startOfHour()
     {
-        return $this->setTimeValue($this->hour, 0, 0, 0);
+        return $this->setTime($this->hour, 0, 0, 0);
     }
 
     /**
@@ -331,7 +321,7 @@ trait Boundaries
      */
     public function endOfHour()
     {
-        return $this->setTimeValue($this->hour, static::MINUTES_PER_HOUR - 1, static::SECONDS_PER_MINUTE - 1, static::MICROSECONDS_PER_SECOND - 1);
+        return $this->setTime($this->hour, static::MINUTES_PER_HOUR - 1, static::SECONDS_PER_MINUTE - 1, static::MICROSECONDS_PER_SECOND - 1);
     }
 
     /**
@@ -346,7 +336,7 @@ trait Boundaries
      */
     public function startOfMinute()
     {
-        return $this->setTimeValue($this->hour, $this->minute, 0, 0);
+        return $this->setTime($this->hour, $this->minute, 0, 0);
     }
 
     /**
@@ -361,7 +351,7 @@ trait Boundaries
      */
     public function endOfMinute()
     {
-        return $this->setTimeValue($this->hour, $this->minute, static::SECONDS_PER_MINUTE - 1, static::MICROSECONDS_PER_SECOND - 1);
+        return $this->setTime($this->hour, $this->minute, static::SECONDS_PER_MINUTE - 1, static::MICROSECONDS_PER_SECOND - 1);
     }
 
     /**
@@ -378,7 +368,7 @@ trait Boundaries
      */
     public function startOfSecond()
     {
-        return $this->setTimeValue($this->hour, $this->minute, $this->second, 0);
+        return $this->setTime($this->hour, $this->minute, $this->second, 0);
     }
 
     /**
@@ -395,7 +385,7 @@ trait Boundaries
      */
     public function endOfSecond()
     {
-        return $this->setTimeValue($this->hour, $this->minute, $this->second, static::MICROSECONDS_PER_SECOND - 1);
+        return $this->setTime($this->hour, $this->minute, $this->second, static::MICROSECONDS_PER_SECOND - 1);
     }
 
     /**
@@ -418,7 +408,7 @@ trait Boundaries
         $ucfUnit = ucfirst(static::singularUnit($unit));
         $method = "startOf$ucfUnit";
         if (!method_exists($this, $method)) {
-            throw new InvalidArgumentException("Unknown unit '$unit'");
+            throw new UnknownUnitException($unit);
         }
 
         return $this->$method(...$params);
@@ -444,7 +434,7 @@ trait Boundaries
         $ucfUnit = ucfirst(static::singularUnit($unit));
         $method = "endOf$ucfUnit";
         if (!method_exists($this, $method)) {
-            throw new InvalidArgumentException("Unknown unit '$unit'");
+            throw new UnknownUnitException($unit);
         }
 
         return $this->$method(...$params);

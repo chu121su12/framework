@@ -48,8 +48,11 @@ return [
     'after' => ':time sonra',
     'before' => ':time önce',
     'diff_now' => 'şimdi',
+    'diff_today' => 'bugün',
+    'diff_today_regexp' => 'bugün(?:\\s+saat)?',
     'diff_yesterday' => 'dün',
     'diff_tomorrow' => 'yarın',
+    'diff_tomorrow_regexp' => 'yarın(?:\\s+saat)?',
     'diff_before_yesterday' => 'evvelsi gün',
     'diff_after_tomorrow' => 'öbür gün',
     'formats' => [
@@ -103,17 +106,7 @@ return [
 
                 $lastDigit = $number % 10;
 
-                if (isset($suffixes[$lastDigit])) {
-                    $appendage = $suffixes[$lastDigit];
-                } elseif (isset($suffixes[$key = $number % 100 - $lastDigit])) {
-                    $appendage = $suffixes[$key];
-                } elseif (isset($suffixes[$key = $number >= 100 ? 100 : -1])) {
-                    $appendage = $suffixes[$key];
-                } else {
-                    $appendage = '';
-                }
-
-                return $number.$appendage;
+                return $number.($suffixes[$lastDigit] ?? $suffixes[$number % 100 - $lastDigit] ?? $suffixes[$number >= 100 ? 100 : -1] ?? '');
         }
     },
     'meridiem' => ['ÖÖ', 'ÖS', 'öö', 'ös'],

@@ -10,7 +10,7 @@
  */
 namespace Carbon\Traits;
 
-use InvalidArgumentException;
+use Carbon\Exceptions\InvalidFormatException;
 
 /**
  * Trait Serialization.
@@ -26,12 +26,12 @@ use InvalidArgumentException;
  *
  * Depends on the following methods:
  *
- * @method string|static locale(string $locale = null)
+ * @method string|static locale(string $locale = null, string ...$fallbackLocales)
  * @method string        toJSON()
  */
 trait Serialization
 {
-    // use ObjectInitialisation;
+    use ObjectInitialisation;
 
     /**
      * The custom Carbon JSON serializer.
@@ -69,7 +69,7 @@ trait Serialization
      *
      * @param string $value
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidFormatException
      *
      * @return static
      */
@@ -78,10 +78,31 @@ trait Serialization
         $instance = @unserialize("$value");
 
         if (!$instance instanceof static) {
-            throw new InvalidArgumentException('Invalid serialized value.');
+            throw new InvalidFormatException("Invalid serialized value: $value");
         }
 
         return $instance;
+    }
+
+    /**
+     * The __set_state handler.
+     *
+     * @param string|array $dump
+     *
+     * @return static
+     */
+    public static function __set_state($dump)
+    {
+        if (is_string($dump)) {
+            return static::parse($dump);
+        }
+
+        /** @var \DateTimeInterface $date */
+        $date = get_parent_class(static::class) && method_exists(parent::class, '__set_state')
+            ? parent::__set_state((array) $dump)
+            : (object) $dump;
+
+        return static::instance($date);
     }
 
     /**
@@ -93,9 +114,9 @@ trait Serialization
     {
         $properties = $this->dumpProperties;
 
-        if (isset($this->localTranslator) ? $this->localTranslator : null) {
+        if ($this->localTranslator ?? null) {
             $properties[] = 'dumpLocale';
-            $this->dumpLocale = isset($this->locale) ? $this->locale : null;
+            $this->dumpLocale = $this->locale ?? null;
         }
 
         return $properties;
@@ -127,7 +148,7 @@ trait Serialization
      */
     public function jsonSerialize()
     {
-        $serializer = isset($this->localSerializer) ? $this->localSerializer : static::$serializer;
+        $serializer = $this->localSerializer ?? static::$serializer;
         if ($serializer) {
             return is_string($serializer)
                 ? $this->rawFormat($serializer)

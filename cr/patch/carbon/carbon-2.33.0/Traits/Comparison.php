@@ -10,8 +10,9 @@
  */
 namespace Carbon\Traits;
 
+use BadMethodCallException;
 use Carbon\CarbonInterface;
-use Carbon\Exceptions\BadUnitException;
+use Carbon\Exceptions\BadComparisonUnitException;
 use InvalidArgumentException;
 
 /**
@@ -22,11 +23,11 @@ use InvalidArgumentException;
  *
  * Depends on the following methods:
  *
- * @method CarbonInterface        resolveCarbon($date)
- * @method CarbonInterface        copy()
- * @method CarbonInterface        nowWithSameTz()
- * @method static CarbonInterface yesterday($timezone = null)
- * @method static CarbonInterface tomorrow($timezone = null)
+ * @method static        resolveCarbon($date)
+ * @method static        copy()
+ * @method static        nowWithSameTz()
+ * @method static static yesterday($timezone = null)
+ * @method static static tomorrow($timezone = null)
  */
 trait Comparison
 {
@@ -46,7 +47,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function eq($date)
+    public function eq($date): bool
     {
         return $this->equalTo($date);
     }
@@ -65,7 +66,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function equalTo($date)
+    public function equalTo($date): bool
     {
         return $this == $date;
     }
@@ -86,7 +87,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function ne($date)
+    public function ne($date): bool
     {
         return $this->notEqualTo($date);
     }
@@ -105,7 +106,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function notEqualTo($date)
+    public function notEqualTo($date): bool
     {
         return !$this->equalTo($date);
     }
@@ -126,7 +127,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function gt($date)
+    public function gt($date): bool
     {
         return $this->greaterThan($date);
     }
@@ -145,7 +146,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function greaterThan($date)
+    public function greaterThan($date): bool
     {
         return $this > $date;
     }
@@ -166,7 +167,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function isAfter($date)
+    public function isAfter($date): bool
     {
         return $this->greaterThan($date);
     }
@@ -187,7 +188,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function gte($date)
+    public function gte($date): bool
     {
         return $this->greaterThanOrEqualTo($date);
     }
@@ -206,7 +207,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function greaterThanOrEqualTo($date)
+    public function greaterThanOrEqualTo($date): bool
     {
         return $this >= $date;
     }
@@ -227,7 +228,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function lt($date)
+    public function lt($date): bool
     {
         return $this->lessThan($date);
     }
@@ -246,7 +247,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function lessThan($date)
+    public function lessThan($date): bool
     {
         return $this < $date;
     }
@@ -267,7 +268,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function isBefore($date)
+    public function isBefore($date): bool
     {
         return $this->lessThan($date);
     }
@@ -288,7 +289,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function lte($date)
+    public function lte($date): bool
     {
         return $this->lessThanOrEqualTo($date);
     }
@@ -307,7 +308,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function lessThanOrEqualTo($date)
+    public function lessThanOrEqualTo($date): bool
     {
         return $this <= $date;
     }
@@ -333,13 +334,13 @@ trait Comparison
      *
      * @return bool
      */
-    public function between($date1, $date2, $equal = true)
+    public function between($date1, $date2, $equal = true): bool
     {
         $date1 = $this->resolveCarbon($date1);
         $date2 = $this->resolveCarbon($date2);
 
         if ($date1->greaterThan($date2)) {
-            list($date1, $date2) = [$date2, $date1];
+            [$date1, $date2] = [$date2, $date1];
         }
 
         if ($equal) {
@@ -364,7 +365,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function betweenIncluded($date1, $date2)
+    public function betweenIncluded($date1, $date2): bool
     {
         return $this->between($date1, $date2, true);
     }
@@ -384,7 +385,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function betweenExcluded($date1, $date2)
+    public function betweenExcluded($date1, $date2): bool
     {
         return $this->between($date1, $date2, false);
     }
@@ -406,7 +407,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function isBetween($date1, $date2, $equal = true)
+    public function isBetween($date1, $date2, $equal = true): bool
     {
         return $this->between($date1, $date2, $equal);
     }
@@ -569,8 +570,6 @@ trait Comparison
      * @param string                                        $format date formats to compare.
      * @param \Carbon\Carbon|\DateTimeInterface|string|null $date   instance to compare with or null to use current day.
      *
-     * @throws \InvalidArgumentException
-     *
      * @return bool
      */
     public function isSameAs($format, $date = null)
@@ -590,7 +589,7 @@ trait Comparison
      * @param string                                 $unit singular unit string
      * @param \Carbon\Carbon|\DateTimeInterface|null $date instance to compare with or null to use current day.
      *
-     * @throws \InvalidArgumentException
+     * @throws BadComparisonUnitException
      *
      * @return bool
      */
@@ -620,8 +619,8 @@ trait Comparison
                 return $this->$unit === $this->resolveCarbon($date)->$unit;
             }
 
-            if (isset($this->localStrictModeEnabled) ? $this->localStrictModeEnabled : static::isStrictModeEnabled()) {
-                throw new BadUnitException($unit);
+            if ($this->localStrictModeEnabled ?? static::isStrictModeEnabled()) {
+                throw new BadComparisonUnitException($unit);
             }
 
             return false;
@@ -641,7 +640,7 @@ trait Comparison
      *
      * @param string $unit The unit to test.
      *
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      *
      * @return bool
      */
@@ -920,7 +919,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function is($tester)
+    public function is(string $tester)
     {
         $tester = trim($tester);
 
@@ -976,9 +975,7 @@ trait Comparison
             'microsecond' => [0, 'second'],
         ];
 
-        foreach ($units as $unit => $loops) {
-            list($minimum, $startUnit) = $loops;
-
+        foreach ($units as $unit => [$minimum, $startUnit]) {
             if ($median->$unit === $minimum) {
                 $current = $current->startOf($startUnit);
 

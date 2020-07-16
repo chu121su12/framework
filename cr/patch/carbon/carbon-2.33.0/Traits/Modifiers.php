@@ -62,7 +62,7 @@ trait Modifiers
      */
     public function midDay()
     {
-        return $this->setTimeValue(static::$midDayAt, 0, 0, 0);
+        return $this->setTime(static::$midDayAt, 0, 0, 0);
     }
 
     /**
@@ -96,7 +96,7 @@ trait Modifiers
      */
     private function nextOrPreviousDay($weekday = true, $forward = true)
     {
-        /** @var CarbonInterface $step */
+        /** @var CarbonInterface $date */
         $date = $this;
         $step = $forward ? 1 : -1;
 
@@ -457,6 +457,11 @@ trait Modifiers
             $match[1] = $test->$method($this) ? $match[1].' day' : 'today';
 
             return $match[1].' '.$match[2];
-        }, trim($modifier)));
+        }, strtr(trim($modifier), [
+            ' at ' => ' ',
+            'just now' => 'now',
+            'after tomorrow' => 'tomorrow +1 day',
+            'before yesterday' => 'yesterday -1 day',
+        ])));
     }
 }

@@ -11,22 +11,9 @@
 namespace Carbon\Traits;
 
 /**
- * Trait Boundaries.
+ * Trait Macros.
  *
- * startOf, endOf and derived method for each unit.
- *
- * Depends on the following properties:
- *
- * @property int $year
- * @property int $month
- * @property int $daysInMonth
- * @property int $quarter
- *
- * Depends on the following methods:
- *
- * @method $this setTime(int $hour, int $minute, int $second = 0, int $microseconds = 0)
- * @method $this setDate(int $year, int $month, int $day)
- * @method $this addMonths(int $value = 1)
+ * Allows users to register macros within the Carbon class.
  */
 trait Macro
 {
@@ -119,7 +106,7 @@ trait Macro
      */
     public static function getMacro($name)
     {
-        return isset(static::$globalMacros[$name]) ? static::$globalMacros[$name] : null;
+        return static::$globalMacros[$name] ?? null;
     }
 
     /**
@@ -143,7 +130,6 @@ trait Macro
      */
     public function getLocalMacro($name)
     {
-        $localMacros = isset($this->localMacros) ? $this->localMacros : [];
-        return isset($localMacros[$name]) ? $localMacros[$name] : static::getMacro($name);
+        return ($this->localMacros ?? [])[$name] ?? static::getMacro($name);
     }
 }

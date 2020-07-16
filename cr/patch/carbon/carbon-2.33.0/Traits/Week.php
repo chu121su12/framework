@@ -28,7 +28,7 @@ namespace Carbon\Traits;
  * @method static copy()
  * @method static dayOfYear(int $dayOfYear)
  * @method string getTranslationMessage(string $key, string $locale = null, string $default = null, $translator = null)
- * @method static next(int $day)
+ * @method static next(int|string $day = null)
  * @method static startOfWeek(int $day = 1)
  * @method static subWeeks(int $weeks = 1)
  * @method static year(int $year = null)
@@ -50,8 +50,8 @@ trait Week
     {
         return $this->weekYear(
             $year,
-            isset($dayOfWeek) ? $dayOfWeek : 1,
-            isset($dayOfYear) ? $dayOfYear : 4
+            $dayOfWeek ?? 1,
+            $dayOfYear ?? 4
         );
     }
 
@@ -68,15 +68,8 @@ trait Week
      */
     public function weekYear($year = null, $dayOfWeek = null, $dayOfYear = null)
     {
-        if (! isset($dayOfWeek)) {
-            $translation = $this->getTranslationMessage('first_day_of_week');
-            $dayOfWeek = isset($translation) ? $translation : 0;
-        }
-
-        if (! isset($dayOfYear)) {
-            $translation = $this->getTranslationMessage('day_of_first_week_of_year');
-            $dayOfYear = isset($translation) ? $translation : 1;
-        }
+        $dayOfWeek = $dayOfWeek ?? $this->getTranslationMessage('first_day_of_week') ?? 0;
+        $dayOfYear = $dayOfYear ?? $this->getTranslationMessage('day_of_first_week_of_year') ?? 1;
 
         if ($year !== null) {
             $year = (int) round($year);
@@ -138,8 +131,8 @@ trait Week
     public function isoWeeksInYear($dayOfWeek = null, $dayOfYear = null)
     {
         return $this->weeksInYear(
-            isset($dayOfWeek) ? $dayOfWeek : 1,
-            isset($dayOfYear) ? $dayOfYear : 4
+            $dayOfWeek ?? 1,
+            $dayOfYear ?? 4
         );
     }
 
@@ -155,16 +148,8 @@ trait Week
      */
     public function weeksInYear($dayOfWeek = null, $dayOfYear = null)
     {
-        if (! isset($dayOfWeek)) {
-            $translation = $this->getTranslationMessage('first_day_of_week');
-            $dayOfWeek = isset($translation) ? $translation : 0;
-        }
-
-        if (! isset($dayOfYear)) {
-            $translation = $this->getTranslationMessage('day_of_first_week_of_year');
-            $dayOfYear = isset($translation) ? $translation : 1;
-        }
-
+        $dayOfWeek = $dayOfWeek ?? $this->getTranslationMessage('first_day_of_week') ?? 0;
+        $dayOfYear = $dayOfYear ?? $this->getTranslationMessage('day_of_first_week_of_year') ?? 1;
         $year = $this->year;
         $start = $this->copy()->dayOfYear($dayOfYear)->startOfWeek($dayOfWeek);
         $startDay = $start->dayOfYear;
@@ -194,16 +179,8 @@ trait Week
     public function week($week = null, $dayOfWeek = null, $dayOfYear = null)
     {
         $date = $this;
-
-        if (! isset($dayOfWeek)) {
-            $translation = $this->getTranslationMessage('first_day_of_week');
-            $dayOfWeek = isset($translation) ? $translation : 0;
-        }
-
-        if (! isset($dayOfYear)) {
-            $translation = $this->getTranslationMessage('day_of_first_week_of_year');
-            $dayOfYear = isset($translation) ? $translation : 1;
-        }
+        $dayOfWeek = $dayOfWeek ?? $this->getTranslationMessage('first_day_of_week') ?? 0;
+        $dayOfYear = $dayOfYear ?? $this->getTranslationMessage('day_of_first_week_of_year') ?? 1;
 
         if ($week !== null) {
             return $date->addWeeks(round($week) - $this->week(null, $dayOfWeek, $dayOfYear));
@@ -234,8 +211,8 @@ trait Week
     {
         return $this->week(
             $week,
-            isset($dayOfWeek) ? $dayOfWeek : 1,
-            isset($dayOfYear) ? $dayOfYear : 4
+            $dayOfWeek ?? 1,
+            $dayOfYear ?? 4
         );
     }
 }

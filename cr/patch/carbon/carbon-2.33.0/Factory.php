@@ -42,7 +42,7 @@ use Closure;
  *                                                                                                                                                                                               values for $minute and $second will be their now() values.
  *                                                                                                                                                                                               If $hour is not null then the default values for $minute and $second
  *                                                                                                                                                                                               will be 0.
- *                                                                                                                                                                                               If one of the set values is not valid, an \InvalidArgumentException
+ *                                                                                                                                                                                               If one of the set values is not valid, an InvalidDateException
  *                                                                                                                                                                                               will be thrown.
  * @method Carbon                                             disableHumanDiffOption($humanDiffOption)                                                                                           @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
  *                                                                                                                                                                                                           You should rather use the ->settings() method.
@@ -106,7 +106,7 @@ use Closure;
  *                                                                                                                                                                                               This is an alias for the constructor that allows better fluent syntax
  *                                                                                                                                                                                               as it allows you to do Carbon::parse('Monday next week')->fn() rather
  *                                                                                                                                                                                               than (new Carbon('Monday next week'))->fn().
- * @method Carbon                                             parseFromLocale($time, $locale, $tz = null)                                                                                        Create a carbon instance from a localized string (in French, Japanese, Arabic, etc.).
+ * @method Carbon                                             parseFromLocale($time, $locale = null, $tz = null)                                                                                 Create a carbon instance from a localized string (in French, Japanese, Arabic, etc.).
  * @method string                                             pluralUnit(string $unit)                                                                                                           Returns standardized plural of a given singular/plural unit name (in English).
  * @method Carbon|false                                       rawCreateFromFormat($format, $time, $tz = null)                                                                                    Create a Carbon instance from a specific format.
  * @method Carbon                                             rawParse($time = null, $tz = null)                                                                                                 Create a carbon instance from a string.
@@ -193,7 +193,7 @@ use Closure;
  * @method string                                             singularUnit(string $unit)                                                                                                         Returns standardized singular of a given singular/plural unit name (in English).
  * @method Carbon                                             today($tz = null)                                                                                                                  Create a Carbon instance for today.
  * @method Carbon                                             tomorrow($tz = null)                                                                                                               Create a Carbon instance for tomorrow.
- * @method string                                             translateTimeString($timeString, $from = null, $to = null, $mode = 15)                                                             Translate a time string from a locale to an other.
+ * @method string                                             translateTimeString($timeString, $from = null, $to = null, $mode = CarbonInterface::TRANSLATE_ALL)                                 Translate a time string from a locale to an other.
  * @method string                                             translateWith(\Symfony\Component\Translation\TranslatorInterface $translator, string $key, array $parameters = [], $number = null) Translate using translation string or callback available.
  * @method void                                               useMonthsOverflow($monthsOverflow = true)                                                                                          @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
  *                                                                                                                                                                                                           You should rather use the ->settings() method.
@@ -215,7 +215,7 @@ class Factory
 
     protected $settings = [];
 
-    public function __construct(array $settings = [], $className = null)
+    public function __construct(array $settings = [], string $className = null)
     {
         if ($className) {
             $this->className = $className;
@@ -228,14 +228,14 @@ class Factory
         return $this->className;
     }
 
-    public function setClassName($className)
+    public function setClassName(string $className)
     {
         $this->className = $className;
 
         return $this;
     }
 
-    public function className($className = null)
+    public function className(string $className = null)
     {
         return $className === null ? $this->getClassName() : $this->setClassName($className);
     }
@@ -266,9 +266,7 @@ class Factory
 
     public function __call($name, $arguments)
     {
-        $className = $this->className;
-
-        $result = $className::$name(...$arguments);
+        $result = $this->className::$name(...$arguments);
 
         return $result instanceof CarbonInterface ? $result->settings($this->settings) : $result;
     }

@@ -46,8 +46,11 @@ return [
     'after' => ':time sonra',
     'before' => ':time əvvəl',
     'diff_now' => 'indi',
+    'diff_today' => 'bugün',
+    'diff_today_regexp' => 'bugün(?:\\s+saat)?',
     'diff_yesterday' => 'dünən',
     'diff_tomorrow' => 'sabah',
+    'diff_tomorrow_regexp' => 'sabah(?:\\s+saat)?',
     'diff_before_yesterday' => 'srağagün',
     'diff_after_tomorrow' => 'birisi gün',
     'period_recurrences' => ':count dəfədən bir',
@@ -98,17 +101,7 @@ return [
 
         $lastDigit = $number % 10;
 
-        if (isset($suffixes[$lastDigit])) {
-            $appendage = $suffixes[$lastDigit];
-        } elseif (isset($suffixes[$key = $number % 100 - $lastDigit])) {
-            $appendage = $suffixes[$key];
-        } elseif (isset($suffixes[$key = $number >= 100 ? 100 : -1])) {
-            $appendage = $suffixes[$key];
-        } else {
-            $appendage = '';
-        }
-
-        return $number.$appendage;
+        return $number.($suffixes[$lastDigit] ?? $suffixes[$number % 100 - $lastDigit] ?? $suffixes[$number >= 100 ? 100 : -1] ?? '');
     },
     'meridiem' => function ($hour) {
         if ($hour < 4) {
