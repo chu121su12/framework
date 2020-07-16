@@ -70,7 +70,7 @@ class ThrottleRequestsTest extends TestCase
     {
         $rateLimiter = Container::getInstance()->make(RateLimiter::class);
 
-        $rateLimiter->forName('test', function ($request) {
+        $rateLimiter->for_('test', function ($request) {
             return new GlobalLimit(2, 1);
         });
 

@@ -89,7 +89,7 @@ class PendingChain
      * @param  \Closure  $callback
      * @return $this
      */
-    public function catches(Closure $callback)
+    public function catch_(Closure $callback)
     {
         $this->catchCallbacks[] = new SerializableClosure($callback);
 

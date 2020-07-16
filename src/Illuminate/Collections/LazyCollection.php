@@ -31,7 +31,7 @@ class LazyCollection implements Enumerable
         if ($source instanceof Closure || $source instanceof self) {
             $this->source = $source;
         } elseif (is_null($source)) {
-            $this->source = static::emptyCollection();
+            $this->source = static::empty_();
         } else {
             $this->source = $this->getArrayableItems($source);
         }
@@ -42,7 +42,7 @@ class LazyCollection implements Enumerable
      *
      * @return static
      */
-    public static function emptyCollection()
+    public static function empty_()
     {
         return new static([]);
     }
@@ -1037,7 +1037,7 @@ class LazyCollection implements Enumerable
     public function chunk($size)
     {
         if ($size <= 0) {
-            return static::emptyCollection();
+            return static::empty_();
         }
 
         return new static(function () use ($size) {

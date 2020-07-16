@@ -576,7 +576,7 @@ class PendingRequest
                     $response->transferStats = $this->transferStats;
 
                     if ($this->tries > 1 && ! $response->successful()) {
-                        $response->throwThrowable();
+                        $response->throw_();
                     }
                 });
             } catch (ConnectException $e) {

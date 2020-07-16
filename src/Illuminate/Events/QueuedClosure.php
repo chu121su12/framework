@@ -98,7 +98,7 @@ class QueuedClosure
      * @param  \Closure  $closure
      * @return $this
      */
-    public function catches(Closure $closure)
+    public function catch_(Closure $closure)
     {
         $this->catchCallbacks[] = $closure;
 

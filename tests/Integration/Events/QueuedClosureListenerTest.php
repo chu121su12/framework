@@ -17,7 +17,7 @@ class QueuedClosureListenerTest extends TestCase
 
         Event::listen(queueable(function (TestEvent $event) {
             //
-        })->catches(function (TestEvent $event) {
+        })->catch_(function (TestEvent $event) {
             //
         })->onConnection(null)->onQueue(null));
 

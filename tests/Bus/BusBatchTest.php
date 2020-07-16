@@ -291,12 +291,12 @@ class BusBatchTest extends TestCase
                                 $_SERVER['__then.batch'] = $batch;
                                 $_SERVER['__then.count']++;
                             })
-                            ->catches(function (Batch $batch, $e) {
+                            ->catch_(function (Batch $batch, $e) {
                                 $_SERVER['__catch.batch'] = $batch;
                                 $_SERVER['__catch.exception'] = $e;
                                 $_SERVER['__catch.count']++;
                             })
-                            ->thenFinally(function (Batch $batch) {
+                            ->finally_(function (Batch $batch) {
                                 $_SERVER['__finally.batch'] = $batch;
                                 $_SERVER['__finally.count']++;
                             })

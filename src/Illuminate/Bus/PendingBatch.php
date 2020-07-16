@@ -83,7 +83,7 @@ class PendingBatch
      * @param  \Closure  $callback
      * @return $this
      */
-    public function catches(Closure $callback)
+    public function catch_(Closure $callback)
     {
         $this->options['catch'][] = new SerializableClosure($callback);
 
@@ -106,7 +106,7 @@ class PendingBatch
      * @param  \Closure  $callback
      * @return $this
      */
-    public function thenFinally(Closure $callback)
+    public function finally_(Closure $callback)
     {
         $this->options['finally'][] = new SerializableClosure($callback);
 
