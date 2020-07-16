@@ -99,6 +99,12 @@ trait Converter
      */
     public function rawFormat($format)
     {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            if (strpos($format, 'v') !== false) {
+                return preg_replace('/v/', substr(parent::format('u'), 0, 3), parent::format($format));
+            }
+        }
+
         return parent::format($format);
     }
 

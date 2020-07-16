@@ -966,7 +966,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
         $start = $this->getStartDate();
 
         if ($this->isStartExcluded()) {
-            return $start->add($this->getDateInterval());
+            return $start->add_($this->getDateInterval());
         }
 
         return $start;
@@ -987,7 +987,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
         }
 
         if ($this->isEndExcluded()) {
-            return $end->sub($this->getDateInterval());
+            return $end->sub_($this->getDateInterval());
         }
 
         return $end;
@@ -1509,7 +1509,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
         $attempts = 0;
 
         do {
-            $this->current = $this->current->add($this->dateInterval);
+            $this->current = $this->current->add_($this->dateInterval);
 
             $this->validationResult = null;
 
@@ -1644,11 +1644,11 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
 
         $result = iterator_to_array($this);
 
-        [
+        list(
             $this->key,
             $this->current,
             $this->validationResult
-        ] = $state;
+        ) = $state;
 
         return $result;
     }
@@ -2315,7 +2315,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
     {
         $period = $this->resolveCarbonPeriod($period, ...$arguments);
 
-        return $this->getIncludedStartDate()->equalTo($period->getIncludedEndDate()->add($period->getDateInterval()));
+        return $this->getIncludedStartDate()->equalTo($period->getIncludedEndDate()->add_($period->getDateInterval()));
     }
 
     /**

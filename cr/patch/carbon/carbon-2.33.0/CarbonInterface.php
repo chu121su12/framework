@@ -721,8 +721,7 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      *
      * @return static
      */
-    // public static function __set_state($dump);
-    public static function __set_state();
+    // public static function __set_state($dump); // move to class
 
     /**
      * Returns the list of properties to dump on serialize() called on.

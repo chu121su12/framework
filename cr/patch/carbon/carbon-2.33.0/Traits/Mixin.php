@@ -104,7 +104,12 @@ trait Mixin
                 continue;
             }
 
-            $closureBase = Closure::fromCallable([$context, $name]);
+            if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+                $method = new ReflectionMethod($context, $name);
+                $closureBase = $method->getClosure($this);
+            } else {
+                $closureBase = Closure::fromCallable([$context, $name]);
+            }
 
             static::macro($name, function () use ($closureBase, $className) {
                 $context = isset($this) ? $this->cast($className) : new $className();

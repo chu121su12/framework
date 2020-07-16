@@ -776,7 +776,7 @@ trait Difference
 
         return $this->diffAsCarbonInterval($other, false)
             ->setLocalTranslator($this->getLocalTranslator())
-            ->forHumans($syntax, (bool) $short, $parts, isset($options) ? $options : isset($this->localHumanDiffOptions) ? $this->localHumanDiffOptions : static::getHumanDiffOptions());
+            ->forHumans($syntax, (bool) $short, $parts, isset($options) ? $options : (isset($this->localHumanDiffOptions) ? $this->localHumanDiffOptions : static::getHumanDiffOptions()));
     }
 
     /**
