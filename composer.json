@@ -115,7 +115,7 @@
             "Symfony\\Component\\Routing\\": "cr/symfony/routing-5.0.8/",
             "Symfony\\Component\\String\\": "cr/symfony/string-5.0.8/",
             "Symfony\\Contracts\\Service\\": "cr/symfony/service-contracts-2.0.1/",
-            "Carbon\\": "cr/patch/carbon/carbon-2.33.0/",
+            "Carbon\\": "cr/patch/carbon/carbon-2.36.1/",
             "Doctrine\\Inflector\\": "cr/patch/doctrine-inflector-src/",
             "Illuminate\\": "src/Illuminate/",
             "Illuminate\\Support\\": ["src/Illuminate/Macroable/", "src/Illuminate/Collections/"],
