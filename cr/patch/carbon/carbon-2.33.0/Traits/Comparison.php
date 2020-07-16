@@ -47,7 +47,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function eq($date): bool
+    public function eq($date)
     {
         return $this->equalTo($date);
     }
@@ -66,7 +66,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function equalTo($date): bool
+    public function equalTo($date)
     {
         return $this == $date;
     }
@@ -87,7 +87,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function ne($date): bool
+    public function ne($date)
     {
         return $this->notEqualTo($date);
     }
@@ -106,7 +106,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function notEqualTo($date): bool
+    public function notEqualTo($date)
     {
         return !$this->equalTo($date);
     }
@@ -127,7 +127,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function gt($date): bool
+    public function gt($date)
     {
         return $this->greaterThan($date);
     }
@@ -146,7 +146,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function greaterThan($date): bool
+    public function greaterThan($date)
     {
         return $this > $date;
     }
@@ -167,7 +167,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function isAfter($date): bool
+    public function isAfter($date)
     {
         return $this->greaterThan($date);
     }
@@ -188,7 +188,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function gte($date): bool
+    public function gte($date)
     {
         return $this->greaterThanOrEqualTo($date);
     }
@@ -207,7 +207,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function greaterThanOrEqualTo($date): bool
+    public function greaterThanOrEqualTo($date)
     {
         return $this >= $date;
     }
@@ -228,7 +228,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function lt($date): bool
+    public function lt($date)
     {
         return $this->lessThan($date);
     }
@@ -247,7 +247,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function lessThan($date): bool
+    public function lessThan($date)
     {
         return $this < $date;
     }
@@ -268,7 +268,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function isBefore($date): bool
+    public function isBefore($date)
     {
         return $this->lessThan($date);
     }
@@ -289,7 +289,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function lte($date): bool
+    public function lte($date)
     {
         return $this->lessThanOrEqualTo($date);
     }
@@ -308,7 +308,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function lessThanOrEqualTo($date): bool
+    public function lessThanOrEqualTo($date)
     {
         return $this <= $date;
     }
@@ -334,13 +334,13 @@ trait Comparison
      *
      * @return bool
      */
-    public function between($date1, $date2, $equal = true): bool
+    public function between($date1, $date2, $equal = true)
     {
         $date1 = $this->resolveCarbon($date1);
         $date2 = $this->resolveCarbon($date2);
 
         if ($date1->greaterThan($date2)) {
-            [$date1, $date2] = [$date2, $date1];
+            list($date1, $date2) = [$date2, $date1];
         }
 
         if ($equal) {
@@ -365,7 +365,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function betweenIncluded($date1, $date2): bool
+    public function betweenIncluded($date1, $date2)
     {
         return $this->between($date1, $date2, true);
     }
@@ -385,7 +385,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function betweenExcluded($date1, $date2): bool
+    public function betweenExcluded($date1, $date2)
     {
         return $this->between($date1, $date2, false);
     }
@@ -407,7 +407,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function isBetween($date1, $date2, $equal = true): bool
+    public function isBetween($date1, $date2, $equal = true)
     {
         return $this->between($date1, $date2, $equal);
     }
@@ -619,7 +619,7 @@ trait Comparison
                 return $this->$unit === $this->resolveCarbon($date)->$unit;
             }
 
-            if ($this->localStrictModeEnabled ?? static::isStrictModeEnabled()) {
+            if (isset($this->localStrictModeEnabled) ? $this->localStrictModeEnabled : static::isStrictModeEnabled()) {
                 throw new BadComparisonUnitException($unit);
             }
 
@@ -919,8 +919,10 @@ trait Comparison
      *
      * @return bool
      */
-    public function is(string $tester)
+    public function is($tester)
     {
+        $tester = cast_to_string($tester);
+
         $tester = trim($tester);
 
         if (preg_match('/^\d+$/', $tester)) {
@@ -975,7 +977,8 @@ trait Comparison
             'microsecond' => [0, 'second'],
         ];
 
-        foreach ($units as $unit => [$minimum, $startUnit]) {
+        foreach ($units as $unit => $loop) {
+            list($minimum, $startUnit) = $loop;
             if ($median->$unit === $minimum) {
                 $current = $current->startOf($startUnit);
 

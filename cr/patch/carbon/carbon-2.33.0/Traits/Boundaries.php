@@ -272,7 +272,7 @@ trait Boundaries
      */
     public function startOfWeek($weekStartsAt = null)
     {
-        return $this->subDays((7 + $this->dayOfWeek - ($weekStartsAt ?? $this->firstWeekDay)) % 7)->startOfDay();
+        return $this->subDays((7 + $this->dayOfWeek - (isset($weekStartsAt) ? $weekStartsAt : $this->firstWeekDay)) % 7)->startOfDay();
     }
 
     /**
@@ -291,7 +291,7 @@ trait Boundaries
      */
     public function endOfWeek($weekEndsAt = null)
     {
-        return $this->addDays((7 - $this->dayOfWeek + ($weekEndsAt ?? $this->lastWeekDay)) % 7)->endOfDay();
+        return $this->addDays((7 - $this->dayOfWeek + (isset($weekEndsAt) ? $weekEndsAt : $this->lastWeekDay)) % 7)->endOfDay();
     }
 
     /**

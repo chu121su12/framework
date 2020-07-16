@@ -39,16 +39,20 @@ final class MacroExtension implements MethodsClassReflectionExtension
     /**
      * {@inheritdoc}
      */
-    public function hasMethod(ClassReflection $classReflection, string $methodName): bool
+    public function hasMethod(ClassReflection $classReflection, $methodName)
     {
+        $methodName = cast_to_string($methodName);
+
         return $this->scanner->hasMethod($classReflection->getName(), $methodName);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMethod(ClassReflection $classReflection, string $methodName): MethodReflection
+    public function getMethod(ClassReflection $classReflection, $methodName)
     {
+        $methodName = cast_to_string($methodName);
+
         $builtinMacro = $this->scanner->getMethod($classReflection->getName(), $methodName);
 
         return $this->methodReflectionFactory->create(

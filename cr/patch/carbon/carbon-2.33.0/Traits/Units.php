@@ -125,7 +125,7 @@ trait Units
                 break;
 
             default:
-                if ($this->localStrictModeEnabled ?? static::isStrictModeEnabled()) {
+                if (isset($this->localStrictModeEnabled) ? $this->localStrictModeEnabled : static::isStrictModeEnabled()) {
                     throw new UnitException("Invalid unit for real timestamp add/sub: '$unit'");
                 }
 
@@ -212,7 +212,7 @@ trait Units
         }
 
         if (is_numeric($unit)) {
-            [$value, $unit] = [$unit, $value];
+            list($value, $unit) = [$unit, $value];
         }
 
         return $this->addUnit($unit, $value, $overflow);
@@ -243,7 +243,7 @@ trait Units
         ];
 
         if (isset($metaUnits[$unit])) {
-            [$factor, $unit] = $metaUnits[$unit];
+            list($factor, $unit) = $metaUnits[$unit];
             $value *= $factor;
         }
 
@@ -276,7 +276,7 @@ trait Units
             ]) && ($overflow === false || (
                 $overflow === null &&
                 ($ucUnit = ucfirst($unit).'s') &&
-                !($this->{'local'.$ucUnit.'Overflow'} ?? static::{'shouldOverflow'.$ucUnit}())
+                !(isset($this->{'local'.$ucUnit.'Overflow'}) ? $this->{'local'.$ucUnit.'Overflow'} : static::{'shouldOverflow'.$ucUnit}())
             ))) {
             $day = $date->day;
         }
@@ -371,7 +371,7 @@ trait Units
         }
 
         if (is_numeric($unit)) {
-            [$value, $unit] = [$unit, $value];
+            list($value, $unit) = [$unit, $value];
         }
 
         return $this->addUnit($unit, -floatval($value), $overflow);

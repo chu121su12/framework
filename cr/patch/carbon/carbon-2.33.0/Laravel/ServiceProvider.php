@@ -53,6 +53,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 $root->setLocale($locale);
             } catch (Throwable $e) {
                 // Non Carbon class in use in Date facade
+            } catch (\Error $e) {
+                // Non Carbon class in use in Date facade
+            } catch (\Exception $e) {
+                // Non Carbon class in use in Date facade
             }
         }
         // @codeCoverageIgnoreEnd

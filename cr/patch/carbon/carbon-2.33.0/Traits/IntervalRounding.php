@@ -19,8 +19,10 @@ use DateInterval;
  */
 trait IntervalRounding
 {
-    protected function callRoundMethod(string $method, array $parameters)
+    protected function callRoundMethod($method, array $parameters)
     {
+        $method = cast_to_string($method);
+
         $action = substr($method, 0, 4);
 
         if ($action !== 'ceil') {
@@ -43,7 +45,7 @@ trait IntervalRounding
         }
 
         if (is_string($precision) && preg_match('/^\s*(?<precision>\d+)?\s*(?<unit>\w+)(?<other>\W.*)?$/', $precision, $match)) {
-            if (trim($match['other'] ?? '') !== '') {
+            if (trim(isset($match['other']) ? $match['other'] : '') !== '') {
                 throw new InvalidIntervalException('Rounding is only possible with single unit intervals.');
             }
 

@@ -114,9 +114,9 @@ trait Serialization
     {
         $properties = $this->dumpProperties;
 
-        if ($this->localTranslator ?? null) {
+        if (isset($this->localTranslator) ? $this->localTranslator : null) {
             $properties[] = 'dumpLocale';
-            $this->dumpLocale = $this->locale ?? null;
+            $this->dumpLocale = isset($this->locale) ? $this->locale : null;
         }
 
         return $properties;
@@ -148,7 +148,7 @@ trait Serialization
      */
     public function jsonSerialize()
     {
-        $serializer = $this->localSerializer ?? static::$serializer;
+        $serializer = isset($this->localSerializer) ? $this->localSerializer : static::$serializer;
         if ($serializer) {
             return is_string($serializer)
                 ? $this->rawFormat($serializer)

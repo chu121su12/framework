@@ -60,8 +60,10 @@ class CarbonTimeZone extends DateTimeZone
      *
      * @return DateTimeZone
      */
-    public function cast(string $className)
+    public function cast($className)
     {
+        $className = cast_to_string($className);
+
         if (!method_exists($className, 'instance')) {
             if (is_a($className, DateTimeZone::class, true)) {
                 return new $className($this->getName());
@@ -200,6 +202,10 @@ class CarbonTimeZone extends DateTimeZone
             $offset = @$this->getOffset($date) ?: 0;
         } catch (\Throwable $e) {
             $offset = 0;
+        } catch (\Error $e) {
+            $offset = 0;
+        } catch (\Exception $e) {
+            $offset = 0;
         }
         // @codeCoverageIgnoreEnd
 
@@ -269,8 +275,10 @@ class CarbonTimeZone extends DateTimeZone
      *
      * @return false|static
      */
-    public static function createFromHourOffset(float $hourOffset)
+    public static function createFromHourOffset($hourOffset)
     {
+        $hourOffset = cast_to_float($hourOffset);
+
         return static::createFromMinuteOffset($hourOffset * Carbon::MINUTES_PER_HOUR);
     }
 
@@ -281,8 +289,10 @@ class CarbonTimeZone extends DateTimeZone
      *
      * @return false|static
      */
-    public static function createFromMinuteOffset(float $minuteOffset)
+    public static function createFromMinuteOffset($minuteOffset)
     {
+        $minuteOffset = cast_to_float($minuteOffset);
+
         return static::instance(static::getOffsetNameFromMinuteOffset($minuteOffset));
     }
 
@@ -293,8 +303,10 @@ class CarbonTimeZone extends DateTimeZone
      *
      * @return string
      */
-    public static function getOffsetNameFromMinuteOffset(float $minutes): string
+    public static function getOffsetNameFromMinuteOffset($minutes)
     {
+        $minutes = cast_to_float($minutes);
+
         $minutes = round($minutes);
         $unsignedMinutes = abs($minutes);
 

@@ -18,8 +18,11 @@ final class MacroScanner
      *
      * @return bool
      */
-    public function hasMethod(string $className, string $methodName): bool
+    public function hasMethod($className, $methodName)
     {
+        $className = cast_to_string($className);
+        $methodName = cast_to_string($methodName);
+
         return is_a($className, CarbonInterface::class, true) &&
             is_callable([$className, 'hasMacro']) &&
             $className::hasMacro($methodName);
@@ -37,8 +40,11 @@ final class MacroScanner
      *
      * @return Macro
      */
-    public function getMethod(string $className, string $methodName): Macro
+    public function getMethod($className, $methodName)
     {
+        $className = cast_to_string($className);
+        $methodName = cast_to_string($methodName);
+
         $reflectionClass = new ReflectionClass($className);
         $property = $reflectionClass->getProperty('globalMacros');
 

@@ -61,8 +61,11 @@ final class Macro implements BuiltinMethodReflection
      * @param string   $methodName
      * @param callable $macro
      */
-    public function __construct(string $className, string $methodName, $macro)
+    public function __construct($className, $methodName, $macro)
     {
+        $className = cast_to_string($className);
+        $methodName = cast_to_string($methodName);
+
         $this->className = $className;
         $this->methodName = $methodName;
         $this->reflectionFunction = is_array($macro)
@@ -78,6 +81,10 @@ final class Macro implements BuiltinMethodReflection
                 $this->static = (!$boundClosure || (new ReflectionFunction($boundClosure))->getClosureThis() === null);
             } catch (Throwable $e) {
                 $this->static = true;
+            } catch (\Error $e) {
+                $this->static = true;
+            } catch (\Exception $e) {
+                $this->static = true;
             }
         }
     }
@@ -85,7 +92,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getDeclaringClass(): ReflectionClass
+    public function getDeclaringClass()
     {
         return new ReflectionClass($this->className);
     }
@@ -93,7 +100,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isPrivate(): bool
+    public function isPrivate()
     {
         return false;
     }
@@ -101,7 +108,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isPublic(): bool
+    public function isPublic()
     {
         return true;
     }
@@ -109,7 +116,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isFinal(): bool
+    public function isFinal()
     {
         return false;
     }
@@ -117,7 +124,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isInternal(): bool
+    public function isInternal()
     {
         return false;
     }
@@ -125,7 +132,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isAbstract(): bool
+    public function isAbstract()
     {
         return false;
     }
@@ -133,7 +140,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isStatic(): bool
+    public function isStatic()
     {
         return $this->static;
     }
@@ -141,7 +148,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getDocComment(): ?string
+    public function getDocComment()
     {
         return $this->reflectionFunction->getDocComment() ?: null;
     }
@@ -157,7 +164,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->methodName;
     }
@@ -165,7 +172,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getParameters(): array
+    public function getParameters()
     {
         return $this->parameters;
     }
@@ -197,7 +204,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isDeprecated(): TrinaryLogic
+    public function isDeprecated()
     {
         return TrinaryLogic::createFromBoolean(
             $this->reflectionFunction->isDeprecated() ||
@@ -208,7 +215,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isVariadic(): bool
+    public function isVariadic()
     {
         return $this->reflectionFunction->isVariadic();
     }
@@ -216,7 +223,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getPrototype(): BuiltinMethodReflection
+    public function getPrototype()
     {
         return $this;
     }

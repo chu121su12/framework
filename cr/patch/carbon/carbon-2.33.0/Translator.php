@@ -87,7 +87,7 @@ class Translator extends Translation\Translator
      *
      * @return array
      */
-    public function getDirectories(): array
+    public function getDirectories()
     {
         return $this->directories;
     }
@@ -113,8 +113,10 @@ class Translator extends Translation\Translator
      *
      * @return $this
      */
-    public function addDirectory(string $directory)
+    public function addDirectory($directory)
     {
+        $directory = cast_to_string($directory);
+
         $this->directories[] = $directory;
 
         return $this;
@@ -127,8 +129,10 @@ class Translator extends Translation\Translator
      *
      * @return $this
      */
-    public function removeDirectory(string $directory)
+    public function removeDirectory($directory)
     {
+        $directory = cast_to_string($directory);
+
         $search = rtrim(strtr($directory, '\\', '/'), '/');
 
         return $this->setDirectories(array_filter($this->getDirectories(), function ($item) use ($search) {

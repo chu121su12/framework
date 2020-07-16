@@ -15,8 +15,10 @@ class DateTimeDefaultPrecision
      *
      * @param int $precision
      */
-    public static function set(int $precision): void
+    public static function set($precision)
     {
+        $precision = cast_to_int($precision);
+
         self::$precision = $precision;
     }
 
@@ -25,7 +27,7 @@ class DateTimeDefaultPrecision
      *
      * @return int
      */
-    public static function get(): int
+    public static function get()
     {
         return self::$precision;
     }

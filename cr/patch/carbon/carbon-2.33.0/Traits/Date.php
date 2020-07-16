@@ -676,7 +676,7 @@ trait Date
      *
      * @return static
      */
-    public function clone()
+    public function clone_()
     {
         return clone $this;
     }
@@ -917,11 +917,13 @@ trait Date
 
             // @property-read int 0 through 6
             case $name === 'firstWeekDay':
-                return $this->localTranslator ? ($this->getTranslationMessage('first_day_of_week') ?? 0) : static::getWeekStartsAt();
+                $translationMessage = $this->getTranslationMessage('first_day_of_week');
+                return $this->localTranslator ? (isset($translationMessage) ? $translationMessage : 0) : static::getWeekStartsAt();
 
             // @property-read int 0 through 6
             case $name === 'lastWeekDay':
-                return $this->localTranslator ? (($this->getTranslationMessage('first_day_of_week') ?? 0) + static::DAYS_PER_WEEK - 1) % static::DAYS_PER_WEEK : static::getWeekEndsAt();
+                $translationMessage = $this->getTranslationMessage('first_day_of_week');
+                return $this->localTranslator ? ((isset($translationMessage) ? $translationMessage : 0) + static::DAYS_PER_WEEK - 1) % static::DAYS_PER_WEEK : static::getWeekEndsAt();
 
             // @property int 1 through 366
             case $name === 'dayOfYear':
@@ -1029,7 +1031,9 @@ trait Date
     {
         try {
             $this->__get($name);
-        } catch (UnknownGetterException | ReflectionException $e) {
+        } catch (UnknownGetterException $e) {
+            return false;
+        } catch (ReflectionException $e) {
             return false;
         }
 
@@ -1112,7 +1116,7 @@ trait Date
             case 'hour':
             case 'minute':
             case 'second':
-                [$year, $month, $day, $hour, $minute, $second] = array_map('intval', explode('-', $this->rawFormat('Y-n-j-G-i-s')));
+                list($year, $month, $day, $hour, $minute, $second) = array_map('intval', explode('-', $this->rawFormat('Y-n-j-G-i-s')));
                 $$name = $value;
                 $this->setDateTime($year, $month, $day, $hour, $minute, $second);
 
@@ -1178,7 +1182,7 @@ trait Date
                     break;
                 }
 
-                if ($this->localStrictModeEnabled ?? static::isStrictModeEnabled()) {
+                if (isset($this->localStrictModeEnabled) ? $this->localStrictModeEnabled : static::isStrictModeEnabled()) {
                     throw new UnknownSetterException($name);
                 }
 
@@ -1295,7 +1299,8 @@ trait Date
      */
     public function weekday($value = null)
     {
-        $dayOfWeek = ($this->dayOfWeek + 7 - intval($this->getTranslationMessage('first_day_of_week') ?? 0)) % 7;
+        $translationMessage = $this->getTranslationMessage('first_day_of_week');
+        $dayOfWeek = ($this->dayOfWeek + 7 - intval(isset($translationMessage) ? $translationMessage : 0)) % 7;
 
         return is_null($value) ? $dayOfWeek : $this->addDays($value - $dayOfWeek);
     }
@@ -1338,7 +1343,9 @@ trait Date
             }
 
             return $date;
-        } catch (BadMethodCallException | ReflectionException $exception) {
+        } catch (BadMethodCallException $exception) {
+            throw new UnknownUnitException($valueUnit, 0, $exception);
+        } catch (ReflectionException $exception) {
             throw new UnknownUnitException($valueUnit, 0, $exception);
         }
     }
@@ -1378,8 +1385,10 @@ trait Date
      *
      * @return int|static
      */
-    public function utcOffset(int $offset = null)
+    public function utcOffset($offset = null)
     {
+        $offset = cast_to_int($offset, null);
+
         if (func_num_args() < 1) {
             return $this->offsetMinutes;
         }
@@ -1605,7 +1614,7 @@ trait Date
     /////////////////////// WEEK SPECIAL DAYS /////////////////////////
     ///////////////////////////////////////////////////////////////////
 
-    private static function getFirstDayOfWeek(): int
+    private static function getFirstDayOfWeek()
     {
         return (int) static::getTranslationMessageWith(
             static::getTranslator(),
@@ -1966,8 +1975,11 @@ trait Date
      *
      * @return string
      */
-    public function ordinal(string $key, string $period = null): string
+    public function ordinal($key, $period = null)
     {
+        $key = cast_to_string($key);
+        $period = cast_to_string($period, null);
+
         $number = $this->$key;
         $result = $this->translate('ordinal', [
             ':number' => $number,
@@ -1984,8 +1996,10 @@ trait Date
      *
      * @return string
      */
-    public function meridiem(bool $isLower = false): string
+    public function meridiem($isLower = false)
     {
+        $isLower = cast_to_bool($isLower);
+
         $hour = $this->hour;
         $index = $hour < 12 ? 0 : 1;
 
@@ -2024,8 +2038,10 @@ trait Date
      *
      * @return string
      */
-    public function getAltNumber(string $key): string
+    public function getAltNumber($key)
     {
+        $key = cast_to_string($key);
+
         return $this->translateNumber(strlen($key) > 1 ? $this->$key : $this->rawFormat('h'));
     }
 
@@ -2037,8 +2053,11 @@ trait Date
      *
      * @return string
      */
-    public function isoFormat(string $format, string $originalFormat = null): string
+    public function isoFormat($format, $originalFormat = null)
     {
+        $format = cast_to_string($format);
+        $originalFormat = cast_to_string($originalFormat, null);
+
         $result = '';
         $length = mb_strlen($format);
         $originalFormat = $originalFormat ?: $format;
@@ -2081,12 +2100,12 @@ trait Date
                 }
 
                 $code = $match[0];
-                $sequence = $formats[$code] ?? preg_replace_callback(
+                $sequence = isset($formats[$code]) ? $formats[$code] : preg_replace_callback(
                     '/MMMM|MM|DD|dddd/',
                     function ($code) {
                         return mb_substr($code[0], 1);
                     },
-                    $formats[strtoupper($code)] ?? ''
+                    isset($formats[strtoupper($code)]) ? $formats[strtoupper($code)] : ''
                 );
                 $rest = mb_substr($format, $i + mb_strlen($code));
                 $format = mb_substr($format, 0, $i).$sequence.$rest;
@@ -2101,18 +2120,22 @@ trait Date
                     $units = static::getIsoUnits();
                 }
 
-                $sequence = $units[$code] ?? '';
+                $sequence = isset($units[$code]) ? $units[$code] : '';
 
                 if ($sequence instanceof Closure) {
                     $sequence = $sequence($this, $originalFormat);
                 } elseif (is_array($sequence)) {
                     try {
                         $sequence = $this->{$sequence[0]}(...$sequence[1]);
-                    } catch (ReflectionException | InvalidArgumentException | BadMethodCallException $e) {
+                    } catch (ReflectionException $e) {
+                        $sequence = '';
+                    } catch (BadMethodCallException $e) {
+                        $sequence = '';
+                    } catch (BadMethodCallException $e) {
                         $sequence = '';
                     }
                 } elseif (is_string($sequence)) {
-                    $sequence = $this->$sequence ?? $code;
+                    $sequence = $this->isset($sequence) ? $sequence : $code;
                 }
 
                 $format = mb_substr($format, 0, $i).$sequence.mb_substr($format, $i + mb_strlen($code));
@@ -2193,8 +2216,10 @@ trait Date
      *
      * @return string
      */
-    public function translatedFormat(string $format): string
+    public function translatedFormat($format)
     {
+        $format = cast_to_string($format);
+
         $replacements = static::getFormatsToIsoReplacements();
         $context = '';
         $isoFormat = '';
@@ -2246,7 +2271,7 @@ trait Date
                 }
 
                 $isoFormat .= '['.$this->rawFormat($char).']';
-                $context .= $contextReplacements[$char] ?? ' ';
+                $context .= isset($contextReplacements[$char]) ? $contextReplacements[$char] : ' ';
 
                 continue;
             }
@@ -2368,8 +2393,10 @@ trait Date
      *
      * @return string
      */
-    public static function singularUnit(string $unit): string
+    public static function singularUnit($unit)
     {
+        $unit = cast_to_string($unit);
+
         $unit = rtrim(mb_strtolower($unit), 's');
 
         if ($unit === 'centurie') {
@@ -2390,8 +2417,10 @@ trait Date
      *
      * @return string
      */
-    public static function pluralUnit(string $unit): string
+    public static function pluralUnit($unit)
     {
+        $unit = cast_to_string($unit);
+
         $unit = rtrim(strtolower($unit), 's');
 
         if ($unit === 'century') {
@@ -2539,7 +2568,7 @@ trait Date
         }
 
         if (static::isModifiableUnit($unit)) {
-            return $this->{"${action}Unit"}($unit, $parameters[0] ?? 1, $overflow);
+            return $this->{"${action}Unit"}($unit, isset($parameters[0]) ? $parameters[0] : 1, $overflow);
         }
 
         $sixFirstLetters = substr($unit, 0, 6);
@@ -2569,7 +2598,9 @@ trait Date
         if (substr($unit, 0, 9) === 'isCurrent') {
             try {
                 return $this->isCurrentUnit(strtolower(substr($unit, 9)));
-            } catch (BadComparisonUnitException | BadMethodCallException $exception) {
+            } catch (BadComparisonUnitException $exception) {
+                // Try next
+            } catch (BadMethodCallException $exception) {
                 // Try next
             }
         }
@@ -2578,7 +2609,7 @@ trait Date
             try {
                 $unit = static::singularUnit(substr($method, 0, -5));
 
-                return $this->range($parameters[0] ?? $this, $parameters[1] ?? 1, $unit);
+                return $this->range(isset($parameters[0]) ? $parameters[0] : $this, isset($parameters[1]) ? $parameters[1] : 1, $unit);
             } catch (InvalidArgumentException $exception) {
                 // Try macros
             }
@@ -2598,7 +2629,7 @@ trait Date
                     }
                 }
 
-                if ($this->localStrictModeEnabled ?? static::isStrictModeEnabled()) {
+                if (isset($this->localStrictModeEnabled) ? $this->localStrictModeEnabled : static::isStrictModeEnabled()) {
                     throw new UnknownMethodException($method);
                 }
 

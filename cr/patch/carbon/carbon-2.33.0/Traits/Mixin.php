@@ -113,6 +113,10 @@ trait Mixin
                     $closure = $closureBase->bindTo($context);
                 } catch (Throwable $e) {
                     $closure = $closureBase;
+                } catch (\Error $e) {
+                    $closure = $closureBase;
+                } catch (\Exception $e) {
+                    $closure = $closureBase;
                 }
 
                 return $closure(...func_get_args());
@@ -140,6 +144,10 @@ trait Mixin
             $result = $callable();
         } catch (Throwable $throwable) {
             $exception = $throwable;
+        } catch (\Error $error) {
+            $exception = $error;
+        } catch (\Exception $e) {
+            $exception = $e;
         }
 
         array_pop(static::$macroContextStack);
