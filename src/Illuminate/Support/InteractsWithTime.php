@@ -46,7 +46,7 @@ trait InteractsWithTime
     protected function parseDateInterval($delay)
     {
         if ($delay instanceof DateInterval) {
-            $delay = Carbon::now()->addValue($delay);
+            $delay = Carbon::now()->add_($delay);
         }
 
         return $delay;

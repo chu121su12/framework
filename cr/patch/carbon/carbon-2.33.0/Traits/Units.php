@@ -179,7 +179,7 @@ trait Units
      *
      * @return static
      */
-    public function addValue($unit, $value = 1, $overflow = null)
+    public function add_($unit, $value = 1, $overflow = null)
     {
         if (is_string($unit) && func_num_args() === 1) {
             $unit = CarbonInterval::make($unit);
@@ -318,7 +318,7 @@ trait Units
      *
      * @return static
      */
-    public function subValue($unit, $value = 1, $overflow = null)
+    public function sub_($unit, $value = 1, $overflow = null)
     {
         if (is_string($unit) && func_num_args() === 1) {
             $unit = CarbonInterval::make($unit);
@@ -352,6 +352,6 @@ trait Units
             $unit = CarbonInterval::make($unit);
         }
 
-        return $this->subValue($unit, $value, $overflow);
+        return $this->sub_($unit, $value, $overflow);
     }
 }

@@ -742,7 +742,7 @@ trait Date
     public function carbonize($date = null)
     {
         if ($date instanceof DateInterval) {
-            return $this->copy()->addValue($date);
+            return $this->copy()->add_($date);
         }
 
         if ($date instanceof DatePeriod || $date instanceof CarbonPeriod) {

@@ -713,7 +713,7 @@ interface CarbonInterface extends CarbonSetStateInterface, DateTimeInterface, Js
      *
      * @return static
      */
-    public function addValue($unit, $value = 1, $overflow = null);
+    public function add_($unit, $value = 1, $overflow = null);
 
     /**
      * Add seconds to the instance using timestamp. Positive $value travels
@@ -4049,7 +4049,7 @@ interface CarbonInterface extends CarbonSetStateInterface, DateTimeInterface, Js
      *
      * @return static
      */
-    public function subValue($unit, $value = 1, $overflow = null);
+    public function sub_($unit, $value = 1, $overflow = null);
 
     public function subRealUnit($unit, $value = 1);
 

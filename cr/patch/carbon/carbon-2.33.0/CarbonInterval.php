@@ -1833,7 +1833,7 @@ class CarbonInterval extends DateInterval
             list($value, $unit) = [$unit, $value];
         }
 
-        return $this->addValue($unit, -floatval($value));
+        return $this->add_($unit, -floatval($value));
     }
 
     /**
@@ -1846,7 +1846,7 @@ class CarbonInterval extends DateInterval
      */
     public function subtract($unit, $value = 1)
     {
-        return $this->subValue($unit, $value);
+        return $this->sub_($unit, $value);
     }
 
     /**
@@ -2017,8 +2017,8 @@ class CarbonInterval extends DateInterval
     public static function compareDateIntervals(DateInterval $first, DateInterval $second)
     {
         $current = Carbon::now();
-        $passed = $current->copy()->addValue($second);
-        $current->addValue($first);
+        $passed = $current->copy()->add_($second);
+        $current->add_($first);
 
         if ($current < $passed) {
             return -1;
@@ -2428,7 +2428,7 @@ class CarbonInterval extends DateInterval
             ->roundUnit($unit, $precision, $function);
 
         return $this->copyProperties(
-            $base->addValue($this)
+            $base->add_($this)
                 ->roundUnit($unit, $precision, $function)
                 ->diffAsCarbonInterval($base)
         );
