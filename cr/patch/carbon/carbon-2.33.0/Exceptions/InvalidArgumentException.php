@@ -10,6 +10,6 @@
  */
 namespace Carbon\Exceptions;
 
-interface InvalidArgumentException extends Exception
+interface InvalidArgumentException extends BaseException
 {
 }

@@ -10,6 +10,6 @@
  */
 namespace Carbon\Exceptions;
 
-interface BadMethodCallException extends Exception
+interface BadMethodCallException extends BaseException
 {
 }

@@ -10,6 +10,6 @@
  */
 namespace Carbon\Exceptions;
 
-interface Exception
+interface BaseException
 {
 }

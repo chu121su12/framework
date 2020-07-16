@@ -10,6 +10,6 @@
  */
 namespace Carbon\Exceptions;
 
-interface RuntimeException extends Exception
+interface RuntimeException extends BaseException
 {
 }
