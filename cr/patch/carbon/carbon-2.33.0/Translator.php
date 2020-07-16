@@ -348,7 +348,7 @@ class Translator extends Translation\Translator
             };
 
             usort($locales, function ($first, $second) use ($getScore) {
-                return $getScore($second) <=> $getScore($first);
+                return backport_spaceship_operator($getScore($second), $getScore($first));
             });
 
             $locale = $locales[0];

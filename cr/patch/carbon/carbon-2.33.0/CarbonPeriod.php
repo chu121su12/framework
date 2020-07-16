@@ -377,7 +377,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return static
      */
-    public function clone()
+    public function clone_()
     {
         return clone $this;
     }
@@ -1900,7 +1900,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @param callable $callback
      */
-    public function forEach(callable $callback)
+    public function forEach_(callable $callback)
     {
         foreach ($this as $date) {
             $callback($date);

@@ -566,7 +566,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
      *
      * @return static
      */
-    public function clone()
+    public function clone_()
     {
         return $this->copy();
     }

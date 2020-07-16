@@ -66,7 +66,8 @@ trait IntervalStep
         $carbonDate = $dateTime instanceof CarbonInterface ? $dateTime : $this->resolveCarbon($dateTime);
 
         if ($this->step) {
-            return $carbonDate->setDateTimeFrom(($this->step)($carbonDate->copy(), $negated));
+            $stepFunction = $this->step;
+            return $carbonDate->setDateTimeFrom($stepFunction($carbonDate->copy(), $negated));
         }
 
         if ($negated) {
