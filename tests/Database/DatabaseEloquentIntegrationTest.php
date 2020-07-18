@@ -780,7 +780,7 @@ class DatabaseEloquentIntegrationTest extends TestCase
         $query = EloquentTestUser::has('postWithPhotos');
 
         $bindingsCount = count($query->getBindings());
-        $questionMarksCount = substr_count($query->toSql(), '?');
+        $questionMarksCount = backport_substr_count($query->toSql(), '?');
 
         $this->assertEquals($questionMarksCount, $bindingsCount);
     }

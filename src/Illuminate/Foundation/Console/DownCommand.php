@@ -98,7 +98,8 @@ class DownCommand extends Command
      */
     protected function prerenderView()
     {
-        (new RegisterErrorViewPaths)();
+        $errorViewPath = new RegisterErrorViewPaths;
+        $errorViewPath();
 
         return view($this->option('render'))->render();
     }

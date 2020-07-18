@@ -571,7 +571,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function registerErrorViewPaths()
     {
-        (new RegisterErrorViewPaths)();
+        $errorViewPath = new RegisterErrorViewPaths;
+        $errorViewPath();
     }
 
     /**

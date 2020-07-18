@@ -13,8 +13,10 @@ class MaintenanceModeBypassCookie
      * @param  string  $key
      * @return \Symfony\Component\HttpFoundation\Cookie
      */
-    public static function create(string $key)
+    public static function create($key)
     {
+        $key = cast_to_string($key);
+
         $expiresAt = Carbon::now()->addHours(12);
 
         return new Cookie('laravel_maintenance', base64_encode(json_encode([
@@ -30,12 +32,16 @@ class MaintenanceModeBypassCookie
      * @param  string  $key
      * @return bool
      */
-    public static function isValid(string $cookie, string $key)
+    public static function isValid($cookie, $key)
     {
-        $payload = json_decode(base64_decode($cookie), true);
+        $cookie = cast_to_string($cookie);
+
+        $key = cast_to_string($key);
+
+        $payload = backport_json_decode(base64_decode($cookie), true);
 
         return is_array($payload) &&
-            is_numeric($payload['expires_at'] ?? null) &&
+            is_numeric(isset($payload['expires_at']) ? $payload['expires_at'] : null) &&
             isset($payload['mac']) &&
             hash_equals(hash_hmac('SHA256', $payload['expires_at'], $key), $payload['mac']) &&
             (int) $payload['expires_at'] >= Carbon::now()->getTimestamp();

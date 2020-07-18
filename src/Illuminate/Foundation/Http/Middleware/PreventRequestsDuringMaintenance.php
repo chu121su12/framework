@@ -71,13 +71,13 @@ class PreventRequestsDuringMaintenance
             if (isset($data['template'])) {
                 return response(
                     $data['template'],
-                    $data['status'] ?? 503,
+                    isset($data['status']) ? $data['status'] : 503,
                     isset($data['retry']) ? ['Retry-After' => $data['retry']] : []
                 );
             }
 
             throw new HttpException(
-                $data['status'] ?? 503,
+                isset($data['status']) ? $data['status'] : 503,
                 'Service Unavailable',
                 null,
                 isset($data['retry']) ? ['Retry-After' => $data['retry']] : []
@@ -131,8 +131,10 @@ class PreventRequestsDuringMaintenance
      * @param  string  $secret
      * @return \Illuminate\Http\RedirectResponse
      */
-    protected function bypassResponse(string $secret)
+    protected function bypassResponse($secret)
     {
+        $secret = cast_to_string($secret);
+
         return redirect('/')->withCookie(
             MaintenanceModeBypassCookie::create($secret)
         );

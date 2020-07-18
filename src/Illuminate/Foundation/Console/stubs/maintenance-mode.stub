@@ -6,7 +6,7 @@ if (! file_exists($down = __DIR__.'/../storage/framework/down')) {
 }
 
 // Decode the "down" file's JSON...
-$data = json_decode(file_get_contents($down), true);
+$data = backport_json_decode(file_get_contents($down), true);
 
 // Allow framework to handle request if no prerendered template...
 if (! isset($data['template'])) {
@@ -20,10 +20,10 @@ if (isset($data['secret']) && $_SERVER['REQUEST_URI'] === '/'.$data['secret']) {
 
 // Determine if maintenance mode bypass cookie is valid...
 if (isset($_COOKIE['laravel_maintenance']) && isset($data['secret'])) {
-    $payload = json_decode(base64_decode($_COOKIE['laravel_maintenance']), true);
+    $payload = backport_json_decode(base64_decode($_COOKIE['laravel_maintenance']), true);
 
     if (is_array($payload) &&
-        is_numeric($payload['expires_at'] ?? null) &&
+        is_numeric(isset($payload['expires_at']) ? $payload['expires_at'] : null) &&
         isset($payload['mac']) &&
         hash_equals(hash_hmac('SHA256', $payload['expires_at'], $data['secret']), $payload['mac']) &&
         (int) $payload['expires_at'] >= time()) {
@@ -40,7 +40,7 @@ if (isset($data['redirect']) && $_SERVER['REQUEST_URI'] !== $data['redirect']) {
 }
 
 // Output the prerendered template...
-http_response_code($data['status'] ?? 503);
+http_response_code(isset($data['status']) ? $data['status'] : 503);
 header('Retry-After: '.$data['retry']);
 
 echo $data['template'];
