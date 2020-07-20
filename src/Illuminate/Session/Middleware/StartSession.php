@@ -285,7 +285,7 @@ class StartSession
     /**
      * Resolve the given cache driver.
      *
-     * @param  string  $cache
+     * @param  string  $driver
      * @return \Illuminate\Cache\Store
      */
     protected function cache($driver)
