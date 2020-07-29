@@ -11,6 +11,8 @@ class TypedPropertyTestClass
 
     public $user;
 
+    public $unitializedUser;
+
     protected $id;
 
     private $names;
