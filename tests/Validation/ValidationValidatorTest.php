@@ -1219,6 +1219,14 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator($trans, ['first' => 'sven'], ['last' => 'required_unless:first,taylor,sven']);
         $this->assertTrue($v->passes());
 
+        $trans = $this->getIlluminateArrayTranslator();
+        $v = new Validator($trans, ['foo' => false], ['bar' => 'required_unless:foo,false']);
+        $this->assertTrue($v->passes());
+
+        $trans = $this->getIlluminateArrayTranslator();
+        $v = new Validator($trans, ['foo' => false], ['bar' => 'required_unless:foo,true']);
+        $this->assertTrue($v->fails());
+
         // error message when passed multiple values (required_unless:foo,bar,baz)
         $trans = $this->getIlluminateArrayTranslator();
         $trans->addLines(['validation.required_unless' => 'The :attribute field is required unless :other is in :values.'], 'en');
@@ -1369,6 +1377,9 @@ class ValidationValidatorTest extends TestCase
 
         $v = new Validator($trans, ['lhs' => 15.0], ['lhs' => 'numeric|gt:10']);
         $this->assertTrue($v->passes());
+
+        $v = new Validator($trans, ['lhs' => 5, 10 => 1], ['lhs' => 'numeric|gt:10']);
+        $this->assertTrue($v->fails());
 
         $v = new Validator($trans, ['lhs' => '15'], ['lhs' => 'numeric|gt:10']);
         $this->assertTrue($v->passes());
