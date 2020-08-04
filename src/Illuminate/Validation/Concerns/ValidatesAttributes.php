@@ -1504,7 +1504,7 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(2, $parameters, 'required_unless');
 
-        [$values, $other] = $this->prepareValuesAndOther($parameters);
+        list($values, $other) = $this->prepareValuesAndOther($parameters);
 
         if (! in_array($other, $values)) {
             return $this->validateRequired($attribute, $value);

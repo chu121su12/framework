@@ -731,7 +731,7 @@ class PendingRequest
 
                 $response = is_array($response) ? Factory::response($response) : $response;
 
-                $sink = $options['sink'] ?? null;
+                $sink = isset($options['sink']) ? $options['sink'] : null;
 
                 if ($sink) {
                     $response->then($this->sinkStubHandler($sink));
