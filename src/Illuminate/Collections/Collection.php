@@ -1309,6 +1309,17 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
+     * Count the number of items in the collection by a field or using a callback.
+     *
+     * @param  callable|string  $countBy
+     * @return static
+     */
+    public function countBy($countBy = null)
+    {
+        return new static($this->lazy()->countBy($countBy)->all());
+    }
+
+    /**
      * Add an item to the collection.
      *
      * @param  mixed  $item
