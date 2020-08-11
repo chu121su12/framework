@@ -265,7 +265,9 @@ class LazyCollection implements Enumerable
                 $counts[$group]++;
             }
 
-            yield from $counts;
+            foreach ($counts as $yieldKey => $yieldValue) {
+                yield $yieldKey => $yieldValue;
+            }
         });
     }
 

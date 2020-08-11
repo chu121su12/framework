@@ -187,7 +187,7 @@ class RedisManager implements Factory
     {
         $parsed = (new ConfigurationUrlParser)->parseConfiguration($config);
 
-        $driver = strtolower($parsed['driver'] ?? '');
+        $driver = strtolower(isset($parsed['driver']) ? $parsed['driver'] : '');
 
         if (in_array($driver, ['tcp', 'tls'])) {
             $parsed['host'] = "{$driver}://{$parsed['host']}";
