@@ -78,13 +78,18 @@ class CallbackEvent extends Event
                         ? $container->call([$this->callback, '__invoke'], $this->parameters)
                         : $container->call($this->callback, $this->parameters);
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
+        }
+
+        $this->removeMutex();
+
+        parent::callAfterCallbacks($container);
+
+        if (isset($e)) {
             $this->exitCode = 1;
 
             throw $e;
-        } finally {
-            $this->removeMutex();
-
-            parent::callAfterCallbacks($container);
         }
 
         $this->exitCode = $response === false ? 1 : 0;

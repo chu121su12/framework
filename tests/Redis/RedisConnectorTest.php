@@ -12,13 +12,13 @@ class RedisConnectorTest extends TestCase
 {
     use InteractsWithRedis;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->setUpRedis();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         parent::tearDown();
 

@@ -13,7 +13,7 @@ use Orchestra\Testbench\TestCase;
  */
 class CallbackEventTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         parent::tearDown();
 
