@@ -549,7 +549,7 @@ class PendingRequest
      * @param  array  $options
      * @return \Illuminate\Http\Client\Response
      *
-     * @throws \Exception
+     * @throws \Throwable
      */
     public function send($method, $url, array $options = [])
     {

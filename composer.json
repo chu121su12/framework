@@ -103,6 +103,7 @@
         "files": [
             "cr/helpers/backport.php",
             "cr/helpers/casts.php",
+            "src/Illuminate/Collections/helpers.php",
             "src/Illuminate/Events/functions.php",
             "src/Illuminate/Foundation/helpers.php",
             "src/Illuminate/Support/helpers.php"
@@ -162,10 +163,11 @@
         "nyholm/psr7": "Required to use PSR-7 bridging features (^1.2).",
         "pda/pheanstalk": "Required to use the beanstalk queue driver (^4.0).",
         "phpunit/phpunit": "Required to use assertions and run tests (^8.4|^9.0).",
+        "predis/predis": "Required to use the predis connector (^1.1.2).",
         "psr/http-message": "Required to allow Storage::put to accept a StreamInterface (^1.0).",
         "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (^4.0).",
         "symfony/cache": "Required to PSR-6 cache bridge (^5.1).",
-        "symfony/filesystem": "Required to create relative storage directory symbolic links (^5.1).",
+        "symfony/filesystem": "Required to enable support for relative symbolic links (^5.1).",
         "symfony/psr-http-message-bridge": "Required to use PSR-7 bridging features (^2.0).",
         "wildbit/swiftmailer-postmark": "Required to use Postmark mail driver (^3.0)."
     },

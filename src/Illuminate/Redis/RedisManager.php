@@ -190,7 +190,7 @@ class RedisManager implements Factory
         $driver = strtolower(isset($parsed['driver']) ? $parsed['driver'] : '');
 
         if (in_array($driver, ['tcp', 'tls'])) {
-            $parsed['host'] = "{$driver}://{$parsed['host']}";
+            $parsed['scheme'] = $driver;
         }
 
         return array_filter($parsed, function ($key) {

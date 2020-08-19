@@ -33,7 +33,7 @@ class Connector
      * @param  array  $options
      * @return \PDO
      *
-     * @throws \Exception
+     * @throws \Throwable
      */
     public function createConnection($dsn, array $config, array $options)
     {
@@ -93,7 +93,7 @@ class Connector
      * @param  array  $options
      * @return \PDO
      *
-     * @throws \Exception
+     * @throws \Throwable
      */
     protected function tryAgainIfCausedByLostConnection($e, $dsn, $username, $password, $options)
     {
