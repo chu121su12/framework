@@ -11,11 +11,16 @@ trait PhpUnit8Assert
 {
     function assertSameStringDifferentLineEndings($expected, $actual, $message = '')
     {
-        static::assertSame(
-            preg_replace('/\r\n/', "\n", $expected),
-            preg_replace('/\r\n/', "\n", $actual),
-            $message
-        );
+        if (windows_os()) {
+            static::assertSame(
+                preg_replace('/\r\n/', "\n", $expected),
+                preg_replace('/\r\n/', "\n", $actual),
+                $message
+            );
+
+        } else {
+            static::assertSame($expected, $actual, $message);
+        }
     }
 
     /**

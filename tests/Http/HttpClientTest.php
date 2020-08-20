@@ -258,7 +258,7 @@ class HttpClientTest extends TestCase
         $this->assertSame(200, $response->status());
 
         $response = $this->factory->get('https://example.com');
-        $this->assertSame("This is a story about something that happened long ago when your grandfather was a child.\n", $response->body());
+        $this->assertSameStringDifferentLineEndings("This is a story about something that happened long ago when your grandfather was a child.\n", $response->body());
         $this->assertSame(200, $response->status());
 
         $response = $this->factory->get('https://example.com');
