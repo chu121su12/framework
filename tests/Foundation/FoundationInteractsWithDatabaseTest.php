@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithDatabase;
 use Mockery as m;
-use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+
+use PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
+// use PHPUnit\Framework\ExpectationFailedException;
 
 class FoundationInteractsWithDatabaseTest extends TestCase
 {
