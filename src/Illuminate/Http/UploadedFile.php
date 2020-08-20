@@ -41,6 +41,9 @@ class UploadedFile extends SymfonyUploadedFile
     public function __construct($path, $originalName, $mimeType = null, $error = null, $test = false, $unused = null)
     {
         parent::__construct($path, $originalName, $mimeType, null, $error, $test);
+
+        // updated constructor signature:
+        // parent::__construct($path, $originalName, $mimeType, $error, $test);
     }
 
     /**
@@ -169,9 +172,19 @@ class UploadedFile extends SymfonyUploadedFile
             $file->getPathname(),
             $file->getClientOriginalName(),
             $file->getClientMimeType(),
+            null,
             $file->getError(),
             $test
         );
+
+        // updated constructor signature:
+        // return $file instanceof static ? $file : new static(
+        //     $file->getPathname(),
+        //     $file->getClientOriginalName(),
+        //     $file->getClientMimeType(),
+        //     $file->getError(),
+        //     $test
+        // );
     }
 
     /**
