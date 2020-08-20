@@ -33,6 +33,7 @@
         "psr/simple-cache": "^1.0",
         "ramsey/uuid": "^3.7",
         "swiftmailer/swiftmailer": "^5.4",
+        "symfony/console": "^3.4",
         "symfony/finder": "^3.4",
         "symfony/http-foundation": "^3.4",
         "symfony/http-kernel": "^3.4",
@@ -109,13 +110,10 @@
             "src/Illuminate/Support/helpers.php"
         ],
         "psr-4": {
-            "Symfony\\Component\\Console\\": "cr/symfony/console-5.0.8/",
             "Symfony\\Component\\ErrorHandler\\": "cr/symfony/error-handler-5.0.8/",
             "Symfony\\Component\\HttpKernel\\Exception\\": "cr/patch/symfony/http-kernel-5.0.8/Exception/",
             "Symfony\\Component\\Mime\\": "cr/symfony/mime-5.0.8/",
             "Symfony\\Component\\Routing\\": "cr/symfony/routing-5.0.8/",
-            "Symfony\\Component\\String\\": "cr/symfony/string-5.0.8/",
-            "Symfony\\Contracts\\Service\\": "cr/symfony/service-contracts-2.0.1/",
             "Carbon\\": "cr/patch/carbon/carbon-2.36.1/",
             "Doctrine\\Inflector\\": "cr/patch/doctrine-inflector-src/",
             "Illuminate\\": "src/Illuminate/",
