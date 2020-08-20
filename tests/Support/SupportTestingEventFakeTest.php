@@ -9,6 +9,10 @@ use PHPUnit\Framework\Constraint\ExceptionMessage;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group job
+ * @group pesky
+ */
 class SupportTestingEventFakeTest extends TestCase
 {
     protected function setUp()
