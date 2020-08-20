@@ -84,10 +84,26 @@ final class MimeTypes implements MimeTypesInterface
     public function getExtensions($mimeType)
     {
         if ($this->extensions) {
-            $extensions = isset($this->extensions[$mimeType]) ? $this->extensions[$mimeType] : isset($this->extensions[$lcMimeType = strtolower($mimeType)]) ? $this->extensions[$lcMimeType = strtolower($mimeType)] : null;
+            $extensions = isset($this->extensions[$mimeType])
+                ? $this->extensions[$mimeType]
+                : (
+                    isset($this->extensions[$lcMimeType = strtolower($mimeType)])
+                        ? $this->extensions[$lcMimeType = strtolower($mimeType)]
+                        : null
+                );
         }
 
-        return isset($extensions) ? $extensions : isset(self::$map[$mimeType]) ? self::$map[$mimeType] : isset(self::$map[isset($lcMimeType) ? $lcMimeType : strtolower($mimeType)]) ? self::$map[isset($lcMimeType) ? $lcMimeType : strtolower($mimeType)] : [];
+        return isset($extensions)
+            ? $extensions
+            : (
+                isset(self::$map[$mimeType])
+                    ? self::$map[$mimeType]
+                    : (
+                        isset(self::$map[isset($lcMimeType) ? $lcMimeType : strtolower($mimeType)])
+                            ? self::$map[isset($lcMimeType) ? $lcMimeType : strtolower($mimeType)]
+                            : []
+                    )
+            );
     }
 
     /**
@@ -96,10 +112,26 @@ final class MimeTypes implements MimeTypesInterface
     public function getMimeTypes($ext)
     {
         if ($this->mimeTypes) {
-            $mimeTypes = isset($this->mimeTypes[$ext]) ? $this->mimeTypes[$ext] : isset($this->mimeTypes[$lcExt = strtolower($ext)]) ? $this->mimeTypes[$lcExt = strtolower($ext)] : null;
+            $mimeTypes = isset($this->mimeTypes[$ext])
+                ? $this->mimeTypes[$ext]
+                : (
+                    isset($this->mimeTypes[$lcExt = strtolower($ext)])
+                    ? $this->mimeTypes[$lcExt = strtolower($ext)]
+                    : null
+                );
         }
 
-        return isset($mimeTypes) ? $mimeTypes : isset(self::$reverseMap[$ext]) ? self::$reverseMap[$ext] : isset(self::$reverseMap[isset($lcExt) ? $lcExt : strtolower($ext)]) ? self::$reverseMap[isset($lcExt) ? $lcExt : strtolower($ext)] : [];
+        return isset($mimeTypes)
+            ? $mimeTypes
+            : (
+                isset(self::$reverseMap[$ext])
+                    ? self::$reverseMap[$ext]
+                    : (
+                        isset(self::$reverseMap[isset($lcExt) ? $lcExt : strtolower($ext)])
+                            ? self::$reverseMap[isset($lcExt) ? $lcExt : strtolower($ext)]
+                            : []
+                    )
+            );
     }
 
     /**
