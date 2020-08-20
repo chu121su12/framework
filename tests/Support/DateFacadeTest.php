@@ -17,7 +17,7 @@ class DateFacadeTest extends TestCase
     protected function tearDown()
     {
         parent::tearDown();
-        DateFactory::useHandler(Carbon::class);
+        DateFactory::use_(Carbon::class);
     }
 
     protected static function assertBetweenStartAndNow($start, $actual)
@@ -36,7 +36,7 @@ class DateFacadeTest extends TestCase
         $start = Carbon::now()->getTimestamp();
         $this->assertSame(Carbon::class, get_class(Date::now()));
         $this->assertBetweenStartAndNow($start, Date::now()->getTimestamp());
-        DateFactory::useHandler(function (Carbon $date) {
+        DateFactory::use_(function (Carbon $date) {
             return new DateTime($date->format('Y-m-d H:i:s.u'), $date->getTimezone());
         });
         $start = Carbon::now()->getTimestamp();
@@ -49,7 +49,7 @@ class DateFacadeTest extends TestCase
         $start = Carbon::now()->getTimestamp();
         $this->assertSame(Carbon::class, get_class(Date::now()));
         $this->assertBetweenStartAndNow($start, Date::now()->getTimestamp());
-        DateFactory::useHandler(DateTime::class);
+        DateFactory::use_(DateTime::class);
         $start = Carbon::now()->getTimestamp();
         $this->assertSame(DateTime::class, get_class(Date::now()));
         $this->assertBetweenStartAndNow($start, Date::now()->getTimestamp());
@@ -57,36 +57,36 @@ class DateFacadeTest extends TestCase
 
     public function testCarbonImmutable()
     {
-        DateFactory::useHandler(CarbonImmutable::class);
+        DateFactory::use_(CarbonImmutable::class);
         $this->assertSame(CarbonImmutable::class, get_class(Date::now()));
-        DateFactory::useHandler(Carbon::class);
+        DateFactory::use_(Carbon::class);
         $this->assertSame(Carbon::class, get_class(Date::now()));
-        DateFactory::useHandler(function (Carbon $date) {
+        DateFactory::use_(function (Carbon $date) {
             return $date->toImmutable();
         });
         $this->assertSame(CarbonImmutable::class, get_class(Date::now()));
-        DateFactory::useHandler(function ($date) {
+        DateFactory::use_(function ($date) {
             return $date;
         });
         $this->assertSame(Carbon::class, get_class(Date::now()));
 
-        DateFactory::useHandler(new Factory([
+        DateFactory::use_(new Factory([
             'locale' => 'fr',
         ]));
         $this->assertSame('fr', Date::now()->locale);
-        DateFactory::useHandler(Carbon::class);
+        DateFactory::use_(Carbon::class);
         $this->assertSame('en', Date::now()->locale);
-        DateFactory::useHandler(CustomDateClass::class);
+        DateFactory::use_(CustomDateClass::class);
         $this->assertInstanceOf(CustomDateClass::class, Date::now());
         $this->assertInstanceOf(Carbon::class, Date::now()->getOriginal());
-        DateFactory::useHandler(Carbon::class);
+        DateFactory::use_(Carbon::class);
     }
 
     public function testUseInvalidHandler()
     {
         $this->expectException(InvalidArgumentException::class);
 
-        DateFactory::useHandler(42);
+        DateFactory::use_(42);
     }
 
     public function testMacro()

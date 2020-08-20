@@ -989,7 +989,7 @@ class Post extends Model
     {
         return $this->belongsToMany(TagWithCustomPivot::class, 'posts_tags', 'post_id', 'tag_id')
             ->using(PostTagPivot::class)
-            ->aliasAs('tag'); 
+            ->as_('tag');
     }
 
     public function tagsWithCustomRelatedKey()
