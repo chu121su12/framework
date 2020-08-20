@@ -362,14 +362,14 @@ class QueueWorkerTest extends TestCase
     /**
      * Helpers...
      */
-    private function getWorker($connectionName = 'default', $jobs = [], $isInMaintenanceMode = null)
+    private function getWorker($connectionName = 'default', $jobs = [], callable $isInMaintenanceMode = null)
     {
         return new InsomniacWorker(
             ...$this->workerDependencies($connectionName, $jobs, $isInMaintenanceMode)
         );
     }
 
-    private function workerDependencies($connectionName = 'default', $jobs = [], $isInMaintenanceMode = null)
+    private function workerDependencies($connectionName = 'default', $jobs = [], callable $isInMaintenanceMode = null)
     {
         return [
             new WorkerFakeManager($connectionName, new WorkerFakeConnection($jobs)),

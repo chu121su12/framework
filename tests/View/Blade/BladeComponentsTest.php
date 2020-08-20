@@ -12,40 +12,34 @@ class BladeComponentsTest extends AbstractBladeTestCase
 
     public function testClassComponentsAreCompiled()
     {
-        $expected = '<?php if (isset($component)) { $__componentOriginal35bda42cbf6f9717b161c4f893644ac7a48b0d98 = $component; } ?>
+        $this->assertSame('<?php if (isset($component)) { $__componentOriginal35bda42cbf6f9717b161c4f893644ac7a48b0d98 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Test::class, ["foo" => "bar"]); ?>
 <?php $component->withName(\'test\'); ?>
 <?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>';
-
-        $this->assertSame(preg_replace('/\r\n/', "\n", $expected), $this->compiler->compileString('@component(\'Test::class\', \'test\', ["foo" => "bar"])'));
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>', $this->compiler->compileString('@component(\'Test::class\', \'test\', ["foo" => "bar"])'));
     }
 
     public function testEndComponentsAreCompiled()
     {
         $this->compiler->newComponentHash('foo');
 
-        $expected = '<?php if (isset($__componentOriginal0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33)): ?>
+        $this->assertSame('<?php if (isset($__componentOriginal0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33)): ?>
 <?php $component = $__componentOriginal0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33; ?>
 <?php unset($__componentOriginal0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33); ?>
 <?php endif; ?>
-<?php echo $__env->renderComponent(); ?>';
-
-        $this->assertSame(preg_replace('/\r\n/', "\n", $expected), $this->compiler->compileString('@endcomponent'));
+<?php echo $__env->renderComponent(); ?>', $this->compiler->compileString('@endcomponent'));
     }
 
     public function testEndComponentClassesAreCompiled()
     {
         $this->compiler->newComponentHash('foo');
 
-        $expected = '<?php if (isset($__componentOriginal0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33)): ?>
+        $this->assertSame('<?php if (isset($__componentOriginal0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33)): ?>
 <?php $component = $__componentOriginal0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33; ?>
 <?php unset($__componentOriginal0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33); ?>
 <?php endif; ?>
 <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>';
-
-        $this->assertSame(preg_replace('/\r\n/', "\n", $expected), $this->compiler->compileString('@endcomponentClass'));
+<?php endif; ?>', $this->compiler->compileString('@endcomponentClass'));
     }
 
     public function testSlotsAreCompiled()

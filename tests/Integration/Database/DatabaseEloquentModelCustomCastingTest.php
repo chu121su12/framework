@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\InvalidCastException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
+// note: do not remove (array) cast since php 5 requires method overriding extending class have the same type as the extended class.
+
 class ValueObject_castUsing_class implements CastsAttributes {
             private $argument;
 
