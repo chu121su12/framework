@@ -104,8 +104,8 @@ class DatabaseStore implements LockProvider, Store
             return;
         }
 
-        if (!isset($cache->value)) {
-            return $this->unserialize(null);
+        if (! isset($cache->value)) {
+            return;
         }
 
         return $this->unserialize($cache->value);
