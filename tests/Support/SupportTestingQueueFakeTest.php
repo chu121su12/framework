@@ -11,7 +11,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @group job
+ * @group queue
  * @group pesky
  */
 class SupportTestingQueueFakeTest extends TestCase

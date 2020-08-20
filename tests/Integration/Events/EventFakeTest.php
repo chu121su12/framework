@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
 
 /**
- * @group job
- * @group pesky
+ * @group queue
  */
 class EventFakeTest extends TestCase
 {

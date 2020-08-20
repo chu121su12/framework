@@ -10,8 +10,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @group job
- * @group pesky
+ * @group queue
  */
 class SupportTestingBusFakeTest extends TestCase
 {

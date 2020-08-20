@@ -12,8 +12,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @group messages
- * @group pesky
+ * @group queue
  */
 class SupportTestingMailFakeTest extends TestCase
 {
