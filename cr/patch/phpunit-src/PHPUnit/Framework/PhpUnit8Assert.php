@@ -13,8 +13,8 @@ trait PhpUnit8Assert
     {
         if (windows_os()) {
             static::assertSame(
-                preg_replace(['/^(\r\n)+/', '/(\r\n)+$/', '/\r\n/'], ['', '', "\n"], $expected),
-                preg_replace(['/^(\r\n)+/', '/(\r\n)+$/', '/\r\n/'], ['', '', "\n"], $actual),
+                preg_replace(['/^(?:\r\n)*/', '/(?:\r\n)*$/', '/\r\n/'], ['', '', "\n"], $expected),
+                preg_replace(['/^(?:\r\n)*/', '/(?:\r\n)*$/', '/\r\n/'], ['', '', "\n"], $actual),
                 $message
             );
 
