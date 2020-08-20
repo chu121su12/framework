@@ -114,7 +114,7 @@
             "Symfony\\Component\\HttpKernel\\Exception\\": "cr/patch/symfony/http-kernel-5.0.8/Exception/",
             "Symfony\\Component\\Mime\\": "cr/symfony/mime-5.0.8/",
             "Symfony\\Component\\Routing\\": "cr/symfony/routing-5.0.8/",
-            "Carbon\\": "cr/patch/carbon/carbon-2.36.1/",
+            "Carbon\\": "cr/patch/carbon/carbon-2.38.0/",
             "Doctrine\\Inflector\\": "cr/patch/doctrine-inflector-src/",
             "Illuminate\\": "src/Illuminate/",
             "Illuminate\\Support\\": ["src/Illuminate/Macroable/", "src/Illuminate/Collections/"],
