@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
 
+/**
+ * @group job
+ * @group pesky
+ */
 class EventFakeTest extends TestCase
 {
     /**

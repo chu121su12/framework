@@ -9,6 +9,10 @@ use PHPUnit\Framework\Constraint\ExceptionMessage;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group job
+ * @group pesky
+ */
 class SupportTestingBusFakeTest extends TestCase
 {
     /** @var \Illuminate\Support\Testing\Fakes\BusFake */

@@ -11,6 +11,10 @@ use PHPUnit\Framework\Constraint\ExceptionMessage;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group messages
+ * @group pesky
+ */
 class SupportTestingMailFakeTest extends TestCase
 {
     /**

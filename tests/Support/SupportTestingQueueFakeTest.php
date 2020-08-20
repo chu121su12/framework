@@ -10,6 +10,10 @@ use PHPUnit\Framework\Constraint\ExceptionMessage;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group job
+ * @group pesky
+ */
 class SupportTestingQueueFakeTest extends TestCase
 {
     /**
