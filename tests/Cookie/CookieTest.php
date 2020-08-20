@@ -168,7 +168,9 @@ class CookieTest extends TestCase
         $cookieJar = $this->getCreator();
         $cookieJar->queue('foo', 'bar', 0, '/path');
         $this->assertEquals(
-            ['foo' => ['/path' => new Cookie('foo', 'bar', 0, '/path')]],
+            ['foo' => ['/path' => new Cookie('foo', 'bar', 0, '/path', null, false, true, false, 'lax')]],
+            // updated cookie signature:
+            // ['foo' => ['/path' => new Cookie('foo', 'bar', 0, '/path')]],
             $this->getQueuedPropertyValue($cookieJar)
         );
     }
