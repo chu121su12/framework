@@ -2,7 +2,7 @@
 
 namespace Illuminate\Support;
 
-use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\DepracatedInflector;
 
 class Pluralizer
 {
@@ -129,7 +129,19 @@ class Pluralizer
         static $inflector;
 
         if (is_null($inflector)) {
-            $inflector = new Inflector;
+            if (class_exists('Doctrine\Inflector\Inflector')) {
+                $inflector = new \Doctrine\Inflector\Inflector(
+                    new \Doctrine\Inflector\CachedWordInflector(new \Doctrine\Inflector\RulesetInflector(
+                        \Doctrine\Inflector\Rules\English\Rules::getSingularRuleset()
+                    )),
+                    new \Doctrine\Inflector\CachedWordInflector(new \Doctrine\Inflector\RulesetInflector(
+                        \Doctrine\Inflector\Rules\English\Rules::getPluralRuleset()
+                    ))
+                );
+
+            } else {
+                $inflector = new DepracatedInflector;
+            }
         }
 
         return $inflector;

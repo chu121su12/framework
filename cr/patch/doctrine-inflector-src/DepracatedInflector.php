@@ -4,7 +4,7 @@ namespace Doctrine\Inflector;
 
 use Doctrine\Common\Inflector\Inflector as DoctrineCommonInflector;
 
-class Inflector
+class DepracatedInflector
 {
     public function pluralize($value)
     {
