@@ -140,7 +140,7 @@ abstract class Factory
      * @param  callable|array  $attributes
      * @return static
      */
-    public static function newUp($attributes = [])
+    public static function new_($attributes = [])
     {
         return (new static)->state($attributes);
     }
@@ -445,7 +445,7 @@ abstract class Factory
      * @param  string|null  $relationship
      * @return static
      */
-    public function forr(self $factory, $relationship = null)
+    public function for_(self $factory, $relationship = null)
     {
         return $this->newInstance(['for' => $this->for->concat([new BelongsToRelationship(
             $factory,
@@ -622,7 +622,7 @@ abstract class Factory
 
         $factory = $resolver($modelName);
 
-        return $factory::newUp();
+        return $factory::new_();
     }
 
     /**
@@ -666,7 +666,7 @@ abstract class Factory
         );
 
         if (Str::startsWith($method, 'for')) {
-            return $this->forr($factory->state(isset($parameters[0]) ? $parameters[0] : []), $relationship);
+            return $this->for_($factory->state(isset($parameters[0]) ? $parameters[0] : []), $relationship);
         } elseif (Str::startsWith($method, 'has')) {
             return $this->has(
                 $factory

@@ -9,6 +9,15 @@ use PHPUnit\Framework\Constraint\StringContains;
 
 trait PhpUnit8Assert
 {
+    function assertSameStringDifferentLineEndings($expected, $actual, $message = '')
+    {
+        static::assertSame(
+            preg_replace('/\r\n/', "\n", $expected),
+            preg_replace('/\r\n/', "\n", $actual),
+            $message
+        );
+    }
+
     /**
      * Asserts that two variables are equal (with delta).
      *

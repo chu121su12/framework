@@ -341,7 +341,7 @@ class BelongsToMany extends Relation
      * @param  string  $accessor
      * @return $this
      */
-    public function aliasAs($accessor)
+    public function as_($accessor)
     {
         $this->accessor = $accessor;
 
