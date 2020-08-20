@@ -22,6 +22,8 @@ class SupportTestingEventFakeTest extends TestCase
 
     public function testAssertDispatched()
     {
+        phpunit_assert_v5_skip_test($this);
+
         try {
             $this->fake->assertDispatched(EventStub::class);
             $this->fail();
@@ -45,6 +47,8 @@ class SupportTestingEventFakeTest extends TestCase
 
     public function testAssertDispatchedWithCallbackInt()
     {
+        phpunit_assert_v5_skip_test($this);
+
         $this->fake->dispatch(EventStub::class);
         $this->fake->dispatch(EventStub::class);
 
@@ -60,6 +64,8 @@ class SupportTestingEventFakeTest extends TestCase
 
     public function testAssertDispatchedTimes()
     {
+        phpunit_assert_v5_skip_test($this);
+
         $this->fake->dispatch(EventStub::class);
         $this->fake->dispatch(EventStub::class);
 
@@ -75,6 +81,8 @@ class SupportTestingEventFakeTest extends TestCase
 
     public function testAssertNotDispatched()
     {
+        phpunit_assert_v5_skip_test($this);
+
         $this->fake->assertNotDispatched(EventStub::class);
 
         $this->fake->dispatch(EventStub::class);
@@ -89,6 +97,8 @@ class SupportTestingEventFakeTest extends TestCase
 
     public function testAssertNotDispatchedWithClosure()
     {
+        phpunit_assert_v5_skip_test($this);
+
         $this->fake->dispatch(new EventStub);
 
         try {
