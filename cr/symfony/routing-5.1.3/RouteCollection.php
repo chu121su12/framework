@@ -78,7 +78,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
     {
         $name = cast_to_string($name);
 
-        $priority = cast_to_int($priority);
+        // $priority = cast_to_int($priority);
 
         if (\func_num_args() < 3 && __CLASS__ !== static::class && __CLASS__ !== (new \ReflectionMethod($this, __FUNCTION__))->getDeclaringClass()->getName() && !$this instanceof \PHPUnit\Framework\MockObject\MockObject && !$this instanceof \Prophecy\Prophecy\ProphecySubjectInterface) {
             trigger_deprecation('symfony/routing', '5.1', 'The "%s()" method will have a new "int $priority = 0" argument in version 6.0, not defining it is deprecated.', __METHOD__);

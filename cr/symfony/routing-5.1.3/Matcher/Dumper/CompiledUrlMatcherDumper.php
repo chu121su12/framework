@@ -335,7 +335,7 @@ EOF;
 
                     $state->vars = [];
                     $regex = preg_replace_callback('#\?P<([^>]++)>#', $state->getVars, $rx[1]);
-                    if ($hasTrailingSlash = '/' !== $regex && '/' === $regex[-1]) {
+                    if ($hasTrailingSlash = '/' !== $regex && '/' === backport_string_offset($regex, -1)) {
                         $regex = substr($regex, 0, -1);
                     }
                     $hasTrailingVar = (bool) preg_match('#\{\w+\}/?$#', $route->getPath());
@@ -399,7 +399,8 @@ EOF;
                 continue;
             }
 
-            list($name, $regex, $vars, $route, $hasTrailingSlash, $hasTrailingVar) = $route;
+            $r = $route;
+            list($name, $regex, $vars, $route, $hasTrailingSlash, $hasTrailingVar) = $r;
             $compiledRoute = $route->compile();
             $vars = array_merge($state->hostVars, $vars);
 

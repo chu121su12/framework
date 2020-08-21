@@ -58,3 +58,15 @@ if (! function_exists('backport_spaceship_operator'))
         return 0;
     }
 }
+
+if (! function_exists('backport_string_offset'))
+{
+    function backport_string_offset($string, $offset)
+    {
+        if ($offset >= 0) {
+            return $string[0];
+        }
+
+        return substr($string, $offset, 1);
+    }
+}
