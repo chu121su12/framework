@@ -1061,7 +1061,7 @@ class DebugClassLoader
 EOTXT;
             }
 
-            $fileOffset += substr_count($code[$startLine], "\n") - 1;
+            $fileOffset += backport_substr_count($code[$startLine], "\n") - 1;
         }
 
         self::$fileOffsets[$file] = $fileOffset;
