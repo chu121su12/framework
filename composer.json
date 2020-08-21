@@ -104,16 +104,17 @@
         "files": [
             "cr/helpers/backport.php",
             "cr/helpers/casts.php",
+            "cr/symfony/deprecation-contracts-2.1.3/function.php",
             "src/Illuminate/Collections/helpers.php",
             "src/Illuminate/Events/functions.php",
             "src/Illuminate/Foundation/helpers.php",
             "src/Illuminate/Support/helpers.php"
         ],
         "psr-4": {
-            "Symfony\\Component\\ErrorHandler\\": "cr/symfony/error-handler-5.0.8/",
-            "Symfony\\Component\\HttpKernel\\Exception\\": "cr/patch/symfony/http-kernel-5.0.8/Exception/",
-            "Symfony\\Component\\Mime\\": "cr/symfony/mime-5.0.8/",
-            "Symfony\\Component\\Routing\\": "cr/symfony/routing-5.0.8/",
+            "Symfony\\Component\\ErrorHandler\\": "cr/symfony/error-handler-5.1.0/",
+            "Symfony\\Component\\HttpKernel\\Exception\\": "cr/patch/symfony/http-kernel-5.1.0/Exception/",
+            "Symfony\\Component\\Mime\\": "cr/symfony/mime-5.1.0/",
+            "Symfony\\Component\\Routing\\": "cr/symfony/routing-5.1.0/",
             "Carbon\\": "cr/patch/carbon/carbon-2.38.0/",
             "Doctrine\\Inflector\\": "cr/patch/doctrine-inflector-src/",
             "Illuminate\\": "src/Illuminate/",
