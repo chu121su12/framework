@@ -2,9 +2,10 @@
 
 namespace CR\LaravelBackport;
 
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class SymfonyConsoleApplication extends Application
 {
