@@ -3,6 +3,7 @@
 namespace Illuminate\Console\Scheduling;
 
 use Closure;
+use CR\LaravelBackport\SymfonyHelper;
 use Cron\CronExpression;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\TransferException;
@@ -220,7 +221,7 @@ class Event
     {
         $this->callBeforeCallbacks($container);
 
-        $this->exitCode = Process::fromShellCommandline($this->buildCommand(), base_path(), null, null, null)->run();
+        $this->exitCode = SymfonyHelper::processFromShellCommandline($this->buildCommand(), base_path(), null, null, null)->run();
 
         $this->callAfterCallbacks($container);
     }
@@ -235,7 +236,7 @@ class Event
     {
         $this->callBeforeCallbacks($container);
 
-        Process::fromShellCommandline($this->buildCommand(), base_path(), null, null, null)->run();
+        SymfonyHelper::processFromShellCommandline($this->buildCommand(), base_path(), null, null, null)->run();
     }
 
     /**

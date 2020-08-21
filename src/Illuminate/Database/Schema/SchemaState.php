@@ -2,6 +2,7 @@
 
 namespace Illuminate\Database\Schema;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Database\Connection;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
@@ -51,7 +52,7 @@ abstract class SchemaState
         $this->files = $files ?: new Filesystem;
 
         $this->processFactory = $processFactory ?: function (...$arguments) {
-            return Process::fromShellCommandline(...$arguments);
+            return SymfonyHelper::processFromShellCommandline(...$arguments);
         };
 
         $this->handleOutputUsing(function () {
