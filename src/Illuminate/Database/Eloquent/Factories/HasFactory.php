@@ -13,7 +13,7 @@ trait HasFactory
     public static function factory(...$parameters)
     {
         return Factory::factoryForModel(get_called_class())
-                    ->count(is_numeric(isset($parameters[0]) ? $parameters[0] : null) ? $parameters[0] : 1)
+                    ->count(is_numeric(isset($parameters[0]) ? $parameters[0] : null) ? $parameters[0] : null)
                     ->state(is_array(isset($parameters[0]) ? $parameters[0] : null) ? $parameters[0] : (isset($parameters[1]) ? $parameters[1] : []));
     }
 }
