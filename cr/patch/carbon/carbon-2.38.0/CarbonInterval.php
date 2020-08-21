@@ -1123,7 +1123,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
                     break;
 
                 default:
-                    if ($this->localStrictModeEnabled ?? Carbon::isStrictModeEnabled()) {
+                    if (isset($this->localStrictModeEnabled) ? $this->localStrictModeEnabled : Carbon::isStrictModeEnabled()) {
                         throw new UnknownSetterException($key);
                     }
 

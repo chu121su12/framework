@@ -161,8 +161,11 @@ abstract class AnnotationClassLoader implements LoaderInterface
             $host = $globals['host'];
         }
 
-        $condition = isset($annotCondition = $annot->getCondition()) ? $annotCondition : $globals['condition'];
-        $priority = isset($annotPriority = $annot->getPriority()) ? $annotPriority : $globals['priority'];
+        $annotCondition = $annot->getCondition();
+        $condition = isset($annotCondition) ? $annotCondition : $globals['condition'];
+
+        $annotPriority = $annot->getPriority();
+        $priority = isset($annotPriority) ? $annotPriority : $globals['priority'];
 
         $path = $annot->getLocalizedPaths() ?: $annot->getPath();
         $prefix = $globals['localized_paths'] ?: $globals['path'];
@@ -302,7 +305,8 @@ abstract class AnnotationClassLoader implements LoaderInterface
                 $globals['condition'] = $annot->getCondition();
             }
 
-            $globals['priority'] = isset($annotPriority = $annot->getPriority()) ? $annotPriority : 0;
+            $annotPriority = $annot->getPriority();
+            $globals['priority'] = isset($annotPriority) ? $annotPriority : 0;
 
             foreach ($globals['requirements'] as $placeholder => $requirement) {
                 if (\is_int($placeholder)) {

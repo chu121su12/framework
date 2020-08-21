@@ -48,6 +48,10 @@ use Symfony\Component\ErrorHandler\Exception\SilencedErrorContext;
  *
  * @final
  */
+
+class ErrorHandlerInternalClass extends \Exception {
+        };
+
 class ErrorHandler
 {
     private $levels = [
@@ -204,8 +208,7 @@ class ErrorHandler
             $traceReflector->setValue($e, $trace);
             $e->file = isset($file) ? $file : $e->file;
             $e->line = isset($line) ? $line : $e->line;
-        }, null, new class() extends \Exception {
-        });
+        }, null, new ErrorHandlerInternalClass);
         $this->debug = $debug;
     }
 
@@ -800,7 +803,7 @@ class ErrorHandler
         }
         if (class_exists(DebugClassLoader::class, false)) {
             for ($i = \count($lightTrace) - 2; 0 < $i; --$i) {
-                if (DebugClassLoader::class === ($lightTrace[$i]['class'] ?? null)) {
+                if (DebugClassLoader::class === (isset($lightTrace[$i]) && isset($lightTrace[$i]['class']) ? $lightTrace[$i]['class'] : null)) {
                     array_splice($lightTrace, --$i, 2);
                 }
             }
