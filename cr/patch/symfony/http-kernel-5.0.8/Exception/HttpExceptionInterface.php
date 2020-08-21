@@ -16,19 +16,41 @@ namespace Symfony\Component\HttpKernel\Exception;
  *
  * @author Kris Wallsmith <kris@symfony.com>
  */
-interface HttpExceptionInterface
+if (interface_exists('Throwable'))
 {
-    /**
-     * Returns the status code.
-     *
-     * @return int An HTTP response status code
-     */
-    public function getStatusCode();
+    interface HttpExceptionInterface extends \Throwable
+    {
+        /**
+         * Returns the status code.
+         *
+         * @return int An HTTP response status code
+         */
+        public function getStatusCode();
 
-    /**
-     * Returns response headers.
-     *
-     * @return array Response headers
-     */
-    public function getHeaders();
+        /**
+         * Returns response headers.
+         *
+         * @return array Response headers
+         */
+        public function getHeaders();
+    }
+}
+else
+{
+    interface HttpExceptionInterface
+    {
+        /**
+         * Returns the status code.
+         *
+         * @return int An HTTP response status code
+         */
+        public function getStatusCode();
+
+        /**
+         * Returns response headers.
+         *
+         * @return array Response headers
+         */
+        public function getHeaders();
+    }
 }
