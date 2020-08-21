@@ -61,4 +61,13 @@ class SymfonyHelper
 
         return $disposition.'; '.self::headerUtilsToString($params, ';');
     }
+
+    public static function consoleStrlen($string = null)
+    {
+        if (false === $encoding = mb_detect_encoding($string, null, true)) {
+            return \strlen($string);
+        }
+
+        return mb_strwidth($string, $encoding);
+    }
 }
