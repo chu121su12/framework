@@ -85,7 +85,12 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
              */
             public function renderForConsole($output, $e)
             {
-                (new ConsoleApplication)->renderThrowable($e, $output);
+                $console = new ConsoleApplication;
+                if (method_exists($console, 'renderThrowable')) {
+                    $console->renderThrowable($e, $output);
+                } else {
+                    $console->renderException($e, $output);
+                }
             }
         }
 

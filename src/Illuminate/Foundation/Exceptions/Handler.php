@@ -3,7 +3,6 @@
 namespace Illuminate\Foundation\Exceptions;
 
 use Closure;
-use CR\LaravelBackport\SymfonyConsoleApplication;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -656,7 +655,12 @@ class Handler implements ExceptionHandlerContract
      */
     public function renderForConsole($output, $e)
     {
-        (new SymfonyConsoleApplication)->renderThrowable($e, $output);
+        $console = new ConsoleApplication;
+        if (method_exists($console, 'renderThrowable')) {
+            $console->renderThrowable($e, $output);
+        } else {
+            $console->renderException($e, $output);
+        }
     }
 
     /**
