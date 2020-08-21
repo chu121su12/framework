@@ -35,6 +35,22 @@ class RequestContext
 
     public function __construct($baseUrl = '', $method = 'GET', $host = 'localhost', $scheme = 'http', $httpPort = 80, $httpsPort = 443, $path = '/', $queryString = '')
     {
+        $queryString = cast_to_string($queryString);
+
+        $path = cast_to_string($path);
+
+        $httpsPort = cast_to_int($httpsPort);
+
+        $httpPort = cast_to_int($httpPort);
+
+        $scheme = cast_to_string($scheme);
+
+        $host = cast_to_string($host);
+
+        $method = cast_to_string($method);
+
+        $baseUrl = cast_to_string($baseUrl);
+
         $this->setBaseUrl($baseUrl);
         $this->setMethod($method);
         $this->setHost($host);
@@ -43,6 +59,33 @@ class RequestContext
         $this->setHttpsPort($httpsPort);
         $this->setPathInfo($path);
         $this->setQueryString($queryString);
+    }
+
+    public static function fromUri($uri, $host = 'localhost', $scheme = 'http', $httpPort = 80, $httpsPort = 443)
+    {
+        $uri = cast_to_string($uri);
+
+        $httpsPort = cast_to_int($httpsPort);
+
+        $httpPort = cast_to_int($httpPort);
+
+        $scheme = cast_to_string($scheme);
+
+        $host = cast_to_string($host);
+
+        $uri = parse_url($uri);
+        $scheme = isset($uri['scheme']) ? $uri['scheme'] : $scheme;
+        $host = isset($uri['host']) ? $uri['host'] : $host;
+
+        if (isset($uri['port'])) {
+            if ('http' === $scheme) {
+                $httpPort = $uri['port'];
+            } elseif ('https' === $scheme) {
+                $httpsPort = $uri['port'];
+            }
+        }
+
+        return new self(isset($uri['path']) ? $uri['path'] : '', 'GET', $host, $scheme, $httpPort, $httpsPort);
     }
 
     /**
@@ -81,6 +124,8 @@ class RequestContext
      */
     public function setBaseUrl($baseUrl)
     {
+        $baseUrl = cast_to_string($baseUrl);
+
         $this->baseUrl = $baseUrl;
 
         return $this;
@@ -103,6 +148,8 @@ class RequestContext
      */
     public function setPathInfo($pathInfo)
     {
+        $pathInfo = cast_to_string($pathInfo);
+
         $this->pathInfo = $pathInfo;
 
         return $this;
@@ -127,6 +174,8 @@ class RequestContext
      */
     public function setMethod($method)
     {
+        $method = cast_to_string($method);
+
         $this->method = strtoupper($method);
 
         return $this;
@@ -151,6 +200,8 @@ class RequestContext
      */
     public function setHost($host)
     {
+        $host = cast_to_string($host);
+
         $this->host = strtolower($host);
 
         return $this;
@@ -173,6 +224,8 @@ class RequestContext
      */
     public function setScheme($scheme)
     {
+        $scheme = cast_to_string($scheme);
+
         $this->scheme = strtolower($scheme);
 
         return $this;
@@ -195,6 +248,8 @@ class RequestContext
      */
     public function setHttpPort($httpPort)
     {
+        $httpPort = cast_to_int($httpPort);
+
         $this->httpPort = $httpPort;
 
         return $this;
@@ -217,6 +272,8 @@ class RequestContext
      */
     public function setHttpsPort($httpsPort)
     {
+        $httpsPort = cast_to_int($httpsPort);
+
         $this->httpsPort = $httpsPort;
 
         return $this;
@@ -239,6 +296,8 @@ class RequestContext
      */
     public function setQueryString($queryString = null)
     {
+        $queryString = cast_to_string($queryString, null);
+
         // string cast to be fault-tolerant, accepting null
         $this->queryString = (string) $queryString;
 
@@ -276,6 +335,8 @@ class RequestContext
      */
     public function getParameter($name)
     {
+        $name = cast_to_string($name);
+
         return isset($this->parameters[$name]) ? $this->parameters[$name] : null;
     }
 
@@ -286,6 +347,8 @@ class RequestContext
      */
     public function hasParameter($name)
     {
+        $name = cast_to_string($name);
+
         return \array_key_exists($name, $this->parameters);
     }
 
@@ -298,8 +361,15 @@ class RequestContext
      */
     public function setParameter($name, $parameter)
     {
+        $name = cast_to_string($name);
+
         $this->parameters[$name] = $parameter;
 
         return $this;
+    }
+
+    public function isSecure()
+    {
+        return 'https' === $this->scheme;
     }
 }

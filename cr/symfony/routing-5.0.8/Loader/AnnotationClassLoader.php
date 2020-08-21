@@ -18,12 +18,11 @@ use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Routing\Annotation\Route as RouteAnnotation;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\RouteCompiler;
 
 /**
  * AnnotationClassLoader loads routing information from a PHP class and its methods.
  *
- * You need to define an implementation for the getRouteDefaults() method. Most of the
+ * You need to define an implementation for the configureRoute() method. Most of the
  * time, this method should define some PHP callable to be called for the route
  * (a controller in MVC speak).
  *
@@ -79,6 +78,8 @@ abstract class AnnotationClassLoader implements LoaderInterface
      */
     public function setRouteAnnotationClass($class)
     {
+        $class = cast_to_string($class);
+
         $this->routeAnnotationClass = $class;
     }
 
@@ -93,6 +94,8 @@ abstract class AnnotationClassLoader implements LoaderInterface
      */
     public function load($class, $type = null)
     {
+        $type = cast_to_string($type, null);
+
         if (!class_exists($class)) {
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
@@ -158,10 +161,8 @@ abstract class AnnotationClassLoader implements LoaderInterface
             $host = $globals['host'];
         }
 
-        $condition = $annot->getCondition();
-        if (null === $condition) {
-            $condition = $globals['condition'];
-        }
+        $condition = isset($annotCondition = $annot->getCondition()) ? $annotCondition : $globals['condition'];
+        $priority = isset($annotPriority = $annot->getPriority()) ? $annotPriority : $globals['priority'];
 
         $path = $annot->getLocalizedPaths() ?: $annot->getPath();
         $prefix = $globals['localized_paths'] ?: $globals['path'];
@@ -208,11 +209,11 @@ abstract class AnnotationClassLoader implements LoaderInterface
             $this->configureRoute($route, $class, $method, $annot);
             if (0 !== $locale) {
                 $route->setDefault('_locale', $locale);
-                $route->setRequirement('_locale', preg_quote($locale, RouteCompiler::REGEX_DELIMITER));
+                $route->setRequirement('_locale', preg_quote($locale));
                 $route->setDefault('_canonical_route', $name);
-                $collection->add($name.'.'.$locale, $route);
+                $collection->add($name.'.'.$locale, $route, $priority);
             } else {
-                $collection->add($name, $route);
+                $collection->add($name, $route, $priority);
             }
         }
     }
@@ -222,6 +223,8 @@ abstract class AnnotationClassLoader implements LoaderInterface
      */
     public function supports($resource, $type = null)
     {
+        $type = cast_to_string($type, null);
+
         return \is_string($resource) && preg_match('/^(?:\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)+$/', $resource) && (!$type || 'annotation' === $type);
     }
 
@@ -299,6 +302,8 @@ abstract class AnnotationClassLoader implements LoaderInterface
                 $globals['condition'] = $annot->getCondition();
             }
 
+            $globals['priority'] = isset($annotPriority = $annot->getPriority()) ? $annotPriority : 0;
+
             foreach ($globals['requirements'] as $placeholder => $requirement) {
                 if (\is_int($placeholder)) {
                     throw new \InvalidArgumentException(sprintf('A placeholder name must be a string (%d given). Did you forget to specify the placeholder key for the requirement "%s" in "%s"?', $placeholder, $requirement, $class->getName()));
@@ -322,11 +327,18 @@ abstract class AnnotationClassLoader implements LoaderInterface
             'host' => '',
             'condition' => '',
             'name' => '',
+            'priority' => 0,
         ];
     }
 
     protected function createRoute($path, array $defaults, array $requirements, array $options, $host = null, array $schemes, array $methods, $condition = null)
     {
+        $path = cast_to_string($path);
+
+        $condition = cast_to_string($condition, null);
+
+        $host = cast_to_string($host, null);
+
         return new Route($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
     }
 

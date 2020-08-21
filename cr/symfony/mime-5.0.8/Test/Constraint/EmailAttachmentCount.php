@@ -22,6 +22,10 @@ final class EmailAttachmentCount extends Constraint
 
     public function __construct($expectedValue, $transport = null)
     {
+        $expectedValue = cast_to_int($expectedValue);
+
+        $transport = cast_to_string($transport, null);
+
         $this->expectedValue = $expectedValue;
         $this->transport = $transport;
     }

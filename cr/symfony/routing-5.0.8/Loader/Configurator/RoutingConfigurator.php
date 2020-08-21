@@ -27,6 +27,10 @@ class RoutingConfigurator
 
     public function __construct(RouteCollection $collection, PhpFileLoader $loader, $path, $file)
     {
+        $file = cast_to_string($file);
+
+        $path = cast_to_string($path);
+
         $this->collection = $collection;
         $this->loader = $loader;
         $this->path = $path;
@@ -38,6 +42,10 @@ class RoutingConfigurator
      */
     final public function import($resource, $type = null, $ignoreErrors = false, $exclude = null)
     {
+        $ignoreErrors = cast_to_bool($ignoreErrors);
+
+        $type = cast_to_string($type, null);
+
         $this->loader->setCurrentDir(\dirname($this->path));
 
         $imported = $this->loader->import($resource, $type, $ignoreErrors, $this->file, $exclude) ?: [];
@@ -55,6 +63,21 @@ class RoutingConfigurator
 
     final public function collection($name = '')
     {
+        $name = cast_to_string($name);
+
         return new CollectionConfigurator($this->collection, $name);
+    }
+
+    /**
+     * @return static
+     */
+    final public function withPath($path)
+    {
+        $path = cast_to_string($path);
+
+        $clone = clone $this;
+        $clone->path = $clone->file = $path;
+
+        return $clone;
     }
 }

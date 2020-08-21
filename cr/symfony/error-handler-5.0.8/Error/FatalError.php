@@ -22,6 +22,11 @@ class FatalError extends \Error
      */
     public function __construct($message, $code, array $error, $traceOffset = null, $traceArgs = true, array $trace = null)
     {
+        $code = cast_to_int($code);
+        $message = cast_to_string($message);
+        $traceArgs = cast_to_bool($traceArgs);
+        $traceOffset = cast_to_int($traceOffset, null);
+
         parent::__construct($message, $code);
 
         $this->error = $error;
@@ -72,9 +77,11 @@ class FatalError extends \Error
                 'file' => $error['file'],
                 'line' => $error['line'],
             ] as $property => $value) {
-                $refl = new \ReflectionProperty(\Error::class, $property);
-                $refl->setAccessible(true);
-                $refl->setValue($this, $value);
+                if (null !== $value) {
+                    $refl = new \ReflectionProperty(\Error::class, $property);
+                    $refl->setAccessible(true);
+                    $refl->setValue($this, $value);
+                }
             }
         } else {
             foreach ([
@@ -82,9 +89,11 @@ class FatalError extends \Error
                 'line' => $error['line'],
                 'trace' => $trace,
             ] as $property => $value) {
-                $refl = new \ReflectionProperty(\Error::class, $property);
-                $refl->setAccessible(true);
-                $refl->setValue($this, $value);
+                if (null !== $value) {
+                    $refl = new \ReflectionProperty(\Error::class, $property);
+                    $refl->setAccessible(true);
+                    $refl->setValue($this, $value);
+                }
             }
         }
     }

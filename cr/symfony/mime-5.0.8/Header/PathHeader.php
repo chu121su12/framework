@@ -25,6 +25,8 @@ final class PathHeader extends AbstractHeader
 
     public function __construct($name, Address $address)
     {
+        $name = cast_to_string($name);
+
         parent::__construct($name);
 
         $this->setAddress($address);

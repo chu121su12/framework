@@ -63,6 +63,8 @@ EOF;
      */
     public function getCompiledRoutes($forDump = false)
     {
+        $forDump = cast_to_bool($forDump);
+
         // Group hosts by same-suffix, re-order when possible
         $matchHost = false;
         $routes = new StaticPrefixCollection();
@@ -244,11 +246,15 @@ EOF;
      * Last but not least:
      *  - Because it is not possibe to mix unicode/non-unicode patterns in a single regexp, several of them can be generated.
      *  - The same regexp can be used several times when the logic in the switch rejects the match. When this happens, the
-     *    matching-but-failing subpattern is blacklisted by replacing its name by "(*F)", which forces a failure-to-match.
+     *    matching-but-failing subpattern is excluded by replacing its name by "(*F)", which forces a failure-to-match.
      *    To ease this backlisting operation, the name of subpatterns is also the string offset where the replacement should occur.
      */
     private function compileDynamicRoutes(RouteCollection $collection, $matchHost, $chunkLimit, array &$conditions)
     {
+        $chunkLimit = cast_to_int($chunkLimit);
+
+        $matchHost = cast_to_bool($matchHost);
+
         if (!$collection->all()) {
             return [[], [], ''];
         }
@@ -329,7 +335,7 @@ EOF;
 
                     $state->vars = [];
                     $regex = preg_replace_callback('#\?P<([^>]++)>#', $state->getVars, $rx[1]);
-                    if ($hasTrailingSlash = '/' !== $regex && '/' === substr($regex, -1)) {
+                    if ($hasTrailingSlash = '/' !== $regex && '/' === $regex[-1]) {
                         $regex = substr($regex, 0, -1);
                     }
                     $hasTrailingVar = (bool) preg_match('#\{\w+\}/?$#', $route->getPath());
@@ -373,6 +379,8 @@ EOF;
      */
     private function compileStaticPrefixCollection(StaticPrefixCollection $tree, \stdClass $state, $prefixLen, array &$conditions)
     {
+        $prefixLen = cast_to_int($prefixLen);
+
         $code = '';
         $prevRegex = null;
         $routes = $tree->getRoutes();
@@ -391,8 +399,7 @@ EOF;
                 continue;
             }
 
-            $tempRoute = $route;
-            list($name, $regex, $vars, $route, $hasTrailingSlash, $hasTrailingVar) = $tempRoute;
+            list($name, $regex, $vars, $route, $hasTrailingSlash, $hasTrailingVar) = $route;
             $compiledRoute = $route->compile();
             $vars = array_merge($state->hostVars, $vars);
 
@@ -419,6 +426,12 @@ EOF;
      */
     private function compileRoute(Route $route, $name, $vars, $hasTrailingSlash, $hasTrailingVar, array &$conditions)
     {
+        $hasTrailingVar = cast_to_bool($hasTrailingVar);
+
+        $hasTrailingSlash = cast_to_bool($hasTrailingSlash);
+
+        $name = cast_to_string($name);
+
         $defaults = $route->getDefaults();
 
         if (isset($defaults['_canonical_route'])) {
@@ -460,6 +473,10 @@ EOF;
 
     private function indent($code, $level = 1)
     {
+        $code = cast_to_string($code);
+
+        $level = cast_to_int($level);
+
         return preg_replace('/^./m', str_repeat('    ', $level).'$0', $code);
     }
 

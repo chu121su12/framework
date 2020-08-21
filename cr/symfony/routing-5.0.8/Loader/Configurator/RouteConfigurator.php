@@ -19,16 +19,33 @@ use Symfony\Component\Routing\RouteCollection;
 class RouteConfigurator
 {
     use Traits\AddTrait;
+    use Traits\HostTrait;
     use Traits\RouteTrait;
 
-    private $parentConfigurator;
+    protected $parentConfigurator;
 
     public function __construct(RouteCollection $collection, $route, $name = '', CollectionConfigurator $parentConfigurator = null, array $prefixes = null)
     {
+        $name = cast_to_string($name);
+
         $this->collection = $collection;
         $this->route = $route;
         $this->name = $name;
         $this->parentConfigurator = $parentConfigurator; // for GC control
         $this->prefixes = $prefixes;
+    }
+
+    /**
+     * Sets the host to use for all child routes.
+     *
+     * @param string|array $host the host, or the localized hosts
+     *
+     * @return $this
+     */
+    final public function host($host)
+    {
+        $this->addHost($this->route, $host);
+
+        return $this;
     }
 }

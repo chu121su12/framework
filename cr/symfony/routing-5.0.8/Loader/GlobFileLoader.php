@@ -26,6 +26,8 @@ class GlobFileLoader extends FileLoader
      */
     public function load($resource, $type = null)
     {
+        $type = cast_to_string($type, null);
+
         $collection = new RouteCollection();
 
         foreach ($this->glob($resource, false, $globResource) as $path => $info) {
@@ -42,6 +44,8 @@ class GlobFileLoader extends FileLoader
      */
     public function supports($resource, $type = null)
     {
+        $type = cast_to_string($type, null);
+
         return 'glob' === $type;
     }
 }

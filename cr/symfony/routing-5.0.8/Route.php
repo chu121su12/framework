@@ -52,6 +52,12 @@ class Route implements \Serializable
      */
     public function __construct($path, array $defaults = [], array $requirements = [], array $options = [], $host = '', $schemes = [], $methods = [], $condition = '')
     {
+        $path = cast_to_string($path);
+
+        $condition = cast_to_string($condition, null);
+
+        $host = cast_to_string($host, null);
+
         $this->setPath($path);
         $this->addDefaults($defaults);
         $this->addRequirements($requirements);
@@ -130,6 +136,8 @@ class Route implements \Serializable
      */
     public function setPath($pattern)
     {
+        $pattern = cast_to_string($pattern);
+
         if (false !== strpbrk($pattern, '?<')) {
             $pattern = preg_replace_callback('#\{(\w++)(<.*?>)?(\?[^\}]*+)?\}#', function ($m) {
                 if (isset($m[3][0])) {
@@ -170,6 +178,8 @@ class Route implements \Serializable
      */
     public function setHost($pattern = null)
     {
+        $pattern = cast_to_string($pattern, null);
+
         $this->host = (string) $pattern;
         $this->compiled = null;
 
@@ -212,6 +222,8 @@ class Route implements \Serializable
      */
     public function hasScheme($scheme)
     {
+        $scheme = cast_to_string($scheme);
+
         return \in_array(strtolower($scheme), $this->schemes, true);
     }
 
@@ -298,6 +310,8 @@ class Route implements \Serializable
      */
     public function setOption($name, $value)
     {
+        $name = cast_to_string($name);
+
         $this->options[$name] = $value;
         $this->compiled = null;
 
@@ -311,6 +325,8 @@ class Route implements \Serializable
      */
     public function getOption($name)
     {
+        $name = cast_to_string($name);
+
         return isset($this->options[$name]) ? $this->options[$name] : null;
     }
 
@@ -321,6 +337,8 @@ class Route implements \Serializable
      */
     public function hasOption($name)
     {
+        $name = cast_to_string($name);
+
         return \array_key_exists($name, $this->options);
     }
 
@@ -380,6 +398,8 @@ class Route implements \Serializable
      */
     public function getDefault($name)
     {
+        $name = cast_to_string($name);
+
         return isset($this->defaults[$name]) ? $this->defaults[$name] : null;
     }
 
@@ -390,6 +410,8 @@ class Route implements \Serializable
      */
     public function hasDefault($name)
     {
+        $name = cast_to_string($name);
+
         return \array_key_exists($name, $this->defaults);
     }
 
@@ -402,6 +424,8 @@ class Route implements \Serializable
      */
     public function setDefault($name, $default)
     {
+        $name = cast_to_string($name);
+
         if ('_locale' === $name && $this->isLocalized()) {
             return $this;
         }
@@ -468,6 +492,8 @@ class Route implements \Serializable
      */
     public function getRequirement($key)
     {
+        $key = cast_to_string($key);
+
         return isset($this->requirements[$key]) ? $this->requirements[$key] : null;
     }
 
@@ -478,6 +504,8 @@ class Route implements \Serializable
      */
     public function hasRequirement($key)
     {
+        $key = cast_to_string($key);
+
         return \array_key_exists($key, $this->requirements);
     }
 
@@ -488,6 +516,10 @@ class Route implements \Serializable
      */
     public function setRequirement($key, $regex)
     {
+        $regex = cast_to_string($regex);
+
+        $key = cast_to_string($key);
+
         if ('_locale' === $key && $this->isLocalized()) {
             return $this;
         }
@@ -517,6 +549,8 @@ class Route implements \Serializable
      */
     public function setCondition($condition = null)
     {
+        $condition = cast_to_string($condition, null);
+
         $this->condition = (string) $condition;
         $this->compiled = null;
 
@@ -546,6 +580,10 @@ class Route implements \Serializable
 
     private function sanitizeRequirement($key, $regex)
     {
+        $regex = cast_to_string($regex);
+
+        $key = cast_to_string($key);
+
         if ('' !== $regex && '^' === $regex[0]) {
             $regex = (string) substr($regex, 1); // returns false for a single character
         }
@@ -563,6 +601,6 @@ class Route implements \Serializable
 
     private function isLocalized()
     {
-        return isset($this->defaults['_locale']) && isset($this->defaults['_canonical_route']) && (isset($this->requirements['_locale']) ? $this->requirements['_locale'] : null) === preg_quote($this->defaults['_locale'], RouteCompiler::REGEX_DELIMITER);
+        return isset($this->defaults['_locale']) && isset($this->defaults['_canonical_route']) && (isset($this->requirements['_locale']) ? $this->requirements['_locale'] : null) === preg_quote($this->defaults['_locale']);
     }
 }

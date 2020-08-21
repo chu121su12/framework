@@ -23,6 +23,10 @@ final class EmailAddressContains extends Constraint
 
     public function __construct($headerName, $expectedValue)
     {
+        $expectedValue = cast_to_string($expectedValue);
+
+        $headerName = cast_to_string($headerName);
+
         $this->headerName = $headerName;
         $this->expectedValue = $expectedValue;
     }
@@ -48,7 +52,7 @@ final class EmailAddressContains extends Constraint
 
         $header = $message->getHeaders()->get($this->headerName);
         if ($header instanceof MailboxHeader) {
-            return $this->expectedValue === $header->Address()->getAddress();
+            return $this->expectedValue === $header->getAddress()->getAddress();
         } elseif ($header instanceof MailboxListHeader) {
             foreach ($header->getAddresses() as $address) {
                 if ($this->expectedValue === $address->getAddress()) {

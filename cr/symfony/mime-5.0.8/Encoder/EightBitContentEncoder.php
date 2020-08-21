@@ -18,6 +18,8 @@ final class EightBitContentEncoder implements ContentEncoderInterface
 {
     public function encodeByteStream($stream, $maxLineLength = 0)
     {
+        $maxLineLength = cast_to_int($maxLineLength);
+
         while (!feof($stream)) {
             yield fread($stream, 16372);
         }
@@ -30,6 +32,14 @@ final class EightBitContentEncoder implements ContentEncoderInterface
 
     public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
     {
+        $string = cast_to_string($string);
+
+        $maxLineLength = cast_to_int($maxLineLength);
+
+        $firstLineOffset = cast_to_int($firstLineOffset);
+
+        $charset = cast_to_string($charset, null);
+
         return $string;
     }
 }

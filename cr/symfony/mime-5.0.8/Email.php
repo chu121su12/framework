@@ -49,6 +49,8 @@ class Email extends Message
      */
     public function subject($subject)
     {
+        $subject = cast_to_string($subject);
+
         return $this->setHeaderBody('Text', 'Subject', $subject);
     }
 
@@ -65,7 +67,7 @@ class Email extends Message
         return $this->setHeaderBody('Date', 'Date', $dateTime);
     }
 
-    public function getDate()
+    public function getDate() // ?\DateTimeImmutable
     {
         return $this->getHeaders()->getHeaderBody('Date');
     }
@@ -249,6 +251,8 @@ class Email extends Message
      */
     public function priority($priority)
     {
+        $priority = cast_to_int($priority);
+
         if ($priority > 5) {
             $priority = 5;
         } elseif ($priority < 1) {
@@ -278,6 +282,8 @@ class Email extends Message
      */
     public function text($body, $charset = 'utf-8')
     {
+        $charset = cast_to_string($charset);
+
         $this->text = $body;
         $this->textCharset = $charset;
 
@@ -304,6 +310,8 @@ class Email extends Message
      */
     public function html($body, $charset = 'utf-8')
     {
+        $charset = cast_to_string($charset);
+
         $this->html = $body;
         $this->htmlCharset = $charset;
 
@@ -330,6 +338,9 @@ class Email extends Message
      */
     public function attach($body, $name = null, $contentType = null)
     {
+        $contentType = cast_to_string($contentType, null);
+        $name = cast_to_string($name, null);
+
         $this->attachments[] = ['body' => $body, 'name' => $name, 'content-type' => $contentType, 'inline' => false];
 
         return $this;
@@ -340,6 +351,10 @@ class Email extends Message
      */
     public function attachFromPath($path, $name = null, $contentType = null)
     {
+        $path = cast_to_string($path);
+        $contentType = cast_to_string($contentType, null);
+        $name = cast_to_string($name, null);
+
         $this->attachments[] = ['path' => $path, 'name' => $name, 'content-type' => $contentType, 'inline' => false];
 
         return $this;
@@ -352,6 +367,9 @@ class Email extends Message
      */
     public function embed($body, $name = null, $contentType = null)
     {
+        $contentType = cast_to_string($contentType, null);
+        $name = cast_to_string($name, null);
+
         $this->attachments[] = ['body' => $body, 'name' => $name, 'content-type' => $contentType, 'inline' => true];
 
         return $this;
@@ -362,6 +380,10 @@ class Email extends Message
      */
     public function embedFromPath($path, $name = null, $contentType = null)
     {
+        $path = cast_to_string($path);
+        $contentType = cast_to_string($contentType, null);
+        $name = cast_to_string($name, null);
+
         $this->attachments[] = ['path' => $path, 'name' => $name, 'content-type' => $contentType, 'inline' => true];
 
         return $this;
@@ -464,15 +486,8 @@ class Email extends Message
         $htmlPart = null;
         $html = $this->html;
         if (null !== $this->html) {
-            if (\is_resource($html)) {
-                $streamGetMetaData = stream_get_meta_data($html);
-                if (isset($streamGetMetaData['seekable']) ? $streamGetMetaData['seekable'] : false) {
-                    rewind($html);
-                }
-
-                $html = stream_get_contents($html);
-            }
             $htmlPart = new TextPart($html, $this->htmlCharset, 'html');
+            $html = $htmlPart->getBody();
             preg_match_all('(<img\s+[^>]*src\s*=\s*(?:([\'"])cid:([^"]+)\\1|cid:([^>\s]+)))i', $html, $names);
             $names = array_filter(array_unique(array_merge($names[2], $names[3])));
         }
@@ -510,9 +525,18 @@ class Email extends Message
         }
 
         if (isset($attachment['body'])) {
-            $part = new DataPart($attachment['body'], isset($attachment['name']) ? $attachment['name'] : null, isset($attachment['content-type']) ? $attachment['content-type'] : null);
+            $part = new DataPart(
+                $attachment['body'],
+                isset($attachment['name']) ? $attachment['name'] : null,
+                isset($attachment['content-type']) ? $attachment['content-type'] : null
+            );
+
         } else {
-            $part = DataPart::fromPath(isset($attachment['path']) ? $attachment['path'] : '', isset($attachment['name']) ? $attachment['name'] : null, isset($attachment['content-type']) ? $attachment['content-type'] : null);
+            $part = DataPart::fromPath(
+                isset($attachment['path']) ? $attachment['path'] : '',
+                isset($attachment['name']) ? $attachment['name'] : null,
+                isset($attachment['content-type']) ? $attachment['content-type'] : null
+            );
         }
         if ($attachment['inline']) {
             $part->asInline();
@@ -526,6 +550,9 @@ class Email extends Message
      */
     private function setHeaderBody($type, $name, $body)
     {
+        $name = cast_to_string($name);
+        $type = cast_to_string($type);
+
         $this->getHeaders()->setHeaderBody($type, $name, $body);
 
         return $this;
@@ -533,6 +560,8 @@ class Email extends Message
 
     private function addListAddressHeaderBody($name, array $addresses)
     {
+        $name = cast_to_string($name);
+
         if (!$header = $this->getHeaders()->get($name)) {
             return $this->setListAddressHeaderBody($name, $addresses);
         }
@@ -543,6 +572,8 @@ class Email extends Message
 
     private function setListAddressHeaderBody($name, array $addresses)
     {
+        $name = cast_to_string($name);
+
         $addresses = Address::createArray($addresses);
         $headers = $this->getHeaders();
         if ($header = $headers->get($name)) {
@@ -560,31 +591,16 @@ class Email extends Message
     public function __serialize()
     {
         if (\is_resource($this->text)) {
-            $streamGetMetaData = stream_get_meta_data($this->text);
-            if (isset($streamGetMetaData['seekable']) ? $streamGetMetaData['seekable'] : false) {
-                rewind($this->text);
-            }
-
-            $this->text = stream_get_contents($this->text);
+            $this->text = (new TextPart($this->text))->getBody();
         }
 
         if (\is_resource($this->html)) {
-            $streamGetMetaData = stream_get_meta_data($this->html);
-            if (isset($streamGetMetaData['seekable']) ? $streamGetMetaData['seekable'] : false) {
-                rewind($this->html);
-            }
-
-            $this->html = stream_get_contents($this->html);
+            $this->html = (new TextPart($this->html))->getBody();
         }
 
         foreach ($this->attachments as $i => $attachment) {
             if (isset($attachment['body']) && \is_resource($attachment['body'])) {
-                $streamGetMetaData = stream_get_meta_data($attachment['body']);
-                if (isset($streamGetMetaData['seekable']) ? $streamGetMetaData['seekable'] : false) {
-                    rewind($attachment['body']);
-                }
-
-                $this->attachments[$i]['body'] = stream_get_contents($attachment['body']);
+                $this->attachments[$i]['body'] = (new TextPart($attachment['body']))->getBody();
             }
         }
 

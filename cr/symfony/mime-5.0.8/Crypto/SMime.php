@@ -23,6 +23,8 @@ abstract class SMime
 {
     protected function normalizeFilePath($path)
     {
+        $path = cast_to_string($path);
+
         if (!file_exists($path)) {
             throw new RuntimeException(sprintf('File does not exist: "%s".', $path));
         }
@@ -32,6 +34,8 @@ abstract class SMime
 
     protected function iteratorToFile($iterator, $stream)
     {
+        $iterator = cast_to_iterable($iterator);
+
         foreach ($iterator as $chunk) {
             fwrite($stream, $chunk);
         }
@@ -39,6 +43,9 @@ abstract class SMime
 
     protected function convertMessageToSMimePart($stream, $type, $subtype)
     {
+        $subtype = cast_to_string($subtype);
+        $type = cast_to_string($type);
+
         rewind($stream);
 
         $headers = '';
@@ -71,6 +78,8 @@ abstract class SMime
 
     private function getMessageHeaders($headerData)
     {
+        $headerData = cast_to_string($headerData);
+
         $headers = [];
         $headerLines = explode("\r\n", str_replace("\n", "\r\n", str_replace("\r\n", "\n", $headerData)));
         $currentHeaderName = '';
@@ -98,6 +107,8 @@ abstract class SMime
 
     private function getParametersFromHeader($header)
     {
+        $header = cast_to_string($header);
+
         $params = [];
 
         preg_match_all('/(?P<name>[a-z-0-9]+)=(?P<value>"[^"]+"|(?:[^\s;]+|$))(?:\s+;)?/i', $header, $matches);

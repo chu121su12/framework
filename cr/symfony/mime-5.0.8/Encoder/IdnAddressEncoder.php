@@ -33,6 +33,8 @@ final class IdnAddressEncoder implements AddressEncoderInterface
      */
     public function encodeString($address)
     {
+        $address = cast_to_string($address);
+
         $i = strrpos($address, '@');
         if (false !== $i) {
             $local = substr($address, 0, $i);

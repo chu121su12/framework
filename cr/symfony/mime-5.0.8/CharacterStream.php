@@ -67,6 +67,8 @@ final class CharacterStream
      */
     public function __construct($input, $charset = 'utf-8')
     {
+        $charset = cast_to_string($charset, null);
+
         $charset = strtolower(trim($charset)) ?: 'utf-8';
         if ('utf-8' === $charset || 'utf8' === $charset) {
             $this->fixedWidth = 0;
@@ -97,11 +99,7 @@ final class CharacterStream
             }
         }
         if (\is_resource($input)) {
-            $blocks = 512;
-            $streamMetaData = stream_get_meta_data($input);
-            if (isset($streamMetaData['seekable']) ? $streamMetaData['seekable'] : false) {
-                rewind($input);
-            }
+            $blocks = 16372;
             while (false !== $read = fread($input, $blocks)) {
                 $this->write($read);
             }
@@ -112,6 +110,8 @@ final class CharacterStream
 
     public function read($length)
     {
+        $length = cast_to_int($length);
+
         if ($this->currentPos >= $this->charCount) {
             return null;
         }
@@ -145,6 +145,8 @@ final class CharacterStream
 
     public function readBytes($length)
     {
+        $length = cast_to_int($length);
+
         if (null !== $read = $this->read($length)) {
             return array_map('ord', str_split($read, 1));
         }
@@ -154,6 +156,8 @@ final class CharacterStream
 
     public function setPointer($charOffset)
     {
+        $charOffset = cast_to_int($charOffset);
+
         if ($this->charCount < $charOffset) {
             $charOffset = $this->charCount;
         }
@@ -162,6 +166,8 @@ final class CharacterStream
 
     public function write($chars)
     {
+        $chars = cast_to_string($chars);
+
         $ignored = '';
         $this->data .= $chars;
         if ($this->fixedWidth > 0) {
@@ -177,6 +183,10 @@ final class CharacterStream
 
     private function getUtf8CharPositions($string, $startOffset, &$ignoredChars)
     {
+        $ignoredChars = cast_to_string($ignoredChars);
+        $startOffset = cast_to_int($startOffset);
+        $string = cast_to_string($string);
+
         $strlen = \strlen($string);
         $charPos = \count($this->map['p']);
         $foundChars = 0;

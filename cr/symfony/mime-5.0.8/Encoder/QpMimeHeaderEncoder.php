@@ -33,6 +33,14 @@ final class QpMimeHeaderEncoder extends QpEncoder implements MimeHeaderEncoderIn
 
     public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
     {
+        $string = cast_to_string($string);
+
+        $maxLineLength = cast_to_int($maxLineLength);
+
+        $firstLineOffset = cast_to_int($firstLineOffset);
+
+        $charset = cast_to_string($charset, null);
+
         return str_replace([' ', '=20', "=\r\n"], ['_', '_', "\r\n"],
             parent::encodeString($string, $charset, $firstLineOffset, $maxLineLength)
         );

@@ -14,11 +14,16 @@ namespace Symfony\Component\Routing;
 use Symfony\Component\Config\Exception\LoaderLoadException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\ResourceInterface;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+
+trigger_deprecation('symfony/routing', '5.1', 'The "%s" class is deprecated, use "%s" instead.', RouteCollectionBuilder::class, RoutingConfigurator::class);
 
 /**
  * Helps add and import routes into a RouteCollection.
  *
  * @author Ryan Weaver <ryan@knpuniversity.com>
+ *
+ * @deprecated since Symfony 5.1, use RoutingConfigurator instead
  */
 class RouteCollectionBuilder
 {
@@ -56,6 +61,10 @@ class RouteCollectionBuilder
      */
     public function import($resource, $prefix = '/', $type = null)
     {
+        $prefix = cast_to_string($prefix);
+
+        $type = cast_to_string($type, null);
+
         /** @var RouteCollection[] $collections */
         $collections = $this->load($resource, $type);
 
@@ -89,6 +98,12 @@ class RouteCollectionBuilder
      */
     public function add($path, $controller, $name = null)
     {
+        $controller = cast_to_string($controller);
+
+        $path = cast_to_string($path);
+
+        $name = cast_to_string($name, null);
+
         $route = new Route($path);
         $route->setDefault('_controller', $controller);
         $this->addRoute($route, $name);
@@ -111,6 +126,8 @@ class RouteCollectionBuilder
      */
     public function mount($prefix, self $builder)
     {
+        $prefix = cast_to_string($prefix);
+
         $builder->prefix = trim(trim($prefix), '/');
         $this->routes[] = $builder;
     }
@@ -122,6 +139,8 @@ class RouteCollectionBuilder
      */
     public function addRoute(Route $route, $name = null)
     {
+        $name = cast_to_string($name, null);
+
         if (null === $name) {
             // used as a flag to know which routes will need a name later
             $name = '_unnamed_route_'.spl_object_hash($route);
@@ -139,6 +158,8 @@ class RouteCollectionBuilder
      */
     public function setHost($pattern = null)
     {
+        $pattern = cast_to_string($pattern, null);
+
         $this->host = $pattern;
 
         return $this;
@@ -151,6 +172,8 @@ class RouteCollectionBuilder
      */
     public function setCondition($condition = null)
     {
+        $condition = cast_to_string($condition, null);
+
         $this->condition = $condition;
 
         return $this;
@@ -166,6 +189,8 @@ class RouteCollectionBuilder
      */
     public function setDefault($key, $value)
     {
+        $key = cast_to_string($key);
+
         $this->defaults[$key] = $value;
 
         return $this;
@@ -181,6 +206,8 @@ class RouteCollectionBuilder
      */
     public function setRequirement($key, $regex)
     {
+        $key = cast_to_string($key);
+
         $this->requirements[$key] = $regex;
 
         return $this;
@@ -196,6 +223,8 @@ class RouteCollectionBuilder
      */
     public function setOption($key, $value)
     {
+        $key = cast_to_string($key);
+
         $this->options[$key] = $value;
 
         return $this;
@@ -334,6 +363,8 @@ class RouteCollectionBuilder
      */
     private function load($resource, $type = null)
     {
+        $type = cast_to_string($type, null);
+
         if (null === $this->loader) {
             throw new \BadMethodCallException('Cannot import other routing resources: you must pass a LoaderInterface when constructing RouteCollectionBuilder.');
         }

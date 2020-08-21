@@ -40,6 +40,9 @@ final class Address
 
     public function __construct($address, $name = '')
     {
+        $address = cast_to_string($address);
+        $name = cast_to_string($name);
+
         if (!class_exists(EmailValidator::class)) {
             throw new LogicException(sprintf('The "%s" class cannot be used as it needs "%s"; try running "composer require egulias/email-validator".', __CLASS__, EmailValidator::class));
         }
@@ -89,10 +92,10 @@ final class Address
             return $address;
         }
         if (\is_string($address)) {
-            return new self($address);
+            return self::fromString($address);
         }
 
-        throw new InvalidArgumentException(sprintf('An address can be an instance of Address or a string ("%s") given).', \is_object($address) ? \get_class($address) : \gettype($address)));
+        throw new InvalidArgumentException(sprintf('An address can be an instance of Address or a string ("%s") given).', get_debug_type($address)));
     }
 
     /**
@@ -112,6 +115,8 @@ final class Address
 
     public static function fromString($string)
     {
+        $string = cast_to_string($string);
+
         if (false === strpos($string, '<')) {
             return new self($string, '');
         }

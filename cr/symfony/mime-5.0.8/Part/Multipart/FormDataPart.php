@@ -34,7 +34,7 @@ final class FormDataPart extends AbstractMultipartPart
 
         foreach ($fields as $name => $value) {
             if (!\is_string($value) && !\is_array($value) && !$value instanceof TextPart) {
-                throw new InvalidArgumentException(sprintf('A form field value can only be a string, an array, or an instance of TextPart ("%s" given).', \is_object($value) ? \get_class($value) : \gettype($value)));
+                throw new InvalidArgumentException(sprintf('A form field value can only be a string, an array, or an instance of TextPart ("%s" given).', get_debug_type($value)));
             }
 
             $this->fields[$name] = $value;
@@ -76,6 +76,8 @@ final class FormDataPart extends AbstractMultipartPart
 
     private function preparePart($name, $value)
     {
+        $name = cast_to_string($name);
+
         if (\is_string($value)) {
             return $this->configurePart($name, new TextPart($value, 'utf-8', 'plain', '8bit'));
         }
@@ -85,6 +87,8 @@ final class FormDataPart extends AbstractMultipartPart
 
     private function configurePart($name, TextPart $part)
     {
+        $name = cast_to_string($name);
+
         static $r;
 
         if (null === $r) {

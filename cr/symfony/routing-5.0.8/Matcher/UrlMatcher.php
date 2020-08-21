@@ -83,6 +83,8 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      */
     public function match($pathinfo)
     {
+        $pathinfo = cast_to_string($pathinfo);
+
         $this->allow = $this->allowSchemes = [];
 
         if ($ret = $this->matchCollection(rawurldecode($pathinfo) ?: '/', $this->routes)) {
@@ -128,6 +130,8 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      */
     protected function matchCollection($pathinfo, RouteCollection $routes)
     {
+        $pathinfo = cast_to_string($pathinfo);
+
         // HEAD and GET are equivalent as per RFC
         if ('HEAD' === $method = $this->context->getMethod()) {
             $method = 'GET';
@@ -156,7 +160,7 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
 
             $hasTrailingVar = $trimmedPathinfo !== $pathinfo && preg_match('#\{\w+\}/?$#', $route->getPath());
 
-            if ($hasTrailingVar && ($hasTrailingSlash || (null === $m = isset($matches[\count($compiledRoute->getPathVariables())]) ? $matches[\count($compiledRoute->getPathVariables())] : null) || '/' !== (strlen($m) > 0 ? substr($m, -1) : '/')) && preg_match($regex, $trimmedPathinfo, $m)) {
+            if ($hasTrailingVar && ($hasTrailingSlash || (null === $m = isset($matches[\count($compiledRoute->getPathVariables())]) ? $matches[\count($compiledRoute->getPathVariables())] : null) || '/' !== (isset($m[-1]) ? $m[-1] : '/')) && preg_match($regex, $trimmedPathinfo, $m)) {
                 if ($hasTrailingSlash) {
                     $matches = $m;
                 } else {
@@ -209,6 +213,8 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      */
     protected function getAttributes(Route $route, $name, array $attributes)
     {
+        $name = cast_to_string($name);
+
         $defaults = $route->getDefaults();
         if (isset($defaults['_canonical_route'])) {
             $name = $defaults['_canonical_route'];
@@ -226,6 +232,10 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      */
     protected function handleRouteRequirements($pathinfo, $name, Route $route)
     {
+        $name = cast_to_string($name);
+
+        $pathinfo = cast_to_string($pathinfo);
+
         // expression condition
         if ($route->getCondition() && !$this->getExpressionLanguage()->evaluate($route->getCondition(), ['context' => $this->context, 'request' => $this->request ?: $this->createRequest($pathinfo)])) {
             return [self::REQUIREMENT_MISMATCH, null];
@@ -267,6 +277,8 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      */
     protected function createRequest($pathinfo)
     {
+        $pathinfo = cast_to_string($pathinfo);
+
         if (!class_exists('Symfony\Component\HttpFoundation\Request')) {
             return null;
         }

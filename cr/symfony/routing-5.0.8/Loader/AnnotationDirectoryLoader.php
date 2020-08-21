@@ -34,6 +34,8 @@ class AnnotationDirectoryLoader extends AnnotationFileLoader
      */
     public function load($path, $type = null)
     {
+        $type = cast_to_string($type, null);
+
         if (!is_dir($dir = $this->locator->locate($path))) {
             return parent::supports($path, $type) ? parent::load($path, $type) : new RouteCollection();
         }
@@ -76,6 +78,8 @@ class AnnotationDirectoryLoader extends AnnotationFileLoader
      */
     public function supports($resource, $type = null)
     {
+        $type = cast_to_string($type, null);
+
         if ('annotation' === $type) {
             return true;
         }

@@ -47,6 +47,8 @@ final class Headers
 
     public function setMaxLineLength($lineLength)
     {
+        $lineLength = cast_to_int($lineLength);
+
         $this->lineLength = $lineLength;
         foreach ($this->all() as $header) {
             $header->setMaxLineLength($lineLength);
@@ -65,6 +67,8 @@ final class Headers
      */
     public function addMailboxListHeader($name, array $addresses)
     {
+        $name = cast_to_string($name);
+
         return $this->add(new MailboxListHeader($name, Address::createArray($addresses)));
     }
 
@@ -75,6 +79,8 @@ final class Headers
      */
     public function addMailboxHeader($name, $address)
     {
+        $name = cast_to_string($name);
+
         return $this->add(new MailboxHeader($name, Address::create($address)));
     }
 
@@ -85,6 +91,8 @@ final class Headers
      */
     public function addIdHeader($name, $ids)
     {
+        $name = cast_to_string($name);
+
         return $this->add(new IdentificationHeader($name, $ids));
     }
 
@@ -95,6 +103,8 @@ final class Headers
      */
     public function addPathHeader($name, $path)
     {
+        $name = cast_to_string($name);
+
         return $this->add(new PathHeader($name, $path instanceof Address ? $path : new Address($path)));
     }
 
@@ -103,6 +113,8 @@ final class Headers
      */
     public function addDateHeader($name, \DateTimeInterface $dateTime)
     {
+        $name = cast_to_string($name);
+
         return $this->add(new DateHeader($name, $dateTime));
     }
 
@@ -111,6 +123,10 @@ final class Headers
      */
     public function addTextHeader($name, $value)
     {
+        $value = cast_to_string($value);
+
+        $name = cast_to_string($name);
+
         return $this->add(new UnstructuredHeader($name, $value));
     }
 
@@ -119,11 +135,17 @@ final class Headers
      */
     public function addParameterizedHeader($name, $value, array $params = [])
     {
+        $value = cast_to_string($value);
+
+        $name = cast_to_string($name);
+
         return $this->add(new ParameterizedHeader($name, $value, $params));
     }
 
     public function has($name)
     {
+        $name = cast_to_string($name);
+
         return isset($this->headers[strtolower($name)]);
     }
 
@@ -150,7 +172,7 @@ final class Headers
         $name = strtolower($header->getName());
 
         if (isset($map[$name]) && !$header instanceof $map[$name]) {
-            throw new LogicException(sprintf('The "%s" header must be an instance of "%s" (got "%s").', $header->getName(), $map[$name], \get_class($header)));
+            throw new LogicException(sprintf('The "%s" header must be an instance of "%s" (got "%s").', $header->getName(), $map[$name], get_debug_type($header)));
         }
 
         if (\in_array($name, self::$uniqueHeaders, true) && isset($this->headers[$name]) && \count($this->headers[$name]) > 0) {
@@ -164,6 +186,8 @@ final class Headers
 
     public function get($name)
     {
+        $name = cast_to_string($name);
+
         $name = strtolower($name);
         if (!isset($this->headers[$name])) {
             return null;
@@ -176,6 +200,8 @@ final class Headers
 
     public function all($name = null)
     {
+        $name = cast_to_string($name, null);
+
         if (null === $name) {
             foreach ($this->headers as $name => $collection) {
                 foreach ($collection as $header) {
@@ -196,11 +222,15 @@ final class Headers
 
     public function remove($name)
     {
+        $name = cast_to_string($name);
+
         unset($this->headers[strtolower($name)]);
     }
 
     public static function isUniqueHeader($name)
     {
+        $name = cast_to_string($name);
+
         return \in_array($name, self::$uniqueHeaders, true);
     }
 
@@ -239,6 +269,10 @@ final class Headers
      */
     public function setHeaderBody($type, $name, $body)
     {
+        $name = cast_to_string($name);
+
+        $type = cast_to_string($type);
+
         if ($this->has($name)) {
             $this->get($name)->setBody($body);
         } else {
@@ -251,6 +285,10 @@ final class Headers
      */
     public function getHeaderParameter($name, $parameter)
     {
+        $parameter = cast_to_string($parameter);
+
+        $name = cast_to_string($name);
+
         if (!$this->has($name)) {
             return null;
         }
@@ -268,6 +306,10 @@ final class Headers
      */
     public function setHeaderParameter($name, $parameter, $value)
     {
+        $parameter = cast_to_string($parameter);
+
+        $name = cast_to_string($name);
+
         if (!$this->has($name)) {
             throw new LogicException(sprintf('Unable to set parameter "%s" on header "%s" as the header is not defined.', $parameter, $name));
         }

@@ -22,6 +22,8 @@ class DirectoryLoader extends FileLoader
      */
     public function load($file, $type = null)
     {
+        $type = cast_to_string($type, null);
+
         $path = $this->locator->locate($file);
 
         $collection = new RouteCollection();
@@ -51,6 +53,8 @@ class DirectoryLoader extends FileLoader
      */
     public function supports($resource, $type = null)
     {
+        $type = cast_to_string($type, null);
+
         // only when type is forced to directory, not to conflict with AnnotationLoader
 
         return 'directory' === $type;

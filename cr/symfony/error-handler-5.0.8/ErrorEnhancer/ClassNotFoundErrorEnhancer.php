@@ -24,7 +24,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
     /**
      * {@inheritdoc}
      */
-    public function enhance($error)
+    public function enhance($error) // ?\Throwable
     {
         // Some specific versions of PHP produce a fatal error when extending a not found class.
         $message = !$error instanceof FatalError ? $error->getMessage() : $error->getError()['message'];
@@ -86,6 +86,8 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
      */
     private function getClassCandidates($class)
     {
+        $class = cast_to_string($class);
+
         if (!\is_array($functions = spl_autoload_functions())) {
             return [];
         }
@@ -126,6 +128,10 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
 
     private function findClassInPath($path, $class, $prefix)
     {
+        $prefix = cast_to_string($prefix);
+        $class = cast_to_string($class);
+        $path = cast_to_string($path);
+
         if (!$path = realpath($path.'/'.strtr($prefix, '\\_', '//')) ?: realpath($path.'/'.\dirname(strtr($prefix, '\\_', '//'))) ?: realpath($path)) {
             return [];
         }
@@ -143,6 +149,10 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
 
     private function convertFileToClass($path, $file, $prefix)
     {
+        $prefix = cast_to_string($prefix);
+        $file = cast_to_string($file);
+        $path = cast_to_string($path);
+
         $candidates = [
             // namespaced class
             $namespacedClass = str_replace([$path.\DIRECTORY_SEPARATOR, '.php', '/'], ['', '', '\\'], $file),
@@ -193,6 +203,8 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
 
     private function classExists($class)
     {
+        $class = cast_to_string($class);
+
         return class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false);
     }
 }

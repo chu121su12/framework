@@ -33,6 +33,8 @@ class ClosureLoader extends Loader
      */
     public function load($closure, $type = null)
     {
+        $type = cast_to_string($type, null);
+
         return $closure();
     }
 
@@ -41,6 +43,8 @@ class ClosureLoader extends Loader
      */
     public function supports($resource, $type = null)
     {
+        $type = cast_to_string($type, null);
+
         return $resource instanceof \Closure && (!$type || 'closure' === $type);
     }
 }

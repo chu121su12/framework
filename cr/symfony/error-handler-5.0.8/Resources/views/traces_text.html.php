@@ -7,8 +7,8 @@
                         <span class="text-muted">[<?= $numExceptions - $index + 1; ?>/<?= $numExceptions; ?>]</span>
                     <?php } ?>
                     <?= ($parts = explode('\\', $exception['class'])) ? end($parts) : ''; ?>
-                    <span class="icon icon-close"><?= $this->doInclude('assets/images/icon-minus-square-o.svg'); ?></span>
-                    <span class="icon icon-open"><?= $this->doInclude('assets/images/icon-plus-square-o.svg'); ?></span>
+                    <span class="icon icon-close"><?= $this->include_('assets/images/icon-minus-square-o.svg'); ?></span>
+                    <span class="icon icon-open"><?= $this->include_('assets/images/icon-plus-square-o.svg'); ?></span>
                 </h3>
             </th>
         </tr>

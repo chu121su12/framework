@@ -25,6 +25,8 @@ final class MailboxHeader extends AbstractHeader
 
     public function __construct($name, Address $address)
     {
+        $name = cast_to_string($name);
+
         parent::__construct($name);
 
         $this->setAddress($address);
@@ -80,6 +82,8 @@ final class MailboxHeader extends AbstractHeader
      */
     protected function tokenNeedsEncoding($token)
     {
+        $token = cast_to_string($token);
+
         return preg_match('/[()<>\[\]:;@\,."]/', $token) || parent::tokenNeedsEncoding($token);
     }
 }

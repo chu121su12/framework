@@ -51,7 +51,7 @@ final class MimeTypes implements MimeTypesInterface
             $this->extensions[$mimeType] = $extensions;
 
             foreach ($extensions as $extension) {
-                $this->mimeTypes[$extension] = $mimeType;
+                $this->mimeTypes[$extension][] = $mimeType;
             }
         }
         $this->registerGuesser(new FileBinaryMimeTypeGuesser());
@@ -83,12 +83,14 @@ final class MimeTypes implements MimeTypesInterface
      */
     public function getExtensions($mimeType)
     {
+        $mimeType = cast_to_string($mimeType);
+
         if ($this->extensions) {
             $extensions = isset($this->extensions[$mimeType])
                 ? $this->extensions[$mimeType]
                 : (
                     isset($this->extensions[$lcMimeType = strtolower($mimeType)])
-                        ? $this->extensions[$lcMimeType = strtolower($mimeType)]
+                        ? $this->extensions[$lcMimeType]
                         : null
                 );
         }
@@ -99,8 +101,8 @@ final class MimeTypes implements MimeTypesInterface
                 isset(self::$map[$mimeType])
                     ? self::$map[$mimeType]
                     : (
-                        isset(self::$map[isset($lcMimeType) ? $lcMimeType : strtolower($mimeType)])
-                            ? self::$map[isset($lcMimeType) ? $lcMimeType : strtolower($mimeType)]
+                        isset(self::$map[$lcMimeType = isset($lcMimeType) ? $lcMimeType : strtolower($mimeType)])
+                            ? self::$map[$lcMimeType]
                             : []
                     )
             );
@@ -111,13 +113,15 @@ final class MimeTypes implements MimeTypesInterface
      */
     public function getMimeTypes($ext)
     {
+        $ext = cast_to_string($ext);
+
         if ($this->mimeTypes) {
             $mimeTypes = isset($this->mimeTypes[$ext])
                 ? $this->mimeTypes[$ext]
                 : (
                     isset($this->mimeTypes[$lcExt = strtolower($ext)])
-                    ? $this->mimeTypes[$lcExt = strtolower($ext)]
-                    : null
+                        ? $this->mimeTypes[$lcExt]
+                        : null
                 );
         }
 
@@ -127,8 +131,8 @@ final class MimeTypes implements MimeTypesInterface
                 isset(self::$reverseMap[$ext])
                     ? self::$reverseMap[$ext]
                     : (
-                        isset(self::$reverseMap[isset($lcExt) ? $lcExt : strtolower($ext)])
-                            ? self::$reverseMap[isset($lcExt) ? $lcExt : strtolower($ext)]
+                        isset(self::$reverseMap[$lcExt = isset($lcExt) ? $lcExt : strtolower($ext)])
+                            ? self::$reverseMap[$lcExt]
                             : []
                     )
             );
@@ -158,6 +162,8 @@ final class MimeTypes implements MimeTypesInterface
      */
     public function guessMimeType($path)
     {
+        $path = cast_to_string($path);
+
         foreach ($this->guessers as $guesser) {
             if (!$guesser->isGuesserSupported()) {
                 continue;
@@ -169,7 +175,7 @@ final class MimeTypes implements MimeTypesInterface
         }
 
         if (!$this->isGuesserSupported()) {
-            throw new LogicException('Unable to guess the MIME type as no guessers are available (have you enable the php_fileinfo extension?).');
+            throw new LogicException('Unable to guess the MIME type as no guessers are available (have you enabled the php_fileinfo extension?).');
         }
 
         return null;
@@ -558,6 +564,7 @@ final class MimeTypes implements MimeTypesInterface
         'application/vnd.ms-ims' => ['ims'],
         'application/vnd.ms-lrm' => ['lrm'],
         'application/vnd.ms-officetheme' => ['thmx'],
+        'application/vnd.ms-outlook' => ['msg'],
         'application/vnd.ms-pki.seccat' => ['cat'],
         'application/vnd.ms-pki.stl' => ['stl'],
         'application/vnd.ms-powerpoint' => ['ppt', 'pps', 'pot', 'ppz'],
@@ -1145,7 +1152,7 @@ final class MimeTypes implements MimeTypesInterface
         'audio/mp2' => ['mp2'],
         'audio/mp3' => ['mp3', 'mpga'],
         'audio/mp4' => ['m4a', 'mp4a', 'f4a'],
-        'audio/mpeg' => ['mpga', 'mp2', 'mp2a', 'mp3', 'm2a', 'm3a'],
+        'audio/mpeg' => ['mp3', 'mpga', 'mp2', 'mp2a', 'm2a', 'm3a'],
         'audio/mpegurl' => ['m3u', 'm3u8', 'vlc'],
         'audio/ogg' => ['oga', 'ogg', 'spx', 'opus'],
         'audio/prs.sid' => ['sid', 'psid'],
@@ -2406,6 +2413,7 @@ final class MimeTypes implements MimeTypesInterface
         'mseed' => ['application/vnd.fdsn.mseed'],
         'mseq' => ['application/vnd.mseq'],
         'msf' => ['application/vnd.epson.msf'],
+        'msg' => ['application/vnd.ms-outlook'],
         'msh' => ['model/mesh'],
         'msi' => ['application/x-msdownload', 'application/x-msi'],
         'msl' => ['application/vnd.mobius.msl'],

@@ -22,5 +22,5 @@ interface EncoderInterface
      * @param int $firstLineOffset if first line needs to be shorter
      * @param int $maxLineLength   - 0 indicates the default length for this encoding
      */
-    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0);
+    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0); //// string
 }

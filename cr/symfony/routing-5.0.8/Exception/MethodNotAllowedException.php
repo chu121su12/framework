@@ -24,6 +24,10 @@ class MethodNotAllowedException extends \RuntimeException implements ExceptionIn
 
     public function __construct(array $allowedMethods, $message = null, $code = 0, $previous = null)
     {
+        $code = cast_to_int($code);
+
+        $message = cast_to_string($message, null);
+
         $this->allowedMethods = array_map('strtoupper', $allowedMethods);
 
         parent::__construct($message, $code, $previous);

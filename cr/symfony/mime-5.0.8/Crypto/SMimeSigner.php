@@ -25,11 +25,6 @@ final class SMimeSigner extends SMime
     private $extraCerts;
 
     /**
-     * @var string|null
-     */
-    private $privateKeyPassphrase;
-
-    /**
      * @param string      $certificate          The path of the file containing the signing certificate (in PEM format)
      * @param string      $privateKey           The path of the file containing the private key (in PEM format)
      * @param string|null $privateKeyPassphrase A passphrase of the private key (if any)
@@ -38,6 +33,12 @@ final class SMimeSigner extends SMime
      */
     public function __construct($certificate, $privateKey, $privateKeyPassphrase = null, $extraCerts = null, $signOptions = null)
     {
+        $privateKey = cast_to_string($privateKey);
+        $certificate = cast_to_string($certificate);
+        $signOptions = cast_to_int($signOptions, null);
+        $extraCerts = cast_to_string($extraCerts, null);
+        $privateKeyPassphrase = cast_to_string($privateKeyPassphrase, null);
+
         if (!\extension_loaded('openssl')) {
             throw new \LogicException('PHP extension "openssl" is required to use SMime.');
         }
@@ -52,7 +53,6 @@ final class SMimeSigner extends SMime
 
         $this->signOptions = isset($signOptions) ? $signOptions : PKCS7_DETACHED;
         $this->extraCerts = $extraCerts ? realpath($extraCerts) : null;
-        $this->privateKeyPassphrase = $privateKeyPassphrase;
     }
 
     public function sign(Message $message)

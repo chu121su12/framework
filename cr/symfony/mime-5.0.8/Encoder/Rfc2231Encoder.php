@@ -23,6 +23,14 @@ final class Rfc2231Encoder implements EncoderInterface
      */
     public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
     {
+        $string = cast_to_string($string);
+
+        $maxLineLength = cast_to_int($maxLineLength);
+
+        $firstLineOffset = cast_to_int($firstLineOffset);
+
+        $charset = cast_to_string($charset, null);
+
         $lines = [];
         $lineCount = 0;
         $lines[] = '';

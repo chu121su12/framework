@@ -20,6 +20,8 @@ final class Base64ContentEncoder extends Base64Encoder implements ContentEncoder
 {
     public function encodeByteStream($stream, $maxLineLength = 0)
     {
+        $maxLineLength = cast_to_int($maxLineLength);
+
         if (!\is_resource($stream)) {
             throw new \TypeError(sprintf('Method "%s" takes a stream as a first argument.', __METHOD__));
         }
@@ -32,12 +34,8 @@ final class Base64ContentEncoder extends Base64Encoder implements ContentEncoder
             throw new RuntimeException('Unable to set the base64 content encoder to the filter.');
         }
 
-        $streamGetMetaData = stream_get_meta_data($stream);
-        if (isset($streamGetMetaData['seekable']) ? $streamGetMetaData['seekable'] : false) {
-            rewind($stream);
-        }
         while (!feof($stream)) {
-            yield fread($stream, 8192);
+            yield fread($stream, 16372);
         }
         stream_filter_remove($filter);
     }

@@ -19,7 +19,7 @@ trait RouteTrait
     /**
      * @var RouteCollection|Route
      */
-    private $route;
+    protected $route;
 
     /**
      * Adds defaults.
@@ -64,6 +64,8 @@ trait RouteTrait
      */
     final public function utf8($utf8 = true)
     {
+        $utf8 = cast_to_bool($utf8);
+
         $this->route->addOptions(['utf8' => $utf8]);
 
         return $this;
@@ -76,6 +78,8 @@ trait RouteTrait
      */
     final public function condition($condition)
     {
+        $condition = cast_to_string($condition);
+
         $this->route->setCondition($condition);
 
         return $this;
@@ -88,6 +92,8 @@ trait RouteTrait
      */
     final public function host($pattern)
     {
+        $pattern = cast_to_string($pattern);
+
         $this->route->setHost($pattern);
 
         return $this;
@@ -144,6 +150,8 @@ trait RouteTrait
      */
     final public function locale($locale)
     {
+        $locale = cast_to_string($locale);
+
         $this->route->addDefaults(['_locale' => $locale]);
 
         return $this;
@@ -156,7 +164,23 @@ trait RouteTrait
      */
     final public function format($format)
     {
+        $format = cast_to_string($format);
+
         $this->route->addDefaults(['_format' => $format]);
+
+        return $this;
+    }
+
+    /**
+     * Adds the "_stateless" entry to defaults.
+     *
+     * @return $this
+     */
+    final public function stateless($stateless = true)
+    {
+        $stateless = cast_to_bool($stateless);
+
+        $this->route->addDefaults(['_stateless' => $stateless]);
 
         return $this;
     }

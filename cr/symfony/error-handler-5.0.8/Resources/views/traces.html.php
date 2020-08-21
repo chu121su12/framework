@@ -3,8 +3,8 @@
         <div class="trace-head">
             <span class="sf-toggle" data-toggle-selector="#trace-html-<?= $index; ?>" data-toggle-initial="<?= $expand ? 'display' : ''; ?>">
                 <h3 class="trace-class">
-                    <span class="icon icon-close"><?= $this->doInclude('assets/images/icon-minus-square-o.svg'); ?></span>
-                    <span class="icon icon-open"><?= $this->doInclude('assets/images/icon-plus-square-o.svg'); ?></span>
+                    <span class="icon icon-close"><?= $this->include_('assets/images/icon-minus-square-o.svg'); ?></span>
+                    <span class="icon icon-open"><?= $this->include_('assets/images/icon-plus-square-o.svg'); ?></span>
 
                     <span class="trace-namespace">
                         <?= implode('\\', array_slice(explode('\\', $exception['class']), 0, -1)); ?><?= count(explode('\\', $exception['class'])) > 1 ? '\\' : ''; ?>
@@ -28,7 +28,7 @@
                 $isFirstUserCode = false;
             } ?>
             <div class="trace-line <?= $isVendorTrace ? 'trace-from-vendor' : ''; ?>">
-                <?= $this->doInclude('views/trace.html.php', [
+                <?= $this->include_('views/trace.html.php', [
                     'prefix' => $index,
                     'i' => $i,
                     'trace' => $trace,

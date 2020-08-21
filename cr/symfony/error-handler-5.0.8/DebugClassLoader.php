@@ -49,12 +49,9 @@ use ProxyManager\Proxy\ProxyInterface;
 class DebugClassLoader
 {
     const SPECIAL_RETURN_TYPES = [
-        'mixed' => 'mixed',
         'void' => 'void',
         'null' => 'null',
         'resource' => 'resource',
-        'static' => 'object',
-        '$this' => 'object',
         'boolean' => 'bool',
         'true' => 'bool',
         'false' => 'bool',
@@ -69,7 +66,13 @@ class DebugClassLoader
         'string' => 'string',
         'self' => 'self',
         'parent' => 'parent',
-    ];
+    ] + (\PHP_VERSION_ID >= 80000 ? [
+        '$this' => 'static',
+    ] : [
+        'mixed' => 'mixed',
+        'static' => 'object',
+        '$this' => 'object',
+    ]);
 
     const BUILTIN_RETURN_TYPES = [
         'void' => true,
@@ -83,7 +86,10 @@ class DebugClassLoader
         'string' => true,
         'self' => true,
         'parent' => true,
-    ];
+    ] + (\PHP_VERSION_ID >= 80000 ? [
+        'mixed' => true,
+        'static' => true,
+    ] : []);
 
     const MAGIC_METHODS = [
         '__set' => 'void',
@@ -185,7 +191,7 @@ class DebugClassLoader
         ];
 
         if (!isset(self::$caseCheck)) {
-            $file = file_exists(__FILE__) ? __FILE__ : rtrim(realpath('.'), \DIRECTORY_SEPARATOR);
+            $file = is_file(__FILE__) ? __FILE__ : rtrim(realpath('.'), \DIRECTORY_SEPARATOR);
             $i = strrpos($file, \DIRECTORY_SEPARATOR);
             $dir = substr($file, 0, 1 + $i);
             $file = substr($file, 1 + $i);
@@ -313,7 +319,9 @@ class DebugClassLoader
 
     public function findFile($class)
     {
-        return $this->isFinder ? ($this->classLoader[0]->findFile($class) ?: null) : null;;
+        $class = cast_to_string($class);
+
+        return $this->isFinder ? ($this->classLoader[0]->findFile($class) ?: null) : null;
     }
 
     /**
@@ -323,6 +331,8 @@ class DebugClassLoader
      */
     public function loadClass($class)
     {
+        $class = cast_to_string($class);
+
         $e = error_reporting(error_reporting() | E_PARSE | E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR);
 
         try {
@@ -351,6 +361,10 @@ class DebugClassLoader
 
     private function checkClass($class, $file = null)
     {
+        $class = cast_to_string($class);
+
+        $file = cast_to_string($file, null);
+
         $exists = null === $file || class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false);
 
         if (null !== $file && $class && '\\' === $class[0]) {
@@ -399,6 +413,8 @@ class DebugClassLoader
 
     public function checkAnnotations(\ReflectionClass $refl, $class)
     {
+        $class = cast_to_string($class);
+
         if (
             'Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerForV7' === $class
             || 'Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerForV6' === $class
@@ -407,7 +423,7 @@ class DebugClassLoader
         }
         $deprecations = [];
 
-        $className = isset($class[15]) && "\0" === $class[15] && 0 === strpos($class, "class@anonymous\x00") ? get_parent_class($class).'@anonymous' : $class;
+        $className = false !== strpos($class, "@anonymous\0") ? (get_parent_class($class) ?: (key(class_implements($class)) ?: 'class')).'@anonymous' : $class;
 
         // Don't trigger deprecations for classes in the same vendor
         if ($class !== $className) {
@@ -699,6 +715,10 @@ class DebugClassLoader
 
     public function checkCase(\ReflectionClass $refl, $file, $class)
     {
+        $class = cast_to_string($class);
+
+        $file = cast_to_string($file);
+
         $real = explode('\\', $class.strrchr($file, '.'));
         $tail = explode(\DIRECTORY_SEPARATOR, str_replace('/', \DIRECTORY_SEPARATOR, $file));
 
@@ -738,6 +758,8 @@ class DebugClassLoader
      */
     private function darwinRealpath($real)
     {
+        $real = cast_to_string($real);
+
         $i = 1 + strrpos($real, '/');
         $file = substr($real, $i);
         $real = substr($real, 0, $i);
@@ -811,6 +833,10 @@ class DebugClassLoader
      */
     private function getOwnInterfaces($class, $parent = null)
     {
+        $class = cast_to_string($class);
+
+        $parent = cast_to_string($parent, null);
+
         $ownInterfaces = class_implements($class, false);
 
         if ($parent) {
@@ -830,6 +856,10 @@ class DebugClassLoader
 
     private function setReturnType($types, \ReflectionMethod $method, $parent = null)
     {
+        $types = cast_to_string($types);
+
+        $parent = cast_to_string($parent, null);
+
         $nullable = false;
         $typesMap = [];
         foreach (explode('|', $types) as $t) {
@@ -901,6 +931,12 @@ class DebugClassLoader
 
     private function normalizeType($type, $class, $parent = null)
     {
+        $class = cast_to_string($class);
+
+        $type = cast_to_string($type);
+
+        $parent = cast_to_string($parent, null);
+
         $specialReturnTypes = self::SPECIAL_RETURN_TYPES;
         if (isset($specialReturnTypes[$lcType = strtolower($type)])) {
             if ('parent' === $lcType = $specialReturnTypes[$lcType]) {
@@ -931,10 +967,16 @@ class DebugClassLoader
      */
     private function patchMethod(\ReflectionMethod $method, $returnType, $declaringFile, $normalizedType)
     {
+        $normalizedType = cast_to_string($normalizedType);
+
+        $declaringFile = cast_to_string($declaringFile);
+
+        $returnType = cast_to_string($returnType);
+
         static $patchedMethods = [];
         static $useStatements = [];
 
-        if (!file_exists($file = $method->getFileName()) || isset($patchedMethods[$file][$startLine = $method->getStartLine()])) {
+        if (!is_file($file = $method->getFileName()) || isset($patchedMethods[$file][$startLine = $method->getStartLine()])) {
             return;
         }
 
@@ -1030,11 +1072,13 @@ EOTXT;
 
     private static function getUseStatements($file)
     {
+        $file = cast_to_string($file);
+
         $namespace = '';
         $useMap = [];
         $useOffset = 0;
 
-        if (!file_exists($file)) {
+        if (!is_file($file)) {
             return [$namespace, $useOffset, $useMap];
         }
 
@@ -1073,11 +1117,13 @@ EOTXT;
 
     private function fixReturnStatements(\ReflectionMethod $method, $returnType)
     {
+        $returnType = cast_to_string($returnType);
+
         if ('7.1' === $this->patchTypes['php'] && 'object' === ltrim($returnType, '?') && 'docblock' !== $this->patchTypes['force']) {
             return;
         }
 
-        if (!file_exists($file = $method->getFileName())) {
+        if (!is_file($file = $method->getFileName())) {
             return;
         }
 

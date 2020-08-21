@@ -32,6 +32,8 @@ class ContainerLoader extends ObjectLoader
      */
     public function supports($resource, $type = null)
     {
+        $type = cast_to_string($type, null);
+
         return 'service' === $type;
     }
 
@@ -40,6 +42,8 @@ class ContainerLoader extends ObjectLoader
      */
     protected function getObject($id)
     {
+        $id = cast_to_string($id);
+
         return $this->container->get($id);
     }
 }

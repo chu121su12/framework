@@ -30,6 +30,8 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
      */
     public function __construct($magicFile = null)
     {
+        $magicFile = cast_to_string($magicFile, null);
+
         $this->magicFile = $magicFile;
     }
 
@@ -46,6 +48,8 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
      */
     public function guessMimeType($path)
     {
+        $path = cast_to_string($path);
+
         if (!is_file($path) || !is_readable($path)) {
             throw new InvalidArgumentException(sprintf('The "%s" file does not exist or is not readable.', $path));
         }
@@ -57,7 +61,13 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
         if (false === $finfo = new \finfo(FILEINFO_MIME_TYPE, $this->magicFile)) {
             return null;
         }
+        $mimeType = $finfo->file($path);
 
-        return $finfo->file($path);
+        if ($mimeType && 0 === (\strlen($mimeType) % 2)) {
+            $mimeStart = substr($mimeType, 0, \strlen($mimeType) >> 1);
+            $mimeType = $mimeStart.$mimeStart === $mimeType ? $mimeStart : $mimeType;
+        }
+
+        return $mimeType;
     }
 }

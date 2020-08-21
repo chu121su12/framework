@@ -18,16 +18,13 @@ final class QpContentEncoder implements ContentEncoderInterface
 {
     public function encodeByteStream($stream, $maxLineLength = 0)
     {
+        $maxLineLength = cast_to_int($maxLineLength);
+
         if (!\is_resource($stream)) {
             throw new \TypeError(sprintf('Method "%s" takes a stream as a first argument.', __METHOD__));
         }
 
         // we don't use PHP stream filters here as the content should be small enough
-        $streamGetMetaData = stream_get_meta_data($stream);
-        if (isset($streamGetMetaData['seekable']) ? $streamGetMetaData['seekable'] : false) {
-            rewind($stream);
-        }
-
         yield $this->encodeString(stream_get_contents($stream), 'utf-8', 0, $maxLineLength);
     }
 
@@ -38,6 +35,14 @@ final class QpContentEncoder implements ContentEncoderInterface
 
     public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
     {
+        $string = cast_to_string($string);
+
+        $maxLineLength = cast_to_int($maxLineLength);
+
+        $firstLineOffset = cast_to_int($firstLineOffset);
+
+        $charset = cast_to_string($charset, null);
+
         return $this->standardize(quoted_printable_encode($string));
     }
 
@@ -46,6 +51,8 @@ final class QpContentEncoder implements ContentEncoderInterface
      */
     private function standardize($string)
     {
+        $string = cast_to_string($string);
+
         // transform CR or LF to CRLF
         $string = preg_replace('~=0D(?!=0A)|(?<!=0D)=0A~', '=0D=0A', $string);
         // transform =0D=0A to CRLF

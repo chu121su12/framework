@@ -34,6 +34,8 @@ trait CompiledUrlMatcherTrait
 
     public function match($pathinfo)
     {
+        $pathinfo = cast_to_string($pathinfo);
+
         $allow = $allowSchemes = [];
         if ($ret = $this->doMatch($pathinfo, $allow, $allowSchemes)) {
             return $ret;
@@ -72,6 +74,8 @@ trait CompiledUrlMatcherTrait
 
     private function doMatch($pathinfo, array &$allow = [], array &$allowSchemes = [])
     {
+        $pathinfo = cast_to_string($pathinfo);
+
         $allow = $allowSchemes = [];
         $pathinfo = rawurldecode($pathinfo) ?: '/';
         $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/';
@@ -101,10 +105,10 @@ trait CompiledUrlMatcherTrait
             }
 
             if ($requiredHost) {
-                if ('#' !== $requiredHost[0] ? $requiredHost !== $host : !preg_match($requiredHost, $host, $hostMatches)) {
+                if ('{' !== $requiredHost[0] ? $requiredHost !== $host : !preg_match($requiredHost, $host, $hostMatches)) {
                     continue;
                 }
-                if ('#' === $requiredHost[0] && $hostMatches) {
+                if ('{' === $requiredHost[0] && $hostMatches) {
                     $hostMatches['_route'] = $ret['_route'];
                     $ret = $this->mergeDefaults($hostMatches, $ret);
                 }
@@ -155,7 +159,7 @@ trait CompiledUrlMatcherTrait
 
                     $hasTrailingVar = $trimmedPathinfo !== $pathinfo && $hasTrailingVar;
 
-                    if ($hasTrailingVar && ($hasTrailingSlash || (null === $n = isset($matches[\count($vars)]) ? $matches[\count($vars)] : null) || '/' !== (strlen($n) > 0 ? substr($n, -1) : '/')) && preg_match($regex, $this->matchHost ? $host.'.'.$trimmedPathinfo : $trimmedPathinfo, $n) && $m === (int) $n['MARK']) {
+                    if ($hasTrailingVar && ($hasTrailingSlash || (null === $n = isset($matches[\count($vars)]) ? $matches[\count($vars)] : null) || '/' !== (isset($n[-1]) ? $n[-1] : '/')) && preg_match($regex, $this->matchHost ? $host.'.'.$trimmedPathinfo : $trimmedPathinfo, $n) && $m === (int) $n['MARK']) {
                         if ($hasTrailingSlash) {
                             $matches = $n;
                         } else {

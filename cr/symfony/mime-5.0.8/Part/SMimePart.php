@@ -28,10 +28,14 @@ class SMimePart extends AbstractPart
      */
     public function __construct($body, $type, $subtype, array $parameters)
     {
+        $subtype = cast_to_string($subtype);
+
+        $type = cast_to_string($type);
+
         parent::__construct();
 
         if (!\is_string($body) && !is_iterable($body)) {
-            throw new \TypeError(sprintf('The body of "%s" must be a string or a iterable (got "%s").', self::class, \is_object($body) ? \get_class($body) : \gettype($body)));
+            throw new \TypeError(sprintf('The body of "%s" must be a string or a iterable (got "%s").', self::class, get_debug_type($body)));
         }
 
         $this->body = $body;

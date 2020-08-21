@@ -18,6 +18,8 @@ class UndefinedFunctionError extends \Error
      */
     public function __construct($message, $previous)
     {
+        $message = cast_to_string($message);
+
         parent::__construct($message, $previous->getCode(), $previous->getPrevious());
 
         foreach ([

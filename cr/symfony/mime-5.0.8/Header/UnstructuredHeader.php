@@ -22,6 +22,10 @@ class UnstructuredHeader extends AbstractHeader
 
     public function __construct($name, $value)
     {
+        $value = cast_to_string($value);
+
+        $name = cast_to_string($name);
+
         parent::__construct($name);
 
         $this->setValue($value);
@@ -56,6 +60,8 @@ class UnstructuredHeader extends AbstractHeader
      */
     public function setValue($value)
     {
+        $value = cast_to_string($value);
+
         $this->value = $value;
     }
 

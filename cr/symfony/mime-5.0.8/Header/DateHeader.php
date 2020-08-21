@@ -22,6 +22,8 @@ final class DateHeader extends AbstractHeader
 
     public function __construct($name, \DateTimeInterface $date)
     {
+        $name = cast_to_string($name);
+
         parent::__construct($name);
 
         $this->setDateTime($date);
@@ -35,12 +37,12 @@ final class DateHeader extends AbstractHeader
         $this->setDateTime($body);
     }
 
-    public function getBody()
+    public function getBody() // \DateTimeImmutable
     {
         return $this->getDateTime();
     }
 
-    public function getDateTime()
+    public function getDateTime() // \DateTimeImmutable
     {
         return $this->dateTime;
     }

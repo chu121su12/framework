@@ -99,6 +99,8 @@ class Router implements RouterInterface, RequestMatcherInterface
      */
     public function __construct(LoaderInterface $loader, $resource, array $options = [], RequestContext $context = null, LoggerInterface $logger = null, $defaultLocale = null)
     {
+        $defaultLocale = cast_to_string($defaultLocale, null);
+
         $this->loader = $loader;
         $this->resource = $resource;
         $this->logger = $logger;
@@ -161,6 +163,8 @@ class Router implements RouterInterface, RequestMatcherInterface
      */
     public function setOption($key, $value)
     {
+        $key = cast_to_string($key);
+
         if (!\array_key_exists($key, $this->options)) {
             throw new \InvalidArgumentException(sprintf('The Router does not support the "%s" option.', $key));
         }
@@ -177,6 +181,8 @@ class Router implements RouterInterface, RequestMatcherInterface
      */
     public function getOption($key)
     {
+        $key = cast_to_string($key);
+
         if (!\array_key_exists($key, $this->options)) {
             throw new \InvalidArgumentException(sprintf('The Router does not support the "%s" option.', $key));
         }
@@ -232,6 +238,10 @@ class Router implements RouterInterface, RequestMatcherInterface
      */
     public function generate($name, array $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
+        $name = cast_to_string($name);
+
+        $referenceType = cast_to_int($referenceType);
+
         return $this->getGenerator()->generate($name, $parameters, $referenceType);
     }
 
@@ -240,6 +250,8 @@ class Router implements RouterInterface, RequestMatcherInterface
      */
     public function match($pathinfo)
     {
+        $pathinfo = cast_to_string($pathinfo);
+
         return $this->getMatcher()->match($pathinfo);
     }
 
@@ -373,6 +385,8 @@ class Router implements RouterInterface, RequestMatcherInterface
 
     private static function getCompiledRoutes($path)
     {
+        $path = cast_to_string($path);
+
         if ([] === self::$cache && \function_exists('opcache_invalidate') && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN) && (!\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) || filter_var(ini_get('opcache.enable_cli'), FILTER_VALIDATE_BOOLEAN))) {
             self::$cache = null;
         }

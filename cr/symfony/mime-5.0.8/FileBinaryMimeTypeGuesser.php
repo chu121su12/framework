@@ -33,6 +33,8 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
      */
     public function __construct($cmd = 'file -b --mime -- %s 2>/dev/null')
     {
+        $cmd = cast_to_string($cmd);
+
         $this->cmd = $cmd;
     }
 
@@ -63,6 +65,8 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
      */
     public function guessMimeType($path)
     {
+        $path = cast_to_string($path);
+
         if (!is_file($path) || !is_readable($path)) {
             throw new InvalidArgumentException(sprintf('The "%s" file does not exist or is not readable.', $path));
         }

@@ -32,6 +32,12 @@ class DataPart extends TextPart
      */
     public function __construct($body, $filename = null, $contentType = null, $encoding = null)
     {
+        $encoding = cast_to_string($encoding, null);
+
+        $contentType = cast_to_string($contentType, null);
+
+        $filename = cast_to_string($filename, null);
+
         if (null === $contentType) {
             $contentType = 'application/octet-stream';
         }
@@ -46,6 +52,12 @@ class DataPart extends TextPart
 
     public static function fromPath($path, $name = null, $contentType = null)
     {
+        $path = cast_to_string($path);
+
+        $contentType = cast_to_string($contentType, null);
+
+        $name = cast_to_string($name, null);
+
         // FIXME: if file is not readable, exception?
 
         if (null === $contentType) {
@@ -55,6 +67,10 @@ class DataPart extends TextPart
             }
             $mimeTypes = self::$mimeTypes->getMimeTypes($ext);
             $contentType = isset($mimeTypes[0]) ? $mimeTypes[0] : 'application/octet-stream';
+        }
+
+        if (false === is_readable($path)) {
+            throw new InvalidArgumentException(sprintf('Path "%s" is not readable.', $path));
         }
 
         if (false === $handle = @fopen($path, 'r', false)) {

@@ -29,6 +29,14 @@ final class Base64MimeHeaderEncoder extends Base64Encoder implements MimeHeaderE
      */
     public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
     {
+        $string = cast_to_string($string);
+
+        $maxLineLength = cast_to_int($maxLineLength);
+
+        $firstLineOffset = cast_to_int($firstLineOffset);
+
+        $charset = cast_to_string($charset, null);
+
         if ('iso-2022-jp' === strtolower($charset)) {
             $old = mb_internal_encoding();
             mb_internal_encoding('utf-8');

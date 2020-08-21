@@ -83,6 +83,8 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
 
     public function __construct(RouteCollection $routes, RequestContext $context, LoggerInterface $logger = null, $defaultLocale = null)
     {
+        $defaultLocale = cast_to_string($defaultLocale, null);
+
         $this->routes = $routes;
         $this->context = $context;
         $this->logger = $logger;
@@ -110,6 +112,8 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
      */
     public function setStrictRequirements($enabled = null)
     {
+        $enabled = cast_to_bool($enabled, null);
+
         $this->strictRequirements = $enabled;
     }
 
@@ -126,6 +130,10 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
      */
     public function generate($name, array $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
+        $name = cast_to_string($name);
+
+        $referenceType = cast_to_int($referenceType);
+
         $route = null;
         $locale = isset($parameters['_locale'])
             ? $parameters['_locale']
@@ -169,6 +177,10 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
      */
     protected function doGenerate(array $variables, array $defaults, array $requirements, array $tokens, array $parameters, $name, $referenceType, array $hostTokens, array $requiredSchemes = [])
     {
+        $referenceType = cast_to_int($referenceType);
+
+        $name = cast_to_string($name);
+
         $variables = array_flip($variables);
         $mergedParams = array_replace($defaults, $this->context->getParameters(), $parameters);
 
@@ -335,6 +347,10 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
      */
     public static function getRelativePath($basePath, $targetPath)
     {
+        $targetPath = cast_to_string($targetPath);
+
+        $basePath = cast_to_string($basePath);
+
         if ($basePath === $targetPath) {
             return '';
         }

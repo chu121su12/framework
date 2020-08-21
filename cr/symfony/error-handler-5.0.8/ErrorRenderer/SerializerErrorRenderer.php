@@ -37,11 +37,11 @@ class SerializerErrorRenderer implements ErrorRendererInterface
     public function __construct(SerializerInterface $serializer, $format, ErrorRendererInterface $fallbackErrorRenderer = null, $debug = false)
     {
         if (!\is_string($format) && !\is_callable($format)) {
-            throw new \TypeError(sprintf('Argument 2 passed to "%s()" must be a string or a callable, "%s" given.', __METHOD__, \is_object($format) ? \get_class($format) : \gettype($format)));
+            throw new \TypeError(sprintf('Argument 2 passed to "%s()" must be a string or a callable, "%s" given.', __METHOD__, get_debug_type($format)));
         }
 
         if (!\is_bool($debug) && !\is_callable($debug)) {
-            throw new \TypeError(sprintf('Argument 4 passed to "%s()" must be a boolean or a callable, "%s" given.', __METHOD__, \is_object($debug) ? \get_class($debug) : \gettype($debug)));
+            throw new \TypeError(sprintf('Argument 4 passed to "%s()" must be a boolean or a callable, "%s" given.', __METHOD__, get_debug_type($debug)));
         }
 
         $this->serializer = $serializer;
@@ -55,7 +55,15 @@ class SerializerErrorRenderer implements ErrorRendererInterface
      */
     public function render($exception)
     {
-        $flattenException = FlattenException::createFromThrowable($exception);
+        $headers = [];
+        $thisDebug = $this->debug;
+        $debug = \is_bool($thisDebug) ? $thisDebug : $thisDebug($exception);
+        if ($debug) {
+            $headers['X-Debug-Exception'] = rawurlencode($exception->getMessage());
+            $headers['X-Debug-Exception-File'] = rawurlencode($exception->getFile()).':'.$exception->getLine();
+        }
+
+        $flattenException = FlattenException::createFromThrowable($exception, null, $headers);
 
         try {
             $thisFormat = $this->format;
@@ -66,10 +74,9 @@ class SerializerErrorRenderer implements ErrorRendererInterface
                 'Vary' => 'Accept',
             ];
 
-            $thisDebug = $this->debug;
             return $flattenException->setAsString($this->serializer->serialize($flattenException, $format, [
                 'exception' => $exception,
-                'debug' => \is_bool($thisDebug) ? $thisDebug : $thisDebug($exception),
+                'debug' => $debug,
             ]))
             ->setHeaders($flattenException->getHeaders() + $headers);
         } catch (NotEncodableValueException $e) {
@@ -77,7 +84,7 @@ class SerializerErrorRenderer implements ErrorRendererInterface
         }
     }
 
-    public static function getPreferredFormat(RequestStack $requestStack)
+    public static function getPreferredFormat(RequestStack $requestStack) // \Closure
     {
         return static function () use ($requestStack) {
             if (!$request = $requestStack->getCurrentRequest()) {

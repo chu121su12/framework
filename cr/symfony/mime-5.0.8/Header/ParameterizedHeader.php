@@ -30,6 +30,10 @@ final class ParameterizedHeader extends UnstructuredHeader
 
     public function __construct($name, $value, array $parameters = [])
     {
+        $value = cast_to_string($value);
+
+        $name = cast_to_string($name);
+
         parent::__construct($name, $value);
 
         foreach ($parameters as $k => $v) {
@@ -43,11 +47,17 @@ final class ParameterizedHeader extends UnstructuredHeader
 
     public function setParameter($parameter, $value = null)
     {
+        $parameter = cast_to_string($parameter);
+
+        $value = cast_to_string($value, null);
+
         $this->setParameters(array_merge($this->getParameters(), [$parameter => $value]));
     }
 
     public function getParameter($parameter)
     {
+        $parameter = cast_to_string($parameter);
+
         $parameters = $this->getParameters();
         return isset($parameters[$parameter]) ? $parameters[$parameter] : '';
     }
@@ -88,6 +98,8 @@ final class ParameterizedHeader extends UnstructuredHeader
      */
     protected function toTokens($string = null)
     {
+        $string = cast_to_string($string, null);
+
         $tokens = parent::toTokens(parent::getBodyAsString());
 
         // Try creating any parameters
@@ -107,6 +119,10 @@ final class ParameterizedHeader extends UnstructuredHeader
      */
     private function createParameter($name, $value)
     {
+        $value = cast_to_string($value);
+
+        $name = cast_to_string($name);
+
         $origValue = $value;
 
         $encoded = false;
@@ -159,7 +175,14 @@ final class ParameterizedHeader extends UnstructuredHeader
      */
     private function getEndOfParameterValue($value, $encoded = false, $firstLine = false)
     {
-        if (!preg_match('/^'.self::TOKEN_REGEX.'$/D', $value)) {
+        $value = cast_to_string($value);
+
+        $firstLine = cast_to_bool($firstLine);
+
+        $encoded = cast_to_bool($encoded);
+
+        $forceHttpQuoting = 'content-disposition' === strtolower($this->getName()) && 'form-data' === $this->getValue();
+        if ($forceHttpQuoting || !preg_match('/^'.self::TOKEN_REGEX.'$/D', $value)) {
             $value = '"'.$value.'"';
         }
         $prepend = '=';

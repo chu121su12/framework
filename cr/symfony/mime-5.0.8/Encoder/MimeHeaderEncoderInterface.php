@@ -19,5 +19,5 @@ interface MimeHeaderEncoderInterface
     /**
      * Get the MIME name of this content encoding scheme.
      */
-    public function getName();
+    public function getName(); //// string
 }

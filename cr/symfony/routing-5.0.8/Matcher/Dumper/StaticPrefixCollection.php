@@ -42,6 +42,8 @@ class StaticPrefixCollection
 
     public function __construct($prefix = '/')
     {
+        $prefix = cast_to_string($prefix);
+
         $this->prefix = $prefix;
     }
 
@@ -65,6 +67,8 @@ class StaticPrefixCollection
      */
     public function addRoute($prefix, $route)
     {
+        $prefix = cast_to_string($prefix);
+
         list($prefix, $staticPrefix) = $this->getCommonPrefix($prefix, $prefix);
 
         for ($i = \count($this->items) - 1; 0 <= $i; --$i) {
@@ -146,6 +150,10 @@ class StaticPrefixCollection
      */
     private function getCommonPrefix($prefix, $anotherPrefix)
     {
+        $anotherPrefix = cast_to_string($anotherPrefix);
+
+        $prefix = cast_to_string($prefix);
+
         $baseLength = \strlen($this->prefix);
         $end = min(\strlen($prefix), \strlen($anotherPrefix));
         $staticLength = null;

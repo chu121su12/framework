@@ -21,10 +21,10 @@ interface ContentEncoderInterface extends EncoderInterface
      *
      * @param resource $stream
      */
-    public function encodeByteStream($stream, $maxLineLength = 0);
+    public function encodeByteStream($stream, $maxLineLength = 0); //// iterable
 
     /**
      * Gets the MIME name of this content encoding scheme.
      */
-    public function getName();
+    public function getName(); //// string
 }

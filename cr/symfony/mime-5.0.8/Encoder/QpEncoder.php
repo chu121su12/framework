@@ -116,6 +116,14 @@ class QpEncoder implements EncoderInterface
      */
     public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
     {
+        $string = cast_to_string($string);
+
+        $maxLineLength = cast_to_int($maxLineLength);
+
+        $firstLineOffset = cast_to_int($firstLineOffset);
+
+        $charset = cast_to_string($charset, null);
+
         if ($maxLineLength > 76 || $maxLineLength <= 0) {
             $maxLineLength = 76;
         }
@@ -163,6 +171,8 @@ class QpEncoder implements EncoderInterface
      */
     private function encodeByteSequence(array $bytes, &$size)
     {
+        $size = cast_to_int($size);
+
         $ret = '';
         $size = 0;
         foreach ($bytes as $b) {
@@ -183,6 +193,8 @@ class QpEncoder implements EncoderInterface
      */
     private function standardize($string)
     {
+        $string = cast_to_string($string);
+
         $string = str_replace(["\t=0D=0A", ' =0D=0A', '=0D=0A'], ["=09\r\n", "=20\r\n", "\r\n"], $string);
         switch ($end = \ord(substr($string, -1))) {
             case 0x09:

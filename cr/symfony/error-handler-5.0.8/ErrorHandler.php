@@ -91,7 +91,7 @@ class ErrorHandler
     private $tracedErrors = 0x77FB; // E_ALL - E_STRICT - E_PARSE
     private $screamedErrors = 0x55; // E_ERROR + E_CORE_ERROR + E_COMPILE_ERROR + E_PARSE
     private $loggedErrors = 0;
-    private $traceReflector;
+    private $configureException;
     private $debug;
 
     private $isRecursive = 0;
@@ -110,6 +110,8 @@ class ErrorHandler
      */
     public static function register(self $handler = null, $replace = true)
     {
+        $replace = cast_to_bool($replace);
+
         if (null === self::$reservedMemory) {
             self::$reservedMemory = str_repeat('x', 10240);
             register_shutdown_function(__CLASS__.'::handleFatalError');
@@ -165,6 +167,11 @@ class ErrorHandler
     public static function call(callable $function, ...$arguments)
     {
         set_error_handler(static function ($type, $message, $file, $line) {
+            $line = cast_to_int($line);
+            $file = cast_to_string($file);
+            $message = cast_to_string($message);
+            $type = cast_to_int($type);
+
             if (__FILE__ === $file) {
                 $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
                 if (isset($trace[2])) {
@@ -185,12 +192,20 @@ class ErrorHandler
 
     public function __construct(BufferingLogger $bootstrappingLogger = null, $debug = false)
     {
+        $debug = cast_to_bool($debug);
+
         if ($bootstrappingLogger) {
             $this->bootstrappingLogger = $bootstrappingLogger;
             $this->setDefaultLogger($bootstrappingLogger);
         }
-        $this->traceReflector = new \ReflectionProperty('Exception', 'trace');
-        $this->traceReflector->setAccessible(true);
+        $traceReflector = new \ReflectionProperty('Exception', 'trace');
+        $traceReflector->setAccessible(true);
+        $this->configureException = \Closure::bind(static function ($e, $trace, $file = null, $line = null) use ($traceReflector) {
+            $traceReflector->setValue($e, $trace);
+            $e->file = isset($file) ? $file : $e->file;
+            $e->line = isset($line) ? $line : $e->line;
+        }, null, new class() extends \Exception {
+        });
         $this->debug = $debug;
     }
 
@@ -203,6 +218,8 @@ class ErrorHandler
      */
     public function setDefaultLogger(LoggerInterface $logger, $levels = E_ALL, $replace = false)
     {
+        $replace = cast_to_bool($replace);
+
         $loggers = [];
 
         if (\is_array($levels)) {
@@ -288,6 +305,8 @@ class ErrorHandler
      */
     public function setExceptionHandler(callable $handler = null)
     {
+        $handler = cast_to_callable($handler, null);
+
         $prev = $this->exceptionHandler;
         $this->exceptionHandler = $handler;
 
@@ -304,6 +323,9 @@ class ErrorHandler
      */
     public function throwAt($levels, $replace = false)
     {
+        $levels = cast_to_int($levels);
+        $replace = cast_to_bool($replace);
+
         $prev = $this->thrownErrors;
         $this->thrownErrors = ($levels | E_RECOVERABLE_ERROR | E_USER_ERROR) & ~E_USER_DEPRECATED & ~E_DEPRECATED;
         if (!$replace) {
@@ -324,6 +346,9 @@ class ErrorHandler
      */
     public function scopeAt($levels, $replace = false)
     {
+        $levels = cast_to_int($levels);
+        $replace = cast_to_bool($replace);
+
         $prev = $this->scopedErrors;
         $this->scopedErrors = $levels;
         if (!$replace) {
@@ -343,6 +368,9 @@ class ErrorHandler
      */
     public function traceAt($levels, $replace = false)
     {
+        $levels = cast_to_int($levels);
+        $replace = cast_to_bool($replace);
+
         $prev = $this->tracedErrors;
         $this->tracedErrors = (int) $levels;
         if (!$replace) {
@@ -362,6 +390,9 @@ class ErrorHandler
      */
     public function screamAt($levels, $replace = false)
     {
+        $levels = cast_to_int($levels);
+        $replace = cast_to_bool($replace);
+
         $prev = $this->screamedErrors;
         $this->screamedErrors = $levels;
         if (!$replace) {
@@ -376,6 +407,8 @@ class ErrorHandler
      */
     private function reRegister($prev)
     {
+        $prev = cast_to_int($prev);
+
         if ($prev !== $this->thrownErrors | $this->loggedErrors) {
             $handler = set_error_handler('var_dump');
             $handler = \is_array($handler) ? $handler[0] : null;
@@ -402,6 +435,11 @@ class ErrorHandler
      */
     public function handleError($type, $message, $file, $line)
     {
+        $line = cast_to_int($line);
+        $file = cast_to_string($file);
+        $message = cast_to_string($message);
+        $type = cast_to_int($type);
+
         if (\PHP_VERSION_ID >= 70300 && E_WARNING === $type && '"' === $message[0] && false !== strpos($message, '" targeting switch is equivalent to "break')) {
             $type = E_DEPRECATED;
         }
@@ -425,19 +463,7 @@ class ErrorHandler
         }
         $scope = $this->scopedErrors & $type;
 
-        if (4 < $numArgs = \func_num_args()) {
-            $context = $scope ? (func_get_arg(4) ?: []) : [];
-        } else {
-            $context = [];
-        }
-
-        if (isset($context['GLOBALS']) && $scope) {
-            $e = $context;                  // Whatever the signature of the method,
-            unset($e['GLOBALS'], $context); // $context is always a reference in 5.3
-            $context = $e;
-        }
-
-        if (false !== strpos($message, "class@anonymous\0")) {
+        if (false !== strpos($message, "@anonymous\0")) {
             $logMessage = $this->parseAnonymousClass($message);
         } else {
             $logMessage = $this->levels[$type].': '.$message;
@@ -475,9 +501,11 @@ class ErrorHandler
             if ($throw || $this->tracedErrors & $type) {
                 $backtrace = $errorAsException->getTrace();
                 $lightTrace = $this->cleanTrace($backtrace, $type, $file, $line, $throw);
-                $this->traceReflector->setValue($errorAsException, $lightTrace);
+                $configureException = $this->configureException;
+                $configureException($errorAsException, $lightTrace, $file, $line);
             } else {
-                $this->traceReflector->setValue($errorAsException, []);
+                $configureException = $this->configureException;
+                $configureException($errorAsException, []);
                 $backtrace = [];
             }
         }
@@ -497,6 +525,8 @@ class ErrorHandler
                         // given a caught $e exception in __toString(), quitting the method with
                         // `return trigger_error($e, E_USER_ERROR);` allows this error handler
                         // to make $e get through the __toString() barrier.
+
+                        $context = 4 < \func_num_args() ? (func_get_arg(4) ?: []) : [];
 
                         foreach ($context as $e) {
                             if ($e instanceof \Throwable && $e->__toString() === $message) {
@@ -560,7 +590,7 @@ class ErrorHandler
         }
 
         if ($this->loggedErrors & $type) {
-            if (false !== strpos($message = $exception->getMessage(), "class@anonymous\0")) {
+            if (false !== strpos($message = $exception->getMessage(), "@anonymous\0")) {
                 $message = $this->parseAnonymousClass($message);
             }
 
@@ -742,8 +772,11 @@ class ErrorHandler
     /**
      * Cleans the trace by removing function arguments and the frames added by the error handler and DebugClassLoader.
      */
-    private function cleanTrace(array $backtrace, $type, $file, $line, $throw)
+    private function cleanTrace(array $backtrace, $type, &$file, &$line, $throw)
     {
+        $throw = cast_to_bool($throw);
+        $type = cast_to_int($type);
+
         $lightTrace = $backtrace;
 
         for ($i = 0; isset($backtrace[$i]); ++$i) {
@@ -752,9 +785,22 @@ class ErrorHandler
                 break;
             }
         }
+        if (E_USER_DEPRECATED === $type) {
+            for ($i = 0; isset($lightTrace[$i]); ++$i) {
+                if (!isset($lightTrace[$i]['file'], $lightTrace[$i]['line'], $lightTrace[$i]['function'])) {
+                    continue;
+                }
+                if (!isset($lightTrace[$i]['class']) && 'trigger_deprecation' === $lightTrace[$i]['function']) {
+                    $file = $lightTrace[$i]['file'];
+                    $line = $lightTrace[$i]['line'];
+                    $lightTrace = \array_slice($lightTrace, 1 + $i);
+                    break;
+                }
+            }
+        }
         if (class_exists(DebugClassLoader::class, false)) {
             for ($i = \count($lightTrace) - 2; 0 < $i; --$i) {
-                if (DebugClassLoader::class === (isset($lightTrace[$i]) && isset($lightTrace[$i]['class']) ? $lightTrace[$i]['class'] : null)) {
+                if (DebugClassLoader::class === ($lightTrace[$i]['class'] ?? null)) {
                     array_splice($lightTrace, --$i, 2);
                 }
             }
@@ -774,8 +820,10 @@ class ErrorHandler
      */
     private function parseAnonymousClass($message)
     {
-        return preg_replace_callback('/class@anonymous\x00.*?\.php(?:0x?|:[0-9]++\$)[0-9a-fA-F]++/', static function ($m) {
-            return class_exists($m[0], false) ? get_parent_class($m[0]).'@anonymous' : $m[0];
+        $message = cast_to_string($message);
+
+        return preg_replace_callback('/[a-zA-Z_\x7f-\xff][\\\\a-zA-Z0-9_\x7f-\xff]*+@anonymous\x00.*?\.php(?:0x?|:[0-9]++\$)[0-9a-fA-F]++/', static function ($m) {
+            return class_exists($m[0], false) ? (get_parent_class($m[0]) ?: key(class_implements($m[0])) ?: 'class').'@anonymous' : $m[0];
         }, $message);
     }
 }
