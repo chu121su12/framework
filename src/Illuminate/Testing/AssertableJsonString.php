@@ -63,8 +63,10 @@ class AssertableJsonString
      * @param  string|null  $key
      * @return $this
      */
-    public function assertCount(int $count, $key = null)
+    public function assertCount($count, $key = null)
     {
+        $count = cast_to_int($count);
+
         if (! is_null($key)) {
             PHPUnit::assertCount(
                 $count, data_get($this->decoded, $key),
