@@ -1470,6 +1470,8 @@ trait ValidatesAttributes
 
         if (is_bool($other)) {
             $values = $this->convertValuesToBoolean($values);
+        } elseif (is_null($other)) {
+            $values = $this->convertValuesToNull($values);
         }
 
         return [$values, $other];
@@ -1491,6 +1493,19 @@ trait ValidatesAttributes
             }
 
             return $value;
+        }, $values);
+    }
+
+    /**
+     * Convert the given values to null if they are string "null".
+     *
+     * @param  array  $values
+     * @return array
+     */
+    protected function convertValuesToNull($values)
+    {
+        return array_map(function ($value) {
+            return Str::lower($value) === 'null' ? null : $value;
         }, $values);
     }
 
