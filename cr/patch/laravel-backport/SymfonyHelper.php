@@ -2,8 +2,8 @@
 
 namespace CR\LaravelBackport;
 
-use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Process\Process;
 
 class SymfonyHelper
 {
@@ -80,6 +80,6 @@ class SymfonyHelper
 
         $timeout = cast_to_float($timeout, null);
 
-        return new ConsoleApplication($command, $cwd, $env, $input, $timeout);
+        return new Process($command, $cwd, $env, $input, $timeout);
     }
 }
