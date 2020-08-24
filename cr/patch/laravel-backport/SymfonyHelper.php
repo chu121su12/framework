@@ -80,6 +80,10 @@ class SymfonyHelper
 
         $timeout = cast_to_float($timeout, null);
 
+        if (windows_os()) {
+            return new Process($command, $cwd, null, $input, $timeout);
+        }
+
         return new Process($command, $cwd, $env, $input, $timeout);
     }
 }
