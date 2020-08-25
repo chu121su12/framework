@@ -159,6 +159,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
         Mixin::mixin as baseMixin;
     }
     use Options;
+    use Patch\StaticTranslator;
 
     /**
      * Built-in filters.
