@@ -2834,18 +2834,6 @@ class ValidationValidatorTest extends TestCase
         $this->assertTrue($v->passes());
     }
 
-    protected function hasActiveInternetConnection()
-    {
-        $connected = false;
-
-        if ($connection = @fsockopen("google.com", 80)) {
-            $connected = true;
-            fclose($connection);
-        }
-
-        return $connected;
-    }
-
     public function testValidateImage()
     {
         $trans = $this->getIlluminateArrayTranslator();
@@ -5563,6 +5551,18 @@ class ValidationValidatorTest extends TestCase
         return new Translator(
             new ArrayLoader, 'en'
         );
+    }
+
+    protected function hasActiveInternetConnection()
+    {
+        $connected = false;
+
+        if ($connection = @fsockopen("google.com", 80)) {
+            $connected = true;
+            fclose($connection);
+        }
+
+        return $connected;
     }
 }
 

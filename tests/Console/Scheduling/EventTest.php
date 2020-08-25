@@ -17,7 +17,7 @@ class EventTest extends TestCase
     public function testBuildCommandUsingUnix()
     {
         if (windows_os()) {
-            $this->markTestSkipped('Skipping since operating system is Windows');
+            $this->markTestSkipped('The operating system is Windows');
         }
 
         $event = new Event(m::mock(EventMutex::class), 'php -i');
@@ -39,7 +39,7 @@ class EventTest extends TestCase
     public function testBuildCommandInBackgroundUsingUnix()
     {
         if (windows_os()) {
-            $this->markTestSkipped('Skipping since operating system is Windows');
+            $this->markTestSkipped('The operating system is Windows');
         }
 
         $event = new Event(m::mock(EventMutex::class), 'php -i');
