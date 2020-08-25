@@ -2813,6 +2813,10 @@ class ValidationValidatorTest extends TestCase
 
     public function testValidateActiveUrl()
     {
+        if (!$this->hasActiveInternetConnection()) {
+            $this->markTestSkipped('Internet connection may not be available.');
+        }
+
         $trans = $this->getIlluminateArrayTranslator();
         $v = new Validator($trans, ['x' => 'aslsdlks'], ['x' => 'active_url']);
         $this->assertFalse($v->passes());
@@ -2828,6 +2832,18 @@ class ValidationValidatorTest extends TestCase
 
         $v = new Validator($trans, ['x' => 'http://www.google.com/about'], ['x' => 'active_url']);
         $this->assertTrue($v->passes());
+    }
+
+    protected function hasActiveInternetConnection()
+    {
+        $connected = false;
+
+        if ($connection = @fsockopen("google.com", 80)) {
+            $connected = true;
+            fclose($connection);
+        }
+
+        return $connected;
     }
 
     public function testValidateImage()
