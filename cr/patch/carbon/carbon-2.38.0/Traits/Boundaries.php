@@ -26,7 +26,7 @@ use Carbon\Exceptions\UnknownUnitException;
  *
  * Depends on the following methods:
  *
- * @method $this setTime_(int $hour, int $minute, int $second = 0, int $microseconds = 0)
+ * @method $this setTime(int $hour, int $minute, int $second = 0, int $microseconds = 0)
  * @method $this setDate(int $year, int $month, int $day)
  * @method $this addMonths(int $value = 1)
  */

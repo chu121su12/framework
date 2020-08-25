@@ -500,6 +500,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
     public static function createFromFormat($format, $interval = null)
     {
         $format = cast_to_string($format);
+
         $interval = cast_to_string($interval, null);
 
         $instance = new static(0);
