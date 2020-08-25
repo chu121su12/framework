@@ -7,8 +7,8 @@ use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment;
-use Webuni\CommonMark\TableExtension\TableExtension;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
+use Webuni\CommonMark\TableExtension\TableExtension;
 
 class Markdown
 {
