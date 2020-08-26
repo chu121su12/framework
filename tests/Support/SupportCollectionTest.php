@@ -4556,4 +4556,3 @@ class TestCollectionSubclass extends Collection
 {
     //
 }
-
