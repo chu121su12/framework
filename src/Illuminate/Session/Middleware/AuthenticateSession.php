@@ -40,7 +40,8 @@ class AuthenticateSession
         }
 
         if ($this->guard()->viaRemember()) {
-            $passwordHash = explode('|', $request->cookies->get($this->auth->getRecallerName()))[2] ?? null;
+            $recallerCookies = explode('|', $request->cookies->get($this->auth->getRecallerName()));
+            $passwordHash = isset($recallerCookies[2]) ? $recallerCookies[2] : null;
 
             if (! $passwordHash || $passwordHash != $request->user()->getAuthPassword()) {
                 $this->logout($request);
