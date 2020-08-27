@@ -35,16 +35,15 @@ class AuthenticateSession
      */
     public function handle($request, Closure $next)
     {
-        $guard = $this->guard();
-
         if (! $request->hasSession() || ! $request->user()) {
             return $next($request);
         }
 
-        if ($guard->viaRemember()) {
-            $passwordHash = explode('|', $request->cookies->get($guard->getRecallerName()))[2];
+        if ($this->guard()->viaRemember()) {
+            $recallerCookies = explode('|', $request->cookies->get($this->auth->getRecallerName()));
+            $passwordHash = isset($recallerCookies[2]) ? $recallerCookies[2] : null;
 
-            if ($passwordHash != $request->user()->getAuthPassword()) {
+            if (! $passwordHash || $passwordHash != $request->user()->getAuthPassword()) {
                 $this->logout($request);
             }
         }
