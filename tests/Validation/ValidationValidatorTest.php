@@ -2975,7 +2975,7 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator($trans, ['x' => $svgXmlUploadedFile], ['x' => 'dimensions:max_width=1,max_height=1']);
         $this->assertTrue($v->passes());
 
-        $svgXmlFile = new File(__DIR__.'/fixtures/image.svg', '', 'image/svg+xml', null, true);
+        $svgXmlFile = new UploadedFile(__DIR__.'/fixtures/image.svg', '', 'image/svg+xml', null, true);
         $trans = $this->getIlluminateArrayTranslator();
 
         $v = new Validator($trans, ['x' => $svgXmlFile], ['x' => 'dimensions:max_width=1,max_height=1']);
@@ -2990,7 +2990,7 @@ class ValidationValidatorTest extends TestCase
             $this->assertTrue($v->passes());
         }
 
-        $svgFile = new File(__DIR__.'/fixtures/image2.svg', '', 'image/svg', null, true);
+        $svgFile = new UploadedFile(__DIR__.'/fixtures/image2.svg', '', 'image/svg', null, true);
         $trans = $this->getIlluminateArrayTranslator();
 
         $v = new Validator($trans, ['x' => $svgFile], ['x' => 'dimensions:max_width=1,max_height=1']);
