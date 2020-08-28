@@ -65,20 +65,20 @@ class RedisConnectorTest extends TestCase
         $this->assertEquals($host, $parameters->host);
         $this->assertEquals($port, $parameters->port);
 
-        // $this->markTestSkipped('Before php 7, Redis::connect on phpredis may throw RedisException: php_network_getaddresses: getaddrinfo failed: Name or service not known.');
+        $phpRedis = new RedisManager(new Application, 'phpredis', [
+            'cluster' => false,
+            'options' => [
+                'prefix' => 'test_',
+            ],
+            'default' => [
+                'url' => "redis://{$host}:{$port}",
+                'database' => 5,
+                'timeout' => 0.5,
+            ],
+        ]);
 
+        // $this->markTestSkipped('Before php 7, Redis::connect on phpredis may throw RedisException: php_network_getaddresses: getaddrinfo failed: Name or service not known.');
         if (!version_compare(PHP_VERSION, '7.0.0', '<')) {
-            $phpRedis = new RedisManager(new Application, 'phpredis', [
-                'cluster' => false,
-                'options' => [
-                    'prefix' => 'test_',
-                ],
-                'default' => [
-                    'url' => "redis://{$host}:{$port}",
-                    'database' => 5,
-                    'timeout' => 0.5,
-                ],
-            ]);
             $phpRedisClient = $phpRedis->connection()->client();
             $this->assertEquals("tcp://{$host}", $phpRedisClient->getHost());
             $this->assertEquals($port, $phpRedisClient->getPort());
@@ -107,20 +107,20 @@ class RedisConnectorTest extends TestCase
         $this->assertEquals($host, $parameters->host);
         $this->assertEquals($port, $parameters->port);
 
-        // $this->markTestSkipped('Before php 7, Redis::connect on phpredis may throw RedisException: php_network_getaddresses: getaddrinfo failed: Name or service not known.');
+        $phpRedis = new RedisManager(new Application, 'phpredis', [
+            'cluster' => false,
+            'options' => [
+                'prefix' => 'test_',
+            ],
+            'default' => [
+                'url' => "tcp://{$host}:{$port}",
+                'database' => 5,
+                'timeout' => 0.5,
+            ],
+        ]);
 
+        // $this->markTestSkipped('Before php 7, Redis::connect on phpredis may throw RedisException: php_network_getaddresses: getaddrinfo failed: Name or service not known.');
         if (!version_compare(PHP_VERSION, '7.0.0', '<')) {
-            $phpRedis = new RedisManager(new Application, 'phpredis', [
-                'cluster' => false,
-                'options' => [
-                    'prefix' => 'test_',
-                ],
-                'default' => [
-                    'url' => "tcp://{$host}:{$port}",
-                    'database' => 5,
-                    'timeout' => 0.5,
-                ],
-            ]);
             $phpRedisClient = $phpRedis->connection()->client();
             $this->assertEquals("tcp://{$host}", $phpRedisClient->getHost());
             $this->assertEquals($port, $phpRedisClient->getPort());
@@ -151,22 +151,22 @@ class RedisConnectorTest extends TestCase
         $this->assertEquals($host, $parameters->host);
         $this->assertEquals($port, $parameters->port);
 
-        // $this->markTestSkipped('Before php 7, Redis::connect on phpredis may throw RedisException: php_network_getaddresses: getaddrinfo failed: Name or service not known.');
+        $phpRedis = new RedisManager(new Application, 'phpredis', [
+            'cluster' => false,
+            'options' => [
+                'prefix' => 'test_',
+            ],
+            'default' => [
+                'scheme' => 'tcp',
+                'host' => $host,
+                'port' => $port,
+                'database' => 5,
+                'timeout' => 0.5,
+            ],
+        ]);
 
+        // $this->markTestSkipped('Before php 7, Redis::connect on phpredis may throw RedisException: php_network_getaddresses: getaddrinfo failed: Name or service not known.');
         if (!version_compare(PHP_VERSION, '7.0.0', '<')) {
-            $phpRedis = new RedisManager(new Application, 'phpredis', [
-                'cluster' => false,
-                'options' => [
-                    'prefix' => 'test_',
-                ],
-                'default' => [
-                    'scheme' => 'tcp',
-                    'host' => $host,
-                    'port' => $port,
-                    'database' => 5,
-                    'timeout' => 0.5,
-                ],
-            ]);
             $phpRedisClient = $phpRedis->connection()->client();
             $this->assertEquals("tcp://{$host}", $phpRedisClient->getHost());
             $this->assertEquals($port, $phpRedisClient->getPort());
