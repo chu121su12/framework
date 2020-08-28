@@ -481,7 +481,7 @@ trait ValidatesAttributes
             return true;
         }
 
-        if (! $this->isValidFileInstance($value) || ! $sizeDetails = @getimagesize($value->getRealPath())) {
+        if (! $this->isValidFileInstance($value) || ! $sizeDetails = $this->getimagesize($value->getRealPath())) {
             return false;
         }
 
@@ -497,6 +497,20 @@ trait ValidatesAttributes
         }
 
         return true;
+    }
+
+    protected function getimagesize($filePath)
+    {
+        if (Str::endsWith($filePath, '.svg')) {
+            if (!($xml = @simplexml_load_string(file_get_contents($filePath)))) {
+                return false;
+            }
+
+            $xmlAttributes = $xml->attributes();
+            return [(int) $xmlAttributes->width, (int) $xmlAttributes->height];
+        }
+
+        return @getimagesize($filePath);
     }
 
     /**
