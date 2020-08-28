@@ -12,10 +12,21 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-use PHPUnit_Framework_AssertionFailedError as AssertionFailedError;
-use PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
-// use PHPUnit\Framework\AssertionFailedError;
-// use PHPUnit\Framework\ExpectationFailedException;
+if (!class_exists('AssertionFailedError')) {
+    if (class_exists('PHPUnit_Framework_AssertionFailedError')) {
+        class_alias(\PHPUnit_Framework_AssertionFailedError::class, 'AssertionFailedError');
+    } else {
+        class_alias(\PHPUnit\Framework\AssertionFailedError::class, 'AssertionFailedError');
+    }
+}
+
+if (!class_exists('ExpectationFailedException')) {
+    if (class_exists('PHPUnit_Framework_ExpectationFailedException')) {
+        class_alias(\PHPUnit_Framework_ExpectationFailedException::class, 'ExpectationFailedException');
+    } else {
+        class_alias(\PHPUnit\Framework\ExpectationFailedException::class, 'ExpectationFailedException');
+    }
+}
 
 class TestResponseTest_testAssertViewHasModel_class extends Model {
             public function is($model)
