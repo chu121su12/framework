@@ -213,6 +213,10 @@ abstract class Connection
      */
     public function __call($method, $parameters)
     {
+        if ($method === 'eval_') {
+            $method = 'eval';
+        }
+
         if (static::hasMacro($method)) {
             return $this->macroCall($method, $parameters);
         }

@@ -784,7 +784,7 @@ class RedisConnectionTest extends TestCase
                 'host' => $host,
                 'port' => $port,
                 'database' => 7,
-                'options' => ['serializer' => Redis::SERIALIZER_JSON],
+                'options' => ['serializer' => defined('Redis::SERIALIZER_JSON') ? Redis::SERIALIZER_JSON : null],
                 'timeout' => 0.5,
             ],
         ]);
@@ -801,7 +801,9 @@ class RedisConnectionTest extends TestCase
         ]);
 
         $connections[] = $prefixedPhpredis->connection();
-        $connections[] = $serializerPhpRedis->connection();
+        if (defined('Redis::SERIALIZER_JSON')) {
+            $connections[] = $serializerPhpRedis->connection();
+        }
         $connections[] = $scanRetryPhpRedis->connection();
         $connections['persistent'] = $persistentPhpRedis->connection();
 
