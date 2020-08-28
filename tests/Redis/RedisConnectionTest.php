@@ -800,7 +800,10 @@ class RedisConnectionTest extends TestCase
             ],
         ]);
 
-        $connections[] = $prefixedPhpredis->connection();
+        try {
+            $connections[] = $prefixedPhpredis->connection();
+        } catch (\RedisException $e) {
+        }
         if (defined('Redis::SERIALIZER_JSON')) {
             $connections[] = $serializerPhpRedis->connection();
         }
