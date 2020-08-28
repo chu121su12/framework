@@ -37,6 +37,7 @@ class CookieTest extends TestCase
 
         $c3 = $cookie->forget('color');
         $this->assertNull($c3->getValue());
+        // This test will fail if ran standalone. Run with filter 'Illuminate\\Tests\\C'
         $this->assertTrue($c3->getExpiresTime() < time());
     }
 
