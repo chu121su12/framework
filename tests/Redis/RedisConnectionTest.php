@@ -472,7 +472,7 @@ class RedisConnectionTest extends TestCase
     public function testItRunsEval()
     {
         foreach ($this->connections() as $redis) {
-            $redis->eval('redis.call("set", KEYS[1], ARGV[1])', 1, 'name', 'mohamed');
+            $redis->eval_('redis.call("set", KEYS[1], ARGV[1])', 1, 'name', 'mohamed');
             $this->assertSame('mohamed', $redis->get('name'));
 
             $redis->flushall();

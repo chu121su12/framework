@@ -444,7 +444,7 @@ class PhpRedisConnection extends Connection implements ConnectionContract
      * @param  dynamic  $arguments
      * @return mixed
      */
-    public function evaluate($script, $numberOfKeys, ...$arguments)
+    public function eval_($script, $numberOfKeys, ...$arguments)
     {
         return $this->command('eval', [$script, $arguments, $numberOfKeys]);
     }

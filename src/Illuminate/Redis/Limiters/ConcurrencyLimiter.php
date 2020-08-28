@@ -104,7 +104,7 @@ class ConcurrencyLimiter
             return $this->name.$i;
         }, range(1, $this->maxLocks));
 
-        return $this->redis->eval(...array_merge(
+        return $this->redis->eval_(...array_merge(
             [$this->lockScript(), count($slots)],
             array_merge($slots, [$this->name, $this->releaseAfter, $id])
         ));
@@ -141,7 +141,7 @@ LUA;
      */
     protected function release($key, $id)
     {
-        $this->redis->eval($this->releaseScript(), 1, $key, $id);
+        $this->redis->eval_($this->releaseScript(), 1, $key, $id);
     }
 
     /**
