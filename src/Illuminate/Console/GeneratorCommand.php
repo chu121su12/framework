@@ -401,7 +401,7 @@ abstract class GeneratorCommand extends Command
      */
     protected function viewPath($path = '')
     {
-        $views = isset($this->laravel['config']
+        $views = isset($this->laravel['config'])
             && isset($this->laravel['config']['view.paths'])
             && isset($this->laravel['config']['view.paths'][0])
             ? $this->laravel['config']['view.paths'][0]
