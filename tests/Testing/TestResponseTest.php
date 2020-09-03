@@ -12,19 +12,19 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-if (!class_exists('AssertionFailedError')) {
+if (!class_exists('Illuminate\Tests\Foundation\AssertionFailedError')) {
     if (class_exists('PHPUnit_Framework_AssertionFailedError')) {
-        class_alias(\PHPUnit_Framework_AssertionFailedError::class, 'AssertionFailedError');
+        class_alias(\PHPUnit_Framework_AssertionFailedError::class, 'Illuminate\Tests\Foundation\AssertionFailedError');
     } else {
-        class_alias(\PHPUnit\Framework\AssertionFailedError::class, 'AssertionFailedError');
+        class_alias(\PHPUnit\Framework\AssertionFailedError::class, 'Illuminate\Tests\Foundation\AssertionFailedError');
     }
 }
 
-if (!class_exists('ExpectationFailedException')) {
+if (!class_exists('Illuminate\Tests\Foundation\ExpectationFailedException')) {
     if (class_exists('PHPUnit_Framework_ExpectationFailedException')) {
-        class_alias(\PHPUnit_Framework_ExpectationFailedException::class, 'ExpectationFailedException');
+        class_alias(\PHPUnit_Framework_ExpectationFailedException::class, 'Illuminate\Tests\Foundation\ExpectationFailedException');
     } else {
-        class_alias(\PHPUnit\Framework\ExpectationFailedException::class, 'ExpectationFailedException');
+        class_alias(\PHPUnit\Framework\ExpectationFailedException::class, 'Illuminate\Tests\Foundation\ExpectationFailedException');
     }
 }
 

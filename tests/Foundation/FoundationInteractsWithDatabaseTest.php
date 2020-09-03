@@ -10,11 +10,11 @@ use Illuminate\Foundation\Testing\Concerns\InteractsWithDatabase;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
-if (!class_exists('ExpectationFailedException')) {
+if (!class_exists('Illuminate\Tests\Foundation\ExpectationFailedException')) {
     if (class_exists('PHPUnit_Framework_ExpectationFailedException')) {
-        class_alias(\PHPUnit_Framework_ExpectationFailedException::class, 'ExpectationFailedException');
+        class_alias(\PHPUnit_Framework_ExpectationFailedException::class, 'Illuminate\Tests\Foundation\ExpectationFailedException');
     } else {
-        class_alias(\PHPUnit\Framework\ExpectationFailedException::class, 'ExpectationFailedException');
+        class_alias(\PHPUnit\Framework\ExpectationFailedException::class, 'Illuminate\Tests\Foundation\ExpectationFailedException');
     }
 }
 
