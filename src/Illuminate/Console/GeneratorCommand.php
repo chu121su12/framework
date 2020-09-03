@@ -401,7 +401,11 @@ abstract class GeneratorCommand extends Command
      */
     protected function viewPath($path = '')
     {
-        $views = $this->laravel['config']['view.paths'][0] ?? resource_path('views');
+        $views = isset($this->laravel['config']
+            && isset($this->laravel['config']['view.paths'])
+            && isset($this->laravel['config']['view.paths'][0])
+            ? $this->laravel['config']['view.paths'][0]
+            : resource_path('views');
 
         return $views.($path ? DIRECTORY_SEPARATOR.$path : $path);
     }
