@@ -103,22 +103,22 @@
             "vendor/symfony/http-kernel/Exception"
         ],
         "files": [
-            "cr/patch/symfony/polyfill-php80-1.18/bootstrap.php",
+            "cr/patch/symfony/polyfill-php80/bootstrap.php",
             "cr/helpers/backport.php",
             "cr/helpers/casts.php",
-            "cr/symfony/deprecation-contracts-2.1.3/function.php",
+            "cr/symfony/deprecation-contracts/function.php",
             "src/Illuminate/Collections/helpers.php",
             "src/Illuminate/Events/functions.php",
             "src/Illuminate/Foundation/helpers.php",
             "src/Illuminate/Support/helpers.php"
         ],
         "psr-4": {
-            "Symfony\\Polyfill\\Php80\\": "cr/patch/symfony/polyfill-php80-1.18/",
-            "Symfony\\Component\\ErrorHandler\\": "cr/symfony/error-handler-5.1.3/",
-            "Symfony\\Component\\HttpKernel\\Exception\\": "cr/patch/symfony/http-kernel-5.1.3/Exception/",
-            "Symfony\\Component\\Mime\\": "cr/symfony/mime-5.1.3/",
-            "Symfony\\Component\\Routing\\": "cr/symfony/routing-5.1.3/",
-            "Carbon\\": "cr/patch/carbon/carbon-2.39.0/",
+            "Symfony\\Polyfill\\Php80\\": "cr/patch/symfony/polyfill-php80/",
+            "Symfony\\Component\\ErrorHandler\\": "cr/symfony/error-handler/",
+            "Symfony\\Component\\HttpKernel\\Exception\\": "cr/patch/symfony/http-kernel/Exception/",
+            "Symfony\\Component\\Mime\\": "cr/symfony/mime/",
+            "Symfony\\Component\\Routing\\": "cr/symfony/routing/",
+            "Carbon\\": "cr/patch/carbon/carbon/",
             "Doctrine\\Inflector\\": "cr/patch/doctrine-inflector-src/",
             "Illuminate\\": "src/Illuminate/",
             "Illuminate\\Support\\": ["src/Illuminate/Macroable/", "src/Illuminate/Collections/"],
@@ -127,7 +127,7 @@
             "CR\\LaravelBackport\\": "cr/patch/laravel-backport/"
         },
         "classmap": [
-            "cr/patch/symfony/polyfill-php80-1.18/Resources/stubs"
+            "cr/patch/symfony/polyfill-php80/Resources/stubs"
         ]
     },
     "autoload-dev": {
