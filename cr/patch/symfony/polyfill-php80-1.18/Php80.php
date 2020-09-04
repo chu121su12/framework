@@ -22,6 +22,10 @@ final class Php80
 {
     public static function fdiv($dividend, $divisor)
     {
+        $dividend = cast_to_float($dividend);
+
+        $divisor = cast_to_float($divisor);
+
         return @($dividend / $divisor);
     }
 
@@ -90,16 +94,28 @@ final class Php80
 
     public static function str_contains($haystack, $needle)
     {
+        $haystack = cast_to_string($haystack);
+
+        $needle = cast_to_string($needle);
+
         return '' === $needle || false !== strpos($haystack, $needle);
     }
 
     public static function str_starts_with($haystack, $needle)
     {
+        $haystack = cast_to_string($haystack);
+
+        $needle = cast_to_string($needle);
+
         return 0 === \strncmp($haystack, $needle, \strlen($needle));
     }
 
     public static function str_ends_with($haystack, $needle)
     {
+        $haystack = cast_to_string($haystack);
+
+        $needle = cast_to_string($needle);
+
         return '' === $needle || ('' !== $haystack && 0 === \substr_compare($haystack, $needle, -\strlen($needle)));
     }
 }
