@@ -41,7 +41,7 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
     /**
      * {@inheritdoc}
      */
-    public function isGuesserSupported()
+    public function isGuesserSupported() //// bool
     {
         static $supported = null;
 
@@ -63,7 +63,7 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
     /**
      * {@inheritdoc}
      */
-    public function guessMimeType($path)
+    public function guessMimeType($path) //// ?string
     {
         $path = cast_to_string($path);
 

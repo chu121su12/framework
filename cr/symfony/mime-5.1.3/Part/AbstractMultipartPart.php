@@ -33,17 +33,17 @@ abstract class AbstractMultipartPart extends AbstractPart
     /**
      * @return AbstractPart[]
      */
-    public function getParts()
+    public function getParts() //// array
     {
         return $this->parts;
     }
 
-    public function getMediaType()
+    public function getMediaType() //// string
     {
         return 'multipart';
     }
 
-    public function getPreparedHeaders()
+    public function getPreparedHeaders() // Headers
     {
         $headers = parent::getPreparedHeaders();
         $headers->setHeaderParameter('Content-Type', 'boundary', $this->getBoundary());
@@ -51,7 +51,7 @@ abstract class AbstractMultipartPart extends AbstractPart
         return $headers;
     }
 
-    public function bodyToString()
+    public function bodyToString() //// string
     {
         $parts = $this->getParts();
         $string = '';
@@ -63,7 +63,7 @@ abstract class AbstractMultipartPart extends AbstractPart
         return $string;
     }
 
-    public function bodyToIterable()
+    public function bodyToIterable() //// iterable
     {
         $parts = $this->getParts();
         foreach ($parts as $part) {
@@ -77,7 +77,7 @@ abstract class AbstractMultipartPart extends AbstractPart
         yield '--'.$this->getBoundary()."--\r\n";
     }
 
-    public function asDebugString()
+    public function asDebugString() //// string
     {
         $str = parent::asDebugString();
         foreach ($this->getParts() as $part) {
@@ -91,7 +91,7 @@ abstract class AbstractMultipartPart extends AbstractPart
         return $str;
     }
 
-    private function getBoundary()
+    private function getBoundary() //// string
     {
         if (null === $this->boundary) {
             $this->boundary = strtr(base64_encode(random_bytes(6)), '+/', '-_');

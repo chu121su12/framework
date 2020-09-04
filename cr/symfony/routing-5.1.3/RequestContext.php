@@ -61,7 +61,7 @@ class RequestContext
         $this->setQueryString($queryString);
     }
 
-    public static function fromUri($uri, $host = 'localhost', $scheme = 'http', $httpPort = 80, $httpsPort = 443)
+    public static function fromUri($uri, $host = 'localhost', $scheme = 'http', $httpPort = 80, $httpsPort = 443) /// self
     {
         $uri = cast_to_string($uri);
 
@@ -368,7 +368,7 @@ class RequestContext
         return $this;
     }
 
-    public function isSecure()
+    public function isSecure() //// bool
     {
         return 'https' === $this->scheme;
     }

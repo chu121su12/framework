@@ -28,6 +28,7 @@ class AddMimeTypeGuesserPass implements CompilerPassInterface
     public function __construct($mimeTypesService = 'mime_types', $mimeTypeGuesserTag = 'mime.mime_type_guesser')
     {
         $mimeTypeGuesserTag = cast_to_string($mimeTypeGuesserTag);
+
         $mimeTypesService = cast_to_string($mimeTypesService);
 
         $this->mimeTypesService = $mimeTypesService;

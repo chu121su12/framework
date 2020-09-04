@@ -38,7 +38,7 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
     /**
      * {@inheritdoc}
      */
-    public function isGuesserSupported()
+    public function isGuesserSupported() //// bool
     {
         return \function_exists('finfo_open');
     }
@@ -46,7 +46,7 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
     /**
      * {@inheritdoc}
      */
-    public function guessMimeType($path)
+    public function guessMimeType($path) //// ?string
     {
         $path = cast_to_string($path);
 

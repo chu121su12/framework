@@ -68,7 +68,7 @@ class Route implements \Serializable
         $this->setCondition($condition);
     }
 
-    public function __serialize()
+    public function __serialize() //// array
     {
         return [
             'path' => $this->path,
@@ -86,12 +86,12 @@ class Route implements \Serializable
     /**
      * @internal
      */
-    final public function serialize()
+    final public function serialize() //// string
     {
         return serialize($this->__serialize());
     }
 
-    public function __unserialize(array $data)
+    public function __unserialize(array $data) /// void
     {
         $this->path = $data['path'];
         $this->host = $data['host'];
@@ -599,7 +599,7 @@ class Route implements \Serializable
         return $regex;
     }
 
-    private function isLocalized()
+    private function isLocalized() //// bool
     {
         return isset($this->defaults['_locale']) && isset($this->defaults['_canonical_route']) && (isset($this->requirements['_locale']) ? $this->requirements['_locale'] : null) === preg_quote($this->defaults['_locale']);
     }

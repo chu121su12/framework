@@ -33,7 +33,7 @@ final class EmailHeaderSame extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function toString()
+    public function toString() //// string
     {
         return sprintf('has header "%s" with value "%s"', $this->headerName, $this->expectedValue);
     }
@@ -43,7 +43,7 @@ final class EmailHeaderSame extends Constraint
      *
      * {@inheritdoc}
      */
-    protected function matches($message)
+    protected function matches($message) //// bool
     {
         if (RawMessage::class === \get_class($message)) {
             throw new \LogicException('Unable to test a message header on a RawMessage instance.');
@@ -57,12 +57,12 @@ final class EmailHeaderSame extends Constraint
      *
      * {@inheritdoc}
      */
-    protected function failureDescription($message)
+    protected function failureDescription($message) //// string
     {
         return sprintf('the Email %s (value is %s)', $this->toString(), $this->getHeaderValue($message));
     }
 
-    private function getHeaderValue($message)
+    private function getHeaderValue($message) //// string
     {
         $header = $message->getHeaders()->get($this->headerName);
 

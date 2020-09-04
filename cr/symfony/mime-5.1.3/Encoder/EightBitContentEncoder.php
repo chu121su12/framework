@@ -16,7 +16,7 @@ namespace Symfony\Component\Mime\Encoder;
  */
 final class EightBitContentEncoder implements ContentEncoderInterface
 {
-    public function encodeByteStream($stream, $maxLineLength = 0)
+    public function encodeByteStream($stream, $maxLineLength = 0) //// iterable
     {
         $maxLineLength = cast_to_int($maxLineLength);
 
@@ -25,12 +25,12 @@ final class EightBitContentEncoder implements ContentEncoderInterface
         }
     }
 
-    public function getName()
+    public function getName() //// string
     {
         return '8bit';
     }
 
-    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
+    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0) //// string
     {
         $string = cast_to_string($string);
 

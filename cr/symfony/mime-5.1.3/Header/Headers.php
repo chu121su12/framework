@@ -55,7 +55,7 @@ final class Headers
         }
     }
 
-    public function getMaxLineLength()
+    public function getMaxLineLength() //// int
     {
         return $this->lineLength;
     }
@@ -65,7 +65,7 @@ final class Headers
      *
      * @return $this
      */
-    public function addMailboxListHeader($name, array $addresses)
+    public function addMailboxListHeader($name, array $addresses) /// self
     {
         $name = cast_to_string($name);
 
@@ -77,7 +77,7 @@ final class Headers
      *
      * @return $this
      */
-    public function addMailboxHeader($name, $address)
+    public function addMailboxHeader($name, $address) /// self
     {
         $name = cast_to_string($name);
 
@@ -89,7 +89,7 @@ final class Headers
      *
      * @return $this
      */
-    public function addIdHeader($name, $ids)
+    public function addIdHeader($name, $ids) /// self
     {
         $name = cast_to_string($name);
 
@@ -101,7 +101,7 @@ final class Headers
      *
      * @return $this
      */
-    public function addPathHeader($name, $path)
+    public function addPathHeader($name, $path) /// self
     {
         $name = cast_to_string($name);
 
@@ -111,7 +111,7 @@ final class Headers
     /**
      * @return $this
      */
-    public function addDateHeader($name, \DateTimeInterface $dateTime)
+    public function addDateHeader($name, \DateTimeInterface $dateTime) /// self
     {
         $name = cast_to_string($name);
 
@@ -121,7 +121,7 @@ final class Headers
     /**
      * @return $this
      */
-    public function addTextHeader($name, $value)
+    public function addTextHeader($name, $value) /// self
     {
         $value = cast_to_string($value);
 
@@ -133,7 +133,7 @@ final class Headers
     /**
      * @return $this
      */
-    public function addParameterizedHeader($name, $value, array $params = [])
+    public function addParameterizedHeader($name, $value, array $params = []) /// self
     {
         $value = cast_to_string($value);
 
@@ -142,7 +142,7 @@ final class Headers
         return $this->add(new ParameterizedHeader($name, $value, $params));
     }
 
-    public function has($name)
+    public function has($name) //// bool
     {
         $name = cast_to_string($name);
 
@@ -152,7 +152,7 @@ final class Headers
     /**
      * @return $this
      */
-    public function add(HeaderInterface $header)
+    public function add(HeaderInterface $header) /// self
     {
         static $map = [
             'date' => DateHeader::class,
@@ -184,7 +184,7 @@ final class Headers
         return $this;
     }
 
-    public function get($name)
+    public function get($name) // ?HeaderInterface
     {
         $name = cast_to_string($name);
 
@@ -198,7 +198,7 @@ final class Headers
         return array_shift($values);
     }
 
-    public function all($name = null)
+    public function all($name = null) //// iterable
     {
         $name = cast_to_string($name, null);
 
@@ -215,26 +215,26 @@ final class Headers
         }
     }
 
-    public function getNames()
+    public function getNames() //// array
     {
         return array_keys($this->headers);
     }
 
-    public function remove($name)
+    public function remove($name) /// void
     {
         $name = cast_to_string($name);
 
         unset($this->headers[strtolower($name)]);
     }
 
-    public static function isUniqueHeader($name)
+    public static function isUniqueHeader($name) //// bool
     {
         $name = cast_to_string($name);
 
         return \in_array($name, self::$uniqueHeaders, true);
     }
 
-    public function toString()
+    public function toString() //// string
     {
         $string = '';
         foreach ($this->toArray() as $str) {
@@ -244,7 +244,7 @@ final class Headers
         return $string;
     }
 
-    public function toArray()
+    public function toArray() //// array
     {
         $arr = [];
         foreach ($this->all() as $header) {
@@ -267,7 +267,7 @@ final class Headers
     /**
      * @internal
      */
-    public function setHeaderBody($type, $name, $body)
+    public function setHeaderBody($type, $name, $body) /// void
     {
         $name = cast_to_string($name);
 
@@ -283,7 +283,7 @@ final class Headers
     /**
      * @internal
      */
-    public function getHeaderParameter($name, $parameter)
+    public function getHeaderParameter($name, $parameter) //// ?string
     {
         $parameter = cast_to_string($parameter);
 
@@ -304,7 +304,7 @@ final class Headers
     /**
      * @internal
      */
-    public function setHeaderParameter($name, $parameter, $value)
+    public function setHeaderParameter($name, $parameter, $value) /// void
     {
         $parameter = cast_to_string($parameter);
 

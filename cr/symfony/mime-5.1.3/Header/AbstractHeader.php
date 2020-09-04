@@ -43,7 +43,7 @@ abstract class AbstractHeader implements HeaderInterface
         $this->charset = $charset;
     }
 
-    public function getCharset()
+    public function getCharset() //// ?string
     {
         return $this->charset;
     }
@@ -60,12 +60,12 @@ abstract class AbstractHeader implements HeaderInterface
         $this->lang = $lang;
     }
 
-    public function getLanguage()
+    public function getLanguage() //// ?string
     {
         return $this->lang;
     }
 
-    public function getName()
+    public function getName() //// string
     {
         return $this->name;
     }
@@ -77,12 +77,12 @@ abstract class AbstractHeader implements HeaderInterface
         $this->lineLength = $lineLength;
     }
 
-    public function getMaxLineLength()
+    public function getMaxLineLength() //// int
     {
         return $this->lineLength;
     }
 
-    public function toString()
+    public function toString() //// string
     {
         return $this->tokensToString($this->toTokens());
     }
@@ -93,7 +93,7 @@ abstract class AbstractHeader implements HeaderInterface
      * @param string $string  as displayed
      * @param bool   $shorten the first line to make remove for header name
      */
-    protected function createPhrase(HeaderInterface $header, $string, $charset, $shorten = false)
+    protected function createPhrase(HeaderInterface $header, $string, $charset, $shorten = false) //// string
     {
         $charset = cast_to_string($charset);
 
@@ -131,7 +131,7 @@ abstract class AbstractHeader implements HeaderInterface
     /**
      * Encode needed word tokens within a string of input.
      */
-    protected function encodeWords(HeaderInterface $header, $input, $usedLength = -1)
+    protected function encodeWords(HeaderInterface $header, $input, $usedLength = -1) //// string
     {
         $input = cast_to_string($input);
 
@@ -163,7 +163,7 @@ abstract class AbstractHeader implements HeaderInterface
         return $value;
     }
 
-    protected function tokenNeedsEncoding($token)
+    protected function tokenNeedsEncoding($token) //// bool
     {
         $token = cast_to_string($token);
 
@@ -175,7 +175,7 @@ abstract class AbstractHeader implements HeaderInterface
      *
      * @return string[]
      */
-    protected function getEncodableWordTokens($string)
+    protected function getEncodableWordTokens($string) //// array
     {
         $string = cast_to_string($string);
 
@@ -203,7 +203,7 @@ abstract class AbstractHeader implements HeaderInterface
     /**
      * Get a token as an encoded word for safe insertion into headers.
      */
-    protected function getTokenAsEncodedWord($token, $firstLineOffset = 0)
+    protected function getTokenAsEncodedWord($token, $firstLineOffset = 0) //// string
     {
         $token = cast_to_string($token);
 
@@ -244,7 +244,7 @@ abstract class AbstractHeader implements HeaderInterface
      *
      * @return string[]
      */
-    protected function generateTokenLines($token)
+    protected function generateTokenLines($token) //// array
     {
         $token = cast_to_string($token);
 
@@ -254,7 +254,7 @@ abstract class AbstractHeader implements HeaderInterface
     /**
      * Generate a list of all tokens in the final header.
      */
-    protected function toTokens($string = null)
+    protected function toTokens($string = null) //// array
     {
         $string = cast_to_string($string, null);
 
@@ -280,7 +280,7 @@ abstract class AbstractHeader implements HeaderInterface
      *
      * @param string[] $tokens
      */
-    private function tokensToString(array $tokens)
+    private function tokensToString(array $tokens) //// string
     {
         $lineCount = 0;
         $headerLines = [];

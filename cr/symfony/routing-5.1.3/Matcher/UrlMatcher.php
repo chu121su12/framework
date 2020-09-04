@@ -275,7 +275,7 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
     /**
      * @internal
      */
-    protected function createRequest($pathinfo)
+    protected function createRequest($pathinfo) // ?Request
     {
         $pathinfo = cast_to_string($pathinfo);
 

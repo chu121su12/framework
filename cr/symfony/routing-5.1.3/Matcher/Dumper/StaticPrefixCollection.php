@@ -47,7 +47,7 @@ class StaticPrefixCollection
         $this->prefix = $prefix;
     }
 
-    public function getPrefix()
+    public function getPrefix() //// string
     {
         return $this->prefix;
     }
@@ -55,7 +55,7 @@ class StaticPrefixCollection
     /**
      * @return array[]|self[]
      */
-    public function getRoutes()
+    public function getRoutes() //// array
     {
         return $this->items;
     }
@@ -130,7 +130,7 @@ class StaticPrefixCollection
     /**
      * Linearizes back a set of nested routes into a collection.
      */
-    public function populateCollection(RouteCollection $routes)
+    public function populateCollection(RouteCollection $routes) // RouteCollection
     {
         foreach ($this->items as $route) {
             if ($route instanceof self) {
@@ -148,7 +148,7 @@ class StaticPrefixCollection
      *
      * The static prefix stops at last at the first opening bracket.
      */
-    private function getCommonPrefix($prefix, $anotherPrefix)
+    private function getCommonPrefix($prefix, $anotherPrefix) //// array
     {
         $anotherPrefix = cast_to_string($anotherPrefix);
 

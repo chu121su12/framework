@@ -55,7 +55,7 @@ class CollectionConfigurator
     /**
      * Creates a sub-collection.
      */
-    final public function collection($name = '')
+    final public function collection($name = '') /// self
     {
         $name = cast_to_string($name);
 
@@ -69,7 +69,7 @@ class CollectionConfigurator
      *
      * @return $this
      */
-    final public function prefix($prefix)
+    final public function prefix($prefix) /// self
     {
         if (\is_array($prefix)) {
             if (null === $this->parentPrefixes) {
@@ -102,14 +102,14 @@ class CollectionConfigurator
      *
      * @return $this
      */
-    final public function host($host)
+    final public function host($host) /// self
     {
         $this->host = $host;
 
         return $this;
     }
 
-    private function createRoute($path)
+    private function createRoute($path) // Route
     {
         $path = cast_to_string($path);
 

@@ -18,7 +18,7 @@ use Symfony\Component\Mime\Part\AbstractMultipartPart;
  */
 final class MixedPart extends AbstractMultipartPart
 {
-    public function getMediaSubtype()
+    public function getMediaSubtype() //// string
     {
         return 'mixed';
     }

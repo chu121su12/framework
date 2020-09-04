@@ -374,7 +374,7 @@ class Router implements RouterInterface, RequestMatcherInterface
      * Provides the ConfigCache factory implementation, falling back to a
      * default implementation if necessary.
      */
-    private function getConfigCacheFactory()
+    private function getConfigCacheFactory() // ConfigCacheFactoryInterface
     {
         if (null === $this->configCacheFactory) {
             $this->configCacheFactory = new ConfigCacheFactory($this->options['debug']);
@@ -383,7 +383,7 @@ class Router implements RouterInterface, RequestMatcherInterface
         return $this->configCacheFactory;
     }
 
-    private static function getCompiledRoutes($path)
+    private static function getCompiledRoutes($path) //// array
     {
         $path = cast_to_string($path);
 

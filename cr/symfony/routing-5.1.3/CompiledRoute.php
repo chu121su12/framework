@@ -55,7 +55,7 @@ class CompiledRoute implements \Serializable
         $this->variables = $variables;
     }
 
-    public function __serialize()
+    public function __serialize() //// array
     {
         return [
             'vars' => $this->variables,
@@ -72,12 +72,12 @@ class CompiledRoute implements \Serializable
     /**
      * @internal
      */
-    final public function serialize()
+    final public function serialize() //// string
     {
         return serialize($this->__serialize());
     }
 
-    public function __unserialize(array $data)
+    public function __unserialize(array $data) /// void
     {
         $this->variables = $data['vars'];
         $this->staticPrefix = $data['path_prefix'];

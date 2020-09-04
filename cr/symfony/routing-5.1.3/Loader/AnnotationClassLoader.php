@@ -318,7 +318,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
         return $globals;
     }
 
-    private function resetGlobals()
+    private function resetGlobals() //// array
     {
         return [
             'path' => null,

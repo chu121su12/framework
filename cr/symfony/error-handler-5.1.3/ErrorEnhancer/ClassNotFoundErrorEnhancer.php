@@ -84,7 +84,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
      *
      * Returns an array of possible fully qualified class names
      */
-    private function getClassCandidates($class)
+    private function getClassCandidates($class) //// array
     {
         $class = cast_to_string($class);
 
@@ -126,10 +126,12 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         return array_unique($classes);
     }
 
-    private function findClassInPath($path, $class, $prefix)
+    private function findClassInPath($path, $class, $prefix) //// array
     {
         $prefix = cast_to_string($prefix);
+
         $class = cast_to_string($class);
+
         $path = cast_to_string($path);
 
         if (!$path = realpath($path.'/'.strtr($prefix, '\\_', '//')) ?: realpath($path.'/'.\dirname(strtr($prefix, '\\_', '//'))) ?: realpath($path)) {
@@ -147,10 +149,12 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         return $classes;
     }
 
-    private function convertFileToClass($path, $file, $prefix)
+    private function convertFileToClass($path, $file, $prefix) //// ?string
     {
         $prefix = cast_to_string($prefix);
+
         $file = cast_to_string($file);
+
         $path = cast_to_string($path);
 
         $candidates = [
@@ -201,7 +205,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         return null;
     }
 
-    private function classExists($class)
+    private function classExists($class) //// bool
     {
         $class = cast_to_string($class);
 

@@ -16,7 +16,7 @@ namespace Symfony\Component\Mime\Encoder;
  */
 final class Base64MimeHeaderEncoder extends Base64Encoder implements MimeHeaderEncoderInterface
 {
-    public function getName()
+    public function getName() //// string
     {
         return 'B';
     }
@@ -27,7 +27,7 @@ final class Base64MimeHeaderEncoder extends Base64Encoder implements MimeHeaderE
      * If the charset is iso-2022-jp, it uses mb_encode_mimeheader instead of
      * default encodeString, otherwise pass to the parent method.
      */
-    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
+    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0) //// string
     {
         $string = cast_to_string($string);
 

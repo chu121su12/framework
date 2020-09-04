@@ -34,7 +34,7 @@ trait AddTrait
      *
      * @param string|array $path the path, or the localized paths of the route
      */
-    public function add($name, $path)
+    public function add($name, $path) // RouteConfigurator
     {
         $name = cast_to_string($name);
 
@@ -49,7 +49,7 @@ trait AddTrait
      *
      * @param string|array $path the path, or the localized paths of the route
      */
-    public function __invoke($name, $path)
+    public function __invoke($name, $path) // RouteConfigurator
     {
         $name = cast_to_string($name);
 

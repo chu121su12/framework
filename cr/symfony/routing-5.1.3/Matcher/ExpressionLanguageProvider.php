@@ -48,7 +48,7 @@ class ExpressionLanguageProvider implements ExpressionFunctionProviderInterface
         }
     }
 
-    public function get($function)
+    public function get($function) //// callable
     {
         $function = cast_to_string($function);
 

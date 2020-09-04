@@ -41,6 +41,7 @@ final class Address
     public function __construct($address, $name = '')
     {
         $address = cast_to_string($address);
+
         $name = cast_to_string($name);
 
         if (!class_exists(EmailValidator::class)) {
@@ -59,17 +60,17 @@ final class Address
         }
     }
 
-    public function getAddress()
+    public function getAddress() //// string
     {
         return $this->address;
     }
 
-    public function getName()
+    public function getName() //// string
     {
         return $this->name;
     }
 
-    public function getEncodedAddress()
+    public function getEncodedAddress() //// string
     {
         if (null === self::$encoder) {
             self::$encoder = new IdnAddressEncoder();
@@ -78,7 +79,7 @@ final class Address
         return self::$encoder->encodeString($this->address);
     }
 
-    public function toString()
+    public function toString() //// string
     {
         return ($n = $this->getName()) ? $n.' <'.$this->getEncodedAddress().'>' : $this->getEncodedAddress();
     }
@@ -86,7 +87,7 @@ final class Address
     /**
      * @param Address|string $address
      */
-    public static function create($address)
+    public static function create($address) /// self
     {
         if ($address instanceof self) {
             return $address;
@@ -103,7 +104,7 @@ final class Address
      *
      * @return Address[]
      */
-    public static function createArray(array $addresses)
+    public static function createArray(array $addresses) //// array
     {
         $addrs = [];
         foreach ($addresses as $address) {
@@ -113,7 +114,7 @@ final class Address
         return $addrs;
     }
 
-    public static function fromString($string)
+    public static function fromString($string) /// self
     {
         $string = cast_to_string($string);
 

@@ -40,7 +40,7 @@ class RoutingConfigurator
     /**
      * @param string|string[]|null $exclude Glob patterns to exclude from the import
      */
-    final public function import($resource, $type = null, $ignoreErrors = false, $exclude = null)
+    final public function import($resource, $type = null, $ignoreErrors = false, $exclude = null) // ImportConfigurator
     {
         $ignoreErrors = cast_to_bool($ignoreErrors);
 
@@ -61,7 +61,7 @@ class RoutingConfigurator
         return new ImportConfigurator($this->collection, $mergedCollection);
     }
 
-    final public function collection($name = '')
+    final public function collection($name = '') // CollectionConfigurator
     {
         $name = cast_to_string($name);
 
@@ -71,7 +71,7 @@ class RoutingConfigurator
     /**
      * @return static
      */
-    final public function withPath($path)
+    final public function withPath($path) /// self
     {
         $path = cast_to_string($path);
 

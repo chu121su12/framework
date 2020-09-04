@@ -71,7 +71,7 @@ class PhpFileLoader extends FileLoader
         return \is_string($resource) && 'php' === pathinfo($resource, PATHINFO_EXTENSION) && (!$type || 'php' === $type);
     }
 
-    protected function callConfigurator(callable $result, $path, $file)
+    protected function callConfigurator(callable $result, $path, $file) // RouteCollection
     {
         $file = cast_to_string($file);
 

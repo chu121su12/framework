@@ -54,7 +54,7 @@ class Email extends Message
         return $this->setHeaderBody('Text', 'Subject', $subject);
     }
 
-    public function getSubject()
+    public function getSubject() //// ?string
     {
         return $this->getHeaders()->getHeaderBody('Subject');
     }
@@ -82,7 +82,7 @@ class Email extends Message
         return $this->setHeaderBody('Path', 'Return-Path', Address::create($address));
     }
 
-    public function getReturnPath()
+    public function getReturnPath() // ?Address
     {
         return $this->getHeaders()->getHeaderBody('Return-Path');
     }
@@ -97,7 +97,7 @@ class Email extends Message
         return $this->setHeaderBody('Mailbox', 'Sender', Address::create($address));
     }
 
-    public function getSender()
+    public function getSender() // ?Address
     {
         return $this->getHeaders()->getHeaderBody('Sender');
     }
@@ -125,7 +125,7 @@ class Email extends Message
     /**
      * @return Address[]
      */
-    public function getFrom()
+    public function getFrom() //// array
     {
         return $this->getHeaders()->getHeaderBody('From') ?: [];
     }
@@ -153,7 +153,7 @@ class Email extends Message
     /**
      * @return Address[]
      */
-    public function getReplyTo()
+    public function getReplyTo() //// array
     {
         return $this->getHeaders()->getHeaderBody('Reply-To') ?: [];
     }
@@ -181,7 +181,7 @@ class Email extends Message
     /**
      * @return Address[]
      */
-    public function getTo()
+    public function getTo() //// array
     {
         return $this->getHeaders()->getHeaderBody('To') ?: [];
     }
@@ -209,7 +209,7 @@ class Email extends Message
     /**
      * @return Address[]
      */
-    public function getCc()
+    public function getCc() //// array
     {
         return $this->getHeaders()->getHeaderBody('Cc') ?: [];
     }
@@ -237,7 +237,7 @@ class Email extends Message
     /**
      * @return Address[]
      */
-    public function getBcc()
+    public function getBcc() //// array
     {
         return $this->getHeaders()->getHeaderBody('Bcc') ?: [];
     }
@@ -268,7 +268,7 @@ class Email extends Message
      * The returned value is an integer where 1 is the highest priority and 5
      * is the lowest.
      */
-    public function getPriority()
+    public function getPriority() //// int
     {
         list($priority) = sscanf($this->getHeaders()->getHeaderBody('X-Priority'), '%[1-5]');
 
@@ -298,7 +298,7 @@ class Email extends Message
         return $this->text;
     }
 
-    public function getTextCharset()
+    public function getTextCharset() //// ?string
     {
         return $this->textCharset;
     }
@@ -326,7 +326,7 @@ class Email extends Message
         return $this->html;
     }
 
-    public function getHtmlCharset()
+    public function getHtmlCharset() //// ?string
     {
         return $this->htmlCharset;
     }
@@ -339,6 +339,7 @@ class Email extends Message
     public function attach($body, $name = null, $contentType = null)
     {
         $contentType = cast_to_string($contentType, null);
+
         $name = cast_to_string($name, null);
 
         $this->attachments[] = ['body' => $body, 'name' => $name, 'content-type' => $contentType, 'inline' => false];
@@ -352,7 +353,9 @@ class Email extends Message
     public function attachFromPath($path, $name = null, $contentType = null)
     {
         $path = cast_to_string($path);
+
         $contentType = cast_to_string($contentType, null);
+
         $name = cast_to_string($name, null);
 
         $this->attachments[] = ['path' => $path, 'name' => $name, 'content-type' => $contentType, 'inline' => false];
@@ -368,6 +371,7 @@ class Email extends Message
     public function embed($body, $name = null, $contentType = null)
     {
         $contentType = cast_to_string($contentType, null);
+
         $name = cast_to_string($name, null);
 
         $this->attachments[] = ['body' => $body, 'name' => $name, 'content-type' => $contentType, 'inline' => true];
@@ -381,7 +385,9 @@ class Email extends Message
     public function embedFromPath($path, $name = null, $contentType = null)
     {
         $path = cast_to_string($path);
+
         $contentType = cast_to_string($contentType, null);
+
         $name = cast_to_string($name, null);
 
         $this->attachments[] = ['path' => $path, 'name' => $name, 'content-type' => $contentType, 'inline' => true];
@@ -402,7 +408,7 @@ class Email extends Message
     /**
      * @return DataPart[]
      */
-    public function getAttachments()
+    public function getAttachments() //// array
     {
         $parts = [];
         foreach ($this->attachments as $attachment) {
@@ -412,7 +418,7 @@ class Email extends Message
         return $parts;
     }
 
-    public function getBody()
+    public function getBody() // AbstractPart
     {
         if (null !== $body = parent::getBody()) {
             return $body;
@@ -450,7 +456,7 @@ class Email extends Message
      *         |
      *          ------------> application/pdf (with content)
      */
-    private function generateBody()
+    private function generateBody() // AbstractPart
     {
         $this->ensureValidity();
 
@@ -480,7 +486,7 @@ class Email extends Message
         return $part;
     }
 
-    private function prepareParts()
+    private function prepareParts() //// ?array
     {
         $names = [];
         $htmlPart = null;
@@ -518,7 +524,7 @@ class Email extends Message
         return [$htmlPart, $attachmentParts, array_values($inlineParts)];
     }
 
-    private function createDataPart(array $attachment)
+    private function createDataPart(array $attachment) // DataPart
     {
         if (isset($attachment['part'])) {
             return $attachment['part'];
@@ -548,9 +554,10 @@ class Email extends Message
     /**
      * @return $this
      */
-    private function setHeaderBody($type, $name, $body)
+    private function setHeaderBody($type, $name, $body) // object
     {
         $name = cast_to_string($name);
+
         $type = cast_to_string($type);
 
         $this->getHeaders()->setHeaderBody($type, $name, $body);
@@ -588,7 +595,7 @@ class Email extends Message
     /**
      * @internal
      */
-    public function __serialize()
+    public function __serialize() //// array
     {
         if (\is_resource($this->text)) {
             $this->text = (new TextPart($this->text))->getBody();
@@ -610,7 +617,7 @@ class Email extends Message
     /**
      * @internal
      */
-    public function __unserialize(array $data)
+    public function __unserialize(array $data) /// void
     {
         list($this->text, $this->textCharset, $this->html, $this->htmlCharset, $this->attachments, $parentData) = $data;
 

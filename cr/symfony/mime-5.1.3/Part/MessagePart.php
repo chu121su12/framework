@@ -35,27 +35,27 @@ class MessagePart extends DataPart
         $this->message = $message;
     }
 
-    public function getMediaType()
+    public function getMediaType() //// string
     {
         return 'message';
     }
 
-    public function getMediaSubtype()
+    public function getMediaSubtype() //// string
     {
         return 'rfc822';
     }
 
-    public function getBody()
+    public function getBody() //// string
     {
         return $this->message->toString();
     }
 
-    public function bodyToString()
+    public function bodyToString() //// string
     {
         return $this->getBody();
     }
 
-    public function bodyToIterable()
+    public function bodyToIterable() //// iterable
     {
         return $this->message->toIterable();
     }

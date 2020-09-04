@@ -40,7 +40,7 @@ class FlattenException
     /**
      * @return static
      */
-    public static function create(\Exception $exception, $statusCode = null, array $headers = [])
+    public static function create(\Exception $exception, $statusCode = null, array $headers = []) /// self
     {
         return static::createFromThrowable($exception, $statusCode, $headers);
     }
@@ -48,7 +48,7 @@ class FlattenException
     /**
      * @return static
      */
-    public static function createFromThrowable($exception, $statusCode = null, array $headers = [])
+    public static function createFromThrowable($exception, $statusCode = null, array $headers = []) /// self
     {
         $statusCode = cast_to_int($statusCode, null);
 
@@ -90,7 +90,7 @@ class FlattenException
         return $e;
     }
 
-    public function toArray()
+    public function toArray() //// array
     {
         $exceptions = [];
         foreach (array_merge([$this], $this->getAllPrevious()) as $exception) {
@@ -104,7 +104,7 @@ class FlattenException
         return $exceptions;
     }
 
-    public function getStatusCode()
+    public function getStatusCode() //// int
     {
         return $this->statusCode;
     }
@@ -112,14 +112,14 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setStatusCode($code)
+    public function setStatusCode($code) /// self
     {
         $this->statusCode = $code;
 
         return $this;
     }
 
-    public function getHeaders()
+    public function getHeaders() //// array
     {
         return $this->headers;
     }
@@ -127,14 +127,14 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setHeaders(array $headers)
+    public function setHeaders(array $headers) /// self
     {
         $this->headers = $headers;
 
         return $this;
     }
 
-    public function getClass()
+    public function getClass() //// string
     {
         return $this->class;
     }
@@ -142,14 +142,14 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setClass($class)
+    public function setClass($class) /// self
     {
         $this->class = false !== strpos($class, "@anonymous\0") ? (get_parent_class($class) ?: key(class_implements($class)) ?: 'class').'@anonymous' : $class;
 
         return $this;
     }
 
-    public function getFile()
+    public function getFile() //// string
     {
         return $this->file;
     }
@@ -157,14 +157,14 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setFile($file)
+    public function setFile($file) /// self
     {
         $this->file = $file;
 
         return $this;
     }
 
-    public function getLine()
+    public function getLine() //// int
     {
         return $this->line;
     }
@@ -172,19 +172,19 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setLine($line)
+    public function setLine($line) /// self
     {
         $this->line = $line;
 
         return $this;
     }
 
-    public function getStatusText()
+    public function getStatusText() //// string
     {
         return $this->statusText;
     }
 
-    public function setStatusText($statusText)
+    public function setStatusText($statusText) /// self
     {
         $statusText = cast_to_string($statusText);
 
@@ -193,7 +193,7 @@ class FlattenException
         return $this;
     }
 
-    public function getMessage()
+    public function getMessage() //// string
     {
         return $this->message;
     }
@@ -201,7 +201,7 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setMessage($message)
+    public function setMessage($message) /// self
     {
         if (false !== strpos($message, "@anonymous\0")) {
             $message = preg_replace_callback('/[a-zA-Z_\x7f-\xff][\\\\a-zA-Z0-9_\x7f-\xff]*+@anonymous\x00.*?\.php(?:0x?|:[0-9]++\$)[0-9a-fA-F]++/', function ($m) {
@@ -225,14 +225,14 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setCode($code)
+    public function setCode($code) /// self
     {
         $this->code = $code;
 
         return $this;
     }
 
-    public function getPrevious()
+    public function getPrevious() /// ?self
     {
         return $this->previous;
     }
@@ -240,7 +240,7 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setPrevious(self $previous)
+    public function setPrevious(self $previous) /// self
     {
         $this->previous = $previous;
 
@@ -250,7 +250,7 @@ class FlattenException
     /**
      * @return self[]
      */
-    public function getAllPrevious()
+    public function getAllPrevious() //// array
     {
         $exceptions = [];
         $e = $this;
@@ -261,7 +261,7 @@ class FlattenException
         return $exceptions;
     }
 
-    public function getTrace()
+    public function getTrace() //// array
     {
         return $this->trace;
     }
@@ -269,7 +269,7 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setTraceFromThrowable($throwable)
+    public function setTraceFromThrowable($throwable) /// self
     {
         $this->traceAsString = $throwable->getTraceAsString();
 
@@ -279,7 +279,7 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setTrace($trace, $file, $line)
+    public function setTrace($trace, $file, $line) /// self
     {
         $this->trace = [];
         $this->trace[] = [
@@ -316,9 +316,10 @@ class FlattenException
         return $this;
     }
 
-    private function flattenArgs(array $args, $level = 0, &$count = 0)
+    private function flattenArgs(array $args, $level = 0, &$count = 0) //// array
     {
         $level = cast_to_int($level);
+
         $count = cast_to_int($count);
 
         $result = [];
@@ -355,14 +356,14 @@ class FlattenException
         return $result;
     }
 
-    private function getClassNameFromIncomplete(\__PHP_Incomplete_Class $value)
+    private function getClassNameFromIncomplete(\__PHP_Incomplete_Class $value) //// string
     {
         $array = new \ArrayObject($value);
 
         return $array['__PHP_Incomplete_Class_Name'];
     }
 
-    public function getTraceAsString()
+    public function getTraceAsString() //// string
     {
         return $this->traceAsString;
     }
@@ -370,7 +371,7 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setAsString($asString = null)
+    public function setAsString($asString = null) /// self
     {
         $asString = cast_to_string($asString, null);
 
@@ -379,7 +380,7 @@ class FlattenException
         return $this;
     }
 
-    public function getAsString()
+    public function getAsString() //// string
     {
         if (null !== $this->asString) {
             return $this->asString;

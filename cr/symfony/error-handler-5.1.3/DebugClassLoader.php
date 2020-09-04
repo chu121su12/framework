@@ -219,7 +219,7 @@ class DebugClassLoader
      *
      * @return callable The wrapped class loader
      */
-    public function getClassLoader()
+    public function getClassLoader() //// callable
     {
         return $this->classLoader;
     }
@@ -227,7 +227,7 @@ class DebugClassLoader
     /**
      * Wraps all autoloaders.
      */
-    public static function enable()
+    public static function enable() /// void
     {
         // Ensures we don't hit https://bugs.php.net/42098
         class_exists('Symfony\Component\ErrorHandler\ErrorHandler');
@@ -253,7 +253,7 @@ class DebugClassLoader
     /**
      * Disables the wrapping.
      */
-    public static function disable()
+    public static function disable() /// void
     {
         if (!\is_array($functions = spl_autoload_functions())) {
             return;
@@ -272,7 +272,7 @@ class DebugClassLoader
         }
     }
 
-    public static function checkClasses()
+    public static function checkClasses() //// bool
     {
         if (!\is_array($functions = spl_autoload_functions())) {
             return false;
@@ -317,7 +317,7 @@ class DebugClassLoader
         return true;
     }
 
-    public function findFile($class)
+    public function findFile($class) //// ?string
     {
         $class = cast_to_string($class);
 
@@ -329,7 +329,7 @@ class DebugClassLoader
      *
      * @throws \RuntimeException
      */
-    public function loadClass($class)
+    public function loadClass($class) /// void
     {
         $class = cast_to_string($class);
 
@@ -359,7 +359,7 @@ class DebugClassLoader
         $this->checkClass($class, $file);
     }
 
-    private function checkClass($class, $file = null)
+    private function checkClass($class, $file = null) /// void
     {
         $class = cast_to_string($class);
 
@@ -411,7 +411,7 @@ class DebugClassLoader
         }
     }
 
-    public function checkAnnotations(\ReflectionClass $refl, $class)
+    public function checkAnnotations(\ReflectionClass $refl, $class) //// array
     {
         $class = cast_to_string($class);
 
@@ -559,7 +559,6 @@ class DebugClassLoader
             if ($method->class !== $class) {
                 continue;
             }
-
 
             $ns = null;
             $filename = $method->getFileName();
@@ -713,7 +712,7 @@ class DebugClassLoader
         return $deprecations;
     }
 
-    public function checkCase(\ReflectionClass $refl, $file, $class)
+    public function checkCase(\ReflectionClass $refl, $file, $class) //// ?array
     {
         $class = cast_to_string($class);
 
@@ -756,7 +755,7 @@ class DebugClassLoader
     /**
      * `realpath` on MacOSX doesn't normalize the case of characters.
      */
-    private function darwinRealpath($real)
+    private function darwinRealpath($real) //// string
     {
         $real = cast_to_string($real);
 
@@ -831,7 +830,7 @@ class DebugClassLoader
      *
      * @return string[]
      */
-    private function getOwnInterfaces($class, $parent = null)
+    private function getOwnInterfaces($class, $parent = null) //// array
     {
         $class = cast_to_string($class);
 
@@ -854,7 +853,7 @@ class DebugClassLoader
         return $ownInterfaces;
     }
 
-    private function setReturnType($types, \ReflectionMethod $method, $parent = null)
+    private function setReturnType($types, \ReflectionMethod $method, $parent = null) /// void
     {
         $types = cast_to_string($types);
 
@@ -929,7 +928,7 @@ class DebugClassLoader
         self::$returnTypes[$method->class][$method->name] = [$normalizedType, $returnType, $method->class, $method->getFileName()];
     }
 
-    private function normalizeType($type, $class, $parent = null)
+    private function normalizeType($type, $class, $parent = null) //// string
     {
         $class = cast_to_string($class);
 
@@ -1070,7 +1069,7 @@ EOTXT;
         $this->fixReturnStatements($method, $nullable.$normalizedType);
     }
 
-    private static function getUseStatements($file)
+    private static function getUseStatements($file) //// array
     {
         $file = cast_to_string($file);
 

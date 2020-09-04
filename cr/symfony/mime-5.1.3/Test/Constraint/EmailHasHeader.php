@@ -28,7 +28,7 @@ final class EmailHasHeader extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function toString()
+    public function toString() //// string
     {
         return sprintf('has header "%s"', $this->headerName);
     }
@@ -38,7 +38,7 @@ final class EmailHasHeader extends Constraint
      *
      * {@inheritdoc}
      */
-    protected function matches($message)
+    protected function matches($message) //// bool
     {
         if (RawMessage::class === \get_class($message)) {
             throw new \LogicException('Unable to test a message header on a RawMessage instance.');
@@ -52,7 +52,7 @@ final class EmailHasHeader extends Constraint
      *
      * {@inheritdoc}
      */
-    protected function failureDescription($message)
+    protected function failureDescription($message) //// string
     {
         return 'the Email '.$this->toString();
     }

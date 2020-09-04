@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Matcher\Dumper\CompiledUrlMatcherDumper;
  */
 class CompiledUrlGeneratorDumper extends GeneratorDumper
 {
-    public function getCompiledRoutes()
+    public function getCompiledRoutes() //// array
     {
         $compiledRoutes = [];
         foreach ($this->getRoutes()->all() as $name => $route) {
@@ -61,7 +61,7 @@ EOF;
      * Generates PHP code representing an array of defined routes
      * together with the routes properties (e.g. requirements).
      */
-    private function generateDeclaredRoutes()
+    private function generateDeclaredRoutes() //// string
     {
         $routes = '';
         foreach ($this->getCompiledRoutes() as $name => $properties) {

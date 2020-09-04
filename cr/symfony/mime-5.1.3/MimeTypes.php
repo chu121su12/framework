@@ -63,9 +63,9 @@ final class MimeTypes implements MimeTypesInterface
         self::$default = $default;
     }
 
-    public static function getDefault()
+    public static function getDefault() /// self
     {
-        return isset(self::$default) ? self::$default : (self::$default = new self());
+        return isset(self::$default) ? self::$default : self::$default = new self();
     }
 
     /**
@@ -81,7 +81,7 @@ final class MimeTypes implements MimeTypesInterface
     /**
      * {@inheritdoc}
      */
-    public function getExtensions($mimeType)
+    public function getExtensions($mimeType) //// array
     {
         $mimeType = cast_to_string($mimeType);
 
@@ -111,7 +111,7 @@ final class MimeTypes implements MimeTypesInterface
     /**
      * {@inheritdoc}
      */
-    public function getMimeTypes($ext)
+    public function getMimeTypes($ext) //// array
     {
         $ext = cast_to_string($ext);
 
@@ -141,7 +141,7 @@ final class MimeTypes implements MimeTypesInterface
     /**
      * {@inheritdoc}
      */
-    public function isGuesserSupported()
+    public function isGuesserSupported() //// bool
     {
         foreach ($this->guessers as $guesser) {
             if ($guesser->isGuesserSupported()) {
@@ -160,7 +160,7 @@ final class MimeTypes implements MimeTypesInterface
      * returns a value that is not null, this method terminates and returns the
      * value.
      */
-    public function guessMimeType($path)
+    public function guessMimeType($path) //// ?string
     {
         $path = cast_to_string($path);
 

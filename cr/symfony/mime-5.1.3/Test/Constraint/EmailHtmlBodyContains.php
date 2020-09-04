@@ -29,7 +29,7 @@ final class EmailHtmlBodyContains extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function toString()
+    public function toString() //// string
     {
         return sprintf('contains "%s"', $this->expectedText);
     }
@@ -39,7 +39,7 @@ final class EmailHtmlBodyContains extends Constraint
      *
      * @param RawMessage $message
      */
-    protected function matches($message)
+    protected function matches($message) //// bool
     {
         if (RawMessage::class === \get_class($message) || Message::class === \get_class($message)) {
             throw new \LogicException('Unable to test a message HTML body on a RawMessage or Message instance.');
@@ -53,7 +53,7 @@ final class EmailHtmlBodyContains extends Constraint
      *
      * @param RawMessage $message
      */
-    protected function failureDescription($message)
+    protected function failureDescription($message) //// string
     {
         return 'the Email HTML body '.$this->toString();
     }

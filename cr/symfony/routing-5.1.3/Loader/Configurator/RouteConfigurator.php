@@ -42,7 +42,7 @@ class RouteConfigurator
      *
      * @return $this
      */
-    final public function host($host)
+    final public function host($host) /// self
     {
         $this->addHost($this->route, $host);
 

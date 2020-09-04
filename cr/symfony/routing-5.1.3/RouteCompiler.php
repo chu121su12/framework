@@ -103,7 +103,7 @@ class RouteCompiler implements RouteCompilerInterface
         );
     }
 
-    private static function compilePattern(Route $route, $pattern, $isHost)
+    private static function compilePattern(Route $route, $pattern, $isHost) //// array
     {
         $isHost = cast_to_bool($isHost);
 
@@ -255,7 +255,7 @@ class RouteCompiler implements RouteCompilerInterface
     /**
      * Determines the longest static prefix possible for a route.
      */
-    private static function determineStaticPrefix(Route $route, array $tokens)
+    private static function determineStaticPrefix(Route $route, array $tokens) //// string
     {
         if ('text' !== $tokens[0][0]) {
             return ($route->hasDefault($tokens[0][3]) || '/' === $tokens[0][1]) ? '' : $tokens[0][1];
@@ -273,7 +273,7 @@ class RouteCompiler implements RouteCompilerInterface
     /**
      * Returns the next static character in the Route pattern that will serve as a separator (or the empty string when none available).
      */
-    private static function findNextSeparator($pattern, $useUtf8)
+    private static function findNextSeparator($pattern, $useUtf8) //// string
     {
         $useUtf8 = cast_to_bool($useUtf8);
 
@@ -303,7 +303,7 @@ class RouteCompiler implements RouteCompilerInterface
      *
      * @return string The regexp pattern for a single token
      */
-    private static function computeRegexp(array $tokens, $index, $firstOptional)
+    private static function computeRegexp(array $tokens, $index, $firstOptional) //// string
     {
         $firstOptional = cast_to_int($firstOptional);
 
@@ -337,7 +337,7 @@ class RouteCompiler implements RouteCompilerInterface
         }
     }
 
-    private static function transformCapturingGroupsToNonCapturings($regexp)
+    private static function transformCapturingGroupsToNonCapturings($regexp) //// string
     {
         $regexp = cast_to_string($regexp);
 

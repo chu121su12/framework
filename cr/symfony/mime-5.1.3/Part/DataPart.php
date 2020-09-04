@@ -50,7 +50,7 @@ class DataPart extends TextPart
         $this->setDisposition('attachment');
     }
 
-    public static function fromPath($path, $name = null, $contentType = null)
+    public static function fromPath($path, $name = null, $contentType = null) /// self
     {
         $path = cast_to_string($path);
 
@@ -90,22 +90,22 @@ class DataPart extends TextPart
         return $this->setDisposition('inline');
     }
 
-    public function getContentId()
+    public function getContentId() //// string
     {
         return $this->cid ?: $this->cid = $this->generateContentId();
     }
 
-    public function hasContentId()
+    public function hasContentId() //// bool
     {
         return null !== $this->cid;
     }
 
-    public function getMediaType()
+    public function getMediaType() //// string
     {
         return $this->mediaType;
     }
 
-    public function getPreparedHeaders()
+    public function getPreparedHeaders() // Headers
     {
         $headers = parent::getPreparedHeaders();
 
@@ -120,7 +120,7 @@ class DataPart extends TextPart
         return $headers;
     }
 
-    public function asDebugString()
+    public function asDebugString() //// string
     {
         $str = parent::asDebugString();
         if (null !== $this->filename) {
@@ -130,7 +130,7 @@ class DataPart extends TextPart
         return $str;
     }
 
-    private function generateContentId()
+    private function generateContentId() //// string
     {
         return bin2hex(random_bytes(16)).'@symfony';
     }

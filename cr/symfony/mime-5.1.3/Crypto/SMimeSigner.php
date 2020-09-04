@@ -34,9 +34,13 @@ final class SMimeSigner extends SMime
     public function __construct($certificate, $privateKey, $privateKeyPassphrase = null, $extraCerts = null, $signOptions = null)
     {
         $privateKey = cast_to_string($privateKey);
+
         $certificate = cast_to_string($certificate);
+
         $signOptions = cast_to_int($signOptions, null);
+
         $extraCerts = cast_to_string($extraCerts, null);
+
         $privateKeyPassphrase = cast_to_string($privateKeyPassphrase, null);
 
         if (!\extension_loaded('openssl')) {
@@ -55,7 +59,7 @@ final class SMimeSigner extends SMime
         $this->extraCerts = $extraCerts ? realpath($extraCerts) : null;
     }
 
-    public function sign(Message $message)
+    public function sign(Message $message) // Message
     {
         $bufferFile = tmpfile();
         $outputFile = tmpfile();

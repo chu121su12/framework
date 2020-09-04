@@ -26,7 +26,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function defaults(array $defaults)
+    final public function defaults(array $defaults) /// self
     {
         $this->route->addDefaults($defaults);
 
@@ -38,7 +38,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function requirements(array $requirements)
+    final public function requirements(array $requirements) /// self
     {
         $this->route->addRequirements($requirements);
 
@@ -50,7 +50,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function options(array $options)
+    final public function options(array $options) /// self
     {
         $this->route->addOptions($options);
 
@@ -62,7 +62,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function utf8($utf8 = true)
+    final public function utf8($utf8 = true) /// self
     {
         $utf8 = cast_to_bool($utf8);
 
@@ -76,7 +76,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function condition($condition)
+    final public function condition($condition) /// self
     {
         $condition = cast_to_string($condition);
 
@@ -90,7 +90,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function host($pattern)
+    final public function host($pattern) /// self
     {
         $pattern = cast_to_string($pattern);
 
@@ -107,7 +107,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function schemes(array $schemes)
+    final public function schemes(array $schemes) /// self
     {
         $this->route->setSchemes($schemes);
 
@@ -122,7 +122,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function methods(array $methods)
+    final public function methods(array $methods) /// self
     {
         $this->route->setMethods($methods);
 
@@ -136,7 +136,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function controller($controller)
+    final public function controller($controller) /// self
     {
         $this->route->addDefaults(['_controller' => $controller]);
 
@@ -148,7 +148,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function locale($locale)
+    final public function locale($locale) /// self
     {
         $locale = cast_to_string($locale);
 
@@ -162,7 +162,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function format($format)
+    final public function format($format) /// self
     {
         $format = cast_to_string($format);
 
@@ -176,7 +176,7 @@ trait RouteTrait
      *
      * @return $this
      */
-    final public function stateless($stateless = true)
+    final public function stateless($stateless = true) /// self
     {
         $stateless = cast_to_bool($stateless);
 

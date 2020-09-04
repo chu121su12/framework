@@ -42,7 +42,7 @@ final class PathHeader extends AbstractHeader
         $this->setAddress($body);
     }
 
-    public function getBody()
+    public function getBody() // Address
     {
         return $this->getAddress();
     }
@@ -52,12 +52,12 @@ final class PathHeader extends AbstractHeader
         $this->address = $address;
     }
 
-    public function getAddress()
+    public function getAddress() // Address
     {
         return $this->address;
     }
 
-    public function getBodyAsString()
+    public function getBodyAsString() //// string
     {
         return '<'.$this->address->toString().'>';
     }

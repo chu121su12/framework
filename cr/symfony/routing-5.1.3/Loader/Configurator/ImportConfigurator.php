@@ -42,7 +42,7 @@ class ImportConfigurator
      *
      * @return $this
      */
-    final public function prefix($prefix, $trailingSlashOnRoot = true)
+    final public function prefix($prefix, $trailingSlashOnRoot = true) /// self
     {
         $trailingSlashOnRoot = cast_to_bool($trailingSlashOnRoot);
 
@@ -56,7 +56,7 @@ class ImportConfigurator
      *
      * @return $this
      */
-    final public function namePrefix($namePrefix)
+    final public function namePrefix($namePrefix) /// self
     {
         $namePrefix = cast_to_string($namePrefix);
 
@@ -72,7 +72,7 @@ class ImportConfigurator
      *
      * @return $this
      */
-    final public function host($host)
+    final public function host($host) /// self
     {
         $this->addHost($this->route, $host);
 

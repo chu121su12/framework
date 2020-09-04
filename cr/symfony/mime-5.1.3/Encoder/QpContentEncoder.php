@@ -16,7 +16,7 @@ namespace Symfony\Component\Mime\Encoder;
  */
 final class QpContentEncoder implements ContentEncoderInterface
 {
-    public function encodeByteStream($stream, $maxLineLength = 0)
+    public function encodeByteStream($stream, $maxLineLength = 0) //// iterable
     {
         $maxLineLength = cast_to_int($maxLineLength);
 
@@ -28,12 +28,12 @@ final class QpContentEncoder implements ContentEncoderInterface
         yield $this->encodeString(stream_get_contents($stream), 'utf-8', 0, $maxLineLength);
     }
 
-    public function getName()
+    public function getName() //// string
     {
         return 'quoted-printable';
     }
 
-    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
+    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0) //// string
     {
         $string = cast_to_string($string);
 
@@ -49,7 +49,7 @@ final class QpContentEncoder implements ContentEncoderInterface
     /**
      * Make sure CRLF is correct and HT/SPACE are in valid places.
      */
-    private function standardize($string)
+    private function standardize($string) //// string
     {
         $string = cast_to_string($string);
 

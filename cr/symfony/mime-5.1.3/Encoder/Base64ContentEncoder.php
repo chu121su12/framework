@@ -18,7 +18,7 @@ use Symfony\Component\Mime\Exception\RuntimeException;
  */
 final class Base64ContentEncoder extends Base64Encoder implements ContentEncoderInterface
 {
-    public function encodeByteStream($stream, $maxLineLength = 0)
+    public function encodeByteStream($stream, $maxLineLength = 0) //// iterable
     {
         $maxLineLength = cast_to_int($maxLineLength);
 
@@ -40,7 +40,7 @@ final class Base64ContentEncoder extends Base64Encoder implements ContentEncoder
         stream_filter_remove($filter);
     }
 
-    public function getName()
+    public function getName() //// string
     {
         return 'base64';
     }

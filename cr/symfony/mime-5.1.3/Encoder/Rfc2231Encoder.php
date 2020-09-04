@@ -21,7 +21,7 @@ final class Rfc2231Encoder implements EncoderInterface
     /**
      * Takes an unencoded string and produces a string encoded according to RFC 2231 from it.
      */
-    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
+    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0) //// string
     {
         $string = cast_to_string($string);
 

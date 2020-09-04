@@ -44,17 +44,17 @@ class SMimePart extends AbstractPart
         $this->parameters = $parameters;
     }
 
-    public function getMediaType()
+    public function getMediaType() //// string
     {
         return $this->type;
     }
 
-    public function getMediaSubtype()
+    public function getMediaSubtype() //// string
     {
         return $this->subtype;
     }
 
-    public function bodyToString()
+    public function bodyToString() //// string
     {
         if (\is_string($this->body)) {
             return $this->body;
@@ -69,7 +69,7 @@ class SMimePart extends AbstractPart
         return $body;
     }
 
-    public function bodyToIterable()
+    public function bodyToIterable() //// iterable
     {
         if (\is_string($this->body)) {
             yield $this->body;
@@ -85,7 +85,7 @@ class SMimePart extends AbstractPart
         $this->body = $body;
     }
 
-    public function getPreparedHeaders()
+    public function getPreparedHeaders() // Headers
     {
         $headers = clone parent::getHeaders();
 
@@ -98,7 +98,7 @@ class SMimePart extends AbstractPart
         return $headers;
     }
 
-    public function __sleep()
+    public function __sleep() //// array
     {
         // convert iterables to strings for serialization
         if (is_iterable($this->body)) {
@@ -110,7 +110,7 @@ class SMimePart extends AbstractPart
         return ['_headers', 'body', 'type', 'subtype', 'parameters'];
     }
 
-    public function __wakeup()
+    public function __wakeup() /// void
     {
         $r = new \ReflectionProperty(AbstractPart::class, 'headers');
         $r->setAccessible(true);

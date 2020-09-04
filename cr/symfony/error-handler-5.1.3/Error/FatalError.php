@@ -23,8 +23,11 @@ class FatalError extends \Error
     public function __construct($message, $code, array $error, $traceOffset = null, $traceArgs = true, array $trace = null)
     {
         $code = cast_to_int($code);
+
         $message = cast_to_string($message);
+
         $traceArgs = cast_to_bool($traceArgs);
+
         $traceOffset = cast_to_int($traceOffset, null);
 
         parent::__construct($message, $code);
@@ -101,7 +104,7 @@ class FatalError extends \Error
     /**
      * {@inheritdoc}
      */
-    public function getError()
+    public function getError() //// array
     {
         return $this->error;
     }

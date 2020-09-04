@@ -54,7 +54,7 @@ final class ParameterizedHeader extends UnstructuredHeader
         $this->setParameters(array_merge($this->getParameters(), [$parameter => $value]));
     }
 
-    public function getParameter($parameter)
+    public function getParameter($parameter) //// string
     {
         $parameter = cast_to_string($parameter);
 
@@ -73,12 +73,12 @@ final class ParameterizedHeader extends UnstructuredHeader
     /**
      * @return string[]
      */
-    public function getParameters()
+    public function getParameters() //// array
     {
         return $this->parameters;
     }
 
-    public function getBodyAsString()
+    public function getBodyAsString() //// string
     {
         $body = parent::getBodyAsString();
         foreach ($this->parameters as $name => $value) {
@@ -96,7 +96,7 @@ final class ParameterizedHeader extends UnstructuredHeader
      * This doesn't need to be overridden in theory, but it is for implementation
      * reasons to prevent potential breakage of attributes.
      */
-    protected function toTokens($string = null)
+    protected function toTokens($string = null) //// array
     {
         $string = cast_to_string($string, null);
 
@@ -117,7 +117,7 @@ final class ParameterizedHeader extends UnstructuredHeader
     /**
      * Render a RFC 2047 compliant header parameter from the $name and $value.
      */
-    private function createParameter($name, $value)
+    private function createParameter($name, $value) //// string
     {
         $value = cast_to_string($value);
 
@@ -173,7 +173,7 @@ final class ParameterizedHeader extends UnstructuredHeader
      *
      * @param string $value to append
      */
-    private function getEndOfParameterValue($value, $encoded = false, $firstLine = false)
+    private function getEndOfParameterValue($value, $encoded = false, $firstLine = false) //// string
     {
         $value = cast_to_string($value);
 

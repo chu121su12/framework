@@ -263,7 +263,7 @@ class RouteCollectionBuilder
      *
      * @return $this
      */
-    private function addResource(ResourceInterface $resource)
+    private function addResource(ResourceInterface $resource) /// self
     {
         $this->resources[] = $resource;
 
@@ -337,7 +337,7 @@ class RouteCollectionBuilder
     /**
      * Generates a route name based on details of this route.
      */
-    private function generateRouteName(Route $route)
+    private function generateRouteName(Route $route) //// string
     {
         $methods = implode('_', $route->getMethods()).'_';
 
@@ -361,7 +361,7 @@ class RouteCollectionBuilder
      *
      * @throws LoaderLoadException If no loader is found
      */
-    private function load($resource, $type = null)
+    private function load($resource, $type = null) //// array
     {
         $type = cast_to_string($type, null);
 

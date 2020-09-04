@@ -16,7 +16,7 @@ namespace Symfony\Component\Mime\Encoder;
  */
 final class QpMimeHeaderEncoder extends QpEncoder implements MimeHeaderEncoderInterface
 {
-    protected function initSafeMap()
+    protected function initSafeMap() /// void
     {
         foreach (array_merge(
             range(0x61, 0x7A), range(0x41, 0x5A),
@@ -26,12 +26,12 @@ final class QpMimeHeaderEncoder extends QpEncoder implements MimeHeaderEncoderIn
         }
     }
 
-    public function getName()
+    public function getName() //// string
     {
         return 'Q';
     }
 
-    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
+    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0) //// string
     {
         $string = cast_to_string($string);
 

@@ -61,7 +61,7 @@ EOF;
     /**
      * Generates the arrays for CompiledUrlMatcher's constructor.
      */
-    public function getCompiledRoutes($forDump = false)
+    public function getCompiledRoutes($forDump = false) //// array
     {
         $forDump = cast_to_bool($forDump);
 
@@ -131,7 +131,7 @@ EOF;
         return $compiledRoutes;
     }
 
-    private function generateCompiledRoutes()
+    private function generateCompiledRoutes() //// string
     {
         list($matchHost, $staticRoutes, $regexpCode, $dynamicRoutes, $checkConditionCode) = $this->getCompiledRoutes(true);
 
@@ -166,7 +166,7 @@ EOF;
     /**
      * Splits static routes from dynamic routes, so that they can be matched first, using a simple switch.
      */
-    private function groupStaticRoutes(RouteCollection $collection)
+    private function groupStaticRoutes(RouteCollection $collection) //// array
     {
         $staticRoutes = $dynamicRegex = [];
         $dynamicRoutes = new RouteCollection();
@@ -214,7 +214,7 @@ EOF;
      *
      * @throws \LogicException
      */
-    private function compileStaticRoutes(array $staticRoutes, array &$conditions)
+    private function compileStaticRoutes(array $staticRoutes, array &$conditions) //// array
     {
         if (!$staticRoutes) {
             return [];
@@ -249,7 +249,7 @@ EOF;
      *    matching-but-failing subpattern is excluded by replacing its name by "(*F)", which forces a failure-to-match.
      *    To ease this backlisting operation, the name of subpatterns is also the string offset where the replacement should occur.
      */
-    private function compileDynamicRoutes(RouteCollection $collection, $matchHost, $chunkLimit, array &$conditions)
+    private function compileDynamicRoutes(RouteCollection $collection, $matchHost, $chunkLimit, array &$conditions) //// array
     {
         $chunkLimit = cast_to_int($chunkLimit);
 
@@ -377,7 +377,7 @@ EOF;
      * @param \stdClass $state A simple state object that keeps track of the progress of the compilation,
      *                         and gathers the generated switch's "case" and "default" statements
      */
-    private function compileStaticPrefixCollection(StaticPrefixCollection $tree, \stdClass $state, $prefixLen, array &$conditions)
+    private function compileStaticPrefixCollection(StaticPrefixCollection $tree, \stdClass $state, $prefixLen, array &$conditions) //// string
     {
         $prefixLen = cast_to_int($prefixLen);
 
@@ -425,7 +425,7 @@ EOF;
     /**
      * Compiles a single Route to PHP code used to match it against the path info.
      */
-    private function compileRoute(Route $route, $name, $vars, $hasTrailingSlash, $hasTrailingVar, array &$conditions)
+    private function compileRoute(Route $route, $name, $vars, $hasTrailingSlash, $hasTrailingVar, array &$conditions) //// array
     {
         $hasTrailingVar = cast_to_bool($hasTrailingVar);
 
@@ -460,7 +460,7 @@ EOF;
         ];
     }
 
-    private function getExpressionLanguage()
+    private function getExpressionLanguage() // ExpressionLanguage
     {
         if (null === $this->expressionLanguage) {
             if (!class_exists('Symfony\Component\ExpressionLanguage\ExpressionLanguage')) {
@@ -472,7 +472,7 @@ EOF;
         return $this->expressionLanguage;
     }
 
-    private function indent($code, $level = 1)
+    private function indent($code, $level = 1) //// string
     {
         $code = cast_to_string($code);
 
@@ -484,7 +484,7 @@ EOF;
     /**
      * @internal
      */
-    public static function export($value)
+    public static function export($value) //// string
     {
         if (null === $value) {
             return 'null';

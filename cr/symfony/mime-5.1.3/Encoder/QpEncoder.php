@@ -98,7 +98,7 @@ class QpEncoder implements EncoderInterface
         }
     }
 
-    protected function initSafeMap()
+    protected function initSafeMap() /// void
     {
         foreach (array_merge([0x09, 0x20], range(0x21, 0x3C), range(0x3E, 0x7E)) as $byte) {
             $this->safeMap[$byte] = \chr($byte);
@@ -114,7 +114,7 @@ class QpEncoder implements EncoderInterface
      * If the first line needs to be shorter, indicate the difference with
      * $firstLineOffset.
      */
-    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0)
+    public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0) //// string
     {
         $string = cast_to_string($string);
 
@@ -169,7 +169,7 @@ class QpEncoder implements EncoderInterface
     /**
      * Encode the given byte array into a verbatim QP form.
      */
-    private function encodeByteSequence(array $bytes, &$size)
+    private function encodeByteSequence(array $bytes, &$size) //// string
     {
         $size = cast_to_int($size);
 
@@ -191,7 +191,7 @@ class QpEncoder implements EncoderInterface
     /**
      * Make sure CRLF is correct and HT/SPACE are in valid places.
      */
-    private function standardize($string)
+    private function standardize($string) //// string
     {
         $string = cast_to_string($string);
 

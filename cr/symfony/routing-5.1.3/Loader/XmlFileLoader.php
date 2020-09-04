@@ -256,7 +256,7 @@ class XmlFileLoader extends FileLoader
      *
      * @throws \InvalidArgumentException When the XML is invalid
      */
-    private function parseConfigs(\DOMElement $node, $path)
+    private function parseConfigs(\DOMElement $node, $path) //// array
     {
         $path = cast_to_string($path);
 
@@ -436,7 +436,7 @@ class XmlFileLoader extends FileLoader
         }
     }
 
-    private function isElementValueNull(\DOMElement $element)
+    private function isElementValueNull(\DOMElement $element) //// bool
     {
         $namespaceUri = 'http://www.w3.org/2001/XMLSchema-instance';
 

@@ -32,7 +32,7 @@ trait CompiledUrlMatcherTrait
     private $dynamicRoutes = [];
     private $checkCondition;
 
-    public function match($pathinfo)
+    public function match($pathinfo) //// array
     {
         $pathinfo = cast_to_string($pathinfo);
 
@@ -72,7 +72,7 @@ trait CompiledUrlMatcherTrait
         throw new ResourceNotFoundException(sprintf('No routes found for "%s".', $pathinfo));
     }
 
-    private function doMatch($pathinfo, array &$allow = [], array &$allowSchemes = [])
+    private function doMatch($pathinfo, array &$allow = [], array &$allowSchemes = []) //// array
     {
         $pathinfo = cast_to_string($pathinfo);
 

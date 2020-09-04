@@ -21,7 +21,7 @@ use Symfony\Component\Mime\Part\SMimePart;
  */
 abstract class SMime
 {
-    protected function normalizeFilePath($path)
+    protected function normalizeFilePath($path) //// string
     {
         $path = cast_to_string($path);
 
@@ -32,7 +32,7 @@ abstract class SMime
         return 'file://'.str_replace('\\', '/', realpath($path));
     }
 
-    protected function iteratorToFile($iterator, $stream)
+    protected function iteratorToFile($iterator, $stream) /// void
     {
         $iterator = cast_to_iterable($iterator);
 
@@ -41,9 +41,10 @@ abstract class SMime
         }
     }
 
-    protected function convertMessageToSMimePart($stream, $type, $subtype)
+    protected function convertMessageToSMimePart($stream, $type, $subtype) // SMimePart
     {
         $subtype = cast_to_string($subtype);
+
         $type = cast_to_string($type);
 
         rewind($stream);
@@ -69,14 +70,14 @@ abstract class SMime
         return new SMimePart($this->getStreamIterator($stream), $type, $subtype, $this->getParametersFromHeader($headers['content-type']));
     }
 
-    protected function getStreamIterator($stream)
+    protected function getStreamIterator($stream) //// iterable
     {
         while (!feof($stream)) {
             yield str_replace("\n", "\r\n", str_replace("\r\n", "\n", fread($stream, 16372)));
         }
     }
 
-    private function getMessageHeaders($headerData)
+    private function getMessageHeaders($headerData) //// array
     {
         $headerData = cast_to_string($headerData);
 
@@ -105,7 +106,7 @@ abstract class SMime
         return $headers;
     }
 
-    private function getParametersFromHeader($header)
+    private function getParametersFromHeader($header) //// array
     {
         $header = cast_to_string($header);
 

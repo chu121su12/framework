@@ -53,7 +53,7 @@ class SerializerErrorRenderer implements ErrorRendererInterface
     /**
      * {@inheritdoc}
      */
-    public function render($exception)
+    public function render($exception) // FlattenException
     {
         $headers = [];
         $thisDebug = $this->debug;

@@ -98,7 +98,7 @@ class Route
         $this->localizedPaths = $localizedPaths;
     }
 
-    public function getLocalizedPaths()
+    public function getLocalizedPaths() //// array
     {
         return $this->localizedPaths;
     }
@@ -183,14 +183,14 @@ class Route
         return $this->condition;
     }
 
-    public function setPriority($priority)
+    public function setPriority($priority) /// void
     {
         $priority = cast_to_int($priority);
 
         $this->priority = $priority;
     }
 
-    public function getPriority()
+    public function getPriority() //// ?int
     {
         return $this->priority;
     }

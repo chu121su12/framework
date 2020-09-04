@@ -28,8 +28,11 @@ class SilencedErrorContext implements \JsonSerializable
     public function __construct($severity, $file, $line, array $trace = [], $count = 1)
     {
         $line = cast_to_int($line);
+
         $file = cast_to_string($file);
+
         $severity = cast_to_int($severity);
+
         $count = cast_to_int($count);
 
         $this->severity = $severity;
@@ -39,27 +42,27 @@ class SilencedErrorContext implements \JsonSerializable
         $this->count = $count;
     }
 
-    public function getSeverity()
+    public function getSeverity() //// int
     {
         return $this->severity;
     }
 
-    public function getFile()
+    public function getFile() //// string
     {
         return $this->file;
     }
 
-    public function getLine()
+    public function getLine() //// int
     {
         return $this->line;
     }
 
-    public function getTrace()
+    public function getTrace() //// array
     {
         return $this->trace;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize() //// array
     {
         return [
             'severity' => $this->severity,
