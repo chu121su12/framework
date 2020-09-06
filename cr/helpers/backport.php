@@ -70,3 +70,15 @@ if (! function_exists('backport_string_offset'))
         return substr($string, $offset, 1);
     }
 }
+
+if (! function_exists('backport_reflection_type_as_string'))
+{
+    function backport_reflection_type_as_string(\ReflectionType $type)
+    {
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
+            return (string) $type;
+        }
+
+        return $type->getName();
+    }
+}
