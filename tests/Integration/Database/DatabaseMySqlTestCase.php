@@ -10,6 +10,15 @@ abstract class DatabaseMySqlTestCase extends TestCase
     {
         $app['config']->set('app.debug', 'true');
         $app['config']->set('database.default', 'mysql');
+
+        $app['config']->set('database.connections.mysql', [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'username' => 'forge',
+            'password' => 'forge',
+            'database' => 'forge',
+            'prefix' => '',
+        ]);
     }
 
     protected function setUp()
