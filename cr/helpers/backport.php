@@ -71,9 +71,9 @@ if (! function_exists('backport_string_offset'))
     }
 }
 
-if (! function_exists('backport_reflection_type_as_string'))
+if (! function_exists('backport_reflection_type_cast_string'))
 {
-    function backport_reflection_type_as_string(\ReflectionType $type)
+    function backport_reflection_type_cast_string(\ReflectionType $type)
     {
         if (version_compare(PHP_VERSION, '7.1.0', '<')) {
             return (string) $type;
@@ -82,3 +82,44 @@ if (! function_exists('backport_reflection_type_as_string'))
         return $type->getName();
     }
 }
+
+if (! function_exists('backport_reflection_parameter_get_class'))
+{
+    function backport_reflection_parameter_get_class(\ReflectionParameter $parameter)
+    {
+        if (version_compare(PHP_VERSION, '7.9', '<=')) {
+            return $parameter->getClass();
+        }
+
+        return $parameter->getType() && !$parameter->getType()->isBuiltin()
+            ? new \ReflectionClass($parameter->getType()->getName())
+            : null;
+    }
+}
+
+if (! function_exists('backport_reflection_parameter_is_array'))
+{
+    function backport_reflection_parameter_is_array(\ReflectionParameter $parameter)
+    {
+        if (version_compare(PHP_VERSION, '7.9', '<=')) {
+            return $parameter->isArray();
+        }
+
+        return $parameter->getType() && $parameter->getType()->getName() === 'array';
+    }
+}
+
+if (! function_exists('backport_reflection_parameter_is_callable'))
+{
+    function backport_reflection_parameter_is_callable(\ReflectionParameter $parameter)
+    {
+        if (version_compare(PHP_VERSION, '7.9', '<=')) {
+            return $parameter->isCallable();
+        }
+
+        return $parameter->getType() && $parameter->getType()->getName() === 'callable';
+    }
+}
+
+
+

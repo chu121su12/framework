@@ -1,4 +1,4 @@
-backport_reflection_type_as_string
+backport_reflection_type_cast_string
 see vendor/phpunit/phpunit-mock-objects/src/Framework/MockObject/Generator.php
 line 1190, line 1195
 
@@ -9,7 +9,7 @@ PDO::query
     }
 
 Statement::fetchAll
-    public function fetchAll(int $fetch_style = PDO::FETCH_BOTH, mixed ...$fetch_args)
+    public function fetchAll(int $fetch_style = \PDO::FETCH_BOTH, mixed ...$fetch_args)
     {
         return $this->_fetchAll($fetch_style, ...$fetch_args);
     }
