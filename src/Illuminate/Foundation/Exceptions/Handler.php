@@ -427,7 +427,7 @@ class Handler implements ExceptionHandlerContract
     {
         return redirect(isset($exception->redirectTo) ? $exception->redirectTo : url()->previous())
                     ->withInput(Arr::except($request->input(), $this->dontFlash))
-                    ->withErrors($exception->errors(), $exception->errorBag);
+                    ->withErrors($exception->errors(), $request->input('_error_bag', $exception->errorBag));
     }
 
     /**
