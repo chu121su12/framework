@@ -2178,7 +2178,7 @@ class SupportCollectionTest extends TestCase
      */
     public function testEmptyMethod($collection)
     {
-        $collection = $collection::empty();
+        $collection = $collection::empty_();
 
         $this->assertCount(0, $collection->all());
     }

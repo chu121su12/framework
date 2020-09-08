@@ -114,7 +114,7 @@ trait EnumeratesValues
      *
      * @return static
      */
-    public static function empty()
+    public static function empty_()
     {
         return new static([]);
     }

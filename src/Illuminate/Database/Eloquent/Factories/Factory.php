@@ -662,9 +662,11 @@ abstract class Factory
      * @param  string  $modelName
      * @return string
      */
-    public static function resolveFactoryName(string $modelName)
+    public static function resolveFactoryName($modelName)
     {
-        $resolver = static::$factoryNameResolver ?: function (string $modelName) {
+        $modelName = cast_to_string($modelName);
+
+        $resolver = static::$factoryNameResolver ?: function ($modelName) {
             $modelName = Str::startsWith($modelName, 'App\\Models\\')
                 ? Str::after($modelName, 'App\\Models\\')
                 : Str::after($modelName, 'App\\');

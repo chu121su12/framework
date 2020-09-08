@@ -293,8 +293,10 @@ class ComponentTagCompiler
      * @param  string  $component
      * @return string|null
      */
-    public function findClassByComponent(string $component)
+    public function findClassByComponent($component)
     {
+        $component = cast_to_string($component);
+
         $segments = explode('::', $component);
 
         $prefix = $segments[0];
@@ -333,8 +335,10 @@ class ComponentTagCompiler
      * @param  string  $component
      * @return string
      */
-    public function formatClassName(string $component)
+    public function formatClassName($component)
     {
+        $component = cast_to_string($component);
+
         $componentPieces = array_map(function ($componentPiece) {
             return ucfirst(Str::camel($componentPiece));
         }, explode('.', $component));

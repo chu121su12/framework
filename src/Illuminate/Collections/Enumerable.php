@@ -57,7 +57,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      *
      * @return static
      */
-    public static function empty();
+    public static function empty_();
 
     /**
      * Get all items in the enumerable.
