@@ -659,6 +659,10 @@ class Handler implements ExceptionHandlerContract
         if (method_exists($console, 'renderThrowable')) {
             $console->renderThrowable($e, $output);
         } else {
+            if (!($e instanceof \Exception)) {
+                $e = new \Exception($e);
+            }
+
             $console->renderException($e, $output);
         }
     }
