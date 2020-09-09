@@ -2,6 +2,7 @@
 
 namespace Illuminate\Foundation\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Env;
 use Symfony\Component\Console\Input\InputOption;
@@ -92,7 +93,7 @@ class ServeCommand extends Command
      */
     protected function startProcess()
     {
-        $process = new Process($this->serverCommand(), null, collect($_ENV)->mapWithKeys(function ($value, $key) {
+        $process = SymfonyHelper::newProcess($this->serverCommand(), null, collect($_ENV)->mapWithKeys(function ($value, $key) {
             return [$key => false];
         })->all());
 

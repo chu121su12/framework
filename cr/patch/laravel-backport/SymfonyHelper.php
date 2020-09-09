@@ -72,10 +72,8 @@ class SymfonyHelper
         return mb_strwidth($string, $encoding);
     }
 
-    public static function processFromShellCommandline($command, $cwd = null, array $env = null, $input = null, $timeout = 60)
+    public static function newProcess($command, $cwd = null, array $env = null, $input = null, $timeout = 60)
     {
-        $command = cast_to_string($command);
-
         $cwd = cast_to_string($cwd, null);
 
         $timeout = cast_to_float($timeout, null);
@@ -85,5 +83,12 @@ class SymfonyHelper
         }
 
         return new Process($command, $cwd, $env, $input, $timeout);
+    }
+
+    public static function processFromShellCommandline($command, $cwd = null, array $env = null, $input = null, $timeout = 60)
+    {
+        $command = cast_to_string($command);
+
+        return static newProcess($command, $cwd, $env, $input, $timeout);
     }
 }
