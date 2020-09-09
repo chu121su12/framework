@@ -89,6 +89,6 @@ class SymfonyHelper
     {
         $command = cast_to_string($command);
 
-        return static newProcess($command, $cwd, $env, $input, $timeout);
+        return static::newProcess($command, $cwd, $env, $input, $timeout);
     }
 }
