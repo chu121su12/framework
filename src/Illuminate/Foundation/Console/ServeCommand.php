@@ -94,7 +94,9 @@ class ServeCommand extends Command
     protected function startProcess()
     {
         $process = SymfonyHelper::newProcess($this->serverCommand(), null, collect($_ENV)->mapWithKeys(function ($value, $key) {
-            return [$key => false];
+            return $key === 'APP_ENV'
+                    ? [$key => $value]
+                    : [$key => false];
         })->all());
 
         $process->start(function ($type, $buffer) {
