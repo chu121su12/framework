@@ -121,5 +121,14 @@ if (! function_exists('backport_reflection_parameter_is_callable'))
     }
 }
 
+if (! function_exists('backport_closure_from_callable'))
+{
+    function backport_closure_from_callable($callingThis, $classCallable)
+    {
+        if (!version_compare(PHP_VERSION, '7.0.0', '<')) {
+            throw new \Exception('Use \Closure::fromCallable() directly from calling method.');
+        }
 
-
+        return (new \ReflectionMethod(...$classCallable))->getClosure($callingThis);
+    }
+}

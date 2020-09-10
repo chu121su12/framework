@@ -105,8 +105,7 @@ trait Mixin
             }
 
             if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-                $method = new ReflectionMethod($context, $name);
-                $closureBase = $method->getClosure($this);
+                $closureBase = backport_closure_from_callable($this, [$context, $name]);
             } else {
                 $closureBase = Closure::fromCallable([$context, $name]);
             }
