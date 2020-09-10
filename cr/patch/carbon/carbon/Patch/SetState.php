@@ -13,10 +13,13 @@ if (version_compare(PHP_VERSION, '7.0.0', '<'))
          *
          * @return static
          */
-        public static function __set_state()
+        public static function __set_state($dump = null)
         {
-            list($dump) = func_get_args();
+            return static::__set_state_(...func_get_args());
+        }
 
+        public static function __set_state_($dump)
+        {
             if (is_string($dump)) {
                 return static::parse($dump);
             }
