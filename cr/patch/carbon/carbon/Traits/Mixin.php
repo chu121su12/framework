@@ -116,11 +116,11 @@ trait Mixin
 
                 try {
                     $closure = $closureBase->bindTo($context);
-                } catch (Throwable $e) {
+                } catch (Throwable $throwable) {
                     $closure = $closureBase;
-                } catch (\Error $e) {
+                } catch (\Error $throwable) {
                     $closure = $closureBase;
-                } catch (\Exception $e) {
+                } catch (\Exception $throwable) {
                     $closure = $closureBase;
                 }
 
