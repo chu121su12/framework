@@ -63,8 +63,9 @@ final class Macro implements BuiltinMethodReflection
      */
     public function __construct($className, $methodName, $macro)
     {
-        $className = cast_to_string($className);
         $methodName = cast_to_string($methodName);
+
+        $className = cast_to_string($className);
 
         $this->className = $className;
         $this->methodName = $methodName;
@@ -92,7 +93,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getDeclaringClass()
+    public function getDeclaringClass() // ReflectionClass
     {
         return new ReflectionClass($this->className);
     }
@@ -100,7 +101,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isPrivate()
+    public function isPrivate() //// bool
     {
         return false;
     }
@@ -108,7 +109,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isPublic()
+    public function isPublic() //// bool
     {
         return true;
     }
@@ -116,7 +117,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isFinal()
+    public function isFinal() //// bool
     {
         return false;
     }
@@ -124,7 +125,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isInternal()
+    public function isInternal() //// bool
     {
         return false;
     }
@@ -132,7 +133,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isAbstract()
+    public function isAbstract() //// bool
     {
         return false;
     }
@@ -140,7 +141,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isStatic()
+    public function isStatic() //// bool
     {
         return $this->static;
     }
@@ -148,7 +149,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getDocComment()
+    public function getDocComment() //// ?string
     {
         return $this->reflectionFunction->getDocComment() ?: null;
     }
@@ -164,7 +165,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName() //// string
     {
         return $this->methodName;
     }
@@ -172,7 +173,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getParameters()
+    public function getParameters() //// array
     {
         return $this->parameters;
     }
@@ -180,7 +181,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getReturnType()
+    public function getReturnType() // ?ReflectionType
     {
         return $this->reflectionFunction->getReturnType();
     }
@@ -204,7 +205,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isDeprecated()
+    public function isDeprecated() // TrinaryLogic
     {
         return TrinaryLogic::createFromBoolean(
             $this->reflectionFunction->isDeprecated() ||
@@ -215,7 +216,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isVariadic()
+    public function isVariadic() //// bool
     {
         return $this->reflectionFunction->isVariadic();
     }
@@ -223,7 +224,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getPrototype()
+    public function getPrototype() // BuiltinMethodReflection
     {
         return $this;
     }
@@ -231,7 +232,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getReflection()
+    public function getReflection() // ?ReflectionMethod
     {
         return $this->reflectionFunction instanceof ReflectionMethod
             ? $this->reflectionFunction

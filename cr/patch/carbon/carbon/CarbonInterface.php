@@ -852,7 +852,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function between($date1, $date2, $equal = true);
+    public function between($date1, $date2, $equal = true); //// bool
 
     /**
      * Determines if the instance is between two others, bounds excluded.
@@ -869,7 +869,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function betweenExcluded($date1, $date2);
+    public function betweenExcluded($date1, $date2); //// bool
 
     /**
      * Determines if the instance is between two others, bounds included.
@@ -886,7 +886,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function betweenIncluded($date1, $date2);
+    public function betweenIncluded($date1, $date2); //// bool
 
     /**
      * Returns either the close date "Friday 15h30", or a calendar date "10/09/2017" is farthest than 7 days from now.
@@ -1647,7 +1647,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function eq($date);
+    public function eq($date); //// bool
 
     /**
      * Determines if the instance is equal to another
@@ -1663,7 +1663,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function equalTo($date);
+    public function equalTo($date); //// bool
 
     /**
      * Set the current locale to the given, execute the passed function, reset the locale to previous one,
@@ -1985,7 +1985,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public function getAltNumber($key);
+    public function getAltNumber($key); //// string
 
     /**
      * Returns the list of internally available locales and already loaded custom locales.
@@ -2285,7 +2285,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function greaterThan($date);
+    public function greaterThan($date); //// bool
 
     /**
      * Determines if the instance is greater (after) than or equal to another
@@ -2301,7 +2301,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function greaterThanOrEqualTo($date);
+    public function greaterThanOrEqualTo($date); //// bool
 
     /**
      * Determines if the instance is greater (after) than another
@@ -2319,7 +2319,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function gt($date);
+    public function gt($date); //// bool
 
     /**
      * Determines if the instance is greater (after) than or equal to another
@@ -2337,7 +2337,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function gte($date);
+    public function gte($date); //// bool
 
     /**
      * Checks if the (date)time string is in a given format.
@@ -2450,7 +2450,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function isAfter($date);
+    public function isAfter($date); //// bool
 
     /**
      * Determines if the instance is less (before) than another
@@ -2468,7 +2468,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function isBefore($date);
+    public function isBefore($date); //// bool
 
     /**
      * Determines if the instance is between two others
@@ -2487,7 +2487,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function isBetween($date1, $date2, $equal = true);
+    public function isBetween($date1, $date2, $equal = true); //// bool
 
     /**
      * Check if its the birthday. Compares the date/month values of the two dates.
@@ -2851,7 +2851,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public function isoFormat($format, $originalFormat = null);
+    public function isoFormat($format, $originalFormat = null); //// string
 
     /**
      * Get/set the week number using given first day of week and first
@@ -2957,7 +2957,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function lessThan($date);
+    public function lessThan($date); //// bool
 
     /**
      * Determines if the instance is less (before) or equal to another
@@ -2973,7 +2973,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function lessThanOrEqualTo($date);
+    public function lessThanOrEqualTo($date); //// bool
 
     /**
      * Get/set the locale for the current instance.
@@ -3051,7 +3051,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function lt($date);
+    public function lt($date); //// bool
 
     /**
      * Determines if the instance is less (before) or equal to another
@@ -3069,7 +3069,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function lte($date);
+    public function lte($date); //// bool
 
     /**
      * Register a custom macro.
@@ -3141,7 +3141,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public function meridiem($isLower = false);
+    public function meridiem($isLower = false); //// string
 
     /**
      * Modify to midday, default to self::$midDayAt
@@ -3233,7 +3233,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function ne($date);
+    public function ne($date); //// bool
 
     /**
      * Modify to the next occurrence of a given modifier such as a day of
@@ -3275,7 +3275,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return bool
      */
-    public function notEqualTo($date);
+    public function notEqualTo($date); //// bool
 
     /**
      * Get a Carbon instance for the current date and time.
@@ -3340,7 +3340,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public function ordinal($key, $period = null);
+    public function ordinal($key, $period = null); //// string
 
     /**
      * Create a carbon instance from a string.
@@ -3379,7 +3379,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public static function pluralUnit($unit);
+    public static function pluralUnit($unit); //// string
 
     /**
      * Modify to the previous occurrence of a given modifier such as a day of
@@ -3942,7 +3942,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public static function singularUnit($unit);
+    public static function singularUnit($unit); //// string
 
     /**
      * Modify to start of current given unit.
@@ -4654,7 +4654,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public function translate($key, array $parameters = [], $number = null, \Symfony\Component\Translation\TranslatorInterface $translator = null, $altNumbers = false);
+    public function translate($key, array $parameters = [], $number = null, \Symfony\Component\Translation\TranslatorInterface $translator = null, $altNumbers = false); //// string
 
     /**
      * Returns the alternative number for a given integer if available in the current locale.
@@ -4663,7 +4663,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public function translateNumber($number);
+    public function translateNumber($number); //// string
 
     /**
      * Translate a time string from a locale to an other.
@@ -4703,7 +4703,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public static function translateWith(\Symfony\Component\Translation\TranslatorInterface $translator, $key, array $parameters = [], $number = null);
+    public static function translateWith(\Symfony\Component\Translation\TranslatorInterface $translator, $key, array $parameters = [], $number = null); //// string
 
     /**
      * Format as ->format() do (using date replacements patterns from http://php.net/manual/fr/function.date.php)
@@ -4713,7 +4713,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public function translatedFormat($format);
+    public function translatedFormat($format); //// string
 
     /**
      * Set the timezone or returns the timezone name if no arguments passed.

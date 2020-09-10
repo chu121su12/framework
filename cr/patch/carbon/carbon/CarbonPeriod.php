@@ -721,7 +721,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return string
      */
-    public function getDateClass()
+    public function getDateClass() //// string
     {
         return $this->dateClass;
     }
@@ -1672,6 +1672,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
     public function first()
     {
         $array = $this->toArray() ?: [];
+
         return isset($array[0]) ? $array[0] : null;
     }
 
@@ -1940,7 +1941,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function eq($period)
+    public function eq($period) //// bool
     {
         return $this->equalTo($period);
     }
@@ -1953,7 +1954,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function equalTo($period)
+    public function equalTo($period) //// bool
     {
         if (!($period instanceof self)) {
             $period = self::make($period);
@@ -1978,7 +1979,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function ne($period)
+    public function ne($period) //// bool
     {
         return $this->notEqualTo($period);
     }
@@ -1991,7 +1992,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function notEqualTo($period)
+    public function notEqualTo($period) //// bool
     {
         return !$this->eq($period);
     }
@@ -2004,7 +2005,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function startsBefore($date = null)
+    public function startsBefore($date = null) //// bool
     {
         return $this->getStartDate()->lessThan($this->resolveCarbon($date));
     }
@@ -2017,7 +2018,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function startsBeforeOrAt($date = null)
+    public function startsBeforeOrAt($date = null) //// bool
     {
         return $this->getStartDate()->lessThanOrEqualTo($this->resolveCarbon($date));
     }
@@ -2030,7 +2031,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function startsAfter($date = null)
+    public function startsAfter($date = null) //// bool
     {
         return $this->getStartDate()->greaterThan($this->resolveCarbon($date));
     }
@@ -2043,7 +2044,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function startsAfterOrAt($date = null)
+    public function startsAfterOrAt($date = null) //// bool
     {
         return $this->getStartDate()->greaterThanOrEqualTo($this->resolveCarbon($date));
     }
@@ -2056,7 +2057,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function startsAt($date = null)
+    public function startsAt($date = null) //// bool
     {
         return $this->getStartDate()->equalTo($this->resolveCarbon($date));
     }
@@ -2069,7 +2070,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function endsBefore($date = null)
+    public function endsBefore($date = null) //// bool
     {
         return $this->calculateEnd()->lessThan($this->resolveCarbon($date));
     }
@@ -2082,7 +2083,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function endsBeforeOrAt($date = null)
+    public function endsBeforeOrAt($date = null) //// bool
     {
         return $this->calculateEnd()->lessThanOrEqualTo($this->resolveCarbon($date));
     }
@@ -2095,7 +2096,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function endsAfter($date = null)
+    public function endsAfter($date = null) //// bool
     {
         return $this->calculateEnd()->greaterThan($this->resolveCarbon($date));
     }
@@ -2108,7 +2109,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function endsAfterOrAt($date = null)
+    public function endsAfterOrAt($date = null) //// bool
     {
         return $this->calculateEnd()->greaterThanOrEqualTo($this->resolveCarbon($date));
     }
@@ -2121,7 +2122,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function endsAt($date = null)
+    public function endsAt($date = null) //// bool
     {
         return $this->calculateEnd()->equalTo($this->resolveCarbon($date));
     }
@@ -2132,7 +2133,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function isStarted()
+    public function isStarted() //// bool
     {
         return $this->startsBeforeOrAt();
     }
@@ -2143,7 +2144,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function isEnded()
+    public function isEnded() //// bool
     {
         return $this->endsBeforeOrAt();
     }
@@ -2154,7 +2155,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function isInProgress()
+    public function isInProgress() //// bool
     {
         return $this->isStarted() && !$this->isEnded();
     }
@@ -2295,7 +2296,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function contains($date = null)
+    public function contains($date = null) //// bool
     {
         $startMethod = 'startsBefore'.($this->isStartIncluded() ? 'OrAt' : '');
         $endMethod = 'endsAfter'.($this->isEndIncluded() ? 'OrAt' : '');
@@ -2312,7 +2313,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function follows($period, ...$arguments)
+    public function follows($period, ...$arguments) //// bool
     {
         $period = $this->resolveCarbonPeriod($period, ...$arguments);
 
@@ -2328,7 +2329,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function isFollowedBy($period, ...$arguments)
+    public function isFollowedBy($period, ...$arguments) //// bool
     {
         $period = $this->resolveCarbonPeriod($period, ...$arguments);
 
@@ -2345,7 +2346,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function isConsecutiveWith($period, ...$arguments)
+    public function isConsecutiveWith($period, ...$arguments) //// bool
     {
         return $this->follows($period, ...$arguments) || $this->isFollowedBy($period, ...$arguments);
     }

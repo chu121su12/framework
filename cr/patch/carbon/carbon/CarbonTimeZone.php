@@ -303,7 +303,7 @@ class CarbonTimeZone extends DateTimeZone
      *
      * @return string
      */
-    public static function getOffsetNameFromMinuteOffset($minutes)
+    public static function getOffsetNameFromMinuteOffset($minutes) //// string
     {
         $minutes = cast_to_float($minutes);
 

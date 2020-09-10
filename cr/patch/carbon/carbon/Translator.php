@@ -87,7 +87,7 @@ class Translator extends Translation\Translator
      *
      * @return array
      */
-    public function getDirectories()
+    public function getDirectories() //// array
     {
         return $this->directories;
     }

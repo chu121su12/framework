@@ -31,7 +31,7 @@ trait IntervalStep
      *
      * @return Closure
      */
-    public function getStep()
+    public function getStep() // ?Closure
     {
         return $this->step;
     }
@@ -43,7 +43,7 @@ trait IntervalStep
      *
      * @param Closure|null $step
      */
-    public function setStep(Closure $step = null)
+    public function setStep(Closure $step = null) /// void
     {
         $this->step = $step;
     }
@@ -58,7 +58,7 @@ trait IntervalStep
      *
      * @return CarbonInterface
      */
-    public function convertDate(DateTimeInterface $dateTime, $negated = false)
+    public function convertDate(DateTimeInterface $dateTime, $negated = false) // CarbonInterface
     {
         $negated = cast_to_bool($negated);
 

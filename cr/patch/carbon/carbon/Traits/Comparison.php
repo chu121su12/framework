@@ -47,7 +47,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function eq($date)
+    public function eq($date) //// bool
     {
         return $this->equalTo($date);
     }
@@ -66,7 +66,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function equalTo($date)
+    public function equalTo($date) //// bool
     {
         return $this == $date;
     }
@@ -87,7 +87,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function ne($date)
+    public function ne($date) //// bool
     {
         return $this->notEqualTo($date);
     }
@@ -106,7 +106,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function notEqualTo($date)
+    public function notEqualTo($date) //// bool
     {
         return !$this->equalTo($date);
     }
@@ -127,7 +127,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function gt($date)
+    public function gt($date) //// bool
     {
         return $this->greaterThan($date);
     }
@@ -146,7 +146,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function greaterThan($date)
+    public function greaterThan($date) //// bool
     {
         return $this > $date;
     }
@@ -167,7 +167,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function isAfter($date)
+    public function isAfter($date) //// bool
     {
         return $this->greaterThan($date);
     }
@@ -188,7 +188,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function gte($date)
+    public function gte($date) //// bool
     {
         return $this->greaterThanOrEqualTo($date);
     }
@@ -207,7 +207,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function greaterThanOrEqualTo($date)
+    public function greaterThanOrEqualTo($date) //// bool
     {
         return $this >= $date;
     }
@@ -228,7 +228,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function lt($date)
+    public function lt($date) //// bool
     {
         return $this->lessThan($date);
     }
@@ -247,7 +247,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function lessThan($date)
+    public function lessThan($date) //// bool
     {
         return $this < $date;
     }
@@ -268,7 +268,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function isBefore($date)
+    public function isBefore($date) //// bool
     {
         return $this->lessThan($date);
     }
@@ -289,7 +289,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function lte($date)
+    public function lte($date) //// bool
     {
         return $this->lessThanOrEqualTo($date);
     }
@@ -308,7 +308,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function lessThanOrEqualTo($date)
+    public function lessThanOrEqualTo($date) //// bool
     {
         return $this <= $date;
     }
@@ -334,7 +334,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function between($date1, $date2, $equal = true)
+    public function between($date1, $date2, $equal = true) //// bool
     {
         $date1 = $this->resolveCarbon($date1);
         $date2 = $this->resolveCarbon($date2);
@@ -365,7 +365,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function betweenIncluded($date1, $date2)
+    public function betweenIncluded($date1, $date2) //// bool
     {
         return $this->between($date1, $date2, true);
     }
@@ -385,7 +385,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function betweenExcluded($date1, $date2)
+    public function betweenExcluded($date1, $date2) //// bool
     {
         return $this->between($date1, $date2, false);
     }
@@ -407,7 +407,7 @@ trait Comparison
      *
      * @return bool
      */
-    public function isBetween($date1, $date2, $equal = true)
+    public function isBetween($date1, $date2, $equal = true) //// bool
     {
         return $this->between($date1, $date2, $equal);
     }
@@ -979,6 +979,7 @@ trait Comparison
 
         foreach ($units as $unit => $loop) {
             list($minimum, $startUnit) = $loop;
+
             if ($median->$unit === $minimum) {
                 $current = $current->startOf($startUnit);
 

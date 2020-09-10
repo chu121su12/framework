@@ -13,7 +13,7 @@ class DateTimeImmutableType extends VarDateTimeImmutableType implements CarbonDo
 {
     use CarbonTypeConverter;
 
-    protected function getCarbonClassName()
+    protected function getCarbonClassName() //// string
     {
         return CarbonImmutable::class;
     }

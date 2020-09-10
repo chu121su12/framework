@@ -39,7 +39,7 @@ final class MacroExtension implements MethodsClassReflectionExtension
     /**
      * {@inheritdoc}
      */
-    public function hasMethod(ClassReflection $classReflection, $methodName)
+    public function hasMethod(ClassReflection $classReflection, $methodName) //// bool
     {
         $methodName = cast_to_string($methodName);
 
@@ -49,7 +49,7 @@ final class MacroExtension implements MethodsClassReflectionExtension
     /**
      * {@inheritdoc}
      */
-    public function getMethod(ClassReflection $classReflection, $methodName)
+    public function getMethod(ClassReflection $classReflection, $methodName) // MethodReflection
     {
         $methodName = cast_to_string($methodName);
 

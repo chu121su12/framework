@@ -14,5 +14,5 @@ use DateTimeInterface;
 
 interface CarbonConverterInterface
 {
-    public function convertDate(DateTimeInterface $dateTime, $negated = false);
+    public function convertDate(DateTimeInterface $dateTime, $negated = false); // CarbonInterface
 }

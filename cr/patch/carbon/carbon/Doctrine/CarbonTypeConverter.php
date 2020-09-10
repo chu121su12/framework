@@ -15,7 +15,7 @@ use Exception;
 
 trait CarbonTypeConverter
 {
-    protected function getCarbonClassName()
+    protected function getCarbonClassName() //// string
     {
         return Carbon::class;
     }

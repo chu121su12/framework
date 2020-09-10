@@ -1620,7 +1620,7 @@ trait Date
     /////////////////////// WEEK SPECIAL DAYS /////////////////////////
     ///////////////////////////////////////////////////////////////////
 
-    private static function getFirstDayOfWeek()
+    private static function getFirstDayOfWeek() //// int
     {
         return (int) static::getTranslationMessageWith(
             static::getTranslator(),
@@ -1981,9 +1981,10 @@ trait Date
      *
      * @return string
      */
-    public function ordinal($key, $period = null)
+    public function ordinal($key, $period = null) //// string
     {
         $key = cast_to_string($key);
+
         $period = cast_to_string($period, null);
 
         $number = $this->$key;
@@ -2002,7 +2003,7 @@ trait Date
      *
      * @return string
      */
-    public function meridiem($isLower = false)
+    public function meridiem($isLower = false) //// string
     {
         $isLower = cast_to_bool($isLower);
 
@@ -2044,7 +2045,7 @@ trait Date
      *
      * @return string
      */
-    public function getAltNumber($key)
+    public function getAltNumber($key) //// string
     {
         $key = cast_to_string($key);
 
@@ -2059,9 +2060,10 @@ trait Date
      *
      * @return string
      */
-    public function isoFormat($format, $originalFormat = null)
+    public function isoFormat($format, $originalFormat = null) //// string
     {
         $format = cast_to_string($format);
+
         $originalFormat = cast_to_string($originalFormat, null);
 
         $result = '';
@@ -2222,7 +2224,7 @@ trait Date
      *
      * @return string
      */
-    public function translatedFormat($format)
+    public function translatedFormat($format) //// string
     {
         $format = cast_to_string($format);
 
@@ -2399,7 +2401,7 @@ trait Date
      *
      * @return string
      */
-    public static function singularUnit($unit)
+    public static function singularUnit($unit) //// string
     {
         $unit = cast_to_string($unit);
 
@@ -2423,7 +2425,7 @@ trait Date
      *
      * @return string
      */
-    public static function pluralUnit($unit)
+    public static function pluralUnit($unit) //// string
     {
         $unit = cast_to_string($unit);
 
