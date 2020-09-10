@@ -13,7 +13,7 @@ if (version_compare(PHP_VERSION, '7.0.0', '<'))
          *
          * @return static
          */
-        public static function __set_state($dump = null);
+        public static function __set_state();
     }
 }
 else
