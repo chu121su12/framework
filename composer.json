@@ -122,8 +122,8 @@
             "Doctrine\\Inflector\\": "cr/patch/doctrine-inflector-src/",
             "Illuminate\\": "src/Illuminate/",
             "Illuminate\\Support\\": ["src/Illuminate/Macroable/", "src/Illuminate/Collections/"],
-            "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/ui-2.1.0/auth-backend/",
-            "Laravel\\Ui\\": "cr/patch/laravel-ui/ui-2.1.0/src/",
+            "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/ui/auth-backend/",
+            "Laravel\\Ui\\": "cr/patch/laravel-ui/ui/src/",
             "CR\\LaravelBackport\\": "cr/patch/laravel-backport/"
         },
         "classmap": [
