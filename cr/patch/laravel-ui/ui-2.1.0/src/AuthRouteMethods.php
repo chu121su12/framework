@@ -13,45 +13,49 @@ class AuthRouteMethods
     public function auth()
     {
         return function ($options = []) {
-            // Login Routes...
-            if (isset($options['login']) ? $options['login'] : true) {
-                $this->get('login', 'Auth\LoginController@showLoginForm')->name('login');
-                $this->post('login', 'Auth\LoginController@login');
-            }
+            $namespace = class_exists($this->prependGroupNamespace('Auth\LoginController')) ? null : 'App\Http\Controllers';
 
-            // Logout Routes...
-            if (isset($options['logout']) ? $options['logout'] : true) {
-                $this->post('logout', 'Auth\LoginController@logout')->name('logout');
-            }
+            $this->group(['namespace' => $namespace], function() use($options) {
+                // Login Routes...
+                if (isset($options['login']) ? $options['login'] : true) {
+                    $this->get('login', 'Auth\LoginController@showLoginForm')->name('login');
+                    $this->post('login', 'Auth\LoginController@login');
+                }
 
-            // Registration Routes...
-            if (isset($options['register']) ? $options['register'] : true) {
-                $this->get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-                $this->post('register', 'Auth\RegisterController@register');
-            }
+                // Logout Routes...
+                if (isset($options['logout']) ? $options['logout'] : true) {
+                    $this->post('logout', 'Auth\LoginController@logout')->name('logout');
+                }
 
-            // Password Reset Routes...
-            if (isset($options['reset']) ? $options['reset'] : true) {
-                $this->resetPassword();
-            }
+                // Registration Routes...
+                if (isset($options['register']) ? $options['register'] : true) {
+                    $this->get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+                    $this->post('register', 'Auth\RegisterController@register');
+                }
 
-            // Password Confirmation Routes...
-            if (isset($options['confirm']) ? $options['confirm'] :
-                class_exists($this->prependGroupNamespace('Auth\ConfirmPasswordController'))) {
-                $this->confirmPassword();
-            }
+                // Password Reset Routes...
+                if (isset($options['reset']) ? $options['reset'] : true) {
+                    $this->resetPassword();
+                }
 
-            // Email Verification Routes...
-            if (isset($options['verify']) ? $options['verify'] : false) {
-                $this->emailVerification();
-            }
+                // Password Confirmation Routes...
+                if (isset($options['confirm']) ? $options['confirm'] :
+                    class_exists($this->prependGroupNamespace('Auth\ConfirmPasswordController'))) {
+                    $this->confirmPassword();
+                }
+
+                // Email Verification Routes...
+                if (isset($options['verify']) ? $options['verify'] : false) {
+                    $this->emailVerification();
+                }
+            });
         };
     }
 
     /**
      * Register the typical reset password routes for an application.
      *
-     * @return void
+     * @return callable
      */
     public function resetPassword()
     {
@@ -66,7 +70,7 @@ class AuthRouteMethods
     /**
      * Register the typical confirm password routes for an application.
      *
-     * @return void
+     * @return callable
      */
     public function confirmPassword()
     {
@@ -79,7 +83,7 @@ class AuthRouteMethods
     /**
      * Register the typical email verification routes for an application.
      *
-     * @return void
+     * @return callable
      */
     public function emailVerification()
     {
