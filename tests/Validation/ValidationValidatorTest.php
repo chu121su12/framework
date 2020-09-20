@@ -127,6 +127,30 @@ class ValidationValidatorTest_testImplicitCustomValidationObjects_class implemen
                 }
             }
 
+class ValidationValidatorTest_testCustomValidationObjectWithDotKeysIsCorrectlyPassedValue_class_passes implements Rule {
+                    public function passes($attribute, $value)
+                    {
+                        return $value === ['foo.bar' => 'baz'];
+                    }
+
+                    public function message()
+                    {
+                        return ':attribute must be baz';
+                    }
+                }
+
+class ValidationValidatorTest_testCustomValidationObjectWithDotKeysIsCorrectlyPassedValue_class_not_passes implements Rule {
+                    public function passes($attribute, $value)
+                    {
+                        return false;
+                    }
+
+                    public function message()
+                    {
+                        return ':attribute must be baz';
+                    }
+                }
+
 class ValidationValidatorTest extends TestCase
 {
     protected function tearDown()
@@ -4975,17 +4999,7 @@ class ValidationValidatorTest extends TestCase
             $this->getIlluminateArrayTranslator(),
             ['foo' => ['foo.bar' => 'baz']],
             [
-                'foo' => new class implements Rule {
-                    public function passes($attribute, $value)
-                    {
-                        return $value === ['foo.bar' => 'baz'];
-                    }
-
-                    public function message()
-                    {
-                        return ':attribute must be baz';
-                    }
-                },
+                'foo' => new ValidationValidatorTest_testCustomValidationObjectWithDotKeysIsCorrectlyPassedValue_class_passes,
             ]
         );
 
@@ -4996,17 +5010,7 @@ class ValidationValidatorTest extends TestCase
             $this->getIlluminateArrayTranslator(),
             ['foo' => ['foo.bar' => 'baz']],
             [
-                'foo.foo\.bar' => new class implements Rule {
-                    public function passes($attribute, $value)
-                    {
-                        return false;
-                    }
-
-                    public function message()
-                    {
-                        return ':attribute must be baz';
-                    }
-                },
+                'foo.foo\.bar' => new ValidationValidatorTest_testCustomValidationObjectWithDotKeysIsCorrectlyPassedValue_class_not_passes,
             ]
         );
 

@@ -328,8 +328,10 @@ class Validator implements ValidatorContract
      * @param  string  $value
      * @return string
      */
-    protected function replacePlaceholderInString(string $value)
+    protected function replacePlaceholderInString($value)
     {
+        $value = cast_to_string($value);
+
         return str_replace(
             [$this->dotPlaceholder, '__asterisk__'],
             ['.', '*'],

@@ -627,7 +627,7 @@ class Builder
      */
     public function crossJoinSub($query, $as)
     {
-        [$query, $bindings] = $this->createSub($query);
+        list($query, $bindings) = $this->createSub($query);
 
         $expression = '('.$query.') as '.$this->grammar->wrapTable($as);
 

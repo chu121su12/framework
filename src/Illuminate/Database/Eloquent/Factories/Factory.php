@@ -177,7 +177,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return array
      */
-    public function raw($attributes = [], ?Model $parent = null)
+    public function raw($attributes = [], Model $parent = null)
     {
         return $this->state($attributes)->getExpandedAttributes($parent);
     }
@@ -199,8 +199,10 @@ abstract class Factory
      * @param  iterable  $records
      * @return \Illuminate\Database\Eloquent\Collection|mixed
      */
-    public function createMany(iterable $records)
+    public function createMany($records)
     {
+        $records = cast_to_iterable($records);
+
         return new EloquentCollection(
             array_map(function ($record) {
                 return $this->state($record)->create();
