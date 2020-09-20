@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentFactoryTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     protected function setUp()
     {
         Container::getInstance()->singleton(\Faker\Generator::class, function ($app, $parameters) {
@@ -96,7 +98,7 @@ class DatabaseEloquentFactoryTest extends TestCase
         $this->assertInstanceOf(Eloquent::class, $user);
         $this->assertEquals('Taylor Otwell', $user->name);
 
-        $users = FactoryTestUserFactory::new()->createMany([
+        $users = FactoryTestUserFactory::new_()->createMany([
             ['name' => 'Taylor Otwell'],
             ['name' => 'Jeffrey Way'],
         ]);
@@ -135,20 +137,20 @@ class DatabaseEloquentFactoryTest extends TestCase
 
     public function test_basic_model_attributes_can_be_created()
     {
-        $user = FactoryTestUserFactory::new()->raw();
+        $user = FactoryTestUserFactory::new_()->raw();
         $this->assertIsArray($user);
 
-        $user = FactoryTestUserFactory::new()->raw(['name' => 'Taylor Otwell']);
+        $user = FactoryTestUserFactory::new_()->raw(['name' => 'Taylor Otwell']);
         $this->assertIsArray($user);
         $this->assertEquals('Taylor Otwell', $user['name']);
     }
 
     public function test_expanded_model_attributes_can_be_created()
     {
-        $post = FactoryTestPostFactory::new()->raw();
+        $post = FactoryTestPostFactory::new_()->raw();
         $this->assertIsArray($post);
 
-        $post = FactoryTestPostFactory::new()->raw(['title' => 'Test Title']);
+        $post = FactoryTestPostFactory::new_()->raw(['title' => 'Test Title']);
         $this->assertIsArray($post);
         $this->assertIsInt($post['user_id']);
         $this->assertEquals('Test Title', $post['title']);
