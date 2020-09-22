@@ -45,7 +45,7 @@ if (! function_exists('backport_substr_count'))
 
 if (! function_exists('backport_spaceship_operator'))
 {
-    function backport_spaceship_operator($left, $right)
+    function backport_spaceship_operator($left, $right) // <=>
     {
         if ($left > $right) {
             return 1;
@@ -61,7 +61,7 @@ if (! function_exists('backport_spaceship_operator'))
 
 if (! function_exists('backport_string_offset'))
 {
-    function backport_string_offset($string, $offset)
+    function backport_string_offset($string, $offset) // ex: $string[-1]
     {
         if ($offset >= 0) {
             return $string[0];
