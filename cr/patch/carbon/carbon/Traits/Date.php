@@ -2137,7 +2137,7 @@ trait Date
                         $sequence = $this->{$sequence[0]}(...$sequence[1]);
                     } catch (ReflectionException $e) {
                         $sequence = '';
-                    } catch (BadMethodCallException $e) {
+                    } catch (InvalidArgumentException $e) {
                         $sequence = '';
                     } catch (BadMethodCallException $e) {
                         $sequence = '';

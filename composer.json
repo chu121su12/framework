@@ -139,7 +139,7 @@
             "tests/Database/stubs/MigrationCreatorFakeMigration.php"
         ],
         "psr-4": {
-            "Orchestra\\Testbench\\": "cr/patch/orchestra-testbench-core/testbench-core-5.1.4/src/",
+            "Orchestra\\Testbench\\": "cr/patch/orchestra-testbench-core/testbench-core/src/",
             "PHPUnit\\": "cr/patch/phpunit-src/PHPUnit/",
             "Illuminate\\Tests\\": "tests/"
         }
