@@ -62,7 +62,9 @@ class ServeCommand extends Command
                 clearstatcache(false, $environmentFile);
             }
 
-            if ($hasEnvironment && filemtime($environmentFile) > $environmentLastModified) {
+            if (! $this->option('no-reload') &&
+                $hasEnvironment &&
+                filemtime($environmentFile) > $environmentLastModified) {
                 $environmentLastModified = filemtime($environmentFile);
 
                 $this->comment('Environment modified. Restarting server...');
@@ -94,6 +96,10 @@ class ServeCommand extends Command
     protected function startProcess()
     {
         $process = SymfonyHelper::newProcess($this->serverCommand(), null, collect($_ENV)->mapWithKeys(function ($value, $key) {
+            if ($this->option('no-reload')) {
+                return [$key => $value];
+            }
+
             return $key === 'APP_ENV'
                     ? [$key => $value]
                     : [$key => false];
@@ -165,6 +171,7 @@ class ServeCommand extends Command
             ['host', null, InputOption::VALUE_OPTIONAL, 'The host address to serve the application on', '127.0.0.1'],
             ['port', null, InputOption::VALUE_OPTIONAL, 'The port to serve the application on', Env::get('SERVER_PORT')],
             ['tries', null, InputOption::VALUE_OPTIONAL, 'The max number of ports to attempt to serve from', 10],
+            ['no-reload', null, InputOption::VALUE_NONE, 'Do not reload the development server on .env file changes'],
         ];
     }
 }
