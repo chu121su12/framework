@@ -229,6 +229,7 @@ class Factory
         if ($className) {
             $this->className = $className;
         }
+
         $this->settings = $settings;
     }
 
@@ -293,7 +294,8 @@ class Factory
             }
         }
 
-        $result = $this->className::$name(...$arguments);
+        $className = $this->className;
+        $result = $className::$name(...$arguments);
 
         return $result instanceof CarbonInterface && !empty($settings)
             ? $result->settings($settings)
