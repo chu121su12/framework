@@ -177,8 +177,8 @@ class SupportLazyCollectionTest extends TestCase
                     ->shouldReceive('now')
                     ->times(3)
                     ->andReturn(
-                        (clone $timeout)->sub(2, 'minute')->getTimestamp(),
-                        (clone $timeout)->sub(1, 'minute')->getTimestamp(),
+                        with(clone $timeout)->sub_(2, 'minute')->getTimestamp(),
+                        with(clone $timeout)->sub_(1, 'minute')->getTimestamp(),
                         $timeout->getTimestamp()
                     );
 
