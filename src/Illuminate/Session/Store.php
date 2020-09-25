@@ -640,6 +640,16 @@ class Store implements Session
     }
 
     /**
+     * Specify that the user has confirmed their password.
+     *
+     * @return void
+     */
+    public function passwordConfirmed()
+    {
+        $this->put('auth.password_confirmed_at', time());
+    }
+
+    /**
      * Get the underlying session handler implementation.
      *
      * @return \SessionHandlerInterface

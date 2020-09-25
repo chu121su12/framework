@@ -61,7 +61,7 @@ class PostgresSchemaState extends SchemaState
     }
 
     /**
-     * Get the base dump command arguments for MySQL as a string.
+     * Get the base dump command arguments for PostgreSQL as a string.
      *
      * @return string
      */
