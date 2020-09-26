@@ -721,9 +721,13 @@ abstract class Factory
 
         $relationship = Str::camel(Str::substr($method, 3));
 
-        $factory = static::factoryForModel(
-            get_class($this->newModel()->{$relationship}()->getRelated())
-        );
+        $relatedModel = get_class($this->newModel()->{$relationship}()->getRelated());
+
+        if (method_exists($relatedModel, 'newFactory')) {
+            $factory = $relatedModel::newFactory() ?: static::factoryForModel($relatedModel);
+        } else {
+            $factory = static::factoryForModel($relatedModel);
+        }
 
         if (Str::startsWith($method, 'for')) {
             return $this->for_($factory->state(isset($parameters[0]) ? $parameters[0] : []), $relationship);
