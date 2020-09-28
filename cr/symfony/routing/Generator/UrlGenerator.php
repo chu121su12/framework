@@ -314,7 +314,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
             unset($extra['_fragment']);
         }
 
-        if ($extra && $query = http_build_query($extra, '', '&', PHP_QUERY_RFC3986)) {
+        if ($extra && $query = http_build_query($extra, '', '&', \PHP_QUERY_RFC3986)) {
             $url .= '?'.strtr($query, self::QUERY_FRAGMENT_DECODED);
         }
 

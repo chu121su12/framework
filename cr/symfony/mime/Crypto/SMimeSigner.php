@@ -55,7 +55,7 @@ final class SMimeSigner extends SMime
             $this->signPrivateKey = $this->normalizeFilePath($privateKey);
         }
 
-        $this->signOptions = isset($signOptions) ? $signOptions : PKCS7_DETACHED;
+        $this->signOptions = isset($signOptions) ? $signOptions : \PKCS7_DETACHED;
         $this->extraCerts = $extraCerts ? realpath($extraCerts) : null;
     }
 

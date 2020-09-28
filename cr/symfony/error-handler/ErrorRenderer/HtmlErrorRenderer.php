@@ -199,7 +199,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
     {
         $string = cast_to_string($string);
 
-        return htmlspecialchars($string, ENT_COMPAT | ENT_SUBSTITUTE, $this->charset);
+        return htmlspecialchars($string, \ENT_COMPAT | \ENT_SUBSTITUTE, $this->charset);
     }
 
     private function abbrClass($class) //// string
@@ -388,7 +388,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
     {
         $name = cast_to_string($name);
 
-        extract($context, EXTR_SKIP);
+        extract($context, \EXTR_SKIP);
         ob_start();
         include __DIR__.'/../Resources/'.$name;
 

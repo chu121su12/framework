@@ -40,7 +40,7 @@ final class SMimeEncrypter extends SMime
             $this->certs = $this->normalizeFilePath($certificate);
         }
 
-        $this->cipher = isset($cipher) ? $cipher : OPENSSL_CIPHER_AES_256_CBC;
+        $this->cipher = isset($cipher) ? $cipher : \OPENSSL_CIPHER_AES_256_CBC;
     }
 
     public function encrypt(Message $message) // Message
