@@ -6,6 +6,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator as PaginatorContract;
 
 class UrlWindow
 {
+    protected $defaultOnEachSide = 3;
+
+    protected $defaultOnSideEnds = 2;
+
     /**
      * The paginator implementation.
      *
@@ -42,9 +46,9 @@ class UrlWindow
      */
     public function get()
     {
-        $onEachSide = $this->paginator->onEachSide;
+        $onEachSide = $this->paginator->onEachSide ?: $this->defaultOnEachSide;
 
-        if ($this->paginator->lastPage() < ($onEachSide * 2) + 8) {
+        if ($this->paginator->lastPage() < ($onEachSide * 2) + ($this->defaultOnSideEnds * 2) + 2) {
             return $this->getSmallSlider();
         }
 
@@ -172,7 +176,7 @@ class UrlWindow
      */
     public function getStart()
     {
-        return $this->paginator->getUrlRange(1, 2);
+        return $this->paginator->getUrlRange(1, $this->defaultOnSideEnds);
     }
 
     /**
@@ -183,7 +187,7 @@ class UrlWindow
     public function getFinish()
     {
         return $this->paginator->getUrlRange(
-            $this->lastPage() - 1,
+            $this->lastPage() + 1 - $this->defaultOnSideEnds,
             $this->lastPage()
         );
     }
