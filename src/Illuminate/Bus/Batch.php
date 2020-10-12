@@ -81,21 +81,21 @@ class Batch implements Arrayable, JsonSerializable
     /**
      * The date indicating when the batch was created.
      *
-     * @var \Illuminate\Support\CarbonImmutable
+     * @var \Carbon\CarbonImmutable
      */
     public $createdAt;
 
     /**
      * The date indicating when the batch was cancelled.
      *
-     * @var \Illuminate\Support\CarbonImmutable|null
+     * @var \Carbon\CarbonImmutable|null
      */
     public $cancelledAt;
 
     /**
      * The date indicating when the batch was finished.
      *
-     * @var \Illuminate\Support\CarbonImmutable|null
+     * @var \Carbon\CarbonImmutable|null
      */
     public $finishedAt;
 
@@ -111,9 +111,9 @@ class Batch implements Arrayable, JsonSerializable
      * @param  int  $failedJobs
      * @param  array  $failedJobIds
      * @param  array  $options
-     * @param  \Illuminate\Support\CarbonImmutable  $createdAt
-     * @param  \Illuminate\Support\CarbonImmutable|null  $cancelledAt
-     * @param  \Illuminate\Support\CarbonImmutable|null  $finishedAt
+     * @param  \Carbon\CarbonImmutable  $createdAt
+     * @param  \Carbon\CarbonImmutable|null  $cancelledAt
+     * @param  \Carbon\CarbonImmutable|null  $finishedAt
      * @return void
      */
     public function __construct(QueueFactory $queue,
@@ -171,18 +171,28 @@ class Batch implements Arrayable, JsonSerializable
      */
     public function add($jobs)
     {
-        $jobs = Collection::wrap($jobs)->map(function ($job) {
-            if ($job instanceof Closure) {
-                $job = CallQueuedClosure::create($job);
-            }
+        $count = 0;
 
-            $job->withBatchId($this->id);
+        $jobs = Collection::wrap($jobs)->map(function ($job) use (&$count) {
+            $job = $job instanceof Closure ? CallQueuedClosure::create($job) : $job;
+
+            if (is_array($job)) {
+                $count += count($job);
+
+                return with($this->prepareBatchedChain($job), function ($chain) {
+                    return $chain->first()->chain($chain->slice(1)->values()->all());
+                });
+            } else {
+                $job->withBatchId($this->id);
+
+                $count++;
+            }
 
             return $job;
         });
 
-        $this->repository->transaction(function () use ($jobs) {
-            $this->repository->incrementTotalJobs($this->id, count($jobs));
+        $this->repository->transaction(function () use ($jobs, $count) {
+            $this->repository->incrementTotalJobs($this->id, $count);
 
             $this->queue->connection(isset($this->options['connection']) ? $this->options['connection'] : null)->bulk(
                 $jobs->all(),
@@ -192,6 +202,21 @@ class Batch implements Arrayable, JsonSerializable
         });
 
         return $this->fresh();
+    }
+
+    /**
+     * Prepare a chain that exists within the jobs being added.
+     *
+     * @param  array  $chain
+     * @return \Illuminate\Support\Collection
+     */
+    protected function prepareBatchedChain(array $chain)
+    {
+        return collect($chain)->map(function ($job) {
+            $job = $job instanceof Closure ? CallQueuedClosure::create($job) : $job;
+
+            return $job->withBatchId($this->id);
+        });
     }
 
     /**
@@ -251,7 +276,7 @@ class Batch implements Arrayable, JsonSerializable
      * Decrement the pending jobs for the batch.
      *
      * @param  string  $jobId
-     * @return int
+     * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
     public function decrementPendingJobs($jobId)
     {
@@ -338,7 +363,7 @@ class Batch implements Arrayable, JsonSerializable
      * Increment the failed jobs for the batch.
      *
      * @param  string  $jobId
-     * @return int
+     * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
     public function incrementFailedJobs($jobId)
     {
@@ -411,7 +436,7 @@ class Batch implements Arrayable, JsonSerializable
      * Invoke a batch callback handler.
      *
      * @param  \Illuminate\Queue\SerializableClosure|callable  $handler
-     * @param  \Illuminate\Bus  $batch
+     * @param  \Illuminate\Bus\Batch  $batch
      * @param  \Throwable|null  $e
      * @return void
      */
