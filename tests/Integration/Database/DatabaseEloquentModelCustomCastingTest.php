@@ -353,17 +353,17 @@ class JsonCaster implements CastsAttributes
 
 class DecimalCaster implements CastsAttributes, SerializesCastableAttributes
 {
-    public function get($model, $key, $value, $attributes)
+    public function get($model, $key, $value, array $attributes)
     {
         return new Decimal($value);
     }
 
-    public function set($model, $key, $value, $attributes)
+    public function set($model, $key, $value, array $attributes)
     {
         return (string) $value;
     }
 
-    public function serialize($model, $key, $value, $attributes)
+    public function serialize($model, $key, $value, array $attributes)
     {
         return (string) $value;
     }

@@ -227,7 +227,7 @@ class Response implements ArrayAccess
      */
     public function throw_()
     {
-        $callback = func_get_args()[0] ?? null;
+        $callback = isset(func_get_args()[0]) ? func_get_args()[0] : null;
 
         if ($this->failed()) {
             throw tap(new RequestException($this), function ($exception) use ($callback) {

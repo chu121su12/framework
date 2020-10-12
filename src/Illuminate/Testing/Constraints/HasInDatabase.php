@@ -115,6 +115,6 @@ class HasInDatabase extends Constraint
             $output[$key] = $data instanceof Expression ? (string) $data : $data;
         }
 
-        return json_encode($output ?? [], $options);
+        return json_encode(isset($output) ? $output : [], $options);
     }
 }

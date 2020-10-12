@@ -12,7 +12,7 @@ use Illuminate\Tests\Integration\Database\DatabaseTestCase;
  */
 class EloquentHasOneIsTest extends DatabaseTestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

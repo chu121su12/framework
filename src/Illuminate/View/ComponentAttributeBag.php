@@ -179,7 +179,7 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
                         : $value;
         }, $attributeDefaults);
 
-        [$appendableAttributes, $nonAppendableAttributes] = collect($this->attributes)
+        list($appendableAttributes, $nonAppendableAttributes) = collect($this->attributes)
                     ->partition(function ($value, $key) use ($attributeDefaults) {
                         return $key === 'class' ||
                                (isset($attributeDefaults[$key]) &&
@@ -189,7 +189,7 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
         $attributes = $appendableAttributes->mapWithKeys(function ($value, $key) use ($attributeDefaults, $escape) {
             $defaultsValue = isset($attributeDefaults[$key]) && $attributeDefaults[$key] instanceof AppendableAttributeValue
                         ? $this->resolveAppendableAttributeDefault($attributeDefaults, $key, $escape)
-                        : ($attributeDefaults[$key] ?? '');
+                        : (isset($attributeDefaults[$key]) ? $attributeDefaults[$key] : '');
 
             return [$key => implode(' ', array_unique(array_filter([$defaultsValue, $value])))];
         })->merge($nonAppendableAttributes)->all();

@@ -31,7 +31,7 @@ class ScheduleWorkCommand extends Command
     {
         $this->info('Schedule worker started successfully.');
 
-        [$lastExecutionStartedAt, $keyOfLastExecutionWithOutput, $executions] = [null, null, []];
+        list($lastExecutionStartedAt, $keyOfLastExecutionWithOutput, $executions) = [null, null, []];
 
         while (true) {
             usleep(100 * 1000);

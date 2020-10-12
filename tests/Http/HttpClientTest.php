@@ -494,8 +494,9 @@ class HttpClientTest extends TestCase
     public function testOnErrorDoesntCallClosureOnInformational()
     {
         $status = 0;
+        $factory = $this->factory;
         $client = $this->factory->fake([
-            'laravel.com' => $this->factory::response('', 101),
+            'laravel.com' => $factory::response('', 101),
         ]);
 
         $response = $client->get('laravel.com')
@@ -510,8 +511,9 @@ class HttpClientTest extends TestCase
     public function testOnErrorDoesntCallClosureOnSuccess()
     {
         $status = 0;
+        $factory = $this->factory;
         $client = $this->factory->fake([
-            'laravel.com' => $this->factory::response('', 201),
+            'laravel.com' => $factory::response('', 201),
         ]);
 
         $response = $client->get('laravel.com')
@@ -526,8 +528,9 @@ class HttpClientTest extends TestCase
     public function testOnErrorDoesntCallClosureOnRedirection()
     {
         $status = 0;
+        $factory = $this->factory;
         $client = $this->factory->fake([
-            'laravel.com' => $this->factory::response('', 301),
+            'laravel.com' => $factory::response('', 301),
         ]);
 
         $response = $client->get('laravel.com')
@@ -542,8 +545,9 @@ class HttpClientTest extends TestCase
     public function testOnErrorCallsClosureOnClientError()
     {
         $status = 0;
+        $factory = $this->factory;
         $client = $this->factory->fake([
-            'laravel.com' => $this->factory::response('', 401),
+            'laravel.com' => $factory::response('', 401),
         ]);
 
         $response = $client->get('laravel.com')
@@ -558,8 +562,9 @@ class HttpClientTest extends TestCase
     public function testOnErrorCallsClosureOnServerError()
     {
         $status = 0;
+        $factory = $this->factory;
         $client = $this->factory->fake([
-            'laravel.com' => $this->factory::response('', 501),
+            'laravel.com' => $factory::response('', 501),
         ]);
 
         $response = $client->get('laravel.com')
