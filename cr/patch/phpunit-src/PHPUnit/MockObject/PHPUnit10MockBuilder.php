@@ -11,7 +11,7 @@ class PHPUnit10MockBuilder extends \PHPUnit_Framework_MockObject_MockBuilder
         return parent::setMethods($this->phpUnit10MockBuilderMethods = $methods);
     }
 
-    public function onlyMethods(array $methods)
+    public function onlyMethods(array $methods = null)
     {
         return $this->setMethods(count($methods) ? $methods : null);
     }
