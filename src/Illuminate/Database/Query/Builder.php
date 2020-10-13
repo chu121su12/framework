@@ -3242,7 +3242,7 @@ class Builder
      *
      * @return static
      */
-    public function clone()
+    public function clone_()
     {
         return clone $this;
     }
@@ -3255,7 +3255,7 @@ class Builder
      */
     public function cloneWithout(array $properties)
     {
-        return tap($this->clone(), function ($clone) use ($properties) {
+        return tap($this->clone_(), function ($clone) use ($properties) {
             foreach ($properties as $property) {
                 $clone->{$property} = null;
             }
@@ -3270,7 +3270,7 @@ class Builder
      */
     public function cloneWithoutBindings(array $except)
     {
-        return tap($this->clone(), function ($clone) use ($except) {
+        return tap($this->clone_(), function ($clone) use ($except) {
             foreach ($except as $type) {
                 $clone->bindings[$type] = [];
             }

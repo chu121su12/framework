@@ -17,7 +17,7 @@ class JobDispatchingTest extends TestCase
         $app['config']->set('app.debug', 'true');
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         Job::$ran = false;
     }
