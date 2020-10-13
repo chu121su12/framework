@@ -264,7 +264,7 @@ class TestEloquentModelWithCustomCast extends Model
     /**
      * The attributes that aren't mass assignable.
      *
-     * @var array
+     * @var string[]
      */
     protected $guarded = [];
 
