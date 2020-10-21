@@ -721,7 +721,9 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
 
         try {
             $this->__get($name);
-        } catch (UnknownGetterException | ReflectionException $e) {
+        } catch (UnknownGetterException $e) {
+            return false;
+        } catch (ReflectionException $e) {
             return false;
         }
 
