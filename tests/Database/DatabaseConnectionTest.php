@@ -63,7 +63,10 @@ class DatabaseConnectionTest extends TestCase
         $pdo = $this->getMockBuilder(DatabaseConnectionTestMockPDO::class)->onlyMethods(['prepare'])->getMock();
         $writePdo = $this->getMockBuilder(DatabaseConnectionTestMockPDO::class)->onlyMethods(['prepare'])->getMock();
         $writePdo->expects($this->never())->method('prepare');
-        $statement = $this->getMockBuilder('PDOStatement')->onlyMethods(['execute', 'fetchAll', 'bindValue'])->getMock();
+        $statement = $this->getMockBuilder('PDOStatement')
+            ->setMethods(['setFetchMode', 'execute', 'fetchAll', 'bindValue'])
+            ->getMock();
+        $statement->expects($this->once())->method('setFetchMode');
         $statement->expects($this->once())->method('bindValue')->with('foo', 'bar', 2);
         $statement->expects($this->once())->method('execute');
         $statement->expects($this->once())->method('fetchAll')->willReturn(['boom']);
@@ -181,6 +184,7 @@ class DatabaseConnectionTest extends TestCase
         $pdo->expects($this->once())->method('exec')->will($this->throwException(new Exception));
         $connection = $this->getMockConnection(['reconnect'], $pdo);
         $queryGrammar = $this->createMock(Grammar::class);
+        $queryGrammar->expects($this->once())->method('compileSavepoint')->willReturn('trans1');
         $queryGrammar->expects($this->once())->method('supportsSavepoints')->willReturn(true);
         $connection->setQueryGrammar($queryGrammar);
         $connection->expects($this->never())->method('reconnect');

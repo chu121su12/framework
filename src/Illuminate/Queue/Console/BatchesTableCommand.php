@@ -57,9 +57,10 @@ class BatchesTableCommand extends Command
      */
     public function handle()
     {
-        $table = isset($this->laravel['config']) && isset($this->laravel['config']['queue.batches.table'])
-            ? $this->laravel['config']['queue.batches.table']
+        $table = isset($this->laravel['config']) && isset($this->laravel['config']['queue.batching.table'])
+            ? $this->laravel['config']['queue.batching.table']
             : 'job_batches';
+
 
         $this->replaceMigration(
             $this->createBaseMigration($table), $table, Str::studly($table)
