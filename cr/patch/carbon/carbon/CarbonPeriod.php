@@ -737,7 +737,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return static
      */
-    public function clone()
+    public function clone_()
     {
         return clone $this;
     }
