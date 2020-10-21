@@ -715,7 +715,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function __isset($name); ////: bool
+    public function __isset($name) ////: bool
     {
         $name = cast_to_string($name);
 
