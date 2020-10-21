@@ -13,7 +13,7 @@ class PHPUnit10MockBuilder extends \PHPUnit_Framework_MockObject_MockBuilder
 
     public function onlyMethods(array $methods = null)
     {
-        return $this->setMethods(is_array($methods) & count($methods) ? $methods : null);
+        return $this->setMethods(is_array($methods) && count($methods) ? $methods : null);
     }
 
     public function addMethods(array $methods)

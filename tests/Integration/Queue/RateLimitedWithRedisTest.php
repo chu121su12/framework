@@ -6,7 +6,7 @@ use Illuminate\Bus\Dispatcher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Contracts\Queue\Job;
+use Illuminate\Contracts\Queue\Job as JobContract;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithRedis;
 use Illuminate\Queue\CallQueuedHandler;
 use Illuminate\Queue\InteractsWithQueue;
@@ -22,14 +22,14 @@ class RateLimitedWithRedisTest extends TestCase
 {
     use InteractsWithRedis;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
         $this->setUpRedis();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         parent::tearDown();
 
@@ -44,7 +44,7 @@ class RateLimitedWithRedisTest extends TestCase
 
         $testJob = new RedisRateLimitedTestJob;
 
-        $rateLimiter->for($testJob->key, function ($job) {
+        $rateLimiter->for_($testJob->key, function ($job) {
             return Limit::none();
         });
 
@@ -58,7 +58,7 @@ class RateLimitedWithRedisTest extends TestCase
 
         $testJob = new RedisRateLimitedTestJob;
 
-        $rateLimiter->for($testJob->key, function ($job) {
+        $rateLimiter->for_($testJob->key, function ($job) {
             return Limit::perMinute(1);
         });
 
@@ -72,7 +72,7 @@ class RateLimitedWithRedisTest extends TestCase
 
         $adminJob = new RedisAdminTestJob;
 
-        $rateLimiter->for($adminJob->key, function ($job) {
+        $rateLimiter->for_($adminJob->key, function ($job) {
             if ($job->isAdmin()) {
                 return Limit::none();
             }
@@ -85,7 +85,7 @@ class RateLimitedWithRedisTest extends TestCase
 
         $nonAdminJob = new RedisNonAdminTestJob;
 
-        $rateLimiter->for($nonAdminJob->key, function ($job) {
+        $rateLimiter->for_($nonAdminJob->key, function ($job) {
             if ($job->isAdmin()) {
                 return Limit::none();
             }
@@ -102,7 +102,7 @@ class RateLimitedWithRedisTest extends TestCase
         $testJob::$handled = false;
         $instance = new CallQueuedHandler(new Dispatcher($this->app), $this->app);
 
-        $job = m::mock(Job::class);
+        $job = m::mock(JobContract::class);
 
         $job->shouldReceive('hasFailed')->once()->andReturn(false);
         $job->shouldReceive('isReleased')->once()->andReturn(false);
@@ -121,7 +121,7 @@ class RateLimitedWithRedisTest extends TestCase
         $testJob::$handled = false;
         $instance = new CallQueuedHandler(new Dispatcher($this->app), $this->app);
 
-        $job = m::mock(Job::class);
+        $job = m::mock(JobContract::class);
 
         $job->shouldReceive('hasFailed')->once()->andReturn(false);
         $job->shouldReceive('release')->once();

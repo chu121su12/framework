@@ -61,7 +61,6 @@ class BatchesTableCommand extends Command
             ? $this->laravel['config']['queue.batching.table']
             : 'job_batches';
 
-
         $this->replaceMigration(
             $this->createBaseMigration($table), $table, Str::studly($table)
         );

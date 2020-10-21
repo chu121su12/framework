@@ -6,7 +6,7 @@ use Illuminate\Bus\Dispatcher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Contracts\Queue\Job;
+use Illuminate\Contracts\Queue\Job as JobContract;
 use Illuminate\Queue\CallQueuedHandler;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\Middleware\RateLimited;
@@ -18,7 +18,7 @@ use Orchestra\Testbench\TestCase;
  */
 class RateLimitedTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         parent::tearDown();
 
@@ -29,7 +29,7 @@ class RateLimitedTest extends TestCase
     {
         $rateLimiter = $this->app->make(RateLimiter::class);
 
-        $rateLimiter->for('test', function ($job) {
+        $rateLimiter->for_('test', function ($job) {
             return Limit::none();
         });
 
@@ -41,7 +41,7 @@ class RateLimitedTest extends TestCase
     {
         $rateLimiter = $this->app->make(RateLimiter::class);
 
-        $rateLimiter->for('test', function ($job) {
+        $rateLimiter->for_('test', function ($job) {
             return Limit::perHour(1);
         });
 
@@ -53,7 +53,7 @@ class RateLimitedTest extends TestCase
     {
         $rateLimiter = $this->app->make(RateLimiter::class);
 
-        $rateLimiter->for('test', function ($job) {
+        $rateLimiter->for_('test', function ($job) {
             if ($job->isAdmin()) {
                 return Limit::none();
             }
@@ -73,7 +73,7 @@ class RateLimitedTest extends TestCase
         $class::$handled = false;
         $instance = new CallQueuedHandler(new Dispatcher($this->app), $this->app);
 
-        $job = m::mock(Job::class);
+        $job = m::mock(JobContract::class);
 
         $job->shouldReceive('hasFailed')->once()->andReturn(false);
         $job->shouldReceive('isReleased')->once()->andReturn(false);
@@ -92,7 +92,7 @@ class RateLimitedTest extends TestCase
         $class::$handled = false;
         $instance = new CallQueuedHandler(new Dispatcher($this->app), $this->app);
 
-        $job = m::mock(Job::class);
+        $job = m::mock(JobContract::class);
 
         $job->shouldReceive('hasFailed')->once()->andReturn(false);
         $job->shouldReceive('release')->once();

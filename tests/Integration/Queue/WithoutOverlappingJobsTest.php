@@ -5,7 +5,7 @@ namespace Illuminate\Tests\Integration\Queue;
 use Illuminate\Bus\Dispatcher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Cache\Repository as Cache;
-use Illuminate\Contracts\Queue\Job;
+use Illuminate\Contracts\Queue\Job as JobContract;
 use Illuminate\Queue\CallQueuedHandler;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\Middleware\WithoutOverlapping;
@@ -17,7 +17,7 @@ use Orchestra\Testbench\TestCase;
  */
 class WithoutOverlappingJobsTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         parent::tearDown();
 
@@ -29,7 +29,7 @@ class WithoutOverlappingJobsTest extends TestCase
         OverlappingTestJob::$handled = false;
         $instance = new CallQueuedHandler(new Dispatcher($this->app), $this->app);
 
-        $job = m::mock(Job::class);
+        $job = m::mock(JobContract::class);
 
         $job->shouldReceive('hasFailed')->andReturn(false);
         $job->shouldReceive('isReleased')->andReturn(false);
@@ -51,7 +51,7 @@ class WithoutOverlappingJobsTest extends TestCase
         FailedOverlappingTestJob::$handled = false;
         $instance = new CallQueuedHandler(new Dispatcher($this->app), $this->app);
 
-        $job = m::mock(Job::class);
+        $job = m::mock(JobContract::class);
 
         $job->shouldReceive('hasFailed')->andReturn(false);
         $job->shouldReceive('isReleased')->andReturn(false);
@@ -79,7 +79,7 @@ class WithoutOverlappingJobsTest extends TestCase
         $lockKey = (new WithoutOverlapping)->getLockKey($command = new OverlappingTestJob);
         $this->app->get(Cache::class)->lock($lockKey, 10)->acquire();
 
-        $job = m::mock(Job::class);
+        $job = m::mock(JobContract::class);
 
         $job->shouldReceive('release')->once();
         $job->shouldReceive('hasFailed')->andReturn(false);
@@ -101,7 +101,7 @@ class WithoutOverlappingJobsTest extends TestCase
         $lockKey = (new WithoutOverlapping)->getLockKey($command = new SkipOverlappingTestJob);
         $this->app->get(Cache::class)->lock($lockKey, 10)->acquire();
 
-        $job = m::mock(Job::class);
+        $job = m::mock(JobContract::class);
 
         $job->shouldReceive('hasFailed')->andReturn(false);
         $job->shouldReceive('isReleased')->andReturn(false);

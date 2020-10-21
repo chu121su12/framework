@@ -33,6 +33,14 @@ class BoundMethod
         }
 
         return static::callBoundMethod($container, $callback, function () use ($container, $callback, $parameters) {
+            if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+                if (is_string($callback) && ! function_exists($callback) && strpos($callback, '::') === false) {
+                    throw new \Error("Call to undefined function {$callback}()");
+                }
+
+                return call_user_func($callback, ...static::getMethodDependencies($container, $callback, $parameters));
+            }
+
             return $callback(...static::getMethodDependencies($container, $callback, $parameters));
         });
     }
