@@ -38,10 +38,10 @@ class BoundMethod
                     throw new \Error("Call to undefined function {$callback}()");
                 }
 
-                return call_user_func($callback, ...static::getMethodDependencies($container, $callback, $parameters));
+                return call_user_func($callback, ...array_values(static::getMethodDependencies($container, $callback, $parameters)));
             }
 
-            return $callback(...static::getMethodDependencies($container, $callback, $parameters));
+            return $callback(...array_values(static::getMethodDependencies($container, $callback, $parameters)));
         });
     }
 
