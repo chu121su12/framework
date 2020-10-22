@@ -43,8 +43,10 @@ class ContainerCommandLoader implements CommandLoaderInterface
      *
      * @throws \Symfony\Component\Console\Exception\CommandNotFoundException
      */
-    public function get(string $name)
+    public function get($name)
     {
+        $name = cast_to_string($name);
+
         if (! $this->has($name)) {
             throw new CommandNotFoundException(sprintf('Command "%s" does not exist.', $name));
         }
@@ -58,8 +60,10 @@ class ContainerCommandLoader implements CommandLoaderInterface
      * @param  string  $name
      * @return bool
      */
-    public function has(string $name)
+    public function has($name)
     {
+        $name = cast_to_string($name);
+
         return $name && isset($this->commandMap[$name]);
     }
 
