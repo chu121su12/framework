@@ -251,7 +251,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return \Closure
      */
-    public function lazy(array $attributes = [], ?Model $parent = null)
+    public function lazy(array $attributes = [], Model $parent = null)
     {
         return function () use ($attributes, $parent) {
             return $this->create($attributes, $parent);
