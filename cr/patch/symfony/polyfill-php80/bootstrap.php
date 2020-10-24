@@ -20,7 +20,7 @@ if (!defined('FILTER_VALIDATE_BOOL') && defined('FILTER_VALIDATE_BOOLEAN')) {
 }
 
 if (!function_exists('fdiv')) {
-    function fdiv($dividend, $divisor) { return p\Php80::fdiv($dividend, $divisor); }
+    function fdiv($num1, $num2) { return p\Php80::fdiv($num1, $num2); }
 }
 if (!function_exists('preg_last_error_msg')) {
     function preg_last_error_msg() { return p\Php80::preg_last_error_msg(); }
