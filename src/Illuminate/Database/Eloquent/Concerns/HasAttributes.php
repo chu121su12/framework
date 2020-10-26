@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
@@ -70,6 +71,7 @@ trait HasAttributes
         'datetime',
         'decimal',
         'double',
+        'encrypted',
         'float',
         'int',
         'integer',
@@ -558,6 +560,8 @@ trait HasAttributes
                 return $this->asDateTime($value);
             case 'timestamp':
                 return $this->asTimestamp($value);
+            case 'encrypted':
+                return $this->fromEncryptedString($value);
         }
 
         if ($this->isClassCastable($key)) {
@@ -680,7 +684,7 @@ trait HasAttributes
             return $this;
         }
 
-        if ($this->isJsonCastable($key) && ! is_null($value)) {
+        if (! is_null($value) && $this->isJsonCastable($key)) {
             $value = $this->castAttributeAsJson($key, $value);
         }
 
@@ -689,6 +693,10 @@ trait HasAttributes
         // attribute in the array's value in the case of deeply nested items.
         if (Str::contains($key, '->')) {
             return $this->fillJsonAttribute($key, $value);
+        }
+
+        if (! is_null($value) && $this->isEncryptedCastable($key)) {
+            $value = $this->castAttributeAsEncryptedString($key, $value);
         }
 
         $this->attributes[$key] = $value;
@@ -852,6 +860,30 @@ trait HasAttributes
     public function fromJson($value, $asObject = false)
     {
         return backport_json_decode($value, ! $asObject);
+    }
+
+    /**
+     * Decode the given encrypted string.
+     *
+     * @param  string  $value
+     * @param  bool  $asObject
+     * @return mixed
+     */
+    public function fromEncryptedString($value)
+    {
+        return Crypt::decryptString($value);
+    }
+
+    /**
+     * Cast the given attribute to an encrypted string.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return string
+     */
+    protected function castAttributeAsEncryptedString($key, $value)
+    {
+        return Crypt::encryptString($value);
     }
 
     /**
@@ -1097,6 +1129,17 @@ trait HasAttributes
     protected function isJsonCastable($key)
     {
         return $this->hasCast($key, ['array', 'json', 'object', 'collection']);
+    }
+
+    /**
+     * Determine whether a value is an encrypted castable for inbound manipulation.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    protected function isEncryptedCastable($key)
+    {
+        return $this->hasCast($key, ['encrypted']);
     }
 
     /**
