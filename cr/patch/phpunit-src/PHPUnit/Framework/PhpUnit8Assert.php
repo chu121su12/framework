@@ -201,5 +201,13 @@ if (phpunit_major_version() > 5) {
             static::assertThat($haystack, $constraint, $message);
         }
 
+        public static function assertIsCallable($actual, $message = '')
+        {
+            static::assertThat(
+                $actual,
+                new IsType(IsType::TYPE_CALLABLE),
+                $message
+            );
+        }
     }
 }

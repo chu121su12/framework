@@ -158,11 +158,11 @@ class DatabaseEloquentFactoryTest extends TestCase
 
     public function test_lazy_model_attributes_can_be_created()
     {
-        $userFunction = FactoryTestUserFactory::new()->lazy();
+        $userFunction = FactoryTestUserFactory::new_()->lazy();
         $this->assertIsCallable($userFunction);
         $this->assertInstanceOf(Eloquent::class, $userFunction());
 
-        $userFunction = FactoryTestUserFactory::new()->lazy(['name' => 'Taylor Otwell']);
+        $userFunction = FactoryTestUserFactory::new_()->lazy(['name' => 'Taylor Otwell']);
         $this->assertIsCallable($userFunction);
 
         $user = $userFunction();
