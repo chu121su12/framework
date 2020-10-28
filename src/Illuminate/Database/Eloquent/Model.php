@@ -833,7 +833,9 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      */
     protected function getKeyForSelectQuery()
     {
-        return $this->original[$this->getKeyName()] ?? $this->getKey();
+        $keyName = $this->getKeyName();
+
+        return isset($this->original[$keyName]) ? $this->original[$keyName] : $this->getKey();
     }
 
     /**

@@ -22,7 +22,7 @@ class Reflector
         }
 
         if ((! isset($var[0]) || ! isset($var[1])) ||
-            ! is_string($var[1] ?? null)) {
+            ! is_string(isset($var[1]) ? $var[1] : null)) {
             return false;
         }
 
