@@ -43,7 +43,7 @@ class ValueObject_castUsing_class implements CastsAttributes {
  */
 class DatabaseEloquentModelCustomCastingTest extends DatabaseTestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
