@@ -72,7 +72,7 @@ class RateLimitedWithRedisTest extends TestCase
 
         $testJob = new RedisRateLimitedDontReleaseTestJob;
 
-        $rateLimiter->for($testJob->key, function ($job) {
+        $rateLimiter->for_($testJob->key, function ($job) {
             return Limit::perMinute(1);
         });
 
