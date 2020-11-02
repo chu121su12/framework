@@ -392,12 +392,12 @@ class DecimalCaster implements CastsAttributes, DeviatesCastableAttributes, Seri
         return (string) $value;
     }
 
-    public function increment($model, $key, $value, $attributes)
+    public function increment($model, $key, $value, array $attributes)
     {
         return new Decimal($attributes[$key] + $value);
     }
 
-    public function decrement($model, $key, $value, $attributes)
+    public function decrement($model, $key, $value, array $attributes)
     {
         return new Decimal($attributes[$key] - $value);
     }
