@@ -402,7 +402,7 @@ class DecimalCaster implements CastsAttributes, DeviatesCastableAttributes, Seri
         return new Decimal($attributes[$key] - $value);
     }
 
-    public function serialize($model, $key, $value, $attributes)
+    public function serialize($model, $key, $value, array $attributes)
     {
         return (string) $value;
     }
