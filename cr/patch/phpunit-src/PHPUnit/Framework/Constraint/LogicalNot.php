@@ -30,7 +30,9 @@ class LogicalNot extends Constraint
         parent::__construct();
 
         if (!($constraint instanceof Constraint)) {
-            $constraint = new IsEqual($constraint);
+            if (!(class_exists('PHPUnit_Framework_Constraint') && ($constraint instanceof \PHPUnit_Framework_Constraint))) {
+                $constraint = new IsEqual($constraint);
+            }
         }
 
         $this->constraint = $constraint;
