@@ -89,10 +89,15 @@ class FrequencyTest extends TestCase
         $this->assertSame('0 15 4 * *', $this->event->monthlyOn(4, '15:00')->getExpression());
     }
 
-    // public function testLastDayOfMonth()
-    // {
-    //     $this->assertSame('0 0 31 * *', $this->event->lastDayOfMonth()->getExpression());
-    // }
+    public function testLastDayOfMonth()
+    {
+        // $this->assertSame('0 0 31 * *', $this->event->lastDayOfMonth()->getExpression());
+        $this->assertTrue(in_array(
+            $this->event->lastDayOfMonth()->getExpression(),
+            ['0 0 31 * *', '0 0 30 * *', '0 0 29 * *', '0 0 28 * *'],
+            true
+        ));
+    }
 
     public function testTwiceMonthly()
     {
