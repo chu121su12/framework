@@ -47,7 +47,7 @@ if (! function_exists('backport_bcmod'))
 {
     function backport_bcmod($dividend, $divisor, $scale)
     {
-        if (version_compare(PHP_VERSION, '7.2.0', '<')) {
+        if (version_compare(PHP_VERSION, '7.2.0', '<') && (new \ReflectionFunction('bcmod'))->getNumberOfParameters() === 2) {
             $currentScale = strlen(bcsqrt('2')) - 2;
             bcscale($scale);
             $modulo = bcsub($dividend, bcmul(bcdiv($dividend, $divisor, 0), $divisor));
