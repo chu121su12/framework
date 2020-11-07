@@ -120,12 +120,12 @@ class MySqlSchemaState extends SchemaState
      */
     protected function baseVariables(array $config)
     {
-        $config['host'] = $config['host'] ?? '';
+        $config['host'] = isset($config['host']) ? $config['host'] : '';
 
         return [
-            'LARAVEL_LOAD_SOCKET' => $config['unix_socket'] ?? '',
+            'LARAVEL_LOAD_SOCKET' => isset($config['unix_socket']) ? $config['unix_socket'] : '',
             'LARAVEL_LOAD_HOST' => is_array($config['host']) ? $config['host'][0] : $config['host'],
-            'LARAVEL_LOAD_PORT' => $config['port'] ?? '',
+            'LARAVEL_LOAD_PORT' => isset($config['port']) ? $config['port'] : '',
             'LARAVEL_LOAD_USER' => $config['username'],
             'LARAVEL_LOAD_PASSWORD' => $config['password'],
             'LARAVEL_LOAD_DATABASE' => $config['database'],

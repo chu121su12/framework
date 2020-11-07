@@ -374,11 +374,13 @@ class Dispatcher implements DispatcherContract
      * @param  string  $eventName
      * @return \Closure[]
      */
-    protected function prepareListeners(string $eventName)
+    protected function prepareListeners($eventName)
     {
+        $eventName = cast_to_string($eventName);
+
         $listeners = [];
 
-        foreach ($this->listeners[$eventName] ?? [] as $listener) {
+        foreach (isset($this->listeners[$eventName]) ? $this->listeners[$eventName] : [] as $listener) {
             $listeners[] = $this->makeListener($listener);
         }
 

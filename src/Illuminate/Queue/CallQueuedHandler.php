@@ -176,7 +176,7 @@ class CallQueuedHandler
 
         $uniqueId = method_exists($command, 'uniqueId')
                     ? $command->uniqueId()
-                    : ($command->uniqueId ?? '');
+                    : (isset($command->uniqueId) ? $command->uniqueId : '');
 
         $cache = method_exists($command, 'uniqueVia')
                     ? $command->uniqueVia()

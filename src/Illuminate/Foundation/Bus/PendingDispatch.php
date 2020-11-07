@@ -137,7 +137,7 @@ class PendingDispatch
 
         $uniqueId = method_exists($this->job, 'uniqueId')
                     ? $this->job->uniqueId()
-                    : ($this->job->uniqueId ?? '');
+                    : (isset($this->job->uniqueId) ? $this->job->uniqueId : '');
 
         $cache = method_exists($this->job, 'uniqueVia')
                     ? $this->job->uniqueVia()
@@ -145,7 +145,7 @@ class PendingDispatch
 
         return (bool) $cache->lock(
             $key = 'laravel_unique_job:'.get_class($this->job).$uniqueId,
-            $this->job->uniqueFor ?? 0
+            isset($this->job->uniqueFor) ? $this->job->uniqueFor : 0
         )->get();
     }
 

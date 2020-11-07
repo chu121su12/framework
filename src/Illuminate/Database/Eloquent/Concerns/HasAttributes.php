@@ -903,7 +903,9 @@ trait HasAttributes
      */
     public function fromEncryptedString($value)
     {
-        return (static::$encrypter ?? Crypt::getFacadeRoot())->decrypt($value, false);
+        $encrypter = isset(static::$encrypter) ? static::$encrypter : Crypt::getFacadeRoot();
+
+        return $encrypter->decrypt($value, false);
     }
 
     /**
@@ -915,7 +917,9 @@ trait HasAttributes
      */
     protected function castAttributeAsEncryptedString($key, $value)
     {
-        return (static::$encrypter ?? Crypt::getFacadeRoot())->encrypt($value, false);
+        $encrypter = isset(static::$encrypter) ? static::$encrypter : Crypt::getFacadeRoot();
+
+        return $encrypter->encrypt($value, false);
     }
 
     /**

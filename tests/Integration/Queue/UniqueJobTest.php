@@ -40,7 +40,7 @@ class UniqueJobTest extends TestCase
         });
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->app['db']->connection()->getSchemaBuilder()->drop('jobs');
 
