@@ -24,6 +24,13 @@ abstract class SchemaState
     protected $files;
 
     /**
+     * The name of the application's migration table.
+     *
+     * @var string
+     */
+    protected $migrationTable = 'migrations';
+
+    /**
      * The process factory callback.
      *
      * @var callable
@@ -86,6 +93,19 @@ abstract class SchemaState
     public function makeProcess(...$arguments)
     {
         return call_user_func($this->processFactory, ...$arguments);
+    }
+
+    /**
+     * Specify the name of the application's migration table.
+     *
+     * @param  string  $table
+     * @return $this
+     */
+    public function withMigrationTable(string $table)
+    {
+        $this->migrationTable = $table;
+
+        return $this;
     }
 
     /**

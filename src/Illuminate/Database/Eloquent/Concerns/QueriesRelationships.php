@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Str;
-use RuntimeException;
 
 trait QueriesRelationships
 {
@@ -36,7 +35,7 @@ trait QueriesRelationships
         }
 
         if ($relation instanceof MorphTo) {
-            throw new RuntimeException('Please use whereHasMorph() for MorphTo relationships.');
+            return $this->hasMorph($relation, ['*'], $operator, $count, $boolean, $callback);
         }
 
         // If we only need to check for the existence of the relation, then we can optimize
@@ -189,7 +188,7 @@ trait QueriesRelationships
     /**
      * Add a polymorphic relationship count / exists condition to the query.
      *
-     * @param  string  $relation
+     * @param  \Illuminate\Database\Eloquent\Relations\MorphTo|string  $relation
      * @param  string|array  $types
      * @param  string  $operator
      * @param  int  $count
@@ -199,7 +198,9 @@ trait QueriesRelationships
      */
     public function hasMorph($relation, $types, $operator = '>=', $count = 1, $boolean = 'and', Closure $callback = null)
     {
-        $relation = $this->getRelationWithoutConstraints($relation);
+        if (is_string($relation)) {
+            $relation = $this->getRelationWithoutConstraints($relation);
+        }
 
         $types = (array) $types;
 
@@ -255,7 +256,7 @@ trait QueriesRelationships
     /**
      * Add a polymorphic relationship count / exists condition to the query with an "or".
      *
-     * @param  string  $relation
+     * @param  \Illuminate\Database\Eloquent\Relations\MorphTo|string  $relation
      * @param  string|array  $types
      * @param  string  $operator
      * @param  int  $count
@@ -269,7 +270,7 @@ trait QueriesRelationships
     /**
      * Add a polymorphic relationship count / exists condition to the query.
      *
-     * @param  string  $relation
+     * @param  \Illuminate\Database\Eloquent\Relations\MorphTo|string  $relation
      * @param  string|array  $types
      * @param  string  $boolean
      * @param  \Closure|null  $callback
@@ -283,7 +284,7 @@ trait QueriesRelationships
     /**
      * Add a polymorphic relationship count / exists condition to the query with an "or".
      *
-     * @param  string  $relation
+     * @param  \Illuminate\Database\Eloquent\Relations\MorphTo|string  $relation
      * @param  string|array  $types
      * @return \Illuminate\Database\Eloquent\Builder|static
      */
@@ -295,7 +296,7 @@ trait QueriesRelationships
     /**
      * Add a polymorphic relationship count / exists condition to the query with where clauses.
      *
-     * @param  string  $relation
+     * @param  \Illuminate\Database\Eloquent\Relations\MorphTo|string  $relation
      * @param  string|array  $types
      * @param  \Closure|null  $callback
      * @param  string  $operator
@@ -310,7 +311,7 @@ trait QueriesRelationships
     /**
      * Add a polymorphic relationship count / exists condition to the query with where clauses and an "or".
      *
-     * @param  string  $relation
+     * @param  \Illuminate\Database\Eloquent\Relations\MorphTo|string  $relation
      * @param  string|array  $types
      * @param  \Closure|null  $callback
      * @param  string  $operator
@@ -325,7 +326,7 @@ trait QueriesRelationships
     /**
      * Add a polymorphic relationship count / exists condition to the query with where clauses.
      *
-     * @param  string  $relation
+     * @param  \Illuminate\Database\Eloquent\Relations\MorphTo|string  $relation
      * @param  string|array  $types
      * @param  \Closure|null  $callback
      * @return \Illuminate\Database\Eloquent\Builder|static
@@ -338,7 +339,7 @@ trait QueriesRelationships
     /**
      * Add a polymorphic relationship count / exists condition to the query with where clauses and an "or".
      *
-     * @param  string  $relation
+     * @param  \Illuminate\Database\Eloquent\Relations\MorphTo|string  $relation
      * @param  string|array  $types
      * @param  \Closure|null  $callback
      * @return \Illuminate\Database\Eloquent\Builder|static
@@ -382,9 +383,13 @@ trait QueriesRelationships
 
             $relation = $this->getRelationWithoutConstraints($name);
 
-            $expression = $function
-                ? sprintf('%s(%s)', $function, $this->getQuery()->getGrammar()->wrap($column))
-                : $column;
+            if ($function) {
+                $expression = sprintf('%s(%s)', $function, $this->getQuery()->getGrammar()->wrap(
+                    $column === '*' ? $column : $relation->getRelated()->qualifyColumn($column)
+                ));
+            } else {
+                $expression = $column;
+            }
 
             // Here, we will grab the relationship sub-query and prepare to add it to the main query
             // as a sub-select. First, we'll get the "has" query and use that to get the relation
@@ -415,7 +420,10 @@ trait QueriesRelationships
                 preg_replace('/[^[:alnum:][:space:]_]/u', '', "$name $function $column")
             );
 
-            $this->selectSub($query->limit(1), $alias);
+            $this->selectSub(
+                $function ? $query : $query->limit(1),
+                $alias
+            );
         }
 
         return $this;

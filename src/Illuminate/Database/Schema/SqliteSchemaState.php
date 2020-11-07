@@ -41,7 +41,7 @@ class SqliteSchemaState extends SchemaState
         $path = cast_to_string($path);
 
         with($process = $this->makeProcess(
-            $this->baseCommand().' ".dump \'migrations\'"'
+            $this->baseCommand().' ".dump \''.$this->migrationTable.'\'"'
         ))->mustRun(null, array_merge($this->baseVariables($this->connection->getConfig()), [
             //
         ]));
