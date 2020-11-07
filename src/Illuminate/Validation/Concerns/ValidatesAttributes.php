@@ -1285,7 +1285,7 @@ trait ValidatesAttributes
             return false;
         }
 
-        return bcmod($value, $parameters[0], 16) === '0.0000000000000000';
+        return backport_bcmod($value, $parameters[0], 16) === '0.0000000000000000';
     }
 
     /**

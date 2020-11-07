@@ -43,6 +43,22 @@ if (! function_exists('backport_substr_count'))
     }
 }
 
+if (! function_exists('backport_bcmod'))
+{
+    function backport_bcmod($dividend, $divisor, $scale)
+    {
+        if (version_compare(PHP_VERSION, '7.2.0', '<')) {
+            $currentScale = strlen(bcsqrt('2')) - 2;
+            bcscale($scale);
+            $modulo = bcsub($dividend, bcmul(bcdiv($dividend, $divisor, 0), $divisor));
+            bcscale($currentScale);
+            return $modulo;
+        }
+
+        return bcmod($dividend, $divisor, $scale);
+    }
+}
+
 if (! function_exists('backport_spaceship_operator'))
 {
     function backport_spaceship_operator($left, $right) // <=>
