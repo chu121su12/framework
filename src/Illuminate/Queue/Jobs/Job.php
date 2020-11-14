@@ -83,7 +83,7 @@ abstract class Job
     {
         $payload = $this->payload();
 
-        return isset($payload['uuid']) ? isset($payload['uuid']) : null;
+        return isset($payload['uuid']) ? $payload['uuid'] : null;
     }
 
     /**
@@ -258,7 +258,7 @@ abstract class Job
     {
         $payload = $this->payload();
 
-        return isset($payload['maxTries']) ? isset($payload['maxTries']) : null;
+        return isset($payload['maxTries']) ? $payload['maxTries'] : null;
     }
 
     /**
@@ -270,7 +270,7 @@ abstract class Job
     {
         $payload = $this->payload();
 
-        return isset($payload['maxExceptions']) ? isset($payload['maxExceptions']) : null;
+        return isset($payload['maxExceptions']) ? $payload['maxExceptions'] : null;
     }
 
     /**
@@ -282,7 +282,7 @@ abstract class Job
     {
         $payload = $this->payload();
 
-        return isset($payload['backoff']) ? isset($payload['backoff']) : null;
+        return isset($payload['backoff']) ? $payload['backoff'] : null;
     }
 
     /**
@@ -294,7 +294,7 @@ abstract class Job
     {
         $payload = $this->payload();
 
-        return isset($payload['timeout']) ? isset($payload['timeout']) : null;
+        return isset($payload['timeout']) ? $payload['timeout'] : null;
     }
 
     /**
@@ -306,7 +306,7 @@ abstract class Job
     {
         $payload = $this->payload();
 
-        return isset($payload['retryUntil']) ? isset($payload['retryUntil']) : null;
+        return isset($payload['retryUntil']) ? $payload['retryUntil'] : null;
     }
 
     /**
