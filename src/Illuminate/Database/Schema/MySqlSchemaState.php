@@ -89,7 +89,7 @@ class MySqlSchemaState extends SchemaState
     {
         $command = 'mysqldump '.$this->connectionString().' --skip-add-locks --skip-comments --skip-set-charset --tz-utc';
 
-        if ($this->connection->isMaria()) {
+        if (! $this->connection->isMaria()) {
             $command .= ' --column-statistics=0 --set-gtid-purged=OFF';
         }
 

@@ -7,9 +7,11 @@ use Faker\Generator;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ForwardsCalls;
+use Throwable;
 
 abstract class Factory
 {
@@ -637,9 +639,11 @@ abstract class Factory
         $resolver = static::$modelNameResolver ?: function (self $factory) {
             $factoryBasename = Str::replaceLast('Factory', '', class_basename($factory));
 
-            return class_exists('App\\Models\\'.$factoryBasename)
-                        ? 'App\\Models\\'.$factoryBasename
-                        : 'App\\'.$factoryBasename;
+            $appNamespace = static::appNamespace();
+
+            return class_exists($appNamespace.'Models\\'.$factoryBasename)
+                        ? $appNamespace.'Models\\'.$factoryBasename
+                        : $appNamespace.$factoryBasename;
         };
 
         return $this->model ?: $resolver($this);
@@ -716,14 +720,34 @@ abstract class Factory
         $modelName = cast_to_string($modelName);
 
         $resolver = static::$factoryNameResolver ?: function ($modelName) {
-            $modelName = Str::startsWith($modelName, 'App\\Models\\')
-                ? Str::after($modelName, 'App\\Models\\')
-                : Str::after($modelName, 'App\\');
+            $modelName = cast_to_string($modelName);
+
+            $appNamespace = static::appNamespace();
+
+            $modelName = Str::startsWith($modelName, $appNamespace.'Models\\')
+                ? Str::after($modelName, $appNamespace.'Models\\')
+                : Str::after($modelName, $appNamespace);
 
             return static::$namespace.$modelName.'Factory';
         };
 
         return $resolver($modelName);
+    }
+
+    /**
+     * Get the application namespace for the application.
+     *
+     * @return string
+     */
+    protected static function appNamespace()
+    {
+        try {
+            return Container::getInstance()
+                            ->make(Application::class)
+                            ->getNamespace();
+        } catch (Throwable $e) {
+            return 'App\\';
+        }
     }
 
     /**
