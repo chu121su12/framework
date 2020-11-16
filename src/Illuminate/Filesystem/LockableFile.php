@@ -77,7 +77,7 @@ class LockableFile
     {
         clearstatcache(true, $this->path);
 
-        return fread($this->handle, $length ?? ($this->size() ?: 1));
+        return fread($this->handle, isset($length) ? $length : ($this->size() ?: 1));
     }
 
     /**

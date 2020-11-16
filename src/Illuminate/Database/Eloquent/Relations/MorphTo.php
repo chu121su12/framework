@@ -146,7 +146,7 @@ class MorphTo extends BelongsTo
                                     : [])
                             );
 
-        if ($callback = ($this->morphableConstraints[get_class($instance)] ?? null)) {
+        if ($callback = (isset($this->morphableConstraints[$instanceClass]) ? $this->morphableConstraints[$instanceClass] : null)) {
             $callback($query);
         }
 
