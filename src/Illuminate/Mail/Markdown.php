@@ -176,4 +176,14 @@ class Markdown
 
         return $this;
     }
+
+    /**
+     * Get the theme currently being used by the renderer.
+     *
+     * @return string
+     */
+    public function getTheme()
+    {
+        return $this->theme;
+    }
 }
