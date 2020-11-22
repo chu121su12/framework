@@ -39,8 +39,10 @@ class Connection implements ServerInfoAwareConnection
      * @param  string  $statement
      * @return int
      */
-    public function exec(string $statement): int
+    public function exec($statement) // : int
     {
+        $statement = cast_to_string($statement);
+
         try {
             $result = $this->connection->exec($statement);
 
@@ -48,7 +50,7 @@ class Connection implements ServerInfoAwareConnection
 
             return $result;
         } catch (PDOException $exception) {
-            throw Exception::new($exception);
+            throw Exception::new_($exception);
         }
     }
 
@@ -58,14 +60,16 @@ class Connection implements ServerInfoAwareConnection
      * @param  string  $sql
      * @return \Doctrine\DBAL\Driver\Statement
      */
-    public function prepare(string $sql): StatementInterface
+    public function prepare($sql) // : StatementInterface
     {
+        $sql = cast_to_string($sql);
+
         try {
             return $this->createStatement(
                 $this->connection->prepare($sql)
             );
         } catch (PDOException $exception) {
-            throw Exception::new($exception);
+            throw Exception::new_($exception);
         }
     }
 
@@ -75,8 +79,10 @@ class Connection implements ServerInfoAwareConnection
      * @param  string  $sql
      * @return \Doctrine\DBAL\Driver\Result
      */
-    public function query(string $sql): ResultInterface
+    public function query($sql) // : ResultInterface
     {
+        $sql = cast_to_string($sql);
+
         try {
             $stmt = $this->connection->query($sql);
 
@@ -84,7 +90,7 @@ class Connection implements ServerInfoAwareConnection
 
             return new Result($stmt);
         } catch (PDOException $exception) {
-            throw Exception::new($exception);
+            throw Exception::new_($exception);
         }
     }
 
@@ -103,7 +109,7 @@ class Connection implements ServerInfoAwareConnection
 
             return $this->connection->lastInsertId($name);
         } catch (PDOException $exception) {
-            throw Exception::new($exception);
+            throw Exception::new_($exception);
         }
     }
 
@@ -113,7 +119,7 @@ class Connection implements ServerInfoAwareConnection
      * @param  \PDOStatement
      * @return \Doctrine\DBAL\Driver\PDO\Statement
      */
-    protected function createStatement(PDOStatement $stmt): Statement
+    protected function createStatement(PDOStatement $stmt) // : Statement
     {
         return new Statement($stmt);
     }
@@ -175,7 +181,7 @@ class Connection implements ServerInfoAwareConnection
      *
      * @return \PDO
      */
-    public function getWrappedConnection(): PDO
+    public function getWrappedConnection() // : PDO
     {
         return $this->connection;
     }

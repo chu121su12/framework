@@ -103,9 +103,11 @@ class MySqlSchemaState extends SchemaState
      */
     protected function connectionString()
     {
+        $config = $this->connection->getConfig();
+
         $value = ' --user="${:LARAVEL_LOAD_USER}" --password="${:LARAVEL_LOAD_PASSWORD}"';
 
-        $value .= $this->connection->getConfig()['unix_socket'] ?? false
+        $value .= isset($config['unix_socket']) ? $config['unix_socket'] : false
                         ? ' --socket="${:LARAVEL_LOAD_SOCKET}"'
                         : ' --host="${:LARAVEL_LOAD_HOST}" --port="${:LARAVEL_LOAD_PORT}"';
 

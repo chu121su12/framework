@@ -948,10 +948,10 @@ class SupportArrTest extends TestCase
         // sort using callable
         $sortedWithCallable = array_values(Arr::sort($unsorted, [
             function ($a, $b) {
-                return $a['name'] <=> $b['name'];
+                return backport_spaceship_operator($a['name'], $b['name']);
             },
             function ($a, $b) {
-                return $b['age'] <=> $a['age'];
+                return backport_spaceship_operator($b['age'], $a['age']);
             },
             ['meta.key', true],
         ]));

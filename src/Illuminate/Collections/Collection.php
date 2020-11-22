@@ -1177,7 +1177,7 @@ class Collection implements ArrayAccess, Enumerable
                         $values = array_reverse($values);
                     }
 
-                    $result = $values[0] <=> $values[1];
+                    $result = backport_spaceship_operator($values[0], $values[1]);
                 }
 
                 if ($result === 0) {

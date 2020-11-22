@@ -17,7 +17,7 @@ class AblyBroadcasterTest extends TestCase
 
     public $ably;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

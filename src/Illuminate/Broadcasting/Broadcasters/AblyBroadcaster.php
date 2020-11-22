@@ -100,7 +100,7 @@ class AblyBroadcaster extends Broadcaster
         return hash_hmac(
             'sha256',
             sprintf('%s:%s%s', $socketId, $channelName, $userData ? ':'.json_encode($userData) : ''),
-            $this->getPrivateToken(),
+            $this->getPrivateToken()
         );
     }
 
