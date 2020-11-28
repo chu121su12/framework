@@ -745,9 +745,9 @@ abstract class Factory
             return Container::getInstance()
                             ->make(Application::class)
                             ->getNamespace();
-        } catch (\Exception $e) {
-        } catch (\Error $e) {
         } catch (Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
         }
 
         if (isset($e)) {
