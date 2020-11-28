@@ -110,7 +110,9 @@ class DownCommand extends Command
         $errorViewPath = new RegisterErrorViewPaths;
         $errorViewPath();
 
-        return view($this->option('render'))->render();
+        return view($this->option('render'), [
+            'retryAfter' => $this->option('retry'),
+        ])->render();
     }
 
     /**
