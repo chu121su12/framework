@@ -1169,7 +1169,7 @@ class Route
         if ($this->action['uses'] instanceof Closure) {
             $this->action['uses'] = serialize(new SerializableClosure($this->action['uses']));
 
-            throw new LogicException("Unable to prepare route [{$this->uri}] for serialization. Uses Closure.");
+            // throw new LogicException("Unable to prepare route [{$this->uri}] for serialization. Uses Closure.");
         }
 
         $this->compileRoute();

@@ -14,7 +14,7 @@ class DatabaseTransactionsTest extends TestCase
      *
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $db = new DB;
 
@@ -49,7 +49,7 @@ class DatabaseTransactionsTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         foreach (['default', 'second_connection'] as $connection) {
             $this->schema($connection)->drop('users');
@@ -178,6 +178,8 @@ class DatabaseTransactionsTest extends TestCase
 
                 throw new \Exception;
             });
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (\Throwable $e) {
         }
     }
@@ -233,6 +235,8 @@ class DatabaseTransactionsTest extends TestCase
                     throw new \Exception;
                 });
             });
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (\Throwable $e) {
         }
     }
