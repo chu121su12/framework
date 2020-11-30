@@ -1281,6 +1281,7 @@ class DatabaseEloquentModelTest extends TestCase
         $this->addMockConnection($model);
 
         // $this->morphTo();
+        $model->setAttribute('morph_to_stub_type', EloquentModelSaveStub::class);
         $relation = $model->morphToStub();
         $this->assertSame('morph_to_stub_id', $relation->getForeignKeyName());
         $this->assertSame('morph_to_stub_type', $relation->getMorphType());
@@ -2235,7 +2236,6 @@ class EloquentModelStub extends Model
     public $scopesCalled = [];
     protected $table = 'stub';
     protected $guarded = [];
-    protected $morph_to_stub_type = EloquentModelSaveStub::class;
     protected $casts = ['castedFloat' => 'float'];
 
     public function getListItemsAttribute($value)
