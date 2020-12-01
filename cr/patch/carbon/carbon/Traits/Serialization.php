@@ -93,7 +93,7 @@ trait Serialization
      */
     public static function __set_state_($dump) // moved as trait
     {
-        if (is_string($dump)) {
+        if (\is_string($dump)) {
             return static::parse($dump);
         }
 
@@ -150,9 +150,9 @@ trait Serialization
     {
         $serializer = isset($this->localSerializer) ? $this->localSerializer : static::$serializer;
         if ($serializer) {
-            return is_string($serializer)
+            return \is_string($serializer)
                 ? $this->rawFormat($serializer)
-                : call_user_func($serializer, $this);
+                : \call_user_func($serializer, $this);
         }
 
         return $this->toJSON();

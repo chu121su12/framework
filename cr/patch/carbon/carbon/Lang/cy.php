@@ -64,7 +64,7 @@ return [
         ];
         return $number.(
             $number > 20
-                ? (in_array($number, [40, 50, 60, 80, 100]) ? 'fed' : 'ain')
+                ? (\in_array($number, [40, 50, 60, 80, 100]) ? 'fed' : 'ain')
                 : isset($ordinals[$number]) ? $ordinals[$number] : ''
         );
     },

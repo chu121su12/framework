@@ -25,7 +25,7 @@ final class MacroScanner
         $className = cast_to_string($className);
 
         return is_a($className, CarbonInterface::class, true) &&
-            is_callable([$className, 'hasMacro']) &&
+            \is_callable([$className, 'hasMacro']) &&
             $className::hasMacro($methodName);
     }
 

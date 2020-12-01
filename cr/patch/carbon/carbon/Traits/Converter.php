@@ -83,11 +83,11 @@ trait Converter
             return $this->rawFormat($format);
         }
 
-        if (is_string($function) && method_exists($this, $function)) {
+        if (\is_string($function) && method_exists($this, $function)) {
             $function = [$this, $function];
         }
 
-        return $function(...func_get_args());
+        return $function(...\func_get_args());
     }
 
     /**
@@ -125,7 +125,7 @@ trait Converter
         return $format instanceof Closure
             ? $format($this)
             : $this->rawFormat($format ?: (
-                defined('static::DEFAULT_TO_STRING_FORMAT')
+                \defined('static::DEFAULT_TO_STRING_FORMAT')
                     ? static::DEFAULT_TO_STRING_FORMAT
                     : CarbonInterface::DEFAULT_TO_STRING_FORMAT
             ));
@@ -458,7 +458,7 @@ trait Converter
     {
         return $this->copy()
             ->setTimezone('GMT')
-            ->rawFormat(defined('static::RFC7231_FORMAT') ? static::RFC7231_FORMAT : CarbonInterface::RFC7231_FORMAT);
+            ->rawFormat(\defined('static::RFC7231_FORMAT') ? static::RFC7231_FORMAT : CarbonInterface::RFC7231_FORMAT);
     }
 
     /**
@@ -484,7 +484,7 @@ trait Converter
             'second' => $this->second,
             'micro' => $this->micro,
             'timestamp' => $this->timestamp,
-            'formatted' => $this->rawFormat(defined('static::DEFAULT_TO_STRING_FORMAT') ? static::DEFAULT_TO_STRING_FORMAT : CarbonInterface::DEFAULT_TO_STRING_FORMAT),
+            'formatted' => $this->rawFormat(\defined('static::DEFAULT_TO_STRING_FORMAT') ? static::DEFAULT_TO_STRING_FORMAT : CarbonInterface::DEFAULT_TO_STRING_FORMAT),
             'timezone' => $this->timezone,
         ];
     }
@@ -629,7 +629,7 @@ trait Converter
             $period->setDateInterval($interval);
         }
 
-        if (is_int($end) || is_string($end) && ctype_digit($end)) {
+        if (\is_int($end) || \is_string($end) && ctype_digit($end)) {
             $period->setRecurrences($end);
         } elseif ($end) {
             $period->setEndDate($end);
