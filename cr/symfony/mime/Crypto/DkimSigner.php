@@ -24,11 +24,11 @@ use Symfony\Component\Mime\Part\AbstractPart;
  */
 final class DkimSigner
 {
-    public const CANON_SIMPLE = 'simple';
-    public const CANON_RELAXED = 'relaxed';
+    const CANON_SIMPLE = 'simple';
+    const CANON_RELAXED = 'relaxed';
 
-    public const ALGO_SHA256 = 'rsa-sha256';
-    public const ALGO_ED25519 = 'ed25519-sha256'; // RFC 8463
+    const ALGO_SHA256 = 'rsa-sha256';
+    const ALGO_ED25519 = 'ed25519-sha256'; // RFC 8463
 
     private $key;
     private $domainName;
@@ -39,8 +39,16 @@ final class DkimSigner
      * @param string $pk         The private key as a string or the path to the file containing the private key, should be prefixed with file:// (in PEM format)
      * @param string $passphrase A passphrase of the private key (if any)
      */
-    public function __construct(string $pk, string $domainName, string $selector, array $defaultOptions = [], string $passphrase = '')
+    public function __construct($pk, $domainName, $selector, array $defaultOptions = [], $passphrase = '')
     {
+        $pk = cast_to_string($pk);
+
+        $domainName = cast_to_string($domainName);
+
+        $selector = cast_to_string($selector);
+
+        $passphrase = cast_to_string($passphrase);
+
         if (!\extension_loaded('openssl')) {
             throw new \LogicException('PHP extension "openssl" is required to use DKIM.');
         }
@@ -61,7 +69,7 @@ final class DkimSigner
         ];
     }
 
-    public function sign(Message $message, array $options = []): Message
+    public function sign(Message $message, array $options = []) // Message
     {
         $options += $this->defaultOptions;
         if (!\in_array($options['algorithm'], [self::ALGO_SHA256, self::ALGO_ED25519], true)) {
@@ -129,8 +137,12 @@ final class DkimSigner
         return new Message($headers, $message->getBody());
     }
 
-    private function canonicalizeHeader(string $header, string $headerCanon): string
+    private function canonicalizeHeader($header, $headerCanon) //// string
     {
+        $header = cast_to_string($header);
+
+        $headerCanon = cast_to_string($headerCanon);
+
         if (self::CANON_RELAXED !== $headerCanon) {
             return $header."\r\n";
         }
@@ -143,8 +155,12 @@ final class DkimSigner
         return $name.':'.$value."\r\n";
     }
 
-    private function hashBody(AbstractPart $body, string $bodyCanon, int $maxLength): array
+    private function hashBody(AbstractPart $body, $bodyCanon, $maxLength) //// array
     {
+        $bodyCanon = cast_to_string($bodyCanon);
+
+        $maxLength = cast_to_int($maxLength);
+
         $hash = hash_init('sha256');
         $relaxed = self::CANON_RELAXED === $bodyCanon;
         $currentLine = '';

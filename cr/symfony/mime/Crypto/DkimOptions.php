@@ -20,7 +20,7 @@ final class DkimOptions
 {
     private $options = [];
 
-    public function toArray(): array
+    public function toArray() //// array
     {
         return $this->options;
     }
@@ -28,8 +28,10 @@ final class DkimOptions
     /**
      * @return $this
      */
-    public function algorithm(int $algo): self
+    public function algorithm($algo) /// self
     {
+        $algo = cast_to_int($algo);
+
         $this->options['algorithm'] = $algo;
 
         return $this;
@@ -38,8 +40,10 @@ final class DkimOptions
     /**
      * @return $this
      */
-    public function signatureExpirationDelay(int $show): self
+    public function signatureExpirationDelay($show) /// self
     {
+        $show = cast_to_int($show);
+
         $this->options['signature_expiration_delay'] = $show;
 
         return $this;
@@ -48,8 +52,10 @@ final class DkimOptions
     /**
      * @return $this
      */
-    public function bodyMaxLength(int $max): self
+    public function bodyMaxLength($max) /// self
     {
+        $max = cast_to_int($max);
+
         $this->options['body_max_length'] = $max;
 
         return $this;
@@ -58,8 +64,10 @@ final class DkimOptions
     /**
      * @return $this
      */
-    public function bodyShowLength(bool $show): self
+    public function bodyShowLength($show) /// self
     {
+        $show = cast_to_bool($show);
+
         $this->options['body_show_length'] = $show;
 
         return $this;
@@ -68,8 +76,10 @@ final class DkimOptions
     /**
      * @return $this
      */
-    public function headerCanon(string $canon): self
+    public function headerCanon($canon) /// self
     {
+        $canon = cast_to_string($canon);
+
         $this->options['header_canon'] = $canon;
 
         return $this;
@@ -78,8 +88,10 @@ final class DkimOptions
     /**
      * @return $this
      */
-    public function bodyCanon(string $canon): self
+    public function bodyCanon($canon) /// self
     {
+        $canon = cast_to_string($canon);
+
         $this->options['body_canon'] = $canon;
 
         return $this;
@@ -88,7 +100,7 @@ final class DkimOptions
     /**
      * @return $this
      */
-    public function headersToIgnore(array $headers): self
+    public function headersToIgnore(array $headers) /// self
     {
         $this->options['headers_to_ignore'] = $headers;
 
