@@ -85,18 +85,20 @@ trait Difference
     {
         $diff = CarbonInterval::instance($diff);
 
+        $diffF = property_exists($diff, 'f') ? $diff->f : 0;
+
         // Work-around for https://bugs.php.net/bug.php?id=77145
         // @codeCoverageIgnoreStart
-        if ($diff->f > 0 && $diff->y === -1 && $diff->m === 11 && $diff->d >= 27 && $diff->h === 23 && $diff->i === 59 && $diff->s === 59) {
+        if ($diffF > 0 && $diff->y === -1 && $diff->m === 11 && $diff->d >= 27 && $diff->h === 23 && $diff->i === 59 && $diff->s === 59) {
             $diff->y = 0;
             $diff->m = 0;
             $diff->d = 0;
             $diff->h = 0;
             $diff->i = 0;
             $diff->s = 0;
-            $diff->f = (1000000 - round($diff->f * 1000000)) / 1000000;
+            $diffF = (1000000 - round($diffF * 1000000)) / 1000000;
             $diff->invert();
-        } elseif ($diff->f < 0) {
+        } elseif ($diffF < 0) {
             static::fixNegativeMicroseconds($diff);
         }
         // @codeCoverageIgnoreEnd
@@ -376,10 +378,13 @@ trait Difference
     public function diffInMicroseconds($date = null, $absolute = true)
     {
         $diff = $this->diff($date);
+
+        $diffF = property_exists($diff, 'f') ? $diff->f : 0;
+
         $value = (int) round(((((($diff->m || $diff->y ? $diff->days : $diff->d) * static::HOURS_PER_DAY) +
             $diff->h) * static::MINUTES_PER_HOUR +
             $diff->i) * static::SECONDS_PER_MINUTE +
-            ($diff->f + $diff->s)) * static::MICROSECONDS_PER_SECOND);
+            ($diffF + $diff->s)) * static::MICROSECONDS_PER_SECOND);
 
         return $absolute || !$diff->invert ? $value : -$value;
     }
