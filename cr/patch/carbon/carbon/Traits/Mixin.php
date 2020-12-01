@@ -11,6 +11,7 @@
 namespace Carbon\Traits;
 
 use Closure;
+use Generator;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -69,7 +70,7 @@ trait Mixin
     }
 
     /**
-     * @param string $mixin
+     * @param object|string $mixin
      *
      * @throws ReflectionException
      */
@@ -95,15 +96,10 @@ trait Mixin
      */
     private static function loadMixinTrait($trait)
     {
-        $baseClass = static::class;
-        $context = eval('return new class() extends '.$baseClass.' {use '.$trait.';};');
+        $context = eval(self::getAnonymousClassCodeForTrait($trait));
         $className = \get_class($context);
 
-        foreach (get_class_methods($context) as $name) {
-            if (method_exists($baseClass, $name)) {
-                continue;
-            }
-
+        foreach (self::getMixableMethods($context) as $name) {
             if (version_compare(PHP_VERSION, '7.0.0', '<')) {
                 $closureBase = backport_closure_from_callable($this, [$context, $name]);
             } else {
@@ -111,6 +107,7 @@ trait Mixin
             }
 
             static::macro($name, function () use ($closureBase, $className) {
+                /** @phpstan-ignore-next-line */
                 $context = isset($this) ? $this->cast($className) : new $className();
 
                 try {
@@ -125,6 +122,24 @@ trait Mixin
 
                 return $closure(...\func_get_args());
             });
+        }
+    }
+
+    private static function getAnonymousClassCodeForTrait($trait)
+    {
+        $trait = cast_to_string($trait);
+
+        return 'return new class() extends '.static::class.' {use '.$trait.';};';
+    }
+
+    private static function getMixableMethods($context) /// : Generator
+    {
+        foreach (get_class_methods($context) as $name) {
+            if (method_exists(static::class, $name)) {
+                continue;
+            }
+
+            yield $name;
         }
     }
 

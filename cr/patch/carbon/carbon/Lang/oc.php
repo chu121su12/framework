@@ -83,17 +83,16 @@ return [
     'weekdays_short' => ['dg', 'dl', 'dm', 'dc', 'dj', 'dv', 'ds'],
     'weekdays_min' => ['dg', 'dl', 'dm', 'dc', 'dj', 'dv', 'ds'],
     'ordinal' => function ($number, $period) {
-        return $number.(
-            ($period === 'w' || $period === 'W') ? 'a' : (
-                ($number === 1) ? 'r' : (
-                    ($number === 2) ? 'n' : (
-                        ($number === 3) ? 'r' : (
-                            ($number === 4) ? 't' : 'è'
-                        )
-                    )
-                )
-            )
-        );
+        $ordinals = [1 => 'èr', 2 => 'nd'];
+
+        $ordinal = isset($ordinals[(int) $number]) ? $ordinals[(int) $number] : 'en';
+
+        // feminine for year, week, hour, minute, second
+        if (preg_match('/^[yYwWhHgGis]$/', $period)) {
+            $ordinal .= 'a';
+        }
+
+        return $number.$ordinal;
     },
     'first_day_of_week' => 1,
     'day_of_first_week_of_year' => 4,
