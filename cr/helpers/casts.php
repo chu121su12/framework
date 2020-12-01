@@ -121,6 +121,25 @@ if (! \function_exists('cast_to_iterable')) {
     }
 }
 
+if (! \function_exists('cast_to_object')) {
+    function cast_to_object($value, $default = null, $strict = false)
+    {
+        if (\func_num_args() > 1 && null === $value) {
+            return $default;
+        }
+
+        if (\is_object($value)) {
+            return $value;
+        }
+
+        if (! $strict) {
+            return (object) $value;
+        }
+
+        throw new TypeError;
+    }
+}
+
 if (! \function_exists('cast_to_string')) {
     function cast_to_string($value, $default = null, $strict = false)
     {
