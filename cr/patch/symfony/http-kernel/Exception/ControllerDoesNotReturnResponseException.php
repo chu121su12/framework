@@ -18,6 +18,12 @@ class ControllerDoesNotReturnResponseException extends \LogicException
 {
     public function __construct($message, callable $controller, $file, $line)
     {
+        $message = cast_to_string($message);
+
+        $file = cast_to_string($file);
+
+        $line = cast_to_int($line);
+
         parent::__construct($message);
 
         if (!$controllerDefinition = $this->parseControllerDefinition($controller)) {
