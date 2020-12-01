@@ -96,7 +96,7 @@ final class DkimSigner
             }
         }
 
-        [$bodyHash, $bodyLength] = $this->hashBody($message->getBody(), $options['body_canon'], $options['body_max_length']);
+        list($bodyHash, $bodyLength) = $this->hashBody($message->getBody(), $options['body_canon'], $options['body_max_length']);
 
         $params = [
             'v' => '1',
