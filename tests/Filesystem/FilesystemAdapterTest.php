@@ -2,12 +2,7 @@
 
 namespace Illuminate\Tests\Filesystem;
 
-// use League\Flysystem\Ftp\FtpAdapter;
-// use League\Flysystem\Local\LocalFilesystemAdapter;
-
 use GuzzleHttp\Psr7\Stream;
-use Illuminate\Contracts\Filesystem\FileExistsException;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Foundation\Application;
@@ -19,6 +14,9 @@ use League\Flysystem\Filesystem;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+
+// use League\Flysystem\Ftp\FtpAdapter;
+// use League\Flysystem\Local\LocalFilesystemAdapter;
 
 class FilesystemAdapterTest extends TestCase
 {
@@ -39,6 +37,7 @@ class FilesystemAdapterTest extends TestCase
         $filesystem = new Filesystem(
             $this->adapter = new LocalFilesystemAdapter(dirname($this->tempDir))
         );
+        // $filesystem->deleteDirectory(basename($this->tempDir));
         $filesystem->deleteDir(basename($this->tempDir));
         m::close();
 
@@ -355,6 +354,8 @@ class FilesystemAdapterTest extends TestCase
             'permPublic' => 0700,
             'unsupportedParam' => true,
         ]);
+
+        // $this->assertInstanceOf(FtpAdapter::class, $driver->getAdapter());
 
         /** @var \League\Flysystem\Adapter\Ftp $adapter */
         $adapter = $driver->getAdapter();

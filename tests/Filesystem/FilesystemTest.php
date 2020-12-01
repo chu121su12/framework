@@ -4,7 +4,6 @@ namespace Illuminate\Tests\Filesystem;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Testing\Assert;
 use Mockery as m;

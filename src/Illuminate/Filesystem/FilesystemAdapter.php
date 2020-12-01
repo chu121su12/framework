@@ -2,6 +2,29 @@
 
 namespace Illuminate\Filesystem;
 
+use Illuminate\Contracts\Filesystem\Cloud as CloudFilesystemContract;
+use Illuminate\Contracts\Filesystem\FileExistsException as ContractFileExistsException;
+use Illuminate\Contracts\Filesystem\FileNotFoundException as ContractFileNotFoundException;
+use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
+use Illuminate\Http\File;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
+use League\Flysystem\Adapter\Ftp as FtpAdapter;
+use League\Flysystem\Adapter\Local as LocalAdapter;
+use League\Flysystem\AdapterInterface as FlysystemAdapter;
+use League\Flysystem\AdapterInterface as Visibility;
+use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use League\Flysystem\FileExistsException;
+use League\Flysystem\FileNotFoundException;
+use League\Flysystem\FilesystemInterface as FilesystemOperator;
+use PHPUnit\Framework\Assert as PHPUnit;
+use Psr\Http\Message\StreamInterface;
+use RuntimeException;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 // use League\Flysystem\FilesystemAdapter as FlysystemAdapter;
 // use League\Flysystem\FilesystemOperator;
 // use League\Flysystem\Ftp\FtpAdapter;
@@ -18,30 +41,9 @@ namespace Illuminate\Filesystem;
 // use League\Flysystem\UnableToWriteFile;
 // use League\Flysystem\Visibility;
 
-use Illuminate\Contracts\Filesystem\Cloud as CloudFilesystemContract;
-use Illuminate\Contracts\Filesystem\FileExistsException as ContractFileExistsException;
-use Illuminate\Contracts\Filesystem\FileNotFoundException as ContractFileNotFoundException;
-use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
-use Illuminate\Http\File;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use InvalidArgumentException;
-use League\Flysystem\Adapter\Ftp;
-use League\Flysystem\Adapter\Local as LocalAdapter;
-use League\Flysystem\AdapterInterface;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
-use League\Flysystem\Cached\CachedAdapter;
-use League\Flysystem\FileExistsException;
-use League\Flysystem\FileNotFoundException;
-use League\Flysystem\FilesystemInterface;
-use PHPUnit\Framework\Assert as PHPUnit;
-use Psr\Http\Message\StreamInterface;
-use RuntimeException;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-
 /**
+ * #mixin \League\Flysystem\FilesystemOperator
+ *
  * @mixin \League\Flysystem\FilesystemInterface
  */
 class FilesystemAdapter implements CloudFilesystemContract
@@ -76,7 +78,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      * @param  array  $options
      * @return string
      */
-    public function getAwsTemporaryUrl($adapter, $path, $expiration, $options)
+    protected function getAwsTemporaryUrl($adapter, $path, $expiration, $options)
     {
         $client = $adapter->getClient();
 
@@ -88,20 +90,6 @@ class FilesystemAdapter implements CloudFilesystemContract
         return (string) $client->createPresignedRequest(
             $command, $expiration
         )->getUri();
-    }
-
-    /**
-     * Flush the Flysystem cache.
-     *
-     * @return void
-     */
-    public function flushCache()
-    {
-        $adapter = $this->driver->getAdapter();
-
-        if ($adapter instanceof CachedAdapter) {
-            $adapter->getCache()->flush();
-        }
     }
 
     /**
@@ -122,6 +110,8 @@ class FilesystemAdapter implements CloudFilesystemContract
 
     /**
      * The Flysystem filesystem implementation.
+     *
+     * #var \League\Flysystem\FilesystemOperator
      *
      * @var \League\Flysystem\FilesystemInterface
      */
@@ -151,12 +141,16 @@ class FilesystemAdapter implements CloudFilesystemContract
     /**
      * Create a new filesystem adapter instance.
      *
+     * #param  \League\Flysystem\FilesystemOperator  $driver
+     * #param  \League\Flysystem\FilesystemAdapter  $adapter
+     * #param  array  $config
+     *
      * @param  \League\Flysystem\FilesystemInterface  $driver
-     * @param  ?  $adapter
+     * @param  \League\Flysystem\AdapterInterface  $adapter
      * @param  array  $config
      * @return void
      */
-    public function __construct(FilesystemInterface $driver, $adapter, array $config = [])
+    public function __construct(FilesystemOperator $driver, FlysystemAdapter $adapter, array $config = [])
     {
         $this->driver = $driver;
         $this->adapter = $adapter;
@@ -223,6 +217,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function exists($path)
     {
+        // return $this->driver->fileExists($path);
         return $this->driver->has($path);
     }
 
@@ -245,13 +240,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function path($path)
     {
-        $adapter = $this->adapter;
-
-        if ($adapter instanceof CachedAdapter) {
-            $adapter = $adapter->getAdapter();
-        }
-
-        return $adapter->getPathPrefix().$path;
+        return $this->adapter->getPathPrefix().$path;
     }
 
     /**
@@ -355,6 +344,10 @@ class FilesystemAdapter implements CloudFilesystemContract
 
         try {
             if ($contents instanceof StreamInterface) {
+                // $this->driver->writeStream($path, $contents->detach(), $options);
+
+                // return true;
+
                 return $this->driver->putStream($path, $contents->detach(), $options);
             }
 
@@ -422,7 +415,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function getVisibility($path)
     {
-        if ($this->driver->getVisibility($path) == AdapterInterface::VISIBILITY_PUBLIC) {
+        if ($this->driver->getVisibility($path) == Visibility::VISIBILITY_PUBLIC) {
             return FilesystemContract::VISIBILITY_PUBLIC;
         }
 
@@ -542,6 +535,8 @@ class FilesystemAdapter implements CloudFilesystemContract
     public function move($from, $to)
     {
         try {
+            // $this->driver->move($from, $to);
+
             return $this->driver->rename($from, $to);
         } catch (\Exception $e) {
             return false;
@@ -562,6 +557,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function size($path)
     {
+        // return $this->driver->fileSize($path);
         return $this->driver->getSize($path);
     }
 
@@ -573,6 +569,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function mimeType($path)
     {
+        // return $this->driver->mimeType($path);
         return $this->driver->getMimetype($path);
     }
 
@@ -584,6 +581,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function lastModified($path)
     {
+        // return $this->driver->lastModified($path);
         return $this->driver->getTimestamp($path);
     }
 
@@ -609,6 +607,7 @@ class FilesystemAdapter implements CloudFilesystemContract
         } catch (FileExistsException $e) {
             $this->delete($path);
             $this->driver->writeStream($path, $resource, $options);
+
             return false;
         }
 
@@ -627,17 +626,13 @@ class FilesystemAdapter implements CloudFilesystemContract
     {
         $adapter = $this->adapter;
 
-        if ($adapter instanceof CachedAdapter) {
-            $adapter = $adapter->getAdapter();
-        }
-
         if (method_exists($adapter, 'getUrl')) {
             return $adapter->getUrl($path);
         } elseif (method_exists($this->driver, 'getUrl')) {
             return $this->driver->getUrl($path);
         } elseif ($adapter instanceof AwsS3Adapter) {
             return $this->getAwsUrl($adapter, $path);
-        } elseif ($adapter instanceof Ftp) {
+        } elseif ($adapter instanceof FtpAdapter) {
             return $this->getFtpUrl($path);
         } elseif ($adapter instanceof LocalAdapter) {
             return $this->getLocalUrl($path);
@@ -698,21 +693,15 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function temporaryUrl($path, $expiration, array $options = [])
     {
-        $adapter = $this->adapter;
-
-        if ($adapter instanceof CachedAdapter) {
-            $adapter = $adapter->getAdapter();
-        }
-
-        if (! method_exists($adapter, 'getTemporaryUrl')) {
+        if (! method_exists($this->adapter, 'getTemporaryUrl')) {
             throw new RuntimeException('This driver does not support creating temporary URLs.');
         }
 
-        if ($adapter instanceof AwsS3Adapter) {
-            return $this->getAwsTemporaryUrl($adapter, $path, $expiration, $options);
+        if ($this->adapter instanceof AwsS3Adapter) {
+            return $this->getAwsTemporaryUrl($this->adapter, $path, $expiration, $options);
         }
 
-        return $adapter->getTemporaryUrl($path, $expiration, $options);
+        return $this->adapter->getTemporaryUrl($path, $expiration, $options);
     }
 
     /**
@@ -736,6 +725,15 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function files($directory = null, $recursive = false)
     {
+        // return $this->driver->listContents($directory, $recursive)
+        //     ->filter(function (StorageAttributes $attributes) {
+        //         return $attributes->isFile();
+        //     })
+        //     ->map(function (StorageAttributes $attributes) {
+        //         return $attributes->path();
+        //     })
+        //     ->toArray();
+
         $contents = $this->driver->listContents($directory, $recursive);
 
         return $this->filterContentsByType($contents, 'file');
@@ -761,6 +759,15 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function directories($directory = null, $recursive = false)
     {
+        // return $this->driver->listContents($directory, $recursive)
+        //     ->filter(function (StorageAttributes $attributes) {
+        //         return $attributes->isDir();
+        //     })
+        //     ->map(function (StorageAttributes $attributes) {
+        //         return $attributes->path();
+        //     })
+        //     ->toArray();
+
         $contents = $this->driver->listContents($directory, $recursive);
 
         return $this->filterContentsByType($contents, 'dir');
@@ -786,6 +793,8 @@ class FilesystemAdapter implements CloudFilesystemContract
     public function makeDirectory($path)
     {
         try {
+            // $this->driver->createDirectory($path);
+
             return $this->driver->createDir($path);
         } catch (\Exception $e) {
             return false;
@@ -807,6 +816,8 @@ class FilesystemAdapter implements CloudFilesystemContract
     public function deleteDirectory($directory)
     {
         try {
+            // $this->driver->deleteDirectory($directory);
+
             return $this->driver->deleteDir($directory);
         } catch (\Exception $e) {
             return false;
@@ -822,7 +833,9 @@ class FilesystemAdapter implements CloudFilesystemContract
     /**
      * Get the Flysystem driver.
      *
-     * @return \League\Flysystem\FilesystemOperator
+     * #return \League\Flysystem\FilesystemOperator
+     *
+     * @return \League\Flysystem\FilesystemInterface
      */
     public function getDriver()
     {
@@ -832,7 +845,9 @@ class FilesystemAdapter implements CloudFilesystemContract
     /**
      * Get the Flysystem adapter.
      *
-     * @return \League\Flysystem\FilesystemAdapter
+     * #return \League\Flysystem\FilesystemAdapter
+     *
+     * @return \League\Flysystem\AdapterInterface
      */
     public function getAdapter()
     {
@@ -865,9 +880,11 @@ class FilesystemAdapter implements CloudFilesystemContract
 
         switch ($visibility) {
             case FilesystemContract::VISIBILITY_PUBLIC:
-                return AdapterInterface::VISIBILITY_PUBLIC;
+                // return Visibility::PUBLIC;
+                return Visibility::VISIBILITY_PUBLIC;
             case FilesystemContract::VISIBILITY_PRIVATE:
-                return AdapterInterface::VISIBILITY_PRIVATE;
+                // return Visibility::PRIVATE;
+                return Visibility::VISIBILITY_PRIVATE;
         }
 
         throw new InvalidArgumentException("Unknown visibility: {$visibility}.");

@@ -2,6 +2,19 @@
 
 namespace Illuminate\Filesystem;
 
+use Aws\S3\S3Client;
+use Closure;
+use Illuminate\Contracts\Filesystem\Factory as FactoryContract;
+use Illuminate\Support\Arr;
+use InvalidArgumentException;
+use League\Flysystem\Adapter\Ftp as FtpAdapter;
+use League\Flysystem\Adapter\Local as LocalAdapter;
+use League\Flysystem\AdapterInterface as FlysystemAdapter;
+use League\Flysystem\AwsS3v3\AwsS3Adapter as S3Adapter;
+use League\Flysystem\Filesystem as Flysystem;
+use League\Flysystem\FilesystemInterface as FilesystemOperator;
+use League\Flysystem\Sftp\SftpAdapter;
+
 // use League\Flysystem\FilesystemAdapter as FlysystemAdapter;
 // use League\Flysystem\Ftp\FtpAdapter as FtpAdapter;
 // use League\Flysystem\Ftp\FtpConnectionOptions;
@@ -11,58 +24,11 @@ namespace Illuminate\Filesystem;
 // use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 // use League\Flysystem\Visibility;
 
-use Aws\S3\S3Client;
-use Closure;
-use Illuminate\Contracts\Filesystem\Factory as FactoryContract;
-use Illuminate\Support\Arr;
-use InvalidArgumentException;
-use League\Flysystem\Adapter\Ftp as FtpAdapter;
-use League\Flysystem\Adapter\Local as LocalAdapter;
-use League\Flysystem\AdapterInterface;
-use League\Flysystem\AwsS3v3\AwsS3Adapter as S3Adapter;
-use League\Flysystem\Cached\CachedAdapter;
-use League\Flysystem\Cached\Storage\Memory as MemoryStore;
-use League\Flysystem\Filesystem as Flysystem;
-use League\Flysystem\FilesystemInterface;
-use League\Flysystem\Sftp\SftpAdapter;
-
 /**
  * @mixin \Illuminate\Contracts\Filesystem\Filesystem
  */
 class FilesystemManager implements FactoryContract
 {
-    /**
-     * Adapt the filesystem implementation.
-     *
-     * @param  \League\Flysystem\FilesystemInterface  $filesystem
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
-     */
-    protected function adapt(FilesystemInterface $filesystem)
-    {
-        throw new \Exception();
-    }
-
-    /**
-     * Create a cache store instance.
-     *
-     * @param  mixed  $config
-     * @return \League\Flysystem\Cached\CacheInterface
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function createCacheStore($config)
-    {
-        if ($config === true) {
-            return new MemoryStore;
-        }
-
-        return new Cache(
-            $this->app['cache']->store($config['store']),
-            isset($config['prefix']) ? $config['prefix'] : 'flysystem',
-            isset($config['expire']) ? $config['expire'] : null
-        );
-    }
-
     /**
      * The application instance.
      *
@@ -202,8 +168,8 @@ class FilesystemManager implements FactoryContract
             : LocalAdapter::DISALLOW_LINKS;
 
         $adapter = new LocalAdapter(
-            $config['root'], isset($config['lock']) ? $config['lock'] : LOCK_EX, $links, $permissions
             // $config['root'], $visibility, $config['lock'] ?? LOCK_EX, $links
+            $config['root'], isset($config['lock']) ? $config['lock'] : LOCK_EX, $links, $permissions
         );
 
         return new FilesystemAdapter($this->createFlysystem($adapter, $config), $adapter, $config);
@@ -217,8 +183,8 @@ class FilesystemManager implements FactoryContract
      */
     public function createFtpDriver(array $config)
     {
-        $adapter = new FtpAdapter($config);
         // $adapter = new FtpAdapter(FtpConnectionOptions::fromArray($config));
+        $adapter = new FtpAdapter($config);
 
         return new FilesystemAdapter($this->createFlysystem($adapter, $config), $adapter, $config);
     }
@@ -305,19 +271,17 @@ class FilesystemManager implements FactoryContract
     /**
      * Create a Flysystem instance with the given adapter.
      *
+     * #param  \League\Flysystem\FilesystemAdapter  $adapter
+     * #param  array  $config
+     * #return \League\Flysystem\FilesystemOperator
+     *
      * @param  \League\Flysystem\AdapterInterface  $adapter
      * @param  array  $config
      * @return \League\Flysystem\FilesystemInterface
      */
-    protected function createFlysystem(AdapterInterface $adapter, array $config)
+    protected function createFlysystem(FlysystemAdapter $adapter, array $config)
     {
-        $cache = Arr::pull($config, 'cache');
-
         $config = Arr::only($config, ['visibility', 'disable_asserts', 'url']);
-
-        if ($cache) {
-            $adapter = new CachedAdapter($adapter, $this->createCacheStore($cache));
-        }
 
         return new Flysystem($adapter, count($config) > 0 ? $config : null);
     }
