@@ -13,6 +13,6 @@ trait SetState
      */
     public static function __set_state()
     {
-        return static::__set_state_(...func_get_args());
+        return static::__set_state_(...\func_get_args());
     }
 }
