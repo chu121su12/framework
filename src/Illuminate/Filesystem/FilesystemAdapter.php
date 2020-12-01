@@ -17,7 +17,8 @@ use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\AdapterInterface as FlysystemAdapter;
 use League\Flysystem\AdapterInterface as Visibility;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
-use League\Flysystem\FileExistsException;
+use League\Flysystem\FileExistsException as UnableToWriteFile;
+use League\Flysystem\FileNotFoundException as UnableToReadFile;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface as FilesystemOperator;
 use PHPUnit\Framework\Assert as PHPUnit;
@@ -240,6 +241,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function path($path)
     {
+        // return $this->prefixer->prefixPath($path);
         return $this->adapter->getPathPrefix().$path;
     }
 
@@ -253,7 +255,7 @@ class FilesystemAdapter implements CloudFilesystemContract
     {
         try {
             return $this->driver->read($path);
-        } catch (FileNotFoundException $e) {
+        } catch (UnableToReadFile $e) {
             //
         }
     }
@@ -592,7 +594,7 @@ class FilesystemAdapter implements CloudFilesystemContract
     {
         try {
             return $this->driver->readStream($path);
-        } catch (FileNotFoundException $e) {
+        } catch (UnableToReadFile $e) {
             //
         }
     }
@@ -604,7 +606,7 @@ class FilesystemAdapter implements CloudFilesystemContract
     {
         try {
             $this->driver->writeStream($path, $resource, $options);
-        } catch (FileExistsException $e) {
+        } catch (UnableToWriteFile $e) {
             $this->delete($path);
             $this->driver->writeStream($path, $resource, $options);
 
