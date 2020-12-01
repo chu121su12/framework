@@ -258,16 +258,14 @@ class FilesystemAdapter implements CloudFilesystemContract
      * Get the contents of a file.
      *
      * @param  string  $path
-     * @return string|?null
-     *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @return string|null
      */
     public function get($path)
     {
         try {
             return $this->driver->read($path);
         } catch (FileNotFoundException $e) {
-            throw new ContractFileNotFoundException($e->getMessage(), $e->getCode(), $e);
+            //
         }
     }
 
@@ -505,7 +503,7 @@ class FilesystemAdapter implements CloudFilesystemContract
                     $success = false;
                 }
             } catch (FileNotFoundException $e) {
-                $success = false;
+                $success = true;
             }
         }
 
@@ -595,9 +593,9 @@ class FilesystemAdapter implements CloudFilesystemContract
     public function readStream($path)
     {
         try {
-            return $this->driver->readStream($path) ?: null;
+            return $this->driver->readStream($path);
         } catch (FileNotFoundException $e) {
-            throw new ContractFileNotFoundException($e->getMessage(), $e->getCode(), $e);
+            //
         }
     }
 
@@ -607,10 +605,14 @@ class FilesystemAdapter implements CloudFilesystemContract
     public function writeStream($path, $resource, array $options = [])
     {
         try {
-            return $this->driver->writeStream($path, $resource, $options);
+            $this->driver->writeStream($path, $resource, $options);
         } catch (FileExistsException $e) {
-            throw new ContractFileExistsException($e->getMessage(), $e->getCode(), $e);
+            $this->delete($path);
+            $this->driver->writeStream($path, $resource, $options);
+            return false;
         }
+
+        return true;
     }
 
     /**

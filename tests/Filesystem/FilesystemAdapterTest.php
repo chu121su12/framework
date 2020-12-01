@@ -120,7 +120,9 @@ class FilesystemAdapterTest extends TestCase
     public function testPath()
     {
         $this->filesystem->write('file.txt', 'Hello World');
-        $filesystemAdapter = new FilesystemAdapter($this->filesystem, $this->adapter);
+        $filesystemAdapter = new FilesystemAdapter($this->filesystem, $this->adapter, [
+            'root' => $this->tempDir.DIRECTORY_SEPARATOR,
+        ]);
         $this->assertEquals($this->tempDir.DIRECTORY_SEPARATOR.'file.txt', $filesystemAdapter->path('file.txt'));
     }
 
@@ -134,9 +136,7 @@ class FilesystemAdapterTest extends TestCase
     public function testGetFileNotFound()
     {
         $filesystemAdapter = new FilesystemAdapter($this->filesystem, $this->adapter);
-        $this->expectException(FileNotFoundException::class);
-        $filesystemAdapter->get('file.txt');
-        // $this->assertNull($filesystemAdapter->get('file.txt'));
+        $this->assertNull($filesystemAdapter->get('file.txt'));
     }
 
     public function testPut()
@@ -170,10 +170,10 @@ class FilesystemAdapterTest extends TestCase
         Assert::assertFileDoesNotExist($this->tempDir.'/file.txt');
     }
 
-    public function testDeleteReturnsFalseWhenFileNotFound()
+    public function testDeleteReturnsTrueWhenFileNotFound()
     {
         $filesystemAdapter = new FilesystemAdapter($this->filesystem, $this->adapter);
-        $this->assertFalse($filesystemAdapter->delete('file.txt'));
+        $this->assertTrue($filesystemAdapter->delete('file.txt'));
     }
 
     public function testCopy()
@@ -227,21 +227,20 @@ class FilesystemAdapterTest extends TestCase
         $this->assertEquals($original_content, $secondFilesystemAdapter->get('copy.txt'));
     }
 
-    public function testStreamToExistingFileThrows()
+    public function testStreamToExistingFileOverwrites()
     {
-        $this->expectException(FileExistsException::class);
         $this->filesystem->write('file.txt', 'Hello World');
         $this->filesystem->write('existing.txt', 'Dear Kate');
         $filesystemAdapter = new FilesystemAdapter($this->filesystem, $this->adapter);
         $readStream = $filesystemAdapter->readStream('file.txt');
         $filesystemAdapter->writeStream('existing.txt', $readStream);
+        $this->assertSame('Hello World', $filesystemAdapter->read('existing.txt'));
     }
 
-    public function testReadStreamNonExistentFileThrows()
+    public function testReadStreamNonExistentFileReturnsNull()
     {
-        $this->expectException(FileNotFoundException::class);
         $filesystemAdapter = new FilesystemAdapter($this->filesystem, $this->adapter);
-        $filesystemAdapter->readStream('nonexistent.txt');
+        $this->assertNull($filesystemAdapter->readStream('nonexistent.txt'));
     }
 
     public function testStreamInvalidResourceThrows()
@@ -254,15 +253,13 @@ class FilesystemAdapterTest extends TestCase
     public function testPutWithStreamInterface()
     {
         file_put_contents($this->tempDir.'/foo.txt', 'some-data');
-        $spy = m::spy($this->filesystem);
 
-        $filesystemAdapter = new FilesystemAdapter($spy, $this->adapter);
+        $filesystemAdapter = new FilesystemAdapter($this->filesystem, $this->adapter);
         $stream = fopen($this->tempDir.'/foo.txt', 'r');
         $guzzleStream = new Stream($stream);
         $filesystemAdapter->put('bar.txt', $guzzleStream);
         fclose($stream);
 
-        $spy->shouldHaveReceived('putStream');
         $this->assertSame('some-data', $filesystemAdapter->get('bar.txt'));
     }
 
@@ -364,5 +361,10 @@ class FilesystemAdapterTest extends TestCase
         $this->assertEquals(0700, $adapter->getPermPublic());
         $this->assertSame('ftp.example.com', $adapter->getHost());
         $this->assertSame('admin', $adapter->getUsername());
+
+        $config = $driver->getConfig();
+        $this->assertEquals(0700, $config['permPublic']);
+        $this->assertSame('ftp.example.com', $config['host']);
+        $this->assertSame('admin', $config['username']);
     }
 }
