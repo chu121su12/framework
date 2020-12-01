@@ -52,7 +52,22 @@ use Symfony\Component\Routing\RouteCollection;
  *         }
  *     }
  *
+ * On PHP 8, the annotation class can be used as an attribute as well:
+ *     #[Route('/Blog')]
+ *     class Blog
+ *     {
+ *         #[Route('/', name: 'blog_index')]
+ *         public function index()
+ *         {
+ *         }
+ *         #[Route('/{id}', name: 'blog_post', requirements: ["id" => '\d+'])]
+ *         public function show()
+ *         {
+ *         }
+ *     }
+ *
  * @author Fabien Potencier <fabien@symfony.com>
+ * @author Alexander M. Turek <me@derrabus.de>
  */
 abstract class AnnotationClassLoader implements LoaderInterface
 {
@@ -61,14 +76,14 @@ abstract class AnnotationClassLoader implements LoaderInterface
     /**
      * @var string
      */
-    protected $routeAnnotationClass = 'Symfony\\Component\\Routing\\Annotation\\Route';
+    protected $routeAnnotationClass = RouteAnnotation::class;
 
     /**
      * @var int
      */
     protected $defaultRouteIndex = 0;
 
-    public function __construct(Reader $reader)
+    public function __construct(Reader $reader = null)
     {
         $this->reader = $reader;
     }
@@ -112,19 +127,15 @@ abstract class AnnotationClassLoader implements LoaderInterface
 
         foreach ($class->getMethods() as $method) {
             $this->defaultRouteIndex = 0;
-            foreach ($this->reader->getMethodAnnotations($method) as $annot) {
-                if ($annot instanceof $this->routeAnnotationClass) {
-                    $this->addRoute($collection, $annot, $globals, $class, $method);
-                }
+            foreach ($this->getAnnotations($method) as $annot) {
+                $this->addRoute($collection, $annot, $globals, $class, $method);
             }
         }
 
         if (0 === $collection->count() && $class->hasMethod('__invoke')) {
             $globals = $this->resetGlobals();
-            foreach ($this->reader->getClassAnnotations($class) as $annot) {
-                if ($annot instanceof $this->routeAnnotationClass) {
-                    $this->addRoute($collection, $annot, $globals, $class, $class->getMethod('__invoke'));
-                }
+            foreach ($this->getAnnotations($class) as $annot) {
+                $this->addRoute($collection, $annot, $globals, $class, $class->getMethod('__invoke'));
             }
         }
 
@@ -136,6 +147,8 @@ abstract class AnnotationClassLoader implements LoaderInterface
      */
     protected function addRoute(RouteCollection $collection, $annot, array $globals, \ReflectionClass $class, \ReflectionMethod $method)
     {
+        $annot = cast_to_object($annot);
+
         $name = $annot->getName();
         if (null === $name) {
             $name = $this->getDefaultRouteName($class, $method);
@@ -266,7 +279,19 @@ abstract class AnnotationClassLoader implements LoaderInterface
     {
         $globals = $this->resetGlobals();
 
-        if ($annot = $this->reader->getClassAnnotation($class, $this->routeAnnotationClass)) {
+        $annot = null;
+        if (\PHP_VERSION_ID >= 80000) {
+            $classesRouteAnnotationClassAttributes = $class->getAttributes($this->routeAnnotationClass);
+
+            if ($attribute = (isset($classesRouteAnnotationClassAttributes[0]) ? $classesRouteAnnotationClassAttributes[0] : null)) {
+                $annot = $attribute->newInstance();
+            }
+        }
+        if (!$annot && $this->reader) {
+            $annot = $this->reader->getClassAnnotation($class, $this->routeAnnotationClass);
+        }
+
+        if ($annot) {
             if (null !== $annot->getName()) {
                 $globals['name'] = $annot->getName();
             }
@@ -347,4 +372,34 @@ abstract class AnnotationClassLoader implements LoaderInterface
     }
 
     abstract protected function configureRoute(Route $route, \ReflectionClass $class, \ReflectionMethod $method, $annot);
+
+    /**
+     * @param \ReflectionClass|\ReflectionMethod $reflection
+     *
+     * @return iterable|RouteAnnotation[]
+     */
+    private function getAnnotations($reflection) //// iterable
+    {
+        $reflection = cast_to_object($reflection);
+
+        if (\PHP_VERSION_ID >= 80000) {
+            foreach ($reflection->getAttributes($this->routeAnnotationClass) as $attribute) {
+                yield $attribute->newInstance();
+            }
+        }
+
+        if (!$this->reader) {
+            return;
+        }
+
+        $anntotations = $reflection instanceof \ReflectionClass
+            ? $this->reader->getClassAnnotations($reflection)
+            : $this->reader->getMethodAnnotations($reflection);
+
+        foreach ($anntotations as $annotation) {
+            if ($annotation instanceof $this->routeAnnotationClass) {
+                yield $annotation;
+            }
+        }
+    }
 }
