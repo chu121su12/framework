@@ -78,9 +78,7 @@ trait Rounding
         $factor = $this->year < 0 ? -1 : 1;
         $changes = [];
 
-        foreach ($ranges as $unit => $loop) {
-            list($minimum, $maximum) = $loop;
-
+        foreach ($ranges as $unit => list($minimum, $maximum)) {
             if ($normalizedUnit === $unit) {
                 $arguments = [$this->$unit, $minimum];
                 $fraction = $precision - floor($precision);

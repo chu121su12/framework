@@ -503,8 +503,7 @@ class DebugClassLoader
                 } elseif (!$refl->isInterface()) {
                     $hasCall = $refl->hasMethod('__call');
                     $hasStaticCall = $refl->hasMethod('__callStatic');
-                    foreach (self::$method[$use] as $method) {
-                        list($interface, $name, $static, $description) = $method;
+                    foreach (self::$method[$use] as list($interface, $name, $static, $description)) {
                         if ($static ? $hasStaticCall : $hasCall) {
                             continue;
                         }

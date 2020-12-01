@@ -281,9 +281,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         if (!self::$flipCascadeFactors) {
             self::$flipCascadeFactors = [];
 
-            foreach (static::getCascadeFactors() as $to => $loop) {
-                list($factor, $from) = $loop;
-
+            foreach (static::getCascadeFactors() as $to => list($factor, $from)) {
                 self::$flipCascadeFactors[self::standardizeUnit($from)] = [self::standardizeUnit($to), $factor];
             }
         }
@@ -655,9 +653,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         $pattern = '/(\d+(?:\.\d+)?)\h*([^\d\h]*)/i';
         preg_match_all($pattern, $intervalDefinition, $parts, PREG_SET_ORDER);
 
-        while ($loop = array_shift($parts)) {
-            list($part, $value, $unit) = $loop;
-
+        while (list($part, $value, $unit) = array_shift($parts)) {
             $intValue = \intval($value);
             $fraction = \floatval($value) - $intValue;
 
@@ -2093,9 +2089,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         unset($originalData['days']);
         $newData = $originalData;
 
-        foreach (static::getFlipCascadeFactors() as $source => $loop) {
-            list($target, $factor) = $loop;
-
+        foreach (static::getFlipCascadeFactors() as $source => list($target, $factor)) {
             foreach (['source', 'target'] as $key) {
                 if ($$key === 'dayz') {
                     $$key = 'daysExcludeWeeks';
@@ -2205,9 +2199,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
             $values['weeks'] = 0;
         }
 
-        foreach ($factors as $source => $loop) {
-            list($target, $factor) = $loop;
-
+        foreach ($factors as $source => list($target, $factor)) {
             if ($source === $realUnit) {
                 $unitFound = true;
                 $value = $values[$source];

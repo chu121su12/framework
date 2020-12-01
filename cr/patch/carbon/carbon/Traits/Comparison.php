@@ -996,9 +996,7 @@ trait Comparison
             'microsecond' => [0, 'second'],
         ];
 
-        foreach ($units as $unit => $loop) {
-            list($minimum, $startUnit) = $loop;
-
+        foreach ($units as $unit => list($minimum, $startUnit)) {
             if ($median->$unit === $minimum) {
                 $current = $current->startOf($startUnit);
 
