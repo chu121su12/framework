@@ -1,31 +1,28 @@
 <?php
 
-if (! class_exists('TypeError'))
-{
+if (! \class_exists('TypeError')) {
     class TypeError extends Error
     {
     }
 }
 
-if (! function_exists('is_iterable'))
-{
+if (! \function_exists('is_iterable')) {
     function is_iterable($obj)
     {
-        return is_array($obj)
-            || (is_object($obj)
+        return \is_array($obj)
+            || (\is_object($obj)
                 && ($obj instanceof \Traversable));
     }
 }
 
-if (! function_exists('cast_to_array'))
-{
+if (! \function_exists('cast_to_array')) {
     function cast_to_array($value, $default = null, $strict = false)
     {
-        if (func_num_args() > 1 && is_null($value)) {
+        if (\func_num_args() > 1 && null === $value) {
             return $default;
         }
 
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return $value;
         }
 
@@ -37,15 +34,14 @@ if (! function_exists('cast_to_array'))
     }
 }
 
-if (! function_exists('cast_to_bool'))
-{
+if (! \function_exists('cast_to_bool')) {
     function cast_to_bool($value, $default = null, $strict = false)
     {
-        if (func_num_args() > 1 && is_null($value)) {
+        if (\func_num_args() > 1 && null === $value) {
             return $default;
         }
 
-        if (is_bool($value)) {
+        if (\is_bool($value)) {
             return $value;
         }
 
@@ -57,15 +53,14 @@ if (! function_exists('cast_to_bool'))
     }
 }
 
-if (! function_exists('cast_to_callable'))
-{
+if (! \function_exists('cast_to_callable')) {
     function cast_to_callable($value, $default = null)
     {
-        if (func_num_args() > 1 && is_null($value)) {
+        if (\func_num_args() > 1 && null === $value) {
             return $default;
         }
 
-        if (is_callable($value)) {
+        if (\is_callable($value)) {
             return $value;
         }
 
@@ -73,15 +68,14 @@ if (! function_exists('cast_to_callable'))
     }
 }
 
-if (! function_exists('cast_to_float'))
-{
+if (! \function_exists('cast_to_float')) {
     function cast_to_float($value, $default = null, $strict = false)
     {
-        if (func_num_args() > 1 && is_null($value)) {
+        if (\func_num_args() > 1 && null === $value) {
             return $default;
         }
 
-        if (is_float($value)) {
+        if (\is_float($value)) {
             return $value;
         }
 
@@ -93,15 +87,14 @@ if (! function_exists('cast_to_float'))
     }
 }
 
-if (! function_exists('cast_to_int'))
-{
+if (! \function_exists('cast_to_int')) {
     function cast_to_int($value, $default = null, $strict = false)
     {
-        if (func_num_args() > 1 && is_null($value)) {
+        if (\func_num_args() > 1 && null === $value) {
             return $default;
         }
 
-        if (is_int($value)) {
+        if (\is_int($value)) {
             return $value;
         }
 
@@ -113,15 +106,14 @@ if (! function_exists('cast_to_int'))
     }
 }
 
-if (! function_exists('cast_to_iterable'))
-{
+if (! \function_exists('cast_to_iterable')) {
     function cast_to_iterable($value, $default = null)
     {
-        if (func_num_args() > 1 && is_null($value)) {
+        if (\func_num_args() > 1 && null === $value) {
             return $default;
         }
 
-        if (is_iterable($value)) {
+        if (\is_iterable($value)) {
             return $value;
         }
 
@@ -129,15 +121,14 @@ if (! function_exists('cast_to_iterable'))
     }
 }
 
-if (! function_exists('cast_to_string'))
-{
+if (! \function_exists('cast_to_string')) {
     function cast_to_string($value, $default = null, $strict = false)
     {
-        if (func_num_args() > 1 && is_null($value)) {
+        if (\func_num_args() > 1 && null === $value) {
             return $default;
         }
 
-        if (is_string($value)) {
+        if (\is_string($value)) {
             return $value;
         }
 

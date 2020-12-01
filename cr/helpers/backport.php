@@ -1,66 +1,63 @@
 <?php
 
-if (! function_exists('backport_json_decode'))
-{
+if (! \function_exists('backport_json_decode')) {
     function backport_json_decode($json, $assoc = false, $depth = 512, $options = 0)
     {
         // https://www.php.net/manual/en/function.json-decode 7.0.0 changes
         if ((string) $json === '') {
-            return json_decode('-');
+            return \json_decode('-');
         }
 
-        return json_decode($json, $assoc, $depth, $options);
+        return \json_decode($json, $assoc, $depth, $options);
     }
 }
 
-if (! function_exists('backport_substr_count'))
-{
+if (! \function_exists('backport_substr_count')) {
     function backport_substr_count($haystack, $needle, $offset = 0, $length = null)
     {
-        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
+        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
             if ($offset < 0) {
                 $offset = -$offset - 1;
-                $haystack = strrev($haystack);
-                $needle = strrev($needle);
+                $haystack = \strrev($haystack);
+                $needle = \strrev($needle);
             }
 
-            if (! is_null($length)) {
+            if (null !== $length) {
                 if ($length < 0) {
-                    $length = strlen($haystack) + $length - $offset;
+                    $length = \strlen($haystack) + $length - $offset;
                 }
 
-                return substr_count($haystack, $needle, $offset, $length);
-            } else {
-                return substr_count($haystack, $needle, $offset);
+                return \substr_count($haystack, $needle, $offset, $length);
             }
+
+            return \substr_count($haystack, $needle, $offset);
         }
 
-        if (! is_null($length)) {
-            return substr_count($haystack, $needle, $offset, $length);
-        } else {
-            return substr_count($haystack, $needle, $offset);
+        if (null !== $length) {
+            return \substr_count($haystack, $needle, $offset, $length);
         }
+
+        return \substr_count($haystack, $needle, $offset);
     }
 }
 
-if (! function_exists('backport_bcmod'))
-{
+if (! \function_exists('backport_bcmod')) {
     function backport_bcmod($dividend, $divisor, $scale)
     {
-        if (version_compare(PHP_VERSION, '7.2.0', '<') && (new \ReflectionFunction('bcmod'))->getNumberOfParameters() === 2) {
-            $currentScale = strlen(bcsqrt('2')) - 2;
-            bcscale($scale);
-            $modulo = bcsub($dividend, bcmul(bcdiv($dividend, $divisor, 0), $divisor));
-            bcscale($currentScale);
+        if (\version_compare(\PHP_VERSION, '7.2.0', '<') && (new \ReflectionFunction('bcmod'))->getNumberOfParameters() === 2) {
+            $currentScale = \strlen(\bcsqrt('2')) - 2;
+            \bcscale($scale);
+            $modulo = \bcsub($dividend, \bcmul(\bcdiv($dividend, $divisor, 0), $divisor));
+            \bcscale($currentScale);
+
             return $modulo;
         }
 
-        return bcmod($dividend, $divisor, $scale);
+        return \bcmod($dividend, $divisor, $scale);
     }
 }
 
-if (! function_exists('backport_spaceship_operator'))
-{
+if (! \function_exists('backport_spaceship_operator')) {
     function backport_spaceship_operator($left, $right) // <=>
     {
         if ($left > $right) {
@@ -75,23 +72,21 @@ if (! function_exists('backport_spaceship_operator'))
     }
 }
 
-if (! function_exists('backport_string_offset'))
-{
+if (! \function_exists('backport_string_offset')) {
     function backport_string_offset($string, $offset) // ex: $string[-1]
     {
         if ($offset >= 0) {
             return $string[0];
         }
 
-        return substr($string, $offset, 1);
+        return \substr($string, $offset, 1);
     }
 }
 
-if (! function_exists('backport_reflection_type_cast_string'))
-{
+if (! \function_exists('backport_reflection_type_cast_string')) {
     function backport_reflection_type_cast_string(\ReflectionType $type)
     {
-        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
+        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
             return (string) $type;
         }
 
@@ -99,25 +94,23 @@ if (! function_exists('backport_reflection_type_cast_string'))
     }
 }
 
-if (! function_exists('backport_reflection_parameter_get_class'))
-{
+if (! \function_exists('backport_reflection_parameter_get_class')) {
     function backport_reflection_parameter_get_class(\ReflectionParameter $parameter)
     {
-        if (version_compare(PHP_VERSION, '7.9', '<=')) {
+        if (\version_compare(\PHP_VERSION, '7.9', '<=')) {
             return $parameter->getClass();
         }
 
-        return $parameter->getType() && !$parameter->getType()->isBuiltin()
+        return $parameter->getType() && ! $parameter->getType()->isBuiltin()
             ? new \ReflectionClass($parameter->getType()->getName())
             : null;
     }
 }
 
-if (! function_exists('backport_reflection_parameter_is_array'))
-{
+if (! \function_exists('backport_reflection_parameter_is_array')) {
     function backport_reflection_parameter_is_array(\ReflectionParameter $parameter)
     {
-        if (version_compare(PHP_VERSION, '7.9', '<=')) {
+        if (\version_compare(\PHP_VERSION, '7.9', '<=')) {
             return $parameter->isArray();
         }
 
@@ -125,11 +118,10 @@ if (! function_exists('backport_reflection_parameter_is_array'))
     }
 }
 
-if (! function_exists('backport_reflection_parameter_is_callable'))
-{
+if (! \function_exists('backport_reflection_parameter_is_callable')) {
     function backport_reflection_parameter_is_callable(\ReflectionParameter $parameter)
     {
-        if (version_compare(PHP_VERSION, '7.9', '<=')) {
+        if (\version_compare(\PHP_VERSION, '7.9', '<=')) {
             return $parameter->isCallable();
         }
 
@@ -137,11 +129,10 @@ if (! function_exists('backport_reflection_parameter_is_callable'))
     }
 }
 
-if (! function_exists('backport_closure_from_callable'))
-{
+if (! \function_exists('backport_closure_from_callable')) {
     function backport_closure_from_callable($callingThis, $classCallable)
     {
-        if (!version_compare(PHP_VERSION, '7.0.0', '<')) {
+        if (! \version_compare(\PHP_VERSION, '7.0.0', '<')) {
             throw new \Exception('Use \Closure::fromCallable() directly from calling method.');
         }
 
