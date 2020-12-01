@@ -28,7 +28,7 @@ class WormholeTest extends TestCase
     public function testCarbonImmutableCompatibility()
     {
         // Tell the Date Factory to use CarbonImmutable...
-        Date::use(CarbonImmutable::class);
+        Date::use_(CarbonImmutable::class);
 
         // Record what time it is in 10 days...
         $present = now();
