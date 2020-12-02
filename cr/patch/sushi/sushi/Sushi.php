@@ -16,7 +16,7 @@ trait Sushi
 
     public function getSchema()
     {
-        return $this->schema ?? [];
+        return isset($this->schema) ? $this->schema : [];
     }
 
     public static function resolveConnection($connection = null)
@@ -117,7 +117,7 @@ trait Sushi
 
                 $schema = $this->getSchema();
 
-                $type = $schema[$column] ?? $type;
+                $type = isset($schema[$column]) ? $schema[$column] : $type;
 
                 $table->{$type}($column)->nullable();
             }
