@@ -124,6 +124,7 @@
             "Illuminate\\Support\\": ["src/Illuminate/Macroable/", "src/Illuminate/Collections/"],
             "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/ui/auth-backend/",
             "Laravel\\Ui\\": "cr/patch/laravel-ui/ui/src/",
+            "Sushi\\": "cr/patch/sushi/sushi/",
             "CR\\LaravelBackport\\": "cr/patch/laravel-backport/"
         },
         "classmap": [
