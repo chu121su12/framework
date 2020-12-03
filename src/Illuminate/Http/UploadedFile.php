@@ -42,7 +42,7 @@ class UploadedFile extends SymfonyUploadedFile
     {
         parent::__construct($path, $originalName, $mimeType, null, $error, $test);
 
-        // updated constructor signature:
+        // symfony updated constructor signature:
         // parent::__construct($path, $originalName, $mimeType, $error, $test);
     }
 

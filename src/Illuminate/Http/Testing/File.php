@@ -48,14 +48,8 @@ class File extends UploadedFile
 
         parent::__construct(
             $this->tempFilePath(), $name, $this->getMimeType(),
-            null, null, true
+            null, true
         );
-
-        // updated constructor signature:
-        // parent::__construct(
-        //     $this->tempFilePath(), $name, $this->getMimeType(),
-        //     null, true
-        // );
     }
 
     /**
