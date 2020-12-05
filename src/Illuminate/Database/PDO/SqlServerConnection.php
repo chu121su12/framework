@@ -120,8 +120,8 @@ class SqlServerConnection implements ServerInfoAwareConnection
     /**
      * Wrap quotes around the given input.
      *
-     * @param  string  $input
-     * @param  string  $type
+     * @param  string  $value
+     * @param  int  $type
      * @return string
      */
     public function quote($value, $type = ParameterType::STRING)
