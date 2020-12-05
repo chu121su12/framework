@@ -11,7 +11,7 @@ interface Laravel
      *
      * @return string|null
      */
-    public function getApplicationTimezone($app);
+    protected function getApplicationTimezone($app);
 
     /**
      * Override application bindings.
@@ -20,7 +20,7 @@ interface Laravel
      *
      * @return array
      */
-    public function overrideApplicationBindings($app);
+    protected function overrideApplicationBindings($app);
 
     /**
      * Get application aliases.
@@ -29,7 +29,7 @@ interface Laravel
      *
      * @return array
      */
-    public function getApplicationAliases($app);
+    protected function getApplicationAliases($app);
 
     /**
      * Override application aliases.
@@ -38,7 +38,7 @@ interface Laravel
      *
      * @return array
      */
-    public function overrideApplicationAliases($app);
+    protected function overrideApplicationAliases($app);
 
     /**
      * Get package aliases.
@@ -47,7 +47,7 @@ interface Laravel
      *
      * @return array
      */
-    public function getPackageAliases($app);
+    protected function getPackageAliases($app);
 
     /**
      * Get package bootstrapper.
@@ -56,7 +56,7 @@ interface Laravel
      *
      * @return array
      */
-    public function getPackageBootstrappers($app);
+    protected function getPackageBootstrappers($app);
 
     /**
      * Get application providers.
@@ -65,7 +65,7 @@ interface Laravel
      *
      * @return array
      */
-    public function getApplicationProviders($app);
+    protected function getApplicationProviders($app);
 
     /**
      * Override application aliases.
@@ -74,7 +74,7 @@ interface Laravel
      *
      * @return array
      */
-    public function overrideApplicationProviders($app);
+    protected function overrideApplicationProviders($app);
 
     /**
      * Get package providers.
@@ -83,14 +83,14 @@ interface Laravel
      *
      * @return array
      */
-    public function getPackageProviders($app);
+    protected function getPackageProviders($app);
 
     /**
      * Get base path.
      *
      * @return string
      */
-    public function getBasePath();
+    protected function getBasePath();
 
     /**
      * Resolve application core configuration implementation.
@@ -99,7 +99,7 @@ interface Laravel
      *
      * @return void
      */
-    public function resolveApplicationConfiguration($app);
+    protected function resolveApplicationConfiguration($app);
 
     /**
      * Resolve application core implementation.
@@ -108,7 +108,7 @@ interface Laravel
      *
      * @return void
      */
-    public function resolveApplicationCore($app);
+    protected function resolveApplicationCore($app);
 
     /**
      * Resolve application Console Kernel implementation.
@@ -117,7 +117,7 @@ interface Laravel
      *
      * @return void
      */
-    public function resolveApplicationConsoleKernel($app);
+    protected function resolveApplicationConsoleKernel($app);
 
     /**
      * Resolve application HTTP Kernel implementation.
@@ -126,7 +126,7 @@ interface Laravel
      *
      * @return void
      */
-    public function resolveApplicationHttpKernel($app);
+    protected function resolveApplicationHttpKernel($app);
 
     /**
      * Resolve application HTTP exception handler.
@@ -135,5 +135,5 @@ interface Laravel
      *
      * @return void
      */
-    public function resolveApplicationExceptionHandler($app);
+    protected function resolveApplicationExceptionHandler($app);
 }

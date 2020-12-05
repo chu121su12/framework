@@ -19,7 +19,7 @@ class ImplicitRouteBindingTest extends TestCase
     /**
      * Teardown the test environment.
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->tearDownInteractsWithPublishedFiles();
 
@@ -39,7 +39,7 @@ class ImplicitRouteBindingTest extends TestCase
         ]);
     }
 
-    protected function defineDatabaseMigrations(): void
+    protected function defineDatabaseMigrations()
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');

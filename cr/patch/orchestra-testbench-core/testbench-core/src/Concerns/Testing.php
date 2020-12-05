@@ -18,6 +18,9 @@ use Throwable;
 trait Testing
 {
     use CreatesApplication,
+        HandlesAnnotations,
+        HandlesDatabases,
+        HandlesRoutes,
         WithFactories,
         WithLaravelMigrations,
         WithLoadMigrationsFrom;
@@ -35,6 +38,13 @@ trait Testing
      * @var array
      */
     protected $afterApplicationCreatedCallbacks = [];
+
+    /**
+     * The callbacks that should be run after the application is refreshed.
+     *
+     * @var array
+     */
+    protected $afterApplicationRefreshedCallbacks = [];
 
     /**
      * The callbacks that should be run before the application is destroyed.
@@ -68,6 +78,10 @@ trait Testing
             $this->refreshApplication();
         }
 
+        foreach ($this->afterApplicationRefreshedCallbacks as $callback) {
+            \call_user_func($callback);
+        }
+
         $this->setUpTraits();
 
         foreach ($this->afterApplicationCreatedCallbacks as $callback) {
@@ -75,6 +89,8 @@ trait Testing
         }
 
         Model::setEventDispatcher($this->app['events']);
+
+        $this->setUpApplicationRoutes();
 
         $this->setUpHasRun = true;
     }
@@ -137,13 +153,15 @@ trait Testing
      */
     final protected function setUpTheTestEnvironmentTraits(array $uses)
     {
-        if (isset($uses[RefreshDatabase::class])) {
-            $this->refreshDatabase();
-        }
+        $this->setUpDatabaseRequirements(function () use ($uses) {
+            if (isset($uses[RefreshDatabase::class])) {
+                $this->refreshDatabase();
+            }
 
-        if (isset($uses[DatabaseMigrations::class])) {
-            $this->runDatabaseMigrations();
-        }
+            if (isset($uses[DatabaseMigrations::class])) {
+                $this->runDatabaseMigrations();
+            }
+        });
 
         if (isset($uses[DatabaseTransactions::class])) {
             $this->beginDatabaseTransaction();
@@ -162,6 +180,22 @@ trait Testing
         }
 
         return $uses;
+    }
+
+    /**
+     * Register a callback to be run after the application is refreshed.
+     *
+     * @param  callable  $callback
+     *
+     * @return void
+     */
+    protected function afterApplicationRefreshed(callable $callback)
+    {
+        $this->afterApplicationRefreshedCallbacks[] = $callback;
+
+        if ($this->setUpHasRun) {
+            \call_user_func($callback);
+        }
     }
 
     /**
@@ -213,6 +247,15 @@ trait Testing
                 }
             }
         }
+    }
+
+    /**
+     * Reload the application instance with cached routes.
+     */
+    protected function reloadApplication()
+    {
+        $this->tearDownTheTestEnvironment();
+        $this->setUpTheTestEnvironment();
     }
 
     /**

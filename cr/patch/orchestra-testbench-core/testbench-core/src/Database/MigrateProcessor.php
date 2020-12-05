@@ -67,6 +67,8 @@ class MigrateProcessor
      */
     protected function dispatch($command)
     {
+        $command = cast_to_string($command);
+
         $console = $this->testbench->artisan($command, $this->options);
 
         if ($console instanceof PendingCommand) {
