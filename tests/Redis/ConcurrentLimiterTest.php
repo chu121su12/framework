@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Redis;
 
+use Error;
 use Illuminate\Contracts\Redis\LimiterTimeoutException;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithRedis;
 use Illuminate\Redis\Limiters\ConcurrencyLimiter;
@@ -157,6 +158,27 @@ class ConcurrentLimiterTest extends TestCase
         if (isset($e)) {
             $this->assertInstanceOf(LimiterTimeoutException::class, $e);
         }
+
+        $this->assertEquals([1], $store);
+    }
+
+    public function testItReleasesIfErrorIsThrown()
+    {
+        $store = [];
+
+        $lock = new ConcurrencyLimiter($this->redis(), 'key', 1, 5);
+
+        try {
+            $lock->block(1, function () {
+                throw new Error();
+            });
+        } catch (Error $e) {
+        }
+
+        $lock = new ConcurrencyLimiter($this->redis(), 'key', 1, 5);
+        $lock->block(1, function () use (&$store) {
+            $store[] = 1;
+        });
 
         $this->assertEquals([1], $store);
     }

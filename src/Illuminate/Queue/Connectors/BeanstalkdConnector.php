@@ -20,7 +20,8 @@ class BeanstalkdConnector implements ConnectorInterface
             $this->pheanstalk($config),
             $config['queue'],
             isset($config['retry_after']) ? $config['retry_after'] : Pheanstalk::DEFAULT_TTR,
-            isset($config['block_for']) ? $config['block_for'] : 0
+            isset($config['block_for']) ? $config['block_for'] : 0,
+            isset($config['after_commit']) ? $config['after_commit'] : null
         );
     }
 
