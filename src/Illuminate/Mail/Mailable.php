@@ -862,7 +862,7 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertSeeInHtml($string)
     {
-        [$html, $text] = $this->renderForAssertions();
+        list($html, $text) = $this->renderForAssertions();
 
         PHPUnit::assertTrue(
             Str::contains($html, $string),
@@ -878,7 +878,7 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertDontSeeInHtml($string)
     {
-        [$html, $text] = $this->renderForAssertions();
+        list($html, $text) = $this->renderForAssertions();
 
         PHPUnit::assertFalse(
             Str::contains($html, $string),
@@ -894,7 +894,7 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertSeeInText($string)
     {
-        [$html, $text] = $this->renderForAssertions();
+        list($html, $text) = $this->renderForAssertions();
 
         PHPUnit::assertTrue(
             Str::contains($text, $string),
@@ -910,7 +910,7 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertDontSeeInText($string)
     {
-        [$html, $text] = $this->renderForAssertions();
+        list($html, $text) = $this->renderForAssertions();
 
         PHPUnit::assertFalse(
             Str::contains($text, $string),
@@ -938,7 +938,7 @@ class Mailable implements MailableContract, Renderable
                 $view = $this->buildView(), $this->buildViewData()
             );
 
-            $text = $view['text'] ?? '';
+            $text = isset($view['text']) ? $view['text'] : '';
 
             if (! empty($text) && ! $text instanceof Htmlable) {
                 $text = Container::getInstance()->make('mailer')->render(

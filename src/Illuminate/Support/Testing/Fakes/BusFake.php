@@ -199,7 +199,7 @@ class BusFake implements QueueingDispatcher
         $callback = null;
 
         if ($command instanceof Closure) {
-            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
+            list($command, $callback) = [$this->firstClosureParameterType($command), $command];
         }
 
         PHPUnit::assertTrue(
@@ -227,7 +227,7 @@ class BusFake implements QueueingDispatcher
     public function assertDispatchedWithoutChain($command, $callback = null)
     {
         if ($command instanceof Closure) {
-            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
+            list($command, $callback) = [$this->firstClosureParameterType($command), $command];
         }
 
         PHPUnit::assertTrue(

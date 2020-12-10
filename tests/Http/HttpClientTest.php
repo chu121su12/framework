@@ -11,6 +11,14 @@ use Illuminate\Support\Str;
 use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 
+if (!class_exists('Illuminate\Tests\Http\AssertionFailedError')) {
+    if (class_exists('PHPUnit_Framework_AssertionFailedError')) {
+        class_alias(\PHPUnit_Framework_AssertionFailedError::class, 'Illuminate\Tests\Http\AssertionFailedError');
+    } else {
+        class_alias(\PHPUnit\Framework\AssertionFailedError::class, 'Illuminate\Tests\Http\AssertionFailedError');
+    }
+}
+
 class HttpClientTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -650,7 +658,7 @@ class HttpClientTest extends TestCase
         $this->factory->get($exampleUrls[2]);
         $this->factory->get($exampleUrls[1]);
 
-        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectException(AssertionFailedError::class);
 
         $this->factory->assertSentInOrder($exampleUrls);
     }
@@ -668,7 +676,7 @@ class HttpClientTest extends TestCase
         $this->factory->get($exampleUrls[0]);
         $this->factory->get($exampleUrls[1]);
 
-        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectException(AssertionFailedError::class);
 
         $this->factory->assertSentInOrder($exampleUrls);
     }
@@ -769,7 +777,7 @@ class HttpClientTest extends TestCase
             'name' => 'Taylor',
         ]);
 
-        $this->expectException(\PHPUnit\Framework\AssertionFailedError::class);
+        $this->expectException(AssertionFailedError::class);
 
         $this->factory->assertSentInOrder($executionOrder);
     }

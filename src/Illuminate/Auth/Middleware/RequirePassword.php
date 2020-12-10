@@ -81,6 +81,6 @@ class RequirePassword
     {
         $confirmedAt = time() - $request->session()->get('auth.password_confirmed_at', 0);
 
-        return $confirmedAt > ($passwordTimeoutSeconds ?? $this->passwordTimeout);
+        return $confirmedAt > (isset($passwordTimeoutSeconds) ? $passwordTimeoutSeconds : $this->passwordTimeout);
     }
 }

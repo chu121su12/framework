@@ -54,7 +54,7 @@ class ImplicitRouteBindingTest extends TestCase
 
     public function testWithRouteCachingEnabled()
     {
-        $this->defineCacheRoutes(<<<PHP
+        $route = <<<PHP
 <?php
 
 use Illuminate\Tests\Integration\Routing\ImplicitBindingModel;
@@ -62,7 +62,9 @@ use Illuminate\Tests\Integration\Routing\ImplicitBindingModel;
 Route::post('/user/{user}', function (ImplicitBindingModel \$user) {
     return \$user;
 })->middleware('web');
-PHP);
+PHP;
+
+        $this->defineCacheRoutes($route);
 
         $user = ImplicitBindingModel::create(['name' => 'Dries']);
 

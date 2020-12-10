@@ -83,10 +83,16 @@ class ConcurrencyLimiter
                     $this->release($slot, $id);
                 });
             } catch (Throwable $exception) {
+            } catch (\Error $exception) {
+            } catch (\Exception $exception) {
+            }
+
+            if (isset($exception)) {
                 $this->release($slot, $id);
 
                 throw $exception;
             }
+
         }
 
         return true;

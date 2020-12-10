@@ -22,7 +22,7 @@ class QueueConnectionTest extends TestCase
         $app['config']->set('queue.connections.sqs.after_commit', true);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         QueueConnectionTestJob::$ran = false;
 
@@ -53,6 +53,10 @@ class QueueConnectionTest extends TestCase
         try {
             Bus::dispatch((new QueueConnectionTestJob)->beforeCommit());
         } catch (\Throwable $e) {
+            // This job was dispatched
+        } catch (\Error $e) {
+            // This job was dispatched
+        } catch (\Exception $e) {
             // This job was dispatched
         }
     }

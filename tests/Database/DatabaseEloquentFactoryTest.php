@@ -254,9 +254,9 @@ class DatabaseEloquentFactoryTest extends TestCase
 
     public function test_belongs_to_relationship_with_existing_model_instance()
     {
-        $user = FactoryTestUserFactory::new(['name' => 'Taylor Otwell'])->create();
+        $user = FactoryTestUserFactory::new_(['name' => 'Taylor Otwell'])->create();
         $posts = FactoryTestPostFactory::times(3)
-                        ->for($user, 'user')
+                        ->for_($user, 'user')
                         ->create();
 
         $this->assertCount(3, $posts->filter(function ($post) use ($user) {
@@ -282,9 +282,9 @@ class DatabaseEloquentFactoryTest extends TestCase
 
     public function test_morph_to_relationship_with_existing_model_instance()
     {
-        $post = FactoryTestPostFactory::new(['title' => 'Test Title'])->create();
+        $post = FactoryTestPostFactory::new_(['title' => 'Test Title'])->create();
         $posts = FactoryTestCommentFactory::times(3)
-                        ->for($post, 'commentable')
+                        ->for_($post, 'commentable')
                         ->create();
 
         $this->assertSame('Test Title', FactoryTestPost::first()->title);

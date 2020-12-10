@@ -516,7 +516,7 @@ class Dispatcher implements DispatcherContract
      */
     protected function handlerShouldBeDispatchedAfterDatabaseTransactions($listener)
     {
-        return ($listener->afterCommit ?? null) && $this->container->bound('db.transactions');
+        return (isset($listener->afterCommit) ? $listener->afterCommit : null) && $this->container->bound('db.transactions');
     }
 
     /**

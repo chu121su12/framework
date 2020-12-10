@@ -28,6 +28,41 @@ trait HandlesRoutes
     }
 
     /**
+     * Define cache routes setup.
+     *
+     * @param  \Illuminate\Routing\Router  $router
+     *
+     * @return void
+     */
+    protected function defineCacheRoutes($route)
+    {
+        $route = cast_to_string($route);
+
+        $files = $this->app['files'];
+
+        $files->put(
+            \base_path('routes/testbench.php'), $route
+        );
+
+        $this->artisan('route:cache')->run();
+
+        $this->reloadApplication();
+
+        $this->assertTrue(
+            $files->exists(\base_path('bootstrap/cache/routes-v7.php'))
+        );
+
+        $this->requireApplicationCachedRoutes();
+
+        $this->beforeApplicationDestroyed(function () use ($files) {
+            $files->delete(
+                \base_path('bootstrap/cache/routes-v7.php'),
+                \base_path('routes/testbench.php')
+            );
+        });
+    }
+
+    /**
      * Require application cached routes.
      */
     protected function requireApplicationCachedRoutes()
