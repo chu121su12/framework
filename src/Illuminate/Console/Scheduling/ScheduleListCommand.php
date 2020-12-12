@@ -56,6 +56,6 @@ class ScheduleListCommand extends Command
             'Interval',
             'Description',
             'Next Due',
-        ], $rows ?? []);
+        ], isset($rows) ? $rows : []);
     }
 }

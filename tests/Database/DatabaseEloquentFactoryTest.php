@@ -269,9 +269,9 @@ class DatabaseEloquentFactoryTest extends TestCase
 
     public function test_belongs_to_relationship_with_existing_model_instance_with_relationship_name_implied_from_model()
     {
-        $user = FactoryTestUserFactory::new(['name' => 'Taylor Otwell'])->create();
+        $user = FactoryTestUserFactory::new_(['name' => 'Taylor Otwell'])->create();
         $posts = FactoryTestPostFactory::times(3)
-                        ->for($user)
+                        ->for_($user)
                         ->create();
 
         $this->assertCount(3, $posts->filter(function ($post) use ($user) {
