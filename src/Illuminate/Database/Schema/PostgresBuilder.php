@@ -109,7 +109,9 @@ class PostgresBuilder extends Builder
     public function getAllTables()
     {
         return $this->connection->select(
-            $this->grammar->compileGetAllTables((array) $this->connection->getConfig('schema'))
+            $this->grammar->compileGetAllTables(
+                $this->parseSearchPath($this->connection->getConfig('search_path'))
+            )
         );
     }
 
@@ -121,7 +123,9 @@ class PostgresBuilder extends Builder
     public function getAllViews()
     {
         return $this->connection->select(
-            $this->grammar->compileGetAllViews((array) $this->connection->getConfig('schema'))
+            $this->grammar->compileGetAllViews(
+                $this->parseSearchPath($this->connection->getConfig('search_path'))
+            )
         );
     }
 
@@ -211,6 +215,10 @@ class PostgresBuilder extends Builder
 
         array_walk($searchPath, function (&$schema) {
             $schema = trim($schema, '\'"');
+
+            $schema = $schema === '$user'
+                ? $this->connection->getConfig('username')
+                : $schema;
         });
 
         return $searchPath;
