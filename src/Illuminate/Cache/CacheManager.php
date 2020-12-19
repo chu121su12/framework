@@ -199,7 +199,11 @@ class CacheManager implements FactoryContract
 
         $connection = isset($config['connection']) ? $config['connection'] : 'default';
 
-        return $this->repository(new RedisStore($redis, $this->getPrefix($config), $connection));
+        $store = new RedisStore($redis, $this->getPrefix($config), $connection);
+
+        return $this->repository(
+            $store->setLockConnection($config['lock_connection'] ?? $connection)
+        );
     }
 
     /**
@@ -212,15 +216,17 @@ class CacheManager implements FactoryContract
     {
         $connection = $this->app['db']->connection(isset($config['connection']) ? $config['connection'] : null);
 
-        return $this->repository(
-            new DatabaseStore(
-                $connection,
-                $config['table'],
-                $this->getPrefix($config),
-                isset($config['lock_table']) ? $config['lock_table'] : 'cache_locks',
-                isset($config['lock_lottery']) ? $config['lock_lottery'] : [2, 100]
-            )
+        $store = new DatabaseStore(
+            $connection,
+            $config['table'],
+            $this->getPrefix($config),
+            isset($config['lock_table']) ? $config['lock_table'] : 'cache_locks',
+            isset($config['lock_lottery']) ? $config['lock_lottery'] : [2, 100]
         );
+
+        return $this->repository($store->setLockConnection(
+            $this->app['db']->connection($config['lock_connection'] ?? $config['connection'] ?? null)
+        ));
     }
 
     /**

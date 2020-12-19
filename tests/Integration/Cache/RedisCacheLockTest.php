@@ -45,6 +45,13 @@ class RedisCacheLockTest extends TestCase
         Cache::store('redis')->lock('foo')->release();
     }
 
+    public function testRedisLockCanHaveASeparateConnection()
+    {
+        $this->app['config']->set('cache.stores.redis.lock_connection', 'default');
+
+        $this->assertSame('default', Cache::store('redis')->lock('foo')->getConnectionName());
+    }
+
     public function testRedisLocksCanBlockForSeconds()
     {
         Carbon::setTestNow();
