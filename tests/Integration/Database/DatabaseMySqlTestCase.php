@@ -12,11 +12,12 @@ abstract class DatabaseMySqlTestCase extends TestCase
         $app['config']->set('database.default', 'mysql');
 
         $app['config']->set('database.connections.mysql', [
-            'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'username' => 'forge',
-            'password' => 'forge',
-            'database' => 'forge',
+            'driver' => isset($_SERVER['CI_DB_DRIVER']) ? $_SERVER['CI_DB_DRIVER'] : 'mysql',
+            'host' => env('DB_HOST', isset($_SERVER['CI_DB_HOST']) ? $_SERVER['CI_DB_HOST'] : '127.0.0.1'),
+            'port' => isset($_SERVER['CI_DB_PORT']) ? $_SERVER['CI_DB_PORT'] : '3306',
+            'username' => isset($_SERVER['CI_DB_USERNAME']) ? $_SERVER['CI_DB_USERNAME'] : 'forge',
+            'password' => isset($_SERVER['CI_DB_PASSWORD']) ? $_SERVER['CI_DB_PASSWORD'] : 'forge',
+            'database' => isset($_SERVER['CI_DB_DATABASE']) ? $_SERVER['CI_DB_DATABASE'] : 'forge',
             'prefix' => '',
         ]);
     }
@@ -26,7 +27,7 @@ abstract class DatabaseMySqlTestCase extends TestCase
         parent::setUp();
 
         if (! isset($_SERVER['CI']) || windows_os()) {
-            $this->markTestSkipped('This test is only executed on CI.');
+            $this->markTestSkipped('This test is only executed on CI in Linux.');
         }
     }
 }
