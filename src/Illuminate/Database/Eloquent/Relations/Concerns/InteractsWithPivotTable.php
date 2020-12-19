@@ -131,8 +131,10 @@ trait InteractsWithPivotTable
      * @param  bool  $detaching
      * @return array
      */
-    public function syncWithPivotValues($ids, array $values, bool $detaching = true)
+    public function syncWithPivotValues($ids, array $values, $detaching = true)
     {
+        $detaching = cast_to_bool($detaching);
+
         return $this->sync(collect($this->parseIds($ids))->mapWithKeys(function ($id) use ($values) {
             return [$id => $values];
         }), $detaching);

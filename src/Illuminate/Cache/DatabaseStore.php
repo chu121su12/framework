@@ -278,7 +278,7 @@ class DatabaseStore implements LockProvider, Store
     public function lock($name, $seconds = 0, $owner = null)
     {
         return new DatabaseLock(
-            $this->lockConnection ?? $this->connection,
+            isset($this->lockConnection) ? $this->lockConnection : $this->connection,
             $this->lockTable,
             $this->prefix.$name,
             $seconds,

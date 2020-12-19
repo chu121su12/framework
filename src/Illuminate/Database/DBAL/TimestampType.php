@@ -51,7 +51,7 @@ class TimestampType extends Type
             $columnType = 'TIMESTAMP('.$fieldDeclaration['precision'].')';
         }
 
-        $notNull = $fieldDeclaration['notnull'] ?? false;
+        $notNull = isset($fieldDeclaration['notnull']) ? $fieldDeclaration['notnull'] : false;
 
         if (! $notNull) {
             return $columnType.' NULL';
@@ -79,7 +79,7 @@ class TimestampType extends Type
      */
     protected function getSqlServerPlatformSQLDeclaration(array $fieldDeclaration)
     {
-        return $fieldDeclaration['precision'] ?? false
+        return (isset($fieldDeclaration['precision']) ? $fieldDeclaration['precision'] : false)
                     ? 'DATETIME2('.$fieldDeclaration['precision'].')'
                     : 'DATETIME';
     }

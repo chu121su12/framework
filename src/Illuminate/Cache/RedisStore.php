@@ -256,7 +256,7 @@ class RedisStore extends TaggableStore implements LockProvider
      */
     public function lockConnection()
     {
-        return $this->redis->connection($this->lockConnection ?? $this->connection);
+        return $this->redis->connection(isset($this->lockConnection) ? $this->lockConnection : $this->connection);
     }
 
     /**

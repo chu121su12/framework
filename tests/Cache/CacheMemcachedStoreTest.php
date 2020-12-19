@@ -11,7 +11,7 @@ use stdClass;
 
 class CacheMemcachedStoreTest extends TestCase
 {
-    public function tearDown(): void
+    public function tearDown()
     {
         m::close();
 
