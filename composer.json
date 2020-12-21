@@ -119,7 +119,7 @@
             "Symfony\\Component\\Mime\\": "cr/symfony/mime/",
             "Symfony\\Component\\Routing\\": "cr/symfony/routing/",
             "Carbon\\": "cr/patch/carbon/carbon/",
-            "Doctrine\\": "cr/patch/doctrine/",
+            "Doctrine\\": "cr/patch/doctrine/doctrine/",
             "Illuminate\\": "src/Illuminate/",
             "Illuminate\\Support\\": ["src/Illuminate/Macroable/", "src/Illuminate/Collections/"],
             "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/ui/auth-backend/",
