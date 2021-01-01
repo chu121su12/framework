@@ -161,7 +161,7 @@ trait CompilesComponents
     protected function compileProps($expression)
     {
         return "<?php foreach(\$attributes->onlyProps{$expression} as \$__key => \$__value) {
-    \$\$__key = \$\$__key ?? \$__value;
+    \$\$__key = isset(\$\$__key) ? \$\$__key : \$__value;
 } ?>
 <?php \$attributes = \$attributes->exceptProps{$expression}; ?>
 <?php foreach (array_filter({$expression}, 'is_string', ARRAY_FILTER_USE_KEY) as \$__key => \$__value) {
