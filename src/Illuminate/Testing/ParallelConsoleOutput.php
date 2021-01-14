@@ -35,7 +35,7 @@ class ParallelConsoleOutput extends ConsoleOutput
         parent::__construct(
             $output->getVerbosity(),
             $output->isDecorated(),
-            $output->getFormatter(),
+            $output->getFormatter()
         );
 
         $this->output = $output;
@@ -49,8 +49,12 @@ class ParallelConsoleOutput extends ConsoleOutput
      * @param  int  $options
      * @return void
      */
-    public function write($messages, bool $newline = false, int $options = 0)
+    public function write($messages, $newline = false, $options = 0)
     {
+        $newline = cast_to_bool($newline);
+
+        $options = cast_to_int($options);
+
         $messages = collect($messages)->filter(function ($message) {
             return ! Str::contains($message, $this->ignore);
         });

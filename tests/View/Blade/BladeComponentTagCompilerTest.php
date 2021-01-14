@@ -21,6 +21,8 @@ class BladeComponentTagCompilerTest_testAttributeSanitization_class {
 
 class BladeComponentTagCompilerTest extends AbstractBladeTestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     protected function tearDown()
     {
         Mockery::close();

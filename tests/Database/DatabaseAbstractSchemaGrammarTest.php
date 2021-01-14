@@ -8,16 +8,18 @@ use LogicException;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+class ExtendedGrammar extends Grammar {};
+
 class DatabaseAbstractSchemaGrammarTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()
     {
         m::close();
     }
 
     public function testCreateDatabase()
     {
-        $grammar = new class extends Grammar {};
+        $grammar = new ExtendedGrammar;
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('This database driver does not support creating databases.');
@@ -27,7 +29,7 @@ class DatabaseAbstractSchemaGrammarTest extends TestCase
 
     public function testDropDatabaseIfExists()
     {
-        $grammar = new class extends Grammar {};
+        $grammar = new ExtendedGrammar;
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('This database driver does not support dropping databases.');

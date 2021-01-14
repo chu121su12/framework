@@ -212,7 +212,7 @@ class ParallelTesting
         $optionsResolver = $this->optionsResolver ?: function ($option) {
             $option = 'LARAVEL_PARALLEL_TESTING_'.Str::upper($option);
 
-            return $_SERVER[$option] ?? false;
+            return isset($_SERVER[$option]) ? $_SERVER[$option] : false;
         };
 
         return call_user_func($optionsResolver, $option);
@@ -227,7 +227,7 @@ class ParallelTesting
     {
         return $token = $this->tokenResolver
             ? call_user_func($this->tokenResolver)
-            : ($_SERVER['TEST_TOKEN'] ?? false);
+            : (isset($_SERVER['TEST_TOKEN']) ? $_SERVER['TEST_TOKEN'] : false);
     }
 
     /**

@@ -74,7 +74,7 @@ class ParallelRunner implements RunnerInterface
      *
      * @return void
      */
-    public function run(): void
+    public function run()
     {
         (new PhpHandler)->handle($this->options->configuration()->php());
 
@@ -96,7 +96,7 @@ class ParallelRunner implements RunnerInterface
      *
      * @return int
      */
-    public function getExitCode(): int
+    public function getExitCode()
     {
         return $this->runner->getExitCode();
     }
