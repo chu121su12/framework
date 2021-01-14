@@ -19,7 +19,7 @@ class ComponentTest extends TestCase
     protected $viewFactory;
     protected $config;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->config = m::mock(Config::class);
 

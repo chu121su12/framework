@@ -587,11 +587,15 @@ if (! function_exists('report')) {
     /**
      * Report an exception.
      *
-     * @param  \Throwable  $exception
+     * @param  \Throwable|string  $exception
      * @return void
      */
     function report($exception)
     {
+        if (is_string($exception)) {
+            $exception = new Exception($exception);
+        }
+
         if ($exception instanceof \Throwable &&
             ! $exception instanceof \Exception) {
             if (class_exists('FatalThrowableError')) {
@@ -611,7 +615,7 @@ if (! function_exists('request')) {
      *
      * @param  array|string|null  $key
      * @param  mixed  $default
-     * @return \Illuminate\Http\Request|string|array
+     * @return \Illuminate\Http\Request|string|array|null
      */
     function request($key = null, $default = null)
     {
