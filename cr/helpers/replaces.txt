@@ -1,6 +1,15 @@
-backport_reflection_type_cast_string
-see vendor/phpunit/phpunit-mock-objects/src/Framework/MockObject/Generator.php
-line 1190, line 1195
+
+Error:
+    Function ReflectionType::__toString() is deprecated
+File:
+    vendor/phpunit/phpunit-mock-objects/src/Framework/MockObject/Generator.php
+Replace:
+    (string) $parameter->getType()
+With:
+    backport_reflection_type_cast_string($parameter->getType())
+Line:
+    - 1190
+    - 1195
 
 PDO::query
     public function query(string $statement, ?int $fetch_mode = null, mixed ...$fetch_mode_args)
