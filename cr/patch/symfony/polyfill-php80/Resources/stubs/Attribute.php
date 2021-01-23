@@ -15,7 +15,7 @@ final class Attribute
     /** @var int */
     public $flags;
 
-    public function __construct($flags = Attribute::TARGET_ALL)
+    public function __construct($flags = self::TARGET_ALL)
     {
         $flags = cast_to_int($flags);
 

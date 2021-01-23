@@ -45,6 +45,8 @@ class TextPart extends AbstractPart
 
         $charset = cast_to_string($charset, null);
 
+        $subtype = cast_to_string($subtype, null);
+
         parent::__construct();
 
         if (!\is_string($body) && !\is_resource($body)) {

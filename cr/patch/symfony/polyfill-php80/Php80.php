@@ -73,19 +73,19 @@ final class Php80
     public static function preg_last_error_msg()
     {
         switch (preg_last_error()) {
-            case PREG_INTERNAL_ERROR:
+            case \PREG_INTERNAL_ERROR:
                 return 'Internal error';
-            case PREG_BAD_UTF8_ERROR:
+            case \PREG_BAD_UTF8_ERROR:
                 return 'Malformed UTF-8 characters, possibly incorrectly encoded';
-            case PREG_BAD_UTF8_OFFSET_ERROR:
+            case \PREG_BAD_UTF8_OFFSET_ERROR:
                 return 'The offset did not correspond to the beginning of a valid UTF-8 code point';
-            case PREG_BACKTRACK_LIMIT_ERROR:
+            case \PREG_BACKTRACK_LIMIT_ERROR:
                 return 'Backtrack limit exhausted';
-            case PREG_RECURSION_LIMIT_ERROR:
+            case \PREG_RECURSION_LIMIT_ERROR:
                 return 'Recursion limit exhausted';
-            case PREG_JIT_STACKLIMIT_ERROR:
+            case \PREG_JIT_STACKLIMIT_ERROR:
                 return 'JIT stack limit exhausted';
-            case PREG_NO_ERROR:
+            case \PREG_NO_ERROR:
                 return 'No error';
             default:
                 return 'Unknown error';
@@ -107,7 +107,7 @@ final class Php80
 
         $needle = cast_to_string($needle);
 
-        return 0 === \strncmp($haystack, $needle, \strlen($needle));
+        return 0 === strncmp($haystack, $needle, \strlen($needle));
     }
 
     public static function str_ends_with($haystack, $needle)
@@ -116,6 +116,6 @@ final class Php80
 
         $needle = cast_to_string($needle);
 
-        return '' === $needle || ('' !== $haystack && 0 === \substr_compare($haystack, $needle, -\strlen($needle)));
+        return '' === $needle || ('' !== $haystack && 0 === substr_compare($haystack, $needle, -\strlen($needle)));
     }
 }
