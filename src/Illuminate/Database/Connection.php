@@ -342,7 +342,7 @@ class Connection implements ConnectionInterface
 
             $statement->execute();
 
-            return $statement->fetchAll();
+            return $statement->fetchAll($this->fetchMode);
         });
     }
 
