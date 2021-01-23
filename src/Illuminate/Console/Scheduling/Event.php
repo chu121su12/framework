@@ -329,7 +329,7 @@ class Event
             $date->setTimezone($this->timezone);
         }
 
-        return (new CronExpression($this->expression))->isDue($date->toDateTimeString());
+        return CronExpression::factory($this->expression)->isDue($date->toDateTimeString());
     }
 
     /**

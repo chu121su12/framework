@@ -42,6 +42,8 @@ class ScheduleListCommand extends Command
     public function handle(Schedule $schedule)
     {
         foreach ($schedule->events() as $event) {
+            $timezone = $this->option('timezone');
+
             $rows[] = [
                 $event->command,
                 $event->expression,
@@ -49,7 +51,7 @@ class ScheduleListCommand extends Command
                 (new CronExpression($event->expression))
                             ->getNextRunDate(Carbon::now())
                             ->setTimezone(
-                                new DateTimeZone($this->option('timezone') ?? config('app.timezone'))
+                                new DateTimeZone(isset($timezone) ? $timezone : config('app.timezone'))
                             ),
             ];
         }
