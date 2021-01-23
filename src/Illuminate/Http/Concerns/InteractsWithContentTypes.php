@@ -13,7 +13,9 @@ trait InteractsWithContentTypes
      */
     public function isJson()
     {
-        return Str::contains($this->header('CONTENT_TYPE') ?? '', ['/json', '+json']);
+        $contentType = $this->header('CONTENT_TYPE');
+
+        return Str::contains(isset($contentType) ? $contentType : '', ['/json', '+json']);
     }
 
     /**

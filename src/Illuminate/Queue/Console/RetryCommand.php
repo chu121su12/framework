@@ -134,7 +134,7 @@ class RetryCommand extends Command
      */
     protected function refreshRetryUntil($payload)
     {
-        $payload = json_decode($payload, true);
+        $payload = backport_json_decode($payload, true);
 
         if (! isset($payload['data']['command'])) {
             return json_encode($payload);
