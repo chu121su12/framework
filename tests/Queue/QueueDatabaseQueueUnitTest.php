@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Queue;
 
+use Illuminate\Container\Container;
 use Illuminate\Database\Connection;
 use Illuminate\Queue\DatabaseQueue;
 use Illuminate\Queue\Queue;
@@ -30,6 +31,7 @@ class QueueDatabaseQueueUnitTest extends TestCase
 
         $queue = $this->getMockBuilder(DatabaseQueue::class)->onlyMethods(['currentTime'])->setConstructorArgs([$database = m::mock(Connection::class), 'table', 'default'])->getMock();
         $queue->expects($this->any())->method('currentTime')->willReturn('time');
+        $queue->setContainer($container = m::spy(Container::class));
         $database->shouldReceive('table')->with('table')->andReturn($query = m::mock(stdClass::class));
         $query->shouldReceive('insertGetId')->once()->andReturnUsing(function ($array) use ($uuid) {
             $this->assertSame('default', $array['queue']);
@@ -40,6 +42,8 @@ class QueueDatabaseQueueUnitTest extends TestCase
         });
 
         $queue->push('foo', ['data']);
+
+        $container->shouldHaveReceived('bound')->with('events')->once();
 
         Str::createUuidsNormally();
     }
@@ -58,6 +62,7 @@ class QueueDatabaseQueueUnitTest extends TestCase
             [$database = m::mock(Connection::class), 'table', 'default']
         )->getMock();
         $queue->expects($this->any())->method('currentTime')->willReturn('time');
+        $queue->setContainer($container = m::spy(Container::class));
         $database->shouldReceive('table')->with('table')->andReturn($query = m::mock(stdClass::class));
         $query->shouldReceive('insertGetId')->once()->andReturnUsing(function ($array) use ($uuid) {
             $this->assertSame('default', $array['queue']);
@@ -68,6 +73,8 @@ class QueueDatabaseQueueUnitTest extends TestCase
         });
 
         $queue->later(10, 'foo', ['data']);
+
+        $container->shouldHaveReceived('bound')->with('events')->once();
 
         Str::createUuidsNormally();
     }
