@@ -12,10 +12,6 @@ class ConfigurationUrlParserTest extends TestCase
      */
     public function testDatabaseUrlsAreParsed($config, $expectedOutput)
     {
-        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
-            $this->markTestSkipped('Needs more investigation.');
-        }
-
         $this->assertEquals($expectedOutput, (new ConfigurationUrlParser)->parseConfiguration($config));
     }
 
@@ -139,7 +135,9 @@ class ConfigurationUrlParserTest extends TestCase
                 ],
             ],
             'query params from URL are used as extra params' => [
-                'url' => 'mysql://foo:bar@localhost/database?charset=UTF-8',
+                [
+                    'url' => 'mysql://foo:bar@localhost/database?charset=UTF-8',
+                ],
                 [
                     'driver' => 'mysql',
                     'database' => 'database',

@@ -30,7 +30,7 @@ class AuthListenersSendEmailVerificationNotificationHandleFunctionTest extends T
     public function testUserIsNotInstanceOfMustVerifyEmail()
     {
         if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
-            $this->markTestSkipped('Needs more investigation.');
+            phpunit_assert_v5_skip_test($this); // Cannot mock self
         }
 
         $user = $this->getMockBuilder(User::class)->getMock();
