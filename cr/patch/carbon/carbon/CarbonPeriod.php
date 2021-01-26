@@ -2344,7 +2344,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      */
     protected function prepareForReturn(CarbonInterface $date)
     {
-        $callableArray = [$this->dateClass, 'make']($date);
+        $callableArray = [$this->dateClass, 'make'];
         $date = $callableArray($date);
 
         if ($this->timezone) {
