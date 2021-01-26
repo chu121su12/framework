@@ -87,9 +87,12 @@ class RateLimitedTest extends TestCase
 
         $restoredRateLimited = unserialize(serialize($rateLimited));
 
-        $fetch = (function (string $name) {
+        $callback = function ($name) {
+            $name = cast_to_string($name);
+
             return $this->{$name};
-        })->bindTo($restoredRateLimited, RateLimited::class);
+        };
+        $fetch = $callback->bindTo($restoredRateLimited, RateLimited::class);
 
         $this->assertFalse($restoredRateLimited->shouldRelease);
         $this->assertEquals('limiterName', $fetch('limiterName'));

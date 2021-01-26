@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
  */
 class RedisQueueIntegrationTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
     use InteractsWithRedis, InteractsWithTime;
 
     /**

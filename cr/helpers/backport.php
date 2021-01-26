@@ -90,6 +90,10 @@ if (! \function_exists('backport_reflection_type_cast_string')) {
             return (string) $type;
         }
 
+        if (\version_compare(\PHP_VERSION, '8.0', '>=') && $type instanceof \ReflectionUnionType) {
+            return 'mixed';
+        }
+
         return $type->getName();
     }
 }

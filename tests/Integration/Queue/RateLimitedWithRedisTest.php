@@ -119,9 +119,12 @@ class RateLimitedWithRedisTest extends TestCase
 
         $restoredRateLimited = unserialize(serialize($rateLimited));
 
-        $fetch = (function (string $name) {
+        $callback = function ($name) {
+            $name = cast_to_string($name);
+
             return $this->{$name};
-        })->bindTo($restoredRateLimited, RateLimitedWithRedis::class);
+        };
+        $fetch = $callback->bindTo($restoredRateLimited, RateLimitedWithRedis::class);
 
         $this->assertFalse($restoredRateLimited->shouldRelease);
         $this->assertEquals('limiterName', $fetch('limiterName'));
