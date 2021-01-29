@@ -98,6 +98,10 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
 
     public function testDropColumn()
     {
+        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
+            $this->markTestSkipped('Needs fix on Doctrine\DBAL\Schema\Table.');
+        }
+
         if (! class_exists(SqliteSchemaManager::class)) {
             $this->markTestSkipped('Doctrine should be installed to run dropColumn tests');
         }
