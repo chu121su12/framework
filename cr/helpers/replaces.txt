@@ -11,6 +11,21 @@ Line:
     - 1190
     - 1195
 
+
+
+File:
+    vendor/phpunit/phpunit-mock-objects/src/Framework/MockObject/Generator.php
+Method:
+    evalClass
+Replace:
+    eval($code);
+With:
+    eval(preg_replace("/\?mixed\b/", 'mixed', $code));
+
+
+
+
+
 PDO::query
     public function query(string $statement, ?int $fetch_mode = null, mixed ...$fetch_mode_args)
     {
