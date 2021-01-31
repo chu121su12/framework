@@ -1077,7 +1077,7 @@ trait ValidatesAttributes
     }
 
     /**
-     * Validate that the values of an attribute is in another attribute.
+     * Validate that the values of an attribute are in another attribute.
      *
      * @param  string  $attribute
      * @param  mixed  $value
@@ -1593,7 +1593,7 @@ trait ValidatesAttributes
     }
 
     /**
-     * Validate that an attribute exists when all other attributes exists.
+     * Validate that an attribute exists when all other attributes exist.
      *
      * @param  string  $attribute
      * @param  mixed  $value

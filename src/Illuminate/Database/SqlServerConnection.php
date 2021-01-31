@@ -44,7 +44,7 @@ class SqlServerConnection extends Connection
             } catch (\Exception $e) {
             }
 
-            // If we catch an exception, we will roll back so nothing gets messed
+            // If we catch an exception, we will rollback so nothing gets messed
             // up in the database. Then we'll re-throw the exception so it can
             // be handled how the developer sees fit for their applications.
             if (isset($e)) {

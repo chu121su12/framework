@@ -108,7 +108,7 @@ class SqlServerConnection implements ServerInfoAwareConnection
     }
 
     /**
-     * Roll back a database transaction.
+     * Rollback a database transaction.
      *
      * @return void
      */

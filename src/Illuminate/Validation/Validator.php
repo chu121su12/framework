@@ -1236,7 +1236,7 @@ class Validator implements ValidatorContract
     }
 
     /**
-     * Set the callback that used to format an implicit attribute..
+     * Set the callback that used to format an implicit attribute.
      *
      * @param  callable|null  $formatter
      * @return $this

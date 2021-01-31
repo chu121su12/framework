@@ -186,7 +186,7 @@ class ArgonHasher extends AbstractHasher implements HasherContract
     }
 
     /**
-     * Extract the threads value from the options array.
+     * Extract the thread's value from the options array.
      *
      * @param  array  $options
      * @return int
