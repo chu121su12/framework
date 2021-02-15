@@ -18,5 +18,6 @@ if (phpunit_major_version() > 5) {
     {
         use Patch\ExtraAssertions;
         use Patch\PhpUnit5AssertBackport;
+        use Patch\PhpUnit7AssertBackport;
     }
 }
