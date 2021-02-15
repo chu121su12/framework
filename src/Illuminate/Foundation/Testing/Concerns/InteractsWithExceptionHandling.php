@@ -69,7 +69,7 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
 
                 if ($e instanceof NotFoundHttpException) {
                     throw new NotFoundHttpException(
-                        "{$request->method()} {$request->url()}", null, $e->getCode()
+                        "{$request->method()} {$request->url()}", $e, $e->getCode()
                     );
                 }
 

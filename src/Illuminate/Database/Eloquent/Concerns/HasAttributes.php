@@ -1545,7 +1545,7 @@ trait HasAttributes
     }
 
     /**
-     * Get the attributes that have been changed since last sync.
+     * Get the attributes that have been changed since the last sync.
      *
      * @return array
      */

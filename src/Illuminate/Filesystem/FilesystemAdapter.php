@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use League\Flysystem\Adapter\Ftp as FtpAdapter;
+use League\Flysystem\Adapter\Ftp as SftpAdapter;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\AdapterInterface as FlysystemAdapter;
 use League\Flysystem\AdapterInterface as Visibility;
@@ -634,7 +635,7 @@ class FilesystemAdapter implements CloudFilesystemContract
             return $this->driver->getUrl($path);
         } elseif ($adapter instanceof AwsS3Adapter) {
             return $this->getAwsUrl($adapter, $path);
-        } elseif ($adapter instanceof FtpAdapter) {
+        } elseif ($adapter instanceof FtpAdapter || $adapter instanceof SftpAdapter) {
             return $this->getFtpUrl($path);
         } elseif ($adapter instanceof LocalAdapter) {
             return $this->getLocalUrl($path);
