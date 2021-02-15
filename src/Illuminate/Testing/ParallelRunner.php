@@ -12,6 +12,12 @@ use RuntimeException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
+if (trait_exists(\Tests\CreatesApplication::class)) {
+class ParallelRunner_createApplication_class {
+                    use \Tests\CreatesApplication;
+                }
+}
+
 class ParallelRunner implements RunnerInterface
 {
     /**
@@ -131,9 +137,7 @@ class ParallelRunner implements RunnerInterface
     {
         $applicationResolver = static::$applicationResolver ?: function () {
             if (trait_exists(\Tests\CreatesApplication::class)) {
-                $applicationCreator = new class {
-                    use \Tests\CreatesApplication;
-                };
+                $applicationCreator = new ParallelRunner_createApplication_class;
 
                 return $applicationCreator->createApplication();
             } elseif (file_exists(getcwd().'/bootstrap/app.php')) {

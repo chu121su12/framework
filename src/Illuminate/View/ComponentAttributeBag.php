@@ -203,7 +203,7 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      * @param  mixed|array  $classList
      * @return static
      */
-    public function class($classList)
+    public function class_($classList)
     {
         $classList = Arr::wrap($classList);
 

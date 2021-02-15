@@ -6,6 +6,25 @@ use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Facades\Crypt;
 
+class AsEncryptedArrayObject_castUsing_class implements CastsAttributes {
+            public function get($model, $key, $value, array $attributes)
+            {
+                return new ArrayObject(json_decode(Crypt::decryptString($attributes[$key]), true));
+            }
+
+            public function set($model, $key, $value, array $attributes)
+            {
+                return [$key => Crypt::encryptString(json_encode($value))];
+            }
+
+            public function serialize($model, $key, $value, $attributes)
+            {
+                // $key = cast_to_string($key);
+
+                return $value->getArrayCopy();
+            }
+        }
+
 class AsEncryptedArrayObject implements Castable
 {
     /**
@@ -16,21 +35,6 @@ class AsEncryptedArrayObject implements Castable
      */
     public static function castUsing(array $arguments)
     {
-        return new class implements CastsAttributes {
-            public function get($model, $key, $value, $attributes)
-            {
-                return new ArrayObject(json_decode(Crypt::decryptString($attributes[$key]), true));
-            }
-
-            public function set($model, $key, $value, $attributes)
-            {
-                return [$key => Crypt::encryptString(json_encode($value))];
-            }
-
-            public function serialize($model, string $key, $value, array $attributes)
-            {
-                return $value->getArrayCopy();
-            }
-        };
+        return new AsEncryptedArrayObject_castUsing_class;
     }
 }

@@ -9,9 +9,13 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 
+class TestDatabasesTest_switchToDatabase_class {
+            use TestDatabases;
+        }
+
 class TestDatabasesTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -66,9 +70,7 @@ class TestDatabasesTest extends TestCase
 
     public function switchToDatabase($database)
     {
-        $instance = new class {
-            use TestDatabases;
-        };
+        $instance = new TestDatabasesTest_switchToDatabase_class;
 
         $method = new ReflectionMethod($instance, 'switchToDatabase');
         tap($method)->setAccessible(true)->invoke($instance, $database);
@@ -95,7 +97,7 @@ class TestDatabasesTest extends TestCase
         ];
     }
 
-    public function tearDown(): void
+    public function tearDown()
     {
         parent::tearDown();
 

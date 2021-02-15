@@ -7,6 +7,18 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
 
+class AsEncryptedCollection_castUsing_class implements CastsAttributes {
+            public function get($model, $key, $value, array $attributes)
+            {
+                return new Collection(json_decode(Crypt::decryptString($attributes[$key]), true));
+            }
+
+            public function set($model, $key, $value, array $attributes)
+            {
+                return [$key => Crypt::encryptString(json_encode($value))];
+            }
+        }
+
 class AsEncryptedCollection implements Castable
 {
     /**
@@ -17,16 +29,6 @@ class AsEncryptedCollection implements Castable
      */
     public static function castUsing(array $arguments)
     {
-        return new class implements CastsAttributes {
-            public function get($model, $key, $value, $attributes)
-            {
-                return new Collection(json_decode(Crypt::decryptString($attributes[$key]), true));
-            }
-
-            public function set($model, $key, $value, $attributes)
-            {
-                return [$key => Crypt::encryptString(json_encode($value))];
-            }
-        };
+        return new AsEncryptedCollection_castUsing_class;
     }
 }

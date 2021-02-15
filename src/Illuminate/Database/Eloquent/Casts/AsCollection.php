@@ -6,6 +6,18 @@ use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Collection;
 
+class AsCollection_castUsing_class implements CastsAttributes {
+            public function get($model, $key, $value, array $attributes)
+            {
+                return new Collection(json_decode($attributes[$key], true));
+            }
+
+            public function set($model, $key, $value, array $attributes)
+            {
+                return [$key => json_encode($value)];
+            }
+        }
+
 class AsCollection implements Castable
 {
     /**
@@ -16,16 +28,6 @@ class AsCollection implements Castable
      */
     public static function castUsing(array $arguments)
     {
-        return new class implements CastsAttributes {
-            public function get($model, $key, $value, $attributes)
-            {
-                return new Collection(json_decode($attributes[$key], true));
-            }
-
-            public function set($model, $key, $value, $attributes)
-            {
-                return [$key => json_encode($value)];
-            }
-        };
+        return new AsCollection_castUsing_class;
     }
 }

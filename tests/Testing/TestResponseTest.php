@@ -16,19 +16,19 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Cookie;
 
-if (!class_exists('Illuminate\Tests\Foundation\AssertionFailedError')) {
+if (!class_exists('Illuminate\Tests\Testing\AssertionFailedError')) {
     if (class_exists('PHPUnit_Framework_AssertionFailedError')) {
-        class_alias(\PHPUnit_Framework_AssertionFailedError::class, 'Illuminate\Tests\Foundation\AssertionFailedError');
+        class_alias(\PHPUnit_Framework_AssertionFailedError::class, 'Illuminate\Tests\Testing\AssertionFailedError');
     } else {
-        class_alias(\PHPUnit\Framework\AssertionFailedError::class, 'Illuminate\Tests\Foundation\AssertionFailedError');
+        class_alias(\PHPUnit\Framework\AssertionFailedError::class, 'Illuminate\Tests\Testing\AssertionFailedError');
     }
 }
 
-if (!class_exists('Illuminate\Tests\Foundation\ExpectationFailedException')) {
+if (!class_exists('Illuminate\Tests\Testing\ExpectationFailedException')) {
     if (class_exists('PHPUnit_Framework_ExpectationFailedException')) {
-        class_alias(\PHPUnit_Framework_ExpectationFailedException::class, 'Illuminate\Tests\Foundation\ExpectationFailedException');
+        class_alias(\PHPUnit_Framework_ExpectationFailedException::class, 'Illuminate\Tests\Testing\ExpectationFailedException');
     } else {
-        class_alias(\PHPUnit\Framework\ExpectationFailedException::class, 'Illuminate\Tests\Foundation\ExpectationFailedException');
+        class_alias(\PHPUnit\Framework\ExpectationFailedException::class, 'Illuminate\Tests\Testing\ExpectationFailedException');
     }
 }
 
@@ -1076,7 +1076,7 @@ class TestResponseTest extends TestCase
                             'foo' => ['one'],
                         ],
                     ],
-                ]),
+                ])
             );
         });
 

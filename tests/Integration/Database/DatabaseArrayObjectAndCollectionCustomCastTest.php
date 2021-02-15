@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Schema;
  */
 class DatabaseArrayObjectAndCollectionCustomCastTest extends DatabaseTestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

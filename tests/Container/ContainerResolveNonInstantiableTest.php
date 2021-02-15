@@ -36,8 +36,10 @@ class ParentClass
      */
     public $i;
 
-    public function __construct(TestInterface $testObject = null, int $i = 0)
+    public function __construct(TestInterface $testObject = null, $i = 0)
     {
+        $i = cast_to_int($i);
+
         $this->i = $i;
     }
 }
@@ -54,8 +56,10 @@ class VariadicParentClass
      */
     public $i;
 
-    public function __construct(ChildClass $child, int $i = 0)
+    public function __construct(ChildClass $child, $i = 0)
     {
+        $i = cast_to_int($i);
+
         $this->child = $child;
         $this->i = $i;
     }
