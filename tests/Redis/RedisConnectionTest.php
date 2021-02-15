@@ -18,6 +18,7 @@ use Redis;
 class RedisConnectionTest extends TestCase
 {
     use InteractsWithRedis;
+    use \PHPUnit\Framework\PhpUnit8Assert;
 
     protected function setUp()
     {
