@@ -714,7 +714,13 @@ class Router implements BindingRegistrar, RegistrarContract
         })->flatten()->reject(function ($name) use ($excluded) {
             if (empty($excluded)) {
                 return false;
-            } elseif (in_array($name, $excluded, true)) {
+            }
+
+            if ($name instanceof Closure) {
+                return false;
+            }
+
+            if (in_array($name, $excluded, true)) {
                 return true;
             }
 
@@ -836,7 +842,7 @@ class Router implements BindingRegistrar, RegistrarContract
      */
     protected function performBinding($key, $value, $route)
     {
-        return call_user_func($this->binders[$key], $value, $route);
+        return call_user_func($this->binders[$key], $value, $route, $key);
     }
 
     /**
@@ -945,6 +951,18 @@ class Router implements BindingRegistrar, RegistrarContract
         if (! in_array($middleware, $this->middlewareGroups[$group])) {
             $this->middlewareGroups[$group][] = $middleware;
         }
+
+        return $this;
+    }
+
+    /**
+     * Flush the router's middleware groups.
+     *
+     * @return $this
+     */
+    public function flushMiddlewareGroups()
+    {
+        $this->middlewareGroups = [];
 
         return $this;
     }
