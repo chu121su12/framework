@@ -477,7 +477,7 @@ class DatabaseEloquentFactoryTest extends TestCase
 
     public function test_can_be_macroable()
     {
-        $factory = FactoryTestUserFactory::new();
+        $factory = FactoryTestUserFactory::new_();
         $factory->macro('getFoo', function () {
             return 'Hello World';
         });

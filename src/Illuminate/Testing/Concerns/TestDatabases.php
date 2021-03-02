@@ -47,7 +47,7 @@ trait TestDatabases
 
             if (Arr::hasAny($uses, $databaseTraits)) {
                 $this->whenNotUsingInMemoryDatabase(function ($database) use ($uses) {
-                    [$testDatabase, $created] = $this->ensureTestDatabaseExists($database);
+                    list($testDatabase, $created) = $this->ensureTestDatabaseExists($database);
 
                     $this->switchToDatabase($testDatabase);
 

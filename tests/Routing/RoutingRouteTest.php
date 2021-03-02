@@ -958,7 +958,7 @@ class RoutingRouteTest extends TestCase
         // Mock the stub so we can verify that the method is called with custom key.
         $mock = $container->instance(
             RouteModelBindingStub::class,
-            Mockery::mock(RouteModelBindingStub::class),
+            Mockery::mock(RouteModelBindingStub::class)
         );
 
         $mock->shouldReceive('resolveRouteBinding')

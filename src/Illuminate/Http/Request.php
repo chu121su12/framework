@@ -257,8 +257,11 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      */
     public function prefetch()
     {
-        return strcasecmp($this->server->get('HTTP_X_MOZ') ?? '', 'prefetch') === 0 ||
-               strcasecmp($this->headers->get('Purpose') ?? '', 'prefetch') === 0;
+        $httpXMoz = $this->server->get('HTTP_X_MOZ');
+        $purpose = $this->headers->get('Purpose');
+
+        return strcasecmp(isset($httpXMoz) ? $httpXMoz : '', 'prefetch') === 0 ||
+               strcasecmp(isset($purpose) ? $purpose : '', 'prefetch') === 0;
     }
 
     /**
