@@ -280,6 +280,10 @@ class Handler implements ExceptionHandlerContract
      */
     protected function exceptionContext($e)
     {
+        if (method_exists($e, 'context')) {
+            return $e->context();
+        }
+
         return [];
     }
 
