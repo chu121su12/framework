@@ -198,7 +198,11 @@ trait DatabaseRule
     protected function formatWheres()
     {
         return collect($this->wheres)->map(function ($where) {
-            return $where['column'].','.'"'.str_replace('"', '""', $where['value']).'"';
+            if (is_bool($where['value'])) {
+                return $where['column'].','.($where['value'] ? 'true' : 'false');
+            } else {
+                return $where['column'].','.'"'.str_replace('"', '""', $where['value']).'"';
+            }
         })->implode(',');
     }
 }
