@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\VarDumper\VarDumper;
 
 if (!class_exists('Illuminate\Tests\Http\AssertionFailedError')) {
     if (class_exists('PHPUnit_Framework_AssertionFailedError')) {
@@ -796,5 +797,24 @@ class HttpClientTest extends TestCase
         $this->expectException(AssertionFailedError::class);
 
         $this->factory->assertSentInOrder($executionOrder);
+    }
+
+    public function testCanDump()
+    {
+        $dumped = [];
+
+        VarDumper::setHandler(function ($value) use (&$dumped) {
+            $dumped[] = $value;
+        });
+
+        $this->factory->fake()->dump(1, 2, 3)->withOptions(['delay' => 1000])->get('http://foo.com');
+
+        $this->assertSame(1, $dumped[0]);
+        $this->assertSame(2, $dumped[1]);
+        $this->assertSame(3, $dumped[2]);
+        $this->assertInstanceOf(Request::class, $dumped[3]);
+        $this->assertSame(1000, $dumped[4]['delay']);
+
+        VarDumper::setHandler(null);
     }
 }
