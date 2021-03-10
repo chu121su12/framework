@@ -4,7 +4,7 @@ namespace Illuminate\Testing\Fluent\Concerns;
 
 use Closure;
 use Illuminate\Support\Arr;
-use PHPUnit\Framework\Assert as PHPUnit;
+use PHPUnit\Framework\Patch\FrameworkAssert as PHPUnit;
 
 trait Has
 {
@@ -15,8 +15,12 @@ trait Has
      * @param  int  $length
      * @return $this
      */
-    protected function count(string $key, int $length): self
+    protected function count($key, $length) ////:self
     {
+        $key = cast_to_string($key);
+
+        $length = cast_to_int($length, $length, true);
+
         PHPUnit::assertCount(
             $length,
             $this->prop($key),
@@ -34,8 +38,10 @@ trait Has
      * @param  \Closure|null  $scope
      * @return $this
      */
-    public function has(string $key, $value = null, Closure $scope = null): self
+    public function has($key, $value = null, Closure $scope = null) ////:self
     {
+        $key = cast_to_string($key);
+
         $prop = $this->prop();
 
         PHPUnit::assertTrue(
@@ -75,7 +81,7 @@ trait Has
      * @param  array|string $key
      * @return $this
      */
-    public function hasAll($key): self
+    public function hasAll($key) ////:self
     {
         $keys = is_array($key) ? $key : func_get_args();
 
@@ -96,7 +102,7 @@ trait Has
      * @param  array|string $key
      * @return $this
      */
-    public function missingAll($key): self
+    public function missingAll($key) ////:self
     {
         $keys = is_array($key) ? $key : func_get_args();
 
@@ -113,8 +119,10 @@ trait Has
      * @param  string  $key
      * @return $this
      */
-    public function missing(string $key): self
+    public function missing($key) ////:self
     {
+        $key = cast_to_string($key);
+
         PHPUnit::assertNotTrue(
             Arr::has($this->prop(), $key),
             sprintf('Property [%s] was found while it was expected to be missing.', $this->dotPath($key))
@@ -129,7 +137,7 @@ trait Has
      * @param  string  $key
      * @return string
      */
-    abstract protected function dotPath(string $key): string;
+    abstract protected function dotPath($key); ////: string;
 
     /**
      * Marks the property as interacted.
@@ -137,7 +145,7 @@ trait Has
      * @param  string  $key
      * @return void
      */
-    abstract protected function interactsWith(string $key): void;
+    abstract protected function interactsWith($key); ////: void;
 
     /**
      * Retrieve a prop within the current scope using "dot" notation.
@@ -145,7 +153,7 @@ trait Has
      * @param  string|null  $key
      * @return mixed
      */
-    abstract protected function prop(string $key = null);
+    abstract protected function prop($key = null);
 
     /**
      * Instantiate a new "scope" at the path of the given key.
@@ -154,5 +162,5 @@ trait Has
      * @param  \Closure  $callback
      * @return $this
      */
-    abstract protected function scope(string $key, Closure $callback);
+    abstract protected function scope($key, Closure $callback);
 }

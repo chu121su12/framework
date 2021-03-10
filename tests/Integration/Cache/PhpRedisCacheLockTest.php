@@ -14,14 +14,14 @@ class PhpRedisCacheLockTest extends TestCase
 {
     use InteractsWithRedis;
 
-    protected function setUp(): void
+    protected function setUp() ////: void
     {
         parent::setUp();
 
         $this->setUpRedis();
     }
 
-    protected function tearDown(): void
+    protected function tearDown() ////: void
     {
         parent::tearDown();
 
@@ -72,6 +72,10 @@ class PhpRedisCacheLockTest extends TestCase
 
     public function testRedisLockCanBeAcquiredAndReleasedWithJsonSerialization()
     {
+        if (!defined('Redis::SERIALIZER_JSON')) {
+            $this->markTestSkipped('Redis extension is not configured to support the json serializer.');
+        }
+
         $this->app['config']->set('database.redis.client', 'phpredis');
         $this->app['config']->set('cache.stores.redis.connection', 'default');
         $this->app['config']->set('cache.stores.redis.lock_connection', 'default');

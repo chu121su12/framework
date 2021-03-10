@@ -97,7 +97,13 @@ class ThrottlesExceptions
             $next($job);
 
             $this->limiter->clear($jobKey);
-        } catch (Throwable $throwable) {
+
+        } catch (\Throwable $throwable) {
+        } catch (\Error $throwable) {
+        } catch (\Exception $throwable) {
+        }
+
+        if (isset($throwable)) {
             if ($this->whenCallback && ! call_user_func($this->whenCallback, $throwable)) {
                 throw $throwable;
             }
@@ -127,8 +133,10 @@ class ThrottlesExceptions
      * @param  string  $prefix
      * @return $this
      */
-    public function withPrefix(string $prefix)
+    public function withPrefix($prefix)
     {
+        $prefix = cast_to_string($prefix);
+
         $this->prefix = $prefix;
 
         return $this;

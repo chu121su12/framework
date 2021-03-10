@@ -91,7 +91,9 @@ class SeedCommand extends Command
      */
     protected function getSeeder()
     {
-        $class = $this->input->getArgument('class') ?? $this->input->getOption('class');
+        $inputClass = $this->input->getArgument('class');
+
+        $class = isset($inputClass) ? $inputClass : $this->input->getOption('class');
 
         if (strpos($class, '\\') === false) {
             $class = 'Database\\Seeders\\'.$class;

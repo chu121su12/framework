@@ -7,11 +7,13 @@ use Countable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Testing\Assert as PHPUnit;
+use PHPUnit\Framework\Patch\FrameworkAssert as PHPUnit;
 use JsonSerializable;
 
 class AssertableJsonString implements ArrayAccess, Countable
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     /**
      * The original encoded json.
      *

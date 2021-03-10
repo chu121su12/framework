@@ -17,8 +17,14 @@ class PhpRedisLock extends RedisLock
      * @param  string|null  $owner
      * @return void
      */
-    public function __construct(PhpRedisConnection $redis, string $name, int $seconds, ?string $owner = null)
+    public function __construct(PhpRedisConnection $redis, $name, $seconds, $owner = null)
     {
+        $name = cast_to_string($name);
+
+        $seconds = cast_to_int($seconds);
+
+        $owner = cast_to_string($owner, null);
+
         parent::__construct($redis, $name, $seconds, $owner);
     }
 
@@ -27,7 +33,7 @@ class PhpRedisLock extends RedisLock
      */
     public function release()
     {
-        return (bool) $this->redis->eval(
+        return (bool) $this->redis->eval_(
             LuaScripts::releaseLock(),
             1,
             $this->name,
@@ -40,7 +46,7 @@ class PhpRedisLock extends RedisLock
      *
      * @return string
      */
-    protected function serializedAndCompressedOwner(): string
+    protected function serializedAndCompressedOwner() ////:string
     {
         $client = $this->redis->client();
 
@@ -70,7 +76,7 @@ class PhpRedisLock extends RedisLock
      *
      * @return bool
      */
-    protected function compressed(): bool
+    protected function compressed() ////:bool
     {
         return $this->redis->client()->getOption(Redis::OPT_COMPRESSION) !== Redis::COMPRESSION_NONE;
     }
@@ -80,7 +86,7 @@ class PhpRedisLock extends RedisLock
      *
      * @return bool
      */
-    protected function lzfCompressed(): bool
+    protected function lzfCompressed() ////:bool
     {
         return defined('Redis::COMPRESSION_LZF') &&
                $this->redis->client()->getOption(Redis::OPT_COMPRESSION) === Redis::COMPRESSION_LZF;
@@ -91,7 +97,7 @@ class PhpRedisLock extends RedisLock
      *
      * @return bool
      */
-    protected function zstdCompressed(): bool
+    protected function zstdCompressed() ////:bool
     {
         return defined('Redis::COMPRESSION_ZSTD') &&
                $this->redis->client()->getOption(Redis::OPT_COMPRESSION) === Redis::COMPRESSION_ZSTD;
@@ -102,7 +108,7 @@ class PhpRedisLock extends RedisLock
      *
      * @return bool
      */
-    protected function lz4Compressed(): bool
+    protected function lz4Compressed() ////:bool
     {
         return defined('Redis::COMPRESSION_LZ4') &&
                $this->redis->client()->getOption(Redis::OPT_COMPRESSION) === Redis::COMPRESSION_LZ4;

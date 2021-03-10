@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
 use Illuminate\Testing\AssertableJsonString;
-use PHPUnit\Framework\Assert as PHPUnit;
+use PHPUnit\Framework\Patch\FrameworkAssert as PHPUnit;
 
 class AssertableJson implements Arrayable
 {
@@ -40,8 +40,10 @@ class AssertableJson implements Arrayable
      * @param  string|null  $path
      * @return void
      */
-    protected function __construct(array $props, string $path = null)
+    protected function __construct(array $props, $path = null)
     {
+        $path = cast_to_string($path, null);
+
         $this->path = $path;
         $this->props = $props;
     }
@@ -52,8 +54,10 @@ class AssertableJson implements Arrayable
      * @param  string  $key
      * @return string
      */
-    protected function dotPath(string $key): string
+    protected function dotPath($key) ////:string
     {
+        $key = cast_to_string($key);
+
         if (is_null($this->path)) {
             return $key;
         }
@@ -67,8 +71,10 @@ class AssertableJson implements Arrayable
      * @param  string|null  $key
      * @return mixed
      */
-    protected function prop(string $key = null)
+    protected function prop($key = null)
     {
+        $key = cast_to_string($key, null);
+
         return Arr::get($this->props, $key);
     }
 
@@ -79,8 +85,10 @@ class AssertableJson implements Arrayable
      * @param  \Closure  $callback
      * @return $this
      */
-    protected function scope(string $key, Closure $callback): self
+    protected function scope($key, Closure $callback) ////:self
     {
+        $key = cast_to_string($key);
+
         $props = $this->prop($key);
         $path = $this->dotPath($key);
 
@@ -99,7 +107,7 @@ class AssertableJson implements Arrayable
      * @param  array  $data
      * @return static
      */
-    public static function fromArray(array $data): self
+    public static function fromArray(array $data) ////:self
     {
         return new self($data);
     }
@@ -110,7 +118,7 @@ class AssertableJson implements Arrayable
      * @param  \Illuminate\Testing\AssertableJsonString  $json
      * @return static
      */
-    public static function fromAssertableJsonString(AssertableJsonString $json): self
+    public static function fromAssertableJsonString(AssertableJsonString $json) ////:self
     {
         return self::fromArray($json->json());
     }

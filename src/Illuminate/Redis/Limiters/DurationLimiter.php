@@ -118,7 +118,7 @@ class DurationLimiter
      */
     public function tooManyAttempts()
     {
-        [$this->decaysAt, $this->remaining] = $this->redis->eval(
+        list($this->decaysAt, $this->remaining) = $this->redis->eval_(
             $this->tooManyAttemptsLuaScript(), 1, $this->name, microtime(true), time(), $this->decay, $this->maxLocks
         );
 

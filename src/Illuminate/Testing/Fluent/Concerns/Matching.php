@@ -16,8 +16,10 @@ trait Matching
      * @param  mixed|\Closure  $expected
      * @return $this
      */
-    public function where(string $key, $expected): self
+    public function where($key, $expected) ////:self
     {
+        $key = cast_to_string($key);
+
         $this->has($key);
 
         $actual = $this->prop($key);
@@ -53,7 +55,7 @@ trait Matching
      * @param  array  $bindings
      * @return $this
      */
-    public function whereAll(array $bindings): self
+    public function whereAll(array $bindings) ////:self
     {
         foreach ($bindings as $key => $value) {
             $this->where($key, $value);
@@ -68,7 +70,7 @@ trait Matching
      * @param  mixed  $value
      * @return void
      */
-    protected function ensureSorted(&$value): void
+    protected function ensureSorted(&$value) ////:void
     {
         if (! is_array($value)) {
             return;
@@ -87,7 +89,7 @@ trait Matching
      * @param  string  $key
      * @return string
      */
-    abstract protected function dotPath(string $key): string;
+    abstract protected function dotPath($key); ////: string;
 
     /**
      * Ensure that the given prop exists.
@@ -97,7 +99,7 @@ trait Matching
      * @param  \Closure|null  $scope
      * @return $this
      */
-    abstract public function has(string $key, $value = null, Closure $scope = null);
+    abstract public function has($key, $value = null, Closure $scope = null);
 
     /**
      * Retrieve a prop within the current scope using "dot" notation.
@@ -105,5 +107,5 @@ trait Matching
      * @param  string|null  $key
      * @return mixed
      */
-    abstract protected function prop(string $key = null);
+    abstract protected function prop($key = null);
 }

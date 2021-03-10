@@ -49,7 +49,12 @@ class ThrottlesExceptionsWithRedis extends ThrottlesExceptions
             $next($job);
 
             $this->limiter->clear();
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
+        } catch (\Error $throwable) {
+        } catch (\Exception $throwable) {
+        }
+
+        if (isset($throwable)) {
             if ($this->whenCallback && ! call_user_func($this->whenCallback, $throwable)) {
                 throw $throwable;
             }
