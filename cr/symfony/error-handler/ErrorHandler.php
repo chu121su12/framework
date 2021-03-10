@@ -205,7 +205,7 @@ class ErrorHandler
             $this->bootstrappingLogger = $bootstrappingLogger;
             $this->setDefaultLogger($bootstrappingLogger);
         }
-        $traceReflector = new \ReflectionProperty('Exception', 'trace');
+        $traceReflector = new \ReflectionProperty(\Exception::class, 'trace');
         $traceReflector->setAccessible(true);
         $this->configureException = \Closure::bind(static function ($e, $trace, $file = null, $line = null) use ($traceReflector) {
             $traceReflector->setValue($e, $trace);
@@ -475,11 +475,7 @@ class ErrorHandler
             return false;
         }
 
-        if (false !== strpos($message, "@anonymous\0")) {
-            $logMessage = $this->parseAnonymousClass($message);
-        } else {
-            $logMessage = $this->levels[$type].': '.$message;
-        }
+        $logMessage = $this->levels[$type].': '.$message;
 
         if (null !== self::$toStringException) {
             $errorAsException = self::$toStringException;
@@ -508,6 +504,23 @@ class ErrorHandler
                 return true;
             }
         } else {
+            if (false !== strpos($message, '@anonymous')) {
+                $backtrace = debug_backtrace(false, 5);
+
+                for ($i = 1; isset($backtrace[$i]); ++$i) {
+                    if (isset($backtrace[$i]['function'], $backtrace[$i]['args'][0])
+                        && ('trigger_error' === $backtrace[$i]['function'] || 'user_error' === $backtrace[$i]['function'])
+                    ) {
+                        if ($backtrace[$i]['args'][0] !== $message) {
+                            $message = $this->parseAnonymousClass($backtrace[$i]['args'][0]);
+                            $logMessage = $this->levels[$type].': '.$message;
+                        }
+
+                        break;
+                    }
+                }
+            }
+
             $errorAsException = new \ErrorException($logMessage, 0, $type, $file, $line);
 
             if ($throw || $this->tracedErrors & $type) {

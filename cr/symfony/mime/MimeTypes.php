@@ -95,14 +95,16 @@ final class MimeTypes implements MimeTypesInterface
                 );
         }
 
+        $map = self::MAP;
+
         return isset($extensions)
             ? $extensions
             : (
-                isset(self::$map[$mimeType])
-                    ? self::$map[$mimeType]
+                isset($map[$mimeType])
+                    ? $map[$mimeType]
                     : (
-                        isset(self::$map[$lcMimeType = isset($lcMimeType) ? $lcMimeType : strtolower($mimeType)])
-                            ? self::$map[$lcMimeType]
+                        isset($map[$lcMimeType = isset($lcMimeType) ? $lcMimeType : strtolower($mimeType)])
+                            ? $map[$lcMimeType]
                             : []
                     )
             );
@@ -125,14 +127,16 @@ final class MimeTypes implements MimeTypesInterface
                 );
         }
 
+        $reverseMap = self::REVERSE_MAP;
+
         return isset($mimeTypes)
             ? $mimeTypes
             : (
-                isset(self::$reverseMap[$ext])
-                    ? self::$reverseMap[$ext]
+                isset($reverseMap[$ext])
+                    ? $reverseMap[$ext]
                     : (
-                        isset(self::$reverseMap[$lcExt = isset($lcExt) ? $lcExt : strtolower($ext)])
-                            ? self::$reverseMap[$lcExt]
+                        isset($reverseMap[$lcExt = isset($lcExt) ? $lcExt : strtolower($ext)])
+                            ? $reverseMap[$lcExt]
                             : []
                     )
             );
@@ -188,7 +192,7 @@ final class MimeTypes implements MimeTypesInterface
      *
      * @see Resources/bin/update_mime_types.php
      */
-    private static $map = [
+    const MAP = [
         'application/acrobat' => ['pdf'],
         'application/andrew-inset' => ['ez'],
         'application/annodex' => ['anx'],
@@ -1780,7 +1784,7 @@ final class MimeTypes implements MimeTypesInterface
         'zz-application/zz-winassoc-xls' => ['xls', 'xlc', 'xll', 'xlm', 'xlw', 'xla', 'xlt', 'xld'],
     ];
 
-    private static $reverseMap = [
+    const REVERSE_MAP = [
         '1km' => ['application/vnd.1000minds.decision-model+xml'],
         '32x' => ['application/x-genesis-32x-rom'],
         '3dml' => ['text/vnd.in3d.3dml'],

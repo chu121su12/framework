@@ -167,7 +167,9 @@ final class Headers
 
         $headerClassMap = self::HEADER_CLASS_MAP;
 
-        $parts = explode('\\', isset($headerClassMap[$name]) ? $headerClassMap[$name] : UnstructuredHeader::class);
+        $nameLower = strtolower($name);
+
+        $parts = explode('\\', isset($headerClassMap[$nameLower]) ? $headerClassMap[$nameLower] : UnstructuredHeader::class);
         $method = 'add'.ucfirst(array_pop($parts));
         if ('addUnstructuredHeader' === $method) {
             $method = 'addTextHeader';
@@ -251,7 +253,7 @@ final class Headers
     {
         $name = cast_to_string($name);
 
-        return \in_array($name, self::UNIQUE_HEADERS, true);
+        return \in_array(strtolower($name), self::UNIQUE_HEADERS, true);
     }
 
     /**

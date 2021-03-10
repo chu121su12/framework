@@ -21,7 +21,7 @@ class HttpException extends \RuntimeException implements HttpExceptionInterface
     private $statusCode;
     private $headers;
 
-    public function __construct($statusCode, $message = null, $previous = null, array $headers = [], $code = 0)
+    public function __construct($statusCode, $message = '', $previous = null, array $headers = [], $code = 0)
     {
         $statusCode = cast_to_int($statusCode);
 
