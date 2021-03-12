@@ -8,7 +8,7 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 class AsArrayObject_castUsing_class implements CastsAttributes {
             public function get($model, $key, $value, array $attributes)
             {
-                return new ArrayObject(json_decode($attributes[$key], true));
+                return isset($attributes[$key]) ? new ArrayObject(json_decode($attributes[$key], true)) : null;
             }
 
             public function set($model, $key, $value, array $attributes)

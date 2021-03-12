@@ -521,6 +521,7 @@ class BusFake implements QueueingDispatcher
     {
         $batchId = cast_to_string($batchId);
 
+        //
     }
 
     /**

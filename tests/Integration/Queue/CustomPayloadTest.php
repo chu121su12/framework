@@ -62,5 +62,6 @@ class MyJob implements ShouldQueue
 
     public function handle()
     {
+        //
     }
 }

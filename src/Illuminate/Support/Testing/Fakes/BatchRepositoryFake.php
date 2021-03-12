@@ -35,6 +35,7 @@ class BatchRepositoryFake implements BatchRepository
     {
         $batchId = cast_to_string($batchId);
 
+        //
     }
 
     /**
@@ -74,6 +75,7 @@ class BatchRepositoryFake implements BatchRepository
 
         $batchId = cast_to_string($batchId);
 
+        //
     }
 
     /**
@@ -118,6 +120,7 @@ class BatchRepositoryFake implements BatchRepository
     {
         $batchId = cast_to_string($batchId);
 
+        //
     }
 
     /**
@@ -130,6 +133,7 @@ class BatchRepositoryFake implements BatchRepository
     {
         $batchId = cast_to_string($batchId);
 
+        //
     }
 
     /**
@@ -142,6 +146,7 @@ class BatchRepositoryFake implements BatchRepository
     {
         $batchId = cast_to_string($batchId);
 
+        //
     }
 
     /**
