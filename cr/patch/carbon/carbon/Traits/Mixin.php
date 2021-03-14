@@ -101,7 +101,7 @@ trait Mixin
 
         foreach (self::getMixableMethods($context) as $name) {
             if (\version_compare(\PHP_VERSION, '7.0.0', '<')) {
-                $closureBase = backport_closure_from_callable($this, [$context, $name]);
+                $closureBase = backport_closure_from_callable($context, [$context, $name]);
             } else {
                 $closureBase = Closure::fromCallable([$context, $name]);
             }

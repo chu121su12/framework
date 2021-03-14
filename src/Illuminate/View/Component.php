@@ -201,11 +201,11 @@ abstract class Component
             return $this->createInvokableVariable($method->getName());
         }
 
-        if (! version_compare(PHP_VERSION, '7.0.0', '<')) {
-            return Closure::fromCallable([$this, $method->getName()]);
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            return backport_closure_from_callable($this, [$this, $method->getName()]);
         }
 
-        return backport_closure_from_callable($this, [$this, $method->getName()]);
+        return Closure::fromCallable([$this, $method->getName()]);
     }
 
     /**
