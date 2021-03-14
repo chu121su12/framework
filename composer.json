@@ -82,6 +82,7 @@
     "require-dev": {
         "aws/aws-sdk-php": "^3.155",
         "doctrine/dbal": "^2.5",
+        "fakerphp/faker": "^1.9.2",
         "filp/whoops": "^2.8",
         "fzaninotto/faker": "^1.9.1",
         "guzzlehttp/guzzle": "^6.5.5",
