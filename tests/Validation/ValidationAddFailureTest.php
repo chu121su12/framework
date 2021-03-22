@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 class ValidationAddFailureTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     /**
      * Making Validator using ValidationValidatorTest.
      *

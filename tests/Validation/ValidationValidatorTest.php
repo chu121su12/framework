@@ -153,6 +153,8 @@ class ValidationValidatorTest_testCustomValidationObjectWithDotKeysIsCorrectlyPa
 
 class ValidationValidatorTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     protected function tearDown()
     {
         Carbon::setTestNow();

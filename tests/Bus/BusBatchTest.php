@@ -31,6 +31,8 @@ class BusBatchTest_test_secondJob_class {
 
 class BusBatchTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     protected function setUp()
     {
         $db = new DB;

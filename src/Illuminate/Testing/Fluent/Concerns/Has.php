@@ -17,9 +17,7 @@ trait Has
      */
     public function count($key, $length = null) ////: self
     {
-        $key = cast_to_string($key);
-
-        $length = cast_to_int($length, null);
+        $length = cast_to_int($length, null, true);
 
         if (is_null($length)) {
             $path = $this->dotPath();
@@ -54,8 +52,6 @@ trait Has
      */
     public function has($key, $length = null, Closure $callback = null) ////: self
     {
-        $key = cast_to_string($key);
-
         $prop = $this->prop();
 
         if (is_int($key) && is_null($length)) {
