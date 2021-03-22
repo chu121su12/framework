@@ -469,7 +469,7 @@ class DatabaseEloquentBuilderTest extends TestCase
         $builder = $this->getBuilder();
 
         $this->assertTrue(Builder::hasGlobalMacro('foo'));
-        $this->assertEquals('bar', $builder->foo('bar'));
+        $this->assertSame('bar', $builder->foo('bar'));
         $this->assertEquals($builder->bam(), $builder->getQuery());
     }
 
@@ -662,7 +662,7 @@ class DatabaseEloquentBuilderTest extends TestCase
         $this->assertSame('foo', $builder->raw('bar'));
 
         $builder = $this->getBuilder();
-        $grammar = new Grammar();
+        $grammar = new Grammar;
         $builder->getQuery()->shouldReceive('getGrammar')->once()->andReturn($grammar);
         $this->assertSame($grammar, $builder->getGrammar());
     }
@@ -1099,7 +1099,7 @@ class DatabaseEloquentBuilderTest extends TestCase
 
     public function testWhereKeyMethodWithStringZero()
     {
-        $model = new EloquentBuilderTestStubStringPrimaryKey();
+        $model = new EloquentBuilderTestStubStringPrimaryKey;
         $builder = $this->getBuilder()->setModel($model);
         $keyName = $model->getQualifiedKeyName();
 
@@ -1112,7 +1112,7 @@ class DatabaseEloquentBuilderTest extends TestCase
 
     public function testWhereKeyMethodWithStringNull()
     {
-        $model = new EloquentBuilderTestStubStringPrimaryKey();
+        $model = new EloquentBuilderTestStubStringPrimaryKey;
         $builder = $this->getBuilder()->setModel($model);
         $keyName = $model->getQualifiedKeyName();
 
@@ -1151,7 +1151,7 @@ class DatabaseEloquentBuilderTest extends TestCase
 
     public function testWhereKeyNotMethodWithStringZero()
     {
-        $model = new EloquentBuilderTestStubStringPrimaryKey();
+        $model = new EloquentBuilderTestStubStringPrimaryKey;
         $builder = $this->getBuilder()->setModel($model);
         $keyName = $model->getQualifiedKeyName();
 
@@ -1164,7 +1164,7 @@ class DatabaseEloquentBuilderTest extends TestCase
 
     public function testWhereKeyNotMethodWithStringNull()
     {
-        $model = new EloquentBuilderTestStubStringPrimaryKey();
+        $model = new EloquentBuilderTestStubStringPrimaryKey;
         $builder = $this->getBuilder()->setModel($model);
         $keyName = $model->getQualifiedKeyName();
 

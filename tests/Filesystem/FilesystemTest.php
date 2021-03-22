@@ -135,7 +135,7 @@ class FilesystemTest extends TestCase
         $files = new Filesystem;
         $files->chmod(self::$tempDir.'/file.txt', 0755);
         $filePermission = substr(sprintf('%o', fileperms(self::$tempDir.'/file.txt')), -4);
-        $expectedPermissions = DIRECTORY_SEPARATOR == '\\' ? '0666' : '0755';
+        $expectedPermissions = DIRECTORY_SEPARATOR === '\\' ? '0666' : '0755';
         $this->assertEquals($expectedPermissions, $filePermission);
     }
 
@@ -146,7 +146,7 @@ class FilesystemTest extends TestCase
 
         $files = new Filesystem;
         $filePermission = $files->chmod(self::$tempDir.'/file.txt');
-        $expectedPermissions = DIRECTORY_SEPARATOR == '\\' ? '0666' : '0755';
+        $expectedPermissions = DIRECTORY_SEPARATOR === '\\' ? '0666' : '0755';
         $this->assertEquals($expectedPermissions, $filePermission);
     }
 
@@ -488,7 +488,7 @@ class FilesystemTest extends TestCase
     {
         $this->markTestSkipped('Hangs the machine');
 
-        if (PHP_OS == 'Darwin') {
+        if (PHP_OS === 'Darwin') {
             $this->markTestSkipped('The operating system is MacOS.');
         }
 

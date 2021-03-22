@@ -54,7 +54,7 @@ class AssertableJson implements Arrayable
      * @param  string  $key
      * @return string
      */
-    protected function dotPath($key) ////:string
+    protected function dotPath($key = '') ////: string
     {
         $key = cast_to_string($key);
 
@@ -62,7 +62,7 @@ class AssertableJson implements Arrayable
             return $key;
         }
 
-        return implode('.', [$this->path, $key]);
+        return rtrim(implode('.', [$this->path, $key]), '.');
     }
 
     /**
@@ -99,6 +99,30 @@ class AssertableJson implements Arrayable
         $scope->interacted();
 
         return $this;
+    }
+
+    /**
+     * Instantiate a new "scope" on the first child element.
+     *
+     * @param  \Closure  $callback
+     * @return $this
+     */
+    public function first(Closure $callback) ////: self
+    {
+        $props = $this->prop();
+
+        $path = $this->dotPath();
+
+        PHPUnit::assertNotEmpty($props, $path === ''
+            ? 'Cannot scope directly onto the first element of the root level because it is empty.'
+            : sprintf('Cannot scope directly onto the first element of property [%s] because it is empty.', $path)
+        );
+
+        $key = array_keys($props)[0];
+
+        $this->interactsWith($key);
+
+        return $this->scope($key, $callback);
     }
 
     /**

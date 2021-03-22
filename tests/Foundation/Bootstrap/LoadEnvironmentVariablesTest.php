@@ -11,8 +11,7 @@ class LoadEnvironmentVariablesTest extends TestCase
 {
     protected function tearDown()
     {
-        unset($_ENV['FOO']);
-        unset($_SERVER['FOO']);
+        unset($_ENV['FOO'], $_SERVER['FOO']);
         putenv('FOO');
         m::close();
     }

@@ -4,6 +4,7 @@ namespace Illuminate\Tests\Integration\Database;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use stdClass;
 
 class DatabaseSchemaBuilderAlterTableWithEnumTest extends DatabaseMySqlTestCase
 {
@@ -34,7 +35,7 @@ class DatabaseSchemaBuilderAlterTableWithEnumTest extends DatabaseMySqlTestCase
         $tables = Schema::getAllTables();
 
         $this->assertCount(1, $tables);
-        $this->assertEquals('stdClass', get_class($tables[0]));
+        $this->assertInstanceOf(stdClass::class, $tables[0]);
 
         $tableProperties = array_values((array) $tables[0]);
         $this->assertEquals(['users', 'BASE TABLE'], $tableProperties);

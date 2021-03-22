@@ -78,10 +78,7 @@ class BusBatchTest extends TestCase
      */
     protected function tearDown()
     {
-        unset($_SERVER['__finally.batch']);
-        unset($_SERVER['__then.batch']);
-        unset($_SERVER['__catch.batch']);
-        unset($_SERVER['__catch.exception']);
+        unset($_SERVER['__finally.batch'], $_SERVER['__then.batch'], $_SERVER['__catch.batch'], $_SERVER['__catch.exception']);
 
         $this->schema()->drop('job_batches');
 
@@ -117,7 +114,7 @@ class BusBatchTest extends TestCase
 
         $this->assertEquals(3, $batch->totalJobs);
         $this->assertEquals(3, $batch->pendingJobs);
-        $this->assertTrue(is_string($job->batchId));
+        $this->assertIsString($job->batchId);
         $this->assertInstanceOf(CarbonImmutable::class, $batch->createdAt);
     }
 
@@ -293,7 +290,7 @@ class BusBatchTest extends TestCase
         $batch->cancelledAt = now();
         $this->assertTrue($batch->cancelled());
 
-        $this->assertTrue(is_string(json_encode($batch)));
+        $this->assertIsString(json_encode($batch));
     }
 
     public function test_chain_can_be_added_to_batch()
@@ -302,11 +299,11 @@ class BusBatchTest extends TestCase
 
         $batch = $this->createTestBatch($queue);
 
-        $chainHeadJob = new ChainHeadJob();
+        $chainHeadJob = new ChainHeadJob;
 
-        $secondJob = new SecondTestJob();
+        $secondJob = new SecondTestJob;
 
-        $thirdJob = new ThirdTestJob();
+        $thirdJob = new ThirdTestJob;
 
         $queue->shouldReceive('connection')->once()
             ->with('test-connection')
@@ -325,10 +322,10 @@ class BusBatchTest extends TestCase
 
         $this->assertEquals(3, $batch->totalJobs);
         $this->assertEquals(3, $batch->pendingJobs);
-        $this->assertEquals('test-queue', $chainHeadJob->chainQueue);
-        $this->assertTrue(is_string($chainHeadJob->batchId));
-        $this->assertTrue(is_string($secondJob->batchId));
-        $this->assertTrue(is_string($thirdJob->batchId));
+        $this->assertSame('test-queue', $chainHeadJob->chainQueue);
+        $this->assertIsString($chainHeadJob->batchId);
+        $this->assertIsString($secondJob->batchId);
+        $this->assertIsString($thirdJob->batchId);
         $this->assertInstanceOf(CarbonImmutable::class, $batch->createdAt);
     }
 

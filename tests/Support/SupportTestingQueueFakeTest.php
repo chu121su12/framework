@@ -240,7 +240,7 @@ class SupportTestingQueueFakeTest extends TestCase
         $this->fake->assertPushedWithChain(JobWithChainAndParameterStub::class, [
             JobStub::class,
         ], function ($job) {
-            return $job->parameter == 'second';
+            return $job->parameter === 'second';
         });
 
         try {
@@ -248,7 +248,7 @@ class SupportTestingQueueFakeTest extends TestCase
                 JobStub::class,
                 JobStub::class,
             ], function ($job) {
-                return $job->parameter == 'second';
+                return $job->parameter === 'second';
             });
             $this->fail();
         } catch (ExpectationFailedException $e) {

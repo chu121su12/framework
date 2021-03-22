@@ -73,7 +73,7 @@ class DatabaseEloquentModelTest extends TestCase
 
     public function testSetAttributeWithNumericKey()
     {
-        $model = new EloquentDateModelStub();
+        $model = new EloquentDateModelStub;
         $model->setAttribute(0, 'value');
 
         $this->assertEquals([0 => 'value'], $model->getAttributes());
@@ -96,7 +96,7 @@ class DatabaseEloquentModelTest extends TestCase
 
     public function testIntAndNullComparisonWhenDirty()
     {
-        $model = new EloquentModelCastingStub();
+        $model = new EloquentModelCastingStub;
         $model->intAttribute = null;
         $model->syncOriginal();
         $this->assertFalse($model->isDirty('intAttribute'));
@@ -106,7 +106,7 @@ class DatabaseEloquentModelTest extends TestCase
 
     public function testFloatAndNullComparisonWhenDirty()
     {
-        $model = new EloquentModelCastingStub();
+        $model = new EloquentModelCastingStub;
         $model->floatAttribute = null;
         $model->syncOriginal();
         $this->assertFalse($model->isDirty('floatAttribute'));
@@ -2116,7 +2116,7 @@ class DatabaseEloquentModelTest extends TestCase
 
     public function testGetOriginalCastsAttributes()
     {
-        $model = new EloquentModelCastingStub();
+        $model = new EloquentModelCastingStub;
         $model->intAttribute = '1';
         $model->floatAttribute = '0.1234';
         $model->stringAttribute = 432;

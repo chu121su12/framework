@@ -606,7 +606,7 @@ class SupportCollectionTest extends TestCase
 
         $c = new $collection(['id' => 1, 'first' => 'Hello', 'second' => 'World']);
         $this->assertEquals(['first' => 'Hello', 'second' => 'World'], $c->filter(function ($item, $key) {
-            return $key != 'id';
+            return $key !== 'id';
         })->all());
     }
 
@@ -3136,7 +3136,7 @@ class SupportCollectionTest extends TestCase
 
         $c = new $collection(['foo', 'bar']);
         $this->assertEquals(['foo'], $c->reject(function ($v) {
-            return $v == 'bar';
+            return $v === 'bar';
         })->values()->all());
 
         $c = new $collection(['foo', null]);
@@ -3147,12 +3147,12 @@ class SupportCollectionTest extends TestCase
 
         $c = new $collection(['foo', 'bar']);
         $this->assertEquals(['foo', 'bar'], $c->reject(function ($v) {
-            return $v == 'baz';
+            return $v === 'baz';
         })->values()->all());
 
         $c = new $collection(['id' => 1, 'primary' => 'foo', 'secondary' => 'bar']);
         $this->assertEquals(['primary' => 'foo', 'secondary' => 'bar'], $c->reject(function ($item, $key) {
-            return $key == 'id';
+            return $key === 'id';
         })->all());
     }
 
@@ -3225,7 +3225,7 @@ class SupportCollectionTest extends TestCase
             return $value < 1 && is_numeric($value);
         }));
         $this->assertFalse($c->search(function ($value) {
-            return $value == 'nope';
+            return $value === 'nope';
         }));
     }
 
@@ -3590,7 +3590,7 @@ class SupportCollectionTest extends TestCase
      */
     public function testDump($collection)
     {
-        $log = new Collection();
+        $log = new Collection;
 
         VarDumper::setHandler(function ($value) use ($log) {
             $log->add($value);
@@ -3617,7 +3617,21 @@ class SupportCollectionTest extends TestCase
             'foo' => 'bar',
             'baz' => 'qux',
         ]);
-        $this->assertEquals('foobarbazqux', $data->reduce(function ($carry, $element, $key) {
+        $this->assertSame('foobarbazqux', $data->reduce(function ($carry, $element, $key) {
+            return $carry .= $key.$element;
+        }));
+    }
+
+    /**
+     * @dataProvider collectionClassProvider
+     */
+    public function testReduceWithKeys($collection)
+    {
+        $data = new $collection([
+            'foo' => 'bar',
+            'baz' => 'qux',
+        ]);
+        $this->assertSame('foobarbazqux', $data->reduceWithKeys(function ($carry, $element, $key) {
             return $carry .= $key.$element;
         }));
     }

@@ -603,16 +603,28 @@ class TestResponseTest extends TestCase
         });
     }
 
-    public function testAssertJsonWithFluentStrict()
+    public function testAssertJsonWithFluentFailsWhenNotInteractingWithAllProps()
     {
-        $response = TestResponse::fromBaseResponse(new Response(new JsonSerializableSingleResourceStub));
+        $response = TestResponse::fromBaseResponse(new Response(new JsonSerializableMixedResourcesStub));
 
         $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('Unexpected properties were found on the root level.');
 
         $response->assertJson(function (AssertableJson $json) {
-            $json->where('0.foo', 'foo 0');
-        }, true);
+            $json->where('foo', 'bar');
+        });
+    }
+
+    public function testAssertJsonWithFluentSkipsInteractionWhenTopLevelKeysNonAssociative()
+    {
+        $response = TestResponse::fromBaseResponse(new Response([
+            ['foo' => 'bar'],
+            ['foo' => 'baz'],
+        ]));
+
+        $response->assertJson(function (AssertableJson $json) {
+            //
+        });
     }
 
     public function testAssertSimilarJsonWithMixed()
@@ -1245,7 +1257,7 @@ class TestResponseTest extends TestCase
     public function testAssertPlainCookie()
     {
         $response = TestResponse::fromBaseResponse(
-            (new Response())->withCookie(new Cookie('cookie-name', 'cookie-value'))
+            (new Response)->withCookie(new Cookie('cookie-name', 'cookie-value'))
         );
 
         $response->assertPlainCookie('cookie-name', 'cookie-value');
@@ -1264,7 +1276,7 @@ class TestResponseTest extends TestCase
         $encryptedValue = $encrypter->encrypt(CookieValuePrefix::create($cookieName, $encrypter->getKey()).$cookieValue, false);
 
         $response = TestResponse::fromBaseResponse(
-            (new Response())->withCookie(new Cookie($cookieName, $encryptedValue))
+            (new Response)->withCookie(new Cookie($cookieName, $encryptedValue))
         );
 
         $response->assertCookie($cookieName, $cookieValue);
@@ -1273,7 +1285,7 @@ class TestResponseTest extends TestCase
     public function testAssertCookieExpired()
     {
         $response = TestResponse::fromBaseResponse(
-            (new Response())->withCookie(new Cookie('cookie-name', 'cookie-value', time() - 5000))
+            (new Response)->withCookie(new Cookie('cookie-name', 'cookie-value', time() - 5000))
         );
 
         $response->assertCookieExpired('cookie-name');
@@ -1282,7 +1294,7 @@ class TestResponseTest extends TestCase
     public function testAssertSessionCookieExpiredDoesNotTriggerOnSessionCookies()
     {
         $response = TestResponse::fromBaseResponse(
-            (new Response())->withCookie(new Cookie('cookie-name', 'cookie-value', 0))
+            (new Response)->withCookie(new Cookie('cookie-name', 'cookie-value', 0))
         );
 
         $this->expectException(ExpectationFailedException::class);
@@ -1293,7 +1305,7 @@ class TestResponseTest extends TestCase
     public function testAssertCookieNotExpired()
     {
         $response = TestResponse::fromBaseResponse(
-            (new Response())->withCookie(new Cookie('cookie-name', 'cookie-value', time() + 5000))
+            (new Response)->withCookie(new Cookie('cookie-name', 'cookie-value', time() + 5000))
         );
 
         $response->assertCookieNotExpired('cookie-name');
@@ -1302,7 +1314,7 @@ class TestResponseTest extends TestCase
     public function testAssertSessionCookieNotExpired()
     {
         $response = TestResponse::fromBaseResponse(
-            (new Response())->withCookie(new Cookie('cookie-name', 'cookie-value', 0))
+            (new Response)->withCookie(new Cookie('cookie-name', 'cookie-value', 0))
         );
 
         $response->assertCookieNotExpired('cookie-name');
@@ -1310,7 +1322,7 @@ class TestResponseTest extends TestCase
 
     public function testAssertCookieMissing()
     {
-        $response = TestResponse::fromBaseResponse(new Response());
+        $response = TestResponse::fromBaseResponse(new Response);
 
         $response->assertCookieMissing('cookie-name');
     }

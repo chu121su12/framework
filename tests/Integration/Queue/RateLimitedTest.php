@@ -95,7 +95,7 @@ class RateLimitedTest extends TestCase
         $fetch = $callback->bindTo($restoredRateLimited, RateLimited::class);
 
         $this->assertFalse($restoredRateLimited->shouldRelease);
-        $this->assertEquals('limiterName', $fetch('limiterName'));
+        $this->assertSame('limiterName', $fetch('limiterName'));
         $this->assertInstanceOf(RateLimiter::class, $fetch('limiter'));
     }
 
