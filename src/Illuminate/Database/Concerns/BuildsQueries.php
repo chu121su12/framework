@@ -206,9 +206,9 @@ trait BuildsQueries
             throw new InvalidArgumentException('The chunk size should be at least 1');
         }
 
-        $column = $column ?? $this->defaultKeyName();
+        $column = isset($column) ? $column : $this->defaultKeyName();
 
-        $alias = $alias ?? $column;
+        $alias = isset($alias) ? $alias : $column;
 
         return LazyCollection::make(function () use ($chunkSize, $column, $alias) {
             $lastId = null;
