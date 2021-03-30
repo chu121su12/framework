@@ -525,9 +525,9 @@ class HasManyThrough extends Relation
      */
     public function lazyById($chunkSize = 1000, $column = null, $alias = null)
     {
-        $column = $column ?? $this->getRelated()->getQualifiedKeyName();
+        $column = isset($column) ? $column : $this->getRelated()->getQualifiedKeyName();
 
-        $alias = $alias ?? $this->getRelated()->getKeyName();
+        $alias = isset($alias) ? $alias : $this->getRelated()->getKeyName();
 
         return $this->prepareQueryBuilder()->lazyById($chunkSize, $column, $alias);
     }

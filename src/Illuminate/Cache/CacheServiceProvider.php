@@ -39,7 +39,7 @@ class CacheServiceProvider extends ServiceProvider implements DeferrableProvider
             return new DynamoDbClient([
                 'region' => $config['region'],
                 'version' => 'latest',
-                'endpoint' => $config['endpoint'] ?? null,
+                'endpoint' => isset($config['endpoint']) ? $config['endpoint'] : null,
                 'credentials' => Arr::only(
                     $config, ['key', 'secret', 'token']
                 ),
