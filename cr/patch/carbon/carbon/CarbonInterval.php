@@ -1952,8 +1952,9 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         $minutes = 0,
         $seconds = 0,
         $microseconds = 0
-    ): self {
-        return $this->add("
+    ) ////: self
+    {
+        return $this->add_("
             $years years $months months $weeks weeks $days days
             $hours hours $minutes minutes $seconds seconds $microseconds microseconds
         ");
@@ -1982,8 +1983,9 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         $minutes = 0,
         $seconds = 0,
         $microseconds = 0
-    ): self {
-        return $this->sub("
+    ) ////: self
+    {
+        return $this->sub_("
             $years years $months months $weeks weeks $days days
             $hours hours $minutes minutes $seconds seconds $microseconds microseconds
         ");

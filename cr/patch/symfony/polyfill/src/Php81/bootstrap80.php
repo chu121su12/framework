@@ -12,5 +12,5 @@
 use Symfony\Polyfill\Php81 as p;
 
 if (!function_exists('array_is_list')) {
-    function array_is_list($array) { return p\Php81::array_is_list($array); }
+    function array_is_list(array $array): bool { return p\Php81::array_is_list($array); }
 }
