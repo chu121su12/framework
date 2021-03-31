@@ -583,8 +583,7 @@ class DatabaseEloquentModelTest extends TestCase
         //     $this->markTestSkipped('Before php 7, v format (milliseconds) is not supported.');
         // }
 
-        $model = $this->getMockBuilder('Illuminate\Tests\Database\EloquentDateModelStub')->setMethods(['getDateFormat'])->getMock();
-        // $model = $this->getMockBuilder('Illuminate\Tests\Database\EloquentDateModelStub')->onlyMethods(['getDateFormat'])->getMock();
+        $model = $this->getMockBuilder('Illuminate\Tests\Database\EloquentDateModelStub')->onlyMethods(['getDateFormat'])->getMock();
         $model->expects($this->any())->method('getDateFormat')->willReturn('Y-m-d H:s.vi');
         $model->setRawAttributes([
             'created_at' => '2012-12-04 22:59.32130',

@@ -104,8 +104,7 @@ class AuthGuardTest extends TestCase
     public function testAttemptReturnsUserInterface()
     {
         list($session, $provider, $request, $cookie) = $this->getMocks();
-        $guard = $this->getMockBuilder(SessionGuard::class)->setMethods(['login'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
-        // $guard = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['login'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
+        $guard = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['login'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
         $guard->setDispatcher($events = m::mock(Dispatcher::class));
         $events->shouldReceive('dispatch')->once()->with(m::type(Attempting::class));
         $events->shouldReceive('dispatch')->once()->with(m::type(Validated::class));
@@ -130,8 +129,7 @@ class AuthGuardTest extends TestCase
     public function testLoginStoresIdentifierInSession()
     {
         list($session, $provider, $request, $cookie) = $this->getMocks();
-        $mock = $this->getMockBuilder(SessionGuard::class)->setMethods(['getName'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
-        // $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['getName'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
+        $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['getName'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
         $user = m::mock(Authenticatable::class);
         $mock->expects($this->once())->method('getName')->willReturn('foo');
         $user->shouldReceive('getAuthIdentifier')->once()->andReturn('bar');
@@ -156,8 +154,7 @@ class AuthGuardTest extends TestCase
     public function testLoginFiresLoginAndAuthenticatedEvents()
     {
         list($session, $provider, $request, $cookie) = $this->getMocks();
-        $mock = $this->getMockBuilder(SessionGuard::class)->setMethods(['getName'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
-        // $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['getName'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
+        $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['getName'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
         $mock->setDispatcher($events = m::mock(Dispatcher::class));
         $user = m::mock(Authenticatable::class);
         $events->shouldReceive('dispatch')->once()->with(m::type(Login::class));
@@ -236,8 +233,7 @@ class AuthGuardTest extends TestCase
     public function testIsAuthedReturnsFalseWhenUserIsNull()
     {
         list($session, $provider, $request, $cookie) = $this->getMocks();
-        $mock = $this->getMockBuilder(SessionGuard::class)->setMethods(['user'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
-        // $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['user'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
+        $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['user'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
         $mock->expects($this->exactly(2))->method('user')->willReturn(null);
         $this->assertFalse($mock->check());
         $this->assertTrue($mock->guest());
@@ -271,8 +267,7 @@ class AuthGuardTest extends TestCase
     public function testLogoutRemovesSessionTokenAndRememberMeCookie()
     {
         list($session, $provider, $request, $cookie) = $this->getMocks();
-        $mock = $this->getMockBuilder(SessionGuard::class)->setMethods(['getName', 'getRecallerName', 'recaller'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
-        // $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['getName', 'getRecallerName', 'recaller'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
+        $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['getName', 'getRecallerName', 'recaller'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
         $mock->setCookieJar($cookies = m::mock(CookieJar::class));
         $user = m::mock(Authenticatable::class);
         $user->shouldReceive('getRememberToken')->once()->andReturn('a');
@@ -294,8 +289,7 @@ class AuthGuardTest extends TestCase
     public function testLogoutDoesNotEnqueueRememberMeCookieForDeletionIfCookieDoesntExist()
     {
         list($session, $provider, $request, $cookie) = $this->getMocks();
-        $mock = $this->getMockBuilder(SessionGuard::class)->setMethods(['getName', 'recaller'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
-        // $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['getName', 'recaller'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
+        $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['getName', 'recaller'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
         $mock->setCookieJar($cookies = m::mock(CookieJar::class));
         $user = m::mock(Authenticatable::class);
         $user->shouldReceive('getRememberToken')->andReturn(null);
@@ -311,8 +305,7 @@ class AuthGuardTest extends TestCase
     public function testLogoutFiresLogoutEvent()
     {
         list($session, $provider, $request, $cookie) = $this->getMocks();
-        $mock = $this->getMockBuilder(SessionGuard::class)->setMethods(['clearUserDataFromStorage'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
-        // $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['clearUserDataFromStorage'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
+        $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['clearUserDataFromStorage'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
         $mock->expects($this->once())->method('clearUserDataFromStorage');
         $mock->setDispatcher($events = m::mock(Dispatcher::class));
         $user = m::mock(Authenticatable::class);
@@ -326,8 +319,7 @@ class AuthGuardTest extends TestCase
     public function testLogoutDoesNotSetRememberTokenIfNotPreviouslySet()
     {
         list($session, $provider, $request) = $this->getMocks();
-        $mock = $this->getMockBuilder(SessionGuard::class)->setMethods(['clearUserDataFromStorage'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
-        // $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['clearUserDataFromStorage'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
+        $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['clearUserDataFromStorage'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
         $user = m::mock(Authenticatable::class);
 
         $user->shouldReceive('getRememberToken')->andReturn(null);
@@ -341,8 +333,7 @@ class AuthGuardTest extends TestCase
     public function testLogoutCurrentDeviceRemovesRememberMeCookie()
     {
         list($session, $provider, $request, $cookie) = $this->getMocks();
-        $mock = $this->getMockBuilder(SessionGuard::class)->setMethods(['getName', 'getRecallerName', 'recaller'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
-        // $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['getName', 'getRecallerName', 'recaller'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
+        $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['getName', 'getRecallerName', 'recaller'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
         $mock->setCookieJar($cookies = m::mock(CookieJar::class));
         $user = m::mock(Authenticatable::class);
         $mock->expects($this->once())->method('getName')->willReturn('foo');
@@ -361,8 +352,7 @@ class AuthGuardTest extends TestCase
     public function testLogoutCurrentDeviceDoesNotEnqueueRememberMeCookieForDeletionIfCookieDoesntExist()
     {
         list($session, $provider, $request, $cookie) = $this->getMocks();
-        $mock = $this->getMockBuilder(SessionGuard::class)->setMethods(['getName', 'recaller'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
-        // $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['getName', 'recaller'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
+        $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['getName', 'recaller'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
         $mock->setCookieJar($cookies = m::mock(CookieJar::class));
         $user = m::mock(Authenticatable::class);
         $user->shouldReceive('getRememberToken')->andReturn(null);
@@ -378,8 +368,7 @@ class AuthGuardTest extends TestCase
     public function testLogoutCurrentDeviceFiresLogoutEvent()
     {
         list($session, $provider, $request, $cookie) = $this->getMocks();
-        $mock = $this->getMockBuilder(SessionGuard::class)->setMethods(['clearUserDataFromStorage'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
-        // $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['clearUserDataFromStorage'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
+        $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['clearUserDataFromStorage'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
         $mock->expects($this->once())->method('clearUserDataFromStorage');
         $mock->setDispatcher($events = m::mock(Dispatcher::class));
         $user = m::mock(Authenticatable::class);
