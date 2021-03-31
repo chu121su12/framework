@@ -28,7 +28,6 @@
         "monolog/monolog": "^1.25",
         "moontoast/math": "^1.1",
         "opis/closure": "^3.6",
-        "paragonie/random_compat": "~1.4|~2.0",
         "psr/container": "^1.0",
         "psr/log": "^1.0",
         "psr/simple-cache": "^1.0",
@@ -38,13 +37,15 @@
         "symfony/finder": "^3.4",
         "symfony/http-foundation": "^3.4",
         "symfony/http-kernel": "^3.4",
-        "symfony/polyfill": "^1.16",
         "symfony/process": "^3.4",
         "symfony/translation": "^3.4",
         "symfony/var-dumper": "^3.4",
         "tijsverkoyen/css-to-inline-styles": "^2.2.2",
         "vlucas/phpdotenv": "^4.0",
-        "voku/portable-utf8": "^3.1.30"
+        "voku/portable-utf8": "^3.1.30",
+        "ircmaxell/password-compat": "~1.0",
+        "paragonie/random_compat": "~1.4|~2.0|~9.99",
+        "symfony/intl": "~2.3|~3.0|~4.0|~5.0"
     },
     "replace": {
         "illuminate/auth": "self.version",
@@ -104,9 +105,19 @@
             "vendor/symfony/http-kernel/Exception"
         ],
         "files": [
-            "cr/patch/symfony/polyfill-php80/bootstrap.php",
             "cr/helpers/backport.php",
             "cr/helpers/casts.php",
+            "cr/patch/symfony/polyfill/src/bootstrap.php",
+            "cr/patch/symfony/polyfill/src/Apcu/bootstrap.php",
+            "cr/patch/symfony/polyfill/src/Ctype/bootstrap.php",
+            "cr/patch/symfony/polyfill/src/Uuid/bootstrap.php",
+            "cr/patch/symfony/polyfill/src/Iconv/bootstrap.php",
+            "cr/patch/symfony/polyfill/src/Intl/Grapheme/bootstrap.php",
+            "cr/patch/symfony/polyfill/src/Intl/Idn/bootstrap.php",
+            "cr/patch/symfony/polyfill/src/Intl/Icu/bootstrap.php",
+            "cr/patch/symfony/polyfill/src/Intl/MessageFormatter/bootstrap.php",
+            "cr/patch/symfony/polyfill/src/Intl/Normalizer/bootstrap.php",
+            "cr/patch/symfony/polyfill/src/Mbstring/bootstrap.php",
             "cr/symfony/deprecation-contracts/function.php",
             "src/Illuminate/Collections/helpers.php",
             "src/Illuminate/Events/functions.php",
@@ -114,7 +125,7 @@
             "src/Illuminate/Support/helpers.php"
         ],
         "psr-4": {
-            "Symfony\\Polyfill\\Php80\\": "cr/patch/symfony/polyfill-php80/",
+            "Symfony\\Polyfill\\": "cr/patch/symfony/polyfill/src/",
             "Symfony\\Component\\ErrorHandler\\": "cr/symfony/error-handler/",
             "Symfony\\Component\\HttpKernel\\Exception\\": "cr/patch/symfony/http-kernel/Exception/",
             "Symfony\\Component\\Mime\\": "cr/symfony/mime/",
@@ -129,7 +140,11 @@
             "CR\\LaravelBackport\\": "cr/patch/laravel-backport/"
         },
         "classmap": [
-            "cr/patch/symfony/polyfill-php80/Resources/stubs"
+            "cr/patch/symfony/polyfill/src/Intl/Icu/Resources/stubs",
+            "cr/patch/symfony/polyfill/src/Intl/MessageFormatter/Resources/stubs",
+            "cr/patch/symfony/polyfill/src/Intl/Normalizer/Resources/stubs",
+            "cr/patch/symfony/polyfill/src/Php80/Resources/stubs",
+            "cr/patch/symfony/polyfill/src/Php73/Resources/stubs"
         ]
     },
     "autoload-dev": {
