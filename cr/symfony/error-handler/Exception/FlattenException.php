@@ -24,17 +24,40 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
  */
 class FlattenException
 {
+    /** @var string */
     private $message;
+
+    /** @var int|string */
     private $code;
+
+    /** @var self|null */
     private $previous;
+
+    /** @var array */
     private $trace;
+
+    /** @var string */
     private $traceAsString;
+
+    /** @var string */
     private $class;
+
+    /** @var int */
     private $statusCode;
+
+    /** @var string */
     private $statusText;
+
+    /** @var array */
     private $headers;
+
+    /** @var string */
     private $file;
+
+    /** @var int */
     private $line;
+
+    /** @var string|null */
     private $asString;
 
     /**
@@ -110,6 +133,8 @@ class FlattenException
     }
 
     /**
+     * @param int $code
+     *
      * @return $this
      */
     public function setStatusCode($code) /// self
@@ -140,6 +165,8 @@ class FlattenException
     }
 
     /**
+     * @param string $class
+     *
      * @return $this
      */
     public function setClass($class) /// self
@@ -155,6 +182,8 @@ class FlattenException
     }
 
     /**
+     * @param string $file
+     *
      * @return $this
      */
     public function setFile($file) /// self
@@ -170,6 +199,8 @@ class FlattenException
     }
 
     /**
+     * @param int $line
+     *
      * @return $this
      */
     public function setLine($line) /// self
@@ -199,6 +230,8 @@ class FlattenException
     }
 
     /**
+     * @param string $message
+     *
      * @return $this
      */
     public function setMessage($message) /// self
@@ -223,6 +256,8 @@ class FlattenException
     }
 
     /**
+     * @param int|string $code
+     *
      * @return $this
      */
     public function setCode($code) /// self
@@ -277,6 +312,10 @@ class FlattenException
     }
 
     /**
+     * @param array       $trace
+     * @param string|null $file
+     * @param int|null    $line
+     *
      * @return $this
      */
     public function setTrace($trace, $file, $line) /// self
