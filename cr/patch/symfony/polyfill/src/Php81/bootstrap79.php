@@ -11,14 +11,6 @@
 
 use Symfony\Polyfill\Php81 as p;
 
-if (\PHP_VERSION_ID >= 80100) {
-    return;
-}
-
-if (\PHP_VERSION_ID < 80000) {
-    return require __DIR__.'/bootstrap79.php';
-}
-
 if (!function_exists('array_is_list')) {
-    function array_is_list(array $array): bool { return p\Php81::array_is_list($array); }
+    function array_is_list($array) { return p\Php81::array_is_list($array); }
 }
