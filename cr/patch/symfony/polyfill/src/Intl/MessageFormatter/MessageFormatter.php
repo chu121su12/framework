@@ -64,8 +64,12 @@ class MessageFormatter
     private $errorCode = 0;
     private $errorMessage = '';
 
-    public function __construct(string $locale, string $pattern)
+    public function __construct($locale, $pattern)
     {
+        $locale = cast_to_string($locale);
+
+        $pattern = cast_to_string($pattern);
+
         $this->locale = $locale;
 
         if (!$this->setPattern($pattern)) {
@@ -73,15 +77,23 @@ class MessageFormatter
         }
     }
 
-    public static function create(string $locale, string $pattern)
+    public static function create($locale, $pattern)
     {
+        $locale = cast_to_string($locale);
+
+        $pattern = cast_to_string($pattern);
+
         $formatter = new static($locale, '-');
 
         return $formatter->setPattern($pattern) ? $formatter : null;
     }
 
-    public static function formatMessage(string $locale, string $pattern, array $values)
+    public static function formatMessage($locale, $pattern, array $values)
     {
+        $locale = cast_to_string($locale);
+
+        $pattern = cast_to_string($pattern);
+
         if (null === $formatter = self::create($locale, $pattern)) {
             return false;
         }
@@ -109,8 +121,10 @@ class MessageFormatter
         return $this->errorMessage;
     }
 
-    public function setPattern(string $pattern)
+    public function setPattern($pattern)
     {
+        $pattern = cast_to_string($pattern);
+
         try {
             $this->tokens = self::tokenizePattern($pattern);
             $this->pattern = $pattern;
@@ -140,8 +154,10 @@ class MessageFormatter
         }
     }
 
-    public function parse(string $string)
+    public function parse($string)
     {
+        $string = cast_to_string($string);
+
         $this->errorCode = -1;
         $this->errorMessage = sprintf('The PHP intl extension is required to use "MessageFormatter::%s()".', __FUNCTION__);
 

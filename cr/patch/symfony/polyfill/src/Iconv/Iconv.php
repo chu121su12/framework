@@ -36,8 +36,8 @@ namespace Symfony\Polyfill\Iconv;
  */
 final class Iconv
 {
-    public const ERROR_ILLEGAL_CHARACTER = 'iconv(): Detected an illegal character in input string';
-    public const ERROR_WRONG_CHARSET = 'iconv(): Wrong charset, conversion from `%s\' to `%s\' is not allowed';
+    const ERROR_ILLEGAL_CHARACTER = 'iconv(): Detected an illegal character in input string';
+    const ERROR_WRONG_CHARSET = 'iconv(): Wrong charset, conversion from `%s\' to `%s\' is not allowed';
 
     public static $inputEncoding = 'utf-8';
     public static $outputEncoding = 'utf-8';
@@ -380,7 +380,7 @@ final class Iconv
 
         preg_match_all('/./us', $fieldValue, $chars);
 
-        $chars = $chars[0] ?? [];
+        $chars = isset($chars[0]) ? $chars[0] : array();
 
         $lineBreak = (int) $pref['line-length'];
         $lineStart = "=?{$pref['output-charset']}?{$scheme}?";
@@ -471,7 +471,7 @@ final class Iconv
 
         while ($i < $len) {
             $u = $s[$i] & "\xF0";
-            $i += $ulenMask[$u] ?? 1;
+            $i += isset($ulenMask[$u]) ? $ulenMask[$u] : 1;
             ++$j;
         }
 
@@ -610,7 +610,7 @@ final class Iconv
                 $u[$j++] = $str[$i++];
             } else {
                 $ulen = $str[$i] & "\xF0";
-                $ulen = $ulenMask[$ulen] ?? 1;
+                $ulen = isset($ulenMask[$ulen]) ? $ulenMask[$ulen] : 1;
                 $uchr = substr($str, $i, $ulen);
 
                 if (1 === $ulen || !($valid || preg_match('/^.$/us', $uchr))) {
@@ -672,7 +672,7 @@ final class Iconv
                 $uchr = $str[$i++];
             } else {
                 $ulen = $str[$i] & "\xF0";
-                $ulen = $ulenMask[$ulen] ?? 1;
+                $ulen = isset($ulenMask[$ulen]) ? $ulenMask[$ulen] : 1;
                 $uchr = substr($str, $i, $ulen);
 
                 if ($ignore && (1 === $ulen || !($valid || preg_match('/^.$/us', $uchr)))) {

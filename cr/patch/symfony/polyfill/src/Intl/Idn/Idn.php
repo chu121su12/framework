@@ -23,45 +23,45 @@ use Symfony\Polyfill\Intl\Idn\Resources\unidata\Regex;
  */
 final class Idn
 {
-    public const ERROR_EMPTY_LABEL = 1;
-    public const ERROR_LABEL_TOO_LONG = 2;
-    public const ERROR_DOMAIN_NAME_TOO_LONG = 4;
-    public const ERROR_LEADING_HYPHEN = 8;
-    public const ERROR_TRAILING_HYPHEN = 0x10;
-    public const ERROR_HYPHEN_3_4 = 0x20;
-    public const ERROR_LEADING_COMBINING_MARK = 0x40;
-    public const ERROR_DISALLOWED = 0x80;
-    public const ERROR_PUNYCODE = 0x100;
-    public const ERROR_LABEL_HAS_DOT = 0x200;
-    public const ERROR_INVALID_ACE_LABEL = 0x400;
-    public const ERROR_BIDI = 0x800;
-    public const ERROR_CONTEXTJ = 0x1000;
-    public const ERROR_CONTEXTO_PUNCTUATION = 0x2000;
-    public const ERROR_CONTEXTO_DIGITS = 0x4000;
+    const ERROR_EMPTY_LABEL = 1;
+    const ERROR_LABEL_TOO_LONG = 2;
+    const ERROR_DOMAIN_NAME_TOO_LONG = 4;
+    const ERROR_LEADING_HYPHEN = 8;
+    const ERROR_TRAILING_HYPHEN = 0x10;
+    const ERROR_HYPHEN_3_4 = 0x20;
+    const ERROR_LEADING_COMBINING_MARK = 0x40;
+    const ERROR_DISALLOWED = 0x80;
+    const ERROR_PUNYCODE = 0x100;
+    const ERROR_LABEL_HAS_DOT = 0x200;
+    const ERROR_INVALID_ACE_LABEL = 0x400;
+    const ERROR_BIDI = 0x800;
+    const ERROR_CONTEXTJ = 0x1000;
+    const ERROR_CONTEXTO_PUNCTUATION = 0x2000;
+    const ERROR_CONTEXTO_DIGITS = 0x4000;
 
-    public const INTL_IDNA_VARIANT_2003 = 0;
-    public const INTL_IDNA_VARIANT_UTS46 = 1;
+    const INTL_IDNA_VARIANT_2003 = 0;
+    const INTL_IDNA_VARIANT_UTS46 = 1;
 
-    public const IDNA_DEFAULT = 0;
-    public const IDNA_ALLOW_UNASSIGNED = 1;
-    public const IDNA_USE_STD3_RULES = 2;
-    public const IDNA_CHECK_BIDI = 4;
-    public const IDNA_CHECK_CONTEXTJ = 8;
-    public const IDNA_NONTRANSITIONAL_TO_ASCII = 16;
-    public const IDNA_NONTRANSITIONAL_TO_UNICODE = 32;
+    const IDNA_DEFAULT = 0;
+    const IDNA_ALLOW_UNASSIGNED = 1;
+    const IDNA_USE_STD3_RULES = 2;
+    const IDNA_CHECK_BIDI = 4;
+    const IDNA_CHECK_CONTEXTJ = 8;
+    const IDNA_NONTRANSITIONAL_TO_ASCII = 16;
+    const IDNA_NONTRANSITIONAL_TO_UNICODE = 32;
 
-    public const MAX_DOMAIN_SIZE = 253;
-    public const MAX_LABEL_SIZE = 63;
+    const MAX_DOMAIN_SIZE = 253;
+    const MAX_LABEL_SIZE = 63;
 
-    public const BASE = 36;
-    public const TMIN = 1;
-    public const TMAX = 26;
-    public const SKEW = 38;
-    public const DAMP = 700;
-    public const INITIAL_BIAS = 72;
-    public const INITIAL_N = 128;
-    public const DELIMITER = '-';
-    public const MAX_INT = 2147483647;
+    const BASE = 36;
+    const TMIN = 1;
+    const TMAX = 26;
+    const SKEW = 38;
+    const DAMP = 700;
+    const INITIAL_BIAS = 72;
+    const INITIAL_N = 128;
+    const DELIMITER = '-';
+    const MAX_INT = 2147483647;
 
     /**
      * Contains the numeric value of a basic code point (for use in representing integers) in the
