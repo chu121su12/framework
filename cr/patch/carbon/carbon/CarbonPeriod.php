@@ -682,37 +682,69 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Get a property allowing both `DatePeriod` snakeCase and camelCase names.
+     * Get the getter for a property allowing both `DatePeriod` snakeCase and camelCase names.
      *
      * @param string $name
      *
-     * @return bool|CarbonInterface|CarbonInterval|int|null
+     * @return callable|null
      */
-    public function __get($name)
+    protected function getGetter($name)
     {
         $name = cast_to_string($name);
 
         switch (strtolower(preg_replace('/[A-Z]/', '_$0', $name))) {
             case 'start':
             case 'start_date':
-                return $this->getStartDate();
+                return [$this, 'getStartDate'];
             case 'end':
             case 'end_date':
-                return $this->getEndDate();
+                return [$this, 'getEndDate'];
             case 'interval':
             case 'date_interval':
-                return $this->getDateInterval();
+                return [$this, 'getDateInterval'];
             case 'recurrences':
-                return $this->getRecurrences();
+                return [$this, 'getRecurrences'];
             case 'include_start_date':
-                return $this->isStartIncluded();
+                return [$this, 'isStartIncluded'];
             case 'include_end_date':
-                return $this->isEndIncluded();
+                return [$this, 'isEndIncluded'];
             case 'current':
-                return $this->current();
+                return [$this, 'current'];
             default:
-                throw new UnknownGetterException($name);
+                return null;
         }
+    }
+
+    /**
+     * Get a property allowing both `DatePeriod` snakeCase and camelCase names.
+     *
+     * @param string $name
+     *
+     * @return bool|CarbonInterface|CarbonInterval|int|null
+     */
+    public function get($name)
+    {
+        $name = cast_to_string($name);
+
+        $getter = $this->getGetter($name);
+
+        if ($getter) {
+            return $getter();
+        }
+
+        throw new UnknownGetterException($name);
+    }
+
+    /**
+     * Get a property allowing both `DatePeriod` snakeCase and camelCase names.
+     *
+     * @param string $name
+     *
+     * @return bool|CarbonInterface|CarbonInterval|int|null
+     */
+    public function __get(string $name)
+    {
+        return $this->get($name);
     }
 
     /**
@@ -726,15 +758,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
     {
         $name = cast_to_string($name);
 
-        try {
-            $this->__get($name);
-        } catch (UnknownGetterException $e) {
-            return false;
-        } catch (ReflectionException $e) {
-            return false;
-        }
-
-        return true;
+        return $this->getGetter($name) !== null;
     }
 
     /**
