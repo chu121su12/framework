@@ -8,6 +8,13 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+class DatabaseEloquentMorphToTest_testLookupDictionaryIsProperlyConstructed_Class {
+                public function __toString()
+                {
+                    return 'foreign_key_2';
+                }
+            }
+
 class DatabaseEloquentMorphToTest extends TestCase
 {
     protected $builder;
@@ -26,12 +33,7 @@ class DatabaseEloquentMorphToTest extends TestCase
             $one = (object) ['morph_type' => 'morph_type_1', 'foreign_key' => 'foreign_key_1'],
             $two = (object) ['morph_type' => 'morph_type_1', 'foreign_key' => 'foreign_key_1'],
             $three = (object) ['morph_type' => 'morph_type_2', 'foreign_key' => 'foreign_key_2'],
-            $four = (object) ['morph_type' => 'morph_type_2', 'foreign_key' => new class {
-                public function __toString()
-                {
-                    return 'foreign_key_2';
-                }
-            }],
+            $four = (object) ['morph_type' => 'morph_type_2', 'foreign_key' => new DatabaseEloquentMorphToTest_testLookupDictionaryIsProperlyConstructed_Class],
         ]);
 
         $dictionary = $relation->getDictionary();

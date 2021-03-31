@@ -11,6 +11,13 @@ use Illuminate\Database\Query\Expression;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+class DatabaseEloquentHasOneTest_testModelsAreProperlyMatchedToParents_Class {
+            public function __toString()
+            {
+                return '4';
+            }
+        }
+
 class DatabaseEloquentHasOneTest extends TestCase
 {
     protected $builder;
@@ -161,12 +168,7 @@ class DatabaseEloquentHasOneTest extends TestCase
         $result2 = new EloquentHasOneModelStub;
         $result2->foreign_key = 2;
         $result3 = new EloquentHasOneModelStub;
-        $result3->foreign_key = new class {
-            public function __toString()
-            {
-                return '4';
-            }
-        };
+        $result3->foreign_key = new DatabaseEloquentHasOneTest_testModelsAreProperlyMatchedToParents_Class;
 
         $model1 = new EloquentHasOneModelStub;
         $model1->id = 1;

@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentBelongsToManyLazyByIdTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp() ///: void
     {
         $db = new DB;
 
@@ -68,7 +68,7 @@ class DatabaseEloquentBelongsToManyLazyByIdTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown() ////: void
     {
         $this->schema()->drop('users');
         $this->schema()->drop('articles');

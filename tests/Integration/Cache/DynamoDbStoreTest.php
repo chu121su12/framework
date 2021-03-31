@@ -95,13 +95,13 @@ class DynamoDbStoreTest extends TestCase
             'TableName' => $config['table'],
             'KeySchema' => [
                 [
-                    'AttributeName' => $config['attributes']['key'] ?? 'key',
+                    'AttributeName' => isset($config['attributes']) && isset($config['attributes']['key']) ? $config['attributes']['key'] : 'key',
                     'KeyType' => 'HASH',
                 ],
             ],
             'AttributeDefinitions' => [
                 [
-                    'AttributeName' => $config['attributes']['key'] ?? 'key',
+                    'AttributeName' => isset($config['attributes']) && isset($config['attributes']['key']) ? $config['attributes']['key'] : 'key',
                     'AttributeType' => 'S',
                 ],
             ],

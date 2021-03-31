@@ -10,6 +10,20 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
+class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_1_Class {
+            public function __toString()
+            {
+                return '3';
+            }
+        }
+
+class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_2_Class {
+            public function __toString()
+            {
+                return '3';
+            }
+        }
+
 class DatabaseEloquentBelongsToTest extends TestCase
 {
     protected $builder;
@@ -110,23 +124,13 @@ class DatabaseEloquentBelongsToTest extends TestCase
         $result2 = m::mock(stdClass::class);
         $result2->shouldReceive('getAttribute')->with('id')->andReturn(2);
         $result3 = m::mock(stdClass::class);
-        $result3->shouldReceive('getAttribute')->with('id')->andReturn(new class {
-            public function __toString()
-            {
-                return '3';
-            }
-        });
+        $result3->shouldReceive('getAttribute')->with('id')->andReturn(new DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_1_Class);
         $model1 = new EloquentBelongsToModelStub;
         $model1->foreign_key = 1;
         $model2 = new EloquentBelongsToModelStub;
         $model2->foreign_key = 2;
         $model3 = new EloquentBelongsToModelStub;
-        $model3->foreign_key = new class {
-            public function __toString()
-            {
-                return '3';
-            }
-        };
+        $model3->foreign_key = new DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_2_Class;
         $models = $relation->match([$model1, $model2, $model3], new Collection([$result1, $result2, $result3]), 'foo');
 
         $this->assertEquals(1, $models[0]->foo->getAttribute('id'));

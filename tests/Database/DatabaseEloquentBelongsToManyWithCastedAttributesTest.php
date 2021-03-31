@@ -9,9 +9,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+
+class DatabaseEloquentBelongsToManyWithCastedAttributesTest_testModelsAreProperlyMatchedToParents_Class {
+                    public function __toString()
+                    {
+                        return '1';
+                    }
+                }
+
 class DatabaseEloquentBelongsToManyWithCastedAttributesTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown() ////: void
     {
         m::close();
     }
@@ -35,12 +43,7 @@ class DatabaseEloquentBelongsToManyWithCastedAttributesTest extends TestCase
 
         $result1 = (object) [
             'pivot' => (object) [
-                'foreign_key' => new class {
-                    public function __toString()
-                    {
-                        return '1';
-                    }
-                },
+                'foreign_key' => new DatabaseEloquentBelongsToManyWithCastedAttributesTest_testModelsAreProperlyMatchedToParents_Class,
             ],
         ];
 

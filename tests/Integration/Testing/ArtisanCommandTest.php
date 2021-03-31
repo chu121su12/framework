@@ -7,11 +7,19 @@ use Mockery;
 use Mockery\Exception\InvalidCountException;
 use Mockery\Exception\InvalidOrderException;
 use Orchestra\Testbench\TestCase;
-use PHPUnit\Framework\AssertionFailedError;
+// use PHPUnit\Framework\AssertionFailedError;
+
+if (!class_exists('Illuminate\Tests\Integration\Testing\AssertionFailedError')) {
+    if (class_exists('PHPUnit_Framework_AssertionFailedError')) {
+        class_alias(\PHPUnit_Framework_AssertionFailedError::class, 'Illuminate\Tests\Integration\Testing\AssertionFailedError');
+    } else {
+        class_alias(\PHPUnit\Framework\AssertionFailedError::class, 'Illuminate\Tests\Integration\Testing\AssertionFailedError');
+    }
+}
 
 class ArtisanCommandTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp() ////: void
     {
         parent::setUp();
 

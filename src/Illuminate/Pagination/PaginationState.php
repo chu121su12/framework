@@ -12,15 +12,15 @@ class PaginationState
      */
     public static function resolveUsing($app)
     {
-        Paginator::viewFactoryResolver(function () {
+        Paginator::viewFactoryResolver(function () use ($app) {
             return $app['view'];
         });
 
-        Paginator::currentPathResolver(function () {
+        Paginator::currentPathResolver(function () use ($app) {
             return $app['request']->url();
         });
 
-        Paginator::currentPageResolver(function ($pageName = 'page') {
+        Paginator::currentPageResolver(function ($pageName = 'page') use ($app) {
             $page = $app['request']->input($pageName);
 
             if (filter_var($page, FILTER_VALIDATE_INT) !== false && (int) $page >= 1) {
@@ -30,7 +30,7 @@ class PaginationState
             return 1;
         });
 
-        Paginator::queryStringResolver(function () {
+        Paginator::queryStringResolver(function () use ($app) {
             return $app['request']->query();
         });
     }
