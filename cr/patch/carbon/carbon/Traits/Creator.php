@@ -602,7 +602,15 @@ trait Creator
         }
 
         // First attempt to create an instance, so that error messages are based on the unmodified format.
+        if (strpos($format, '.v') === false) {
+
         $date = self::createFromFormatAndTimezone($format, $time, $tz);
+
+        } else {
+            $date = self::createFromFormatAndTimezone(
+                preg_replace('/\.v/', '.u', $format), preg_replace('/(?<=\.\d{3})/', '000', $time), $tz
+            );
+        }
         $lastErrors = parent::getLastErrors();
         /** @var \Carbon\CarbonImmutable|\Carbon\Carbon|null $mock */
         $mock = static::getMockedTestNow($tz);
@@ -622,6 +630,8 @@ trait Creator
             // See https://bugs.php.net/bug.php?id=74332
             $mock = $mock->copy()->microsecond(0);
 
+            if (strpos($format, '.v') === false) {
+
             // Prepend mock datetime only if the format does not contain non escaped unix epoch reset flag.
             if (!preg_match("/{$nonEscaped}[!|]/", $format)) {
                 $format = static::MOCK_DATETIME_FORMAT.' '.$format;
@@ -630,6 +640,15 @@ trait Creator
 
             // Regenerate date from the modified format to base result on the mocked instance instead of now.
             $date = self::createFromFormatAndTimezone($format, $time, $tz);
+
+            } else {
+                if (!preg_match("/{$nonEscaped}[!|]/", $format)) {
+                    $format = static::MOCK_DATETIME_FORMAT.' '.preg_replace('/\.v/', '.u', $format);
+                    $time = ($mock instanceof self ? $mock->rawFormat(static::MOCK_DATETIME_FORMAT) : $mock->format(static::MOCK_DATETIME_FORMAT)).' '.preg_replace('/(?<=\.\d{3})/', '000', $time);
+                }
+
+                $date = self::createFromFormatAndTimezone($format, $time, $tz);
+            }
         }
 
         if ($date instanceof DateTimeInterface) {
