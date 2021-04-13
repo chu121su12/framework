@@ -1115,7 +1115,7 @@ class Builder
      * @param  bool  $not
      * @return $this
      */
-    public function whereBetween($column, iterable $values, $boolean = 'and', $not = false)
+    public function whereBetween($column, $values, $boolean = 'and', $not = false)
     {
         $type = 'between';
 
@@ -1151,7 +1151,7 @@ class Builder
      * @param  iterable  $values
      * @return $this
      */
-    public function orWhereBetween($column, iterable $values)
+    public function orWhereBetween($column, $values)
     {
         return $this->whereBetween($column, $values, 'or');
     }
@@ -1176,7 +1176,7 @@ class Builder
      * @param  string  $boolean
      * @return $this
      */
-    public function whereNotBetween($column, iterable $values, $boolean = 'and')
+    public function whereNotBetween($column, $values, $boolean = 'and')
     {
         return $this->whereBetween($column, $values, $boolean, true);
     }
@@ -1201,7 +1201,7 @@ class Builder
      * @param  iterable  $values
      * @return $this
      */
-    public function orWhereNotBetween($column, iterable $values)
+    public function orWhereNotBetween($column, $values)
     {
         return $this->whereNotBetween($column, $values, 'or');
     }
