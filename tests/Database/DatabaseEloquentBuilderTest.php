@@ -1504,7 +1504,7 @@ class DatabaseEloquentBuilderTest extends TestCase
         $query = new BaseBuilder(m::mock(ConnectionInterface::class), new Grammar, m::mock(Processor::class));
         $builder = new Builder($query);
         $builder->select('*')->from('users');
-        $clone = $builder->clone()->where('email', 'foo');
+        $clone = $builder->clone_()->where('email', 'foo');
 
         $this->assertNotSame($builder, $clone);
         $this->assertSame('select * from "users"', $builder->toSql());

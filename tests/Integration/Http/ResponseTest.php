@@ -6,6 +6,13 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 use Orchestra\Testbench\TestCase;
 
+class ResponseTest_testResponseWithInvalidJsonThrowsException_class implements \JsonSerializable {
+                public function jsonSerialize()
+                {
+                    return "\xB1\x31";
+                }
+            }
+
 /**
  * @group integration
  */
@@ -17,12 +24,7 @@ class ResponseTest extends TestCase
         $this->expectExceptionMessage('Malformed UTF-8 characters, possibly incorrectly encoded');
 
         Route::get('/response', function () {
-            return (new Response())->setContent(new class implements \JsonSerializable {
-                public function jsonSerialize()
-                {
-                    return "\xB1\x31";
-                }
-            });
+            return (new Response())->setContent(new ResponseTest_testResponseWithInvalidJsonThrowsException_class);
         });
 
         $this->withoutExceptionHandling();

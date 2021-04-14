@@ -879,10 +879,12 @@ class HttpClientTest extends TestCase
 
     public function testMultipleRequestsAreSentInThePool()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            '200.com' => $this->factory::response('', 200),
-            '400.com' => $this->factory::response('', 400),
-            '500.com' => $this->factory::response('', 500),
+            '200.com' => $factory::response('', 200),
+            '400.com' => $factory::response('', 400),
+            '500.com' => $factory::response('', 500),
         ]);
 
         $responses = $this->factory->pool(function (Pool $pool) {
@@ -900,17 +902,19 @@ class HttpClientTest extends TestCase
 
     public function testMultipleRequestsAreSentInThePoolWithKeys()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            '200.com' => $this->factory::response('', 200),
-            '400.com' => $this->factory::response('', 400),
-            '500.com' => $this->factory::response('', 500),
+            '200.com' => $factory::response('', 200),
+            '400.com' => $factory::response('', 400),
+            '500.com' => $factory::response('', 500),
         ]);
 
         $responses = $this->factory->pool(function (Pool $pool) {
             return [
-                $pool->as('test200')->get('200.com'),
-                $pool->as('test400')->get('400.com'),
-                $pool->as('test500')->get('500.com'),
+                $pool->as_('test200')->get('200.com'),
+                $pool->as_('test400')->get('400.com'),
+                $pool->as_('test500')->get('500.com'),
             ];
         });
 

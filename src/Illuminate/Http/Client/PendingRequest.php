@@ -714,8 +714,12 @@ class PendingRequest
      * @param  array  $options
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    protected function makePromise(string $method, string $url, array $options = [])
+    protected function makePromise($method, $url, array $options = [])
     {
+        $method = cast_to_string($method);
+
+        $url = cast_to_string($url);
+
         return $this->promise = $this->sendRequest($method, $url, $options)
             ->then(function (MessageInterface $message) {
                 return $this->populateResponse(new Response($message));
@@ -735,8 +739,12 @@ class PendingRequest
      *
      * @throws \Exception
      */
-    protected function sendRequest(string $method, string $url, array $options = [])
+    protected function sendRequest($method, $url, array $options = [])
     {
+        $method = cast_to_string($method);
+
+        $url = cast_to_string($url);
+
         $clientMethod = $this->async ? 'requestAsync' : 'request';
 
         $laravelData = $this->parseRequestData($method, $url, $options);
@@ -964,8 +972,10 @@ class PendingRequest
      * @param  bool  $async
      * @return $this
      */
-    public function async(bool $async = true)
+    public function async($async = true)
     {
+        $async = cast_to_bool($async);
+
         $this->async = $async;
 
         return $this;

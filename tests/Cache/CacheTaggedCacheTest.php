@@ -287,7 +287,7 @@ class CacheTaggedCacheTest extends TestCase
         $redis->flush();
     }
 
-    private function getTestCacheStoreWithTagValues(): ArrayStore
+    private function getTestCacheStoreWithTagValues() ///: ArrayStore
     {
         $store = new ArrayStore;
 

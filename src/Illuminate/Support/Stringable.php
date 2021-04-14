@@ -485,8 +485,10 @@ class Stringable implements JsonSerializable
      * @param  int  $times
      * @return static
      */
-    public function repeat(int $times)
+    public function repeat($times)
     {
+        $times = cast_to_int($times);
+
         return new static(Str::repeat($this->value, $times));
     }
 

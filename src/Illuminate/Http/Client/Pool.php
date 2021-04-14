@@ -44,8 +44,10 @@ class Pool
      * @param  string  $key
      * @return \Illuminate\Http\Client\PendingRequest
      */
-    public function as(string $key)
+    public function as_($key)
     {
+        $key = cast_to_string($key);
+
         return $this->pool[$key] = $this->asyncRequest();
     }
 

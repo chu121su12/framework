@@ -416,7 +416,7 @@ class Migrator
 
             $reflectionClass = new ReflectionClass($migration);
 
-            if ($reflectionClass->isAnonymous()) {
+            if (\version_compare(\PHP_VERSION, '7.0.0', '>=') && $reflectionClass->isAnonymous()) {
                 $name = $this->getMigrationName($reflectionClass->getFileName());
             }
 
@@ -466,8 +466,10 @@ class Migrator
      * @param  string  $path
      * @return object
      */
-    protected function resolvePath(string $path)
+    protected function resolvePath($path)
     {
+        $path = cast_to_string($path);
+
         $class = $this->getMigrationClass($this->getMigrationName($path));
 
         if (class_exists($class)) {
@@ -483,8 +485,10 @@ class Migrator
      * @param  string  $migrationName
      * @return string
      */
-    protected function getMigrationClass(string $migrationName): string
+    protected function getMigrationClass($migrationName) ////: string
     {
+        $migrationName = cast_to_string($migrationName);
+
         return Str::studly(implode('_', array_slice(explode('_', $migrationName), 4)));
     }
 

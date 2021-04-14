@@ -504,8 +504,12 @@ class Str
      * @param  int  $times
      * @return string
      */
-    public static function repeat(string $string, int $times)
+    public static function repeat($string, $times)
     {
+        $string = cast_to_string($string);
+
+        $times = cast_to_int($times);
+
         return str_repeat($string, $times);
     }
 

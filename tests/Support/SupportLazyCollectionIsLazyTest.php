@@ -12,7 +12,7 @@ class SupportLazyCollectionIsLazyTest extends TestCase
 
     public function testMakeWithClosureIsLazy()
     {
-        [$closure, $recorder] = $this->makeGeneratorFunctionWithRecorder();
+        list($closure, $recorder) = $this->makeGeneratorFunctionWithRecorder();
 
         LazyCollection::make($closure);
 
@@ -28,7 +28,7 @@ class SupportLazyCollectionIsLazyTest extends TestCase
 
     public function testMakeWithGeneratorIsNotLazy()
     {
-        [$closure, $recorder] = $this->makeGeneratorFunctionWithRecorder(5);
+        list($closure, $recorder) = $this->makeGeneratorFunctionWithRecorder(5);
 
         LazyCollection::make($closure());
 
