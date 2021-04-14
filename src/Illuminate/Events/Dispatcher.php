@@ -612,6 +612,8 @@ class Dispatcher implements DispatcherContract
         return tap($job, function ($job) use ($listener) {
             $job->tries = isset($listener->tries) ? $listener->tries : null;
 
+            $job->maxExceptions = $listener->maxExceptions ?? null;
+
             $job->backoff = method_exists($listener, 'backoff')
                                 ? $listener->backoff() : (isset($listener->backoff) ? $listener->backoff : null);
 

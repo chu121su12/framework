@@ -48,10 +48,12 @@ trait ManagesTransactions
                 $e = null;
                 if ($this->transactions == 1) {
                     $this->getPdo()->commit();
-
-                    optional($this->transactionsManager)->commit($this->getName());
                 }
                 $this->transactions = max(0, $this->transactions - 1);
+
+                if ($this->transactions == 0) {
+                    optional($this->transactionsManager)->commit($this->getName());
+                }
             } catch (\Throwable $e) {
             } catch (\Error $e) {
             } catch (\Exception $e) {
@@ -201,11 +203,13 @@ trait ManagesTransactions
     {
         if ($this->transactions == 1) {
             $this->getPdo()->commit();
-
-            optional($this->transactionsManager)->commit($this->getName());
         }
 
         $this->transactions = max(0, $this->transactions - 1);
+
+        if ($this->transactions == 0) {
+            optional($this->transactionsManager)->commit($this->getName());
+        }
 
         $this->fireConnectionEvent('committed');
     }
