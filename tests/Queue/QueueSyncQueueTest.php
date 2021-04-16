@@ -131,6 +131,6 @@ class SyncQueueJob implements ShouldQueue
     {
         $payload = $this->job->payload();
 
-        return $payload['data'][$key] ?? null;
+        return isset($payload['data']) && isset($payload['data'][$key]) ? $payload['data'][$key] : null;
     }
 }
