@@ -670,6 +670,8 @@ class PendingRequest
                     $options[$this->bodyFormat], $this->pendingFiles
                 );
             }
+        } else {
+            $options[$this->bodyFormat] = $this->pendingBody;
         }
 
         list($this->pendingBody, $this->pendingFiles) = [null, []];

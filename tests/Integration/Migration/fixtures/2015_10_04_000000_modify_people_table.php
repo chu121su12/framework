@@ -4,8 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-if (! class_exists('AnonymousFixtureModifyPeopleTable2015')) {
-class AnonymousFixtureModifyPeopleTable2015 extends Migration {
+class ModifyPeopleTable extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -29,13 +29,4 @@ class AnonymousFixtureModifyPeopleTable2015 extends Migration {
             $table->dropColumn('first_name');
         });
     }
-};
 }
-
-return new AnonymousFixtureModifyPeopleTable2015;
-
-// if (\version_compare(\PHP_VERSION, '7.0.0', '<')) {
-//     return new AnonymousFixtureModifyPeopleTable2015;
-// } else {
-//     return new class extends AnonymousFixtureModifyPeopleTable2015;
-// }
