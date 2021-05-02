@@ -137,7 +137,7 @@
             "Symfony\\Component\\HttpKernel\\Exception\\": "cr/patch/symfony/http-kernel/Exception/",
             "Symfony\\Component\\Mime\\": "cr/symfony/mime/",
             "Symfony\\Component\\Routing\\": "cr/symfony/routing/",
-            "Carbon\\": "cr/patch/carbon/carbon/",
+            "Carbon\\": "cr/patch/carbon/src/",
             "Doctrine\\": "cr/patch/doctrine/doctrine/",
             "Illuminate\\": "src/Illuminate/",
             "Illuminate\\Support\\": ["src/Illuminate/Macroable/", "src/Illuminate/Collections/"],
