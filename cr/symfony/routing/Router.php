@@ -104,7 +104,7 @@ class Router implements RouterInterface, RequestMatcherInterface
         $this->loader = $loader;
         $this->resource = $resource;
         $this->logger = $logger;
-        $this->context = $context ?: new RequestContext();
+        $this->context = isset($context) ? $context : new RequestContext();
         $this->setOptions($options);
         $this->defaultLocale = $defaultLocale;
     }

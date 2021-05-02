@@ -58,8 +58,6 @@ class DataPart extends TextPart
 
         $name = cast_to_string($name, null);
 
-        // FIXME: if file is not readable, exception?
-
         if (null === $contentType) {
             $ext = strtolower(substr($path, strrpos($path, '.') + 1));
             if (null === self::$mimeTypes) {
