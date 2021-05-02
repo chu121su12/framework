@@ -134,8 +134,8 @@
             "Doctrine\\": "cr/patch/doctrine/doctrine/",
             "Illuminate\\": "src/Illuminate/",
             "Illuminate\\Support\\": ["src/Illuminate/Macroable/", "src/Illuminate/Collections/"],
-            "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/ui/auth-backend/",
-            "Laravel\\Ui\\": "cr/patch/laravel-ui/ui/src/",
+            "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/auth-backend/",
+            "Laravel\\Ui\\": "cr/patch/laravel-ui/src/",
             "Sushi\\": "cr/patch/sushi/sushi/",
             "CR\\LaravelBackport\\": "cr/patch/laravel-backport/"
         },
