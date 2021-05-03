@@ -143,6 +143,7 @@
             "Illuminate\\": "src/Illuminate/",
             "Illuminate\\Support\\": ["src/Illuminate/Macroable/", "src/Illuminate/Collections/"],
             "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/auth-backend/",
+            "Laravel\\Octane\\": "cr/patch/laravel-octane/src/",
             "Laravel\\Ui\\": "cr/patch/laravel-ui/src/",
             "Sushi\\": "cr/patch/sushi/sushi/",
             "CR\\LaravelBackport\\": "cr/patch/laravel-backport/"
@@ -166,6 +167,7 @@
         "psr-4": {
             "Orchestra\\Testbench\\": "cr/patch/orchestra-testbench-core/testbench-core/src/",
             "PHPUnit\\": "cr/patch/phpunit-src/PHPUnit/",
+            "Laravel\\Octane\\Tests\\": "cr/patch/laravel-octane/tests/",
             "Illuminate\\Tests\\": "tests/"
         }
     },
@@ -175,8 +177,12 @@
         },
         "laravel": {
             "providers": [
-                "Carbon\\Laravel\\ServiceProvider"
-            ]
+                "Carbon\\Laravel\\ServiceProvider",
+                "Laravel\\Octane\\OctaneServiceProvider"
+            ],
+            "aliases": {
+                "Octane": "Laravel\\Octane\\OctaneFacade"
+            }
         }
     },
     "suggest": {
