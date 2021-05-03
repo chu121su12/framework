@@ -8,7 +8,8 @@ use Illuminate\Container\Container;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
-class BusBatchableTest_test_batch_may_be_retrieved_class {
+class BusBatchableTest_test_batch_may_be_retrieved_class 
+        {
             use Batchable;
         }
 

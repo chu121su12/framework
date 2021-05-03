@@ -23,7 +23,8 @@ use ReflectionClass;
 use stdClass;
 use Symfony\Component\VarDumper\VarDumper;
 
-class SupportCollectionTest_testHigherOrderFilter_class_1 {
+class SupportCollectionTest_testHigherOrderFilter_class_1 
+            {
                 public $name = 'Alex';
 
                 public function active()
@@ -32,7 +33,8 @@ class SupportCollectionTest_testHigherOrderFilter_class_1 {
                 }
             }
 
-class SupportCollectionTest_testHigherOrderFilter_class_2 {
+class SupportCollectionTest_testHigherOrderFilter_class_2 
+            {
                 public $name = 'John';
 
                 public function active()

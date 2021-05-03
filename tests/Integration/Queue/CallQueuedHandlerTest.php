@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Event;
 use Mockery as m;
 use Orchestra\Testbench\TestCase;
 
-class AbstractCallQueuedHandlerTestJobWithMiddleware_middleware_class {
+class AbstractCallQueuedHandlerTestJobWithMiddleware_middleware_class 
+            {
                 public function handle($command, $next)
                 {
                     AbstractCallQueuedHandlerTestJobWithMiddleware::$middlewareCommand = $command;

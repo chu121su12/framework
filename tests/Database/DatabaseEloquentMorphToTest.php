@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
-class DatabaseEloquentMorphToTest_testLookupDictionaryIsProperlyConstructed_Class {
+class DatabaseEloquentMorphToTest_testLookupDictionaryIsProperlyConstructed_Class 
+            {
                 public function __toString()
                 {
                     return 'foreign_key_2';
@@ -28,12 +29,14 @@ class DatabaseEloquentMorphToTest extends TestCase
 
     public function testLookupDictionaryIsProperlyConstructed()
     {
+        $stringish = new DatabaseEloquentMorphToTest_testLookupDictionaryIsProperlyConstructed_Class;
+
         $relation = $this->getRelation();
         $relation->addEagerConstraints([
             $one = (object) ['morph_type' => 'morph_type_1', 'foreign_key' => 'foreign_key_1'],
             $two = (object) ['morph_type' => 'morph_type_1', 'foreign_key' => 'foreign_key_1'],
             $three = (object) ['morph_type' => 'morph_type_2', 'foreign_key' => 'foreign_key_2'],
-            $four = (object) ['morph_type' => 'morph_type_2', 'foreign_key' => new DatabaseEloquentMorphToTest_testLookupDictionaryIsProperlyConstructed_Class],
+            $four = (object) ['morph_type' => 'morph_type_2', 'foreign_key' => $stringish],
         ]);
 
         $dictionary = $relation->getDictionary();
@@ -136,13 +139,13 @@ class DatabaseEloquentMorphToTest extends TestCase
     public function testAssociateMethodSetsForeignKeyAndTypeOnModel()
     {
         $parent = m::mock(Model::class);
-        $parent->shouldReceive('getAttribute')->once()->with('foreign_key')->andReturn('foreign.value');
+        $parent->shouldReceive('getAttribute')->with('foreign_key')->andReturn('foreign.value');
 
         $relation = $this->getRelationAssociate($parent);
 
         $associate = m::mock(Model::class);
-        $associate->shouldReceive('getAttribute')->once()->andReturn(1);
-        $associate->shouldReceive('getMorphClass')->once()->andReturn('Model');
+        $associate->shouldReceive('getAttribute')->andReturn(1);
+        $associate->shouldReceive('getMorphClass')->andReturn('Model');
 
         $parent->shouldReceive('setAttribute')->once()->with('foreign_key', 1);
         $parent->shouldReceive('setAttribute')->once()->with('morph_type', 'Model');

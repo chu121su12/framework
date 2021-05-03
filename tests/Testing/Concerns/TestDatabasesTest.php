@@ -9,7 +9,8 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 
-class TestDatabasesTest_switchToDatabase_class {
+class TestDatabasesTest_switchToDatabase_class 
+        {
             use TestDatabases;
         }
 

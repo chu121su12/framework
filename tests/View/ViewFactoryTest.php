@@ -24,7 +24,8 @@ use PHPUnit\Framework\TestCase;
 use ReflectionFunction;
 use stdClass;
 
-class ViewFactoryTest_testAddingLoopDoesNotCloseGenerator_class {
+class ViewFactoryTest_testAddingLoopDoesNotCloseGenerator_class 
+        {
             public function generate()
             {
                 for ($count = 0; $count < 3; $count++) {

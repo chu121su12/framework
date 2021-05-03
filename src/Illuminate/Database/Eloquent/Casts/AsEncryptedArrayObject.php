@@ -6,7 +6,8 @@ use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Facades\Crypt;
 
-class AsEncryptedArrayObject_castUsing_class implements CastsAttributes {
+class AsEncryptedArrayObject_castUsing_class implements CastsAttributes 
+        {
             public function get($model, $key, $value, array $attributes)
             {
                 return new ArrayObject(json_decode(Crypt::decryptString($attributes[$key]), true));
@@ -17,7 +18,7 @@ class AsEncryptedArrayObject_castUsing_class implements CastsAttributes {
                 return [$key => Crypt::encryptString(json_encode($value))];
             }
 
-            public function serialize($model, $key, $value, $attributes)
+            public function serialize($model, $key, $value, /* array */ $attributes)
             {
                 // $key = cast_to_string($key);
 

@@ -10,14 +10,16 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_1_Class {
+class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_1_Class 
+        {
             public function __toString()
             {
                 return '3';
             }
         }
 
-class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_2_Class {
+class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_2_Class 
+        {
             public function __toString()
             {
                 return '3';

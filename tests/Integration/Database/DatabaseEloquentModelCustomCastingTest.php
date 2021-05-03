@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Schema;
 
 // note: do not remove (array) cast since php 5 requires method overriding extending class have the same type as the extended class.
 
-class ValueObject_castUsing_class implements CastsAttributes {
+class ValueObject_castUsing_class implements CastsAttributes 
+        {
             private $argument;
 
             public function __construct($argument = null)

@@ -7,7 +7,8 @@ use Illuminate\Pagination\AbstractPaginator;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
-class PaginatorLoadMorphCountTest_testCollectionLoadMorphCountCanChainOnThePaginator_class extends AbstractPaginator {
+class PaginatorLoadMorphCountTest_testCollectionLoadMorphCountCanChainOnThePaginator_class extends AbstractPaginator 
+        {
             //
         }
 

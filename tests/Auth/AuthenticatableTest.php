@@ -5,7 +5,8 @@ namespace Illuminate\Tests\Auth;
 use Illuminate\Foundation\Auth\User;
 use PHPUnit\Framework\TestCase;
 
-class AuthenticatableTest_testItReturnsNullWhenRememberTokenNameWasSetToEmpty_class extends User {
+class AuthenticatableTest_testItReturnsNullWhenRememberTokenNameWasSetToEmpty_class extends User 
+        {
             public function getRememberTokenName()
             {
                 return '';

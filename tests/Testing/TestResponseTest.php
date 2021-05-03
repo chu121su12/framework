@@ -33,7 +33,8 @@ if (!class_exists('Illuminate\Tests\Testing\ExpectationFailedException')) {
     }
 }
 
-class TestResponseTest_testAssertViewHasModel_class extends Model {
+class TestResponseTest_testAssertViewHasModel_class extends Model 
+        {
             public function is($model)
             {
                 return $this == $model;

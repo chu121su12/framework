@@ -10,7 +10,8 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
 
-class DatabaseEloquentBelongsToManyWithCastedAttributesTest_testModelsAreProperlyMatchedToParents_Class {
+class DatabaseEloquentBelongsToManyWithCastedAttributesTest_testModelsAreProperlyMatchedToParents_Class 
+                {
                     public function __toString()
                     {
                         return '1';

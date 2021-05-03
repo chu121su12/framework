@@ -5,7 +5,8 @@ namespace Illuminate\Database\Eloquent\Casts;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
-class AsArrayObject_castUsing_class implements CastsAttributes {
+class AsArrayObject_castUsing_class implements CastsAttributes 
+        {
             public function get($model, $key, $value, array $attributes)
             {
                 return isset($attributes[$key]) ? new ArrayObject(json_decode($attributes[$key], true)) : null;
@@ -16,7 +17,7 @@ class AsArrayObject_castUsing_class implements CastsAttributes {
                 return [$key => json_encode($value)];
             }
 
-            public function serialize($model, $key, $value, $attributes)
+            public function serialize($model, $key, $value, /* array */ $attributes)
             {
                 // $key = cast_to_string($key);
 

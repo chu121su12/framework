@@ -12,21 +12,24 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
 
-class SupportHelpersTest_testOptional_class {
+class SupportHelpersTest_testOptional_class 
+        {
             public function something()
             {
                 return 10;
             }
         }
 
-class SupportHelpersTest_testOptionalIsMacroable_class_inner {
+class SupportHelpersTest_testOptionalIsMacroable_class_inner 
+                {
                     public function something()
                     {
                         return '$10.00';
                     }
                 }
 
-class SupportHelpersTest_testOptionalIsMacroable_class {
+class SupportHelpersTest_testOptionalIsMacroable_class 
+        {
             public function present()
             {
                 return new SupportHelpersTest_testOptionalIsMacroable_class_inner;

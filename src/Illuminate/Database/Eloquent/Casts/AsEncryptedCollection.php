@@ -7,7 +7,8 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
 
-class AsEncryptedCollection_castUsing_class implements CastsAttributes {
+class AsEncryptedCollection_castUsing_class implements CastsAttributes 
+        {
             public function get($model, $key, $value, array $attributes)
             {
                 return new Collection(json_decode(Crypt::decryptString($attributes[$key]), true));

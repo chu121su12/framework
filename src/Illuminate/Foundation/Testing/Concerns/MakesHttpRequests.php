@@ -11,12 +11,12 @@ use Symfony\Component\HttpFoundation\File\UploadedFile as SymfonyUploadedFile;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class MakesHttpRequests_withoutMiddleware_Class
-{
-    public function handle($request, $next)
-    {
-        return $next($request);
-    }
-}
+            {
+                public function handle($request, $next)
+                {
+                    return $next($request);
+                }
+            }
 
 trait MakesHttpRequests
 {

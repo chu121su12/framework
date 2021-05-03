@@ -6,7 +6,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
 use Orchestra\Testbench\TestCase;
 
-class JsonResponseTest_testResponseWithInvalidJsonThrowsException_class implements \JsonSerializable {
+class JsonResponseTest_testResponseWithInvalidJsonThrowsException_class implements \JsonSerializable 
+            {
                 public function jsonSerialize()
                 {
                     return "\xB1\x31";

@@ -11,13 +11,15 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class FoundationApplicationTest_testClassesAreBoundWhenServiceProviderIsRegistered_class extends ServiceProvider {
+class FoundationApplicationTest_testClassesAreBoundWhenServiceProviderIsRegistered_class extends ServiceProvider 
+        {
             public $bindings = [
                 AbstractClass::class => ConcreteClass::class,
             ];
         }
 
-class FoundationApplicationTest_testSingletonsAreCreatedWhenServiceProviderIsRegistered_class extends ServiceProvider {
+class FoundationApplicationTest_testSingletonsAreCreatedWhenServiceProviderIsRegistered_class extends ServiceProvider 
+        {
             public $singletons = [
                 AbstractClass::class => ConcreteClass::class,
             ];

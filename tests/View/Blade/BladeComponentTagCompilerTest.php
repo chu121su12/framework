@@ -12,7 +12,8 @@ use Illuminate\View\ComponentAttributeBag;
 use InvalidArgumentException;
 use Mockery;
 
-class BladeComponentTagCompilerTest_testAttributeSanitization_class {
+class BladeComponentTagCompilerTest_testAttributeSanitization_class 
+        {
             public function __toString()
             {
                 return '<hi>';

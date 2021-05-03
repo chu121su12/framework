@@ -11,7 +11,8 @@ use Illuminate\Database\Query\Expression;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
-class DatabaseEloquentHasOneTest_testModelsAreProperlyMatchedToParents_Class {
+class DatabaseEloquentHasOneTest_testModelsAreProperlyMatchedToParents_Class 
+        {
             public function __toString()
             {
                 return '4';

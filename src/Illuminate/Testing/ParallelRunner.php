@@ -13,7 +13,8 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 if (trait_exists(\Tests\CreatesApplication::class)) {
-class ParallelRunner_createApplication_class {
+    class ParallelRunner_createApplication_class 
+                {
                     use \Tests\CreatesApplication;
                 }
 }

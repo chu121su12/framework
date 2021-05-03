@@ -9,7 +9,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 use Exception;
 
-class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements ExceptionHandler {
+class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements ExceptionHandler 
+        {
             protected $except;
             protected $originalHandler;
 

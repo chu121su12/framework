@@ -21,11 +21,13 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-class BusBatchTest_test_firstJob_class {
+class BusBatchTest_test_firstJob_class 
+        {
             use Batchable;
         }
 
-class BusBatchTest_test_secondJob_class {
+class BusBatchTest_test_secondJob_class 
+        {
             use Batchable;
         }
 
@@ -371,7 +373,7 @@ class BusBatchTest extends TestCase
                 'failed_jobs' => '',
                 'failed_job_ids' => '[]',
                 'options' => $serialize,
-                'created_at' => null,
+                'created_at' => now()->timestamp,
                 'cancelled_at' => null,
                 'finished_at' => null,
             ]);

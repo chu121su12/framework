@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
 
-class FoundationHelpersTest_testRescue_class {
+class FoundationHelpersTest_testRescue_class 
+        {
             public function test($a)
             {
                 if (! is_int($a)) {

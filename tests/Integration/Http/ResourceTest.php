@@ -29,7 +29,8 @@ use Illuminate\Tests\Integration\Http\Fixtures\SerializablePostResource;
 use Illuminate\Tests\Integration\Http\Fixtures\Subscription;
 use Orchestra\Testbench\TestCase;
 
-class ResourceTest_testLeadingMergeKeyedValueIsMergedCorrectly_class {
+class ResourceTest_testLeadingMergeKeyedValueIsMergedCorrectly_class 
+        {
             use ConditionallyLoadsAttributes;
 
             public function work()
@@ -40,7 +41,8 @@ class ResourceTest_testLeadingMergeKeyedValueIsMergedCorrectly_class {
             }
         }
 
-class ResourceTest_testLeadingMergeKeyedValueIsMergedCorrectlyWhenFirstValueIsMissing_class {
+class ResourceTest_testLeadingMergeKeyedValueIsMergedCorrectlyWhenFirstValueIsMissing_class 
+        {
             use ConditionallyLoadsAttributes;
 
             public function work()
@@ -55,7 +57,8 @@ class ResourceTest_testLeadingMergeKeyedValueIsMergedCorrectlyWhenFirstValueIsMi
             }
         }
 
-class ResourceTest_testLeadingMergeValueIsMergedCorrectly_class {
+class ResourceTest_testLeadingMergeValueIsMergedCorrectly_class 
+        {
             use ConditionallyLoadsAttributes;
 
             public function work()
@@ -71,7 +74,8 @@ class ResourceTest_testLeadingMergeValueIsMergedCorrectly_class {
             }
         }
 
-class ResourceTest_testMergeValuesMayBeMissing_class {
+class ResourceTest_testMergeValuesMayBeMissing_class 
+        {
             use ConditionallyLoadsAttributes;
 
             public function work()
@@ -87,7 +91,8 @@ class ResourceTest_testMergeValuesMayBeMissing_class {
             }
         }
 
-class ResourceTest_testInitialMergeValuesMayBeMissing_class {
+class ResourceTest_testInitialMergeValuesMayBeMissing_class 
+        {
             use ConditionallyLoadsAttributes;
 
             public function work()
@@ -103,7 +108,8 @@ class ResourceTest_testInitialMergeValuesMayBeMissing_class {
             }
         }
 
-class ResourceTest_testMergeValueCanMergeJsonSerializable_class {
+class ResourceTest_testMergeValueCanMergeJsonSerializable_class 
+        {
             use ConditionallyLoadsAttributes;
 
             public function work()
@@ -121,7 +127,8 @@ class ResourceTest_testMergeValueCanMergeJsonSerializable_class {
             }
         }
 
-class ResourceTest_testMergeValueCanMergeCollectionOfJsonSerializable_class {
+class ResourceTest_testMergeValueCanMergeCollectionOfJsonSerializable_class 
+        {
             use ConditionallyLoadsAttributes;
 
             public function work()
@@ -137,7 +144,8 @@ class ResourceTest_testMergeValueCanMergeCollectionOfJsonSerializable_class {
             }
         }
 
-class ResourceTest_testAllMergeValuesMayBeMissing_class {
+class ResourceTest_testAllMergeValuesMayBeMissing_class 
+        {
             use ConditionallyLoadsAttributes;
 
             public function work()
@@ -153,7 +161,8 @@ class ResourceTest_testAllMergeValuesMayBeMissing_class {
             }
         }
 
-class ResourceTest_testNestedMerges_class {
+class ResourceTest_testNestedMerges_class 
+        {
             use ConditionallyLoadsAttributes;
 
             public function work()

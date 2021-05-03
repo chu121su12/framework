@@ -14,14 +14,16 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
-class CommandTest_testCallingClassCommandResolveCommandViaApplicationResolution_class extends Command {
+class CommandTest_testCallingClassCommandResolveCommandViaApplicationResolution_class extends Command 
+        {
             public function handle()
             {
             }
         }
 
 
-class CommandTest_testGettingCommandArgumentsAndOptionsByClass_class extends Command {
+class CommandTest_testGettingCommandArgumentsAndOptionsByClass_class extends Command 
+        {
             public function handle()
             {
             }

@@ -14,11 +14,13 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
 
-class BusPendingBatchTest_test_pending_batch_may_be_configured_and_dispatched_class {
+class BusPendingBatchTest_test_pending_batch_may_be_configured_and_dispatched_class 
+        {
             use Batchable;
         }
 
-class BusPendingBatchTest_test_batch_is_deleted_from_storage_if_exception_thrown_during_batching_class {
+class BusPendingBatchTest_test_batch_is_deleted_from_storage_if_exception_thrown_during_batching_class 
+        {
         }
 
 class BusPendingBatchTest extends TestCase
@@ -37,9 +39,9 @@ class BusPendingBatchTest extends TestCase
 
         $container->instance(Dispatcher::class, $eventDispatcher);
 
-        $pendingBatch = new PendingBatch($container, new Collection([
-            $job = new BusPendingBatchTest_test_batch_is_deleted_from_storage_if_exception_thrown_during_batching_class
-        ]));
+        $job = new BusPendingBatchTest_test_batch_is_deleted_from_storage_if_exception_thrown_during_batching_class;
+
+        $pendingBatch = new PendingBatch($container, new Collection([$job]));
 
         $pendingBatch = $pendingBatch->then(function () {
             //
@@ -67,9 +69,9 @@ class BusPendingBatchTest extends TestCase
 
         $container = new Container;
 
-        $pendingBatch = new PendingBatch($container, new Collection([
-            new BusPendingBatchTest_test_batch_is_deleted_from_storage_if_exception_thrown_during_batching_class
-        ]));
+        $job = new BusPendingBatchTest_test_batch_is_deleted_from_storage_if_exception_thrown_during_batching_class;
+
+        $pendingBatch = new PendingBatch($container, new Collection([$job]));
 
         $repository = m::mock(BatchRepository::class);
 
