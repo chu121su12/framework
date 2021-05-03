@@ -112,6 +112,7 @@
             "vendor/symfony/http-kernel/Exception"
         ],
         "files": [
+            "cr/helpers/helpers.php",
             "cr/helpers/backport.php",
             "cr/helpers/casts.php",
             "cr/patch/symfony/polyfill/src/bootstrap.php",

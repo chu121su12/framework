@@ -8,11 +8,12 @@ if (! \function_exists('backport_match')) {
         $hasDefault = false;
 
         foreach ($matchArms as $key => $arms) {
-            $expression = array_pop($arms);
+            $expression = \array_pop($arms);
 
             if ($key === 'default') {
                 if ($hasDefault) {
-                    throw new Exception;
+                    \trigger_error('Fatal error', \E_USER_ERROR);
+                    throw new \Exception('Fatal error');
                 }
 
                 $hasDefault = true;
@@ -25,7 +26,9 @@ if (! \function_exists('backport_match')) {
             }
         }
 
-        throw new Exception;
+        throw \class_exists('UnhandledMatchError')
+            ? new \UnhandledMatchError
+            : new \Exception;
     }
 }
 
