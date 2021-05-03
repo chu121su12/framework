@@ -1,5 +1,34 @@
 <?php
 
+if (! \function_exists('backport_match')) {
+    function backport_match($matchValue, ...$matchArms)
+    {
+        $matchValue = value($matchValue);
+
+        $hasDefault = false;
+
+        foreach ($matchArms as $key => $arms) {
+            $expression = array_pop($arms);
+
+            if ($key === 'default') {
+                if ($hasDefault) {
+                    throw new Exception;
+                }
+
+                $hasDefault = true;
+            }
+
+            foreach ($arms as $arm) {
+                if ($hasDefault || value($arm) === $matchValue) {
+                    return value($expression);
+                }
+            }
+        }
+
+        throw new Exception;
+    }
+}
+
 if (! \function_exists('backport_json_decode')) {
     function backport_json_decode($json, $assoc = false, $depth = 512, $options = 0)
     {
