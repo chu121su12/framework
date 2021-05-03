@@ -67,7 +67,7 @@ class ServerProcessInspector
 
         $workerProcessIds = $this->exec->run('pgrep -P '.$managerProcessId);
 
-        foreach ([$masterProcessId, $managerProcessId, ...$workerProcessIds] as $processId) {
+        foreach (array_merge([$masterProcessId], [$managerProcessId], $workerProcessIds) as $processId) {
             $this->dispatcher->signal($processId, SIGKILL);
         }
 
