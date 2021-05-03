@@ -6,7 +6,10 @@ use Illuminate\Foundation\Application;
 
 class WorkerStarting
 {
-    public function __construct(public Application $app)
+    public $app;
+
+    public function __construct(/*public */Application $app)
     {
+        $this->app = $app;
     }
 }

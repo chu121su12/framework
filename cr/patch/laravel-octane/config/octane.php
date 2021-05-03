@@ -63,11 +63,11 @@ return [
             EnsureUploadedFilesAreValid::class,
         ],
 
-        RequestReceived::class => [
-            ...Octane::prepareApplicationForNextOperation(),
-            ...Octane::prepareApplicationForNextRequest(),
+        RequestReceived::class => array_merge(...[
+            Octane::prepareApplicationForNextOperation(),
+            Octane::prepareApplicationForNextRequest(),
             //
-        ],
+        ]),
 
         RequestHandled::class => [
             //
@@ -77,15 +77,15 @@ return [
             //
         ],
 
-        TaskReceived::class => [
-            ...Octane::prepareApplicationForNextOperation(),
+        TaskReceived::class => array_merge(...[
+            Octane::prepareApplicationForNextOperation(),
             //
-        ],
+        ]),
 
-        TickReceived::class => [
-            ...Octane::prepareApplicationForNextOperation(),
+        TickReceived::class => array_merge(...[
+            Octane::prepareApplicationForNextOperation(),
             //
-        ],
+        ]),
 
         OperationTerminated::class => [
             FlushTemporaryContainerInstances::class,
@@ -114,9 +114,9 @@ return [
     |
     */
 
-    'warm' => [
-        ...Octane::defaultServicesToWarm(),
-    ],
+    'warm' => array_merge(...[
+        Octane::defaultServicesToWarm(),
+    ]),
 
     'flush' => [
         //

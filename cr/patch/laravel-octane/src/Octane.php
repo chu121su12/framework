@@ -21,8 +21,10 @@ class Octane
      * @param  string  $table
      * @return \Swoole\Table
      */
-    public function table(string $table): Table
+    public function table(/*string */$table) ///: Table
     {
+        $table = cast_to_string($table);
+
         if (! app()->bound(Server::class)) {
             throw new Exception('Tables may only be accessed when using the Swoole server.');
         }
@@ -43,8 +45,10 @@ class Octane
      * @param  bool  $debug
      * @return string
      */
-    public static function formatExceptionForClient(Throwable $e, bool $debug = false): string
+    public static function formatExceptionForClient(/*Throwable */$e, /*bool */$debug = false) ////: string
     {
+        $debug = cast_to_bool($debug);
+
         return $debug ? (string) $e : 'Internal server error.';
     }
 }

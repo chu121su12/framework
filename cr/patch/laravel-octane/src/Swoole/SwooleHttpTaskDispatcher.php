@@ -33,8 +33,10 @@ class SwooleHttpTaskDispatcher implements DispatchesTasks
      * @throws \Laravel\Octane\Exceptions\TaskException
      * @throws \Laravel\Octane\Exceptions\TaskTimeoutException
      */
-    public function resolve(array $tasks, int $waitMilliseconds = 3000): array
+    public function resolve(array $tasks, /*int */$waitMilliseconds = 3000) ////: array
     {
+        $waitMilliseconds = cast_to_int($waitMilliseconds);
+
         $tasks = collect($tasks)->mapWithKeys(function ($task, $key) {
             return [$key => $task instanceof Closure
                             ? new SerializableClosure($task)
@@ -47,13 +49,13 @@ class SwooleHttpTaskDispatcher implements DispatchesTasks
                 'wait' => $waitMilliseconds,
             ]);
 
-            return match ($response->status()) {
-                200 => unserialize($response),
-                504 => throw TaskTimeoutException::after($waitMilliseconds),
-                default => throw TaskExceptionResult::from(
-                    new Exception('Invalid response from task server.'),
-                )->getOriginal(),
-            };
+            return backport_match ($response->status(),
+                [200, function () use ($response) { return unserialize($response); }],
+                [504, function () use ($waitMilliseconds) { throw TaskTimeoutException::after($waitMilliseconds); }],
+                ['default' => null, function () { throw TaskExceptionResult::from(
+                    new Exception('Invalid response from task server.')
+                )->getOriginal(); }],
+            );
         } catch (ConnectionException) {
             return $this->fallbackDispatcher->resolve($tasks, $waitMilliseconds);
         }
@@ -65,7 +67,7 @@ class SwooleHttpTaskDispatcher implements DispatchesTasks
      * @param  array  $tasks
      * @return void
      */
-    public function dispatch(array $tasks): void
+    public function dispatch(array $tasks) ////: void
     {
         $tasks = collect($tasks)->mapWithKeys(function ($task, $key) {
             return [$key => $task instanceof Closure

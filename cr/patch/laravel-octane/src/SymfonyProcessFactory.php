@@ -16,8 +16,12 @@ class SymfonyProcessFactory
      * @param  float|null  $timeout
      * @return \Symfony\Component\Process\Process
      */
-    public function createProcess(array $command, string $cwd = null, array $env = null, $input = null, ?float $timeout = 60)
+    public function createProcess(array $command, /*string */$cwd = null, array $env = null, $input = null, /*?float */$timeout = 60)
     {
+        $cwd = cast_to_string($cwd);
+
+        $timeout = cast_to_float($timeout, null);
+
         return new Process($command, $cwd, $env, $input, $timeout);
     }
 }

@@ -95,7 +95,7 @@ trait InstallsRoadRunnerDependencies
      *
      * @return string
      */
-    protected function ensureRoadRunnerBinaryIsInstalled(): string
+    protected function ensureRoadRunnerBinaryIsInstalled() ////: string
     {
         if (file_exists(base_path('rr'))) {
             return base_path('rr');
@@ -143,8 +143,14 @@ trait InstallsRoadRunnerDependencies
                 rename($roadRunnerBinary, "$roadRunnerBinary.backup");
 
                 try {
+                    $e = null;
                     $this->downloadRoadRunnerBinary();
-                } catch (Throwable $e) {
+                } catch (\Exception $e) {
+                } catch (\Error $e) {
+                } catch (\Throwable $e) {
+                }
+
+                if (isset($e)) {
                     report($e);
 
                     rename("$roadRunnerBinary.backup", $roadRunnerBinary);
@@ -171,7 +177,7 @@ trait InstallsRoadRunnerDependencies
             '-n',
             '--ansi',
         ]), base_path(), null, null, null))->mustRun(
-            fn ($type, $buffer) => $this->output->write($buffer)
+            function ($type, $buffer) { return $this->output->write($buffer); }
         );
 
         chmod(base_path('rr'), 755);

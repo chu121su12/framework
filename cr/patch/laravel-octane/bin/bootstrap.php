@@ -17,7 +17,11 @@ $_ENV['APP_RUNNING_IN_CONSOLE'] = false;
 |
 */
 
-$basePath = $_SERVER['APP_BASE_PATH'] ?? $_ENV['APP_BASE_PATH'] ?? $serverState['octaneConfig']['base_path'] ?? null;
+$basePath = isset($_SERVER['APP_BASE_PATH']) ? $_SERVER['APP_BASE_PATH'] : (
+    isset($_ENV['APP_BASE_PATH']) ? $_ENV['APP_BASE_PATH'] : (
+        isset($serverState) && isset($serverState['octaneConfig']) && isset($serverState['octaneConfig']['base_path'])
+            ? $serverState['octaneConfig']['base_path']
+            : null));
 
 if (! is_string($basePath)) {
     fwrite(STDERR, 'Cannot find application base path.'.PHP_EOL);

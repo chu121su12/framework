@@ -76,14 +76,14 @@ trait InteractsWithServers
 
         if (empty($paths = config('octane.watch'))) {
             throw new InvalidArgumentException(
-                'List of directories/files to watch not found. Please update your "config/octane.php" configuration file.',
+                'List of directories/files to watch not found. Please update your "config/octane.php" configuration file.'
             );
         }
 
         return tap(new Process([
             (new ExecutableFinder)->find('node'),
             'file-watcher.js',
-            json_encode(collect(config('octane.watch'))->map(fn ($path) => base_path($path))),
+            json_encode(collect(config('octane.watch'))->map(function ($path) { return base_path($path); })),
         ], realpath(__DIR__.'/../../../bin'), null, null, null))->start();
     }
 
@@ -110,7 +110,7 @@ trait InteractsWithServers
      *
      * @return array
      */
-    public function getSubscribedSignals(): array
+    public function getSubscribedSignals() ////: array
     {
         return [SIGINT, SIGTERM];
     }
@@ -121,8 +121,10 @@ trait InteractsWithServers
      * @param  int  $signal
      * @return void
      */
-    public function handleSignal(int $signal): void
+    public function handleSignal(/*int */$signal) ////: void
     {
+        // $signal = cast_to_int($signal);
+
         $this->stopServer();
     }
 }

@@ -9,7 +9,7 @@ class TaskExceptionResult
         protected string $message,
         protected int $code,
         protected string $file,
-        protected int $line,
+        protected int $line
     ) {
     }
 
@@ -29,8 +29,8 @@ class TaskExceptionResult
             $throwable::class,
             $throwable->getMessage(),
             (int) $throwable->getCode(),
-            $fallbackTrace['file'] ?? $throwable->getFile(),
-            $fallbackTrace['line'] ?? (int) $throwable->getLine(),
+            isset($fallbackTrace) && isset($fallbackTrace['file']) ? $fallbackTrace['file'] : $throwable->getFile(),
+            isset($fallbackTrace) && isset($fallbackTrace['line']) ? $fallbackTrace['line'] : (int) $throwable->getLine()
         );
     }
 
@@ -52,7 +52,7 @@ class TaskExceptionResult
             $this->message,
             (int) $this->code,
             $this->file,
-            (int) $this->line,
+            (int) $this->line
         );
     }
 }

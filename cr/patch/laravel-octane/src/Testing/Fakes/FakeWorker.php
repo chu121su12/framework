@@ -10,7 +10,7 @@ class FakeWorker extends Worker
     public function run()
     {
         foreach ($this->client->requests as $request) {
-            [$request, $context] = $this->client->marshalRequest(
+            list($request, $context) = $this->client->marshalRequest(
                 new RequestContext(['request' => $request])
             );
 
@@ -20,11 +20,11 @@ class FakeWorker extends Worker
 
     public function runTasks()
     {
-        return collect($this->client->requests)->map(fn ($data) => $this->handleTask($data))->all();
+        return collect($this->client->requests)->map(function ($data) { return $this->handleTask($data); })->all();
     }
 
     public function runTicks()
     {
-        return collect($this->client->requests)->map(fn () => $this->handleTick())->all();
+        return collect($this->client->requests)->map(function () { return $this->handleTick(); })->all();
     }
 }

@@ -16,7 +16,7 @@ interface DispatchesTasks
      * @throws \Laravel\Octane\Exceptions\TaskException
      * @throws \Laravel\Octane\Exceptions\TaskTimeoutException
      */
-    public function resolve(array $tasks, int $waitMilliseconds = 3000): array;
+    public function resolve(array $tasks, /*int */$waitMilliseconds = 3000); ////: array;
 
     /**
      * Concurrently dispatch the given callbacks via background tasks.
@@ -24,5 +24,5 @@ interface DispatchesTasks
      * @param  array  $tasks
      * @return void
      */
-    public function dispatch(array $tasks): void;
+    public function dispatch(array $tasks); ////: void;
 }

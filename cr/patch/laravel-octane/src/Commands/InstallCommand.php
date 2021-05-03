@@ -34,14 +34,14 @@ class InstallCommand extends Command
     {
         $server = $this->option('server') ?: $this->choice(
             'Which application server you would like to use?',
-            ['roadrunner', 'swoole'],
+            ['roadrunner', 'swoole']
         );
 
-        return (int) ! tap(match ($server) {
-            'swoole' => $this->installSwooleServer(),
-            'roadrunner' => $this->installRoadRunnerServer(),
-            default => $this->invalidServer($server),
-        }, function ($installed) use ($server) {
+        return (int) ! tap(backport_match ($server,
+            ['swoole', function () { return $this->installSwooleServer(); }],
+            ['roadrunner', function () { return $this->installRoadRunnerServer(); }],
+            ['default' => null, function () use ($server) { return $this->invalidServer($server); }],
+        ), function ($installed) use ($server) {
             if ($installed) {
                 $this->updateEnvironmentFile($server);
 
@@ -66,7 +66,7 @@ class InstallCommand extends Command
             if (! Str::contains($contents, 'OCTANE_SERVER=')) {
                 File::append(
                     $env,
-                    PHP_EOL.'OCTANE_SERVER='.$server.PHP_EOL,
+                    PHP_EOL.'OCTANE_SERVER='.$server.PHP_EOL
                 );
             } else {
                 $this->warn('Please adjust the `OCTANE_SERVER` environment variable.');
@@ -123,8 +123,10 @@ class InstallCommand extends Command
      * @param  string  $server
      * @return bool
      */
-    protected function invalidServer(string $server)
+    protected function invalidServer(/*string */$server)
     {
+        $server = cast_to_string($server);
+
         $this->error("Invalid server: {$server}.");
 
         return false;

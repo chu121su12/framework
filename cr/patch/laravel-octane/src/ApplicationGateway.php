@@ -15,8 +15,15 @@ class ApplicationGateway
 {
     use DispatchesEvents;
 
-    public function __construct(protected Application $app, protected Application $sandbox)
+    protected $app;
+
+    protected $sandbox;
+
+    public function __construct(Application $app, Application $sandbox)
     {
+        $this->app = $app;
+
+        $this->sandbox = $sandbox;
     }
 
     /**
@@ -25,7 +32,7 @@ class ApplicationGateway
      * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handle(Request $request): Response
+    public function handle(Request $request) ///: Response
     {
         $this->dispatchEvent($this->sandbox, new RequestReceived($this->app, $this->sandbox, $request));
 
@@ -45,7 +52,7 @@ class ApplicationGateway
      * @param  \Symfony\Component\HttpFoundation\Response  $response
      * @return void
      */
-    public function terminate(Request $request, Response $response): void
+    public function terminate(Request $request, Response $response) ////: void
     {
         $this->sandbox->make(Kernel::class)->terminate($request, $response);
 

@@ -19,8 +19,14 @@ trait RegistersTickHandlers
      * @param  bool  $immediate
      * @return \Laravel\Octane\Swoole\InvokeTickCallable
      */
-    public function tick(string $key, callable $callback, int $seconds = 1, bool $immediate = true)
+    public function tick(/*string */$key, callable $callback, /*int */$seconds = 1, /*bool */$immediate = true)
     {
+        $key = cast_to_string($key);
+
+        $seconds = cast_to_int($seconds);
+
+        $immediate = cast_to_bool($immediate);
+
         $listener = new InvokeTickCallable(
             $key,
             $callback,

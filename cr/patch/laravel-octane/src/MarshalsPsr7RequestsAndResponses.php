@@ -37,7 +37,7 @@ trait MarshalsPsr7RequestsAndResponses
      * @param  \Psr\Http\Message\ServerRequestInterface  $request
      * @return \Illuminate\Http\Request
      */
-    protected function toHttpFoundationRequest(ServerRequestInterface $request): Request
+    protected function toHttpFoundationRequest(ServerRequestInterface $request) ///: Request
     {
         return Request::createFromBase($this->httpFoundationRequestFactory()->createRequest($request));
     }
@@ -48,7 +48,7 @@ trait MarshalsPsr7RequestsAndResponses
      * @param  \Symfony\Component\HttpFoundation\Response  $response
      * @return  \Psr\Http\Message\ResponseInterface
      */
-    protected function toPsr7Response(Response $response): ResponseInterface
+    protected function toPsr7Response(Response $response) ///: ResponseInterface
     {
         return $this->psr7ResponseFactory()->createResponse($response);
     }
@@ -60,7 +60,7 @@ trait MarshalsPsr7RequestsAndResponses
      *
      * @return \Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface
      */
-    protected function httpFoundationRequestFactory(): HttpFoundationFactoryInterface
+    protected function httpFoundationRequestFactory() ///: HttpFoundationFactoryInterface
     {
         return $this->httpFoundationFactory ?: (
             $this->httpFoundationFactory = new HttpFoundationFactory
@@ -74,7 +74,7 @@ trait MarshalsPsr7RequestsAndResponses
      *
      * @return \Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface
      */
-    protected function psr7ResponseFactory(): HttpMessageFactoryInterface
+    protected function psr7ResponseFactory() ///: HttpMessageFactoryInterface
     {
         return $this->psrHttpFactory ?: ($this->psrHttpFactory = new PsrHttpFactory(
             new ServerRequestFactory,

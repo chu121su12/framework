@@ -11,12 +11,12 @@ interface OperationTerminated
      *
      * @return \Illuminate\Foundation\Application
      */
-    public function app(): Application;
+    public function app(); ////: Application;
 
     /**
      * Get the sandbox version of the application instance.
      *
      * @return \Illuminate\Foundation\Application
      */
-    public function sandbox(): Application;
+    public function sandbox(); ////: Application;
 }

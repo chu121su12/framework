@@ -13,10 +13,12 @@ class SequentialCoroutineDispatcher implements DispatchesCoroutines
      * @param  int  $waitSeconds
      * @return array
      */
-    public function resolve(array $coroutines, int $waitSeconds = -1): array
+    public function resolve(array $coroutines, /*int */$waitSeconds = -1) ////: array
     {
+        $waitSeconds = cast_to_int($waitSeconds);
+
         return collect($coroutines)->mapWithKeys(
-            fn ($coroutine, $key) => [$key => $coroutine()]
+            function ($coroutine, $key) { return [$key => $coroutine()]; }
         )->all();
     }
 }

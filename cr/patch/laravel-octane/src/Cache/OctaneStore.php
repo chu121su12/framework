@@ -19,8 +19,11 @@ class OctaneStore implements Store
      */
     protected $intervals = [];
 
-    public function __construct(protected $table)
+    protected $table;
+
+    public function __construct(/*protected */$table)
     {
+        $this->table = $table;
     }
 
     /**
@@ -31,7 +34,7 @@ class OctaneStore implements Store
      */
     public function get($key)
     {
-        $record = $this->table[$key] ?? null;
+        $record = isset($this->table[$key]) ? $this->table[$key] : null;
 
         if (! $this->recordIsNullOrExpired($record)) {
             return unserialize($record['value']);
@@ -66,7 +69,9 @@ class OctaneStore implements Store
      */
     public function many(array $keys)
     {
-        return collect($keys)->mapWithKeys(fn ($key) => [$key => $this->get($key)])->all();
+        return collect($keys)->mapWithKeys(function ($key) {
+            return [$key => $this->get($key)];
+        })->all();
     }
 
     /**
@@ -112,10 +117,12 @@ class OctaneStore implements Store
      */
     public function increment($key, $value = 1)
     {
-        $record = $this->table[$key] ?? null;
+        $record = isset($this->table[$key]) ? $this->table[$key] : null;
 
         if ($this->recordIsNullOrExpired($record)) {
-            return tap($value, fn ($value) => $this->put($key, $value, static::ONE_YEAR));
+            return tap($value, function ($value) use ($key) {
+                return $this->put($key, $value, static::ONE_YEAR);
+            });
         }
 
         return tap((int) (unserialize($record['value']) + $value), function ($value) use ($key, $record) {
@@ -185,12 +192,18 @@ class OctaneStore implements Store
             }
 
             try {
+                $e = null;
                 $this->forever('interval-'.$key, serialize(array_merge(
-                    $interval, ['lastRefreshedAt' => Carbon::now()->getTimestamp()],
+                    $interval, ['lastRefreshedAt' => Carbon::now()->getTimestamp()]
                 )));
 
                 $this->forever($key, $interval['resolver']());
-            } catch (Throwable $e) {
+            } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (\Throwable $e) {
+            }
+
+            if (isset($e)) {
                 report($e);
             }
         }

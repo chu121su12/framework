@@ -9,5 +9,5 @@ interface StoppableClient extends Client
      *
      * @return void
      */
-    public function stop(): void;
+    public function stop(); ////: void;
 }

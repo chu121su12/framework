@@ -11,8 +11,11 @@ use RuntimeException;
 
 class ApplicationFactory
 {
-    public function __construct(protected string $basePath)
+    protected $basePath;
+
+    public function __construct($basePath)
     {
+        $this->basePath = cast_to_string($basePath);
     }
 
     /**
@@ -21,7 +24,7 @@ class ApplicationFactory
      * @param  array  $initialInstances
      * @return \Illuminate\Foundation\Application
      */
-    public function createApplication(array $initialInstances = []): Application
+    public function createApplication(array $initialInstances = []) ///: Application
     {
         $path = $this->basePath.'/bootstrap/app.php';
 
@@ -39,7 +42,7 @@ class ApplicationFactory
      * @param  array  $initialInstances
      * @return \Illuminate\Foundation\Application
      */
-    public function bootstrap(Application $app, array $initialInstances = []): Application
+    public function bootstrap(Application $app, array $initialInstances = []) ///: Application
     {
         foreach ($initialInstances as $key => $value) {
             $app->instance($key, $value);
@@ -58,7 +61,7 @@ class ApplicationFactory
      * @param  \Illuminate\Foundation\Application  $app
      * @return array
      */
-    protected function getBootstrappers(Application $app): array
+    protected function getBootstrappers(Application $app) ////: array
     {
         $method = (new ReflectionObject(
             $kernel = $app->make(HttpKernelContract::class)
@@ -81,8 +84,12 @@ class ApplicationFactory
      * @param  array  $bootstrappers
      * @return array
      */
-    protected function injectBootstrapperBefore(string $before, string $inject, array $bootstrappers): array
+    protected function injectBootstrapperBefore(/*string */$before, /*string */$inject, array $bootstrappers) ////: array
     {
+        $before = cast_to_string($before);
+
+        $inject = cast_to_string($inject);
+
         $injectIndex = array_search($before, $bootstrappers, true);
 
         if ($injectIndex !== false) {
@@ -99,7 +106,7 @@ class ApplicationFactory
      * @param  array  $services
      * @return \Illuminate\Foundation\Application
      */
-    public function warm(Application $app, array $services = []): Application
+    public function warm(Application $app, array $services = []) ///: Application
     {
         foreach ($services ?: $app->make('config')->get('octane.warm', []) as $service) {
             if (is_string($service) && $app->bound($service)) {

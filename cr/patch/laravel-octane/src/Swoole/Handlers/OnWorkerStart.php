@@ -13,13 +13,28 @@ use Throwable;
 
 class OnWorkerStart
 {
+    protected $extension;
+
+    protected $basePath;
+
+    protected $serverState;
+
+    protected $workerState;
+
+    protected $shouldSetProcessName;
+
     public function __construct(
-        protected SwooleExtension $extension,
-        protected $basePath,
-        protected array $serverState,
-        protected WorkerState $workerState,
-        protected bool $shouldSetProcessName = true
+        /*protected */SwooleExtension $extension,
+        /*protected */$basePath,
+        /*protected */array $serverState,
+        /*protected */WorkerState $workerState,
+        /*protected bool */$shouldSetProcessName = true
     ) {
+        $this->extension = $extension;
+        $this->basePath = $basePath;
+        $this->serverState = $serverState;
+        $this->workerState = $workerState;
+        $this->shouldSetProcessName = cast_to_bool($shouldSetProcessName);
     }
 
     /**
@@ -29,8 +44,10 @@ class OnWorkerStart
      * @param  int  $workerId
      * @return void
      */
-    public function __invoke($server, int $workerId)
+    public function __invoke($server, /*int */$workerId)
     {
+        $workerId = cast_to_int($workerId);
+
         $this->workerState->workerId = $workerId;
         $this->workerState->workerPid = posix_getpid();
         $this->workerState->worker = $this->bootWorker($server);
@@ -43,7 +60,7 @@ class OnWorkerStart
 
             $this->extension->setProcessName(
                 $this->serverState['appName'],
-                $isTaskWorker ? 'task worker process' : 'worker process',
+                $isTaskWorker ? 'task worker process' : 'worker process'
             );
         }
     }
@@ -65,7 +82,12 @@ class OnWorkerStart
                 Server::class => $server,
                 WorkerState::class => $this->workerState,
             ]);
-        } catch (Throwable $e) {
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
+        }
+
+        if (isset($e)) {
             Stream::shutdown($e);
 
             $server->shutdown();
@@ -105,7 +127,7 @@ class OnWorkerStart
                 $request->getMethod(),
                 $request->fullUrl(),
                 $response->getStatusCode(),
-                (microtime(true) - $this->workerState->lastRequestTime) * 1000,
+                (microtime(true) - $this->workerState->lastRequestTime) * 1000
             );
         });
     }

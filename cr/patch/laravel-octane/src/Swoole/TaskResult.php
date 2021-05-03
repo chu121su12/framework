@@ -4,7 +4,10 @@ namespace Laravel\Octane\Swoole;
 
 class TaskResult
 {
-    public function __construct(public mixed $result)
+    public $result;
+
+    public function __construct(/*public mixed */$result)
     {
+        $this->result = $result;
     }
 }

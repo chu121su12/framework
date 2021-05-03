@@ -19,8 +19,11 @@ use Throwable;
 
 class SwooleClient implements Client, ServesStaticFiles
 {
-    public function __construct(protected int $chunkSize = 1048576)
+    protected $chunkSize;
+
+    public function __construct(/*protected int */$chunkSize = 1048576)
     {
+        $this->chunkSize = cast_to_int($chunkSize);
     }
 
     /**
@@ -29,7 +32,7 @@ class SwooleClient implements Client, ServesStaticFiles
      * @param  \Laravel\Octane\RequestContext  $context
      * @return array
      */
-    public function marshalRequest(RequestContext $context): array
+    public function marshalRequest(RequestContext $context) ////: array
     {
         return [
             (new Actions\ConvertSwooleRequestToIlluminateRequest)(
@@ -47,9 +50,9 @@ class SwooleClient implements Client, ServesStaticFiles
      * @param  \Laravel\Octane\RequestContext  $context
      * @return bool
      */
-    public function canServeRequestAsStaticFile(Request $request, RequestContext $context): bool
+    public function canServeRequestAsStaticFile(Request $request, RequestContext $context) ////: bool
     {
-        if (! ($context->publicPath ?? false) ||
+        if (! (isset($context) && isset($context->publicPath) ? $context->publicPath : false) ||
             $request->path() === '/') {
             return false;
         }
@@ -64,7 +67,7 @@ class SwooleClient implements Client, ServesStaticFiles
 
         return $this->fileIsServable(
             $publicPath,
-            $pathToFile,
+            $pathToFile
         );
     }
 
@@ -76,8 +79,12 @@ class SwooleClient implements Client, ServesStaticFiles
      * @param  string  $pathToFile
      * @return bool
      */
-    private function isValidFileWithinSymlink(Request $request, string $publicPath, string $pathToFile): bool
+    private function isValidFileWithinSymlink(Request $request, /*string */$publicPath, /*string */$pathToFile) ////: bool
     {
+        $publicPath = cast_to_string($publicPath);
+
+        $pathToFile = cast_to_string($pathToFile);
+
         $pathAfterSymlink = $this->pathAfterSymlink($publicPath, $request->path());
 
         return $pathAfterSymlink && str_ends_with($pathToFile, $pathAfterSymlink);
@@ -90,8 +97,12 @@ class SwooleClient implements Client, ServesStaticFiles
      * @param  string  $path
      * @return string|bool
      */
-    private function pathAfterSymlink(string $publicPath, string $path)
+    private function pathAfterSymlink(/*string */$publicPath, /*string */$path)
     {
+        $publicPath = cast_to_string($publicPath);
+
+        $path = cast_to_string($path);
+
         $directories = explode('/', $path);
 
         while ($directory = array_shift($directories)) {
@@ -112,8 +123,12 @@ class SwooleClient implements Client, ServesStaticFiles
      * @param  string  $pathToFile
      * @return bool
      */
-    protected function fileIsServable(string $publicPath, string $pathToFile): bool
+    protected function fileIsServable(/*string */$publicPath, /*string */$pathToFile) ////: bool
     {
+        $publicPath = cast_to_string($publicPath);
+
+        $pathToFile = cast_to_string($pathToFile);
+
         return $pathToFile &&
                ! in_array(pathinfo($pathToFile, PATHINFO_EXTENSION), ['php', 'htaccess', 'config']) &&
                str_starts_with($pathToFile, $publicPath) &&
@@ -127,7 +142,7 @@ class SwooleClient implements Client, ServesStaticFiles
      * @param  \Laravel\Octane\RequestContext  $context
      * @return void
      */
-    public function serveStaticFile(Request $request, RequestContext $context): void
+    public function serveStaticFile(Request $request, RequestContext $context) ////: void
     {
         $swooleResponse = $context->swooleResponse;
 
@@ -145,7 +160,7 @@ class SwooleClient implements Client, ServesStaticFiles
      * @param  \Laravel\Octane\OctaneResponse  $octaneResponse
      * @return void
      */
-    public function respond(RequestContext $context, OctaneResponse $octaneResponse): void
+    public function respond(RequestContext $context, OctaneResponse $octaneResponse) ////: void
     {
         $this->sendResponseHeaders($octaneResponse->response, $context->swooleResponse);
         $this->sendResponseContent($octaneResponse, $context->swooleResponse);
@@ -158,7 +173,7 @@ class SwooleClient implements Client, ServesStaticFiles
      * @param  \Swoole\Http\Response  $response
      * @return void
      */
-    public function sendResponseHeaders(Response $response, SwooleResponse $swooleResponse): void
+    public function sendResponseHeaders(Response $response, SwooleResponse $swooleResponse) ////: void
     {
         if (! $response->headers->has('Date')) {
             $response->setDate(DateTime::createFromFormat('U', time()));
@@ -198,7 +213,7 @@ class SwooleClient implements Client, ServesStaticFiles
      * @param  \Swoole\Http\Response  $response
      * @return void
      */
-    protected function sendResponseContent(OctaneResponse $octaneResponse, SwooleResponse $swooleResponse): void
+    protected function sendResponseContent(OctaneResponse $octaneResponse, SwooleResponse $swooleResponse) ////: void
     {
         if ($octaneResponse->response instanceof BinaryFileResponse) {
             $swooleResponse->sendfile($octaneResponse->response->getFile()->getPathname());
@@ -256,7 +271,7 @@ class SwooleClient implements Client, ServesStaticFiles
      * @param  \Laravel\Octane\RequestContext  $context
      * @return void
      */
-    public function error(Throwable $e, Application $app, Request $request, RequestContext $context): void
+    public function error(/*Throwable */$e, Application $app, Request $request, RequestContext $context) ////: void
     {
         $context->swooleResponse->header('Status', '500 Internal Server Error');
         $context->swooleResponse->header('Content-Type', 'text/plain');

@@ -11,7 +11,7 @@ class SwooleExtension
      *
      * @return bool
      */
-    public function isInstalled(): bool
+    public function isInstalled() ////: bool
     {
         return extension_loaded('swoole');
     }
@@ -23,8 +23,12 @@ class SwooleExtension
      * @param  int  $signal
      * @return bool
      */
-    public function dispatchProcessSignal(int $processId, int $signal): bool
+    public function dispatchProcessSignal(/*int */$processId, /*int */$signal) ////: bool
     {
+        $processId = cast_to_int($processId);
+
+        $signal = cast_to_int($signal);
+
         if (Process::kill($processId, 0)) {
             return Process::kill($processId, $signal);
         }
@@ -39,8 +43,12 @@ class SwooleExtension
      * @param  string  $processName
      * @return void
      */
-    public function setProcessName(string $appName, string $processName): void
+    public function setProcessName(/*string */$appName, /*string */$processName) ////: void
     {
+        $appName = cast_to_string($appName);
+
+        $processName = cast_to_string($processName);
+
         if (PHP_OS_FAMILY === 'Linux') {
             cli_set_process_title('swoole_http_server: '.$processName.' for '.$appName);
         }
@@ -51,7 +59,7 @@ class SwooleExtension
      *
      * @return int
      */
-    public function cpuCount(): int
+    public function cpuCount() ////: int
     {
         return swoole_cpu_num();
     }

@@ -3,13 +3,20 @@
 $config = $serverState['octaneConfig'];
 
 try {
+    $e = null;
+
     $server = new Swoole\Http\Server(
-        $serverState['host'] ?? '127.0.0.1',
-        $serverState['port'] ?? '8080',
+        isset($serverState['host']) ? $serverState['host'] : '127.0.0.1',
+        isset($serverState['port']) ? $serverState['port'] : '8080',
         SWOOLE_PROCESS,
-        SWOOLE_SOCK_TCP,
+        SWOOLE_SOCK_TCP
     );
-} catch (Throwable $e) {
+} catch (\Exception $e) {
+} catch (\Error $e) {
+} catch (\Throwable $e) {
+}
+
+if (isset($e)) {
     Laravel\Octane\Stream::shutdown($e);
 
     exit(1);
@@ -17,7 +24,7 @@ try {
 
 $server->set(array_merge(
     $serverState['defaultServerOptions'],
-    $config['swoole']['options'] ?? []
+    isset($config['swoole']) && isset($config['swoole']['options']) ? $config['swoole']['options'] : []
 ));
 
 return $server;

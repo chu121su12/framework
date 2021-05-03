@@ -15,22 +15,24 @@ class ConvertSwooleRequestToIlluminateRequest
      * @param  string  $phpSapi
      * @return \Illuminate\Http\Request
      */
-    public function __invoke($swooleRequest, string $phpSapi): Request
+    public function __invoke($swooleRequest, /*string */$phpSapi) ///: Request
     {
+        $phpSapi = cast_to_string($phpSapi);
+
         $serverVariables = $this->prepareServerVariables(
-            $swooleRequest->server ?? [],
-            $swooleRequest->header ?? [],
+            isset($swooleRequest) && isset($swooleRequest->server) ? $swooleRequest->server : [],
+            isset($swooleRequest) && isset($swooleRequest->header) ? $swooleRequest->header : [],
             $phpSapi
         );
 
         $request = new SymfonyRequest(
-            $swooleRequest->get ?? [],
-            $swooleRequest->post ?? [],
+            isset($swooleRequest) && isset($swooleRequest->get) ? $swooleRequest->get : [],
+            isset($swooleRequest) && isset($swooleRequest->post) ? $swooleRequest->post : [],
             [],
-            $swooleRequest->cookie ?? [],
-            $swooleRequest->files ?? [],
+            isset($swooleRequest) && isset($swooleRequest->cookie) ? $swooleRequest->cookie : [],
+            isset($swooleRequest) && isset($swooleRequest->files) ? $swooleRequest->files : [],
             $serverVariables,
-            $swooleRequest->rawContent(),
+            $swooleRequest->rawContent()
         );
 
         if (str_starts_with($request->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded') &&
@@ -51,8 +53,10 @@ class ConvertSwooleRequestToIlluminateRequest
      * @param  string  $phpSapi
      * @return array
      */
-    protected function prepareServerVariables(array $server, array $headers, string $phpSapi): array
+    protected function prepareServerVariables(array $server, array $headers, /*string */$phpSapi) ////: array
     {
+        $phpSapi = cast_to_string($phpSapi);
+
         $results = [];
 
         foreach ($server as $key => $value) {
@@ -81,7 +85,7 @@ class ConvertSwooleRequestToIlluminateRequest
      * @param  array  $headers
      * @return array
      */
-    protected function formatHttpHeadersIntoServerVariables(array $headers): array
+    protected function formatHttpHeadersIntoServerVariables(array $headers) ////: array
     {
         $results = [];
 
@@ -104,7 +108,7 @@ class ConvertSwooleRequestToIlluminateRequest
      * @param  array  $headers
      * @return array
      */
-    protected function correctHeadersSetIncorrectlyByPhpDevServer(array $headers): array
+    protected function correctHeadersSetIncorrectlyByPhpDevServer(array $headers) ////: array
     {
         if (array_key_exists('HTTP_CONTENT_LENGTH', $headers)) {
             $headers['CONTENT_LENGTH'] = $headers['HTTP_CONTENT_LENGTH'];

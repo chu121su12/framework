@@ -46,11 +46,11 @@ class StartCommand extends Command implements SignalableCommandInterface
 
         $server = $this->option('server') ?: config('octane.server');
 
-        return match ($server) {
-            'swoole' => $this->startSwooleServer(),
-            'roadrunner' => $this->startRoadRunnerServer(),
-            default => $this->invalidServer($server),
-        };
+        return backport_match ($server,
+            ['swoole', function () { return $this->startSwooleServer(); }],
+            ['roadrunner', function () { return $this->startRoadRunnerServer(); }],
+            ['default' => null, function () use ($server) { return $this->invalidServer($server); }],
+        );
     }
 
     /**
@@ -93,8 +93,10 @@ class StartCommand extends Command implements SignalableCommandInterface
      * @param  string  $server
      * @return int
      */
-    protected function invalidServer(string $server)
+    protected function invalidServer(/*string */$server)
     {
+        $server = cast_to_string($server);
+
         $this->error("Invalid server: {$server}.");
 
         return 1;

@@ -23,8 +23,10 @@ trait ProvidesConcurrencySupport
      * @throws \Laravel\Octane\Exceptions\TaskException
      * @throws \Laravel\Octane\Exceptions\TaskTimeoutException
      */
-    public function concurrently(array $tasks, int $waitMilliseconds = 3000)
+    public function concurrently(array $tasks, /*int */$waitMilliseconds = 3000)
     {
+        $waitMilliseconds = cast_to_int($waitMilliseconds);
+
         return $this->tasks()->resolve($tasks, $waitMilliseconds);
     }
 
@@ -35,15 +37,19 @@ trait ProvidesConcurrencySupport
      */
     public function tasks()
     {
-        return match (true) {
-            app()->bound(DispatchesTasks::class) => app(DispatchesTasks::class),
-            app()->bound(Server::class) => new SwooleTaskDispatcher,
-            class_exists(Server::class) => (fn (array $serverState) => new SwooleHttpTaskDispatcher(
-                $serverState['state']['host'] ?? '127.0.0.1',
-                $serverState['state']['port'] ?? '8000',
-                new SequentialTaskDispatcher
-            ))(app(ServerStateFile::class)->read()),
-            default => new SequentialTaskDispatcher,
-        };
+        return backport_match (true,
+            [function () { return app()->bound(DispatchesTasks::class); }, function () { return app(DispatchesTasks::class); }],
+            [function () { return app()->bound(Server::class); }, function () { return new SwooleTaskDispatcher; }],
+            [function () { return class_exists(Server::class); }, function () {
+                $serverState = app(ServerStateFile::class)->read();
+
+                return new SwooleHttpTaskDispatcher(
+                    isset($serverState['state']) && isset($serverState['state']['host']) ? $serverState['state']['host'] : '127.0.0.1',
+                    isset($serverState['state']) && isset($serverState['state']['port']) ? $serverState['state']['port'] : '8000',
+                    new SequentialTaskDispatcher
+                )
+            }],
+            ['default' => null, function () { return new SequentialTaskDispatcher; }],
+        );
     }
 }

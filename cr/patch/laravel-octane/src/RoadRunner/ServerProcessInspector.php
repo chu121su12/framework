@@ -21,11 +21,11 @@ class ServerProcessInspector
      *
      * @return bool
      */
-    public function serverIsRunning(): bool
+    public function serverIsRunning() ////: bool
     {
-        [
-            'masterProcessId' => $masterProcessId,
-        ] = $this->serverStateFile->read();
+        $serverStateFile = $this->serverStateFile->read();
+
+        $masterProcessId = $serverStateFile['masterProcessId'];
 
         return $masterProcessId && $this->posix->kill($masterProcessId, 0);
     }
@@ -35,14 +35,13 @@ class ServerProcessInspector
      *
      * @return void
      */
-    public function reloadServer(): void
+    public function reloadServer() ////: void
     {
-        [
-            'state' => [
-                'host' => $host,
-                'rpcPort' => $rpcPort,
-            ],
-        ] = $this->serverStateFile->read();
+        $serverStateFile = $this->serverStateFile->read();
+
+        $host = $serverStateFile['state']['host'];
+
+        $rpcPort = $serverStateFile['state']['rpcPort'];
 
         tap($this->processFactory->createProcess([
             './rr',
@@ -62,11 +61,11 @@ class ServerProcessInspector
      *
      * @return bool
      */
-    public function stopServer(): bool
+    public function stopServer() ////: bool
     {
-        [
-            'masterProcessId' => $masterProcessId,
-        ] = $this->serverStateFile->read();
+        $serverStateFile = $this->serverStateFile->read();
+
+        $masterProcessId = $serverStateFile['masterProcessId'];
 
         return (bool) $this->posix->kill($masterProcessId, SIGTERM);
     }

@@ -173,7 +173,7 @@ class StartRoadRunnerCommand extends Command implements SignalableCommandInterfa
                 }
 
                 if ($debug['level'] == 'debug' && isset($debug['remote'])) {
-                    [$statusCode, $method, $url] = explode(' ', $debug['msg']);
+                    list($statusCode, $method, $url) = explode(' ', $debug['msg']);
 
                     return $this->requestInfo([
                         'method' => $method,
@@ -200,8 +200,10 @@ class StartRoadRunnerCommand extends Command implements SignalableCommandInterfa
      * @param  string  $elapsed
      * @return float
      */
-    protected function calculateElapsedTime(string $elapsed): float
+    protected function calculateElapsedTime(/*string */$elapsed) ////: float
     {
+        $elapsed = cast_to_string($elapsed);
+
         if (Str::endsWith($elapsed, 'ms')) {
             return substr($elapsed, 0, -2);
         }

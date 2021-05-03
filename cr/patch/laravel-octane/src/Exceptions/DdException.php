@@ -9,8 +9,12 @@ use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
 class DdException extends Exception implements Renderable
 {
-    public function __construct(public array $vars)
+    public $vars;
+
+    public function __construct(/*public */array $vars)
     {
+        $this->vars = $vars;
+
         $this->message = json_encode($vars);
     }
 

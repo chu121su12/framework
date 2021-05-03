@@ -6,8 +6,11 @@ use ArrayAccess;
 
 class RequestContext implements ArrayAccess
 {
-    public function __construct(public array $data = [])
+    public $data;
+
+    public function __construct(/*public */array $data = [])
     {
+        $this->data = $data;
     }
 
     public function offsetExists($offset)

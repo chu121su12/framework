@@ -32,6 +32,6 @@ trait InteractsWithEnvironmentVariables
             // ..
         }
 
-        $variables->each(fn ($name) => Env::getRepository()->clear($name));
+        $variables->each(function ($name) { return Env::getRepository()->clear($name); });
     }
 }

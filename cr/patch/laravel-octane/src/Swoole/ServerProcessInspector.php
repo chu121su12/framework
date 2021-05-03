@@ -18,12 +18,13 @@ class ServerProcessInspector
      *
      * @return bool
      */
-    public function serverIsRunning(): bool
+    public function serverIsRunning() ////: bool
     {
-        [
-            'masterProcessId' => $masterProcessId,
-            'managerProcessId' => $managerProcessId
-        ] = $this->serverStateFile->read();
+        $serverStateFile = $this->serverStateFile->read();
+
+        $masterProcessId = $serverStateFile['masterProcessId'];
+
+        $managerProcessId = $serverStateFile['managerProcessId'];
 
         return $managerProcessId
                 ? $masterProcessId && $managerProcessId && $this->dispatcher->canCommunicateWith((int) $managerProcessId)
@@ -35,11 +36,11 @@ class ServerProcessInspector
      *
      * @return void
      */
-    public function reloadServer(): void
+    public function reloadServer() ////: void
     {
-        [
-            'masterProcessId' => $masterProcessId,
-        ] = $this->serverStateFile->read();
+        $serverStateFile = $this->serverStateFile->read();
+
+        $masterProcessId = $serverStateFile['masterProcessId'];
 
         $this->dispatcher->signal($masterProcessId, SIGUSR1);
     }
@@ -49,12 +50,13 @@ class ServerProcessInspector
      *
      * @return bool
      */
-    public function stopServer(): bool
+    public function stopServer() ////: bool
     {
-        [
-            'masterProcessId' => $masterProcessId,
-            'managerProcessId' => $managerProcessId
-        ] = $this->serverStateFile->read();
+        $serverStateFile = $this->serverStateFile->read();
+
+        $masterProcessId = $serverStateFile['masterProcessId'];
+
+        $managerProcessId = $serverStateFile['managerProcessId'];
 
         $workerProcessIds = $this->exec->run('pgrep -P '.$managerProcessId);
 

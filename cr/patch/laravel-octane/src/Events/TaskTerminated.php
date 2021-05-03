@@ -13,7 +13,7 @@ class TaskTerminated implements OperationTerminated
         public Application $app,
         public Application $sandbox,
         public $data,
-        public $result,
+        public $result
     ) {
     }
 }

@@ -11,8 +11,12 @@ class PosixExtension
      * @param  int  $signal
      * @return bool
      */
-    public function kill(int $processId, int $signal)
+    public function kill(/*int */$processId, /*int */$signal)
     {
+        $processId = cast_to_int($processId);
+
+        $signal = cast_to_int($signal);
+
         return posix_kill($processId, $signal);
     }
 }

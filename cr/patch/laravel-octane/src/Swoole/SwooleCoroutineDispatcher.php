@@ -8,8 +8,11 @@ use Swoole\Coroutine\WaitGroup;
 
 class SwooleCoroutineDispatcher implements DispatchesCoroutines
 {
-    public function __construct(protected bool $withinCoroutineContext)
+    protected $withinCoroutineContext;
+
+    public function __construct(/*protected bool */$withinCoroutineContext)
     {
+        $this->withinCoroutineContext = cast_to_bool($withinCoroutineContext);
     }
 
     /**
@@ -19,8 +22,10 @@ class SwooleCoroutineDispatcher implements DispatchesCoroutines
      * @param  int  $waitSeconds
      * @return array
      */
-    public function resolve(array $coroutines, int $waitSeconds = -1): array
+    public function resolve(array $coroutines, /*int */$waitSeconds = -1) ////: array
     {
+        $waitSeconds = cast_to_int($waitSeconds);
+
         $results = [];
 
         $callback = function () use (&$results, $coroutines, $waitSeconds) {

@@ -23,8 +23,12 @@ trait ProvidesRouting
      * @param  \Closure  $callback
      * @return void
      */
-    public function route(string $method, string $uri, Closure $callback): void
+    public function route(/*string */$method, /*string */$uri, Closure $callback) ////: void
     {
+        $method = cast_to_string($method);
+
+        $uri = cast_to_string($uri);
+
         $this->routes[$method.$uri] = $callback;
     }
 
@@ -35,8 +39,12 @@ trait ProvidesRouting
      * @param  string  $uri
      * @return bool
      */
-    public function hasRouteFor(string $method, string $uri): bool
+    public function hasRouteFor(/*string */$method, /*string */$uri) ////: bool
     {
+        $method = cast_to_string($method);
+
+        $uri = cast_to_string($uri);
+
         return isset($this->routes[$method.$uri]);
     }
 
@@ -48,8 +56,12 @@ trait ProvidesRouting
      * @param  string  $uri
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function invokeRoute(Request $request, string $method, string $uri): Response
+    public function invokeRoute(Request $request, /*string */$method, /*string */$uri) ////: Response
     {
+        $method = cast_to_string($method);
+
+        $uri = cast_to_string($uri);
+
         return call_user_func($this->routes[$method.$uri], $request);
     }
 }

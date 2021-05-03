@@ -16,7 +16,7 @@ ini_set('display_errors', 'stderr');
 
 require_once __DIR__.'/../src/Stream.php';
 
-$bootstrap = fn ($serverState) => require __DIR__.'/bootstrap.php';
+$bootstrap = function ($serverState) { return require __DIR__.'/bootstrap.php'; };
 
 /*
 |--------------------------------------------------------------------------
@@ -48,18 +48,30 @@ $timerTable = require __DIR__.'/createSwooleTimerTable.php';
 |
 */
 
-$server->on('start', fn (Server $server) => $bootstrap($serverState) && (new OnServerStart(
-    new ServerStateFile($serverStateFile),
-    new SwooleExtension,
-    $serverState['appName'],
-    $serverState['octaneConfig']['max_execution_time'] ?? 0,
-    $timerTable,
-    $serverState['octaneConfig']['tick'] ?? true
-))($server));
+$server->on('start', function (Server $server) use ($bootstrap, $serverState) {
+    $basePath = $bootstrap($serverState);
 
-$server->on('managerstart', fn () => $bootstrap($serverState) && (new OnManagerStart(
-    new SwooleExtension, $serverState['appName']
-))());
+    $onServerStart = new OnServerStart(
+        new ServerStateFile($serverStateFile),
+        new SwooleExtension,
+        $serverState['appName'],
+        isset($serverState['octaneConfig']) && isset($serverState['octaneConfig']['max_execution_time']) ? $serverState['octaneConfig']['max_execution_time'] : 0,
+        $timerTable,
+        isset($serverState['octaneConfig']) && isset($serverState['octaneConfig']['tick']) ? $serverState['octaneConfig']['tick'] : true
+    );
+
+    return $basePath && $onServerStart($server);
+});
+
+$server->on('managerstart', function () use ($bootstrap, $serverState) {
+    $basePath = $bootstrap($serverState);
+
+    $onManagerStart = new OnManagerStart(
+        new SwooleExtension, $serverState['appName']
+    );
+
+    return $basePath && $onManagerStart();
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -84,11 +96,15 @@ $workerState->cacheTable = require __DIR__.'/createSwooleCacheTable.php';
 $workerState->timerTable = $timerTable;
 $workerState->tables = require __DIR__.'/createSwooleTables.php';
 
-$server->on('workerstart', fn (Server $server, $workerId) =>
-    (fn ($basePath) => (new OnWorkerStart(
+$server->on('workerstart', function (Server $server, $workerId) use ($bootstrap, $serverState) {
+    $basePath = $bootstrap($serverState);
+
+    $onWorkerStart = new OnWorkerStart(
         new SwooleExtension, $basePath, $serverState, $workerState
-    ))($server, $workerId))($bootstrap($serverState))
-);
+    );
+
+    return $onWorkerStart($server, $workerId);
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -134,13 +150,21 @@ $server->on('request', function ($request, $response) use ($server, $workerState
 |
 */
 
-$server->on('task', fn (Server $server, int $taskId, int $fromWorkerId, $data) =>
-    $data === 'octane-tick'
-            ? $workerState->worker->handleTick()
-            : $workerState->worker->handleTask($data)
-);
+$server->on('task', function (Server $server, /*int */$taskId, /*int */$fromWorkerId, $data) use ($workerState) {
+    // $taskId = cast_to_int($taskId);
 
-$server->on('finish', fn (Server $server, int $taskId, $result) => $result);
+    // $fromWorkerId = cast_to_int($fromWorkerId);
+
+    return $data === 'octane-tick'
+            ? $workerState->worker->handleTick()
+            : $workerState->worker->handleTask($data);
+});
+
+$server->on('finish', function (Server $server, /*int */$taskId, $result) {
+    // $taskId = cast_to_int($taskId);
+
+    return $result;
+});
 
 /*
 |--------------------------------------------------------------------------

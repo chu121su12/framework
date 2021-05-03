@@ -9,7 +9,7 @@ trait ProvidesDefaultConfigurationOptions
      *
      * @return array
      */
-    public static function prepareApplicationForNextRequest(): array
+    public static function prepareApplicationForNextRequest() ////: array
     {
         return [
             \Laravel\Octane\Listeners\FlushLocaleState::class,
@@ -28,7 +28,7 @@ trait ProvidesDefaultConfigurationOptions
      *
      * @return array
      */
-    public static function prepareApplicationForNextOperation(): array
+    public static function prepareApplicationForNextOperation() ////: array
     {
         return [
             \Laravel\Octane\Listeners\CreateConfigurationSandbox::class,
@@ -58,7 +58,7 @@ trait ProvidesDefaultConfigurationOptions
      *
      * @return array
      */
-    public static function defaultServicesToWarm(): array
+    public static function defaultServicesToWarm() ////: array
     {
         return [
             'auth',

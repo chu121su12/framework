@@ -7,7 +7,14 @@ use Throwable;
 
 class WorkerErrorOccurred
 {
-    public function __construct(public Throwable $exception, public Application $sandbox)
+    public $exception;
+
+    public $sandbox;
+
+    public function __construct(/*public Throwable */$exception, /*public */Application $sandbox)
     {
+        $this->exception = $exception;
+
+        $this->sandbox = $sandbox;
     }
 }

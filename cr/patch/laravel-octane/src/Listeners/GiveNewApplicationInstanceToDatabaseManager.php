@@ -10,7 +10,7 @@ class GiveNewApplicationInstanceToDatabaseManager
      * @param  mixed  $event
      * @return void
      */
-    public function handle($event): void
+    public function handle($event) ////: void
     {
         if (! $event->sandbox->resolved('db') ||
             ! method_exists($event->sandbox->make('db'), 'setApplication')) {

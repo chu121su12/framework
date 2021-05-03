@@ -32,11 +32,11 @@ class StopCommand extends Command
     {
         $server = $this->option('server') ?: config('octane.server');
 
-        return match ($server) {
-            'swoole' => $this->stopSwooleServer(),
-            'roadrunner' => $this->stopRoadRunnerServer(),
-            default => $this->invalidServer($server),
-        };
+        return backport_match ($server,
+            ['swoole', function () { return $this->stopSwooleServer(); }],
+            ['roadrunner', function () { return $this->stopRoadRunnerServer(); }],
+            ['default' => null, function () use ($server) { return $this->invalidServer($server); }],
+        );
     }
 
     /**
@@ -101,8 +101,10 @@ class StopCommand extends Command
      * @param  string  $server
      * @return int
      */
-    protected function invalidServer(string $server)
+    protected function invalidServer(/*string */$server)
     {
+        $server = cast_to_string($server);
+
         $this->error("Invalid server: {$server}.");
 
         return 1;

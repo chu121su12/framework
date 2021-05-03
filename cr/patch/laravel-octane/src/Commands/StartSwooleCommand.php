@@ -168,15 +168,15 @@ class StartSwooleCommand extends Command implements SignalableCommandInterface
         Str::of($server->getIncrementalOutput())
             ->explode("\n")
             ->filter()
-            ->each(fn ($output) => is_array($stream = json_decode($output, true))
+            ->each(function ($output) { return is_array($stream = json_decode($output, true))
                 ? $this->handleStream($stream)
-                : $this->info($output)
-            );
+                : $this->info($output);
+            });
 
         Str::of($server->getIncrementalErrorOutput())
             ->explode("\n")
             ->filter()
-            ->groupBy(fn ($output) => $output)
+            ->groupBy(function ($output) { return $output; })
             ->each(function ($group) {
                 is_array($stream = json_decode($output = $group->first(), true))
                     ? $this->handleStream($stream)

@@ -20,18 +20,29 @@ class SequentialTaskDispatcher implements DispatchesTasks
      * @throws \Laravel\Octane\Exceptions\TaskException
      * @throws \Laravel\Octane\Exceptions\TaskTimeoutException
      */
-    public function resolve(array $tasks, int $waitMilliseconds = 1): array
+    public function resolve(array $tasks, /*int */$waitMilliseconds = 1) ////: array
     {
-        return collect($tasks)->mapWithKeys(
-            fn ($task, $key) => [$key => (function () use ($task) {
-                try {
-                    return $task();
-                } catch (Throwable $e) {
-                    report($e);
+        $waitMilliseconds = cast_to_int($waitMilliseconds);
 
-                    return TaskExceptionResult::from($e);
-                }
-            })()]
+        return collect($tasks)->mapWithKeys(
+            function ($task, $key) {
+                $valueCallback = function () use ($task) {
+                    try {
+                        return $task();
+                    } catch (\Exception $e) {
+                    } catch (\Error $e) {
+                    } catch (\Throwable $e) {
+                    }
+
+                    if (isset($e)) {
+                        report($e);
+
+                        return TaskExceptionResult::from($e);
+                    }
+                };
+
+                return [$key => $valueCallback()];
+            }
         )->each(function ($result) {
             if ($result instanceof TaskExceptionResult) {
                 throw $result->getOriginal();
@@ -45,11 +56,16 @@ class SequentialTaskDispatcher implements DispatchesTasks
      * @param  array  $tasks
      * @return void
      */
-    public function dispatch(array $tasks): void
+    public function dispatch(array $tasks) ////: void
     {
         try {
             $this->resolve($tasks);
-        } catch (Throwable) {
+        } catch (\Exceptions $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
+        }
+
+        if (isset($e)) {
             // ..
         }
     }

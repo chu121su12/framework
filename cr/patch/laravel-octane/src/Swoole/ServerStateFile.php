@@ -6,8 +6,11 @@ use RuntimeException;
 
 class ServerStateFile
 {
-    public function __construct(protected string $path)
+    protected $path;
+
+    public function __construct(/*protected string*/ $path)
     {
+        $this->path = cast_to_string($path);
     }
 
     /**
@@ -15,16 +18,16 @@ class ServerStateFile
      *
      * @return array
      */
-    public function read(): array
+    public function read() ////: array
     {
         $state = is_readable($this->path)
                     ? json_decode(file_get_contents($this->path), true)
                     : [];
 
         return [
-            'masterProcessId' => $state['masterProcessId'] ?? null,
-            'managerProcessId' => $state['managerProcessId'] ?? null,
-            'state' => $state['state'] ?? [],
+            'masterProcessId' => isset($state) && isset($state['masterProcessId']) ? $state['masterProcessId'] : null,
+            'managerProcessId' => isset($state) && isset($state['managerProcessId']) ? $state['managerProcessId'] : null,
+            'state' => isset($state) && isset($state['state']) ? $state['state'] : [],
         ];
     }
 
@@ -35,8 +38,12 @@ class ServerStateFile
      * @param  int  $managerProcessId
      * @return void
      */
-    public function writeProcessIds(int $masterProcessId, int $managerProcessId): void
+    public function writeProcessIds(/*int */$masterProcessId, /*int */$managerProcessId) ////: void
     {
+        $masterProcessId = cast_to_int($masterProcessId);
+
+        $managerProcessId = cast_to_int($managerProcessId);
+
         if (! is_writable($this->path) && ! is_writable(dirname($this->path))) {
             throw new RuntimeException('Unable to write to process ID file.');
         }
@@ -56,7 +63,7 @@ class ServerStateFile
      * @param  array  $newState
      * @return void
      */
-    public function writeState(array $newState): void
+    public function writeState(array $newState) ////: void
     {
         if (! is_writable($this->path) && ! is_writable(dirname($this->path))) {
             throw new RuntimeException('Unable to write to process ID file.');
@@ -73,7 +80,7 @@ class ServerStateFile
      *
      * @return bool
      */
-    public function delete(): bool
+    public function delete() ////: bool
     {
         if (is_writable($this->path)) {
             return unlink($this->path);
@@ -87,7 +94,7 @@ class ServerStateFile
      *
      * @return string
      */
-    public function path(): string
+    public function path() ////: string
     {
         return $this->path;
     }

@@ -7,19 +7,19 @@ if (! \function_exists('backport_match')) {
 
         $hasDefault = false;
 
-        foreach ($matchArms as $key => $arms) {
+        foreach ($matchArms as $arms) {
             $expression = \array_pop($arms);
 
-            if ($key === 'default') {
-                if ($hasDefault) {
-                    \trigger_error('Fatal error', \E_USER_ERROR);
-                    throw new \Exception('Fatal error');
+            foreach ($arms as $key => $arm) {
+                if ($key === 'default' && $arm === null) {
+                    if ($hasDefault) {
+                        \trigger_error('Fatal error', \E_USER_ERROR);
+                        throw new \Exception('Fatal error');
+                    }
+
+                    $hasDefault = true;
                 }
 
-                $hasDefault = true;
-            }
-
-            foreach ($arms as $arm) {
                 if ($hasDefault || value($arm) === $matchValue) {
                     return value($expression);
                 }

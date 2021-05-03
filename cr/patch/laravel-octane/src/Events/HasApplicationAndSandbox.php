@@ -11,7 +11,7 @@ trait HasApplicationAndSandbox
      *
      * @return \Illuminate\Foundation\Application
      */
-    public function app(): Application
+    public function app() ////: Application
     {
         return $this->app;
     }
@@ -21,7 +21,7 @@ trait HasApplicationAndSandbox
      *
      * @return \Illuminate\Foundation\Application
      */
-    public function sandbox(): Application
+    public function sandbox() ////: Application
     {
         return $this->sandbox;
     }

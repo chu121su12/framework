@@ -4,8 +4,11 @@ namespace Laravel\Octane\Swoole;
 
 class SignalDispatcher
 {
-    public function __construct(protected SwooleExtension $extension)
+    protected $extension;
+
+    public function __construct(/*protected */SwooleExtension $extension)
     {
+        $this->extension = $extension;
     }
 
     /**
@@ -14,8 +17,10 @@ class SignalDispatcher
      * @param  int  $processId
      * @return bool
      */
-    public function canCommunicateWith(int $processId): bool
+    public function canCommunicateWith(/*int */$processId) ////: bool
     {
+        $processId = cast_to_int($processId);
+
         return $this->signal($processId, 0);
     }
 
@@ -26,8 +31,12 @@ class SignalDispatcher
      * @param  int  $wait
      * @return bool
      */
-    public function terminate(int $processId, int $wait = 0): bool
+    public function terminate(/*int */$processId, /*int */$wait = 0) ////: bool
     {
+        $processId = cast_to_int($processId);
+
+        $wait = cast_to_int($wait);
+
         $this->extension->dispatchProcessSignal($processId, SIGTERM);
 
         if ($wait) {
@@ -54,8 +63,12 @@ class SignalDispatcher
      * @param  int  $signal
      * @return bool
      */
-    public function signal(int $processId, int $signal): bool
+    public function signal(/*int */$processId, /*int */$signal) ////: bool
     {
+        $processId = cast_to_int($processId);
+
+        $signal = cast_to_int($signal);
+
         return $this->extension->dispatchProcessSignal($processId, $signal);
     }
 }

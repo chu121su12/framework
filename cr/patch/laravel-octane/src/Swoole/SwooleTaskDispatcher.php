@@ -24,8 +24,10 @@ class SwooleTaskDispatcher implements DispatchesTasks
      * @throws \Laravel\Octane\Exceptions\TaskException
      * @throws \Laravel\Octane\Exceptions\TaskTimeoutException
      */
-    public function resolve(array $tasks, int $waitMilliseconds = 3000): array
+    public function resolve(array $tasks, /*int */$waitMilliseconds = 3000) ////: array
     {
+        $waitMilliseconds = cast_to_int($waitMilliseconds);
+
         if (! app()->bound(Server::class)) {
             throw new InvalidArgumentException('Tasks can only be resolved within a Swoole server context / web request.');
         }
@@ -61,7 +63,7 @@ class SwooleTaskDispatcher implements DispatchesTasks
      * @param  array  $tasks
      * @return void
      */
-    public function dispatch(array $tasks): void
+    public function dispatch(array $tasks) ////: void
     {
         if (! app()->bound(Server::class)) {
             throw new InvalidArgumentException('Tasks can only be dispatched within a Swoole server context / web request.');

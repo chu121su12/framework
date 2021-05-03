@@ -45,7 +45,7 @@ class OctaneServiceProvider extends ServiceProvider
             return new RoadRunnerServerProcessInspector(
                 $app->make(RoadRunnerServerStateFile::class),
                 new SymfonyProcessFactory,
-                new PosixExtension,
+                new PosixExtension
             );
         });
 
@@ -60,7 +60,7 @@ class OctaneServiceProvider extends ServiceProvider
             return new SwooleServerProcessInspector(
                 $app->make(SignalDispatcher::class),
                 $app->make(SwooleServerStateFile::class),
-                $app->make(Exec::class),
+                $app->make(Exec::class)
             );
         });
 
@@ -150,9 +150,9 @@ class OctaneServiceProvider extends ServiceProvider
                         ? new OctaneStore($this->app['octane.cacheTable'])
                         : new OctaneArrayStore;
 
-        Event::listen(TickReceived::class, fn () => $store->refreshIntervalCaches());
+        Event::listen(TickReceived::class, function () use ($store) { return $store->refreshIntervalCaches(); });
 
-        Cache::extend('octane', fn () => Cache::repository($store));
+        Cache::extend('octane', function () use ($store) { return Cache::repository($store); });
     }
 
     /**
@@ -200,7 +200,7 @@ class OctaneServiceProvider extends ServiceProvider
         OctaneFacade::route('POST', '/octane/dispatch-tasks', function (Request $request) {
             try {
                 (new SwooleTaskDispatcher)->dispatch(
-                    unserialize(Crypt::decryptString($request->input('tasks'))),
+                    unserialize(Crypt::decryptString($request->input('tasks')))
                 );
             } catch (DecryptException) {
                 return new Response('', 403);

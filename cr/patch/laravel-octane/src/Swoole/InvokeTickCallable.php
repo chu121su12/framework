@@ -40,7 +40,12 @@ class InvokeTickCallable
 
         try {
             call_user_func($this->callback);
-        } catch (Throwable $e) {
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
+        }
+
+        if (isset($e)) {
             $this->exceptionHandler->report($e);
         }
     }
@@ -51,8 +56,10 @@ class InvokeTickCallable
      * @param  int  $seconds
      * @return $this
      */
-    public function seconds(int $seconds)
+    public function seconds(/*int */$seconds)
     {
+        $seconds = cast_to_int($seconds);
+
         $this->seconds = $seconds;
 
         return $this;

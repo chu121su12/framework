@@ -32,17 +32,23 @@ $roadRunnerClient = new RoadRunnerClient($psr7Client = new PSR7Worker(
     new RoadRunnerWorker(Relay::create('pipes')),
     new ServerRequestFactory,
     new StreamFactory,
-    new UploadedFileFactory,
+    new UploadedFileFactory
 ));
 
 $worker = null;
 
 while ($psr7Request = $psr7Client->waitRequest()) {
     try {
+        $e = null;
         $worker = $worker ?: tap((new Worker(
             new ApplicationFactory($basePath), $roadRunnerClient
         )))->boot();
-    } catch (Throwable $e) {
+    } catch (\Exception $e) {
+    } catch (\Error $e) {
+    } catch (\Throwable $e) {
+    }
+
+    if (isset($e)) {
         Stream::shutdown($e);
 
         exit(1);
@@ -52,7 +58,7 @@ while ($psr7Request = $psr7Client->waitRequest()) {
         break;
     }
 
-    [$request, $context] = $roadRunnerClient->marshalRequest(new RequestContext([
+    list($request, $context) = $roadRunnerClient->marshalRequest(new RequestContext([
         'psr7Request' => $psr7Request
     ]));
 

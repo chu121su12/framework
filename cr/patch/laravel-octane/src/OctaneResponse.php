@@ -6,7 +6,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OctaneResponse
 {
-    public function __construct(public Response $response, public ?string $outputBuffer = null)
+    public $response;
+
+    public $outputBuffer;
+
+    public function __construct(/*public */Response $response, /*public ?string */$outputBuffer = null)
     {
+        $this->response = $response;
+
+        $this->outputBuffer = cast_to_string($outputBuffer, null);
     }
 }

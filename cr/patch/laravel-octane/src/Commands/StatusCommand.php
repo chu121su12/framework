@@ -30,11 +30,11 @@ class StatusCommand extends Command
     {
         $server = $this->option('server') ?: config('octane.server');
 
-        $isRunning = match ($server) {
-            'swoole' => $this->isSwooleServerRunning(),
-            'roadrunner' => $this->isRoadRunnerServerRunning(),
-            default => $this->invalidServer($server),
-        };
+        $isRunning = backport_match ($server,
+            ['swoole', function () { return $this->isSwooleServerRunning(); }],
+            ['roadrunner', function () { return $this->isRoadRunnerServerRunning(); }],
+            ['default' => null, function () use ($server) { return $this->invalidServer($server); }],
+        );
 
         return ! tap($isRunning, function ($isRunning) {
             $isRunning
@@ -71,8 +71,10 @@ class StatusCommand extends Command
      * @param  string  $server
      * @return bool
      */
-    protected function invalidServer(string $server)
+    protected function invalidServer(/*string */$server)
     {
+        $server = cast_to_string($server);
+
         $this->error("Invalid server: {$server}.");
 
         return false;

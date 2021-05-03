@@ -46,7 +46,7 @@ class Worker implements WorkerContract
      * @param  array  $initialInstances
      * @return void
      */
-    public function boot(array $initialInstances = []): void
+    public function boot(array $initialInstances = []) ////: void
     {
         // First we will create an instance of the Laravel application that can serve as
         // the base container instance we will clone from on every request. This will
@@ -54,7 +54,7 @@ class Worker implements WorkerContract
         $this->app = $app = $this->appFactory->createApplication(
             array_merge(
                 $initialInstances,
-                [Client::class => $this->client],
+                [Client::class => $this->client]
             )
         );
 
@@ -68,7 +68,7 @@ class Worker implements WorkerContract
      * @param  \Laravel\Octane\RequestContext  $context
      * @return void
      */
-    public function handle(Request $request, RequestContext $context): void
+    public function handle(Request $request, RequestContext $context) ////: void
     {
         if ($this->client instanceof ServesStaticFiles &&
             $this->client->canServeRequestAsStaticFile($request, $context)) {
@@ -100,7 +100,7 @@ class Worker implements WorkerContract
             // it can be returned to a browser. This gateway will also dispatch events.
             $this->client->respond(
                 $context,
-                $octaneResponse = new OctaneResponse($response, $output),
+                $octaneResponse = new OctaneResponse($response, $output)
             );
 
             $responded = true;
@@ -108,7 +108,11 @@ class Worker implements WorkerContract
             $this->invokeRequestHandledCallbacks($request, $response, $sandbox);
 
             $gateway->terminate($request, $response);
-        } catch (Throwable $e) {
+        } catch (\Exception $e) {
+            $this->handleWorkerError($e, $sandbox, $request, $context, $responded);
+        } catch (\Error $e) {
+            $this->handleWorkerError($e, $sandbox, $request, $context, $responded);
+        } catch (\Throwable $e) {
             $this->handleWorkerError($e, $sandbox, $request, $context, $responded);
         } finally {
             $sandbox->flush();
@@ -146,7 +150,15 @@ class Worker implements WorkerContract
             $result = $data();
 
             $this->dispatchEvent($sandbox, new TaskTerminated($this->app, $sandbox, $data, $result));
-        } catch (Throwable $e) {
+        } catch (\Exception $e) {
+            $this->dispatchEvent($sandbox, new WorkerErrorOccurred($e, $sandbox));
+
+            return TaskExceptionResult::from($e);
+        } catch (\Error $e) {
+            $this->dispatchEvent($sandbox, new WorkerErrorOccurred($e, $sandbox));
+
+            return TaskExceptionResult::from($e);
+        } catch (\Throwable $e) {
             $this->dispatchEvent($sandbox, new WorkerErrorOccurred($e, $sandbox));
 
             return TaskExceptionResult::from($e);
@@ -167,14 +179,18 @@ class Worker implements WorkerContract
      *
      * @return void
      */
-    public function handleTick(): void
+    public function handleTick() ////: void
     {
         CurrentApplication::set($sandbox = clone $this->app);
 
         try {
             $this->dispatchEvent($sandbox, new TickReceived($this->app, $sandbox));
             $this->dispatchEvent($sandbox, new TickTerminated($this->app, $sandbox));
-        } catch (Throwable $e) {
+        } catch (\Exception $e) {
+            $this->dispatchEvent($sandbox, new WorkerErrorOccurred($e, $sandbox));
+        } catch (\Error $e) {
+            $this->dispatchEvent($sandbox, new WorkerErrorOccurred($e, $sandbox));
+        } catch (\Throwable $e) {
             $this->dispatchEvent($sandbox, new WorkerErrorOccurred($e, $sandbox));
         } finally {
             unset($sandbox);
@@ -194,12 +210,15 @@ class Worker implements WorkerContract
      * @return void
      */
     protected function handleWorkerError(
-        Throwable $e,
+        /*Throwable */$e,
         Application $app,
         Request $request,
         RequestContext $context,
-        bool $hasResponded
-    ): void {
+        /*bool */$hasResponded
+    ) ////: void
+    {
+        $hasResponded = cast_to_bool($hasResponded);
+
         if (! $hasResponded) {
             $this->client->error($e, $app, $request, $context);
         }
@@ -215,7 +234,7 @@ class Worker implements WorkerContract
      * @param  \Illuminate\Foundation\Application  $sandbox
      * @return void
      */
-    protected function invokeRequestHandledCallbacks($request, $response, $sandbox): void
+    protected function invokeRequestHandledCallbacks($request, $response, $sandbox) ////: void
     {
         foreach ($this->requestHandledCallbacks as $callback) {
             $callback($request, $response, $sandbox);
@@ -240,7 +259,7 @@ class Worker implements WorkerContract
      *
      * @return \Illuminate\Foundation\Application
      */
-    public function application(): Application
+    public function application() ///: Application
     {
         if (! $this->app) {
             throw new RuntimeException('Worker has not booted. Unable to access application.');
@@ -254,7 +273,7 @@ class Worker implements WorkerContract
      *
      * @return void
      */
-    public function terminate(): void
+    public function terminate() ////: void
     {
         $this->dispatchEvent($this->app, new WorkerStopping($this->app));
     }

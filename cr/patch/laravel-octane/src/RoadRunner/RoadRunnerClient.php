@@ -20,8 +20,11 @@ class RoadRunnerClient implements Client, StoppableClient
 {
     use MarshalsPsr7RequestsAndResponses;
 
-    public function __construct(protected PSR7Worker $client)
+    protected $client;
+
+    public function __construct(/*protected */PSR7Worker $client)
     {
+        $this->client = $client;
     }
 
     /**
@@ -30,7 +33,7 @@ class RoadRunnerClient implements Client, StoppableClient
      * @param  \Laravel\Octane\RequestContext  $context
      * @return array
      */
-    public function marshalRequest(RequestContext $context): array
+    public function marshalRequest(RequestContext $context) ////: array
     {
         return [
             $this->toHttpFoundationRequest($context->psr7Request),
@@ -45,7 +48,7 @@ class RoadRunnerClient implements Client, StoppableClient
      * @param  \Laravel\Octane\OctaneResponse  $octaneResponse
      * @return void
      */
-    public function respond(RequestContext $context, OctaneResponse $octaneResponse): void
+    public function respond(RequestContext $context, OctaneResponse $octaneResponse) ////: void
     {
         if ($octaneResponse->outputBuffer &&
             ! $octaneResponse->response instanceof StreamedResponse &&
@@ -67,7 +70,7 @@ class RoadRunnerClient implements Client, StoppableClient
      * @param  \Laravel\Octane\RequestContext  $context
      * @return void
      */
-    public function error(Throwable $e, Application $app, Request $request, RequestContext $context): void
+    public function error(/*Throwable */$e, Application $app, Request $request, RequestContext $context) ////: void
     {
         $this->client->getWorker()->error(Octane::formatExceptionForClient(
             $e,
@@ -80,7 +83,7 @@ class RoadRunnerClient implements Client, StoppableClient
      *
      * @return void
      */
-    public function stop(): void
+    public function stop() ////: void
     {
         $this->client->getWorker()->stop();
     }

@@ -12,7 +12,7 @@ interface Worker
      *
      * @return void
      */
-    public function boot(): void;
+    public function boot(); ////: void;
 
     /**
      * Handle an incoming request and send the response to the client.
@@ -21,7 +21,7 @@ interface Worker
      * @param  \Laravel\Octane\RequestContext  $context
      * @return void
      */
-    public function handle(Request $request, RequestContext $context): void;
+    public function handle(Request $request, RequestContext $context); ////: void;
 
     /**
      * Handle an incoming task.
@@ -36,5 +36,5 @@ interface Worker
      *
      * @return void
      */
-    public function terminate(): void;
+    public function terminate(); ////: void;
 }

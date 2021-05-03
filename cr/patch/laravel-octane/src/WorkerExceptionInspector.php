@@ -7,8 +7,16 @@ use Whoops\Exception\Inspector;
 
 class WorkerExceptionInspector extends Inspector
 {
-    public function __construct(Throwable $throwable, protected string $class, protected array $trace)
+    protected $class;
+
+    protected $trace;
+
+    public function __construct(/*Throwable */$throwable, /*protected string */$class, /*protected array */$trace)
     {
+        $this->class = cast_to_string($class);
+
+        $this->trace = $trace;
+
         parent::__construct($throwable);
     }
 
