@@ -175,7 +175,7 @@
         },
         "laravel": {
             "providers": [
-                "Carbon\\Laravel\\ServiceProvider",
+                "Carbon\\Laravel\\ServiceProvider"
             ]
         }
     },
