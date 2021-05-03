@@ -41,11 +41,11 @@ class NotPwnedVerifier implements UncompromisedVerifier
             return false;
         }
 
-        [$hash, $hashPrefix] = $this->getHash($value);
+        list($hash, $hashPrefix) = $this->getHash($value);
 
         return ! $this->search($hashPrefix)
             ->contains(function ($line) use ($hash, $hashPrefix, $threshold) {
-                [$hashSuffix, $count] = explode(':', $line);
+                list($hashSuffix, $count) = explode(':', $line);
 
                 return $hashPrefix.$hashSuffix == $hash && $count > $threshold;
             });

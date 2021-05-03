@@ -162,6 +162,26 @@ class ValidationValidatorTest_testCustomValidationObjectWithDotKeysIsCorrectlyPa
                     }
                 }
 
+class ValidationValidatorTest_testCustomValidationObject_class_password_rule implements Rule, DataAwareRule
+                    {
+                        protected $data;
+
+                        public function setData($data)
+                        {
+                            $this->data = $data;
+                        }
+
+                        public function passes($attribute, $value)
+                        {
+                            return $value === $this->data['password_confirmation'];
+                        }
+
+                        public function message()
+                        {
+                            return ['The :attribute confirmation does not match.'];
+                        }
+                    }
+
 class ValidationValidatorTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -5366,25 +5386,7 @@ class ValidationValidatorTest extends TestCase
             ['password' => 'foo', 'password_confirmation' => 'foo'],
             [
                 'password' => [
-                    new class implements Rule, DataAwareRule
-                    {
-                        protected $data;
-
-                        public function setData($data)
-                        {
-                            $this->data = $data;
-                        }
-
-                        public function passes($attribute, $value)
-                        {
-                            return $value === $this->data['password_confirmation'];
-                        }
-
-                        public function message()
-                        {
-                            return ['The :attribute confirmation does not match.'];
-                        }
-                    }, 'string',
+                    new ValidationValidatorTest_testCustomValidationObject_class_password_rule, 'string',
                 ],
             ]
         );
@@ -5396,25 +5398,7 @@ class ValidationValidatorTest extends TestCase
             ['password' => 'foo', 'password_confirmation' => 'bar'],
             [
                 'password' => [
-                    new class implements Rule, DataAwareRule
-                    {
-                        protected $data;
-
-                        public function setData($data)
-                        {
-                            $this->data = $data;
-                        }
-
-                        public function passes($attribute, $value)
-                        {
-                            return $value === $this->data['password_confirmation'];
-                        }
-
-                        public function message()
-                        {
-                            return ['The :attribute confirmation does not match.'];
-                        }
-                    }, 'string',
+                    new ValidationValidatorTest_testCustomValidationObject_class_password_rule, 'string',
                 ],
             ]
         );

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Orchestra\Testbench\TestCase;
 
 class ResponseTest_testResponseWithInvalidJsonThrowsException_class implements \JsonSerializable 
-        {
+            {
                 public function jsonSerialize()
                 {
                     return "\xB1\x31";

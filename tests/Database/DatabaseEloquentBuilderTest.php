@@ -21,6 +21,11 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
+class DatabaseEloquentBuilderTest_testWhereKeyMethodWithModel_class extends Model
+        {
+            protected $attributes = ['id' => 1];
+        }
+
 class DatabaseEloquentBuilderTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -1271,10 +1276,7 @@ class DatabaseEloquentBuilderTest extends TestCase
             return $argument === '1';
         }));
 
-        $builder->whereKey(new class extends Model
-        {
-            protected $attributes = ['id' => 1];
-        });
+        $builder->whereKey(new DatabaseEloquentBuilderTest_testWhereKeyMethodWithModel_class);
     }
 
     public function testWhereKeyNotMethodWithStringZero()
@@ -1353,10 +1355,7 @@ class DatabaseEloquentBuilderTest extends TestCase
             return $argument === '1';
         }));
 
-        $builder->whereKeyNot(new class extends Model
-        {
-            protected $attributes = ['id' => 1];
-        });
+        $builder->whereKeyNot(new DatabaseEloquentBuilderTest_testWhereKeyMethodWithModel_class);
     }
 
     public function testWhereIn()

@@ -179,15 +179,15 @@ class ValidationPasswordRuleTest extends TestCase
 
     protected function passes($rule, $values)
     {
-        $this->testRule($rule, $values, true, []);
+        $this->_testRule($rule, $values, true, []);
     }
 
     protected function fails($rule, $values, $messages)
     {
-        $this->testRule($rule, $values, false, $messages);
+        $this->_testRule($rule, $values, false, $messages);
     }
 
-    protected function testRule($rule, $values, $result, $messages)
+    protected function _testRule($rule, $values, $result, $messages)
     {
         foreach ($values as $value) {
             $v = new Validator(
@@ -205,7 +205,7 @@ class ValidationPasswordRuleTest extends TestCase
         }
     }
 
-    protected function setUp(): void
+    protected function setUp() ////: void
     {
         $container = Container::getInstance();
 
@@ -220,7 +220,7 @@ class ValidationPasswordRuleTest extends TestCase
         (new ValidationServiceProvider($container))->register();
     }
 
-    protected function tearDown(): void
+    protected function tearDown() ////: void
     {
         Container::setInstance(null);
 

@@ -115,7 +115,7 @@ trait ReplacesAttributes
      */
     protected function replaceMultipleOf($message, $attribute, $rule, $parameters)
     {
-        return str_replace(':value', $parameters[0] ?? '', $message);
+        return str_replace(':value', isset($parameters) && isset($parameters[0]) ? $parameters[0] : '', $message);
     }
 
     /**

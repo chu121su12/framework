@@ -128,7 +128,7 @@ class AuthGuardTest extends TestCase
 
     public function testAttemptAndWithCallbacks()
     {
-        [$session, $provider, $request, $cookie] = $this->getMocks();
+        list($session, $provider, $request, $cookie) = $this->getMocks();
         $mock = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['getName'])->setConstructorArgs(['default', $provider, $session, $request])->getMock();
         $mock->setDispatcher($events = m::mock(Dispatcher::class));
         $user = m::mock(Authenticatable::class);
