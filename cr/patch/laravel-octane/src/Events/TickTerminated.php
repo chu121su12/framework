@@ -9,9 +9,14 @@ class TickTerminated implements OperationTerminated
 {
     use HasApplicationAndSandbox;
 
+    public $app;
+    public $sandbox;
+
     public function __construct(
-        public Application $app,
-        public Application $sandbox
+        /*public */Application $app,
+        /*public */Application $sandbox
     ) {
+        $this->app = $app;
+        $this->sandbox = $sandbox;
     }
 }

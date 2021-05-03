@@ -49,7 +49,7 @@ class StartCommand extends Command implements SignalableCommandInterface
         return backport_match ($server,
             ['swoole', function () { return $this->startSwooleServer(); }],
             ['roadrunner', function () { return $this->startRoadRunnerServer(); }],
-            ['default' => null, function () use ($server) { return $this->invalidServer($server); }],
+            ['default' => null, function () use ($server) { return $this->invalidServer($server); }]
         );
     }
 

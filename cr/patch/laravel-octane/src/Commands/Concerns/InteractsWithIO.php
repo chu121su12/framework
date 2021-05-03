@@ -116,7 +116,7 @@ trait InteractsWithIO
                 [$statusCode >= 400, 'yellow'],
                 [$statusCode >= 300, 'cyan'],
                 [$statusCode >= 100, 'green'],
-                ['default' => null, 'white'],
+                ['default' => null, 'white']
             ),
            $statusCode,
            $method,

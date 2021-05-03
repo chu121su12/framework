@@ -10,7 +10,7 @@ use Throwable;
 
 class OctaneStore implements Store
 {
-    protected const ONE_YEAR = 31536000;
+    /*protected */const ONE_YEAR = 31536000;
 
     /**
      * All of the registered interval caches.

@@ -49,7 +49,7 @@ trait InteractsWithServers
             }
 
             $this->writeServerOutput($server);
-        } catch (ServerShutdownException) {
+        } catch (ServerShutdownException $e) {
             return 1;
         } finally {
             $this->stopServer();
@@ -66,12 +66,7 @@ trait InteractsWithServers
     protected function startServerWatcher()
     {
         if (! $this->option('watch')) {
-            return new class {
-                public function __call($method, $parameters)
-                {
-                    return null;
-                }
-            };
+            return new NoOpEmptyWatchCallable;
         }
 
         if (empty($paths = config('octane.watch'))) {

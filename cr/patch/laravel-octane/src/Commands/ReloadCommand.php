@@ -33,7 +33,7 @@ class ReloadCommand extends Command
         return backport_match ($server,
             ['swoole', function () { return $this->reloadSwooleServer(); }],
             ['roadrunner', function () { return $this->reloadRoadRunnerServer(); }],
-            ['default' => null, function () use ($server) { return $this->invalidServer($server); }],
+            ['default' => null, function () use ($server) { return $this->invalidServer($server); }]
         );
     }
 

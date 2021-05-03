@@ -4,13 +4,24 @@ namespace Laravel\Octane\Exceptions;
 
 class TaskExceptionResult
 {
+    protected $class;
+    protected $message;
+    protected $code;
+    protected $file;
+    protected $line;
+
     public function __construct(
-        protected string $class,
-        protected string $message,
-        protected int $code,
-        protected string $file,
-        protected int $line
+        /*protected string */$class,
+        /*protected string */$message,
+        /*protected int */$code,
+        /*protected string */$file,
+        /*protected int */$line
     ) {
+        $this->class = cast_to_string($class);
+        $this->message = cast_to_string($message);
+        $this->code = cast_to_int($code);
+        $this->file = cast_to_string($file);
+        $this->line = cast_to_int($line);
     }
 
     /**
@@ -26,7 +37,7 @@ class TaskExceptionResult
             : null;
 
         return new static(
-            $throwable::class,
+            get_class($throwable),
             $throwable->getMessage(),
             (int) $throwable->getCode(),
             isset($fallbackTrace) && isset($fallbackTrace['file']) ? $fallbackTrace['file'] : $throwable->getFile(),

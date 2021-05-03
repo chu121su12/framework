@@ -188,11 +188,13 @@ class OctaneServiceProvider extends ServiceProvider
                     unserialize(Crypt::decryptString($request->input('tasks'))),
                     $request->input('wait')
                 )), 200);
-            } catch (DecryptException) {
+            } catch (DecryptException $e) {
                 return new Response('', 403);
-            } catch (TaskException | DdException) {
+            } catch (TaskException $e) {
                 return new Response('', 500);
-            } catch (TaskTimeoutException) {
+            } catch (DdException $e) {
+                return new Response('', 500);
+            } catch (TaskTimeoutException $e) {
                 return new Response('', 504);
             }
         });
@@ -202,7 +204,7 @@ class OctaneServiceProvider extends ServiceProvider
                 (new SwooleTaskDispatcher)->dispatch(
                     unserialize(Crypt::decryptString($request->input('tasks')))
                 );
-            } catch (DecryptException) {
+            } catch (DecryptException $e) {
                 return new Response('', 403);
             }
 

@@ -34,10 +34,16 @@ class Worker implements WorkerContract
      */
     protected $app;
 
+    protected $appFactory;
+
+    protected $client;
+
     public function __construct(
-        protected ApplicationFactory $appFactory,
-        protected Client $client
+        /*protected */ApplicationFactory $appFactory,
+        /*protected */Client $client
     ) {
+        $this->appFactory = $appFactory;
+        $this->client = $client;
     }
 
     /**

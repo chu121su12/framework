@@ -6,11 +6,18 @@ use Laravel\Octane\Swoole\SwooleExtension;
 
 class EnsureRequestsDontExceedMaxExecutionTime
 {
+    protected $extension;
+    protected $timerTable;
+    protected $maxExecutionTime;
+
     public function __construct(
-        protected SwooleExtension $extension,
-        protected $timerTable,
-        protected $maxExecutionTime
+        /*protected */SwooleExtension $extension,
+        /*protected */$timerTable,
+        /*protected */$maxExecutionTime
     ) {
+        $this->extension = $extension;
+        $this->timerTable = $timerTable;
+        $this->maxExecutionTime = $maxExecutionTime;
     }
 
     /**

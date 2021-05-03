@@ -8,14 +8,27 @@ use Throwable;
 
 class InvokeTickCallable
 {
+    protected $key;
+    protected $callback;
+    protected $seconds;
+    protected $immediate;
+    protected $cache;
+    protected $exceptionHandler;
+
     public function __construct(
-        protected string $key,
-        protected $callback,
-        protected int $seconds,
-        protected bool $immediate,
-        protected $cache,
-        protected ExceptionHandler $exceptionHandler
+        /*protected string */$key,
+        /*protected */$callback,
+        /*protected int */$seconds,
+        /*protected bool */$immediate,
+        /*protected */$cache,
+        /*protected */ExceptionHandler $exceptionHandler
     ) {
+        $this->key = cast_to_string($key);
+        $this->callback = $callback;
+        $this->seconds = cast_to_int($seconds);
+        $this->immediate = cast_to_bool($immediate);
+        $this->cache = $cache;
+        $this->exceptionHandler = $exceptionHandler;
     }
 
     /**

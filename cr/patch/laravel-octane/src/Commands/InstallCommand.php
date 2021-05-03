@@ -40,7 +40,7 @@ class InstallCommand extends Command
         return (int) ! tap(backport_match ($server,
             ['swoole', function () { return $this->installSwooleServer(); }],
             ['roadrunner', function () { return $this->installRoadRunnerServer(); }],
-            ['default' => null, function () use ($server) { return $this->invalidServer($server); }],
+            ['default' => null, function () use ($server) { return $this->invalidServer($server); }]
         ), function ($installed) use ($server) {
             if ($installed) {
                 $this->updateEnvironmentFile($server);

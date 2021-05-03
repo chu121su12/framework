@@ -9,11 +9,18 @@ use Symfony\Component\Process\Process;
 
 class ServerProcessInspector
 {
+    protected $serverStateFile;
+    protected $processFactory;
+    protected $posix;
+
     public function __construct(
-        protected ServerStateFile $serverStateFile,
-        protected SymfonyProcessFactory $processFactory,
-        protected PosixExtension $posix
+        /*protected */ServerStateFile $serverStateFile,
+        /*protected */SymfonyProcessFactory $processFactory,
+        /*protected */PosixExtension $posix
     ) {
+        $this->serverStateFile = $serverStateFile;
+        $this->processFactory = $processFactory;
+        $this->posix = $posix;
     }
 
     /**

@@ -6,11 +6,18 @@ use Laravel\Octane\Exec;
 
 class ServerProcessInspector
 {
+    protected $dispatcher;
+    protected $serverStateFile;
+    protected $exec;
+
     public function __construct(
-        protected SignalDispatcher $dispatcher,
-        protected ServerStateFile $serverStateFile,
-        protected Exec $exec,
+        /*protected */SignalDispatcher $dispatcher,
+        /*protected */ServerStateFile $serverStateFile,
+        /*protected */Exec $exec
     ) {
+        $this->dispatcher = $dispatcher;
+        $this->serverStateFile = $serverStateFile;
+        $this->exec = $exec;
     }
 
     /**

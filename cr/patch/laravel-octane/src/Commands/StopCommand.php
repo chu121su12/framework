@@ -35,7 +35,7 @@ class StopCommand extends Command
         return backport_match ($server,
             ['swoole', function () { return $this->stopSwooleServer(); }],
             ['roadrunner', function () { return $this->stopRoadRunnerServer(); }],
-            ['default' => null, function () use ($server) { return $this->invalidServer($server); }],
+            ['default' => null, function () use ($server) { return $this->invalidServer($server); }]
         );
     }
 

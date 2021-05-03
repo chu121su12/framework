@@ -14,11 +14,18 @@ use Laravel\Octane\Exceptions\TaskTimeoutException;
 
 class SwooleHttpTaskDispatcher implements DispatchesTasks
 {
+    protected $host;
+    protected $port;
+    protected $fallbackDispatcher;
+
     public function __construct(
-        protected string $host,
-        protected string $port,
-        protected DispatchesTasks $fallbackDispatcher
+        /*protected string */$host,
+        /*protected string */$port,
+        /*protected */DispatchesTasks $fallbackDispatcher
     ) {
+        $this->host = cast_to_string($host);
+        $this->port = cast_to_string($port);
+        $this->fallbackDispatcher = $fallbackDispatcher;
     }
 
     /**
@@ -54,9 +61,9 @@ class SwooleHttpTaskDispatcher implements DispatchesTasks
                 [504, function () use ($waitMilliseconds) { throw TaskTimeoutException::after($waitMilliseconds); }],
                 ['default' => null, function () { throw TaskExceptionResult::from(
                     new Exception('Invalid response from task server.')
-                )->getOriginal(); }],
+                )->getOriginal(); }]
             );
-        } catch (ConnectionException) {
+        } catch (ConnectionException $e) {
             return $this->fallbackDispatcher->resolve($tasks, $waitMilliseconds);
         }
     }
@@ -79,7 +86,7 @@ class SwooleHttpTaskDispatcher implements DispatchesTasks
             Http::post("http://{$this->host}:{$this->port}/octane/dispatch-tasks", [
                 'tasks' => Crypt::encryptString(serialize($tasks)),
             ]);
-        } catch (ConnectionException) {
+        } catch (ConnectionException $e) {
             $this->fallbackDispatcher->dispatch($tasks);
         }
     }

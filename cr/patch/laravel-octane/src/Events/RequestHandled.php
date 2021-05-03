@@ -8,10 +8,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RequestHandled
 {
+    public $sandbox;
+    public $request;
+    public $response;
+
     public function __construct(
-        public Application $sandbox,
-        public Request $request,
-        public Response $response
+        /*public */Application $sandbox,
+        /*public */Request $request,
+        /*public */Response $response
     ) {
+        $this->sandbox = $sandbox;
+        $this->request = $request;
+        $this->response = $response;
     }
 }

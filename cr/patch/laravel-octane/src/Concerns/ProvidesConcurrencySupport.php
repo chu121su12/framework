@@ -47,9 +47,9 @@ trait ProvidesConcurrencySupport
                     isset($serverState['state']) && isset($serverState['state']['host']) ? $serverState['state']['host'] : '127.0.0.1',
                     isset($serverState['state']) && isset($serverState['state']['port']) ? $serverState['state']['port'] : '8000',
                     new SequentialTaskDispatcher
-                )
+                );
             }],
-            ['default' => null, function () { return new SequentialTaskDispatcher; }],
+            ['default' => null, function () { return new SequentialTaskDispatcher; }]
         );
     }
 }
