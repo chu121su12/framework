@@ -193,9 +193,9 @@ abstract class AbstractCursorPaginator implements Htmlable
             ->flip()
             ->map(function ($_, $parameterName) use ($item) {
                 if ($item instanceof ArrayAccess || is_array($item)) {
-                    return $item[$parameterName] ?? $item[Str::afterLast($parameterName, '.')];
+                    return isset($item[$parameterName]) ? $item[$parameterName] : $item[Str::afterLast($parameterName, '.')];
                 } elseif (is_object($item)) {
-                    return $item->{$parameterName} ?? $item->{Str::afterLast($parameterName, '.')};
+                    return isset($item->{$parameterName}) ? $item->{$parameterName} : $item->{Str::afterLast($parameterName, '.')};
                 }
 
                 throw new Exception('Only arrays and objects are supported when cursor paginating items.');
@@ -431,7 +431,8 @@ abstract class AbstractCursorPaginator implements Htmlable
     public static function resolveCurrentCursor($cursorName = 'cursor', $default = null)
     {
         if (isset(static::$currentCursorResolver)) {
-            return call_user_func(static::$currentCursorResolver, $cursorName);
+            $currentCursorResolver = static::$currentCursorResolver;
+            return $currentCursorResolver($cursorName);
         }
 
         return $default;

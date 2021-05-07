@@ -2433,7 +2433,9 @@ class Builder
 
         $orders = $this->ensureOrderForCursorPagination(! is_null($cursor) && $cursor->pointsToPreviousItems());
 
-        $orderDirection = $orders->first()['direction'] ?? 'asc';
+        $firstOrder = $orders->first();
+
+        $orderDirection = isset($firstOrder) && isset($firstOrder['direction']) ? $firstOrder['direction'] : 'asc';
 
         $comparisonOperator = $orderDirection === 'asc' ? '>' : '<';
 
