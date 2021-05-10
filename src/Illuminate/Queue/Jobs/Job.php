@@ -214,7 +214,7 @@ abstract class Job
         list($class, $method) = JobName::parse($payload['job']);
 
         if (method_exists($this->instance = $this->resolve($class), 'failed')) {
-            $this->instance->failed($payload['data'], $e, $payload['uuid']);
+            $this->instance->failed($payload['data'], $e, $payload['uuid'] ?? '');
         }
     }
 

@@ -5,7 +5,6 @@ namespace Illuminate\Tests\Cache;
 use Illuminate\Cache\RedisStore;
 use Illuminate\Cache\Repository;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithRedis;
-use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,7 +24,6 @@ class RedisCacheIntegrationTest extends TestCase
     {
         parent::tearDown();
         $this->tearDownRedis();
-        m::close();
     }
 
     /**
