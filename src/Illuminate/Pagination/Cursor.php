@@ -39,8 +39,10 @@ class Cursor implements Arrayable
      * @param  string  $parameterName
      * @return string|null
      */
-    public function parameter(string $parameterName)
+    public function parameter(/*string */$parameterName)
     {
+        $parameterName = cast_to_string($parameterName);
+
         if (! isset($this->parameters[$parameterName])) {
             throw new UnexpectedValueException("Unable to find parameter [{$parameterName}] in pagination item.");
         }

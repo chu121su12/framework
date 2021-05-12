@@ -145,7 +145,7 @@ class BusFake implements QueueingDispatcher
     public function assertDispatchedSync($command, $callback = null)
     {
         if ($command instanceof Closure) {
-            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
+            list($command, $callback) = [$this->firstClosureParameterType($command), $command];
         }
 
         if (is_numeric($callback)) {
@@ -185,7 +185,7 @@ class BusFake implements QueueingDispatcher
     public function assertNotDispatchedSync($command, $callback = null)
     {
         if ($command instanceof Closure) {
-            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
+            list($command, $callback) = [$this->firstClosureParameterType($command), $command];
         }
 
         PHPUnit::assertCount(
@@ -432,8 +432,10 @@ class BusFake implements QueueingDispatcher
      * @param  callable|null  $callback
      * @return \Illuminate\Support\Collection
      */
-    public function dispatchedSync(string $command, $callback = null)
+    public function dispatchedSync(/*string */$command, $callback = null)
     {
+        $command = cast_to_string($command);
+
         if (! $this->hasDispatchedSync($command)) {
             return collect();
         }

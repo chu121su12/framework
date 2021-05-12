@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Schema;
  */
 class EloquentCursorPaginateTest extends DatabaseTestCase
 {
-    protected function setUp(): void
+    protected function setUp() ////: void
     {
         parent::setUp();
 
@@ -141,8 +141,8 @@ class EloquentCursorPaginateTest extends DatabaseTestCase
             $query->where('title', 'Howdy');
         })->where('id', '<', 5)->orderBy('id');
 
-        $clonedQuery = $query->clone();
-        $anotherQuery = $query->clone();
+        $clonedQuery = $query->clone_();
+        $anotherQuery = $query->clone_();
 
         $this->assertEquals(2, $query->get()->count());
         $this->assertEquals(2, $query->count());
@@ -162,8 +162,8 @@ class EloquentCursorPaginateTest extends DatabaseTestCase
         }
 
         $query = TestUser::query()->select('id as user_id')->orderBy('user_id');
-        $clonedQuery = $query->clone();
-        $anotherQuery = $query->clone();
+        $clonedQuery = $query->clone_();
+        $anotherQuery = $query->clone_();
 
         $this->assertEquals(6, $query->get()->count());
         $this->assertEquals(6, $query->count());
