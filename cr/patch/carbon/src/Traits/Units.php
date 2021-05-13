@@ -394,6 +394,6 @@ trait Units
             $unit = CarbonInterval::make($unit);
         }
 
-        return $this->sub($unit, $value, $overflow);
+        return $this->sub_($unit, $value, $overflow);
     }
 }
