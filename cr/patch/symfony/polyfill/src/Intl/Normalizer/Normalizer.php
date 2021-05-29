@@ -43,7 +43,7 @@ class Normalizer
     {
         $form = cast_to_int($form);
 
-        if (!\in_array($form, array(self::NFD, self::NFKD, self::NFC, self::NFKC))) {
+        if (!\in_array($form, [self::NFD, self::NFKD, self::NFC, self::NFKC])) {
             return false;
         }
 

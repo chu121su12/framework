@@ -19,6 +19,14 @@ if (\PHP_VERSION_ID >= 80000) {
     return require __DIR__.'/bootstrap80.php';
 }
 
+if (defined('MYSQLI_REFRESH_SLAVE') && !defined('MYSQLI_REFRESH_REPLICA')) {
+    define('MYSQLI_REFRESH_REPLICA', 64);
+}
+
 if (!function_exists('array_is_list')) {
-    function array_is_list($array) { return p\Php81::array_is_list($array); }
+    function array_is_list(array $array) { return p\Php81::array_is_list($array); }
+}
+
+if (!function_exists('enum_exists')) {
+    function enum_exists($enum, $autoload = true) { return cast_to_bool($autoload) && class_exists(cast_to_string($enum)) && false; }
 }
