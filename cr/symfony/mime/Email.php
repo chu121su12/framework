@@ -270,7 +270,9 @@ class Email extends Message
      */
     public function getPriority() //// int
     {
-        list($priority) = sscanf($this->getHeaders()->getHeaderBody('X-Priority'), '%[1-5]');
+        $priorityHeader = $this->getHeaders()->getHeaderBody('X-Priority');
+
+        list($priority) = sscanf(isset($priorityHeader) ? $priorityHeader : '', '%[1-5]');
 
         return isset($priority) ? $priority : 3;
     }
