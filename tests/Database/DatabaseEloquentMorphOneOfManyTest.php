@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  */
 class DatabaseEloquentMorphOneOfManyTest extends TestCase
 {
-    protected function setUp()////: void
+    protected function setUp(): void
     {
         $db = new DB;
 
@@ -49,7 +49,7 @@ class DatabaseEloquentMorphOneOfManyTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown()////: void
+    protected function tearDown(): void
     {
         $this->schema()->drop('products');
         $this->schema()->drop('states');
