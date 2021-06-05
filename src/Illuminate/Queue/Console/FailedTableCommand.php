@@ -69,7 +69,7 @@ class FailedTableCommand extends Command
         $table = $this->laravel['config']['queue.failed.table'];
 
         $this->replaceMigration(
-            $this->createBaseMigration($table), $table, Str::studly($table)
+            $this->createBaseMigration($table), $table
         );
 
         $this->info('Migration created successfully!');
@@ -95,11 +95,12 @@ class FailedTableCommand extends Command
      *
      * @param  string  $path
      * @param  string  $table
-     * @param  string  $tableClassName
      * @return void
      */
-    protected function replaceMigration($path, $table, $tableClassName)
+    protected function replaceMigration($path, $table)
     {
+        $tableClassName = Str::studly($table);
+
         $stub = str_replace(
             ['{{table}}', '{{tableClassName}}'],
             [$table, $tableClassName],
