@@ -339,6 +339,8 @@ trait ManagesTransactions
      *
      * @param  callable  $callback
      * @return void
+     *
+     * @throws \RuntimeException
      */
     public function afterCommit($callback)
     {

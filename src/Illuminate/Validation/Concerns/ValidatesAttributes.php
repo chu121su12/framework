@@ -819,6 +819,11 @@ trait ValidatesAttributes
 
             $table = $model->getTable();
             $connection = isset($connection) ? $connection : $model->getConnectionName();
+
+            if (Str::contains($table, '.') && Str::startsWith($table, $connection)) {
+                $connection = null;
+            }
+
             $idColumn = $model->getKeyName();
         }
 

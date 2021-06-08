@@ -74,6 +74,8 @@ class Builder
      *
      * @param  string  $type
      * @return void
+     *
+     * @throws \InvalidArgumentException
      */
     public static function defaultMorphKeyType($type)
     {
@@ -101,6 +103,8 @@ class Builder
      *
      * @param  string  $name
      * @return bool
+     *
+     * @throws \LogicException
      */
     public function createDatabase($name)
     {
@@ -112,6 +116,8 @@ class Builder
      *
      * @param  string  $name
      * @return bool
+     *
+     * @throws \LogicException
      */
     public function dropDatabaseIfExists($name)
     {
