@@ -532,7 +532,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return string
      */
-    protected function renderExceptionWithCustomRenderer($e)
+    protected function renderExceptionWithCustomRenderer(/*Throwable */$e)
     {
         return app(ExceptionRenderer::class)->render($e);
     }

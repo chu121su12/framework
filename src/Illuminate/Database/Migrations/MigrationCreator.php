@@ -141,7 +141,7 @@ class MigrationCreator
     {
         $stub = str_replace(
             ['DummyClass', '{{ class }}', '{{class}}'],
-            $this->getClassName($name), $stub
+            $this->getClassName($name ?: Str::studly($table)), $stub
         );
 
         // Here we will replace the table place-holders with the table specified by
