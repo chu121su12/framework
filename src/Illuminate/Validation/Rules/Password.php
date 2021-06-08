@@ -107,7 +107,7 @@ class Password implements Rule, DataAwareRule
     public static function defaults($callback = null)
     {
         if (is_null($callback)) {
-            return static::default();
+            return static::default_();
         }
 
         if (! is_callable($callback) && ! $callback instanceof static) {
@@ -122,7 +122,7 @@ class Password implements Rule, DataAwareRule
      *
      * @return static
      */
-    public static function default()
+    public static function default_()
     {
         $password = value(static::$defaultCallback);
 
@@ -136,7 +136,7 @@ class Password implements Rule, DataAwareRule
      */
     public static function required()
     {
-        return ['required', static::default()];
+        return ['required', static::default_()];
     }
 
     /**
@@ -146,7 +146,7 @@ class Password implements Rule, DataAwareRule
      */
     public static function sometimes()
     {
-        return ['sometimes', static::default()];
+        return ['sometimes', static::default_()];
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Illuminate\Queue\Console;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
+use Illuminate\Support\Str;
 
 class TableCommand extends Command
 {
@@ -94,12 +95,17 @@ class TableCommand extends Command
      *
      * @param  string  $path
      * @param  string  $table
+     * @param  string  $tableClassName
      * @return void
      */
     protected function replaceMigration($path, $table)
     {
+        $tableClassName = Str::studly($table);
+
         $stub = str_replace(
-            '{{table}}', $table, $this->files->get(__DIR__.'/stubs/jobs.stub')
+            ['{{table}}', '{{tableClassName}}'],
+            [$table, $tableClassName],
+            $this->files->get(__DIR__.'/stubs/jobs.stub')
         );
 
         $this->files->put($path, $stub);

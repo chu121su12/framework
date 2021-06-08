@@ -5,6 +5,22 @@ namespace Illuminate\Tests\Support;
 use Illuminate\Support\Traits\Tappable;
 use PHPUnit\Framework\TestCase;
 
+class SupportTappableTest_testTappableClassWithInvokableClass_class
+        {
+            public function __invoke($tappable)
+            {
+                $tappable->setName('MyName');
+            }
+        }
+
+class SupportTappableTest_testTappableClassWithNoneInvokableClass_class
+        {
+            public function setName($tappable)
+            {
+                $tappable->setName('MyName');
+            }
+        }
+
 class SupportTappableTest extends TestCase
 {
     public function testTappableClassWithCallback()
@@ -18,13 +34,7 @@ class SupportTappableTest extends TestCase
 
     public function testTappableClassWithInvokableClass()
     {
-        $name = TappableClass::make()->tap(new class
-        {
-            public function __invoke($tappable)
-            {
-                $tappable->setName('MyName');
-            }
-        })->getName();
+        $name = TappableClass::make()->tap(new SupportTappableTest_testTappableClassWithInvokableClass_class)->getName();
 
         $this->assertSame('MyName', $name);
     }
@@ -33,13 +43,7 @@ class SupportTappableTest extends TestCase
     {
         $this->expectException('Error');
 
-        $name = TappableClass::make()->tap(new class
-        {
-            public function setName($tappable)
-            {
-                $tappable->setName('MyName');
-            }
-        })->getName();
+        $name = TappableClass::make()->tap(new SupportTappableTest_testTappableClassWithNoneInvokableClass_class)->getName();
 
         $this->assertSame('MyName', $name);
     }

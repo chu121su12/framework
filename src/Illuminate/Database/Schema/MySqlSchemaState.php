@@ -131,7 +131,7 @@ class MySqlSchemaState extends SchemaState
             'LARAVEL_LOAD_HOST' => is_array($config['host']) ? $config['host'][0] : $config['host'],
             'LARAVEL_LOAD_PORT' => isset($config['port']) ? $config['port'] : '',
             'LARAVEL_LOAD_USER' => $config['username'],
-            'LARAVEL_LOAD_PASSWORD' => $config['password'] ?? '',
+            'LARAVEL_LOAD_PASSWORD' => isset($config['password']) ? $config['password'] : '',
             'LARAVEL_LOAD_DATABASE' => $config['database'],
         ];
     }

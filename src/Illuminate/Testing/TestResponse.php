@@ -17,7 +17,7 @@ use Illuminate\Testing\Constraints\SeeInOrder;
 use Illuminate\Testing\Fluent\AssertableJson;
 use LogicException;
 use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse5 as StreamedResponse;
 
 /**
  * @mixin \Illuminate\Http\Response

@@ -18,7 +18,7 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\HeaderBag;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag5 as ResponseHeaderBag;
 
 class HttpResponseTest extends TestCase
 {

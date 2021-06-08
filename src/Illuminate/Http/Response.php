@@ -10,7 +10,7 @@ use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 use JsonSerializable;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag5 as ResponseHeaderBag;
 
 class Response extends SymfonyResponse
 {

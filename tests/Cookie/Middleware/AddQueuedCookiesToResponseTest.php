@@ -7,7 +7,7 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag5 as ResponseHeaderBag;
 
 class AddQueuedCookiesToResponseTest extends TestCase
 {

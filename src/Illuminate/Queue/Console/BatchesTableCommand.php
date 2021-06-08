@@ -5,6 +5,7 @@ namespace Illuminate\Queue\Console;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
+use Illuminate\Support\Str;
 
 class BatchesTableCommand extends Command
 {
@@ -100,8 +101,12 @@ class BatchesTableCommand extends Command
      */
     protected function replaceMigration($path, $table)
     {
+        $tableClassName = Str::studly($table);
+
         $stub = str_replace(
-            '{{table}}', $table, $this->files->get(__DIR__.'/stubs/batches.stub')
+            ['{{table}}', '{{tableClassName}}'],
+            [$table, $tableClassName],
+            $this->files->get(__DIR__.'/stubs/batches.stub')
         );
 
         $this->files->put($path, $stub);

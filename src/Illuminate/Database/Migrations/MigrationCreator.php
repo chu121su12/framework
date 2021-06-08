@@ -68,7 +68,7 @@ class MigrationCreator
         $this->files->ensureDirectoryExists(dirname($path));
 
         $this->files->put(
-            $path, $this->populateStub($stub, $table)
+            $path, $this->populateStub($stub, $table, $name)
         );
 
         // Next, we will fire any hooks that are supposed to fire after a migration is
@@ -134,10 +134,16 @@ class MigrationCreator
      *
      * @param  string  $stub
      * @param  string|null  $table
+     * @param  string  $name
      * @return string
      */
-    protected function populateStub($stub, $table)
+    protected function populateStub($stub, $table, $name)
     {
+        $stub = str_replace(
+            ['DummyClass', '{{ class }}', '{{class}}'],
+            $this->getClassName($name), $stub
+        );
+
         // Here we will replace the table place-holders with the table specified by
         // the developer, which is useful for quickly creating a tables creation
         // or update migration from the console instead of typing it manually.

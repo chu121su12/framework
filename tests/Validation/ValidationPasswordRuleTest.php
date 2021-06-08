@@ -198,12 +198,12 @@ class ValidationPasswordRuleTest extends TestCase
 
     public function testItCanUseDefault()
     {
-        $this->assertInstanceOf(Password::class, Password::default());
+        $this->assertInstanceOf(Password::class, Password::default_());
     }
 
     public function testItCanSetDefaultUsing()
     {
-        $this->assertInstanceOf(Password::class, Password::default());
+        $this->assertInstanceOf(Password::class, Password::default_());
 
         $password = Password::min(3);
         $password2 = Password::min(2)->mixedCase();
@@ -212,14 +212,14 @@ class ValidationPasswordRuleTest extends TestCase
             return $password;
         });
 
-        $this->passes(Password::default(), ['abcd', '454qb^', '接2133手田']);
-        $this->assertSame($password, Password::default());
+        $this->passes(Password::default_(), ['abcd', '454qb^', '接2133手田']);
+        $this->assertSame($password, Password::default_());
         $this->assertSame(['required', $password], Password::required());
         $this->assertSame(['sometimes', $password], Password::sometimes());
 
         Password::defaults($password2);
-        $this->passes(Password::default(), ['Nn', 'Mn', 'âA']);
-        $this->assertSame($password2, Password::default());
+        $this->passes(Password::default_(), ['Nn', 'Mn', 'âA']);
+        $this->assertSame($password2, Password::default_());
         $this->assertSame(['required', $password2], Password::required());
         $this->assertSame(['sometimes', $password2], Password::sometimes());
     }

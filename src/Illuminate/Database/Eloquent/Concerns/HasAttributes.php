@@ -458,8 +458,10 @@ trait HasAttributes
      */
     public function isRelation($key)
     {
+        $thisClass = get_class($this);
+
         return method_exists($this, $key) ||
-            (static::$relationResolvers[get_class($this)][$key] ?? null);
+            (isset(static::$relationResolvers[$thisClass]) && isset(static::$relationResolvers[$thisClass][$key]) ? static::$relationResolvers[$thisClass][$key] : null);
     }
 
     /**

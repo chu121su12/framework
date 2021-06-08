@@ -2,13 +2,17 @@
 
 namespace CR\LaravelBackport;
 
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Process\Process;
 
 class SymfonyHelper
 {
-    public static function headerUtilsQuote($s)
+    const DISPOSITION_ATTACHMENT = 'attachment';
+    const DISPOSITION_INLINE = 'inline';
+
+    public static function headerUtilsQuote(/*string */$s)////: string
     {
+        $s = cast_to_string($s);
+
         if (preg_match('/^[a-z0-9!#$%&\'*.^_`|~-]+$/i', $s)) {
             return $s;
         }
@@ -16,8 +20,10 @@ class SymfonyHelper
         return '"'.addcslashes($s, '"\\"').'"';
     }
 
-    public static function headerUtilsToString($assoc, $separator)
+    public static function headerUtilsToString(array $assoc, /*string */$separator)////: string
     {
+        $separator = cast_to_string($separator);
+
         $parts = [];
         foreach ($assoc as $name => $value) {
             if (true === $value) {
@@ -30,10 +36,16 @@ class SymfonyHelper
         return implode($separator.' ', $parts);
     }
 
-    public static function httpFoundationMakeDisposition($disposition, $filename, $filenameFallback = '')
+    public static function httpFoundationMakeDisposition(/*string */$disposition, /*string */$filename, /*string */$filenameFallback = '')////: string
     {
-        if (!\in_array($disposition, [ResponseHeaderBag::DISPOSITION_ATTACHMENT, ResponseHeaderBag::DISPOSITION_INLINE])) {
-            throw new \InvalidArgumentException(sprintf('The disposition must be either "%s" or "%s".', ResponseHeaderBag::DISPOSITION_ATTACHMENT, ResponseHeaderBag::DISPOSITION_INLINE));
+        $disposition = cast_to_string($disposition);
+
+        $filename = cast_to_string($filename);
+
+        $filenameFallback = cast_to_string($filenameFallback);
+
+        if (!\in_array($disposition, [self::DISPOSITION_ATTACHMENT, self::DISPOSITION_INLINE])) {
+            throw new \InvalidArgumentException(sprintf('The disposition must be either "%s" or "%s".', self::DISPOSITION_ATTACHMENT, self::DISPOSITION_INLINE));
         }
 
         if ('' === $filenameFallback) {

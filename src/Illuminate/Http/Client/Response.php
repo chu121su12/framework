@@ -226,7 +226,9 @@ class Response implements ArrayAccess
      */
     public function handlerStats()
     {
-        return optional($this->transferStats)->getHandlerStats() ?? [];
+        $handlerStats = optional($this->transferStats)->getHandlerStats();
+
+        return isset($handlerStats) ? $handlerStats : [];
     }
 
     /**

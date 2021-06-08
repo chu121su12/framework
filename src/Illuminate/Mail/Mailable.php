@@ -237,7 +237,7 @@ class Mailable implements MailableContract, Renderable
         return (new SendQueuedMailable($this))
                     ->through(array_merge(
                         method_exists($this, 'middleware') ? $this->middleware() : [],
-                        $this->middleware ?? []
+                        isset($this->middleware) ? $this->middleware : []
                     ));
     }
 

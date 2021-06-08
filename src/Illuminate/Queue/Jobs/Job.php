@@ -280,7 +280,9 @@ abstract class Job
      */
     public function shouldFailOnTimeout()
     {
-        return $this->payload()['failOnTimeout'] ?? false;
+        $payload = $this->payload();
+
+        return isset($payload['failOnTimeout']) ? $payload['failOnTimeout'] : false;
     }
 
     /**

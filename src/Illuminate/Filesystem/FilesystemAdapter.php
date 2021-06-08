@@ -25,7 +25,7 @@ use League\Flysystem\FilesystemInterface as FilesystemOperator;
 use PHPUnit\Framework\Assert as PHPUnit;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse5 as StreamedResponse;
 
 // use League\Flysystem\FilesystemAdapter as FlysystemAdapter;
 // use League\Flysystem\FilesystemOperator;
@@ -276,11 +276,7 @@ class FilesystemAdapter implements CloudFilesystemContract
 
         $filename = isset($name) ? $name : basename($path);
 
-        // $disposition = $response->headers->makeDisposition(
-        //     $disposition, $filename, $this->fallbackName($filename)
-        // );
-
-        $disposition = \CR\LaravelBackport\SymfonyHelper::httpFoundationMakeDisposition(
+        $disposition = $response->headers->makeDisposition(
             $disposition, $filename, $this->fallbackName($filename)
         );
 

@@ -129,6 +129,7 @@
         "psr-4": {
             "Symfony\\Polyfill\\": "cr/patch/symfony/polyfill/src/",
             "Symfony\\Component\\ErrorHandler\\": "cr/symfony/error-handler/",
+            "Symfony\\Component\\HttpFoundation\\": "cr/patch/symfony/http-foundation/",
             "Symfony\\Component\\HttpKernel\\Exception\\": "cr/patch/symfony/http-kernel/Exception/",
             "Symfony\\Component\\Mime\\": "cr/symfony/mime/",
             "Symfony\\Component\\Routing\\": "cr/symfony/routing/",

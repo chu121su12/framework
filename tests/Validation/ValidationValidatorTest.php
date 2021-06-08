@@ -183,6 +183,30 @@ class ValidationValidatorTest_testCustomValidationObject_class_password_rule imp
                         }
                     }
 
+class ValidationValidatorTest_testCustomValidationObject_class_password_rule_validator_aware implements Rule, ValidatorAwareRule
+                    {
+                        protected $validator;
+
+                        public function setValidator($validator)
+                        {
+                            $this->validator = $validator;
+                        }
+
+                        public function passes($attribute, $value)
+                        {
+                            if ($this->validator->errors()->hasAny(['base', $attribute])) {
+                                return true;
+                            }
+
+                            return $value === 2 * $this->validator->getData()['base'];
+                        }
+
+                        public function message()
+                        {
+                            return ['The :attribute must be the double of base.'];
+                        }
+                    }
+
 class ValidationValidatorTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -5435,29 +5459,7 @@ class ValidationValidatorTest extends TestCase
                 'base' => ['integer'],
                 'double' => [
                     'integer',
-                    new class implements Rule, ValidatorAwareRule
-                    {
-                        protected $validator;
-
-                        public function setValidator($validator)
-                        {
-                            $this->validator = $validator;
-                        }
-
-                        public function passes($attribute, $value)
-                        {
-                            if ($this->validator->errors()->hasAny(['base', $attribute])) {
-                                return true;
-                            }
-
-                            return $value === 2 * $this->validator->getData()['base'];
-                        }
-
-                        public function message()
-                        {
-                            return ['The :attribute must be the double of base.'];
-                        }
-                    },
+                    new ValidationValidatorTest_testCustomValidationObject_class_password_rule_validator_aware,
                 ],
             ]
         );
@@ -5471,29 +5473,7 @@ class ValidationValidatorTest extends TestCase
                 'base' => ['integer'],
                 'double' => [
                     'integer',
-                    new class implements Rule, ValidatorAwareRule
-                    {
-                        protected $validator;
-
-                        public function setValidator($validator)
-                        {
-                            $this->validator = $validator;
-                        }
-
-                        public function passes($attribute, $value)
-                        {
-                            if ($this->validator->errors()->hasAny(['base', $attribute])) {
-                                return true;
-                            }
-
-                            return $value === 2 * $this->validator->getData()['base'];
-                        }
-
-                        public function message()
-                        {
-                            return ['The :attribute must be the double of base.'];
-                        }
-                    },
+                    new ValidationValidatorTest_testCustomValidationObject_class_password_rule_validator_aware,
                 ],
             ]
         );
@@ -5508,29 +5488,7 @@ class ValidationValidatorTest extends TestCase
                 'base' => ['integer'],
                 'double' => [
                     'integer',
-                    new class implements Rule, ValidatorAwareRule
-                    {
-                        protected $validator;
-
-                        public function setValidator($validator)
-                        {
-                            $this->validator = $validator;
-                        }
-
-                        public function passes($attribute, $value)
-                        {
-                            if ($this->validator->errors()->hasAny(['base', $attribute])) {
-                                return true;
-                            }
-
-                            return $value === 2 * $this->validator->getData()['base'];
-                        }
-
-                        public function message()
-                        {
-                            return ['The :attribute must be the double of base.'];
-                        }
-                    },
+                    new ValidationValidatorTest_testCustomValidationObject_class_password_rule_validator_aware,
                 ],
             ]
         );

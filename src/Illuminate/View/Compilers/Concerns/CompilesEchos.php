@@ -24,7 +24,7 @@ trait CompilesEchos
     public function stringable($class, $handler = null)
     {
         if ($class instanceof Closure) {
-            [$class, $handler] = [$this->firstClosureParameterType($class), $class];
+            list($class, $handler) = [$this->firstClosureParameterType($class), $class];
         }
 
         $this->echoHandlers[$class] = $handler;

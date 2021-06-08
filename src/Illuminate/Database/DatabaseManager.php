@@ -275,7 +275,7 @@ class DatabaseManager implements ConnectionResolverInterface
      */
     protected function refreshPdoConnections($name)
     {
-        [$database, $type] = $this->parseConnectionName($name);
+        list($database, $type) = $this->parseConnectionName($name);
 
         $fresh = $this->configure(
             $this->makeConnection($database), $type

@@ -14,7 +14,7 @@ use Illuminate\Testing\TestResponse;
 use JsonSerializable;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse5 as BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Cookie;
 
 if (!class_exists('Illuminate\Tests\Testing\AssertionFailedError')) {

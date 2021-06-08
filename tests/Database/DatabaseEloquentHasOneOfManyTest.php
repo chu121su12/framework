@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  */
 class DatabaseEloquentHasOneOfManyTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()////: void
     {
         $db = new DB;
 
@@ -64,7 +64,7 @@ class DatabaseEloquentHasOneOfManyTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()////: void
     {
         $this->schema()->drop('users');
         $this->schema()->drop('logins');

@@ -27,6 +27,15 @@ class DatabaseEloquentCollectionTest_testQueueableRelationshipsReturnsOnlyRelati
             }
         }
 
+
+class DatabaseEloquentCollectionTest_testQueueableRelationshipsIgnoreCollectionKeys_class
+            {
+                public function getQueueableRelations()
+                {
+                    return [];
+                }
+            }
+
 class DatabaseEloquentCollectionTest extends TestCase
 {
     protected function tearDown()
@@ -492,20 +501,8 @@ class DatabaseEloquentCollectionTest extends TestCase
     public function testQueueableRelationshipsIgnoreCollectionKeys()
     {
         $c = new Collection([
-            'foo' => new class
-            {
-                public function getQueueableRelations()
-                {
-                    return [];
-                }
-            },
-            'bar' => new class
-            {
-                public function getQueueableRelations()
-                {
-                    return [];
-                }
-            },
+            'foo' => new DatabaseEloquentCollectionTest_testQueueableRelationshipsIgnoreCollectionKeys_class,
+            'bar' => new DatabaseEloquentCollectionTest_testQueueableRelationshipsIgnoreCollectionKeys_class,
         ]);
 
         $this->assertEquals([], $c->getQueueableRelations());
