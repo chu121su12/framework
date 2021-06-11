@@ -897,8 +897,10 @@ class Connection implements ConnectionInterface
      * @param  bool  $value
      * @return $this
      */
-    public function setRecordModificationState(bool $value)
+    public function setRecordModificationState(/*bool */$value)
     {
+        $value = cast_to_bool($value);
+
         $this->recordsModified = $value;
 
         return $this;

@@ -149,7 +149,9 @@ class Worker
             }
 
             if (isset($this->resetScope)) {
-                ($this->resetScope)();
+                $resetScope = $this->resetScope;
+
+                $resetScope();
             }
 
             // First, we will attempt to get the next job off of the queue. We will also

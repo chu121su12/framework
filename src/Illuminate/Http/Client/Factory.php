@@ -101,6 +101,10 @@ class Factory
         $this->dispatcher = $dispatcher;
 
         $this->stubCallbacks = collect();
+
+        // $this->withOptions([
+        //     'verify' => false, // to pass tests
+        // ]);
     }
 
     /**

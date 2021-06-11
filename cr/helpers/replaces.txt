@@ -1,4 +1,12 @@
 
+uncomment block:
+- to pass tests
+
+
+
+
+
+
 Error:
     Function ReflectionType::__toString() is deprecated
 File:
@@ -10,6 +18,47 @@ With:
 Line:
     - 1190
     - 1195
+
+
+
+Error:
+    Method ReflectionParameter::isArray() is deprecated
+File:
+    vendor/phpunit/phpunit-mock-objects/src/Framework/MockObject/Generator.php
+Replace:
+    $parameter->isArray()
+With:
+    backport_reflection_parameter_declares_array($parameter)
+Line:
+    - 1196
+
+
+
+Error:
+    Method ReflectionParameter::isCallable() is deprecated
+File:
+    vendor/phpunit/phpunit-mock-objects/src/Framework/MockObject/Generator.php
+Replace:
+    $parameter->isCallable()
+With:
+    backport_reflection_parameter_declares_callable($parameter)
+Line:
+    - 1198
+
+
+
+Error:
+    Method ReflectionParameter::getClass() is deprecated
+File:
+    vendor/phpunit/phpunit-mock-objects/src/Framework/MockObject/Generator.php
+Replace:
+    $parameter->getClass()
+With:
+    backport_reflection_parameter_declares_callable($parameter)
+Line:
+    - 1202
+
+
 
 
 
@@ -26,20 +75,28 @@ With:
 
 
 
-PDO::query
+PDOConnection::query (Connection) > PDO::query
     public function query(string $statement, ?int $fetch_mode = null, mixed ...$fetch_mode_args)
     {
         return $this->_query(...func_get_args());
     }
 
-Statement::fetchAll
+PDOStatement::fetchAll (ResultStatement) > Statement::fetchAll
     public function fetchAll(int $fetch_style = \PDO::FETCH_BOTH, mixed ...$fetch_args)
     {
         return $this->_fetchAll($fetch_style, ...$fetch_args);
     }
 
-Statement::setFetchMode
+PDOStatement::setFetchMode (ResultStatement) > Statement::setFetchMode
     public function setFetchMode(int $mode, mixed ...$params)
     {
         return $this->_setFetchMode($mode, ...$params);
     }
+
+
+
+
+
+
+CurlMultiHandler::__destruct()
+    @curl_multi_close

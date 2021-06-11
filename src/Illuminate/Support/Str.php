@@ -427,7 +427,7 @@ class Str
             return '';
         }
 
-        return $matches[1] ?? $matches[0];
+        return isset($matches[1]) ? $matches[1] : $matches[0];
     }
 
     /**
@@ -445,7 +445,7 @@ class Str
             return collect();
         }
 
-        return collect($matches[1] ?? $matches[0]);
+        return collect(isset($matches[1]) ? $matches[1] : $matches[0]);
     }
 
     /**

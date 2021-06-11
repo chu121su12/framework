@@ -115,10 +115,14 @@ trait Matching
      *
      * @return $this
      */
-    public function whereContains(string $key, $expected)
+    public function whereContains(/*string */$key, $expected)
     {
+        $key = cast_to_string($key);
+
+        $keyedProp = $this->prop($key);
+
         $actual = Collection::make(
-            $this->prop($key) ?? $this->prop()
+            isset($keyedProp) ? $keyedProp : $this->prop()
         );
 
         $missing = Collection::make($expected)->reject(function ($search) use ($key, $actual) {

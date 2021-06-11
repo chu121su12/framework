@@ -143,25 +143,66 @@ if (! \function_exists('backport_reflection_parameter_get_class')) {
     }
 }
 
-if (! \function_exists('backport_reflection_parameter_is_array')) {
-    function backport_reflection_parameter_is_array(\ReflectionParameter $parameter)
+if (! \function_exists('backport_reflection_parameter_declares_array')) {
+    function backport_reflection_parameter_declares_array(\ReflectionParameter $parameter)
     {
         if (\version_compare(\PHP_VERSION, '7.9', '<=')) {
             return $parameter->isArray();
         }
 
-        return $parameter->getType() && $parameter->getType()->getName() === 'array';
+        // return $parameter->getType() && $parameter->getType()->getName() === 'array';
+
+        return \in_array(
+            'array',
+            \array_map(
+                function ($t) {
+                    return $t->getName();
+                },
+                $parameter instanceof \ReflectionUnionType
+                    ? $parameter->getTypes()
+                    : [$parameter]
+                ),
+            true
+        );
     }
 }
 
-if (! \function_exists('backport_reflection_parameter_is_callable')) {
-    function backport_reflection_parameter_is_callable(\ReflectionParameter $parameter)
+if (! \function_exists('backport_reflection_parameter_declares_callable')) {
+    function backport_reflection_parameter_declares_callable(\ReflectionParameter $parameter)
     {
         if (\version_compare(\PHP_VERSION, '7.9', '<=')) {
             return $parameter->isCallable();
         }
 
-        return $parameter->getType() && $parameter->getType()->getName() === 'callable';
+        // return $parameter->getType() && $parameter->getType()->getName() === 'callable';
+
+        return \in_array(
+            'callable',
+            \array_map(
+                function ($t) {
+                    return $t->getName();
+                },
+                $parameter instanceof \ReflectionUnionType
+                    ? $parameter->getTypes()
+                    : [$parameter]
+                ),
+            true
+        );
+    }
+}
+
+if (! \function_exists('backport_reflection_parameter_first_classable')) {
+    function backport_reflection_parameter_first_classable(\ReflectionParameter $parameter)
+    {
+        if (\version_compare(\PHP_VERSION, '7.9', '<=')) {
+            return $parameter->getClass();
+        }
+
+        foreach ($parameter instanceof \ReflectionUnionType
+            ? $parameter->getTypes()
+            : [$parameter] as $type) {
+            // return $type;
+        }
     }
 }
 

@@ -58,7 +58,7 @@ class DatabaseTransactionsManager
      */
     public function commit($connection)
     {
-        [$forThisConnection, $forOtherConnections] = $this->transactions->partition(
+        list($forThisConnection, $forOtherConnections) = $this->transactions->partition(
             function ($transaction) use ($connection) {
                 return $transaction->connection == $connection;
             }
