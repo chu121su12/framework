@@ -2,7 +2,7 @@
 
 namespace Doctrine\Patch;
 
-trait PDOConnectionTrait
+trait PDOConnectionComplianceTrait
 {
     public function query()
     {

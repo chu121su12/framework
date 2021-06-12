@@ -2,7 +2,7 @@
 
 namespace Doctrine\Patch;
 
-trait PDOStatementTrait
+trait PDOStatementComplianceTrait
 {
     public function fetchAll(int $fetch_style = \PDO::FETCH_BOTH, mixed ...$fetch_args)
     {

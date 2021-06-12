@@ -2,7 +2,7 @@
 
 namespace Doctrine\Patch;
 
-trait PDOConnectionTrait
+trait PDOConnectionComplianceTrait
 {
     public function query(string $statement, ?int $fetch_mode = null, mixed ...$fetch_mode_args)
     {

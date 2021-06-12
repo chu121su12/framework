@@ -2,7 +2,7 @@
 
 namespace Doctrine\Patch;
 
-trait PDOStatementTrait
+trait PDOStatementComplianceTrait
 {
     public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = null)
     {
