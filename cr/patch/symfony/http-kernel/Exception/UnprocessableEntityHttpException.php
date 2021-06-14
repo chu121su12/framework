@@ -23,6 +23,14 @@ class UnprocessableEntityHttpException extends HttpException
      */
     public function __construct($message = '', $previous = null, $code = 0, array $headers = [])
     {
+        $message = cast_to_string($message, null);
+
+        if (null === $message) {
+            trigger_deprecation('symfony/http-kernel', '5.3', 'Passing null as $message to "%s()" is deprecated, pass an empty string instead.', __METHOD__);
+
+            $message = '';
+        }
+
         parent::__construct(422, $message, $previous, $headers, $code);
     }
 }

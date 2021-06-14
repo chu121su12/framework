@@ -72,6 +72,7 @@ use Symfony\Component\Routing\RouteCollection;
 abstract class AnnotationClassLoader implements LoaderInterface
 {
     protected $reader;
+    protected $env;
 
     /**
      * @var string
@@ -83,9 +84,12 @@ abstract class AnnotationClassLoader implements LoaderInterface
      */
     protected $defaultRouteIndex = 0;
 
-    public function __construct(Reader $reader = null)
+    public function __construct(Reader $reader = null, /*string */$env = null)
     {
+        $env = cast_to_string($env, null);
+
         $this->reader = $reader;
+        $this->env = $env;
     }
 
     /**
@@ -125,6 +129,10 @@ abstract class AnnotationClassLoader implements LoaderInterface
         $collection = new RouteCollection();
         $collection->addResource(new FileResource($class->getFileName()));
 
+        if ($globals['env'] && $this->env !== $globals['env']) {
+            return $collection;
+        }
+
         foreach ($class->getMethods() as $method) {
             $this->defaultRouteIndex = 0;
             foreach ($this->getAnnotations($method) as $annot) {
@@ -148,6 +156,10 @@ abstract class AnnotationClassLoader implements LoaderInterface
     protected function addRoute(RouteCollection $collection, $annot, array $globals, \ReflectionClass $class, \ReflectionMethod $method)
     {
         $annot = cast_to_object($annot);
+
+        if ($annot->getEnv() && $annot->getEnv() !== $this->env) {
+            return;
+        }
 
         $name = $annot->getName();
         if (null === $name) {
@@ -281,7 +293,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
 
         $annot = null;
         if (\PHP_VERSION_ID >= 80000) {
-            $classesRouteAnnotationClassAttributes = $class->getAttributes($this->routeAnnotationClass);
+            $classesRouteAnnotationClassAttributes = $class->getAttributes($this->routeAnnotationClass, \ReflectionAttribute::IS_INSTANCEOF);
 
             if ($attribute = (isset($classesRouteAnnotationClassAttributes[0]) ? $classesRouteAnnotationClassAttributes[0] : null)) {
                 $annot = $attribute->newInstance();
@@ -332,6 +344,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
 
             $annotPriority = $annot->getPriority();
             $globals['priority'] = isset($annotPriority) ? $annotPriority : 0;
+            $globals['env'] = $annot->getEnv();
 
             foreach ($globals['requirements'] as $placeholder => $requirement) {
                 if (\is_int($placeholder)) {
@@ -357,6 +370,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
             'condition' => '',
             'name' => '',
             'priority' => 0,
+            'env' => null,
         ];
     }
 
@@ -383,7 +397,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
         $reflection = cast_to_object($reflection);
 
         if (\PHP_VERSION_ID >= 80000) {
-            foreach ($reflection->getAttributes($this->routeAnnotationClass) as $attribute) {
+            foreach ($reflection->getAttributes($this->routeAnnotationClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
                 yield $attribute->newInstance();
             }
         }

@@ -15,6 +15,7 @@ namespace Symfony\Component\Routing\Annotation;
  * Annotation class for @Route().
  *
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target({"CLASS", "METHOD"})
  *
  * @author Alexander M. Turek <me@derrabus.de>
@@ -33,13 +34,14 @@ class Route
     private $schemes = [];
     private $condition;
     private $priority;
+    private $env;
 
     /**
      * @param array|string      $data         data array managed by the Doctrine Annotations library or the path
      * @param array|string|null $path
      * @param string[]          $requirements
-     * @param string[]          $methods
-     * @param string[]          $schemes
+     * @param string[]|string   $methods
+     * @param string[]|string   $schemes
      *
      * @throws \BadMethodCallException
      */
@@ -51,14 +53,15 @@ class Route
         array $options = [],
         array $defaults = [],
         $host = null,
-        array $methods = [],
-        array $schemes = [],
+        $methods = [],
+        $schemes = [],
         $condition = null,
         $priority = null,
         $locale = null,
         $format = null,
         $utf8 = null,
-        $stateless = null
+        $stateless = null,
+        /*string */$env = null
     ) {
         $name = cast_to_string($name, null);
 
@@ -76,10 +79,26 @@ class Route
 
         $stateless = cast_to_bool($stateless, nul);
 
+        $env = cast_to_string($env, null);
+
         if (\is_string($data)) {
             $data = ['path' => $data];
         } elseif (!\is_array($data)) {
             throw new \TypeError(sprintf('"%s": Argument $data is expected to be a string or array, got "%s".', __METHOD__, get_debug_type($data)));
+        } elseif ([] !== $data) {
+            $deprecation = false;
+            foreach ($data as $key => $val) {
+                if (\in_array($key, ['path', 'name', 'requirements', 'options', 'defaults', 'host', 'methods', 'schemes', 'condition', 'priority', 'locale', 'format', 'utf8', 'stateless', 'env', 'value'])) {
+                    $deprecation = true;
+                }
+            }
+
+            if ($deprecation) {
+                trigger_deprecation('symfony/routing', '5.3', 'Passing an array as first argument to "%s" is deprecated. Use named arguments instead.', __METHOD__);
+            } else {
+                $localizedPaths = $data;
+                $data = ['path' => $localizedPaths];
+            }
         }
         if (null !== $path && !\is_string($path) && !\is_array($path)) {
             throw new \TypeError(sprintf('"%s": Argument $path is expected to be a string, array or null, got "%s".', __METHOD__, get_debug_type($path)));
@@ -99,6 +118,7 @@ class Route
         $data['format'] = isset($data['format']) ? $data['format'] : $format;
         $data['utf8'] = isset($data['utf8']) ? $data['utf8'] : $utf8;
         $data['stateless'] = isset($data['stateless']) ? $data['stateless'] : $stateless;
+        $data['env'] = isset($data['env']) ? $data['env'] : $env;
 
         $data = array_filter($data, static function ($value) {
             return null !== $value;
@@ -257,5 +277,17 @@ class Route
     public function getPriority() //// ?int
     {
         return $this->priority;
+    }
+
+    public function setEnv(/*?string */$env = null)////: void
+    {
+        $enc = cast_to_string($enc, null);
+
+        $this->env = $env;
+    }
+
+    public function getEnv()////: ?string
+    {
+        return $this->env;
     }
 }

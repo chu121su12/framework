@@ -35,7 +35,7 @@ class ClosureLoader extends Loader
     {
         $type = cast_to_string($type, null);
 
-        return $closure();
+        return $closure($this->env);
     }
 
     /**

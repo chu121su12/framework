@@ -12,8 +12,14 @@ class ResponseHeaderBag5 extends ResponseHeaderBag
         parent::__construct($headers);
     }
 
-    public function makeDisposition($disposition, $filename, $filenameFallback = '')
+    public function makeDisposition(/*string */$disposition, /*string */$filename, /*string */$filenameFallback = '')
     {
+        $disposition = cast_to_string($disposition);
+
+        $filename = cast_to_string($filename);
+
+        $filenameFallback = cast_to_string($filenameFallback);
+
         return SymfonyHelper::httpFoundationMakeDisposition($disposition, $filename, $filenameFallback);
     }
 }
