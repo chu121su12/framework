@@ -1849,7 +1849,7 @@ final class MimeTypes implements MimeTypesInterface
         'zz-application/zz-winassoc-xls' => ['xls', 'xlc', 'xll', 'xlm', 'xlw', 'xla', 'xlt', 'xld'],
     ];
 
-    private const REVERSE_MAP = [
+    const REVERSE_MAP = [
         '1km' => ['application/vnd.1000minds.decision-model+xml'],
         '32x' => ['application/x-genesis-32x-rom'],
         '3dml' => ['text/vnd.in3d.3dml'],
