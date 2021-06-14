@@ -2,6 +2,8 @@
 
 namespace Carbon\Patch;
 
+use ReturnTypeWillChange;
+
 trait SetState
 {
     /**
@@ -11,6 +13,7 @@ trait SetState
      *
      * @return static
      */
+    #[ReturnTypeWillChange]
     public static function __set_state()
     {
         return static::__set_state_(...\func_get_args());

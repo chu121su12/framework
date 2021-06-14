@@ -1229,6 +1229,25 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
     public static function createSafe($year = null, $month = null, $day = null, $hour = null, $minute = null, $second = null, $tz = null);
 
     /**
+     * Create a new Carbon instance from a specific date and time using strict validation.
+     *
+     * @see create()
+     *
+     * @param int|null                 $year
+     * @param int|null                 $month
+     * @param int|null                 $day
+     * @param int|null                 $hour
+     * @param int|null                 $minute
+     * @param int|null                 $second
+     * @param DateTimeZone|string|null $tz
+     *
+     * @throws InvalidFormatException
+     *
+     * @return static
+     */
+    public static function createStrict(/*?int */$year = 0, /*?int */$month = 1, /*?int */$day = 1, /*?int */$hour = 0, /*?int */$minute = 0, /*?int */$second = 0, $tz = null);
+
+    /**
      * Get/set the day of year.
      *
      * @param int|null $value new value for day of year if using as setter.
@@ -2286,7 +2305,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public function getTranslationMessage($key, $locale = null, $default = null, $translator = null);
+    public function getTranslationMessage(/*string */$key, /*?string */$locale = null, /*?string */$default = null, $translator = null);
 
     /**
      * Returns raw translation message for a given key.
@@ -2298,7 +2317,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public static function getTranslationMessageWith($translator, $key, $locale = null, $default = null);
+    public static function getTranslationMessageWith($translator, /*string */$key, /*?string */$locale = null, /*?string */$default = null);
 
     /**
      * Get the default translator instance in use.
@@ -2936,7 +2955,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public function isoFormat($format, $originalFormat = null); //// string
+    public function isoFormat(/*string */$format, /*?string */$originalFormat = null); //// string
 
     /**
      * Get/set the week number using given first day of week and first
@@ -3068,7 +3087,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return $this|string
      */
-    public function locale($locale = null, ...$fallbackLocales);
+    public function locale(/*?string */$locale = null, ...$fallbackLocales);
 
     /**
      * Returns true if the given locale is internally supported and has words for 1-day diff (just now, yesterday, tomorrow).
@@ -3425,7 +3444,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public function ordinal($key, $period = null); //// string
+    public function ordinal(/*string */$key, /*?string */$period = null); //// string
 
     /**
      * Create a carbon instance from a string.
@@ -4741,7 +4760,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return string
      */
-    public function translate($key, array $parameters = [], $number = null, \Symfony\Component\Translation\TranslatorInterface $translator = null, $altNumbers = false); //// string
+    public function translate($key, array $parameters = [], $number = null, /*?*/\Symfony\Component\Translation\TranslatorInterface $translator = null, $altNumbers = false); //// string
 
     /**
      * Returns the alternative number for a given integer if available in the current locale.
@@ -4911,7 +4930,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return int|static
      */
-    public function utcOffset($minuteOffset = null);
+    public function utcOffset(/*?int */$minuteOffset = null);
 
     /**
      * Returns the milliseconds timestamps used amongst other by Date javascript objects.
