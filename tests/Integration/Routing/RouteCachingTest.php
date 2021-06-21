@@ -23,8 +23,10 @@ class RouteCachingTest extends TestCase
         $this->get('/foo/1')->assertRedirect('/foo/1/bar');
     }
 
-    protected function routes(string $file)
+    protected function routes(/*string */$file)
     {
+        $file = cast_to_string($file);
+
         $this->defineCacheRoutes(file_get_contents($file));
     }
 }
