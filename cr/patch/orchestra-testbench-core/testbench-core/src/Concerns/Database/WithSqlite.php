@@ -41,7 +41,7 @@ trait WithSqlite
      *
      * @return void
      */
-    protected function hotfixForSqliteSchemaBuilder()
+    protected function hotfixForSqliteSchemaBuilder()////: void
     {
         Connection::resolverFor('sqlite', static function ($connection, $database, $prefix, $config) {
             return new WithSqlite_hotfix_SQLiteConnection($connection, $database, $prefix, $config);

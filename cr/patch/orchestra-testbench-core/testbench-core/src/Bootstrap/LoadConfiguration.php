@@ -2,6 +2,7 @@
 
 namespace Orchestra\Testbench\Bootstrap;
 
+use Generator;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Config\Repository as RepositoryContract;
 use Illuminate\Contracts\Foundation\Application;
@@ -16,15 +17,13 @@ class LoadConfiguration
      *
      * @return void
      */
-    public function bootstrap(Application $app)
+    public function bootstrap(Application $app)////: void
     {
-        $items = [];
-
-        $app->instance('config', $config = new Repository($items));
+        $app->instance('config', $config = new Repository([]));
 
         $this->loadConfigurationFiles($app, $config);
 
-        \mb_internal_encoding('UTF-8');
+        mb_internal_encoding('UTF-8');
     }
 
     /**
@@ -35,7 +34,7 @@ class LoadConfiguration
      *
      * @return void
      */
-    protected function loadConfigurationFiles(Application $app, RepositoryContract $config)
+    protected function loadConfigurationFiles(Application $app, RepositoryContract $config)////: void
     {
         foreach ($this->getConfigurationFiles($app) as $key => $path) {
             $config->set($key, require $path);
@@ -47,18 +46,16 @@ class LoadConfiguration
      *
      * @param  \Illuminate\Contracts\Foundation\Application  $app
      *
-     * @return array
+     * @return \Generator
      */
-    protected function getConfigurationFiles(Application $app)
+    protected function getConfigurationFiles(Application $app)///: Generator
     {
-        $files = [];
-
-        $path = \realpath(__DIR__.'/../../laravel/config');
-
-        foreach (Finder::create()->files()->name('*.php')->in($path) as $file) {
-            $files[\basename($file->getRealPath(), '.php')] = $file->getRealPath();
+        if (! is_dir($path = $app->basePath('config'))) {
+            $path = realpath(__DIR__.'/../../laravel/config');
         }
 
-        return $files;
+        foreach (Finder::create()->files()->name('*.php')->in($path) as $file) {
+            yield basename($file->getRealPath(), '.php') => $file->getRealPath();
+        }
     }
 }

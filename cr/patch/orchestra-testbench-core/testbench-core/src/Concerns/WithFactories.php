@@ -14,7 +14,7 @@ trait WithFactories
      *
      * @return $this
      */
-    protected function withFactories($path)
+    protected function withFactories(/*string */$path)
     {
         $path = cast_to_string($path);
 
@@ -29,11 +29,11 @@ trait WithFactories
      *
      * @return $this
      */
-    protected function loadFactoriesUsing($app, $path)
+    protected function loadFactoriesUsing($app, /*string */$path)
     {
         $path = cast_to_string($path);
 
-        if (! \class_exists(ModelFactory::class)) {
+        if (! class_exists(ModelFactory::class)) {
             $requirement = <<<'requirement'
 Missing `laravel/legacy-factories` in composer.json. Please refer to <https://github.com/orchestral/testbench/blob/6.x/README.md#using-legacy-factories>
 requirement;

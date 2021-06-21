@@ -3,11 +3,19 @@
 namespace Orchestra\Testbench\Console;
 
 use Dotenv\Dotenv;
+use Dotenv\Loader\Loader;
+use Dotenv\Parser\Parser;
+use Dotenv\Store\StringStore;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
+use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Env;
 use Orchestra\Testbench\Concerns\CreatesApplication;
+use Orchestra\Testbench\Foundation\TestbenchServiceProvider;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 class Commander
 {
@@ -43,7 +51,7 @@ class Commander
      * @param  array  $config
      * @param  string  $workingPath
      */
-    public function __construct(array $config, $workingPath)
+    public function __construct(array $config, /*string */$workingPath)
     {
         $workingPath = cast_to_string($workingPath);
 
@@ -59,11 +67,22 @@ class Commander
     public function handle()
     {
         $laravel = $this->laravel();
+
         $kernel = $laravel->make(ConsoleKernel::class);
 
-        $status = $kernel->handle(
-            $input = new ArgvInput(), new ConsoleOutput()
-        );
+        $input = new ArgvInput();
+        $output = new ConsoleOutput();
+
+        try {
+            $status = $kernel->handle($input, $output);
+        } catch (\Throwable $error) {
+        } catch (\Error $error) {
+        } catch (\Exception $error) {
+        }
+
+        if (isset($error)) {
+            $status = $this->handleException($output, $error);
+        }
 
         $kernel->terminate($input, $status);
 
@@ -78,10 +97,22 @@ class Commander
     public function laravel()
     {
         if (! $this->app) {
+            $this->createSymlinkToVendorPath();
+
             $this->app = $this->createApplication();
         }
 
         return $this->app;
+    }
+
+    /**
+     * Ignore package discovery from.
+     *
+     * @return array
+     */
+    public function ignorePackageDiscoveriesFrom()
+    {
+        return isset($this->config['dont-discover']) ? $this->config['dont-discover'] : [];
     }
 
     /**
@@ -103,40 +134,31 @@ class Commander
      */
     protected function resolveApplication()
     {
-        return \tap($this->resolveApplicationFromTrait(), function () {
+        return tap($this->resolveApplicationFromTrait(), function ($app) {
             $this->createDotenv()->load();
+
+            $app->register(TestbenchServiceProvider::class);
         });
     }
 
     /**
      * Create a Dotenv instance.
      */
-    protected function createDotenv()
+    protected function createDotenv()//: Dotenv
     {
         $laravelBasePath = $this->getBasePath();
 
-        if (\file_exists($laravelBasePath.'/.env')) {
+        if (file_exists($laravelBasePath.'/.env')) {
             return Dotenv::create(
                 Env::getRepository(), $laravelBasePath.'/', '.env'
             );
         }
 
-        $path = \tempnam(\sys_get_temp_dir(), 'testbench');
-
-        \file_put_contents(
-            $path,
-            \implode("\n", isset($this->config['env']) ? $this->config['env'] : [])
-        );
-
-        \register_shutdown_function(function () use ($path) {
-            if (\file_exists($path)) {
-                \unlink($path);
-            }
-        });
-
-        return Dotenv::create(
-            Env::getRepository(), \dirname($path) . '/', \basename($path)
-        );
+        return (new Dotenv(
+            new Loader(),
+            Env::getRepository(),
+            new StringStore(implode("\n", isset($this->config['env']) ? $this->config['env'] : []))
+        ));
     }
 
     /**
@@ -149,9 +171,54 @@ class Commander
         $laravelBasePath = isset($this->config['laravel']) ? $this->config['laravel'] : null;
 
         if (! \is_null($laravelBasePath)) {
-            return \str_replace('./', $this->workingPath.'/', $laravelBasePath);
+            return tap(str_replace('./', $this->workingPath.'/', $laravelBasePath), static function ($path) {
+                $_ENV['APP_BASE_PATH'] = $path;
+            });
         }
 
         return $this->getBasePathFromTrait();
+    }
+
+    /**
+     * Create symlink on vendor path.
+     */
+    protected function createSymlinkToVendorPath()////: void
+    {
+        $workingVendorPath = $this->workingPath.'/vendor';
+
+        tap($this->resolveApplication(), static function ($laravel) use ($workingVendorPath) {
+            $filesystem = new Filesystem();
+
+            $laravelVendorPath = $laravel->basePath('vendor');
+
+            if (
+                "{$laravelVendorPath}/autoload.php" !== "{$workingVendorPath}/autoload.php"
+            ) {
+                $filesystem->delete($laravelVendorPath);
+                $filesystem->link($workingVendorPath, $laravelVendorPath);
+            }
+
+            $laravel->flush();
+        });
+    }
+
+    /**
+     * Render an exception to the console.
+     *
+     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
+     * @param  \Throwable  $error
+     *
+     * @return int
+     */
+    protected function handleException(OutputInterface $output, /*Throwable */$error)
+    {
+        $laravel = $this->laravel();
+
+        tap($laravel->make(ExceptionHandler::class), static function ($handler) use ($error, $output) {
+            $handler->report($error);
+            $handler->renderForConsole($output, $error);
+        });
+
+        return 1;
     }
 }

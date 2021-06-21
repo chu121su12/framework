@@ -14,7 +14,7 @@ trait WithLoadMigrationsFrom
      *
      * @return void
      */
-    protected function loadMigrationsFrom($paths)
+    protected function loadMigrationsFrom($paths)////: void
     {
         $options = \is_array($paths) ? $paths : ['--path' => $paths];
 

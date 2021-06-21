@@ -10,7 +10,7 @@ trait InteractsWithPublishedFiles
     /**
      * Setup Interacts with Published Files environment.
      */
-    protected function setUpInteractsWithPublishedFiles()
+    protected function setUpInteractsWithPublishedFiles()////: void
     {
         $this->cleanUpFiles();
         $this->cleanUpMigrationFiles();
@@ -19,7 +19,7 @@ trait InteractsWithPublishedFiles
     /**
      * Teardown Interacts with Published Files environment.
      */
-    protected function tearDownInteractsWithPublishedFiles()
+    protected function tearDownInteractsWithPublishedFiles()////: void
     {
         $this->cleanUpFiles();
         $this->cleanUpMigrationFiles();
@@ -28,7 +28,7 @@ trait InteractsWithPublishedFiles
     /**
      * Assert file does contains data.
      */
-    protected function assertFileContains(array $contains, $file, $message = '')
+    protected function assertFileContains(array $contains, /*string */$file, /*string */$message = '')////: void
     {
         $file = cast_to_string($file);
 
@@ -48,7 +48,7 @@ trait InteractsWithPublishedFiles
     /**
      * Assert file doesn't contains data.
      */
-    protected function assertFileNotContains(array $contains, $file, $message = '')
+    protected function assertFileNotContains(array $contains, /*string */$file, /*string */$message = '')////: void
     {
         $file = cast_to_string($file);
 
@@ -68,7 +68,7 @@ trait InteractsWithPublishedFiles
     /**
      * Assert file does contains data.
      */
-    protected function assertMigrationFileContains(array $contains, $file, $message = '')
+    protected function assertMigrationFileContains(array $contains, /*string */$file, /*string */$message = '')////: void
     {
         $file = cast_to_string($file);
 
@@ -84,7 +84,7 @@ trait InteractsWithPublishedFiles
     /**
      * Assert file doesn't contains data.
      */
-    protected function assertMigrationFileNotContains(array $contains, $file, $message = '')
+    protected function assertMigrationFileNotContains(array $contains, /*string */$file, /*string */$message = '')////: void
     {
         $file = cast_to_string($file);
 
@@ -100,7 +100,7 @@ trait InteractsWithPublishedFiles
     /**
      * Assert filename exists.
      */
-    protected function assertFilenameExists($file)
+    protected function assertFilenameExists(/*string */$file)////: void
     {
         $file = cast_to_string($file);
 
@@ -112,7 +112,7 @@ trait InteractsWithPublishedFiles
     /**
      * Assert filename not exists.
      */
-    protected function assertFilenameNotExists($file)
+    protected function assertFilenameNotExists(/*string */$file)////: void
     {
         $file = cast_to_string($file);
 
@@ -124,7 +124,7 @@ trait InteractsWithPublishedFiles
     /**
      * Removes generated files.
      */
-    protected function cleanUpFiles()
+    protected function cleanUpFiles()////: void
     {
         $this->app['files']->delete(
             Collection::make(isset($this->files) ? $this->files : [])
@@ -140,7 +140,7 @@ trait InteractsWithPublishedFiles
     /**
      * Removes generated migration files.
      */
-    protected function getMigrationFile($filename)
+    protected function getMigrationFile(/*string */$filename)////: string
     {
         $filename = cast_to_string($filename);
 
@@ -152,7 +152,7 @@ trait InteractsWithPublishedFiles
     /**
      * Removes generated migration files.
      */
-    protected function cleanUpMigrationFiles()
+    protected function cleanUpMigrationFiles()////: void
     {
         $this->app['files']->delete(
             Collection::make($this->app['files']->files($this->app->databasePath('migrations')))

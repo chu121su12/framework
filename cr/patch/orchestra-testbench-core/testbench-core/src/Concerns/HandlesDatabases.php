@@ -6,16 +6,26 @@ use Closure;
 
 trait HandlesDatabases
 {
+    use Database\HandlesConnections;
+
     /**
      * Setup database requirements.
      *
      * @param  \Closure  $callback
      */
-    protected function setUpDatabaseRequirements(Closure $callback)
+    protected function setUpDatabaseRequirements(Closure $callback)////: void
     {
+        tap($this->app['config'], function ($config) {
+            $this->usesDatabaseConnectionsEnvironmentVariables($config, 'mysql', 'MYSQL');
+            $this->usesDatabaseConnectionsEnvironmentVariables($config, 'pgsql', 'POSTGRES');
+            $this->usesDatabaseConnectionsEnvironmentVariables($config, 'sqlsrv', 'MSSQL');
+        });
+
         $this->defineDatabaseMigrations();
 
-        $this->parseTestMethodAnnotations($this->app, 'define-db');
+        if (method_exists($this, 'parseTestMethodAnnotations')) {
+            $this->parseTestMethodAnnotations($this->app, 'define-db');
+        }
 
         $callback();
     }
@@ -29,12 +39,4 @@ trait HandlesDatabases
     {
         // Define database migrations.
     }
-
-    /**
-     * Parse test method annotations.
-     *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @param  string  $name
-     */
-    abstract protected function parseTestMethodAnnotations($app, $name);
 }

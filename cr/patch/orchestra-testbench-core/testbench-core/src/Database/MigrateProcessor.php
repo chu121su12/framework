@@ -65,7 +65,7 @@ class MigrateProcessor
      *
      * @return void
      */
-    protected function dispatch($command)
+    protected function dispatch(/*string */$command)////: void
     {
         $command = cast_to_string($command);
 

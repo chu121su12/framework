@@ -5,9 +5,30 @@ namespace Orchestra\Testbench\Concerns;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
+use Orchestra\Testbench\Foundation\PackageManifest;
 
 trait CreatesApplication
 {
+    /**
+     * Get Application's base path.
+     *
+     * @return string
+     */
+    public static function applicationBasePath()
+    {
+        return isset($_ENV['APP_BASE_PATH']) ? $_ENV['APP_BASE_PATH'] : realpath(__DIR__.'/../../laravel');
+    }
+
+    /**
+     * Ignore package discovery from.
+     *
+     * @return array
+     */
+    public function ignorePackageDiscoveriesFrom()
+    {
+        return ['*'];
+    }
+
     /**
      * Get application timezone.
      *
@@ -39,7 +60,7 @@ trait CreatesApplication
      *
      * @return void
      */
-    final protected function resolveApplicationBindings($app)
+    final protected function resolveApplicationBindings($app)////: void
     {
         foreach ($this->overrideApplicationBindings($app) as $original => $replacement) {
             $app->bind($original, $replacement);
@@ -77,7 +98,7 @@ trait CreatesApplication
      *
      * @return array
      */
-    final protected function resolveApplicationAliases($app)
+    final protected function resolveApplicationAliases($app)////: array
     {
         $aliases = new Collection($this->getApplicationAliases($app));
         $overrides = $this->overrideApplicationAliases($app);
@@ -146,7 +167,7 @@ trait CreatesApplication
      *
      * @return array
      */
-    final protected function resolveApplicationProviders($app)
+    final protected function resolveApplicationProviders($app)////: array
     {
         $providers = new Collection($this->getApplicationProviders($app));
         $overrides = $this->overrideApplicationProviders($app);
@@ -179,7 +200,7 @@ trait CreatesApplication
      */
     protected function getBasePath()
     {
-        return \realpath(__DIR__.'/../../laravel');
+        return static::applicationBasePath();
     }
 
     /**
@@ -211,11 +232,13 @@ trait CreatesApplication
      */
     protected function resolveApplication()
     {
-        return \tap(new Application($this->getBasePath()), static function ($app) {
+        return tap(new Application($this->getBasePath()), function ($app) {
             $app->bind(
                 'Illuminate\Foundation\Bootstrap\LoadConfiguration',
                 'Orchestra\Testbench\Bootstrap\LoadConfiguration'
             );
+
+            PackageManifest::swap($app, $this);
         });
     }
 
@@ -228,10 +251,14 @@ trait CreatesApplication
      */
     protected function resolveApplicationConfiguration($app)
     {
+        if (property_exists($this, 'loadEnvironmentVariables') && $this->loadEnvironmentVariables === true) {
+            $app->make('Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables')->bootstrap($app);
+        }
+
         $app->make('Illuminate\Foundation\Bootstrap\LoadConfiguration')->bootstrap($app);
 
-        \tap($this->getApplicationTimezone($app), static function ($timezone) {
-            ! \is_null($timezone) && \date_default_timezone_set($timezone);
+        tap($this->getApplicationTimezone($app), static function ($timezone) {
+            ! \is_null($timezone) && date_default_timezone_set($timezone);
         });
 
         $app['config']['app.aliases'] = $this->resolveApplicationAliases($app);
@@ -305,11 +332,11 @@ trait CreatesApplication
         $app->make('Illuminate\Foundation\Bootstrap\SetRequestForConsole')->bootstrap($app);
         $app->make('Illuminate\Foundation\Bootstrap\RegisterProviders')->bootstrap($app);
 
-        if (\class_exists('Illuminate\Database\Eloquent\LegacyFactoryServiceProvider')) {
+        if (class_exists('Illuminate\Database\Eloquent\LegacyFactoryServiceProvider')) {
             $app->register('Illuminate\Database\Eloquent\LegacyFactoryServiceProvider');
         }
 
-        if (\method_exists($this, 'parseTestMethodAnnotations')) {
+        if (method_exists($this, 'parseTestMethodAnnotations')) {
             $this->parseTestMethodAnnotations($app, 'environment-setup');
             $this->parseTestMethodAnnotations($app, 'define-env');
         }
