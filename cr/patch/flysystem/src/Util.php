@@ -141,8 +141,8 @@ class Util
     {
         // We do this check in a loop, since removing invalid unicode characters
         // can lead to new characters being created.
-        while (preg_match('#\p{C}+|^\./#u', $path)) {
-            $path = preg_replace('#\p{C}+|^\./#u', '', $path);
+        if (preg_match('#\p{C}+#u', $path)) {
+            throw CorruptedPathDetected::forPath($path);
         }
 
         return $path;
