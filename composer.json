@@ -48,6 +48,7 @@
         "voku/portable-utf8": "^3.1.30"
     },
     "replace": {
+        "calebporzio/sushi": "^2.2.0",
         "illuminate/auth": "self.version",
         "illuminate/broadcasting": "self.version",
         "illuminate/bus": "self.version",
@@ -78,7 +79,21 @@
         "illuminate/testing": "self.version",
         "illuminate/translation": "self.version",
         "illuminate/validation": "self.version",
-        "illuminate/view": "self.version"
+        "illuminate/view": "self.version",
+        "league/flysystem": "^1.0.70",
+        "nesbot/carbon": "^2.49",
+        "symfony/deprecation-contracts": "^2.2.0",
+        "symfony/error-handler": "^5.3.0",
+        "symfony/mime": "^5.3.0",
+        "symfony/polyfill": "^1.23.0",
+        "symfony/polyfill-php70": "^1.20.0",
+        "symfony/polyfill-php71": "^1.20.0",
+        "symfony/polyfill-php72": "^1.23.0",
+        "symfony/polyfill-php73": "^1.23.0",
+        "symfony/polyfill-php74": "^1.23.0",
+        "symfony/polyfill-php80": "^1.23.0",
+        "symfony/polyfill-php81": "^1.23.0",
+        "symfony/routing": "^5.3.0"
     },
     "require-dev": {
         "aws/aws-sdk-php": "^3.155",
