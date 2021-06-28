@@ -4850,7 +4850,7 @@ class TestJsonableObject implements Jsonable
 
 class TestJsonSerializeObject implements JsonSerializable
 {
-    public function jsonSerialize(): array
+    public function jsonSerialize()////: array
     {
         return ['foo' => 'bar'];
     }
@@ -4858,7 +4858,7 @@ class TestJsonSerializeObject implements JsonSerializable
 
 class TestJsonSerializeWithScalarValueObject implements JsonSerializable
 {
-    public function jsonSerialize(): string
+    public function jsonSerialize()////: string
     {
         return 'foo';
     }
