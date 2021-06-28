@@ -165,6 +165,6 @@ class RateLimiter
      */
     public function availableIn($key)
     {
-        return $this->cache->get($key.':timer') - $this->currentTime();
+        return max(0, $this->cache->get($key.':timer') - $this->currentTime());
     }
 }
