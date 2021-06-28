@@ -50,7 +50,7 @@ class RateLimitedTest extends TestCase
         $this->app->instance(RateLimiter::class, $rateLimiter);
         $rateLimiter = $this->app->make(RateLimiter::class);
 
-        $rateLimiter->for('test', function ($job) {
+        $rateLimiter->for_('test', function ($job) {
             return Limit::perHour(1);
         });
 
