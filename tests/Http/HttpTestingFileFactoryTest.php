@@ -65,7 +65,7 @@ class HttpTestingFileFactoryTest extends TestCase
         $image = (new FileFactory)->image('test.webp');
 
         $this->assertSame(
-            'image/webp',
+            version_compare(PHP_VERSION, '7.0.0', '<') ? 'application/octet-stream' : 'image/webp',
             mime_content_type($image->getRealPath())
         );
     }

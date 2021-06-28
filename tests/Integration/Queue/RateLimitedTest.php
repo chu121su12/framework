@@ -60,7 +60,7 @@ class RateLimitedTest extends TestCase
         RateLimitedTestJob::$handled = false;
         $instance = new CallQueuedHandler(new Dispatcher($this->app), $this->app);
 
-        $job = m::mock(Job::class);
+        $job = m::mock(JobContract::class);
 
         $job->shouldReceive('hasFailed')->once()->andReturn(false);
         $job->shouldReceive('release')->once()->withArgs(function ($delay) {
