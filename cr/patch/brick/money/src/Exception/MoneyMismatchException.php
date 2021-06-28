@@ -31,7 +31,7 @@ class MoneyMismatchException extends MoneyException
      *
      * @return MoneyMismatchException
      */
-    public static function contextMismatch(string $method)//// : self
+    public static function contextMismatch(/*string */$method)//// : self
     {
         $method = cast_to_string($method);
 

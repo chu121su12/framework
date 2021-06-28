@@ -81,7 +81,9 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
             $throw();
         }
 
-        $getMatch = static function(string $value) use ($matches)/* : ?string*/ {
+        $getMatch = static function(/*string */$value) use ($matches)/* : ?string*/ {
+            $value = cast_to_string($value);
+
             return isset($matches[$value]) && $matches[$value] !== '' ? $matches[$value] : null;
         };
 

@@ -646,7 +646,7 @@ final class Money extends AbstractMoney
      *
      * @throws \InvalidArgumentException If called with invalid parameters.
      */
-    public function split(int $parts)//// : array
+    public function split(/*int */$parts)//// : array
     {
         $parts = cast_to_int($parts);
 
@@ -671,7 +671,7 @@ final class Money extends AbstractMoney
      *
      * @throws \InvalidArgumentException If called with invalid parameters.
      */
-    public function splitWithRemainder(int $parts)//// : array
+    public function splitWithRemainder(/*int */$parts)//// : array
     {
         $parts = cast_to_int($parts);
 

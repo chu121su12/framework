@@ -24,7 +24,7 @@ class UnknownCurrencyException extends MoneyException
      *
      * @return UnknownCurrencyException
      */
-    public static function noCurrencyForCountry(string $countryCode)//// : self
+    public static function noCurrencyForCountry(/*string */$countryCode)//// : self
     {
         $countryCode = cast_to_string($countryCode);
 
@@ -37,7 +37,7 @@ class UnknownCurrencyException extends MoneyException
      *
      * @return UnknownCurrencyException
      */
-    public static function noSingleCurrencyForCountry(string $countryCode, array $currencyCodes)//// : self
+    public static function noSingleCurrencyForCountry(/*string */$countryCode, array $currencyCodes)//// : self
     {
         $countryCode = cast_to_string($countryCode);
 

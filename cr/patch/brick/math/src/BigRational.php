@@ -300,7 +300,7 @@ final class BigRational extends BigNumber
      *
      * @throws \InvalidArgumentException If the exponent is not in the range 0 to 1,000,000.
      */
-    public function power(int $exponent)// : BigRational
+    public function power(/*int */$exponent)// : BigRational
     {
         $exponent = cast_to_int($exponent);
 
