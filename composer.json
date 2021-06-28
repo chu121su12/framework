@@ -175,11 +175,11 @@
             "Doctrine\\": "cr/patch/doctrine/doctrine/",
             "Illuminate\\": "src/Illuminate/",
             "Illuminate\\Support\\": ["src/Illuminate/Macroable/", "src/Illuminate/Collections/"],
-            "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/auth-backend/",
-            "Brick\\Math\\": "cr/brick/math/src/",
-            "Brick\\Money\\": "cr/brick/money/src/",
+            "Brick\\Math\\": "cr/patch/brick/math/src/",
+            "Brick\\Money\\": "cr/patch/brick/money/src/",
             "Sushi\\": "cr/patch/sushi/sushi/",
             "Laravel\\Ui\\": "cr/patch/laravel-ui/src/",
+            "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/auth-backend/",
             "CR\\LaravelBackport\\": "cr/patch/laravel-backport/"
         },
         "classmap": [
