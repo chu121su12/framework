@@ -82,7 +82,9 @@ return [
     'weekdays' => ['dimenge', 'diluns', 'dimars', 'dimècres', 'dijòus', 'divendres', 'dissabte'],
     'weekdays_short' => ['dg', 'dl', 'dm', 'dc', 'dj', 'dv', 'ds'],
     'weekdays_min' => ['dg', 'dl', 'dm', 'dc', 'dj', 'dv', 'ds'],
-    'ordinal' => function ($number, $period) {
+    'ordinal' => function ($number, /*string */$period = '') {
+        $period = cast_to_string($period);
+
         $ordinals = [1 => 'èr', 2 => 'nd'];
 
         $ordinal = isset($ordinals[(int) $number]) ? $ordinals[(int) $number] : 'en';

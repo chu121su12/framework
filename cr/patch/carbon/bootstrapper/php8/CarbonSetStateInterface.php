@@ -2,6 +2,8 @@
 
 namespace Carbon\Patch;
 
+use ReturnTypeWillChange;
+
 interface CarbonSetStateInterface
 {
     /**
@@ -11,5 +13,6 @@ interface CarbonSetStateInterface
      *
      * @return static
      */
+    #[ReturnTypeWillChange]
     public static function __set_state($dump);
 }
