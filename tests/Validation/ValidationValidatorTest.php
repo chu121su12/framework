@@ -6279,10 +6279,15 @@ class ValidationValidatorTest extends TestCase
 
     protected function hasActiveInternetConnection()
     {
-        if ($connection = @fsockopen('google.com', 80)) {
-            fclose($connection);
+        try {
+            if ($connection = @fsockopen('google.com', 80)) {
+                fclose($connection);
 
-            return true;
+                return true;
+            }
+        } catch (\Throwable $e) {
+        } catch (\Error $e) {
+        } catch (\Exception $e) {
         }
 
         return false;
