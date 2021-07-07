@@ -22,6 +22,10 @@ class HttpRedirectResponseTest extends TestCase
 
     public function testHeaderOnRedirect()
     {
+        if (\version_compare(\PHP_VERSION, '5.6', '<=') && windows_os()) {
+            // something?
+        }
+
         $response = new RedirectResponse('foo.bar');
         $this->assertNull($response->headers->get('foo'));
         $response->header('foo', 'bar');

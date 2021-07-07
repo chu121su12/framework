@@ -106,6 +106,10 @@ class ValidationPasswordRuleTest extends TestCase
 
     public function testUncompromised()
     {
+        if (\version_compare(\PHP_VERSION, '5.6', '<=') && windows_os()) {
+            $this->markTestSkipped('This PHP version may throw SSL error');
+        }
+
         $this->fails(Password::min(2)->uncompromised(), [
             '123456',
             'password',
@@ -136,6 +140,10 @@ class ValidationPasswordRuleTest extends TestCase
 
     public function testMessagesOrder()
     {
+        if (\version_compare(\PHP_VERSION, '5.6', '<=') && windows_os()) {
+            $this->markTestSkipped('This PHP version may throw SSL error');
+        }
+
         $makeRules = function () {
             return ['required', Password::min(8)->mixedCase()->numbers()];
         };
