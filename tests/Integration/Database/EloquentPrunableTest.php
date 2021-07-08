@@ -15,7 +15,7 @@ use Mockery as m;
 
 class EloquentPrunableTest extends DatabaseTestCase
 {
-    protected function setUp(): void
+    protected function setUp()////: void
     {
         parent::setUp();
 
@@ -46,7 +46,7 @@ class EloquentPrunableTest extends DatabaseTestCase
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage(
-            'Please implement',
+            'Please implement'
         );
 
         PrunableTestModelMissingPrunableMethod::create()->pruneAll();
@@ -112,7 +112,7 @@ class EloquentPrunableTest extends DatabaseTestCase
         $this->assertEquals(5000, PrunableWithCustomPruneMethodTestModel::count());
     }
 
-    public function tearDown(): void
+    public function tearDown()////: void
     {
         parent::tearDown();
 

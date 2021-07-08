@@ -15,7 +15,7 @@ use Mockery as m;
 
 class EloquentMassPrunableTest extends DatabaseTestCase
 {
-    protected function setUp(): void
+    protected function setUp()////: void
     {
         parent::setUp();
 
@@ -45,7 +45,7 @@ class EloquentMassPrunableTest extends DatabaseTestCase
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage(
-            'Please implement',
+            'Please implement'
         );
 
         MassPrunableTestModelMissingPrunableMethod::create()->pruneAll();
@@ -90,7 +90,7 @@ class EloquentMassPrunableTest extends DatabaseTestCase
         $this->assertEquals(2000, MassPrunableSoftDeleteTestModel::withTrashed()->count());
     }
 
-    public function tearDown(): void
+    public function tearDown()////: void
     {
         parent::tearDown();
 

@@ -982,7 +982,7 @@ class HttpClientTest extends TestCase
 
     public function testClonedClientsWorkSuccessfullyWithTheRequestObject()
     {
-        if (\version_compare(\PHP_VERSION, '5.6', '<=') && windows_os()) {
+        if (\version_compare(\PHP_VERSION, '7.0.0', '<') && windows_os()) {
             $this->markTestSkipped('This PHP version may throw SSL error');
         }
 

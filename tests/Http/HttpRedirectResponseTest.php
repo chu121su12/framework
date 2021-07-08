@@ -22,7 +22,7 @@ class HttpRedirectResponseTest extends TestCase
 
     public function testHeaderOnRedirect()
     {
-        if (\version_compare(\PHP_VERSION, '5.6', '<=') && windows_os()) {
+        if (\version_compare(\PHP_VERSION, '7.0.0', '<') && windows_os()) {
             // something?
         }
 

@@ -106,7 +106,7 @@ class ValidationPasswordRuleTest extends TestCase
 
     public function testUncompromised()
     {
-        if (\version_compare(\PHP_VERSION, '5.6', '<=') && windows_os()) {
+        if (\version_compare(\PHP_VERSION, '7.0.0', '<') && windows_os()) {
             $this->markTestSkipped('This PHP version may throw SSL error');
         }
 
@@ -140,7 +140,7 @@ class ValidationPasswordRuleTest extends TestCase
 
     public function testMessagesOrder()
     {
-        if (\version_compare(\PHP_VERSION, '5.6', '<=') && windows_os()) {
+        if (\version_compare(\PHP_VERSION, '7.0.0', '<') && windows_os()) {
             $this->markTestSkipped('This PHP version may throw SSL error');
         }
 

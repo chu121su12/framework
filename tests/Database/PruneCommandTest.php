@@ -16,7 +16,10 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class PruneCommandTest extends TestCase
 {
-    protected function setUp(): void
+    use \PHPUnit\Framework\PhpUnit8Assert;
+    use \PHPUnit\Framework\PhpUnit8Expect;
+
+    protected function setUp()////: void
     {
         parent::setUp();
 
@@ -33,31 +36,36 @@ class PruneCommandTest extends TestCase
     {
         $output = $this->artisan(['--model' => PrunableTestModelWithPrunableRecords::class]);
 
-        $this->assertEquals(<<<'EOF'
+        $actual = <<<'EOF'
 10 [Illuminate\Tests\Database\PrunableTestModelWithPrunableRecords] records have been pruned.
 20 [Illuminate\Tests\Database\PrunableTestModelWithPrunableRecords] records have been pruned.
 
-EOF, str_replace("\r", '', $output->fetch()));
+EOF;
+
+        $this->assertSameStringDifferentLineEndings($actual, $output->fetch());
     }
 
     public function testPrunableTestModelWithoutPrunableRecords()
     {
         $output = $this->artisan(['--model' => PrunableTestModelWithoutPrunableRecords::class]);
 
-        $this->assertEquals(<<<'EOF'
+        $actual = <<<'EOF'
 No prunable [Illuminate\Tests\Database\PrunableTestModelWithoutPrunableRecords] records found.
 
-EOF, str_replace("\r", '', $output->fetch()));
+EOF;
+        $this->assertSameStringDifferentLineEndings($actual, $output->fetch());
     }
 
     public function testNonPrunableTest()
     {
         $output = $this->artisan(['--model' => NonPrunableTestModel::class]);
 
-        $this->assertEquals(<<<'EOF'
+        $actual = <<<'EOF'
 No prunable [Illuminate\Tests\Database\NonPrunableTestModel] records found.
 
-EOF, str_replace("\r", '', $output->fetch()));
+EOF;
+
+        $this->assertSameStringDifferentLineEndings($actual, $output->fetch());
     }
 
     protected function artisan($arguments)
@@ -72,7 +80,7 @@ EOF, str_replace("\r", '', $output->fetch()));
         return $output;
     }
 
-    public function tearDown(): void
+    public function tearDown()////: void
     {
         parent::tearDown();
 

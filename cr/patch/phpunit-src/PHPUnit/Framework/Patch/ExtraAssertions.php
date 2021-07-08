@@ -6,7 +6,7 @@ trait ExtraAssertions
 {
     function assertSameStringDifferentLineEndings($expected, $actual, $message = '')
     {
-        if (windows_os() || PHP_OS_FAMILY === 'Unknown') {
+        if (tests_windows_os_or_unknown()) {
             static::assertSame(
                 preg_replace('/\r\n/', "\n", trim($expected)),
                 preg_replace('/\r\n/', "\n", trim($actual)),
