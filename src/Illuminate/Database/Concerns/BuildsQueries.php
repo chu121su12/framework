@@ -303,7 +303,8 @@ trait BuildsQueries
                 }
 
                 $builder->where(function (self $builder) use ($addCursorConditions, $cursor, $orders, $i) {
-                    ['column' => $column, 'direction' => $direction] = $orders[$i];
+                    $column = $orders[$i]['column'];
+                    $direction = $orders[$i]['direction'];
 
                     $builder->where($column, $direction === 'asc' ? '>' : '<', $cursor->parameter($column));
 
