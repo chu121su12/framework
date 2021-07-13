@@ -340,14 +340,16 @@ trait BuildsQueries
      * @param  string  $parameter
      * @return string
      */
-    protected function getOriginalColumnNameForCursorPagination($builder, string $parameter)
+    protected function getOriginalColumnNameForCursorPagination($builder, /*string */$parameter)
     {
+        $parameter = cast_to_string($parameter);
+
         $columns = $builder instanceof Builder ? $builder->getQuery()->columns : $builder->columns;
 
         if (! is_null($columns)) {
             foreach ($columns as $column) {
                 if (stripos($column, ' as ') !== false) {
-                    [$original, $alias] = explode(' as ', $column);
+                    list($original, $alias) = explode(' as ', $column);
 
                     if ($parameter === $alias) {
                         return $original;
