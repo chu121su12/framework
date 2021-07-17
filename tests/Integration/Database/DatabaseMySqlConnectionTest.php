@@ -20,7 +20,7 @@ class DatabaseMySqlConnectionTest extends DatabaseMySqlTestCase
     {
         parent::setUp();
 
-        if (! isset($_SERVER['CI']) || windows_os()) {
+        if (! isset($_SERVER['CI']) || (! isset($_SERVER['CI_FORCE_DATABASE']) && windows_os())) {
             $this->markTestSkipped('This test is only executed on CI in Linux.');
         }
 

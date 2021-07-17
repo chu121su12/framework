@@ -3,6 +3,15 @@
 #
 # Force CI tests to be run.
 #
+# Database:
+#
+#   CREATE DATABASE `forge` COLLATE 'utf8mb4_unicode_ci';
+#   CREATE USER 'forge'@'127.0.0.1' IDENTIFIED BY 'forge';
+#   GRANT ALL PRIVILEGES ON `forge`.* TO 'forge'@'127.0.0.1';
+#
+#   DROP USER 'forge'@'*'
+#   DROP DATABASE `forge`;
+#
 # Usage:
 #
 #   vendor/bin/phpunit --bootstrap cr/test.php
@@ -16,3 +25,5 @@ $_SERVER['CI_DB_PORT'] = '3306';
 $_SERVER['CI_DB_USERNAME'] = 'forge';
 $_SERVER['CI_DB_PASSWORD'] = 'forge';
 $_SERVER['CI_DB_DATABASE'] = 'forge';
+
+// $_SERVER['CI_FORCE_DATABASE'] = true;
