@@ -18,7 +18,7 @@ use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Support\Traits\ForwardsCalls;
+// use Illuminate\Support\Traits\ForwardsCalls;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -27,7 +27,7 @@ use ReflectionMethod;
  */
 class Builder implements BuilderContract
 {
-    use BuildsQueries, DecoratesQueryBuilder, ExplainsQueries, ForwardsCalls, QueriesRelationships {
+    use BuildsQueries, DecoratesQueryBuilder, ExplainsQueries, /*ForwardsCalls, */QueriesRelationships {
         BuildsQueries::sole as baseSole;
     }
 
@@ -36,7 +36,7 @@ class Builder implements BuilderContract
      *
      * @var \Illuminate\Database\Query\Builder
      */
-    protected $query;
+    // protected $query;
 
     /**
      * The model being queried.

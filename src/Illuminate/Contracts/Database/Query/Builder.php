@@ -394,7 +394,7 @@ interface Builder
      * @param  bool  $not
      * @return static
      */
-    public function whereBetween($column, iterable $values, $boolean = 'and', $not = false);
+    public function whereBetween($column, /*iterable */$values, $boolean = 'and', $not = false);
 
     /**
      * Add a where between statement using columns to the query.
@@ -414,7 +414,7 @@ interface Builder
      * @param  iterable  $values
      * @return static
      */
-    public function orWhereBetween($column, iterable $values);
+    public function orWhereBetween($column, /*iterable */$values);
 
     /**
      * Add an or where between statement using columns to the query.
@@ -433,7 +433,7 @@ interface Builder
      * @param  string  $boolean
      * @return static
      */
-    public function whereNotBetween($column, iterable $values, $boolean = 'and');
+    public function whereNotBetween($column, /*iterable */$values, $boolean = 'and');
 
     /**
      * Add a where not between statement using columns to the query.
@@ -452,7 +452,7 @@ interface Builder
      * @param  iterable  $values
      * @return static
      */
-    public function orWhereNotBetween($column, iterable $values);
+    public function orWhereNotBetween($column, /*iterable */$values);
 
     /**
      * Add an or where not between statement using columns to the query.
@@ -1059,7 +1059,7 @@ interface Builder
      * Clone the query.
      * @return static
      */
-    public function clone();
+    public function clone_();
 
     /**
      * Clone the query without the given properties.

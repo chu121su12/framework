@@ -334,7 +334,7 @@ trait DecoratesQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function whereBetween($column, iterable $values, $boolean = 'and', $not = false)
+    public function whereBetween($column, /*iterable */$values, $boolean = 'and', $not = false)
     {
         return $this->forwardCallToQueryBuilder(__FUNCTION__, func_get_args());
     }
@@ -350,7 +350,7 @@ trait DecoratesQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function orWhereBetween($column, iterable $values)
+    public function orWhereBetween($column, /*iterable */$values)
     {
         return $this->forwardCallToQueryBuilder(__FUNCTION__, func_get_args());
     }
@@ -366,7 +366,7 @@ trait DecoratesQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function whereNotBetween($column, iterable $values, $boolean = 'and')
+    public function whereNotBetween($column, /*iterable */$values, $boolean = 'and')
     {
         return $this->forwardCallToQueryBuilder(__FUNCTION__, func_get_args());
     }
@@ -382,7 +382,7 @@ trait DecoratesQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function orWhereNotBetween($column, iterable $values)
+    public function orWhereNotBetween($column, /*iterable */$values)
     {
         return $this->forwardCallToQueryBuilder(__FUNCTION__, func_get_args());
     }
@@ -1174,7 +1174,7 @@ trait DecoratesQueryBuilder
     /**
      * @inheritdoc
      */
-    public function clone()
+    public function clone_()
     {
         return $this->forwardCallToQueryBuilder(__FUNCTION__, func_get_args());
     }
