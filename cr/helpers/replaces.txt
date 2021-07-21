@@ -4,9 +4,6 @@ uncomment block:
 
 
 
-
-
-
 Error:
     Function ReflectionType::__toString() is deprecated
 File:
@@ -54,11 +51,9 @@ File:
 Replace:
     $parameter->getClass()
 With:
-    backport_reflection_parameter_declares_callable($parameter)
+    backport_reflection_parameter_get_class($parameter)
 Line:
     - 1202
-
-
 
 
 
@@ -69,7 +64,21 @@ Method:
 Replace:
     eval($code);
 With:
-    eval(preg_replace("/\?mixed\b/", 'mixed', $code));
+    eval(preg_replace(['/\?(?=mixed\s+\$\w+\b)/', '/\?(?=\?)/'], '', $code));
+Line: 345
+
+
+
+File:
+    vendor/phpunit/phpunit/src/Util/Configuration.php
+Method:
+    __clone
+Replace:
+    final private
+With:
+    private
+Line: 162
+
 
 
 
