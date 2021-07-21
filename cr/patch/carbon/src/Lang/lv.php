@@ -96,7 +96,6 @@ return [
     'a_second' => '{1}sekunde|0 sekunžu|:count sekunde|:count sekundes',
 
     'after' => ':time vēlāk',
-
     'year_after' => '0 gadus|:count gadu|:count gadus',
     'a_year_after' => '{1}gadu|0 gadus|:count gadu|:count gadus',
     'month_after' => '0 mēnešus|:count mēnesi|:count mēnešus',
@@ -130,8 +129,8 @@ return [
 
     'first_day_of_week' => 1,
     'day_of_first_week_of_year' => 4,
-
     'list' => [', ', ' un '],
+
     'diff_now' => 'tagad',
     'diff_today' => 'šodien',
     'diff_yesterday' => 'vakar',

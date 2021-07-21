@@ -5,32 +5,30 @@ namespace Illuminate\Database\Eloquent;
 use BadMethodCallException;
 use Closure;
 use Exception;
+use Illuminate\Contracts\Database\Query\Builder as BuilderContract;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Concerns\BuildsQueries;
 use Illuminate\Database\Concerns\ExplainsQueries;
+use Illuminate\Database\Eloquent\Concerns\DecoratesQueryBuilder;
+use Illuminate\Database\Eloquent\Concerns\QueriesRelationships;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\RecordsNotFoundException;
-use Illuminate\Pagination\CursorPaginationException;
-use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Support\Traits\ForwardsCalls;
+// use Illuminate\Support\Traits\ForwardsCalls;
 use ReflectionClass;
 use ReflectionMethod;
 
 /**
  * @property-read HigherOrderBuilderProxy $orWhere
- *
- * @mixin \Illuminate\Database\Query\Builder
  */
-class Builder
+class Builder implements BuilderContract
 {
-    use Concerns\QueriesRelationships, ExplainsQueries, ForwardsCalls;
-    use BuildsQueries {
-        sole as baseSole;
+    use BuildsQueries, DecoratesQueryBuilder, ExplainsQueries, /*ForwardsCalls, */QueriesRelationships {
+        BuildsQueries::sole as baseSole;
     }
 
     /**
@@ -38,7 +36,7 @@ class Builder
      *
      * @var \Illuminate\Database\Query\Builder
      */
-    protected $query;
+    // protected $query;
 
     /**
      * The model being queried.
@@ -74,38 +72,6 @@ class Builder
      * @var \Closure
      */
     protected $onDelete;
-
-    /**
-     * The methods that should be returned from query builder.
-     *
-     * @var string[]
-     */
-    protected $passthru = [
-        'aggregate',
-        'average',
-        'avg',
-        'count',
-        'dd',
-        'doesntExist',
-        'dump',
-        'exists',
-        'getBindings',
-        'getConnection',
-        'getGrammar',
-        'getProcessor',
-        'implode',
-        'insert',
-        'insertGetId',
-        'insertOrIgnore',
-        'insertUsing',
-        'max',
-        'min',
-        'newQuery',
-        'numericAggregate',
-        'raw',
-        'sum',
-        'toSql',
-    ];
 
     /**
      * Applied global scopes.
@@ -833,41 +799,14 @@ class Builder
      * @param  int|null  $perPage
      * @param  array  $columns
      * @param  string  $cursorName
-     * @param  string|null  $cursor
+     * @param  \Illuminate\Pagination\Cursor|string|null  $cursor
      * @return \Illuminate\Contracts\Pagination\CursorPaginator
-     * @throws \Illuminate\Pagination\CursorPaginationException
      */
     public function cursorPaginate($perPage = null, $columns = ['*'], $cursorName = 'cursor', $cursor = null)
     {
-        $cursor = $cursor ?: CursorPaginator::resolveCurrentCursor($cursorName);
-
         $perPage = $perPage ?: $this->model->getPerPage();
 
-        $orders = $this->ensureOrderForCursorPagination(! is_null($cursor) && $cursor->pointsToPreviousItems());
-
-        $firstOrder = $orders->first();
-
-        $orderDirection = isset($firstOrder) && isset($firstOrder['direction']) ? $firstOrder['direction'] : 'asc';
-
-        $comparisonOperator = $orderDirection === 'asc' ? '>' : '<';
-
-        $parameters = $orders->pluck('column')->toArray();
-
-        if (! is_null($cursor)) {
-            if (count($parameters) === 1) {
-                $this->where($column = $parameters[0], $comparisonOperator, $cursor->parameter($column));
-            } elseif (count($parameters) > 1) {
-                $this->whereRowValues($parameters, $comparisonOperator, $cursor->parameters($parameters));
-            }
-        }
-
-        $this->take($perPage + 1);
-
-        return $this->cursorPaginator($this->get($columns), $perPage, $cursor, [
-            'path' => Paginator::resolveCurrentPath(),
-            'cursorName' => $cursorName,
-            'parameters' => $parameters,
-        ]);
+        return $this->paginateUsingCursor($perPage, $columns, $cursorName, $cursor);
     }
 
     /**
@@ -875,18 +814,12 @@ class Builder
      *
      * @param  bool  $shouldReverse
      * @return \Illuminate\Support\Collection
-     *
-     * @throws \Illuminate\Pagination\CursorPaginationException
      */
     protected function ensureOrderForCursorPagination($shouldReverse = false)
     {
-        $orderDirections = collect($this->query->orders)->pluck('direction')->unique();
+        $orders = collect($this->query->orders);
 
-        if ($orderDirections->count() > 1) {
-            throw new CursorPaginationException('Only a single order by direction is supported when using cursor pagination.');
-        }
-
-        if ($orderDirections->count() === 0) {
+        if ($orders->count() === 0) {
             $this->enforceOrderBy();
         }
 
@@ -1654,10 +1587,6 @@ class Builder
 
         if ($this->hasNamedScope($method)) {
             return $this->callNamedScope($method, $parameters);
-        }
-
-        if (in_array($method, $this->passthru)) {
-            return $this->toBase()->{$method}(...$parameters);
         }
 
         $this->forwardCallTo($this->query, $method, $parameters);

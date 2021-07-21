@@ -214,7 +214,7 @@ use ReflectionMethod;
  *                                                                                                                                                                                                           You should rather use the ->settings() method.
  *                                                                                                                                                                                                           Or you can use method variants: addYearsWithOverflow/addYearsNoOverflow, same variants
  *                                                                                                                                                                                                           are available for quarters, years, decade, centuries, millennia (singular and plural forms).
- * @method Carbon                                             withTestNow($testNow = null, $callback = null)                                                                                     Temporarily sets a static date to be used within the callback.
+ * @method mixed                                              withTestNow($testNow = null, $callback = null)                                                                                     Temporarily sets a static date to be used within the callback.
  *                                                                                                                                                                                               Using setTestNow to set the date, executing the callback, then
  *                                                                                                                                                                                               clearing the test instance.
  *                                                                                                                                                                                               /!\ Use this method for unit tests only.
@@ -228,7 +228,7 @@ class Factory
 
     protected $settings = [];
 
-    public function __construct(array $settings = [], $className = null)
+    public function __construct(array $settings = [], /*?string */$className = null)
     {
         $className = cast_to_string($className, null);
 

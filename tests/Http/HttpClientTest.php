@@ -982,6 +982,10 @@ class HttpClientTest extends TestCase
 
     public function testClonedClientsWorkSuccessfullyWithTheRequestObject()
     {
+        if (\version_compare(\PHP_VERSION, '7.0.0', '<') && windows_os()) {
+            $this->markTestSkipped('This PHP version may throw SSL error');
+        }
+
         $events = m::mock(Dispatcher::class);
         $events->shouldReceive('dispatch')->once()->with(m::type(RequestSending::class));
         $events->shouldReceive('dispatch')->once()->with(m::type(ResponseReceived::class));

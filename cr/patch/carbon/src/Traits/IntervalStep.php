@@ -67,7 +67,7 @@ trait IntervalStep
 
         if ($this->step) {
             $stepFunction = $this->step;
-            return $carbonDate->setDateTimeFrom($stepFunction($carbonDate->copy(), $negated));
+            return $carbonDate->setDateTimeFrom($stepFunction($carbonDate->avoidMutation(), $negated));
         }
 
         if ($negated) {

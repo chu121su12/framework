@@ -26,6 +26,7 @@ use DateTimeInterface;
 use DateTimeZone;
 use JsonSerializable;
 use ReflectionException;
+use ReturnTypeWillChange;
 use Throwable;
 
 /**
@@ -721,6 +722,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return static
      */
+    // #[ReturnTypeWillChange]
     // public static function __set_state($dump); // move to class
 
     /**
@@ -756,6 +758,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      * @return static
      */
     // public function add($unit, $value = 1, $overflow = null);
+    #[ReturnTypeWillChange]
     public function add_($unit, $value = 1, $overflow = null);
 
     /**
@@ -830,6 +833,16 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      * @return static
      */
     public function average($date = null);
+
+    /**
+     * Clone the current instance if it's mutable.
+     *
+     * This method is convenient to ensure you don't mutate the initial object
+     * but avoid to make a useless copy of it if it's already immutable.
+     *
+     * @return static
+     */
+    public function avoidMutation();
 
     /**
      * Determines if the instance is between two others.
@@ -1068,6 +1081,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return static|false
      */
+    #[ReturnTypeWillChange]
     public static function createFromFormat($format, $time, $tz = null);
 
     /**
@@ -1948,7 +1962,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
 
     /**
      * Format the instance with the current locale.  You can set the current
-     * locale using setlocale() http://php.net/setlocale.
+     * locale using setlocale() https://php.net/setlocale.
      *
      * @param string $format
      *
@@ -2137,6 +2151,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
     /**
      * {@inheritdoc}
      */
+    #[ReturnTypeWillChange]
     public static function getLastErrors();
 
     /**
@@ -3319,6 +3334,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @see https://php.net/manual/en/datetime.modify.php
      */
+    #[ReturnTypeWillChange]
     public function modify($modify);
 
     /**
@@ -3702,6 +3718,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return static
      */
+    #[ReturnTypeWillChange]
     public function setDate($year, $month, $day);
 
     /**
@@ -3766,6 +3783,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return static
      */
+    #[ReturnTypeWillChange]
     public function setISODate($year, $week, $day = 1);
 
     /**
@@ -3837,6 +3855,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      * @return static
      */
     // public function setTime($hour, $minute, $second = 0, $microseconds = 0);
+    #[ReturnTypeWillChange]
     public function setTime_($hour, $minute, $second = 0, $microseconds = 0);
 
     /**
@@ -3866,6 +3885,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return static
      */
+    #[ReturnTypeWillChange]
     public function setTimestamp($unixTimestamp);
 
     /**
@@ -3875,6 +3895,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return static
      */
+    #[ReturnTypeWillChange]
     public function setTimezone($value);
 
     /**
@@ -4217,6 +4238,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      * @return static
      */
     // public function sub($unit, $value = 1, $overflow = null);
+    #[ReturnTypeWillChange]
     public function sub_($unit, $value = 1, $overflow = null);
 
     public function subRealUnit($unit, $value = 1);
@@ -4755,7 +4777,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @param string                                             $key
      * @param array                                              $parameters
-     * @param null                                               $number
+     * @param string|int|float|null                              $number
      * @param \Symfony\Component\Translation\TranslatorInterface $translator
      *
      * @return string
@@ -4812,7 +4834,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
     public static function translateWith(\Symfony\Component\Translation\TranslatorInterface $translator, $key, array $parameters = [], $number = null); //// string
 
     /**
-     * Format as ->format() do (using date replacements patterns from http://php.net/manual/fr/function.date.php)
+     * Format as ->format() do (using date replacements patterns from https://php.net/manual/en/function.date.php)
      * but translate words whenever possible (months, day names, etc.) using the current locale.
      *
      * @param string $format
@@ -4995,6 +5017,8 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @param Closure|static|string|false|null $testNow real or mock Carbon instance
      * @param Closure|null $callback
+     *
+     * @return mixed
      */
     public static function withTestNow($testNow = null, $callback = null);
 

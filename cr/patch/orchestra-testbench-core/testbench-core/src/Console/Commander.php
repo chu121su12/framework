@@ -195,7 +195,9 @@ class Commander
                 "{$laravelVendorPath}/autoload.php" !== "{$workingVendorPath}/autoload.php"
             ) {
                 $filesystem->delete($laravelVendorPath);
-                $filesystem->link($workingVendorPath, $laravelVendorPath);
+                if (!is_dir($laravelVendorPath) && !file_exists($laravelVendorPath)) {
+                    $filesystem->link($workingVendorPath, $laravelVendorPath);
+                }
             }
 
             $laravel->flush();
