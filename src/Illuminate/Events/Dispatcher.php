@@ -610,22 +610,18 @@ class Dispatcher implements DispatcherContract
     protected function propagateListenerOptions($listener, $job)
     {
         return tap($job, function ($job) use ($listener) {
+            $job->afterCommit = property_exists($listener, 'afterCommit') ? $listener->afterCommit : null;
+            $job->backoff = method_exists($listener, 'backoff') ? $listener->backoff() : (isset($listener->backoff) ? $listener->backoff : null);
+            $job->maxExceptions = isset($listener->maxExceptions) ? $listener->maxExceptions : null;
+            $job->retryUntil = method_exists($listener, 'retryUntil') ? $listener->retryUntil() : null;
+            $job->shouldBeEncrypted = $listener instanceof ShouldBeEncrypted;
+            $job->timeout = isset($listener->timeout) ? $listener->timeout : null;
             $job->tries = isset($listener->tries) ? $listener->tries : null;
 
-            $job->maxExceptions = isset($listener->maxExceptions) ? $listener->maxExceptions : null;
-
-            $job->backoff = method_exists($listener, 'backoff')
-                                ? $listener->backoff() : (isset($listener->backoff) ? $listener->backoff : null);
-
-            $job->timeout = isset($listener->timeout) ? $listener->timeout : null;
-
-            $job->retryUntil = method_exists($listener, 'retryUntil')
-                                ? $listener->retryUntil() : null;
-
-            $job->afterCommit = property_exists($listener, 'afterCommit')
-                                ? $listener->afterCommit : null;
-
-            $job->shouldBeEncrypted = $listener instanceof ShouldBeEncrypted;
+            $job->through(array_merge(
+                method_exists($listener, 'middleware') ? $listener->middleware() : [],
+                $listener->middleware ?? []
+            ));
         });
     }
 
