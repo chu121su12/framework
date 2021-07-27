@@ -620,7 +620,7 @@ class Dispatcher implements DispatcherContract
 
             $job->through(array_merge(
                 method_exists($listener, 'middleware') ? $listener->middleware() : [],
-                $listener->middleware ?? []
+                isset($listener->middleware) ? $listener->middleware : []
             ));
         });
     }
