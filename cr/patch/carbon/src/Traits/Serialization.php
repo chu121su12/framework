@@ -53,7 +53,15 @@ trait Serialization
      *
      * @var string|null
      */
-    protected $dumpLocale = null;
+    protected $dumpLocale;
+
+    /**
+     * Embed date properties to dump in a dedicated variables so it won't overlap native
+     * DateTime ones.
+     *
+     * @var array|null
+     */
+    protected $dumpDateProperties;
 
     /**
      * Return a serialized string of the instance.
@@ -114,7 +122,7 @@ trait Serialization
      */
     public function __sleep()
     {
-        $properties = $this->dumpProperties;
+        $properties = $this->getSleepProperties();
 
         if (isset($this->localTranslator) ? $this->localTranslator : null) {
             $properties[] = 'dumpLocale';
@@ -131,7 +139,22 @@ trait Serialization
     public function __wakeup()
     {
         if (get_parent_class() && method_exists(parent::class, '__wakeup')) {
-            parent::__wakeup();
+            // @codeCoverageIgnoreStart
+            try {
+                $exception = null;
+                parent::__wakeup();
+            } catch (\Throwable $exception) {
+            } catch (\Error $exception) {
+            } catch (\Exception $exception) {
+            }
+
+            if (isset($exception)) {
+                // FatalError occurs when calling msgpack_unpack() in PHP 7.4 or later.
+                $date = $this->dumpDateProperties['date'];
+                $timezone = $this->dumpDateProperties['timezone'];
+                parent::__construct($date, unserialize($timezone));
+            }
+            // @codeCoverageIgnoreEnd
         }
 
         $this->constructedObjectId = spl_object_hash($this);
@@ -149,6 +172,7 @@ trait Serialization
      *
      * @return array|string
      */
+    #[ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $serializer = isset($this->localSerializer) ? $this->localSerializer : static::$serializer;
@@ -192,5 +216,27 @@ trait Serialization
         }
 
         return $this;
+    }
+
+    private function getSleepProperties()////: array
+    {
+        $properties = $this->dumpProperties;
+
+        // @codeCoverageIgnoreStart
+        if (!\extension_loaded('msgpack')) {
+            return $properties;
+        }
+
+        if (isset($this->constructedObjectId)) {
+            $this->dumpDateProperties = [
+                'date' => $this->format('Y-m-d H:i:s.u'),
+                'timezone' => serialize(isset($this->timezone) ? $this->timezone : null),
+            ];
+
+            $properties[] = 'dumpDateProperties';
+        }
+
+        return $properties;
+        // @codeCoverageIgnoreEnd
     }
 }

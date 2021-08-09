@@ -3024,6 +3024,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return array|string
      */
+    #[ReturnTypeWillChange]
     public function jsonSerialize();
 
     /**
