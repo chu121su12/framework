@@ -119,7 +119,7 @@ class Cursor implements Arrayable
             return null;
         }
 
-        $parameters = json_decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $encodedString)), true);
+        $parameters = backport_json_decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $encodedString)), true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             return null;

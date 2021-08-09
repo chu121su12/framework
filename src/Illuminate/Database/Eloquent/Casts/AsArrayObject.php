@@ -9,7 +9,7 @@ class AsArrayObject_castUsing_class implements CastsAttributes
         {
             public function get($model, $key, $value, array $attributes)
             {
-                return isset($attributes[$key]) ? new ArrayObject(json_decode($attributes[$key], true)) : null;
+                return isset($attributes[$key]) ? new ArrayObject(backport_json_decode($attributes[$key], true)) : null;
             }
 
             public function set($model, $key, $value, array $attributes)

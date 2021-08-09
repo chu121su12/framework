@@ -6,7 +6,6 @@ use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Exceptions\RegisterErrorViewPaths;
-use Throwable;
 
 class DownCommand extends Command
 {
@@ -99,7 +98,11 @@ class DownCommand extends Command
     {
         try {
             return $this->laravel->make(PreventRequestsDuringMaintenance::class)->getExcludedPaths();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
+            return [];
+        } catch (\Error $e) {
+            return [];
+        } catch (\Exception $e) {
             return [];
         }
     }

@@ -13,7 +13,7 @@ use Illuminate\Tests\Integration\Database\DatabaseTestCase;
  */
 class EloquentModelImmutableDateCastingTest extends DatabaseTestCase
 {
-    protected function setUp(): void
+    protected function setUp()////: void
     {
         parent::setUp();
 

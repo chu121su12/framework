@@ -55,7 +55,7 @@ trait ValidatesAttributes
 
         $this->requireParameterCount(2, $parameters, 'accepted_if');
 
-        [$values, $other] = $this->parseDependentRuleParameters($parameters);
+        list($values, $other) = $this->parseDependentRuleParameters($parameters);
 
         if (in_array($other, $values, is_bool($other) || is_null($other))) {
             return $this->validateRequired($attribute, $value) && in_array($value, $acceptable, true);

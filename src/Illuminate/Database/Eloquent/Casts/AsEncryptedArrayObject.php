@@ -10,7 +10,7 @@ class AsEncryptedArrayObject_castUsing_class implements CastsAttributes
         {
             public function get($model, $key, $value, array $attributes)
             {
-                return new ArrayObject(json_decode(Crypt::decryptString($attributes[$key]), true));
+                return new ArrayObject(backport_json_decode(Crypt::decryptString($attributes[$key]), true));
             }
 
             public function set($model, $key, $value, array $attributes)

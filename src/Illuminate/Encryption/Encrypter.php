@@ -155,9 +155,24 @@ class Encrypter implements EncrypterContract, StringEncrypter
         // Here we will decrypt the value. If we are able to successfully decrypt it
         // we will then unserialize it and return it out to the caller. If we are
         // unable to decrypt this value we will throw out an exception message.
-        $decrypted = \openssl_decrypt(
-            $payload['value'], $this->cipher, $this->key, 0, $iv, $tag
-        );
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
+            try {
+                $decrypted = \openssl_decrypt(
+                    $payload['value'], $this->cipher, $this->key, 0, $iv
+                );
+            } catch (\Exception $e) {
+                if ($e->getMessage() !== 'openssl_decrypt(): Failed to base64 decode the input') {
+                    throw $e;
+                }
+
+                throw new DecryptException('The payload is invalid.');
+            }
+
+        } else {
+            $decrypted = \openssl_decrypt(
+                $payload['value'], $this->cipher, $this->key, 0, $iv, $tag
+            );
+        }
 
         if ($decrypted === false) {
             throw new DecryptException('Could not decrypt the data.');
@@ -239,7 +254,7 @@ class Encrypter implements EncrypterContract, StringEncrypter
     protected function validMac(array $payload)
     {
         return hash_equals(
-            $this->hash($payload['iv'], $payload['value'], $payload['tag'] ?? ''), $payload['mac']
+            $this->hash($payload['iv'], $payload['value'], isset($payload['tag']) ? $payload['tag'] : ''), $payload['mac']
         );
     }
 

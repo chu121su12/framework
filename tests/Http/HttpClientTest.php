@@ -992,14 +992,11 @@ class HttpClientTest extends TestCase
 
         $factory = new Factory($events);
 
-        // $factory = $factory->withOptions([
-        //     'verify' => false, // to pass tests
-        // ]);
-
         $client = $factory->timeout(10);
         $clonedClient = clone $client;
 
         $clonedClient->get('https://example.com');
+        // $clonedClient->withoutVerifying()->get('https://example.com'); // to pass tests
 
         m::close();
     }
