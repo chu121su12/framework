@@ -24,7 +24,7 @@ class RouteConfigurator
 
     protected $parentConfigurator;
 
-    public function __construct(RouteCollection $collection, $route, $name = '', CollectionConfigurator $parentConfigurator = null, array $prefixes = null)
+    public function __construct(RouteCollection $collection, RouteCollection $route, $name = '', CollectionConfigurator $parentConfigurator = null, array $prefixes = null)
     {
         $name = cast_to_string($name);
 

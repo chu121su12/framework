@@ -203,8 +203,12 @@ class StaticPrefixCollection
         return [substr($prefix, 0, $i), substr($prefix, 0, isset($staticLength) ? $staticLength : $i)];
     }
 
-    public static function handleError($type, $msg)
+    public static function handleError(/*int */$type, /*string */$msg)
     {
-        return false !== strpos($msg, 'Compilation failed: lookbehind assertion is not fixed length');
+        $type = cast_to_int($type);
+
+        $msg = cast_to_string($msg);
+
+        return str_contains($msg, 'Compilation failed: lookbehind assertion is not fixed length');
     }
 }

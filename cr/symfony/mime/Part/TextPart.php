@@ -99,6 +99,8 @@ class TextPart extends AbstractPart
      */
     public function setName($name)
     {
+        $name = cast_to_string($name);
+
         $this->name = $name;
 
         return $this;

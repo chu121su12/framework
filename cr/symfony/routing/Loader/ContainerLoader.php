@@ -38,7 +38,7 @@ class ContainerLoader extends ObjectLoader
     {
         $type = cast_to_string($type, null);
 
-        return 'service' === $type;
+        return 'service' === $type && \is_string($resource);
     }
 
     /**

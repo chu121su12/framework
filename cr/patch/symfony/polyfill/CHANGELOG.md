@@ -1,5 +1,6 @@
 # 1.23.1
 
+  * Allow null in str_*() functions
   * fixed `grapheme_str(r)ipos()`
 
 # 1.23.0

@@ -167,8 +167,10 @@ class Route
         }
     }
 
-    public function setPath($path)
+    public function setPath(/*string */$path)
     {
+        $path = cast_to_string($path);
+
         $this->path = $path;
     }
 
@@ -187,8 +189,10 @@ class Route
         return $this->localizedPaths;
     }
 
-    public function setHost($pattern)
+    public function setHost(/*string */$pattern)
     {
+        $pattern = cast_to_string($pattern);
+
         $this->host = $pattern;
     }
 
@@ -197,8 +201,10 @@ class Route
         return $this->host;
     }
 
-    public function setName($name)
+    public function setName(/*string */$name)
     {
+        $name = cast_to_string($name);
+
         $this->name = $name;
     }
 
@@ -207,7 +213,7 @@ class Route
         return $this->name;
     }
 
-    public function setRequirements($requirements)
+    public function setRequirements(array $requirements)
     {
         $this->requirements = $requirements;
     }
@@ -217,7 +223,7 @@ class Route
         return $this->requirements;
     }
 
-    public function setOptions($options)
+    public function setOptions(array $options)
     {
         $this->options = $options;
     }
@@ -227,7 +233,7 @@ class Route
         return $this->options;
     }
 
-    public function setDefaults($defaults)
+    public function setDefaults(array $defaults)
     {
         $this->defaults = $defaults;
     }
@@ -257,8 +263,10 @@ class Route
         return $this->methods;
     }
 
-    public function setCondition($condition)
+    public function setCondition(/*?string */$condition = null)
     {
+        $condition = cast_to_string($condition, null);
+
         $this->condition = $condition;
     }
 

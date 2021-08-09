@@ -292,8 +292,13 @@ final class Headers
         return $arr;
     }
 
+    /**
+     * @internal
+     */
     public function getHeaderBody($name)
     {
+        $name = cast_to_string($name);
+
         return $this->has($name) ? $this->get($name)->getBody() : null;
     }
 
@@ -334,11 +339,13 @@ final class Headers
     /**
      * @internal
      */
-    public function setHeaderParameter($name, $parameter, $value) /// void
+    public function setHeaderParameter($name, $parameter, $value = null) /// void
     {
         $parameter = cast_to_string($parameter);
 
         $name = cast_to_string($name);
+
+        $value = cast_to_string($value, null);
 
         if (!$this->has($name)) {
             throw new LogicException(sprintf('Unable to set parameter "%s" on header "%s" as the header is not defined.', $parameter, $name));
