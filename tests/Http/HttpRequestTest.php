@@ -304,7 +304,7 @@ class HttpRequestTest extends TestCase
     {
         $request = Request::create('/', 'GET', ['name' => 'Taylor', 'age' => '', 'city' => null]);
 
-        $name = $age = $city = $foo = false;
+        $name = $age = $city = $foo = $bar = false;
 
         $request->whenHas('name', function ($value) use (&$name) {
             $name = $value;
@@ -322,17 +322,24 @@ class HttpRequestTest extends TestCase
             $foo = 'test';
         });
 
+        $request->whenHas('bar', function () use (&$bar) {
+            $bar = 'test';
+        }, function () use (&$bar) {
+            $bar = true;
+        });
+
         $this->assertSame('Taylor', $name);
         $this->assertSame('', $age);
         $this->assertNull($city);
         $this->assertFalse($foo);
+        $this->assertTrue($bar);
     }
 
     public function testWhenFilledMethod()
     {
         $request = Request::create('/', 'GET', ['name' => 'Taylor', 'age' => '', 'city' => null]);
 
-        $name = $age = $city = $foo = false;
+        $name = $age = $city = $foo = $bar = false;
 
         $request->whenFilled('name', function ($value) use (&$name) {
             $name = $value;
@@ -350,10 +357,17 @@ class HttpRequestTest extends TestCase
             $foo = 'test';
         });
 
+        $request->whenFilled('bar', function () use (&$bar) {
+            $bar = 'test';
+        }, function () use (&$bar) {
+            $bar = true;
+        });
+
         $this->assertSame('Taylor', $name);
         $this->assertFalse($age);
         $this->assertFalse($city);
         $this->assertFalse($foo);
+        $this->assertTrue($bar);
     }
 
     public function testMissingMethod()
@@ -993,7 +1007,12 @@ class HttpRequestTest extends TestCase
         $request->fingerprint();
     }
 
-    public function testCreateFromBase()
+    /**
+     * Ensure JSON GET requests populate $request->request with the JSON content.
+     *
+     * @link https://github.com/laravel/framework/pull/7052 Correctly fill the $request->request parameter bag on creation.
+     */
+    public function testJsonRequestFillsRequestBodyParams()
     {
         $body = [
             'foo' => 'bar',
@@ -1009,6 +1028,24 @@ class HttpRequestTest extends TestCase
         $request = Request::createFromBase($base);
 
         $this->assertEquals($request->request->all(), $body);
+    }
+
+    /**
+     * Ensure non-JSON GET requests don't pollute $request->request with the GET parameters.
+     *
+     * @link https://github.com/laravel/framework/pull/37921 Manually populate POST request body with JSON data only when required.
+     */
+    public function testNonJsonRequestDoesntFillRequestBodyParams()
+    {
+        $params = ['foo' => 'bar'];
+
+        $getRequest = Request::create('/', 'GET', $params, [], [], []);
+        $this->assertEquals($getRequest->request->all(), []);
+        $this->assertEquals($getRequest->query->all(), $params);
+
+        $postRequest = Request::create('/', 'POST', $params, [], [], []);
+        $this->assertEquals($postRequest->request->all(), $params);
+        $this->assertEquals($postRequest->query->all(), []);
     }
 
     /**

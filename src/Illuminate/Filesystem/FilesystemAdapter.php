@@ -11,6 +11,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 use League\Flysystem\Adapter\Ftp as FtpAdapter;
 use League\Flysystem\Adapter\Ftp as SftpAdapter;
@@ -50,6 +51,10 @@ use Symfony\Component\HttpFoundation\StreamedResponse5 as StreamedResponse;
  */
 class FilesystemAdapter implements CloudFilesystemContract
 {
+    use Macroable {
+        __call as macroCall;
+    }
+
     /**
      * Get the URL for the file at the given path.
      *
@@ -917,6 +922,10 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function __call($method, array $parameters)
     {
+        if (static::hasMacro($method)) {
+            return $this->macroCall($method, $parameters);
+        }
+
         return $this->driver->{$method}(...array_values($parameters));
     }
 }

@@ -11,7 +11,6 @@ use Illuminate\Queue\SerializableClosure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use JsonSerializable;
-use ReturnTypeWillChange;
 use Throwable;
 
 class Batch implements Arrayable, JsonSerializable
@@ -478,7 +477,7 @@ class Batch implements Arrayable, JsonSerializable
      *
      * @return array
      */
-    #[ReturnTypeWillChange]
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->toArray();
