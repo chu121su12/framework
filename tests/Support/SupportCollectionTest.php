@@ -253,6 +253,8 @@ class SupportCollectionTest extends TestCase
 
         $this->assertEquals(new Collection(['baz', 'bar']), $c->pop(2));
         $this->assertSame('foo', $c->first());
+
+        $this->assertEquals(new Collection(['baz', 'bar', 'foo']), (new Collection(['foo', 'bar', 'baz']))->pop(6));
     }
 
     public function testShiftReturnsAndRemovesFirstItemInCollection()
@@ -271,6 +273,8 @@ class SupportCollectionTest extends TestCase
 
         $this->assertEquals(new Collection(['foo', 'bar']), $data->shift(2));
         $this->assertSame('baz', $data->first());
+
+        $this->assertEquals(new Collection(['foo', 'bar', 'baz']), (new Collection(['foo', 'bar', 'baz']))->shift(6));
     }
 
     /**

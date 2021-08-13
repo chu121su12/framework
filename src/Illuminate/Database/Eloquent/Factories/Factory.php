@@ -215,9 +215,9 @@ abstract class Factory
         $records = cast_to_iterable($records);
 
         return new EloquentCollection(
-            array_map(function ($record) {
+            collect($records)->map(function ($record) {
                 return $this->state($record)->create();
-            }, $records)
+            })
         );
     }
 

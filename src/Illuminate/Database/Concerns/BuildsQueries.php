@@ -429,6 +429,8 @@ trait BuildsQueries
      */
     public function tap($callback)
     {
-        return $this->when(true, $callback);
+        $callback($this);
+
+        return $this;
     }
 }

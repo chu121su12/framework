@@ -799,9 +799,15 @@ class Collection implements ArrayAccess, Enumerable
             return array_pop($this->items);
         }
 
+        if ($this->isEmpty()) {
+            return new static;
+        }
+
         $results = [];
 
-        foreach (range(1, $count) as $item) {
+        $collectionCount = $this->count();
+
+        foreach (range(1, min($count, $collectionCount)) as $item) {
             array_push($results, array_pop($this->items));
         }
 
@@ -963,9 +969,15 @@ class Collection implements ArrayAccess, Enumerable
             return array_shift($this->items);
         }
 
+        if ($this->isEmpty()) {
+            return new static;
+        }
+
         $results = [];
 
-        foreach (range(1, $count) as $item) {
+        $collectionCount = $this->count();
+
+        foreach (range(1, min($count, $collectionCount)) as $item) {
             array_push($results, array_shift($this->items));
         }
 
