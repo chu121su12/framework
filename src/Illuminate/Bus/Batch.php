@@ -446,10 +446,17 @@ class Batch implements Arrayable, JsonSerializable
     protected function invokeHandlerCallback($handler, Batch $batch, $e = null)
     {
         try {
+            $exception = null;
             return $handler instanceof SerializableClosure
                 ? $handler->__invoke($batch, $e)
                 : call_user_func($handler, $batch, $e);
-        } catch (Throwable $e) {
+        } catch (\Throwable $exception) {
+        } catch (\Error $exception) {
+        } catch (\Exception $exception) {
+        }
+
+        if (isset($exception)) {
+            $e = $exception;
             if (function_exists('report')) {
                 report($e);
             }

@@ -4,6 +4,7 @@ namespace Illuminate\Tests\Integration\Http;
 
 use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
 use Illuminate\Http\Exceptions\PostTooLargeException;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\ConditionallyLoadsAttributes;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MergeValue;
@@ -1135,6 +1136,10 @@ class ResourceTest extends TestCase
 
     public function testPostTooLargeException()
     {
+        if (is_numeric($postMaxSize = ini_get('post_max_size')) && (int) $postMaxSize === 0) {
+            $this->markTestSkipped('Max POST size is 0.');
+        }
+
         $this->expectException(PostTooLargeException::class);
 
         $request = Mockery::mock(Request::class, ['server' => ['CONTENT_LENGTH' => '2147483640']]);

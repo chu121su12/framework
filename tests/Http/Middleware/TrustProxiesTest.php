@@ -6,6 +6,15 @@ use Illuminate\Http\Middleware\TrustProxies;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\TestCase;
 
+class TrustProxiesTest_createTrustedProxy_Class extends TrustProxies
+        {
+            public function __construct($trustedHeaders, $trustedProxies)
+            {
+                $this->headers = $trustedHeaders;
+                $this->proxies = $trustedProxies;
+            }
+        }
+
 class TrustProxiesTest extends TestCase
 {
     /**
@@ -367,13 +376,6 @@ class TrustProxiesTest extends TestCase
      */
     protected function createTrustedProxy($trustedHeaders, $trustedProxies)
     {
-        return new class($trustedHeaders, $trustedProxies) extends TrustProxies
-        {
-            public function __construct($trustedHeaders, $trustedProxies)
-            {
-                $this->headers = $trustedHeaders;
-                $this->proxies = $trustedProxies;
-            }
-        };
+        return new TrustProxiesTest_createTrustedProxy_Class($trustedHeaders, $trustedProxies);
     }
 }

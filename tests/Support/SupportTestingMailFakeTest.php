@@ -78,16 +78,18 @@ class SupportTestingMailFakeTest extends TestCase
 
     public function testAssertNotSentWithClosure()
     {
+        phpunit_assert_v5_skip_test($this);
+
         $callback = function (MailableStub $mail) {
             return $mail->hasTo('taylor@laravel.com');
         };
 
-        $this->fake->assertNotSent($callback);
-
-        $this->fake->to('taylor@laravel.com')->send($this->mailable);
-
-        $this->expectException(ExpectationFailedException::class);
-        $this->expectExceptionMessageMatches('/The unexpected \['.preg_quote(MailableStub::class, '/').'\] mailable was sent./m');
+        try {
+            $this->fake->assertNotSent($callback);
+            $this->fake->to('taylor@laravel.com')->send($this->mailable);
+        } catch (ExpectationFailedException $e) {
+            $this->expectExceptionMessageMatches('/The unexpected \['.preg_quote(MailableStub::class, '/').'\] mailable was sent./m');
+        }
 
         $this->fake->assertNotSent($callback);
     }
