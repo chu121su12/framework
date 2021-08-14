@@ -440,7 +440,7 @@ class Builder implements BuilderContract
             return $instance;
         }
 
-        return $this->newModelInstance($attributes + $values);
+        return $this->newModelInstance(array_merge($attributes, $values));
     }
 
     /**
@@ -456,7 +456,7 @@ class Builder implements BuilderContract
             return $instance;
         }
 
-        return tap($this->newModelInstance($attributes + $values), function ($instance) {
+        return tap($this->newModelInstance(array_merge($attributes, $values)), function ($instance) {
             $instance->save();
         });
     }
