@@ -86,7 +86,7 @@ class Reflector
     public static function getParameterClassNames($parameter)
     {
         if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-            return [static::getParameterClassName($parameter)];
+            return array_filter([static::getParameterClassName($parameter)]);
         }
 
         $type = $parameter->getType();

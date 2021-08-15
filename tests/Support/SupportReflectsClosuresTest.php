@@ -64,7 +64,7 @@ class SupportReflectsClosuresTest extends TestCase
         });
     }
 
-    public function testItWorksWithUnionTypes()
+    public function testItWorksWithUnionTypesSingleType()
     {
         $types = ReflectsClosuresClass::reflectFirstAll(function (ExampleParameter $a, $b) {
             //
@@ -73,15 +73,24 @@ class SupportReflectsClosuresTest extends TestCase
         $this->assertEquals([
             ExampleParameter::class,
         ], $types);
+    }
 
-        $types = ReflectsClosuresClass::reflectFirstAll(function (ExampleParameter | AnotherExampleParameter $a, $b) {
-            //
-        });
+    public function testItWorksWithUnionTypes()
+    {
+        if (version_compare(phpversion(), '8.0.0', '<')) {
+            $this->markTestSkipped('Test uses union types.');
+        } else {
+            $this->markTestSkipped('Framework does not support union types.');
+        }
 
-        $this->assertEquals([
-            ExampleParameter::class,
-            AnotherExampleParameter::class,
-        ], $types);
+        // $types = ReflectsClosuresClass::reflectFirstAll(function (ExampleParameter | AnotherExampleParameter $a, $b) {
+        //     //
+        // });
+
+        // $this->assertEquals([
+        //     ExampleParameter::class,
+        //     AnotherExampleParameter::class,
+        // ], $types);
     }
 
     public function testItWorksWithUnionTypesWithNoTypeHints()
