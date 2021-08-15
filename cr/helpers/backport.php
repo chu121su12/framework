@@ -130,6 +130,19 @@ if (! \function_exists('backport_reflection_type_cast_string')) {
     }
 }
 
+if (! \function_exists('backport_only_reflection_parameter_get_type')) {
+    function backport_only_reflection_parameter_get_type(\ReflectionParameter $parameter)
+    {
+        $className = $parameter->getClass();
+
+        if ($className && ($className = $className->getName())) {
+            return in_array($className, ['array', 'callable'], true) ? null : $className;
+        }
+
+        return null;
+    }
+}
+
 if (! \function_exists('backport_reflection_parameter_get_class')) {
     function backport_reflection_parameter_get_class(\ReflectionParameter $parameter)
     {

@@ -65,13 +65,7 @@ class Reflector
     public static function getParameterClassName($parameter)
     {
         if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-            $className = $parameter->getClass();
-
-            if ($className && ($className = $className->getName())) {
-                return in_array($className, ['array', 'callable'], true) ? null : $className;
-            }
-
-            return null;
+            return backport_only_reflection_parameter_get_type($parameter);
         }
 
         $type = $parameter->getType();
@@ -91,6 +85,10 @@ class Reflector
      */
     public static function getParameterClassNames($parameter)
     {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            return [static::getParameterClassName($parameter)];
+        }
+
         $type = $parameter->getType();
 
         if (! $type instanceof ReflectionUnionType) {
