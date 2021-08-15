@@ -20,7 +20,7 @@ class AssertRedirectToSignedRouteTest extends TestCase
      */
     private $urlGenerator;
 
-    protected function setUp(): void
+    protected function setUp()////: void
     {
         parent::setUp();
 
@@ -90,7 +90,7 @@ class AssertRedirectToSignedRouteTest extends TestCase
             ->assertRedirectToSignedRoute('signed-route');
     }
 
-    public function tearDown(): void
+    public function tearDown()////: void
     {
         parent::tearDown();
 

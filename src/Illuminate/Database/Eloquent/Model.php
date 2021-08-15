@@ -1811,7 +1811,7 @@ abstract class Model implements Arrayable, ArrayAccess, HasBroadcastChannel, Jso
      */
     public function resolveSoftDeletableRouteBinding($value, $field = null)
     {
-        return $this->where($field ?? $this->getRouteKeyName(), $value)->withTrashed()->first();
+        return $this->where(isset($field) ? $field : $this->getRouteKeyName(), $value)->withTrashed()->first();
     }
 
     /**
