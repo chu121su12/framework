@@ -32,6 +32,9 @@ class DiscoverEventsTest extends TestCase
         ], $events);
     }
 
+    /**
+     * @requires PHP 8
+     */
     public function testUnionEventsCanBeDiscovered()
     {
         if (version_compare(phpversion(), '8.0.0', '<')) {

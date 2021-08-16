@@ -75,6 +75,9 @@ class SupportReflectsClosuresTest extends TestCase
         ], $types);
     }
 
+    /**
+     * @requires PHP 8
+     */
     public function testItWorksWithUnionTypes()
     {
         if (version_compare(phpversion(), '8.0.0', '<')) {
@@ -83,14 +86,14 @@ class SupportReflectsClosuresTest extends TestCase
             $this->markTestSkipped('Framework does not support union types.');
         }
 
-        // $types = ReflectsClosuresClass::reflectFirstAll(function (ExampleParameter | AnotherExampleParameter $a, $b) {
-        //     //
-        // });
+        $closure = require __DIR__.'/Fixtures/UnionTypesClosure.php';
 
-        // $this->assertEquals([
-        //     ExampleParameter::class,
-        //     AnotherExampleParameter::class,
-        // ], $types);
+        $types = ReflectsClosuresClass::reflectFirstAll($closure);
+
+        $this->assertEquals([
+            ExampleParameter::class,
+            AnotherExampleParameter::class,
+        ], $types);
     }
 
     public function testItWorksWithUnionTypesWithNoTypeHints()
