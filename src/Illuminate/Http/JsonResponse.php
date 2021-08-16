@@ -70,7 +70,7 @@ class JsonResponse extends BaseJsonResponse
     /**
      * {@inheritdoc}
      */
-    public function setData($data = []): static
+    public function setData($data = [])////: static
     {
         $this->original = $data;
 
@@ -114,7 +114,7 @@ class JsonResponse extends BaseJsonResponse
     /**
      * {@inheritdoc}
      */
-    public function setEncodingOptions($options): static
+    public function setEncodingOptions($options)////: static
     {
         $this->encodingOptions = (int) $options;
 

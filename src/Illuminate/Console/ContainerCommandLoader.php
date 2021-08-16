@@ -3,7 +3,7 @@
 namespace Illuminate\Console;
 
 use Psr\Container\ContainerInterface;
-use Symfony\Component\Console\Command\Command;
+// use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 
@@ -44,7 +44,7 @@ class ContainerCommandLoader implements CommandLoaderInterface
      *
      * @throws \Symfony\Component\Console\Exception\CommandNotFoundException
      */
-    public function get(/*string */$name)///: Command
+    public function get(/*string */$name)///: SymfonyCommand
     {
         $name = cast_to_string($name);
 
@@ -73,7 +73,7 @@ class ContainerCommandLoader implements CommandLoaderInterface
      *
      * @return string[]
      */
-    public function getNames(): array
+    public function getNames()////: array
     {
         return array_keys($this->commandMap);
     }
