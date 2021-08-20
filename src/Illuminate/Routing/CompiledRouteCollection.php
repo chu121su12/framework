@@ -315,7 +315,8 @@ class CompiledRouteCollection extends AbstractRouteCollection
             ->block(
                 isset($attributes['lockSeconds']) ? $attributes['lockSeconds'] : null,
                 isset($attributes['waitSeconds']) ? $attributes['waitSeconds'] : null
-            );
+            )
+            ->withTrashed(isset($attributes['withTrashed']) ? $attributes['withTrashed'] : false);
     }
 
     /**

@@ -47,6 +47,11 @@ class HttpClientTest extends TestCase
         $this->factory = new Factory;
     }
 
+    protected function tearDown(): void
+    {
+        m::close();
+    }
+
     public function testStubbedResponsesAreReturnedAfterFaking()
     {
         $this->factory->fake();
@@ -956,8 +961,6 @@ class HttpClientTest extends TestCase
         $factory->post('https://example.com');
         $factory->patch('https://example.com');
         $factory->delete('https://example.com');
-
-        m::close();
     }
 
     public function testTheRequestSendingAndResponseReceivedEventsAreFiredWhenARequestIsSentAsync()
@@ -977,8 +980,6 @@ class HttpClientTest extends TestCase
                 $pool->delete('https://example.com'),
             ];
         });
-
-        m::close();
     }
 
     public function testTheTransferStatsAreCalledSafelyWhenFakingTheRequest()
@@ -1012,14 +1013,13 @@ class HttpClientTest extends TestCase
         $events->shouldReceive('dispatch')->once()->with(m::type(ResponseReceived::class));
 
         $factory = new Factory($events);
+        $factory->fake(['example.com' => $factory->response('foo', 200)]);
 
         $client = $factory->timeout(10);
         $clonedClient = clone $client;
 
         $clonedClient->get('https://example.com');
         // $clonedClient->withoutVerifying()->get('https://example.com'); // to pass tests
-
-        m::close();
     }
 
     public function testRequestIsMacroable()
