@@ -1107,7 +1107,7 @@ class LazyCollection implements Enumerable
             : $key;
 
         return $this
-            ->when($filter)
+            ->unless($filter == null)
             ->filter($filter)
             ->take(1)
             ->collect()
