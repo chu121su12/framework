@@ -963,7 +963,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
     /**
      * {@inheritdoc}
      */
-    public function handle(SymfonyRequest $request, /*int */$type = self::MAIN_REQUEST, /*bool */$catch = true)/*: SymfonyResponse*/
+    public function handle(SymfonyRequest $request, /*int */$type = self::MASTER_REQUEST, /*bool */$catch = true)/*: SymfonyResponse*/
     {
         $catch = cast_to_bool($catch);
 

@@ -207,6 +207,8 @@ class ValidationValidatorTest_testCustomValidationObject_class_password_rule_val
                         }
                     }
 
+class ValidationValidatorTest_testCustomException_class extends ValidationException {};
+
 class ValidationValidatorTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -810,7 +812,7 @@ class ValidationValidatorTest extends TestCase
 
         $v = new Validator($trans, ['name' => ''], ['name' => 'required']);
 
-        $exception = new class($v) extends ValidationException {};
+        $exception = new ValidationValidatorTest_testCustomException_class($v);
         $v->setException($exception);
 
         try {

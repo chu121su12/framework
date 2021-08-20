@@ -6,6 +6,22 @@ use Illuminate\Foundation\Testing\Concerns\InteractsWithViews;
 use Illuminate\View\Component;
 use Orchestra\Testbench\TestCase;
 
+class InteractsWithViewsTest_testComponentCanAccessPublicProperties_class extends Component
+        {
+            public $foo = 'bar';
+
+            public function speak()
+            {
+                return 'hello';
+            }
+
+            public function render()
+            {
+                return 'rendered content';
+            }
+        }
+
+
 class InteractsWithViewsTest extends TestCase
 {
     use InteractsWithViews;
@@ -19,20 +35,7 @@ class InteractsWithViewsTest extends TestCase
 
     public function testComponentCanAccessPublicProperties()
     {
-        $exampleComponent = new class extends Component
-        {
-            public $foo = 'bar';
-
-            public function speak()
-            {
-                return 'hello';
-            }
-
-            public function render()
-            {
-                return 'rendered content';
-            }
-        };
+        $exampleComponent = new InteractsWithViewsTest_testComponentCanAccessPublicProperties_class;
 
         $component = $this->component(get_class($exampleComponent));
 

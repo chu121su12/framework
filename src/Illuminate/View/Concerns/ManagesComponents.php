@@ -147,7 +147,7 @@ trait ManagesComponents
             $this->slotStack[$this->currentComponent()]
         );
 
-        [$currentName, $currentAttributes] = $currentSlot;
+        list($currentName, $currentAttributes) = $currentSlot;
 
         $this->slots[$this->currentComponent()][$currentName] = new ComponentSlot(
             trim(ob_get_clean()), $currentAttributes

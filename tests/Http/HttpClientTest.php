@@ -47,7 +47,7 @@ class HttpClientTest extends TestCase
         $this->factory = new Factory;
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
