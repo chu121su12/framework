@@ -62,6 +62,10 @@ class EncrypterTest extends TestCase
 
     public function testThatAnAeadCipherIncludesTag()
     {
+        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
+            $this->markTestSkipped('openssl_encrypt/openssl_decrypt does not support these ciphers.');
+        }
+
         $e = new Encrypter(str_repeat('b', 32), 'AES-256-GCM');
         $encrypted = $e->encrypt('foo');
         $data = json_decode(base64_decode($encrypted));

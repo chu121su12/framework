@@ -595,7 +595,10 @@ class SupportHelpersTest extends TestCase
         $this->assertEquals(3, $attempts);
 
         // Make sure we waited 300ms for the first two attempts
-        $this->assertEqualsWithDelta(0.3, microtime(true) - $startTime, 0.02);
+        $this->assertEqualsWithDelta(
+            0.3, microtime(true) - $startTime,
+            \version_compare(\PHP_VERSION, '7.1.0', '<') ? 0.05 : 0.02
+        );
     }
 
     public function testRetryWithPassingWhenCallback()
