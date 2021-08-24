@@ -56,6 +56,7 @@
         "illuminate/bus": "self.version",
         "illuminate/cache": "self.version",
         "illuminate/collections": "self.version",
+        "illuminate/conditionable": "self.version",
         "illuminate/config": "self.version",
         "illuminate/console": "self.version",
         "illuminate/container": "self.version",
@@ -176,7 +177,11 @@
             "Carbon\\": "cr/patch/carbon/src/",
             "Doctrine\\": "cr/patch/doctrine/doctrine/",
             "Illuminate\\": "src/Illuminate/",
-            "Illuminate\\Support\\": ["src/Illuminate/Macroable/", "src/Illuminate/Collections/"],
+            "Illuminate\\Support\\": [
+                "src/Illuminate/Macroable/",
+                "src/Illuminate/Collections/",
+                "src/Illuminate/Conditionable/"
+            ],
             "Brick\\Math\\": "cr/patch/brick/math/src/",
             "Brick\\Money\\": "cr/patch/brick/money/src/",
             "Sushi\\": "cr/patch/sushi/sushi/",
