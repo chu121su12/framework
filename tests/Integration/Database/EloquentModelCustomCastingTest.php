@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  */
 class EloquentModelCustomCastingTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $db = new DB;
 
@@ -50,7 +50,7 @@ class EloquentModelCustomCastingTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         $this->schema()->drop('casting_table');
     }
@@ -158,11 +158,11 @@ class AddressCast implements CastsAttributes
      * @param  array  $attributes
      * @return AddressModel
      */
-    public function get($model, $key, $value, $attributes)
+    public function get($model, $key, $value, array $attributes)
     {
         return new AddressModel(
             $attributes['address_line_one'],
-            $attributes['address_line_two'],
+            $attributes['address_line_two']
         );
     }
 
@@ -175,7 +175,7 @@ class AddressCast implements CastsAttributes
      * @param  array  $attributes
      * @return array
      */
-    public function set($model, $key, $value, $attributes)
+    public function set($model, $key, $value, array $attributes)
     {
         if (! $value instanceof AddressModel) {
             throw new InvalidArgumentException('The given value is not an Address instance.');
@@ -199,7 +199,7 @@ class NonNullableString implements CastsAttributes
      * @param  array  $attributes
      * @return string|null
      */
-    public function get($model, $key, $value, $attributes)
+    public function get($model, $key, $value, array $attributes)
     {
         return ($value != '') ? $value : null;
     }
@@ -213,9 +213,9 @@ class NonNullableString implements CastsAttributes
      * @param  array  $attributes
      * @return string
      */
-    public function set($model, $key, $value, $attributes)
+    public function set($model, $key, $value, array $attributes)
     {
-        return $value ?? '';
+        return isset($value) ? $value : '';
     }
 }
 
