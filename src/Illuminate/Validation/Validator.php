@@ -1148,8 +1148,10 @@ class Validator implements ValidatorContract
      * @param  string  $attribute
      * @return \Illuminate\Support\Fluent|array|mixed
      */
-    private function dataForSometimesIteration(string $attribute, $removeLastSegmentOfAttribute)
+    private function dataForSometimesIteration(/*string */$attribute, $removeLastSegmentOfAttribute)
     {
+        $attribute = cast_to_string($attribute);
+
         $lastSegmentOfAttribute = strrchr($attribute, '.');
 
         $attribute = $lastSegmentOfAttribute && $removeLastSegmentOfAttribute
