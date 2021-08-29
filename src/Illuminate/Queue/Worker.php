@@ -5,7 +5,7 @@ namespace Illuminate\Queue;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Contracts\Queue\Factory as QueueManager;
+use Illuminate\Contracts\Queue\Factory as QueueManagerContract;
 use Illuminate\Database\DetectsLostConnections;
 use Illuminate\Queue\Events\JobExceptionOccurred;
 use Illuminate\Queue\Events\JobProcessed;
@@ -103,7 +103,7 @@ class Worker
      * @param  callable|null  $resetScope
      * @return void
      */
-    public function __construct(QueueManager $manager,
+    public function __construct(QueueManagerContract $manager,
                                 Dispatcher $events,
                                 ExceptionHandler $exceptions,
                                 callable $isDownForMaintenance,
@@ -847,7 +847,7 @@ class Worker
      * @param  \Illuminate\Contracts\Queue\Factory  $manager
      * @return void
      */
-    public function setManager(QueueManager $manager)
+    public function setManager(QueueManagerContract $manager)
     {
         $this->manager = $manager;
     }
