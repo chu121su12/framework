@@ -93,7 +93,7 @@ trait Sushi
 
         static::$sushiConnection = app(ConnectionFactory::class)->make($config);
 
-        app('config')->set('database.connections.'.static::class, $config);
+        app('config')->set('database.connections.sushi-'.Str::slug(Str::replace('\\', '-', static::class)), $config);
     }
 
     public function migrate()
