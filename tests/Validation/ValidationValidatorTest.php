@@ -6484,7 +6484,7 @@ class ValidationValidatorTest extends TestCase
             );
         }
 
-        $this->assertTrue($passes, $message ?? '');
+        $this->assertTrue($passes, isset($message) ? $message : '');
 
         $this->assertSame($expectedValidatedData, $validator->validated());
     }

@@ -62,6 +62,10 @@ class EncrypterTest extends TestCase
 
     public function testCipherNamesCanBeMixedCase()
     {
+        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
+            $this->markTestSkipped('openssl_encrypt/openssl_decrypt does not support these ciphers.');
+        }
+
         $upper = new Encrypter(str_repeat('b', 16), 'AES-128-GCM');
         $encrypted = $upper->encrypt('bar');
         $this->assertNotSame('bar', $encrypted);
