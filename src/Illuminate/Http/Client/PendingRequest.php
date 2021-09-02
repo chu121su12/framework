@@ -99,6 +99,13 @@ class PendingRequest
     protected $retryDelay = 100;
 
     /**
+     * The callback that will determine if the request should be retried.
+     *
+     * @var callable|null
+     */
+    protected $retryWhenCallback = null;
+
+    /**
      * The callbacks that should execute before the request is sent.
      *
      * @var \Illuminate\Support\Collection
@@ -455,9 +462,10 @@ class PendingRequest
      *
      * @param  int  $times
      * @param  int  $sleep
+     * @param  callable|null  $when
      * @return $this
      */
-    public function retry($times, $sleep = 0)
+    public function retry(/*int */$times, /*int */$sleep = 0, /*?*/callable $when = null)
     {
         $times = cast_to_int($times);
 
@@ -465,6 +473,7 @@ class PendingRequest
 
         $this->tries = $times;
         $this->retryDelay = $sleep;
+        $this->retryWhenCallback = $when;
 
         return $this;
     }
@@ -707,7 +716,7 @@ class PendingRequest
 
                 throw new ConnectionException($e->getMessage(), 0, $e);
             }
-        }, isset($this->retryDelay) ? $this->retryDelay : 100);
+        }, isset($this->retryDelay) ? $this->retryDelay : 100, $this->retryWhenCallback);
     }
 
     /**
