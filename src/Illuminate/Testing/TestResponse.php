@@ -156,6 +156,16 @@ class TestResponse implements ArrayAccess
     }
 
     /**
+     * Assert that the response has a 422 status code.
+     *
+     * @return $this
+     */
+    public function assertUnprocessable()
+    {
+        return $this->assertStatus(422);
+    }
+
+    /**
      * Assert that the response has the given status code.
      *
      * @param  int  $status
@@ -1046,7 +1056,7 @@ EOF;
     /**
      * Assert that the given keys do not have validation errors.
      *
-     * @param  array|null  $keys
+     * @param  string|array|null  $keys
      * @param  string  $errorBag
      * @param  string  $responseKey
      * @return $this
@@ -1089,7 +1099,7 @@ EOF;
     /**
      * Assert that the response has the given validation errors.
      *
-     * @param  array  $errors
+     * @param  string|array|null  $errors
      * @param  string  $errorBag
      * @param  string  $responseKey
      * @return $this
