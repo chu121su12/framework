@@ -83,7 +83,9 @@ class Encrypter implements EncrypterContract, StringEncrypter
      */
     public static function generateKey($cipher)
     {
-        return random_bytes(self::$supportedCiphers[strtolower($cipher)]['size'] ?? 32);
+        $cipherLower = strtolower($cipher);
+
+        return random_bytes(isset(self::$supportedCiphers[$cipherLower]) && isset(self::$supportedCiphers[$cipherLower]['size']) ? self::$supportedCiphers[$cipherLower]['size'] : 32);
     }
 
     /**
@@ -101,7 +103,7 @@ class Encrypter implements EncrypterContract, StringEncrypter
 
         $tag = '';
 
-        $value = self::$supportedCiphers[strtolower($this->cipher)]['aead']
+        $value = self::$supportedCiphers[strtolower($this->cipher)]['aead'] && !version_compare(PHP_VERSION, '7.1.0', '<')
             ? \openssl_encrypt(
                 $serialize ? serialize($value) : $value,
                 strtolower($this->cipher), $this->key, 0, $iv, $tag

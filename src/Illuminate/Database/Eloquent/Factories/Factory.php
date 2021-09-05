@@ -280,7 +280,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
      */
-    public function createQuietly($attributes = [], ?Model $parent = null)
+    public function createQuietly($attributes = [], /*?*/Model $parent = null)
     {
         return Model::withoutEvents(function () use ($attributes, $parent) {
             return $this->create($attributes, $parent);
