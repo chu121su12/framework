@@ -125,7 +125,7 @@ class PackageManifest extends IlluminatePackageManifest
             return [];
         }
 
-        $package = json_decode(file_get_contents(
+        $package = backport_json_decode(file_get_contents(
             TESTBENCH_WORKING_PATH.'/composer.json'
         ), true);
 

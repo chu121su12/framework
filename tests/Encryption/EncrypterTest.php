@@ -85,7 +85,7 @@ class EncrypterTest extends TestCase
 
         $e = new Encrypter(str_repeat('b', 32), 'AES-256-GCM');
         $encrypted = $e->encrypt('foo');
-        $data = json_decode(base64_decode($encrypted));
+        $data = backport_json_decode(base64_decode($encrypted));
 
         $this->assertEmpty($data->mac);
         $this->assertNotEmpty($data->tag);
@@ -93,9 +93,13 @@ class EncrypterTest extends TestCase
 
     public function testThatAnAeadTagMustBeProvidedInFullLength()
     {
+        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
+            $this->markTestSkipped('openssl_encrypt/openssl_decrypt does not support these ciphers.');
+        }
+
         $e = new Encrypter(str_repeat('b', 32), 'AES-256-GCM');
         $encrypted = $e->encrypt('foo');
-        $data = json_decode(base64_decode($encrypted));
+        $data = backport_json_decode(base64_decode($encrypted));
 
         $this->expectException(DecryptException::class);
         $this->expectExceptionMessage('Could not decrypt the data.');
@@ -107,9 +111,13 @@ class EncrypterTest extends TestCase
 
     public function testThatAnAeadTagCantBeModified()
     {
+        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
+            $this->markTestSkipped('openssl_encrypt/openssl_decrypt does not support these ciphers.');
+        }
+
         $e = new Encrypter(str_repeat('b', 32), 'AES-256-GCM');
         $encrypted = $e->encrypt('foo');
-        $data = json_decode(base64_decode($encrypted));
+        $data = backport_json_decode(base64_decode($encrypted));
 
         $this->expectException(DecryptException::class);
         $this->expectExceptionMessage('Could not decrypt the data.');
@@ -123,7 +131,7 @@ class EncrypterTest extends TestCase
     {
         $e = new Encrypter(str_repeat('b', 32), 'AES-256-CBC');
         $encrypted = $e->encrypt('foo');
-        $data = json_decode(base64_decode($encrypted));
+        $data = backport_json_decode(base64_decode($encrypted));
 
         $this->assertEmpty($data->tag);
         $this->assertNotEmpty($data->mac);

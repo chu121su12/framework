@@ -131,7 +131,7 @@ class AssertableJson implements Arrayable
      * @param  \Closure  $callback
      * @return $this
      */
-    public function each(Closure $callback): self
+    public function each(Closure $callback)/*: self*/
     {
         $props = $this->prop();
 

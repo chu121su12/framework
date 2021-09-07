@@ -9,7 +9,7 @@ use Orchestra\Testbench\TestCase;
 
 class EloquentStrictMorphsTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -51,7 +51,7 @@ class EloquentStrictMorphsTest extends TestCase
         $this->assertEquals('test', $morphName);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 
