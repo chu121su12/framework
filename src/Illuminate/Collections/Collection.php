@@ -673,7 +673,7 @@ class Collection implements ArrayAccess, Enumerable
      * @template TMapToDictionaryKey of array-key
      * @template TMapToDictionaryValue
      *
-     * @param  callable(TValue, TKey): array<TMapToDictionaryKey, TMapToDictionaryValue>   $callback
+     * @param  callable(TValue, TKey): array<TMapToDictionaryKey, TMapToDictionaryValue>  $callback
      * @return static<TMapToDictionaryKey, array<int, TMapToDictionaryValue>>
      */
     public function mapToDictionary(callable $callback)
@@ -705,7 +705,7 @@ class Collection implements ArrayAccess, Enumerable
      * @template TMapWithKeysKey of array-key
      * @template TMapWithKeysValue
      *
-     * @param  callable(TValue, TKey): array<TMapWithKeysKey, TMapWithKeysValue>   $callback
+     * @param  callable(TValue, TKey): array<TMapWithKeysKey, TMapWithKeysValue>  $callback
      * @return static<TMapWithKeysKey, TMapWithKeysValue>
      */
     public function mapWithKeys(callable $callback)
@@ -726,7 +726,7 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Merge the collection with the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue> $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
      * @return static<TKey, TValue>
      */
     public function merge($items)
@@ -737,7 +737,7 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Recursively merge the collection with the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue> $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
      * @return static<TKey, array<int, TValue>>
      */
     public function mergeRecursive($items)
@@ -750,7 +750,7 @@ class Collection implements ArrayAccess, Enumerable
      *
      * @template TCombineValue
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TCombineValue>|iterable<array-key, TCombineValue> $values
+     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TCombineValue>|iterable<array-key, TCombineValue>  $values
      * @return static<TKey, TCombineValue>
      */
     public function combine($values)
@@ -761,7 +761,7 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Union the collection with the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue> $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
      * @return static<TKey, TValue>
      */
     public function union($items)
@@ -796,7 +796,7 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Get the items with the specified keys.
      *
-     * @param  \Illuminate\Support\Enumerable<array-key, TKey>|array<array-key, TKey> $keys
+     * @param  \Illuminate\Support\Enumerable<array-key, TKey>|array<array-key, TKey>  $keys
      * @return static<TKey, TValue>
      */
     public function only($keys)
@@ -935,7 +935,7 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Replace the collection items with the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue> $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
      * @return static<TKey, TValue>
      */
     public function replace($items)
