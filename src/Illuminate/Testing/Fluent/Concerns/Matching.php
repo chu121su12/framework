@@ -112,7 +112,6 @@ trait Matching
      *
      * @param  string  $key
      * @param  array|string  $expected
-     *
      * @return $this
      */
     public function whereContains(/*string */$key, $expected)
