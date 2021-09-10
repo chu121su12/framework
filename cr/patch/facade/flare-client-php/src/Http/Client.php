@@ -22,11 +22,16 @@ class Client
     private $timeout;
 
     public function __construct(
-        ?string $apiToken,
-        ?string $apiSecret,
-        string $baseUrl = 'https://reporting.flareapp.io/api',
-        int $timeout = 10
+        /*?string */$apiToken,
+        /*?string */$apiSecret,
+        /*string */$baseUrl = 'https://reporting.flareapp.io/api',
+        /*int */$timeout = 10
     ) {
+        $apiToken = cast_to_string($apiToken, null);
+        $apiSecret = cast_to_string($apiSecret, null);
+        $baseUrl = cast_to_string($baseUrl);
+        $timeout = cast_to_int($timeout);
+
         $this->apiToken = $apiToken;
 
         $this->apiSecret = $apiSecret;

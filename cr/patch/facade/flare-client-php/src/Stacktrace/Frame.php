@@ -20,12 +20,18 @@ class Frame
     private $isApplicationFrame;
 
     public function __construct(
-        string $file,
-        int $lineNumber,
-        string $method = null,
-        string $class = null,
-        bool $isApplicationFrame = false
+        /*string */$file,
+        /*int */$lineNumber,
+        /*string */$method = null,
+        /*string */$class = null,
+        /*bool */$isApplicationFrame = false
     ) {
+        $file = cast_to_string($file);
+        $lineNumber = cast_to_int($lineNumber);
+        $method = cast_to_string($method, null);
+        $class = cast_to_string($class, null);
+        $isApplicationFrame = cast_to_bool($isApplicationFrame);
+
         $this->file = $file;
 
         $this->lineNumber = $lineNumber;

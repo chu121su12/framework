@@ -41,7 +41,7 @@ class Codesnippet
         try {
             $file = new File($fileName);
 
-            [$startLineNumber, $endLineNumber] = $this->getBounds($file->numberOfLines());
+            list($startLineNumber, $endLineNumber) = $this->getBounds($file->numberOfLines());
 
             $code = [];
 

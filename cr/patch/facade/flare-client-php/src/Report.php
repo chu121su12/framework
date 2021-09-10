@@ -3,6 +3,7 @@
 namespace Facade\FlareClient;
 
 use Facade\FlareClient\Concerns\HasContext;
+use Facade\FlareClient\Concerns\HasContextProperties;
 use Facade\FlareClient\Concerns\UsesTime;
 use Facade\FlareClient\Context\ContextInterface;
 use Facade\FlareClient\Contracts\ProvidesFlareContext;
@@ -15,7 +16,7 @@ use Throwable;
 
 class Report
 {
-    use UsesTime, HasContext;
+    use UsesTime, HasContext, HasContextProperties;
 
     /** @var \Facade\FlareClient\Stacktrace\Stacktrace */
     private $stacktrace;
@@ -42,7 +43,7 @@ class Report
     private $applicationVersion;
 
     /** @var array */
-    private $userProvidedContext = [];
+    /*private $userProvidedContext = [];*/
 
     /** @var array */
     private $exceptionContext = [];
@@ -68,9 +69,12 @@ class Report
     public static function createForThrowable(
         /*Throwable */$throwable,
         ContextInterface $context,
-        ?string $applicationPath = null,
-        ?string $version = null
+        /*?string */$applicationPath = null,
+        /*?string */$version = null
     )/*: self */{
+        $applicationPath = cast_to_string($applicationPath, null);
+        $version = cast_to_string($version, null);
+
         return (new static())
             ->setApplicationPath($applicationPath)
             ->throwable($throwable)
@@ -233,7 +237,7 @@ class Report
         return $this->applicationVersion;
     }
 
-    public function view(?View $view)
+    public function view(/*?*/View $view = null)
     {
         $this->view = $view;
 

@@ -6,6 +6,7 @@ use Error;
 use ErrorException;
 use Exception;
 use Facade\FlareClient\Concerns\HasContext;
+use Facade\FlareClient\Concerns\HasContextProperties;
 use Facade\FlareClient\Context\ContextContextDetector;
 use Facade\FlareClient\Context\ContextDetectorInterface;
 use Facade\FlareClient\Enums\MessageLevels;
@@ -21,7 +22,7 @@ use Throwable;
 
 class Flare
 {
-    use HasContext;
+    use HasContext, HasContextProperties;
 
     /** @var \Facade\FlareClient\Http\Client */
     protected $client;
@@ -95,7 +96,8 @@ class Flare
             return null;
         }
 
-        return ($this->determineVersionCallable)();
+        $determineVersionCallable = $this->determineVersionCallable;
+        return $determineVersionCallable();
     }
 
     public function __construct(Client $client, ContextDetectorInterface $contextDetector = null, Container $container = null, array $middleware = [])

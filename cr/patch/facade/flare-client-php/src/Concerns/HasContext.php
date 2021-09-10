@@ -11,7 +11,7 @@ trait HasContext
     private $stage;
 
     /** @var array */
-    private $userProvidedContext = [];
+    /*private $userProvidedContext = [];*/
 
     public function stage(/*?string */$stage)
     {
