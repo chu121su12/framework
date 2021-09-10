@@ -12,22 +12,28 @@ class Codesnippet
     /** @var int */
     private $snippetLineCount = 9;
 
-    public function surroundingLine(int $surroundingLine): self
+    public function surroundingLine(/*int */$surroundingLine)/*: self*/
     {
+        $surroundingLine = cast_to_int($surroundingLine);
+
         $this->surroundingLine = $surroundingLine;
 
         return $this;
     }
 
-    public function snippetLineCount(int $snippetLineCount): self
+    public function snippetLineCount(/*int */$snippetLineCount)/*: self*/
     {
+        $snippetLineCount = cast_to_int($snippetLineCount);
+
         $this->snippetLineCount = $snippetLineCount;
 
         return $this;
     }
 
-    public function get(string $fileName): array
+    public function get(/*string */$fileName)/*: array*/
     {
+        $fileName = cast_to_string($fileName);
+
         if (! file_exists($fileName)) {
             return [];
         }
@@ -56,7 +62,7 @@ class Codesnippet
         }
     }
 
-    private function getBounds($totalNumberOfLineInFile): array
+    private function getBounds($totalNumberOfLineInFile)/*: array*/
     {
         $startLine = max($this->surroundingLine - floor($this->snippetLineCount / 2), 1);
 

@@ -33,7 +33,7 @@ class Frame
         $this->class = $class;
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         $codeSnippet = (new Codesnippet())
             ->snippetLineCount(9)
@@ -48,18 +48,18 @@ class Frame
         ];
     }
 
-    private function getFullMethod(): string
+    private function getFullMethod()/*: string*/
     {
         $method = $this->method;
 
-        if ($class = $this->class ?? false) {
+        if ($class = isset($this->class) ? $this->class : false) {
             $method = "{$class}::{$method}";
         }
 
         return $method;
     }
 
-    public function getFile(): string
+    public function getFile()/*: string*/
     {
         return $this->file;
     }

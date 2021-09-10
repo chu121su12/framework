@@ -13,18 +13,22 @@ class View
     /** @var array */
     private $data = [];
 
-    public function __construct(string $file, array $data = [])
+    public function __construct(/*string */$file, array $data = [])
     {
+        $file = cast_to_string($file);
+
         $this->file = $file;
         $this->data = $data;
     }
 
-    public static function create(string $file, array $data = []): self
+    public static function create(/*string */$file, array $data = [])/*: self*/
     {
+        $file = cast_to_string($file);
+
         return new static($file, $data);
     }
 
-    private function dumpViewData($variable): string
+    private function dumpViewData($variable)/*: string*/
     {
         $cloner = new VarCloner();
 

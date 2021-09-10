@@ -66,11 +66,11 @@ class Report
     private $groupBy ;
 
     public static function createForThrowable(
-        Throwable $throwable,
+        /*Throwable */$throwable,
         ContextInterface $context,
         ?string $applicationPath = null,
         ?string $version = null
-    ): self {
+    )/*: self */{
         return (new static())
             ->setApplicationPath($applicationPath)
             ->throwable($throwable)
@@ -82,7 +82,7 @@ class Report
             ->setApplicationVersion($version);
     }
 
-    protected static function getClassForThrowable(Throwable $throwable): string
+    protected static function getClassForThrowable(/*Throwable */$throwable)/*: string*/
     {
         if ($throwable instanceof \Facade\Ignition\Exceptions\ViewException) {
             if ($previous = $throwable->getPrevious()) {
@@ -93,8 +93,12 @@ class Report
         return get_class($throwable);
     }
 
-    public static function createForMessage(string $message, string $logLevel, ContextInterface $context, ?string $applicationPath = null): self
+    public static function createForMessage(/*string */$message, /*string */$logLevel, ContextInterface $context, /*?string */$applicationPath = null)/*: self*/
     {
+        $message = cast_to_string($message);
+        $logLevel = cast_to_string($logLevel);
+        $applicationPath = cast_to_string($applicationPath, null);
+
         $stacktrace = Stacktrace::create($applicationPath);
 
         return (new static())
@@ -106,38 +110,42 @@ class Report
             ->openFrameIndex($stacktrace->firstApplicationFrameIndex());
     }
 
-    public function exceptionClass(string $exceptionClass)
+    public function exceptionClass(/*string */$exceptionClass)
     {
+        $exceptionClass = cast_to_string($exceptionClass);
+
         $this->exceptionClass = $exceptionClass;
 
         return $this;
     }
 
-    public function getExceptionClass(): string
+    public function getExceptionClass()/*: string*/
     {
         return $this->exceptionClass;
     }
 
-    public function throwable(Throwable $throwable)
+    public function throwable(/*Throwable */$throwable)
     {
         $this->throwable = $throwable;
 
         return $this;
     }
 
-    public function getThrowable(): ?Throwable
+    public function getThrowable()/*: ?Throwable*/
     {
         return $this->throwable;
     }
 
-    public function message(string $message)
+    public function message(/*string */$message)
     {
+        $message = cast_to_string($message);
+
         $this->message = $message;
 
         return $this;
     }
 
-    public function getMessage(): string
+    public function getMessage()/*: string*/
     {
         return $this->message;
     }
@@ -149,27 +157,33 @@ class Report
         return $this;
     }
 
-    public function getStacktrace(): Stacktrace
+    public function getStacktrace()/*: Stacktrace*/
     {
         return $this->stacktrace;
     }
 
-    public function notifierName(string $notifierName)
+    public function notifierName(/*string */$notifierName)
     {
+        $notifierName = cast_to_string($notifierName);
+
         $this->notifierName = $notifierName;
 
         return $this;
     }
 
-    public function languageVersion(string $languageVersion)
+    public function languageVersion(/*string */$languageVersion)
     {
+        $languageVersion = cast_to_string($languageVersion);
+
         $this->languageVersion = $languageVersion;
 
         return $this;
     }
 
-    public function frameworkVersion(string $frameworkVersion)
+    public function frameworkVersion(/*string */$frameworkVersion)
     {
+        $frameworkVersion = cast_to_string($frameworkVersion);
+
         $this->frameworkVersion = $frameworkVersion;
 
         return $this;
@@ -182,33 +196,39 @@ class Report
         return $this;
     }
 
-    public function openFrameIndex(?int $index)
+    public function openFrameIndex(/*?int */$index)
     {
+        $index = cast_to_int($index, null);
+
         $this->openFrameIndex = $index;
 
         return $this;
     }
 
-    public function setApplicationPath(?string $applicationPath)
+    public function setApplicationPath(/*?string */$applicationPath)
     {
+        $applicationPath = cast_to_string($applicationPath, null);
+
         $this->applicationPath = $applicationPath;
 
         return $this;
     }
 
-    public function getApplicationPath(): ?string
+    public function getApplicationPath()/*: ?string*/
     {
         return $this->applicationPath;
     }
 
-    public function setApplicationVersion(?string $applicationVersion)
+    public function setApplicationVersion(/*?string */$applicationVersion)
     {
+        $applicationVersion = cast_to_string($applicationVersion, null);
+
         $this->applicationVersion = $applicationVersion;
 
         return $this;
     }
 
-    public function getApplicationVersion(): ?string
+    public function getApplicationVersion()/*: ?string*/
     {
         return $this->applicationVersion;
     }
@@ -257,7 +277,7 @@ class Report
         return $this;
     }
 
-    public function allContext(): array
+    public function allContext()/*: array*/
     {
         $context = $this->context->toArray();
 
@@ -266,7 +286,7 @@ class Report
         return array_merge_recursive_distinct($context, $this->userProvidedContext);
     }
 
-    private function exceptionContext(Throwable $throwable)
+    private function exceptionContext(/*Throwable */$throwable)
     {
         if ($throwable instanceof ProvidesFlareContext) {
             $this->exceptionContext = $throwable->context();
@@ -278,10 +298,10 @@ class Report
     public function toArray()
     {
         return [
-            'notifier' => $this->notifierName ?? 'Flare Client',
+            'notifier' => isset($this->notifierName) ? $this->notifierName : 'Flare Client',
             'language' => 'PHP',
             'framework_version' => $this->frameworkVersion,
-            'language_version' => $this->languageVersion ?? phpversion(),
+            'language_version' => isset($this->languageVersion) ? $this->languageVersion : phpversion(),
             'exception_class' => $this->exceptionClass,
             'seen_at' => $this->getCurrentTime(),
             'message' => $this->message,

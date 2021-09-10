@@ -12,20 +12,28 @@ class Stacktrace
     /** @var string */
     private $applicationPath;
 
-    public static function createForThrowable(Throwable $throwable, ?string $applicationPath = null): self
+    public static function createForThrowable(/*Throwable */$throwable, /*?string */$applicationPath = null)/*: self*/
     {
+        $applicationPath = cast_to_string($applicationPath, null);
+
         return new static($throwable->getTrace(),  $applicationPath, $throwable->getFile(), $throwable->getLine());
     }
 
-    public static function create(?string $applicationPath = null): self
+    public static function create(/*?string */$applicationPath = null)/*: self*/
     {
+        $applicationPath = cast_to_string($applicationPath, null);
+
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS & ~DEBUG_BACKTRACE_PROVIDE_OBJECT);
 
         return new static($backtrace, $applicationPath);
     }
 
-    public function __construct(array $backtrace, ?string $applicationPath = null, string $topmostFile = null, string $topmostLine = null)
+    public function __construct(array $backtrace, /*?string */$applicationPath = null, /*string */$topmostFile = null, /*string */$topmostLine = null)
     {
+        $applicationPath = cast_to_string($applicationPath, null);
+        $topmostFile = cast_to_string($topmostFile, null);
+        $topmostLine = cast_to_string($topmostLine, null);
+
         $this->applicationPath = $applicationPath;
 
         $currentFile = $topmostFile;
@@ -36,14 +44,14 @@ class Stacktrace
                 $this->frames[] = new Frame(
                     $currentFile,
                     $currentLine,
-                    $rawFrame['function'] ?? null,
-                    $rawFrame['class'] ?? null,
+                    isset($rawFrame['function']) ? $rawFrame['function'] : null,
+                    isset($rawFrame['class']) ? $rawFrame['class'] : null,
                     $this->frameFileFromApplication($currentFile)
                 );
             }
 
-            $currentFile = $rawFrame['file'] ?? 'unknown';
-            $currentLine = $rawFrame['line'] ?? 0;
+            $currentFile = isset($rawFrame['file']) ? $rawFrame['file'] : 'unknown';
+            $currentLine = isset($rawFrame['line']) ? $rawFrame['line'] : 0;
         }
 
         $this->frames[] = new Frame(
@@ -53,17 +61,19 @@ class Stacktrace
         );
     }
 
-    protected function frameFromFlare(array $rawFrame): bool
+    protected function frameFromFlare(array $rawFrame)/*: bool*/
     {
         return isset($rawFrame['class']) && strpos($rawFrame['class'], 'Facade\\FlareClient\\') === 0;
     }
 
-    protected function frameFileFromApplication(string $frameFilename): bool
+    protected function frameFileFromApplication(/*string */$frameFilename)/*: bool*/
     {
+        $frameFilename = cast_to_string($frameFilename);
+
         $relativeFile = str_replace('\\', DIRECTORY_SEPARATOR, $frameFilename);
 
         if (! empty($this->applicationPath)) {
-            $relativeFile = array_reverse(explode($this->applicationPath ?? '', $frameFilename, 2))[0];
+            $relativeFile = array_reverse(explode(isset($this->applicationPath) ? $this->applicationPath : '', $frameFilename, 2))[0];
         }
 
         if (strpos($relativeFile, DIRECTORY_SEPARATOR . 'vendor') === 0) {
@@ -73,8 +83,10 @@ class Stacktrace
         return true;
     }
 
-    protected function fileIgnored(string $currentFile): bool
+    protected function fileIgnored(/*string */$currentFile)/*: bool*/
     {
+        $currentFile = cast_to_string($currentFile);
+
         $currentFile = str_replace('\\', DIRECTORY_SEPARATOR, $currentFile);
 
         $ignoredFiles = [
@@ -90,19 +102,19 @@ class Stacktrace
         return false;
     }
 
-    public function firstFrame(): Frame
+    public function firstFrame()/*: Frame*/
     {
         return $this->frames[0];
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return array_map(function (Frame $frame) {
             return $frame->toArray();
         }, $this->frames);
     }
 
-    public function firstApplicationFrame(): ?Frame
+    public function firstApplicationFrame()/*: ?Frame*/
     {
         foreach ($this->frames as $index => $frame) {
             if ($frame->isApplicationFrame()) {
@@ -113,7 +125,7 @@ class Stacktrace
         return null;
     }
 
-    public function firstApplicationFrameIndex(): ?int
+    public function firstApplicationFrameIndex()/*: ?int*/
     {
         foreach ($this->frames as $index => $frame) {
             if ($frame->isApplicationFrame()) {

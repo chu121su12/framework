@@ -37,7 +37,7 @@ class Frame
         $this->isApplicationFrame = $isApplicationFrame;
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         $codeSnippet = (new Codesnippet())
             ->snippetLineCount(31)
@@ -54,12 +54,12 @@ class Frame
         ];
     }
 
-    public function getFile(): string
+    public function getFile()/*: string*/
     {
         return $this->file;
     }
 
-    public function getLinenumber(): int
+    public function getLinenumber()/*: int*/
     {
         return $this->lineNumber;
     }

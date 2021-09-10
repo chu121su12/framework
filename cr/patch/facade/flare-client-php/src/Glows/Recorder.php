@@ -15,7 +15,7 @@ class Recorder
         $this->glows = array_slice($this->glows, static::GLOW_LIMIT * -1, static::GLOW_LIMIT);
     }
 
-    public function glows(): array
+    public function glows()/*: array*/
     {
         return $this->glows;
     }

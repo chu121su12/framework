@@ -50,8 +50,10 @@ class Client
      *
      * @return array|false
      */
-    public function get(string $url, array $arguments = [])
+    public function get(/*string */$url, array $arguments = [])
     {
+        $url = cast_to_string($url);
+
         return $this->makeRequest('get', $url, $arguments);
     }
 
@@ -61,8 +63,10 @@ class Client
      *
      * @return array|false
      */
-    public function post(string $url, array $arguments = [])
+    public function post(/*string */$url, array $arguments = [])
     {
+        $url = cast_to_string($url);
+
         return $this->makeRequest('post', $url, $arguments);
     }
 
@@ -72,8 +76,10 @@ class Client
      *
      * @return array|false
      */
-    public function patch(string $url, array $arguments = [])
+    public function patch(/*string */$url, array $arguments = [])
     {
+        $url = cast_to_string($url);
+
         return $this->makeRequest('patch', $url, $arguments);
     }
 
@@ -83,8 +89,10 @@ class Client
      *
      * @return array|false
      */
-    public function put(string $url, array $arguments = [])
+    public function put(/*string */$url, array $arguments = [])
     {
+        $url = cast_to_string($url);
+
         return $this->makeRequest('put', $url, $arguments);
     }
 
@@ -94,8 +102,10 @@ class Client
      *
      * @return array|false
      */
-    public function delete(string $method, array $arguments = [])
+    public function delete(/*string */$method, array $arguments = [])
     {
+        $method = cast_to_string($method);
+
         return $this->makeRequest('delete', $method, $arguments);
     }
 
@@ -106,8 +116,11 @@ class Client
      *
      * @return array
      */
-    private function makeRequest(string $httpVerb, string $url, array $arguments = [])
+    private function makeRequest(/*string */$httpVerb, /*string */$url, array $arguments = [])
     {
+        $httpVerb = cast_to_string($httpVerb);
+        $url = cast_to_string($url);
+
         $queryString = http_build_query([
             'key' => $this->apiToken,
             'secret' => $this->apiSecret,
@@ -136,8 +149,11 @@ class Client
         return $response->getBody();
     }
 
-    public function makeCurlRequest(string $httpVerb, string $fullUrl, array $headers = [], array $arguments = []): Response
+    public function makeCurlRequest(/*string */$httpVerb, /*string */$fullUrl, array $headers = [], array $arguments = [])/*: Response*/
     {
+        $httpVerb = cast_to_string($httpVerb);
+        $fullUrl = cast_to_string($fullUrl);
+
         $curlHandle = $this->getCurlHandle($fullUrl, $headers);
 
         switch ($httpVerb) {
@@ -191,8 +207,10 @@ class Client
      *
      * @return resource
      */
-    private function getCurlHandle(string $fullUrl, array $headers = [])
+    private function getCurlHandle(/*string */$fullUrl, array $headers = [])
     {
+        $fullUrl = cast_to_string($fullUrl);
+
         $curlHandle = curl_init();
 
         curl_setopt($curlHandle, CURLOPT_URL, $fullUrl);

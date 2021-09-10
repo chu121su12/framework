@@ -9,20 +9,24 @@ class File
     /** @var \SplFileObject */
     private $file;
 
-    public function __construct(string $path)
+    public function __construct(/*string */$path)
     {
+        $path = cast_to_string($path);
+
         $this->file = new SplFileObject($path);
     }
 
-    public function numberOfLines(): int
+    public function numberOfLines()/*: int*/
     {
         $this->file->seek(PHP_INT_MAX);
 
         return $this->file->key() + 1;
     }
 
-    public function getLine(int $lineNumber = null): string
+    public function getLine(/*int */$lineNumber = null)/*: string*/
     {
+        $lineNumber = cast_to_int($lineNumber);
+
         if (is_null($lineNumber)) {
             return $this->getNextLine();
         }
@@ -32,7 +36,7 @@ class File
         return $this->file->current();
     }
 
-    public function getNextLine(): string
+    public function getNextLine()/*: string*/
     {
         $this->file->next();
 

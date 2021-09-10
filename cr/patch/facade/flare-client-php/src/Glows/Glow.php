@@ -21,12 +21,16 @@ class Glow
     /** @var float */
     private $microtime;
 
-    public function __construct(string $name, string $messageLevel = MessageLevels::INFO, array $metaData = [], ?float $microtime = null)
+    public function __construct(/*string */$name, /*string */$messageLevel = MessageLevels::INFO, array $metaData = [], /*?float */$microtime = null)
     {
+        $name = cast_to_string($name);
+        $messageLevel = cast_to_string($messageLevel);
+        $microtime = cast_to_float($microtime, null);
+
         $this->name = $name;
         $this->messageLevel = $messageLevel;
         $this->metaData = $metaData;
-        $this->microtime = $microtime ?? microtime(true);
+        $this->microtime = isset($microtime) ? $microtime : microtime(true);
     }
 
     public function toArray()

@@ -20,7 +20,7 @@ class ReportSolution
         return new static($solution);
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         $isRunnable = ($this->solution instanceof RunnableSolution);
 

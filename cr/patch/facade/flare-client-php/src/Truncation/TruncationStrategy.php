@@ -4,5 +4,5 @@ namespace Facade\FlareClient\Truncation;
 
 interface TruncationStrategy
 {
-    public function execute(array $payload): array;
+    public function execute(array $payload)/*: array*/;
 }

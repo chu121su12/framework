@@ -24,8 +24,10 @@ class Api
         register_shutdown_function([$this, 'sendQueuedReports']);
     }
 
-    public static function sendReportsInBatches(bool $batchSending = true)
+    public static function sendReportsInBatches(/*bool */$batchSending = true)
     {
+        $batchSending = cast_to_bool($batchSending);
+
         static::$sendInBatches = $batchSending;
     }
 
@@ -70,7 +72,7 @@ class Api
         $this->client->post('reports', $this->truncateReport($report->toArray()));
     }
 
-    protected function truncateReport(array $payload): array
+    protected function truncateReport(array $payload)/*: array*/
     {
         return (new ReportTrimmer())->trim($payload);
     }

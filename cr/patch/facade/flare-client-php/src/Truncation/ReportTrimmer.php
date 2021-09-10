@@ -11,7 +11,7 @@ class ReportTrimmer
         TrimContextItemsStrategy::class,
     ];
 
-    public function trim(array $payload): array
+    public function trim(array $payload)/*: array*/
     {
         foreach ($this->strategies as $strategy) {
             if (! $this->needsToBeTrimmed($payload)) {
@@ -24,18 +24,20 @@ class ReportTrimmer
         return $payload;
     }
 
-    public function needsToBeTrimmed(array $payload): bool
+    public function needsToBeTrimmed(array $payload)/*: bool*/
     {
         return strlen(json_encode($payload)) > self::getMaxPayloadSize();
     }
 
-    public static function getMaxPayloadSize(): int
+    public static function getMaxPayloadSize()/*: int*/
     {
         return self::$maxPayloadSize;
     }
 
-    public static function setMaxPayloadSize(int $maxPayloadSize): void
+    public static function setMaxPayloadSize(/*int */$maxPayloadSize)/*: void*/
     {
+        $maxPayloadSize = cast_to_int($maxPayloadSize);
+
         self::$maxPayloadSize = $maxPayloadSize;
     }
 }

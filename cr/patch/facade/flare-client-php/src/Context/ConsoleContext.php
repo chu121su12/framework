@@ -12,7 +12,7 @@ class ConsoleContext implements ContextInterface
         $this->arguments = $arguments;
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'arguments' => $this->arguments,

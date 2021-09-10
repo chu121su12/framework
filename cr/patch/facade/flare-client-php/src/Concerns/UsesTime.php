@@ -15,9 +15,9 @@ trait UsesTime
         self::$time = $time;
     }
 
-    public function getCurrentTime(): int
+    public function getCurrentTime()/*: int*/
     {
-        $time = self::$time ?? new SystemTime();
+        $time = isset(self::$time) ? self::$time : new SystemTime();
 
         return $time->getCurrentTime();
     }

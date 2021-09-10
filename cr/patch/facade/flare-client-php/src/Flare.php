@@ -59,8 +59,11 @@ class Flare
     /** @var callable|null */
     protected $filterExceptionsCallable;
 
-    public static function register(string $apiKey, string $apiSecret = null, ContextDetectorInterface $contextDetector = null, Container $container = null)
+    public static function register(/*string */$apiKey, /*string */$apiSecret = null, ContextDetectorInterface $contextDetector = null, Container $container = null)
     {
+        $apiKey = cast_to_string($apiKey);
+        $apiSecret = cast_to_string($apiSecret);
+
         $client = new Client($apiKey, $apiSecret);
 
         return new static($client, $contextDetector, $container);
@@ -71,8 +74,10 @@ class Flare
         $this->determineVersionCallable = $determineVersionCallable;
     }
 
-    public function reportErrorLevels(int $reportErrorLevels)
+    public function reportErrorLevels(/*int */$reportErrorLevels)
     {
+        $reportErrorLevels = cast_to_int($reportErrorLevels);
+
         $this->reportErrorLevels = $reportErrorLevels;
     }
 
@@ -97,7 +102,7 @@ class Flare
     {
         $this->client = $client;
         $this->recorder = new Recorder();
-        $this->contextDetector = $contextDetector ?? new ContextContextDetector();
+        $this->contextDetector = isset($contextDetector) ? $contextDetector : new ContextContextDetector();
         $this->container = $container;
         $this->middleware = $middleware;
         $this->api = new Api($this->client);
@@ -105,7 +110,7 @@ class Flare
         $this->registerDefaultMiddleware();
     }
 
-    public function getMiddleware(): array
+    public function getMiddleware()/*: array*/
     {
         return $this->middleware;
     }
@@ -144,7 +149,7 @@ class Flare
         return $this;
     }
 
-    public function getMiddlewares(): array
+    public function getMiddlewares()/*: array*/
     {
         return $this->middleware;
     }
@@ -157,7 +162,7 @@ class Flare
         $this->recorder->record(new Glow($name, $messageLevel, $metaData));
     }
 
-    public function handleException(Throwable $throwable)
+    public function handleException(/*Throwable */$throwable)
     {
         $this->report($throwable);
 
@@ -183,14 +188,16 @@ class Flare
         }
     }
 
-    public function applicationPath(string $applicationPath)
+    public function applicationPath(/*string */$applicationPath)
     {
+        $applicationPath = cast_to_string($applicationPath);
+
         $this->applicationPath = $applicationPath;
 
         return $this;
     }
 
-    public function report(Throwable $throwable, callable $callback = null)
+    public function report(/*Throwable */$throwable, callable $callback = null)
     {
         if (! $this->shouldSendReport($throwable)) {
             return;
@@ -205,7 +212,7 @@ class Flare
         $this->sendReportToApi($report);
     }
 
-    protected function shouldSendReport(Throwable $throwable): bool
+    protected function shouldSendReport(/*Throwable */$throwable)/*: bool*/
     {
         if ($this->reportErrorLevels && $throwable instanceof Error) {
             return $this->reportErrorLevels & $throwable->getCode();
@@ -222,8 +229,11 @@ class Flare
         return true;
     }
 
-    public function reportMessage(string $message, string $logLevel, callable $callback = null)
+    public function reportMessage(/*string */$message, /*string */$logLevel, callable $callback = null)
     {
+        $message = cast_to_string($message);
+        $logLevel = cast_to_string($logLevel);
+
         $report = $this->createReportFromMessage($message, $logLevel);
 
         if (! is_null($callback)) {
@@ -233,7 +243,7 @@ class Flare
         $this->sendReportToApi($report);
     }
 
-    public function sendTestReport(Throwable $throwable)
+    public function sendTestReport(/*Throwable */$throwable)
     {
         $this->api->sendTestReport($this->createReport($throwable));
     }
@@ -277,7 +287,7 @@ class Flare
         return $this;
     }
 
-    public function createReport(Throwable $throwable): Report
+    public function createReport(/*Throwable */$throwable)/*: Report*/
     {
         $report = Report::createForThrowable(
             $throwable,
@@ -289,8 +299,11 @@ class Flare
         return $this->applyMiddlewareToReport($report);
     }
 
-    public function createReportFromMessage(string $message, string $logLevel): Report
+    public function createReportFromMessage(/*string */$message, /*string */$logLevel)/*: Report*/
     {
+        $message = cast_to_string($message);
+        $logLevel = cast_to_string($logLevel);
+
         $report = Report::createForMessage(
             $message,
             $logLevel,
@@ -301,7 +314,7 @@ class Flare
         return $this->applyMiddlewareToReport($report);
     }
 
-    protected function applyMiddlewareToReport(Report $report): Report
+    protected function applyMiddlewareToReport(Report $report)/*: Report*/
     {
         $this->applyAdditionalParameters($report);
 

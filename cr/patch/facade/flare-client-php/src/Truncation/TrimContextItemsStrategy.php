@@ -9,7 +9,7 @@ class TrimContextItemsStrategy extends AbstractTruncationStrategy
         return [100, 50, 25, 10];
     }
 
-    public function execute(array $payload): array
+    public function execute(array $payload)/*: array*/
     {
         foreach (static::thresholds() as $threshold) {
             if (! $this->reportTrimmer->needsToBeTrimmed($payload)) {
@@ -22,15 +22,19 @@ class TrimContextItemsStrategy extends AbstractTruncationStrategy
         return $payload;
     }
 
-    protected function iterateContextItems(array $contextItems, int $threshold): array
+    protected function iterateContextItems(array $contextItems, /*int */$threshold)/*: array*/
     {
+        $threshold = cast_to_int($threshold);
+
         array_walk($contextItems, [$this, 'trimContextItems'], $threshold);
 
         return $contextItems;
     }
 
-    protected function trimContextItems(&$value, $key, int $threshold)
+    protected function trimContextItems(&$value, $key, /*int */$threshold)
     {
+        $threshold = cast_to_int($threshold);
+
         if (is_array($value)) {
             if (count($value) > $threshold) {
                 $value = array_slice($value, $threshold * -1, $threshold);
