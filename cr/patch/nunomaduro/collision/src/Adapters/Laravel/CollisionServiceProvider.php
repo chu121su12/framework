@@ -7,8 +7,11 @@ namespace NunoMaduro\Collision\Adapters\Laravel;
 use Illuminate\Contracts\Debug\ExceptionHandler as ExceptionHandlerContract;
 use Illuminate\Support\ServiceProvider;
 use NunoMaduro\Collision\Adapters\Laravel\Commands\TestCommand;
+use NunoMaduro\Collision\ConsoleColor;
+use NunoMaduro\Collision\Contracts\Highlighter as HighlighterContract;
 use NunoMaduro\Collision\Contracts\Provider as ProviderContract;
 use NunoMaduro\Collision\Handler;
+use NunoMaduro\Collision\Highlighter;
 use NunoMaduro\Collision\Provider;
 use NunoMaduro\Collision\SolutionsRepositories\NullSolutionsRepository;
 use NunoMaduro\Collision\Writer;
@@ -45,6 +48,13 @@ class CollisionServiceProvider extends ServiceProvider
     public function register()
     {
         if ($this->app->runningInConsole() && !$this->app->runningUnitTests()) {
+            $this->app->bind(HighlighterContract::class, function () {
+                return new Highlighter(
+                    $this->app->make(ConsoleColor::class),
+                    !windows_os() && \version_compare(\PHP_VERSION, '7.0.0', '>=')
+                );
+            });
+
             $this->app->bind(ProviderContract::class, function () {
                 if ($this->app->has(\Facade\IgnitionContracts\SolutionProviderRepository::class)) {
                     $solutionsRepository = new IgnitionSolutionsRepository(
