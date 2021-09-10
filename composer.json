@@ -48,6 +48,9 @@
         "voku/portable-utf8": "^3.1.30"
     },
     "replace": {
+        "facade/ignition": "^2.12",
+        "nunomaduro/collision": "^5.9",
+
         "brick/math": "^0.9.2",
         "brick/money": "^0.5.2",
         "calebporzio/sushi": "^2.2.0",
@@ -161,6 +164,7 @@
             "cr/patch/symfony/polyfill/src/Intl/Normalizer/bootstrap.php",
             "cr/patch/symfony/polyfill/src/Mbstring/bootstrap.php",
             "cr/symfony/deprecation-contracts/function.php",
+            "cr/patch/facade/ignition/src/helpers.php",
             "src/Illuminate/Collections/helpers.php",
             "src/Illuminate/Events/functions.php",
             "src/Illuminate/Foundation/helpers.php",
@@ -187,6 +191,9 @@
             "Sushi\\": "cr/patch/sushi/sushi/",
             "Laravel\\Ui\\": "cr/patch/laravel-ui/src/",
             "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/auth-backend/",
+            "Facade\\IgnitionContracts\\": "cr/patch/facade/ignition-contracts/src",
+            "Facade\\Ignition\\": "cr/patch/facade/ignition/src",
+            "NunoMaduro\\Collision\\": "cr/patch/nunomaduro/collision/src/",
             "CR\\LaravelBackport\\": "cr/patch/laravel-backport/"
         },
         "classmap": [
@@ -218,8 +225,13 @@
         },
         "laravel": {
             "providers": [
-                "Carbon\\Laravel\\ServiceProvider"
-            ]
+                "Carbon\\Laravel\\ServiceProvider",
+                "Facade\\Ignition\\IgnitionServiceProvider",
+                "NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider"
+            ],
+            "aliases": {
+                "Flare": "Facade\\Ignition\\Facades\\Flare"
+            }
         }
     },
     "suggest": {
