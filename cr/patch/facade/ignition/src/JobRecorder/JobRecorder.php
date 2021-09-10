@@ -25,19 +25,19 @@ class JobRecorder
         $this->app = $app;
     }
 
-    public function register(): self
+    public function register()/*: self*/
     {
         $this->app['events']->listen(JobExceptionOccurred::class, [$this, 'record']);
 
         return $this;
     }
 
-    public function record(JobExceptionOccurred $event): void
+    public function record(JobExceptionOccurred $event)/*: void*/
     {
         $this->job = $event->job;
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         if ($this->job === null) {
             return [];
@@ -51,17 +51,17 @@ class JobRecorder
         ]);
     }
 
-    public function getJob(): ?Job
+    public function getJob()/*: ?Job*/
     {
         return $this->job;
     }
 
-    public function reset(): void
+    public function reset()/*: void*/
     {
         $this->job = null;
     }
 
-    protected function getJobProperties(): array
+    protected function getJobProperties()/*: array*/
     {
         $payload = $this->job->payload();
 
@@ -95,7 +95,7 @@ class JobRecorder
     }
 
     // Taken from Illuminate\Queue\CallQueuedHandler
-    protected function getCommand(array $data): object
+    protected function getCommand(array $data)/*: object*/
     {
         if (Str::startsWith($data['command'], 'O:')) {
             return unserialize($data['command']);

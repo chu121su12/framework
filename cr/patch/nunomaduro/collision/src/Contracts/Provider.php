@@ -14,12 +14,12 @@ interface Provider
      *
      * @return \NunoMaduro\Collision\Contracts\Provider
      */
-    public function register(): Provider;
+    public function register()/*: Provider*/;
 
     /**
      * Returns the handler.
      *
      * @return \NunoMaduro\Collision\Contracts\Handler
      */
-    public function getHandler(): Handler;
+    public function getHandler()/*: Handler*/;
 }

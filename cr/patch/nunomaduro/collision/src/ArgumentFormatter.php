@@ -13,13 +13,15 @@ use NunoMaduro\Collision\Contracts\ArgumentFormatter as ArgumentFormatterContrac
  */
 final class ArgumentFormatter implements ArgumentFormatterContract
 {
-    private const MAX_STRING_LENGTH = 1000;
+    /*private */const MAX_STRING_LENGTH = 1000;
 
     /**
      * {@inheritdoc}
      */
-    public function format(array $arguments, bool $recursive = true): string
+    public function format(array $arguments, /*bool */$recursive = true)/*: string*/
     {
+        $recursive = cast_to_bool($recursive);
+
         $result = [];
 
         foreach ($arguments as $argument) {

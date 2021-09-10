@@ -15,12 +15,12 @@ class MissingPackageSolution implements Solution
         $this->possiblePackage = $possiblePackage;
     }
 
-    public function getSolutionTitle(): string
+    public function getSolutionTitle()/*: string*/
     {
         return 'A composer dependency is missing';
     }
 
-    public function getSolutionDescription(): string
+    public function getSolutionDescription()/*: string*/
     {
         $output = [
             'You might be missing a composer dependency.',
@@ -32,7 +32,7 @@ class MissingPackageSolution implements Solution
         return implode(PHP_EOL, $output);
     }
 
-    public function getDocumentationLinks(): array
+    public function getDocumentationLinks()/*: array*/
     {
         return [
             'Git repository' => $this->possiblePackage->repository,

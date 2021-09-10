@@ -22,8 +22,10 @@ class ShareReportAction
         $this->client = $client;
     }
 
-    public function handle(array $report, array $tabs, ?string $lineSelection = null)
+    public function handle(array $report, array $tabs, /*?string */$lineSelection = null)
     {
+        $lineSelection = cast_to_string($lineSelection, null);
+
         $this->tabs = $tabs;
 
         $report = $this->filterReport($report);
@@ -39,7 +41,7 @@ class ShareReportAction
         }
     }
 
-    public function filterReport(array $report): array
+    public function filterReport(array $report)/*: array*/
     {
         if (! $this->hasTab('stackTraceTab')) {
             $report['stacktrace'] = array_slice($report['stacktrace'], 0, 1);
@@ -54,12 +56,14 @@ class ShareReportAction
         return $report;
     }
 
-    protected function hasTab(string $tab): bool
+    protected function hasTab(/*string */$tab)/*: bool*/
     {
+        $tab = cast_to_strin($tab);
+
         return in_array($tab, $this->tabs);
     }
 
-    protected function filterContextItems(array $contextItems): array
+    protected function filterContextItems(array $contextItems)/*: array*/
     {
         if (! $this->hasTab('requestTab')) {
             $contextItems = $this->removeRequestInformation($contextItems);
@@ -84,7 +88,7 @@ class ShareReportAction
         return $contextItems;
     }
 
-    protected function removeRequestInformation(array $contextItems): array
+    protected function removeRequestInformation(array $contextItems)/*: array*/
     {
         Arr::forget($contextItems, 'request');
         Arr::forget($contextItems, 'request_data');
@@ -95,7 +99,7 @@ class ShareReportAction
         return $contextItems;
     }
 
-    protected function removeAppInformation(array $contextItems): array
+    protected function removeAppInformation(array $contextItems)/*: array*/
     {
         Arr::forget($contextItems, 'view');
         Arr::forget($contextItems, 'route');
@@ -103,7 +107,7 @@ class ShareReportAction
         return $contextItems;
     }
 
-    protected function removeUserInformation(array $contextItems): array
+    protected function removeUserInformation(array $contextItems)/*: array*/
     {
         Arr::forget($contextItems, 'user');
         Arr::forget($contextItems, 'request.ip');
@@ -112,7 +116,7 @@ class ShareReportAction
         return $contextItems;
     }
 
-    protected function removeContextInformation(array $contextItems): array
+    protected function removeContextInformation(array $contextItems)/*: array*/
     {
         Arr::forget($contextItems, 'env');
         Arr::forget($contextItems, 'git');
@@ -123,7 +127,7 @@ class ShareReportAction
         return $contextItems;
     }
 
-    protected function removeDebugInformation(array $contextItems): array
+    protected function removeDebugInformation(array $contextItems)/*: array*/
     {
         Arr::forget($contextItems, 'dumps');
         Arr::forget($contextItems, 'glows');
@@ -133,7 +137,7 @@ class ShareReportAction
         return $contextItems;
     }
 
-    protected function getCustomContextGroups(array $contextItems): array
+    protected function getCustomContextGroups(array $contextItems)/*: array*/
     {
         $predefinedContextItemGroups = [
             'request',
@@ -160,7 +164,7 @@ class ShareReportAction
             ->toArray();
     }
 
-    protected function trimReport(array $report): array
+    protected function trimReport(array $report)/*: array*/
     {
         return (new ReportTrimmer())->trim($report);
     }

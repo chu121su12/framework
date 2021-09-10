@@ -35,7 +35,7 @@ class PhpEngine extends \Illuminate\View\Engines\PhpEngine
      *
      * @throws \Throwable
      */
-    protected function handleViewException(Throwable $baseException, $obLevel)
+    protected function handleViewException(/*Throwable */$baseException, $obLevel)
     {
         $exception = new ViewException($baseException->getMessage(), 0, 1, $baseException->getFile(), $baseException->getLine(), $baseException);
 

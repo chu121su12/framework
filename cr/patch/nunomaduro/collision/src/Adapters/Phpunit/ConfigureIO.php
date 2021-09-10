@@ -29,7 +29,7 @@ final class ConfigureIO
      *
      * @throws \ReflectionException
      */
-    public static function of(InputInterface $input, Output $output): void
+    public static function of(InputInterface $input, Output $output)/*: void*/
     {
         $application = new Application();
         $reflector   = new ReflectionObject($application);

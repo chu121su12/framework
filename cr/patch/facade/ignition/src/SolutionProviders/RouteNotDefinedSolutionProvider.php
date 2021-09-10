@@ -14,9 +14,9 @@ use Throwable;
 
 class RouteNotDefinedSolutionProvider implements HasSolutionsForThrowable
 {
-    protected const REGEX = '/Route \[(.*)\] not defined/m';
+    /*protected */const REGEX = '/Route \[(.*)\] not defined/m';
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
         if (version_compare(Application::VERSION, '6.0.0', '>=')) {
             if (! $throwable instanceof RouteNotFoundException) {
@@ -33,11 +33,11 @@ class RouteNotDefinedSolutionProvider implements HasSolutionsForThrowable
         return (bool)preg_match(self::REGEX, $throwable->getMessage(), $matches);
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
         preg_match(self::REGEX, $throwable->getMessage(), $matches);
 
-        $missingRoute = $matches[1] ?? null;
+        $missingRoute = isset($matches[1]) ? $matches[1] : null;
 
         $suggestedRoute = $this->findRelatedRoute($missingRoute);
 
@@ -54,8 +54,10 @@ class RouteNotDefinedSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function findRelatedRoute(string $missingRoute): ?string
+    protected function findRelatedRoute(/*string */$missingRoute)/*: ?string*/
     {
+        $missingRoute = cast_to_string($missingRoute);
+
         Route::getRoutes()->refreshNameLookups();
 
         return StringComparator::findClosestMatch(array_keys(Route::getRoutes()->getRoutesByName()), $missingRoute);

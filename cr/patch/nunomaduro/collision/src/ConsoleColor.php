@@ -12,12 +12,12 @@ use NunoMaduro\Collision\Exceptions\ShouldNotHappen;
  */
 final class ConsoleColor
 {
-    public const FOREGROUND = 38;
-    public const BACKGROUND = 48;
+    /*public */const FOREGROUND = 38;
+    /*public */const BACKGROUND = 48;
 
-    public const COLOR256_REGEXP = '~^(bg_)?color_(\d{1,3})$~';
+    /*public */const COLOR256_REGEXP = '~^(bg_)?color_(\d{1,3})$~';
 
-    public const RESET_STYLE = 0;
+    /*public */const RESET_STYLE = 0;
 
     /** @var bool */
     private $isSupported;
@@ -26,7 +26,7 @@ final class ConsoleColor
     private $forceStyle = false;
 
     /** @var array */
-    private const STYLES = [
+    /*private */const STYLES = [
         'none'      => null,
         'bold'      => '1',
         'dark'      => '2',

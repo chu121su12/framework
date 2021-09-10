@@ -16,8 +16,10 @@ class IgnitionConfigValueEnabled
         $this->ignitionConfig = $ignitionConfig;
     }
 
-    public function handle(Request $request, Closure $next, string $value)
+    public function handle(Request $request, Closure $next, /*string */$value)
     {
+        $value = cast_to_string($value);
+
         if (! $this->ignitionConfig->toArray()[$value]) {
             abort(404);
         }

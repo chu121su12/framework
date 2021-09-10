@@ -10,7 +10,7 @@ trait CollectsViewExceptions
 {
     protected $lastCompiledData = [];
 
-    public function collectViewData($path, array $data): void
+    public function collectViewData($path, array $data)/*: void*/
     {
         $this->lastCompiledData[] = [
             'path' => $path,
@@ -19,7 +19,7 @@ trait CollectsViewExceptions
         ];
     }
 
-    public function filterViewData(array $data): array
+    public function filterViewData(array $data)/*: array*/
     {
         // By default, Laravel views get two shared data keys:
         // __env and app. We try to filter them out.
@@ -32,21 +32,21 @@ trait CollectsViewExceptions
         }, ARRAY_FILTER_USE_BOTH);
     }
 
-    public function getCompiledViewData($compiledPath): array
+    public function getCompiledViewData($compiledPath)/*: array*/
     {
         $compiledView = $this->findCompiledView($compiledPath);
 
-        return $compiledView['data'] ?? [];
+        return isset($compiledView['data']) ? $compiledView['data'] : [];
     }
 
-    public function getCompiledViewName($compiledPath): string
+    public function getCompiledViewName($compiledPath)/*: string*/
     {
         $compiledView = $this->findCompiledView($compiledPath);
 
-        return $compiledView['path'] ?? $compiledPath;
+        return isset($compiledView['path']) ? $compiledView['path'] : $compiledPath;
     }
 
-    protected function findCompiledView($compiledPath): ?array
+    protected function findCompiledView($compiledPath)/*: ?array*/
     {
         return Collection::make($this->lastCompiledData)
             ->first(function ($compiledData) use ($compiledPath) {
@@ -56,7 +56,7 @@ trait CollectsViewExceptions
             });
     }
 
-    protected function getCompiledPath($path): string
+    protected function getCompiledPath($path)/*: string*/
     {
         if ($this instanceof CompilerEngine) {
             return $this->getCompiler()->getCompiledPath($path);

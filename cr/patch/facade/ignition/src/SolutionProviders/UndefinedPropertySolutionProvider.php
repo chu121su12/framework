@@ -12,10 +12,10 @@ use Throwable;
 
 class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
 {
-    protected const REGEX = '/([a-zA-Z\\\\]+)::\$([a-zA-Z]+)/m';
-    protected const MINIMUM_SIMILARITY = 80;
+    /*protected */const REGEX = '/([a-zA-Z\\\\]+)::\$([a-zA-Z]+)/m';
+    /*protected */const MINIMUM_SIMILARITY = 80;
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
         if (! $throwable instanceof ErrorException) {
             return false;
@@ -32,7 +32,7 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
         return true;
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
         return [
             BaseSolution::create('Unknown Property')
@@ -40,7 +40,7 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    public function getSolutionDescription(Throwable $throwable): string
+    public function getSolutionDescription(/*Throwable */$throwable)/*: string*/
     {
         if (! $this->canSolve($throwable) || ! $this->similarPropertyExists($throwable)) {
             return '';
@@ -53,7 +53,7 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
         return "Did you mean {$class}::\${$possibleProperty->name} ?";
     }
 
-    protected function similarPropertyExists(Throwable $throwable)
+    protected function similarPropertyExists(/*Throwable */$throwable)
     {
         extract($this->getClassAndPropertyFromExceptionMessage($throwable->getMessage()), EXTR_OVERWRITE);
 
@@ -62,8 +62,10 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
         return $possibleProperty !== null;
     }
 
-    protected function getClassAndPropertyFromExceptionMessage(string $message): ?array
+    protected function getClassAndPropertyFromExceptionMessage(/*string */$message)/*: ?array*/
     {
+        $message = cast_to_string($message);
+
         if (! preg_match(self::REGEX, $message, $matches)) {
             return null;
         }
@@ -74,8 +76,11 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function findPossibleProperty(string $class, string $invalidPropertyName)
+    protected function findPossibleProperty(/*string */$class, /*string */$invalidPropertyName)
     {
+        $class = cast_to_string($class);
+        $invalidPropertyName = cast_to_string($invalidPropertyName);
+
         return $this->getAvailableProperties($class)
             ->sortByDesc(function (ReflectionProperty $property) use ($invalidPropertyName) {
                 similar_text($invalidPropertyName, $property->name, $percentage);
@@ -89,7 +94,7 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
             })->first();
     }
 
-    protected function getAvailableProperties($class): Collection
+    protected function getAvailableProperties($class)/*: Collection*/
     {
         $class = new ReflectionClass($class);
 

@@ -15,9 +15,9 @@ use Throwable;
 
 class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
 {
-    protected const REGEX = '/View \[(.*)\] not found/m';
+    /*protected */const REGEX = '/View \[(.*)\] not found/m';
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
         if (! $throwable instanceof InvalidArgumentException && ! $throwable instanceof ViewException) {
             return false;
@@ -26,11 +26,11 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
         return (bool)preg_match(self::REGEX, $throwable->getMessage(), $matches);
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
         preg_match(self::REGEX, $throwable->getMessage(), $matches);
 
-        $missingView = $matches[1] ?? null;
+        $missingView = isset($matches[1]) ? $matches[1] : null;
 
         $suggestedView = $this->findRelatedView($missingView);
 
@@ -47,14 +47,16 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function findRelatedView(string $missingView): ?string
+    protected function findRelatedView(/*string */$missingView)/*: ?string*/
     {
+        $missingView = cast_to_string($missingView);
+
         $views = $this->getAllViews();
 
         return StringComparator::findClosestMatch($views, $missingView);
     }
 
-    protected function getAllViews(): array
+    protected function getAllViews()/*: array*/
     {
         /** @var \Illuminate\View\FileViewFinder $fileViewFinder */
         $fileViewFinder = View::getFinder();
@@ -62,34 +64,42 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
         $extensions = $fileViewFinder->getExtensions();
 
         $viewsForHints = collect($fileViewFinder->getHints())
-            ->flatMap(function ($paths, string $namespace) use ($extensions) {
+            ->flatMap(function ($paths, /*string */$namespace) use ($extensions) {
+                $namespace = cast_to_string($namespace);
                 $paths = Arr::wrap($paths);
 
                 return collect($paths)
-                    ->flatMap(function (string $path) use ($extensions) {
+                    ->flatMap(function (/*string */$path) use ($extensions) {
+                        $path = cast_to_string($path);
                         return $this->getViewsInPath($path, $extensions);
                     })
-                    ->map(function (string $view) use ($namespace) {
+                    ->map(function (/*string */$view) use ($namespace) {
+                        $view = cast_to_string($view);
                         return "{$namespace}::{$view}";
                     })
                     ->toArray();
             });
 
         $viewsForViewPaths = collect($fileViewFinder->getPaths())
-            ->flatMap(function (string $path) use ($extensions) {
+            ->flatMap(function (/*string */$path) use ($extensions) {
+                $path = cast_to_string($path);
                 return $this->getViewsInPath($path, $extensions);
             });
 
         return $viewsForHints->merge($viewsForViewPaths)->toArray();
     }
 
-    protected function getViewsInPath(string $path, array $extensions): array
+    protected function getViewsInPath(/*string */$path, array $extensions)/*: array*/
     {
-        $filePatterns = array_map(function (string $extension) {
+        $path = cast_to_string($path);
+
+        $filePatterns = array_map(function (/*string */$extension) {
+            $extension = cast_to_string($extension);
             return "*.{$extension}";
         }, $extensions);
 
-        $extensionsWithDots = array_map(function (string $extension) {
+        $extensionsWithDots = array_map(function (/*string */$extension) {
+            $extension = cast_to_string($extension);
             return ".{$extension}";
         }, $extensions);
 

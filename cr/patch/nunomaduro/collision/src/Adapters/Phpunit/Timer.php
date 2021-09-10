@@ -17,15 +17,17 @@ final class Timer
     /**
      * Timer constructor.
      */
-    private function __construct(float $start)
+    private function __construct(/*float */$start)
     {
+        $start = cast_to_float($start);
+
         $this->start = $start;
     }
 
     /**
      * Starts the timer.
      */
-    public static function start(): Timer
+    public static function start()/*: Timer*/
     {
         return new self(microtime(true));
     }
@@ -33,7 +35,7 @@ final class Timer
     /**
      * Returns the elapsed time in microseconds.
      */
-    public function result(): float
+    public function result()/*: float*/
     {
         return microtime(true) - $this->start;
     }

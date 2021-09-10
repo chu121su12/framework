@@ -12,9 +12,9 @@ use UnexpectedValueException;
 
 class InvalidRouteActionSolutionProvider implements HasSolutionsForThrowable
 {
-    protected const REGEX = '/\[([a-zA-Z\\\\]+)\]/m';
+    /*protected */const REGEX = '/\[([a-zA-Z\\\\]+)\]/m';
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
         if (! $throwable instanceof UnexpectedValueException) {
             return false;
@@ -27,11 +27,11 @@ class InvalidRouteActionSolutionProvider implements HasSolutionsForThrowable
         return Str::startsWith($throwable->getMessage(), 'Invalid route action: ');
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
         preg_match(self::REGEX, $throwable->getMessage(), $matches);
 
-        $invalidController = $matches[1] ?? null;
+        $invalidController = isset($matches[1]) ? $matches[1] : null;
 
         $suggestedController = $this->findRelatedController($invalidController);
 
@@ -55,15 +55,21 @@ class InvalidRouteActionSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function findRelatedController(string $invalidController): ?string
+    protected function findRelatedController(/*string */$invalidController)/*: ?string*/
     {
+        $invalidController = cast_to_string($invalidController);
+
         $composerClassMap = app(ComposerClassMap::class);
 
         $controllers = collect($composerClassMap->listClasses())
-            ->filter(function (string $_file, string $fqcn) {
+            ->filter(function (/*string */$_file, /*string */$fqcn) {
+                $_file = cast_to_string($_file);
+                $fqcn = cast_to_string($fqcn);
                 return Str::endsWith($fqcn, 'Controller');
             })
-            ->mapWithKeys(function (string $_file, string $fqcn) {
+            ->mapWithKeys(function (/*string */$_file, /*string */$fqcn) {
+                $_file = cast_to_string($_file);
+                $fqcn = cast_to_string($fqcn);
                 return [$fqcn => class_basename($fqcn)];
             })
             ->toArray();
@@ -74,6 +80,6 @@ class InvalidRouteActionSolutionProvider implements HasSolutionsForThrowable
 
         $fqcnMatch = StringComparator::findClosestMatch($controllers, $invalidController, 4);
 
-        return $fqcnMatch ?? $basenameMatch;
+        return isset($fqcnMatch) ? $fqcnMatch : $basenameMatch;
     }
 }

@@ -12,5 +12,5 @@ interface Highlighter
     /**
      * Highlights the provided content.
      */
-    public function highlight(string $content, int $line): string;
+    public function highlight(/*string */$content, /*int */$line)/*: string*/;
 }

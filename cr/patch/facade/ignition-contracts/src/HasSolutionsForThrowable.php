@@ -6,8 +6,8 @@ use Throwable;
 
 interface HasSolutionsForThrowable
 {
-    public function canSolve(Throwable $throwable): bool;
+    public function canSolve(/*Throwable */$throwable)/*: bool*/;
 
     /** \Facade\IgnitionContracts\Solution[] */
-    public function getSolutions(Throwable $throwable): array;
+    public function getSolutions(/*Throwable */$throwable)/*: array*/;
 }

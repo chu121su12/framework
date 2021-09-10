@@ -244,7 +244,9 @@ class IgnitionServiceProvider extends ServiceProvider
                 if ($configPath = $this->getConfigFileLocation()) {
                     $options = require $configPath;
                 }
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
+            } catch (\Error $e) {
+            } catch (\Exception $e) {
                 // possible open_basedir restriction
             }
 
@@ -305,9 +307,14 @@ class IgnitionServiceProvider extends ServiceProvider
         return $this;
     }
 
-    protected function getLogLevel(string $logLevelString): int
+    protected function getLogLevel(/*string */$logLevelString)/*: int*/
     {
-        $logLevel = Logger::getLevels()[strtoupper($logLevelString)] ?? null;
+        $logLevelString = cast_to_string($logLevelString);
+
+        $loggerLevels = Logger::getLevels();
+        $logLevelUppercase = strtoupper($logLevelString);
+
+        $logLevel = isset($loggerLevels) && isset($loggerLevels[$logLevelUppercase]) ? $loggerLevels[$logLevelUppercase] : null;
 
         if (! $logLevel) {
             throw InvalidConfig::invalidLogLevel($logLevelString);
@@ -316,9 +323,9 @@ class IgnitionServiceProvider extends ServiceProvider
         return $logLevel;
     }
 
-    protected function registerLogRecorder(): self
+    protected function registerLogRecorder()/*: self*/
     {
-        $this->app->singleton(LogRecorder::class, function (Application $app): LogRecorder {
+        $this->app->singleton(LogRecorder::class, function (Application $app)/*: LogRecorder */{
             return new LogRecorder(
                 $app,
                 $app->get('config')->get('flare.reporting.maximum_number_of_collected_logs')
@@ -368,9 +375,9 @@ class IgnitionServiceProvider extends ServiceProvider
         return $this;
     }
 
-    protected function registerQueryRecorder(): self
+    protected function registerQueryRecorder()/*: self*/
     {
-        $this->app->singleton(QueryRecorder::class, function (Application $app): QueryRecorder {
+        $this->app->singleton(QueryRecorder::class, function (Application $app)/*: QueryRecorder */{
             return new QueryRecorder(
                 $app,
                 $app->get('config')->get('flare.reporting.report_query_bindings'),
@@ -405,7 +412,8 @@ class IgnitionServiceProvider extends ServiceProvider
         }
 
         $middleware = collect($middlewares)
-            ->map(function (string $middlewareClass) {
+            ->map(function (/*string */$middlewareClass) {
+                $middlewareClass = cast_to_string($middlewareClass);
                 return $this->app->make($middlewareClass);
             });
 
@@ -420,7 +428,7 @@ class IgnitionServiceProvider extends ServiceProvider
         return $this;
     }
 
-    protected function getDefaultSolutions(): array
+    protected function getDefaultSolutions()/*: array*/
     {
         return [
             IncorrectValetDbCredentialsSolutionProvider::class,
@@ -476,7 +484,7 @@ class IgnitionServiceProvider extends ServiceProvider
         });
     }
 
-    protected function getConfigFileLocation(): ?string
+    protected function getConfigFileLocation()/*: ?string*/
     {
         $configFullPath = base_path().DIRECTORY_SEPARATOR.'.ignition';
 

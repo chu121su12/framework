@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace NunoMaduro\Collision\Contracts\Adapters\Phpunit;
 
@@ -18,5 +18,5 @@ interface Listener extends TestListener
      *
      * @return void
      */
-    public function render(Test $test, \Throwable $t);
+    public function render(Test $test, /*Throwable */$t);
 }

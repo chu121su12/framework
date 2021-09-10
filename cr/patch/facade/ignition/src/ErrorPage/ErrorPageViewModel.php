@@ -40,7 +40,7 @@ class ErrorPageViewModel implements Arrayable
     /** @var bool */
     protected $appDebug;
 
-    public function __construct(?Throwable $throwable, IgnitionConfig $ignitionConfig, Report $report, array $solutions)
+    public function __construct(/*?Throwable */$throwable, IgnitionConfig $ignitionConfig, Report $report, array $solutions)
     {
         $this->throwable = $throwable;
 
@@ -54,7 +54,7 @@ class ErrorPageViewModel implements Arrayable
         $this->appDebug = config('app.debug');
     }
 
-    public function throwableString(): string
+    public function throwableString()/*: string*/
     {
         if (! $this->throwable) {
             return '';
@@ -72,7 +72,7 @@ class ErrorPageViewModel implements Arrayable
         return htmlspecialchars($throwableString);
     }
 
-    public function telescopeUrl(): ?string
+    public function telescopeUrl()/*: ?string*/
     {
         try {
             if (! class_exists(Telescope::class)) {
@@ -99,19 +99,19 @@ class ErrorPageViewModel implements Arrayable
         }
     }
 
-    public function title(): string
+    public function title()/*: string*/
     {
         $message = htmlspecialchars($this->report->getMessage());
 
         return "🧨 {$message}";
     }
 
-    public function config(): array
+    public function config()/*: array*/
     {
         return $this->ignitionConfig->toArray();
     }
 
-    public function solutions(): array
+    public function solutions()/*: array*/
     {
         $solutions = [];
 
@@ -122,7 +122,7 @@ class ErrorPageViewModel implements Arrayable
         return $solutions;
     }
 
-    protected function shareEndpoint(): string
+    protected function shareEndpoint()/*: string*/
     {
         try {
             // use string notation as L5.5 and L5.6 don't support array notation yet
@@ -132,50 +132,54 @@ class ErrorPageViewModel implements Arrayable
         }
     }
 
-    public function report(): array
+    public function report()/*: array*/
     {
         return $this->report->toArray();
     }
 
-    public function jsonEncode($data): string
+    public function jsonEncode($data)/*: string*/
     {
         $jsonOptions = JSON_PARTIAL_OUTPUT_ON_ERROR | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
 
         return json_encode($data, $jsonOptions);
     }
 
-    public function getAssetContents(string $asset): string
+    public function getAssetContents(/*string */$asset)/*: string*/
     {
+        $asset = cast_to_string($asset);
+
         $assetPath = __DIR__."/../../resources/compiled/{$asset}";
 
         return file_get_contents($assetPath);
     }
 
-    public function styles(): array
+    public function styles()/*: array*/
     {
         return array_keys(Ignition::styles());
     }
 
-    public function scripts(): array
+    public function scripts()/*: array*/
     {
         return array_keys(Ignition::scripts());
     }
 
-    public function tabs(): string
+    public function tabs()/*: string*/
     {
         return json_encode(Ignition::$tabs);
     }
 
-    public function defaultTab(?string $defaultTab, ?array $defaultTabProps)
+    public function defaultTab(/*?string */$defaultTab, /*?*/array $defaultTabProps = null)
     {
-        $this->defaultTab = $defaultTab ?? 'StackTab';
+        $defaultTab = cast_to_string($defaultTab, null);
+
+        $this->defaultTab = isset($defaultTab) ? $defaultTab : 'StackTab';
 
         if ($defaultTabProps) {
             $this->defaultTabProps = $defaultTabProps;
         }
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'throwableString' => $this->throwableString(),

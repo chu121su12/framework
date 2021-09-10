@@ -10,14 +10,17 @@ use Monolog\Logger;
 
 class InvalidConfig extends Exception implements ProvidesSolution
 {
-    public static function invalidLogLevel(string $logLevel)
+    public static function invalidLogLevel(/*string */$logLevel)
     {
+        $logLevel = cast_to_string($logLevel);
+
         return new static("Invalid log level `{$logLevel}` specified.");
     }
 
-    public function getSolution(): Solution
+    public function getSolution()/*: Solution*/
     {
-        $validLogLevels = array_map(function (string $level) {
+        $validLogLevels = array_map(function (/*string */$level) {
+            $level = cast_to_string($level);
             return strtolower($level);
         }, array_keys(Logger::getLevels()));
 

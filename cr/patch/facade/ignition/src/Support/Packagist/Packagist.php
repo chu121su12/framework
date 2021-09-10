@@ -9,8 +9,10 @@ class Packagist
      *
      * @return \Facade\Ignition\Support\Packagist\Package[]
      */
-    public static function findPackagesForClassName(string $className): array
+    public static function findPackagesForClassName(/*string */$className)/*: array*/
     {
+        $className = cast_to_string($className);
+
         $parts = explode('\\', $className);
         $queryParts = array_splice($parts, 0, 2);
 

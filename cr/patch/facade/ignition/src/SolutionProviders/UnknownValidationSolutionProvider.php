@@ -15,9 +15,9 @@ use Throwable;
 
 class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
 {
-    protected const REGEX = '/Illuminate\\\\Validation\\\\Validator::(?P<method>validate(?!(Attribute|UsingCustomRule))[A-Z][a-zA-Z]+)/m';
+    /*protected */const REGEX = '/Illuminate\\\\Validation\\\\Validator::(?P<method>validate(?!(Attribute|UsingCustomRule))[A-Z][a-zA-Z]+)/m';
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
         if (! $throwable instanceof BadMethodCallException) {
             return false;
@@ -26,7 +26,7 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
         return ! is_null($this->getMethodFromExceptionMessage($throwable->getMessage()));
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
         return [
             BaseSolution::create('Unknown Validation Rule')
@@ -34,7 +34,7 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function getSolutionDescription(Throwable $throwable): string
+    protected function getSolutionDescription(/*Throwable */$throwable)/*: string*/
     {
         $method = $this->getMethodFromExceptionMessage($throwable->getMessage());
 
@@ -52,8 +52,10 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
         return "Did you mean `{$rule}` ?";
     }
 
-    protected function getMethodFromExceptionMessage(string $message): ?string
+    protected function getMethodFromExceptionMessage(/*string */$message)/*: ?string*/
     {
+        $message = cast_to_string($message);
+
         if (! preg_match(self::REGEX, $message, $matches)) {
             return null;
         }
@@ -61,13 +63,16 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
         return $matches['method'];
     }
 
-    protected function getAvailableMethods(): Collection
+    protected function getAvailableMethods()/*: Collection*/
     {
         $class = new ReflectionClass(Validator::class);
 
-        $extensions = Collection::make((app('validator')->make([], []))->extensions)
+        $validator = app('validator')->make([], []);
+
+        $extensions = Collection::make($validator->extensions)
             ->keys()
-            ->map(function (string $extension) {
+            ->map(function (/*string */$extension) {
+                $extension = cast_to_string($extension);
                 return 'validate'.Str::studly($extension);
             });
 

@@ -21,9 +21,12 @@ class QueryRecorder
 
     public function __construct(
         Application $app,
-        bool $reportBindings = true,
-        ?int $maxQueries = null
+        /*bool */$reportBindings = true,
+        /*?int */$maxQueries = null
     ) {
+        $reportBindings = cast_to_bool($reportBindings);
+        $maxQueries = cast_to_int($maxQueries, null);
+
         $this->app = $app;
         $this->reportBindings = $reportBindings;
         $this->maxQueries = $maxQueries;
@@ -45,7 +48,7 @@ class QueryRecorder
         }
     }
 
-    public function getQueries(): array
+    public function getQueries()/*: array*/
     {
         $queries = [];
 
@@ -61,25 +64,29 @@ class QueryRecorder
         $this->queries = [];
     }
 
-    public function getReportBindings(): bool
+    public function getReportBindings()/*: bool*/
     {
         return $this->reportBindings;
     }
 
-    public function setReportBindings(bool $reportBindings): self
+    public function setReportBindings(/*bool */$reportBindings)/*: self*/
     {
+        $reportBindings = cast_to_bool($reportBindings);
+
         $this->reportBindings = $reportBindings;
 
         return $this;
     }
 
-    public function getMaxQueries(): ?int
+    public function getMaxQueries()/*: ?int*/
     {
         return $this->maxQueries;
     }
 
-    public function setMaxQueries(?int $maxQueries): self
+    public function setMaxQueries(/*?int */$maxQueries)/*: self*/
     {
+        $maxQueries = cast_to_int($maxQueries, null);
+
         $this->maxQueries = $maxQueries;
 
         return $this;

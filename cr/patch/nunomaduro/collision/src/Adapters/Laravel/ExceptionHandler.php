@@ -41,7 +41,7 @@ final class ExceptionHandler implements ExceptionHandlerContract
     /**
      * {@inheritdoc}
      */
-    public function report(Throwable $e)
+    public function report(/*Throwable */$e)
     {
         $this->appExceptionHandler->report($e);
     }
@@ -49,7 +49,7 @@ final class ExceptionHandler implements ExceptionHandlerContract
     /**
      * {@inheritdoc}
      */
-    public function render($request, Throwable $e)
+    public function render($request, /*Throwable */$e)
     {
         return $this->appExceptionHandler->render($request, $e);
     }
@@ -57,7 +57,7 @@ final class ExceptionHandler implements ExceptionHandlerContract
     /**
      * {@inheritdoc}
      */
-    public function renderForConsole($output, Throwable $e)
+    public function renderForConsole($output, /*Throwable */$e)
     {
         if ($e instanceof SymfonyConsoleExceptionInterface) {
             $this->appExceptionHandler->renderForConsole($output, $e);
@@ -78,7 +78,7 @@ final class ExceptionHandler implements ExceptionHandlerContract
      *
      * @return bool
      */
-    public function shouldReport(Throwable $e)
+    public function shouldReport(/*Throwable */$e)
     {
         return $this->appExceptionHandler->shouldReport($e);
     }

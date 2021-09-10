@@ -1,5 +1,12 @@
 <?php
 
+if (! \function_exists('backport_instanceof_throwable')) {
+    function backport_instanceof_throwable($any)
+    {
+        return $any instanceof \Throwable || $any instanceof \Error || $any instanceof \Exception;
+    }
+}
+
 if (! \function_exists('backport_match')) {
     function backport_match($matchValue, ...$matchArms)
     {

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace NunoMaduro\Collision\Exceptions;
 
@@ -14,7 +14,7 @@ final class ShouldNotHappen extends RuntimeException
     /**
      * @var string
      */
-    private const MESSAGE = 'This should not happen, please open an issue on collision repository: %s';
+    /*private */const MESSAGE = 'This should not happen, please open an issue on collision repository: %s';
 
     public function __construct()
     {

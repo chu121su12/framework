@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace NunoMaduro\Collision\Adapters\Phpunit;
 
@@ -14,6 +14,9 @@ use ReflectionObject;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Throwable;
+
+final class Printer___construct_class extends TestCase {
+        }
 
 /**
  * @internal
@@ -58,19 +61,21 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
      *
      * @throws \ReflectionException
      */
-    public function __construct(\Symfony\Component\Console\Output\ConsoleOutputInterface $output = null, bool $verbose = false, string $colors = 'always')
+    public function __construct(\Symfony\Component\Console\Output\ConsoleOutputInterface $output = null, /*bool */$verbose = false, /*string */$colors = 'always')
     {
+        $verbose = cast_to_bool($verbose);
+        $colors = cast_to_string($colors);
+
         $this->timer = Timer::start();
 
         $decorated = $colors === 'always' || $colors === 'auto';
 
-        $output = $output ?? new ConsoleOutput(ConsoleOutput::VERBOSITY_NORMAL, $decorated);
+        $output = isset($output) ? $output : new ConsoleOutput(ConsoleOutput::VERBOSITY_NORMAL, $decorated);
 
         ConfigureIO::of(new ArgvInput(), $output);
 
         $this->style = new Style($output);
-        $dummyTest   = new class() extends TestCase {
-        };
+        $dummyTest   = new Printer___construct_class;
 
         $this->state = State::from($dummyTest);
     }
@@ -78,8 +83,10 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
     /**
      * {@inheritdoc}
      */
-    public function addError(Test $testCase, Throwable $throwable, float $time): void
+    public function addError(Test $testCase, /*Throwable */$throwable, /*float */$time)/*: void*/
     {
+        $time = cast_to_float($time);
+
         $this->failed = true;
 
         $testCase = $this->testCaseFromTest($testCase);
@@ -90,8 +97,10 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
     /**
      * {@inheritdoc}
      */
-    public function addWarning(Test $testCase, Warning $warning, float $time): void
+    public function addWarning(Test $testCase, Warning $warning, /*float */$time)/*: void*/
     {
+        $time = cast_to_float($time);
+
         $testCase = $this->testCaseFromTest($testCase);
 
         $this->state->add(TestResult::fromTestCase($testCase, TestResult::WARN, $warning));
@@ -100,8 +109,10 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
     /**
      * {@inheritdoc}
      */
-    public function addFailure(Test $testCase, AssertionFailedError $error, float $time): void
+    public function addFailure(Test $testCase, AssertionFailedError $error, /*float */$time)/*: void*/
     {
+        $time = cast_to_float($time);
+
         $this->failed = true;
 
         $testCase = $this->testCaseFromTest($testCase);
@@ -121,8 +132,10 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
     /**
      * {@inheritdoc}
      */
-    public function addIncompleteTest(Test $testCase, Throwable $throwable, float $time): void
+    public function addIncompleteTest(Test $testCase, /*Throwable */$throwable, /*float */$time)/*: void*/
     {
+        $time = cast_to_float($time);
+
         $testCase = $this->testCaseFromTest($testCase);
 
         $this->state->add(TestResult::fromTestCase($testCase, TestResult::INCOMPLETE, $throwable));
@@ -131,8 +144,10 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
     /**
      * {@inheritdoc}
      */
-    public function addRiskyTest(Test $testCase, Throwable $throwable, float $time): void
+    public function addRiskyTest(Test $testCase, /*Throwable */$throwable, /*float */$time)/*: void*/
     {
+        $time = cast_to_float($time);
+
         $testCase = $this->testCaseFromTest($testCase);
 
         $this->state->add(TestResult::fromTestCase($testCase, TestResult::RISKY, $throwable));
@@ -141,7 +156,7 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
     /**
      * {@inheritdoc}
      */
-    public function addSkippedTest(Test $testCase, Throwable $throwable, float $time): void
+    public function addSkippedTest(Test $testCase, /*Throwable */$throwable, /*float */$time)/*: void*/
     {
         $testCase = $this->testCaseFromTest($testCase);
 
@@ -151,7 +166,7 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
     /**
      * {@inheritdoc}
      */
-    public function startTestSuite(TestSuite $suite): void
+    public function startTestSuite(TestSuite $suite)/*: void*/
     {
         if ($this->state->suiteTotalTests === null) {
             $this->state->suiteTotalTests = $suite->count();
@@ -161,7 +176,7 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
     /**
      * {@inheritdoc}
      */
-    public function endTestSuite(TestSuite $suite): void
+    public function endTestSuite(TestSuite $suite)/*: void*/
     {
         // ..
     }
@@ -169,7 +184,7 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
     /**
      * {@inheritdoc}
      */
-    public function startTest(Test $testCase): void
+    public function startTest(Test $testCase)/*: void*/
     {
         $testCase = $this->testCaseFromTest($testCase);
 
@@ -184,7 +199,7 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
     /**
      * {@inheritdoc}
      */
-    public function endTest(Test $testCase, float $time): void
+    public function endTest(Test $testCase, /*float */$time)/*: void*/
     {
         $testCase = $this->testCaseFromTest($testCase);
 
@@ -203,7 +218,7 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
     /**
      * Intentionally left blank as we output things on events of the listener.
      */
-    public function write(string $content): void
+    public function write(/*string */$content)/*: void*/
     {
         // ..
     }
@@ -215,7 +230,7 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
      * with Test Case classes. Please report an issue if you think
      * this should work any other way.
      */
-    private function testCaseFromTest(Test $test): TestCase
+    private function testCaseFromTest(Test $test)/*: TestCase*/
     {
         if (!$test instanceof TestCase) {
             throw new ShouldNotHappen();
@@ -227,7 +242,7 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
     /**
      * Intentionally left blank as we output things on events of the listener.
      */
-    public function printResult(\PHPUnit\Framework\TestResult $result): void
+    public function printResult(\PHPUnit\Framework\TestResult $result)/*: void*/
     {
         if ($result->count() === 0) {
             $this->style->writeWarning('No tests executed!');

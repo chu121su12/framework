@@ -13,13 +13,13 @@ use Throwable;
  */
 final class TestResult
 {
-    public const FAIL       = 'failed';
-    public const SKIPPED    = 'skipped';
-    public const INCOMPLETE = 'incompleted';
-    public const RISKY      = 'risked';
-    public const WARN       = 'warnings';
-    public const RUNS       = 'pending';
-    public const PASS       = 'passed';
+    /*public */const FAIL       = 'failed';
+    /*public */const SKIPPED    = 'skipped';
+    /*public */const INCOMPLETE = 'incompleted';
+    /*public */const RISKY      = 'risked';
+    /*public */const WARN       = 'warnings';
+    /*public */const RUNS       = 'pending';
+    /*public */const PASS       = 'passed';
 
     /**
      * @readonly
@@ -73,8 +73,14 @@ final class TestResult
     /**
      * Test constructor.
      */
-    private function __construct(string $testCaseName, string $description, string $type, string $icon, string $color, Throwable $throwable = null)
+    private function __construct(/*string */$testCaseName, /*string */$description, /*string */$type, /*string */$icon, /*string */$color, /*Throwable */$throwable = null)
     {
+        $testCaseName = cast_to_string($testCaseName);
+        $description = cast_to_string($description);
+        $type = cast_to_string($type);
+        $icon = cast_to_string($icon);
+        $color = cast_to_string($color);
+
         $this->testCaseName = $testCaseName;
         $this->description  = $description;
         $this->type         = $type;
@@ -95,8 +101,10 @@ final class TestResult
     /**
      * Creates a new test from the given test case.
      */
-    public static function fromTestCase(TestCase $testCase, string $type, Throwable $throwable = null): self
+    public static function fromTestCase(TestCase $testCase, /*string */$type, /*Throwable */$throwable = null)/*: self*/
     {
+        $type = cast_to_string($type);
+
         $testCaseName = State::getPrintableTestCaseName($testCase);
 
         $description = self::makeDescription($testCase);
@@ -111,7 +119,7 @@ final class TestResult
     /**
      * Get the test case description.
      */
-    public static function makeDescription(TestCase $testCase): string
+    public static function makeDescription(TestCase $testCase)/*: string*/
     {
         $name = $testCase->getName(false);
 
@@ -149,8 +157,10 @@ final class TestResult
     /**
      * Get the test case icon.
      */
-    public static function makeIcon(string $type): string
+    public static function makeIcon(/*string */$type)/*: string*/
     {
+        $type = cast_to_string($type);
+
         switch ($type) {
             case self::FAIL:
                 return '⨯';
@@ -172,8 +182,10 @@ final class TestResult
     /**
      * Get the test case color.
      */
-    public static function makeColor(string $type): string
+    public static function makeColor(/*string */$type)/*: string*/
     {
+        $type = cast_to_string($type);
+
         switch ($type) {
             case self::FAIL:
                 return 'red';

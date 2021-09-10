@@ -10,7 +10,7 @@ use Throwable;
 
 class MergeConflictSolutionProvider implements HasSolutionsForThrowable
 {
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
         if (! ($throwable instanceof ParseError)) {
             return false;
@@ -33,7 +33,7 @@ class MergeConflictSolutionProvider implements HasSolutionsForThrowable
         return true;
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
         $file = file_get_contents($throwable->getFile());
         preg_match('/\>\>\>\>\>\>\> (.*?)\n/', $file, $matches);
@@ -47,8 +47,10 @@ class MergeConflictSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function getCurrentBranch(string $directory): string
+    protected function getCurrentBranch(/*string */$directory)/*: string*/
     {
+        $directory = cast_to_string($directory);
+
         $branch = "'".trim(shell_exec("cd ${directory}; git branch | grep \\* | cut -d ' ' -f2"))."'";
 
         if ($branch === "''") {
@@ -58,7 +60,7 @@ class MergeConflictSolutionProvider implements HasSolutionsForThrowable
         return $branch;
     }
 
-    protected function hasMergeConflictExceptionMessage(Throwable $throwable): bool
+    protected function hasMergeConflictExceptionMessage(/*Throwable */$throwable)/*: bool*/
     {
         // For PHP 7.x and below
         if (Str::startsWith($throwable->getMessage(), 'syntax error, unexpected \'<<\'')) {

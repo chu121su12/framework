@@ -9,7 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ExecuteSolutionRequest extends FormRequest
 {
-    public function rules(): array
+    public function rules()/*: array*/
     {
         return [
             'solution' => 'required',
@@ -17,7 +17,7 @@ class ExecuteSolutionRequest extends FormRequest
         ];
     }
 
-    public function getSolution(): Solution
+    public function getSolution()/*: Solution*/
     {
         $solution = app(SolutionProviderRepository::class)
             ->getSolutionForClass($this->get('solution'));
@@ -28,7 +28,7 @@ class ExecuteSolutionRequest extends FormRequest
         return $solution;
     }
 
-    public function getRunnableSolution(): RunnableSolution
+    public function getRunnableSolution()/*: RunnableSolution*/
     {
         $solution = $this->getSolution();
 

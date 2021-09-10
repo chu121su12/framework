@@ -14,7 +14,7 @@ class MissingPackageSolutionProvider implements HasSolutionsForThrowable
     /** @var \Facade\Ignition\Support\Packagist\Package|null */
     protected $package;
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
         $pattern = '/Class \'([^\s]+)\' not found/m';
 
@@ -33,13 +33,15 @@ class MissingPackageSolutionProvider implements HasSolutionsForThrowable
         return ! is_null($this->package);
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
         return [new MissingPackageSolution($this->package)];
     }
 
-    protected function findPackageFromClassName(string $missingClassName): ?Package
+    protected function findPackageFromClassName(/*string */$missingClassName)/*: ?Package*/
     {
+        $missingClassName = cast_to_string($missingClassName);
+
         if (! $package = $this->findComposerPackageForClassName($missingClassName)) {
             return null;
         }
@@ -49,10 +51,12 @@ class MissingPackageSolutionProvider implements HasSolutionsForThrowable
             : null;
     }
 
-    protected function findComposerPackageForClassName(string $className): ?Package
+    protected function findComposerPackageForClassName(/*string */$className)/*: ?Package*/
     {
+        $className = cast_to_string($className);
+
         $packages = Packagist::findPackagesForClassName($className);
 
-        return $packages[0] ?? null;
+        return isset($packages[0]) ? $packages[0] : null;
     }
 }

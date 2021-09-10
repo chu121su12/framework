@@ -17,7 +17,7 @@ class LaravelRequestContext extends RequestContext
         $this->request = $request;
     }
 
-    public function getUser(): array
+    public function getUser()/*: array*/
     {
         try {
             $user = $this->request->user();
@@ -25,7 +25,11 @@ class LaravelRequestContext extends RequestContext
             if (! $user) {
                 return [];
             }
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
+            return [];
+        } catch (\Error $e) {
+            return [];
+        } catch (\Exception $e) {
             return [];
         }
 
@@ -37,26 +41,32 @@ class LaravelRequestContext extends RequestContext
             if (method_exists($user, 'toArray')) {
                 return $user->toArray();
             }
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
+            return [];
+        } catch (\Error $e) {
+            return [];
+        } catch (\Exception $e) {
             return [];
         }
 
         return [];
     }
 
-    public function getRoute(): array
+    public function getRoute()/*: array*/
     {
         $route = $this->request->route();
+
+        $middlewares = optional($route)->gatherMiddleware();
 
         return [
             'route' => optional($route)->getName(),
             'routeParameters' => $this->getRouteParameters(),
             'controllerAction' => optional($route)->getActionName(),
-            'middleware' => array_values(optional($route)->gatherMiddleware() ?? []),
+            'middleware' => array_values(isset($middlewares) ? $middlewares : []),
         ];
     }
 
-    public function getRequest(): array
+    public function getRequest()/*: array*/
     {
         $properties = parent::getRequest();
 
@@ -68,20 +78,26 @@ class LaravelRequestContext extends RequestContext
         return $properties;
     }
 
-    protected function getRouteParameters(): array
+    protected function getRouteParameters()/*: array*/
     {
         try {
-            return collect(optional($this->request->route())->parameters ?? [])
+            $parameters = optional($this->request->route())->parameters;
+
+            return collect(isset($parameters) ? $parameters : [])
                 ->map(function ($parameter) {
                     return $parameter instanceof Model ? $parameter->withoutRelations() : $parameter;
                 })
                 ->toArray();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
+            return [];
+        } catch (\Error $e) {
+            return [];
+        } catch (\Exception $e) {
             return [];
         }
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         $properties = parent::toArray();
 

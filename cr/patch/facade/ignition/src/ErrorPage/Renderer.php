@@ -10,13 +10,17 @@ class Renderer
     /** @var string */
     protected $viewPath;
 
-    public function __construct(string $viewPath)
+    public function __construct(/*string */$viewPath)
     {
+        $viewPath = cast_to_string($viewPath);
+
         $this->viewPath = $this->formatPath($viewPath);
     }
 
-    public function render(string $viewName, array $_data): string
+    public function render(/*string */$viewName, array $_data)/*: string*/
     {
+        $viewName = cast_to_string($viewName);
+
         ob_start();
 
         $viewFile = "{$this->viewPath}/{$viewName}.php";
@@ -36,8 +40,10 @@ class Renderer
         return ob_get_clean();
     }
 
-    protected function formatPath(string $path): string
+    protected function formatPath(/*string */$path)/*: string*/
     {
+        $path = cast_to_string($path);
+
         return preg_replace('/(?:\/)+$/u', '', $path).'/';
     }
 }

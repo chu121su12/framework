@@ -12,9 +12,9 @@ use Throwable;
 
 class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
 {
-    protected const REGEX = '/([a-zA-Z\\\\]+)::([a-zA-Z]+)/m';
+    /*protected */const REGEX = '/([a-zA-Z\\\\]+)::([a-zA-Z]+)/m';
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
         if (! $throwable instanceof BadMethodCallException) {
             return false;
@@ -27,7 +27,7 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
         return true;
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
         return [
             BaseSolution::create('Bad Method Call')
@@ -35,7 +35,7 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    public function getSolutionDescription(Throwable $throwable): string
+    public function getSolutionDescription(/*Throwable */$throwable)/*: string*/
     {
         if (! $this->canSolve($throwable)) {
             return '';
@@ -48,8 +48,10 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
         return "Did you mean {$class}::{$possibleMethod->name}() ?";
     }
 
-    protected function getClassAndMethodFromExceptionMessage(string $message): ?array
+    protected function getClassAndMethodFromExceptionMessage(/*string */$message)/*: ?array*/
     {
+        $message = cast_to_string($message);
+
         if (! preg_match(self::REGEX, $message, $matches)) {
             return null;
         }
@@ -60,8 +62,11 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function findPossibleMethod(string $class, string $invalidMethodName)
+    protected function findPossibleMethod(/*string */$class, /*string */$invalidMethodName)
     {
+        $class = cast_to_string($class);
+        $invalidMethodName = cast_to_string($invalidMethodName);
+
         return $this->getAvailableMethods($class)
             ->sortByDesc(function (ReflectionMethod $method) use ($invalidMethodName) {
                 similar_text($invalidMethodName, $method->name, $percentage);
@@ -70,7 +75,7 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
             })->first();
     }
 
-    protected function getAvailableMethods($class): Collection
+    protected function getAvailableMethods($class)/*: Collection*/
     {
         $class = new ReflectionClass($class);
 

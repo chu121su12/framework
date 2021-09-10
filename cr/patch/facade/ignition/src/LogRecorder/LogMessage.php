@@ -18,15 +18,19 @@ class LogMessage
     /** @var float */
     protected $microtime;
 
-    public function __construct(?string $message, string $level, array $context = [], ?float $microtime = null)
+    public function __construct(/*?string */$message = null, /*string */$level, array $context = [], /*?float */$microtime = null)
     {
+        $message = cast_to_string($message, null);
+        $level = cast_to_string($level);
+        $microtime = cast_to_float($microtime, null);
+
         $this->message = $message;
         $this->level = $level;
         $this->context = $context;
-        $this->microtime = $microtime ?? microtime(true);
+        $this->microtime = isset($microtime) ? $microtime : microtime(true);
     }
 
-    public static function fromMessageLoggedEvent(MessageLogged $event): self
+    public static function fromMessageLoggedEvent(MessageLogged $event)/*: self*/
     {
         return new self(
             $event->message,

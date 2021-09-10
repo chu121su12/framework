@@ -23,7 +23,7 @@ class IgnitionEnabled
         return $next($request);
     }
 
-    protected function ignitionEnabled(): bool
+    protected function ignitionEnabled()/*: bool*/
     {
         return config('app.debug');
     }

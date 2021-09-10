@@ -19,22 +19,24 @@ class ViewException extends ErrorException implements ProvidesFlareContext
         $this->viewData = $data;
     }
 
-    public function getViewData(): array
+    public function getViewData()/*: array*/
     {
         return $this->viewData;
     }
 
-    public function setView(string $path)
+    public function setView(/*string */$path)
     {
+        $path = cast_to_string($path);
+
         $this->view = $path;
     }
 
-    protected function dumpViewData($variable): string
+    protected function dumpViewData($variable)/*: string*/
     {
         return (new HtmlDumper())->dumpVariable($variable);
     }
 
-    public function context(): array
+    public function context()/*: array*/
     {
         $context = [
             'view' => [

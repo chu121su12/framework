@@ -17,7 +17,7 @@ class SolutionTransformer implements Arrayable
         $this->solution = $solution;
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         $isRunnable = ($this->solution instanceof RunnableSolution);
 
@@ -34,11 +34,15 @@ class SolutionTransformer implements Arrayable
         ];
     }
 
-    protected function executeEndpoint(): string
+    protected function executeEndpoint()/*: string*/
     {
         try {
             return action('\Facade\Ignition\Http\Controllers\ExecuteSolutionController');
-        } catch (Throwable $exception) {
+        } catch (\Throwable $exception) {
+            return '';
+        } catch (\Error $exception) {
+            return '';
+        } catch (\Exception $exception) {
             return '';
         }
     }

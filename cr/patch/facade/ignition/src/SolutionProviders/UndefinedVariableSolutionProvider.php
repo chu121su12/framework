@@ -15,7 +15,7 @@ class UndefinedVariableSolutionProvider implements HasSolutionsForThrowable
 
     private $viewFile;
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
         if (! $throwable instanceof ViewException) {
             return false;
@@ -24,7 +24,7 @@ class UndefinedVariableSolutionProvider implements HasSolutionsForThrowable
         return $this->getNameAndView($throwable) !== null;
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
         $solutions = [];
 
@@ -44,7 +44,7 @@ class UndefinedVariableSolutionProvider implements HasSolutionsForThrowable
         ViewException $throwable,
         string $variableName,
         string $viewFile
-    ): array {
+    )/*: array*/ {
         return collect($throwable->getViewData())
             ->map(function ($value, $key) use ($variableName) {
                 similar_text($variableName, $key, $percentage);
@@ -67,8 +67,11 @@ class UndefinedVariableSolutionProvider implements HasSolutionsForThrowable
             ->toArray();
     }
 
-    protected function findOptionalVariableSolution(string $variableName, string $viewFile)
+    protected function findOptionalVariableSolution(/*string */$variableName, /*string */$viewFile)
     {
+        $variableName = cast_to_string($variableName);
+        $viewFile = cast_to_string($viewFile);
+
         $optionalSolution = new MakeViewVariableOptionalSolution($variableName, $viewFile);
 
         return $optionalSolution->isRunnable()
@@ -77,14 +80,14 @@ class UndefinedVariableSolutionProvider implements HasSolutionsForThrowable
                 ->setSolutionDescription($optionalSolution->getSolutionDescription());
     }
 
-    protected function getNameAndView(Throwable $throwable): ?array
+    protected function getNameAndView(/*Throwable */$throwable)/*: ?array*/
     {
         $pattern = '/Undefined variable:? (.*?) \(View: (.*?)\)/';
 
         preg_match($pattern, $throwable->getMessage(), $matches);
 
         if (count($matches) === 3) {
-            [, $variableName, $viewFile] = $matches;
+            list($_1, $variableName, $viewFile) = $matches;
             $variableName = ltrim($variableName, '$');
 
             return compact('variableName', 'viewFile');

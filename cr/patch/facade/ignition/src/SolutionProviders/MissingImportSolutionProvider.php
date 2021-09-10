@@ -15,7 +15,7 @@ class MissingImportSolutionProvider implements HasSolutionsForThrowable
     /** @var \Facade\Ignition\Support\ComposerClassMap */
     protected $composerClassMap;
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
         $pattern = '/Class \'([^\s]+)\' not found/m';
 
@@ -32,13 +32,15 @@ class MissingImportSolutionProvider implements HasSolutionsForThrowable
         return ! is_null($this->foundClass);
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
         return [new SuggestImportSolution($this->foundClass)];
     }
 
-    protected function search(string $missingClass)
+    protected function search(/*string */$missingClass)
     {
+        $missingClass = cast_to_string($missingClass);
+
         $this->foundClass = $this->composerClassMap->searchClassMap($missingClass);
 
         if (is_null($this->foundClass)) {

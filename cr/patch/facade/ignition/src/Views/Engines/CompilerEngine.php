@@ -47,7 +47,7 @@ class CompilerEngine extends \Illuminate\View\Engines\CompilerEngine
      *
      * @throws \Throwable
      */
-    protected function handleViewException(Throwable $baseException, $obLevel)
+    protected function handleViewException(/*Throwable */$baseException, $obLevel)
     {
         while (ob_get_level() > $obLevel) {
             ob_end_clean();
@@ -85,8 +85,11 @@ class CompilerEngine extends \Illuminate\View\Engines\CompilerEngine
         throw $exception;
     }
 
-    protected function getBladeLineNumber(string $compiledPath, int $exceptionLineNumber): int
+    protected function getBladeLineNumber(/*string */$compiledPath, /*int */$exceptionLineNumber)/*: int*/
     {
+        $compiledPath = cast_to_string($compiledPath);
+        $exceptionLineNumber = cast_to_int($exceptionLineNumber);
+
         $viewPath = $this->getCompiledViewName($compiledPath);
 
         if (! $viewPath) {

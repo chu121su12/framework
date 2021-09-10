@@ -24,32 +24,38 @@ abstract class Tab implements JsonSerializable
         $this->registerAssets();
     }
 
-    public function name(): string
+    public function name()/*: string*/
     {
         return Str::studly(class_basename(get_called_class()));
     }
 
-    public function component(): string
+    public function component()/*: string*/
     {
         return Str::snake(class_basename(get_called_class()), '-');
     }
 
-    public function beforeRenderingErrorPage(Flare $flare, Throwable $throwable)
+    public function beforeRenderingErrorPage(Flare $flare, /*Throwable */$throwable)
     {
         $this->flare = $flare;
 
         $this->throwable = $throwable;
     }
 
-    public function script(string $name, string $path)
+    public function script(/*string */$name, /*string */$path)
     {
+        $name = cast_to_string($name);
+        $path = cast_to_string($path);
+
         $this->scripts[$name] = $path;
 
         return $this;
     }
 
-    public function style(string $name, string $path)
+    public function style(/*string */$name, /*string */$path)
     {
+        $name = cast_to_string($name);
+        $path = cast_to_string($path);
+
         $this->styles[$name] = $path;
 
         return $this;
@@ -57,7 +63,7 @@ abstract class Tab implements JsonSerializable
 
     abstract protected function registerAssets();
 
-    public function meta(): array
+    public function meta()/*: array*/
     {
         return [];
     }

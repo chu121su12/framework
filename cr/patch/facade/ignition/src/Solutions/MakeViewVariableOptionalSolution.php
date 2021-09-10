@@ -20,37 +20,37 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
         $this->viewFile = $viewFile;
     }
 
-    public function getSolutionTitle(): string
+    public function getSolutionTitle()/*: string*/
     {
         return "$$this->variableName is undefined";
     }
 
-    public function getDocumentationLinks(): array
+    public function getDocumentationLinks()/*: array*/
     {
         return [];
     }
 
-    public function getSolutionActionDescription(): string
+    public function getSolutionActionDescription()/*: string*/
     {
         $output = [
             'Make the variable optional in the blade template.',
-            "Replace `{{ $$this->variableName }}` with `{{ $$this->variableName ?? '' }}`",
+            "Replace `{{ $$this->variableName }}` with `{{ isset($$this->variableName) ? $$this->variableName : '' }}`",
         ];
 
         return implode(PHP_EOL, $output);
     }
 
-    public function getRunButtonText(): string
+    public function getRunButtonText()/*: string*/
     {
         return 'Make variable optional';
     }
 
-    public function getSolutionDescription(): string
+    public function getSolutionDescription()/*: string*/
     {
         return '';
     }
 
-    public function getRunParameters(): array
+    public function getRunParameters()/*: array*/
     {
         return [
             'variableName' => $this->variableName,
@@ -71,8 +71,10 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
         }
     }
 
-    protected function isSafePath(string $path): bool
+    protected function isSafePath(/*string */$path)/*: bool*/
     {
+        $path = cast_to_string($path);
+
         if (! Str::startsWith($path, ['/', './'])) {
             return false;
         }
@@ -90,7 +92,7 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
         }
 
         $originalContents = file_get_contents($parameters['viewFile']);
-        $newContents = str_replace('$'.$parameters['variableName'], '$'.$parameters['variableName']." ?? ''", $originalContents);
+        $newContents = str_replace('$'.$parameters['variableName'], 'isset($'.$parameters['variableName'].') ? $'.$parameters['variableName']." : ''", $originalContents);
 
         $originalTokens = token_get_all(Blade::compileString($originalContents));
         $newTokens = token_get_all(Blade::compileString($newContents));
@@ -104,8 +106,10 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
         return $newContents;
     }
 
-    protected function generateExpectedTokens(array $originalTokens, string $variableName): array
+    protected function generateExpectedTokens(array $originalTokens, /*string */$variableName)/*: array*/
     {
+        $variableName = cast_to_string($variableName);
+
         $expectedTokens = [];
         foreach ($originalTokens as $token) {
             $expectedTokens[] = $token;

@@ -42,7 +42,7 @@ final class Provider implements ProviderContract
     /**
      * {@inheritdoc}
      */
-    public function register(): ProviderContract
+    public function register()/*: ProviderContract*/
     {
         $this->run->pushHandler($this->handler)
             ->register();
@@ -53,7 +53,7 @@ final class Provider implements ProviderContract
     /**
      * {@inheritdoc}
      */
-    public function getHandler(): HandlerContract
+    public function getHandler()/*: HandlerContract*/
     {
         return $this->handler;
     }

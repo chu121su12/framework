@@ -16,15 +16,20 @@ class Dump
     /** @var float */
     protected $microtime;
 
-    public function __construct(string $htmlDump, ?string $file, ?int $lineNumber, ?float $microtime = null)
+    public function __construct(/*string */$htmlDump, /*?string */$file, /*?int */$lineNumber, /*?float */$microtime = null)
     {
+        $htmlDump = cast_to_string($htmlDump);
+        $file = cast_to_string($file, null);
+        $lineNumber = cast_to_int($lineNumber, null);
+        $microtime = cast_to_float($microtime, null);
+
         $this->htmlDump = $htmlDump;
         $this->file = $file;
         $this->lineNumber = $lineNumber;
-        $this->microtime = $microtime ?? microtime(true);
+        $this->microtime = isset($microtime) ? $microtime : microtime(true);
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'html_dump' => $this->htmlDump,

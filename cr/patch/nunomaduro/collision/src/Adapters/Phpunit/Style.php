@@ -39,8 +39,10 @@ final class Style
     /**
      * Prints the content.
      */
-    public function write(string $content): void
+    public function write(/*string */$content)/*: void*/
     {
+        $content = cast_to_string($content);
+
         $this->output->write($content);
     }
 
@@ -52,7 +54,7 @@ final class Style
      *    ✓ basic test
      * ```
      */
-    public function writeCurrentTestCaseSummary(State $state): void
+    public function writeCurrentTestCaseSummary(State $state)/*: void*/
     {
         if ($state->testCaseTestsCount() === 0) {
             return;
@@ -86,8 +88,10 @@ final class Style
      *    ✓ basic test
      * ```
      */
-    public function writeErrorsSummary(State $state, bool $onFailure): void
+    public function writeErrorsSummary(State $state, /*bool */$onFailure)/*: void*/
     {
+        $onFailure = cast_to_bool($onFailure);
+
         $errors = array_filter($state->suiteTests, function (TestResult $testResult) {
             return $testResult->type === TestResult::FAIL;
         });
@@ -116,7 +120,7 @@ final class Style
     /**
      * Writes the final recap.
      */
-    public function writeRecap(State $state, Timer $timer = null): void
+    public function writeRecap(State $state, Timer $timer = null)/*: void*/
     {
         $types = [TestResult::FAIL, TestResult::WARN, TestResult::RISKY, TestResult::INCOMPLETE, TestResult::SKIPPED, TestResult::PASS];
         foreach ($types as $type) {
@@ -159,8 +163,10 @@ final class Style
     /**
      * Displays a warning message.
      */
-    public function writeWarning(string $message): void
+    public function writeWarning(/*string */$message)/*: void*/
     {
+        $message = cast_to_string($message);
+
         $this->output->writeln($this->testLineFrom('yellow', $message, ''));
     }
 
@@ -168,7 +174,7 @@ final class Style
      * Displays the error using Collision's writer
      * and terminates with exit code === 1.
      */
-    public function writeError(Throwable $throwable): void
+    public function writeError(/*Throwable */$throwable)/*: void*/
     {
         $writer = (new Writer())->setOutput($this->output);
 
@@ -228,8 +234,13 @@ final class Style
     /**
      * Returns the title contents.
      */
-    private function titleLineFrom(string $fg, string $bg, string $title, string $testCaseName): string
+    private function titleLineFrom(/*string */$fg, /*string */$bg, /*string */$title, /*string */$testCaseName)/*: string*/
     {
+        $fg = cast_to_string($fg);
+        $bg = cast_to_string($bg);
+        $title = cast_to_string($title);
+        $testCaseName = cast_to_string($testCaseName);
+
         return sprintf(
             "\n  <fg=%s;bg=%s;options=bold> %s </><fg=default> %s</>",
             $fg,
@@ -242,8 +253,13 @@ final class Style
     /**
      * Returns the test contents.
      */
-    private function testLineFrom(string $fg, string $icon, string $description, string $warning = null): string
+    private function testLineFrom(/*string */$fg, /*string */$icon, /*string */$description, /*string */$warning = null)/*: string*/
     {
+        $fg = cast_to_string($fg);
+        $icon = cast_to_string($icon);
+        $description = cast_to_string($description);
+        $warning = cast_to_string($warning, null);
+
         if (!empty($warning)) {
             $warning = sprintf(
                 ' → %s',

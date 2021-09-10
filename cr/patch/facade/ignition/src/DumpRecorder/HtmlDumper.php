@@ -10,7 +10,7 @@ class HtmlDumper extends BaseHtmlDumper
 {
     protected $dumpHeader = '';
 
-    public function dumpVariable($variable): string
+    public function dumpVariable($variable)/*: string*/
     {
         $cloner = new VarCloner();
 
@@ -19,7 +19,7 @@ class HtmlDumper extends BaseHtmlDumper
         return $this->dump($clonedData);
     }
 
-    public function dump(Data $data, $output = null, array $extraDisplayOptions = []): string
+    public function dump(Data $data, $output = null, array $extraDisplayOptions = [])/*: string*/
     {
         return (string)parent::dump($data, true, [
             'maxDepth' => 3,

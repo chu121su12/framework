@@ -14,7 +14,7 @@ class HealthCheckController
         ];
     }
 
-    protected function canExecuteCommands(): bool
+    protected function canExecuteCommands()/*: bool*/
     {
         Artisan::call('help', ['--version']);
 

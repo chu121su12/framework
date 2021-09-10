@@ -25,20 +25,22 @@ class Package
         $this->repository = $properties['repository'];
     }
 
-    public function hasNamespaceThatContainsClassName(string $className): bool
+    public function hasNamespaceThatContainsClassName(/*string */$className)/*: bool*/
     {
+        $className = cast_to_string($className);
+
         return $this->getNamespaces()->contains(function ($namespace) use ($className) {
             return Str::startsWith(strtolower($className), strtolower($namespace));
         });
     }
 
-    protected function getNamespaces(): Collection
+    protected function getNamespaces()/*: Collection*/
     {
         $details = json_decode(file_get_contents("https://packagist.org/packages/{$this->name}.json"), true);
 
         return collect($details['package']['versions'])
             ->map(function ($version) {
-                return collect($version['autoload'] ?? [])
+                return collect(isset($version) && isset($version['autoload']) ? $version['autoload'] : [])
                     ->map(function ($autoload) {
                         return array_keys($autoload);
                     })

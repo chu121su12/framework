@@ -6,8 +6,11 @@ use Illuminate\Support\Collection;
 
 class StringComparator
 {
-    public static function findClosestMatch(array $strings, string $input, int $sensitivity = 4): ?string
+    public static function findClosestMatch(array $strings, /*string */$input, /*int */$sensitivity = 4)/*: ?string*/
     {
+        $input = cast_to_string($input);
+        $sensitivity = cast_to_int($sensitivity);
+
         $closestDistance = -1;
         $closestMatch = null;
 
@@ -34,14 +37,17 @@ class StringComparator
         return null;
     }
 
-    public static function findSimilarText(array $strings, string $input): ?string
+    public static function findSimilarText(array $strings, /*string */$input)/*: ?string*/
     {
+        $input = cast_to_string($input);
+
         if (empty($strings)) {
             return null;
         }
 
         return Collection::make($strings)
-            ->sortByDesc(function (string $string) use ($input) {
+            ->sortByDesc(function (/*string */$string) use ($input) {
+                $string = cast_to_string($string);
                 similar_text($input, $string, $percentage);
 
                 return $percentage;

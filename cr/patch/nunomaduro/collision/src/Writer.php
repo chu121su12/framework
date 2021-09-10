@@ -26,7 +26,7 @@ final class Writer implements WriterContract
     /**
      * The number of frames if no verbosity is specified.
      */
-    public const VERBOSITY_NORMAL_FRAMES = 1;
+    /*public */const VERBOSITY_NORMAL_FRAMES = 1;
 
     /**
      * Holds an instance of the solutions repository.
@@ -103,7 +103,7 @@ final class Writer implements WriterContract
     /**
      * {@inheritdoc}
      */
-    public function write(Inspector $inspector): void
+    public function write(Inspector $inspector)/*: void*/
     {
         $this->renderTitleAndDescription($inspector);
 
@@ -132,7 +132,7 @@ final class Writer implements WriterContract
     /**
      * {@inheritdoc}
      */
-    public function ignoreFilesIn(array $ignore): WriterContract
+    public function ignoreFilesIn(array $ignore)/*: WriterContract*/
     {
         $this->ignore = $ignore;
 
@@ -142,8 +142,10 @@ final class Writer implements WriterContract
     /**
      * {@inheritdoc}
      */
-    public function showTrace(bool $show): WriterContract
+    public function showTrace(/*bool */$show)/*: WriterContract*/
     {
+        $show = cast_to_bool($show);
+
         $this->showTrace = $show;
 
         return $this;
@@ -152,8 +154,10 @@ final class Writer implements WriterContract
     /**
      * {@inheritdoc}
      */
-    public function showTitle(bool $show): WriterContract
+    public function showTitle(/*bool */$show)/*: WriterContract*/
     {
+        $show = cast_to_bool($show);
+
         $this->showTitle = $show;
 
         return $this;
@@ -162,8 +166,10 @@ final class Writer implements WriterContract
     /**
      * {@inheritdoc}
      */
-    public function showEditor(bool $show): WriterContract
+    public function showEditor(/*bool */$show)/*: WriterContract*/
     {
+        $show = cast_to_bool($show);
+
         $this->showEditor = $show;
 
         return $this;
@@ -172,7 +178,7 @@ final class Writer implements WriterContract
     /**
      * {@inheritdoc}
      */
-    public function setOutput(OutputInterface $output): WriterContract
+    public function setOutput(OutputInterface $output)/*: WriterContract*/
     {
         $this->output = $output;
 
@@ -182,7 +188,7 @@ final class Writer implements WriterContract
     /**
      * {@inheritdoc}
      */
-    public function getOutput(): OutputInterface
+    public function getOutput()/*: OutputInterface*/
     {
         return $this->output;
     }
@@ -190,7 +196,7 @@ final class Writer implements WriterContract
     /**
      * Returns pertinent frames.
      */
-    protected function getFrames(Inspector $inspector): array
+    protected function getFrames(Inspector $inspector)/*: array*/
     {
         return $inspector->getFrames()
             ->filter(
@@ -219,7 +225,7 @@ final class Writer implements WriterContract
     /**
      * Renders the title of the exception.
      */
-    protected function renderTitleAndDescription(Inspector $inspector): WriterContract
+    protected function renderTitleAndDescription(Inspector $inspector)/*: WriterContract*/
     {
         $exception = $inspector->getException();
         $message   = rtrim($exception->getMessage());
@@ -238,7 +244,7 @@ final class Writer implements WriterContract
     /**
      * Renders the solution of the exception, if any.
      */
-    protected function renderSolution(Inspector $inspector): WriterContract
+    protected function renderSolution(Inspector $inspector)/*: WriterContract*/
     {
         $throwable = $inspector->getException();
         $solutions = $this->solutionsRepository->getFromThrowable($throwable);
@@ -268,7 +274,7 @@ final class Writer implements WriterContract
      * Renders the editor containing the code that was the
      * origin of the exception.
      */
-    protected function renderEditor(Frame $frame): WriterContract
+    protected function renderEditor(Frame $frame)/*: WriterContract*/
     {
         if ($frame->getFile() !== 'Unknown') {
             $file = $this->getFileRelativePath((string) $frame->getFile());
@@ -288,7 +294,7 @@ final class Writer implements WriterContract
     /**
      * Renders the trace of the exception.
      */
-    protected function renderTrace(array $frames): WriterContract
+    protected function renderTrace(array $frames)/*: WriterContract*/
     {
         $vendorFrames = 0;
         $userFrames   = 0;
@@ -330,8 +336,11 @@ final class Writer implements WriterContract
      *
      * @return $this
      */
-    protected function render(string $message, bool $break = true): WriterContract
+    protected function render(/*string */$message, /*bool */$break = true)/*: WriterContract*/
     {
+        $message = cast_to_string($message);
+        $break = cast_to_bool($break);
+
         if ($break) {
             $this->output->writeln('');
         }
@@ -344,8 +353,10 @@ final class Writer implements WriterContract
     /**
      * Returns the relative path of the given file path.
      */
-    protected function getFileRelativePath(string $filePath): string
+    protected function getFileRelativePath(/*string */$filePath)/*: string*/
     {
+        $filePath = cast_to_string($filePath);
+
         $cwd = (string) getcwd();
 
         if (!empty($cwd)) {

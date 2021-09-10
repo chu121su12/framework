@@ -31,7 +31,7 @@ final class IgnitionSolutionsRepository implements SolutionsRepository
     /**
      * {@inheritdoc}
      */
-    public function getFromThrowable(Throwable $throwable): array
+    public function getFromThrowable(/*Throwable */$throwable)/*: array*/
     {
         return $this->solutionProviderRepository->getSolutionsForThrowable($throwable);
     }

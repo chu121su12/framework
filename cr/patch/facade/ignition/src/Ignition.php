@@ -18,7 +18,7 @@ class Ignition
         static::$tabs[] = $tab;
     }
 
-    public static function styles(): array
+    public static function styles()/*: array*/
     {
         return collect(static::$tabs)->flatMap(function ($tab) {
             return $tab->styles;
@@ -27,7 +27,7 @@ class Ignition
             ->toArray();
     }
 
-    public static function scripts(): array
+    public static function scripts()/*: array*/
     {
         return collect(static::$tabs)->flatMap(function ($tab) {
             return $tab->scripts;

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ShareReportRequest extends FormRequest
 {
-    public function rules(): array
+    public function rules()/*: array*/
     {
         return [
             'report' => 'required',

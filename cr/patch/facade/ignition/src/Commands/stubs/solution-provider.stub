@@ -6,12 +6,12 @@ use Facade\IgnitionContracts\HasSolutionsForThrowable;
 
 class DummyClass implements HasSolutionsForThrowable
 {
-    public function canSolve(): bool
+    public function canSolve()/*: bool*/
     {
         return false;
     }
 
-    public function getSolutions(): array
+    public function getSolutions()/*: array*/
     {
         return [];
     }

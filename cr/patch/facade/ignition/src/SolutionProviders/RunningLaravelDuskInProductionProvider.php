@@ -9,7 +9,7 @@ use Throwable;
 
 class RunningLaravelDuskInProductionProvider implements HasSolutionsForThrowable
 {
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
         if (! $throwable instanceof Exception) {
             return false;
@@ -18,7 +18,7 @@ class RunningLaravelDuskInProductionProvider implements HasSolutionsForThrowable
         return $throwable->getMessage() === 'It is unsafe to run Dusk in production.';
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
         return [
             BaseSolution::create('Laravel Dusk should not be run in production.')

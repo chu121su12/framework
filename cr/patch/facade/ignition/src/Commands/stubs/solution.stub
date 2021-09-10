@@ -6,17 +6,17 @@ use Facade\IgnitionContracts\Solution;
 
 class DummyClass implements Solution
 {
-    public function getSolutionTitle(): string
+    public function getSolutionTitle()/*: string*/
     {
         return '';
     }
 
-    public function getSolutionDescription(): string
+    public function getSolutionDescription()/*: string*/
     {
         return '';
     }
 
-    public function getDocumentationLinks(): array
+    public function getDocumentationLinks()/*: array*/
     {
         return [];
     }

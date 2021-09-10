@@ -15,7 +15,7 @@ class ViewExceptionWithSolution extends ViewException implements ProvidesSolutio
         $this->solution = $solution;
     }
 
-    public function getSolution(): Solution
+    public function getSolution()/*: Solution*/
     {
         return $this->solution;
     }

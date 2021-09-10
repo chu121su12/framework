@@ -29,43 +29,43 @@ interface Writer
      *
      * @return \NunoMaduro\Collision\Contracts\Writer
      */
-    public function ignoreFilesIn(array $ignore): Writer;
+    public function ignoreFilesIn(array $ignore)/*: Writer*/;
 
     /**
      * Declares whether or not the Writer should show the trace.
      *
      * @return \NunoMaduro\Collision\Contracts\Writer
      */
-    public function showTrace(bool $show): Writer;
+    public function showTrace(/*bool */$show)/*: Writer*/;
 
     /**
      * Declares whether or not the Writer should show the title.
      *
      * @return \NunoMaduro\Collision\Contracts\Writer
      */
-    public function showTitle(bool $show): Writer;
+    public function showTitle(/*bool */$show)/*: Writer*/;
 
     /**
      * Declares whether or not the Writer should show the editor.
      *
      * @return \NunoMaduro\Collision\Contracts\Writer
      */
-    public function showEditor(bool $show): Writer;
+    public function showEditor(/*bool */$show)/*: Writer*/;
 
     /**
      * Writes the details of the exception on the console.
      */
-    public function write(Inspector $inspector): void;
+    public function write(Inspector $inspector)/*: void*/;
 
     /**
      * Sets the output.
      *
      * @return \NunoMaduro\Collision\Contracts\Writer
      */
-    public function setOutput(OutputInterface $output): Writer;
+    public function setOutput(OutputInterface $output)/*: Writer*/;
 
     /**
      * Gets the output.
      */
-    public function getOutput(): OutputInterface;
+    public function getOutput()/*: OutputInterface*/;
 }

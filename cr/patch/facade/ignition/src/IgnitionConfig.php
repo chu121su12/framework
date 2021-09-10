@@ -15,27 +15,27 @@ class IgnitionConfig implements Arrayable
         $this->options = $this->mergeWithDefaultConfig($options);
     }
 
-    public function getEditor(): ?string
+    public function getEditor()/*: ?string*/
     {
         return Arr::get($this->options, 'editor');
     }
 
-    public function getRemoteSitesPath(): ?string
+    public function getRemoteSitesPath()/*: ?string*/
     {
         return Arr::get($this->options, 'remote_sites_path');
     }
 
-    public function getLocalSitesPath(): ?string
+    public function getLocalSitesPath()/*: ?string*/
     {
         return Arr::get($this->options, 'local_sites_path');
     }
 
-    public function getTheme(): ?string
+    public function getTheme()/*: ?string*/
     {
         return Arr::get($this->options, 'theme');
     }
 
-    public function getEnableShareButton(): bool
+    public function getEnableShareButton()/*: bool*/
     {
         if (! app()->isBooted()) {
             return false;
@@ -44,7 +44,7 @@ class IgnitionConfig implements Arrayable
         return Arr::get($this->options, 'enable_share_button', true);
     }
 
-    public function getEnableRunnableSolutions(): bool
+    public function getEnableRunnableSolutions()/*: bool*/
     {
         $enabled = Arr::get($this->options, 'enable_runnable_solutions', null);
 
@@ -52,10 +52,10 @@ class IgnitionConfig implements Arrayable
             $enabled = config('app.debug');
         }
 
-        return $enabled ?? false;
+        return isset($enabled) ? $enabled : false;
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'editor' => $this->getEditor(),
@@ -68,7 +68,7 @@ class IgnitionConfig implements Arrayable
         ];
     }
 
-    protected function mergeWithDefaultConfig(array $options = []): array
+    protected function mergeWithDefaultConfig(array $options = [])/*: array*/
     {
         return array_merge(config('ignition') ?: include __DIR__.'/../config/ignition.php', $options);
     }

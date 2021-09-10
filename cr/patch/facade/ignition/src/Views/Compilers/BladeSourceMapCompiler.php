@@ -7,8 +7,11 @@ use Illuminate\View\Compilers\BladeCompiler;
 
 class BladeSourceMapCompiler extends BladeCompiler
 {
-    public function detectLineNumber(string $filename, int $exceptionLineNumber): int
+    public function detectLineNumber(/*string */$filename, /*int */$exceptionLineNumber)/*: int*/
     {
+        $filename = cast_to_string($filename);
+        $exceptionLineNumber = cast_to_int($exceptionLineNumber);
+
         try {
             $map = $this->compileString(file_get_contents($filename));
         } catch (ErrorException $e) {
@@ -17,7 +20,7 @@ class BladeSourceMapCompiler extends BladeCompiler
         
         $map = explode("\n", $map);
 
-        $line = $map[$exceptionLineNumber - 1] ?? $exceptionLineNumber;
+        $line = isset($map[$exceptionLineNumber - 1]) ? $map[$exceptionLineNumber - 1] : $exceptionLineNumber;
         $pattern = '/\|---LINE:([0-9]+)---\|/m';
 
         if (preg_match($pattern, (string)$line, $matches)) {
@@ -42,8 +45,10 @@ class BladeSourceMapCompiler extends BladeCompiler
         }
     }
 
-    protected function addEchoLineNumbers(string $value)
+    protected function addEchoLineNumbers(/*string */$value)
     {
+        $value = cast_to_string($value);
+
         $pattern = sprintf('/(@)?%s\s*(.+?)\s*%s(\r?\n)?/s', $this->contentTags[0], $this->contentTags[1]);
 
         if (preg_match_all($pattern, $value, $matches, PREG_OFFSET_CAPTURE)) {
@@ -57,8 +62,10 @@ class BladeSourceMapCompiler extends BladeCompiler
         return $value;
     }
 
-    protected function addStatementLineNumbers(string $value)
+    protected function addStatementLineNumbers(/*string */$value)
     {
+        $value = cast_to_string($value);
+
         $shouldInsertLineNumbers = preg_match_all(
             '/\B@(@?\w+(?:::\w+)?)([ \t]*)(\( ( (?>[^()]+) | (?3) )* \))?/x',
             $value,
@@ -77,16 +84,21 @@ class BladeSourceMapCompiler extends BladeCompiler
         return $value;
     }
 
-    protected function insertLineNumberAtPosition(int $position, string $value)
+    protected function insertLineNumberAtPosition(/*int */$position, /*string */$value)
     {
+        $position = cast_to_int($position);
+        $value = cast_to_string($value);
+
         $before = mb_substr($value, 0, $position);
         $lineNumber = count(explode("\n", $before));
 
         return mb_substr($value, 0, $position)."|---LINE:{$lineNumber}---|".mb_substr($value, $position);
     }
 
-    protected function trimEmptyLines(string $value)
+    protected function trimEmptyLines(/*string */$value)
     {
+        $value = cast_to_string($value);
+
         $value = preg_replace('/^\|---LINE:([0-9]+)---\|$/m', '', $value);
 
         return ltrim($value, PHP_EOL);

@@ -9,22 +9,24 @@ class SuggestImportSolution implements Solution
     /** @var string */
     protected $class;
 
-    public function __construct(string $class)
+    public function __construct(/*string */$class)
     {
+        $class = cast_to_string($class);
+
         $this->class = $class;
     }
 
-    public function getSolutionTitle(): string
+    public function getSolutionTitle()/*: string*/
     {
         return 'A class import is missing';
     }
 
-    public function getSolutionDescription(): string
+    public function getSolutionDescription()/*: string*/
     {
         return 'You have a missing class import. Try importing this class: `'.$this->class.'`.';
     }
 
-    public function getDocumentationLinks(): array
+    public function getDocumentationLinks()/*: array*/
     {
         return [];
     }

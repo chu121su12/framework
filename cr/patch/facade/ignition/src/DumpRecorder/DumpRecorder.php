@@ -22,7 +22,7 @@ class DumpRecorder
         $this->app = $app;
     }
 
-    public function register(): self
+    public function register()/*: self*/
     {
         $multiDumpHandler = new MultiDumpHandler();
 
@@ -63,7 +63,7 @@ class DumpRecorder
         $this->dumps[] = new Dump($htmlDump, $file, $lineNumber);
     }
 
-    public function getDumps(): array
+    public function getDumps()/*: array*/
     {
         return $this->toArray();
     }
@@ -73,7 +73,7 @@ class DumpRecorder
         $this->dumps = [];
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         $dumps = [];
 

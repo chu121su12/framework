@@ -14,9 +14,11 @@ class ComposerClassMap
     /** @var string */
     protected $basePath;
 
-    public function __construct(?string $autoloaderPath = null)
+    public function __construct(/*?string */$autoloaderPath = null)
     {
-        $autoloaderPath = $autoloaderPath ?? base_path('/vendor/autoload.php');
+        $autoloaderPath = cast_to_string($autoloaderPath, null);
+
+        $autoloaderPath = isset($autoloaderPath) ? $autoloaderPath : base_path('/vendor/autoload.php');
 
         if (file_exists($autoloaderPath)) {
             $this->composer = require $autoloaderPath;
@@ -26,15 +28,17 @@ class ComposerClassMap
         $this->basePath = app_path();
     }
 
-    public function listClasses(): array
+    public function listClasses()/*: array*/
     {
         $classes = $this->composer->getClassMap();
 
         return array_merge($classes, $this->listClassesInPsrMaps());
     }
 
-    public function searchClassMap(string $missingClass): ?string
+    public function searchClassMap(/*string */$missingClass)/*: ?string*/
     {
+        $missingClass = cast_to_string($missingClass);
+
         foreach ($this->composer->getClassMap() as $fqcn => $file) {
             $basename = basename($file, '.php');
 
@@ -46,7 +50,7 @@ class ComposerClassMap
         return null;
     }
 
-    public function listClassesInPsrMaps(): array
+    public function listClassesInPsrMaps()/*: array*/
     {
         // TODO: This is incorrect. Doesnt list all fqcns. Need to parse namespace? e.g. App\LoginController is wrong
 
@@ -79,8 +83,10 @@ class ComposerClassMap
         return $classes;
     }
 
-    public function searchPsrMaps(string $missingClass): ?string
+    public function searchPsrMaps(/*string */$missingClass)/*: ?string*/
     {
+        $missingClass = cast_to_string($missingClass);
+
         $prefixes = array_merge(
             $this->composer->getPrefixes(),
             $this->composer->getPrefixesPsr4()
@@ -110,8 +116,10 @@ class ComposerClassMap
         return null;
     }
 
-    protected function getFullyQualifiedClassNameFromFile(string $rootNamespace, SplFileInfo $file): string
+    protected function getFullyQualifiedClassNameFromFile(/*string */$rootNamespace, SplFileInfo $file)/*: string*/
     {
+        $rootNamespace = cast_to_string($rootNamespace);
+
         $class = trim(str_replace($this->basePath, '', $file->getRealPath()), DIRECTORY_SEPARATOR);
 
         $class = str_replace(

@@ -44,7 +44,7 @@ final class Handler extends AbstractHandler implements HandlerContract
     /**
      * {@inheritdoc}
      */
-    public function setOutput(OutputInterface $output): HandlerContract
+    public function setOutput(OutputInterface $output)/*: HandlerContract*/
     {
         $this->writer->setOutput($output);
 
@@ -54,7 +54,7 @@ final class Handler extends AbstractHandler implements HandlerContract
     /**
      * {@inheritdoc}
      */
-    public function getWriter(): WriterContract
+    public function getWriter()/*: WriterContract*/
     {
         return $this->writer;
     }
