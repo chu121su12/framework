@@ -8,46 +8,54 @@ class BaseSolution implements Solution
     protected $description;
     protected $links = [];
 
-    public static function create(string $title)
+    public static function create(/*string */$title)
     {
+        $title = cast_to_string($title);
+
         return new static($title);
     }
 
-    public function __construct(string $title)
+    public function __construct(/*string */$title)
     {
+        $title = cast_to_string($title);
+
         $this->title = $title;
     }
 
-    public function getSolutionTitle(): string
+    public function getSolutionTitle()/*: string*/
     {
         return $this->title;
     }
 
-    public function setSolutionTitle(string $title): self
+    public function setSolutionTitle(/*string */$title)/*: self*/
     {
+        $title = cast_to_string($title);
+
         $this->title = $title;
 
         return $this;
     }
 
-    public function getSolutionDescription(): string
+    public function getSolutionDescription()/*: string*/
     {
         return $this->description;
     }
 
-    public function setSolutionDescription(string $description): self
+    public function setSolutionDescription(/*string */$description)/*: self*/
     {
+        $description = cast_to_string($description);
+
         $this->description = $description;
 
         return $this;
     }
 
-    public function getDocumentationLinks(): array
+    public function getDocumentationLinks()/*: array*/
     {
         return $this->links;
     }
 
-    public function setDocumentationLinks(array $links): self
+    public function setDocumentationLinks(array $links)/*: self*/
     {
         $this->links = $links;
 
