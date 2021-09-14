@@ -4,5 +4,5 @@ namespace Facade\IgnitionContracts;
 
 interface ProvidesSolution
 {
-    public function getSolution(): Solution;
+    public function getSolution()/*: Solution*/;
 }
