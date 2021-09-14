@@ -17,6 +17,14 @@ use Orchestra\Testbench\TestCase;
 use ReflectionProperty;
 use RuntimeException;
 
+class LogManagerTest_testItUtilisesTheNullDriverDuringTestsWhenNullDriverUsed_class extends LogManager
+        {
+            protected function createEmergencyLogger()
+            {
+                throw new RuntimeException('Emergency logger was created.');
+            }
+        }
+
 class LogManagerTest extends TestCase
 {
     public function testLogManagerCachesLoggerInstances()
@@ -212,13 +220,7 @@ class LogManagerTest extends TestCase
             'driver' => 'monolog',
             'handler' => NullHandler::class,
         ]);
-        $manager = new class($this->app) extends LogManager
-        {
-            protected function createEmergencyLogger()
-            {
-                throw new RuntimeException('Emergency logger was created.');
-            }
-        };
+        $manager = new LogManagerTest_testItUtilisesTheNullDriverDuringTestsWhenNullDriverUsed_class($this->app);
 
         // In tests, this should not need to create the emergency logger...
         $manager->info('message');
