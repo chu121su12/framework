@@ -675,4 +675,3 @@ class Mailer implements MailerContract, MailQueueContract
         return $this;
     }
 }
-
