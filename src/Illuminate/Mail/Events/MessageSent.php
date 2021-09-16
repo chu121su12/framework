@@ -7,7 +7,7 @@ use Swift_Attachment;
 class MessageSent
 {
     /**
-     * The Swift message instance.
+     * The Symfony Email instance.
      *
      * @var \Swift_Message
      */
@@ -27,7 +27,7 @@ class MessageSent
      * @param  array  $data
      * @return void
      */
-    public function __construct($message, $data = [])
+    public function __construct(/*Email */$message, array $data = [])
     {
         $this->data = $data;
         $this->message = $message;

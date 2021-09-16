@@ -32,7 +32,7 @@ class MailSesTransportTest extends TestCase
         $manager = new MailManager($container);
 
         /** @var \Illuminate\Mail\Transport\SesTransport $transport */
-        $transport = $manager->createTransport(['transport' => 'ses']);
+        $transport = $manager->createSymfonyTransport(['transport' => 'ses']);
 
         $ses = $transport->ses();
 
