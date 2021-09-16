@@ -44,7 +44,7 @@ class Mailer implements MailerContract, MailQueueContract
     protected $swift;
 
     /**
-     * The Swift Mailer instance.
+     * The Symfony Transport instance.
      *
      * @var \Swift_Transport
      */
@@ -675,3 +675,4 @@ class Mailer implements MailerContract, MailQueueContract
         return $this;
     }
 }
+
