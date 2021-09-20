@@ -242,14 +242,14 @@ if (! \function_exists('backport_closure_from_callable')) {
         }
     */
 
-    function backport_closure_from_callable($callingThis, $callable)
+    function backport_closure_from_callable($callable, $callingThis = null)
     {
-        if (! \version_compare(\PHP_VERSION, '7.0.0', '<')) {
-            throw new \Exception('Use \Closure::fromCallable() directly from calling method.');
+        if (\version_compare(\PHP_VERSION, '7.0.0', '>=')) {
+            return \Closure::fromCallable($callable);
         }
 
         if (is_array($callable)) {
-            return (new \ReflectionMethod(...$callable))->getClosure($callingThis);
+            return (new \ReflectionMethod(...$callable))->getClosure($callable[0]);
         }
 
         if (is_object($callable) && method_exists($callable, '__invoke')) {

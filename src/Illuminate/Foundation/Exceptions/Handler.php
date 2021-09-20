@@ -138,11 +138,7 @@ class Handler implements ExceptionHandlerContract
     public function reportable(callable $reportUsing)
     {
         if (! $reportUsing instanceof Closure) {
-            if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-                $reportUsing = backport_closure_from_callable($this, $reportUsing);
-            } else {
-                $reportUsing = Closure::fromCallable($reportUsing);
-            }
+            $reportUsing = backport_closure_from_callable($reportUsing, $this);
         }
 
         return tap(new ReportableHandler($reportUsing), function ($callback) {
@@ -159,11 +155,7 @@ class Handler implements ExceptionHandlerContract
     public function renderable(callable $renderUsing)
     {
         if (! $renderUsing instanceof Closure) {
-            if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-                $renderUsing = backport_closure_from_callable($this, $renderUsing);
-            } else {
-                $renderUsing = Closure::fromCallable($renderUsing);
-            }
+            $renderUsing = backport_closure_from_callable($renderUsing, $this);
         }
 
         $this->renderCallbacks[] = $renderUsing;
