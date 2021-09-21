@@ -273,7 +273,7 @@ class Encrypter implements EncrypterContract, StringEncrypter
     }
 
     /**
-     * Get the encryption key.
+     * Get the encryption key that the encrypter is currently using.
      *
      * @return string
      */
