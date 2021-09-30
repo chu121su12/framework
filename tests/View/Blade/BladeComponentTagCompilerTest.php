@@ -317,6 +317,25 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
 '@endComponentClass##END-COMPONENT-CLASS##', trim($result));
     }
 
+    public function testClasslessComponentsWithIndexView()
+    {
+        $container = new Container;
+        $container->instance(Application::class, $app = Mockery::mock(Application::class));
+        $container->instance(Factory::class, $factory = Mockery::mock(Factory::class));
+        $app->shouldReceive('getNamespace')->andReturn('App\\');
+        $factory->shouldReceive('exists')->andReturn(false, true);
+        Container::setInstance($container);
+
+        $result = $this->compiler()->compileTags('<x-anonymous-component :name="\'Taylor\'" :age="31" wire:model="foo" />');
+
+        $this->assertSame("##BEGIN-COMPONENT-CLASS##@component('Illuminate\View\AnonymousComponent', 'anonymous-component', ['view' => 'components.anonymous-component.index','data' => ['name' => 'Taylor','age' => 31,'wire:model' => 'foo']])
+<?php if (isset(\$attributes) && \$constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php \$attributes = \$attributes->except(collect(\$constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php \$component->withAttributes(['name' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Taylor'),'age' => 31,'wire:model' => 'foo']); ?>\n".
+'@endComponentClass##END-COMPONENT-CLASS##', trim($result));
+    }
+
     public function testPackagesClasslessComponents()
     {
         $container = new Container;

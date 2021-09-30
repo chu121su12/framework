@@ -14,7 +14,12 @@ use PHPUnit\Framework\TestCase;
 
 class QueueRedisQueueTest extends TestCase
 {
-    protected function tearDown()
+    protected function setUp()/*: void*/
+    {
+        parent::setUp();
+    }
+
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

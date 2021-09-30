@@ -185,7 +185,7 @@ class Encrypter implements EncrypterContract, StringEncrypter
 
         } else {
             $decrypted = \openssl_decrypt(
-                $payload['value'], strtolower($this->cipher), $this->key, 0, $iv, $tag
+                $payload['value'], strtolower($this->cipher), $this->key, 0, $iv, $tag ?? ''
             );
         }
 

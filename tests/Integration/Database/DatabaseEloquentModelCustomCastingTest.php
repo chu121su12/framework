@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Schema;
 
 // note: do not remove (array) cast since php 5 requires method overriding extending class have the same type as the extended class.
 
-class ValueObject_castUsing_class implements CastsAttributes 
+class ValueObject_castUsing_class implements CastsAttributes, SerializesCastableAttributes
         {
             private $argument;
 
@@ -34,6 +34,11 @@ class ValueObject_castUsing_class implements CastsAttributes
             }
 
             public function set($model, $key, $value, array $attributes)
+            {
+                return serialize($value);
+            }
+
+            public function serialize($model, $key, $value, $attributes)
             {
                 return serialize($value);
             }
@@ -256,6 +261,7 @@ class DatabaseEloquentModelCustomCastingTest extends DatabaseTestCase
         ]);
 
         $this->assertInstanceOf(ValueObject::class, $model->value_object_with_caster);
+        $this->assertSame(serialize(new ValueObject('hello')), $model->toArray()['value_object_with_caster']);
 
         $model->setRawAttributes([
             'value_object_caster_with_argument' => null,
