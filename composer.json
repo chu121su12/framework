@@ -48,6 +48,7 @@
         "voku/portable-utf8": "^3.1.30"
     },
     "replace": {
+        "laravel/serializable-closure": "^1.0.2",
         "facade/ignition": "^2.12",
         "facade/flare-client-php": "1.8.1",
         "nunomaduro/collision": "^5.9",
@@ -183,6 +184,7 @@
             "League\\Flysystem\\": "cr/patch/flysystem/src/",
             "Carbon\\": "cr/patch/carbon/src/",
             "Doctrine\\": "cr/patch/doctrine/doctrine/",
+            "Laravel\\SerializableClosure\\": "cr/patch/serializable-closure/src/",
             "Illuminate\\": "src/Illuminate/",
             "Illuminate\\Support\\": [
                 "src/Illuminate/Macroable/",
