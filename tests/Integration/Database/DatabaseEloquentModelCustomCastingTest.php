@@ -38,7 +38,7 @@ class ValueObject_castUsing_class implements CastsAttributes, SerializesCastable
                 return serialize($value);
             }
 
-            public function serialize($model, $key, $value, $attributes)
+            public function serialize($model, $key, $value, array $attributes)
             {
                 return serialize($value);
             }

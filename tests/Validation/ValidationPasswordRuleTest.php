@@ -243,7 +243,7 @@ class ValidationPasswordRuleTest extends TestCase
     public function testItPassesWithValidDataIfTheSameValidationRulesAreReused()
     {
         $rules = [
-            'password' => Password::default(),
+            'password' => Password::default_(),
         ];
 
         $v = new Validator(

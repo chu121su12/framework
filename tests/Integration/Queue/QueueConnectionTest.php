@@ -16,7 +16,7 @@ use Throwable;
  */
 class QueueConnectionTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         if (\PHP_VERSION_ID >= 80100) {
             $this->markTestSkipped('Test failing in PHP 8.1');

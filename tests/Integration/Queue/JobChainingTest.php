@@ -17,7 +17,7 @@ class JobChainingTest extends TestCase
 {
     public static $catchCallbackRan = false;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
     }

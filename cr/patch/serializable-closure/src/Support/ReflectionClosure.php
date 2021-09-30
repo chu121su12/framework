@@ -44,7 +44,7 @@ class ReflectionClosure extends ReflectionFunction
      *
      * @return bool
      */
-    public function isStatic(): bool
+    public function isStatic()/*: bool*/
     {
         if ($this->isStaticClosure === null) {
             $this->isStaticClosure = strtolower(substr($this->getCode(), 0, 6)) === 'static';
@@ -676,6 +676,10 @@ class ReflectionClosure extends ReflectionFunction
         // PHP 8
         if (\PHP_MAJOR_VERSION === 8) {
             return ['array', 'callable', 'string', 'int', 'bool', 'float', 'iterable', 'void', 'object', 'mixed', 'false', 'null'];
+        }
+
+        if (\PHP_MAJOR_VERSION < 7) {
+            return ['array', 'callable'];
         }
 
         // PHP 7

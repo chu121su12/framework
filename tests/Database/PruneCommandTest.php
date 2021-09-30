@@ -98,10 +98,12 @@ EOF;
             '--pretend' => true,
         ]);
 
-        $this->assertEquals(<<<'EOF'
+        $expected = <<<'EOF'
 3 [Illuminate\Tests\Database\PrunableTestModelWithPrunableRecords] records will be pruned.
 
-EOF, str_replace("\r", '', $output->fetch()));
+EOF;
+
+        $this->assertEquals($expected, str_replace("\r", '', $output->fetch()));
 
         $this->assertEquals(5, PrunableTestModelWithPrunableRecords::count());
     }
