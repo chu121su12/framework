@@ -217,6 +217,7 @@
         ],
         "files": [
             "cr/helpers/tests.php",
+            "cr/patch/orchestra-testbench-core/testbench-core/src/helpers.php",
             "tests/Database/stubs/MigrationCreatorFakeMigration.php"
         ],
         "psr-4": {
