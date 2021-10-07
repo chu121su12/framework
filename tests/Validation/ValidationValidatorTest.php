@@ -1059,100 +1059,6 @@ class ValidationValidatorTest extends TestCase
         $this->assertEquals(['validation.present'], $v->errors()->get('name'));
     }
 
-    public function testValidatePassword()
-    {
-        // Fails when user is not logged in.
-        $auth = m::mock(Guard::class);
-        $auth->shouldReceive('guard')->andReturn($auth);
-        $auth->shouldReceive('guest')->andReturn(true);
-
-        $hasher = m::mock(Hasher::class);
-
-        $container = m::mock(Container::class);
-        $container->shouldReceive('make')->with('auth')->andReturn($auth);
-        $container->shouldReceive('make')->with('hash')->andReturn($hasher);
-
-        $trans = $this->getTranslator();
-        $trans->shouldReceive('get')->andReturnArg(0);
-
-        $v = new Validator($trans, ['password' => 'foo'], ['password' => 'password']);
-        $v->setContainer($container);
-
-        $this->assertFalse($v->passes());
-
-        // Fails when password is incorrect.
-        $user = m::mock(Authenticatable::class);
-        $user->shouldReceive('getAuthPassword');
-
-        $auth = m::mock(Guard::class);
-        $auth->shouldReceive('guard')->andReturn($auth);
-        $auth->shouldReceive('guest')->andReturn(false);
-        $auth->shouldReceive('user')->andReturn($user);
-
-        $hasher = m::mock(Hasher::class);
-        $hasher->shouldReceive('check')->andReturn(false);
-
-        $container = m::mock(Container::class);
-        $container->shouldReceive('make')->with('auth')->andReturn($auth);
-        $container->shouldReceive('make')->with('hash')->andReturn($hasher);
-
-        $trans = $this->getTranslator();
-        $trans->shouldReceive('get')->andReturnArg(0);
-
-        $v = new Validator($trans, ['password' => 'foo'], ['password' => 'password']);
-        $v->setContainer($container);
-
-        $this->assertFalse($v->passes());
-
-        // Succeeds when password is correct.
-        $user = m::mock(Authenticatable::class);
-        $user->shouldReceive('getAuthPassword');
-
-        $auth = m::mock(Guard::class);
-        $auth->shouldReceive('guard')->andReturn($auth);
-        $auth->shouldReceive('guest')->andReturn(false);
-        $auth->shouldReceive('user')->andReturn($user);
-
-        $hasher = m::mock(Hasher::class);
-        $hasher->shouldReceive('check')->andReturn(true);
-
-        $container = m::mock(Container::class);
-        $container->shouldReceive('make')->with('auth')->andReturn($auth);
-        $container->shouldReceive('make')->with('hash')->andReturn($hasher);
-
-        $trans = $this->getTranslator();
-        $trans->shouldReceive('get')->andReturnArg(0);
-
-        $v = new Validator($trans, ['password' => 'foo'], ['password' => 'password']);
-        $v->setContainer($container);
-
-        $this->assertTrue($v->passes());
-
-        // We can use a specific guard.
-        $user = m::mock(Authenticatable::class);
-        $user->shouldReceive('getAuthPassword');
-
-        $auth = m::mock(Guard::class);
-        $auth->shouldReceive('guard')->with('custom')->andReturn($auth);
-        $auth->shouldReceive('guest')->andReturn(false);
-        $auth->shouldReceive('user')->andReturn($user);
-
-        $hasher = m::mock(Hasher::class);
-        $hasher->shouldReceive('check')->andReturn(true);
-
-        $container = m::mock(Container::class);
-        $container->shouldReceive('make')->with('auth')->andReturn($auth);
-        $container->shouldReceive('make')->with('hash')->andReturn($hasher);
-
-        $trans = $this->getTranslator();
-        $trans->shouldReceive('get')->andReturnArg(0);
-
-        $v = new Validator($trans, ['password' => 'foo'], ['password' => 'password:custom']);
-        $v->setContainer($container);
-
-        $this->assertTrue($v->passes());
-    }
-
     public function testValidatePresent()
     {
         $trans = $this->getIlluminateArrayTranslator();
@@ -4553,6 +4459,62 @@ class ValidationValidatorTest extends TestCase
             return (bool) $item;
         });
         $this->assertEquals(['attendee.name' => ['string', 'required'], 'attendee.title' => ['string', 'required'], 'attendee.type' => ['string', 'required']], $v->getRules());
+    }
+
+    public function testValidateSometimesImplicitEachWithAsterisksBeforeAndAfter()
+    {
+        $trans = $this->getIlluminateArrayTranslator();
+
+        $v = new Validator($trans, [
+            'foo' => [
+                ['start' => '2016-04-19', 'end' => '2017-04-19'],
+            ],
+        ], []);
+        $v->sometimes('foo.*.start', ['before:foo.*.end'], function () {
+            return true;
+        });
+        $this->assertTrue($v->passes());
+
+        $v = new Validator($trans, [
+            'foo' => [
+                ['start' => '2016-04-19', 'end' => '2017-04-19'],
+            ],
+        ], []);
+        $v->sometimes('foo.*.start', 'before:foo.*.end', function () {
+            return true;
+        });
+        $this->assertTrue($v->passes());
+
+        $v = new Validator($trans, [
+            'foo' => [
+                ['start' => '2016-04-19', 'end' => '2017-04-19'],
+            ],
+        ], []);
+        $v->sometimes('foo.*.end', ['before:foo.*.start'], function () {
+            return true;
+        });
+
+        $this->assertTrue($v->fails());
+
+        $v = new Validator($trans, [
+            'foo' => [
+                ['start' => '2016-04-19', 'end' => '2017-04-19'],
+            ],
+        ], []);
+        $v->sometimes('foo.*.end', ['after:foo.*.start'], function () {
+            return true;
+        });
+        $this->assertTrue($v->passes());
+
+        $v = new Validator($trans, [
+            'foo' => [
+                ['start' => '2016-04-19', 'end' => '2017-04-19'],
+            ],
+        ], []);
+        $v->sometimes('foo.*.start', ['after:foo.*.end'], function () {
+            return true;
+        });
+        $this->assertTrue($v->fails());
     }
 
     public function testCustomValidators()

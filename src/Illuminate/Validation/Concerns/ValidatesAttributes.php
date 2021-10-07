@@ -1384,19 +1384,6 @@ trait ValidatesAttributes
     }
 
     /**
-     * Validate that the password of the currently authenticated user matches the given value.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @param  array  $parameters
-     * @return bool
-     */
-    protected function validatePassword($attribute, $value, $parameters)
-    {
-        return $this->validateCurrentPassword($attribute, $value, $parameters);
-    }
-
-    /**
      * Validate that an attribute exists even if not filled.
      *
      * @param  string  $attribute
@@ -1993,7 +1980,7 @@ trait ValidatesAttributes
             return $value->getSize() / 1024;
         }
 
-        return mb_strlen($value);
+        return mb_strlen(isset($value) ? $value : '');
     }
 
     /**

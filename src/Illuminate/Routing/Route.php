@@ -14,8 +14,8 @@ use Illuminate\Routing\Matching\UriValidator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use Laravel\SerializableClosure\SerializableClosure;
 use LogicException;
-use Opis\Closure\SerializableClosure;
 use ReflectionFunction;
 use Symfony\Component\Routing\Route as SymfonyRoute;
 
@@ -975,9 +975,9 @@ class Route
         $missing = isset($this->action['missing']) ? $this->action['missing'] : null;
 
         return is_string($missing) &&
-            Str::startsWith($missing, 'C:32:"Opis\\Closure\\SerializableClosure')
-                ? unserialize($missing)
-                : $missing;
+            Str::startsWith($missing, [
+                'O:47:"Laravel\\SerializableClosure\\SerializableClosure',
+            ]) ? unserialize($missing) : $missing;
     }
 
     /**
@@ -1227,13 +1227,17 @@ class Route
     public function prepareForSerialization()
     {
         if ($this->action['uses'] instanceof Closure) {
-            $this->action['uses'] = serialize(new SerializableClosure($this->action['uses']));
+            $this->action['uses'] = serialize(
+                new SerializableClosure($this->action['uses'])
+            );
 
             // throw new LogicException("Unable to prepare route [{$this->uri}] for serialization. Uses Closure.");
         }
 
         if (isset($this->action['missing']) && $this->action['missing'] instanceof Closure) {
-            $this->action['missing'] = serialize(new SerializableClosure($this->action['missing']));
+            $this->action['missing'] = serialize(
+                new SerializableClosure($this->action['missing'])
+            );
         }
 
         $this->compileRoute();

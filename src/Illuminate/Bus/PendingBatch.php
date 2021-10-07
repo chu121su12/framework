@@ -6,9 +6,9 @@ use Closure;
 use Illuminate\Bus\Events\BatchDispatched;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
-use Illuminate\Queue\SerializableClosure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Laravel\SerializableClosure\SerializableClosure;
 use Throwable;
 
 class PendingBatch

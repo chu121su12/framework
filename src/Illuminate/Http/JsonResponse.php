@@ -34,6 +34,8 @@ class JsonResponse extends BaseJsonResponse
 
     /**
      * {@inheritdoc}
+     *
+     * @return static
      */
     public static function fromJsonString(/*?string */$data = null, /*int */$status = 200, /*array */$headers = [])////: static
     {
@@ -69,6 +71,8 @@ class JsonResponse extends BaseJsonResponse
 
     /**
      * {@inheritdoc}
+     *
+     * @return static
      */
     public function setData($data = [])////: static
     {
@@ -113,6 +117,8 @@ class JsonResponse extends BaseJsonResponse
 
     /**
      * {@inheritdoc}
+     *
+     * @return static
      */
     public function setEncodingOptions($options)////: static
     {

@@ -236,6 +236,21 @@ class NotificationFake implements NotificationDispatcher, NotificationFactory
                 $notification->id = Str::uuid()->toString();
             }
 
+            $notifiableChannels = $channels ?: $notification->via($notifiable);
+
+            if (method_exists($notification, 'shouldSend')) {
+                $notifiableChannels = array_filter(
+                    $notifiableChannels,
+                    function ($channel) use ($notification, $notifiable) {
+                        return $notification->shouldSend($notifiable, $channel) !== false;
+                    }
+                );
+
+                if (empty($notifiableChannels)) {
+                    continue;
+                }
+            }
+
             if (isset($notification->locale)) {
                 $locale = $notification->locale;
             } elseif (isset($this->locale)) {
@@ -250,7 +265,7 @@ class NotificationFake implements NotificationDispatcher, NotificationFactory
 
             $this->notifications[get_class($notifiable)][$notifiable->getKey()][get_class($notification)][] = [
                 'notification' => $notification,
-                'channels' => $channels ?: $notification->via($notifiable),
+                'channels' => $notifiableChannels,
                 'notifiable' => $notifiable,
                 'locale' => $locale,
             ];

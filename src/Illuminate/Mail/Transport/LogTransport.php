@@ -29,6 +29,8 @@ class LogTransport extends Transport
 
     /**
      * {@inheritdoc}
+     *
+     * @return int
      */
     public function send(RawMessage $message, /*Envelope */&$failedRecipients = null)/*: ?SentMessage*/
     {
