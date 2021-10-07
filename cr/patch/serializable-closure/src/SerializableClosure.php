@@ -7,6 +7,7 @@ use Laravel\SerializableClosure\Exceptions\InvalidSignatureException;
 use Laravel\SerializableClosure\Exceptions\PhpVersionNotSupportedException;
 use Laravel\SerializableClosure\Serializers\Signed;
 use Laravel\SerializableClosure\Signers\Hmac;
+use Opis\Closure\SerializableClosure as OpisSerializableClosure;
 
 class SerializableClosure
 {
@@ -26,7 +27,8 @@ class SerializableClosure
     public function __construct(Closure $closure)
     {
         if (\PHP_VERSION_ID < 70400) {
-            throw new PhpVersionNotSupportedException();
+            $this->serializable = new OpisSerializableClosure($closure);
+            return;
         }
 
         $this->serializable = Serializers\Signed::$signer
@@ -41,10 +43,6 @@ class SerializableClosure
      */
     public function __invoke()
     {
-        if (\PHP_VERSION_ID < 70400) {
-            throw new PhpVersionNotSupportedException();
-        }
-
         return call_user_func_array($this->serializable, func_get_args());
     }
 
@@ -55,10 +53,6 @@ class SerializableClosure
      */
     public function getClosure()
     {
-        if (\PHP_VERSION_ID < 70400) {
-            throw new PhpVersionNotSupportedException();
-        }
-
         return $this->serializable->getClosure();
     }
 
