@@ -190,7 +190,7 @@ class Flare
         }
     }
 
-    public function applicationPath(/*string */$applicationPath)
+    public function applicationPath(/*string */$applicationPath)/*: ?Report*/
     {
         $applicationPath = cast_to_string($applicationPath);
 
@@ -202,7 +202,7 @@ class Flare
     public function report(/*Throwable */$throwable, callable $callback = null)
     {
         if (! $this->shouldSendReport($throwable)) {
-            return;
+            return null;
         }
 
         $report = $this->createReport($throwable);
@@ -212,6 +212,8 @@ class Flare
         }
 
         $this->sendReportToApi($report);
+
+        return $report;
     }
 
     protected function shouldSendReport(/*Throwable */$throwable)/*: bool*/
