@@ -103,7 +103,7 @@ EOF;
 
 EOF;
 
-        $this->assertEquals($expected, str_replace("\r", '', $output->fetch()));
+        $this->assertSameStringDifferentLineEndings($expected, $output->fetch());
 
         $this->assertEquals(5, PrunableTestModelWithPrunableRecords::count());
     }
