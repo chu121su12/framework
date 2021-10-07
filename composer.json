@@ -28,6 +28,7 @@
         "league/commonmark-ext-table": "^0.9.0",
         "monolog/monolog": "^1.25",
         "moontoast/math": "^1.1",
+        "opis/closure": "^3.6",
         "paragonie/random_compat": "~1.4|~2.0|~9.99",
         "psr/container": "^1.0",
         "psr/log": "^1.0",

@@ -7,9 +7,12 @@ use Laravel\SerializableClosure\Exceptions\InvalidSignatureException;
 use Laravel\SerializableClosure\Exceptions\PhpVersionNotSupportedException;
 use Laravel\SerializableClosure\Serializers\Signed;
 use Laravel\SerializableClosure\Signers\Hmac;
+use Opis\Closure\SerializableClosure as OpisSerializableClosure;
 
 class SerializableClosure
 {
+    protected $opis;
+
     /**
      * The closure's serializable.
      *
@@ -26,7 +29,8 @@ class SerializableClosure
     public function __construct(Closure $closure)
     {
         if (\PHP_VERSION_ID < 70400) {
-            throw new PhpVersionNotSupportedException();
+            $this->opis = new OpisSerializableClosure($closure);
+            return;
         }
 
         $this->serializable = Serializers\Signed::$signer
@@ -42,7 +46,7 @@ class SerializableClosure
     public function __invoke()
     {
         if (\PHP_VERSION_ID < 70400) {
-            throw new PhpVersionNotSupportedException();
+            return call_user_func_array($this->opis, func_get_args());
         }
 
         return call_user_func_array($this->serializable, func_get_args());
@@ -56,7 +60,7 @@ class SerializableClosure
     public function getClosure()
     {
         if (\PHP_VERSION_ID < 70400) {
-            throw new PhpVersionNotSupportedException();
+            return call_user_func_array([$this->opis, 'getClosure'], func_get_args());
         }
 
         return $this->serializable->getClosure();
@@ -70,6 +74,11 @@ class SerializableClosure
      */
     public static function setSecretKey($secret)
     {
+        if (\PHP_VERSION_ID < 80100) {
+            OpisSerializableClosure::setSecretKey($config);
+            return;
+        }
+
         Serializers\Signed::$signer = $secret
             ? new Hmac($secret)
             : null;
@@ -104,6 +113,10 @@ class SerializableClosure
      */
     public function __serialize()
     {
+        if (\PHP_VERSION_ID < 70400) {
+            return $this->opis->__serialize();
+        }
+
         return [
             'serializable' => $this->serializable,
         ];
@@ -119,6 +132,10 @@ class SerializableClosure
      */
     public function __unserialize($data)
     {
+        if (\PHP_VERSION_ID < 70400) {
+            return $this->opis->__unserialize($data);
+        }
+
         if (Signed::$signer && ! $data['serializable'] instanceof Signed) {
             throw new InvalidSignatureException();
         }
