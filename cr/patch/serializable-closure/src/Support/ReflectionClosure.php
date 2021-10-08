@@ -179,7 +179,7 @@ class ReflectionClosure extends ReflectionFunction
                 case 'closure_args':
                     switch ($token[0]) {
                         case T_NAME_QUALIFIED:
-                            [$id_start, $id_start_ci, $id_name] = $this->parseNameQualified($token[1]);
+                            list($id_start, $id_start_ci, $id_name) = $this->parseNameQualified($token[1]);
                             $context = 'args';
                             $state = 'id_name';
                             $lastState = 'closure_args';
@@ -253,7 +253,7 @@ class ReflectionClosure extends ReflectionFunction
                             $lastState = 'return';
                             break 2;
                         case T_NAME_QUALIFIED:
-                            [$id_start, $id_start_ci, $id_name] = $this->parseNameQualified($token[1]);
+                            list($id_start, $id_start_ci, $id_name) = $this->parseNameQualified($token[1]);
                             $context = 'return_type';
                             $state = 'id_name';
                             $lastState = 'return';
@@ -365,7 +365,7 @@ class ReflectionClosure extends ReflectionFunction
                             $lastState = 'closure';
                             break 2;
                         case T_NAME_QUALIFIED:
-                            [$id_start, $id_start_ci, $id_name] = $this->parseNameQualified($token[1]);
+                            list($id_start, $id_start_ci, $id_name) = $this->parseNameQualified($token[1]);
                             $context = 'root';
                             $state = 'id_name';
                             $lastState = 'closure';
@@ -479,7 +479,7 @@ class ReflectionClosure extends ReflectionFunction
                             $state = 'id_name';
                             break 2;
                         case T_NAME_QUALIFIED:
-                            [$id_start, $id_start_ci, $id_name] = $this->parseNameQualified($token[1]);
+                            list($id_start, $id_start_ci, $id_name) = $this->parseNameQualified($token[1]);
                             $state = 'id_name';
                             break 2;
                         case T_VARIABLE:

@@ -80,30 +80,26 @@ class BladeTest extends TestCase
     {
         $view = View::make('consume')->render();
 
-        $expected = '<h1>Menu</h1>
+        $this->assertSame('<h1>Menu</h1>
 <div>Slot: A, Color: orange, Default: foo</div>
 <div>Slot: B, Color: red, Default: foo</div>
 <div>Slot: C, Color: blue, Default: foo</div>
 <div>Slot: D, Color: red, Default: foo</div>
 <div>Slot: E, Color: red, Default: foo</div>
-<div>Slot: F, Color: yellow, Default: foo</div>';
-
-        $this->assertSame($expected, trim($view));
+<div>Slot: F, Color: yellow, Default: foo</div>', trim($view));
     }
 
     public function test_consume_with_props()
     {
         $view = View::make('consume', ['color' => 'rebeccapurple'])->render();
 
-        $expected = '<h1>Menu</h1>
+        $this->assertSame('<h1>Menu</h1>
 <div>Slot: A, Color: orange, Default: foo</div>
 <div>Slot: B, Color: rebeccapurple, Default: foo</div>
 <div>Slot: C, Color: blue, Default: foo</div>
 <div>Slot: D, Color: rebeccapurple, Default: foo</div>
 <div>Slot: E, Color: rebeccapurple, Default: foo</div>
-<div>Slot: F, Color: yellow, Default: foo</div>';
-
-        $this->assertSame($expected, trim($view));
+<div>Slot: F, Color: yellow, Default: foo</div>', trim($view));
     }
 
     protected function getEnvironmentSetUp($app)

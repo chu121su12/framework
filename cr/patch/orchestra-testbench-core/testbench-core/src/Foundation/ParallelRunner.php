@@ -4,6 +4,10 @@ namespace Orchestra\Testbench\Foundation;
 
 use Orchestra\Testbench\Concerns\CreatesApplication;
 
+class ParallelRunner_createApplication_class {
+            use CreatesApplication;
+        }
+
 class ParallelRunner extends \Illuminate\Testing\ParallelRunner
 {
     /**
@@ -13,9 +17,7 @@ class ParallelRunner extends \Illuminate\Testing\ParallelRunner
      */
     protected function createApplication()
     {
-        $applicationCreator = new class() {
-            use CreatesApplication;
-        };
+        $applicationCreator = new ParallelRunner_createApplication_class();
 
         return $applicationCreator->createApplication();
     }
