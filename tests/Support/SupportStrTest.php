@@ -52,10 +52,6 @@ class SupportStrTest extends TestCase
 
     public function testStringAsciiWithSpecificLocale()
     {
-        if (! class_exists('voku\\helper\\ASCII')) {
-            $this->markTestSkipped('voku ASCII is not available.');
-        }
-
         $this->assertSame('h H sht Sht a A ia yo', Str::ascii('х Х щ Щ ъ Ъ иа йо', 'bg'));
         $this->assertSame('ae oe ue Ae Oe Ue', Str::ascii('ä ö ü Ä Ö Ü', 'de'));
     }

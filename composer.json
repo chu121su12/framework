@@ -47,10 +47,11 @@
         "vlucas/phpdotenv": "^4.0"
     },
     "replace": {
-        "laravel/serializable-closure": "^1.0.2",
-        "facade/ignition": "^2.12",
         "facade/flare-client-php": "1.8.1",
+        "facade/ignition": "^2.12",
+        "laravel/serializable-closure": "^1.0.2",
         "nunomaduro/collision": "^5.9",
+        "voku/portable-ascii": "^1.5.6",
 
         "brick/math": "^0.9.2",
         "brick/money": "^0.5.2",

@@ -8,7 +8,7 @@ use Ramsey\Uuid\Codec\TimestampFirstCombCodec;
 use Ramsey\Uuid\Generator\CombGenerator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactory;
-use voku\helper\UTF8;
+use voku\helper\ASCII;
 
 class Str
 {
@@ -102,7 +102,7 @@ class Str
      */
     public static function ascii($value, $language = 'en')
     {
-        return UTF8::to_ascii((string) $value);
+        return ASCII::to_ascii($value, $language);
     }
 
     /**
@@ -310,7 +310,7 @@ class Str
      */
     public static function isAscii($value)
     {
-        return UTF8::is_ascii((string) $value);
+        return ASCII::is_ascii($value);
     }
 
     /**

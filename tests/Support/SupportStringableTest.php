@@ -226,10 +226,6 @@ class SupportStringableTest extends TestCase
 
     public function testAsciiWithSpecificLocale()
     {
-        if (! class_exists('voku\\helper\\ASCII')) {
-            $this->markTestSkipped('voku ASCII is not available.');
-        }
-
         $this->assertSame('h H sht Sht a A ia yo', (string) $this->stringable('х Х щ Щ ъ Ъ иа йо')->ascii('bg'));
         $this->assertSame('ae oe ue Ae Oe Ue', (string) $this->stringable('ä ö ü Ä Ö Ü')->ascii('de'));
     }
