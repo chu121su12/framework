@@ -44,8 +44,7 @@
         "symfony/translation": "^3.4",
         "symfony/var-dumper": "^3.4",
         "tijsverkoyen/css-to-inline-styles": "^2.2.2",
-        "vlucas/phpdotenv": "^4.0",
-        "voku/portable-utf8": "^3.1.30"
+        "vlucas/phpdotenv": "^4.0"
     },
     "replace": {
         "laravel/serializable-closure": "^1.0.2",
@@ -182,6 +181,7 @@
             "Symfony\\Component\\Mime\\": "cr/symfony/mime/",
             "Symfony\\Component\\Routing\\": "cr/symfony/routing/",
             "League\\Flysystem\\": "cr/patch/flysystem/src/",
+            "voku\\": "cr/patch/voku/portable-ascii/src/voku/",
             "Carbon\\": "cr/patch/carbon/src/",
             "Doctrine\\": "cr/patch/doctrine/doctrine/",
             "Laravel\\SerializableClosure\\": "cr/patch/serializable-closure/src/",
