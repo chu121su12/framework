@@ -14,6 +14,7 @@
 #
 # Usage:
 #
+#   cr/phpunit8 --bootstrap cr/test.php
 #   vendor/bin/phpunit --bootstrap cr/test.php
 #
 

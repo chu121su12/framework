@@ -30,7 +30,8 @@ class SetCacheHeaders
         }
 
         if (isset($options['etag']) && $options['etag'] === true) {
-            $options['etag'] = $response->getEtag() ?? md5($response->getContent());
+            $eTag = $response->getEtag();
+            $options['etag'] = isset($eTag) ? $eTag : md5($response->getContent());
         }
 
         if (isset($options['last_modified'])) {
