@@ -14,7 +14,7 @@
 #
 # Usage:
 #
-#   cr/phpunit8 --bootstrap cr/test.php
+#   cr/phpunit --bootstrap cr/test.php
 #   vendor/bin/phpunit --bootstrap cr/test.php
 #
 
@@ -28,3 +28,7 @@ $_SERVER['CI_DB_PASSWORD'] = 'forge';
 $_SERVER['CI_DB_DATABASE'] = 'forge';
 
 // $_SERVER['CI_FORCE_DATABASE'] = true;
+
+// register_shutdown_function(function () {
+//     rmdir(__DIR__ . '/patch/orchestra-testbench-core/testbench-core/laravel');
+// });
