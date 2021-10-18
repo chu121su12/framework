@@ -199,7 +199,7 @@ class Flare
         return $this;
     }
 
-    public function report(/*Throwable */$throwable, callable $callback = null)
+    public function report(/*Throwable */$throwable, callable $callback = null)/*: ?Report*/
     {
         if (! $this->shouldSendReport($throwable)) {
             return null;

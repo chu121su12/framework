@@ -263,7 +263,7 @@ class IgnitionServiceProvider extends ServiceProvider
             return new Client(
                 config('flare.key'),
                 config('flare.secret'),
-                config('flare.base_url', 'https://flareapp.io/api')
+                config('flare.base_url', 'https://reporting.flareapp.io/api')
             );
         });
 

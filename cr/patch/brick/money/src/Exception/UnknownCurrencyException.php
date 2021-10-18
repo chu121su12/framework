@@ -1,6 +1,6 @@
 <?php
 
-////declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Brick\Money\Exception;
 
@@ -14,7 +14,7 @@ class UnknownCurrencyException extends MoneyException
      *
      * @return UnknownCurrencyException
      */
-    public static function unknownCurrency($currencyCode)//// : self
+    public static function unknownCurrency($currencyCode)/* : self*/
     {
         return new self('Unknown currency code: ' . $currencyCode);
     }
@@ -24,7 +24,7 @@ class UnknownCurrencyException extends MoneyException
      *
      * @return UnknownCurrencyException
      */
-    public static function noCurrencyForCountry(/*string */$countryCode)//// : self
+    public static function noCurrencyForCountry(/*string */$countryCode)/* : self*/
     {
         $countryCode = cast_to_string($countryCode);
 
@@ -32,16 +32,14 @@ class UnknownCurrencyException extends MoneyException
     }
 
     /**
-     * @param string $countryCode
-     * @param array  $currencyCodes
+     * @param string   $countryCode
+     * @param string[] $currencyCodes
      *
      * @return UnknownCurrencyException
      */
-    public static function noSingleCurrencyForCountry(/*string */$countryCode, array $currencyCodes)//// : self
+    public static function noSingleCurrencyForCountry(/*string */$countryCode, array $currencyCodes)/* : self*/
     {
         $countryCode = cast_to_string($countryCode);
-
-        $currencyCodes = cast_to_string($currencyCodes);
 
         return new self('No single currency for country ' . $countryCode . ': ' . implode(', ', $currencyCodes));
     }
