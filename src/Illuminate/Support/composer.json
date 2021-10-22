@@ -17,12 +17,11 @@
         "php": "^8.0.2",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "doctrine/inflector": "^2.0",
-        "illuminate/collections": "^9.0",
-        "illuminate/conditionable": "^9.0",
-        "illuminate/contracts": "^9.0",
-        "illuminate/macroable": "^9.0",
-        "nesbot/carbon": "^2.31",
+        "doctrine/inflector": "^1.4|^2.0",
+        "illuminate/collections": "^8.0",
+        "illuminate/contracts": "^8.0",
+        "illuminate/macroable": "^8.0",
+        "nesbot/carbon": "^2.53.1",
         "voku/portable-ascii": "^1.4.8"
     },
     "conflict": {

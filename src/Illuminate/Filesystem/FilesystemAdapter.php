@@ -755,7 +755,7 @@ class FilesystemAdapter implements CloudFilesystemContract
         //     })
         //     ->toArray();
 
-        $contents = $this->driver->listContents($directory, $recursive);
+        $contents = $this->driver->listContents(isset($directory) ? $directory : '', $recursive);
 
         return $this->filterContentsByType($contents, 'file');
     }
@@ -789,7 +789,7 @@ class FilesystemAdapter implements CloudFilesystemContract
         //     })
         //     ->toArray();
 
-        $contents = $this->driver->listContents($directory, $recursive);
+        $contents = $this->driver->listContents(isset($directory) ? $directory : '', $recursive);
 
         return $this->filterContentsByType($contents, 'dir');
     }
