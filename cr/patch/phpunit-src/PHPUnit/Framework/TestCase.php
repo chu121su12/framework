@@ -10,7 +10,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
     public function getMockBuilder($className)
     {
-        if (phpunit_major_version() < 5) {
+        if (phpunit_major_version() <= 5) {
             return new PHPUnit10MockBuilder($this, $className);
         }
 
