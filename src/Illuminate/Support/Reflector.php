@@ -64,7 +64,7 @@ class Reflector
      */
     public static function getParameterClassName($parameter)
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+        if (version_compare(PHP_VERSION, '8.0', '<')) {
             return backport_only_reflection_parameter_get_type($parameter);
         }
 
@@ -85,7 +85,7 @@ class Reflector
      */
     public static function getParameterClassNames($parameter)
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+        if (version_compare(PHP_VERSION, '8.0', '<')) {
             return array_filter([static::getParameterClassName($parameter)]);
         }
 

@@ -3788,6 +3788,10 @@ SQL;
 
     public function testCursorPaginate()
     {
+        if (\version_compare(\PHP_VERSION, '7.0', '>=') && \version_compare(\PHP_VERSION, '7.1', '<')) {
+            $this->markTestSkipped('Unable to infer QueryBuilder mock is self.');
+        }
+
         $perPage = 16;
         $columns = ['test'];
         $cursorName = 'cursor-name';
@@ -3826,6 +3830,10 @@ SQL;
 
     public function testCursorPaginateMultipleOrderColumns()
     {
+        if (\version_compare(\PHP_VERSION, '7.0', '>=') && \version_compare(\PHP_VERSION, '7.1', '<')) {
+            $this->markTestSkipped('Unable to infer QueryBuilder mock is self.');
+        }
+
         $perPage = 16;
         $columns = ['test', 'another'];
         $cursorName = 'cursor-name';
@@ -3865,6 +3873,10 @@ SQL;
 
     public function testCursorPaginateWithDefaultArguments()
     {
+        if (\version_compare(\PHP_VERSION, '7.0', '>=') && \version_compare(\PHP_VERSION, '7.1', '<')) {
+            $this->markTestSkipped('Unable to infer QueryBuilder mock is self.');
+        }
+
         $perPage = 15;
         $cursorName = 'cursor';
         $cursor = new Cursor(['test' => 'bar']);
@@ -3934,6 +3946,10 @@ SQL;
 
     public function testCursorPaginateWithSpecificColumns()
     {
+        if (\version_compare(\PHP_VERSION, '7.0', '>=') && \version_compare(\PHP_VERSION, '7.1', '<')) {
+            $this->markTestSkipped('Unable to infer QueryBuilder mock is self.');
+        }
+
         $perPage = 16;
         $columns = ['id', 'name'];
         $cursorName = 'cursor-name';
@@ -3972,6 +3988,10 @@ SQL;
 
     public function testCursorPaginateWithMixedOrders()
     {
+        if (\version_compare(\PHP_VERSION, '7.0', '>=') && \version_compare(\PHP_VERSION, '7.1', '<')) {
+            $this->markTestSkipped('Unable to infer QueryBuilder mock is self.');
+        }
+
         $perPage = 16;
         $columns = ['foo', 'bar', 'baz'];
         $cursorName = 'cursor-name';

@@ -736,7 +736,7 @@ class SupportArrTest extends TestCase
 
     public function testShuffleWithSeed()
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
             $this->markTestSkipped('Before php 7, mt_srand with identical seed is not guaranteed to produce same output.');
         }
 

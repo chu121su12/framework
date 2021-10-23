@@ -33,7 +33,7 @@ class FilterEmailValidation implements EmailValidation
      */
     public static function unicode()
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
             if (! defined('FILTER_FLAG_EMAIL_UNICODE')) {
                 define('FILTER_FLAG_EMAIL_UNICODE', FILTER_VALIDATE_EMAIL);
             }

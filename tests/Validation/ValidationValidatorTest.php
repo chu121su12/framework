@@ -3018,7 +3018,7 @@ class ValidationValidatorTest extends TestCase
 
     public function testValidateEmailWithFilterUnicodeCheck()
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
             $this->markTestSkipped('Before php 7, constant FILTER_FLAG_EMAIL_UNICODE is not available.');
         }
 
