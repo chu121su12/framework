@@ -17,6 +17,8 @@ class SchemaBuilderTest extends DatabaseTestCase
 {
     public function testDropAllTables()
     {
+        $this->expectNotToPerformAssertions();
+
         Schema::create('table', function (Blueprint $table) {
             $table->increments('id');
         });
@@ -26,12 +28,12 @@ class SchemaBuilderTest extends DatabaseTestCase
         Schema::create('table', function (Blueprint $table) {
             $table->increments('id');
         });
-
-        $this->assertTrue(true);
     }
 
     public function testDropAllViews()
     {
+        $this->expectNotToPerformAssertions();
+
         if (version_compare(PHP_VERSION, '7.0.0', '<')) {
             DB::statement('create view "view" as select 1 as "id"');
 
@@ -45,8 +47,6 @@ class SchemaBuilderTest extends DatabaseTestCase
 
             DB::statement('create view "view"("id") as select 1');
         }
-
-        $this->assertTrue(true);
     }
 
     public function testRegisterCustomDoctrineType()

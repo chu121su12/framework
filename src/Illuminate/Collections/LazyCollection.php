@@ -520,6 +520,25 @@ class LazyCollection implements Enumerable
     }
 
     /**
+     * Determine if any of the keys exist in the collection.
+     *
+     * @param  mixed  $key
+     * @return bool
+     */
+    public function hasAny($key)
+    {
+        $keys = array_flip(is_array($key) ? $key : func_get_args());
+
+        foreach ($this as $key => $value) {
+            if (array_key_exists($key, $keys)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Concatenate values of a given key as a string.
      *
      * @param  string  $value
@@ -1364,6 +1383,30 @@ class LazyCollection implements Enumerable
                 $callback($value, $key);
 
                 yield $key => $value;
+            }
+        });
+    }
+
+    /**
+     * Return only unique items from the collection array.
+     *
+     * @param  (callable(TValue, TKey): bool)|string|null  $key
+     * @param  bool  $strict
+     * @return static<TKey, TValue>
+     */
+    public function unique($key = null, $strict = false)
+    {
+        $callback = $this->valueRetriever($key);
+
+        return new static(function () use ($callback, $strict) {
+            $exists = [];
+
+            foreach ($this as $key => $item) {
+                if (! in_array($id = $callback($item, $key), $exists, $strict)) {
+                    yield $key => $item;
+
+                    $exists[] = $id;
+                }
             }
         });
     }

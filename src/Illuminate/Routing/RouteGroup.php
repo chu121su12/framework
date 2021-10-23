@@ -59,7 +59,7 @@ class RouteGroup
      */
     protected static function formatPrefix($new, $old, $prependExistingPrefix = true)
     {
-        $old = isset($old['prefix']) ? $old['prefix'] : null;
+        $old = isset($old['prefix']) ? $old['prefix'] : '';
 
         if ($prependExistingPrefix) {
             return isset($new['prefix']) ? trim($old, '/').'/'.trim($new['prefix'], '/') : $old;

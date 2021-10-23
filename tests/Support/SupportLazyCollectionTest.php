@@ -207,4 +207,13 @@ class SupportLazyCollectionTest extends TestCase
         $this->assertSame([1, 2, 3, 4, 5], $data);
         $this->assertSame([1, 2, 3, 4, 5], $tapped);
     }
+
+    public function testUniqueDoubleEnumeration()
+    {
+        $data = LazyCollection::times(2)->unique();
+
+        $data->all();
+
+        $this->assertSame([1, 2], $data->all());
+    }
 }

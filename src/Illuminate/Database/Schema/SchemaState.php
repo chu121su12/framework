@@ -59,7 +59,7 @@ abstract class SchemaState
         $this->files = $files ?: new Filesystem;
 
         $this->processFactory = $processFactory ?: function (...$arguments) {
-            return SymfonyHelper::processFromShellCommandline(...$arguments);
+            return SymfonyHelper::processFromShellCommandline(...$arguments)->setTimeout(null);
         };
 
         $this->handleOutputUsing(function () {
