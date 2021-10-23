@@ -407,6 +407,8 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertNothingDispatched()
     {
+        phpunit_assert_v5_skip_test($this);
+
         $this->fake->assertNothingDispatched();
 
         $this->fake->dispatch(new BusJobStub);

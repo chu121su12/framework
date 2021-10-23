@@ -442,7 +442,7 @@ class AuthGuardTest extends TestCase
 
     public function testLoginMethodQueuesCookieWhenRememberingAndAllowsOverride()
     {
-        [$session, $provider, $request, $cookie] = $this->getMocks();
+        list($session, $provider, $request, $cookie) = $this->getMocks();
         $guard = new SessionGuard('default', $provider, $session, $request);
         $guard->setRememberDuration(5000);
         $guard->setCookieJar($cookie);

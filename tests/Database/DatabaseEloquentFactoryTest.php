@@ -491,7 +491,7 @@ class DatabaseEloquentFactoryTest extends TestCase
 
     public function test_factory_can_conditionally_execute_code()
     {
-        FactoryTestUserFactory::new()
+        FactoryTestUserFactory::new_()
             ->when(true, function () {
                 $this->assertTrue(true);
             })

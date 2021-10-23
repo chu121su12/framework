@@ -116,7 +116,7 @@ trait Has
      * @param  array|string  $key
      * @return $this
      */
-    public function hasAny($key): self
+    public function hasAny($key)/*: self*/
     {
         $keys = is_array($key) ? $key : func_get_args();
 

@@ -1,5 +1,10 @@
 <?php
 
+// Class/interface => 5.0
+// self => 5.0
+// array => 5.1
+// callable => 5.4
+
 if (! \class_exists('TypeError')) {
     class TypeError extends Error
     {

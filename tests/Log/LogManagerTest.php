@@ -26,6 +26,18 @@ class LogManagerTest_testItUtilisesTheNullDriverDuringTestsWhenNullDriverUsed_cl
             }
         }
 
+class LogManagerTest_testLogManagerCanUseOnDemandChannelInOnDemandStack_class
+        {
+            public function __invoke()
+            {
+                return new Monolog(
+                    'uuid',
+                    [new StreamHandler(storage_path('logs/custom.log'))],
+                    [new UidProcessor()]
+                );
+            }
+        }
+
 class LogManagerTest extends TestCase
 {
     public function testLogManagerCachesLoggerInstances()
@@ -406,17 +418,7 @@ class LogManagerTest extends TestCase
             'driver' => 'single',
         ]);
 
-        $factory = new class()
-        {
-            public function __invoke()
-            {
-                return new Monolog(
-                    'uuid',
-                    [new StreamHandler(storage_path('logs/custom.log'))],
-                    [new UidProcessor()]
-                );
-            }
-        };
+        $factory = new LogManagerTest_testLogManagerCanUseOnDemandChannelInOnDemandStack_class;
         $channel = $manager->build([
             'driver' => 'custom',
             'via' => get_class($factory),

@@ -13,7 +13,7 @@ use ReflectionClass;
 
 class HandleExceptionsTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $this->container = Container::setInstance(new Container);
 
@@ -35,7 +35,7 @@ class HandleExceptionsTest extends TestCase
         });
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         Container::setInstance(null);
     }

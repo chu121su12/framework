@@ -112,7 +112,9 @@ class HandleExceptions
                 return;
             }
 
-            $driver = $config->get('logging.deprecations') ?? 'null';
+            $loggingDeprecationsDriver = $config->get('logging.deprecations');
+
+            $driver = isset($loggingDeprecationsDriver) ? $loggingDeprecationsDriver : 'null';
 
             $config->set('logging.channels.deprecations', $config->get("logging.channels.{$driver}"));
         });

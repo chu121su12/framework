@@ -14,6 +14,8 @@ use stdClass;
 
 class QueueDatabaseQueueUnitTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     protected function tearDown()/*: void*/
     {
         m::close();

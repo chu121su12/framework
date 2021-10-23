@@ -206,9 +206,9 @@ class LogManager implements LoggerInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function resolve($name, ?array $config = null)
+    protected function resolve($name, /*?*/array $config = null)
     {
-        $config = $config ?? $this->configurationFor($name);
+        $config = isset($config) ? $config : $this->configurationFor($name);
 
         if (is_null($config)) {
             throw new InvalidArgumentException("Log [{$name}] is not defined.");
