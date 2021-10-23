@@ -12,11 +12,4 @@ trait ExtraAssertions
             $message
         );
     }
-
-    public static function assertCount($expectedCount, $haystack, $message = '')
-    {
-        cast_to_int($expectedCount, null, true);
-
-        parent::assertCount($expectedCount, $haystack, $message);
-    }
 }
