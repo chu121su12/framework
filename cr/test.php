@@ -29,6 +29,30 @@ $_SERVER['CI_DB_DATABASE'] = 'forge';
 
 // $_SERVER['CI_FORCE_DATABASE'] = true;
 
-// register_shutdown_function(function () {
-//     rmdir(__DIR__ . '/patch/orchestra-testbench-core/testbench-core/laravel');
-// });
+define('__TEST_START__', microtime(true));
+register_shutdown_function(function () {
+	$finished = microtime(true);
+
+	$timeFormat = function ($timestamp) {
+		$date = new DateTime();
+		$date->setTimeStamp($timestamp);
+		return $date->format('G:i:s') . substr($timestamp, strpos($timestamp, '.'));
+	};
+
+	echo sprintf(
+		'Time Start (%s): %s, Finished: %s, Elapsed: %ss.',
+		date_default_timezone_get(),
+		$timeFormat(__TEST_START__),
+		$timeFormat($finished),
+		round($finished - __TEST_START__, 3)
+	);
+
+	if (false && file_exists($testbenchExcessDir = __DIR__ . '/patch/orchestra-testbench-core/testbench-core/laravel')) {
+		foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+			$testbenchExcessDir, RecursiveDirectoryIterator::SKIP_DOTS
+		), RecursiveIteratorIterator::CHILD_FIRST) as $file) {
+			call_user_func($file->isDir() ? 'rmdir' : 'unlink', $file->getRealPath());
+		}
+		rmdir($testbenchExcessDir);
+	}
+});
