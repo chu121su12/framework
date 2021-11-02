@@ -116,7 +116,7 @@ class ValidationEnumRuleTest extends TestCase
         $this->assertFalse($v->fails());
     }
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $container = Container::getInstance();
 
@@ -131,7 +131,7 @@ class ValidationEnumRuleTest extends TestCase
         (new ValidationServiceProvider($container))->register();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         Container::setInstance(null);
 
