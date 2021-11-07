@@ -11,6 +11,14 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Stringable;
 
+class RouteRegistrarTest_testMiddlewareStringableObject_class implements Stringable
+        {
+            public function __toString()
+            {
+                return 'one';
+            }
+        }
+
 class RouteRegistrarTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -65,13 +73,7 @@ class RouteRegistrarTest extends TestCase
 
     public function testMiddlewareAsStringableObject()
     {
-        $one = new class implements Stringable
-        {
-            public function __toString()
-            {
-                return 'one';
-            }
-        };
+        $one = new RouteRegistrarTest_testMiddlewareStringableObject_class;
 
         $this->router->middleware($one)->get('users', function () {
             return 'all-users';
@@ -83,13 +85,7 @@ class RouteRegistrarTest extends TestCase
 
     public function testMiddlewareAsStringableObjectOnRouteInstance()
     {
-        $one = new class implements Stringable
-        {
-            public function __toString()
-            {
-                return 'one';
-            }
-        };
+        $one = new RouteRegistrarTest_testMiddlewareStringableObject_class;
 
         $this->router->get('users', function () {
             return 'all-users';
@@ -101,13 +97,7 @@ class RouteRegistrarTest extends TestCase
 
     public function testMiddlewareAsArrayWithStringables()
     {
-        $one = new class implements Stringable
-        {
-            public function __toString()
-            {
-                return 'one';
-            }
-        };
+        $one = new RouteRegistrarTest_testMiddlewareStringableObject_class;
 
         $this->router->middleware([$one, 'two'])->get('users', function () {
             return 'all-users';
@@ -249,13 +239,7 @@ class RouteRegistrarTest extends TestCase
 
     public function testCanRegisterGroupWithStringableMiddleware()
     {
-        $one = new class implements Stringable
-        {
-            public function __toString()
-            {
-                return 'one';
-            }
-        };
+        $one = new RouteRegistrarTest_testMiddlewareStringableObject_class;
 
         $this->router->middleware($one)->group(function ($router) {
             $router->get('users', function () {
@@ -685,13 +669,7 @@ class RouteRegistrarTest extends TestCase
 
     public function testResourceWithMiddlewareAsStringable()
     {
-        $one = new class implements Stringable
-        {
-            public function __toString()
-            {
-                return 'one';
-            }
-        };
+        $one = new RouteRegistrarTest_testMiddlewareStringableObject_class;
 
         $this->router->resource('users', RouteRegistrarControllerStub::class)
                      ->only('index')

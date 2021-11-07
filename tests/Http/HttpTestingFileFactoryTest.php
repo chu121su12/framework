@@ -69,6 +69,10 @@ class HttpTestingFileFactoryTest extends TestCase
 
     public function testImageBmp()
     {
+        if (! function_exists('imagebmp')) {
+            $this->markTestSkipped('The extension gd is missing from your system or was compiled without BMP support.');
+        }
+
         $image = (new FileFactory)->image('test.bmp');
 
         $imagePath = $image->getRealPath();

@@ -229,7 +229,10 @@ class DatabaseConnectorTest extends TestCase
      */
     public function testSqlServerConnectCallsCreateConnectionWithPreferredODBC()
     {
-        $config = ['odbc' => true, 'odbc_datasource_name' => 'server=localhost;database=test;'];
+        $config = ['odbc' => true, 'odbc_datasource_name' => 'server=localhost;database=test;',
+            'host' => null,
+            'database' => null,
+        ];
         $dsn = $this->getDsn($config);
         $connector = $this->getMockBuilder(SqlServerConnector::class)->onlyMethods(['createConnection', 'getOptions'])->getMock();
         $connection = m::mock(stdClass::class);

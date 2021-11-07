@@ -21,7 +21,31 @@ class Js implements Htmlable
      *
      * @var int
      */
-    protected const REQUIRED_FLAGS = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR;
+    /*protected const REQUIRED_FLAGS = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR;*/
+
+    protected static function requiredFlags()
+    {
+        if (\version_compare(\PHP_VERSION, '7.3', '>=')) {
+            return JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR;
+        }
+
+        return JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
+    }
+
+    protected function jsonEncoded73($string)
+    {
+        if (\version_compare(\PHP_VERSION, '7.3', '>=')) {
+            return $string;
+        }
+
+        if (JSON_ERROR_NONE === json_last_error()) {
+            return $string;
+        }
+
+        $jsonErrorMsg = json_last_error_msg();
+        json_encode(''); // reset error
+        throw new \JsonException($jsonErrorMsg);
+    }
 
     /**
      * Create a new class instance.
@@ -91,14 +115,14 @@ class Js implements Htmlable
     protected function jsonEncode($data, $flags = 0, $depth = 512)
     {
         if ($data instanceof Jsonable) {
-            return $data->toJson($flags | static::REQUIRED_FLAGS);
+            return $this->jsonEncoded73($data->toJson($flags | static::requiredFlags()));
         }
 
         if ($data instanceof Arrayable && ! ($data instanceof JsonSerializable)) {
             $data = $data->toArray();
         }
 
-        return json_encode($data, $flags | static::REQUIRED_FLAGS, $depth);
+        return $this->jsonEncoded73(json_encode($data, $flags | static::requiredFlags(), $depth));
     }
 
     /**
@@ -117,7 +141,7 @@ class Js implements Htmlable
         }
 
         if (Str::startsWith($json, ['"', '{', '['])) {
-            return "JSON.parse('".substr(json_encode($json, $flags | static::REQUIRED_FLAGS), 1, -1)."')";
+            return "JSON.parse('".substr($this->jsonEncoded73(json_encode($json, $flags | static::requiredFlags())), 1, -1)."')";
         }
 
         return $json;

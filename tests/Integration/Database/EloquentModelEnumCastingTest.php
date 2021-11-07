@@ -17,7 +17,7 @@ if (PHP_VERSION_ID >= 80100) {
  */
 class EloquentModelEnumCastingTest extends DatabaseTestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

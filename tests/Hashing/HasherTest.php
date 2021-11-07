@@ -13,7 +13,7 @@ class HasherTest extends TestCase
     public function testBasicBcryptHashing()
     {
         if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
-            $this->markTestSkipped('Failed with @depends.');
+            $this->markTestSkipped('Cannot run test with PHPUnit 5. Failed with @depends.');
         }
 
         $hasher = new BcryptHasher;
@@ -28,7 +28,11 @@ class HasherTest extends TestCase
     public function testBasicArgon2iHashing()
     {
         if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
-            $this->markTestSkipped('Failed with @depends.');
+            $this->markTestSkipped('Cannot run test with PHPUnit 5. Failed with @depends.');
+        }
+
+        if (! defined('PASSWORD_ARGON2I')) {
+            $this->markTestSkipped('PHP not compiled with Argon2i hashing support.');
         }
 
         $hasher = new ArgonHasher;
@@ -43,7 +47,11 @@ class HasherTest extends TestCase
     public function testBasicArgon2idHashing()
     {
         if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
-            $this->markTestSkipped('Failed with @depends.');
+            $this->markTestSkipped('Cannot run test with PHPUnit 5. Failed with @depends.');
+        }
+
+        if (! defined('PASSWORD_ARGON2ID')) {
+            $this->markTestSkipped('PHP not compiled with Argon2id hashing support.');
         }
 
         $hasher = new Argon2IdHasher;

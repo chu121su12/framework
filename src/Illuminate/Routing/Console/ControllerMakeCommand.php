@@ -211,14 +211,14 @@ class ControllerMakeCommand extends GeneratorCommand
      */
     protected function buildFormRequestReplacements(array $replace, $modelClass)
     {
-        [$namespace, $storeRequestClass, $updateRequestClass] = [
+        list($namespace, $storeRequestClass, $updateRequestClass) = [
             'Illuminate\\Http', 'Request', 'Request',
         ];
 
         if ($this->option('requests')) {
             $namespace = 'App\\Http\\Requests';
 
-            [$storeRequestClass, $updateRequestClass] = $this->generateFormRequests(
+            list($storeRequestClass, $updateRequestClass) = $this->generateFormRequests(
                 $modelClass, $storeRequestClass, $updateRequestClass
             );
         }

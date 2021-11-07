@@ -2014,14 +2014,14 @@ trait ValidatesAttributes
      */
     protected function compare($first, $second, $operator)
     {
-        return match ($operator) {
-            '<' => $first < $second,
-            '>' => $first > $second,
-            '<=' => $first <= $second,
-            '>=' => $first >= $second,
-            '=' => $first == $second,
-            default => throw new InvalidArgumentException,
-        };
+        switch ($operator) {
+            case '<': return $first < $second;
+            case '>': return $first > $second;
+            case '<=': return $first <= $second;
+            case '>=': return $first >= $second;
+            case '=': return $first == $second;
+            default: throw new InvalidArgumentException;
+        }
     }
 
     /**

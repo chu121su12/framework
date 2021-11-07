@@ -1113,7 +1113,7 @@ class Route
      */
     public function enforcesScopedBindings()
     {
-        return (bool) ($this->action['scope_bindings'] ?? false);
+        return (bool) (isset($this->action['scope_bindings']) ? $this->action['scope_bindings'] : false);
     }
 
     /**

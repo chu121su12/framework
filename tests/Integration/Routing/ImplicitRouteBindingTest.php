@@ -166,7 +166,7 @@ PHP;
         $post = ImplicitBindingPost::create(['user_id' => 2]);
         $this->assertEmpty($user->posts);
 
-        $this->defineCacheRoutes(<<<PHP
+        $route = <<<PHP
 <?php
 
 use Illuminate\Tests\Integration\Routing\ImplicitBindingUser;
@@ -177,7 +177,9 @@ Route::group(['scoping' => true], function () {
         return [\$user, \$post];
     })->middleware(['web']);
 });
-PHP);
+PHP;
+
+        $this->defineCacheRoutes($route);
 
         $response = $this->getJson("/user/{$user->id}/post/{$post->id}");
 

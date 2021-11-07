@@ -8,6 +8,61 @@ use Illuminate\Support\Js;
 use JsonSerializable;
 use PHPUnit\Framework\TestCase;
 
+        // JsonSerializable should take precedence over Arrayable, so we'll
+        // implement both and make sure the correct data is used.
+class SupportJsStringTest_testJsonSerializable_class implements JsonSerializable, Arrayable
+        {
+            public $foo = 'not hello';
+
+            public $bar = 'not world';
+
+            public function jsonSerialize()
+            {
+                return ['foo' => 'hello', 'bar' => 'world'];
+            }
+
+            public function toArray()
+            {
+                return ['foo' => 'not hello', 'bar' => 'not world'];
+            }
+        }
+
+        // Jsonable should take precedence over JsonSerializable and Arrayable, so we'll
+        // implement all three and make sure the correct data is used.
+class SupportJsStringTest_testJsonable_class implements Jsonable, JsonSerializable, Arrayable
+        {
+            public $foo = 'not hello';
+
+            public $bar = 'not world';
+
+            public function toJson($options = 0)
+            {
+                return json_encode(['foo' => 'hello', 'bar' => 'world'], $options);
+            }
+
+            public function jsonSerialize()
+            {
+                return ['foo' => 'not hello', 'bar' => 'not world'];
+            }
+
+            public function toArray()
+            {
+                return ['foo' => 'not hello', 'bar' => 'not world'];
+            }
+        }
+
+class SupportJsStringTest_testArrayable_class implements Arrayable
+        {
+            public $foo = 'not hello';
+
+            public $bar = 'not world';
+
+            public function toArray()
+            {
+                return ['foo' => 'hello', 'bar' => 'world'];
+            }
+        }
+
 class SupportJsStringTest extends TestCase
 {
     public function testScalars()
@@ -45,24 +100,7 @@ class SupportJsStringTest extends TestCase
 
     public function testJsonSerializable()
     {
-        // JsonSerializable should take precedence over Arrayable, so we'll
-        // implement both and make sure the correct data is used.
-        $data = new class() implements JsonSerializable, Arrayable
-        {
-            public $foo = 'not hello';
-
-            public $bar = 'not world';
-
-            public function jsonSerialize()
-            {
-                return ['foo' => 'hello', 'bar' => 'world'];
-            }
-
-            public function toArray()
-            {
-                return ['foo' => 'not hello', 'bar' => 'not world'];
-            }
-        };
+        $data = new SupportJsStringTest_testJsonSerializable_class;
 
         $this->assertEquals(
             "JSON.parse('{\\u0022foo\\u0022:\\u0022hello\\u0022,\\u0022bar\\u0022:\\u0022world\\u0022}')",
@@ -72,29 +110,7 @@ class SupportJsStringTest extends TestCase
 
     public function testJsonable()
     {
-        // Jsonable should take precedence over JsonSerializable and Arrayable, so we'll
-        // implement all three and make sure the correct data is used.
-        $data = new class() implements Jsonable, JsonSerializable, Arrayable
-        {
-            public $foo = 'not hello';
-
-            public $bar = 'not world';
-
-            public function toJson($options = 0)
-            {
-                return json_encode(['foo' => 'hello', 'bar' => 'world'], $options);
-            }
-
-            public function jsonSerialize()
-            {
-                return ['foo' => 'not hello', 'bar' => 'not world'];
-            }
-
-            public function toArray()
-            {
-                return ['foo' => 'not hello', 'bar' => 'not world'];
-            }
-        };
+        $data = new SupportJsStringTest_testJsonable_class;
 
         $this->assertEquals(
             "JSON.parse('{\\u0022foo\\u0022:\\u0022hello\\u0022,\\u0022bar\\u0022:\\u0022world\\u0022}')",
@@ -104,17 +120,7 @@ class SupportJsStringTest extends TestCase
 
     public function testArrayable()
     {
-        $data = new class() implements Arrayable
-        {
-            public $foo = 'not hello';
-
-            public $bar = 'not world';
-
-            public function toArray()
-            {
-                return ['foo' => 'hello', 'bar' => 'world'];
-            }
-        };
+        $data = new SupportJsStringTest_testArrayable_class;
 
         $this->assertEquals(
             "JSON.parse('{\\u0022foo\\u0022:\\u0022hello\\u0022,\\u0022bar\\u0022:\\u0022world\\u0022}')",

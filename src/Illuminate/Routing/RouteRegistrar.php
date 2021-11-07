@@ -230,7 +230,7 @@ class RouteRegistrar
                 return $this->attribute($method, is_array($parameters[0]) ? $parameters[0] : $parameters);
             }
 
-            return $this->attribute($method, $parameters[0] ?? true);
+            return $this->attribute($method, isset($parameters[0]) ? $parameters[0] : true);
         }
 
         throw new BadMethodCallException(sprintf(

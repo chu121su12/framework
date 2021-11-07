@@ -473,7 +473,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return bool
      */
-    protected function shouldReturnJson($request, Throwable $e)
+    protected function shouldReturnJson($request, /*Throwable */$e)
     {
         return $request->expectsJson();
     }

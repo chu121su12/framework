@@ -175,11 +175,11 @@ class ChangeColumn
      */
     protected static function calculateDoctrineTextLength($type)
     {
-        return match ($type) {
-            'mediumText' => 65535 + 1,
-            'longText' => 16777215 + 1,
-            default => 255 + 1,
-        };
+        switch ($type) {
+            case 'mediumText': return 65535 + 1;
+            case 'longText': return 16777215 + 1;
+            default: return 255 + 1;
+        }
     }
 
     /**

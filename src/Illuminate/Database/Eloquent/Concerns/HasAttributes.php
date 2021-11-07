@@ -1046,12 +1046,12 @@ trait HasAttributes
      */
     public function fromFloat($value)
     {
-        return match ((string) $value) {
-            'Infinity' => INF,
-            '-Infinity' => -INF,
-            'NaN' => NAN,
-            default => (float) $value,
-        };
+        switch ((string) $value) {
+            case 'Infinity': return INF;
+            case '-Infinity': return -INF;
+            case 'NaN': return NAN;
+            default: return (float) $value;
+        }
     }
 
     /**

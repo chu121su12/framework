@@ -21,7 +21,7 @@ abstract class DatabaseTestCase extends TestCase
         }
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         if ($this->app['config']->get('database.default') !== 'testbench') {
             $this->artisan('db:wipe', ['--drop-views' => true]);

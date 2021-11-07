@@ -3,7 +3,7 @@
 #
 # Force CI tests to be run.
 #
-# Database:
+# MySql Database:
 #
 #   CREATE DATABASE `forge` COLLATE 'utf8mb4_unicode_ci';
 #   CREATE USER 'forge'@'127.0.0.1' IDENTIFIED BY 'forge';
@@ -40,7 +40,7 @@ register_shutdown_function(function () {
 	};
 
 	echo sprintf(
-		'Time Start (%s): %s, Finished: %s, Elapsed: %ss.',
+		'Start (%s): %s, Finished: %s, Elapsed: %ss.',
 		date_default_timezone_get(),
 		$timeFormat(__TEST_START__),
 		$timeFormat($finished),

@@ -21,6 +21,8 @@ class BladeComponentTagCompilerTest_testAttributeSanitization_class
             }
         }
 
+class BladeComponentTagCompilerTest_testAttributeSanitization_Model_class extends Model {}
+
 class BladeComponentTagCompilerTest extends AbstractBladeTestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -360,7 +362,7 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
     {
         $class = new BladeComponentTagCompilerTest_testAttributeSanitization_class;
 
-        $model = new class extends Model {};
+        $model = new BladeComponentTagCompilerTest_testAttributeSanitization_Model_class;
 
         $this->assertEquals(e('<hi>'), BladeCompiler::sanitizeComponentAttribute('<hi>'));
         $this->assertEquals(e('1'), BladeCompiler::sanitizeComponentAttribute('1'));
