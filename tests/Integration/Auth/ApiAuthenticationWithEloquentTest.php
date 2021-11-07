@@ -38,6 +38,9 @@ class ApiAuthenticationWithEloquentTest extends TestCase
             'password' => 'invalid-credentials',
             'database' => isset($_SERVER['CI_DB_DATABASE']) ? $_SERVER['CI_DB_DATABASE'] : 'forge',
             'prefix' => '',
+            'options' => [
+                \PDO::ATTR_TIMEOUT => isset($_SERVER['CI_DB_OPTIONS_TIMEOUT']) ? $_SERVER['CI_DB_OPTIONS_TIMEOUT'] : 60,
+            ],
         ]);
     }
 

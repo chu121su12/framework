@@ -24,9 +24,11 @@ $_SERVER['CI_DB_MYSQL_PORT'] = '3306';
 $_SERVER['CI_DB_HOST'] = call_user_func(function ($file) {
 	return file_exists($file) && ($ip = trim(file_get_contents($file))) ? $ip : '127.0.0.1';
 }, __DIR__.'/ip.text');
+
 $_SERVER['CI_DB_USERNAME'] = 'forge';
 $_SERVER['CI_DB_PASSWORD'] = 'forge';
 $_SERVER['CI_DB_DATABASE'] = 'forge';
+$_SERVER['CI_DB_OPTIONS_TIMEOUT'] = 10;
 
 define('__TEST_START__', microtime(true));
 register_shutdown_function(function () {
