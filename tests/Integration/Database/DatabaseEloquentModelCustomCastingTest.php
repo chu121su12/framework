@@ -44,12 +44,9 @@ class ValueObject_castUsing_class implements CastsAttributes, SerializesCastable
             }
         }
 
-/**
- * @group integration
- */
 class DatabaseEloquentModelCustomCastingTest extends DatabaseTestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

@@ -746,18 +746,17 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function files($directory = null, $recursive = false)
     {
-        // return $this->driver->listContents($directory, $recursive)
-        //     ->filter(function (StorageAttributes $attributes) {
-        //         return $attributes->isFile();
-        //     })
-        //     ->map(function (StorageAttributes $attributes) {
-        //         return $attributes->path();
-        //     })
-        //     ->toArray();
+        // $contents = $this->driver->listContents(isset($directory) ? $directory : '', $recursive);
+        // return $this->filterContentsByType($contents, 'file');
 
-        $contents = $this->driver->listContents(isset($directory) ? $directory : '', $recursive);
-
-        return $this->filterContentsByType($contents, 'file');
+        return $this->driver->listContents(isset($directory) ? $directory : '', $recursive)
+            ->filter(function (StorageAttributes $attributes) {
+                return $attributes->isFile();
+            })
+            ->map(function (StorageAttributes $attributes) {
+                return $attributes->path();
+            })
+            ->toArray();
     }
 
     /**
@@ -780,18 +779,17 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function directories($directory = null, $recursive = false)
     {
-        // return $this->driver->listContents($directory, $recursive)
-        //     ->filter(function (StorageAttributes $attributes) {
-        //         return $attributes->isDir();
-        //     })
-        //     ->map(function (StorageAttributes $attributes) {
-        //         return $attributes->path();
-        //     })
-        //     ->toArray();
+        // $contents = $this->driver->listContents(isset($directory) ? $directory : '', $recursive);
+        // return $this->filterContentsByType($contents, 'dir');
 
-        $contents = $this->driver->listContents(isset($directory) ? $directory : '', $recursive);
-
-        return $this->filterContentsByType($contents, 'dir');
+        return $this->driver->listContents(isset($directory) ? $directory : '', $recursive)
+            ->filter(function (StorageAttributes $attributes) {
+                return $attributes->isDir();
+            })
+            ->map(function (StorageAttributes $attributes) {
+                return $attributes->path();
+            })
+            ->toArray();
     }
 
     /**

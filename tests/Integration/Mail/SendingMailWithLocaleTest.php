@@ -13,9 +13,6 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Testing\Assert;
 use Orchestra\Testbench\TestCase;
 
-/**
- * @group integration
- */
 class SendingMailWithLocaleTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;

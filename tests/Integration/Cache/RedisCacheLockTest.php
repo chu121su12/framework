@@ -8,10 +8,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Orchestra\Testbench\TestCase;
 
-/**
- * @group redis
- * @group integration
- */
 class RedisCacheLockTest extends TestCase
 {
     use InteractsWithRedis;
