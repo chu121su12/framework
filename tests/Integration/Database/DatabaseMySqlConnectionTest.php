@@ -29,6 +29,10 @@ class DatabaseMySqlConnectionTest extends DatabaseTestCase
     {
         parent::setUp();
 
+        if (!$this->supportsJson()) {
+            $this->markTestSkipped('This database does not support JSON type.');
+        }
+
         if (! Schema::hasTable(self::TABLE)) {
             Schema::create(self::TABLE, function (Blueprint $table) {
                 $table->json(self::JSON_COL)->nullable();
