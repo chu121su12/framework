@@ -22,9 +22,6 @@ class FoundationHelpersTest_testRescue_class
             }
         }
 
-/**
- * @group integration
- */
 class FoundationHelpersTest extends TestCase
 {
     public function testRescue()

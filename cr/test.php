@@ -3,7 +3,7 @@
 #
 # Force CI tests to be run.
 #
-# Database:
+# MySql Database:
 #
 #   CREATE DATABASE `forge` COLLATE 'utf8mb4_unicode_ci';
 #   CREATE USER 'forge'@'127.0.0.1' IDENTIFIED BY 'forge';
@@ -18,16 +18,13 @@
 #   vendor/bin/phpunit --bootstrap cr/test.php
 #
 
-$_SERVER['CI'] = true;
+$_SERVER['CI_DB_AUTH_DRIVER'] = 'mysql';
+$_SERVER['CI_DB_MYSQL_PORT'] = '3306';
 
-$_SERVER['CI_DB_DRIVER'] = 'mysql';
-$_SERVER['CI_DB_HOST'] = '127.0.0.1';
-$_SERVER['CI_DB_PORT'] = '3306';
+$_SERVER['CI_DB_HOST'] = '172.31.160.1';
 $_SERVER['CI_DB_USERNAME'] = 'forge';
 $_SERVER['CI_DB_PASSWORD'] = 'forge';
 $_SERVER['CI_DB_DATABASE'] = 'forge';
-
-// $_SERVER['CI_FORCE_DATABASE'] = true;
 
 define('__TEST_START__', microtime(true));
 register_shutdown_function(function () {
@@ -40,11 +37,12 @@ register_shutdown_function(function () {
 	};
 
 	echo sprintf(
-		'Time Start (%s): %s, Finished: %s, Elapsed: %ss.',
+		'Start (%s): %s, Finished: %s, Elapsed: %ss.%s',
 		date_default_timezone_get(),
 		$timeFormat(__TEST_START__),
 		$timeFormat($finished),
-		round($finished - __TEST_START__, 3)
+		round($finished - __TEST_START__, 3),
+		PHP_EOL
 	);
 
 	if (false && file_exists($testbenchExcessDir = __DIR__ . '/patch/orchestra-testbench-core/testbench-core/laravel')) {

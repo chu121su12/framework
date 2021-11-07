@@ -42,14 +42,10 @@ class ValidatePostSize
         $postMaxSize = (int) $postMaxSize;
 
         switch ($metric) {
-            case 'K':
-                return $postMaxSize * 1024;
-            case 'M':
-                return $postMaxSize * 1048576;
-            case 'G':
-                return $postMaxSize * 1073741824;
-            default:
-                return $postMaxSize;
+            case 'K': return $postMaxSize * 1024;
+            case 'M': return $postMaxSize * 1048576;
+            case 'G': return $postMaxSize * 1073741824;
+            default: return $postMaxSize;
         }
     }
 }

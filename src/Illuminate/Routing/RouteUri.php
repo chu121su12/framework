@@ -46,7 +46,7 @@ class RouteUri
         $bindingFields = [];
 
         foreach ($matches[0] as $match) {
-            if (strpos($match, ':') === false) {
+            if (! str_contains($match, ':')) {
                 continue;
             }
 
@@ -54,7 +54,7 @@ class RouteUri
 
             $bindingFields[$segments[0]] = $segments[1];
 
-            $uri = strpos($match, '?') !== false
+            $uri = str_contains($match, '?')
                     ? str_replace($match, '{'.$segments[0].'?}', $uri)
                     : str_replace($match, '{'.$segments[0].'}', $uri);
         }

@@ -76,15 +76,15 @@ class SupportReflectsClosuresTest extends TestCase
     }
 
     /**
-     * @requires PHP 8
+     * @requires PHP >= 8
      */
     public function testItWorksWithUnionTypes()
     {
-        if (version_compare(phpversion(), '8.0.0', '<')) {
-            $this->markTestSkipped('Test uses union types.');
-        } else {
-            $this->markTestSkipped('Framework does not support union types.');
-        }
+        // if (version_compare(phpversion(), '8.0.0', '<')) {
+        //     $this->markTestSkipped('Test uses union types.');
+        // } else {
+        //     $this->markTestSkipped('Framework does not support union types.');
+        // }
 
         $closure = require __DIR__.'/Fixtures/UnionTypesClosure.php';
 

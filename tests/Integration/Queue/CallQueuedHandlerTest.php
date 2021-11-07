@@ -23,9 +23,6 @@ class AbstractCallQueuedHandlerTestJobWithMiddleware_middleware_class
                 }
             }
 
-/**
- * @group integration
- */
 class CallQueuedHandlerTest extends TestCase
 {
     protected function tearDown()

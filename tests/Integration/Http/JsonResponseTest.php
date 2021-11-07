@@ -14,9 +14,6 @@ class JsonResponseTest_testResponseWithInvalidJsonThrowsException_class implemen
                 }
             }
 
-/**
- * @group integration
- */
 class JsonResponseTest extends TestCase
 {
     public function testResponseWithInvalidJsonThrowsException()

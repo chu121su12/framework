@@ -5,6 +5,7 @@ namespace Illuminate\Tests\View\Blade;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Compilers\ComponentTagCompiler;
 use Illuminate\View\Component;
@@ -19,6 +20,8 @@ class BladeComponentTagCompilerTest_testAttributeSanitization_class
                 return '<hi>';
             }
         }
+
+class BladeComponentTagCompilerTest_testAttributeSanitization_Model_class extends Model {}
 
 class BladeComponentTagCompilerTest extends AbstractBladeTestCase
 {
@@ -359,10 +362,13 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
     {
         $class = new BladeComponentTagCompilerTest_testAttributeSanitization_class;
 
+        $model = new BladeComponentTagCompilerTest_testAttributeSanitization_Model_class;
+
         $this->assertEquals(e('<hi>'), BladeCompiler::sanitizeComponentAttribute('<hi>'));
         $this->assertEquals(e('1'), BladeCompiler::sanitizeComponentAttribute('1'));
         $this->assertEquals(1, BladeCompiler::sanitizeComponentAttribute(1));
         $this->assertEquals(e('<hi>'), BladeCompiler::sanitizeComponentAttribute($class));
+        $this->assertSame($model, BladeCompiler::sanitizeComponentAttribute($model));
     }
 
     public function testItThrowsAnExceptionForNonExistingAliases()

@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: ['5.6', '7.3', '7.4', '8.0', '8.1']
+        php: ['5.6', '7.4', '8.0', '8.1']
         stability: [prefer-lowest, prefer-stable]
 
     name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
@@ -66,7 +66,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer require symfony/symfony:5.4.x-dev league/commonmark:^2.0.2 phpunit/phpunit:^9.5.8 --no-interaction --no-update
+          command: composer require league/commonmark:^2.0.2 phpunit/phpunit:^9.5.8 --no-interaction --no-update
         if: matrix.php >= 8.1
 
       - name: Install dependencies
@@ -95,12 +95,12 @@ jobs:
             !vendor/**/.gitignore
 
   windows_tests:
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     strategy:
       fail-fast: true
       matrix:
-        php: ['5.6', '7.3', '7.4', '8.0', '8.1']
+        php: ['5.6', '7.4', '8.0', '8.1']
         stability: [prefer-lowest, prefer-stable]
 
     name: PHP ${{ matrix.php }} - ${{ matrix.stability }} - Windows
@@ -135,7 +135,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer require symfony/symfony:5.4.x-dev league/commonmark:^2.0.2 phpunit/phpunit:^9.5.8 --no-interaction --no-update
+          command: composer require league/commonmark:^2.0.2 phpunit/phpunit:^9.5.8 --no-interaction --no-update
         if: matrix.php >= 8.1
 
       - name: Install dependencies
