@@ -38,11 +38,11 @@ class SolutionTransformer implements Arrayable
     {
         try {
             return action('\Facade\Ignition\Http\Controllers\ExecuteSolutionController');
-        } catch (\Throwable $exception) {
+        } catch (\Exception $exception) {
             return '';
         } catch (\Error $exception) {
             return '';
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             return '';
         }
     }

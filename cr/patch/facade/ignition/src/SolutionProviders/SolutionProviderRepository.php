@@ -68,22 +68,22 @@ class SolutionProviderRepository implements SolutionProviderRepositoryContract
             ->filter(function (HasSolutionsForThrowable $solutionProvider) use ($throwable) {
                 try {
                     return $solutionProvider->canSolve($throwable);
-                } catch (\Throwable $e) {
+                } catch (\Exception $e) {
                     return false;
                 } catch (\Error $e) {
                     return false;
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     return false;
                 }
             })
             ->map(function (HasSolutionsForThrowable $solutionProvider) use ($throwable) {
                 try {
                     return $solutionProvider->getSolutions($throwable);
-                } catch (\Throwable $e) {
+                } catch (\Exception $e) {
                     return [];
                 } catch (\Error $e) {
                     return [];
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     return [];
                 }
             })

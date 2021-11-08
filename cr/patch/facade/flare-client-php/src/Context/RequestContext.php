@@ -87,11 +87,11 @@ class RequestContext implements ContextInterface
     {
         try {
             json_encode($session->all());
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return [];
         } catch (\Error $e) {
             return [];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return [];
         }
 

@@ -25,11 +25,11 @@ class LaravelRequestContext extends RequestContext
             if (! $user) {
                 return [];
             }
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return [];
         } catch (\Error $e) {
             return [];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return [];
         }
 
@@ -41,11 +41,11 @@ class LaravelRequestContext extends RequestContext
             if (method_exists($user, 'toArray')) {
                 return $user->toArray();
             }
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return [];
         } catch (\Error $e) {
             return [];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return [];
         }
 
@@ -88,11 +88,11 @@ class LaravelRequestContext extends RequestContext
                     return $parameter instanceof Model ? $parameter->withoutRelations() : $parameter;
                 })
                 ->toArray();
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return [];
         } catch (\Error $e) {
             return [];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return [];
         }
     }

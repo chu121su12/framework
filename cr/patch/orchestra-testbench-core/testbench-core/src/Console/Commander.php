@@ -75,9 +75,9 @@ class Commander
 
         try {
             $status = $kernel->handle($input, $output);
-        } catch (\Throwable $error) {
-        } catch (\Error $error) {
         } catch (\Exception $error) {
+        } catch (\Error $error) {
+        } catch (\Throwable $error) {
         }
 
         if (isset($error)) {

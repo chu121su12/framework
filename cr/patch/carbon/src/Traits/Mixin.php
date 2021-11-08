@@ -109,12 +109,12 @@ trait Mixin
                 try {
                      // @ is required to handle error if not converted into exceptions
                     $closure = @$closureBase->bindTo($context);
-                } catch (Throwable $throwable) { // @codeCoverageIgnore
-                    $closure = $closureBase; // @codeCoverageIgnore
-                } catch (\Error $throwable) {
-                    $closure = $closureBase;
                 } catch (\Exception $throwable) {
                     $closure = $closureBase;
+                } catch (\Error $throwable) {
+                    $closure = $closureBase;
+                } catch (Throwable $throwable) { // @codeCoverageIgnore
+                    $closure = $closureBase; // @codeCoverageIgnore
                 }
 
                  // in case of errors not converted into exceptions
@@ -161,12 +161,12 @@ trait Mixin
 
         try {
             $result = $callable();
-        } catch (Throwable $throwable) {
-            $exception = $throwable;
-        } catch (\Error $error) {
-            $exception = $error;
         } catch (\Exception $e) {
             $exception = $e;
+        } catch (\Error $error) {
+            $exception = $error;
+        } catch (Throwable $throwable) {
+            $exception = $throwable;
         }
 
         array_pop(static::$macroContextStack);
