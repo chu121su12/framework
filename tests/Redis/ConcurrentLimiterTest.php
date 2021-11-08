@@ -84,9 +84,9 @@ class ConcurrentLimiterTest extends TestCase
             $lock->block(0, function () use (&$store) {
                 $store[] = 2;
             });
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {
@@ -116,9 +116,9 @@ class ConcurrentLimiterTest extends TestCase
             $lock->block(0, function () use (&$store) {
                 $store[] = 2;
             });
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {
@@ -146,9 +146,9 @@ class ConcurrentLimiterTest extends TestCase
             $lock->block(2, function () use (&$store) {
                 $store[] = 2;
             });
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {

@@ -74,9 +74,9 @@ class DurationLimiterTest extends TestCase
             (new DurationLimiter($this->redis(), 'key', 1, 1))->block(0, function () use (&$store) {
                 $store[] = 2;
             });
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {

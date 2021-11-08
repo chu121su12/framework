@@ -180,9 +180,9 @@ class DatabaseTransactionsTest extends TestCase
 
                 throw new Exception;
             });
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
     }
 
@@ -237,9 +237,9 @@ class DatabaseTransactionsTest extends TestCase
                     throw new Exception;
                 });
             });
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
     }
 

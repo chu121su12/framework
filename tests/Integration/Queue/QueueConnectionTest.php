@@ -50,11 +50,11 @@ class QueueConnectionTest extends TestCase
 
         try {
             Bus::dispatch((new QueueConnectionTestJob)->beforeCommit());
-        } catch (Throwable $e) {
+        } catch (\Exception $e) {
             // This job was dispatched
         } catch (\Error $e) {
             // This job was dispatched
-        } catch (\Exception $e) {
+        } catch (Throwable $e) {
             // This job was dispatched
         }
     }
