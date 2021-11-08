@@ -244,9 +244,9 @@ abstract class TestCase extends BaseTestCase
         foreach ($this->beforeApplicationDestroyedCallbacks as $callback) {
             try {
                 $callback();
-            } catch (\Throwable $e) {
-            } catch (\Error $e) {
             } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (\Throwable $e) {
             }
 
             if (isset($e)) {

@@ -56,9 +56,9 @@ class PhpEngine implements Engine
         // an exception is thrown. This prevents any partial views from leaking.
         try {
             $this->files->getRequire($path, $data);
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {

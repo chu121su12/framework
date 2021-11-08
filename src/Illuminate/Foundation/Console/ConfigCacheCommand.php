@@ -74,9 +74,9 @@ class ConfigCacheCommand extends Command
 
         try {
             require $configPath;
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {

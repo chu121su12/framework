@@ -247,9 +247,9 @@ class PendingBatch
             $batch = $repository->store($this);
 
             $batch = $batch->add($this->jobs);
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {

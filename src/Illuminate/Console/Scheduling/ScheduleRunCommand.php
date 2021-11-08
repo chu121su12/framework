@@ -157,9 +157,9 @@ class ScheduleRunCommand extends Command
             ));
 
             $this->eventsRan = true;
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {

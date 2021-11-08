@@ -446,9 +446,9 @@ class Batch implements Arrayable, JsonSerializable
     {
         try {
             return $handler($batch, $e);
-        } catch (\Throwable $exception) {
-        } catch (\Error $exception) {
         } catch (\Exception $exception) {
+        } catch (\Error $exception) {
+        } catch (\Throwable $exception) {
         }
 
         if (isset($exception)) {

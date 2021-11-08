@@ -98,9 +98,9 @@ class ThrottlesExceptions
 
             $this->limiter->clear($jobKey);
 
-        } catch (\Throwable $throwable) {
-        } catch (\Error $throwable) {
         } catch (\Exception $throwable) {
+        } catch (\Error $throwable) {
+        } catch (\Throwable $throwable) {
         }
 
         if (isset($throwable)) {

@@ -247,7 +247,7 @@ class Event
             SymfonyHelper::processFromShellCommandline($this->buildCommand(), base_path(), null, null, null)->run();
         } catch (\Exception $exception) {
         } catch (\Error $exception) {
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
         }
 
         if (isset($exception)) {

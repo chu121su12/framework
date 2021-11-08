@@ -80,9 +80,9 @@ class CallbackEvent extends Event
                         : $container->call($this->callback, $this->parameters);
 
             $this->exitCode = $response === false ? 1 : 0;
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         $this->removeMutex();

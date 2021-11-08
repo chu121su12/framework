@@ -101,11 +101,11 @@ class DownCommand extends Command
     {
         try {
             return $this->laravel->make(PreventRequestsDuringMaintenance::class)->getExcludedPaths();
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return [];
         } catch (\Error $e) {
             return [];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return [];
         }
     }

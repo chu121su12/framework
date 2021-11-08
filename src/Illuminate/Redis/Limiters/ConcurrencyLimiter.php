@@ -82,9 +82,9 @@ class ConcurrencyLimiter
                 return tap($callback(), function () use ($slot, $id) {
                     $this->release($slot, $id);
                 });
-            } catch (\Throwable $exception) {
-            } catch (\Error $exception) {
             } catch (\Exception $exception) {
+            } catch (\Error $exception) {
+            } catch (\Throwable $exception) {
             }
 
             if (isset($exception)) {

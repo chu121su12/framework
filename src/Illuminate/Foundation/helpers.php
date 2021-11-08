@@ -677,9 +677,9 @@ if (! function_exists('rescue')) {
     {
         try {
             return $callback();
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {

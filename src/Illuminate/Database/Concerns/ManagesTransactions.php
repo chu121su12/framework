@@ -28,9 +28,9 @@ trait ManagesTransactions
             try {
                 $e = null;
                 $callbackResult = $callback($this);
-            } catch (\Throwable $e) {
-            } catch (\Error $e) {
             } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (\Throwable $e) {
             }
 
             // If we catch an exception we'll rollback this transaction and try again if we
@@ -54,9 +54,9 @@ trait ManagesTransactions
                 if ($this->transactions == 0) {
                     optional($this->transactionsManager)->commit($this->getName());
                 }
-            } catch (\Throwable $e) {
-            } catch (\Error $e) {
             } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (\Throwable $e) {
             }
 
             if (isset($e)) {
@@ -146,9 +146,9 @@ trait ManagesTransactions
 
             try {
                 $this->getPdo()->beginTransaction();
-            } catch (\Throwable $e) {
-            } catch (\Error $e) {
             } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (\Throwable $e) {
             }
 
             if (isset($e)) {
@@ -266,9 +266,9 @@ trait ManagesTransactions
         // level that was passed into this method so it will be right from here out.
         try {
             $this->performRollBack($toLevel);
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {
