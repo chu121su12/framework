@@ -36,11 +36,11 @@ class OptimizeCommand extends Command
      */
     public function handle()
     {
-        // $this->call('config:cache');
-        // $this->call('route:cache');
-        // // $this->call('view:cache');
+        $this->call('config:cache');
+        $this->call('route:cache');
 
-        // $this->info('Files cached successfully!');
-        $this->info('Caching not supported!');
+        $this->info('Files cached successfully!');
+        // TODO:
+        // $this->info('Caching not supported!');
     }
 }

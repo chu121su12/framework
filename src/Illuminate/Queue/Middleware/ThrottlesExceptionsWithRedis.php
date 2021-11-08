@@ -51,7 +51,7 @@ class ThrottlesExceptionsWithRedis extends ThrottlesExceptions
             $this->limiter->clear();
         } catch (\Exception $throwable) {
         } catch (\Error $throwable) {
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
         }
 
         if (isset($throwable)) {

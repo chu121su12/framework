@@ -18,7 +18,7 @@ trait InteractsWithViews
      * @param  \Illuminate\Contracts\Support\Arrayable|array  $data
      * @return \Illuminate\Testing\TestView
      */
-    protected function view($view, $data = [])
+    protected function view(/*string */$view, $data = [])
     {
         $view = cast_to_string($view);
 
@@ -32,7 +32,7 @@ trait InteractsWithViews
      * @param  \Illuminate\Contracts\Support\Arrayable|array  $data
      * @return \Illuminate\Testing\TestView
      */
-    protected function blade($template, $data = [])
+    protected function blade(/*string */$template, $data = [])
     {
         $template = cast_to_string($template);
 
@@ -58,7 +58,7 @@ trait InteractsWithViews
      * @param  \Illuminate\Contracts\Support\Arrayable|array  $data
      * @return \Illuminate\Testing\TestComponent
      */
-    protected function component($componentClass, $data = [])
+    protected function component(/*string */$componentClass, $data = [])
     {
         $componentClass = cast_to_string($componentClass);
 

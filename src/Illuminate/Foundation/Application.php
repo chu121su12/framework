@@ -969,11 +969,10 @@ class Application extends Container implements ApplicationContract, CachesConfig
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handle(SymfonyRequest $request, /*int */$type = self::MASTER_REQUEST, /*bool */$catch = true)/*: SymfonyResponse*/
+    public function handle(SymfonyRequest $request, /*int */$type = /*self::MAIN_REQUEST*/self::MASTER_REQUEST, /*bool */$catch = true)/*: SymfonyResponse*/
     {
-        $catch = cast_to_bool($catch);
-
         $type = cast_to_int($type);
+        $catch = cast_to_bool($catch);
 
         return $this[HttpKernelContract::class]->handle(Request::createFromBase($request));
     }
@@ -1175,7 +1174,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
      * @param  string  $provider
      * @return bool
      */
-    public function providerIsLoaded($provider)
+    public function providerIsLoaded(/*string */$provider)
     {
         $provider = cast_to_string($provider);
 

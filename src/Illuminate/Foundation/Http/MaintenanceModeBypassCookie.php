@@ -13,7 +13,7 @@ class MaintenanceModeBypassCookie
      * @param  string  $key
      * @return \Symfony\Component\HttpFoundation\Cookie
      */
-    public static function create($key)
+    public static function create(/*string */$key)
     {
         $key = cast_to_string($key);
 
@@ -32,10 +32,9 @@ class MaintenanceModeBypassCookie
      * @param  string  $key
      * @return bool
      */
-    public static function isValid($cookie, $key)
+    public static function isValid(/*string */$cookie, /*string */$key)
     {
         $cookie = cast_to_string($cookie);
-
         $key = cast_to_string($key);
 
         $payload = backport_json_decode(base64_decode($cookie), true);

@@ -679,7 +679,7 @@ if (! function_exists('rescue')) {
             return $callback();
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {

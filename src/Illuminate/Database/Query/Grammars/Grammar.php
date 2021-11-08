@@ -954,7 +954,7 @@ class Grammar extends BaseGrammar
      * @param  string  $sql
      * @return string
      */
-    public function compileInsertUsing(Builder $query, array $columns, $sql)
+    public function compileInsertUsing(Builder $query, array $columns, /*string */$sql)
     {
         $sql = cast_to_string($sql);
 

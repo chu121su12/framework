@@ -359,14 +359,13 @@ class FilesystemAdapter implements CloudFilesystemContract
                     ? $this->driver->putStream($path, $contents, $options)
                     : $this->driver->put($path, $contents, $options);
         } catch (\Exception $e) {
-            return false;
         } catch (\Error $e) {
-            return false;
-        } catch (\Throwable $e) {
-            return false;
+        } catch (Throwable $e) {
         }
 
-        return true;
+        if (isset($e)) {
+            return false;
+        }
     }
 
     /**
@@ -438,14 +437,13 @@ class FilesystemAdapter implements CloudFilesystemContract
         try {
             return $this->driver->setVisibility($path, $this->parseVisibility($visibility));
         } catch (\Exception $e) {
-            return false;
         } catch (\Error $e) {
-            return false;
         } catch (\Throwable $e) {
-            return false;
         }
 
-        return true;
+        if (isset($e)) {
+            return false;
+        }
     }
 
     /**
@@ -519,14 +517,13 @@ class FilesystemAdapter implements CloudFilesystemContract
         try {
             return $this->driver->copy($from, $to);
         } catch (\Exception $e) {
-            return false;
         } catch (\Error $e) {
-            return false;
         } catch (\Throwable $e) {
-            return false;
         }
 
-        return true;
+        if (isset($e)) {
+            return false;
+        }
     }
 
     /**
@@ -543,14 +540,13 @@ class FilesystemAdapter implements CloudFilesystemContract
 
             return $this->driver->rename($from, $to);
         } catch (\Exception $e) {
-            return false;
         } catch (\Error $e) {
-            return false;
         } catch (\Throwable $e) {
-            return false;
         }
 
-        return true;
+        if (isset($e)) {
+            return false;
+        }
     }
 
     /**
@@ -818,14 +814,13 @@ class FilesystemAdapter implements CloudFilesystemContract
 
             return $this->driver->createDir($path);
         } catch (\Exception $e) {
-            return false;
         } catch (\Error $e) {
-            return false;
         } catch (\Throwable $e) {
-            return false;
         }
 
-        return true;
+        if (isset($e)) {
+            return false;
+        }
     }
 
     /**
@@ -841,14 +836,13 @@ class FilesystemAdapter implements CloudFilesystemContract
 
             return $this->driver->deleteDir($directory);
         } catch (\Exception $e) {
-            return false;
         } catch (\Error $e) {
-            return false;
         } catch (\Throwable $e) {
-            return false;
         }
 
-        return true;
+        if (isset($e)) {
+            return false;
+        }
     }
 
     /**

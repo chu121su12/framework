@@ -39,8 +39,7 @@ class ArrayLock extends Lock
         $expiration = isset($this->store->locks)
             && isset($this->store->locks[$this->name])
             && isset($this->store->locks[$this->name]['expiresAt'])
-                ? $this->store->locks[$this->name]['expiresAt']
-                : Carbon::now()->addSecond();
+                ? $this->store->locks[$this->name]['expiresAt'] : Carbon::now()->addSecond();
 
         if ($this->exists() && $expiration->isFuture()) {
             return false;

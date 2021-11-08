@@ -923,7 +923,7 @@ class Builder implements BuilderContract
     /**
      * {@inheritdoc}
      */
-    public function whereBetween($column, $values, $boolean = 'and', $not = false)
+    public function whereBetween($column, /*iterable */$values, $boolean = 'and', $not = false)
     {
         $type = 'between';
 
@@ -949,7 +949,7 @@ class Builder implements BuilderContract
     /**
      * {@inheritdoc}
      */
-    public function orWhereBetween($column, $values)
+    public function orWhereBetween($column, /*iterable */$values)
     {
         return $this->whereBetween($column, $values, 'or');
     }
@@ -965,7 +965,7 @@ class Builder implements BuilderContract
     /**
      * {@inheritdoc}
      */
-    public function whereNotBetween($column, $values, $boolean = 'and')
+    public function whereNotBetween($column, /*iterable */$values, $boolean = 'and')
     {
         return $this->whereBetween($column, $values, $boolean, true);
     }
@@ -981,7 +981,7 @@ class Builder implements BuilderContract
     /**
      * {@inheritdoc}
      */
-    public function orWhereNotBetween($column, $values)
+    public function orWhereNotBetween($column, /*iterable */$values)
     {
         return $this->whereNotBetween($column, $values, 'or');
     }
@@ -2105,11 +2105,11 @@ class Builder implements BuilderContract
         }
 
         return new LazyCollection(function () {
-            $cursor = $this->connection->cursor(
+            $cursorToYield = $this->connection->cursor(
                 $this->toSql(), $this->getBindings(), ! $this->useWritePdo
             );
 
-            foreach ($cursor as $yieldKey => $yieldValue) {
+            foreach ($cursorToYield as $yieldKey => $yieldValue) {
                 yield $yieldKey => $yieldValue;
             }
         });

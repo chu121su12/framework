@@ -121,7 +121,7 @@ class WithoutOverlapping
      * @param  string  $prefix
      * @return $this
      */
-    public function withPrefix(string $prefix)
+    public function withPrefix(/*string */$prefix)
     {
         $this->prefix = $prefix;
 

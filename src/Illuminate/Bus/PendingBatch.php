@@ -173,7 +173,7 @@ class PendingBatch
      * @param  string  $name
      * @return $this
      */
-    public function name($name)
+    public function name(/*string */$name)
     {
         $name = cast_to_string($name);
 
@@ -188,7 +188,7 @@ class PendingBatch
      * @param  string  $connection
      * @return $this
      */
-    public function onConnection($connection)
+    public function onConnection(/*string */$connection)
     {
         $connection = cast_to_string($connection);
 
@@ -213,7 +213,7 @@ class PendingBatch
      * @param  string  $queue
      * @return $this
      */
-    public function onQueue($queue)
+    public function onQueue(/*string */$queue)
     {
         $queue = cast_to_string($queue);
 
@@ -249,7 +249,7 @@ class PendingBatch
             $batch = $batch->add($this->jobs);
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {

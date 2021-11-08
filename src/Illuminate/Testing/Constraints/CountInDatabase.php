@@ -36,7 +36,7 @@ class CountInDatabase extends Constraint
      * @param  int  $expectedCount
      * @return void
      */
-    public function __construct(Connection $database, $expectedCount)
+    public function __construct(Connection $database, /*int */$expectedCount)
     {
         $expectedCount = cast_to_int($expectedCount);
 
@@ -51,7 +51,7 @@ class CountInDatabase extends Constraint
      * @param  string  $table
      * @return bool
      */
-    public function matches($table)
+    public function matches($table)/*: bool*/
     {
         $this->actualCount = $this->database->table($table)->count();
 
@@ -64,7 +64,7 @@ class CountInDatabase extends Constraint
      * @param  string  $table
      * @return string
      */
-    public function failureDescription($table)
+    public function failureDescription($table)/*: string*/
     {
         return sprintf(
             "table [%s] matches expected entries count of %s. Entries found: %s.\n",
@@ -78,7 +78,7 @@ class CountInDatabase extends Constraint
      * @param  int  $options
      * @return string
      */
-    public function toString($options = 0)
+    public function toString($options = 0)/*: string*/
     {
         return (new ReflectionClass($this))->name;
     }

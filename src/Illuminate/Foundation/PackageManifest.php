@@ -128,16 +128,11 @@ class PackageManifest
         $ignoreAll = in_array('*', $ignore = $this->packagesToIgnore());
 
         $this->write(collect($packages)->mapWithKeys(function ($package) {
-            return [$this->format($package['name']) =>
-                isset($package['extra']) && isset($package['extra']['laravel'])
-                    ? $package['extra']['laravel']
-                    : []
-            ];
+            return [$this->format($package['name']) => isset($package['extra']) && isset($package['extra']['laravel'])
+                ? $package['extra']['laravel'] : []];
         })->each(function ($configuration) use (&$ignore) {
-            $ignore = array_merge(
-                $ignore,
-                isset($configuration['dont-discover']) ? $configuration['dont-discover'] : []
-            );
+            $ignore = array_merge($ignore, isset($configuration['dont-discover'])
+                ? $configuration['dont-discover'] : []);
         })->reject(function ($configuration, $package) use ($ignore, $ignoreAll) {
             return $ignoreAll || in_array($package, $ignore);
         })->filter()->all());

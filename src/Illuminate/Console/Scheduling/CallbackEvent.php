@@ -82,9 +82,10 @@ class CallbackEvent extends Event
             $this->exitCode = $response === false ? 1 : 0;
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
+        // finally
         $this->removeMutex();
 
         parent::callAfterCallbacks($container);

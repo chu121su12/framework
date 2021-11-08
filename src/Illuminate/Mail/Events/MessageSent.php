@@ -41,8 +41,8 @@ class MessageSent
     public function __serialize()
     {
         $hasAttachments = collect($this->message->getChildren())
-                                ->whereInstanceOf(Swift_Attachment::class)
-                                ->isNotEmpty();
+            ->whereInstanceOf(Swift_Attachment::class)
+            ->isNotEmpty();
 
         return $hasAttachments ? [
             'message' => base64_encode(serialize($this->message)),

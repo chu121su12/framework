@@ -102,7 +102,7 @@ class Str
      */
     public static function ascii($value, $language = 'en')
     {
-        return ASCII::to_ascii($value, $language);
+        return ASCII::to_ascii((string) $value, $language);
     }
 
     /**
@@ -310,7 +310,7 @@ class Str
      */
     public static function isAscii($value)
     {
-        return ASCII::is_ascii($value);
+        return ASCII::is_ascii((string) $value);
     }
 
     /**
@@ -591,10 +591,9 @@ class Str
      * @param  int  $times
      * @return string
      */
-    public static function repeat($string, $times)
+    public static function repeat(/*string */$string, /*int */$times)
     {
         $string = cast_to_string($string);
-
         $times = cast_to_int($times);
 
         return str_repeat($string, $times);

@@ -55,7 +55,7 @@ class ComponentTagCompiler
      * @param  \Illuminate\View\Compilers\BladeCompiler|null  $blade
      * @return void
      */
-    public function __construct(array $aliases = [], array $namespaces = [], BladeCompiler $blade = null)
+    public function __construct(array $aliases = [], array $namespaces = [], /*?*/BladeCompiler $blade = null)
     {
         $this->aliases = $aliases;
         $this->namespaces = $namespaces;
@@ -69,7 +69,7 @@ class ComponentTagCompiler
      * @param  string  $value
      * @return string
      */
-    public function compile($value)
+    public function compile(/*string */$value)
     {
         $value = cast_to_string($value);
 
@@ -86,7 +86,7 @@ class ComponentTagCompiler
      *
      * @throws \InvalidArgumentException
      */
-    public function compileTags($value)
+    public function compileTags(/*string */$value)
     {
         $value = cast_to_string($value);
 
@@ -105,7 +105,7 @@ class ComponentTagCompiler
      *
      * @throws \InvalidArgumentException
      */
-    protected function compileOpeningTags($value)
+    protected function compileOpeningTags(/*string */$value)
     {
         $value = cast_to_string($value);
 
@@ -159,7 +159,7 @@ class ComponentTagCompiler
      *
      * @throws \InvalidArgumentException
      */
-    protected function compileSelfClosingTags($value)
+    protected function compileSelfClosingTags(/*string */$value)
     {
         $value = cast_to_string($value);
 
@@ -214,7 +214,7 @@ class ComponentTagCompiler
      *
      * @throws \InvalidArgumentException
      */
-    protected function componentString($component, array $attributes)
+    protected function componentString(/*string */$component, array $attributes)
     {
         $component = cast_to_string($component);
 
@@ -255,7 +255,7 @@ class ComponentTagCompiler
      *
      * @throws \InvalidArgumentException
      */
-    public function componentClass($component)
+    public function componentClass(/*string */$component)
     {
         $component = cast_to_string($component);
 
@@ -302,7 +302,7 @@ class ComponentTagCompiler
      * @param  string  $component
      * @return string|null
      */
-    public function findClassByComponent($component)
+    public function findClassByComponent(/*string */$component)
     {
         $component = cast_to_string($component);
 
@@ -325,7 +325,7 @@ class ComponentTagCompiler
      * @param  string  $component
      * @return string
      */
-    public function guessClassName($component)
+    public function guessClassName(/*string */$component)
     {
         $component = cast_to_string($component);
 
@@ -344,7 +344,7 @@ class ComponentTagCompiler
      * @param  string  $component
      * @return string
      */
-    public function formatClassName($component)
+    public function formatClassName(/*string */$component)
     {
         $component = cast_to_string($component);
 
@@ -407,7 +407,7 @@ class ComponentTagCompiler
      * @param  string  $value
      * @return string
      */
-    protected function compileClosingTags($value)
+    protected function compileClosingTags(/*string */$value)
     {
         $value = cast_to_string($value);
 
@@ -420,7 +420,7 @@ class ComponentTagCompiler
      * @param  string  $value
      * @return string
      */
-    public function compileSlots($value)
+    public function compileSlots(/*string */$value)
     {
         $value = cast_to_string($value);
 
@@ -482,7 +482,7 @@ class ComponentTagCompiler
      * @param  string  $attributeString
      * @return array
      */
-    protected function getAttributesFromAttributeString($attributeString)
+    protected function getAttributesFromAttributeString(/*string */$attributeString)
     {
         $attributeString = cast_to_string($attributeString);
 
@@ -544,7 +544,7 @@ class ComponentTagCompiler
      * @param  string  $attributeString
      * @return string
      */
-    protected function parseAttributeBag($attributeString)
+    protected function parseAttributeBag(/*string */$attributeString)
     {
         $attributeString = cast_to_string($attributeString);
 
@@ -562,7 +562,7 @@ class ComponentTagCompiler
      * @param  string  $attributeString
      * @return string
      */
-    protected function parseBindAttributes($attributeString)
+    protected function parseBindAttributes(/*string */$attributeString)
     {
         $attributeString = cast_to_string($attributeString);
 
@@ -584,7 +584,7 @@ class ComponentTagCompiler
      * @param  string  $attributeString
      * @return string
      */
-    protected function compileAttributeEchos($attributeString)
+    protected function compileAttributeEchos(/*string */$attributeString)
     {
         $attributeString = cast_to_string($attributeString);
 
@@ -604,7 +604,7 @@ class ComponentTagCompiler
      * @param  string  $value
      * @return string
      */
-    protected function escapeSingleQuotesOutsideOfPhpBlocks($value)
+    protected function escapeSingleQuotesOutsideOfPhpBlocks(/*string */$value)
     {
         $value = cast_to_string($value);
 
@@ -629,10 +629,9 @@ class ComponentTagCompiler
     protected function attributesToString(array $attributes, $escapeBound = true)
     {
         return collect($attributes)
-                ->map(function ($value, $attribute) use ($escapeBound) {
-                    $attribute = cast_to_string($attribute);
-
+                ->map(function (/*string */$value, /*string */$attribute) use ($escapeBound) {
                     $value = cast_to_string($value);
+                    $attribute = cast_to_string($attribute);
 
                     return $escapeBound && isset($this->boundAttributes[$attribute]) && $value !== 'true' && ! is_numeric($value)
                                 ? "'{$attribute}' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute({$value})"
@@ -647,7 +646,7 @@ class ComponentTagCompiler
      * @param  string  $value
      * @return string
      */
-    public function stripQuotes($value)
+    public function stripQuotes(/*string */$value)
     {
         $value = cast_to_string($value);
 

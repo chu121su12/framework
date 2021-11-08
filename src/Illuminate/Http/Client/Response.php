@@ -95,7 +95,7 @@ class Response implements ArrayAccess
      * @param  string  $header
      * @return string
      */
-    public function header($header)
+    public function header(/*string */$header)
     {
         $header = cast_to_string($header);
 
@@ -273,7 +273,9 @@ class Response implements ArrayAccess
      */
     public function throw_()
     {
-        $callback = isset(func_get_args()[0]) ? func_get_args()[0] : null;
+        $arguments = func_get_args();
+
+        $callback = isset($arguments[0]) ? $arguments[0] : null;
 
         if ($this->failed()) {
             throw tap($this->toException(), function ($exception) use ($callback) {

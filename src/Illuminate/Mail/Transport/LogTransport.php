@@ -48,23 +48,6 @@ class LogTransport extends Transport
     }
 
     /**
-     * Get a loggable string out of a Swiftmailer entity.
-     *
-     * @param  \Swift_Mime_SimpleMimeEntity  $entity
-     * @return string
-     */
-    protected function getMimeEntityString(Swift_Mime_SimpleMimeEntity $entity)
-    {
-        $string = (string) $entity->getHeaders().PHP_EOL.$entity->getBody();
-
-        foreach ($entity->getChildren() as $children) {
-            $string .= PHP_EOL.PHP_EOL.$this->getMimeEntityString($children);
-        }
-
-        return $string;
-    }
-
-    /**
      * Get the logger for the LogTransport instance.
      *
      * @return \Psr\Log\LoggerInterface
@@ -83,5 +66,22 @@ class LogTransport extends Transport
     public function __toString()/*: string*/
     {
         return 'log';
+    }
+
+    /**
+     * Get a loggable string out of a Swiftmailer entity.
+     *
+     * @param  \Swift_Mime_SimpleMimeEntity  $entity
+     * @return string
+     */
+    protected function getMimeEntityString(Swift_Mime_SimpleMimeEntity $entity)
+    {
+        $string = (string) $entity->getHeaders().PHP_EOL.$entity->getBody();
+
+        foreach ($entity->getChildren() as $children) {
+            $string .= PHP_EOL.PHP_EOL.$this->getMimeEntityString($children);
+        }
+
+        return $string;
     }
 }

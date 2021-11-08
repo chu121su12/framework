@@ -142,11 +142,9 @@ class Schedule
             $job = is_string($job) ? Container::getInstance()->make($job) : $job;
 
             if ($job instanceof ShouldQueue) {
-                $this->dispatchToQueue(
-                    $job,
+                $this->dispatchToQueue($job,
                     isset($queue) ? $queue : $job->queue,
-                    isset($connection) ? $connection : $job->connection
-                );
+                    isset($connection) ? $connection : $job->connection);
             } else {
                 $this->dispatchNow($job);
             }

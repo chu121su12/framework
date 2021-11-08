@@ -225,10 +225,7 @@ class CacheManager implements FactoryContract
         );
 
         return $this->repository($store->setLockConnection(
-            $this->app['db']->connection(isset($config['lock_connection'])
-                ? $config['lock_connection']
-                : (isset($config['connection']) ? $config['connection'] : null)
-            )
+            $this->app['db']->connection(isset($config['lock_connection']) ? $config['lock_connection'] : (isset($config['connection']) ? $config['connection'] : null))
         ));
     }
 

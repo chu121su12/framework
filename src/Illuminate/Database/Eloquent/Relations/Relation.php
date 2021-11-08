@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\MultipleRecordsFoundException;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Arr;
-// use Illuminate\Support\Traits\ForwardsCalls;
+use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
 
 abstract class Relation implements BuilderContract
@@ -26,7 +26,7 @@ abstract class Relation implements BuilderContract
      *
      * @var \Illuminate\Database\Eloquent\Builder
      */
-    // protected $query;
+    /*protected $query;*/
 
     /**
      * The parent model instance.

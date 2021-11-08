@@ -359,7 +359,7 @@ class Validator implements ValidatorContract
      * @param  string  $value
      * @return string
      */
-    protected function replacePlaceholderInString($value)
+    protected function replacePlaceholderInString(/*string */$value)
     {
         $value = cast_to_string($value);
 
@@ -497,7 +497,7 @@ class Validator implements ValidatorContract
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function validateWithBag($errorBag)
+    public function validateWithBag(/*string */$errorBag)
     {
         $errorBag = cast_to_string($errorBag);
 
@@ -873,7 +873,7 @@ class Validator implements ValidatorContract
      * @param  string  $attribute
      * @return void
      */
-    protected function excludeAttribute($attribute)
+    protected function excludeAttribute(/*string */$attribute)
     {
         $attribute = cast_to_string($attribute);
 

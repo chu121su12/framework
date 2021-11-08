@@ -498,7 +498,7 @@ class Stringable implements JsonSerializable
      * @param  int  $times
      * @return static
      */
-    public function repeat($times)
+    public function repeat(/*int */$times)
     {
         $times = cast_to_int($times);
 

@@ -210,7 +210,7 @@ abstract class Component
      * @param  string  $method
      * @return \Illuminate\View\InvokableComponentVariable
      */
-    protected function createInvokableVariable($method)
+    protected function createInvokableVariable(/*string */$method)
     {
         $method = cast_to_string($method);
 

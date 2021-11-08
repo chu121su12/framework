@@ -227,17 +227,6 @@ class Message
     }
 
     /**
-     * Create a Swift Attachment instance.
-     *
-     * @param  string  $file
-     * @return \Swift_Mime_Attachment
-     */
-    protected function createAttachmentFromPath($file)
-    {
-        return Swift_Attachment::fromPath($file);
-    }
-
-    /**
      * Attach in-memory data as an attachment.
      *
      * @param  string  $data
@@ -250,18 +239,6 @@ class Message
         $this->prepAttachment($this->createAttachmentFromData($data, $name), $options);
 
         return $this;
-    }
-
-    /**
-     * Create a Swift Attachment instance from data.
-     *
-     * @param  string  $data
-     * @param  string  $name
-     * @return \Swift_Attachment
-     */
-    protected function createAttachmentFromData($data, $name)
-    {
-        return new Swift_Attachment($data, $name);
     }
 
     /**
@@ -297,6 +274,51 @@ class Message
     }
 
     /**
+     * Get the underlying Symfony Email instance.
+     *
+     * @return \Swift_Message
+     */
+    public function getSymfonyMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * Dynamically pass missing methods to the Symfony instance.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        return $this->forwardDecoratedCallTo($this->message, $method, $parameters);
+    }
+
+    /**
+     * Create a Swift Attachment instance.
+     *
+     * @param  string  $file
+     * @return \Swift_Mime_Attachment
+     */
+    protected function createAttachmentFromPath($file)
+    {
+        return Swift_Attachment::fromPath($file);
+    }
+
+    /**
+     * Create a Swift Attachment instance from data.
+     *
+     * @param  string  $data
+     * @param  string  $name
+     * @return \Swift_Attachment
+     */
+    protected function createAttachmentFromData($data, $name)
+    {
+        return new Swift_Attachment($data, $name);
+    }
+
+    /**
      * Prepare and attach the given attachment.
      *
      * @param  \Swift_Attachment  $attachment
@@ -322,28 +344,6 @@ class Message
         $this->message->attach($attachment);
 
         return $this;
-    }
-
-    /**
-     * Get the underlying Symfony Email instance.
-     *
-     * @return \Swift_Message
-     */
-    public function getSymfonyMessage()
-    {
-        return $this->message;
-    }
-
-    /**
-     * Dynamically pass missing methods to the Symfony instance.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        return $this->forwardDecoratedCallTo($this->message, $method, $parameters);
     }
 
     /**

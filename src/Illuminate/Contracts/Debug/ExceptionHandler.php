@@ -14,7 +14,7 @@ interface ExceptionHandler
      *
      * @throws \Throwable
      */
-    public function report($e);
+    public function report(/*Throwable */$e);
 
     /**
      * Determine if the exception should be reported.
@@ -22,7 +22,7 @@ interface ExceptionHandler
      * @param  \Throwable  $e
      * @return bool
      */
-    public function shouldReport($e);
+    public function shouldReport(/*Throwable */$e);
 
     /**
      * Render an exception into an HTTP response.
@@ -33,7 +33,7 @@ interface ExceptionHandler
      *
      * @throws \Throwable
      */
-    public function render($request, $e);
+    public function render($request, /*Throwable */$e);
 
     /**
      * Render an exception to the console.
@@ -42,5 +42,5 @@ interface ExceptionHandler
      * @param  \Throwable  $e
      * @return void
      */
-    public function renderForConsole($output, $e);
+    public function renderForConsole($output, /*Throwable */$e);
 }

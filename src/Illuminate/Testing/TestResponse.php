@@ -821,7 +821,7 @@ EOF;
      * @param  string|null  $key
      * @return $this
      */
-    public function assertJsonCount($count, $key = null)
+    public function assertJsonCount(/*int */$count, $key = null)
     {
         $count = cast_to_int($count);
 

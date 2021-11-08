@@ -97,10 +97,9 @@ class ThrottlesExceptions
             $next($job);
 
             $this->limiter->clear($jobKey);
-
         } catch (\Exception $throwable) {
         } catch (\Error $throwable) {
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
         }
 
         if (isset($throwable)) {
@@ -133,7 +132,7 @@ class ThrottlesExceptions
      * @param  string  $prefix
      * @return $this
      */
-    public function withPrefix($prefix)
+    public function withPrefix(/*string */$prefix)
     {
         $prefix = cast_to_string($prefix);
 

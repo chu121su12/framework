@@ -316,7 +316,7 @@ abstract class HasOneOrMany extends Relation
      * @param  iterable  $records
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function createMany($records)
+    public function createMany(/*iterable */$records)
     {
         $records = cast_to_iterable($records);
 

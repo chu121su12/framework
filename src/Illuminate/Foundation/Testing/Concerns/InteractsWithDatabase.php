@@ -59,7 +59,7 @@ trait InteractsWithDatabase
      * @param  string|null  $connection
      * @return $this
      */
-    protected function assertDatabaseCount($table, $count, $connection = null)
+    protected function assertDatabaseCount($table, /*int */$count, $connection = null)
     {
         $count = cast_to_int($count);
 

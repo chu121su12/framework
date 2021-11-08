@@ -268,6 +268,7 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
                 $counts[$group]++;
             }
 
+            /*yield from $counts;*/
             foreach ($counts as $yieldKey => $yieldValue) {
                 yield $yieldKey => $yieldValue;
             }
@@ -443,12 +444,13 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
                 if (! is_array($item) && ! $item instanceof Enumerable) {
                     yield $item;
                 } elseif ($depth === 1) {
+                    /*yield from $item;*/
                     foreach ($item as $yieldKey => $yieldValue) {
                         yield $yieldKey => $yieldValue;
                     }
                 } else {
-                    $currentCollection = new static($item);
-                    foreach ($currentCollection->flatten($depth - 1) as $yieldKey => $yieldValue) {
+                    /*yield from (new static($item))->flatten($depth - 1);*/
+                    foreach ((new static($item))->flatten($depth - 1) as $yieldKey => $yieldValue) {
                         yield $yieldKey => $yieldValue;
                     }
                 }
@@ -750,8 +752,8 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
     {
         return new static(function () use ($callback) {
             foreach ($this as $key => $value) {
-                $callbackResult = $callback($value, $key);
-                foreach ($callbackResult as $yieldKey => $yieldValue) {
+                /*yield from $callback($value, $key);*/
+                foreach ($callback($value, $key) as $yieldKey => $yieldValue) {
                     yield $yieldKey => $yieldValue;
                 }
             }
@@ -862,6 +864,7 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
 
         return new static(function () use ($keys) {
             if (is_null($keys)) {
+                /*yield from $this;*/
                 foreach ($this as $yieldKey => $yieldValue) {
                     yield $yieldKey => $yieldValue;
                 }
@@ -892,9 +895,11 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
     public function concat($source)
     {
         return (new static(function () use ($source) {
+            /*yield from $this;*/
             foreach ($this as $yieldKey => $yieldValue) {
                 yield $yieldKey => $yieldValue;
             }
+            /*yield from $source;*/
             foreach ($source as $yieldKey => $yieldValue) {
                 yield $yieldKey => $yieldValue;
             }
@@ -1604,8 +1609,8 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
     protected function passthru($method, array $params)
     {
         return new static(function () use ($method, $params) {
-            $collected = $this->collect()->$method(...$params);
-            foreach ($collected as $yieldKey => $yieldValue) {
+            /*yield from $this->collect()->$method(...$params);*/
+            foreach ($this->collect()->$method(...$params) as $yieldKey => $yieldValue) {
                 yield $yieldKey => $yieldValue;
             }
         });

@@ -44,7 +44,7 @@ trait CompilesComponents
      * @param  string  $component
      * @return string
      */
-    public static function newComponentHash($component)
+    public static function newComponentHash(/*string */$component)
     {
         $component = cast_to_string($component);
 
@@ -62,15 +62,12 @@ trait CompilesComponents
      * @param  string  $hash
      * @return string
      */
-    public static function compileClassComponentOpening($component, $alias, $data, $hash)
+    public static function compileClassComponentOpening(/*string */$component, /*string */$alias, /*string */$data, /*string */$hash)
     {
-        $hash = cast_to_string($hash);
-
-        $data = cast_to_string($data);
-
-        $alias = cast_to_string($alias);
-
         $component = cast_to_string($component);
+        $alias = cast_to_string($alias);
+        $data = cast_to_string($data);
+        $hash = cast_to_string($hash);
 
         return implode("\n", [
             '<?php if (isset($component)) { $__componentOriginal'.$hash.' = $component; } ?>',

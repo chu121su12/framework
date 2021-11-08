@@ -365,7 +365,7 @@ class Factory implements FactoryContract
      * @param  string  $id
      * @return bool
      */
-    public function hasRenderedOnce($id)
+    public function hasRenderedOnce(/*string */$id)
     {
         $id = cast_to_string($id);
 
@@ -378,7 +378,7 @@ class Factory implements FactoryContract
      * @param  string  $id
      * @return void
      */
-    public function markAsRenderedOnce($id)
+    public function markAsRenderedOnce(/*string */$id)
     {
         $id = cast_to_string($id);
 

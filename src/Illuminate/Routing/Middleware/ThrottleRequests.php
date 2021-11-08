@@ -241,7 +241,7 @@ class ThrottleRequests
     protected function getHeaders($maxAttempts,
                                   $remainingAttempts,
                                   $retryAfter = null,
-                                  Response $response = null)
+                                  /*?*/Response $response = null)
     {
         if ($response &&
             ! is_null($response->headers->get('X-RateLimit-Remaining')) &&

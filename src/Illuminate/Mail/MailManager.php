@@ -139,23 +139,6 @@ class MailManager implements FactoryContract
     }
 
     /**
-     * Create the SwiftMailer instance for the given configuration.
-     *
-     * @param  array  $config
-     * @return \Swift_Mailer
-     */
-    protected function createSwiftMailer(array $config)
-    {
-        if (isset($config['domain']) ? $config['domain'] : false) {
-            Swift_DependencyContainer::getInstance()
-                ->register('mime.idgenerator.idright')
-                ->asValue($config['domain']);
-        }
-
-        return new Swift_Mailer($this->createSymfonyTransport($config));
-    }
-
-    /**
      * Create a new transport instance.
      *
      * @param  array  $config
@@ -281,25 +264,6 @@ class MailManager implements FactoryContract
     }
 
     /**
-     * Add the SES credentials to the configuration array.
-     *
-     * @param  array  $config
-     * @return array
-     */
-    protected function addSesCredentials(array $config)
-    {
-        if (! isset($config['session_token']) && isset($config['token'])) {
-            $config['session_token'] = $config['token'];
-        }
-
-        if (! empty($config['key']) && ! empty($config['secret'])) {
-            $config['credentials'] = Arr::only($config, ['key', 'secret', 'token']);
-        }
-
-        return $config;
-    }
-
-    /**
      * Create an instance of the Symfony Mail Transport driver.
      *
      * @return \Swift_SendmailTransport
@@ -407,21 +371,6 @@ class MailManager implements FactoryContract
     }
 
     /**
-     * Get a fresh Guzzle HTTP client instance.
-     *
-     * @param  array  $config
-     * @return \GuzzleHttp\Client
-     */
-    protected function guzzle(array $config)
-    {
-        return new HttpClient(Arr::add(
-            isset($config['guzzle']) ? $config['guzzle'] : [],
-            'connect_timeout',
-            60
-        ));
-    }
-
-    /**
      * Set a global address on the mailer by type.
      *
      * @param  \Illuminate\Mail\Mailer  $mailer
@@ -429,7 +378,7 @@ class MailManager implements FactoryContract
      * @param  string  $type
      * @return void
      */
-    protected function setGlobalAddress($mailer, array $config, $type)
+    protected function setGlobalAddress($mailer, array $config, /*string */$type)
     {
         $type = cast_to_string($type);
 
@@ -446,7 +395,7 @@ class MailManager implements FactoryContract
      * @param  string  $name
      * @return array
      */
-    protected function getConfig($name)
+    protected function getConfig(/*string */$name)
     {
         $name = cast_to_string($name);
 
@@ -469,8 +418,7 @@ class MailManager implements FactoryContract
         // that as the default driver in order to provide support for old styles
         // of the Laravel mail configuration file for backwards compatibility.
         return isset($this->app['config']) && isset($this->app['config']['mail.driver'])
-            ? $this->app['config']['mail.driver']
-            : $this->app['config']['mail.default'];
+            ? $this->app['config']['mail.driver'] : $this->app['config']['mail.default'];
     }
 
     /**
@@ -479,7 +427,7 @@ class MailManager implements FactoryContract
      * @param  string  $name
      * @return void
      */
-    public function setDefaultDriver($name)
+    public function setDefaultDriver(/*string */$name)
     {
         $name = cast_to_string($name);
 
@@ -562,5 +510,56 @@ class MailManager implements FactoryContract
     public function __call($method, $parameters)
     {
         return $this->mailer()->$method(...$parameters);
+    }
+
+    /**
+     * Create the SwiftMailer instance for the given configuration.
+     *
+     * @param  array  $config
+     * @return \Swift_Mailer
+     */
+    protected function createSwiftMailer(array $config)
+    {
+        if (isset($config['domain']) ? $config['domain'] : false) {
+            Swift_DependencyContainer::getInstance()
+                ->register('mime.idgenerator.idright')
+                ->asValue($config['domain']);
+        }
+
+        return new Swift_Mailer($this->createSymfonyTransport($config));
+    }
+
+    /**
+     * Add the SES credentials to the configuration array.
+     *
+     * @param  array  $config
+     * @return array
+     */
+    protected function addSesCredentials(array $config)
+    {
+        if (! isset($config['session_token']) && isset($config['token'])) {
+            $config['session_token'] = $config['token'];
+        }
+
+        if (! empty($config['key']) && ! empty($config['secret'])) {
+            $config['credentials'] = Arr::only($config, ['key', 'secret', 'token']);
+        }
+
+        return $config;
+    }
+
+    /**
+     * Get a fresh Guzzle HTTP client instance.
+     *
+     * @param  array  $config
+     * @return \GuzzleHttp\Client
+     */
+    protected function guzzle(array $config)
+    {
+        return new HttpClient(Arr::add(
+            isset($config['guzzle']) ? $config['guzzle'] : [],
+            'connect_timeout',
+            60
+        ));
     }
 }

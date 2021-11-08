@@ -99,7 +99,7 @@ class EncryptCookies
      * @param  string  $value
      * @return string|array|null
      */
-    protected function validateValue($key, $value)
+    protected function validateValue(/*string */$key, $value)
     {
         $key = cast_to_string($key);
 
@@ -115,7 +115,7 @@ class EncryptCookies
      * @param  array  $value
      * @return array
      */
-    protected function validateArray($key, array $value)
+    protected function validateArray(/*string */$key, array $value)
     {
         $key = cast_to_string($key);
 

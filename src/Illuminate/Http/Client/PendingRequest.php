@@ -178,7 +178,7 @@ class PendingRequest
      * @param  string  $url
      * @return $this
      */
-    public function baseUrl($url)
+    public function baseUrl(/*string */$url)
     {
         $url = cast_to_string($url);
 
@@ -272,7 +272,7 @@ class PendingRequest
      * @param  string  $format
      * @return $this
      */
-    public function bodyFormat($format)
+    public function bodyFormat(/*string */$format)
     {
         $format = cast_to_string($format);
 
@@ -287,7 +287,7 @@ class PendingRequest
      * @param  string  $contentType
      * @return $this
      */
-    public function contentType($contentType)
+    public function contentType(/*string */$contentType)
     {
         $contentType = cast_to_string($contentType);
 
@@ -337,11 +337,10 @@ class PendingRequest
      * @param  string  $password
      * @return $this
      */
-    public function withBasicAuth($username, $password)
+    public function withBasicAuth(/*string */$username, /*string */$password)
     {
-        $password = cast_to_string($password);
-
         $username = cast_to_string($username);
+        $password = cast_to_string($password);
 
         return tap($this, function ($request) use ($username, $password) {
             return $this->options['auth'] = [$username, $password];
@@ -396,7 +395,7 @@ class PendingRequest
      * @param  string  $domain
      * @return $this
      */
-    public function withCookies(array $cookies, $domain)
+    public function withCookies(array $cookies, /*string */$domain)
     {
         $domain = cast_to_string($domain);
 
@@ -450,7 +449,7 @@ class PendingRequest
      * @param  int  $seconds
      * @return $this
      */
-    public function timeout($seconds)
+    public function timeout(/*int */$seconds)
     {
         $seconds = cast_to_int($seconds);
 
@@ -470,7 +469,6 @@ class PendingRequest
     public function retry(/*int */$times, /*int */$sleep = 0, /*?*/callable $when = null)
     {
         $times = cast_to_int($times);
-
         $sleep = cast_to_int($sleep);
 
         $this->tries = $times;
@@ -560,7 +558,7 @@ class PendingRequest
      * @param  array|string|null  $query
      * @return \Illuminate\Http\Client\Response
      */
-    public function get($url, $query = null)
+    public function get(/*string */$url, $query = null)
     {
         $url = cast_to_string($url);
 
@@ -576,7 +574,7 @@ class PendingRequest
      * @param  array|string|null  $query
      * @return \Illuminate\Http\Client\Response
      */
-    public function head($url, $query = null)
+    public function head(/*string */$url, $query = null)
     {
         $url = cast_to_string($url);
 
@@ -592,7 +590,7 @@ class PendingRequest
      * @param  array  $data
      * @return \Illuminate\Http\Client\Response
      */
-    public function post($url, array $data = [])
+    public function post(/*string */$url, array $data = [])
     {
         $url = cast_to_string($url);
 
@@ -672,11 +670,10 @@ class PendingRequest
      *
      * @throws \Exception
      */
-    public function send($method, $url, array $options = [])
+    public function send(/*string */$method, /*string */$url, array $options = [])
     {
-        $url = cast_to_string($url);
-
         $method = cast_to_string($method);
+        $url = cast_to_string($url);
 
         $url = ltrim(rtrim($this->baseUrl, '/').'/'.ltrim($url, '/'), '/');
 
@@ -742,10 +739,9 @@ class PendingRequest
      * @param  array  $options
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    protected function makePromise($method, $url, array $options = [])
+    protected function makePromise(/*string */$method, /*string */$url, array $options = [])
     {
         $method = cast_to_string($method);
-
         $url = cast_to_string($url);
 
         return $this->promise = $this->sendRequest($method, $url, $options)
@@ -770,10 +766,9 @@ class PendingRequest
      *
      * @throws \Exception
      */
-    protected function sendRequest($method, $url, array $options = [])
+    protected function sendRequest(/*string */$method, /*string */$url, array $options = [])
     {
         $method = cast_to_string($method);
-
         $url = cast_to_string($url);
 
         $clientMethod = $this->async ? 'requestAsync' : 'request';
@@ -953,7 +948,7 @@ class PendingRequest
     {
         return function ($handler) {
             return function ($request, $options) use ($handler) {
-                $collection = isset($this->stubCallbacks) ? $this->stubCallbacks : collect();
+                $collection = (isset($this->stubCallbacks) ? $this->stubCallbacks : collect());
 
                 $response = $collection
                      ->map
@@ -1048,7 +1043,7 @@ class PendingRequest
      * @param  bool  $async
      * @return $this
      */
-    public function async($async = true)
+    public function async(/*bool */$async = true)
     {
         $async = cast_to_bool($async);
 

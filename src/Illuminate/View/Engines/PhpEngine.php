@@ -58,7 +58,7 @@ class PhpEngine implements Engine
             $this->files->getRequire($path, $data);
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -77,7 +77,7 @@ class PhpEngine implements Engine
      *
      * @throws \Throwable
      */
-    protected function handleViewException($e, $obLevel)
+    protected function handleViewException(/*Throwable */$e, $obLevel)
     {
         while (ob_get_level() > $obLevel) {
             ob_end_clean();

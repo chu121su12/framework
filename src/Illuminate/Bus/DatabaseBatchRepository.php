@@ -40,7 +40,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      * @param  \Illuminate\Database\Connection  $connection
      * @param  string  $table
      */
-    public function __construct(BatchFactory $factory, Connection $connection, $table)
+    public function __construct(BatchFactory $factory, Connection $connection, /*string */$table)
     {
         $table = cast_to_string($table);
 
@@ -77,7 +77,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      * @param  string  $batchId
      * @return \Illuminate\Bus\Batch|null
      */
-    public function find($batchId)
+    public function find(/*string */$batchId)
     {
         $batchId = cast_to_string($batchId);
 
@@ -123,10 +123,9 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      * @param  int  $amount
      * @return void
      */
-    public function incrementTotalJobs($batchId, $amount)
+    public function incrementTotalJobs(/*string */$batchId, /*int */$amount)
     {
         $amount = cast_to_int($amount);
-
         $batchId = cast_to_string($batchId);
 
         $this->connection->table($this->table)->where('id', $batchId)->update([
@@ -143,10 +142,9 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      * @param  string  $jobId
      * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
-    public function decrementPendingJobs($batchId, $jobId)
+    public function decrementPendingJobs(/*string */$batchId, /*string */$jobId)
     {
         $jobId = cast_to_string($jobId);
-
         $batchId = cast_to_string($batchId);
 
         $values = $this->updateAtomicValues($batchId, function ($batch) use ($jobId) {
@@ -170,10 +168,9 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      * @param  string  $jobId
      * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
-    public function incrementFailedJobs($batchId, $jobId)
+    public function incrementFailedJobs(/*string */$batchId, /*string */$jobId)
     {
         $jobId = cast_to_string($jobId);
-
         $batchId = cast_to_string($batchId);
 
         $values = $this->updateAtomicValues($batchId, function ($batch) use ($jobId) {
@@ -197,7 +194,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      * @param  \Closure  $callback
      * @return int|null
      */
-    protected function updateAtomicValues($batchId, Closure $callback)
+    protected function updateAtomicValues(/*string */$batchId, Closure $callback)
     {
         $batchId = cast_to_string($batchId);
 
@@ -218,7 +215,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function markAsFinished($batchId)
+    public function markAsFinished(/*string */$batchId)
     {
         $batchId = cast_to_string($batchId);
 
@@ -233,7 +230,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function cancel($batchId)
+    public function cancel(/*string */$batchId)
     {
         $batchId = cast_to_string($batchId);
 
@@ -249,7 +246,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function delete($batchId)
+    public function delete(/*string */$batchId)
     {
         $batchId = cast_to_string($batchId);
 

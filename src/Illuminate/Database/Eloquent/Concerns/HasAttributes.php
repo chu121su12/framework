@@ -1157,6 +1157,7 @@ trait HasAttributes
 
         if (version_compare(PHP_VERSION, '7.0.0', '<') && Str::endsWith($format, '.v')) {
             $format = preg_replace('/\.v$/', '.u', $format);
+
             return preg_replace('/\d{3}$/', '', $value->format($format));
         }
 

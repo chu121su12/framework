@@ -41,7 +41,7 @@ class SqlServerConnection extends Connection
                 $this->getPdo()->exec('COMMIT TRAN');
             } catch (\Exception $e) {
             } catch (\Error $e) {
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
             }
 
             // If we catch an exception, we will rollback so nothing gets messed

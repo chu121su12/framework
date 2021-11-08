@@ -100,7 +100,7 @@ class View implements ArrayAccess, Htmlable, ViewContract
             return ! is_null($response) ? $response : $contents;
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {

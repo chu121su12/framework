@@ -84,7 +84,7 @@ class ConcurrencyLimiter
                 });
             } catch (\Exception $exception) {
             } catch (\Error $exception) {
-            } catch (\Throwable $exception) {
+            } catch (Throwable $exception) {
             }
 
             if (isset($exception)) {
@@ -92,7 +92,6 @@ class ConcurrencyLimiter
 
                 throw $exception;
             }
-
         }
 
         return true;

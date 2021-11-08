@@ -1077,8 +1077,7 @@ class Route
     public function withoutMiddleware($middleware)
     {
         $this->action['excluded_middleware'] = array_merge(
-            (array) (isset($this->action['excluded_middleware']) ? $this->action['excluded_middleware'] : []),
-            Arr::wrap($middleware)
+            (array) (isset($this->action['excluded_middleware']) ? $this->action['excluded_middleware'] : []), Arr::wrap($middleware)
         );
 
         return $this;
@@ -1270,8 +1269,6 @@ class Route
             $this->action['uses'] = serialize(
                 new SerializableClosure($this->action['uses'])
             );
-
-            // throw new LogicException("Unable to prepare route [{$this->uri}] for serialization. Uses Closure.");
         }
 
         if (isset($this->action['missing']) && $this->action['missing'] instanceof Closure) {

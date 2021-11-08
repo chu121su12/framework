@@ -843,8 +843,7 @@ class Container implements ArrayAccess, ContainerContract
         $endOfStack = end($this->buildStack);
 
         return isset($this->contextual[$endOfStack]) && isset($this->contextual[$endOfStack][$abstract])
-            ? $this->contextual[$endOfStack][$abstract]
-            : null;
+            ? $this->contextual[$endOfStack][$abstract] : null;
     }
 
     /**

@@ -35,7 +35,7 @@ class SqlServerConnection implements ServerInfoAwareConnection
      * @param  string  $sql
      * @return \Doctrine\DBAL\Driver\Statement
      */
-    public function prepare($sql) // : StatementInterface
+    public function prepare(/*string */$sql)/*: StatementInterface*/
     {
         $sql = cast_to_string($sql);
 
@@ -50,7 +50,7 @@ class SqlServerConnection implements ServerInfoAwareConnection
      * @param  string  $sql
      * @return \Doctrine\DBAL\Driver\Result
      */
-    public function query($sql) // : Result
+    public function query(/*string */$sql)/*: Result*/
     {
         $sql = cast_to_string($sql);
 
@@ -63,7 +63,7 @@ class SqlServerConnection implements ServerInfoAwareConnection
      * @param  string  $statement
      * @return int
      */
-    public function exec($statement) // : int
+    public function exec(/*string */$statement)/*: int*/
     {
         $statement = cast_to_string($statement);
 
@@ -151,7 +151,7 @@ class SqlServerConnection implements ServerInfoAwareConnection
      *
      * @return \PDO
      */
-    public function getWrappedConnection() // : PDO
+    public function getWrappedConnection()/*: PDO*/
     {
         return $this->connection->getWrappedConnection();
     }

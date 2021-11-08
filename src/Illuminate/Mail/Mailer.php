@@ -37,13 +37,6 @@ class Mailer implements MailerContract, MailQueueContract
     protected $views;
 
     /**
-     * The Swift Mailer instance.
-     *
-     * @var \Swift_Mailer
-     */
-    protected $swift;
-
-    /**
      * The Symfony Transport instance.
      *
      * @var \Swift_Transport
@@ -93,13 +86,6 @@ class Mailer implements MailerContract, MailQueueContract
     protected $queue;
 
     /**
-     * Array of failed recipients.
-     *
-     * @var array
-     */
-    protected $failedRecipients = [];
-
-    /**
      * Create a new Mailer instance.
      *
      * @param  string  $name
@@ -108,7 +94,7 @@ class Mailer implements MailerContract, MailQueueContract
      * @param  \Illuminate\Contracts\Events\Dispatcher|null  $events
      * @return void
      */
-    public function __construct($name, Factory $views, TransportInterface $transport = null, Dispatcher $events = null, Swift_Mailer $swift = null)
+    public function __construct(/*string */$name, Factory $views, TransportInterface $transport = null, Dispatcher $events = null, Swift_Mailer $swift = null)
     {
         $name = cast_to_string($name);
 
@@ -379,25 +365,6 @@ class Mailer implements MailerContract, MailQueueContract
         }
     }
 
-    protected function addContentSwift($message, $view, $plain, $raw, $data)
-    {
-        if (isset($view)) {
-            $message->setBody($this->renderView($view, $data) ?: ' ', 'text/html');
-        }
-
-        if (isset($plain)) {
-            $method = isset($view) ? 'addPart' : 'setBody';
-
-            $message->$method($this->renderView($plain, $data) ?: ' ', 'text/plain');
-        }
-
-        if (isset($raw)) {
-            $method = (isset($view) || isset($plain)) ? 'addPart' : 'setBody';
-
-            $message->$method($raw, 'text/plain');
-        }
-    }
-
     /**
      * Render the given view.
      *
@@ -589,6 +556,83 @@ class Mailer implements MailerContract, MailQueueContract
     }
 
     /**
+     * Get the Symfony Transport instance.
+     *
+     * @return \Symfony\Component\Mailer\Transport\TransportInterface
+     */
+    public function getSymfonyTransport()
+    {
+        return $this->transport;
+    }
+
+    /**
+     * Get the view factory instance.
+     *
+     * @return \Illuminate\Contracts\View\Factory
+     */
+    public function getViewFactory()
+    {
+        return $this->views;
+    }
+
+    /**
+     * Set the Symfony Transport instance.
+     *
+     * @param  \Symfony\Component\Mailer\Transport\TransportInterface  $transport
+     * @return void
+     */
+    public function setSymfonyTransport(TransportInterface $transport)
+    {
+        $this->transport = $transport;
+    }
+
+    /**
+     * Set the queue manager instance.
+     *
+     * @param  \Illuminate\Contracts\Queue\Factory  $queue
+     * @return $this
+     */
+    public function setQueue(QueueContract $queue)
+    {
+        $this->queue = $queue;
+
+        return $this;
+    }
+
+    /**
+     * The Swift Mailer instance.
+     *
+     * @var \Swift_Mailer
+     */
+    protected $swift;
+
+    /**
+     * Array of failed recipients.
+     *
+     * @var array
+     */
+    protected $failedRecipients = [];
+
+    protected function addContentSwift($message, $view, $plain, $raw, $data)
+    {
+        if (isset($view)) {
+            $message->setBody($this->renderView($view, $data) ?: ' ', 'text/html');
+        }
+
+        if (isset($plain)) {
+            $method = isset($view) ? 'addPart' : 'setBody';
+
+            $message->$method($this->renderView($plain, $data) ?: ' ', 'text/plain');
+        }
+
+        if (isset($raw)) {
+            $method = (isset($view) || isset($plain)) ? 'addPart' : 'setBody';
+
+            $message->$method($raw, 'text/plain');
+        }
+    }
+
+    /**
      * Force the transport to re-connect.
      *
      * This will prevent errors in daemon queue situations.
@@ -621,26 +665,6 @@ class Mailer implements MailerContract, MailQueueContract
     }
 
     /**
-     * Get the Symfony Transport instance.
-     *
-     * @return \Symfony\Component\Mailer\Transport\TransportInterface
-     */
-    public function getSymfonyTransport()
-    {
-        return $this->transport;
-    }
-
-    /**
-     * Get the view factory instance.
-     *
-     * @return \Illuminate\Contracts\View\Factory
-     */
-    public function getViewFactory()
-    {
-        return $this->views;
-    }
-
-    /**
      * Set the Swift Mailer instance.
      *
      * @param  \Swift_Mailer  $swift
@@ -649,29 +673,5 @@ class Mailer implements MailerContract, MailQueueContract
     public function setSwiftMailer($swift)
     {
         $this->swift = $swift;
-    }
-
-    /**
-     * Set the Symfony Transport instance.
-     *
-     * @param  \Symfony\Component\Mailer\Transport\TransportInterface  $transport
-     * @return void
-     */
-    public function setSymfonyTransport(TransportInterface $transport)
-    {
-        $this->transport = $transport;
-    }
-
-    /**
-     * Set the queue manager instance.
-     *
-     * @param  \Illuminate\Contracts\Queue\Factory  $queue
-     * @return $this
-     */
-    public function setQueue(QueueContract $queue)
-    {
-        $this->queue = $queue;
-
-        return $this;
     }
 }

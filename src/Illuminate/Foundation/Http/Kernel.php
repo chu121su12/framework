@@ -111,7 +111,7 @@ class Kernel implements KernelContract
             $response = $this->sendRequestThroughRouter($request);
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -415,7 +415,7 @@ class Kernel implements KernelContract
      * @param  \Throwable  $e
      * @return void
      */
-    protected function reportException($e)
+    protected function reportException(/*Throwable */$e)
     {
         $this->app[ExceptionHandler::class]->report($e);
     }
@@ -427,7 +427,7 @@ class Kernel implements KernelContract
      * @param  \Throwable  $e
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function renderException($request, $e)
+    protected function renderException($request, /*Throwable */$e)
     {
         return $this->app[ExceptionHandler::class]->render($request, $e);
     }

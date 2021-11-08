@@ -101,7 +101,7 @@ abstract class SchemaState
      * @param  string  $table
      * @return $this
      */
-    public function withMigrationTable(string $table)
+    public function withMigrationTable(/*string */$table)
     {
         $this->migrationTable = $table;
 

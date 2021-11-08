@@ -42,7 +42,7 @@ class RateLimiter
      * @param  \Closure  $callback
      * @return $this
      */
-    public function for_($name, Closure $callback)
+    public function for_(/*string */$name, Closure $callback)
     {
         $name = cast_to_string($name);
 
@@ -57,7 +57,7 @@ class RateLimiter
      * @param  string  $name
      * @return \Closure
      */
-    public function limiter($name)
+    public function limiter(/*string */$name)
     {
         $name = cast_to_string($name);
 

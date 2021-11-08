@@ -35,7 +35,7 @@ class MySqlSchemaState extends SchemaState
      * @param  string  $path
      * @return void
      */
-    protected function removeAutoIncrementingState($path)
+    protected function removeAutoIncrementingState(/*string */$path)
     {
         $path = cast_to_string($path);
 
@@ -52,7 +52,7 @@ class MySqlSchemaState extends SchemaState
      * @param  string  $path
      * @return void
      */
-    protected function appendMigrationData($path)
+    protected function appendMigrationData(/*string */$path)
     {
         $path = cast_to_string($path);
 

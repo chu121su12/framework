@@ -1348,7 +1348,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
                         $values = array_reverse($values);
                     }
 
-                    $result = backport_spaceship_operator($values[0], $values[1]);
+                    $result = backport_spaceship_operator($values[0], /*<=> */$values[1]);
                 }
 
                 if ($result === 0) {

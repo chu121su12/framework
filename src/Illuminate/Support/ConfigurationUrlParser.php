@@ -160,6 +160,7 @@ class ConfigurationUrlParser
             return $value;
         }
 
+        // Why?
         if ((string) $value === '') {
             return $value;
         }

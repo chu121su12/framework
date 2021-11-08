@@ -77,7 +77,7 @@ class Builder
      *
      * @throws \InvalidArgumentException
      */
-    public static function defaultMorphKeyType($type)
+    public static function defaultMorphKeyType(/*string */$type)
     {
         $type = cast_to_string($type);
 

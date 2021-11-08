@@ -1217,7 +1217,7 @@ class BelongsToMany extends Relation
      * @param  array  $joinings
      * @return array
      */
-    public function createMany($records, array $joinings = [])
+    public function createMany(/*iterable */$records, array $joinings = [])
     {
         $records = cast_to_iterable($records);
 

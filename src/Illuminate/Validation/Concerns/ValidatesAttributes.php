@@ -548,20 +548,6 @@ trait ValidatesAttributes
         return true;
     }
 
-    protected function getimagesize($filePath)
-    {
-        if (Str::endsWith($filePath, '.svg')) {
-            if (!($xml = @simplexml_load_string(file_get_contents($filePath)))) {
-                return false;
-            }
-
-            $xmlAttributes = $xml->attributes();
-            return [(int) $xmlAttributes->width, (int) $xmlAttributes->height];
-        }
-
-        return @getimagesize($filePath);
-    }
-
     /**
      * Test if the given width and height fail any conditions.
      *
@@ -1595,10 +1581,6 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(2, $parameters, 'exclude_unless');
 
-        // if (! Arr::has($this->data, $parameters[0])) {
-        //     return true;
-        // }
-
         list($values, $other) = $this->parseDependentRuleParameters($parameters);
 
         return in_array($other, $values, is_bool($other) || is_null($other));
@@ -1615,10 +1597,6 @@ trait ValidatesAttributes
     public function validateRequiredUnless($attribute, $value, $parameters)
     {
         $this->requireParameterCount(2, $parameters, 'required_unless');
-
-        // if (! Arr::has($this->data, $parameters[0])) {
-        //     return true;
-        // }
 
         list($values, $other) = $this->parseDependentRuleParameters($parameters);
 
@@ -2082,5 +2060,19 @@ trait ValidatesAttributes
         if (is_numeric($this->getValue($attribute))) {
             $this->numericRules[] = $rule;
         }
+    }
+
+    protected function getimagesize($filePath)
+    {
+        if (Str::endsWith($filePath, '.svg')) {
+            if (!($xml = @simplexml_load_string(file_get_contents($filePath)))) {
+                return false;
+            }
+
+            $xmlAttributes = $xml->attributes();
+            return [(int) $xmlAttributes->width, (int) $xmlAttributes->height];
+        }
+
+        return @getimagesize($filePath);
     }
 }

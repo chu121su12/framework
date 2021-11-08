@@ -121,11 +121,11 @@ abstract class Factory
      * @return void
      */
     public function __construct($count = null,
-                                Collection $states = null,
-                                Collection $has = null,
-                                Collection $for = null,
-                                Collection $afterMaking = null,
-                                Collection $afterCreating = null,
+                                /*?*/Collection $states = null,
+                                /*?*/Collection $has = null,
+                                /*?*/Collection $for = null,
+                                /*?*/Collection $afterMaking = null,
+                                /*?*/Collection $afterCreating = null,
                                 $connection = null)
     {
         $this->count = $count;
@@ -162,7 +162,7 @@ abstract class Factory
      * @param  int  $count
      * @return static
      */
-    public static function times($count)
+    public static function times(/*int */$count)
     {
         $count = cast_to_int($count);
 
@@ -186,7 +186,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return array<int|string, mixed>
      */
-    public function raw($attributes = [], Model $parent = null)
+    public function raw($attributes = [], /*?*/Model $parent = null)
     {
         if ($this->count === null) {
             return $this->state($attributes)->getExpandedAttributes($parent);
@@ -225,7 +225,7 @@ abstract class Factory
      * @param  iterable<int, array<string, mixed>>  $records
      * @return \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Database\Eloquent\Model|TModel>
      */
-    public function createMany($records)
+    public function createMany(/*iterable */$records)
     {
         $records = cast_to_iterable($records);
 
@@ -256,7 +256,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Database\Eloquent\Model|TModel>|\Illuminate\Database\Eloquent\Model|TModel
      */
-    public function create($attributes = [], Model $parent = null)
+    public function create($attributes = [], /*?*/Model $parent = null)
     {
         if (! empty($attributes)) {
             return $this->state($attributes)->create([], $parent);
@@ -298,7 +298,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return \Closure(): (\Illuminate\Database\Eloquent\Collection<int, \Illuminate\Database\Eloquent\Model|TModel>|\Illuminate\Database\Eloquent\Model|TModel)
      */
-    public function lazy(array $attributes = [], Model $parent = null)
+    public function lazy(array $attributes = [], /*?*/Model $parent = null)
     {
         return function () use ($attributes, $parent) {
             return $this->create($attributes, $parent);
@@ -357,7 +357,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Database\Eloquent\Model|TModel>|\Illuminate\Database\Eloquent\Model|TModel
      */
-    public function make($attributes = [], Model $parent = null)
+    public function make($attributes = [], /*?*/Model $parent = null)
     {
         if (! empty($attributes)) {
             return $this->state($attributes)->make([], $parent);
@@ -388,7 +388,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return \Illuminate\Database\Eloquent\Model
      */
-    protected function makeInstance(Model $parent = null)
+    protected function makeInstance(/*?*/Model $parent = null)
     {
         return Model::unguarded(function () use ($parent) {
             return tap($this->newModel($this->getExpandedAttributes($parent)), function ($instance) {
@@ -405,7 +405,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return mixed
      */
-    protected function getExpandedAttributes(Model $parent = null)
+    protected function getExpandedAttributes(/*?*/Model $parent = null)
     {
         return $this->expandAttributes($this->getRawAttributes($parent));
     }
@@ -416,7 +416,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return array
      */
-    protected function getRawAttributes(Model $parent = null)
+    protected function getRawAttributes(/*?*/Model $parent = null)
     {
         return $this->states->pipe(function ($states) {
             return $this->for->isEmpty() ? $states : new Collection(array_merge([function () {
@@ -520,7 +520,7 @@ abstract class Factory
      * @param  string  $related
      * @return string
      */
-    protected function guessRelationship($related)
+    protected function guessRelationship(/*string */$related)
     {
         $related = cast_to_string($related);
 
@@ -613,7 +613,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return void
      */
-    protected function callAfterCreating(Collection $instances, Model $parent = null)
+    protected function callAfterCreating(Collection $instances, /*?*/Model $parent = null)
     {
         $instances->each(function ($model) use ($parent) {
             $this->afterCreating->each(function ($callback) use ($model, $parent) {
@@ -628,7 +628,7 @@ abstract class Factory
      * @param  int|null  $count
      * @return static
      */
-    public function count($count = null)
+    public function count(/*?int */$count = null)
     {
         $count = cast_to_int($count, null);
 
@@ -641,7 +641,7 @@ abstract class Factory
      * @param  string  $connection
      * @return static
      */
-    public function connection($connection)
+    public function connection(/*string */$connection)
     {
         $connection = cast_to_string($connection);
 
@@ -717,7 +717,7 @@ abstract class Factory
      * @param  string  $namespace
      * @return void
      */
-    public static function useNamespace($namespace)
+    public static function useNamespace(/*string */$namespace)
     {
         $namespace = cast_to_string($namespace);
 
@@ -730,7 +730,7 @@ abstract class Factory
      * @param  class-string<\Illuminate\Database\Eloquent\Model>  $modelName
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public static function factoryForModel($modelName)
+    public static function factoryForModel(/*string */$modelName)
     {
         $modelName = cast_to_string($modelName);
 
@@ -766,11 +766,11 @@ abstract class Factory
      * @param  class-string<\Illuminate\Database\Eloquent\Model>  $modelName
      * @return class-string<\Illuminate\Database\Eloquent\Factories\Factory>
      */
-    public static function resolveFactoryName($modelName)
+    public static function resolveFactoryName(/*string */$modelName)
     {
         $modelName = cast_to_string($modelName);
 
-        $resolver = static::$factoryNameResolver ?: function ($modelName) {
+        $resolver = static::$factoryNameResolver ?: function (/*string */$modelName) {
             $modelName = cast_to_string($modelName);
 
             $appNamespace = static::appNamespace();
@@ -798,7 +798,7 @@ abstract class Factory
                             ->getNamespace();
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -839,9 +839,7 @@ abstract class Factory
             return $this->has(
                 $factory
                     ->count(is_numeric(isset($parameters[0]) ? $parameters[0] : null) ? $parameters[0] : 1)
-                    ->state(
-                        (is_callable(isset($parameters[0]) ? $parameters[0] : null)
-                            || is_array(isset($parameters[0]) ? $parameters[0] : null))
+                    ->state((is_callable(isset($parameters[0]) ? $parameters[0] : null) || is_array(isset($parameters[0]) ? $parameters[0] : null))
                         ? $parameters[0]
                         : (isset($parameters[1]) ? $parameters[1] : [])),
                 $relationship

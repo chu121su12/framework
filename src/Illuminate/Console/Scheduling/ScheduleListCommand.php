@@ -34,8 +34,6 @@ class ScheduleListCommand extends Command
     public function handle(Schedule $schedule)
     {
         foreach ($schedule->events() as $event) {
-            $timezone = $this->option('timezone');
-
             $rows[] = [
                 $event->command,
                 $event->expression,

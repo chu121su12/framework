@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Events\MaintenanceModeEnabled;
 use Illuminate\Foundation\Exceptions\RegisterErrorViewPaths;
+use Throwable;
 
 class DownCommand extends Command
 {
@@ -102,10 +103,11 @@ class DownCommand extends Command
         try {
             return $this->laravel->make(PreventRequestsDuringMaintenance::class)->getExcludedPaths();
         } catch (\Exception $e) {
-            return [];
         } catch (\Error $e) {
-            return [];
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             return [];
         }
     }

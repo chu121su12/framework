@@ -78,7 +78,7 @@ abstract class TestCase extends BaseTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         Facade::clearResolvedInstances();
 
@@ -152,7 +152,7 @@ abstract class TestCase extends BaseTestCase
      *
      * @throws \Mockery\Exception\InvalidCountException
      */
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         if ($this->app) {
             $this->callBeforeApplicationDestroyedCallbacks();
@@ -246,7 +246,7 @@ abstract class TestCase extends BaseTestCase
                 $callback();
             } catch (\Exception $e) {
             } catch (\Error $e) {
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
             }
 
             if (isset($e)) {

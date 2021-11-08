@@ -92,11 +92,10 @@ trait MakesHttpRequests
      * @param  string  $value
      * @return $this
      */
-    public function withHeader($name, $value)
+    public function withHeader(/*string */$name, /*string */$value)
     {
-        $value = cast_to_string($value);
-
         $name = cast_to_string($name);
+        $value = cast_to_string($value);
 
         $this->defaultHeaders[$name] = $value;
 
@@ -110,10 +109,9 @@ trait MakesHttpRequests
      * @param  string  $type
      * @return $this
      */
-    public function withToken($token, $type = 'Bearer')
+    public function withToken(/*string */$token, /*string */$type = 'Bearer')
     {
         $token = cast_to_string($token);
-
         $type = cast_to_string($type);
 
         return $this->withHeader('Authorization', $type.' '.$token);
@@ -159,8 +157,7 @@ trait MakesHttpRequests
         }
 
         foreach ((array) $middleware as $abstract) {
-            $this->app->instance(
-                $abstract,
+            $this->app->instance($abstract,
                 new MakesHttpRequests_withoutMiddleware_Class
             );
         }
@@ -209,11 +206,10 @@ trait MakesHttpRequests
      * @param  string  $value
      * @return $this
      */
-    public function withCookie($name, $value)
+    public function withCookie(/*string */$name, /*string */$value)
     {
-        $value = cast_to_string($value);
-
         $name = cast_to_string($name);
+        $value = cast_to_string($value);
 
         $this->defaultCookies[$name] = $value;
 
@@ -240,11 +236,10 @@ trait MakesHttpRequests
      * @param  string  $value
      * @return $this
      */
-    public function withUnencryptedCookie($name, $value)
+    public function withUnencryptedCookie(/*string */$name, /*string */$value)
     {
-        $value = cast_to_string($value);
-
         $name = cast_to_string($name);
+        $value = cast_to_string($value);
 
         $this->unencryptedCookies[$name] = $value;
 
@@ -293,7 +288,7 @@ trait MakesHttpRequests
      * @param  string  $url
      * @return $this
      */
-    public function from($url)
+    public function from(/*string */$url)
     {
         $url = cast_to_string($url);
 

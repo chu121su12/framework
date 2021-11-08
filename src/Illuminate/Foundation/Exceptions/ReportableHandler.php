@@ -40,7 +40,7 @@ class ReportableHandler
      * @param  \Throwable  $e
      * @return bool
      */
-    public function __invoke($e)
+    public function __invoke(/*Throwable */$e)
     {
         $result = call_user_func($this->callback, $e);
 
@@ -57,7 +57,7 @@ class ReportableHandler
      * @param  \Throwable  $e
      * @return bool
      */
-    public function handles($e)
+    public function handles(/*Throwable */$e)
     {
         foreach ($this->firstClosureParameterTypes($this->callback) as $type) {
             if (is_a($e, $type)) {

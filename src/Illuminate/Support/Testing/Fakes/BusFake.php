@@ -466,7 +466,7 @@ class BusFake implements QueueingDispatcher
      * @param  callable|null  $callback
      * @return \Illuminate\Support\Collection
      */
-    public function dispatchedAfterResponse($command, $callback = null)
+    public function dispatchedAfterResponse(/*string */$command, $callback = null)
     {
         $command = cast_to_string($command);
 
@@ -631,7 +631,7 @@ class BusFake implements QueueingDispatcher
      * @param  string  $batchId
      * @return \Illuminate\Bus\Batch|null
      */
-    public function findBatch($batchId)
+    public function findBatch(/*string */$batchId)
     {
         $batchId = cast_to_string($batchId);
 

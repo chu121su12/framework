@@ -43,7 +43,7 @@ trait Batchable
      * @param  string  $batchId
      * @return $this
      */
-    public function withBatchId($batchId)
+    public function withBatchId(/*string */$batchId)
     {
         $batchId = cast_to_string($batchId);
 

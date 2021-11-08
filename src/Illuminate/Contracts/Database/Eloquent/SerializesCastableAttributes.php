@@ -13,5 +13,5 @@ interface SerializesCastableAttributes
      * @param  array  $attributes
      * @return mixed
      */
-    public function serialize($model, $key, $value, array $attributes);
+    public function serialize($model, /*string */$key, $value, array $attributes);
 }

@@ -40,7 +40,7 @@ class AssertableJson implements Arrayable
      * @param  string|null  $path
      * @return void
      */
-    protected function __construct(array $props, $path = null)
+    protected function __construct(array $props, /*string */$path = null)
     {
         $path = cast_to_string($path, null);
 
@@ -54,7 +54,7 @@ class AssertableJson implements Arrayable
      * @param  string  $key
      * @return string
      */
-    protected function dotPath($key = '') ////: string
+    protected function dotPath(/*string */$key = '')/*: string*/
     {
         $key = cast_to_string($key);
 
@@ -71,7 +71,7 @@ class AssertableJson implements Arrayable
      * @param  string|null  $key
      * @return mixed
      */
-    protected function prop($key = null)
+    protected function prop(/*string */$key = null)
     {
         $key = cast_to_string($key, null);
 
@@ -85,7 +85,7 @@ class AssertableJson implements Arrayable
      * @param  \Closure  $callback
      * @return $this
      */
-    protected function scope($key, Closure $callback) ////:self
+    protected function scope(/*string */$key, Closure $callback)/*: self*/
     {
         $key = cast_to_string($key);
 
@@ -107,7 +107,7 @@ class AssertableJson implements Arrayable
      * @param  \Closure  $callback
      * @return $this
      */
-    public function first(Closure $callback) ////: self
+    public function first(Closure $callback)/*: self*/
     {
         $props = $this->prop();
 
@@ -157,7 +157,7 @@ class AssertableJson implements Arrayable
      * @param  array  $data
      * @return static
      */
-    public static function fromArray(array $data) ////:self
+    public static function fromArray(array $data)/*: self*/
     {
         return new static($data);
     }
@@ -168,7 +168,7 @@ class AssertableJson implements Arrayable
      * @param  \Illuminate\Testing\AssertableJsonString  $json
      * @return static
      */
-    public static function fromAssertableJsonString(AssertableJsonString $json) ////:self
+    public static function fromAssertableJsonString(AssertableJsonString $json)/*: self*/
     {
         return static::fromArray($json->json());
     }

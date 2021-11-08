@@ -67,7 +67,7 @@ class AssertableJsonString implements ArrayAccess, Countable
      * @param  string|null  $key
      * @return $this
      */
-    public function assertCount($count, $key = null)
+    public function assertCount(/*int */$count, $key = null)
     {
         $count = cast_to_int($count);
 
