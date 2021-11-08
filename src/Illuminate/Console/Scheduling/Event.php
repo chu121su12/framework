@@ -245,7 +245,12 @@ class Event
             $this->callBeforeCallbacks($container);
 
             SymfonyHelper::processFromShellCommandline($this->buildCommand(), base_path(), null, null, null)->run();
-        } catch (Throwable $exception) {
+        } catch (\Exception $exception) {
+        } catch (\Error $exception) {
+        } catch (\Throwable $exception) {
+        }
+
+        if (isset($exception)) {
             $this->removeMutex();
 
             throw $exception;
