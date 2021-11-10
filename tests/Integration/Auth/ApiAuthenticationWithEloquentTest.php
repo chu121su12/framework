@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Tests\Integration\Auth\ApiAuthenticationWithEloquentTest;
+namespace Illuminate\Tests\Integration\Auth;
 
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\User as FoundationUser;
@@ -31,13 +31,16 @@ class ApiAuthenticationWithEloquentTest extends TestCase
         $app['config']->set('database.default', 'testbench');
 
         $app['config']->set('database.connections.testbench', [
-            'driver' => isset($_SERVER['CI_DB_DRIVER']) ? $_SERVER['CI_DB_DRIVER'] : 'mysql',
+            'driver' => isset($_SERVER['CI_DB_AUTH_DRIVER']) ? $_SERVER['CI_DB_AUTH_DRIVER'] : 'mysql',
             'host' => env('DB_HOST', isset($_SERVER['CI_DB_HOST']) ? $_SERVER['CI_DB_HOST'] : '127.0.0.1'),
-            'port' => isset($_SERVER['CI_DB_PORT']) ? $_SERVER['CI_DB_PORT'] : '3306',
+            'port' => isset($_SERVER['CI_DB_MYSQL_PORT']) ? $_SERVER['CI_DB_MYSQL_PORT'] : '3306',
             'username' => 'root',
             'password' => 'invalid-credentials',
             'database' => isset($_SERVER['CI_DB_DATABASE']) ? $_SERVER['CI_DB_DATABASE'] : 'forge',
             'prefix' => '',
+            'options' => [
+                \PDO::ATTR_TIMEOUT => isset($_SERVER['CI_DB_OPTIONS_TIMEOUT']) ? $_SERVER['CI_DB_OPTIONS_TIMEOUT'] : 60,
+            ],
         ]);
     }
 

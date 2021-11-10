@@ -352,7 +352,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
     /**
      * Get the base path of the Laravel installation.
      *
-     * @param  string  $path Optionally, a path to append to the base path
+     * @param  string  $path
      * @return string
      */
     public function basePath($path = '')
@@ -363,7 +363,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
     /**
      * Get the path to the bootstrap directory.
      *
-     * @param  string  $path Optionally, a path to append to the bootstrap path
+     * @param  string  $path
      * @return string
      */
     public function bootstrapPath($path = '')
@@ -374,7 +374,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
     /**
      * Get the path to the application configuration files.
      *
-     * @param  string  $path Optionally, a path to append to the config path
+     * @param  string  $path
      * @return string
      */
     public function configPath($path = '')
@@ -385,7 +385,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
     /**
      * Get the path to the database directory.
      *
-     * @param  string  $path Optionally, a path to append to the database path
+     * @param  string  $path
      * @return string
      */
     public function databasePath($path = '')
@@ -630,7 +630,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
      */
     public function runningUnitTests()
     {
-        return $this['env'] === 'testing';
+        return $this->bound('env') && $this['env'] === 'testing';
     }
 
     /**
@@ -943,7 +943,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
         $this->bootedCallbacks[] = $callback;
 
         if ($this->isBooted()) {
-            $this->fireAppCallbacks([$callback]);
+            $callback($this);
         }
     }
 
@@ -953,21 +953,26 @@ class Application extends Container implements ApplicationContract, CachesConfig
      * @param  callable[]  $callbacks
      * @return void
      */
-    protected function fireAppCallbacks(array $callbacks)
+    protected function fireAppCallbacks(array &$callbacks)
     {
-        foreach ($callbacks as $callback) {
-            $callback($this);
+        $index = 0;
+
+        while ($index < count($callbacks)) {
+            $callbacks[$index]($this);
+
+            $index++;
         }
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handle(SymfonyRequest $request, /*int */$type = self::MASTER_REQUEST, /*bool */$catch = true)/*: SymfonyResponse*/
+    public function handle(SymfonyRequest $request, /*int */$type = /*self::MAIN_REQUEST*/self::MASTER_REQUEST, /*bool */$catch = true)/*: SymfonyResponse*/
     {
-        $catch = cast_to_bool($catch);
-
         $type = cast_to_int($type);
+        $catch = cast_to_bool($catch);
 
         return $this[HttpKernelContract::class]->handle(Request::createFromBase($request));
     }
@@ -1110,7 +1115,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
      * @param  int  $code
      * @param  string  $message
      * @param  array  $headers
-     * @return void
+     * @return never
      *
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
@@ -1144,8 +1149,12 @@ class Application extends Container implements ApplicationContract, CachesConfig
      */
     public function terminate()
     {
-        foreach ($this->terminatingCallbacks as $terminating) {
-            $this->call($terminating);
+        $index = 0;
+
+        while ($index < count($this->terminatingCallbacks)) {
+            $this->call($this->terminatingCallbacks[$index]);
+
+            $index++;
         }
     }
 
@@ -1165,7 +1174,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
      * @param  string  $provider
      * @return bool
      */
-    public function providerIsLoaded($provider)
+    public function providerIsLoaded(/*string */$provider)
     {
         $provider = cast_to_string($provider);
 

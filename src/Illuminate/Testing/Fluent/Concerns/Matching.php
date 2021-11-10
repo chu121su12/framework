@@ -16,7 +16,7 @@ trait Matching
      * @param  mixed|\Closure  $expected
      * @return $this
      */
-    public function where($key, $expected) ////:self
+    public function where(/*string */$key, $expected)/*: self*/
     {
         $key = cast_to_string($key);
 
@@ -55,7 +55,7 @@ trait Matching
      * @param  array  $bindings
      * @return $this
      */
-    public function whereAll(array $bindings) ////:self
+    public function whereAll(array $bindings)/*: self*/
     {
         foreach ($bindings as $key => $value) {
             $this->where($key, $value);
@@ -71,7 +71,7 @@ trait Matching
      * @param  string|array  $expected
      * @return $this
      */
-    public function whereType($key, $expected) ////: self
+    public function whereType(/*string */$key, $expected)/*: self*/
     {
         $key = cast_to_string($key);
 
@@ -98,7 +98,7 @@ trait Matching
      * @param  array  $bindings
      * @return $this
      */
-    public function whereAllType(array $bindings) ////: self
+    public function whereAllType(array $bindings)/*: self*/
     {
         foreach ($bindings as $key => $value) {
             $this->whereType($key, $value);
@@ -111,8 +111,7 @@ trait Matching
      * Asserts that the property contains the expected values.
      *
      * @param  string  $key
-     * @param  array|string  $expected
-     *
+     * @param  mixed  $expected
      * @return $this
      */
     public function whereContains(/*string */$key, $expected)
@@ -131,16 +130,26 @@ trait Matching
             }
 
             return $actual->containsStrict($search);
-        })->toArray();
+        });
 
-        PHPUnit::assertEmpty(
-            $missing,
-            sprintf(
-                'Property [%s] does not contain [%s].',
-                $key,
-                implode(', ', array_values($missing))
-            )
-        );
+        if ($missing->whereInstanceOf('Closure')->isNotEmpty()) {
+            PHPUnit::assertEmpty(
+                $missing->toArray(),
+                sprintf(
+                    'Property [%s] does not contain a value that passes the truth test within the given closure.',
+                    $key
+                )
+            );
+        } else {
+            PHPUnit::assertEmpty(
+                $missing->toArray(),
+                sprintf(
+                    'Property [%s] does not contain [%s].',
+                    $key,
+                    implode(', ', array_values($missing->toArray()))
+                )
+            );
+        }
 
         return $this;
     }
@@ -151,7 +160,7 @@ trait Matching
      * @param  mixed  $value
      * @return void
      */
-    protected function ensureSorted(&$value) ////:void
+    protected function ensureSorted(&$value)/*: void*/
     {
         if (! is_array($value)) {
             return;
@@ -170,7 +179,7 @@ trait Matching
      * @param  string  $key
      * @return string
      */
-    abstract protected function dotPath($key = ''); ////: string;
+    abstract protected function dotPath(/*string */$key = '')/*: string*/;
 
     /**
      * Ensure that the given prop exists.
@@ -180,7 +189,7 @@ trait Matching
      * @param  \Closure|null  $scope
      * @return $this
      */
-    abstract public function has($key, $value = null, Closure $scope = null);
+    abstract public function has(/*string */$key, $value = null, Closure $scope = null);
 
     /**
      * Retrieve a prop within the current scope using "dot" notation.
@@ -188,5 +197,5 @@ trait Matching
      * @param  string|null  $key
      * @return mixed
      */
-    abstract protected function prop($key = null);
+    abstract protected function prop(/*string */$key = null);
 }

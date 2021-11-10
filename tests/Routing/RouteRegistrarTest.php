@@ -9,6 +9,15 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Stringable;
+
+class RouteRegistrarTest_testMiddlewareStringableObject_class implements Stringable
+        {
+            public function __toString()
+            {
+                return 'one';
+            }
+        }
 
 class RouteRegistrarTest extends TestCase
 {
@@ -60,6 +69,42 @@ class RouteRegistrarTest extends TestCase
 
         $this->seeResponse('all-users', Request::create('users', 'GET'));
         $this->assertEquals(['seven'], $this->getRoute()->middleware());
+    }
+
+    public function testMiddlewareAsStringableObject()
+    {
+        $one = new RouteRegistrarTest_testMiddlewareStringableObject_class;
+
+        $this->router->middleware($one)->get('users', function () {
+            return 'all-users';
+        });
+
+        $this->seeResponse('all-users', Request::create('users', 'GET'));
+        $this->assertSame(['one'], $this->getRoute()->middleware());
+    }
+
+    public function testMiddlewareAsStringableObjectOnRouteInstance()
+    {
+        $one = new RouteRegistrarTest_testMiddlewareStringableObject_class;
+
+        $this->router->get('users', function () {
+            return 'all-users';
+        })->middleware($one);
+
+        $this->seeResponse('all-users', Request::create('users', 'GET'));
+        $this->assertSame(['one'], $this->getRoute()->middleware());
+    }
+
+    public function testMiddlewareAsArrayWithStringables()
+    {
+        $one = new RouteRegistrarTest_testMiddlewareStringableObject_class;
+
+        $this->router->middleware([$one, 'two'])->get('users', function () {
+            return 'all-users';
+        });
+
+        $this->seeResponse('all-users', Request::create('users', 'GET'));
+        $this->assertSame(['one', 'two'], $this->getRoute()->middleware());
     }
 
     public function testWithoutMiddlewareRegistration()
@@ -192,6 +237,20 @@ class RouteRegistrarTest extends TestCase
         $this->seeMiddleware('group-middleware');
     }
 
+    public function testCanRegisterGroupWithStringableMiddleware()
+    {
+        $one = new RouteRegistrarTest_testMiddlewareStringableObject_class;
+
+        $this->router->middleware($one)->group(function ($router) {
+            $router->get('users', function () {
+                return 'all-users';
+            });
+        });
+
+        $this->seeResponse('all-users', Request::create('users', 'GET'));
+        $this->seeMiddleware('one');
+    }
+
     public function testCanRegisterGroupWithNamespace()
     {
         $this->router->namespace('App\Http\Controllers')->group(function ($router) {
@@ -250,6 +309,16 @@ class RouteRegistrarTest extends TestCase
 
         $this->assertSame('{account}.myapp.com', $this->getRoute()->getDomain());
         $this->assertSame('api.users', $this->getRoute()->getName());
+    }
+
+    public function testRouteGroupingWithoutPrefix()
+    {
+        $this->router->group([], function ($router) {
+            $router->prefix('bar')->get('baz', ['as' => 'baz', function () {
+                return 'hello';
+            }]);
+        });
+        $this->seeResponse('hello', Request::create('bar/baz', 'GET'));
     }
 
     public function testRegisteringNonApprovedAttributesThrows()
@@ -595,6 +664,21 @@ class RouteRegistrarTest extends TestCase
 
         $this->seeResponse('controller', Request::create('users', 'GET'));
 
+        $this->assertEquals(['one'], $this->getRoute()->excludedMiddleware());
+    }
+
+    public function testResourceWithMiddlewareAsStringable()
+    {
+        $one = new RouteRegistrarTest_testMiddlewareStringableObject_class;
+
+        $this->router->resource('users', RouteRegistrarControllerStub::class)
+                     ->only('index')
+                     ->middleware([$one, 'two'])
+                     ->withoutMiddleware('one');
+
+        $this->seeResponse('controller', Request::create('users', 'GET'));
+
+        $this->assertEquals(['one', 'two'], $this->getRoute()->middleware());
         $this->assertEquals(['one'], $this->getRoute()->excludedMiddleware());
     }
 

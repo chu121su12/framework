@@ -14,8 +14,8 @@ use Illuminate\Routing\Matching\UriValidator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use Laravel\SerializableClosure\SerializableClosure;
 use LogicException;
-use Opis\Closure\SerializableClosure;
 use ReflectionFunction;
 use Symfony\Component\Routing\Route as SymfonyRoute;
 
@@ -975,9 +975,9 @@ class Route
         $missing = isset($this->action['missing']) ? $this->action['missing'] : null;
 
         return is_string($missing) &&
-            Str::startsWith($missing, 'C:32:"Opis\\Closure\\SerializableClosure')
-                ? unserialize($missing)
-                : $missing;
+            Str::startsWith($missing, [
+                'O:47:"Laravel\\SerializableClosure\\SerializableClosure',
+            ]) ? unserialize($missing) : $missing;
     }
 
     /**
@@ -1023,8 +1023,12 @@ class Route
             return (array) (isset($this->action['middleware']) ? $this->action['middleware'] : []);
         }
 
-        if (is_string($middleware)) {
+        if (! is_array($middleware)) {
             $middleware = func_get_args();
+        }
+
+        foreach ($middleware as $index => $value) {
+            $middleware[$index] = (string) $value;
         }
 
         $this->action['middleware'] = array_merge(
@@ -1032,6 +1036,20 @@ class Route
         );
 
         return $this;
+    }
+
+    /**
+     * Specify that the "Authorize" / "can" middleware should be applied to the route with the given options.
+     *
+     * @param  string  $ability
+     * @param  array|string  $models
+     * @return $this
+     */
+    public function can($ability, $models = [])
+    {
+        return empty($models)
+                    ? $this->middleware(['can:'.$ability])
+                    : $this->middleware(['can:'.$ability.','.implode(',', Arr::wrap($models))]);
     }
 
     /**
@@ -1059,8 +1077,7 @@ class Route
     public function withoutMiddleware($middleware)
     {
         $this->action['excluded_middleware'] = array_merge(
-            (array) (isset($this->action['excluded_middleware']) ? $this->action['excluded_middleware'] : []),
-            Arr::wrap($middleware)
+            (array) (isset($this->action['excluded_middleware']) ? $this->action['excluded_middleware'] : []), Arr::wrap($middleware)
         );
 
         return $this;
@@ -1074,6 +1091,28 @@ class Route
     public function excludedMiddleware()
     {
         return (array) (isset($this->action['excluded_middleware']) ? $this->action['excluded_middleware'] : []);
+    }
+
+    /**
+     * Indicate that the route should enforce scoping of multiple implicit Eloquent bindings.
+     *
+     * @return bool
+     */
+    public function scopeBindings()
+    {
+        $this->action['scope_bindings'] = true;
+
+        return $this;
+    }
+
+    /**
+     * Determine if the route should enforce scoping of multiple implicit Eloquent bindings.
+     *
+     * @return bool
+     */
+    public function enforcesScopedBindings()
+    {
+        return (bool) (isset($this->action['scope_bindings']) ? $this->action['scope_bindings'] : false);
     }
 
     /**
@@ -1227,13 +1266,15 @@ class Route
     public function prepareForSerialization()
     {
         if ($this->action['uses'] instanceof Closure) {
-            $this->action['uses'] = serialize(new SerializableClosure($this->action['uses']));
-
-            // throw new LogicException("Unable to prepare route [{$this->uri}] for serialization. Uses Closure.");
+            $this->action['uses'] = serialize(
+                new SerializableClosure($this->action['uses'])
+            );
         }
 
         if (isset($this->action['missing']) && $this->action['missing'] instanceof Closure) {
-            $this->action['missing'] = serialize(new SerializableClosure($this->action['missing']));
+            $this->action['missing'] = serialize(
+                new SerializableClosure($this->action['missing'])
+            );
         }
 
         $this->compileRoute();

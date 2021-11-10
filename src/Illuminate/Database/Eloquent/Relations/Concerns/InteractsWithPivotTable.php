@@ -132,7 +132,7 @@ trait InteractsWithPivotTable
      * @param  bool  $detaching
      * @return array
      */
-    public function syncWithPivotValues($ids, array $values, $detaching = true)
+    public function syncWithPivotValues($ids, array $values, /*bool */$detaching = true)
     {
         $detaching = cast_to_bool($detaching);
 

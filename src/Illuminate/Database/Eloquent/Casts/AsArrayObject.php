@@ -17,7 +17,7 @@ class AsArrayObject_castUsing_class implements CastsAttributes
                 return [$key => json_encode($value)];
             }
 
-            public function serialize($model, $key, $value, /* array */ $attributes)
+            public function serialize($model, /*string */$key, $value, /*array */$attributes)
             {
                 // $key = cast_to_string($key);
 

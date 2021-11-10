@@ -49,7 +49,7 @@ class ResponseSequence
      * @param  array  $headers
      * @return $this
      */
-    public function push($body = '', $status = 200, array $headers = [])
+    public function push($body = '', /*int */$status = 200, array $headers = [])
     {
         $status = cast_to_int($status);
 
@@ -67,7 +67,7 @@ class ResponseSequence
      * @param  array  $headers
      * @return $this
      */
-    public function pushStatus($status, array $headers = [])
+    public function pushStatus(/*int */$status, array $headers = [])
     {
         $status = cast_to_int($status);
 
@@ -84,10 +84,9 @@ class ResponseSequence
      * @param  array  $headers
      * @return $this
      */
-    public function pushFile($filePath, $status = 200, array $headers = [])
+    public function pushFile(/*string */$filePath, /*int */$status = 200, array $headers = [])
     {
         $filePath = cast_to_string($filePath);
-
         $status = cast_to_int($status);
 
         $string = file_get_contents($filePath);

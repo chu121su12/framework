@@ -5,6 +5,7 @@ namespace Illuminate\Mail;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Swift_Attachment;
 use Swift_Image;
+use Swift_Message as Email;
 
 /**
  * @mixin \Swift_Message
@@ -14,11 +15,11 @@ class Message
     use ForwardsCalls;
 
     /**
-     * The Swift Message instance.
+     * The Symfony Email instance.
      *
      * @var \Swift_Message
      */
-    protected $swift;
+    protected $message;
 
     /**
      * CIDs of files embedded in the message.
@@ -30,12 +31,12 @@ class Message
     /**
      * Create a new message instance.
      *
-     * @param  \Swift_Message  $swift
+     * @param  \Swift_Message  $message
      * @return void
      */
-    public function __construct($swift)
+    public function __construct($message)
     {
-        $this->swift = $swift;
+        $this->message = $message;
     }
 
     /**
@@ -47,7 +48,9 @@ class Message
      */
     public function from($address, $name = null)
     {
-        $this->swift->setFrom($address, $name);
+        is_array($address)
+            ? $this->message->setFrom(...$address)
+            : $this->message->setFrom($address, (string) $name);
 
         return $this;
     }
@@ -61,7 +64,9 @@ class Message
      */
     public function sender($address, $name = null)
     {
-        $this->swift->setSender($address, $name);
+        is_array($address)
+            ? $this->message->setSender(...$address)
+            : $this->message->setSender($address, (string) $name);
 
         return $this;
     }
@@ -74,7 +79,7 @@ class Message
      */
     public function returnPath($address)
     {
-        $this->swift->setReturnPath($address);
+        $this->message->setReturnPath($address);
 
         return $this;
     }
@@ -90,7 +95,9 @@ class Message
     public function to($address, $name = null, $override = false)
     {
         if ($override) {
-            $this->swift->setTo($address, $name);
+            is_array($address)
+                ? $this->message->setTo(...$address)
+                : $this->message->setTo($address, (string) $name);
 
             return $this;
         }
@@ -109,7 +116,9 @@ class Message
     public function cc($address, $name = null, $override = false)
     {
         if ($override) {
-            $this->swift->setCc($address, $name);
+            is_array($address)
+                ? $this->message->setCc(...$address)
+                : $this->message->setCc($address, (string) $name);
 
             return $this;
         }
@@ -128,7 +137,9 @@ class Message
     public function bcc($address, $name = null, $override = false)
     {
         if ($override) {
-            $this->swift->setBcc($address, $name);
+            is_array($address)
+                ? $this->message->setBcc(...$address)
+                : $this->message->setBcc($address, (string) $name);
 
             return $this;
         }
@@ -159,9 +170,17 @@ class Message
     protected function addAddresses($address, $name, $type)
     {
         if (is_array($address)) {
-            $this->swift->{"set{$type}"}($address, $name);
+            $type = ucfirst($type);
+
+            $addresses = collect($address)->each(function (/*string|array */$address) use ($type) {
+                if (is_array($address)) {
+                    $this->message->{"set{$type}"}(isset($address['email']) ? $address['email'] : $address['address'], isset($address['name']) ? $address['name'] : null);
+                } else {
+                    $this->message->{"set{$type}"}($address);
+                }
+            });
         } else {
-            $this->swift->{"add{$type}"}($address, $name);
+            $this->message->{"add{$type}"}($address, (string) $name);
         }
 
         return $this;
@@ -175,7 +194,7 @@ class Message
      */
     public function subject($subject)
     {
-        $this->swift->setSubject($subject);
+        $this->message->setSubject($subject);
 
         return $this;
     }
@@ -188,7 +207,7 @@ class Message
      */
     public function priority($level)
     {
-        $this->swift->setPriority($level);
+        $this->message->setPriority($level);
 
         return $this;
     }
@@ -202,20 +221,9 @@ class Message
      */
     public function attach($file, array $options = [])
     {
-        $attachment = $this->createAttachmentFromPath($file);
+        $this->prepAttachment($this->createAttachmentFromPath($file), $options);
 
-        return $this->prepAttachment($attachment, $options);
-    }
-
-    /**
-     * Create a Swift Attachment instance.
-     *
-     * @param  string  $file
-     * @return \Swift_Mime_Attachment
-     */
-    protected function createAttachmentFromPath($file)
-    {
-        return Swift_Attachment::fromPath($file);
+        return $this;
     }
 
     /**
@@ -228,21 +236,9 @@ class Message
      */
     public function attachData($data, $name, array $options = [])
     {
-        $attachment = $this->createAttachmentFromData($data, $name);
+        $this->prepAttachment($this->createAttachmentFromData($data, $name), $options);
 
-        return $this->prepAttachment($attachment, $options);
-    }
-
-    /**
-     * Create a Swift Attachment instance from data.
-     *
-     * @param  string  $data
-     * @param  string  $name
-     * @return \Swift_Attachment
-     */
-    protected function createAttachmentFromData($data, $name)
-    {
-        return new Swift_Attachment($data, $name);
+        return $this;
     }
 
     /**
@@ -257,7 +253,7 @@ class Message
             return $this->embeddedFiles[$file];
         }
 
-        return $this->embeddedFiles[$file] = $this->swift->embed(
+        return $this->embeddedFiles[$file] = $this->message->embed(
             Swift_Image::fromPath($file)
         );
     }
@@ -274,7 +270,52 @@ class Message
     {
         $image = new Swift_Image($data, $name, $contentType);
 
-        return $this->swift->embed($image);
+        return $this->message->embed($image);
+    }
+
+    /**
+     * Get the underlying Symfony Email instance.
+     *
+     * @return \Swift_Message
+     */
+    public function getSymfonyMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * Dynamically pass missing methods to the Symfony instance.
+     *
+     * @param  string  $method
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        return $this->forwardDecoratedCallTo($this->message, $method, $parameters);
+    }
+
+    /**
+     * Create a Swift Attachment instance.
+     *
+     * @param  string  $file
+     * @return \Swift_Mime_Attachment
+     */
+    protected function createAttachmentFromPath($file)
+    {
+        return Swift_Attachment::fromPath($file);
+    }
+
+    /**
+     * Create a Swift Attachment instance from data.
+     *
+     * @param  string  $data
+     * @param  string  $name
+     * @return \Swift_Attachment
+     */
+    protected function createAttachmentFromData($data, $name)
+    {
+        return new Swift_Attachment($data, $name);
     }
 
     /**
@@ -300,30 +341,48 @@ class Message
             $attachment->setFilename($options['as']);
         }
 
-        $this->swift->attach($attachment);
+        $this->message->attach($attachment);
 
         return $this;
     }
 
     /**
-     * Get the underlying Swift Message instance.
-     *
-     * @return \Swift_Message
+     * {@inheritdoc}
      */
-    public function getSwiftMessage()
+    public function html($content)
     {
-        return $this->swift;
+        $this->setBody($content, 'text/html');
     }
 
     /**
-     * Dynamically pass missing methods to the Swift instance.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function __call($method, $parameters)
+    public function text($content, $addPart = false)
     {
-        return $this->forwardCallTo($this->swift, $method, $parameters);
+        $method = $addPart ? 'addPart' : 'setBody';
+
+        $this->$method($content, 'text/plain');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addContent($message, $view, $plain, $raw, $data)
+    {
+        if (isset($view)) {
+            $message->setBody($this->renderView($view, $data) ?: ' ', 'text/html');
+        }
+
+        if (isset($plain)) {
+            $method = isset($view) ? 'addPart' : 'setBody';
+
+            $message->$method($this->renderView($plain, $data) ?: ' ', 'text/plain');
+        }
+
+        if (isset($raw)) {
+            $method = (isset($view) || isset($plain)) ? 'addPart' : 'setBody';
+
+            $message->$method($raw, 'text/plain');
+        }
     }
 }

@@ -143,9 +143,9 @@ trait Serialization
             try {
                 $exception = null;
                 parent::__wakeup();
-            } catch (\Throwable $exception) {
-            } catch (\Error $exception) {
             } catch (\Exception $exception) {
+            } catch (\Error $exception) {
+            } catch (\Throwable $exception) {
             }
 
             if (isset($exception)) {

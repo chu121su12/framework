@@ -43,7 +43,7 @@ class SoftDeletedInDatabase extends Constraint
      * @param  string  $deletedAtColumn
      * @return void
      */
-    public function __construct(Connection $database, array $data, $deletedAtColumn)
+    public function __construct(Connection $database, array $data, /*string */$deletedAtColumn)
     {
         $this->data = $data;
 
@@ -58,7 +58,7 @@ class SoftDeletedInDatabase extends Constraint
      * @param  string  $table
      * @return bool
      */
-    public function matches($table)
+    public function matches($table)/*: bool*/
     {
         return $this->database->table($table)
                 ->where($this->data)
@@ -72,7 +72,7 @@ class SoftDeletedInDatabase extends Constraint
      * @param  string  $table
      * @return string
      */
-    public function failureDescription($table)
+    public function failureDescription($table)/*: string*/
     {
         return sprintf(
             "any soft deleted row in the table [%s] matches the attributes %s.\n\n%s",
@@ -110,7 +110,7 @@ class SoftDeletedInDatabase extends Constraint
      *
      * @return string
      */
-    public function toString()
+    public function toString()/*: string*/
     {
         return json_encode($this->data);
     }

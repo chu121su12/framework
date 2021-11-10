@@ -95,7 +95,6 @@ class FailedTableCommand extends Command
      *
      * @param  string  $path
      * @param  string  $table
-     * @param  string  $tableClassName
      * @return void
      */
     protected function replaceMigration($path, $table)

@@ -35,7 +35,7 @@ class MySqlSchemaState extends SchemaState
      * @param  string  $path
      * @return void
      */
-    protected function removeAutoIncrementingState($path)
+    protected function removeAutoIncrementingState(/*string */$path)
     {
         $path = cast_to_string($path);
 
@@ -52,7 +52,7 @@ class MySqlSchemaState extends SchemaState
      * @param  string  $path
      * @return void
      */
-    protected function appendMigrationData($path)
+    protected function appendMigrationData(/*string */$path)
     {
         $path = cast_to_string($path);
 
@@ -89,7 +89,7 @@ class MySqlSchemaState extends SchemaState
      */
     protected function baseDumpCommand()
     {
-        $command = 'mysqldump '.$this->connectionString().' --skip-add-locks --skip-comments --skip-set-charset --tz-utc';
+        $command = 'mysqldump '.$this->connectionString().' --no-tablespaces --skip-add-locks --skip-comments --skip-set-charset --tz-utc';
 
         if (! $this->connection->isMaria()) {
             $command .= ' --column-statistics=0 --set-gtid-purged=OFF';

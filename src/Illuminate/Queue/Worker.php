@@ -150,7 +150,6 @@ class Worker
 
             if (isset($this->resetScope)) {
                 $resetScope = $this->resetScope;
-
                 $resetScope();
             }
 
@@ -360,9 +359,9 @@ class Worker
                     return $job;
                 }
             }
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -386,9 +385,9 @@ class Worker
     {
         try {
             return $this->process($connectionName, $job, $options);
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -443,9 +442,9 @@ class Worker
             $job->fire();
 
             $this->raiseAfterJobEvent($connectionName, $job);
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -464,7 +463,7 @@ class Worker
      *
      * @throws \Throwable
      */
-    protected function handleJobException($connectionName, $job, WorkerOptions $options, $e)
+    protected function handleJobException($connectionName, $job, WorkerOptions $options, /*Throwable */$e)
     {
         try {
             // First, we will go ahead and mark the job as failed if it will exceed the maximum
@@ -535,7 +534,7 @@ class Worker
      * @param  \Throwable  $e
      * @return void
      */
-    protected function markJobAsFailedIfWillExceedMaxAttempts($connectionName, $job, $maxTries, $e)
+    protected function markJobAsFailedIfWillExceedMaxAttempts($connectionName, $job, $maxTries, /*Throwable */$e)
     {
         $maxTries = ! is_null($job->maxTries()) ? $job->maxTries() : $maxTries;
 
@@ -556,7 +555,7 @@ class Worker
      * @param  \Throwable  $e
      * @return void
      */
-    protected function markJobAsFailedIfWillExceedMaxExceptions($connectionName, $job, $e)
+    protected function markJobAsFailedIfWillExceedMaxExceptions($connectionName, $job, /*Throwable */$e)
     {
         if (! $this->cache || is_null($uuid = $job->uuid()) ||
             is_null($maxExceptions = $job->maxExceptions())) {
@@ -582,7 +581,7 @@ class Worker
      * @param  \Throwable  $e
      * @return void
      */
-    protected function markJobAsFailedIfItShouldFailOnTimeout($connectionName, $job, Throwable $e)
+    protected function markJobAsFailedIfItShouldFailOnTimeout($connectionName, $job, /*Throwable */$e)
     {
         if (method_exists($job, 'shouldFailOnTimeout') ? $job->shouldFailOnTimeout() : false) {
             $this->failJob($job, $e);
@@ -596,7 +595,7 @@ class Worker
      * @param  \Throwable  $e
      * @return void
      */
-    protected function failJob($job, $e)
+    protected function failJob($job, /*Throwable */$e)
     {
         return $job->fail($e);
     }
@@ -658,7 +657,7 @@ class Worker
      * @param  \Throwable  $e
      * @return void
      */
-    protected function raiseExceptionOccurredJobEvent($connectionName, $job, $e)
+    protected function raiseExceptionOccurredJobEvent($connectionName, $job, /*Throwable */$e)
     {
         $this->events->dispatch(new JobExceptionOccurred(
             $connectionName, $job, $e
@@ -748,7 +747,7 @@ class Worker
      * Kill the process.
      *
      * @param  int  $status
-     * @return void
+     * @return never
      */
     public function kill($status = 0)
     {

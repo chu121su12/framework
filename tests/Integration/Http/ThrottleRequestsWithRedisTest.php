@@ -9,10 +9,6 @@ use Illuminate\Support\Facades\Route;
 use Orchestra\Testbench\TestCase;
 use Throwable;
 
-/**
- * @group redis
- * @group integration
- */
 class ThrottleRequestsWithRedisTest extends TestCase
 {
     use InteractsWithRedis;
@@ -53,9 +49,9 @@ class ThrottleRequestsWithRedisTest extends TestCase
 
             try {
                 $this->withoutExceptionHandling()->get('/');
-            } catch (\Throwable $e) {
-            } catch (\Error $e) {
             } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (\Throwable $e) {
             }
 
             if (isset($e)) {

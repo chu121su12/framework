@@ -2,7 +2,9 @@
 
 namespace Sushi;
 
+use Closure;
 use Illuminate\Database\Connectors\ConnectionFactory;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 
 trait Sushi
@@ -19,6 +21,16 @@ trait Sushi
         return isset($this->schema) ? $this->schema : [];
     }
 
+    protected function sushiCacheReferencePath()
+    {
+        return (new \ReflectionClass(static::class))->getFileName();
+    }
+
+    protected function sushiShouldCache()
+    {
+        return property_exists(static::class, 'rows');
+    }
+
     public static function resolveConnection($connection = null)
     {
         return static::$sushiConnection;
@@ -31,20 +43,20 @@ trait Sushi
         $cacheFileName = config('sushi.cache-prefix', 'sushi').'-'.Str::kebab(str_replace('\\', '', static::class)).'.sqlite';
         $cacheDirectory = realpath(config('sushi.cache-path', storage_path('framework/cache')));
         $cachePath = $cacheDirectory.'/'.$cacheFileName;
-        $modelPath = (new \ReflectionClass(static::class))->getFileName();
+        $dataPath = $instance->sushiCacheReferencePath();
 
         $states = [
             'cache-file-found-and-up-to-date' => function () use ($cachePath) {
                 static::setSqliteConnection($cachePath);
             },
-            'cache-file-not-found-or-stale' => function () use ($cachePath, $modelPath, $instance) {
+            'cache-file-not-found-or-stale' => function () use ($cachePath, $dataPath, $instance) {
                 file_put_contents($cachePath, '');
 
                 static::setSqliteConnection($cachePath);
 
                 $instance->migrate();
 
-                touch($cachePath, filemtime($modelPath));
+                touch($cachePath, filemtime($dataPath));
             },
             'no-caching-capabilities' => function () use ($instance) {
                 static::setSqliteConnection(':memory:');
@@ -54,11 +66,11 @@ trait Sushi
         ];
 
         switch (true) {
-            case ! property_exists($instance, 'rows'):
+            case ! $instance->sushiShouldCache():
                 $states['no-caching-capabilities']();
                 break;
 
-            case file_exists($cachePath) && filemtime($modelPath) <= filemtime($cachePath):
+            case file_exists($cachePath) && filemtime($dataPath) <= filemtime($cachePath):
                 $states['cache-file-found-and-up-to-date']();
                 break;
 
@@ -74,10 +86,14 @@ trait Sushi
 
     protected static function setSqliteConnection($database)
     {
-        static::$sushiConnection = app(ConnectionFactory::class)->make([
+        $config = [
             'driver' => 'sqlite',
             'database' => $database,
-        ]);
+        ];
+
+        static::$sushiConnection = app(ConnectionFactory::class)->make($config);
+
+        app('config')->set('database.connections.sushi-'.Str::slug(Str::replace('\\', '-', static::class)), $config);
     }
 
     public function migrate()
@@ -91,7 +107,7 @@ trait Sushi
             $this->createTableWithNoData($tableName);
         }
 
-        $chunk = array_chunk($rows, 100);
+        $chunk = array_chunk($rows, $this->getSushiInsertChunkSize());
         foreach (isset($chunk) ? $chunk : [] as $inserts) {
             if (!empty($inserts)) {
                 static::insert($inserts);
@@ -101,7 +117,7 @@ trait Sushi
 
     public function createTable(string $tableName, $firstRow)
     {
-        static::resolveConnection()->getSchemaBuilder()->create($tableName, function ($table) use ($firstRow) {
+        $this->createTableSafely($tableName, function ($table) use ($firstRow) {
             // Add the "id" column if it doesn't already exist in the rows.
             if ($this->incrementing && ! array_key_exists($this->primaryKey, $firstRow)) {
                 $table->increments($this->primaryKey);
@@ -147,7 +163,7 @@ trait Sushi
     {
         $tableName = cast_to_string($tableName);
 
-        static::resolveConnection()->getSchemaBuilder()->create($tableName, function ($table) {
+        $this->createTableSafely($tableName, function ($table) {
             $schema = $this->getSchema();
 
             if ($this->incrementing && ! in_array($this->primaryKey, array_keys($schema))) {
@@ -169,11 +185,41 @@ trait Sushi
         });
     }
 
+    protected function createTableSafely(/*string */$tableName, Closure $callback)
+    {
+        $tableName = cast_to_string($tableName);
+
+        /** @var \Illuminate\Database\Schema\SQLiteBuilder $schemaBuilder */
+        $schemaBuilder = static::resolveConnection()->getSchemaBuilder();
+
+        try {
+            $schemaBuilder->create($tableName, $callback);
+        } catch (QueryException $e) {
+            if (Str::contains($e->getMessage(), 'already exists (SQL: create table')) {
+                // This error can happen in rare circumstances due to a race condition.
+                // Concurrent requests may both see the necessary preconditions for
+                // the table creation, but only one can actually succeed.
+                return;
+            }
+
+            throw $e;
+        }
+    }
+
     public function usesTimestamps()
     {
         // Override the Laravel default value of $timestamps = true; Unless otherwise set.
         return (new \ReflectionClass($this))->getProperty('timestamps')->class === static::class
             ? parent::usesTimestamps()
             : false;
+    }
+
+    public function getSushiInsertChunkSize() {
+        return isset($this->sushiInsertChunkSize) ? $this->sushiInsertChunkSize : 100;
+    }
+
+    public function getConnectionName()
+    {
+        return static::class;
     }
 }

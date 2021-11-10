@@ -92,7 +92,7 @@ return [
             100 => '-чү',
         ];
 
-        return $number.(isset($suffixes[$number]) ? $suffixes[$number] : isset($suffixes[$number % 10]) ? $suffixes[$number % 10] : isset($suffixes[$number >= 100 ? 100 : -1]) ? $suffixes[$number >= 100 ? 100 : -1] : '');
+        return $number.(isset($suffixes[$number]) ? $suffixes[$number] : (isset($suffixes[$number % 10]) ? $suffixes[$number % 10] : (isset($suffixes[$number >= 100 ? 100 : -1]) ? $suffixes[$number >= 100 ? 100 : -1] : '')));
     },
     'months' => ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'],
     'months_short' => ['янв', 'фев', 'март', 'апр', 'май', 'июнь', 'июль', 'авг', 'сен', 'окт', 'ноя', 'дек'],

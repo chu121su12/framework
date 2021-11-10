@@ -2,9 +2,9 @@
 
 namespace Illuminate\Mail\Transport;
 
+use Illuminate\Mail\SentMessage;
 use Psr\Log\LoggerInterface;
-use Swift_Mime_SimpleMessage as SwiftMimeSimpleMessage;
-use Swift_Mime_Message as Swift_Mime_SimpleMessage;
+use Swift_Mime_Message as RawMessage;
 use Swift_Mime_SimpleMimeEntity;
 
 class LogTransport extends Transport
@@ -29,8 +29,10 @@ class LogTransport extends Transport
 
     /**
      * {@inheritdoc}
+     *
+     * @return int
      */
-    public function send(Swift_Mime_SimpleMessage $message, &$failedRecipients = null)
+    public function send(RawMessage $message, /*Envelope */&$failedRecipients = null)/*: ?SentMessage*/
     {
         $this->beforeSendPerformed($message);
 
@@ -38,7 +40,32 @@ class LogTransport extends Transport
 
         $this->sendPerformed($message);
 
-        return $this->numberOfRecipients($message);
+        $sentMessage = new SentMessage($message);
+
+        $this->numberOfRecipients($message);
+
+        return $sentMessage;
+    }
+
+    /**
+     * Get the logger for the LogTransport instance.
+     *
+     * @return \Psr\Log\LoggerInterface
+
+     */
+    public function logger()
+    {
+        return $this->logger;
+    }
+
+    /**
+     * Get the string representation of the transport.
+     *
+     * @return string
+     */
+    public function __toString()/*: string*/
+    {
+        return 'log';
     }
 
     /**
@@ -56,15 +83,5 @@ class LogTransport extends Transport
         }
 
         return $string;
-    }
-
-    /**
-     * Get the logger for the LogTransport instance.
-     *
-     * @return \Psr\Log\LoggerInterface
-     */
-    public function logger()
-    {
-        return $this->logger;
     }
 }

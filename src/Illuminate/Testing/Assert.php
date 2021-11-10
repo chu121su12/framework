@@ -27,11 +27,10 @@ abstract class Assert extends PHPUnit
      * @param  string  $msg
      * @return void
      */
-    public static function assertArraySubset($subset, $array, $checkForIdentity = false, $msg = '')
+    public static function assertArraySubset($subset, $array, /*bool */$checkForIdentity = false, /*string */$msg = '')/*: void*/
     {
-        $msg = cast_to_string($msg);
-
         $checkForIdentity = cast_to_bool($checkForIdentity);
+        $msg = cast_to_string($msg);
 
         if (! (is_array($subset) || $subset instanceof ArrayAccess)) {
             throw InvalidArgumentException::create(1, 'array or ArrayAccess');
@@ -53,10 +52,9 @@ abstract class Assert extends PHPUnit
      * @param  string  $message
      * @return void
      */
-    public static function assertFileDoesNotExist($filename, $message = '')
+    public static function assertFileDoesNotExist(/*string */$filename, /*string */$message = '')/*: void*/
     {
         $filename = cast_to_string($filename);
-
         $message = cast_to_string($message);
 
         static::assertThat($filename, new LogicalNot(new FileExists), $message);
@@ -69,10 +67,9 @@ abstract class Assert extends PHPUnit
      * @param  string  $message
      * @return void
      */
-    public static function assertDirectoryDoesNotExist($directory, $message = '')
+    public static function assertDirectoryDoesNotExist(/*string */$directory, /*string */$message = '')/*: void*/
     {
         $directory = cast_to_string($directory);
-
         $message = cast_to_string($message);
 
         static::assertThat($directory, new LogicalNot(new DirectoryExists), $message);
@@ -86,12 +83,10 @@ abstract class Assert extends PHPUnit
      * @param  string  $message
      * @return void
      */
-    public static function assertMatchesRegularExpression($pattern, $string, $message = '')
+    public static function assertMatchesRegularExpression(/*string */$pattern, /*string */$string, /*string */$message = '')/*: void*/
     {
-        $string = cast_to_string($string);
-
         $pattern = cast_to_string($pattern);
-
+        $string = cast_to_string($string);
         $message = cast_to_string($message);
 
         static::assertThat($string, new RegularExpression($pattern), $message);

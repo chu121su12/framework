@@ -138,7 +138,7 @@ class Dispatcher implements QueueingDispatcher
      * @param  string  $batchId
      * @return \Illuminate\Bus\Batch|null
      */
-    public function findBatch($batchId)
+    public function findBatch(/*string */$batchId)
     {
         $batchId = cast_to_string($batchId);
 

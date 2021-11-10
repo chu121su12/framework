@@ -187,9 +187,11 @@ class Container implements ArrayAccess, ContainerContract
     }
 
     /**
-     *  {@inheritdoc}
+     * {@inheritdoc}
+     *
+     * @return bool
      */
-    public function has($id)
+    public function has(/*string */$id)/*: bool*/
     {
         return $this->bound($id);
     }
@@ -693,9 +695,11 @@ class Container implements ArrayAccess, ContainerContract
     }
 
     /**
-     *  {@inheritdoc}
+     * {@inheritdoc}
+     *
+     * @return mixed
      */
-    public function get($id)
+    public function get(/*string */$id)
     {
         try {
             return $this->resolve($id);
@@ -839,8 +843,7 @@ class Container implements ArrayAccess, ContainerContract
         $endOfStack = end($this->buildStack);
 
         return isset($this->contextual[$endOfStack]) && isset($this->contextual[$endOfStack][$abstract])
-            ? $this->contextual[$endOfStack][$abstract]
-            : null;
+            ? $this->contextual[$endOfStack][$abstract] : null;
     }
 
     /**
@@ -1241,7 +1244,6 @@ class Container implements ArrayAccess, ContainerContract
      * @param  string  $abstract
      * @param  object  $object
      * @param  array  $callbacksPerType
-     *
      * @return array
      */
     protected function getCallbacksForType($abstract, $object, array $callbacksPerType)

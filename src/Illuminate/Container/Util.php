@@ -51,7 +51,7 @@ class Util
      */
     public static function getParameterClassName($parameter)
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+        if (version_compare(PHP_VERSION, '8.0', '<')) {
             $className = $parameter->getClass();
 
             if ($className && ($className = $className->getName())) {
@@ -64,7 +64,7 @@ class Util
         $type = $parameter->getType();
 
         if (! $type instanceof ReflectionNamedType || $type->isBuiltin()) {
-            return;
+            return null;
         }
 
         $name = $type->getName();

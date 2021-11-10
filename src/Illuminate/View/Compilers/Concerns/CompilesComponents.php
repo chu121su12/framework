@@ -2,6 +2,7 @@
 
 namespace Illuminate\View\Compilers\Concerns;
 
+use Illuminate\Contracts\Support\CanBeEscapedWhenCastToString;
 use Illuminate\Support\Str;
 use Illuminate\View\ComponentAttributeBag;
 
@@ -43,7 +44,7 @@ trait CompilesComponents
      * @param  string  $component
      * @return string
      */
-    public static function newComponentHash($component)
+    public static function newComponentHash(/*string */$component)
     {
         $component = cast_to_string($component);
 
@@ -61,15 +62,12 @@ trait CompilesComponents
      * @param  string  $hash
      * @return string
      */
-    public static function compileClassComponentOpening($component, $alias, $data, $hash)
+    public static function compileClassComponentOpening(/*string */$component, /*string */$alias, /*string */$data, /*string */$hash)
     {
-        $hash = cast_to_string($hash);
-
-        $data = cast_to_string($data);
-
-        $alias = cast_to_string($alias);
-
         $component = cast_to_string($component);
+        $alias = cast_to_string($alias);
+        $data = cast_to_string($data);
+        $hash = cast_to_string($hash);
 
         return implode("\n", [
             '<?php if (isset($component)) { $__componentOriginal'.$hash.' = $component; } ?>',
@@ -175,6 +173,20 @@ trait CompilesComponents
     }
 
     /**
+     * Compile the aware statement into valid PHP.
+     *
+     * @param  string  $expression
+     * @return string
+     */
+    protected function compileAware($expression)
+    {
+        return "<?php foreach ({$expression} as \$__key => \$__value) {
+    \$__consumeVariable = is_string(\$__key) ? \$__key : \$__value;
+    \$\$__consumeVariable = is_string(\$__key) ? \$__env->getConsumableComponentData(\$__key, \$__value) : \$__env->getConsumableComponentData(\$__value);
+} ?>";
+    }
+
+    /**
      * Sanitize the given component attribute value.
      *
      * @param  mixed  $value
@@ -182,6 +194,10 @@ trait CompilesComponents
      */
     public static function sanitizeComponentAttribute($value)
     {
+        if (is_object($value) && $value instanceof CanBeEscapedWhenCastToString) {
+            return $value->escapeWhenCastingToString();
+        }
+
         return is_string($value) ||
                (is_object($value) && ! $value instanceof ComponentAttributeBag && method_exists($value, '__toString'))
                         ? e($value)

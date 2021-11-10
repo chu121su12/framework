@@ -176,12 +176,9 @@ class ChangeColumn
     protected static function calculateDoctrineTextLength($type)
     {
         switch ($type) {
-            case 'mediumText':
-                return 65535 + 1;
-            case 'longText':
-                return 16777215 + 1;
-            default:
-                return 255 + 1;
+            case 'mediumText': return 65535 + 1;
+            case 'longText': return 16777215 + 1;
+            default: return 255 + 1;
         }
     }
 
@@ -198,6 +195,7 @@ class ChangeColumn
             'binary',
             'boolean',
             'date',
+            'dateTime',
             'decimal',
             'double',
             'float',

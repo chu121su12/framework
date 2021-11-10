@@ -3,6 +3,7 @@
 namespace Illuminate\Foundation\Exceptions;
 
 use Closure;
+use CR\LaravelBackport\SymfonyHelper;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -138,11 +139,7 @@ class Handler implements ExceptionHandlerContract
     public function reportable(callable $reportUsing)
     {
         if (! $reportUsing instanceof Closure) {
-            if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-                $reportUsing = backport_closure_from_callable($this, $reportUsing);
-            } else {
-                $reportUsing = Closure::fromCallable($reportUsing);
-            }
+            $reportUsing = backport_closure_from_callable($reportUsing, $this);
         }
 
         return tap(new ReportableHandler($reportUsing), function ($callback) {
@@ -159,11 +156,7 @@ class Handler implements ExceptionHandlerContract
     public function renderable(callable $renderUsing)
     {
         if (! $renderUsing instanceof Closure) {
-            if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-                $renderUsing = backport_closure_from_callable($this, $renderUsing);
-            } else {
-                $renderUsing = Closure::fromCallable($renderUsing);
-            }
+            $renderUsing = backport_closure_from_callable($renderUsing, $this);
         }
 
         $this->renderCallbacks[] = $renderUsing;
@@ -207,7 +200,7 @@ class Handler implements ExceptionHandlerContract
      * @param  string  $class
      * @return $this
      */
-    public function ignore($class)
+    public function ignore(/*string */$class)
     {
         $class = cast_to_string($class);
 
@@ -224,7 +217,7 @@ class Handler implements ExceptionHandlerContract
      *
      * @throws \Throwable
      */
-    public function report($e)
+    public function report(/*Throwable */$e)
     {
         $e = $this->mapException($e);
 
@@ -268,7 +261,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return bool
      */
-    public function shouldReport($e)
+    public function shouldReport(/*Throwable */$e)
     {
         return ! $this->shouldntReport($e);
     }
@@ -279,7 +272,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return bool
      */
-    protected function shouldntReport($e)
+    protected function shouldntReport(/*Throwable */$e)
     {
         $dontReport = array_merge($this->dontReport, $this->internalDontReport);
 
@@ -294,7 +287,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return array
      */
-    protected function exceptionContext($e)
+    protected function exceptionContext(/*Throwable */$e)
     {
         if (method_exists($e, 'context')) {
             return $e->context();
@@ -315,9 +308,9 @@ class Handler implements ExceptionHandlerContract
                 'userId' => Auth::id(),
                 // 'email' => optional(Auth::user())->email,
             ]);
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -334,7 +327,7 @@ class Handler implements ExceptionHandlerContract
      *
      * @throws \Throwable
      */
-    public function render($request, $e)
+    public function render($request, /*Throwable */$e)
     {
         if (method_exists($e, 'render') && $response = $e->render($request)) {
             return Router::toResponse($request, $response);
@@ -364,7 +357,7 @@ class Handler implements ExceptionHandlerContract
             return $this->convertValidationExceptionToResponse($e, $request);
         }
 
-        return $request->expectsJson()
+        return $this->shouldReturnJson($request, $e)
                     ? $this->prepareJsonResponse($request, $e)
                     : $this->prepareResponse($request, $e);
     }
@@ -375,7 +368,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Throwable
      */
-    protected function mapException($e)
+    protected function mapException(/*Throwable */$e)
     {
         foreach ($this->exceptionMap as $class => $mapper) {
             if (is_a($e, $class)) {
@@ -392,7 +385,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Throwable
      */
-    protected function prepareException($e)
+    protected function prepareException(/*Throwable */$e)
     {
         if ($e instanceof ModelNotFoundException) {
             $e = new NotFoundHttpException($e->getMessage(), $e);
@@ -418,7 +411,7 @@ class Handler implements ExceptionHandlerContract
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        if ($request->expectsJson()) {
+        if ($this->shouldReturnJson($request, $exception)) {
             return response()->json(['message' => $exception->getMessage()], 401);
         }
 
@@ -440,7 +433,7 @@ class Handler implements ExceptionHandlerContract
             return $e->response;
         }
 
-        return $request->expectsJson()
+        return $this->shouldReturnJson($request, $e)
                     ? $this->invalidJson($request, $e)
                     : $this->invalid($request, $e);
     }
@@ -475,13 +468,25 @@ class Handler implements ExceptionHandlerContract
     }
 
     /**
+     * Determine if the exception handler response should be JSON.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Throwable  $e
+     * @return bool
+     */
+    protected function shouldReturnJson($request, /*Throwable */$e)
+    {
+        return $request->expectsJson();
+    }
+
+    /**
      * Prepare a response for the given exception.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Throwable  $e
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function prepareResponse($request, $e)
+    protected function prepareResponse($request, /*Throwable */$e)
     {
         if (! $this->isHttpException($e) && config('app.debug')) {
             return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
@@ -502,7 +507,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function convertExceptionToResponse($e)
+    protected function convertExceptionToResponse(/*Throwable */$e)
     {
         return new SymfonyResponse(
             $this->renderExceptionContent($e),
@@ -517,7 +522,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return string
      */
-    protected function renderExceptionContent($e)
+    protected function renderExceptionContent(/*Throwable */$e)
     {
         try {
             return config('app.debug') && app()->has(ExceptionRenderer::class)
@@ -546,7 +551,7 @@ class Handler implements ExceptionHandlerContract
      * @param  bool  $debug
      * @return string
      */
-    protected function renderExceptionWithSymfony($e, $debug)
+    protected function renderExceptionWithSymfony(/*Throwable */$e, $debug)
     {
         $renderer = new HtmlErrorRenderer($debug);
 
@@ -563,7 +568,7 @@ class Handler implements ExceptionHandlerContract
     {
         $this->registerErrorViewPaths();
 
-        if (view()->exists($view = $this->getHttpExceptionView($e))) {
+        if ($view = $this->getHttpExceptionView($e)) {
             return response()->view($view, [
                 'errors' => new ViewErrorBag,
                 'exception' => $e,
@@ -588,11 +593,23 @@ class Handler implements ExceptionHandlerContract
      * Get the view used to render HTTP exceptions.
      *
      * @param  \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface  $e
-     * @return string
+     * @return string|null
      */
     protected function getHttpExceptionView(HttpExceptionInterface $e)
     {
-        return "errors::{$e->getStatusCode()}";
+        $view = 'errors::'.$e->getStatusCode();
+
+        if (view()->exists($view)) {
+            return $view;
+        }
+
+        $view = substr($view, 0, -2).'xx';
+
+        if (view()->exists($view)) {
+            return $view;
+        }
+
+        return null;
     }
 
     /**
@@ -602,7 +619,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Illuminate\Http\Response
      */
-    protected function toIlluminateResponse($response, $e)
+    protected function toIlluminateResponse($response, /*Throwable */$e)
     {
         if ($response instanceof SymfonyRedirectResponse) {
             $response = new RedirectResponse(
@@ -624,7 +641,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function prepareJsonResponse($request, $e)
+    protected function prepareJsonResponse($request, /*Throwable */$e)
     {
         return new JsonResponse(
             $this->convertExceptionToArray($e),
@@ -640,7 +657,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return array
      */
-    protected function convertExceptionToArray($e)
+    protected function convertExceptionToArray(/*Throwable */$e)
     {
         return config('app.debug') ? [
             'message' => $e->getMessage(),
@@ -662,18 +679,9 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return void
      */
-    public function renderForConsole($output, $e)
+    public function renderForConsole($output, /*Throwable */$e)
     {
-        $console = new ConsoleApplication;
-        if (method_exists($console, 'renderThrowable')) {
-            $console->renderThrowable($e, $output);
-        } else {
-            if (!($e instanceof \Exception)) {
-                $e = new \Exception($e);
-            }
-
-            $console->renderException($e, $output);
-        }
+        SymfonyHelper::consoleApplicationRenderThrowable($e, $output);
     }
 
     /**
@@ -682,7 +690,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return bool
      */
-    protected function isHttpException($e)
+    protected function isHttpException(/*Throwable */$e)
     {
         return $e instanceof HttpExceptionInterface;
     }

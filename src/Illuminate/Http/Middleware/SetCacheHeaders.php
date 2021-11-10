@@ -30,7 +30,8 @@ class SetCacheHeaders
         }
 
         if (isset($options['etag']) && $options['etag'] === true) {
-            $options['etag'] = md5($response->getContent());
+            $eTag = $response->getEtag();
+            $options['etag'] = isset($eTag) ? $eTag : md5($response->getContent());
         }
 
         if (isset($options['last_modified'])) {
@@ -55,7 +56,7 @@ class SetCacheHeaders
      */
     protected function parseOptions($options)
     {
-        return collect(explode(';', $options))->mapWithKeys(function ($option) {
+        return collect(explode(';', rtrim($options, ';')))->mapWithKeys(function ($option) {
             $data = explode('=', $option, 2);
 
             return [$data[0] => isset($data[1]) ? $data[1] : true];

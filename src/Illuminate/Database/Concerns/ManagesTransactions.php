@@ -28,9 +28,9 @@ trait ManagesTransactions
             try {
                 $e = null;
                 $callbackResult = $callback($this);
-            } catch (\Throwable $e) {
-            } catch (\Error $e) {
             } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (Throwable $e) {
             }
 
             // If we catch an exception we'll rollback this transaction and try again if we
@@ -49,14 +49,15 @@ trait ManagesTransactions
                 if ($this->transactions == 1) {
                     $this->getPdo()->commit();
                 }
+
                 $this->transactions = max(0, $this->transactions - 1);
 
                 if ($this->transactions == 0) {
                     optional($this->transactionsManager)->commit($this->getName());
                 }
-            } catch (\Throwable $e) {
-            } catch (\Error $e) {
             } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (Throwable $e) {
             }
 
             if (isset($e)) {
@@ -83,7 +84,7 @@ trait ManagesTransactions
      *
      * @throws \Throwable
      */
-    protected function handleTransactionException($e, $currentAttempt, $maxAttempts)
+    protected function handleTransactionException(/*Throwable */$e, $currentAttempt, $maxAttempts)
     {
         // On a deadlock, MySQL rolls back the entire transaction so we can't just
         // retry the query. We have to throw this exception all the way out and
@@ -146,9 +147,9 @@ trait ManagesTransactions
 
             try {
                 $this->getPdo()->beginTransaction();
-            } catch (\Throwable $e) {
-            } catch (\Error $e) {
             } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (Throwable $e) {
             }
 
             if (isset($e)) {
@@ -181,7 +182,7 @@ trait ManagesTransactions
      *
      * @throws \Throwable
      */
-    protected function handleBeginTransactionException($e)
+    protected function handleBeginTransactionException(/*Throwable */$e)
     {
         if ($this->causedByLostConnection($e)) {
             $this->reconnect();
@@ -224,7 +225,7 @@ trait ManagesTransactions
      *
      * @throws \Throwable
      */
-    protected function handleCommitTransactionException($e, $currentAttempt, $maxAttempts)
+    protected function handleCommitTransactionException(/*Throwable */$e, $currentAttempt, $maxAttempts)
     {
         $this->transactions = max(0, $this->transactions - 1);
 
@@ -266,9 +267,9 @@ trait ManagesTransactions
         // level that was passed into this method so it will be right from here out.
         try {
             $this->performRollBack($toLevel);
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -311,7 +312,7 @@ trait ManagesTransactions
      *
      * @throws \Throwable
      */
-    protected function handleRollBackException($e)
+    protected function handleRollBackException(/*Throwable */$e)
     {
         if ($this->causedByLostConnection($e)) {
             $this->transactions = 0;

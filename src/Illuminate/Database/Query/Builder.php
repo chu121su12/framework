@@ -2,6 +2,7 @@
 
 namespace Illuminate\Database\Query;
 
+use BackedEnum;
 use Closure;
 use DateTimeInterface;
 use Illuminate\Contracts\Database\Query\Builder as BuilderContract;
@@ -21,6 +22,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
+use LogicException;
 use RuntimeException;
 
 class Builder implements BuilderContract
@@ -921,7 +923,7 @@ class Builder implements BuilderContract
     /**
      * {@inheritdoc}
      */
-    public function whereBetween($column, $values, $boolean = 'and', $not = false)
+    public function whereBetween($column, /*iterable */$values, $boolean = 'and', $not = false)
     {
         $type = 'between';
 
@@ -947,7 +949,7 @@ class Builder implements BuilderContract
     /**
      * {@inheritdoc}
      */
-    public function orWhereBetween($column, $values)
+    public function orWhereBetween($column, /*iterable */$values)
     {
         return $this->whereBetween($column, $values, 'or');
     }
@@ -963,7 +965,7 @@ class Builder implements BuilderContract
     /**
      * {@inheritdoc}
      */
-    public function whereNotBetween($column, $values, $boolean = 'and')
+    public function whereNotBetween($column, /*iterable */$values, $boolean = 'and')
     {
         return $this->whereBetween($column, $values, $boolean, true);
     }
@@ -979,7 +981,7 @@ class Builder implements BuilderContract
     /**
      * {@inheritdoc}
      */
-    public function orWhereNotBetween($column, $values)
+    public function orWhereNotBetween($column, /*iterable */$values)
     {
         return $this->whereNotBetween($column, $values, 'or');
     }
@@ -2103,11 +2105,11 @@ class Builder implements BuilderContract
         }
 
         return new LazyCollection(function () {
-            $cursor = $this->connection->cursor(
+            $cursorToYield = $this->connection->cursor(
                 $this->toSql(), $this->getBindings(), ! $this->useWritePdo
             );
 
-            foreach ($cursor as $yieldKey => $yieldValue) {
+            foreach ($cursorToYield as $yieldKey => $yieldValue) {
                 yield $yieldKey => $yieldValue;
             }
         });
@@ -2585,6 +2587,27 @@ class Builder implements BuilderContract
     }
 
     /**
+     * Update records in a PostgreSQL database using the update from syntax.
+     *
+     * @param  array  $values
+     * @return int
+     */
+    public function updateFrom(array $values)
+    {
+        if (! method_exists($this->grammar, 'compileUpdateFrom')) {
+            throw new LogicException('This database engine does not support the updateFrom method.');
+        }
+
+        $this->applyBeforeQueryCallbacks();
+
+        $sql = $this->grammar->compileUpdateFrom($this, $values);
+
+        return $this->connection->update($sql, $this->cleanBindings(
+            $this->grammar->prepareBindingsForUpdateFrom($this->bindings, $values)
+        ));
+    }
+
+    /**
      * Insert or update a record matching the attributes, and fill it with values.
      *
      * @param  array  $attributes
@@ -2799,12 +2822,31 @@ class Builder implements BuilderContract
         }
 
         if (is_array($value)) {
-            $this->bindings[$type] = array_values(array_merge($this->bindings[$type], $value));
+            $this->bindings[$type] = collect($this->bindings[$type])
+                            ->merge($value)
+                            ->map([$this, 'castBinding'])
+                            ->values()
+                            ->toArray();
         } else {
-            $this->bindings[$type][] = $value;
+            $this->bindings[$type][] = $this->castBinding($value);
         }
 
         return $this;
+    }
+
+    /**
+     * Cast the given binding value.
+     *
+     * @param  mixed  $value
+     * @return mixed
+     */
+    public function castBinding($value)
+    {
+        if (function_exists('enum_exists') && $value instanceof BackedEnum) {
+            return $value->value;
+        }
+
+        return $value;
     }
 
     /**
@@ -2822,9 +2864,13 @@ class Builder implements BuilderContract
      */
     public function cleanBindings(array $bindings)
     {
-        return array_values(array_filter($bindings, function ($binding) {
-            return ! $binding instanceof Expression;
-        }));
+        return collect($bindings)
+                    ->reject(function ($binding) {
+                        return $binding instanceof Expression;
+                    })
+                    ->map([$this, 'castBinding'])
+                    ->values()
+                    ->toArray();
     }
 
     /**
@@ -2943,7 +2989,7 @@ class Builder implements BuilderContract
     /**
      * Die and dump the current SQL and bindings.
      *
-     * @return void
+     * @return never
      */
     public function dd()
     {

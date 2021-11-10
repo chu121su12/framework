@@ -14,6 +14,7 @@ use Illuminate\Support\HigherOrderCollectionProxy;
 use JsonSerializable;
 use Symfony\Component\VarDumper\VarDumper;
 use Traversable;
+use UnexpectedValueException;
 
 /**
  * @template TKey of array-key
@@ -50,6 +51,13 @@ use Traversable;
 trait EnumeratesValues
 {
     use Conditionable;
+
+    /**
+     * Indicates that the object's string representation should be escaped when __toString is invoked.
+     *
+     * @var bool
+     */
+    protected $escapeWhenCastingToString = false;
 
     /**
      * The methods that can be proxied.
@@ -122,7 +130,7 @@ trait EnumeratesValues
      * @template TUnwrapKey of array-key
      * @template TUnwrapValue
      *
-     * @param  array<TUnwrapKey, TUnwrapValue>|static<TUnwrapKey, TUnwrapValue>   $value
+     * @param  array<TUnwrapKey, TUnwrapValue>|static<TUnwrapKey, TUnwrapValue>  $value
      * @return array<TUnwrapKey, TUnwrapValue>
      */
     public static function unwrap($value)
@@ -346,7 +354,7 @@ trait EnumeratesValues
      * @template TMapToGroupsKey of array-key
      * @template TMapToGroupsValue
      *
-     * @param  callable(TValue, TKey): array<TMapToGroupsKey, TMapToGroupsValue>   $callback
+     * @param  callable(TValue, TKey): array<TMapToGroupsKey, TMapToGroupsValue>  $callback
      * @return static<TMapToGroupsKey, static<int, TMapToGroupsValue>>
      */
     public function mapToGroups(callable $callback)
@@ -359,7 +367,7 @@ trait EnumeratesValues
     /**
      * Map a collection and flatten the result by a single level.
      *
-     * @param callable(TValue, TKey): mixed $callback
+     * @param  callable(TValue, TKey): mixed  $callback
      * @return static<int, mixed>
      */
     public function flatMap(callable $callback)
@@ -370,7 +378,7 @@ trait EnumeratesValues
     /**
      * Map the values into a new class.
      *
-     * @param  class-string $class
+     * @param  class-string  $class
      * @return static<TKey, mixed>
      */
     public function mapInto($class)
@@ -436,8 +444,8 @@ trait EnumeratesValues
      * Partition the collection into two arrays using the given callback or key.
      *
      * @param  (callable(TValue, TKey): bool)|TValue|string  $key
-     * @param  TValue|string|null $operator
-     * @param  TValue|null $value
+     * @param  TValue|string|null  $operator
+     * @param  TValue|null  $value
      * @return array<int, static<TKey, TValue>>
      */
     public function partition($key, $operator = null, $value = null)
@@ -718,8 +726,8 @@ trait EnumeratesValues
      * @template TReduceInitial
      * @template TReduceReturnType
      *
-     * @param  callable(TReduceInitial|TReduceReturnType, TValue): TReduceReturnType $callback
-     * @param  TReduceInitial $initial
+     * @param  callable(TReduceInitial|TReduceReturnType, TValue): TReduceReturnType  $callback
+     * @param  TReduceInitial  $initial
      * @return TReduceReturnType
      */
     public function reduce(callable $callback, $initial = null)
@@ -734,13 +742,56 @@ trait EnumeratesValues
     }
 
     /**
+     * Reduce the collection to multiple aggregate values.
+     *
+     * @param  callable  $callback
+     * @param  mixed  ...$initial
+     * @return array
+     *
+     * @deprecated Use "reduceSpread" instead
+     *
+     * @throws \UnexpectedValueException
+     */
+    public function reduceMany(callable $callback, ...$initial)
+    {
+        return $this->reduceSpread($callback, ...$initial);
+    }
+
+    /**
+     * Reduce the collection to multiple aggregate values.
+     *
+     * @param  callable  $callback
+     * @param  mixed  ...$initial
+     * @return array
+     *
+     * @throws \UnexpectedValueException
+     */
+    public function reduceSpread(callable $callback, ...$initial)
+    {
+        $result = $initial;
+
+        foreach ($this as $key => $value) {
+            $result = call_user_func_array($callback, array_merge($result, [$value, $key]));
+
+            if (! is_array($result)) {
+                throw new UnexpectedValueException(sprintf(
+                    "%s::reduceMany expects reducer to return an array, but got a '%s' instead.",
+                    class_basename(static::class), gettype($result)
+                ));
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Reduce an associative collection to a single value.
      *
      * @template TReduceWithKeysInitial
      * @template TReduceWithKeysReturnType
      *
-     * @param  callable(TReduceWithKeysInitial|TReduceWithKeysReturnType, TValue): TReduceWithKeysReturnType $callback
-     * @param  TReduceWithKeysInitial $initial
+     * @param  callable(TReduceWithKeysInitial|TReduceWithKeysReturnType, TValue): TReduceWithKeysReturnType  $callback
+     * @param  TReduceWithKeysInitial  $initial
      * @return TReduceWithKeysReturnType
      */
     public function reduceWithKeys(callable $callback, $initial = null)
@@ -768,7 +819,7 @@ trait EnumeratesValues
     /**
      * Pass the collection to the given callback and then return it.
      *
-     * @param  callable(TValue): mixed  $callback
+     * @param  callable($this): mixed  $callback
      * @return $this
      */
     public function tap(callable $callback)
@@ -883,7 +934,22 @@ trait EnumeratesValues
      */
     public function __toString()
     {
-        return $this->toJson();
+        return $this->escapeWhenCastingToString
+                    ? e($this->toJson())
+                    : $this->toJson();
+    }
+
+    /**
+     * Indicate that the model's string representation should be escaped when __toString is invoked.
+     *
+     * @param  bool  $escape
+     * @return $this
+     */
+    public function escapeWhenCastingToString($escape = true)
+    {
+        $this->escapeWhenCastingToString = $escape;
+
+        return $this;
     }
 
     /**
@@ -918,7 +984,7 @@ trait EnumeratesValues
      * Results array of items from Collection or Arrayable.
      *
      * @param  mixed  $items
-     * @return array
+     * @return array<TKey, TValue>
      */
     protected function getArrayableItems($items)
     {
@@ -1020,7 +1086,7 @@ trait EnumeratesValues
      * Make a function to check an item's equality.
      *
      * @param  mixed  $value
-     * @return \Closure
+     * @return \Closure(mixed): bool
      */
     protected function equality($value)
     {
@@ -1045,7 +1111,7 @@ trait EnumeratesValues
     /**
      * Make a function that returns what's passed to it.
      *
-     * @return \Closure
+     * @return \Closure(TValue): TValue
      */
     protected function identity()
     {

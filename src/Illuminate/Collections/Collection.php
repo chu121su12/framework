@@ -4,6 +4,7 @@ namespace Illuminate\Support;
 
 use ArrayAccess;
 use ArrayIterator;
+use Illuminate\Contracts\Support\CanBeEscapedWhenCastToString;
 use Illuminate\Support\Traits\EnumeratesValues;
 use Illuminate\Support\Traits\Macroable;
 use stdClass;
@@ -15,7 +16,7 @@ use stdClass;
  * @implements \ArrayAccess<TKey, TValue>
  * @implements \Illuminate\Support\Enumerable<TKey, TValue>
  */
-class Collection implements ArrayAccess, Enumerable
+class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerable
 {
     /**
      * @use \Illuminate\Support\Traits\EnumeratesValues<TKey, TValue>
@@ -65,7 +66,7 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Get a lazy collection for the items in this collection.
      *
-     * @return \Illuminate\Support\LazyCollection
+     * @return \Illuminate\Support\LazyCollection<TKey, TValue>
      */
     public function lazy()
     {
@@ -367,7 +368,7 @@ class Collection implements ArrayAccess, Enumerable
      *
      * @template TFirstDefault
      *
-     * @param  (callable(TValue): bool)|null  $callback
+     * @param  (callable(TValue, TKey): bool)|null  $callback
      * @param  TFirstDefault  $default
      * @return TValue|TFirstDefault
      */
@@ -518,6 +519,29 @@ class Collection implements ArrayAccess, Enumerable
         }
 
         return true;
+    }
+
+    /**
+     * Determine if any of the keys exist in the collection.
+     *
+     * @param  mixed  $key
+     * @return bool
+     */
+    public function hasAny($key)
+    {
+        if ($this->isEmpty()) {
+            return false;
+        }
+
+        $keys = is_array($key) ? $key : func_get_args();
+
+        foreach ($keys as $value) {
+            if ($this->has($value)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -673,7 +697,7 @@ class Collection implements ArrayAccess, Enumerable
      * @template TMapToDictionaryKey of array-key
      * @template TMapToDictionaryValue
      *
-     * @param  callable(TValue, TKey): array<TMapToDictionaryKey, TMapToDictionaryValue>   $callback
+     * @param  callable(TValue, TKey): array<TMapToDictionaryKey, TMapToDictionaryValue>  $callback
      * @return static<TMapToDictionaryKey, array<int, TMapToDictionaryValue>>
      */
     public function mapToDictionary(callable $callback)
@@ -705,7 +729,7 @@ class Collection implements ArrayAccess, Enumerable
      * @template TMapWithKeysKey of array-key
      * @template TMapWithKeysValue
      *
-     * @param  callable(TValue, TKey): array<TMapWithKeysKey, TMapWithKeysValue>   $callback
+     * @param  callable(TValue, TKey): array<TMapWithKeysKey, TMapWithKeysValue>  $callback
      * @return static<TMapWithKeysKey, TMapWithKeysValue>
      */
     public function mapWithKeys(callable $callback)
@@ -726,7 +750,7 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Merge the collection with the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue> $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
      * @return static<TKey, TValue>
      */
     public function merge($items)
@@ -737,7 +761,7 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Recursively merge the collection with the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue> $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
      * @return static<TKey, array<int, TValue>>
      */
     public function mergeRecursive($items)
@@ -750,7 +774,7 @@ class Collection implements ArrayAccess, Enumerable
      *
      * @template TCombineValue
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TCombineValue>|iterable<array-key, TCombineValue> $values
+     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TCombineValue>|iterable<array-key, TCombineValue>  $values
      * @return static<TKey, TCombineValue>
      */
     public function combine($values)
@@ -761,7 +785,7 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Union the collection with the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue> $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
      * @return static<TKey, TValue>
      */
     public function union($items)
@@ -796,7 +820,7 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Get the items with the specified keys.
      *
-     * @param  \Illuminate\Support\Enumerable<array-key, TKey>|array<array-key, TKey> $keys
+     * @param  \Illuminate\Support\Enumerable<array-key, TKey>|array<array-key, TKey>  $keys
      * @return static<TKey, TValue>
      */
     public function only($keys)
@@ -935,7 +959,7 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Replace the collection items with the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue> $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
      * @return static<TKey, TValue>
      */
     public function replace($items)
@@ -1166,10 +1190,10 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Get the first item in the collection but throw an exception if no matching items exist.
      *
-     * @param  mixed  $key
+     * @param  (callable(TValue, TKey): bool)|string  $key
      * @param  mixed  $operator
      * @param  mixed  $value
-     * @return mixed
+     * @return TValue
      *
      * @throws \Illuminate\Support\ItemNotFoundException
      */
@@ -1194,7 +1218,7 @@ class Collection implements ArrayAccess, Enumerable
      * Chunk the collection into chunks of the given size.
      *
      * @param  int  $size
-     * @return static<int, static<int, TValue>>
+     * @return static<int, static<TKey, TValue>>
      */
     public function chunk($size)
     {
@@ -1324,7 +1348,7 @@ class Collection implements ArrayAccess, Enumerable
                         $values = array_reverse($values);
                     }
 
-                    $result = backport_spaceship_operator($values[0], $values[1]);
+                    $result = backport_spaceship_operator($values[0], /*<=> */$values[1]);
                 }
 
                 if ($result === 0) {
@@ -1442,6 +1466,28 @@ class Collection implements ArrayAccess, Enumerable
         $this->items = $this->map($callback)->all();
 
         return $this;
+    }
+
+    /**
+     * Return only unique items from the collection array.
+     *
+     * @param  (callable(TValue, TKey): bool)|string|null  $key
+     * @param  bool  $strict
+     * @return static<TKey, TValue>
+     */
+    public function unique($key = null, $strict = false)
+    {
+        $callback = $this->valueRetriever($key);
+
+        $exists = [];
+
+        return $this->reject(function ($item, $key) use ($callback, $strict, &$exists) {
+            if (in_array($id = $callback($item, $key), $exists, $strict)) {
+                return true;
+            }
+
+            $exists[] = $id;
+        });
     }
 
     /**

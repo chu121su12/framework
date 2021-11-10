@@ -84,23 +84,21 @@ Line: 162
 
 
 
-PDOConnection::query (Connection) > PDO::query
-    public function query(string $statement, ?int $fetch_mode = null, mixed ...$fetch_mode_args)
-    {
-        return $this->_query(...func_get_args());
-    }
+\Doctrine\DBAL\Driver\Connection
+    # public function query()
 
-PDOStatement::fetchAll (ResultStatement) > Statement::fetchAll
-    public function fetchAll(int $fetch_style = \PDO::FETCH_BOTH, mixed ...$fetch_args)
-    {
-        return $this->_fetchAll($fetch_style, ...$fetch_args);
-    }
+\Doctrine\DBAL\Driver\ResultStatement
+    # public function setFetchMode()
+    # public function fetchAll()
 
-PDOStatement::setFetchMode (ResultStatement) > Statement::setFetchMode
-    public function setFetchMode(int $mode, mixed ...$params)
-    {
-        return $this->_setFetchMode($mode, ...$params);
-    }
+\Doctrine\DBAL\Driver\PDOConnection
+    use \Doctrine\Patch\PDOConnectionTrait;
+    public function query() -> public function _query()
+
+\Doctrine\DBAL\Driver\PDOStatement
+    use \Doctrine\Patch\PDOStatementTrait;
+    public function setFetchMode() -> public function _setFetchMode()
+    public function fetchAll() -> public function _fetchAll()
 
 
 

@@ -2,6 +2,7 @@
 
 namespace CR\LaravelBackport;
 
+use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Process\Process;
 
 class SymfonyHelper
@@ -103,4 +104,22 @@ class SymfonyHelper
 
         return static::newProcess($command, $cwd, $env, $input, $timeout);
     }
+
+    public static function consoleApplicationRenderThrowable($e, $output)
+    {
+        $console = new ConsoleApplication;
+
+        if (method_exists($console, 'renderThrowable')) {
+
+            $console->renderThrowable($e, $output);
+
+        } else {
+            if (!($e instanceof \Exception)) {
+                $e = new \Exception($e);
+            }
+
+            $console->renderException($e, $output);
+        }
+    }
+
 }

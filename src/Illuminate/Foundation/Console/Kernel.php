@@ -127,9 +127,9 @@ class Kernel implements KernelContract
             $this->bootstrap();
 
             return $this->getArtisan()->run($input, $output);
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -367,7 +367,7 @@ class Kernel implements KernelContract
      * @param  \Throwable  $e
      * @return void
      */
-    protected function reportException($e)
+    protected function reportException(/*Throwable */$e)
     {
         $this->app[ExceptionHandler::class]->report($e);
     }
@@ -379,7 +379,7 @@ class Kernel implements KernelContract
      * @param  \Throwable  $e
      * @return void
      */
-    protected function renderException($output, $e)
+    protected function renderException($output, /*Throwable */$e)
     {
         $this->app[ExceptionHandler::class]->renderForConsole($output, $e);
     }

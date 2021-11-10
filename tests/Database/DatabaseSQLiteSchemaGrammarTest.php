@@ -2,7 +2,6 @@
 
 namespace Illuminate\Tests\Database;
 
-use Doctrine\DBAL\Schema\SqliteSchemaManager;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Blueprint;
@@ -102,10 +101,6 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
             $this->markTestSkipped('Needs fix on Doctrine\DBAL\Schema\Table.');
         }
 
-        if (! class_exists(SqliteSchemaManager::class)) {
-            $this->markTestSkipped('Doctrine should be installed to run dropColumn tests');
-        }
-
         $db = new Manager;
 
         $db->addConnection([
@@ -153,10 +148,6 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
 
     public function testRenameIndex()
     {
-        if (! class_exists(SqliteSchemaManager::class)) {
-            $this->markTestSkipped('Doctrine should be installed to run renameIndex tests');
-        }
-
         $db = new Manager;
 
         $db->addConnection([

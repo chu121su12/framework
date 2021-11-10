@@ -473,7 +473,7 @@ class Migrator
      * @param  string  $path
      * @return object
      */
-    protected function resolvePath($path)
+    protected function resolvePath(/*string */$path)
     {
         $path = cast_to_string($path);
 
@@ -494,7 +494,7 @@ class Migrator
      * @param  string  $migrationName
      * @return string
      */
-    protected function getMigrationClass($migrationName) ////: string
+    protected function getMigrationClass(/*string */$migrationName)/*: string*/
     {
         $migrationName = cast_to_string($migrationName);
 

@@ -114,10 +114,8 @@ class CallQueuedHandler
     protected function dispatchThroughMiddleware(Job $job, $command)
     {
         return (new Pipeline($this->container))->send($command)
-                ->through(array_merge(
-                    method_exists($command, 'middleware') ? $command->middleware() : [],
-                    isset($command->middleware) ? $command->middleware : []
-                ))
+                ->through(array_merge(method_exists($command, 'middleware') ? $command->middleware() : [],
+                    isset($command->middleware) ? $command->middleware : []))
                 ->then(function ($command) use ($job) {
                     return $this->dispatcher->dispatchNow(
                         $command, $this->resolveHandler($job, $command)
@@ -254,7 +252,7 @@ class CallQueuedHandler
      * @param  string  $uuid
      * @return void
      */
-    public function failed(array $data, $e, $uuid)
+    public function failed(array $data, $e, /*string */$uuid)
     {
         $uuid = cast_to_string($uuid);
 
@@ -280,7 +278,7 @@ class CallQueuedHandler
      * @param  \Throwable  $e
      * @return void
      */
-    protected function ensureFailedBatchJobIsRecorded($uuid, $command, $e)
+    protected function ensureFailedBatchJobIsRecorded(/*string */$uuid, $command, $e)
     {
         $uuid = cast_to_string($uuid);
 
@@ -300,7 +298,7 @@ class CallQueuedHandler
      * @param  \Throwable  $e
      * @return void
      */
-    protected function ensureChainCatchCallbacksAreInvoked($uuid, $command, $e)
+    protected function ensureChainCatchCallbacksAreInvoked(/*string */$uuid, $command, $e)
     {
         $uuid = cast_to_string($uuid);
 

@@ -136,6 +136,16 @@ class BusFake implements QueueingDispatcher
     }
 
     /**
+     * Assert that no jobs were dispatched.
+     *
+     * @return void
+     */
+    public function assertNothingDispatched()
+    {
+        PHPUnit::assertEmpty($this->commands, 'Jobs were dispatched unexpectedly.');
+    }
+
+    /**
      * Assert if a job was explicitly dispatched synchronously based on a truth-test callback.
      *
      * @param  string|\Closure  $command
@@ -456,7 +466,7 @@ class BusFake implements QueueingDispatcher
      * @param  callable|null  $callback
      * @return \Illuminate\Support\Collection
      */
-    public function dispatchedAfterResponse($command, $callback = null)
+    public function dispatchedAfterResponse(/*string */$command, $callback = null)
     {
         $command = cast_to_string($command);
 
@@ -621,7 +631,7 @@ class BusFake implements QueueingDispatcher
      * @param  string  $batchId
      * @return \Illuminate\Bus\Batch|null
      */
-    public function findBatch($batchId)
+    public function findBatch(/*string */$batchId)
     {
         $batchId = cast_to_string($batchId);
 
@@ -642,7 +652,7 @@ class BusFake implements QueueingDispatcher
     /**
      * Record the fake pending batch dispatch.
      *
-     * @param  \Illuminate\Bus\PendingBatch $pendingBatch
+     * @param  \Illuminate\Bus\PendingBatch  $pendingBatch
      * @return \Illuminate\Bus\Batch
      */
     public function recordPendingBatch(PendingBatch $pendingBatch)

@@ -3,6 +3,7 @@
 namespace Illuminate\Mail\Transport;
 
 use GuzzleHttp\ClientInterface;
+use Illuminate\Mail\SentMessage;
 use Swift_Mime_SimpleMessage as SwiftMimeSimpleMessage;
 use Swift_Mime_Message as Swift_Mime_SimpleMessage;
 
@@ -82,7 +83,11 @@ class MailgunTransport extends Transport
 
         $this->sendPerformed($message);
 
-        return $this->numberOfRecipients($message);
+        $sentMessage = new SentMessage($message);
+
+        $this->numberOfRecipients($message);
+
+        return $sentMessage;
     }
 
     /**

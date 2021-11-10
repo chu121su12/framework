@@ -255,7 +255,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     /**
      * Execute a callback over each nested chunk of items.
      *
-     * @param  callable(...mixed): mixed  $callback
+     * @param  callable  $callback
      * @return static<TKey, TValue>
      */
     public function eachSpread(callable $callback);
@@ -458,7 +458,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      *
      * @template TFirstDefault
      *
-     * @param  (callable(TValue): bool)|null  $callback
+     * @param  (callable(TValue,TKey): bool)|null  $callback
      * @param  TFirstDefault  $default
      * @return TValue|TFirstDefault
      */
@@ -604,10 +604,8 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     /**
      * Run a map over each nested chunk of items.
      *
-     * @template TMapSpreadValue
-     *
-     * @param  callable(...mixed): TMapSpreadValue  $callback
-     * @return static<TKey, TMapSpreadValue>
+     * @param  callable  $callback
+     * @return static<TKey, TValue>
      */
     public function mapSpread(callable $callback);
 
@@ -661,7 +659,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     /**
      * Map the values into a new class.
      *
-     * @param  class-string $class
+     * @param  class-string  $class
      * @return static<TKey, mixed>
      */
     public function mapInto($class);
@@ -880,7 +878,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * Chunk the collection into chunks of the given size.
      *
      * @param  int  $size
-     * @return static<int, static<int, TValue>>
+     * @return static<int, static<TKey, TValue>>
      */
     public function chunk($size);
 
@@ -1049,8 +1047,10 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     /**
      * Count the number of items in the collection using a given truth test.
      *
-     * @param  (callable(TValue, TKey): mixed)|string|null  $callback
-     * @return static<TValue, int>
+     * @template TGroup of array-key
+     *
+     * @param  (callable(TValue, TKey): TGroup)|string|null  $callback
+     * @return static<TGroup, int>
      */
     public function countBy($callback = null);
 

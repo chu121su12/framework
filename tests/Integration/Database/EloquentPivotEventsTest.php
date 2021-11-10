@@ -7,9 +7,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * @group integration
- */
 class EloquentPivotEventsTest extends DatabaseTestCase
 {
     protected function setUp()
@@ -91,7 +88,7 @@ class EloquentPivotEventsTest extends DatabaseTestCase
 
         $project->collaborators()->updateExistingPivot($user->id, ['role' => 'Lead Developer']);
 
-        $this->assertSame(
+        $this->assertEquals(
             [
                 'user_id' => '1',
                 'project_id' => '1',

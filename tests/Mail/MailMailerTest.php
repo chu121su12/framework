@@ -20,6 +20,8 @@ class MailMailerTest extends TestCase
 {
     protected function tearDown()
     {
+        unset($_SERVER['__mailer.test']);
+
         m::close();
     }
 
@@ -213,7 +215,7 @@ class MailMailerTest extends TestCase
 
     protected function getMailer($events = null)
     {
-        return new Mailer('smtp', m::mock(Factory::class), m::mock(Swift_Mailer::class), $events);
+        return new Mailer('smtp', m::mock(Factory::class), null, $events, m::mock(Swift_Mailer::class));
     }
 
     public function setSwiftMailer($mailer)
@@ -229,7 +231,7 @@ class MailMailerTest extends TestCase
 
     protected function getMocks()
     {
-        return ['smtp', m::mock(Factory::class), m::mock(Swift_Mailer::class)];
+        return ['smtp', m::mock(Factory::class), null, null, m::mock(Swift_Mailer::class)];
     }
 }
 

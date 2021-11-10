@@ -7,7 +7,7 @@ use Swift_Attachment;
 class MessageSent
 {
     /**
-     * The Swift message instance.
+     * The Symfony Email instance.
      *
      * @var \Swift_Message
      */
@@ -27,7 +27,7 @@ class MessageSent
      * @param  array  $data
      * @return void
      */
-    public function __construct($message, $data = [])
+    public function __construct(/*Email */$message, array $data = [])
     {
         $this->data = $data;
         $this->message = $message;
@@ -41,8 +41,8 @@ class MessageSent
     public function __serialize()
     {
         $hasAttachments = collect($this->message->getChildren())
-                                ->whereInstanceOf(Swift_Attachment::class)
-                                ->isNotEmpty();
+            ->whereInstanceOf(Swift_Attachment::class)
+            ->isNotEmpty();
 
         return $hasAttachments ? [
             'message' => base64_encode(serialize($this->message)),

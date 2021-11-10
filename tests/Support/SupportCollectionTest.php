@@ -22,6 +22,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use stdClass;
 use Symfony\Component\VarDumper\VarDumper;
+use UnexpectedValueException;
 
 class SupportCollectionTest_testHigherOrderFilter_class_1 
             {
@@ -490,7 +491,7 @@ class SupportCollectionTest extends TestCase
      */
     public function testCollectionShuffleWithSeed($collection)
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
             $this->markTestSkipped('Before php 7, mt_srand with identical seed is not guaranteed to produce same output.');
         }
 
@@ -2085,6 +2086,20 @@ class SupportCollectionTest extends TestCase
         $this->assertFalse($data->has('third'));
         $this->assertTrue($data->has(['first', 'second']));
         $this->assertFalse($data->has(['third', 'first']));
+    }
+
+    /**
+     * @dataProvider collectionClassProvider
+     */
+    public function testHasAny($collection)
+    {
+        $data = new $collection(['id' => 1, 'first' => 'Hello', 'second' => 'World']);
+
+        $this->assertTrue($data->hasAny('first'));
+        $this->assertFalse($data->hasAny('third'));
+        $this->assertTrue($data->hasAny(['first', 'second']));
+        $this->assertTrue($data->hasAny(['first', 'fourth']));
+        $this->assertFalse($data->hasAny(['third', 'fourth']));
     }
 
     /**
@@ -3910,6 +3925,40 @@ class SupportCollectionTest extends TestCase
         $this->assertSame('foobarbazqux', $data->reduceWithKeys(function ($carry, $element, $key) {
             return $carry .= $key.$element;
         }));
+    }
+
+    /**
+     * @dataProvider collectionClassProvider
+     */
+    public function testReduceSpread($collection)
+    {
+        $data = new $collection([-1, 0, 1, 2, 3, 4, 5]);
+
+        list($sum, $max, $min) = $data->reduceSpread(function ($sum, $max, $min, $value) {
+            $sum += $value;
+            $max = max($max, $value);
+            $min = min($min, $value);
+
+            return [$sum, $max, $min];
+        }, 0, PHP_INT_MIN, PHP_INT_MAX);
+
+        $this->assertEquals(14, $sum);
+        $this->assertEquals(5, $max);
+        $this->assertEquals(-1, $min);
+    }
+
+    /**
+     * @dataProvider collectionClassProvider
+     */
+    public function testReduceSpreadThrowsAnExceptionIfReducerDoesNotReturnAnArray($collection)
+    {
+        $data = new $collection([1]);
+
+        $this->expectException(UnexpectedValueException::class);
+
+        $data->reduceSpread(function () {
+            return false;
+        }, null);
     }
 
     /**

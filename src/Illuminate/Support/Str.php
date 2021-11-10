@@ -8,7 +8,7 @@ use Ramsey\Uuid\Codec\TimestampFirstCombCodec;
 use Ramsey\Uuid\Generator\CombGenerator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactory;
-use voku\helper\UTF8;
+use voku\helper\ASCII;
 
 class Str
 {
@@ -102,7 +102,7 @@ class Str
      */
     public static function ascii($value, $language = 'en')
     {
-        return UTF8::to_ascii((string) $value);
+        return ASCII::to_ascii((string) $value, $language);
     }
 
     /**
@@ -271,11 +271,15 @@ class Str
     {
         $patterns = Arr::wrap($pattern);
 
+        $value = (string) $value;
+
         if (empty($patterns)) {
             return false;
         }
 
         foreach ($patterns as $pattern) {
+            $pattern = (string) $pattern;
+
             // If the given value is an exact match we can of course return true right
             // from the beginning. Otherwise, we will translate asterisks and do an
             // actual pattern match against the two strings to see if they match.
@@ -306,7 +310,7 @@ class Str
      */
     public static function isAscii($value)
     {
-        return UTF8::is_ascii((string) $value);
+        return ASCII::is_ascii((string) $value);
     }
 
     /**
@@ -410,6 +414,38 @@ class Str
         $converter = new GithubFlavoredMarkdownConverter($options);
 
         return (string) $converter->convertToHtml($string);
+    }
+
+    /**
+     * Masks a portion of a string with a repeated character.
+     *
+     * @param  string  $string
+     * @param  string  $character
+     * @param  int  $index
+     * @param  int|null  $length
+     * @param  string  $encoding
+     * @return string
+     */
+    public static function mask($string, $character, $index, $length = null, $encoding = 'UTF-8')
+    {
+        if ($character === '') {
+            return $string;
+        }
+
+        if (is_null($length) && PHP_MAJOR_VERSION < 8) {
+            $length = mb_strlen($string, $encoding);
+        }
+
+        $segment = mb_substr($string, $index, $length, $encoding);
+
+        if ($segment === '') {
+            return $string;
+        }
+
+        $start = mb_substr($string, 0, mb_strpos($string, $segment, 0, $encoding), $encoding);
+        $end = mb_substr($string, mb_strpos($string, $segment, 0, $encoding) + mb_strlen($segment, $encoding));
+
+        return $start.str_repeat(mb_substr($character, 0, 1, $encoding), mb_strlen($segment, $encoding)).$end;
     }
 
     /**
@@ -555,10 +591,9 @@ class Str
      * @param  int  $times
      * @return string
      */
-    public static function repeat($string, $times)
+    public static function repeat(/*string */$string, /*int */$times)
     {
         $string = cast_to_string($string);
-
         $times = cast_to_int($times);
 
         return str_repeat($string, $times);
@@ -698,6 +733,27 @@ class Str
     public static function title($value)
     {
         return mb_convert_case($value, MB_CASE_TITLE, 'UTF-8');
+    }
+
+    /**
+     * Convert the given string to title case for each word.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public static function headline($value)
+    {
+        $parts = explode('_', static::replace(' ', '_', $value));
+
+        if (count($parts) > 1) {
+            $parts = array_map([static::class, 'title'], $parts);
+        }
+
+        $studly = static::studly(implode($parts));
+
+        $words = preg_split('/(?=[A-Z])/', $studly, -1, PREG_SPLIT_NO_EMPTY);
+
+        return implode(' ', $words);
     }
 
     /**

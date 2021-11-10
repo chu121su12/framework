@@ -270,7 +270,7 @@ final class Uuid
 
         $parsed = self::parse($uuid);
 
-        if (self::UUID_TYPE_TIME !== ($parsed['version'] ?? null)) {
+        if (self::UUID_TYPE_TIME !== (isset($parsed['version']) ? $parsed['version'] : null)) {
             if (80000 > \PHP_VERSION_ID) {
                 return false;
             }
@@ -299,7 +299,7 @@ final class Uuid
 
         $parsed = self::parse($uuid);
 
-        if (self::UUID_TYPE_TIME !== ($parsed['version'] ?? null)) {
+        if (self::UUID_TYPE_TIME !== (isset($parsed['version']) ? $parsed['version'] : null)) {
             if (80000 > \PHP_VERSION_ID) {
                 return false;
             }

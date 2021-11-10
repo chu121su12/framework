@@ -18,7 +18,7 @@ use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-// use Illuminate\Support\Traits\ForwardsCalls;
+use Illuminate\Support\Traits\ForwardsCalls;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -36,7 +36,7 @@ class Builder implements BuilderContract
      *
      * @var \Illuminate\Database\Query\Builder
      */
-    // protected $query;
+    /*protected $query;*/
 
     /**
      * The model being queried.
@@ -543,6 +543,19 @@ class Builder implements BuilderContract
         if ($result = $this->first([$column])) {
             return $result->{Str::afterLast($column, '.')};
         }
+    }
+
+    /**
+     * Get a single column's value from the first result of the query or throw an exception.
+     *
+     * @param  string|\Illuminate\Database\Query\Expression  $column
+     * @return mixed
+     *
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     */
+    public function valueOrFail($column)
+    {
+        return $this->firstOrFail([$column])->{Str::afterLast($column, '.')};
     }
 
     /**

@@ -734,6 +734,29 @@ class TestResponseTest extends TestCase
         });
     }
 
+    public function testAssertJsonWithFluentHasAnyThrows()
+    {
+        $response = TestResponse::fromBaseResponse(new Response([]));
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('None of properties [data, errors, meta] exist.');
+
+        $response->assertJson(function (AssertableJson $json) {
+            $json->hasAny('data', 'errors', 'meta');
+        });
+    }
+
+    public function testAssertJsonWithFluentHasAnyPasses()
+    {
+        $response = TestResponse::fromBaseResponse(new Response([
+            'data' => [],
+        ]));
+
+        $response->assertJson(function (AssertableJson $json) {
+            $json->hasAny('data', 'errors', 'meta');
+        });
+    }
+
     public function testAssertSimilarJsonWithMixed()
     {
         $response = TestResponse::fromBaseResponse(new Response(new JsonSerializableMixedResourcesStub));
@@ -1542,6 +1565,19 @@ class TestResponseTest extends TestCase
         $response = TestResponse::fromBaseResponse(new Response);
 
         $response->assertCookieMissing('cookie-name');
+    }
+
+    public function testAssertRedirectContains()
+    {
+        $response = TestResponse::fromBaseResponse(
+            (new Response('', 302))->withHeaders(['Location' => 'https://url.com'])
+        );
+
+        $response->assertRedirectContains('url.com');
+
+        $this->expectException(ExpectationFailedException::class);
+
+        $response->assertRedirectContains('url.net');
     }
 
     public function testGetDecryptedCookie()

@@ -666,7 +666,7 @@ class NativeCalculator extends Calculator
      * @param string $a The first operand.
      * @param string $b The second operand.
      *
-     * @return array{0: string, 1: string, 2: int}
+     * @return array{string, string, int}
      */
     private function pad(/*string */$a, /*string */$b)//// : array
     {

@@ -364,7 +364,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
 
         if ($years instanceof DateInterval) {
             parent::__construct(static::getDateIntervalSpec($years));
-            if (!\version_compare(\PHP_VERSION, '7.0.0', '<')) {
+            if (!\version_compare(\PHP_VERSION, '7.1.0', '<')) {
                 $this->f = $years->f;
             }
             static::copyNegativeUnits($years, $this);
@@ -402,7 +402,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         parent::__construct($spec);
 
         if ($microseconds !== null) {
-            if (!\version_compare(\PHP_VERSION, '7.0.0', '<')) {
+            if (!\version_compare(\PHP_VERSION, '7.1.0', '<')) {
                 $this->f = $microseconds / Carbon::MICROSECONDS_PER_SECOND;
             }
         }
@@ -599,7 +599,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
     {
         $date = new static(0);
         $date->copyProperties($this);
-        if (!\version_compare(\PHP_VERSION, '7.0.0', '<')) {
+        if (!\version_compare(\PHP_VERSION, '7.1.0', '<')) {
             $date->f = $this->f;
         }
         $date->step = $this->step;
@@ -873,7 +873,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
             throw new InvalidCastException("$className is not a sub-class of $mainClass.");
         }
 
-        if (!\version_compare(\PHP_VERSION, '7.0.0', '<')) {
+        if (!\version_compare(\PHP_VERSION, '7.1.0', '<')) {
             $microseconds = $interval->f;
             $instance = new $className(static::getDateIntervalSpec($interval));
 
@@ -1062,7 +1062,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
 
             case 'milli':
             case 'milliseconds':
-                if (\version_compare(\PHP_VERSION, '7.0.0', '<')) {
+                if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
                     return 0;
                 }
 
@@ -1072,14 +1072,14 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
 
             case 'micro':
             case 'microseconds':
-                if (\version_compare(\PHP_VERSION, '7.0.0', '<')) {
+                if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
                     return 0;
                 }
 
                 return (int) round($this->f * Carbon::MICROSECONDS_PER_SECOND);
 
             case 'microExcludeMilli':
-                if (\version_compare(\PHP_VERSION, '7.0.0', '<')) {
+                if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
                     return 0;
                 }
 
@@ -1624,7 +1624,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
 
         $interval = [];
 
-        $syntax = (int) ($syntax === null ? CarbonInterface::DIFF_ABSOLUTE : $syntax);
+        $syntax = (int) (isset($syntax) ? $syntax : CarbonInterface::DIFF_ABSOLUTE);
         $absolute = $syntax === CarbonInterface::DIFF_ABSOLUTE;
         $relativeToNow = $syntax === CarbonInterface::DIFF_RELATIVE_TO_NOW;
         $count = 1;

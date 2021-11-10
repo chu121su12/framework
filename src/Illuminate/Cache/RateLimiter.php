@@ -42,7 +42,7 @@ class RateLimiter
      * @param  \Closure  $callback
      * @return $this
      */
-    public function for_($name, Closure $callback)
+    public function for_(/*string */$name, Closure $callback)
     {
         $name = cast_to_string($name);
 
@@ -57,7 +57,7 @@ class RateLimiter
      * @param  string  $name
      * @return \Closure
      */
-    public function limiter($name)
+    public function limiter(/*string */$name)
     {
         $name = cast_to_string($name);
 
@@ -93,6 +93,8 @@ class RateLimiter
      */
     public function tooManyAttempts($key, $maxAttempts)
     {
+        $key = $this->cleanRateLimiterKey($key);
+
         if ($this->attempts($key) >= $maxAttempts) {
             if ($this->cache->has($key.':timer')) {
                 return true;
@@ -113,6 +115,8 @@ class RateLimiter
      */
     public function hit($key, $decaySeconds = 60)
     {
+        $key = $this->cleanRateLimiterKey($key);
+
         $this->cache->add(
             $key.':timer', $this->availableAt($decaySeconds), $decaySeconds
         );
@@ -136,6 +140,8 @@ class RateLimiter
      */
     public function attempts($key)
     {
+        $key = $this->cleanRateLimiterKey($key);
+
         return $this->cache->get($key, 0);
     }
 
@@ -147,6 +153,8 @@ class RateLimiter
      */
     public function resetAttempts($key)
     {
+        $key = $this->cleanRateLimiterKey($key);
+
         return $this->cache->forget($key);
     }
 
@@ -159,6 +167,8 @@ class RateLimiter
      */
     public function remaining($key, $maxAttempts)
     {
+        $key = $this->cleanRateLimiterKey($key);
+
         $attempts = $this->attempts($key);
 
         return $maxAttempts - $attempts;
@@ -184,6 +194,8 @@ class RateLimiter
      */
     public function clear($key)
     {
+        $key = $this->cleanRateLimiterKey($key);
+
         $this->resetAttempts($key);
 
         $this->cache->forget($key.':timer');
@@ -197,6 +209,19 @@ class RateLimiter
      */
     public function availableIn($key)
     {
+        $key = $this->cleanRateLimiterKey($key);
+
         return max(0, $this->cache->get($key.':timer') - $this->currentTime());
+    }
+
+    /**
+     * Clean the rate limiter key from unicode characters.
+     *
+     * @param  string  $key
+     * @return string
+     */
+    public function cleanRateLimiterKey($key)
+    {
+        return preg_replace('/&([a-z])[a-z]+;/i', '$1', htmlentities($key));
     }
 }

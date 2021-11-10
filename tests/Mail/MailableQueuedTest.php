@@ -93,7 +93,7 @@ class MailableQueuedTest extends TestCase
 
     protected function getMocks()
     {
-        return ['smtp', m::mock(Factory::class), m::mock(Swift_Mailer::class)];
+        return ['smtp', m::mock(Factory::class), null, null, m::mock(Swift_Mailer::class)];
     }
 }
 

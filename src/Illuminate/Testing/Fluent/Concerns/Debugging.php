@@ -10,7 +10,7 @@ trait Debugging
      * @param  string|null  $prop
      * @return $this
      */
-    public function dump($prop = null) ////:self
+    public function dump(/*string */$prop = null)/*: self*/
     {
         $prop = cast_to_string($prop, null);
 
@@ -25,7 +25,7 @@ trait Debugging
      * @param  string|null  $prop
      * @return void
      */
-    public function dd($prop = null) ////:void
+    public function dd(/*string */$prop = null)/*: void*/
     {
         $prop = cast_to_string($prop, null);
 
@@ -38,5 +38,5 @@ trait Debugging
      * @param  string|null  $key
      * @return mixed
      */
-    abstract protected function prop($key = null);
+    abstract protected function prop(/*string */$key = null);
 }

@@ -100,11 +100,7 @@ trait Mixin
         $className = \get_class($context);
 
         foreach (self::getMixableMethods($context) as $name) {
-            if (\version_compare(\PHP_VERSION, '7.0.0', '<')) {
-                $closureBase = backport_closure_from_callable($context, [$context, $name]);
-            } else {
-                $closureBase = Closure::fromCallable([$context, $name]);
-            }
+            $closureBase = backport_closure_from_callable([$context, $name]);
 
             static::macro($name, function () use ($closureBase, $className) {
                 /** @phpstan-ignore-next-line */
@@ -113,12 +109,12 @@ trait Mixin
                 try {
                      // @ is required to handle error if not converted into exceptions
                     $closure = @$closureBase->bindTo($context);
-                } catch (Throwable $throwable) { // @codeCoverageIgnore
-                    $closure = $closureBase; // @codeCoverageIgnore
-                } catch (\Error $throwable) {
-                    $closure = $closureBase;
                 } catch (\Exception $throwable) {
                     $closure = $closureBase;
+                } catch (\Error $throwable) {
+                    $closure = $closureBase;
+                } catch (Throwable $throwable) { // @codeCoverageIgnore
+                    $closure = $closureBase; // @codeCoverageIgnore
                 }
 
                  // in case of errors not converted into exceptions
@@ -165,12 +161,12 @@ trait Mixin
 
         try {
             $result = $callable();
-        } catch (Throwable $throwable) {
-            $exception = $throwable;
-        } catch (\Error $error) {
-            $exception = $error;
         } catch (\Exception $e) {
             $exception = $e;
+        } catch (\Error $error) {
+            $exception = $error;
+        } catch (Throwable $throwable) {
+            $exception = $throwable;
         }
 
         array_pop(static::$macroContextStack);

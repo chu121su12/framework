@@ -84,8 +84,10 @@ class Application extends SymfonyApplication implements ApplicationContract
 
     /**
      * {@inheritdoc}
+     *
+     * @return int
      */
-    public function run(InputInterface $input = null, OutputInterface $output = null)////: int
+    public function run(InputInterface $input = null, OutputInterface $output = null)/*: int*/
     {
         $commandName = $this->getCommandName(
             $input = $input ?: new ArgvInput
@@ -310,7 +312,7 @@ class Application extends SymfonyApplication implements ApplicationContract
      *
      * @return \Symfony\Component\Console\Input\InputDefinition
      */
-    protected function getDefaultInputDefinition()///: InputDefinition
+    protected function getDefaultInputDefinition()/*: InputDefinition*/
     {
         return tap(parent::getDefaultInputDefinition(), function ($definition) {
             $definition->addOption($this->getEnvironmentOption());

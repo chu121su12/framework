@@ -7,17 +7,17 @@ use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\Constraint\LogicalNot;
 use PHPUnit\Framework\Constraint\StringContains;
 
-if (phpunit_major_version() > 5) {
+if (phpunit_major_version() < 8) {
     trait PhpUnit8Assert
     {
         use Patch\ExtraAssertions;
+        use Patch\PhpUnit5AssertBackport;
+        use Patch\PhpUnit7AssertBackport;
     }
 
 } else {
     trait PhpUnit8Assert
     {
         use Patch\ExtraAssertions;
-        use Patch\PhpUnit5AssertBackport;
-        use Patch\PhpUnit7AssertBackport;
     }
 }

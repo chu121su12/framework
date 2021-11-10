@@ -462,11 +462,11 @@ trait Options
                 if (!isset($infos['timezone'])) {
                     $infos['timezone'] = $this->tzName;
                 }
-            } catch (Throwable $exception) {
+            } catch (\Exception $exception) {
                 // noop
             } catch (\Error $exception) {
                 // noop
-            } catch (\Exception $exception) {
+            } catch (Throwable $exception) {
                 // noop
             }
         }

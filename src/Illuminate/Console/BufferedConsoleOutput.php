@@ -28,10 +28,9 @@ class BufferedConsoleOutput extends ConsoleOutput
     /**
      * {@inheritdoc}
      */
-    protected function doWrite(string $message, bool $newline)
+    protected function doWrite(/*string */$message, /*bool */$newline)
     {
         $message = cast_to_string($message);
-
         $newline = cast_to_bool($newline);
 
         $this->buffer .= $message;

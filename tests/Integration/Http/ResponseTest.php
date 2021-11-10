@@ -8,15 +8,12 @@ use Orchestra\Testbench\TestCase;
 
 class ResponseTest_testResponseWithInvalidJsonThrowsException_class implements \JsonSerializable 
             {
-                public function jsonSerialize()////: string
+                public function jsonSerialize()/*: string*/
                 {
                     return "\xB1\x31";
                 }
             }
 
-/**
- * @group integration
- */
 class ResponseTest extends TestCase
 {
     public function testResponseWithInvalidJsonThrowsException()

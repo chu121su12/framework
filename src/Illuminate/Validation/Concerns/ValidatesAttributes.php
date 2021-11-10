@@ -431,11 +431,15 @@ trait ValidatesAttributes
             return false;
         }
 
-        $format = $parameters[0];
+        foreach ($parameters as $format) {
+            $date = DateTime::createFromFormat('!'.$format, $value);
 
-        $date = DateTime::createFromFormat('!'.$format, $value);
+            if ($date && $date->format($format) == $value) {
+                return true;
+            }
+        }
 
-        return $date && $date->format($format) == $value;
+        return false;
     }
 
     /**
@@ -542,20 +546,6 @@ trait ValidatesAttributes
         }
 
         return true;
-    }
-
-    protected function getimagesize($filePath)
-    {
-        if (Str::endsWith($filePath, '.svg')) {
-            if (!($xml = @simplexml_load_string(file_get_contents($filePath)))) {
-                return false;
-            }
-
-            $xmlAttributes = $xml->attributes();
-            return [(int) $xmlAttributes->width, (int) $xmlAttributes->height];
-        }
-
-        return @getimagesize($filePath);
     }
 
     /**
@@ -1384,19 +1374,6 @@ trait ValidatesAttributes
     }
 
     /**
-     * Validate that the password of the currently authenticated user matches the given value.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @param  array  $parameters
-     * @return bool
-     */
-    protected function validatePassword($attribute, $value, $parameters)
-    {
-        return $this->validateCurrentPassword($attribute, $value, $parameters);
-    }
-
-    /**
      * Validate that an attribute exists even if not filled.
      *
      * @param  string  $attribute
@@ -1604,10 +1581,6 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(2, $parameters, 'exclude_unless');
 
-        // if (! Arr::has($this->data, $parameters[0])) {
-        //     return true;
-        // }
-
         list($values, $other) = $this->parseDependentRuleParameters($parameters);
 
         return in_array($other, $values, is_bool($other) || is_null($other));
@@ -1624,10 +1597,6 @@ trait ValidatesAttributes
     public function validateRequiredUnless($attribute, $value, $parameters)
     {
         $this->requireParameterCount(2, $parameters, 'required_unless');
-
-        // if (! Arr::has($this->data, $parameters[0])) {
-        //     return true;
-        // }
 
         list($values, $other) = $this->parseDependentRuleParameters($parameters);
 
@@ -1993,7 +1962,7 @@ trait ValidatesAttributes
             return $value->getSize() / 1024;
         }
 
-        return mb_strlen($value);
+        return mb_strlen(isset($value) ? $value : '');
     }
 
     /**
@@ -2024,18 +1993,12 @@ trait ValidatesAttributes
     protected function compare($first, $second, $operator)
     {
         switch ($operator) {
-            case '<':
-                return $first < $second;
-            case '>':
-                return $first > $second;
-            case '<=':
-                return $first <= $second;
-            case '>=':
-                return $first >= $second;
-            case '=':
-                return $first == $second;
-            default:
-                throw new InvalidArgumentException;
+            case '<': return $first < $second;
+            case '>': return $first > $second;
+            case '<=': return $first <= $second;
+            case '>=': return $first >= $second;
+            case '=': return $first == $second;
+            default: throw new InvalidArgumentException;
         }
     }
 
@@ -2090,7 +2053,6 @@ trait ValidatesAttributes
      *
      * @param  string  $attribute
      * @param  string  $rule
-     *
      * @return void
      */
     protected function shouldBeNumeric($attribute, $rule)
@@ -2098,5 +2060,19 @@ trait ValidatesAttributes
         if (is_numeric($this->getValue($attribute))) {
             $this->numericRules[] = $rule;
         }
+    }
+
+    protected function getimagesize($filePath)
+    {
+        if (Str::endsWith($filePath, '.svg')) {
+            if (!($xml = @simplexml_load_string(file_get_contents($filePath)))) {
+                return false;
+            }
+
+            $xmlAttributes = $xml->attributes();
+            return [(int) $xmlAttributes->width, (int) $xmlAttributes->height];
+        }
+
+        return @getimagesize($filePath);
     }
 }

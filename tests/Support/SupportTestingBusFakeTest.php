@@ -405,6 +405,22 @@ class SupportTestingBusFakeTest extends TestCase
         }
     }
 
+    public function testAssertNothingDispatched()
+    {
+        phpunit_assert_v5_skip_test($this);
+
+        $this->fake->assertNothingDispatched();
+
+        $this->fake->dispatch(new BusJobStub);
+
+        try {
+            $this->fake->assertNothingDispatched();
+            $this->fail();
+        } catch (ExpectationFailedException $e) {
+            $this->assertThat($e, new ExceptionMessage('Jobs were dispatched unexpectedly.'));
+        }
+    }
+
     public function testAssertDispatchedWithIgnoreClass()
     {
         $dispatcher = m::mock(QueueingDispatcher::class);

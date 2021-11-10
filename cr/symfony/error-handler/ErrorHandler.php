@@ -631,9 +631,9 @@ class ErrorHandler
 
             try {
                 $this->loggers[$type][0]->log($this->loggers[$type][1], $message, ['exception' => $exception]);
-            } catch (\Throwable $handlerException) {
-            } catch (\Error $handlerException) {
             } catch (\Exception $handlerException) {
+            } catch (\Error $handlerException) {
+            } catch (\Throwable $handlerException) {
             }
         }
 
@@ -658,9 +658,9 @@ class ErrorHandler
                 return $exceptionHandler($exception);
             }
             $handlerException = $handlerException ?: $exception;
-        } catch (\Throwable $handlerException) {
-        } catch (\Error $handlerException) {
         } catch (\Exception $handlerException) {
+        } catch (\Error $handlerException) {
+        } catch (\Throwable $handlerException) {
         }
         if ($exception === $handlerException && null === $this->exceptionHandler) {
             self::$reservedMemory = null; // Disable the fatal error handler

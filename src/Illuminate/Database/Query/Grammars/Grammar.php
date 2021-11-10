@@ -954,7 +954,7 @@ class Grammar extends BaseGrammar
      * @param  string  $sql
      * @return string
      */
-    public function compileInsertUsing(Builder $query, array $columns, $sql)
+    public function compileInsertUsing(Builder $query, array $columns, /*string */$sql)
     {
         $sql = cast_to_string($sql);
 
@@ -1030,7 +1030,7 @@ class Grammar extends BaseGrammar
     /**
      * Compile an "upsert" statement into SQL.
      *
-     * @param  \Illuminate\Database\Query\Builder $query
+     * @param  \Illuminate\Database\Query\Builder  $query
      * @param  array  $values
      * @param  array  $uniqueBy
      * @param  array  $update

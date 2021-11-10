@@ -1,5 +1,12 @@
 <?php
 
+if (! \function_exists('backport_instanceof_throwable')) {
+    function backport_instanceof_throwable($any)
+    {
+        return $any instanceof \Throwable || $any instanceof \Error || $any instanceof \Exception;
+    }
+}
+
 if (! \function_exists('backport_match')) {
     function backport_match($matchValue, ...$matchArms)
     {
@@ -136,7 +143,7 @@ if (! \function_exists('backport_only_reflection_parameter_get_type')) {
         $className = $parameter->getClass();
 
         if ($className && ($className = $className->getName())) {
-            return in_array($className, ['array', 'callable'], true) ? null : $className;
+            return in_array($className, ['array', 'callable', 'self'], true) ? null : $className;
         }
 
         return null;
@@ -146,7 +153,7 @@ if (! \function_exists('backport_only_reflection_parameter_get_type')) {
 if (! \function_exists('backport_reflection_parameter_get_class')) {
     function backport_reflection_parameter_get_class(\ReflectionParameter $parameter)
     {
-        if (\version_compare(\PHP_VERSION, '7.9', '<=')) {
+        if (\version_compare(\PHP_VERSION, '8.0', '<')) {
             return $parameter->getClass();
         }
 
@@ -159,7 +166,7 @@ if (! \function_exists('backport_reflection_parameter_get_class')) {
 if (! \function_exists('backport_reflection_parameter_declares_array')) {
     function backport_reflection_parameter_declares_array(\ReflectionParameter $parameter)
     {
-        if (\version_compare(\PHP_VERSION, '7.9', '<=')) {
+        if (\version_compare(\PHP_VERSION, '8.0', '<')) {
             return $parameter->isArray();
         }
 
@@ -183,7 +190,7 @@ if (! \function_exists('backport_reflection_parameter_declares_array')) {
 if (! \function_exists('backport_reflection_parameter_declares_callable')) {
     function backport_reflection_parameter_declares_callable(\ReflectionParameter $parameter)
     {
-        if (\version_compare(\PHP_VERSION, '7.9', '<=')) {
+        if (\version_compare(\PHP_VERSION, '8.0', '<')) {
             return $parameter->isCallable();
         }
 
@@ -207,7 +214,7 @@ if (! \function_exists('backport_reflection_parameter_declares_callable')) {
 if (! \function_exists('backport_reflection_parameter_first_classable')) {
     function backport_reflection_parameter_first_classable(\ReflectionParameter $parameter)
     {
-        if (\version_compare(\PHP_VERSION, '7.9', '<=')) {
+        if (\version_compare(\PHP_VERSION, '8.0', '<')) {
             return $parameter->getClass();
         }
 
@@ -222,27 +229,27 @@ if (! \function_exists('backport_reflection_parameter_first_classable')) {
 if (! \function_exists('backport_closure_from_callable')) {
     /* Example use:
 
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
             return backport_closure_from_callable($this, [$this, $methodName]);
         } else {
             return Closure::fromCallable([$this, $methodName]);
         }
 
-        if (\version_compare(\PHP_VERSION, '7.0.0', '<')) {
+        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
             return backport_closure_from_callable(new static, function () {});
         } else {
             return Closure::fromCallable(function () {});
         }
     */
 
-    function backport_closure_from_callable($callingThis, $callable)
+    function backport_closure_from_callable($callable, $callingThis = null)
     {
-        if (! \version_compare(\PHP_VERSION, '7.0.0', '<')) {
-            throw new \Exception('Use \Closure::fromCallable() directly from calling method.');
+        if (\version_compare(\PHP_VERSION, '7.1.0', '>=')) {
+            return \Closure::fromCallable($callable);
         }
 
         if (is_array($callable)) {
-            return (new \ReflectionMethod(...$callable))->getClosure($callingThis);
+            return (new \ReflectionMethod(...$callable))->getClosure($callable[0]);
         }
 
         if (is_object($callable) && method_exists($callable, '__invoke')) {

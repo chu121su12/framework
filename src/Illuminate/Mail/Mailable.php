@@ -167,11 +167,11 @@ class Mailable implements MailableContract, Renderable
      * Send the message using the given mailer.
      *
      * @param  \Illuminate\Contracts\Mail\Factory|\Illuminate\Contracts\Mail\Mailer  $mailer
-     * @return void
+     * @return \Illuminate\Mail\SentMessage|null
      */
     public function send($mailer)
     {
-        $this->withLocale($this->locale, function () use ($mailer) {
+        return $this->withLocale($this->locale, function () use ($mailer) {
             Container::getInstance()->call([$this, 'build']);
 
             $mailer = $mailer instanceof MailFactory
@@ -345,8 +345,7 @@ class Mailable implements MailableContract, Renderable
     protected function buildMarkdownText($markdown, $data)
     {
         return isset($this->textView)
-            ? $this->textView
-            : $markdown->renderText($this->markdown, $data);
+            ? $this->textView : $markdown->renderText($this->markdown, $data);
     }
 
     /**
@@ -451,7 +450,7 @@ class Mailable implements MailableContract, Renderable
     protected function runCallbacks($message)
     {
         foreach ($this->callbacks as $callback) {
-            $callback($message->getSwiftMessage());
+            $callback($message->getSymfonyMessage());
         }
 
         return $this;
@@ -619,6 +618,10 @@ class Mailable implements MailableContract, Renderable
      */
     protected function setAddress($address, $name = null, $property = 'to')
     {
+        if (empty($address)) {
+            return $this;
+        }
+
         foreach ($this->addressesToArray($address, $name) as $recipient) {
             $recipient = $this->normalizeRecipient($recipient);
 
@@ -680,6 +683,10 @@ class Mailable implements MailableContract, Renderable
      */
     protected function hasRecipient($address, $name = null, $property = 'to')
     {
+        if (empty($address)) {
+            return false;
+        }
+
         $expected = $this->normalizeRecipient(
             $this->addressesToArray($address, $name)[0]
         );
@@ -863,7 +870,7 @@ class Mailable implements MailableContract, Renderable
      * Assert that the given text is present in the HTML email body.
      *
      * @param  string  $string
-     * @return void
+     * @return $this
      */
     public function assertSeeInHtml($string)
     {
@@ -873,13 +880,15 @@ class Mailable implements MailableContract, Renderable
             Str::contains($html, $string),
             "Did not see expected text [{$string}] within email body."
         );
+
+        return $this;
     }
 
     /**
      * Assert that the given text is not present in the HTML email body.
      *
      * @param  string  $string
-     * @return void
+     * @return $this
      */
     public function assertDontSeeInHtml($string)
     {
@@ -889,13 +898,15 @@ class Mailable implements MailableContract, Renderable
             Str::contains($html, $string),
             "Saw unexpected text [{$string}] within email body."
         );
+
+        return $this;
     }
 
     /**
      * Assert that the given text is present in the plain-text email body.
      *
      * @param  string  $string
-     * @return void
+     * @return $this
      */
     public function assertSeeInText($string)
     {
@@ -905,13 +916,15 @@ class Mailable implements MailableContract, Renderable
             Str::contains($text, $string),
             "Did not see expected text [{$string}] within text email body."
         );
+
+        return $this;
     }
 
     /**
      * Assert that the given text is not present in the plain-text email body.
      *
      * @param  string  $string
-     * @return void
+     * @return $this
      */
     public function assertDontSeeInText($string)
     {
@@ -921,6 +934,8 @@ class Mailable implements MailableContract, Renderable
             Str::contains($text, $string),
             "Saw unexpected text [{$string}] within text email body."
         );
+
+        return $this;
     }
 
     /**
@@ -973,12 +988,12 @@ class Mailable implements MailableContract, Renderable
     }
 
     /**
-     * Register a callback to be called with the Swift message instance.
+     * Register a callback to be called with the Symfony message instance.
      *
      * @param  callable  $callback
      * @return $this
      */
-    public function withSwiftMessage($callback)
+    public function withSymfonyMessage($callback)
     {
         $this->callbacks[] = $callback;
 

@@ -9,22 +9,18 @@ use Illuminate\Redis\Limiters\ConcurrencyLimiter;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
-/**
- * @group redis
- * @group redislimiters
- */
 class ConcurrentLimiterTest extends TestCase
 {
     use InteractsWithRedis;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
         $this->setUpRedis();
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 
@@ -45,9 +41,9 @@ class ConcurrentLimiterTest extends TestCase
             (new ConcurrencyLimiterMockThatDoesntRelease($this->redis(), 'key', 2, 5))->block(0, function () use (&$store) {
                 $store[] = 3;
             });
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {
@@ -88,9 +84,9 @@ class ConcurrentLimiterTest extends TestCase
             $lock->block(0, function () use (&$store) {
                 $store[] = 2;
             });
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {
@@ -120,9 +116,9 @@ class ConcurrentLimiterTest extends TestCase
             $lock->block(0, function () use (&$store) {
                 $store[] = 2;
             });
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {
@@ -150,9 +146,9 @@ class ConcurrentLimiterTest extends TestCase
             $lock->block(2, function () use (&$store) {
                 $store[] = 2;
             });
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {

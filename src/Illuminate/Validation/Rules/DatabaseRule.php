@@ -69,7 +69,7 @@ trait DatabaseRule
                 return $table;
             }
 
-            return implode('.', array_map(function ($part) {
+            return implode('.', array_map(function (/*string */$part) {
                 $part = cast_to_string($part);
 
                 return trim($part, '.');

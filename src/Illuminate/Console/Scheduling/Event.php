@@ -18,6 +18,7 @@ use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\ReflectsClosures;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\Process\Process;
+use Throwable;
 
 class Event
 {
@@ -219,11 +220,17 @@ class Event
      */
     protected function runCommandInForeground(Container $container)
     {
-        $this->callBeforeCallbacks($container);
+        try {
+            $this->callBeforeCallbacks($container);
 
-        $this->exitCode = SymfonyHelper::processFromShellCommandline($this->buildCommand(), base_path(), null, null, null)->run();
+            $this->exitCode = SymfonyHelper::processFromShellCommandline(
+                $this->buildCommand(), base_path(), null, null, null
+            )->run();
 
-        $this->callAfterCallbacks($container);
+            $this->callAfterCallbacks($container);
+        } finally {
+            $this->removeMutex();
+        }
     }
 
     /**
@@ -234,9 +241,20 @@ class Event
      */
     protected function runCommandInBackground(Container $container)
     {
-        $this->callBeforeCallbacks($container);
+        try {
+            $this->callBeforeCallbacks($container);
 
-        SymfonyHelper::processFromShellCommandline($this->buildCommand(), base_path(), null, null, null)->run();
+            SymfonyHelper::processFromShellCommandline($this->buildCommand(), base_path(), null, null, null)->run();
+        } catch (\Exception $exception) {
+        } catch (\Error $exception) {
+        } catch (Throwable $exception) {
+        }
+
+        if (isset($exception)) {
+            $this->removeMutex();
+
+            throw $exception;
+        }
     }
 
     /**
@@ -276,7 +294,11 @@ class Event
     {
         $this->exitCode = (int) $exitCode;
 
-        $this->callAfterCallbacks($container);
+        try {
+            $this->callAfterCallbacks($container);
+        } finally {
+            $this->removeMutex();
+        }
     }
 
     /**
@@ -328,6 +350,7 @@ class Event
             $date = $date->setTimezone($this->timezone);
         }
 
+        /*return (new CronExpression($this->expression))->isDue($date->toDateTimeString());*/
         return CronExpression::factory($this->expression)->isDue($date->toDateTimeString());
     }
 
@@ -652,9 +675,7 @@ class Event
 
         $this->expiresAt = $expiresAt;
 
-        return $this->then(function () {
-            $this->mutex->forget($this);
-        })->skip(function () {
+        return $this->skip(function () {
             return $this->mutex->exists($this);
         });
     }
@@ -919,5 +940,17 @@ class Event
         $this->mutex = $mutex;
 
         return $this;
+    }
+
+    /**
+     * Delete the mutex for the event.
+     *
+     * @return void
+     */
+    protected function removeMutex()
+    {
+        if ($this->withoutOverlapping) {
+            $this->mutex->forget($this);
+        }
     }
 }

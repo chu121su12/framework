@@ -426,6 +426,22 @@ class SupportArrTest extends TestCase
         $this->assertFalse(Arr::isAssoc(['a', 'b']));
     }
 
+    public function testIsList()
+    {
+        $this->assertTrue(Arr::isList([]));
+        $this->assertTrue(Arr::isList([1, 2, 3]));
+        $this->assertTrue(Arr::isList(['foo', 2, 3]));
+        $this->assertTrue(Arr::isList(['foo', 'bar']));
+        $this->assertTrue(Arr::isList([0 => 'foo', 'bar']));
+        $this->assertTrue(Arr::isList([0 => 'foo', 1 => 'bar']));
+
+        $this->assertFalse(Arr::isList([1 => 'foo', 'bar']));
+        $this->assertFalse(Arr::isList([1 => 'foo', 0 => 'bar']));
+        $this->assertFalse(Arr::isList([0 => 'foo', 'bar' => 'baz']));
+        $this->assertFalse(Arr::isList([0 => 'foo', 2 => 'bar']));
+        $this->assertFalse(Arr::isList(['foo' => 'bar', 'baz' => 'qux']));
+    }
+
     public function testOnly()
     {
         $array = ['name' => 'Desk', 'price' => 100, 'orders' => 10];
@@ -720,7 +736,7 @@ class SupportArrTest extends TestCase
 
     public function testShuffleWithSeed()
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
             $this->markTestSkipped('Before php 7, mt_srand with identical seed is not guaranteed to produce same output.');
         }
 

@@ -130,7 +130,7 @@ class PreventRequestsDuringMaintenance
      * @param  string  $secret
      * @return \Illuminate\Http\RedirectResponse
      */
-    protected function bypassResponse($secret)
+    protected function bypassResponse(/*string */$secret)
     {
         $secret = cast_to_string($secret);
 

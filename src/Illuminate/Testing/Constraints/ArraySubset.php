@@ -31,10 +31,9 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          * @param  bool  $strict
          * @return void
          */
-        public function __construct($subset, $strict = false)
+        public function __construct(/*iterable */$subset, /*bool */$strict = false)
         {
             $subset = cast_to_iterable($subset);
-
             $strict = cast_to_bool($strict);
 
             $this->strict = $strict;
@@ -59,11 +58,10 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          * @throws \PHPUnit\Framework\ExpectationFailedException
          * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
          */
-        public function evaluate($other, $description = '', $returnResult = false)
+        public function evaluate($other, /*string */$description = '', /*bool */$returnResult = false)/*: ?bool*/
         {
-            $returnResult = cast_to_bool($returnResult);
-
             $description = cast_to_string($description);
+            $returnResult = cast_to_bool($returnResult);
 
             // type cast $other & $this->subset as an array to allow
             // support in standard array functions.
@@ -99,11 +97,11 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
         /**
          * Returns a string representation of the constraint.
          *
-         * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-         *
          * @return string
+         *
+         * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
          */
-        public function toString()
+        public function toString()/*: string*/
         {
             return 'has the subset '.$this->exporter()->export($this->subset);
         }
@@ -119,7 +117,7 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          *
          * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
          */
-        protected function failureDescription($other)
+        protected function failureDescription($other)/*: string*/
         {
             return 'an array '.$this->toString();
         }
@@ -133,7 +131,7 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          * @param  iterable  $other
          * @return array
          */
-        private function toArray($other)
+        private function toArray(/*iterable */$other)/*: array*/
         {
             $other = cast_to_iterable($other);
 
@@ -176,10 +174,9 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          * @param  bool  $strict
          * @return void
          */
-        public function __construct($subset, $strict = false)
+        public function __construct(/*iterable */$subset, /*bool */$strict = false)
         {
             $subset = cast_to_iterable($subset);
-
             $strict = cast_to_bool($strict);
 
             $this->strict = $strict;
@@ -204,11 +201,10 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          * @throws \PHPUnit\Framework\ExpectationFailedException
          * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
          */
-        public function evaluate($other, $description = '', $returnResult = false)
+        public function evaluate($other, /*string */$description = '', /*bool */$returnResult = false)
         {
-            $returnResult = cast_to_bool($returnResult);
-
             $description = cast_to_string($description);
+            $returnResult = cast_to_bool($returnResult);
 
             // type cast $other & $this->subset as an array to allow
             // support in standard array functions.
@@ -242,11 +238,11 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
         /**
          * Returns a string representation of the constraint.
          *
-         * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-         *
          * @return string
+         *
+         * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
          */
-        public function toString()
+        public function toString()/*: string*/
         {
             return 'has the subset '.$this->exporter()->export($this->subset);
         }
@@ -262,7 +258,7 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          *
          * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
          */
-        protected function failureDescription($other)
+        protected function failureDescription($other)/*: string*/
         {
             return 'an array '.$this->toString();
         }
@@ -276,7 +272,7 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          * @param  iterable  $other
          * @return array
          */
-        private function toArray($other)
+        private function toArray(/*iterable */$other)/*: array*/
         {
             if (is_array($other)) {
                 return $other;

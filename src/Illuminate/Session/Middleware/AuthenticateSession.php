@@ -41,6 +41,7 @@ class AuthenticateSession
 
         if ($this->guard()->viaRemember()) {
             $recallerCookies = explode('|', $request->cookies->get($this->auth->getRecallerName()));
+
             $passwordHash = isset($recallerCookies[2]) ? $recallerCookies[2] : null;
 
             if (! $passwordHash || $passwordHash != $request->user()->getAuthPassword()) {

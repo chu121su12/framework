@@ -226,10 +226,6 @@ class SupportStringableTest extends TestCase
 
     public function testAsciiWithSpecificLocale()
     {
-        if (! class_exists('voku\\helper\\ASCII')) {
-            $this->markTestSkipped('voku ASCII is not available.');
-        }
-
         $this->assertSame('h H sht Sht a A ia yo', (string) $this->stringable('х Х щ Щ ъ Ъ иа йо')->ascii('bg'));
         $this->assertSame('ae oe ue Ae Oe Ue', (string) $this->stringable('ä ö ü Ä Ö Ü')->ascii('de'));
     }
@@ -682,6 +678,27 @@ class SupportStringableTest extends TestCase
         $this->assertEquals("<h1>hello world</h1>\n", $this->stringable('# hello world')->markdown());
     }
 
+    public function testMask()
+    {
+        $this->assertEquals('tay*************', $this->stringable('taylor@email.com')->mask('*', 3));
+        $this->assertEquals('******@email.com', $this->stringable('taylor@email.com')->mask('*', 0, 6));
+        $this->assertEquals('tay*************', $this->stringable('taylor@email.com')->mask('*', -13));
+        $this->assertEquals('tay***@email.com', $this->stringable('taylor@email.com')->mask('*', -13, 3));
+
+        $this->assertEquals('****************', $this->stringable('taylor@email.com')->mask('*', -17));
+        $this->assertEquals('*****r@email.com', $this->stringable('taylor@email.com')->mask('*', -99, 5));
+
+        $this->assertEquals('taylor@email.com', $this->stringable('taylor@email.com')->mask('*', 16));
+        $this->assertEquals('taylor@email.com', $this->stringable('taylor@email.com')->mask('*', 16, 99));
+
+        $this->assertEquals('taylor@email.com', $this->stringable('taylor@email.com')->mask('', 3));
+
+        $this->assertEquals('taysssssssssssss', $this->stringable('taylor@email.com')->mask('something', 3));
+
+        $this->assertEquals('这是一***', $this->stringable('这是一段中文')->mask('*', 3));
+        $this->assertEquals('**一段中文', $this->stringable('这是一段中文')->mask('*', 0, 2));
+    }
+
     public function testRepeat()
     {
         $this->assertSame('aaaaa', (string) $this->stringable('a')->repeat(5));
@@ -692,5 +709,13 @@ class SupportStringableTest extends TestCase
     {
         $this->assertEquals(2, $this->stringable('Hello, world!')->wordCount());
         $this->assertEquals(10, $this->stringable('Hi, this is my first contribution to the Laravel framework.')->wordCount());
+    }
+
+    public function testStripTags()
+    {
+        $this->assertSame('beforeafter', (string) $this->stringable('before<br>after')->stripTags());
+        $this->assertSame('before<br>after', (string) $this->stringable('before<br>after')->stripTags('<br>'));
+        $this->assertSame('before<br>after', (string) $this->stringable('<strong>before</strong><br>after')->stripTags('<br>'));
+        $this->assertSame('<strong>before</strong><br>after', (string) $this->stringable('<strong>before</strong><br>after')->stripTags('<br><strong>'));
     }
 }

@@ -22,6 +22,7 @@ abstract class TestCase extends BaseTestCase
         Concerns\InteractsWithAuthentication,
         Concerns\InteractsWithConsole,
         Concerns\InteractsWithDatabase,
+        Concerns\InteractsWithDeprecationHandling,
         Concerns\InteractsWithExceptionHandling,
         Concerns\InteractsWithSession,
         Concerns\InteractsWithTime,
@@ -31,7 +32,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * The Illuminate application instance.
      *
-     * @var \Illuminate\Contracts\Foundation\Application
+     * @var \Illuminate\Foundation\Application
      */
     protected $app;
 
@@ -77,7 +78,7 @@ abstract class TestCase extends BaseTestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         Facade::clearResolvedInstances();
 
@@ -151,7 +152,7 @@ abstract class TestCase extends BaseTestCase
      *
      * @throws \Mockery\Exception\InvalidCountException
      */
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         if ($this->app) {
             $this->callBeforeApplicationDestroyedCallbacks();
@@ -243,9 +244,9 @@ abstract class TestCase extends BaseTestCase
         foreach ($this->beforeApplicationDestroyedCallbacks as $callback) {
             try {
                 $callback();
-            } catch (\Throwable $e) {
-            } catch (\Error $e) {
             } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (Throwable $e) {
             }
 
             if (isset($e)) {

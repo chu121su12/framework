@@ -4,7 +4,7 @@ namespace PHPUnit\Framework\Patch;
 
 trait ExtraAssertions
 {
-    function assertSameStringDifferentLineEndings($expected, $actual, $message = '')
+    public static function assertSameStringDifferentLineEndings($expected, $actual, $message = '')
     {
         static::assertSame(
             preg_replace('/\r\n/', "\n", trim($expected)),

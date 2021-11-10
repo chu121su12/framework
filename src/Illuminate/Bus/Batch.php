@@ -7,7 +7,6 @@ use Closure;
 use Illuminate\Contracts\Queue\Factory as QueueFactory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Queue\CallQueuedClosure;
-use Illuminate\Queue\SerializableClosure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use JsonSerializable;
@@ -118,25 +117,21 @@ class Batch implements Arrayable, JsonSerializable
      */
     public function __construct(QueueFactory $queue,
                                 BatchRepository $repository,
-                                $id,
-                                $name,
-                                $totalJobs,
-                                $pendingJobs,
-                                $failedJobs,
+                                /*string */$id,
+                                /*string */$name,
+                                /*int */$totalJobs,
+                                /*int */$pendingJobs,
+                                /*int */$failedJobs,
                                 array $failedJobIds,
                                 array $options,
                                 CarbonImmutable $createdAt,
-                                CarbonImmutable $cancelledAt = null,
-                                CarbonImmutable $finishedAt = null)
+                                /*?*/CarbonImmutable $cancelledAt = null,
+                                /*?*/CarbonImmutable $finishedAt = null)
     {
         $id = cast_to_string($id);
-
         $name = cast_to_string($name);
-
         $totalJobs = cast_to_int($totalJobs);
-
         $pendingJobs = cast_to_int($pendingJobs);
-
         $failedJobs = cast_to_int($failedJobs);
 
         $this->queue = $queue;
@@ -248,7 +243,7 @@ class Batch implements Arrayable, JsonSerializable
      * @param  string  $jobId
      * @return void
      */
-    public function recordSuccessfulJob($jobId)
+    public function recordSuccessfulJob(/*string */$jobId)
     {
         $jobId = cast_to_string($jobId);
 
@@ -281,7 +276,7 @@ class Batch implements Arrayable, JsonSerializable
      * @param  string  $jobId
      * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
-    public function decrementPendingJobs($jobId)
+    public function decrementPendingJobs(/*string */$jobId)
     {
         $jobId = cast_to_string($jobId);
 
@@ -335,7 +330,7 @@ class Batch implements Arrayable, JsonSerializable
      * @param  \Throwable  $e
      * @return void
      */
-    public function recordFailedJob($jobId, $e)
+    public function recordFailedJob(/*string */$jobId, $e)
     {
         $jobId = cast_to_string($jobId);
 
@@ -368,7 +363,7 @@ class Batch implements Arrayable, JsonSerializable
      * @param  string  $jobId
      * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
-    public function incrementFailedJobs($jobId)
+    public function incrementFailedJobs(/*string */$jobId)
     {
         $jobId = cast_to_string($jobId);
 
@@ -438,21 +433,18 @@ class Batch implements Arrayable, JsonSerializable
     /**
      * Invoke a batch callback handler.
      *
-     * @param  \Illuminate\Queue\SerializableClosure|callable  $handler
+     * @param  callable  $handler
      * @param  \Illuminate\Bus\Batch  $batch
      * @param  \Throwable|null  $e
      * @return void
      */
-    protected function invokeHandlerCallback($handler, Batch $batch, $e = null)
+    protected function invokeHandlerCallback($handler, Batch $batch, /*Throwable */$e = null)
     {
         try {
-            $exception = null;
-            return $handler instanceof SerializableClosure
-                ? $handler->__invoke($batch, $e)
-                : call_user_func($handler, $batch, $e);
-        } catch (\Throwable $exception) {
-        } catch (\Error $exception) {
+            return $handler($batch, $e);
         } catch (\Exception $exception) {
+        } catch (\Error $exception) {
+        } catch (Throwable $exception) {
         }
 
         if (isset($exception)) {

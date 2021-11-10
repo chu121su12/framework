@@ -37,6 +37,25 @@ class SupportStrTest extends TestCase
         $this->assertSame('Jefferson Costella', Str::title('jefFErson coSTella'));
     }
 
+    public function testStringHeadline()
+    {
+        $this->assertSame('Jefferson Costella', Str::headline('jefferson costella'));
+        $this->assertSame('Jefferson Costella', Str::headline('jefFErson coSTella'));
+        $this->assertSame('Jefferson Costella Uses Laravel', Str::headline('jefferson_costella uses-_Laravel'));
+        $this->assertSame('Jefferson Costella Uses Laravel', Str::headline('jefferson_costella uses__Laravel'));
+
+        $this->assertSame('Laravel P H P Framework', Str::headline('laravel_p_h_p_framework'));
+        $this->assertSame('Laravel P H P Framework', Str::headline('laravel _p _h _p _framework'));
+        $this->assertSame('Laravel Php Framework', Str::headline('laravel_php_framework'));
+        $this->assertSame('Laravel Ph P Framework', Str::headline('laravel-phP-framework'));
+        $this->assertSame('Laravel Php Framework', Str::headline('laravel  -_-  php   -_-   framework   '));
+
+        $this->assertSame('Foo Bar', Str::headline('fooBar'));
+        $this->assertSame('Foo Bar', Str::headline('foo_bar'));
+        $this->assertSame('Foo Bar Baz', Str::headline('foo-barBaz'));
+        $this->assertSame('Foo Bar Baz', Str::headline('foo-bar_baz'));
+    }
+
     public function testStringWithoutWordsDoesntProduceError()
     {
         $nbsp = chr(0xC2).chr(0xA0);
@@ -52,10 +71,6 @@ class SupportStrTest extends TestCase
 
     public function testStringAsciiWithSpecificLocale()
     {
-        if (! class_exists('voku\\helper\\ASCII')) {
-            $this->markTestSkipped('voku ASCII is not available.');
-        }
-
         $this->assertSame('h H sht Sht a A ia yo', Str::ascii('х Х щ Щ ъ Ъ иа йо', 'bg'));
         $this->assertSame('ae oe ue Ae Oe Ue', Str::ascii('ä ö ü Ä Ö Ü', 'de'));
     }
@@ -434,6 +449,28 @@ class SupportStrTest extends TestCase
         $this->assertSame('FooBar', Str::studly('foo_bar')); // test cache
         $this->assertSame('FooBarBaz', Str::studly('foo-barBaz'));
         $this->assertSame('FooBarBaz', Str::studly('foo-bar_baz'));
+    }
+
+    public function testMask()
+    {
+        $this->assertSame('tay*************', Str::mask('taylor@email.com', '*', 3));
+        $this->assertSame('******@email.com', Str::mask('taylor@email.com', '*', 0, 6));
+        $this->assertSame('tay*************', Str::mask('taylor@email.com', '*', -13));
+        $this->assertSame('tay***@email.com', Str::mask('taylor@email.com', '*', -13, 3));
+
+        $this->assertSame('****************', Str::mask('taylor@email.com', '*', -17));
+        $this->assertSame('*****r@email.com', Str::mask('taylor@email.com', '*', -99, 5));
+
+        $this->assertSame('taylor@email.com', Str::mask('taylor@email.com', '*', 16));
+        $this->assertSame('taylor@email.com', Str::mask('taylor@email.com', '*', 16, 99));
+
+        $this->assertSame('taylor@email.com', Str::mask('taylor@email.com', '', 3));
+
+        $this->assertSame('taysssssssssssss', Str::mask('taylor@email.com', 'something', 3));
+        $this->assertSame('taysssssssssssss', Str::mask('taylor@email.com', Str::of('something'), 3));
+
+        $this->assertSame('这是一***', Str::mask('这是一段中文', '*', 3));
+        $this->assertSame('**一段中文', Str::mask('这是一段中文', '*', 0, 2));
     }
 
     public function testMatch()

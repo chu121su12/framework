@@ -343,6 +343,20 @@ class Stringable implements JsonSerializable
     }
 
     /**
+     * Masks a portion of a string with a repeated character.
+     *
+     * @param  string  $character
+     * @param  int  $index
+     * @param  int|null  $length
+     * @param  string  $encoding
+     * @return static
+     */
+    public function mask($character, $index, $length = null, $encoding = 'UTF-8')
+    {
+        return new static(Str::mask($this->value, $character, $index, $length, $encoding));
+    }
+
+    /**
      * Get the string matching the given pattern.
      *
      * @param  string  $pattern
@@ -484,7 +498,7 @@ class Stringable implements JsonSerializable
      * @param  int  $times
      * @return static
      */
-    public function repeat($times)
+    public function repeat(/*int */$times)
     {
         $times = cast_to_int($times);
 
@@ -568,6 +582,17 @@ class Stringable implements JsonSerializable
     }
 
     /**
+     * Strip HTML and PHP tags from the given string.
+     *
+     * @param  string  $allowedTags
+     * @return static
+     */
+    public function stripTags($allowedTags = null)
+    {
+        return new static(strip_tags($this->value, $allowedTags));
+    }
+
+    /**
      * Convert the given string to upper-case.
      *
      * @return static
@@ -585,6 +610,16 @@ class Stringable implements JsonSerializable
     public function title()
     {
         return new static(Str::title($this->value));
+    }
+
+    /**
+     * Convert the given string to title case for each word.
+     *
+     * @return static
+     */
+    public function headline()
+    {
+        return new static(Str::headline($this->value));
     }
 
     /**
@@ -780,7 +815,7 @@ class Stringable implements JsonSerializable
     /**
      * Dump the string and end the script.
      *
-     * @return void
+     * @return never
      */
     public function dd()
     {

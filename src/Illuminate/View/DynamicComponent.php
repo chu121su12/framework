@@ -35,7 +35,7 @@ class DynamicComponent extends Component
      * @param  string  $component
      * @return void
      */
-    public function __construct($component)
+    public function __construct(/*string */$component)
     {
         $component = cast_to_string($component);
 
@@ -147,7 +147,7 @@ EOF;
      * @param  string  $class
      * @return array
      */
-    protected function bindings($class)
+    protected function bindings(/*string */$class)
     {
         $class = cast_to_string($class);
 

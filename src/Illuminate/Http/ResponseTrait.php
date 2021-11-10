@@ -161,7 +161,7 @@ trait ResponseTrait
      * @param  \Throwable  $e
      * @return $this
      */
-    public function withException($e)
+    public function withException(/*Throwable */$e)
     {
         $this->exception = $e;
 

@@ -20,7 +20,7 @@ trait Interaction
      * @param  string  $key
      * @return void
      */
-    protected function interactsWith($key) ////:void
+    protected function interactsWith(/*string */$key)/*: void*/
     {
         $key = cast_to_string($key);
 
@@ -36,7 +36,7 @@ trait Interaction
      *
      * @return void
      */
-    public function interacted() ////:void
+    public function interacted()/*: void*/
     {
         PHPUnit::assertSame(
             [],
@@ -52,7 +52,7 @@ trait Interaction
      *
      * @return $this
      */
-    public function etc() ////:self
+    public function etc()/*: self*/
     {
         $this->interacted = array_keys($this->prop());
 
@@ -65,5 +65,5 @@ trait Interaction
      * @param  string|null  $key
      * @return mixed
      */
-    abstract protected function prop($key = null);
+    abstract protected function prop(/*string */$key = null);
 }

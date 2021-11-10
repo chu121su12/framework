@@ -2,6 +2,7 @@
 
 namespace Illuminate\Database\Eloquent\Relations;
 
+use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -277,7 +278,7 @@ class BelongsToMany extends Relation
 
         // Once we have an array dictionary of child objects we can easily match the
         // children back to their parent using the dictionary and the keys on the
-        // the parent models. Then we will return the hydrated models back out.
+        // parent models. Then we should return these hydrated models back out.
         foreach ($models as $model) {
             $key = $this->getDictionaryKey($model->{$this->parentKey});
 
@@ -755,6 +756,28 @@ class BelongsToMany extends Relation
     }
 
     /**
+     * Execute the query and get the first result or call a callback.
+     *
+     * @param  \Closure|array  $columns
+     * @param  \Closure|null  $callback
+     * @return \Illuminate\Database\Eloquent\Model|static|mixed
+     */
+    public function firstOr($columns = ['*'], Closure $callback = null)
+    {
+        if ($columns instanceof Closure) {
+            $callback = $columns;
+
+            $columns = ['*'];
+        }
+
+        if (! is_null($model = $this->first($columns))) {
+            return $model;
+        }
+
+        return $callback();
+    }
+
+    /**
      * Get the results of the relationship.
      *
      * @return mixed
@@ -1133,6 +1156,21 @@ class BelongsToMany extends Relation
     }
 
     /**
+     * Save a new model without raising any events and attach it to the parent model.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  array  $pivotAttributes
+     * @param  bool  $touch
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function saveQuietly(Model $model, array $pivotAttributes = [], $touch = true)
+    {
+        return Model::withoutEvents(function () use ($model, $pivotAttributes, $touch) {
+            return $this->save($model, $pivotAttributes, $touch);
+        });
+    }
+
+    /**
      * Save an array of new models and attach them to the parent model.
      *
      * @param  \Illuminate\Support\Collection|array  $models
@@ -1179,7 +1217,7 @@ class BelongsToMany extends Relation
      * @param  array  $joinings
      * @return array
      */
-    public function createMany($records, array $joinings = [])
+    public function createMany(/*iterable */$records, array $joinings = [])
     {
         $records = cast_to_iterable($records);
 

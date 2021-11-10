@@ -171,9 +171,9 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
 
         try {
             require_once $file;
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
         }
 
         if (isset($e)) {

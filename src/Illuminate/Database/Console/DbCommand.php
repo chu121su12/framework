@@ -56,10 +56,8 @@ class DbCommand extends Command
     {
         $db = $this->argument('connection');
 
-        $default = isset($db) ? $db : $this->laravel['config']['database.default'];
-
         $connection = $this->laravel['config']['database.connections.'.
-            $default
+            (isset($db) ? $db : $this->laravel['config']['database.default'])
         ];
 
         if (empty($connection)) {

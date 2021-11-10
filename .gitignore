@@ -7,5 +7,6 @@ composer.lock
 Thumbs.db
 /phpunit.xml
 /.idea
+/.phpintel
 /.vscode
 .phpunit.result.cache

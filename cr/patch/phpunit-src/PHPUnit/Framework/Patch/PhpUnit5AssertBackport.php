@@ -17,7 +17,7 @@ trait PhpUnit5AssertBackport
      *
      * @see Assert::assertEqualsWithDelta
      */
-    function assertEqualsWithDelta($expected, $actual, $delta, $message = '')
+    public static function assertEqualsWithDelta($expected, $actual, $delta, $message = '')
     {
         $constraint = new IsEqualWithDelta(
             $expected,

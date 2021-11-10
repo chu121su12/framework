@@ -53,7 +53,7 @@ class Pool
      * @param  string  $key
      * @return \Illuminate\Http\Client\PendingRequest
      */
-    public function as_($key)
+    public function as_(/*string */$key)
     {
         $key = cast_to_string($key);
 

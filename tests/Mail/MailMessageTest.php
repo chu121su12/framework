@@ -95,7 +95,7 @@ class MailMessageTest extends TestCase
 
     public function testGetSwiftMessageMethod()
     {
-        $this->assertInstanceOf(Swift_Mime_Message::class, $this->message->getSwiftMessage());
+        $this->assertInstanceOf(Swift_Mime_Message::class, $this->message->getSymfonyMessage());
     }
 
     public function testBasicAttachment()

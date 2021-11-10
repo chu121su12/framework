@@ -95,7 +95,7 @@ class Response implements ArrayAccess
      * @param  string  $header
      * @return string
      */
-    public function header($header)
+    public function header(/*string */$header)
     {
         $header = cast_to_string($header);
 
@@ -109,9 +109,7 @@ class Response implements ArrayAccess
      */
     public function headers()
     {
-        return collect($this->response->getHeaders())->mapWithKeys(function ($v, $k) {
-            return [$k => $v];
-        })->all();
+        return $this->response->getHeaders();
     }
 
     /**
@@ -197,7 +195,7 @@ class Response implements ArrayAccess
     /**
      * Execute the given callback if there was a server or client error.
      *
-     * @param  \Closure|callable $callback
+     * @param  callable  $callback
      * @return $this
      */
     public function onError(callable $callback)
@@ -275,7 +273,9 @@ class Response implements ArrayAccess
      */
     public function throw_()
     {
-        $callback = isset(func_get_args()[0]) ? func_get_args()[0] : null;
+        $arguments = func_get_args();
+
+        $callback = isset($arguments[0]) ? $arguments[0] : null;
 
         if ($this->failed()) {
             throw tap($this->toException(), function ($exception) use ($callback) {
@@ -286,6 +286,19 @@ class Response implements ArrayAccess
         }
 
         return $this;
+    }
+
+    /**
+     * Throw an exception if a server or client error occurred and the given condition evaluates to true.
+     *
+     * @param  bool  $condition
+     * @return $this
+     *
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function throwIf($condition)
+    {
+        return $condition ? $this->throw_() : $this;
     }
 
     /**

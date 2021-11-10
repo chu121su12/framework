@@ -36,12 +36,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: ['5.6', '7.4', '8.0']
+        php: ['5.6', '7.4', '8.0', '8.1']
         stability: [prefer-lowest, prefer-stable]
-        include:
-          - php: '8.1'
-            flags: "--ignore-platform-req=php"
-            stability: prefer-stable
 
     name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
 
@@ -57,7 +53,7 @@ jobs:
           tools: composer:v2
           coverage: none
 
-      - name: Set Minimum Guzzle Version
+      - name: Set Minimum PHP 8.0 Versions
         uses: nick-invision/retry@v1
         with:
           timeout_minutes: 5
@@ -70,10 +66,9 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress ${{ matrix.flags }}
+          command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
-        continue-on-error: ${{ matrix.php > 8 }}
         run: vendor/bin/phpunit --verbose
         env:
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
@@ -83,18 +78,22 @@ jobs:
           AWS_ACCESS_KEY_ID: random_key
           AWS_SECRET_ACCESS_KEY: random_secret
 
+      - name: Store artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs
+          path: |
+            vendor/orchestra/testbench-core/laravel/storage/logs
+            !vendor/**/.gitignore
+
   windows_tests:
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     strategy:
       fail-fast: true
       matrix:
-        php: ['5.6', '7.4', '8.0']
+        php: ['5.6', '7.4', '8.0', '8.1']
         stability: [prefer-lowest, prefer-stable]
-        # include:
-        #   - php: '8.1'
-        #     flags: "--ignore-platform-req=php"
-        #     stability: prefer-stable
 
     name: PHP ${{ matrix.php }} - ${{ matrix.stability }} - Windows
 
@@ -115,7 +114,7 @@ jobs:
           tools: composer:v2
           coverage: none
 
-      - name: Set Minimum Guzzle Version
+      - name: Set Minimum PHP 8.0 Versions
         uses: nick-invision/retry@v1
         with:
           timeout_minutes: 5
@@ -128,8 +127,15 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress ${{ matrix.flags }}
+          command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
-        continue-on-error: ${{ matrix.php > 8 }}
         run: vendor/bin/phpunit --verbose
+
+      - name: Store artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs
+          path: |
+            vendor/orchestra/testbench-core/laravel/storage/logs
+            !vendor/**/.gitignore

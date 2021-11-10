@@ -2,12 +2,12 @@
 
 namespace Illuminate\Foundation\Testing\Concerns;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
-use Exception;
 
 class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements ExceptionHandler 
         {
@@ -35,7 +35,7 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
              *
              * @throws \Exception
              */
-            public function report($e)
+            public function report(/*Throwable */$e)
             {
                 //
             }
@@ -46,7 +46,7 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
              * @param  \Throwable  $e
              * @return bool
              */
-            public function shouldReport($e)
+            public function shouldReport(/*Throwable */$e)
             {
                 return false;
             }
@@ -60,7 +60,7 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
              *
              * @throws \Throwable
              */
-            public function render($request, $e)
+            public function render($request, /*Throwable */$e)
             {
                 foreach ($this->except as $class) {
                     if ($e instanceof $class) {
@@ -84,14 +84,9 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
              * @param  \Throwable  $e
              * @return void
              */
-            public function renderForConsole($output, $e)
+            public function renderForConsole($output, /*Throwable */$e)
             {
-                $console = new ConsoleApplication;
-                if (method_exists($console, 'renderThrowable')) {
-                    $console->renderThrowable($e, $output);
-                } else {
-                    $console->renderException($e, $output);
-                }
+                SymfonyHelper::consoleApplicationRenderThrowable($e, $output);
             }
         }
 
@@ -152,8 +147,7 @@ trait InteractsWithExceptionHandling
             $this->originalExceptionHandler = app(ExceptionHandler::class);
         }
 
-        $this->app->instance(
-            ExceptionHandler::class,
+        $this->app->instance(ExceptionHandler::class,
             new InteractsWithExceptionHandling_withoutExceptionHandling_Class($this->originalExceptionHandler, $except)
         );
 

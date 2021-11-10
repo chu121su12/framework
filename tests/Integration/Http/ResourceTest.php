@@ -186,9 +186,6 @@ class ResourceTest_testNestedMerges_class
             }
         }
 
-/**
- * @group integration
- */
 class ResourceTest extends TestCase
 {
     public function testResourcesMayBeConvertedToJson()

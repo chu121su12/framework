@@ -31,7 +31,7 @@ class BatchRepositoryFake implements BatchRepository
      * @param  string  $batchId
      * @return \Illuminate\Bus\Batch|null
      */
-    public function find($batchId)
+    public function find(/*string */$batchId)
     {
         $batchId = cast_to_string($batchId);
 
@@ -69,11 +69,10 @@ class BatchRepositoryFake implements BatchRepository
      * @param  int  $amount
      * @return void
      */
-    public function incrementTotalJobs($batchId, $amount)
+    public function incrementTotalJobs(/*string */$batchId, /*int */$amount)
     {
-        $amount = cast_to_int($amount);
-
         $batchId = cast_to_string($batchId);
+        $amount = cast_to_int($amount);
 
         //
     }
@@ -85,10 +84,9 @@ class BatchRepositoryFake implements BatchRepository
      * @param  string  $jobId
      * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
-    public function decrementPendingJobs($batchId, $jobId)
+    public function decrementPendingJobs(/*string */$batchId, /*string */$jobId)
     {
         $batchId = cast_to_string($batchId);
-
         $jobId = cast_to_string($jobId);
 
         return new UpdatedBatchJobCounts;
@@ -101,10 +99,9 @@ class BatchRepositoryFake implements BatchRepository
      * @param  string  $jobId
      * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
-    public function incrementFailedJobs($batchId, $jobId)
+    public function incrementFailedJobs(/*string */$batchId, /*string */$jobId)
     {
         $batchId = cast_to_string($batchId);
-
         $jobId = cast_to_string($jobId);
 
         return new UpdatedBatchJobCounts;
@@ -116,7 +113,7 @@ class BatchRepositoryFake implements BatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function markAsFinished($batchId)
+    public function markAsFinished(/*string */$batchId)
     {
         $batchId = cast_to_string($batchId);
 
@@ -129,7 +126,7 @@ class BatchRepositoryFake implements BatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function cancel($batchId)
+    public function cancel(/*string */$batchId)
     {
         $batchId = cast_to_string($batchId);
 
@@ -142,7 +139,7 @@ class BatchRepositoryFake implements BatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function delete($batchId)
+    public function delete(/*string */$batchId)
     {
         $batchId = cast_to_string($batchId);
 

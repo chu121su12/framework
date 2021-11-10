@@ -2,6 +2,7 @@
 
 namespace Illuminate\Console;
 
+use Illuminate\Console\Concerns\CreatesMatchingTest;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
@@ -108,6 +109,10 @@ abstract class GeneratorCommand extends Command
     {
         parent::__construct();
 
+        if (in_array(CreatesMatchingTest::class, class_uses_recursive($this))) {
+            $this->addTestOptions();
+        }
+
         $this->files = $files;
     }
 
@@ -159,6 +164,10 @@ abstract class GeneratorCommand extends Command
         $this->files->put($path, $this->sortImports($this->buildClass($name)));
 
         $this->info($this->type.' created successfully.');
+
+        if (in_array(CreatesMatchingTest::class, class_uses_recursive($this))) {
+            $this->handleTestCreation($path);
+        }
     }
 
     /**
@@ -169,8 +178,6 @@ abstract class GeneratorCommand extends Command
      */
     protected function qualifyClass($name)
     {
-        $name = cast_to_string($name);
-
         $name = ltrim($name, '\\/');
 
         $name = str_replace('/', '\\', $name);
@@ -192,7 +199,7 @@ abstract class GeneratorCommand extends Command
      * @param  string  $model
      * @return string
      */
-    protected function qualifyModel($model)
+    protected function qualifyModel(/*string */$model)
     {
         $model = cast_to_string($model);
 
@@ -404,8 +411,7 @@ abstract class GeneratorCommand extends Command
         $views = isset($this->laravel['config'])
             && isset($this->laravel['config']['view.paths'])
             && isset($this->laravel['config']['view.paths'][0])
-            ? $this->laravel['config']['view.paths'][0]
-            : resource_path('views');
+            ? $this->laravel['config']['view.paths'][0] : resource_path('views');
 
         return $views.($path ? DIRECTORY_SEPARATOR.$path : $path);
     }

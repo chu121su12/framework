@@ -15,7 +15,7 @@ trait Has
      * @param  int|null  $length
      * @return $this
      */
-    public function count($key, $length = null) ////: self
+    public function count($key, /*int */$length = null)/*: self*/
     {
         $length = cast_to_int($length, null, true);
 
@@ -50,7 +50,7 @@ trait Has
      * @param  \Closure|null  $callback
      * @return $this
      */
-    public function has($key, $length = null, Closure $callback = null) ////: self
+    public function has($key, $length = null, Closure $callback = null)/*: self*/
     {
         $prop = $this->prop();
 
@@ -65,9 +65,14 @@ trait Has
 
         $this->interactsWith($key);
 
-        if (is_int($length) && ! is_null($callback)) {
+        if (! is_null($callback)) {
             return $this->has($key, function (self $scope) use ($length, $callback) {
-                return $scope->count($length)
+                return $scope
+                    ->tap(function (self $scope) use ($length) {
+                        if (! is_null($length)) {
+                            $scope->count($length);
+                        }
+                    })
                     ->first($callback)
                     ->etc();
             });
@@ -90,7 +95,7 @@ trait Has
      * @param  array|string  $key
      * @return $this
      */
-    public function hasAll($key) ////:self
+    public function hasAll($key)/*: self*/
     {
         $keys = is_array($key) ? $key : func_get_args();
 
@@ -106,12 +111,34 @@ trait Has
     }
 
     /**
+     * Assert that at least one of the given props exists.
+     *
+     * @param  array|string  $key
+     * @return $this
+     */
+    public function hasAny($key)/*: self*/
+    {
+        $keys = is_array($key) ? $key : func_get_args();
+
+        PHPUnit::assertTrue(
+            Arr::hasAny($this->prop(), $keys),
+            sprintf('None of properties [%s] exist.', implode(', ', $keys))
+        );
+
+        foreach ($keys as $key) {
+            $this->interactsWith($key);
+        }
+
+        return $this;
+    }
+
+    /**
      * Assert that none of the given props exist.
      *
      * @param  array|string  $key
      * @return $this
      */
-    public function missingAll($key) ////:self
+    public function missingAll($key)/*: self*/
     {
         $keys = is_array($key) ? $key : func_get_args();
 
@@ -128,7 +155,7 @@ trait Has
      * @param  string  $key
      * @return $this
      */
-    public function missing($key) ////:self
+    public function missing(/*string */$key)/*: self*/
     {
         $key = cast_to_string($key);
 
@@ -146,7 +173,7 @@ trait Has
      * @param  string  $key
      * @return string
      */
-    abstract protected function dotPath($key = ''); ////: string;
+    abstract protected function dotPath(/*string */$key = '')/*: string*/;
 
     /**
      * Marks the property as interacted.
@@ -154,7 +181,7 @@ trait Has
      * @param  string  $key
      * @return void
      */
-    abstract protected function interactsWith($key); ////: void;
+    abstract protected function interactsWith(/*string */$key)/*: void*/;
 
     /**
      * Retrieve a prop within the current scope using "dot" notation.
@@ -162,7 +189,7 @@ trait Has
      * @param  string|null  $key
      * @return mixed
      */
-    abstract protected function prop($key = null);
+    abstract protected function prop(/*string */$key = null);
 
     /**
      * Instantiate a new "scope" at the path of the given key.
@@ -171,7 +198,7 @@ trait Has
      * @param  \Closure  $callback
      * @return $this
      */
-    abstract protected function scope($key, Closure $callback);
+    abstract protected function scope(/*string */$key, Closure $callback);
 
     /**
      * Disables the interaction check.

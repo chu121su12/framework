@@ -85,7 +85,7 @@ class EncrypterTest extends TestCase
 
         $e = new Encrypter(str_repeat('b', 32), 'AES-256-GCM');
         $encrypted = $e->encrypt('foo');
-        $data = json_decode(base64_decode($encrypted));
+        $data = backport_json_decode(base64_decode($encrypted));
 
         $this->assertEmpty($data->mac);
         $this->assertNotEmpty($data->tag);
@@ -93,9 +93,13 @@ class EncrypterTest extends TestCase
 
     public function testThatAnAeadTagMustBeProvidedInFullLength()
     {
+        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
+            $this->markTestSkipped('openssl_encrypt/openssl_decrypt does not support these ciphers.');
+        }
+
         $e = new Encrypter(str_repeat('b', 32), 'AES-256-GCM');
         $encrypted = $e->encrypt('foo');
-        $data = json_decode(base64_decode($encrypted));
+        $data = backport_json_decode(base64_decode($encrypted));
 
         $this->expectException(DecryptException::class);
         $this->expectExceptionMessage('Could not decrypt the data.');
@@ -107,14 +111,18 @@ class EncrypterTest extends TestCase
 
     public function testThatAnAeadTagCantBeModified()
     {
+        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
+            $this->markTestSkipped('openssl_encrypt/openssl_decrypt does not support these ciphers.');
+        }
+
         $e = new Encrypter(str_repeat('b', 32), 'AES-256-GCM');
         $encrypted = $e->encrypt('foo');
-        $data = json_decode(base64_decode($encrypted));
+        $data = backport_json_decode(base64_decode($encrypted));
 
         $this->expectException(DecryptException::class);
         $this->expectExceptionMessage('Could not decrypt the data.');
 
-        $data->tag = 'A'.substr($data->tag, 1, 23);
+        $data->tag[0] = $data->tag[0] === 'A' ? 'B' : 'A';
         $encrypted = base64_encode(json_encode($data));
         $e->decrypt($encrypted);
     }
@@ -123,7 +131,7 @@ class EncrypterTest extends TestCase
     {
         $e = new Encrypter(str_repeat('b', 32), 'AES-256-CBC');
         $encrypted = $e->encrypt('foo');
-        $data = json_decode(base64_decode($encrypted));
+        $data = backport_json_decode(base64_decode($encrypted));
 
         $this->assertEmpty($data->tag);
         $this->assertNotEmpty($data->mac);
@@ -194,5 +202,14 @@ class EncrypterTest extends TestCase
         $data['value'] = substr($data['value'], 1);
         $modified_payload = base64_encode(json_encode($data));
         $e->decrypt($modified_payload);
+    }
+
+    public function testSupportedMethodAcceptsAnyCasing()
+    {
+        $key = str_repeat('a', 16);
+
+        $this->assertTrue(Encrypter::supported($key, 'AES-128-GCM'));
+        $this->assertTrue(Encrypter::supported($key, 'aes-128-CBC'));
+        $this->assertTrue(Encrypter::supported($key, 'aes-128-cbc'));
     }
 }

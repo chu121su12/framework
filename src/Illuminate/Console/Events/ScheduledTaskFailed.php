@@ -28,7 +28,7 @@ class ScheduledTaskFailed
      * @param  \Throwable  $exception
      * @return void
      */
-    public function __construct(Event $task, $exception)
+    public function __construct(Event $task, /*Throwable */$exception)
     {
         $this->task = $task;
         $this->exception = $exception;

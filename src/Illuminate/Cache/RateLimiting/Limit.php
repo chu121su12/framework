@@ -40,11 +40,10 @@ class Limit
      * @param  int  $decayMinutes
      * @return void
      */
-    public function __construct($key = '', $maxAttempts = 60, $decayMinutes = 1)
+    public function __construct($key = '', /*int */$maxAttempts = 60, /*int */$decayMinutes = 1)
     {
-        $decayMinutes = cast_to_int($decayMinutes);
-
         $maxAttempts = cast_to_int($maxAttempts);
+        $decayMinutes = cast_to_int($decayMinutes);
 
         $this->key = $key;
         $this->maxAttempts = $maxAttempts;

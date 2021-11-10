@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\MultipleRecordsFoundException;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Arr;
-// use Illuminate\Support\Traits\ForwardsCalls;
+use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
 
 abstract class Relation implements BuilderContract
@@ -26,7 +26,7 @@ abstract class Relation implements BuilderContract
      *
      * @var \Illuminate\Database\Eloquent\Builder
      */
-    // protected $query;
+    /*protected $query;*/
 
     /**
      * The parent model instance.
@@ -55,6 +55,13 @@ abstract class Relation implements BuilderContract
      * @var array
      */
     public static $morphMap = [];
+
+    /**
+     * Prevents morph relationships without a morph map.
+     *
+     * @var bool
+     */
+    protected static $requireMorphMap = false;
 
     /**
      * The count of self joins.
@@ -388,6 +395,41 @@ abstract class Relation implements BuilderContract
     }
 
     /**
+     * Prevent polymorphic relationships from being used without model mappings.
+     *
+     * @param  bool  $requireMorphMap
+     * @return void
+     */
+    public static function requireMorphMap($requireMorphMap = true)
+    {
+        static::$requireMorphMap = $requireMorphMap;
+    }
+
+    /**
+     * Determine if polymorphic relationships require explicit model mapping.
+     *
+     * @return bool
+     */
+    public static function requiresMorphMap()
+    {
+        return static::$requireMorphMap;
+    }
+
+    /**
+     * Define the morph map for polymorphic relations and require all morphed models to be explicitly mapped.
+     *
+     * @param  array  $map
+     * @param  bool  $merge
+     * @return array
+     */
+    public static function enforceMorphMap(array $map, $merge = true)
+    {
+        static::requireMorphMap();
+
+        return static::morphMap($map, $merge);
+    }
+
+    /**
      * Set or get the morph map for polymorphic relations.
      *
      * @param  array|null  $map
@@ -447,13 +489,7 @@ abstract class Relation implements BuilderContract
             return $this->macroCall($method, $parameters);
         }
 
-        $result = $this->forwardCallTo($this->query, $method, $parameters);
-
-        if ($result === $this->query) {
-            return $this;
-        }
-
-        return $result;
+        return $this->forwardDecoratedCallTo($this->query, $method, $parameters);
     }
 
     /**

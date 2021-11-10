@@ -81,10 +81,9 @@ class StorageLinkCommand extends Command
      * @param  bool  $force
      * @return bool
      */
-    protected function isRemovableSymlink(/*string */$link, /*bool */$force)////: bool
+    protected function isRemovableSymlink(/*string */$link, /*bool */$force)/*: bool*/
     {
         $link = cast_to_string($link);
-
         $force = cast_to_bool($force);
 
         return is_link($link) && $force;

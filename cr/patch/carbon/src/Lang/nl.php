@@ -73,9 +73,9 @@ return [
         $interval = cast_to_string($interval);
 
         /** @var string $output */
-        $output = preg_replace('/^(een|één|1)\s+/', '', $interval);
+        $output = preg_replace('/^(een|één|1)\s+/u', '', $interval);
 
-        if (preg_match('/^(een|één|1)( jaar|j| uur|u)/', $interval)) {
+        if (preg_match('/^(een|één|1)( jaar|j| uur|u)/u', $interval)) {
             return "elk $output";
         }
 

@@ -25,11 +25,10 @@ class UpdatedBatchJobCounts
      * @param  int  $failedJobs
      * @return void
      */
-    public function __construct($pendingJobs = 0, $failedJobs = 0)
+    public function __construct(/*int */$pendingJobs = 0, /*int */$failedJobs = 0)
     {
-        $failedJobs = cast_to_int($failedJobs);
-
         $pendingJobs = cast_to_int($pendingJobs);
+        $failedJobs = cast_to_int($failedJobs);
 
         $this->pendingJobs = $pendingJobs;
         $this->failedJobs = $failedJobs;

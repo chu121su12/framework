@@ -75,9 +75,9 @@ class Commander
 
         try {
             $status = $kernel->handle($input, $output);
-        } catch (\Throwable $error) {
-        } catch (\Error $error) {
         } catch (\Exception $error) {
+        } catch (\Error $error) {
+        } catch (\Throwable $error) {
         }
 
         if (isset($error)) {
@@ -202,6 +202,42 @@ class Commander
 
             $laravel->flush();
         });
+    }
+
+    /**
+     * Resolve application Console Kernel implementation.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     *
+     * @return void
+     */
+    protected function resolveApplicationConsoleKernel($app)
+    {
+        $kernel = 'Orchestra\Testbench\Console\Kernel';
+
+        if (file_exists($app->basePath('app/Console/Kernel.php')) && class_exists('App\Console\Kernel')) {
+            $kernel = 'App\Console\Kernel';
+        }
+
+        $app->singleton('Illuminate\Contracts\Console\Kernel', $kernel);
+    }
+
+    /**
+     * Resolve application HTTP Kernel implementation.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     *
+     * @return void
+     */
+    protected function resolveApplicationHttpKernel($app)
+    {
+        $kernel = 'Orchestra\Testbench\Http\Kernel';
+
+        if (file_exists($app->basePath('app/Http/Kernel.php')) && class_exists('App\Http\Kernel')) {
+            $kernel = 'App\Http\Kernel';
+        }
+
+        $app->singleton('Illuminate\Contracts\Http\Kernel', $kernel);
     }
 
     /**

@@ -42,25 +42,21 @@ class BatchFactory
      * @return \Illuminate\Bus\Batch
      */
     public function make(BatchRepository $repository,
-                         $id,
-                         $name,
-                         $totalJobs,
-                         $pendingJobs,
-                         $failedJobs,
+                         /*string */$id,
+                         /*string */$name,
+                         /*int */$totalJobs,
+                         /*int */$pendingJobs,
+                         /*int */$failedJobs,
                          array $failedJobIds,
                          array $options,
                          CarbonImmutable $createdAt,
-                         CarbonImmutable $cancelledAt = null,
-                         CarbonImmutable $finishedAt = null)
+                         /*?*/CarbonImmutable $cancelledAt = null,
+                         /*?*/CarbonImmutable $finishedAt = null)
     {
         $id = cast_to_string($id);
-
         $name = cast_to_string($name);
-
         $totalJobs = cast_to_int($totalJobs);
-
         $pendingJobs = cast_to_int($pendingJobs);
-
         $failedJobs = cast_to_int($failedJobs);
 
         return new Batch($this->queue, $repository, $id, $name, $totalJobs, $pendingJobs, $failedJobs, $failedJobIds, $options, $createdAt, $cancelledAt, $finishedAt);

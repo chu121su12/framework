@@ -2518,6 +2518,32 @@ class DatabaseQueryBuilderTest extends TestCase
         $this->assertEquals(1, $result);
     }
 
+    public function testUpdateFromMethodWithJoinsOnPostgres()
+    {
+        $builder = $this->getPostgresBuilder();
+        $builder->getConnection()->shouldReceive('update')->once()->with('update "users" set "email" = ?, "name" = ? from "orders" where "users"."id" = ? and "users"."id" = "orders"."user_id"', ['foo', 'bar', 1])->andReturn(1);
+        $result = $builder->from('users')->join('orders', 'users.id', '=', 'orders.user_id')->where('users.id', '=', 1)->updateFrom(['email' => 'foo', 'name' => 'bar']);
+        $this->assertEquals(1, $result);
+
+        $builder = $this->getPostgresBuilder();
+        $builder->getConnection()->shouldReceive('update')->once()->with('update "users" set "email" = ?, "name" = ? from "orders" where "users"."id" = "orders"."user_id" and "users"."id" = ?', ['foo', 'bar', 1])->andReturn(1);
+        $result = $builder->from('users')->join('orders', function ($join) {
+            $join->on('users.id', '=', 'orders.user_id')
+                ->where('users.id', '=', 1);
+        })->updateFrom(['email' => 'foo', 'name' => 'bar']);
+        $this->assertEquals(1, $result);
+
+        $builder = $this->getPostgresBuilder();
+        $builder->getConnection()->shouldReceive('update')->once()->with('update "users" set "email" = ?, "name" = ? from "orders" where "name" = ? and "users"."id" = "orders"."user_id" and "users"."id" = ?', ['foo', 'bar', 'baz', 1])->andReturn(1);
+        $result = $builder->from('users')
+            ->join('orders', function ($join) {
+                $join->on('users.id', '=', 'orders.user_id')
+                   ->where('users.id', '=', 1);
+            })->where('name', 'baz')
+           ->updateFrom(['email' => 'foo', 'name' => 'bar']);
+        $this->assertEquals(1, $result);
+    }
+
     public function testUpdateMethodRespectsRaw()
     {
         $builder = $this->getBuilder();
@@ -3762,6 +3788,10 @@ SQL;
 
     public function testCursorPaginate()
     {
+        if (\version_compare(\PHP_VERSION, '7.0', '>=') && \version_compare(\PHP_VERSION, '7.1', '<')) {
+            $this->markTestSkipped('Unable to infer QueryBuilder mock is self.');
+        }
+
         $perPage = 16;
         $columns = ['test'];
         $cursorName = 'cursor-name';
@@ -3800,6 +3830,10 @@ SQL;
 
     public function testCursorPaginateMultipleOrderColumns()
     {
+        if (\version_compare(\PHP_VERSION, '7.0', '>=') && \version_compare(\PHP_VERSION, '7.1', '<')) {
+            $this->markTestSkipped('Unable to infer QueryBuilder mock is self.');
+        }
+
         $perPage = 16;
         $columns = ['test', 'another'];
         $cursorName = 'cursor-name';
@@ -3839,6 +3873,10 @@ SQL;
 
     public function testCursorPaginateWithDefaultArguments()
     {
+        if (\version_compare(\PHP_VERSION, '7.0', '>=') && \version_compare(\PHP_VERSION, '7.1', '<')) {
+            $this->markTestSkipped('Unable to infer QueryBuilder mock is self.');
+        }
+
         $perPage = 15;
         $cursorName = 'cursor';
         $cursor = new Cursor(['test' => 'bar']);
@@ -3908,6 +3946,10 @@ SQL;
 
     public function testCursorPaginateWithSpecificColumns()
     {
+        if (\version_compare(\PHP_VERSION, '7.0', '>=') && \version_compare(\PHP_VERSION, '7.1', '<')) {
+            $this->markTestSkipped('Unable to infer QueryBuilder mock is self.');
+        }
+
         $perPage = 16;
         $columns = ['id', 'name'];
         $cursorName = 'cursor-name';
@@ -3946,6 +3988,10 @@ SQL;
 
     public function testCursorPaginateWithMixedOrders()
     {
+        if (\version_compare(\PHP_VERSION, '7.0', '>=') && \version_compare(\PHP_VERSION, '7.1', '<')) {
+            $this->markTestSkipped('Unable to infer QueryBuilder mock is self.');
+        }
+
         $perPage = 16;
         $columns = ['foo', 'bar', 'baz'];
         $cursorName = 'cursor-name';

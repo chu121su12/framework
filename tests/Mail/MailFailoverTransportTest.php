@@ -4,6 +4,7 @@ namespace Illuminate\Tests\Mail;
 
 use Illuminate\Mail\Transport\ArrayTransport;
 use Orchestra\Testbench\TestCase;
+use Swift_FailoverTransport as FailoverTransport;
 
 class MailFailoverTransportTest extends TestCase
 {
@@ -31,7 +32,7 @@ class MailFailoverTransportTest extends TestCase
         ]);
 
         $transport = app('mailer')->getSwiftMailer()->getTransport();
-        $this->assertInstanceOf(\Swift_FailoverTransport::class, $transport);
+        $this->assertInstanceOf(FailoverTransport::class, $transport);
 
         $transports = $transport->getTransports();
         $this->assertCount(2, $transports);
@@ -52,7 +53,7 @@ class MailFailoverTransportTest extends TestCase
         $this->app['config']->set('mail.sendmail', '/usr/sbin/sendmail -bs');
 
         $transport = app('mailer')->getSwiftMailer()->getTransport();
-        $this->assertInstanceOf(\Swift_FailoverTransport::class, $transport);
+        $this->assertInstanceOf(FailoverTransport::class, $transport);
 
         $transports = $transport->getTransports();
         $this->assertCount(2, $transports);

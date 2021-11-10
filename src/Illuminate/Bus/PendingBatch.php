@@ -6,9 +6,9 @@ use Closure;
 use Illuminate\Bus\Events\BatchDispatched;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
-use Illuminate\Queue\SerializableClosure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Laravel\SerializableClosure\SerializableClosure;
 use Throwable;
 
 class PendingBatch
@@ -173,7 +173,7 @@ class PendingBatch
      * @param  string  $name
      * @return $this
      */
-    public function name($name)
+    public function name(/*string */$name)
     {
         $name = cast_to_string($name);
 
@@ -188,7 +188,7 @@ class PendingBatch
      * @param  string  $connection
      * @return $this
      */
-    public function onConnection($connection)
+    public function onConnection(/*string */$connection)
     {
         $connection = cast_to_string($connection);
 
@@ -213,7 +213,7 @@ class PendingBatch
      * @param  string  $queue
      * @return $this
      */
-    public function onQueue($queue)
+    public function onQueue(/*string */$queue)
     {
         $queue = cast_to_string($queue);
 
@@ -247,9 +247,9 @@ class PendingBatch
             $batch = $repository->store($this);
 
             $batch = $batch->add($this->jobs);
-        } catch (\Throwable $e) {
-        } catch (\Error $e) {
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {

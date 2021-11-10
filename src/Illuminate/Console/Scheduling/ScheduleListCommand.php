@@ -28,13 +28,12 @@ class ScheduleListCommand extends Command
      *
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
+     *
      * @throws \Exception
      */
     public function handle(Schedule $schedule)
     {
         foreach ($schedule->events() as $event) {
-            $timezone = $this->option('timezone');
-
             $rows[] = [
                 $event->command,
                 $event->expression,

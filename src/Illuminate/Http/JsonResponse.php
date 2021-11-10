@@ -34,12 +34,14 @@ class JsonResponse extends BaseJsonResponse
 
     /**
      * {@inheritdoc}
+     *
+     * @return static
      */
-    public static function fromJsonString(/*?string */$data = null, /*int */$status = 200, /*array */$headers = [])////: static
+    public static function fromJsonString(/*?string */$data = null, /*int */$status = 200, /*array */$headers = [])/*: static*/
     {
         $data = cast_to_string($data, null);
-
-        $status = cast_to_int($status, null);
+        $status = cast_to_int($status);
+        $headers = cast_to_array($headers);
 
         return new static($data, $status, $headers, 0, true);
     }
@@ -69,8 +71,10 @@ class JsonResponse extends BaseJsonResponse
 
     /**
      * {@inheritdoc}
+     *
+     * @return static
      */
-    public function setData($data = [])////: static
+    public function setData($data = [])/*: static*/
     {
         $this->original = $data;
 
@@ -113,8 +117,10 @@ class JsonResponse extends BaseJsonResponse
 
     /**
      * {@inheritdoc}
+     *
+     * @return static
      */
-    public function setEncodingOptions($options)////: static
+    public function setEncodingOptions($options)/*: static*/
     {
         $this->encodingOptions = (int) $options;
 

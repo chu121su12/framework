@@ -5,6 +5,7 @@ namespace Illuminate\Tests\View\Blade;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Compilers\ComponentTagCompiler;
 use Illuminate\View\Component;
@@ -19,6 +20,8 @@ class BladeComponentTagCompilerTest_testAttributeSanitization_class
                 return '<hi>';
             }
         }
+
+class BladeComponentTagCompilerTest_testAttributeSanitization_Model_class extends Model {}
 
 class BladeComponentTagCompilerTest extends AbstractBladeTestCase
 {
@@ -317,6 +320,25 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
 '@endComponentClass##END-COMPONENT-CLASS##', trim($result));
     }
 
+    public function testClasslessComponentsWithIndexView()
+    {
+        $container = new Container;
+        $container->instance(Application::class, $app = Mockery::mock(Application::class));
+        $container->instance(Factory::class, $factory = Mockery::mock(Factory::class));
+        $app->shouldReceive('getNamespace')->andReturn('App\\');
+        $factory->shouldReceive('exists')->andReturn(false, true);
+        Container::setInstance($container);
+
+        $result = $this->compiler()->compileTags('<x-anonymous-component :name="\'Taylor\'" :age="31" wire:model="foo" />');
+
+        $this->assertSame("##BEGIN-COMPONENT-CLASS##@component('Illuminate\View\AnonymousComponent', 'anonymous-component', ['view' => 'components.anonymous-component.index','data' => ['name' => 'Taylor','age' => 31,'wire:model' => 'foo']])
+<?php if (isset(\$attributes) && \$constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php \$attributes = \$attributes->except(collect(\$constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php \$component->withAttributes(['name' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Taylor'),'age' => 31,'wire:model' => 'foo']); ?>\n".
+'@endComponentClass##END-COMPONENT-CLASS##', trim($result));
+    }
+
     public function testPackagesClasslessComponents()
     {
         $container = new Container;
@@ -340,10 +362,13 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
     {
         $class = new BladeComponentTagCompilerTest_testAttributeSanitization_class;
 
+        $model = new BladeComponentTagCompilerTest_testAttributeSanitization_Model_class;
+
         $this->assertEquals(e('<hi>'), BladeCompiler::sanitizeComponentAttribute('<hi>'));
         $this->assertEquals(e('1'), BladeCompiler::sanitizeComponentAttribute('1'));
         $this->assertEquals(1, BladeCompiler::sanitizeComponentAttribute(1));
         $this->assertEquals(e('<hi>'), BladeCompiler::sanitizeComponentAttribute($class));
+        $this->assertSame($model, BladeCompiler::sanitizeComponentAttribute($model));
     }
 
     public function testItThrowsAnExceptionForNonExistingAliases()

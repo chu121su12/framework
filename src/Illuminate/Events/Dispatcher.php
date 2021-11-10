@@ -328,11 +328,8 @@ class Dispatcher implements DispatcherContract
      */
     public function getListeners($eventName)
     {
-        $listeners = array_merge(
-            $this->prepareListeners($eventName),
-            isset($this->wildcardsCache[$eventName])
-                ? $this->wildcardsCache[$eventName]
-                : $this->getWildcardListeners($eventName)
+        $listeners = array_merge($this->prepareListeners($eventName), isset($this->wildcardsCache[$eventName])
+            ? $this->wildcardsCache[$eventName] : $this->getWildcardListeners($eventName)
         );
 
         return class_exists($eventName, false)
@@ -387,7 +384,7 @@ class Dispatcher implements DispatcherContract
      * @param  string  $eventName
      * @return \Closure[]
      */
-    protected function prepareListeners($eventName)
+    protected function prepareListeners(/*string */$eventName)
     {
         $eventName = cast_to_string($eventName);
 

@@ -245,8 +245,7 @@ class BroadcastManager implements FactoryContract
     protected function createRedisDriver(array $config)
     {
         return new RedisBroadcaster(
-            $this->app->make('redis'),
-            isset($config['connection']) ? $config['connection'] : null,
+            $this->app->make('redis'), isset($config['connection']) ? $config['connection'] : null,
             $this->app['config']->get('database.redis.options.prefix', '')
         );
     }

@@ -7,21 +7,30 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
+ * @group MySQL
  * @requires extension pdo_mysql
+ * @requires OS Linux|Darwin
  */
-class DatabaseMySqlConnectionTest extends DatabaseMySqlTestCase
+class DatabaseMySqlConnectionTest extends DatabaseTestCase
 {
     const TABLE = 'player';
     const FLOAT_COL = 'float_col';
     const JSON_COL = 'json_col';
     const FLOAT_VAL = 0.2;
 
-    protected function setUp()
+    protected function getEnvironmentSetUp($app)
+    {
+        parent::getEnvironmentSetUp($app);
+
+        $app['config']->set('database.default', 'mysql');
+    }
+
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
-        if (! isset($_SERVER['CI']) || (! isset($_SERVER['CI_FORCE_DATABASE']) && windows_os())) {
-            $this->markTestSkipped('This test is only executed on CI in Linux.');
+        if (!$this->supportsJson()) {
+            $this->markTestSkipped('This database does not support JSON type.');
         }
 
         if (! Schema::hasTable(self::TABLE)) {
@@ -32,7 +41,7 @@ class DatabaseMySqlConnectionTest extends DatabaseMySqlTestCase
         }
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         Schema::drop(self::TABLE);
 
