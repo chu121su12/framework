@@ -859,12 +859,9 @@ class Connection implements ConnectionInterface
         }
 
         switch ($event) {
-            case 'beganTransaction':
-                return $this->events->dispatch(new TransactionBeginning($this));
-            case 'committed':
-                return $this->events->dispatch(new TransactionCommitted($this));
-            case 'rollingBack':
-                return $this->events->dispatch(new TransactionRolledBack($this));
+            case 'beganTransaction': return $this->events->dispatch(new TransactionBeginning($this));
+            case 'committed': return $this->events->dispatch(new TransactionCommitted($this));
+            case 'rollingBack': return $this->events->dispatch(new TransactionRolledBack($this));
         }
     }
 

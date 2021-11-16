@@ -16,27 +16,16 @@ class TimestampType extends Type implements PhpDateTimeMappingType
      */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $name = $platform->getName();
-
-        switch ($name) {
+        switch ($name = $platform->getName()) {
             case 'mysql':
-            case 'mysql2':
-                return $this->getMySqlPlatformSQLDeclaration($fieldDeclaration);
-
+            case 'mysql2': return $this->getMySqlPlatformSQLDeclaration($fieldDeclaration);
             case 'postgresql':
             case 'pgsql':
-            case 'postgres':
-                return $this->getPostgresPlatformSQLDeclaration($fieldDeclaration);
-
-            case 'mssql':
-                return $this->getSqlServerPlatformSQLDeclaration($fieldDeclaration);
-
+            case 'postgres': return $this->getPostgresPlatformSQLDeclaration($fieldDeclaration);
+            case 'mssql': return $this->getSqlServerPlatformSQLDeclaration($fieldDeclaration);
             case 'sqlite':
-            case 'sqlite3':
-                return $this->getSQLitePlatformSQLDeclaration($fieldDeclaration);
-
-            default:
-                throw new DBALException('Invalid platform: '.$name);
+            case 'sqlite3': return $this->getSQLitePlatformSQLDeclaration($fieldDeclaration);
+            default: throw new DBALException('Invalid platform: '.$name);
         }
     }
 

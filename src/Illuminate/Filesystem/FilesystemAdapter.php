@@ -894,12 +894,11 @@ class FilesystemAdapter implements CloudFilesystemContract
         }
 
         switch ($visibility) {
-            case FilesystemContract::VISIBILITY_PUBLIC:
-                // return Visibility::PUBLIC;
-                return Visibility::VISIBILITY_PUBLIC;
-            case FilesystemContract::VISIBILITY_PRIVATE:
-                // return Visibility::PRIVATE;
-                return Visibility::VISIBILITY_PRIVATE;
+            // case FilesystemContract::VISIBILITY_PUBLIC: return Visibility::PUBLIC;
+            case FilesystemContract::VISIBILITY_PUBLIC: return Visibility::VISIBILITY_PUBLIC;
+
+            // case FilesystemContract::VISIBILITY_PRIVATE: return Visibility::PRIVATE;
+            case FilesystemContract::VISIBILITY_PRIVATE: return Visibility::VISIBILITY_PRIVATE;
         }
 
         throw new InvalidArgumentException("Unknown visibility: {$visibility}.");
