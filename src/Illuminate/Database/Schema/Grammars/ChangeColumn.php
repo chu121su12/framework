@@ -146,25 +146,14 @@ class ChangeColumn
         $type = strtolower($type);
 
         switch ($type) {
-            case 'biginteger':
-                $type = 'bigint';
-                break;
-            case 'smallinteger':
-                $type = 'smallint';
-                break;
+            case 'biginteger': return Type::getType('bigint');
+            case 'smallinteger': return Type::getType('smallint');
             case 'mediumtext':
-            case 'longtext':
-                $type = 'text';
-                break;
-            case 'binary':
-                $type = 'blob';
-                break;
-            case 'uuid':
-                $type = 'guid';
-                break;
+            case 'longtext': return Type::getType('text');
+            case 'binary': return Type::getType('blob');
+            case 'uuid': return Type::getType('guid');
+            default: return Type::getType($type);
         }
-
-        return Type::getType($type);
     }
 
     /**
@@ -218,16 +207,11 @@ class ChangeColumn
     {
         switch ($attribute) {
             case 'type':
-            case 'name':
-                return;
-            case 'nullable':
-                return 'notnull';
-            case 'total':
-                return 'precision';
-            case 'places':
-                return 'scale';
-            default:
-                return $attribute;
+            case 'name': return null;
+            case 'nullable': return 'notnull';
+            case 'total': return 'precision';
+            case 'places': return 'scale';
+            default: return $attribute;
         }
     }
 
