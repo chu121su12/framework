@@ -63,7 +63,7 @@ class SupportJsStringTest_testArrayable_class implements Arrayable
             }
         }
 
-class SupportJsStringTest extends TestCase
+class SupportJsTest extends TestCase
 {
     public function testScalars()
     {

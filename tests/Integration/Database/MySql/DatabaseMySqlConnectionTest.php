@@ -1,29 +1,21 @@
 <?php
 
-namespace Illuminate\Tests\Integration\Database;
+namespace Illuminate\Tests\Integration\Database\MySql;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * @group MySQL
  * @requires extension pdo_mysql
  * @requires OS Linux|Darwin
  */
-class DatabaseMySqlConnectionTest extends DatabaseTestCase
+class DatabaseMySqlConnectionTest extends MySqlTestCase
 {
     const TABLE = 'player';
     const FLOAT_COL = 'float_col';
     const JSON_COL = 'json_col';
     const FLOAT_VAL = 0.2;
-
-    protected function getEnvironmentSetUp($app)
-    {
-        parent::getEnvironmentSetUp($app);
-
-        $app['config']->set('database.default', 'mysql');
-    }
 
     protected function setUp()/*: void*/
     {
@@ -32,7 +24,10 @@ class DatabaseMySqlConnectionTest extends DatabaseTestCase
         if (!$this->supportsJson()) {
             $this->markTestSkipped('This database does not support JSON type.');
         }
+    }
 
+    protected function defineDatabaseMigrationsAfterDatabaseRefreshed()
+    {
         if (! Schema::hasTable(self::TABLE)) {
             Schema::create(self::TABLE, function (Blueprint $table) {
                 $table->json(self::JSON_COL)->nullable();
@@ -41,11 +36,9 @@ class DatabaseMySqlConnectionTest extends DatabaseTestCase
         }
     }
 
-    protected function tearDown()/*: void*/
+    protected function destroyDatabaseMigrations()
     {
         Schema::drop(self::TABLE);
-
-        parent::tearDown();
     }
 
     /**

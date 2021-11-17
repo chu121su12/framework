@@ -12,10 +12,8 @@ use Illuminate\Tests\Integration\Database\DatabaseTestCase;
 
 class EloquentWhereHasMorphTest extends DatabaseTestCase
 {
-    protected function setUp()
+    protected function defineDatabaseMigrationsAfterDatabaseRefreshed()
     {
-        parent::setUp();
-
         Schema::create('posts', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
@@ -131,10 +129,6 @@ class EloquentWhereHasMorphTest extends DatabaseTestCase
 
     public function testWhereHasMorphWithOwnerKey()
     {
-        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
-            $this->markTestSkipped('Needs fix on Doctrine\DBAL\Schema\Table.');
-        }
-
         Schema::table('posts', function (Blueprint $table) {
             $table->string('slug')->nullable();
         });

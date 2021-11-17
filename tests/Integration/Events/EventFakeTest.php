@@ -14,32 +14,7 @@ use Orchestra\Testbench\TestCase;
  */
 class EventFakeTest extends TestCase
 {
-    /**
-     * Define environment setup.
-     *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
-     * @return void
-     */
-    protected function getEnvironmentSetUp($app)
-    {
-        $app['config']->set('app.debug', 'true');
-
-        // Database configuration
-        $app['config']->set('database.default', 'testbench');
-
-        $app['config']->set('database.connections.testbench', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-            'prefix' => '',
-        ]);
-    }
-
-    /**
-     * Setup the test environment.
-     *
-     * @return void
-     */
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -51,12 +26,7 @@ class EventFakeTest extends TestCase
         });
     }
 
-    /**
-     * Clean up the testing environment before the next test.
-     *
-     * @return void
-     */
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         Schema::dropIfExists('posts');
 

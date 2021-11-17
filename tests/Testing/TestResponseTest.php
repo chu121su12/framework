@@ -1228,6 +1228,45 @@ class TestResponseTest extends TestCase
         $testResponse->assertJsonValidationErrors(['one' => 'taylor', 'otwell']);
     }
 
+    public function testAssertJsonValidationErrorMessagesMultipleErrors()
+    {
+        $data = [
+            'status' => 'ok',
+            'errors' => [
+                'one' => [
+                    'First error message.',
+                    'Second error message.',
+                ],
+            ],
+        ];
+
+        $testResponse = TestResponse::fromBaseResponse(
+            (new Response)->setContent(json_encode($data))
+        );
+
+        $testResponse->assertJsonValidationErrors(['one' => ['First error message.', 'Second error message.']]);
+    }
+
+    public function testAssertJsonValidationErrorMessagesMultipleErrorsCanFail()
+    {
+        $this->expectException(AssertionFailedError::class);
+
+        $data = [
+            'status' => 'ok',
+            'errors' => [
+                'one' => [
+                    'First error message.',
+                ],
+            ],
+        ];
+
+        $testResponse = TestResponse::fromBaseResponse(
+            (new Response)->setContent(json_encode($data))
+        );
+
+        $testResponse->assertJsonValidationErrors(['one' => ['First error message.', 'Second error message.']]);
+    }
+
     public function testAssertJsonMissingValidationErrors()
     {
         $baseResponse = tap(new Response, function ($response) {
@@ -1442,6 +1481,21 @@ class TestResponseTest extends TestCase
             $tempDir.'/file.txt', 200, [], true, 'inline'
         ));
         $testResponse->assertDownload();
+        $files->deleteDirectory($tempDir);
+    }
+
+    public function testAssertDownloadOfferedWithAFileNameWithSpacesInIt()
+    {
+        $files = new Filesystem;
+        $tempDir = __DIR__.'/tmp';
+        $files->makeDirectory($tempDir, 0755, false, true);
+        $files->put($tempDir.'/file.txt', 'Hello World');
+        $testResponse = TestResponse::fromBaseResponse(new Response(
+            $files->get($tempDir.'/file.txt'), 200, [
+                'Content-Disposition' => 'attachment; filename = "test file.txt"',
+            ]
+        ));
+        $testResponse->assertDownload('test file.txt');
         $files->deleteDirectory($tempDir);
     }
 
