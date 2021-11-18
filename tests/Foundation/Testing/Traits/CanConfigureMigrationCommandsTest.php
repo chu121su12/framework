@@ -9,7 +9,7 @@ class CanConfigureMigrationCommandsTest extends TestCase
 {
     protected $traitObject;
 
-    protected function setup(): void
+    protected function setup()/*: void*/
     {
         $this->traitObject = $this->getObjectForTrait(CanConfigureMigrationCommands::class);
     }
@@ -26,7 +26,7 @@ class CanConfigureMigrationCommandsTest extends TestCase
         return $migrateFreshUsingReflection;
     }
 
-    public function testMigrateFreshUsingDefault(): void
+    public function testMigrateFreshUsingDefault()/*: void*/
     {
         $migrateFreshUsingReflection = $this->__reflectAndSetupAccessibleForProtectedTraitMethod('migrateFreshUsing');
 
@@ -39,7 +39,7 @@ class CanConfigureMigrationCommandsTest extends TestCase
         $this->assertEquals($expected, $migrateFreshUsingReflection->invoke($this->traitObject));
     }
 
-    public function testMigrateFreshUsingWithPropertySets(): void
+    public function testMigrateFreshUsingWithPropertySets()/*: void*/
     {
         $migrateFreshUsingReflection = $this->__reflectAndSetupAccessibleForProtectedTraitMethod('migrateFreshUsing');
 

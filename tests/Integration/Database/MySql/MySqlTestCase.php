@@ -6,7 +6,7 @@ use Illuminate\Tests\Integration\Database\DatabaseTestCase;
 
 abstract class MySqlTestCase extends DatabaseTestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

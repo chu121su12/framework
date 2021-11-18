@@ -11,7 +11,7 @@ class DatabaseMigrationsTest extends TestCase
 {
     protected $traitObject;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         RefreshDatabaseState::$migrated = false;
 

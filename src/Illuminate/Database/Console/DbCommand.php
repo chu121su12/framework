@@ -137,8 +137,8 @@ class DbCommand extends Command
             '--user='.$connection['username'],
         ], $this->getOptionalArguments([
             'password' => '--password='.$connection['password'],
-            'unix_socket' => '--socket='.($connection['unix_socket'] ?? ''),
-            'charset' => '--default-character-set='.($connection['charset'] ?? ''),
+            'unix_socket' => '--socket='.(isset($connection['unix_socket']) ? $connection['unix_socket'] : ''),
+            'charset' => '--default-character-set='.(isset($connection['charset']) ? $connection['charset'] : ''),
         ], $connection), [$connection['database']]);
     }
 

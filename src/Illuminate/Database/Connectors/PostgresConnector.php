@@ -95,7 +95,7 @@ class PostgresConnector extends Connector implements ConnectorInterface
     {
         if (isset($config['search_path']) || isset($config['schema'])) {
             $searchPath = $this->quoteSearchPath(
-                $this->parseSearchPath($config['search_path'] ?? $config['schema'])
+                $this->parseSearchPath(isset($config['search_path']) ? $config['search_path'] : $config['schema'])
             );
 
             $connection->prepare("set search_path to {$searchPath}")->execute();
@@ -116,7 +116,7 @@ class PostgresConnector extends Connector implements ConnectorInterface
             $searchPath = $matches[0];
         }
 
-        $searchPath = $searchPath ?? [];
+        $searchPath = isset($searchPath) ? $searchPath : [];
 
         array_walk($searchPath, function (&$schema) {
             $schema = trim($schema, '\'"');

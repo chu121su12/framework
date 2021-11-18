@@ -115,7 +115,7 @@ class RouteRegistrar
 
         if ($key === 'withoutMiddleware') {
             $value = array_merge(
-                (array) ($this->attributes[$attributeKey] ?? []), Arr::wrap($value)
+                (array) (isset($this->attributes[$attributeKey]) ? $this->attributes[$attributeKey] : []), Arr::wrap($value)
             );
         }
 
