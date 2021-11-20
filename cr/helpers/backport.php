@@ -51,6 +51,19 @@ if (! \function_exists('backport_json_decode')) {
     }
 }
 
+if (! \function_exists('backport_json_decode_throw')) {
+    function backport_json_decode_throw($json, $assoc = false, $depth = 512, $options = 0)
+    {
+        $result = backport_json_decode($json, $assoc, $depth, $options);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \JsonException(json_last_error_msg());
+        }
+
+        return $result;
+    }
+}
+
 if (! \function_exists('backport_substr_count')) {
     function backport_substr_count($haystack, $needle, $offset = 0, $length = null)
     {

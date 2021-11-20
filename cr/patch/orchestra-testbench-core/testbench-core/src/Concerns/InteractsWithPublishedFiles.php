@@ -27,6 +27,8 @@ trait InteractsWithPublishedFiles
 
     /**
      * Assert file does contains data.
+     *
+     * @param  array<int, string>  $contains
      */
     protected function assertFileContains(array $contains, /*string */$file, /*string */$message = '')////: void
     {
@@ -47,6 +49,8 @@ trait InteractsWithPublishedFiles
 
     /**
      * Assert file doesn't contains data.
+     *
+     * @param  array<int, string>  $contains
      */
     protected function assertFileNotContains(array $contains, /*string */$file, /*string */$message = '')////: void
     {
@@ -67,6 +71,8 @@ trait InteractsWithPublishedFiles
 
     /**
      * Assert file does contains data.
+     *
+     * @param  array<int, string>  $contains
      */
     protected function assertMigrationFileContains(array $contains, /*string */$file, /*string */$message = '')////: void
     {
@@ -83,6 +89,8 @@ trait InteractsWithPublishedFiles
 
     /**
      * Assert file doesn't contains data.
+     *
+     * @param  array<int, string>  $contains
      */
     protected function assertMigrationFileNotContains(array $contains, /*string */$file, /*string */$message = '')////: void
     {

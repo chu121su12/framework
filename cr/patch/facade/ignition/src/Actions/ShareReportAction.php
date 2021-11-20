@@ -154,6 +154,7 @@ class ShareReportAction
             'context',
             'logs',
             'dumps',
+            'exception',
         ];
 
         return Collection::make($contextItems)
