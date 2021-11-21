@@ -47,15 +47,15 @@
         "vlucas/phpdotenv": "^4.0"
     },
     "replace": {
-        "brick/math": "^0.9.2",
-        "brick/money": "^0.5.2",
-        "calebporzio/sushi": "^2.2.0",
-        "facade/flare-client-php": "1.8.1",
-        "facade/ignition": "^2.12",
-        "laravel/serializable-closure": "^1.0.2",
+        "brick/math": "^0.9.3",
+        "brick/money": "^0.5.3",
+        "calebporzio/sushi": "^2.3.1",
+        "facade/flare-client-php": "1.9.1",
+        "facade/ignition": "^2.16.1",
+        "laravel/serializable-closure": "^1.0.4",
         "league/flysystem": "^1.0.70",
-        "nesbot/carbon": "^2.49",
-        "nunomaduro/collision": "^5.9",
+        "nesbot/carbon": "^2.54.0",
+        "nunomaduro/collision": "^5.10",
         "voku/portable-ascii": "^1.5.6",
 
         "illuminate/auth": "self.version",
