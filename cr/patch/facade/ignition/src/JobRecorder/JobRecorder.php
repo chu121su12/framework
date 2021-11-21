@@ -9,7 +9,6 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Queue\Job;
 use Illuminate\Queue\CallQueuedClosure;
 use Illuminate\Queue\Events\JobExceptionOccurred;
-use Illuminate\Queue\Jobs\Job;
 use Illuminate\Queue\Jobs\RedisJob;
 use Illuminate\Support\Str;
 use ReflectionClass;
