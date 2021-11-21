@@ -2,6 +2,7 @@
 
 namespace Illuminate\Routing;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Contracts\Routing\ResponseFactory as FactoryContract;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Http\JsonResponse;
@@ -9,7 +10,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Symfony\Component\HttpFoundation\BinaryFileResponse5 as BinaryFileResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse5 as StreamedResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ResponseFactory implements FactoryContract
 {
@@ -124,7 +125,7 @@ class ResponseFactory implements FactoryContract
      */
     public function stream($callback, $status = 200, array $headers = [])
     {
-        return new StreamedResponse($callback, $status, $headers);
+        return SymfonyHelper::makeStreamedResponse($callback, $status, $headers);
     }
 
     /**
@@ -138,7 +139,7 @@ class ResponseFactory implements FactoryContract
      */
     public function streamDownload($callback, $name = null, array $headers = [], $disposition = 'attachment')
     {
-        $response = new StreamedResponse($callback, 200, $headers);
+        $response = SymfonyHelper::makeStreamedResponse($callback, 200, $headers);
 
         if (! is_null($name)) {
             $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
@@ -162,7 +163,7 @@ class ResponseFactory implements FactoryContract
      */
     public function download($file, $name = null, array $headers = [], $disposition = 'attachment')
     {
-        $response = new BinaryFileResponse($file, 200, $headers, true, $disposition);
+        $response = SymfonyHelper::makeBinaryFileResponse($file, 200, $headers, true, $disposition);
 
         if (! is_null($name)) {
             return $response->setContentDisposition($disposition, $name, $this->fallbackName($name));
@@ -191,7 +192,7 @@ class ResponseFactory implements FactoryContract
      */
     public function file($file, array $headers = [])
     {
-        return new BinaryFileResponse($file, 200, $headers);
+        return SymfonyHelper::makeBinaryFileResponse($file, 200, $headers);
     }
 
     /**

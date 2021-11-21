@@ -13,7 +13,7 @@ use League\Flysystem\Adapter\Local as LocalFilesystemAdapter;
 use League\Flysystem\Filesystem;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\StreamedResponse5 as StreamedResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 // use League\Flysystem\Ftp\FtpAdapter;
 // use League\Flysystem\Local\LocalFilesystemAdapter;

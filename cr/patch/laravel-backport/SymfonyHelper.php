@@ -3,6 +3,10 @@
 namespace CR\LaravelBackport;
 
 use Symfony\Component\Console\Application as ConsoleApplication;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag5;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\Process\Process;
 
 class SymfonyHelper
@@ -122,4 +126,46 @@ class SymfonyHelper
         }
     }
 
+    public static function prepareTooManyRequestsHttpException(TooManyRequestsHttpException $exception, $retryAfter = null, array $headers = [])
+    {
+        if ($retryAfter) {
+            $headers['Retry-After'] = $retryAfter;
+        }
+
+        $exception->setHeaders($headers);
+
+        return $exception;
+    }
+
+    public static function makeBinaryFileResponse($file, /*int */$status = 200, array $headers = [], /*bool */$public = true, /*string */$contentDisposition = null, /*bool */$autoEtag = false, /*bool */$autoLastModified = true)
+    {
+        $status = cast_to_int($status);
+        $public = cast_to_bool($public);
+        $contentDisposition = cast_to_string($contentDisposition, null);
+        $autoEtag = cast_to_bool($autoEtag);
+        $autoLastModified = cast_to_bool($autoLastModified);
+
+        $response = new BinaryFileResponse($file, $status, $headers, $public, $contentDisposition, $autoEtag, $autoLastModified);
+
+        $response->headers = new ResponseHeaderBag5($headers);
+
+        $response->setFile($file, $contentDisposition, $autoEtag, $autoLastModified);
+
+        if ($public) {
+            $response->setPublic();
+        }
+
+        return $response;
+    }
+
+    public static function makeStreamedResponse(callable $callback = null, /*int */$status = 200, array $headers = [])
+    {
+        $status = cast_to_int($status);
+
+        $response = new StreamedResponse($callback, $status);
+
+        $response->headers = new ResponseHeaderBag5($headers);
+
+        return $response;
+    }
 }

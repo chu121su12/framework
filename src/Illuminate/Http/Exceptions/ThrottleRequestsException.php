@@ -2,6 +2,7 @@
 
 namespace Illuminate\Http\Exceptions;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Throwable;
 
@@ -18,6 +19,8 @@ class ThrottleRequestsException extends TooManyRequestsHttpException
      */
     public function __construct($message = null, /*Throwable */$previous = null, array $headers = [], $code = 0)
     {
-        parent::__construct(null, $message, $previous, $code, $headers);
+        parent::__construct(null, $message, $previous, $code);
+
+        SymfonyHelper::prepareTooManyRequestsHttpException($this, null, $headers);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Illuminate\Filesystem;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Contracts\Filesystem\Cloud as CloudFilesystemContract;
 use Illuminate\Contracts\Filesystem\FileExistsException as ContractFileExistsException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException as ContractFileNotFoundException;
@@ -26,7 +27,7 @@ use League\Flysystem\FilesystemInterface as FilesystemOperator;
 use PHPUnit\Framework\Assert as PHPUnit;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
-use Symfony\Component\HttpFoundation\StreamedResponse5 as StreamedResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 // use League\Flysystem\FilesystemAdapter as FlysystemAdapter;
 // use League\Flysystem\FilesystemOperator;
@@ -277,7 +278,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function response($path, $name = null, array $headers = [], $disposition = 'inline')
     {
-        $response = new StreamedResponse;
+        $response = SymfonyHelper::makeStreamedResponse();
 
         $filename = isset($name) ? $name : basename($path);
 

@@ -144,9 +144,6 @@
         "cr/patch/carbon/bin/carbon"
     ],
     "autoload": {
-        "exclude-from-classmap": [
-            "vendor/symfony/http-kernel/Exception"
-        ],
         "files": [
             "cr/helpers/helpers.php",
             "cr/helpers/backport.php",
@@ -179,7 +176,6 @@
             "Symfony\\Polyfill\\": "cr/patch/symfony/polyfill/src/",
             "Symfony\\Component\\ErrorHandler\\": "cr/symfony/error-handler/",
             "Symfony\\Component\\HttpFoundation\\": "cr/patch/symfony/http-foundation/",
-            "Symfony\\Component\\HttpKernel\\Exception\\": "cr/patch/symfony/http-kernel/Exception/",
             "Symfony\\Component\\Mime\\": "cr/symfony/mime/",
             "Symfony\\Component\\Routing\\": "cr/symfony/routing/",
             "League\\Flysystem\\": "cr/patch/flysystem/src/",

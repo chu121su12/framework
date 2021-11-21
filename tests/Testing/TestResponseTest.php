@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Testing;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Exception;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\View\View;
@@ -20,7 +21,7 @@ use Illuminate\Testing\TestResponse;
 use JsonSerializable;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\BinaryFileResponse5 as BinaryFileResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Cookie;
 
 if (!class_exists('Illuminate\Tests\Testing\AssertionFailedError')) {
@@ -1463,7 +1464,7 @@ class TestResponseTest extends TestCase
         $tempDir = __DIR__.'/tmp';
         $files->makeDirectory($tempDir, 0755, false, true);
         $files->put($tempDir.'/file.txt', 'Hello World');
-        $testResponse = TestResponse::fromBaseResponse(new BinaryFileResponse(
+        $testResponse = TestResponse::fromBaseResponse(SymfonyHelper::makeBinaryFileResponse(
             $tempDir.'/file.txt', 200, [], true, 'attachment'
         ));
         $testResponse->assertDownload('file.txt');
@@ -1477,7 +1478,7 @@ class TestResponseTest extends TestCase
         $tempDir = __DIR__.'/tmp';
         $files->makeDirectory($tempDir, 0755, false, true);
         $files->put($tempDir.'/file.txt', 'Hello World');
-        $testResponse = TestResponse::fromBaseResponse(new BinaryFileResponse(
+        $testResponse = TestResponse::fromBaseResponse(SymfonyHelper::makeBinaryFileResponse(
             $tempDir.'/file.txt', 200, [], true, 'inline'
         ));
         $testResponse->assertDownload();
@@ -1519,7 +1520,7 @@ class TestResponseTest extends TestCase
         $files->makeDirectory($tempDir, 0755, false, true);
         $files->put($tempDir.'/file.txt', 'Hello World');
 
-        $response = TestResponse::fromBaseResponse(new BinaryFileResponse($tempDir.'/file.txt'));
+        $response = TestResponse::fromBaseResponse(SymfonyHelper::makeBinaryFileResponse($tempDir.'/file.txt'));
 
         $this->assertEquals($tempDir.'/file.txt', $response->getFile()->getPathname());
 
