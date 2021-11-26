@@ -262,7 +262,8 @@ final class Writer implements WriterContract
                 '<fg=blue;options=bold>• </><fg=default;options=bold>%s</>: %s %s',
                 rtrim($title, '.'),
                 $description,
-                implode(', ', array_map(function (string $link) {
+                implode(', ', array_map(function (/*string */$link) {
+                    $link = cast_to_string($link);
                     return sprintf("\n    <fg=blue>%s</>", $link);
                 }, $links))
             ));
