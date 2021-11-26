@@ -101,7 +101,7 @@ class ClassAliasAutoloader
             return;
         }
 
-        $fullName = $this->classes[$class] ?? false;
+        $fullName = isset($this->classes[$class]) ? $this->classes[$class] : false;
 
         if ($fullName) {
             $this->shell->writeStdout("[!] Aliasing '{$class}' to '{$fullName}' for this Tinker session.\n");

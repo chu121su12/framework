@@ -37,7 +37,9 @@ class Enum implements Rule
             return false;
         }
 
-        return ! is_null($this->type::tryFrom($value));
+        $type = $this->type;
+
+        return ! is_null($type::tryFrom($value));
     }
 
     /**
