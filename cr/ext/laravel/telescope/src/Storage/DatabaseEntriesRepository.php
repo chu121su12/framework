@@ -40,13 +40,12 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
      * Create a new database repository.
      *
      * @param  string  $connection
-     * @param  int     $chunkSize
+     * @param  int  $chunkSize
      * @return void
      */
-    public function __construct($connection, $chunkSize = null)
+    public function __construct(/*string */$connection, /*int */$chunkSize = null)
     {
         $connection = cast_to_string($connection);
-
         $chunkSize = cast_to_int($chunkSize, null);
 
         $this->connection = $connection;
@@ -62,7 +61,7 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
      * @param  mixed  $id
      * @return \Laravel\Telescope\EntryResult
      */
-    public function find($id) // : EntryResult
+    public function find($id)/*: EntryResult*/
     {
         $entry = EntryModel::on($this->connection)->whereUuid($id)->firstOrFail();
 
@@ -151,9 +150,9 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
 
                 return $entry->toArray();
             })->toArray());
-            } catch (\Throwable $e) {
-            } catch (\Error $e) {
             } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (\Throwable $e) {
             }
 
             if (isset($e)) {
@@ -189,9 +188,9 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
                     )),
                 ]);
             })->toArray());
-            } catch (\Throwable $e) {
-            } catch (\Error $e) {
             } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (\Throwable $e) {
             }
 
             if (isset($e)) {
@@ -220,9 +219,9 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
                     ];
                 });
             })->all());
-            } catch (\Throwable $e) {
-            } catch (\Error $e) {
             } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (\Throwable $e) {
             }
 
             if (isset($e)) {
@@ -280,9 +279,9 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
                     ];
                 })->toArray()
             );
-            } catch (\Throwable $e) {
-            } catch (\Error $e) {
             } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (\Throwable $e) {
             }
 
             if (isset($e)) {
@@ -307,11 +306,12 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
     {
         try {
             $this->monitoredTags = $this->monitoring();
-        } catch (\Throwable $e) {
-            $this->monitoredTags = [];
-        } catch (\Error $e) {
-            $this->monitoredTags = [];
         } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
+        }
+
+        if (isset($e)) {
             $this->monitoredTags = [];
         }
     }

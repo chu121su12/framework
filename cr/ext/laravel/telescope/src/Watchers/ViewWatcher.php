@@ -106,7 +106,7 @@ class ViewWatcher extends Watcher
     /**
      * Get all view composers for the given event.
      *
-     * @param  string $eventName
+     * @param  string  $eventName
      * @return \Illuminate\Support\Collection
      */
     protected function getComposersForEvent($eventName)
@@ -146,7 +146,7 @@ class ViewWatcher extends Watcher
      * @param  \ReflectionFunction  $closure
      * @return bool
      */
-    protected function isWildcardViewComposer(array $variables, ReflectionFunction $closure) //// : bool
+    protected function isWildcardViewComposer(array $variables, ReflectionFunction $closure)/*: bool*/
     {
         return $variables['wildcard'] && array_key_exists('callback', $closure->getStaticVariables());
     }
@@ -159,7 +159,7 @@ class ViewWatcher extends Watcher
      * @param  \ReflectionFunction  $closure
      * @return bool
      */
-    protected function isViewComposerClosure(ReflectionFunction $closure) //// : bool
+    protected function isViewComposerClosure(ReflectionFunction $closure)/*: bool*/
     {
         return $closure->getClosureScopeClass()->implementsInterface(Factory::class) &&
                array_key_exists('class', $closure->getStaticVariables());

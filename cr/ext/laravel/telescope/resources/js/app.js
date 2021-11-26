@@ -21,7 +21,7 @@ window.Popper = require('popper.js').default;
 
 moment.tz.setDefault(Telescope.timezone);
 
-window.Telescope.basePath = window.Telescope.rootPath + window.Telescope.path;
+window.Telescope.basePath = (window.Telescope.rootPath || '/') + window.Telescope.path;
 
 let routerBasePath = window.Telescope.basePath + '/';
 
@@ -81,6 +81,12 @@ new Vue({
 
             window.Telescope.recording = !Telescope.recording;
             this.recording = !this.recording;
+        },
+
+        clearEntries() {
+            if (confirm('Are you sure you want to delete all Telescope data?')) {
+                axios.delete(Telescope.basePath + '/telescope-api/entries').then((response) => location.reload());
+            }
         },
     },
 });

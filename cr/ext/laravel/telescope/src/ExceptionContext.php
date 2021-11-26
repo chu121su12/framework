@@ -13,7 +13,7 @@ class ExceptionContext
      * @param  \Throwable  $exception
      * @return array
      */
-    public static function get($exception)
+    public static function get(/*Throwable */$exception)
     {
         $evalContext = static::getEvalContext($exception);
 
@@ -27,7 +27,7 @@ class ExceptionContext
      * @param  \Throwable  $exception
      * @return array|null
      */
-    protected static function getEvalContext($exception)
+    protected static function getEvalContext(/*Throwable */$exception)
     {
         if (Str::contains($exception->getFile(), "eval()'d code")) {
             return [
@@ -42,7 +42,7 @@ class ExceptionContext
      * @param  \Throwable  $exception
      * @return array
      */
-    protected static function getFileContext($exception)
+    protected static function getFileContext(/*Throwable */$exception)
     {
         return collect(explode("\n", file_get_contents($exception->getFile())))
             ->slice($exception->getLine() - 10, 20)

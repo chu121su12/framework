@@ -186,7 +186,7 @@ class RequestWatcher extends Watcher
     {
         $limit = isset($this->options['size_limit']) ? $this->options['size_limit'] : 64;
 
-        return mb_strlen($content) / 1000 <= $limit;
+        return intdiv(mb_strlen($content), 1000) <= $limit;
     }
 
     /**

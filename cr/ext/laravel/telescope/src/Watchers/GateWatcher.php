@@ -46,7 +46,7 @@ class GateWatcher extends Watcher
      * @param  array  $arguments
      * @return bool
      */
-    public function recordGateCheck(Authenticatable $user = null, $ability, $result, $arguments)
+    public function recordGateCheck(/*?*/Authenticatable $user = null, $ability, $result, $arguments)
     {
         if (! Telescope::isRecording() || $this->shouldIgnore($ability)) {
             return;
@@ -58,8 +58,8 @@ class GateWatcher extends Watcher
             'ability' => $ability,
             'result' => $this->gateResult($result),
             'arguments' => $this->formatArguments($arguments),
-            'file' => $caller['file'],
-            'line' => $caller['line'],
+            'file' => isset($caller['file']) ? $caller['file'] : null,
+            'line' => isset($caller['line']) ? $caller['line'] : null,
         ]));
 
         return $result;

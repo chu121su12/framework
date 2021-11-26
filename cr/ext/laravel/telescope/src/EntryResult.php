@@ -81,12 +81,10 @@ class EntryResult implements JsonSerializable
      * @param  \Carbon\CarbonInterface|\Carbon\Carbon  $createdAt
      * @param  array  $tags
      */
-    public function __construct($id, $sequence, $batchId, $type, $familyHash = null, array $content, $createdAt, $tags = [])
+    public function __construct($id, $sequence, /*string */$batchId, /*string */$type, /*?string */$familyHash = null, array $content, $createdAt, $tags = [])
     {
-        $type = cast_to_string($type);
-
         $batchId = cast_to_string($batchId);
-
+        $type = cast_to_string($type);
         $familyHash = cast_to_string($familyHash, null);
 
         $this->id = $id;

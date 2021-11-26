@@ -71,7 +71,7 @@ class EntryQueryOptions
      * @param  string  $batchId
      * @return static
      */
-    public static function forBatchId($batchId = null)
+    public static function forBatchId(/*?string */$batchId = null)
     {
         $batchId = cast_to_string($batchId, null);
 
@@ -84,7 +84,7 @@ class EntryQueryOptions
      * @param  string  $batchId
      * @return $this
      */
-    public function batchId($batchId = null)
+    public function batchId(/*?string */$batchId = null)
     {
         $batchId = cast_to_string($batchId, null);
 
@@ -99,10 +99,8 @@ class EntryQueryOptions
      * @param  array  $uuids
      * @return $this
      */
-    public function uuids(array $uuids = null)
+    public function uuids(/*?*/array $uuids = null)
     {
-        $uuids = cast_to_array($uuids, null);
-
         $this->uuids = $uuids;
 
         return $this;
@@ -127,7 +125,7 @@ class EntryQueryOptions
      * @param  string  $tag
      * @return $this
      */
-    public function tag($tag = null)
+    public function tag(/*?string */$tag = null)
     {
         $tag = cast_to_string($tag, null);
 
@@ -142,7 +140,7 @@ class EntryQueryOptions
      * @param  string  $familyHash
      * @return $this
      */
-    public function familyHash($familyHash = null)
+    public function familyHash(/*?string */$familyHash = null)
     {
         $familyHash = cast_to_string($familyHash, null);
 
@@ -157,7 +155,7 @@ class EntryQueryOptions
      * @param  int  $limit
      * @return $this
      */
-    public function limit($limit)
+    public function limit(/*int */$limit)
     {
         $limit = cast_to_int($limit);
 
