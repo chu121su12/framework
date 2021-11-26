@@ -2,6 +2,8 @@
 
 namespace Laravel\Octane\Exceptions;
 
+use Laravel\SerializableClosure\Support\ClosureStream;
+
 class TaskExceptionResult
 {
     protected $class;
@@ -27,12 +29,12 @@ class TaskExceptionResult
     /**
      * Creates a new task exception result from the given throwable.
      *
-     * @param  \Throwable $throwable
+     * @param  \Throwable  $throwable
      * @return \Laravel\Octane\Exceptions\TaskExceptionResult
      */
     public static function from($throwable)
     {
-        $fallbackTrace = str_starts_with($throwable->getFile(), 'closure://')
+        $fallbackTrace = str_starts_with($throwable->getFile(), ClosureStream::STREAM_PROTO.'://')
             ? collect($throwable->getTrace())->whereNotNull('file')->first()
             : null;
 

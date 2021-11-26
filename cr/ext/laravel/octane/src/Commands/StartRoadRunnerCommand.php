@@ -3,6 +3,7 @@
 namespace Laravel\Octane\Commands;
 
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use Laravel\Octane\RoadRunner\ServerProcessInspector;
 use Laravel\Octane\RoadRunner\ServerStateFile;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
@@ -26,6 +27,7 @@ class StartRoadRunnerCommand extends Command implements SignalableCommandInterfa
                     {--rpc-port= : The RPC port the server should be available on}
                     {--workers=auto : The number of workers that should be available to handle requests}
                     {--max-requests=500 : The number of requests to process before reloading the server}
+                    {--rr-config= : The path to the RoadRunner .rr.yaml file}
                     {--watch : Automatically reload the server when the application is modified}';
 
     /**
@@ -69,22 +71,20 @@ class StartRoadRunnerCommand extends Command implements SignalableCommandInterfa
 
         $this->writeServerStateFile($serverStateFile);
 
-        touch(base_path('.rr.yaml'));
-
         $this->forgetEnvironmentVariables();
 
         $server = tap(new Process(array_filter([
             $roadRunnerBinary,
-            '-c', base_path('.rr.yaml'),
+            '-c', $this->configPath(),
             '-o', 'http.address='.$this->option('host').':'.$this->option('port'),
-            '-o', 'server.command='.(new PhpExecutableFinder)->find().' ./vendor/bin/roadrunner-worker',
+            '-o', 'server.command='.(new PhpExecutableFinder)->find().' '.base_path('vendor/bin/roadrunner-worker'),
             '-o', 'http.pool.num_workers='.$this->workerCount(),
             '-o', 'http.pool.max_jobs='.$this->option('max-requests'),
             '-o', 'rpc.listen=tcp://'.$this->option('host').':'.$this->rpcPort(),
             '-o', 'http.pool.supervisor.exec_ttl='.$this->maxExecutionTime(),
-            '-o', 'http.static.dir=public',
-            '-o', 'http.middleware=static',
-            '-o', app()->environment('local') ? 'logs.mode=production' : 'logs.mode=none',
+            '-o', 'http.static.dir='.base_path('public'),
+            '-o', 'http.middleware='.config('octane.roadrunner.http_middleware', 'static'),
+            '-o', 'logs.mode=production',
             '-o', app()->environment('local') ? 'logs.level=debug' : 'logs.level=warning',
             '-o', 'logs.output=stdout',
             '-o', 'logs.encoding=json',
@@ -133,6 +133,28 @@ class StartRoadRunnerCommand extends Command implements SignalableCommandInterfa
     }
 
     /**
+     * Get the path to the RoadRunner configuration file.
+     *
+     * @return string
+     */
+    protected function configPath()
+    {
+        $path = $this->option('rr-config');
+
+        if (! $path) {
+            touch(base_path('.rr.yaml'));
+
+            return base_path('.rr.yaml');
+        }
+
+        if ($path && ! realpath($path)) {
+            throw new InvalidArgumentException('Unable to locate specified configuration file.');
+        }
+
+        return realpath($path);
+    }
+
+    /**
      * Get the maximum number of seconds that workers should be allowed to execute a single request.
      *
      * @return string
@@ -170,6 +192,10 @@ class StartRoadRunnerCommand extends Command implements SignalableCommandInterfa
 
                 if (is_array($stream = json_decode($debug['msg'], true))) {
                     return $this->handleStream($stream);
+                }
+
+                if ($debug['logger'] == 'server') {
+                    return $this->raw($debug['msg']);
                 }
 
                 if ($debug['level'] == 'debug' && isset($debug['remote'])) {

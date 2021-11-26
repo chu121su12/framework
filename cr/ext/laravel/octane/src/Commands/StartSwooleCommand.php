@@ -66,6 +66,12 @@ class StartSwooleCommand extends Command implements SignalableCommandInterface
             return 1;
         }
 
+        if (config('octane.swoole.ssl', false) === true && ! defined('SWOOLE_SSL')) {
+            $this->error('You must configure Swoole with `--enable-openssl` to support ssl.');
+
+            return 1;
+        }
+
         $this->writeServerStateFile($serverStateFile, $extension);
 
         $this->forgetEnvironmentVariables();
@@ -115,7 +121,6 @@ class StartSwooleCommand extends Command implements SignalableCommandInterface
     protected function defaultServerOptions(SwooleExtension $extension)
     {
         return [
-            'buffer_output_size' => 10 * 1024 * 1024,
             'enable_coroutine' => false,
             'daemonize' => false,
             'log_file' => storage_path('logs/swoole_http.log'),
@@ -178,22 +183,9 @@ class StartSwooleCommand extends Command implements SignalableCommandInterface
             ->filter()
             ->groupBy(function ($output) { return $output; })
             ->each(function ($group) {
-                is_array($stream = json_decode($output = $group->first(), true))
+                is_array($stream = json_decode($output = $group->first(), true)) && isset($stream['type'])
                     ? $this->handleStream($stream)
-                    : $this->error($output);
-
-                if (($count = $group->count()) > 1) {
-                    $this->newLine();
-
-                    $count--;
-
-                    $this->line(sprintf('  <fg=red;options=bold>↑</>   %s %s',
-                        $count,
-                        $count > 1
-                            ? 'similar errors were reported.'
-                            : 'similar error was reported.'
-                    ));
-                }
+                    : $this->raw($output);
             });
     }
 

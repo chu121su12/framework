@@ -3,6 +3,7 @@
 namespace Laravel\Octane\Commands\Concerns;
 
 use Illuminate\Support\Str;
+use Laravel\Octane\RoadRunner\Concerns\FindsRoadRunnerBinary;
 use RuntimeException;
 use Spiral\RoadRunner\Http\PSR7Worker;
 use Symfony\Component\Process\Exception\ProcessSignaledException;
@@ -13,6 +14,8 @@ use Throwable;
 
 trait InstallsRoadRunnerDependencies
 {
+    use FindsRoadRunnerBinary;
+
     /**
      * The minimum required version of the RoadRunner binary.
      *
@@ -95,16 +98,10 @@ trait InstallsRoadRunnerDependencies
      *
      * @return string
      */
-    protected function ensureRoadRunnerBinaryIsInstalled() ////: string
+    protected function ensureRoadRunnerBinaryIsInstalled()/*: string*/
     {
-        if (file_exists(base_path('rr'))) {
-            return base_path('rr');
-        }
-
-        if (! is_null($roadRunnerBinary = (new ExecutableFinder)->find('rr', null, [base_path()]))) {
-            if (! Str::contains($roadRunnerBinary, 'vendor/bin/rr')) {
-                return $roadRunnerBinary;
-            }
+        if (! is_null($roadRunnerBinary = $this->findRoadRunnerBinary())) {
+            return $roadRunnerBinary;
         }
 
         if ($this->confirm('Unable to locate RoadRunner binary. Should Octane download the binary for your operating system?', true)) {
@@ -147,7 +144,7 @@ trait InstallsRoadRunnerDependencies
                     $this->downloadRoadRunnerBinary();
                 } catch (\Exception $e) {
                 } catch (\Error $e) {
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                 }
 
                 if (isset($e)) {

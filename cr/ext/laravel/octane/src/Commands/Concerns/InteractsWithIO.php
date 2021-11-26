@@ -2,6 +2,7 @@
 
 namespace Laravel\Octane\Commands\Concerns;
 
+use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Str;
 use Laravel\Octane\Exceptions\DdException;
 use Laravel\Octane\Exceptions\ServerShutdownException;
@@ -19,10 +20,28 @@ trait InteractsWithIO
      *
      * @var array
      */
-    protected $ignoreErrors = [
+    protected $ignoreMessages = [
+        'scan command',
         'stop signal received, grace timeout is: ',
         'exit forced',
+        'worker constructed',
+        'worker destructed',
     ];
+
+    /**
+     * Write a string as raw output.
+     *
+     * @param  string  $string
+     * @return void
+     */
+    public function raw($string)
+    {
+        if (! Str::startsWith($string, $this->ignoreMessages)) {
+            $this->output instanceof OutputStyle
+                ? fwrite(STDERR, $string."\n")
+                : $this->output->writeln($string);
+        }
+    }
 
     /**
      * Write a string as information output.
@@ -45,9 +64,7 @@ trait InteractsWithIO
      */
     public function error($string, $verbosity = null)
     {
-        if (! Str::contains($string, $this->ignoreErrors)) {
-            $this->label($string, $verbosity, 'ERROR', 'red', 'white');
-        }
+        $this->label($string, $verbosity, 'ERROR', 'red', 'white');
     }
 
     /**
@@ -74,7 +91,7 @@ trait InteractsWithIO
      */
     public function label($string, $verbosity, $level, $background, $foreground)
     {
-        if (! empty($string)) {
+        if (! empty($string) && ! Str::startsWith($string, $this->ignoreMessages)) {
             $this->output->writeln([
                 '',
                 "  <bg=$background;fg=$foreground;options=bold> $level </> $string",
@@ -94,34 +111,37 @@ trait InteractsWithIO
         $terminalWidth = $this->getTerminalWidth();
 
         $url = parse_url($request['url'], PHP_URL_PATH) ?: '/';
-
         $duration = number_format(round($request['duration'], 2), 2, '.', '');
 
-        $method = $request['method'];
+        $memory = isset($request['memory'])
+            ? (number_format($request['memory'] / 1024 / 1204, 2, '.', '').' mb ')
+            : '';
 
+        $method = $request['method'];
         $statusCode = $request['statusCode'];
 
-        $dots = str_repeat('.', max($terminalWidth - strlen($method.$url.$duration) - 16, 0));
+        $dots = str_repeat('.', max($terminalWidth - strlen($method.$url.$duration.$memory) - 16, 0));
 
         if (empty($dots) && ! $this->output->isVerbose()) {
-            $url = substr($url, 0, $terminalWidth - strlen($method.$duration) - 15 - 3).'...';
+            $url = substr($url, 0, $terminalWidth - strlen($method.$duration.$memory) - 15 - 3).'...';
         } else {
             $dots .= ' ';
         }
 
         $this->output->writeln(sprintf(
-           '  <fg=%s;options=bold>%s </>   <fg=cyan;options=bold>%s</> <options=bold>%s</><fg=#6C7280> %s%s ms</>',
+           '  <fg=%s;options=bold>%s </>   <fg=cyan;options=bold>%s</> <options=bold>%s</><fg=#6C7280> %s%s%s ms</>',
             backport_match (true,
                 [$statusCode >= 500, 'red'],
                 [$statusCode >= 400, 'yellow'],
                 [$statusCode >= 300, 'cyan'],
                 [$statusCode >= 100, 'green'],
-                ['default' => null, 'white']
+                ['default', 'white']
             ),
            $statusCode,
            $method,
            $url,
            $dots,
+           $memory,
            $duration
         ), $this->parseVerbosity($verbosity));
     }
@@ -161,7 +181,6 @@ trait InteractsWithIO
                 $number++;
 
                 $line = $trace['line'];
-
                 $file = $trace['file'];
 
                 $this->line("  <fg=yellow>$number</>   $file:$line");
@@ -209,11 +228,11 @@ trait InteractsWithIO
      */
     public function handleStream($stream, $verbosity = null)
     {
-        backport_match ($stream['type'],
+        backport_match (isset($stream['type']) ? $stream['type'] : null,
             ['request', function () use ($stream, $verbosity) { return $this->requestInfo($stream, $verbosity); }],
             ['throwable', function () use ($stream, $verbosity) { return $this->throwableInfo($stream, $verbosity); }],
             ['shutdown', function () use ($stream, $verbosity) { return $this->shutdownInfo($stream, $verbosity); }],
-            ['default' => null, function () use ($stream, $verbosity) { return $this->info(json_encode($stream, $verbosity)); }]
+            ['default', function () use ($stream, $verbosity) { return $this->info(json_encode($stream, $verbosity)); }]
         );
     }
 }

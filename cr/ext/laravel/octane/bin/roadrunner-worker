@@ -1,7 +1,6 @@
 #!/usr/bin/env php
 <?php
 
-use Illuminate\Foundation\Application;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\Diactoros\StreamFactory;
 use Laminas\Diactoros\UploadedFileFactory;
@@ -43,9 +42,9 @@ while ($psr7Request = $psr7Client->waitRequest()) {
         $worker = $worker ?: tap((new Worker(
             new ApplicationFactory($basePath), $roadRunnerClient
         )))->boot();
-    } catch (\Exception $e) {
-    } catch (\Error $e) {
-    } catch (\Throwable $e) {
+    } catch (Exception $e) {
+    } catch (Error $e) {
+    } catch (Throwable $e) {
     }
 
     if (isset($e)) {

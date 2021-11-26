@@ -35,6 +35,7 @@ trait ProvidesDefaultConfigurationOptions
             \Laravel\Octane\Listeners\GiveNewApplicationInstanceToAuthorizationGate::class,
             \Laravel\Octane\Listeners\GiveNewApplicationInstanceToBroadcastManager::class,
             \Laravel\Octane\Listeners\GiveNewApplicationInstanceToDatabaseManager::class,
+            \Laravel\Octane\Listeners\GiveNewApplicationInstanceToDatabaseSessionHandler::class,
             \Laravel\Octane\Listeners\GiveNewApplicationInstanceToHttpKernel::class,
             \Laravel\Octane\Listeners\GiveNewApplicationInstanceToMailManager::class,
             \Laravel\Octane\Listeners\GiveNewApplicationInstanceToNotificationChannelManager::class,
@@ -44,10 +45,14 @@ trait ProvidesDefaultConfigurationOptions
             \Laravel\Octane\Listeners\GiveNewApplicationInstanceToValidationFactory::class,
             \Laravel\Octane\Listeners\GiveNewApplicationInstanceToViewFactory::class,
             \Laravel\Octane\Listeners\FlushDatabaseRecordModificationState::class,
+            \Laravel\Octane\Listeners\FlushDatabaseQueryLog::class,
+            \Laravel\Octane\Listeners\FlushLogContext::class,
             \Laravel\Octane\Listeners\FlushArrayCache::class,
+            \Laravel\Octane\Listeners\FlushTranslatorCache::class,
 
             // First-Party Packages...
             \Laravel\Octane\Listeners\PrepareInertiaForNextOperation::class,
+            \Laravel\Octane\Listeners\PrepareLivewireForNextOperation::class,
             \Laravel\Octane\Listeners\PrepareScoutForNextOperation::class,
             \Laravel\Octane\Listeners\PrepareSocialiteForNextOperation::class,
         ];

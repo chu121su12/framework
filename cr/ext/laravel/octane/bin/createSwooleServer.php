@@ -9,11 +9,13 @@ try {
         isset($serverState['host']) ? $serverState['host'] : '127.0.0.1',
         isset($serverState['port']) ? $serverState['port'] : '8080',
         SWOOLE_PROCESS,
-        SWOOLE_SOCK_TCP
+        (isset($config['swoole']) && isset($config['swoole']['ssl']) ? $config['swoole']['ssl'] : false)
+            ? SWOOLE_SOCK_TCP | SWOOLE_SSL
+            : SWOOLE_SOCK_TCP
     );
-} catch (\Exception $e) {
-} catch (\Error $e) {
-} catch (\Throwable $e) {
+} catch (Exception $e) {
+} catch (Error $e) {
+} catch (Throwable $e) {
 }
 
 if (isset($e)) {

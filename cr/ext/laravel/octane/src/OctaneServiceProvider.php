@@ -112,6 +112,7 @@ class OctaneServiceProvider extends ServiceProvider
         $this->app->singleton(Listeners\EnforceRequestScheme::class);
         $this->app->singleton(Listeners\EnsureRequestServerPortMatchesScheme::class);
         $this->app->singleton(Listeners\EnsureUploadedFilesAreValid::class);
+        $this->app->singleton(Listeners\EnsureUploadedFilesCanBeMoved::class);
         $this->app->singleton(Listeners\FlushAuthenticationState::class);
         $this->app->singleton(Listeners\FlushQueuedCookies::class);
         $this->app->singleton(Listeners\FlushSessionState::class);
@@ -129,6 +130,7 @@ class OctaneServiceProvider extends ServiceProvider
         $this->app->singleton(Listeners\GiveNewRequestInstanceToApplication::class);
         $this->app->singleton(Listeners\GiveNewRequestInstanceToPaginator::class);
         $this->app->singleton(Listeners\PrepareInertiaForNextOperation::class);
+        $this->app->singleton(Listeners\PrepareLivewireForNextOperation::class);
         $this->app->singleton(Listeners\PrepareScoutForNextOperation::class);
         $this->app->singleton(Listeners\PrepareSocialiteForNextOperation::class);
         $this->app->singleton(Listeners\ReportException::class);

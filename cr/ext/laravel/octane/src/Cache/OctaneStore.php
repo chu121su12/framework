@@ -4,8 +4,8 @@ namespace Laravel\Octane\Cache;
 
 use Closure;
 use Illuminate\Contracts\Cache\Store;
-use Illuminate\Queue\SerializableClosure;
 use Illuminate\Support\Carbon;
+use Laravel\SerializableClosure\SerializableClosure;
 use Throwable;
 
 class OctaneStore implements Store
@@ -34,9 +34,9 @@ class OctaneStore implements Store
      */
     public function get($key)
     {
-        $record = isset($this->table[$key]) ? $this->table[$key] : null;
+        $record = $this->table->get($key);
 
-        if (! $this->recordIsNullOrExpired($record)) {
+        if (! $this->recordIsFalseOrExpired($record)) {
             return unserialize($record['value']);
         }
 
@@ -84,12 +84,10 @@ class OctaneStore implements Store
      */
     public function put($key, $value, $seconds)
     {
-        $this->table[$key] = [
+        return $this->table->set($key, [
             'value' => serialize($value),
             'expiration' => Carbon::now()->getTimestamp() + $seconds,
-        ];
-
-        return true;
+        ]);
     }
 
     /**
@@ -117,9 +115,9 @@ class OctaneStore implements Store
      */
     public function increment($key, $value = 1)
     {
-        $record = isset($this->table[$key]) ? $this->table[$key] : null;
+        $record = $this->table->get($key);
 
-        if ($this->recordIsNullOrExpired($record)) {
+        if ($this->recordIsFalseOrExpired($record)) {
             return tap($value, function ($value) use ($key) {
                 return $this->put($key, $value, static::ONE_YEAR);
             });
@@ -200,7 +198,7 @@ class OctaneStore implements Store
                 $this->forever($key, $interval['resolver']());
             } catch (\Exception $e) {
             } catch (\Error $e) {
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
             }
 
             if (isset($e)) {
@@ -229,9 +227,7 @@ class OctaneStore implements Store
      */
     public function forget($key)
     {
-        unset($this->table[$key]);
-
-        return true;
+        return $this->table->del($key);
     }
 
     /**
@@ -258,9 +254,9 @@ class OctaneStore implements Store
      * @param  array|null  $record
      * @return bool
      */
-    protected function recordIsNullOrExpired($record)
+    protected function recordIsFalseOrExpired($record)
     {
-        return is_null($record) || $record['expiration'] <= Carbon::now()->getTimestamp();
+        return $record === false || $record['expiration'] <= Carbon::now()->getTimestamp();
     }
 
     /**

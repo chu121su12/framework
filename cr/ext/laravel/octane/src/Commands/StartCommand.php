@@ -21,6 +21,7 @@ class StartCommand extends Command implements SignalableCommandInterface
                     {--workers=auto : The number of workers that should be available to handle requests}
                     {--task-workers=auto : The number of task workers that should be available to handle tasks}
                     {--max-requests=500 : The number of requests to process before reloading the server}
+                    {--rr-config= : The path to the RoadRunner .rr.yaml file}
                     {--watch : Automatically reload the server when the application is modified}';
 
     /**
@@ -37,13 +38,6 @@ class StartCommand extends Command implements SignalableCommandInterface
      */
     public function handle()
     {
-        if (! app()->environment('local', 'testing')) {
-            $this->warn('Laravel Octane is within a beta period. '
-                .'It should only be used for local development and '
-                .'testing in order to improve the quality of the library '
-                .'and resolve any existing bugs.');
-        }
-
         $server = $this->option('server') ?: config('octane.server');
 
         return backport_match ($server,
@@ -83,6 +77,7 @@ class StartCommand extends Command implements SignalableCommandInterface
             '--rpc-port' => $this->option('rpc-port'),
             '--workers' => $this->option('workers'),
             '--max-requests' => $this->option('max-requests'),
+            '--rr-config' => $this->option('rr-config'),
             '--watch' => $this->option('watch'),
         ]);
     }
