@@ -4,7 +4,7 @@ namespace Laravel\Octane\Commands;
 
 use Symfony\Component\Console\Command\SignalableCommandInterface;
 
-class StartCommand extends Command implements SignalableCommandInterface
+class StartCommand extends Command/* implements SignalableCommandInterface*/
 {
     use Concerns\InteractsWithServers;
 

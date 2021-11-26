@@ -10,7 +10,7 @@ use Symfony\Component\Console\Command\SignalableCommandInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-class StartSwooleCommand extends Command implements SignalableCommandInterface
+class StartSwooleCommand extends Command/* implements SignalableCommandInterface*/
 {
     use Concerns\InteractsWithServers, Concerns\InteractsWithEnvironmentVariables;
 
