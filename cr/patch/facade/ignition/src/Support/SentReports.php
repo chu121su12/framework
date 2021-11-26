@@ -32,7 +32,7 @@ class SentReports
     public function urls()/*: array*/
     {
         return array_map(function (/*string */$trackingUuid) {
-            $link = cast_to_string($link);
+            $trackingUuid = cast_to_string($trackingUuid);
             return "https://flareapp.io/tracked-occurrence/{$trackingUuid}";
         }, $this->uuids());
     }
