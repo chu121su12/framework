@@ -47,9 +47,6 @@
         "vlucas/phpdotenv": "^4.0"
     },
     "replace": {
-        "brick/math": "^0.9.3",
-        "brick/money": "^0.5.3",
-        "calebporzio/sushi": "^2.3.1",
         "facade/flare-client-php": "1.9.1",
         "facade/ignition": "^2.16.1",
         "laravel/serializable-closure": "^1.0.4",
@@ -189,9 +186,6 @@
                 "src/Illuminate/Collections/",
                 "src/Illuminate/Conditionable/"
             ],
-            "Brick\\Math\\": "cr/patch/brick/math/src/",
-            "Brick\\Money\\": "cr/patch/brick/money/src/",
-            "Sushi\\": "cr/patch/sushi/sushi/",
             "Laravel\\Ui\\": "cr/patch/laravel-ui/src/",
             "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/auth-backend/",
             "Facade\\IgnitionContracts\\": "cr/patch/facade/ignition-contracts/src",
