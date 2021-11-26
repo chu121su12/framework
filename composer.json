@@ -9,10 +9,6 @@
         "source": "https://github.com/laravel/framework"
     },
     "authors": [
-        {
-            "name": "Taylor Otwell",
-            "email": "taylor@laravel.com"
-        }
     ],
     "require": {
         "php": ">=5.6.4",
@@ -193,6 +189,7 @@
             "Fruitcake\\Cors\\": "cr/ext/fruitcake/laravel-cors/src/",
             "Illuminate\\": "src/Illuminate/",
             "Laravel\\Octane\\": "cr/ext/laravel/octane/src/",
+            "Laravel\\Sanctum\\": "cr/ext/laravel/sanctum/src/",
             "Laravel\\SerializableClosure\\": "cr/ext/laravel/serializable-closure/src/",
             "Laravel\\Telescope\\": "cr/ext/laravel/telescope/src/",
             "Laravel\\Telescope\\Database\\Factories\\": "cr/ext/laravel/telescope/database/factories/",
@@ -247,6 +244,7 @@
                 "Facade\\Ignition\\IgnitionServiceProvider",
                 "Fruitcake\\Cors\\CorsServiceProvider",
                 "Laravel\\Octane\\OctaneServiceProvider",
+                "Laravel\\Sanctum\\SanctumServiceProvider",
                 "Laravel\\Telescope\\TelescopeServiceProvider",
                 "Laravel\\Tinker\\TinkerServiceProvider",
                 "NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider"

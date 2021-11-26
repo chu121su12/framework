@@ -106,7 +106,7 @@ class Guard
      * @param  mixed  $accessToken
      * @return bool
      */
-    protected function isValidAccessToken($accessToken): bool
+    protected function isValidAccessToken($accessToken)/*: bool*/
     {
         if (! $accessToken) {
             return false;
@@ -117,7 +117,8 @@ class Guard
             && $this->hasValidProvider($accessToken->tokenable);
 
         if (is_callable(Sanctum::$accessTokenAuthenticationCallback)) {
-            $isValid = (bool) (Sanctum::$accessTokenAuthenticationCallback)($accessToken, $isValid);
+            $callback = Sanctum::$accessTokenAuthenticationCallback;
+            $isValid = (bool) $callback($accessToken, $isValid);
         }
 
         return $isValid;
