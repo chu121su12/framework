@@ -24,6 +24,7 @@
         "dragonmantank/cron-expression": "^1.2.1",
         "egulias/email-validator": "^2.1.10",
         "ircmaxell/password-compat": "~1.0",
+        "laminas/laminas-diactoros": "^1.8",
         "league/commonmark": "^0.18.5",
         "league/commonmark-ext-table": "^0.9.0",
         "monolog/monolog": "^1.25",
@@ -42,6 +43,7 @@
         "symfony/http-kernel": "^3.4",
         "symfony/intl": "~2.3|~3.0|~4.0|~5.0",
         "symfony/process": "^3.4",
+        "symfony/psr-http-message-bridge": "^1.1",
         "symfony/translation": "^3.4",
         "symfony/var-dumper": "^3.4",
         "tijsverkoyen/css-to-inline-styles": "^2.2.2",
@@ -50,7 +52,9 @@
     "replace": {
         "facade/flare-client-php": "1.9.1",
         "facade/ignition": "^2.16.1",
+        "laravel/octane": "^1.0.0",
         "laravel/serializable-closure": "^1.0.4",
+        "laravel/telescope": "^4.4.9",
         "laravel/tinker": "^2.6.2",
         "league/flysystem": "^1.0.70",
         "nesbot/carbon": "^2.54.0",
@@ -140,7 +144,9 @@
         "tightenco/collect": "<5.5.33"
     },
     "bin": [
-        "cr/ext/carbon/carbon/bin/carbon"
+        "cr/ext/carbon/carbon/bin/carbon",
+        "cr/ext/laravel/octane/bin/roadrunner-worker",
+        "cr/ext/laravel/octane/bin/swoole-server"
     ],
     "autoload": {
         "files": [
@@ -191,7 +197,10 @@
                 "src/Illuminate/Collections/",
                 "src/Illuminate/Conditionable/"
             ],
+            "Laravel\\Octane\\": "cr/ext/laravel/octane/src/",
             "Laravel\\Tinker\\": "cr/ext/laravel/tinker/src/",
+            "Laravel\\Telescope\\": "cr/ext/laravel/telescope/src/",
+            "Laravel\\Telescope\\Database\\Factories\\": "cr/ext/laravel/telescope/database/factories/",
             "Facade\\IgnitionContracts\\": "cr/ext/facade/ignition-contracts/src",
             "Facade\\Ignition\\": "cr/ext/facade/ignition/src",
             "Facade\\FlareClient\\": "cr/ext/facade/flare-client-php/src",
@@ -231,10 +240,13 @@
                 "Carbon\\Laravel\\ServiceProvider",
                 "Facade\\Ignition\\IgnitionServiceProvider",
                 "NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider",
-                "Laravel\\Tinker\\TinkerServiceProvider"
+                "Laravel\\Octane\\OctaneServiceProvider",
+                "Laravel\\Tinker\\TinkerServiceProvider",
+                "Laravel\\Telescope\\TelescopeServiceProvider"
             ],
             "aliases": {
-                "Flare": "Facade\\Ignition\\Facades\\Flare"
+                "Flare": "Facade\\Ignition\\Facades\\Flare",
+                "Octane": "Laravel\\Octane\\Facades\\Octane"
             }
         }
     },
