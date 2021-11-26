@@ -50,11 +50,13 @@
         "vlucas/phpdotenv": "^4.0"
     },
     "replace": {
+        "asm89/stack-cors": "^2.0.2",
         "facade/flare-client-php": "1.9.1",
         "facade/ignition": "^2.16.1",
-        "laravel/octane": "^1.0.0",
+        "fruitcake/laravel-cors": "^2.0.4",
+        "laravel/octane": "^1.0.20",
         "laravel/serializable-closure": "^1.0.4",
-        "laravel/telescope": "^4.4.9",
+        "laravel/telescope": "^4.6.7",
         "laravel/tinker": "^2.6.2",
         "league/flysystem": "^1.0.70",
         "nesbot/carbon": "^2.54.0",
@@ -181,30 +183,33 @@
             "Laravel\\Ui\\": "cr/patch/laravel-ui/src/",
             "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/auth-backend/",
 
-            "Symfony\\Polyfill\\": "cr/ext/symfony/polyfill/src/",
+            "Asm89\\Stack\\": "cr/ext/asm89/stack-cors/src/",
+            "Carbon\\": "cr/ext/carbon/carbon/src/",
+            "Doctrine\\": "cr/patch/doctrine/doctrine/",
+            "Facade\\FlareClient\\": "cr/ext/facade/flare-client-php/src",
+            "Facade\\Ignition\\": "cr/ext/facade/ignition/src",
+            "Facade\\IgnitionContracts\\": "cr/ext/facade/ignition-contracts/src",
+            "Fruitcake\\Cors\\": "cr/ext/fruitcake/laravel-cors/src/",
+            "Illuminate\\": "src/Illuminate/",
+            "Laravel\\Octane\\": "cr/ext/laravel/octane/src/",
+            "Laravel\\SerializableClosure\\": "cr/ext/laravel/serializable-closure/src/",
+            "Laravel\\Telescope\\": "cr/ext/laravel/telescope/src/",
+            "Laravel\\Telescope\\Database\\Factories\\": "cr/ext/laravel/telescope/database/factories/",
+            "Laravel\\Tinker\\": "cr/ext/laravel/tinker/src/",
+            "League\\Flysystem\\": "cr/ext/league/flysystem/src/",
+            "NunoMaduro\\Collision\\": "cr/ext/nunomaduro/collision/src/",
             "Symfony\\Component\\ErrorHandler\\": "cr/ext/symfony/error-handler/",
             "Symfony\\Component\\HttpFoundation\\": "cr/patch/symfony/http-foundation/",
             "Symfony\\Component\\Mime\\": "cr/ext/symfony/mime/",
             "Symfony\\Component\\Routing\\": "cr/ext/symfony/routing/",
-            "League\\Flysystem\\": "cr/ext/league/flysystem/src/",
+            "Symfony\\Polyfill\\": "cr/ext/symfony/polyfill/src/",
             "voku\\": "cr/ext/voku/portable-ascii/src/voku/",
-            "Carbon\\": "cr/ext/carbon/carbon/src/",
-            "Doctrine\\": "cr/patch/doctrine/doctrine/",
-            "Laravel\\SerializableClosure\\": "cr/ext/laravel/serializable-closure/src/",
-            "Illuminate\\": "src/Illuminate/",
+
             "Illuminate\\Support\\": [
                 "src/Illuminate/Macroable/",
                 "src/Illuminate/Collections/",
                 "src/Illuminate/Conditionable/"
             ],
-            "Laravel\\Octane\\": "cr/ext/laravel/octane/src/",
-            "Laravel\\Tinker\\": "cr/ext/laravel/tinker/src/",
-            "Laravel\\Telescope\\": "cr/ext/laravel/telescope/src/",
-            "Laravel\\Telescope\\Database\\Factories\\": "cr/ext/laravel/telescope/database/factories/",
-            "Facade\\IgnitionContracts\\": "cr/ext/facade/ignition-contracts/src",
-            "Facade\\Ignition\\": "cr/ext/facade/ignition/src",
-            "Facade\\FlareClient\\": "cr/ext/facade/flare-client-php/src",
-            "NunoMaduro\\Collision\\": "cr/ext/nunomaduro/collision/src/",
             "CR\\LaravelBackport\\": "cr/patch/laravel-backport/"
         },
         "classmap": [
@@ -239,10 +244,11 @@
             "providers": [
                 "Carbon\\Laravel\\ServiceProvider",
                 "Facade\\Ignition\\IgnitionServiceProvider",
-                "NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider",
+                "Fruitcake\\Cors\\CorsServiceProvider",
                 "Laravel\\Octane\\OctaneServiceProvider",
+                "Laravel\\Telescope\\TelescopeServiceProvider",
                 "Laravel\\Tinker\\TinkerServiceProvider",
-                "Laravel\\Telescope\\TelescopeServiceProvider"
+                "NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider"
             ],
             "aliases": {
                 "Flare": "Facade\\Ignition\\Facades\\Flare",
