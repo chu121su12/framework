@@ -59,7 +59,7 @@ class SwooleHttpTaskDispatcher implements DispatchesTasks
             return backport_match ($response->status(),
                 [200, function () use ($response) { return unserialize($response); }],
                 [504, function () use ($waitMilliseconds) { throw TaskTimeoutException::after($waitMilliseconds); }],
-                ['default' => null, function () { throw TaskExceptionResult::from(
+                [__BACKPORT_MATCH_DEFAULT_CASE__, function () { throw TaskExceptionResult::from(
                     new Exception('Invalid response from task server.')
                 )->getOriginal(); }]
             );

@@ -134,9 +134,9 @@
         "tightenco/collect": "<5.5.33"
     },
     "bin": [
-        "cr/ext/carbon/carbon/bin/carbon",
         "cr/ext/laravel/octane/bin/roadrunner-worker",
-        "cr/ext/laravel/octane/bin/swoole-server"
+        "cr/ext/laravel/octane/bin/swoole-server",
+        "cr/ext/nesbot/carbon/bin/carbon"
     ],
     "autoload": {
         "files": [
@@ -173,7 +173,7 @@
             "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/auth-backend/",
 
             "Asm89\\Stack\\": "cr/ext/asm89/stack-cors/src/",
-            "Carbon\\": "cr/ext/carbon/carbon/src/",
+            "Carbon\\": "cr/ext/nesbot/carbon/src/",
             "Doctrine\\": "cr/patch/doctrine/doctrine/",
             "Facade\\FlareClient\\": "cr/ext/facade/flare-client-php/src",
             "Facade\\Ignition\\": "cr/ext/facade/ignition/src",

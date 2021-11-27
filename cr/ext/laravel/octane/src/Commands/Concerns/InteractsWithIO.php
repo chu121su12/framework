@@ -135,7 +135,7 @@ trait InteractsWithIO
                 [$statusCode >= 400, 'yellow'],
                 [$statusCode >= 300, 'cyan'],
                 [$statusCode >= 100, 'green'],
-                ['default', 'white']
+                [__BACKPORT_MATCH_DEFAULT_CASE__, 'white']
             ),
            $statusCode,
            $method,
@@ -232,7 +232,7 @@ trait InteractsWithIO
             ['request', function () use ($stream, $verbosity) { return $this->requestInfo($stream, $verbosity); }],
             ['throwable', function () use ($stream, $verbosity) { return $this->throwableInfo($stream, $verbosity); }],
             ['shutdown', function () use ($stream, $verbosity) { return $this->shutdownInfo($stream, $verbosity); }],
-            ['default', function () use ($stream, $verbosity) { return $this->info(json_encode($stream, $verbosity)); }]
+            [__BACKPORT_MATCH_DEFAULT_CASE__, function () use ($stream, $verbosity) { return $this->info(json_encode($stream, $verbosity)); }]
         );
     }
 }

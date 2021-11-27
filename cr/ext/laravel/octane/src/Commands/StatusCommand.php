@@ -33,7 +33,7 @@ class StatusCommand extends Command
         $isRunning = backport_match ($server,
             ['swoole', function () { return $this->isSwooleServerRunning(); }],
             ['roadrunner', function () { return $this->isRoadRunnerServerRunning(); }],
-            ['default' => null, function () use ($server) { return $this->invalidServer($server); }]
+            [__BACKPORT_MATCH_DEFAULT_CASE__, function () use ($server) { return $this->invalidServer($server); }]
         );
 
         return ! tap($isRunning, function ($isRunning) {

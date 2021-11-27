@@ -49,7 +49,7 @@ trait ProvidesConcurrencySupport
                     new SequentialTaskDispatcher
                 );
             }],
-            ['default' => null, function () { return new SequentialTaskDispatcher; }]
+            [__BACKPORT_MATCH_DEFAULT_CASE__, function () { return new SequentialTaskDispatcher; }]
         );
     }
 }

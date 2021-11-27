@@ -8,6 +8,8 @@ if (! \function_exists('backport_instanceof_throwable')) {
 }
 
 if (! \function_exists('backport_match')) {
+    define('__BACKPORT_MATCH_DEFAULT_CASE__', '__BACKPORT_MATCH_DEFAULT_CASE__');
+
     function backport_match($matchValue, ...$matchArms)
     {
         $matchValue = value($matchValue);
@@ -18,7 +20,7 @@ if (! \function_exists('backport_match')) {
             $expression = \array_pop($arms);
 
             foreach ($arms as $key => $arm) {
-                if ($key === 'default' && $arm === null) {
+                if ($key === __BACKPORT_MATCH_DEFAULT_CASE__ && $arm === null) {
                     if ($hasDefault) {
                         \trigger_error('Fatal error', \E_USER_ERROR);
                         throw new \Exception('Fatal error');
@@ -43,8 +45,8 @@ if (! \function_exists('backport_json_decode')) {
     function backport_json_decode($json, $assoc = false, $depth = 512, $options = 0)
     {
         // https://www.php.net/manual/en/function.json-decode 7.0.0 changes
-        if ((string) $json === '') {
-            return \json_decode('-');
+        if (\version_compare(\PHP_VERSION, '7.0', '<') && (string) $json === '') {
+            return \json_decode('-', $assoc, $depth, $options);
         }
 
         return \json_decode($json, $assoc, $depth, $options);
@@ -67,7 +69,7 @@ if (! \function_exists('backport_json_decode_throw')) {
 if (! \function_exists('backport_substr_count')) {
     function backport_substr_count($haystack, $needle, $offset = 0, $length = null)
     {
-        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
+        if (\version_compare(\PHP_VERSION, '7.1', '<')) {
             if ($offset < 0) {
                 $offset = -$offset - 1;
                 $haystack = \strrev($haystack);
@@ -96,7 +98,7 @@ if (! \function_exists('backport_substr_count')) {
 if (! \function_exists('backport_bcmod')) {
     function backport_bcmod($dividend, $divisor, $scale)
     {
-        if (\version_compare(\PHP_VERSION, '7.2.0', '<') && (new \ReflectionFunction('bcmod'))->getNumberOfParameters() === 2) {
+        if (\version_compare(\PHP_VERSION, '7.2', '<') && (new \ReflectionFunction('bcmod'))->getNumberOfParameters() === 2) {
             $currentScale = \strlen(\bcsqrt('2')) - 2;
             \bcscale($scale);
             $modulo = \bcsub($dividend, \bcmul(\bcdiv($dividend, $divisor, 0), $divisor));
@@ -127,8 +129,8 @@ if (! \function_exists('backport_spaceship_operator')) {
 if (! \function_exists('backport_string_offset')) {
     function backport_string_offset($string, $offset) // ex: $string[-1]
     {
-        if ($offset >= 0) {
-            return $string[0];
+        if ($offset >= 0 || \version_compare(\PHP_VERSION, '7.1', '>=')) {
+            return $string[$offset];
         }
 
         return \substr($string, $offset, 1);
@@ -138,7 +140,7 @@ if (! \function_exists('backport_string_offset')) {
 if (! \function_exists('backport_reflection_type_cast_string')) {
     function backport_reflection_type_cast_string(\ReflectionType $type)
     {
-        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
+        if (\version_compare(\PHP_VERSION, '7.1', '<')) {
             return (string) $type;
         }
 
@@ -242,22 +244,22 @@ if (! \function_exists('backport_reflection_parameter_first_classable')) {
 if (! \function_exists('backport_closure_from_callable')) {
     /* Example use:
 
-        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
-            return backport_closure_from_callable($this, [$this, $methodName]);
+        if (version_compare(PHP_VERSION, '7.1', '<')) {
+            return backport_closure_from_callable([$this, $methodName]);
         } else {
             return Closure::fromCallable([$this, $methodName]);
         }
 
-        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
-            return backport_closure_from_callable(new static, function () {});
+        if (\version_compare(\PHP_VERSION, '7.1', '<')) {
+            return backport_closure_from_callable(function () {});
         } else {
             return Closure::fromCallable(function () {});
         }
     */
 
-    function backport_closure_from_callable($callable, $callingThis = null)
+    function backport_closure_from_callable($callable)
     {
-        if (\version_compare(\PHP_VERSION, '7.1.0', '>=')) {
+        if (\version_compare(\PHP_VERSION, '7.1', '>=')) {
             return \Closure::fromCallable($callable);
         }
 

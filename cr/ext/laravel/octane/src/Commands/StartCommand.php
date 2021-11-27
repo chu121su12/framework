@@ -43,7 +43,7 @@ class StartCommand extends Command/* implements SignalableCommandInterface*/
         return backport_match ($server,
             ['swoole', function () { return $this->startSwooleServer(); }],
             ['roadrunner', function () { return $this->startRoadRunnerServer(); }],
-            ['default' => null, function () use ($server) { return $this->invalidServer($server); }]
+            [__BACKPORT_MATCH_DEFAULT_CASE__, function () use ($server) { return $this->invalidServer($server); }]
         );
     }
 
