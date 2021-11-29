@@ -129,8 +129,10 @@ class HandleCors
      * @param string $host
      * @return array
      */
-    protected function getPathsByHost(string $host)
+    protected function getPathsByHost(/*string */$host)
     {
+        $host = cast_to_string($host);
+
         $paths = $this->container['config']->get('cors.paths', []);
         // If where are paths by given host
         if (isset($paths[$host])) {
