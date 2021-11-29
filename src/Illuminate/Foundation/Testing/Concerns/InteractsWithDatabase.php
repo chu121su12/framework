@@ -71,25 +71,6 @@ trait InteractsWithDatabase
     }
 
     /**
-     * Assert the given record has been deleted.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model|string  $table
-     * @param  array  $data
-     * @param  string|null  $connection
-     * @return $this
-     */
-    protected function assertDeleted($table, array $data = [], $connection = null)
-    {
-        if ($table instanceof Model) {
-            return $this->assertDatabaseMissing($table->getTable(), [$table->getKeyName() => $table->getKey()], $table->getConnectionName());
-        }
-
-        $this->assertDatabaseMissing($this->getTable($table), $data, $connection);
-
-        return $this;
-    }
-
-    /**
      * Assert the given record has been "soft deleted".
      *
      * @param  \Illuminate\Database\Eloquent\Model|string  $table
@@ -101,7 +82,12 @@ trait InteractsWithDatabase
     protected function assertSoftDeleted($table, array $data = [], $connection = null, $deletedAtColumn = 'deleted_at')
     {
         if ($this->isSoftDeletableModel($table)) {
-            return $this->assertSoftDeleted($table->getTable(), [$table->getKeyName() => $table->getKey()], $table->getConnectionName(), $table->getDeletedAtColumn());
+            return $this->assertSoftDeleted(
+                $table->getTable(),
+                array_merge($data, [$table->getKeyName() => $table->getKey()]),
+                $table->getConnectionName(),
+                $table->getDeletedAtColumn()
+            );
         }
 
         $this->assertThat(
@@ -123,7 +109,12 @@ trait InteractsWithDatabase
     protected function assertNotSoftDeleted($table, array $data = [], $connection = null, $deletedAtColumn = 'deleted_at')
     {
         if ($this->isSoftDeletableModel($table)) {
-            return $this->assertNotSoftDeleted($table->getTable(), [$table->getKeyName() => $table->getKey()], $table->getConnectionName(), $table->getDeletedAtColumn());
+            return $this->assertNotSoftDeleted(
+                $table->getTable(),
+                array_merge($data, [$table->getKeyName() => $table->getKey()]),
+                $table->getConnectionName(),
+                $table->getDeletedAtColumn()
+            );
         }
 
         $this->assertThat(

@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Log\LogManager;
+use Monolog\Handler\NullHandler;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\ErrorHandler\Error\FatalError;
 use Throwable;
@@ -112,11 +113,32 @@ class HandleExceptions
                 return;
             }
 
+            $this->ensureNullLogDriverIsConfigured();
+
             $loggingDeprecationsDriver = $config->get('logging.deprecations');
 
             $driver = isset($loggingDeprecationsDriver) ? $loggingDeprecationsDriver : 'null';
 
             $config->set('logging.channels.deprecations', $config->get("logging.channels.{$driver}"));
+        });
+    }
+
+    /**
+     * Ensure the "null" log driver is configured.
+     *
+     * @return void
+     */
+    protected function ensureNullLogDriverIsConfigured()
+    {
+        with($this->app['config'], function ($config) {
+            if ($config->get('logging.channels.null')) {
+                return;
+            }
+
+            $config->set('logging.channels.null', [
+                'driver' => 'monolog',
+                'handler' => NullHandler::class,
+            ]);
         });
     }
 
