@@ -38,7 +38,7 @@ class ForgotPasswordTest extends TestCase
     {
         Notification::fake();
 
-        UserFactory::new()->create();
+        UserFactory::new_()->create();
 
         $user = AuthenticationTestUser::first();
 
@@ -62,11 +62,11 @@ class ForgotPasswordTest extends TestCase
     {
         Notification::fake();
 
-        ResetPassword::createUrlUsing(function ($user, string $token) {
+        ResetPassword::createUrlUsing(function ($user, /*string */$token) {
             return route('custom.password.reset', $token);
         });
 
-        UserFactory::new()->create();
+        UserFactory::new_()->create();
 
         $user = AuthenticationTestUser::first();
 
@@ -98,7 +98,7 @@ class ForgotPasswordTest extends TestCase
                 ->line(__('If you did not request a password reset, no further action is required.'));
         });
 
-        UserFactory::new()->create();
+        UserFactory::new_()->create();
 
         $user = AuthenticationTestUser::first();
 
