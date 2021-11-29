@@ -28,8 +28,10 @@ class NewAccessToken implements Arrayable, Jsonable
      * @param  string  $plainTextToken
      * @return void
      */
-    public function __construct(PersonalAccessToken $accessToken, string $plainTextToken)
+    public function __construct(PersonalAccessToken $accessToken, /*string */$plainTextToken)
     {
+        $plainTextToken = cast_to_string($plainTextToken);
+
         $this->accessToken = $accessToken;
         $this->plainTextToken = $plainTextToken;
     }

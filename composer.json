@@ -5,7 +5,7 @@
     "license": "MIT",
     "homepage": "https://laravel.com",
     "require": {
-        "php": ">=5.6.40",
+        "php": ">=5.6",
         "ext-fileinfo": "*",
         "ext-json": "*",
         "ext-mbstring": "*",

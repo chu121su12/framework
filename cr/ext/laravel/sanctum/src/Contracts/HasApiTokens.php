@@ -17,7 +17,7 @@ interface HasApiTokens
      * @param  string  $ability
      * @return bool
      */
-    public function tokenCan(string $ability);
+    public function tokenCan(/*string */$ability);
 
     /**
      * Create a new personal access token for the user.
@@ -26,7 +26,7 @@ interface HasApiTokens
      * @param  array  $abilities
      * @return \Laravel\Sanctum\NewAccessToken
      */
-    public function createToken(string $name, array $abilities = ['*']);
+    public function createToken(/*string */$name, array $abilities = ['*']);
 
     /**
      * Get the access token currently associated with the user.
