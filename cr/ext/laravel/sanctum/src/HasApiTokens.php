@@ -29,8 +29,10 @@ trait HasApiTokens
      * @param  string  $ability
      * @return bool
      */
-    public function tokenCan(string $ability)
+    public function tokenCan(/*string */$ability)
     {
+        $ability = cast_to_string($ability);
+
         return $this->accessToken && $this->accessToken->can($ability);
     }
 
@@ -41,8 +43,10 @@ trait HasApiTokens
      * @param  array  $abilities
      * @return \Laravel\Sanctum\NewAccessToken
      */
-    public function createToken(string $name, array $abilities = ['*'])
+    public function createToken(/*string */$name, array $abilities = ['*'])
     {
+        $name = cast_to_string($name);
+
         $token = $this->tokens()->create([
             'name' => $name,
             'token' => hash('sha256', $plainTextToken = Str::random(40)),
