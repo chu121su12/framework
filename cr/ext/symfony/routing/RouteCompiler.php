@@ -159,7 +159,7 @@ class RouteCompiler implements RouteCompilerInterface
 
             if ($isSeparator && $precedingText !== $precedingChar) {
                 $tokens[] = ['text', substr($precedingText, 0, -\strlen($precedingChar))];
-            } elseif (!$isSeparator && \strlen($precedingText) > 0) {
+            } elseif (!$isSeparator && '' !== $precedingText) {
                 $tokens[] = ['text', $precedingText];
             }
 
@@ -300,8 +300,6 @@ class RouteCompiler implements RouteCompilerInterface
      * @param array $tokens        The route tokens
      * @param int   $index         The index of the current token
      * @param int   $firstOptional The index of the first optional token
-     *
-     * @return string The regexp pattern for a single token
      */
     private static function computeRegexp(array $tokens, $index, $firstOptional) //// string
     {

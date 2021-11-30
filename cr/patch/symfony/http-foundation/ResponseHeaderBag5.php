@@ -7,11 +7,17 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class ResponseHeaderBag5 extends ResponseHeaderBag
 {
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(array $headers = [])
     {
         parent::__construct($headers);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function makeDisposition(/*string */$disposition, /*string */$filename, /*string */$filenameFallback = '')
     {
         $disposition = cast_to_string($disposition);

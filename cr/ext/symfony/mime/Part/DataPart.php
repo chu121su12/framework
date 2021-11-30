@@ -20,6 +20,9 @@ use Symfony\Component\Mime\MimeTypes;
  */
 class DataPart extends TextPart
 {
+    /** @internal */
+    protected $_parent;
+
     private static $mimeTypes;
 
     private $filename;
@@ -37,6 +40,8 @@ class DataPart extends TextPart
         $contentType = cast_to_string($contentType, null);
 
         $filename = cast_to_string($filename, null);
+
+        unset($this->_parent);
 
         if (null === $contentType) {
             $contentType = 'application/octet-stream';

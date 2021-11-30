@@ -23,6 +23,9 @@ use Symfony\Component\Mime\Header\Headers;
  */
 class TextPart extends AbstractPart
 {
+    /** @internal */
+    protected $_headers;
+
     private static $encoders = [];
 
     private $body;
@@ -46,6 +49,8 @@ class TextPart extends AbstractPart
         $charset = cast_to_string($charset, null);
 
         $subtype = cast_to_string($subtype, null);
+
+        unset($this->_headers);
 
         parent::__construct();
 

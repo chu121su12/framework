@@ -580,6 +580,10 @@ class Email extends Message
         return $this;
     }
 
+    /**
+     *
+     * @return $this
+     */
     private function setListAddressHeaderBody($name, array $addresses)
     {
         $name = cast_to_string($name);

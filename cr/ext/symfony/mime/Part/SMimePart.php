@@ -18,6 +18,9 @@ use Symfony\Component\Mime\Header\Headers;
  */
 class SMimePart extends AbstractPart
 {
+    /** @internal */
+    protected $_headers;
+
     private $body;
     private $type;
     private $subtype;
@@ -31,6 +34,8 @@ class SMimePart extends AbstractPart
         $subtype = cast_to_string($subtype);
 
         $type = cast_to_string($type);
+
+        unset($this->_headers);
 
         parent::__construct();
 
