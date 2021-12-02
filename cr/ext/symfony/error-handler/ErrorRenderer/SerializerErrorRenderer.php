@@ -46,18 +46,17 @@ class SerializerErrorRenderer implements ErrorRendererInterface
 
         $this->serializer = $serializer;
         $this->format = $format;
-        $this->fallbackErrorRenderer = isset($fallbackErrorRenderer) ? $fallbackErrorRenderer : new HtmlErrorRenderer();
+        $this->fallbackErrorRenderer = $fallbackErrorRenderer ?? new HtmlErrorRenderer();
         $this->debug = $debug;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function render($exception) // FlattenException
+    public function render(\Throwable $exception): FlattenException
     {
         $headers = [];
-        $thisDebug = $this->debug;
-        $debug = \is_bool($thisDebug) ? $thisDebug : $thisDebug($exception);
+        $debug = \is_bool($this->debug) ? $this->debug : ($this->debug)($exception);
         if ($debug) {
             $headers['X-Debug-Exception'] = rawurlencode($exception->getMessage());
             $headers['X-Debug-Exception-File'] = rawurlencode($exception->getFile()).':'.$exception->getLine();
@@ -66,11 +65,9 @@ class SerializerErrorRenderer implements ErrorRendererInterface
         $flattenException = FlattenException::createFromThrowable($exception, null, $headers);
 
         try {
-            $thisFormat = $this->format;
-            $format = \is_string($thisFormat) ? $thisFormat : $thisFormat($flattenException);
-            $requestFormat = Request::getMimeTypes($format);
+            $format = \is_string($this->format) ? $this->format : ($this->format)($flattenException);
             $headers = [
-                'Content-Type' => isset($requestFormat[0]) ? $requestFormat[0] : $format,
+                'Content-Type' => Request::getMimeTypes($format)[0] ?? $format,
                 'Vary' => 'Accept',
             ];
 
@@ -84,7 +81,7 @@ class SerializerErrorRenderer implements ErrorRendererInterface
         }
     }
 
-    public static function getPreferredFormat(RequestStack $requestStack) // \Closure
+    public static function getPreferredFormat(RequestStack $requestStack): \Closure
     {
         return static function () use ($requestStack) {
             if (!$request = $requestStack->getCurrentRequest()) {

@@ -23,5 +23,5 @@ interface ErrorRendererInterface
     /**
      * Renders a Throwable as a FlattenException.
      */
-    public function render($exception); // FlattenException
+    public function render(\Throwable $exception): FlattenException;
 }

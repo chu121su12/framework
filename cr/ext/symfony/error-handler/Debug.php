@@ -18,7 +18,7 @@ namespace Symfony\Component\ErrorHandler;
  */
 class Debug
 {
-    public static function enable() // ErrorHandler
+    public static function enable(): ErrorHandler
     {
         error_reporting(-1);
 
