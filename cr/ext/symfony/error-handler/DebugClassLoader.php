@@ -562,7 +562,7 @@ class DebugClassLoader
                 $this->patchReturnTypeWillChange($method);
             }
 
-            if (null !== ($returnType ?? $returnType = self::MAGIC_METHODS[$method->name] ?? null) && !$method->hasReturnType() && !isset($doc['return'])) {
+            if (null !== (isset($returnType) ? $returnType : ($returnType = (isset(self::MAGIC_METHODS[$method->name]) ? self::MAGIC_METHODS[$method->name] : null))) && !$method->hasReturnType() && !isset($doc['return'])) {
                 list($normalizedType, $returnType, $declaringClass, $declaringFile) = \is_string($returnType) ? [$returnType, $returnType, '', ''] : $returnType;
 
                 if ($canAddReturnType && 'docblock' !== $this->patchTypes['force']) {
@@ -795,7 +795,8 @@ class DebugClassLoader
         $typesMap = [];
         $glue = false !== strpos($types, '&') ? '&' : '|';
         foreach (explode($glue, $types) as $t) {
-            $t = self::SPECIAL_RETURN_TYPES[strtolower($t)] ?? $t;
+            $lowerT = strtolower($t);
+            $t = isset(self::SPECIAL_RETURN_TYPES[$lowerT]) ? self::SPECIAL_RETURN_TYPES[$lowerT] : $t;
             $typesMap[$this->normalizeType($t, $class, $parent, $returnType)][$t] = $t;
         }
 
