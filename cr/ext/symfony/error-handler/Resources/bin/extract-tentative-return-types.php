@@ -53,7 +53,7 @@ while (false !== $file = fgets(STDIN)) {
         continue;
     }
 
-    for ($i = 1; null !== $class = $code[$i] ?? null; $i += 2) {
+    for ($i = 1; null !== $class = (isset($code[$i]) ? $code[$i] : null); $i += 2) {
         $methods = $code[1 + $i];
 
         if (!str_contains($methods, '@tentative-return-type')) {

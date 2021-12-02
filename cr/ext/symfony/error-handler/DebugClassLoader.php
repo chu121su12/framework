@@ -974,10 +974,10 @@ class DebugClassLoader
                 continue;
             }
 
-            [$namespace, $useOffset, $useMap] = $useStatements[$file] ?? $useStatements[$file] = self::getUseStatements($file);
+            [$namespace, $useOffset, $useMap] = (isset($useStatements[$file]) ? $useStatements[$file] : ($useStatements[$file] = self::getUseStatements($file)));
 
             if ('\\' !== $type[0]) {
-                [$declaringNamespace, , $declaringUseMap] = $useStatements[$declaringFile] ?? $useStatements[$declaringFile] = self::getUseStatements($declaringFile);
+                [$declaringNamespace, , $declaringUseMap] = (isset($useStatements[$declaringFile]) ? $useStatements[$declaringFile] : ($useStatements[$declaringFile] = self::getUseStatements($declaringFile)));
 
                 $p = strpos($type, '\\', 1);
                 $alias = $p ? substr($type, 0, $p) : $type;
@@ -1187,13 +1187,13 @@ EOTXT;
             $returnType = '';
             $static = 'static' === $parts[0];
 
-            for ($i = $static ? 2 : 0; null !== $p = $parts[$i] ?? null; $i += 2) {
+            for ($i = ($static ? 2 : 0); null !== ($p = (isset($parts[$i]) ? $parts[$i] : null)); $i += 2) {
                 if (\in_array($p, ['', '|', '&', 'callable'], true) || \in_array(substr($returnType, -1), ['|', '&'], true)) {
                     $returnType .= trim(isset($parts[$i - 1]) ? $parts[$i - 1] : '').$p;
                     continue;
                 }
 
-                $signature = '(' === ($parts[$i + 1][0] ?? '(') ? $parts[$i + 1] ?? '()' : null;
+                $signature = '(' === ($parts[$i + 1][0] ?? '(') ? (isset($parts[$i + 1]) ? $parts[$i + 1] : '()') : null;
 
                 if (null === $signature && '' === $returnType) {
                     $returnType = $p;
