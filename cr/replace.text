@@ -34,3 +34,16 @@ $1list($2)$3
 
 (\n\s+)(private|protected|public)( const\b)
 $1/*$2*/$3
+
+   1     2   3                             4   5             6    7     8    9
+\n( {4})( *)(.*?function[^\(]+.*?[\(,]\s*)(\?)(\\?Throwable)(\s+)(&?\$)(\w+)(\s*[^\{]+?\{)
+\n$1$2$3/*$4$5$6*/$7$8 = null$9\n$1$2$1backport_type_throwable(\$$8, null);\n
+
+   1     2   3                             4             5    6     7    8
+\n( {4})( *)(.*?function[^\(]+.*?[\(,]\s*)(\\?Throwable)(\s+)(&?\$)(\w+)(\s*=\s*null\b[^\{]+?\{)
+\n$1$2$3/*$4$5*/$6$7$8\n$1$2$1backport_type_throwable(\$$7, null);\n
+
+   1     2   3                             4             5    6     7    8
+\n( {4})( *)(.*?function[^\(]+.*?[\(,]\s*)(\\?Throwable)(\s+)(&?\$)(\w+)(\s*[^\{]+?\{)
+\n$1$2$3/*$4$5*/$6$7$8\n$1$2$1backport_type_throwable(\$$7);\n
+

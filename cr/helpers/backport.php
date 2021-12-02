@@ -12,9 +12,9 @@ if (! \function_exists('backport_instanceof_throwable')) {
 }
 
 if (! \function_exists('backport_type_throwable')) {
-    function backport_type_throwable($any, $null = false)
+    function backport_type_throwable($any, $null = null)
     {
-        if ($null && $any === null) {
+        if (\func_num_args() === 2 && null === $any) {
             return;
         }
 
