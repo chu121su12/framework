@@ -382,7 +382,7 @@ class DebugClassLoader
         // Detect annotations on the class
         if ($doc = $this->parsePhpDoc($refl)) {
             foreach (['final', 'deprecated', 'internal'] as $annotation) {
-                if (null !== $description = $doc[$annotation][0] ?? null) {
+                if (null !== ($description = (isset($doc[$annotation]) && isset($doc[$annotation][0]) ? $doc[$annotation][0] : null))) {
                     self::${$annotation}[$class] = '' !== $description ? ' '.$description.(preg_match('/[.!]$/', $description) ? '' : '.') : '.';
                 }
             }
@@ -499,7 +499,9 @@ class DebugClassLoader
                 continue;
             }
 
-            if (null === $ns = self::$methodTraits[$method->getFileName()][$method->getStartLine()] ?? null) {
+            $methodFileName = $method->getFileName();
+            $methodStartLine = $method->getStartLine();
+            if (null === ($ns = (isset(self::$methodTraits[$methodFileName]) && isset(self::$methodTraits[$methodFileName][$methodStartLine]) ? self::$methodTraits[$methodFileName][$methodStartLine] : null))) {
                 $ns = $vendor;
                 $len = $vendorLen;
             } elseif (2 > $len = 1 + (strpos($ns, '\\') ?: strpos($ns, '_'))) {
@@ -556,7 +558,7 @@ class DebugClassLoader
                 ;
             }
 
-            if (null !== ($returnType = self::$returnTypes[$class][$method->name] ?? null) && 'docblock' === $this->patchTypes['force'] && !$method->hasReturnType() && isset(TentativeTypes::RETURN_TYPES[$returnType[2]][$method->name])) {
+            if (null !== ($returnType = (isset(self::$returnTypes[$class]) && isset(self::$returnTypes[$class][$method->name]) ? self::$returnTypes[$class][$method->name] : null)) && 'docblock' === $this->patchTypes['force'] && !$method->hasReturnType() && isset(TentativeTypes::RETURN_TYPES[$returnType[2]][$method->name])) {
                 $this->patchReturnTypeWillChange($method);
             }
 
@@ -602,7 +604,7 @@ class DebugClassLoader
             $finalOrInternal = false;
 
             foreach (['final', 'internal'] as $annotation) {
-                if (null !== $description = $doc[$annotation][0] ?? null) {
+                if (null !== ($description = (isset($doc[$annotation]) && isset($doc[$annotation][0]) ? $doc[$annotation][0] : null))) {
                     self::${$annotation.'Methods'}[$class][$method->name] = [$class, '' !== $description ? ' '.$description.(preg_match('/[[:punct:]]$/', $description) ? '' : '.') : '.'];
                     $finalOrInternal = true;
                 }
@@ -1234,7 +1236,7 @@ EOTXT;
         }
 
         foreach (['var', 'return'] as $k) {
-            if (null === $v = $tags[$k][0] ?? null) {
+            if (null === ($v = (isset($tags[$k]) && isset($tags[$k][0]) ? $tags[$k][0] : null))) {
                 continue;
             }
             if (\strlen($v) !== strcspn($v, '<{(')) {
