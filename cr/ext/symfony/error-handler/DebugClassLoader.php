@@ -549,8 +549,8 @@ class DebugClassLoader
                     || $refl->isFinal()
                     || $method->isFinal()
                     || $method->isPrivate()
-                    || ('.' === (self::$internal[$class] ?? null) && !$refl->isAbstract())
-                    || '.' === (self::$final[$class] ?? null)
+                    || ('.' === (isset(self::$internal[$class]) ? self::$internal[$class] : null) && !$refl->isAbstract())
+                    || '.' === (isset(self::$final[$class]) ? self::$final[$class] : null)
                     || '' === ($doc['final'][0] ?? null)
                     || '' === ($doc['internal'][0] ?? null)
                 ;
@@ -582,7 +582,7 @@ class DebugClassLoader
             }
 
             if (isset($doc['return']) || 'void' !== (self::MAGIC_METHODS[$method->name] ?? 'void')) {
-                $this->setReturnType($doc['return'] ?? self::MAGIC_METHODS[$method->name], $method->class, $method->name, $method->getFileName(), $parent, $method->getReturnType());
+                $this->setReturnType(isset($doc['return']) ? $doc['return'] : self::MAGIC_METHODS[$method->name], $method->class, $method->name, $method->getFileName(), $parent, $method->getReturnType());
 
                 if (isset(self::$returnTypes[$class][$method->name][0]) && $canAddReturnType) {
                     $this->fixReturnStatements($method, self::$returnTypes[$class][$method->name][0]);
@@ -919,7 +919,7 @@ class DebugClassLoader
             return;
         }
 
-        $fileOffset = self::$fileOffsets[$file] ?? 0;
+        $fileOffset = isset(self::$fileOffsets[$file]) ? self::$fileOffsets[$file] : 0;
 
         $code = file($file);
 
@@ -953,7 +953,7 @@ class DebugClassLoader
         }
 
         $patchedMethods[$file][$startLine] = true;
-        $fileOffset = self::$fileOffsets[$file] ?? 0;
+        $fileOffset = isset(self::$fileOffsets[$file]) ? self::$fileOffsets[$file] : 0;
         $startLine += $fileOffset - 2;
         if ($nullable = '|null' === substr($returnType, -5)) {
             $returnType = substr($returnType, 0, -5);
@@ -1111,7 +1111,7 @@ EOTXT;
         }
 
         $fixedCode = $code = file($file);
-        $i = (self::$fileOffsets[$file] ?? 0) + $method->getStartLine();
+        $i = (isset(self::$fileOffsets[$file]) ? self::$fileOffsets[$file] : 0) + $method->getStartLine();
 
         if ('?' !== $returnType && 'docblock' !== $this->patchTypes['force']) {
             $fixedCode[$i - 1] = preg_replace('/\)(?::[^;\n]++)?(;?\n)/', "): $returnType\\1", $code[$i - 1]);
@@ -1180,7 +1180,7 @@ EOTXT;
             $tags[$tagName][] = $tagContent;
         }
 
-        foreach ($tags['method'] ?? [] as $i => $method) {
+        foreach (isset($tags['method']) ? $tags['method'] : [] as $i => $method) {
             unset($tags['method'][$i]);
 
             $parts = preg_split('{(\s++|\((?:[^()]*+|(?R))*\)(?: *: *[^ ]++)?|<(?:[^<>]*+|(?R))*>|\{(?:[^{}]*+|(?R))*\})}', $method, -1, \PREG_SPLIT_DELIM_CAPTURE);
@@ -1189,7 +1189,7 @@ EOTXT;
 
             for ($i = $static ? 2 : 0; null !== $p = $parts[$i] ?? null; $i += 2) {
                 if (\in_array($p, ['', '|', '&', 'callable'], true) || \in_array(substr($returnType, -1), ['|', '&'], true)) {
-                    $returnType .= trim($parts[$i - 1] ?? '').$p;
+                    $returnType .= trim(isset($parts[$i - 1]) ? $parts[$i - 1] : '').$p;
                     continue;
                 }
 
@@ -1216,7 +1216,7 @@ EOTXT;
             }
         }
 
-        foreach ($tags['param'] ?? [] as $i => $param) {
+        foreach (isset($tags['param']) ? $tags['param'] : [] as $i => $param) {
             unset($tags['param'][$i]);
 
             if (\strlen($param) !== strcspn($param, '<{(')) {
