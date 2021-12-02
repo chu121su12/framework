@@ -19,7 +19,7 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
 class_exists(CliDumper::class);
 
 class CliErrorRenderer_render_class extends CliDumper {
-            protected function supportsColors()
+            protected function supportsColors()/*: bool*/
             {
                 $outputStream = $this->outputStream;
                 $this->outputStream = fopen('php://stdout', 'w');
@@ -40,7 +40,7 @@ class CliErrorRenderer implements ErrorRendererInterface
     /**
      * {@inheritdoc}
      */
-    public function render($exception) // FlattenException
+    public function render(\Throwable $exception)/*: FlattenException*/
     {
         $cloner = new VarCloner();
         $dumper = new CliErrorRenderer_render_class;

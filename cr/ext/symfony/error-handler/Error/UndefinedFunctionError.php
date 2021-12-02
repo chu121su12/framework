@@ -16,7 +16,7 @@ class UndefinedFunctionError extends \Error
     /**
      * {@inheritdoc}
      */
-    public function __construct($message, $previous)
+    public function __construct(/*string */$message, \Throwable $previous)
     {
         $message = cast_to_string($message);
 

@@ -24,7 +24,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
     /**
      * {@inheritdoc}
      */
-    public function enhance($error) // ?\Throwable
+    public function enhance(\Throwable $error)/*: ?\Throwable*/
     {
         // Some specific versions of PHP produce a fatal error when extending a not found class.
         $message = !$error instanceof FatalError ? $error->getMessage() : $error->getError()['message'];
@@ -68,7 +68,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
      *
      * Returns an array of possible fully qualified class names
      */
-    private function getClassCandidates($class) //// array
+    private function getClassCandidates(/*string */$class)/*: array*/
     {
         $class = cast_to_string($class);
 
@@ -95,22 +95,22 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
             if ($function[0] instanceof ClassLoader) {
                 foreach ($function[0]->getPrefixes() as $prefix => $paths) {
                     foreach ($paths as $path) {
-                        $classes = array_merge($classes, $this->findClassInPath($path, $class, $prefix));
+                        $classes[] = $this->findClassInPath($path, $class, $prefix);
                     }
                 }
 
                 foreach ($function[0]->getPrefixesPsr4() as $prefix => $paths) {
                     foreach ($paths as $path) {
-                        $classes = array_merge($classes, $this->findClassInPath($path, $class, $prefix));
+                        $classes[] = $this->findClassInPath($path, $class, $prefix);
                     }
                 }
             }
         }
 
-        return array_unique($classes);
+        return array_unique(array_merge([], ...$classes));
     }
 
-    private function findClassInPath($path, $class, $prefix) //// array
+    private function findClassInPath(/*string */$path, /*string */$class, /*string */$prefix)/*: array*/
     {
         $prefix = cast_to_string($prefix);
 
@@ -133,7 +133,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         return $classes;
     }
 
-    private function convertFileToClass($path, $file, $prefix) //// ?string
+    private function convertFileToClass(/*string */$path, /*string */$file, /*string */$prefix)/*: ?string*/
     {
         $prefix = cast_to_string($prefix);
 
@@ -171,12 +171,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
 
         try {
             require_once $file;
-        } catch (\Exception $e) {
-        } catch (\Error $e) {
         } catch (\Throwable $e) {
-        }
-
-        if (isset($e)) {
             return null;
         }
 
@@ -189,7 +184,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         return null;
     }
 
-    private function classExists($class) //// bool
+    private function classExists(/*string */$class)/*: bool*/
     {
         $class = cast_to_string($class);
 
