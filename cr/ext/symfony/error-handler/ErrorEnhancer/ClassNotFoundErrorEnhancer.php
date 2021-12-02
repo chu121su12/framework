@@ -68,8 +68,10 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
      *
      * Returns an array of possible fully qualified class names
      */
-    private function getClassCandidates(string $class)/*: array*/
+    private function getClassCandidates(/*string */$class)/*: array*/
     {
+        $class = cast_to_string($class);
+
         if (!\is_array($functions = spl_autoload_functions())) {
             return [];
         }
@@ -108,8 +110,14 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         return array_unique(array_merge([], ...$classes));
     }
 
-    private function findClassInPath(string $path, string $class, string $prefix)/*: array*/
+    private function findClassInPath(/*string */$path, /*string */$class, /*string */$prefix)/*: array*/
     {
+        $prefix = cast_to_string($prefix);
+
+        $class = cast_to_string($class);
+
+        $path = cast_to_string($path);
+
         if (!$path = realpath($path.'/'.strtr($prefix, '\\_', '//')) ?: realpath($path.'/'.\dirname(strtr($prefix, '\\_', '//'))) ?: realpath($path)) {
             return [];
         }
@@ -125,8 +133,14 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         return $classes;
     }
 
-    private function convertFileToClass(string $path, string $file, string $prefix)/*: ?string*/
+    private function convertFileToClass(/*string */$path, /*string */$file, /*string */$prefix)/*: ?string*/
     {
+        $prefix = cast_to_string($prefix);
+
+        $file = cast_to_string($file);
+
+        $path = cast_to_string($path);
+
         $candidates = [
             // namespaced class
             $namespacedClass = str_replace([$path.\DIRECTORY_SEPARATOR, '.php', '/'], ['', '', '\\'], $file),
@@ -170,8 +184,10 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         return null;
     }
 
-    private function classExists(string $class)/*: bool*/
+    private function classExists(/*string */$class)/*: bool*/
     {
+        $class = cast_to_string($class);
+
         return class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false);
     }
 }

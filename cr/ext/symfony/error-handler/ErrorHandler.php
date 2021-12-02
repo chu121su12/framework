@@ -108,8 +108,10 @@ class ErrorHandler
     /**
      * Registers the error handler.
      */
-    public static function register(/*self */$handler = null, bool $replace = true)/*: self*/
+    public static function register(/*self */$handler = null, /*bool */$replace = true)/*: self*/
     {
+        $replace = cast_to_bool($replace);
+
         $handler = cast_to_self($handler, null);
 
         if (null === self::$reservedMemory) {
@@ -166,7 +168,15 @@ class ErrorHandler
      */
     public static function call(callable $function, ...$arguments)
     {
-        set_error_handler(static function (int $type, string $message, string $file, int $line) {
+        set_error_handler(static function (/*int */$type, /*string */$message, /*string */$file, /*int */$line) {
+        $line = cast_to_int($line);
+
+        $file = cast_to_string($file);
+
+        $message = cast_to_string($message);
+
+        $type = cast_to_int($type);
+
             if (__FILE__ === $file) {
                 $trace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 3);
                 $file = $trace[2]['file'] ?? $file;
@@ -183,8 +193,10 @@ class ErrorHandler
         }
     }
 
-    public function __construct(BufferingLogger $bootstrappingLogger = null, bool $debug = false)
+    public function __construct(BufferingLogger $bootstrappingLogger = null, /*bool */$debug = false)
     {
+        $debug = cast_to_bool($debug);
+
         if ($bootstrappingLogger) {
             $this->bootstrappingLogger = $bootstrappingLogger;
             $this->setDefaultLogger($bootstrappingLogger);
@@ -207,8 +219,10 @@ class ErrorHandler
      * @param array|int|null  $levels  An array map of E_* to LogLevel::* or an integer bit field of E_* constants
      * @param bool            $replace Whether to replace or not any existing logger
      */
-    public function setDefaultLogger(LoggerInterface $logger, $levels = \E_ALL, bool $replace = false)/*: void*/
+    public function setDefaultLogger(LoggerInterface $logger, $levels = \E_ALL, /*bool */$replace = false)/*: void*/
     {
+        $replace = cast_to_bool($replace);
+
         $loggers = [];
 
         if (\is_array($levels)) {
@@ -308,8 +322,12 @@ class ErrorHandler
      *
      * @return int The previous value
      */
-    public function throwAt(int $levels, bool $replace = false)/*: int*/
+    public function throwAt(/*int */$levels, /*bool */$replace = false)/*: int*/
     {
+        $replace = cast_to_bool($replace);
+
+        $levels = cast_to_int($levels);
+
         $prev = $this->thrownErrors;
         $this->thrownErrors = ($levels | \E_RECOVERABLE_ERROR | \E_USER_ERROR) & ~\E_USER_DEPRECATED & ~\E_DEPRECATED;
         if (!$replace) {
@@ -328,8 +346,12 @@ class ErrorHandler
      *
      * @return int The previous value
      */
-    public function scopeAt(int $levels, bool $replace = false)/*: int*/
+    public function scopeAt(/*int */$levels, /*bool */$replace = false)/*: int*/
     {
+        $replace = cast_to_bool($replace);
+
+        $levels = cast_to_int($levels);
+
         $prev = $this->scopedErrors;
         $this->scopedErrors = $levels;
         if (!$replace) {
@@ -347,8 +369,12 @@ class ErrorHandler
      *
      * @return int The previous value
      */
-    public function traceAt(int $levels, bool $replace = false)/*: int*/
+    public function traceAt(/*int */$levels, /*bool */$replace = false)/*: int*/
     {
+        $replace = cast_to_bool($replace);
+
+        $levels = cast_to_int($levels);
+
         $prev = $this->tracedErrors;
         $this->tracedErrors = $levels;
         if (!$replace) {
@@ -366,8 +392,12 @@ class ErrorHandler
      *
      * @return int The previous value
      */
-    public function screamAt(int $levels, bool $replace = false)/*: int*/
+    public function screamAt(/*int */$levels, /*bool */$replace = false)/*: int*/
     {
+        $replace = cast_to_bool($replace);
+
+        $levels = cast_to_int($levels);
+
         $prev = $this->screamedErrors;
         $this->screamedErrors = $levels;
         if (!$replace) {
@@ -380,8 +410,10 @@ class ErrorHandler
     /**
      * Re-registers as a PHP error handler if levels changed.
      */
-    private function reRegister(int $prev)/*: void*/
+    private function reRegister(/*int */$prev)/*: void*/
     {
+        $prev = cast_to_int($prev);
+
         if ($prev !== $this->thrownErrors | $this->loggedErrors) {
             $handler = set_error_handler('var_dump');
             $handler = \is_array($handler) ? $handler[0] : null;
@@ -406,8 +438,16 @@ class ErrorHandler
      *
      * @internal
      */
-    public function handleError(int $type, string $message, string $file, int $line)/*: bool*/
+    public function handleError(/*int */$type, /*string */$message, /*string */$file, /*int */$line)/*: bool*/
     {
+        $line = cast_to_int($line);
+
+        $file = cast_to_string($file);
+
+        $message = cast_to_string($message);
+
+        $type = cast_to_int($type);
+
         if (\PHP_VERSION_ID >= 70300 && \E_WARNING === $type && '"' === $message[0] && false !== strpos($message, '" targeting switch is equivalent to "break')) {
             $type = \E_DEPRECATED;
         }
@@ -746,8 +786,16 @@ class ErrorHandler
     /**
      * Cleans the trace by removing function arguments and the frames added by the error handler and DebugClassLoader.
      */
-    private function cleanTrace(array $backtrace, int $type, string &$file, int &$line, bool $throw)/*: array*/
+    private function cleanTrace(array $backtrace, /*int */$type, /*string */&$file, /*int */&$line, /*bool */$throw)/*: array*/
     {
+         $throw = cast_to_bool($throw);
+
+         $line = cast_to_int($line);
+
+         $file = cast_to_string($file);
+
+         $type = cast_to_int($type);
+
         $lightTrace = $backtrace;
 
         for ($i = 0; isset($backtrace[$i]); ++$i) {
@@ -789,8 +837,10 @@ class ErrorHandler
      * Parse the error message by removing the anonymous class notation
      * and using the parent class instead if possible.
      */
-    private function parseAnonymousClass(string $message)/*: string*/
+    private function parseAnonymousClass(/*string */$message)/*: string*/
     {
+        $message = cast_to_string($message);
+
         return preg_replace_callback('/[a-zA-Z_\x7f-\xff][\\\\a-zA-Z0-9_\x7f-\xff]*+@anonymous\x00.*?\.php(?:0x?|:[0-9]++\$)[0-9a-fA-F]++/', static function ($m) {
             return class_exists($m[0], false) ? (get_parent_class($m[0]) ?: key(class_implements($m[0])) ?: 'class').'@anonymous' : $m[0];
         }, $message);

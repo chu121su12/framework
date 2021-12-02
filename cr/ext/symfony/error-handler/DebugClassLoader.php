@@ -258,8 +258,10 @@ class DebugClassLoader
         return true;
     }
 
-    public function findFile(string $class)/*: ?string*/
+    public function findFile(/*string */$class)/*: ?string*/
     {
+        $class = cast_to_string($class);
+
         return $this->isFinder ? ($this->classLoader[0]->findFile($class) ?: null) : null;
     }
 
@@ -268,8 +270,10 @@ class DebugClassLoader
      *
      * @throws \RuntimeException
      */
-    public function loadClass(string $class)/*: void*/
+    public function loadClass(/*string */$class)/*: void*/
     {
+        $class = cast_to_string($class);
+
         $e = error_reporting(error_reporting() | \E_PARSE | \E_ERROR | \E_CORE_ERROR | \E_COMPILE_ERROR);
 
         try {
@@ -295,8 +299,10 @@ class DebugClassLoader
         $this->checkClass($class, $file);
     }
 
-    private function checkClass(string $class, /*string */$file = null)/*: void*/
+    private function checkClass(/*string */$class, /*string */$file = null)/*: void*/
     {
+        $class = cast_to_string($class);
+
         $file = cast_to_string($file, null);
 
         $exists = null === $file || class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false);
@@ -345,8 +351,10 @@ class DebugClassLoader
         }
     }
 
-    public function checkAnnotations(\ReflectionClass $refl, string $class)/*: array*/
+    public function checkAnnotations(\ReflectionClass $refl, /*string */$class)/*: array*/
     {
+        $class = cast_to_string($class);
+
         if (
             'Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerForV7' === $class
             || 'Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerForV6' === $class
@@ -619,8 +627,12 @@ class DebugClassLoader
         return $deprecations;
     }
 
-    public function checkCase(\ReflectionClass $refl, string $file, string $class)/*: ?array*/
+    public function checkCase(\ReflectionClass $refl, /*string */$file, /*string */$class)/*: ?array*/
     {
+        $class = cast_to_string($class);
+
+        $file = cast_to_string($file);
+
         $real = explode('\\', $class.strrchr($file, '.'));
         $tail = explode(\DIRECTORY_SEPARATOR, str_replace('/', \DIRECTORY_SEPARATOR, $file));
 
@@ -658,8 +670,10 @@ class DebugClassLoader
     /**
      * `realpath` on MacOSX doesn't normalize the case of characters.
      */
-    private function darwinRealpath(string $real)/*: string*/
+    private function darwinRealpath(/*string */$real)/*: string*/
     {
+        $real = cast_to_string($real);
+
         $i = 1 + strrpos($real, '/');
         $file = substr($real, $i);
         $real = substr($real, 0, $i);
@@ -731,8 +745,10 @@ class DebugClassLoader
      *
      * @return string[]
      */
-    private function getOwnInterfaces(string $class, /*?string */$parent = null)/*: array*/
+    private function getOwnInterfaces(/*string */$class, /*?string */$parent = null)/*: array*/
     {
+        $class = cast_to_string($class);
+
         $parent = cast_to_string($parent, null);
 
         $ownInterfaces = class_implements($class, false);
@@ -752,8 +768,16 @@ class DebugClassLoader
         return $ownInterfaces;
     }
 
-    private function setReturnType(string $types, string $class, string $method, string $filename, /*?string */$parent = null, \ReflectionType $returnType = null)/*: void*/
+    private function setReturnType(/*string */$types, /*string */$class, /*string */$method, /*string */$filename, /*?string */$parent = null, \ReflectionType $returnType = null)/*: void*/
     {
+        $filename = cast_to_string($filename);
+
+        $method = cast_to_string($method);
+
+        $class = cast_to_string($class);
+
+        $types = cast_to_string($types);
+
         $parent = cast_to_string($parent, null);
 
         if ('__construct' === $method) {
@@ -846,8 +870,12 @@ class DebugClassLoader
         self::$returnTypes[$class][$method] = [$phpType, $docType, $class, $filename];
     }
 
-    private function normalizeType(string $type, string $class, /*?string */$parent = null, ?\ReflectionType $returnType)/*: string*/
+    private function normalizeType(/*string */$type, /*string */$class, /*?string */$parent = null, ?\ReflectionType $returnType)/*: string*/
     {
+        $class = cast_to_string($class);
+
+        $type = cast_to_string($type);
+
         $parent = cast_to_string($parent, null);
 
         if (isset(self::SPECIAL_RETURN_TYPES[$lcType = strtolower($type)])) {
@@ -909,8 +937,14 @@ class DebugClassLoader
     /**
      * Utility method to add @return annotations to the Symfony code-base where it triggers self-deprecations.
      */
-    private function patchMethod(\ReflectionMethod $method, string $returnType, string $declaringFile, string $normalizedType)
+    private function patchMethod(\ReflectionMethod $method, /*string */$returnType, /*string */$declaringFile, /*string */$normalizedType)
     {
+        $normalizedType = cast_to_string($normalizedType);
+
+        $declaringFile = cast_to_string($declaringFile);
+
+        $returnType = cast_to_string($returnType);
+
         static $patchedMethods = [];
         static $useStatements = [];
 
@@ -1005,8 +1039,10 @@ EOTXT;
         $this->fixReturnStatements($method, $normalizedType);
     }
 
-    private static function getUseStatements(string $file)/*: array*/
+    private static function getUseStatements(/*string */$file)/*: array*/
     {
+        $file = cast_to_string($file);
+
         $namespace = '';
         $useMap = [];
         $useOffset = 0;
@@ -1048,8 +1084,10 @@ EOTXT;
         return [$namespace, $useOffset, $useMap];
     }
 
-    private function fixReturnStatements(\ReflectionMethod $method, string $returnType)
+    private function fixReturnStatements(\ReflectionMethod $method, /*string */$returnType)
     {
+        $returnType = cast_to_string($returnType);
+
         if ('docblock' !== $this->patchTypes['force']) {
             if ('7.1' === $this->patchTypes['php'] && 'object' === ltrim($returnType, '?')) {
                 return;

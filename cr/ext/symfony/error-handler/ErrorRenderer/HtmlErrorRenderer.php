@@ -105,8 +105,10 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return $this->include('assets/css/exception.css');
     }
 
-    public static function isDebug(RequestStack $requestStack, bool $debug)/*: \Closure*/
+    public static function isDebug(RequestStack $requestStack, /*bool */$debug)/*: \Closure*/
     {
+        $debug = cast_to_bool($debug);
+
         return static function () use ($requestStack, $debug): bool {
             if (!$request = $requestStack->getCurrentRequest()) {
                 return $debug;
@@ -135,8 +137,10 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         };
     }
 
-    private function renderException(FlattenException $exception, string $debugTemplate = 'views/exception_full.html.php')/*: string*/
+    private function renderException(FlattenException $exception, /*string */$debugTemplate = 'views/exception_full.html.php')/*: string*/
     {
+        $debugTemplate = cast_to_string($debugTemplate);
+
         $debug = \is_bool($this->debug) ? $this->debug : ($this->debug)($exception);
         $statusText = $this->escape($exception->getStatusText());
         $statusCode = $this->escape($exception->getStatusCode());
@@ -192,21 +196,27 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return strip_tags($this->formatArgs($args));
     }
 
-    private function escape(string $string)/*: string*/
+    private function escape(/*string */$string)/*: string*/
     {
+        $string = cast_to_string($string);
+
         return htmlspecialchars($string, \ENT_COMPAT | \ENT_SUBSTITUTE, $this->charset);
     }
 
-    private function abbrClass(string $class)/*: string*/
+    private function abbrClass(/*string */$class)/*: string*/
     {
+        $class = cast_to_string($class);
+
         $parts = explode('\\', $class);
         $short = array_pop($parts);
 
         return sprintf('<abbr title="%s">%s</abbr>', $class, $short);
     }
 
-    private function getFileRelative(string $file)/*: ?string*/
+    private function getFileRelative(/*string */$file)/*: ?string*/
     {
+        $file = cast_to_string($file);
+
         $file = str_replace('\\', '/', $file);
 
         if (null !== $this->projectDir && 0 === strpos($file, $this->projectDir)) {
@@ -221,8 +231,12 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      *
      * @return string|false
      */
-    private function getFileLink(string $file, int $line)
+    private function getFileLink(/*string */$file, /*int */$line)
     {
+        $line = cast_to_int($line);
+
+        $file = cast_to_string($file);
+
         if ($fmt = $this->fileLinkFormat) {
             return \is_string($fmt) ? strtr($fmt, ['%f' => $file, '%l' => $line]) : $fmt->format($file, $line);
         }
@@ -237,8 +251,12 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      * @param int    $line The line number
      * @param string $text Use this text for the link rather than the file path
      */
-    private function formatFile(string $file, int $line, /*string */$text = null)/*: string*/
+    private function formatFile(/*string */$file, /*int */$line, /*string */$text = null)/*: string*/
     {
+        $line = cast_to_int($line);
+
+        $file = cast_to_string($file);
+
         $text = cast_to_string($text, null);
 
         $file = trim($file);
@@ -271,8 +289,14 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      *
      * @return string
      */
-    private function fileExcerpt(string $file, int $line, int $srcContext = 3)/*: string*/
+    private function fileExcerpt(/*string */$file, /*int */$line, /*int */$srcContext = 3)/*: string*/
     {
+        $srcContext = cast_to_int($srcContext);
+
+        $line = cast_to_int($line);
+
+        $file = cast_to_string($file);
+
         if (is_file($file) && is_readable($file)) {
             // highlight_file could throw warnings
             // see https://bugs.php.net/25725
@@ -300,8 +324,10 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return '';
     }
 
-    private function fixCodeMarkup(string $line)
+    private function fixCodeMarkup(/*string */$line)
     {
+        $line = cast_to_string($line);
+
         // </span> ending tag from previous line
         $opening = strpos($line, '<span');
         $closing = strpos($line, '</span>');
@@ -319,15 +345,19 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return trim($line);
     }
 
-    private function formatFileFromText(string $text)
+    private function formatFileFromText(/*string */$text)
     {
+        $text = cast_to_string($text);
+
         return preg_replace_callback('/in ("|&quot;)?(.+?)\1(?: +(?:on|at))? +line (\d+)/s', function ($match) {
             return 'in '.$this->formatFile($match[2], $match[3]);
         }, $text);
     }
 
-    private function formatLogMessage(string $message, array $context)
+    private function formatLogMessage(/*string */$message, array $context)
     {
+        $message = cast_to_string($message);
+
         if ($context && false !== strpos($message, '{')) {
             $replacements = [];
             foreach ($context as $key => $val) {
@@ -353,8 +383,10 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return '<path d="'.self::GHOST_ADDONS[date('m-d')].'" fill="#fff" fill-opacity="0.6"></path>';
     }
 
-    private function include(string $name, array $context = [])/*: string*/
+    private function include(/*string */$name, array $context = [])/*: string*/
     {
+        $name = cast_to_string($name);
+
         extract($context, \EXTR_SKIP);
         ob_start();
 
@@ -368,8 +400,10 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      *
      * @param string $template path to the custom template file to render
      */
-    public static function setTemplate(string $template)/*: void*/
+    public static function setTemplate(/*string */$template)/*: void*/
     {
+        $template = cast_to_string($template);
+
         self::$template = $template;
     }
 }

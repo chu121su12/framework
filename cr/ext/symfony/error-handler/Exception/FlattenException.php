@@ -137,8 +137,10 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setStatusCode(int $code)/*: self*/
+    public function setStatusCode(/*int */$code)/*: self*/
     {
+        $code = cast_to_int($code);
+
         $this->statusCode = $code;
 
         return $this;
@@ -167,8 +169,10 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setClass(string $class)/*: self*/
+    public function setClass(/*string */$class)/*: self*/
     {
+        $class = cast_to_string($class);
+
         $this->class = false !== strpos($class, "@anonymous\0") ? (get_parent_class($class) ?: key(class_implements($class)) ?: 'class').'@anonymous' : $class;
 
         return $this;
@@ -182,8 +186,10 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setFile(string $file)/*: self*/
+    public function setFile(/*string */$file)/*: self*/
     {
+        $file = cast_to_string($file);
+
         $this->file = $file;
 
         return $this;
@@ -197,8 +203,10 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setLine(int $line)/*: self*/
+    public function setLine(/*int */$line)/*: self*/
     {
+        $line = cast_to_int($line);
+
         $this->line = $line;
 
         return $this;
@@ -212,8 +220,10 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setStatusText(string $statusText)/*: self*/
+    public function setStatusText(/*string */$statusText)/*: self*/
     {
+        $statusText = cast_to_string($statusText);
+
         $this->statusText = $statusText;
 
         return $this;
@@ -227,8 +237,10 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setMessage(string $message)/*: self*/
+    public function setMessage(/*string */$message)/*: self*/
     {
+        $message = cast_to_string($message);
+
         if (false !== strpos($message, "@anonymous\0")) {
             $message = preg_replace_callback('/[a-zA-Z_\x7f-\xff][\\\\a-zA-Z0-9_\x7f-\xff]*+@anonymous\x00.*?\.php(?:0x?|:[0-9]++\$)[0-9a-fA-F]++/', function ($m) {
                 return class_exists($m[0], false) ? (get_parent_class($m[0]) ?: key(class_implements($m[0])) ?: 'class').'@anonymous' : $m[0];
@@ -350,8 +362,12 @@ class FlattenException
         return $this;
     }
 
-    private function flattenArgs(array $args, int $level = 0, int &$count = 0)/*: array*/
+    private function flattenArgs(array $args, /*int */$level = 0, /*int */&$count = 0)/*: array*/
     {
+        $count = cast_to_int($count);
+
+        $level = cast_to_int($level);
+
         $result = [];
         foreach ($args as $key => $value) {
             if (++$count > 1e4) {
