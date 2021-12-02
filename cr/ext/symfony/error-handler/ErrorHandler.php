@@ -151,7 +151,7 @@ class ErrorHandler
                 $prev[0]->setExceptionHandler($p);
             }
         } else {
-            $handler->setExceptionHandler($prev ?? [$handler, 'renderException']);
+            $handler->setExceptionHandler(isset($prev) ? $prev : [$handler, 'renderException']);
         }
 
         $handler->throwAt(\E_ALL & $handler->thrownErrors, true);
@@ -205,8 +205,8 @@ class ErrorHandler
         $traceReflector->setAccessible(true);
         $this->configureException = \Closure::bind(static function ($e, $trace, $file = null, $line = null) use ($traceReflector) {
             $traceReflector->setValue($e, $trace);
-            $e->file = $file ?? $e->file;
-            $e->line = $line ?? $e->line;
+            $e->file = isset($file) ? $file : $e->file;
+            $e->line = isset($line) ? $line : $e->line;
         }, null, new class() extends \Exception {
         });
         $this->debug = $debug;

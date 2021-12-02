@@ -542,7 +542,7 @@ class DebugClassLoader
             $forcePatchTypes = $this->patchTypes['force'];
 
             if ($canAddReturnType = null !== $forcePatchTypes && false === strpos($method->getFileName(), \DIRECTORY_SEPARATOR.'vendor'.\DIRECTORY_SEPARATOR)) {
-                if ('void' !== (self::MAGIC_METHODS[$method->name] ?? 'void')) {
+                if ('void' !== (isset(self::MAGIC_METHODS[$method->name]) ? self::MAGIC_METHODS[$method->name] : 'void')) {
                     $this->patchTypes['force'] = $forcePatchTypes ?: 'docblock';
                 }
 
@@ -583,7 +583,7 @@ class DebugClassLoader
                 continue;
             }
 
-            if (isset($doc['return']) || 'void' !== (self::MAGIC_METHODS[$method->name] ?? 'void')) {
+            if (isset($doc['return']) || 'void' !== (isset(self::MAGIC_METHODS[$method->name]) ? self::MAGIC_METHODS[$method->name] : 'void')) {
                 $this->setReturnType(isset($doc['return']) ? $doc['return'] : self::MAGIC_METHODS[$method->name], $method->class, $method->name, $method->getFileName(), $parent, $method->getReturnType());
 
                 if (isset(self::$returnTypes[$class][$method->name][0]) && $canAddReturnType) {
@@ -1213,7 +1213,7 @@ EOTXT;
                     $description .= '.';
                 }
 
-                $tags['method'][$p] = [$static, $returnType, $signature ?? '()', $description];
+                $tags['method'][$p] = [$static, $returnType, isset($signature) ? $signature : '()', $description];
                 break;
             }
         }
