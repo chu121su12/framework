@@ -70,10 +70,14 @@ class DebugClassLoader
         'self' => 'self',
         'parent' => 'parent',
         'mixed' => 'mixed',
+    ] + (\PHP_VERSION_ID >= 80100 ? [
         'static' => 'static',
         '$this' => 'static',
         'list' => 'array',
-    ];
+    ] : [
+        'static' => 'object',
+        '$this' => 'object',
+    ]);
 
     /*private */const BUILTIN_RETURN_TYPES = [
         'void' => true,
@@ -98,7 +102,13 @@ class DebugClassLoader
         '__toString' => 'string',
         '__debugInfo' => 'array',
         '__serialize' => 'array',
-    ];
+    ] + (\PHP_VERSION_ID >= 80100 ? [] : [
+        '__set' => 'void',
+        '__unset' => 'void',
+        '__wakeup' => 'void',
+        '__clone' => 'void',
+        '__unserialize' => 'void',
+    ]);
 
     private $classLoader;
     private $isFinder;
