@@ -11,12 +11,20 @@ class AsEncryptedCollection_castUsing_class implements CastsAttributes
         {
             public function get($model, $key, $value, array $attributes)
             {
-                return new Collection(backport_json_decode(Crypt::decryptString($attributes[$key]), true));
+                if (isset($attributes[$key])) {
+                    return new Collection(backport_json_decode(Crypt::decryptString($attributes[$key]), true));
+                }
+
+                return null;
             }
 
             public function set($model, $key, $value, array $attributes)
             {
-                return [$key => Crypt::encryptString(json_encode($value))];
+                if (! is_null($value)) {
+                    return [$key => Crypt::encryptString(json_encode($value))];
+                }
+
+                return null;
             }
         }
 
