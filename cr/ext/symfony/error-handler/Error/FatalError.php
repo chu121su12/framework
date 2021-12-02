@@ -20,13 +20,13 @@ class FatalError extends \Error
      *
      * @param array $error An array as returned by error_get_last()
      */
-    public function __construct($message, $code, array $error, $traceOffset = null, $traceArgs = true, array $trace = null)
+    public function __construct(/*string */$message, /*int */$code, array $error, /*int */$traceOffset = null, /*bool */$traceArgs = true, array $trace = null)
     {
+        $traceArgs = cast_to_bool($traceArgs);
+
         $code = cast_to_int($code);
 
         $message = cast_to_string($message);
-
-        $traceArgs = cast_to_bool($traceArgs);
 
         $traceOffset = cast_to_int($traceOffset, null);
 
@@ -86,24 +86,26 @@ class FatalError extends \Error
                 }
             }
         } else {
-            foreach ([
-                'file' => $error['file'],
-                'line' => $error['line'],
-                'trace' => $trace,
-            ] as $property => $value) {
-                if (null !== $value) {
-                    $refl = new \ReflectionProperty(\Error::class, $property);
-                    $refl->setAccessible(true);
-                    $refl->setValue($this, $value);
-                }
+
+        foreach ([
+            'file' => $error['file'],
+            'line' => $error['line'],
+            'trace' => $trace,
+        ] as $property => $value) {
+            if (null !== $value) {
+                $refl = new \ReflectionProperty(\Error::class, $property);
+                $refl->setAccessible(true);
+                $refl->setValue($this, $value);
             }
+        }
+
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getError() //// array
+    public function getError()/*: array*/
     {
         return $this->error;
     }
