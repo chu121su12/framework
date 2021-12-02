@@ -264,8 +264,10 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setPrevious(?self $previous)/*: self*/
+    public function setPrevious(/*?self */$previous = null)/*: self*/
     {
+        $previous = cast_to_self($previous, null);
+
         $this->previous = $previous;
 
         return $this;
@@ -303,8 +305,12 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setTrace(array $trace, ?string $file, ?int $line)/*: self*/
+    public function setTrace(array $trace, /*?string */$file = null, /*?int */$line = null)/*: self*/
     {
+        $line = cast_to_int($line, null);
+
+        $file = cast_to_string($file, null);
+
         $this->trace = [];
         $this->trace[] = [
             'namespace' => '',
@@ -390,8 +396,10 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setAsString(?string $asString)/*: self*/
+    public function setAsString(/*?string */$asString = null)/*: self*/
     {
+        $asString = cast_to_string($asString, null);
+
         $this->asString = $asString;
 
         return $this;

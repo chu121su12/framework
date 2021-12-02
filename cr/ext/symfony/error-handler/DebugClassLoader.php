@@ -729,8 +729,10 @@ class DebugClassLoader
      *
      * @return string[]
      */
-    private function getOwnInterfaces(string $class, ?string $parent)/*: array*/
+    private function getOwnInterfaces(string $class, /*?string */$parent = null)/*: array*/
     {
+        $parent = cast_to_string($parent, null);
+
         $ownInterfaces = class_implements($class, false);
 
         if ($parent) {
@@ -748,8 +750,10 @@ class DebugClassLoader
         return $ownInterfaces;
     }
 
-    private function setReturnType(string $types, string $class, string $method, string $filename, ?string $parent, \ReflectionType $returnType = null)/*: void*/
+    private function setReturnType(string $types, string $class, string $method, string $filename, /*?string */$parent = null, \ReflectionType $returnType = null)/*: void*/
     {
+        $parent = cast_to_string($parent, null);
+
         if ('__construct' === $method) {
             return;
         }
@@ -840,8 +844,10 @@ class DebugClassLoader
         self::$returnTypes[$class][$method] = [$phpType, $docType, $class, $filename];
     }
 
-    private function normalizeType(string $type, string $class, ?string $parent, ?\ReflectionType $returnType)/*: string*/
+    private function normalizeType(string $type, string $class, /*?string */$parent = null, ?\ReflectionType $returnType)/*: string*/
     {
+        $parent = cast_to_string($parent, null);
+
         if (isset(self::SPECIAL_RETURN_TYPES[$lcType = strtolower($type)])) {
             if ('parent' === $lcType = self::SPECIAL_RETURN_TYPES[$lcType]) {
                 $lcType = null !== $parent ? '\\'.$parent : 'parent';
