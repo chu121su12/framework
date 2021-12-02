@@ -282,10 +282,8 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setPrevious(/*?self */$previous = null)/*: self*/
+    public function setPrevious(/*?*/self $previous = null)/*: self*/
     {
-        $previous = cast_to_self($previous, null);
-
         $this->previous = $previous;
 
         return $this;

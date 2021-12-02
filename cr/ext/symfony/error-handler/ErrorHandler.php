@@ -111,7 +111,7 @@ class ErrorHandler
     /**
      * Registers the error handler.
      */
-    public static function register(/*self */$handler = null, /*bool */$replace = true)/*: self*/
+    public static function register(self $handler = null, /*bool */$replace = true)/*: self*/
     {
         $replace = cast_to_bool($replace);
 
@@ -172,18 +172,20 @@ class ErrorHandler
     public static function call(callable $function, ...$arguments)
     {
         set_error_handler(static function (/*int */$type, /*string */$message, /*string */$file, /*int */$line) {
-        $line = cast_to_int($line);
+            $line = cast_to_int($line);
 
-        $file = cast_to_string($file);
+            $file = cast_to_string($file);
 
-        $message = cast_to_string($message);
+            $message = cast_to_string($message);
 
-        $type = cast_to_int($type);
+            $type = cast_to_int($type);
 
             if (__FILE__ === $file) {
                 $trace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-                $file = isset($trace[2]) && isset($trace[2]['file']) ? $trace[2]['file'] : $file;
-                $line = isset($trace[2]) && isset($trace[2]['line']) ? $trace[2]['line'] : $line;
+                if (isset($trace[2])) {
+                    $file = isset($trace[2]['file']) ? $trace[2]['file'] : $file;
+                    $line = isset($trace[2]['line']) ? $trace[2]['line'] : $line;
+                }
             }
 
             throw new \ErrorException($message, 0, $type, $file, $line);

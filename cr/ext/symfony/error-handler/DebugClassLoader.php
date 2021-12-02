@@ -57,7 +57,6 @@ class DebugClassLoader
         'resource' => 'resource',
         'boolean' => 'bool',
         'true' => 'bool',
-        'false' => 'false',
         'integer' => 'int',
         'array' => 'array',
         'bool' => 'bool',
@@ -71,10 +70,12 @@ class DebugClassLoader
         'parent' => 'parent',
         'mixed' => 'mixed',
     ] + (\PHP_VERSION_ID >= 80100 ? [
+        'false' => 'false',
         'static' => 'static',
         '$this' => 'static',
         'list' => 'array',
     ] : [
+        'false' => 'bool',
         'static' => 'object',
         '$this' => 'object',
     ]);
@@ -82,7 +83,6 @@ class DebugClassLoader
     /*private */const BUILTIN_RETURN_TYPES = [
         'void' => true,
         'array' => true,
-        'false' => true,
         'bool' => true,
         'callable' => true,
         'float' => true,
@@ -94,7 +94,9 @@ class DebugClassLoader
         'parent' => true,
         'mixed' => true,
         'static' => true,
-    ];
+    ] + (\PHP_VERSION_ID >= 80100 ? [
+        'false' => true,
+    ] : []);
 
     /*private */const MAGIC_METHODS = [
         '__isset' => 'bool',
@@ -1051,7 +1053,7 @@ class DebugClassLoader
 EOTXT;
             }
 
-            $fileOffset += substr_count($code[$startLine], "\n") - 1;
+            $fileOffset += backport_substr_count($code[$startLine], "\n") - 1;
         }
 
         self::$fileOffsets[$file] = $fileOffset;

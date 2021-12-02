@@ -1635,5 +1635,19 @@ class TentativeTypes
         'Countable' => [
             'count' => 'int',
         ],
-    ];
+    ] + (\PHP_VERSION_ID >= 80100 ? [] : [
+        'Serializable' => [
+            'serialize' => 'string',
+            'unserialize' => 'void',
+        ],
+        'Throwable' => [
+            'getMessage' => 'string',
+            'getCode' => 'int',
+            'getFile' => 'string',
+            'getLine' => 'int',
+            'getTrace' => 'array',
+            'getPrevious' => '?Throwable',
+            'getTraceAsString' => 'string',
+        ],
+    ]);
 }

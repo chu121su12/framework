@@ -68,9 +68,9 @@ class SerializerErrorRenderer implements ErrorRendererInterface
 
         try {
             $format = \is_string($this->format) ? $this->format : call_user_func($this->format, $flattenException);
-            $mimeTypeFormat = Request::getMimeTypes($format);
+            $requestMimeTypeFormat = Request::getMimeTypes($format);
             $headers = [
-                'Content-Type' => isset($mimeTypeFormat[0]) ? $mimeTypeFormat[0] : $format,
+                'Content-Type' => isset($requestMimeTypeFormat[0]) ? $requestMimeTypeFormat[0] : $format,
                 'Vary' => 'Accept',
             ];
 

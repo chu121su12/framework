@@ -101,10 +101,10 @@ class HtmlErrorRenderer implements ErrorRendererInterface
     public function getStylesheet()/*: string*/
     {
         if (!$this->debug) {
-            return $this->include('assets/css/error.css');
+            return $this->include_('assets/css/error.css');
         }
 
-        return $this->include('assets/css/exception.css');
+        return $this->include_('assets/css/exception.css');
     }
 
     public static function isDebug(RequestStack $requestStack, /*bool */$debug)/*: \Closure*/
@@ -148,7 +148,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         $statusCode = $this->escape($exception->getStatusCode());
 
         if (!$debug) {
-            return $this->include(self::$template, [
+            return $this->include_(self::$template, [
                 'statusText' => $statusText,
                 'statusCode' => $statusCode,
             ]);
@@ -156,7 +156,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
 
         $exceptionMessage = $this->escape($exception->getMessage());
 
-        return $this->include($debugTemplate, [
+        return $this->include_($debugTemplate, [
             'exception' => $exception,
             'exceptionMessage' => $exceptionMessage,
             'statusText' => $statusText,
@@ -378,12 +378,13 @@ class HtmlErrorRenderer implements ErrorRendererInterface
 
     private function addElementToGhost()/*: string*/
     {
-        $GHOST_ADDONS = self::GHOST_ADDONS;
-        if (!isset($GHOST_ADDONS[date('m-d')])) {
+        $ghostAddons = self::GHOST_ADDONS;
+
+        if (!isset($ghostAddons[$monthDateDate = date('m-d')])) {
             return '';
         }
 
-        return '<path d="'.self::GHOST_ADDONS[date('m-d')].'" fill="#fff" fill-opacity="0.6"></path>';
+        return '<path d="'.self::GHOST_ADDONS[$monthDateDate].'" fill="#fff" fill-opacity="0.6"></path>';
     }
 
     private function include_(/*string */$name, array $context = [])/*: string*/
