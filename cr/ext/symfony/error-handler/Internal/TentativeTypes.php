@@ -18,7 +18,7 @@ namespace Symfony\Component\ErrorHandler\Internal;
  */
 class TentativeTypes
 {
-    public const RETURN_TYPES = [
+    /*public */const RETURN_TYPES = [
         'CURLFile' => [
             'getFilename' => 'string',
             'getMimeType' => 'string',

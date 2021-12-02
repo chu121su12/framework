@@ -51,7 +51,7 @@ use Symfony\Component\ErrorHandler\Internal\TentativeTypes;
  */
 class DebugClassLoader
 {
-    private const SPECIAL_RETURN_TYPES = [
+    /*private */const SPECIAL_RETURN_TYPES = [
         'void' => 'void',
         'null' => 'null',
         'resource' => 'resource',
@@ -75,7 +75,7 @@ class DebugClassLoader
         'list' => 'array',
     ];
 
-    private const BUILTIN_RETURN_TYPES = [
+    /*private */const BUILTIN_RETURN_TYPES = [
         'void' => true,
         'array' => true,
         'false' => true,
@@ -92,7 +92,7 @@ class DebugClassLoader
         'static' => true,
     ];
 
-    private const MAGIC_METHODS = [
+    /*private */const MAGIC_METHODS = [
         '__isset' => 'bool',
         '__sleep' => 'array',
         '__toString' => 'string',
