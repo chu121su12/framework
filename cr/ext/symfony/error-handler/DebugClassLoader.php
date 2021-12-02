@@ -551,8 +551,8 @@ class DebugClassLoader
                     || $method->isPrivate()
                     || ('.' === (isset(self::$internal[$class]) ? self::$internal[$class] : null) && !$refl->isAbstract())
                     || '.' === (isset(self::$final[$class]) ? self::$final[$class] : null)
-                    || '' === ($doc['final'][0] ?? null)
-                    || '' === ($doc['internal'][0] ?? null)
+                    || '' === (isset($doc['final']) && isset($doc['final'][0]) ? $doc['final'][0] : null)
+                    || '' === (isset($doc['internal']) && isset($doc['internal'][0]) ? $doc['internal'][0] : null)
                 ;
             }
 
@@ -1193,7 +1193,7 @@ EOTXT;
                     continue;
                 }
 
-                $signature = '(' === ($parts[$i + 1][0] ?? '(') ? (isset($parts[$i + 1]) ? $parts[$i + 1] : '()') : null;
+                $signature = '(' === (isset($parts[$i + 1]) && isset($parts[$i + 1][0]) ? $parts[$i + 1][0] : '(') ? (isset($parts[$i + 1]) ? $parts[$i + 1] : '()') : null;
 
                 if (null === $signature && '' === $returnType) {
                     $returnType = $p;
