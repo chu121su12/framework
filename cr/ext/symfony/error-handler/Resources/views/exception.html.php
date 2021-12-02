@@ -4,7 +4,7 @@
             <h2 class="exception-hierarchy">
                 <?php foreach (array_reverse($exception->getAllPrevious(), true) as $index => $previousException) { ?>
                     <a href="#trace-box-<?= $index + 2; ?>"><?= $this->abbrClass($previousException->getClass()); ?></a>
-                    <span class="icon"><?= $this->include('assets/images/chevron-right.svg'); ?></span>
+                    <span class="icon"><?= $this->include_('assets/images/chevron-right.svg'); ?></span>
                 <?php } ?>
                 <a href="#trace-box-1"><?= $this->abbrClass($exception->getClass()); ?></a>
             </h2>
@@ -19,7 +19,7 @@
             <h1 class="break-long-words exception-message<?= mb_strlen($exceptionMessage) > 180 ? ' long' : ''; ?>"><?= $this->formatFileFromText(nl2br($exceptionMessage)); ?></h1>
 
             <div class="exception-illustration hidden-xs-down">
-                <?= $this->include('assets/images/symfony-ghost.svg.php'); ?>
+                <?= $this->include_('assets/images/symfony-ghost.svg.php'); ?>
             </div>
         </div>
     </div>
@@ -52,7 +52,7 @@
             <div class="tab-content">
                 <?php
                 foreach ($exceptionAsArray as $i => $e) {
-                    echo $this->include('views/traces.html.php', [
+                    echo $this->include_('views/traces.html.php', [
                         'exception' => $e,
                         'index' => $i + 1,
                         'expand' => in_array($i, $exceptionWithUserCode, true) || ([] === $exceptionWithUserCode && 0 === $i),
@@ -71,7 +71,7 @@
 
             <div class="tab-content">
                 <?php if ($logger->getLogs()) { ?>
-                    <?= $this->include('views/logs.html.php', ['logs' => $logger->getLogs()]); ?>
+                    <?= $this->include_('views/logs.html.php', ['logs' => $logger->getLogs()]); ?>
                 <?php } else { ?>
                     <div class="empty">
                         <p>No log messages</p>
@@ -93,7 +93,7 @@
             <div class="tab-content">
                 <?php
                 foreach ($exceptionAsArray as $i => $e) {
-                    echo $this->include('views/traces_text.html.php', [
+                    echo $this->include_('views/traces_text.html.php', [
                         'exception' => $e,
                         'index' => $i + 1,
                         'numExceptions' => $exceptionAsArrayCount,
