@@ -20,8 +20,10 @@ class FatalError extends \Error
      *
      * @param array $error An array as returned by error_get_last()
      */
-    public function __construct(string $message, int $code, array $error, int $traceOffset = null, bool $traceArgs = true, array $trace = null)
+    public function __construct(string $message, int $code, array $error, /*int */$traceOffset = null, bool $traceArgs = true, array $trace = null)
     {
+        $traceOffset = cast_to_int($traceOffset, null);
+
         parent::__construct($message, $code);
 
         $this->error = $error;
