@@ -53,11 +53,12 @@ class SerializerErrorRenderer implements ErrorRendererInterface
     /**
      * {@inheritdoc}
      */
-    public function render($exception) // FlattenException
+    public function render(/*\Throwable */$exception)/*: FlattenException*/
     {
+        backport_type_throwable($exception);
+
         $headers = [];
-        $thisDebug = $this->debug;
-        $debug = \is_bool($thisDebug) ? $thisDebug : $thisDebug($exception);
+        $debug = \is_bool($this->debug) ? $this->debug : call_user_func($this->debug, $exception);
         if ($debug) {
             $headers['X-Debug-Exception'] = rawurlencode($exception->getMessage());
             $headers['X-Debug-Exception-File'] = rawurlencode($exception->getFile()).':'.$exception->getLine();
@@ -66,11 +67,10 @@ class SerializerErrorRenderer implements ErrorRendererInterface
         $flattenException = FlattenException::createFromThrowable($exception, null, $headers);
 
         try {
-            $thisFormat = $this->format;
-            $format = \is_string($thisFormat) ? $thisFormat : $thisFormat($flattenException);
-            $requestFormat = Request::getMimeTypes($format);
+            $format = \is_string($this->format) ? $this->format : call_user_func($this->format, $flattenException);
+            $requestMimeTypeFormat = Request::getMimeTypes($format);
             $headers = [
-                'Content-Type' => isset($requestFormat[0]) ? $requestFormat[0] : $format,
+                'Content-Type' => isset($requestMimeTypeFormat[0]) ? $requestMimeTypeFormat[0] : $format,
                 'Vary' => 'Accept',
             ];
 
@@ -84,7 +84,7 @@ class SerializerErrorRenderer implements ErrorRendererInterface
         }
     }
 
-    public static function getPreferredFormat(RequestStack $requestStack) // \Closure
+    public static function getPreferredFormat(RequestStack $requestStack)/*: \Closure*/
     {
         return static function () use ($requestStack) {
             if (!$request = $requestStack->getCurrentRequest()) {
