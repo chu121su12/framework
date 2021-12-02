@@ -53,8 +53,10 @@ class SerializerErrorRenderer implements ErrorRendererInterface
     /**
      * {@inheritdoc}
      */
-    public function render(\Throwable $exception)/*: FlattenException*/
+    public function render(/*\Throwable */$exception)/*: FlattenException*/
     {
+        backport_type_throwable($exception);
+
         $headers = [];
         $debug = \is_bool($this->debug) ? $this->debug : call_user_func($this->debug, $exception);
         if ($debug) {

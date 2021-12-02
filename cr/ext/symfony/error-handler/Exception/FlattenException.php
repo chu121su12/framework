@@ -73,8 +73,10 @@ class FlattenException
     /**
      * @return static
      */
-    public static function createFromThrowable(\Throwable $exception, /*int */$statusCode = null, array $headers = [])/*: self*/
+    public static function createFromThrowable(/*\Throwable */$exception, /*int */$statusCode = null, array $headers = [])/*: self*/
     {
+        backport_type_throwable($exception);
+
         $statusCode = cast_to_int($statusCode, null);
 
         $e = new static();
@@ -311,8 +313,10 @@ class FlattenException
     /**
      * @return $this
      */
-    public function setTraceFromThrowable(\Throwable $throwable)/*: self*/
+    public function setTraceFromThrowable(/*\Throwable */$throwable)/*: self*/
     {
+        backport_type_throwable($throwable);
+
         $this->traceAsString = $throwable->getTraceAsString();
 
         return $this->setTrace($throwable->getTrace(), $throwable->getFile(), $throwable->getLine());

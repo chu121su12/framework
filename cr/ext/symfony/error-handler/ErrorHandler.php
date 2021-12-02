@@ -597,8 +597,10 @@ class ErrorHandler
      *
      * @internal
      */
-    public function handleException(\Throwable $exception)
+    public function handleException(/*\Throwable */$exception)
     {
+        backport_type_throwable($exception);
+
         $handlerException = null;
 
         if (!$exception instanceof FatalError) {
@@ -626,6 +628,8 @@ class ErrorHandler
 
             try {
                 $this->loggers[$type][0]->log($this->loggers[$type][1], $message, ['exception' => $exception]);
+            } catch (\Exception $handlerException) {
+            } catch (\Error $handlerException) {
             } catch (\Throwable $handlerException) {
             }
         }
@@ -651,6 +655,8 @@ class ErrorHandler
                 return $exceptionHandler($exception);
             }
             $handlerException = $handlerException ?: $exception;
+        } catch (\Exception $handlerException) {
+        } catch (\Error $handlerException) {
         } catch (\Throwable $handlerException) {
         }
         if ($exception === $handlerException && null === $this->exceptionHandler) {
@@ -754,8 +760,10 @@ class ErrorHandler
      * As this method is mainly called during boot where nothing is yet available,
      * the output is always either HTML or CLI depending where PHP runs.
      */
-    private function renderException(\Throwable $exception)/*: void*/
+    private function renderException(/*\Throwable */$exception)/*: void*/
     {
+        backport_type_throwable($exception);
+
         $renderer = \in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) ? new CliErrorRenderer() : new HtmlErrorRenderer($this->debug);
 
         $exception = $renderer->render($exception);

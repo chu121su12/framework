@@ -22,8 +22,10 @@ class UndefinedFunctionErrorEnhancer implements ErrorEnhancerInterface
     /**
      * {@inheritdoc}
      */
-    public function enhance(\Throwable $error)/*: ?\Throwable*/
+    public function enhance(/*\Throwable */$error)/*: ?\Throwable*/
     {
+        backport_type_throwable($error);
+
         if ($error instanceof FatalError) {
             return null;
         }

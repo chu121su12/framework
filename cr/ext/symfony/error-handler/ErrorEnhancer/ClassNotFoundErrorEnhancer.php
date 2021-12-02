@@ -24,8 +24,10 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
     /**
      * {@inheritdoc}
      */
-    public function enhance(\Throwable $error)/*: ?\Throwable*/
+    public function enhance(/*\Throwable */$error)/*: ?\Throwable*/
     {
+        backport_type_throwable($error);
+
         // Some specific versions of PHP produce a fatal error when extending a not found class.
         $message = !$error instanceof FatalError ? $error->getMessage() : $error->getError()['message'];
         if (!preg_match('/^(Class|Interface|Trait) [\'"]([^\'"]+)[\'"] not found$/', $message, $matches)) {
@@ -169,9 +171,15 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
             }
         }
 
+        $e = null;
         try {
             require_once $file;
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (\Throwable $e) {
+        }
+
+        if (isset($e)) {
             return null;
         }
 

@@ -40,8 +40,10 @@ class CliErrorRenderer implements ErrorRendererInterface
     /**
      * {@inheritdoc}
      */
-    public function render(\Throwable $exception)/*: FlattenException*/
+    public function render(/*\Throwable */$exception)/*: FlattenException*/
     {
+        backport_type_throwable($exception);
+
         $cloner = new VarCloner();
         $dumper = new CliErrorRenderer_render_class;
 

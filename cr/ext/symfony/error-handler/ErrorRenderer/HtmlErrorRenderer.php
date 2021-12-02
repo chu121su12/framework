@@ -72,8 +72,10 @@ class HtmlErrorRenderer implements ErrorRendererInterface
     /**
      * {@inheritdoc}
      */
-    public function render(\Throwable $exception)/*: FlattenException*/
+    public function render(/*\Throwable */$exception)/*: FlattenException*/
     {
+        backport_type_throwable($exception);
+
         $headers = ['Content-Type' => 'text/html; charset='.$this->charset];
         if (\is_bool($this->debug) ? $this->debug : call_user_func($this->debug, $exception)) {
             $headers['X-Debug-Exception'] = rawurlencode($exception->getMessage());
