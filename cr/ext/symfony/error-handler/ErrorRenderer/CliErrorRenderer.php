@@ -26,11 +26,11 @@ class CliErrorRenderer implements ErrorRendererInterface
     /**
      * {@inheritdoc}
      */
-    public function render(\Throwable $exception): FlattenException
+    public function render(\Throwable $exception)/*: FlattenException*/
     {
         $cloner = new VarCloner();
         $dumper = new class() extends CliDumper {
-            protected function supportsColors(): bool
+            protected function supportsColors()/*: bool*/
             {
                 $outputStream = $this->outputStream;
                 $this->outputStream = fopen('php://stdout', 'w');

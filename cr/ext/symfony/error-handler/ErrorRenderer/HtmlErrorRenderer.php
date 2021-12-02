@@ -68,7 +68,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
     /**
      * {@inheritdoc}
      */
-    public function render(\Throwable $exception): FlattenException
+    public function render(\Throwable $exception)/*: FlattenException*/
     {
         $headers = ['Content-Type' => 'text/html; charset='.$this->charset];
         if (\is_bool($this->debug) ? $this->debug : ($this->debug)($exception)) {
@@ -84,7 +84,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
     /**
      * Gets the HTML content associated with the given exception.
      */
-    public function getBody(FlattenException $exception): string
+    public function getBody(FlattenException $exception)/*: string*/
     {
         return $this->renderException($exception, 'views/exception.html.php');
     }
@@ -92,7 +92,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
     /**
      * Gets the stylesheet associated with the given exception.
      */
-    public function getStylesheet(): string
+    public function getStylesheet()/*: string*/
     {
         if (!$this->debug) {
             return $this->include('assets/css/error.css');
@@ -101,7 +101,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return $this->include('assets/css/exception.css');
     }
 
-    public static function isDebug(RequestStack $requestStack, bool $debug): \Closure
+    public static function isDebug(RequestStack $requestStack, bool $debug)/*: \Closure*/
     {
         return static function () use ($requestStack, $debug): bool {
             if (!$request = $requestStack->getCurrentRequest()) {
@@ -112,7 +112,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         };
     }
 
-    public static function getAndCleanOutputBuffer(RequestStack $requestStack): \Closure
+    public static function getAndCleanOutputBuffer(RequestStack $requestStack)/*: \Closure*/
     {
         return static function () use ($requestStack): string {
             if (!$request = $requestStack->getCurrentRequest()) {
@@ -131,7 +131,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         };
     }
 
-    private function renderException(FlattenException $exception, string $debugTemplate = 'views/exception_full.html.php'): string
+    private function renderException(FlattenException $exception, string $debugTemplate = 'views/exception_full.html.php')/*: string*/
     {
         $debug = \is_bool($this->debug) ? $this->debug : ($this->debug)($exception);
         $statusText = $this->escape($exception->getStatusText());
@@ -159,7 +159,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
     /**
      * Formats an array as a string.
      */
-    private function formatArgs(array $args): string
+    private function formatArgs(array $args)/*: string*/
     {
         $result = [];
         foreach ($args as $key => $item) {
@@ -188,12 +188,12 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return strip_tags($this->formatArgs($args));
     }
 
-    private function escape(string $string): string
+    private function escape(string $string)/*: string*/
     {
         return htmlspecialchars($string, \ENT_COMPAT | \ENT_SUBSTITUTE, $this->charset);
     }
 
-    private function abbrClass(string $class): string
+    private function abbrClass(string $class)/*: string*/
     {
         $parts = explode('\\', $class);
         $short = array_pop($parts);
@@ -201,7 +201,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return sprintf('<abbr title="%s">%s</abbr>', $class, $short);
     }
 
-    private function getFileRelative(string $file): ?string
+    private function getFileRelative(string $file)/*: ?string*/
     {
         $file = str_replace('\\', '/', $file);
 
@@ -233,7 +233,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      * @param int    $line The line number
      * @param string $text Use this text for the link rather than the file path
      */
-    private function formatFile(string $file, int $line, string $text = null): string
+    private function formatFile(string $file, int $line, string $text = null)/*: string*/
     {
         $file = trim($file);
 
@@ -265,7 +265,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      *
      * @return string
      */
-    private function fileExcerpt(string $file, int $line, int $srcContext = 3): string
+    private function fileExcerpt(string $file, int $line, int $srcContext = 3)/*: string*/
     {
         if (is_file($file) && is_readable($file)) {
             // highlight_file could throw warnings
@@ -338,7 +338,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return $this->escape($message);
     }
 
-    private function addElementToGhost(): string
+    private function addElementToGhost()/*: string*/
     {
         if (!isset(self::GHOST_ADDONS[date('m-d')])) {
             return '';
@@ -347,7 +347,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return '<path d="'.self::GHOST_ADDONS[date('m-d')].'" fill="#fff" fill-opacity="0.6"></path>';
     }
 
-    private function include(string $name, array $context = []): string
+    private function include(string $name, array $context = [])/*: string*/
     {
         extract($context, \EXTR_SKIP);
         ob_start();
@@ -362,7 +362,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      *
      * @param string $template path to the custom template file to render
      */
-    public static function setTemplate(string $template): void
+    public static function setTemplate(string $template)/*: void*/
     {
         self::$template = $template;
     }

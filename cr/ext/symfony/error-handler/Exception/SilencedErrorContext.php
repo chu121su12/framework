@@ -34,27 +34,27 @@ class SilencedErrorContext implements \JsonSerializable
         $this->count = $count;
     }
 
-    public function getSeverity(): int
+    public function getSeverity()/*: int*/
     {
         return $this->severity;
     }
 
-    public function getFile(): string
+    public function getFile()/*: string*/
     {
         return $this->file;
     }
 
-    public function getLine(): int
+    public function getLine()/*: int*/
     {
         return $this->line;
     }
 
-    public function getTrace(): array
+    public function getTrace()/*: array*/
     {
         return $this->trace;
     }
 
-    public function jsonSerialize(): array
+    public function jsonSerialize()/*: array*/
     {
         return [
             'severity' => $this->severity,

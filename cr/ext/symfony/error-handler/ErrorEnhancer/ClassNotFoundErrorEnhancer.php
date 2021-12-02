@@ -24,7 +24,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
     /**
      * {@inheritdoc}
      */
-    public function enhance(\Throwable $error): ?\Throwable
+    public function enhance(\Throwable $error)/*: ?\Throwable*/
     {
         // Some specific versions of PHP produce a fatal error when extending a not found class.
         $message = !$error instanceof FatalError ? $error->getMessage() : $error->getError()['message'];
@@ -68,7 +68,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
      *
      * Returns an array of possible fully qualified class names
      */
-    private function getClassCandidates(string $class): array
+    private function getClassCandidates(string $class)/*: array*/
     {
         if (!\is_array($functions = spl_autoload_functions())) {
             return [];
@@ -108,7 +108,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         return array_unique(array_merge([], ...$classes));
     }
 
-    private function findClassInPath(string $path, string $class, string $prefix): array
+    private function findClassInPath(string $path, string $class, string $prefix)/*: array*/
     {
         if (!$path = realpath($path.'/'.strtr($prefix, '\\_', '//')) ?: realpath($path.'/'.\dirname(strtr($prefix, '\\_', '//'))) ?: realpath($path)) {
             return [];
@@ -125,7 +125,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         return $classes;
     }
 
-    private function convertFileToClass(string $path, string $file, string $prefix): ?string
+    private function convertFileToClass(string $path, string $file, string $prefix)/*: ?string*/
     {
         $candidates = [
             // namespaced class
@@ -170,7 +170,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
         return null;
     }
 
-    private function classExists(string $class): bool
+    private function classExists(string $class)/*: bool*/
     {
         return class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false);
     }

@@ -53,7 +53,7 @@ class SerializerErrorRenderer implements ErrorRendererInterface
     /**
      * {@inheritdoc}
      */
-    public function render(\Throwable $exception): FlattenException
+    public function render(\Throwable $exception)/*: FlattenException*/
     {
         $headers = [];
         $debug = \is_bool($this->debug) ? $this->debug : ($this->debug)($exception);
@@ -81,7 +81,7 @@ class SerializerErrorRenderer implements ErrorRendererInterface
         }
     }
 
-    public static function getPreferredFormat(RequestStack $requestStack): \Closure
+    public static function getPreferredFormat(RequestStack $requestStack)/*: \Closure*/
     {
         return static function () use ($requestStack) {
             if (!$request = $requestStack->getCurrentRequest()) {
