@@ -870,7 +870,7 @@ class DebugClassLoader
         self::$returnTypes[$class][$method] = [$phpType, $docType, $class, $filename];
     }
 
-    private function normalizeType(/*string */$type, /*string */$class, /*?string */$parent = null, ?\ReflectionType $returnType)/*: string*/
+    private function normalizeType(/*string */$type, /*string */$class, /*?string */$parent = null, /*?*/\ReflectionType $returnType = null)/*: string*/
     {
         $class = cast_to_string($class);
 
