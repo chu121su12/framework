@@ -75,7 +75,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
     public function render(\Throwable $exception)/*: FlattenException*/
     {
         $headers = ['Content-Type' => 'text/html; charset='.$this->charset];
-        if (\is_bool($this->debug) ? $this->debug : ($this->debug)($exception)) {
+        if (\is_bool($this->debug) ? $this->debug : call_user_func($this->debug, $exception)) {
             $headers['X-Debug-Exception'] = rawurlencode($exception->getMessage());
             $headers['X-Debug-Exception-File'] = rawurlencode($exception->getFile()).':'.$exception->getLine();
         }
@@ -109,7 +109,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
     {
         $debug = cast_to_bool($debug);
 
-        return static function () use ($requestStack, $debug): bool {
+        return static function () use ($requestStack, $debug)/*: bool*/ {
             if (!$request = $requestStack->getCurrentRequest()) {
                 return $debug;
             }
@@ -120,7 +120,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
 
     public static function getAndCleanOutputBuffer(RequestStack $requestStack)/*: \Closure*/
     {
-        return static function () use ($requestStack): string {
+        return static function () use ($requestStack)/*: string*/ {
             if (!$request = $requestStack->getCurrentRequest()) {
                 return '';
             }
@@ -141,7 +141,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
     {
         $debugTemplate = cast_to_string($debugTemplate);
 
-        $debug = \is_bool($this->debug) ? $this->debug : ($this->debug)($exception);
+        $debug = \is_bool($this->debug) ? $this->debug : call_user_func($this->debug, $exception);
         $statusText = $this->escape($exception->getStatusText());
         $statusCode = $this->escape($exception->getStatusCode());
 
@@ -160,7 +160,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
             'statusText' => $statusText,
             'statusCode' => $statusCode,
             'logger' => $this->logger instanceof DebugLoggerInterface ? $this->logger : null,
-            'currentContent' => \is_string($this->outputBuffer) ? $this->outputBuffer : ($this->outputBuffer)(),
+            'currentContent' => \is_string($this->outputBuffer) ? $this->outputBuffer : call_user_func($this->outputBuffer),
         ]);
     }
 
@@ -376,14 +376,15 @@ class HtmlErrorRenderer implements ErrorRendererInterface
 
     private function addElementToGhost()/*: string*/
     {
-        if (!isset(self::GHOST_ADDONS[date('m-d')])) {
+        $GHOST_ADDONS = self::GHOST_ADDONS;
+        if (!isset($GHOST_ADDONS[date('m-d')])) {
             return '';
         }
 
         return '<path d="'.self::GHOST_ADDONS[date('m-d')].'" fill="#fff" fill-opacity="0.6"></path>';
     }
 
-    private function include(/*string */$name, array $context = [])/*: string*/
+    private function include_(/*string */$name, array $context = [])/*: string*/
     {
         $name = cast_to_string($name);
 

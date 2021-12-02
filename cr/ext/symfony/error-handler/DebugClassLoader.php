@@ -289,7 +289,7 @@ class DebugClassLoader
                     return;
                 }
             } else {
-                ($this->classLoader)($class);
+                call_user_func($this->classLoader, $class);
                 $file = '';
             }
         } finally {
@@ -388,7 +388,7 @@ class DebugClassLoader
             }
 
             if ($refl->isInterface() && isset($doc['method'])) {
-                foreach ($doc['method'] as $name => [$static, $returnType, $signature, $description]) {
+                foreach ($doc['method'] as $name => list($static, $returnType, $signature, $description)) {
                     self::$method[$class][] = [$class, $static, $returnType, $name.$signature, $description];
 
                     if ('' !== $returnType) {
@@ -448,7 +448,8 @@ class DebugClassLoader
                             continue;
                         }
                         $realName = substr($name, 0, strpos($name, '('));
-                        if (!$refl->hasMethod($realName) || !($methodRefl = $refl->getMethod($realName))->isPublic() || ($static && !$methodRefl->isStatic()) || (!$static && $methodRefl->isStatic())) {
+                        $hasMethod = $refl->hasMethod($realName);
+                        if (!$refl->hasMethod($realName) || !with($methodRefl = $refl->getMethod($realName))->isPublic() || ($static && !$methodRefl->isStatic()) || (!$static && $methodRefl->isStatic())) {
                             $deprecations[] = sprintf('Class "%s" should implement method "%s::%s%s"%s', $className, ($static ? 'static ' : '').$interface, $name, $returnType ? ': '.$returnType : '', null === $description ? '.' : ': '.$description);
                         }
                     }
@@ -472,6 +473,8 @@ class DebugClassLoader
         self::$finalMethods[$class] = [];
         self::$internalMethods[$class] = [];
         self::$annotatedParameters[$class] = [];
+        $tentativeReturnTypes = TentativeTypes::RETURN_TYPES;
+        $builtinReturnTypes = self::BUILTIN_RETURN_TYPES;
         foreach ($parentAndOwnInterfaces as $use) {
             foreach (['finalMethods', 'internalMethods', 'annotatedParameters', 'returnTypes'] as $property) {
                 if (isset(self::${$property}[$use])) {
@@ -479,11 +482,12 @@ class DebugClassLoader
                 }
             }
 
-            if (null !== (TentativeTypes::RETURN_TYPES[$use] ?? null)) {
+
+            if (null !== (isset($tentativeReturnTypes[$use]) ? $tentativeReturnTypes[$use] : null)) {
                 foreach (TentativeTypes::RETURN_TYPES[$use] as $method => $returnType) {
                     $returnType = explode('|', $returnType);
                     foreach ($returnType as $i => $t) {
-                        if ('?' !== $t && !isset(self::BUILTIN_RETURN_TYPES[$t])) {
+                        if ('?' !== $t && !isset($builtinReturnTypes[$t])) {
                             $returnType[$i] = '\\'.$t;
                         }
                     }
@@ -494,6 +498,7 @@ class DebugClassLoader
             }
         }
 
+        $magicMethods = self::MAGIC_METHODS;
         foreach ($refl->getMethods() as $method) {
             if ($method->class !== $class) {
                 continue;
@@ -542,7 +547,7 @@ class DebugClassLoader
             $forcePatchTypes = $this->patchTypes['force'];
 
             if ($canAddReturnType = null !== $forcePatchTypes && false === strpos($method->getFileName(), \DIRECTORY_SEPARATOR.'vendor'.\DIRECTORY_SEPARATOR)) {
-                if ('void' !== (isset(self::MAGIC_METHODS[$method->name]) ? self::MAGIC_METHODS[$method->name] : 'void')) {
+                if ('void' !== (isset($magicMethods[$method->name]) ? $magicMethods[$method->name] : 'void')) {
                     $this->patchTypes['force'] = $forcePatchTypes ?: 'docblock';
                 }
 
@@ -558,11 +563,11 @@ class DebugClassLoader
                 ;
             }
 
-            if (null !== ($returnType = (isset(self::$returnTypes[$class]) && isset(self::$returnTypes[$class][$method->name]) ? self::$returnTypes[$class][$method->name] : null)) && 'docblock' === $this->patchTypes['force'] && !$method->hasReturnType() && isset(TentativeTypes::RETURN_TYPES[$returnType[2]][$method->name])) {
+            if (null !== ($returnType = (isset(self::$returnTypes[$class]) && isset(self::$returnTypes[$class][$method->name]) ? self::$returnTypes[$class][$method->name] : null)) && 'docblock' === $this->patchTypes['force'] && !$method->hasReturnType() && isset($tentativeReturnTypes[$returnType[2]][$method->name])) {
                 $this->patchReturnTypeWillChange($method);
             }
 
-            if (null !== (isset($returnType) ? $returnType : ($returnType = (isset(self::MAGIC_METHODS[$method->name]) ? self::MAGIC_METHODS[$method->name] : null))) && !$method->hasReturnType() && !isset($doc['return'])) {
+            if (null !== (isset($returnType) ? $returnType : ($returnType = (isset($magicMethods[$method->name]) ? $magicMethods[$method->name] : null))) && !$method->hasReturnType() && !isset($doc['return'])) {
                 list($normalizedType, $returnType, $declaringClass, $declaringFile) = \is_string($returnType) ? [$returnType, $returnType, '', ''] : $returnType;
 
                 if ($canAddReturnType && 'docblock' !== $this->patchTypes['force']) {
@@ -583,7 +588,7 @@ class DebugClassLoader
                 continue;
             }
 
-            if (isset($doc['return']) || 'void' !== (isset(self::MAGIC_METHODS[$method->name]) ? self::MAGIC_METHODS[$method->name] : 'void')) {
+            if (isset($doc['return']) || 'void' !== (isset($magicMethods[$method->name]) ? $magicMethods[$method->name] : 'void')) {
                 $this->setReturnType(isset($doc['return']) ? $doc['return'] : self::MAGIC_METHODS[$method->name], $method->class, $method->name, $method->getFileName(), $parent, $method->getReturnType());
 
                 if (isset(self::$returnTypes[$class][$method->name][0]) && $canAddReturnType) {
@@ -794,9 +799,10 @@ class DebugClassLoader
         $arrayType = ['array' => 'array'];
         $typesMap = [];
         $glue = false !== strpos($types, '&') ? '&' : '|';
+        $specialReturnTypes = self::SPECIAL_RETURN_TYPES;
         foreach (explode($glue, $types) as $t) {
             $lowerT = strtolower($t);
-            $t = isset(self::SPECIAL_RETURN_TYPES[$lowerT]) ? self::SPECIAL_RETURN_TYPES[$lowerT] : $t;
+            $t = isset($specialReturnTypes[$lowerT]) ? $specialReturnTypes[$lowerT] : $t;
             $typesMap[$this->normalizeType($t, $class, $parent, $returnType)][$t] = $t;
         }
 
@@ -820,7 +826,7 @@ class DebugClassLoader
         foreach ($typesMap as $n => $t) {
             if ('null' !== $n) {
                 $iterable = $iterable && (\in_array($n, ['array', 'iterable']) || false !== strpos($n, 'Iterator'));
-                $object = $object && (\in_array($n, ['callable', 'object', '$this', 'static']) || !isset(self::SPECIAL_RETURN_TYPES[$n]));
+                $object = $object && (\in_array($n, ['callable', 'object', '$this', 'static']) || !isset($specialReturnTypes[$n]));
             }
         }
 
@@ -881,8 +887,9 @@ class DebugClassLoader
 
         $parent = cast_to_string($parent, null);
 
-        if (isset(self::SPECIAL_RETURN_TYPES[$lcType = strtolower($type)])) {
-            if ('parent' === $lcType = self::SPECIAL_RETURN_TYPES[$lcType]) {
+        $specialReturnTypes = self::SPECIAL_RETURN_TYPES;
+        if (isset($specialReturnTypes[$lcType = strtolower($type)])) {
+            if ('parent' === $lcType = $specialReturnTypes[$lcType]) {
                 $lcType = null !== $parent ? '\\'.$parent : 'parent';
             } elseif ('self' === $lcType) {
                 $lcType = '\\'.$class;
@@ -902,7 +909,7 @@ class DebugClassLoader
             $type = $returnType->getName();
 
             if ('mixed' !== $type) {
-                return isset(self::SPECIAL_RETURN_TYPES[$type]) ? $type : '\\'.$type;
+                return isset($specialReturnTypes[$type]) ? $type : '\\'.$type;
             }
         }
 
@@ -965,6 +972,7 @@ class DebugClassLoader
         $returnType = explode($glue, $returnType);
         $code = file($file);
 
+        $specialReturnTypes = self::SPECIAL_RETURN_TYPES;
         foreach ($returnType as $i => $type) {
             if (preg_match('/((?:\[\])+)$/', $type, $m)) {
                 $type = substr($type, 0, -\strlen($m[1]));
@@ -973,7 +981,7 @@ class DebugClassLoader
                 $format = null;
             }
 
-            if (isset(self::SPECIAL_RETURN_TYPES[$type]) || ('\\' === $type[0] && !$p = strrpos($type, '\\', 1))) {
+            if (isset($specialReturnTypes[$type]) || ('\\' === $type[0] && !$p = strrpos($type, '\\', 1))) {
                 continue;
             }
 

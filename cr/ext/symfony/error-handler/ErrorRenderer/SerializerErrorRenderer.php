@@ -56,7 +56,7 @@ class SerializerErrorRenderer implements ErrorRendererInterface
     public function render(\Throwable $exception)/*: FlattenException*/
     {
         $headers = [];
-        $debug = \is_bool($this->debug) ? $this->debug : ($this->debug)($exception);
+        $debug = \is_bool($this->debug) ? $this->debug : call_user_func($this->debug, $exception);
         if ($debug) {
             $headers['X-Debug-Exception'] = rawurlencode($exception->getMessage());
             $headers['X-Debug-Exception-File'] = rawurlencode($exception->getFile()).':'.$exception->getLine();
@@ -65,9 +65,10 @@ class SerializerErrorRenderer implements ErrorRendererInterface
         $flattenException = FlattenException::createFromThrowable($exception, null, $headers);
 
         try {
-            $format = \is_string($this->format) ? $this->format : ($this->format)($flattenException);
+            $format = \is_string($this->format) ? $this->format : call_user_func($this->format, $flattenException);
+            $mimeTypeFormat = Request::getMimeTypes($format);
             $headers = [
-                'Content-Type' => Request::getMimeTypes($format)[0] ?? $format,
+                'Content-Type' => isset($mimeTypeFormat[0]) ? $mimeTypeFormat[0] : $format,
                 'Vary' => 'Accept',
             ];
 

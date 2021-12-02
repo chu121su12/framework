@@ -23,6 +23,9 @@ use Symfony\Component\ErrorHandler\ErrorRenderer\CliErrorRenderer;
 use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
 use Symfony\Component\ErrorHandler\Exception\SilencedErrorContext;
 
+class ErrorHandlerInternalClass extends \Exception {
+        };
+
 /**
  * A generic ErrorHandler for the PHP engine.
  *
@@ -207,8 +210,7 @@ class ErrorHandler
             $traceReflector->setValue($e, $trace);
             $e->file = isset($file) ? $file : $e->file;
             $e->line = isset($line) ? $line : $e->line;
-        }, null, new class() extends \Exception {
-        });
+        }, null, new ErrorHandlerInternalClass);
         $this->debug = $debug;
     }
 
@@ -521,9 +523,9 @@ class ErrorHandler
             if ($throw || $this->tracedErrors & $type) {
                 $backtrace = $errorAsException->getTrace();
                 $lightTrace = $this->cleanTrace($backtrace, $type, $file, $line, $throw);
-                ($this->configureException)($errorAsException, $lightTrace, $file, $line);
+                call_user_func($this->configureException, $errorAsException, $lightTrace, $file, $line);
             } else {
-                ($this->configureException)($errorAsException, []);
+                call_user_func($this->configureException, $errorAsException, []);
                 $backtrace = [];
             }
         }
