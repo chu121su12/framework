@@ -36,7 +36,7 @@ register_shutdown_function(function () {
 
 	$timeFormat = function ($timestamp) {
 		$date = new DateTime();
-		$date->setTimeStamp($timestamp);
+		$date->setTimeStamp((int) $timestamp);
 		return $date->format('G:i:s') . substr($timestamp, strpos($timestamp, '.'));
 	};
 
