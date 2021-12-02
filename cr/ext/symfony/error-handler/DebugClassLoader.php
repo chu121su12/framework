@@ -443,7 +443,7 @@ class DebugClassLoader
                     }
                     $hasCall = $refl->hasMethod('__call');
                     $hasStaticCall = $refl->hasMethod('__callStatic');
-                    foreach (self::$method[$use] as [$interface, $static, $returnType, $name, $description]) {
+                    foreach (self::$method[$use] as list($interface, $static, $returnType, $name, $description)) {
                         if ($static ? $hasStaticCall : $hasCall) {
                             continue;
                         }
@@ -512,12 +512,12 @@ class DebugClassLoader
             }
 
             if ($parent && isset(self::$finalMethods[$parent][$method->name])) {
-                [$declaringClass, $message] = self::$finalMethods[$parent][$method->name];
+                list($declaringClass, $message) = self::$finalMethods[$parent][$method->name];
                 $deprecations[] = sprintf('The "%s::%s()" method is considered final%s It may change without further notice as of its next major version. You should not extend it from "%s".', $declaringClass, $method->name, $message, $className);
             }
 
             if (isset(self::$internalMethods[$class][$method->name])) {
-                [$declaringClass, $message] = self::$internalMethods[$class][$method->name];
+                list($declaringClass, $message) = self::$internalMethods[$class][$method->name];
                 if (strncmp($ns, $declaringClass, $len)) {
                     $deprecations[] = sprintf('The "%s::%s()" method is considered internal%s It may change without further notice. You should not extend it from "%s".', $declaringClass, $method->name, $message, $className);
                 }
@@ -563,7 +563,7 @@ class DebugClassLoader
             }
 
             if (null !== ($returnType ?? $returnType = self::MAGIC_METHODS[$method->name] ?? null) && !$method->hasReturnType() && !isset($doc['return'])) {
-                [$normalizedType, $returnType, $declaringClass, $declaringFile] = \is_string($returnType) ? [$returnType, $returnType, '', ''] : $returnType;
+                list($normalizedType, $returnType, $declaringClass, $declaringFile) = \is_string($returnType) ? [$returnType, $returnType, '', ''] : $returnType;
 
                 if ($canAddReturnType && 'docblock' !== $this->patchTypes['force']) {
                     $this->patchMethod($method, $returnType, $declaringFile, $normalizedType);
@@ -976,10 +976,10 @@ class DebugClassLoader
                 continue;
             }
 
-            [$namespace, $useOffset, $useMap] = (isset($useStatements[$file]) ? $useStatements[$file] : ($useStatements[$file] = self::getUseStatements($file)));
+            list($namespace, $useOffset, $useMap) = (isset($useStatements[$file]) ? $useStatements[$file] : ($useStatements[$file] = self::getUseStatements($file)));
 
             if ('\\' !== $type[0]) {
-                [$declaringNamespace, , $declaringUseMap] = (isset($useStatements[$declaringFile]) ? $useStatements[$declaringFile] : ($useStatements[$declaringFile] = self::getUseStatements($declaringFile)));
+                list($declaringNamespace, , $declaringUseMap) = (isset($useStatements[$declaringFile]) ? $useStatements[$declaringFile] : ($useStatements[$declaringFile] = self::getUseStatements($declaringFile)));
 
                 $p = strpos($type, '\\', 1);
                 $alias = $p ? substr($type, 0, $p) : $type;

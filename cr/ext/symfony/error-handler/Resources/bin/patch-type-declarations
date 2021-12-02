@@ -65,7 +65,7 @@ set_error_handler(function ($type, $msg, $file, $line, $context = []) use (&$dep
         return;
     }
 
-    [,,,,, $class,] = explode('"', $msg);
+    list(,,,,, $class,) = explode('"', $msg);
     $deprecations[$class][] = $msg;
 });
 
