@@ -16,7 +16,7 @@ abstract class DatabaseTestCase extends TestCase
      */
     protected $driver;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $this->beforeApplicationDestroyed(function () {
             foreach (array_keys($this->app['db']->getConnections()) as $name) {
