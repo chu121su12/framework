@@ -705,8 +705,10 @@ class Str
      * @param  string  $value
      * @return string
      */
-    public static function reverse(string $value)
+    public static function reverse(/*string */$value)
     {
+        $value = cast_to_string($value);
+
         return implode(array_reverse(mb_str_split($value)));
     }
 

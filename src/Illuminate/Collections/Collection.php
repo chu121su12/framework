@@ -1487,7 +1487,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      */
     public function unique($key = null, $strict = false)
     {
-        if (is_null($key) && $strict === false) {
+        if (version_compare(PHP_VERSION, '7.0.0', '>=') && is_null($key) && $strict === false) {
             return new static(array_unique($this->items, SORT_REGULAR));
         }
 

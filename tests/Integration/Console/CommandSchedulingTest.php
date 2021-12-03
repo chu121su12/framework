@@ -38,7 +38,7 @@ class CommandSchedulingTest extends TestCase
      */
     protected $fs;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -50,7 +50,7 @@ class CommandSchedulingTest extends TestCase
         $this->writeArtisanScript();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         $this->fs->delete($this->logfile);
         $this->fs->delete(base_path('artisan'));
@@ -63,6 +63,7 @@ class CommandSchedulingTest extends TestCase
     }
 
     /**
+     * @requires OS Linux|Darwin
      * @dataProvider executionProvider
      */
     public function testExecutionOrder($background)

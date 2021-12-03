@@ -16,15 +16,7 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Orchestra\Testbench\TestCase;
 use RuntimeException;
 
-class CallbackSchedulingTest extends TestCase
-{
-    protected $log = [];
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $cache = new class implements Factory
+class CallbackSchedulingTest_setUp_class implements Factory
         {
             public $store;
 
@@ -37,7 +29,17 @@ class CallbackSchedulingTest extends TestCase
             {
                 return $this->store;
             }
-        };
+        }
+
+class CallbackSchedulingTest extends TestCase
+{
+    protected $log = [];
+
+    protected function setUp()/*: void*/
+    {
+        parent::setUp();
+
+        $cache = new CallbackSchedulingTest_setUp_class;
 
         $container = Container::getInstance();
 
@@ -45,7 +47,7 @@ class CallbackSchedulingTest extends TestCase
         $container->instance(SchedulingMutex::class, new CacheSchedulingMutex($cache));
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         Container::setInstance(null);
 
