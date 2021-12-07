@@ -67,8 +67,6 @@ class CommandSchedulingTest extends TestCase
      */
     public function testExecutionOrder($background)
     {
-        $this->markTestSkipped('TODO: Fix');
-
         $event = $this->app->make(Schedule::class)
             ->command("test:{$this->id}")
             ->onOneServer()
@@ -156,7 +154,16 @@ class CommandSchedulingTest extends TestCase
 
 define('LARAVEL_START', microtime(true));
 
-require __DIR__.'/../../../autoload.php';
+foreach ([
+    __DIR__.'/../../../autoload.php',
+    __DIR__.'/../../../../../vendor/autoload.php',
+    __DIR__.'/vendor/autoload.php',
+] as \$autoload) {
+    if (file_exists(\$autoload)) {
+        require \$autoload;
+        break;
+    }
+}
 
 \$app = require_once __DIR__.'/bootstrap/app.php';
 \$kernel = \$app->make(Illuminate\Contracts\Console\Kernel::class);
