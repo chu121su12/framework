@@ -343,12 +343,12 @@ class Handler implements ExceptionHandlerContract
             return $response;
         }
 
-        return match (true) {
-            $e instanceof HttpResponseException => $e->getResponse(),
-            $e instanceof AuthenticationException => $this->unauthenticated($request, $e),
-            $e instanceof ValidationException => $this->convertValidationExceptionToResponse($e, $request),
-            default => $this->renderExceptionResponse($request, $e),
-        };
+        return backport_match(true,
+            [$e instanceof HttpResponseException, function () use ($e) { return $e->getResponse(); }],
+            [$e instanceof AuthenticationException, function () use ($e, $request) { return $this->unauthenticated($request, $e); }],
+            [$e instanceof ValidationException, function () use ($e, $request) { return $this->convertValidationExceptionToResponse($e, $request); }],
+            [__BACKPORT_MATCH_DEFAULT_CASE__, function () use ($e, $request) { return $this->renderExceptionResponse($request, $e); }]
+        );
     }
 
     /**
@@ -357,16 +357,16 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Throwable
      */
-    protected function prepareException(Throwable $e)
+    protected function prepareException(/*Throwable */$e)
     {
-        return match (true) {
-            $e instanceof ModelNotFoundException => new NotFoundHttpException($e->getMessage(), $e),
-            $e instanceof AuthorizationException => new AccessDeniedHttpException($e->getMessage(), $e),
-            $e instanceof TokenMismatchException => new HttpException(419, $e->getMessage(), $e),
-            $e instanceof SuspiciousOperationException => new NotFoundHttpException('Bad hostname provided.', $e),
-            $e instanceof RecordsNotFoundException => new NotFoundHttpException('Not found.', $e),
-            default => $e,
-        };
+        return backport_match(true,
+            [$e instanceof ModelNotFoundException, function () use ($e) { return new NotFoundHttpException($e->getMessage(), $e); }],
+            [$e instanceof AuthorizationException, function () use ($e) { return new AccessDeniedHttpException($e->getMessage(), $e); }],
+            [$e instanceof TokenMismatchException, function () use ($e) { return new HttpException(419, $e->getMessage(), $e); }],
+            [$e instanceof SuspiciousOperationException, function () use ($e) { return new NotFoundHttpException('Bad hostname provided.', $e); }],
+            [$e instanceof RecordsNotFoundException, function () use ($e) { return new NotFoundHttpException('Not found.', $e); }],
+            [__BACKPORT_MATCH_DEFAULT_CASE__, $e]
+        );
     }
 
     /**
@@ -417,7 +417,7 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function renderExceptionResponse($request, Throwable $e)
+    protected function renderExceptionResponse($request, /*Throwable */$e)
     {
         return $this->shouldReturnJson($request, $e)
                     ? $this->prepareJsonResponse($request, $e)

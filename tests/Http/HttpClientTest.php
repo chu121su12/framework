@@ -63,8 +63,10 @@ class HttpClientTest extends TestCase
 
     public function testUnauthorizedRequest()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'laravel.com' => $this->factory::response('', 401),
+            'laravel.com' => $factory::response('', 401),
         ]);
 
         $response = $this->factory->post('http://laravel.com');
@@ -74,8 +76,10 @@ class HttpClientTest extends TestCase
 
     public function testForbiddenRequest()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'laravel.com' => $this->factory::response('', 403),
+            'laravel.com' => $factory::response('', 403),
         ]);
 
         $response = $this->factory->post('http://laravel.com');
