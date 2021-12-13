@@ -37,8 +37,8 @@ if (! \function_exists('backport_match')) {
         foreach ($matchArms as $arms) {
             $expression = \array_pop($arms);
 
-            foreach ($arms as $key => $arm) {
-                if ($key === __BACKPORT_MATCH_DEFAULT_CASE__ && $arm === null) {
+            foreach ($arms as $arm) {
+                if ($arm === __BACKPORT_MATCH_DEFAULT_CASE__) {
                     if ($hasDefault) {
                         \trigger_error('Fatal error', \E_USER_ERROR);
                         throw new \Exception('Fatal error');
