@@ -80,10 +80,12 @@ EOF;
 
         $output = $this->artisan(['--model' => PrunableTestSoftDeletedModelWithPrunableRecords::class]);
 
-        $this->assertEquals(<<<'EOF'
+        $expected = <<<'EOF'
 2 [Illuminate\Tests\Database\PrunableTestSoftDeletedModelWithPrunableRecords] records have been pruned.
 
-EOF, str_replace("\r", '', $output->fetch()));
+EOF;
+
+        $this->assertEquals($expected, str_replace("\r", '', $output->fetch()));
 
         $this->assertEquals(2, PrunableTestSoftDeletedModelWithPrunableRecords::withTrashed()->count());
     }
@@ -161,10 +163,12 @@ EOF;
             '--pretend' => true,
         ]);
 
-        $this->assertEquals(<<<'EOF'
+        $expected = <<<'EOF'
 2 [Illuminate\Tests\Database\PrunableTestSoftDeletedModelWithPrunableRecords] records will be pruned.
 
-EOF, str_replace("\r", '', $output->fetch()));
+EOF;
+
+        $this->assertEquals($expected, str_replace("\r", '', $output->fetch()));
 
         $this->assertEquals(4, PrunableTestSoftDeletedModelWithPrunableRecords::withTrashed()->count());
     }

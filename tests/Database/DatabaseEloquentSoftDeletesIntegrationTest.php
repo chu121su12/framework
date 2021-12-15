@@ -204,17 +204,7 @@ class DatabaseEloquentSoftDeletesIntegrationTest extends TestCase
 
     public function testForceDeleteDoesntUpdateExistsPropertyIfFailed()
     {
-        $user = new class() extends SoftDeletesTestUser
-        {
-            public $exists = true;
-
-            public function newModelQuery()
-            {
-                return Mockery::spy(parent::newModelQuery(), function (Mockery\MockInterface $mock) {
-                    $mock->shouldReceive('forceDelete')->andThrow(new \Exception());
-                });
-            }
-        };
+        $user = new DatabaseEloquentSoftDeletesIntegrationTest_testForceDeleteDoesntUpdateExistsPropertyIfFailed_class;
 
         $this->assertTrue($user->exists);
 
@@ -929,3 +919,15 @@ class SoftDeletesTestGroup extends Eloquent
         $this->hasMany(SoftDeletesTestUser::class);
     }
 }
+
+class DatabaseEloquentSoftDeletesIntegrationTest_testForceDeleteDoesntUpdateExistsPropertyIfFailed_class extends SoftDeletesTestUser
+        {
+            public $exists = true;
+
+            public function newModelQuery()
+            {
+                return Mockery::spy(parent::newModelQuery(), function (Mockery\MockInterface $mock) {
+                    $mock->shouldReceive('forceDelete')->andThrow(new \Exception());
+                });
+            }
+        }

@@ -24,6 +24,9 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
         Concerns\InteractsWithInput,
         Macroable;
 
+    // https://github.com/symfony/http-foundation/commit/9290442f1d4aca01dab1f44731e1781f14531f9a
+    const HEADER_X_FORWARDED_PREFIX = 0b100000;
+
     /**
      * The decoded JSON content for the request.
      *
