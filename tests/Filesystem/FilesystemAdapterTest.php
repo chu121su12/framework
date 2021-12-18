@@ -70,10 +70,6 @@ class FilesystemAdapterTest extends TestCase
 
     public function testDownloadNonAsciiFilename()
     {
-        if (! class_exists('voku\\helper\\ASCII')) {
-            $this->markTestSkipped('voku ASCII is not available.');
-        }
-
         $this->filesystem->write('file.txt', 'Hello World');
         $files = new FilesystemAdapter($this->filesystem, $this->adapter);
         $response = $files->download('file.txt', 'пиздюк.txt');
@@ -83,10 +79,6 @@ class FilesystemAdapterTest extends TestCase
 
     public function testDownloadNonAsciiEmptyFilename()
     {
-        if (! class_exists('voku\\helper\\ASCII')) {
-            $this->markTestSkipped('voku ASCII is not available.');
-        }
-
         $this->filesystem->write('пиздюк.txt', 'Hello World');
         $files = new FilesystemAdapter($this->filesystem, $this->adapter);
         $response = $files->download('пиздюк.txt');
