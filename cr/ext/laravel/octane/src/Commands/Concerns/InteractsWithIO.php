@@ -155,7 +155,7 @@ trait InteractsWithIO
      */
     public function ddInfo($throwable, $verbosity = null)
     {
-        collect(json_decode($throwable['message'], true))
+        collect(backport_json_decode($throwable['message'], true))
             ->each(function ($var) { return VarDumper::dump($var); });
     }
 

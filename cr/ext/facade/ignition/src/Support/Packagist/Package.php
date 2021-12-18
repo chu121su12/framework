@@ -36,7 +36,7 @@ class Package
 
     protected function getNamespaces()/*: Collection*/
     {
-        $details = json_decode(file_get_contents("https://packagist.org/packages/{$this->name}.json"), true);
+        $details = backport_json_decode(file_get_contents("https://packagist.org/packages/{$this->name}.json"), true);
 
         return collect($details['package']['versions'])
             ->map(function ($version) {

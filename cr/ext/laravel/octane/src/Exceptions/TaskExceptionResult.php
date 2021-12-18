@@ -56,7 +56,7 @@ class TaskExceptionResult
     {
         if ($this->class == DdException::class) {
             return new DdException(
-                json_decode($this->message, true)
+                backport_json_decode($this->message, true)
             );
         }
 

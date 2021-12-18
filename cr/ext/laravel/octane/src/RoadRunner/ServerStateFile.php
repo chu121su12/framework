@@ -21,7 +21,7 @@ class ServerStateFile
     public function read() ////: array
     {
         $state = is_readable($this->path)
-                    ? json_decode(file_get_contents($this->path), true)
+                    ? backport_json_decode(file_get_contents($this->path), true)
                     : [];
 
         return [

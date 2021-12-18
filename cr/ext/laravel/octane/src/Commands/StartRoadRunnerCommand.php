@@ -186,11 +186,11 @@ class StartRoadRunnerCommand extends Command/* implements SignalableCommandInter
             ->explode("\n")
             ->filter()
             ->each(function ($output) {
-                if (! is_array($debug = json_decode($output, true))) {
+                if (! is_array($debug = backport_json_decode($output, true))) {
                     return $this->info($output);
                 }
 
-                if (is_array($stream = json_decode($debug['msg'], true))) {
+                if (is_array($stream = backport_json_decode($debug['msg'], true))) {
                     return $this->handleStream($stream);
                 }
 

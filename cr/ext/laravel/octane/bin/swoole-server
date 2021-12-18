@@ -28,7 +28,7 @@ $bootstrap = function ($serverState) { return require __DIR__.'/bootstrap.php'; 
 |
 */
 
-$serverState = json_decode(file_get_contents(
+$serverState = backport_json_decode(file_get_contents(
     $serverStateFile = $_SERVER['argv'][1]
 ), true)['state'];
 

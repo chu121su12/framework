@@ -150,10 +150,10 @@ class RequestWatcher extends Watcher
         $content = $response->getContent();
 
         if (is_string($content)) {
-            if (is_array(json_decode($content, true)) &&
+            if (is_array(backport_json_decode($content, true)) &&
                 json_last_error() === JSON_ERROR_NONE) {
                 return $this->contentWithinLimits($content)
-                        ? $this->hideParameters(json_decode($content, true), Telescope::$hiddenResponseParameters)
+                        ? $this->hideParameters(backport_json_decode($content, true), Telescope::$hiddenResponseParameters)
                         : 'Purged By Telescope';
             }
 
@@ -203,10 +203,10 @@ class RequestWatcher extends Watcher
             } elseif (is_object($value)) {
                 return [
                     'class' => get_class($value),
-                    'properties' => json_decode(json_encode($value), true),
+                    'properties' => backport_json_decode(json_encode($value), true),
                 ];
             } else {
-                return json_decode(json_encode($value), true);
+                return backport_json_decode(json_encode($value), true);
             }
         })->toArray();
     }

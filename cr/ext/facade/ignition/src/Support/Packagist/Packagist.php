@@ -19,7 +19,7 @@ class Packagist
         $url = 'https://packagist.org/search.json?q='.implode(' ', $queryParts);
 
         try {
-            $packages = json_decode(file_get_contents($url));
+            $packages = backport_json_decode(file_get_contents($url));
         } catch (\Exception $e) {
             return [];
         }

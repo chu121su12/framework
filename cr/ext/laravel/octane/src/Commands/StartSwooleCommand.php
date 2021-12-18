@@ -173,7 +173,7 @@ class StartSwooleCommand extends Command/* implements SignalableCommandInterface
         Str::of($server->getIncrementalOutput())
             ->explode("\n")
             ->filter()
-            ->each(function ($output) { return is_array($stream = json_decode($output, true))
+            ->each(function ($output) { return is_array($stream = backport_json_decode($output, true))
                 ? $this->handleStream($stream)
                 : $this->info($output);
             });
@@ -183,7 +183,7 @@ class StartSwooleCommand extends Command/* implements SignalableCommandInterface
             ->filter()
             ->groupBy(function ($output) { return $output; })
             ->each(function ($group) {
-                is_array($stream = json_decode($output = $group->first(), true)) && isset($stream['type'])
+                is_array($stream = backport_json_decode($output = $group->first(), true)) && isset($stream['type'])
                     ? $this->handleStream($stream)
                     : $this->raw($output);
             });
