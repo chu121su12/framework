@@ -181,7 +181,7 @@ class RedisTaggedCache extends TaggedCache
         $cursor = $defaultCursorValue = '0';
 
         do {
-            [$cursor, $valuesChunk] = $this->store->connection()->sscan(
+            list($cursor, $valuesChunk) = $this->store->connection()->sscan(
                 $referenceKey, $cursor, ['match' => '*', 'count' => 1000]
             );
 

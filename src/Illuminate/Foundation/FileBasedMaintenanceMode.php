@@ -12,7 +12,7 @@ class FileBasedMaintenanceMode implements MaintenanceModeContract
      * @param  array  $payload
      * @return void
      */
-    public function activate(array $payload): void
+    public function activate(array $payload)/*: void*/
     {
         file_put_contents(
             $this->path(),
@@ -25,7 +25,7 @@ class FileBasedMaintenanceMode implements MaintenanceModeContract
      *
      * @return void
      */
-    public function deactivate(): void
+    public function deactivate()/*: void*/
     {
         if ($this->active()) {
             unlink($this->path());
@@ -37,7 +37,7 @@ class FileBasedMaintenanceMode implements MaintenanceModeContract
      *
      * @return bool
      */
-    public function active(): bool
+    public function active()/*: bool*/
     {
         return file_exists($this->path());
     }
@@ -47,9 +47,9 @@ class FileBasedMaintenanceMode implements MaintenanceModeContract
      *
      * @return array
      */
-    public function data(): array
+    public function data()/*: array*/
     {
-        return json_decode(file_get_contents($this->path()), true);
+        return backport_json_decode(file_get_contents($this->path()), true);
     }
 
     /**
@@ -57,7 +57,7 @@ class FileBasedMaintenanceMode implements MaintenanceModeContract
      *
      * @return string
      */
-    protected function path(): string
+    protected function path()/*: string*/
     {
         return storage_path('framework/down');
     }

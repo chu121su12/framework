@@ -20,6 +20,10 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
 
     public function testBasicCustomCasting()
     {
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $this->markTestSkipped('Test uses ReturnType attribute.');
+        }
+
         $model = new TestEloquentModelWithAttributeCast;
         $model->uppercase = 'taylor';
 
@@ -70,8 +74,8 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
         $this->assertSame('117 Spencer St.', $model->toArray()['address_line_one']);
         $this->assertSame('My Childhood House', $model->toArray()['address_line_two']);
 
-        $this->assertSame('117 Spencer St.', json_decode($model->toJson(), true)['address_line_one']);
-        $this->assertSame('My Childhood House', json_decode($model->toJson(), true)['address_line_two']);
+        $this->assertSame('117 Spencer St.', backport_json_decode($model->toJson(), true)['address_line_one']);
+        $this->assertSame('My Childhood House', backport_json_decode($model->toJson(), true)['address_line_two']);
 
         $model->address = null;
 
@@ -100,6 +104,10 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
 
     public function testGetOriginalWithCastValueObjects()
     {
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $this->markTestSkipped('Test uses ReturnType attribute.');
+        }
+
         $model = new TestEloquentModelWithAttributeCast([
             'address' => new AttributeCastAddress('110 Kingsbrook St.', 'My Childhood House'),
         ]);
@@ -140,6 +148,10 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
 
     public function testOneWayCasting()
     {
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $this->markTestSkipped('Test uses ReturnType attribute.');
+        }
+
         $model = new TestEloquentModelWithAttributeCast;
 
         $model->password = 'secret';
@@ -159,6 +171,10 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
 
     public function testSettingRawAttributesClearsTheCastCache()
     {
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $this->markTestSkipped('Test uses ReturnType attribute.');
+        }
+
         $model = new TestEloquentModelWithAttributeCast;
 
         $model->setRawAttributes([
@@ -225,7 +241,7 @@ class TestEloquentModelWithAttributeCast extends Model
     {
         return new Attribute(
             function ($value) {
-                return json_decode($value, true);
+                return backport_json_decode($value, true);
             },
             function ($value) {
                 return json_encode($value);

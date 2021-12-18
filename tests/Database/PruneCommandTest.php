@@ -85,7 +85,7 @@ EOF;
 
 EOF;
 
-        $this->assertEquals($expected, str_replace("\r", '', $output->fetch()));
+        $this->assertSameStringDifferentLineEndings($expected, $output->fetch());
 
         $this->assertEquals(2, PrunableTestSoftDeletedModelWithPrunableRecords::withTrashed()->count());
     }
@@ -168,7 +168,7 @@ EOF;
 
 EOF;
 
-        $this->assertEquals($expected, str_replace("\r", '', $output->fetch()));
+        $this->assertSameStringDifferentLineEndings($expected, $output->fetch());
 
         $this->assertEquals(4, PrunableTestSoftDeletedModelWithPrunableRecords::withTrashed()->count());
     }

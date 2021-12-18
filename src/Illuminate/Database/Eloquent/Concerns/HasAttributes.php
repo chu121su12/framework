@@ -563,6 +563,10 @@ trait HasAttributes
      */
     public function hasAttributeGetMutator($key)
     {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            return false;
+        }
+
         if (isset(static::$attributeMutatorCache[get_class($this)][$key])) {
             return static::$attributeMutatorCache[get_class($this)][$key];
         }
@@ -572,6 +576,12 @@ trait HasAttributes
         }
 
         $returnType = (new ReflectionMethod($this, $method))->getReturnType();
+
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
+            return static::$attributeMutatorCache[get_class($this)][$key] = $returnType &&
+                (string) $returnType === Attribute::class &&
+                is_callable($this->{$method}()->get);
+        }
 
         return static::$attributeMutatorCache[get_class($this)][$key] = $returnType &&
                     $returnType instanceof ReflectionNamedType &&
@@ -939,6 +949,10 @@ trait HasAttributes
      */
     public function hasAttributeSetMutator($key)
     {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            return false;
+        }
+
         $class = get_class($this);
 
         if (isset(static::$setAttributeMutatorCache[$class][$key])) {
@@ -950,6 +964,12 @@ trait HasAttributes
         }
 
         $returnType = (new ReflectionMethod($this, $method))->getReturnType();
+
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
+            return static::$setAttributeMutatorCache[$class][$key] = $returnType &&
+                (string) $returnType === Attribute::class &&
+                is_callable($this->{$method}()->set);
+        }
 
         return static::$setAttributeMutatorCache[$class][$key] = $returnType &&
                     $returnType instanceof ReflectionNamedType &&
@@ -2070,10 +2090,27 @@ trait HasAttributes
      */
     protected static function getAttributeMarkedMutatorMethods($class)
     {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            return [];
+        }
+
         $instance = is_object($class) ? $class : new $class;
 
         return collect((new ReflectionClass($instance))->getMethods())->filter(function ($method) use ($instance) {
             $returnType = $method->getReturnType();
+
+            if (version_compare(PHP_VERSION, '7.1.0', '<')) {
+                if ($returnType &&
+                    (string) $returnType === Attribute::class) {
+                    $method->setAccessible(true);
+
+                    if (is_callable($method->invoke($instance)->get)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
 
             if ($returnType &&
                 $returnType instanceof ReflectionNamedType &&

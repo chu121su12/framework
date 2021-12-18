@@ -176,7 +176,7 @@ class Logger implements LoggerInterface
      * @param  array  $context
      * @return void
      */
-    protected function writeLog($level, $message, $context): void
+    protected function writeLog($level, $message, $context)/*: void*/
     {
         $this->logger->{$level}(
             $message = $this->formatMessage($message),
