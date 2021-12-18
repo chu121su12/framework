@@ -99,6 +99,13 @@ class PendingRequest
     protected $retryDelay = 100;
 
     /**
+     * Whether to throw an exception when all retries fail.
+     *
+     * @var bool
+     */
+    protected $retryThrow = true;
+
+    /**
      * The callback that will determine if the request should be retried.
      *
      * @var callable|null
@@ -464,15 +471,18 @@ class PendingRequest
      * @param  int  $times
      * @param  int  $sleep
      * @param  callable|null  $when
+     * @param  bool  $throw
      * @return $this
      */
-    public function retry(/*int */$times, /*int */$sleep = 0, /*?*/callable $when = null)
+    public function retry(/*int */$times, /*int */$sleep = 0, /*?*/callable $when = null, /*bool */$throw = true)
     {
         $times = cast_to_int($times);
         $sleep = cast_to_int($sleep);
+        $throw = cast_to_bool($throw);
 
         $this->tries = $times;
         $this->retryDelay = $sleep;
+        $this->retryThrow = $throw;
         $this->retryWhenCallback = $when;
 
         return $this;
@@ -704,7 +714,7 @@ class PendingRequest
                 return tap(new Response($this->sendRequest($method, $url, $options)), function ($response) {
                     $this->populateResponse($response);
 
-                    if ($this->tries > 1 && ! $response->successful()) {
+                    if ($this->tries > 1 && $this->retryThrow && ! $response->successful()) {
                         $response->throw_();
                     }
 

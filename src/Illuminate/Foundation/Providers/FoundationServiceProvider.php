@@ -2,6 +2,8 @@
 
 namespace Illuminate\Foundation\Providers;
 
+use Illuminate\Contracts\Foundation\MaintenanceMode as MaintenanceModeContract;
+use Illuminate\Foundation\FileBasedMaintenanceMode;
 use Illuminate\Http\Request;
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\AggregateServiceProvider;
@@ -48,6 +50,7 @@ class FoundationServiceProvider extends AggregateServiceProvider
         $this->registerRequestValidation();
         $this->registerRequestSignatureValidation();
         $this->registerExceptionTracking();
+        $this->registerMaintenanceModeManager();
     }
 
     /**
@@ -118,5 +121,15 @@ class FoundationServiceProvider extends AggregateServiceProvider
                         ->push($event->context['exception']);
             }
         });
+    }
+
+    /**
+     * Register the maintenance mode manager service.
+     *
+     * @return void
+     */
+    public function registerMaintenanceModeManager()
+    {
+        $this->app->bind(MaintenanceModeContract::class, FileBasedMaintenanceMode::class);
     }
 }
