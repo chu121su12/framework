@@ -241,7 +241,7 @@
                 "Carbon\\Laravel\\ServiceProvider",
                 "Facade\\Ignition\\IgnitionServiceProvider",
                 "Fruitcake\\Cors\\CorsServiceProvider",
-                "Laravel\\Breeze\\BreezeServiceProvider"
+                "Laravel\\Breeze\\BreezeServiceProvider",
                 "Laravel\\Fortify\\FortifyServiceProvider",
                 "Laravel\\Octane\\OctaneServiceProvider",
                 "Laravel\\Sanctum\\SanctumServiceProvider",
