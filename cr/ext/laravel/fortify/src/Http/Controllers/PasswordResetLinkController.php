@@ -20,7 +20,7 @@ class PasswordResetLinkController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Laravel\Fortify\Contracts\RequestPasswordResetLinkViewResponse
      */
-    public function create(Request $request): RequestPasswordResetLinkViewResponse
+    public function create(Request $request)/*: RequestPasswordResetLinkViewResponse*/
     {
         return app(RequestPasswordResetLinkViewResponse::class);
     }
@@ -31,7 +31,7 @@ class PasswordResetLinkController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Contracts\Support\Responsable
      */
-    public function store(Request $request): Responsable
+    public function store(Request $request)/*: Responsable*/
     {
         $request->validate([Fortify::email() => 'required|email']);
 
@@ -52,7 +52,7 @@ class PasswordResetLinkController extends Controller
      *
      * @return \Illuminate\Contracts\Auth\PasswordBroker
      */
-    protected function broker(): PasswordBroker
+    protected function broker()/*: PasswordBroker*/
     {
         return Password::broker(config('fortify.passwords'));
     }

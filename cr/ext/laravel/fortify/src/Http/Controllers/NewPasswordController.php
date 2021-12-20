@@ -41,7 +41,7 @@ class NewPasswordController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Laravel\Fortify\Contracts\ResetPasswordViewResponse
      */
-    public function create(Request $request): ResetPasswordViewResponse
+    public function create(Request $request)/*: ResetPasswordViewResponse*/
     {
         return app(ResetPasswordViewResponse::class);
     }
@@ -52,7 +52,7 @@ class NewPasswordController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Contracts\Support\Responsable
      */
-    public function store(Request $request): Responsable
+    public function store(Request $request)/*: Responsable*/
     {
         $request->validate([
             'token' => 'required',
@@ -68,7 +68,7 @@ class NewPasswordController extends Controller
             function ($user) use ($request) {
                 app(ResetsUserPasswords::class)->reset($user, $request->all());
 
-                app(CompletePasswordReset::class)($this->guard, $user);
+                call_user_func(app(CompletePasswordReset::class), $this->guard, $user);
             }
         );
 
@@ -85,7 +85,7 @@ class NewPasswordController extends Controller
      *
      * @return \Illuminate\Contracts\Auth\PasswordBroker
      */
-    protected function broker(): PasswordBroker
+    protected function broker()/*: PasswordBroker*/
     {
         return Password::broker(config('fortify.passwords'));
     }

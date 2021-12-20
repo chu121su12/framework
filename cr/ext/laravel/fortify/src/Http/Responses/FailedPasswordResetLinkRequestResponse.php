@@ -20,8 +20,10 @@ class FailedPasswordResetLinkRequestResponse implements FailedPasswordResetLinkR
      * @param  string  $status
      * @return void
      */
-    public function __construct(string $status)
+    public function __construct(/*string */$status)
     {
+        $status = cast_to_string($status);
+
         $this->status = $status;
     }
 

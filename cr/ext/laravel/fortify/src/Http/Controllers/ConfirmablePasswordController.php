@@ -49,7 +49,7 @@ class ConfirmablePasswordController extends Controller
      */
     public function store(Request $request)
     {
-        $confirmed = app(ConfirmPassword::class)(
+        $confirmed = call_user_func(app(ConfirmPassword::class),
             $this->guard, $request->user(), $request->input('password')
         );
 

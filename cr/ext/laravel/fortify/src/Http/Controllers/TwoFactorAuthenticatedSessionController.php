@@ -37,7 +37,7 @@ class TwoFactorAuthenticatedSessionController extends Controller
      * @param  \Laravel\Fortify\Http\Requests\TwoFactorLoginRequest  $request
      * @return \Laravel\Fortify\Contracts\TwoFactorChallengeViewResponse
      */
-    public function create(TwoFactorLoginRequest $request): TwoFactorChallengeViewResponse
+    public function create(TwoFactorLoginRequest $request)/*: TwoFactorChallengeViewResponse*/
     {
         if (! $request->hasChallengedUser()) {
             throw new HttpResponseException(redirect()->route('login'));

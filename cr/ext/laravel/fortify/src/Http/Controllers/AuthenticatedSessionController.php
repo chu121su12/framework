@@ -43,7 +43,7 @@ class AuthenticatedSessionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Laravel\Fortify\Contracts\LoginViewResponse
      */
-    public function create(Request $request): LoginViewResponse
+    public function create(Request $request)/*: LoginViewResponse*/
     {
         return app(LoginViewResponse::class);
     }
@@ -95,7 +95,7 @@ class AuthenticatedSessionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Laravel\Fortify\Contracts\LogoutResponse
      */
-    public function destroy(Request $request): LogoutResponse
+    public function destroy(Request $request)/*: LogoutResponse*/
     {
         $this->guard->logout();
 

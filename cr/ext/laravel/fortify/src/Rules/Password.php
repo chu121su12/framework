@@ -142,8 +142,10 @@ class Password implements Rule
      * @param  int  $length
      * @return $this
      */
-    public function length(int $length)
+    public function length(/*int */$length)
     {
+        $length = cast_to_int($length);
+
         $this->length = $length;
 
         return $this;
@@ -191,8 +193,10 @@ class Password implements Rule
      * @param  string  $message
      * @return $this
      */
-    public function withMessage(string $message)
+    public function withMessage(/*string */$message)
     {
+        $message = cast_to_string($message);
+
         $this->message = $message;
 
         return $this;

@@ -71,9 +71,13 @@ class Fortify
      * @param  string  $redirect
      * @return string
      */
-    public static function redirects(string $redirect, $default = null)
+    public static function redirects(/*string */$redirect, $default = null)
     {
-        return config('fortify.redirects.'.$redirect) ?? $default ?? config('fortify.home');
+        $redirect = cast_to_string($redirect);
+
+        $fortifyRedirect = config('fortify.redirects.'.$redirect);
+
+        return isset($fortifyRedirect) ? $fortifyRedirect : (isset($default) ? $default : config('fortify.home'));
     }
 
     /**
@@ -82,8 +86,10 @@ class Fortify
      * @param  string  $namespace
      * @return void
      */
-    public static function viewNamespace(string $namespace)
+    public static function viewNamespace(/*string */$namespace)
     {
+        $namespace = cast_to_string($namespace);
+
         static::viewPrefix($namespace.'::');
     }
 
@@ -93,8 +99,10 @@ class Fortify
      * @param  string  $prefix
      * @return void
      */
-    public static function viewPrefix(string $prefix)
+    public static function viewPrefix(/*string */$prefix)
     {
+        $prefix = cast_to_string($prefix);
+
         static::loginView($prefix.'login');
         static::twoFactorChallengeView($prefix.'two-factor-challenge');
         static::registerView($prefix.'register');
@@ -245,8 +253,10 @@ class Fortify
      * @param  string  $callback
      * @return void
      */
-    public static function createUsersUsing(string $callback)
+    public static function createUsersUsing(/*string */$callback)
     {
+        $callback = cast_to_string($callback);
+
         app()->singleton(CreatesNewUsers::class, $callback);
     }
 
@@ -256,8 +266,10 @@ class Fortify
      * @param  string  $callback
      * @return void
      */
-    public static function updateUserProfileInformationUsing(string $callback)
+    public static function updateUserProfileInformationUsing(/*string */$callback)
     {
+        $callback = cast_to_string($callback);
+
         app()->singleton(UpdatesUserProfileInformation::class, $callback);
     }
 
@@ -267,8 +279,10 @@ class Fortify
      * @param  string  $callback
      * @return void
      */
-    public static function updateUserPasswordsUsing(string $callback)
+    public static function updateUserPasswordsUsing(/*string */$callback)
     {
+        $callback = cast_to_string($callback);
+
         app()->singleton(UpdatesUserPasswords::class, $callback);
     }
 
@@ -278,8 +292,10 @@ class Fortify
      * @param  string  $callback
      * @return void
      */
-    public static function resetUserPasswordsUsing(string $callback)
+    public static function resetUserPasswordsUsing(/*string */$callback)
     {
+        $callback = cast_to_string($callback);
+
         app()->singleton(ResetsUserPasswords::class, $callback);
     }
 
