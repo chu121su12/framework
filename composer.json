@@ -46,6 +46,7 @@
         "facade/flare-client-php": "1.9.1",
         "facade/ignition": "^2.16.1",
         "fruitcake/laravel-cors": "^2.0.4",
+        "laravel/breeze": "^1.6.0",
         "laravel/fortify": "^1.8.5",
         "laravel/octane": "^1.0.20",
         "laravel/serializable-closure": "^1.0.4",
@@ -172,8 +173,9 @@
             "src/Illuminate/Support/helpers.php"
         ],
         "psr-4": {
-            "Laravel\\Ui\\": "cr/patch/laravel-ui/src/",
             "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/auth-backend/",
+            "Laravel\\Breeze\\": "cr/ext/laravel/breeze/src/",
+            "Laravel\\Ui\\": "cr/patch/laravel-ui/src/",
 
             "Asm89\\Stack\\": "cr/ext/asm89/stack-cors/src/",
             "Carbon\\": "cr/ext/nesbot/carbon/src/",
@@ -239,6 +241,7 @@
                 "Carbon\\Laravel\\ServiceProvider",
                 "Facade\\Ignition\\IgnitionServiceProvider",
                 "Fruitcake\\Cors\\CorsServiceProvider",
+                "Laravel\\Breeze\\BreezeServiceProvider"
                 "Laravel\\Fortify\\FortifyServiceProvider",
                 "Laravel\\Octane\\OctaneServiceProvider",
                 "Laravel\\Sanctum\\SanctumServiceProvider",
