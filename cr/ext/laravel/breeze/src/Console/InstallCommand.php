@@ -87,7 +87,7 @@ class InstallCommand extends Command
             $modifiedMiddlewareGroup = str_replace(
                 $after.',',
                 $after.','.PHP_EOL.'            '.$name.',',
-                $middlewareGroup,
+                $middlewareGroup
             );
 
             file_put_contents(app_path('Http/Kernel.php'), str_replace(
@@ -113,7 +113,7 @@ class InstallCommand extends Command
         }
 
         $command = array_merge(
-            $command ?? ['composer', 'require'],
+            isset($command) ? $command : ['composer', 'require'],
             is_array($packages) ? $packages : func_get_args()
         );
 
