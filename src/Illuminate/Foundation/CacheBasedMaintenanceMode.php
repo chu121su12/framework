@@ -37,8 +37,11 @@ class CacheBasedMaintenanceMode implements MaintenanceMode
      * @param  string  $key
      * @return void
      */
-    public function __construct(Factory $cache, string $store, string $key)
+    public function __construct(Factory $cache, /*string */$store, /*string */$key)
     {
+        $store = cast_to_string($store);
+        $key = cast_to_string($key);
+
         $this->cache = $cache;
         $this->store = $store;
         $this->key = $key;
@@ -50,7 +53,7 @@ class CacheBasedMaintenanceMode implements MaintenanceMode
      * @param  array  $payload
      * @return void
      */
-    public function activate(array $payload): void
+    public function activate(array $payload)/*: void*/
     {
         $this->getStore()->put($this->key, $payload);
     }
@@ -60,7 +63,7 @@ class CacheBasedMaintenanceMode implements MaintenanceMode
      *
      * @return void
      */
-    public function deactivate(): void
+    public function deactivate()/*: void*/
     {
         $this->getStore()->forget($this->key);
     }
@@ -70,7 +73,7 @@ class CacheBasedMaintenanceMode implements MaintenanceMode
      *
      * @return bool
      */
-    public function active(): bool
+    public function active()/*: bool*/
     {
         return $this->getStore()->has($this->key);
     }
@@ -80,7 +83,7 @@ class CacheBasedMaintenanceMode implements MaintenanceMode
      *
      * @return array
      */
-    public function data(): array
+    public function data()/*: array*/
     {
         return $this->getStore()->get($this->key);
     }
@@ -90,7 +93,7 @@ class CacheBasedMaintenanceMode implements MaintenanceMode
      *
      * @return \Illuminate\Contracts\Cache\Repository
      */
-    protected function getStore(): Repository
+    protected function getStore()/*: Repository*/
     {
         return $this->cache->store($this->store);
     }

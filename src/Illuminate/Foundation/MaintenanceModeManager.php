@@ -11,7 +11,7 @@ class MaintenanceModeManager extends Manager
      *
      * @return \Illuminate\Foundation\FileBasedMaintenanceMode
      */
-    protected function createFileDriver(): FileBasedMaintenanceMode
+    protected function createFileDriver()/*: FileBasedMaintenanceMode*/
     {
         return new FileBasedMaintenanceMode();
     }
@@ -23,7 +23,7 @@ class MaintenanceModeManager extends Manager
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function createCacheDriver(): CacheBasedMaintenanceMode
+    protected function createCacheDriver()/*: CacheBasedMaintenanceMode*/
     {
         return new CacheBasedMaintenanceMode(
             $this->container->make('cache'),
@@ -37,7 +37,7 @@ class MaintenanceModeManager extends Manager
      *
      * @return string
      */
-    public function getDefaultDriver(): string
+    public function getDefaultDriver()/*: string*/
     {
         return $this->config->get('app.maintenance.driver', 'file');
     }
