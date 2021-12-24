@@ -263,7 +263,7 @@ class VendorPublishCommand extends Command
             $path = Str::after($file['path'], 'from://');
 
             if ($file['type'] === 'file' && (! $manager->has('to://'.$path) || $this->option('force'))) {
-                $manager->put('to://'.$path, $manager->read($file['path']));
+                $manager->put('to://'.$path, $manager->read('from://'.$path));
             }
         }
     }
