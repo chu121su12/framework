@@ -14,7 +14,7 @@
         "doctrine/inflector": "^1.1",
         "dragonmantank/cron-expression": "^1.2.1",
         "egulias/email-validator": "^2.1.10",
-        "filp/whoops": "^2.0",
+        "filp/whoops": "^2.14.3",
         "ircmaxell/password-compat": "~1.0",
         "laminas/laminas-diactoros": "^1.8",
         "league/commonmark": "^0.18.5",
