@@ -16,6 +16,7 @@
         "egulias/email-validator": "^2.1.10",
         "filp/whoops": "^2.14.3",
         "ircmaxell/password-compat": "~1.0",
+        "jenssegers/agent": "^2.6",
         "laminas/laminas-diactoros": "^1.8",
         "league/commonmark": "^0.18.5",
         "league/commonmark-ext-table": "^0.9.0",
@@ -49,6 +50,7 @@
         "fruitcake/laravel-cors": "^2.0.4",
         "laravel/breeze": "^1.6.0",
         "laravel/fortify": "^1.8.5",
+        "laravel/jetstream": "^2.5.0",
         "laravel/octane": "^1.0.20",
         "laravel/serializable-closure": "^1.0.4",
         "laravel/telescope": "^4.6.7",
@@ -176,6 +178,7 @@
         "psr-4": {
             "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/auth-backend/",
             "Laravel\\Breeze\\": "cr/ext/laravel/breeze/src/",
+            "Laravel\\Jetstream\\": "cr/ext/laravel/jetstream/src/",
             "Laravel\\Ui\\": "cr/patch/laravel-ui/src/",
 
             "Asm89\\Stack\\": "cr/ext/asm89/stack-cors/src/",
@@ -244,6 +247,7 @@
                 "Fruitcake\\Cors\\CorsServiceProvider",
                 "Laravel\\Breeze\\BreezeServiceProvider",
                 "Laravel\\Fortify\\FortifyServiceProvider",
+                "Laravel\\Jetstream\\JetstreamServiceProvider",
                 "Laravel\\Octane\\OctaneServiceProvider",
                 "Laravel\\Sanctum\\SanctumServiceProvider",
                 "Laravel\\Telescope\\TelescopeServiceProvider",
