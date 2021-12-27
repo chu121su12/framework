@@ -9,8 +9,10 @@ use PHPUnit\Framework\Assert as PHPUnit;
 
 trait Has
 {
-    protected function count(string $key, $length): self
+    protected function count(/*string */$key, $length)/*: self*/
     {
+        $key = cast_to_string($key);
+
         PHPUnit::assertCount(
             $length,
             $this->prop($key),
@@ -20,7 +22,7 @@ trait Has
         return $this;
     }
 
-    public function hasAll($key): self
+    public function hasAll($key)/*: self*/
     {
         $keys = is_array($key) ? $key : func_get_args();
 
@@ -35,8 +37,10 @@ trait Has
         return $this;
     }
 
-    public function has(string $key, $value = null, Closure $scope = null): self
+    public function has(/*string */$key, $value = null, Closure $scope = null)/*: self*/
     {
+        $key = cast_to_string($key);
+
         PHPUnit::assertTrue(
             Arr::has($this->prop(), $key),
             sprintf('Inertia property [%s] does not exist.', $this->dotPath($key))
@@ -68,7 +72,7 @@ trait Has
         return $this;
     }
 
-    public function missingAll($key): self
+    public function missingAll($key)/*: self*/
     {
         $keys = is_array($key) ? $key : func_get_args();
 
@@ -79,8 +83,10 @@ trait Has
         return $this;
     }
 
-    public function missing(string $key): self
+    public function missing(/*string */$key)/*: self*/
     {
+        $key = cast_to_string($key);
+
         $this->interactsWith($key);
 
         PHPUnit::assertNotTrue(
@@ -91,23 +97,25 @@ trait Has
         return $this;
     }
 
-    public function missesAll($key): self
+    public function missesAll($key)/*: self*/
     {
         return $this->missingAll(
             is_array($key) ? $key : func_get_args()
         );
     }
 
-    public function misses(string $key): self
+    public function misses(/*string */$key)/*: self*/
     {
+        $key = cast_to_string($key);
+
         return $this->missing($key);
     }
 
     abstract protected function prop(string $key = null);
 
-    abstract protected function dotPath($key): string;
+    abstract protected function dotPath($key)/*: string*/;
 
-    abstract protected function interactsWith(string $key): void;
+    abstract protected function interactsWith(string $key)/*: void*/;
 
     abstract protected function scope($key, Closure $callback);
 }

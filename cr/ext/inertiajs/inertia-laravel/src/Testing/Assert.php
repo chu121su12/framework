@@ -32,8 +32,14 @@ class Assert implements Arrayable
     /** @var string */
     private $path;
 
-    protected function __construct(string $component, array $props, string $url, $version = null, string $path = null)
+    protected function __construct(/*string */$component, array $props, /*string */$url, $version = null, /*string */$path = null)
     {
+        $url = cast_to_string($url);
+
+        $component = cast_to_string($component);
+
+        $path = cast_to_string($path, null);
+
         $this->path = $path;
 
         $this->component = $component;
@@ -42,7 +48,7 @@ class Assert implements Arrayable
         $this->version = $version;
     }
 
-    protected function dotPath($key): string
+    protected function dotPath($key)/*: string*/
     {
         if (is_null($this->path)) {
             return $key;
@@ -51,7 +57,7 @@ class Assert implements Arrayable
         return implode('.', [$this->path, $key]);
     }
 
-    protected function scope($key, Closure $callback): self
+    protected function scope($key, Closure $callback)/*: self*/
     {
         $props = $this->prop($key);
         $path = $this->dotPath($key);
@@ -65,7 +71,7 @@ class Assert implements Arrayable
         return $this;
     }
 
-    public static function fromTestResponse($response): self
+    public static function fromTestResponse($response)/*: self*/
     {
         try {
             $response->assertViewHas('page');

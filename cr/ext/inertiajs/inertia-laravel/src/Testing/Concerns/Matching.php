@@ -10,7 +10,7 @@ use PHPUnit\Framework\Assert as PHPUnit;
 
 trait Matching
 {
-    public function whereAll(array $bindings): self
+    public function whereAll(array $bindings)/*: self*/
     {
         foreach ($bindings as $key => $value) {
             $this->where($key, $value);
@@ -19,7 +19,7 @@ trait Matching
         return $this;
     }
 
-    public function where($key, $expected): self
+    public function where($key, $expected)/*: self*/
     {
         $this->has($key);
 
@@ -52,7 +52,7 @@ trait Matching
         return $this;
     }
 
-    protected function ensureSorted(&$value): void
+    protected function ensureSorted(&$value)/*: void*/
     {
         if (! is_array($value)) {
             return;
@@ -65,7 +65,7 @@ trait Matching
         ksort($value);
     }
 
-    abstract protected function dotPath($key): string;
+    abstract protected function dotPath($key)/*: string*/;
 
     abstract protected function prop(string $key = null);
 

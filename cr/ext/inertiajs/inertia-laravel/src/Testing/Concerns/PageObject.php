@@ -8,8 +8,10 @@ use PHPUnit\Framework\Assert as PHPUnit;
 
 trait PageObject
 {
-    public function component(string $value = null, $shouldExist = null): self
+    public function component(/*string */$value = null, $shouldExist = null)/*: self*/
     {
+        $value = cast_to_string($value, null);
+
         PHPUnit::assertSame($value, $this->component, 'Unexpected Inertia page component.');
 
         if ($shouldExist || (is_null($shouldExist) && config('inertia.testing.ensure_pages_exist', true))) {
@@ -23,26 +25,30 @@ trait PageObject
         return $this;
     }
 
-    protected function prop(string $key = null)
+    protected function prop(/*string */$key = null)
     {
+        $key = cast_to_string($key, null);
+
         return Arr::get($this->props, $key);
     }
 
-    public function url(string $value): self
+    public function url(/*string */$value)/*: self*/
     {
+        $value = cast_to_string($value);
+
         PHPUnit::assertSame($value, $this->url, 'Unexpected Inertia page url.');
 
         return $this;
     }
 
-    public function version($value): self
+    public function version($value)/*: self*/
     {
         PHPUnit::assertSame($value, $this->version, 'Unexpected Inertia asset version.');
 
         return $this;
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'component' => $this->component,

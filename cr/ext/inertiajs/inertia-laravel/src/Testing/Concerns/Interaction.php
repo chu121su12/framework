@@ -10,8 +10,10 @@ trait Interaction
     /** @var array */
     protected $interacted = [];
 
-    protected function interactsWith(string $key): void
+    protected function interactsWith(/*string */$key)/*: void*/
     {
+        $key = cast_to_string($key);
+
         $prop = Str::before($key, '.');
 
         if (! in_array($prop, $this->interacted, true)) {
@@ -19,7 +21,7 @@ trait Interaction
         }
     }
 
-    public function interacted(): void
+    public function interacted()/*: void*/
     {
         PHPUnit::assertSame(
             [],
@@ -30,7 +32,7 @@ trait Interaction
         );
     }
 
-    public function etc(): self
+    public function etc()/*: self*/
     {
         $this->interacted = array_keys($this->prop());
 
