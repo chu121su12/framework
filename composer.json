@@ -150,6 +150,7 @@
             "cr/helpers/backport.php",
             "cr/helpers/casts.php",
             "cr/helpers/helpers.php",
+            "cr/ext/inertiajs/inertia-laravel/helpers.php",
 
             "cr/ext/facade/flare-client-php/src/helpers.php",
             "cr/ext/facade/ignition/src/helpers.php",
@@ -177,6 +178,7 @@
         ],
         "psr-4": {
             "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/auth-backend/",
+            "Inertia\\": "cr/ext/inertiajs/inertia-laravel/src",
             "Laravel\\Breeze\\": "cr/ext/laravel/breeze/src/",
             "Laravel\\Jetstream\\": "cr/ext/laravel/jetstream/src/",
             "Laravel\\Ui\\": "cr/patch/laravel-ui/src/",
@@ -242,12 +244,14 @@
         },
         "laravel": {
             "providers": [
+                "Inertia\\ServiceProvider",
+                "Laravel\\Breeze\\BreezeServiceProvider",
+                "Laravel\\Jetstream\\JetstreamServiceProvider",
+
                 "Carbon\\Laravel\\ServiceProvider",
                 "Facade\\Ignition\\IgnitionServiceProvider",
                 "Fruitcake\\Cors\\CorsServiceProvider",
-                "Laravel\\Breeze\\BreezeServiceProvider",
                 "Laravel\\Fortify\\FortifyServiceProvider",
-                "Laravel\\Jetstream\\JetstreamServiceProvider",
                 "Laravel\\Octane\\OctaneServiceProvider",
                 "Laravel\\Sanctum\\SanctumServiceProvider",
                 "Laravel\\Telescope\\TelescopeServiceProvider",
