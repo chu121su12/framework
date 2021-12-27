@@ -156,8 +156,10 @@ trait HasTeams
      * @param  string  $role
      * @return bool
      */
-    public function hasTeamRole($team, string $role)
+    public function hasTeamRole($team, /*string */$role)
     {
+        $role = cast_to_string($role);
+
         if ($this->ownsTeam($team)) {
             return true;
         }
@@ -193,8 +195,10 @@ trait HasTeams
      * @param  string  $permission
      * @return bool
      */
-    public function hasTeamPermission($team, string $permission)
+    public function hasTeamPermission($team, /*string */$permission)
     {
+        $permission = cast_to_string($permission);
+
         if ($this->ownsTeam($team)) {
             return true;
         }

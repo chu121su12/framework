@@ -30,7 +30,7 @@ class TeamInvitationController extends Controller
         $invitation->delete();
 
         return redirect(config('fortify.home'))->banner(
-            __('Great! You have accepted the invitation to join the :team team.', ['team' => $invitation->team->name]),
+            __('Great! You have accepted the invitation to join the :team team.', ['team' => $invitation->team->name])
         );
     }
 

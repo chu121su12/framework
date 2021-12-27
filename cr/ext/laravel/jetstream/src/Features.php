@@ -10,8 +10,10 @@ class Features
      * @param  string  $feature
      * @return bool
      */
-    public static function enabled(string $feature)
+    public static function enabled(/*string */$feature)
     {
+        $feature = cast_to_string($feature);
+
         return in_array($feature, config('jetstream.features', []));
     }
 
@@ -22,8 +24,12 @@ class Features
      * @param  string  $option
      * @return bool
      */
-    public static function optionEnabled(string $feature, string $option)
+    public static function optionEnabled(/*string */$feature, /*string */$option)
     {
+        $option = cast_to_string($option);
+
+        $feature = cast_to_string($feature);
+
         return static::enabled($feature) &&
                config("jetstream-options.{$feature}.{$option}") === true;
     }

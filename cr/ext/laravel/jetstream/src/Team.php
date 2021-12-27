@@ -56,8 +56,10 @@ abstract class Team extends Model
      * @param  string  $email
      * @return bool
      */
-    public function hasUserWithEmail(string $email)
+    public function hasUserWithEmail(/*string */$email)
     {
+        $email = cast_to_string($email);
+
         return $this->allUsers()->contains(function ($user) use ($email) {
             return $user->email === $email;
         });

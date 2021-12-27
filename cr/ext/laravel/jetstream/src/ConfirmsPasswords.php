@@ -36,8 +36,10 @@ trait ConfirmsPasswords
      * @param  string  $confirmableId
      * @return void
      */
-    public function startConfirmingPassword(string $confirmableId)
+    public function startConfirmingPassword(/*string */$confirmableId)
     {
+        $confirmableId = cast_to_string($confirmableId);
+
         $this->resetErrorBag();
 
         if ($this->passwordIsConfirmed()) {
@@ -72,7 +74,8 @@ trait ConfirmsPasswords
      */
     public function confirmPassword()
     {
-        if (! app(ConfirmPassword::class)(app(StatefulGuard::class), Auth::user(), $this->confirmablePassword)) {
+        $confirmPassword = app(ConfirmPassword::class);
+        if (! $confirmPassword(app(StatefulGuard::class), Auth::user(), $this->confirmablePassword)) {
             throw ValidationException::withMessages([
                 'confirmable_password' => [__('This password does not match our records.')],
             ]);

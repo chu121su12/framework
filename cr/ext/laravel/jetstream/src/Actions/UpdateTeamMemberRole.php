@@ -19,8 +19,10 @@ class UpdateTeamMemberRole
      * @param  string  $role
      * @return void
      */
-    public function update($user, $team, $teamMemberId, string $role)
+    public function update($user, $team, $teamMemberId, /*string */$role)
     {
+        $role = cast_to_string($role);
+
         Gate::forUser($user)->authorize('updateTeamMember', $team);
 
         Validator::make([

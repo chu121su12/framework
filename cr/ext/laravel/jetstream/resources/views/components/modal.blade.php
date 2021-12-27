@@ -1,7 +1,7 @@
 @props(['id', 'maxWidth'])
 
 @php
-$id = $id ?? md5($attributes->wire('model'));
+$id = isset($id) ? $id : md5($attributes->wire('model'));
 
 $maxWidth = [
     'sm' => 'sm:max-w-sm',
@@ -9,7 +9,7 @@ $maxWidth = [
     'lg' => 'sm:max-w-lg',
     'xl' => 'sm:max-w-xl',
     '2xl' => 'sm:max-w-2xl',
-][$maxWidth ?? '2xl'];
+][isset($maxWidth) ? $maxWidth : '2xl'];
 @endphp
 
 <div

@@ -42,8 +42,12 @@ class Role implements JsonSerializable
      * @param  array  $permissions
      * @return void
      */
-    public function __construct(string $key, string $name, array $permissions)
+    public function __construct(/*string */$key, /*string */$name, array $permissions)
     {
+        $name = cast_to_string($name);
+
+        $key = cast_to_string($key);
+
         $this->key = $key;
         $this->name = $name;
         $this->permissions = $permissions;
@@ -55,8 +59,10 @@ class Role implements JsonSerializable
      * @param  string  $description
      * @return $this
      */
-    public function description(string $description)
+    public function description(/*string */$description)
     {
+        $description = cast_to_string($description);
+
         $this->description = $description;
 
         return $this;

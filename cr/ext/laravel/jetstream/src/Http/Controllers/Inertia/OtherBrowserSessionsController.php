@@ -20,7 +20,8 @@ class OtherBrowserSessionsController extends Controller
      */
     public function destroy(Request $request, StatefulGuard $guard)
     {
-        $confirmed = app(ConfirmPassword::class)(
+        $confirmPassword = app(ConfirmPassword::class);
+        $confirmed = $confirmPassword(
             $guard, $request->user(), $request->password
         );
 

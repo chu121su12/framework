@@ -21,8 +21,12 @@ class AddTeamMember implements AddsTeamMembers
      * @param  string|null  $role
      * @return void
      */
-    public function add($user, $team, string $email, string $role = null)
+    public function add($user, $team, /*string */$email, /*string */$role = null)
     {
+        $email = cast_to_string($email);
+
+        $role = cast_to_string($role, null);
+
         Gate::forUser($user)->authorize('addTeamMember', $team);
 
         $this->validate($team, $email, $role);
@@ -46,8 +50,12 @@ class AddTeamMember implements AddsTeamMembers
      * @param  string|null  $role
      * @return void
      */
-    protected function validate($team, string $email, ?string $role)
+    protected function validate($team, /*string */$email, /*?string */$role = null)
     {
+        $email = cast_to_string($email);
+
+        $role = cast_to_string($role, null);
+
         Validator::make([
             'email' => $email,
             'role' => $role,
@@ -80,8 +88,10 @@ class AddTeamMember implements AddsTeamMembers
      * @param  string  $email
      * @return \Closure
      */
-    protected function ensureUserIsNotAlreadyOnTeam($team, string $email)
+    protected function ensureUserIsNotAlreadyOnTeam($team, /*string */$email)
     {
+        $email = cast_to_string($email);
+
         return function ($validator) use ($team, $email) {
             $validator->errors()->addIf(
                 $team->hasUserWithEmail($email),

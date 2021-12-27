@@ -92,9 +92,11 @@ class Jetstream
      * @param  string  $key
      * @return \Laravel\Jetstream\Role
      */
-    public static function findRole(string $key)
+    public static function findRole(/*string */$key)
     {
-        return static::$roles[$key] ?? null;
+        $key = cast_to_string($key);
+
+        return isset(static::$roles[$key]) ? static::$roles[$key] : null;
     }
 
     /**
@@ -105,8 +107,12 @@ class Jetstream
      * @param  array  $permissions
      * @return \Laravel\Jetstream\Role
      */
-    public static function role(string $key, string $name, array $permissions)
+    public static function role(/*string */$key, /*string */$name, array $permissions)
     {
+        $name = cast_to_string($name);
+
+        $key = cast_to_string($key);
+
         static::$permissions = collect(array_merge(static::$permissions, $permissions))
                                     ->unique()
                                     ->sort()
@@ -232,8 +238,10 @@ class Jetstream
      * @param  string  $email
      * @return mixed
      */
-    public static function findUserByEmailOrFail(string $email)
+    public static function findUserByEmailOrFail(/*string */$email)
     {
+        $email = cast_to_string($email);
+
         return static::newUserModel()->where('email', $email)->firstOrFail();
     }
 
@@ -265,8 +273,10 @@ class Jetstream
      * @param  string  $model
      * @return static
      */
-    public static function useUserModel(string $model)
+    public static function useUserModel(/*string */$model)
     {
+        $model = cast_to_string($model);
+
         static::$userModel = $model;
 
         return new static;
@@ -300,8 +310,10 @@ class Jetstream
      * @param  string  $model
      * @return static
      */
-    public static function useTeamModel(string $model)
+    public static function useTeamModel(/*string */$model)
     {
+        $model = cast_to_string($model);
+
         static::$teamModel = $model;
 
         return new static;
@@ -323,8 +335,10 @@ class Jetstream
      * @param  string  $model
      * @return static
      */
-    public static function useMembershipModel(string $model)
+    public static function useMembershipModel(/*string */$model)
     {
+        $model = cast_to_string($model);
+
         static::$membershipModel = $model;
 
         return new static;
@@ -346,8 +360,10 @@ class Jetstream
      * @param  string  $model
      * @return static
      */
-    public static function useTeamInvitationModel(string $model)
+    public static function useTeamInvitationModel(/*string */$model)
     {
+        $model = cast_to_string($model);
+
         static::$teamInvitationModel = $model;
 
         return new static;
@@ -359,8 +375,10 @@ class Jetstream
      * @param  string  $class
      * @return void
      */
-    public static function createTeamsUsing(string $class)
+    public static function createTeamsUsing(/*string */$class)
     {
+        $class = cast_to_string($class);
+
         return app()->singleton(CreatesTeams::class, $class);
     }
 
@@ -370,8 +388,10 @@ class Jetstream
      * @param  string  $class
      * @return void
      */
-    public static function updateTeamNamesUsing(string $class)
+    public static function updateTeamNamesUsing(/*string */$class)
     {
+        $class = cast_to_string($class);
+
         return app()->singleton(UpdatesTeamNames::class, $class);
     }
 
@@ -381,8 +401,10 @@ class Jetstream
      * @param  string  $class
      * @return void
      */
-    public static function addTeamMembersUsing(string $class)
+    public static function addTeamMembersUsing(/*string */$class)
     {
+        $class = cast_to_string($class);
+
         return app()->singleton(AddsTeamMembers::class, $class);
     }
 
@@ -392,8 +414,10 @@ class Jetstream
      * @param  string  $class
      * @return void
      */
-    public static function inviteTeamMembersUsing(string $class)
+    public static function inviteTeamMembersUsing(/*string */$class)
     {
+        $class = cast_to_string($class);
+
         return app()->singleton(InvitesTeamMembers::class, $class);
     }
 
@@ -403,8 +427,10 @@ class Jetstream
      * @param  string  $class
      * @return void
      */
-    public static function removeTeamMembersUsing(string $class)
+    public static function removeTeamMembersUsing(/*string */$class)
     {
+        $class = cast_to_string($class);
+
         return app()->singleton(RemovesTeamMembers::class, $class);
     }
 
@@ -414,8 +440,10 @@ class Jetstream
      * @param  string  $class
      * @return void
      */
-    public static function deleteTeamsUsing(string $class)
+    public static function deleteTeamsUsing(/*string */$class)
     {
+        $class = cast_to_string($class);
+
         return app()->singleton(DeletesTeams::class, $class);
     }
 
@@ -425,8 +453,10 @@ class Jetstream
      * @param  string  $class
      * @return void
      */
-    public static function deleteUsersUsing(string $class)
+    public static function deleteUsersUsing(/*string */$class)
     {
+        $class = cast_to_string($class);
+
         return app()->singleton(DeletesUsers::class, $class);
     }
 

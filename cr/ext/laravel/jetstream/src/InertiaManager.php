@@ -22,8 +22,10 @@ class InertiaManager
      * @param  array  $data
      * @return \Inertia\Response
      */
-    public function render(Request $request, string $page, array $data = [])
+    public function render(Request $request, /*string */$page, array $data = [])
     {
+        $page = cast_to_string($page);
+
         if (isset($this->renderingCallbacks[$page])) {
             foreach ($this->renderingCallbacks[$page] as $callback) {
                 $data = $callback($request, $data);
@@ -40,8 +42,10 @@ class InertiaManager
      * @param  callable  $callback
      * @return $this
      */
-    public function whenRendering(string $page, callable $callback)
+    public function whenRendering(/*string */$page, callable $callback)
     {
+        $page = cast_to_string($page);
+
         $this->renderingCallbacks[$page][] = $callback;
 
         return $this;
