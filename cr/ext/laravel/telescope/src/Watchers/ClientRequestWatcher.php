@@ -106,7 +106,8 @@ class ClientRequestWatcher extends Watcher
                         : 'Purged By Telescope';
             }
 
-            if (Str::startsWith(strtolower($response->header('Content-Type')), 'text/plain')) {
+            $contentType = $response->header('Content-Type');
+            if (Str::startsWith(strtolower(isset($contentType) ? $contentType : ''), 'text/plain')) {
                 return $this->contentWithinLimits($content) ? $content : 'Purged By Telescope';
             }
         }

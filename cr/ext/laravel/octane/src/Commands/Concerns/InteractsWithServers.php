@@ -101,6 +101,21 @@ trait InteractsWithServers
     }
 
     /**
+     * Retrieve the given server output and flush it.
+     *
+     * @return array
+     */
+    protected function getServerOutput($server)
+    {
+        return tap([
+            $server->getIncrementalOutput(),
+            $server->getIncrementalErrorOutput(),
+        ], function () use ($server) {
+            return $server->clearOutput()->clearErrorOutput();
+        });
+    }
+
+    /**
      * Returns the list of signals to subscribe.
      *
      * @return array

@@ -21,6 +21,12 @@ class OctaneStore implements Store
 
     protected $table;
 
+    /**
+     * Create a new Octane store.
+     *
+     * @param  \Swoole\Table  $table
+     * @return void
+     */
     public function __construct(/*protected */$table)
     {
         $this->table = $table;

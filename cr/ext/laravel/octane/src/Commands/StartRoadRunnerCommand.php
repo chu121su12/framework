@@ -182,7 +182,9 @@ class StartRoadRunnerCommand extends Command/* implements SignalableCommandInter
      */
     protected function writeServerOutput($server)
     {
-        Str::of($server->getIncrementalOutput())
+        list($output, $errorOutput) = $this->getServerOutput($server);
+
+        Str::of($output)
             ->explode("\n")
             ->filter()
             ->each(function ($output) {
@@ -198,19 +200,25 @@ class StartRoadRunnerCommand extends Command/* implements SignalableCommandInter
                     return $this->raw($debug['msg']);
                 }
 
-                if ($debug['level'] == 'debug' && isset($debug['remote'])) {
-                    list($statusCode, $method, $url) = explode(' ', $debug['msg']);
+                if ($debug['level'] == 'info'
+                    && isset($debug['remote_address'])
+                    && isset($debug['msg'])
+                    && $debug['msg'] == 'http log') {
+                    $elapsed = $debug['elapsed'];
+                    $method = $debug['method'];
+                    $statusCode = $debug['status'];
+                    $url = $debug['URI'];
 
                     return $this->requestInfo([
                         'method' => $method,
                         'url' => $url,
                         'statusCode' => $statusCode,
-                        'duration' => $this->calculateElapsedTime($debug['elapsed']),
+                        'duration' => $this->calculateElapsedTime($elapsed),
                     ]);
                 }
             });
 
-        Str::of($server->getIncrementalErrorOutput())
+        Str::of($errorOutput)
             ->explode("\n")
             ->filter()
             ->each(function ($output) {

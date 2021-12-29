@@ -75,6 +75,9 @@ class LaravelRequestContext extends RequestContext
                 ->map(function ($parameter) {
                     return $parameter instanceof Model ? $parameter->withoutRelations() : $parameter;
                 })
+                ->map(function ($parameter) {
+                    return method_exists($parameter, 'toFlare') ? $parameter->toFlare() : $parameter;
+                })
                 ->toArray();
         } catch (\Exception $e) {
             return [];

@@ -36,7 +36,8 @@ class RequestWatcher extends Watcher
      */
     public function recordRequest(RequestHandled $event)
     {
-        if (! Telescope::isRecording()) {
+        if (! Telescope::isRecording() ||
+            $this->shouldIgnoreStatusCode($event)) {
             return;
         }
 
@@ -58,6 +59,20 @@ class RequestWatcher extends Watcher
             'duration' => $startTime ? floor((microtime(true) - $startTime) * 1000) : null,
             'memory' => round(memory_get_peak_usage(true) / 1024 / 1024, 1),
         ]));
+    }
+
+    /**
+     * Determine if the request should be ignored based on its status code.
+     *
+     * @param  mixed  $event
+     * @return bool
+     */
+    protected function shouldIgnoreStatusCode($event)
+    {
+        return in_array(
+            $event->response->getStatusCode(),
+            isset($this->options['ignore_status_codes']) ? $this->options['ignore_status_codes'] : []
+        );
     }
 
     /**
@@ -157,7 +172,8 @@ class RequestWatcher extends Watcher
                         : 'Purged By Telescope';
             }
 
-            if (Str::startsWith(strtolower($response->headers->get('Content-Type')), 'text/plain')) {
+            $contentType = $response->headers->get('Content-Type');
+            if (Str::startsWith(strtolower(isset($contentType) ? $contentType : ''), 'text/plain')) {
                 return $this->contentWithinLimits($content) ? $content : 'Purged By Telescope';
             }
         }
