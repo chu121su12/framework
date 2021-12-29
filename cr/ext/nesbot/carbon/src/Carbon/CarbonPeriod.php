@@ -178,50 +178,50 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      *
      * @var string
      */
-    /*public*/ const RECURRENCES_FILTER = [self::class, 'filterRecurrences'];
-    /*public*/ const END_DATE_FILTER = [self::class, 'filterEndDate'];
+    /*public */const RECURRENCES_FILTER = [self::class, 'filterRecurrences'];
+    /*public */const END_DATE_FILTER = [self::class, 'filterEndDate'];
 
     /**
      * Special value which can be returned by filters to end iteration. Also a filter.
      *
      * @var string
      */
-    /*public*/ const END_ITERATION = [self::class, 'endIteration'];
+    /*public */const END_ITERATION = [self::class, 'endIteration'];
 
     /**
      * Exclude start date from iteration.
      *
      * @var int
      */
-    /*public*/ const EXCLUDE_START_DATE = 1;
+    /*public */const EXCLUDE_START_DATE = 1;
 
     /**
      * Exclude end date from iteration.
      *
      * @var int
      */
-    /*public*/ const EXCLUDE_END_DATE = 2;
+    /*public */const EXCLUDE_END_DATE = 2;
 
     /**
      * Yield CarbonImmutable instances.
      *
      * @var int
      */
-    /*public*/ const IMMUTABLE = 4;
+    /*public */const IMMUTABLE = 4;
 
     /**
      * Number of maximum attempts before giving up on finding next valid date.
      *
      * @var int
      */
-    /*public*/ const NEXT_MAX_ATTEMPTS = 1000;
+    /*public */const NEXT_MAX_ATTEMPTS = 1000;
 
     /**
      * Number of maximum attempts before giving up on finding end date.
      *
      * @var int
      */
-    /*public*/ const END_MAX_ATTEMPTS = 10000;
+    /*public */const END_MAX_ATTEMPTS = 10000;
 
     /**
      * The registered macros.

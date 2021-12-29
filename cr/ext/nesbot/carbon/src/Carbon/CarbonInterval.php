@@ -193,14 +193,14 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
     /**
      * Interval spec period designators
      */
-    /*public*/ const PERIOD_PREFIX = 'P';
-    /*public*/ const PERIOD_YEARS = 'Y';
-    /*public*/ const PERIOD_MONTHS = 'M';
-    /*public*/ const PERIOD_DAYS = 'D';
-    /*public*/ const PERIOD_TIME_PREFIX = 'T';
-    /*public*/ const PERIOD_HOURS = 'H';
-    /*public*/ const PERIOD_MINUTES = 'M';
-    /*public*/ const PERIOD_SECONDS = 'S';
+    /*public */const PERIOD_PREFIX = 'P';
+    /*public */const PERIOD_YEARS = 'Y';
+    /*public */const PERIOD_MONTHS = 'M';
+    /*public */const PERIOD_DAYS = 'D';
+    /*public */const PERIOD_TIME_PREFIX = 'T';
+    /*public */const PERIOD_HOURS = 'H';
+    /*public */const PERIOD_MINUTES = 'M';
+    /*public */const PERIOD_SECONDS = 'S';
 
     /**
      * A translator to ... er ... translate stuff
