@@ -15,8 +15,10 @@ use Closure;
 use ReflectionException;
 use ReflectionFunction;
 use Symfony\Component\Translation;
+use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
+use Symfony\Component\Translation\Loader\ArrayLoader;
 
-class Translator extends Translation\Translator
+abstract class AbstractTranslator extends Translation\Translator
 {
     /**
      * Translator singletons for each language.
@@ -68,17 +70,18 @@ class Translator extends Translation\Translator
         $locale = $locale ?: 'en';
 
         if (!isset(static::$singletons[$locale])) {
-            static::$singletons[$locale] = new static($locale ?: 'en');
+            static::$singletons[$locale] = new static($locale);
         }
 
         return static::$singletons[$locale];
     }
 
-    public function __construct($locale, Translation\Formatter\MessageFormatterInterface $formatter = null, $cacheDir = null, $debug = false)
+    public function __construct($locale, MessageFormatterInterface $formatter = null, $cacheDir = null, $debug = false)
     {
+        parent::setLocale($locale);
         $this->initializing = true;
         $this->directories = [__DIR__.'/Lang'];
-        $this->addLoader('array', new Translation\Loader\ArrayLoader());
+        $this->addLoader('array', new ArrayLoader());
         parent::__construct($locale, $formatter, $cacheDir, $debug);
         $this->initializing = false;
     }
@@ -88,7 +91,7 @@ class Translator extends Translation\Translator
      *
      * @return array
      */
-    public function getDirectories() //// array
+    public function getDirectories()/*: array*/
     {
         return $this->directories;
     }
@@ -114,7 +117,7 @@ class Translator extends Translation\Translator
      *
      * @return $this
      */
-    public function addDirectory($directory)
+    public function addDirectory(/*string */$directory)
     {
         $directory = cast_to_string($directory);
 
@@ -130,7 +133,7 @@ class Translator extends Translation\Translator
      *
      * @return $this
      */
-    public function removeDirectory($directory)
+    public function removeDirectory(/*string */$directory)
     {
         $directory = cast_to_string($directory);
 
@@ -139,42 +142,6 @@ class Translator extends Translation\Translator
         return $this->setDirectories(array_filter($this->getDirectories(), function ($item) use ($search) {
             return rtrim(strtr($item, '\\', '/'), '/') !== $search;
         }));
-    }
-
-    /**
-     * Returns the translation.
-     *
-     * @param string $id
-     * @param array  $parameters
-     * @param string $domain
-     * @param string $locale
-     *
-     * @return string
-     */
-    public function trans($id, array $parameters = [], $domain = null, $locale = null)
-    {
-        if ($domain === null) {
-            $domain = 'messages';
-        }
-
-        $format = $this->getCatalogue($locale)->get((string) $id, $domain);
-
-        if ($format instanceof Closure) {
-            // @codeCoverageIgnoreStart
-            try {
-                $count = (new ReflectionFunction($format))->getNumberOfRequiredParameters();
-            } catch (ReflectionException $exception) {
-                $count = 0;
-            }
-            // @codeCoverageIgnoreEnd
-
-            return $format(
-                ...array_values($parameters),
-                ...array_fill(0, max(0, $count - \count($parameters)), null)
-            );
-        }
-
-        return parent::trans($id, $parameters, $domain, $locale);
     }
 
     /**
@@ -246,6 +213,39 @@ class Translator extends Translation\Translator
         }
 
         return array_unique(array_merge($locales, array_keys($this->messages)));
+    }
+
+    protected function translate(/*?string */$id, array $parameters = [], /*?string */$domain = null, /*?string */$locale = null)/*: string*/
+    {
+        $id = cast_to_string($id, null);
+        $domain = cast_to_string($domain, null);
+        $locale = cast_to_string($locale, null);
+
+        if ($domain === null) {
+            $domain = 'messages';
+        }
+
+        $catalogue = $this->getCatalogue($locale);
+        $format = $this instanceof TranslatorStrongTypeInterface
+            ? $this->getFromCatalogue($catalogue, (string) $id, $domain) // @codeCoverageIgnore
+            : $this->getCatalogue($locale)->get((string) $id, $domain);
+
+        if ($format instanceof Closure) {
+            // @codeCoverageIgnoreStart
+            try {
+                $count = (new ReflectionFunction($format))->getNumberOfRequiredParameters();
+            } catch (ReflectionException $exception) {
+                $count = 0;
+            }
+            // @codeCoverageIgnoreEnd
+
+            return $format(
+                ...array_values($parameters),
+                ...array_fill(0, max(0, $count - \count($parameters)), null)
+            );
+        }
+
+        return parent::trans($id, $parameters, $domain, $locale);
     }
 
     /**

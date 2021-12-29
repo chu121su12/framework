@@ -59,7 +59,7 @@
         "laravel/telescope": "^4.6.9",
         "laravel/tinker": "^2.6.3",
         "league/flysystem": "^1.0.70",
-        "nesbot/carbon": "^2.54.0",
+        "nesbot/carbon": "^2.55.2",
         "nunomaduro/collision": "^5.10.0",
         "symfony/deprecation-contracts": "^3.0.0",
         "symfony/error-handler": "^5.4.1",
@@ -187,7 +187,7 @@
             "Laravel\\Ui\\": "cr/patch/laravel-ui/src/",
 
             "Asm89\\Stack\\": "cr/ext/asm89/stack-cors/src/",
-            "Carbon\\": "cr/ext/nesbot/carbon/src/",
+            "Carbon\\": "cr/ext/nesbot/carbon/src/Carbon/",
             "Doctrine\\": "cr/patch/doctrine/doctrine/",
             "Facade\\FlareClient\\": "cr/ext/facade/flare-client-php/src",
             "Facade\\Ignition\\": "cr/ext/facade/ignition/src",
