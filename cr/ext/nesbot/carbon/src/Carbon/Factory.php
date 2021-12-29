@@ -261,7 +261,7 @@ class Factory
         return $this->className;
     }
 
-    public function setClassName($className)
+    public function setClassName(/*string */$className)
     {
         $className = cast_to_string($className);
 
@@ -270,7 +270,7 @@ class Factory
         return $this;
     }
 
-    public function className($className = null)
+    public function className(/*string */$className = null)
     {
         $className = cast_to_string($className, null);
 

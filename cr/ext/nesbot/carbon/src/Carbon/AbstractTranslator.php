@@ -215,11 +215,13 @@ abstract class AbstractTranslator extends Translation\Translator
         return array_unique(array_merge($locales, array_keys($this->messages)));
     }
 
-    protected function translate(/*?string */$id, array $parameters = [], /*?string */$domain = null, /*?string */$locale = null)/*: string*/
+    protected function translate(/*?string */$id = null, array $parameters = [], /*?string */$domain = null, /*?string */$locale = null)/*: string*/
     {
-        $id = cast_to_string($id, null);
-        $domain = cast_to_string($domain, null);
         $locale = cast_to_string($locale, null);
+
+        $domain = cast_to_string($domain, null);
+
+        $id = cast_to_string($id, null);
 
         if ($domain === null) {
             $domain = 'messages';

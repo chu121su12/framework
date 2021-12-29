@@ -12,6 +12,7 @@
 namespace Carbon;
 
 use ReflectionMethod;
+use Symfony\Component\Translation;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 $transMethod = new ReflectionMethod(
@@ -21,7 +22,7 @@ $transMethod = new ReflectionMethod(
     'trans'
 );
 
-require $transMethod->hasReturnType()
+require version_compare(PHP_VERSION, '7.1', '>=') && $transMethod->hasReturnType()
     ? __DIR__.'/../../lazy/Carbon/TranslatorStrongType.php'
     : __DIR__.'/../../lazy/Carbon/TranslatorWeakType.php';
 

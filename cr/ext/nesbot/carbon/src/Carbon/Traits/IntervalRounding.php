@@ -20,7 +20,7 @@ use DateInterval;
  */
 trait IntervalRounding
 {
-    protected function callRoundMethod($method, array $parameters)
+    protected function callRoundMethod(/*string */$method, array $parameters)
     {
         $method = cast_to_string($method);
 

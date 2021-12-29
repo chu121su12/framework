@@ -496,19 +496,19 @@ trait Creator
      *
      * @return static
      */
-    public static function createStrict(/*?int */$year = 0, /*?int */$month = 1, /*?int */$day = 1, /*?int */$hour = 0, /*?int */$minute = 0, /*?int */$second = 0, $tz = null)////: self
+    public static function createStrict(/*?int */$year = 0, /*?int */$month = 1, /*?int */$day = 1, /*?int */$hour = 0, /*?int */$minute = 0, /*?int */$second = 0, $tz = null)/*: self*/
     {
-        $year = cast_to_int($year, null);
-
-        $month = cast_to_int($month, null);
-
-        $day = cast_to_int($day, null);
-
-        $hour = cast_to_int($hour, null);
+        $second = cast_to_int($second, null);
 
         $minute = cast_to_int($minute, null);
 
-        $second = cast_to_int($second, null);
+        $hour = cast_to_int($hour, null);
+
+        $day = cast_to_int($day, null);
+
+        $month = cast_to_int($month, null);
+
+        $year = cast_to_int($year, null);
 
         $initialStrictMode = static::isStrictModeEnabled();
         static::useStrictMode(true);

@@ -275,12 +275,12 @@ trait Modifiers
      */
     public function nthOfQuarter($nth, $dayOfWeek)
     {
-        $date = $this->copy()->day(1)->month($this->quarter * static::MONTHS_PER_QUARTER);
+        $date = $this->avoidMutation()->day(1)->month($this->quarter * static::MONTHS_PER_QUARTER);
         $lastMonth = $date->month;
         $year = $date->year;
         $date = $date->firstOfQuarter()->modify('+'.$nth.' '.static::$days[$dayOfWeek]);
 
-        return ($lastMonth < $date->month || $year !== $date->year) ? false : $this->modify("$date");
+        return ($lastMonth < $date->month || $year !== $date->year) ? false : $this->modify((string) $date);
     }
 
     /**

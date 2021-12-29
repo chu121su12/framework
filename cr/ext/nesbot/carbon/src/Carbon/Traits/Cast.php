@@ -28,7 +28,7 @@ trait Cast
      *
      * @return DateTimeInterface
      */
-    public function cast($className)
+    public function cast(/*string */$className)
     {
         $className = cast_to_string($className);
 

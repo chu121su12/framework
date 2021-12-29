@@ -60,10 +60,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 $root = Date::getFacadeRoot();
                 $root->setLocale($locale);
             } catch (\Exception $e) {
-                // Non Carbon class in use in Date facade
             } catch (\Error $e) {
-                // Non Carbon class in use in Date facade
             } catch (Throwable $e) {
+            }
+            if (isset($e)) {
                 // Non Carbon class in use in Date facade
             }
         }

@@ -108,17 +108,17 @@ trait Mixin
                 $context = isset($this) ? $this->cast($className) : new $className();
 
                 try {
-                     // @ is required to handle error if not converted into exceptions
+                    // @ is required to handle error if not converted into exceptions
                     $closure = @$closureBase->bindTo($context);
-                } catch (\Exception $throwable) {
-                    $closure = $closureBase;
-                } catch (\Error $throwable) {
-                    $closure = $closureBase;
+                } catch (\Exception $throwable) { // @codeCoverageIgnore
+                } catch (\Error $throwable) { // @codeCoverageIgnore
                 } catch (Throwable $throwable) { // @codeCoverageIgnore
+                }
+                if (isset($throwable)) {
                     $closure = $closureBase; // @codeCoverageIgnore
                 }
 
-                 // in case of errors not converted into exceptions
+                // in case of errors not converted into exceptions
                 $closure = isset($closure) ? $closure : $closureBase;
 
                 return $closure(...\func_get_args());
@@ -126,14 +126,14 @@ trait Mixin
         }
     }
 
-    private static function getAnonymousClassCodeForTrait($trait)
+    private static function getAnonymousClassCodeForTrait(/*string */$trait)
     {
         $trait = cast_to_string($trait);
 
         return 'return new class() extends '.static::class.' {use '.$trait.';};';
     }
 
-    private static function getMixableMethods($context) /// : Generator
+    private static function getMixableMethods(self $context)/*: Generator*/
     {
         foreach (get_class_methods($context) as $name) {
             if (method_exists(static::class, $name)) {

@@ -27,7 +27,7 @@ final class MacroScanner
      *
      * @return bool
      */
-    public function hasMethod($className, $methodName) //// bool
+    public function hasMethod(/*string */$className, /*string */$methodName)/*: bool*/
     {
         $methodName = cast_to_string($methodName);
 
@@ -50,7 +50,7 @@ final class MacroScanner
      *
      * @return Macro
      */
-    public function getMethod($className, $methodName) // Macro
+    public function getMethod(/*string */$className, /*string */$methodName)/*: Macro*/
     {
         $methodName = cast_to_string($methodName);
 

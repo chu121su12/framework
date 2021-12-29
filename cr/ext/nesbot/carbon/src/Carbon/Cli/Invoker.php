@@ -13,9 +13,9 @@ namespace Carbon\Cli;
 
 class Invoker
 {
-    const CLI_CLASS_NAME = 'Carbon\\Cli';
+    /*public*/ const CLI_CLASS_NAME = 'Carbon\\Cli';
 
-    protected function runWithCli($className, array $parameters) //// bool
+    protected function runWithCli(/*string */$className, array $parameters)/*: bool*/
     {
         $className = cast_to_string($className);
 
@@ -24,7 +24,7 @@ class Invoker
         return $cli(...$parameters);
     }
 
-    public function __invoke(...$parameters) //// bool
+    public function __invoke(...$parameters)/*: bool*/
     {
         if (class_exists(self::CLI_CLASS_NAME)) {
             return $this->runWithCli(self::CLI_CLASS_NAME, $parameters);

@@ -61,7 +61,7 @@ class Language implements JsonSerializable
      */
     protected $nativeName;
 
-    public function __construct($id)
+    public function __construct(/*string */$id)
     {
         $id = cast_to_string($id);
 
@@ -113,7 +113,7 @@ class Language implements JsonSerializable
      *
      * @return array
      */
-    public function getNames() //// array
+    public function getNames()/*: array*/
     {
         if (!$this->names) {
             $all = static::all();
@@ -131,7 +131,7 @@ class Language implements JsonSerializable
      *
      * @return string
      */
-    public function getId() //// string
+    public function getId()/*: string*/
     {
         return $this->id;
     }
@@ -141,7 +141,7 @@ class Language implements JsonSerializable
      *
      * @return string
      */
-    public function getCode() //// string
+    public function getCode()/*: string*/
     {
         return $this->code;
     }
@@ -151,7 +151,7 @@ class Language implements JsonSerializable
      *
      * @return string|null
      */
-    public function getVariant() //// ?string
+    public function getVariant()/*: ?string*/
     {
         return $this->variant;
     }
@@ -161,7 +161,7 @@ class Language implements JsonSerializable
      *
      * @return string|null
      */
-    public function getVariantName() //// ?string
+    public function getVariantName()/*: ?string*/
     {
         if ($this->variant === 'Latn') {
             return 'Latin';
@@ -179,7 +179,7 @@ class Language implements JsonSerializable
      *
      * @return string|null
      */
-    public function getRegion() //// ?string
+    public function getRegion()/*: ?string*/
     {
         return $this->region;
     }
@@ -189,7 +189,7 @@ class Language implements JsonSerializable
      *
      * @return string|null
      */
-    public function getRegionName() //// ?string
+    public function getRegionName()/*: ?string*/
     {
         $regions = static::regions();
         return $this->region ? (isset($regions[$this->region]) ? $regions[$this->region] : $this->region) : null;
@@ -200,7 +200,7 @@ class Language implements JsonSerializable
      *
      * @return string
      */
-    public function getFullIsoName() //// string
+    public function getFullIsoName()/*: string*/
     {
         if (!$this->isoName) {
             $this->isoName = $this->getNames()['isoName'];
@@ -214,7 +214,7 @@ class Language implements JsonSerializable
      *
      * @param string $isoName
      */
-    public function setIsoName($isoName) /// self
+    public function setIsoName(/*string */$isoName)/*: self*/
     {
         $isoName = cast_to_string($isoName);
 
@@ -228,7 +228,7 @@ class Language implements JsonSerializable
      *
      * @return string
      */
-    public function getFullNativeName() //// string
+    public function getFullNativeName()/*: string*/
     {
         if (!$this->nativeName) {
             $this->nativeName = $this->getNames()['nativeName'];
@@ -242,7 +242,7 @@ class Language implements JsonSerializable
      *
      * @param string $nativeName
      */
-    public function setNativeName($nativeName) /// self
+    public function setNativeName(/*string */$nativeName)/*: self*/
     {
         $nativeName = cast_to_string($nativeName);
 
@@ -256,7 +256,7 @@ class Language implements JsonSerializable
      *
      * @return string
      */
-    public function getIsoName() //// string
+    public function getIsoName()/*: string*/
     {
         $name = $this->getFullIsoName();
 
@@ -268,7 +268,7 @@ class Language implements JsonSerializable
      *
      * @return string
      */
-    public function getNativeName() //// string
+    public function getNativeName()/*: string*/
     {
         $name = $this->getFullNativeName();
 

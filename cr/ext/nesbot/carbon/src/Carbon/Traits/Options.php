@@ -452,7 +452,7 @@ trait Options
         return $infos;
     }
 
-    protected function addExtraDebugInfos(&$infos) //// void
+    protected function addExtraDebugInfos(&$infos)/*: void*/
     {
         if ($this instanceof DateTimeInterface) {
             try {
@@ -463,11 +463,11 @@ trait Options
                 if (!isset($infos['timezone'])) {
                     $infos['timezone'] = $this->tzName;
                 }
-            } catch (\Exception $exception) {
-                // noop
-            } catch (\Error $exception) {
-                // noop
-            } catch (Throwable $exception) {
+            } catch (\Exception $throwable) {
+            } catch (\Error $throwable) {
+            } catch (Throwable $throwable) {
+            }
+            if (isset($throwable)) {
                 // noop
             }
         }

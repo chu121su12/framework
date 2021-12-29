@@ -187,7 +187,11 @@ trait Test
 
         try {
             $success = date_default_timezone_set($timezone);
+        } catch (\Exception $exception) {
+        } catch (\Error $exception) {
         } catch (Throwable $exception) {
+        }
+        if (isset($exception)) {
             $previous = $exception;
         }
 

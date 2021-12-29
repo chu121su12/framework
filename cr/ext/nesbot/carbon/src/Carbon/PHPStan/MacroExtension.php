@@ -48,7 +48,7 @@ final class MacroExtension implements MethodsClassReflectionExtension
     /**
      * {@inheritdoc}
      */
-    public function hasMethod(ClassReflection $classReflection, $methodName) //// bool
+    public function hasMethod(ClassReflection $classReflection, /*string */$methodName)/*: bool*/
     {
         $methodName = cast_to_string($methodName);
 
@@ -58,7 +58,7 @@ final class MacroExtension implements MethodsClassReflectionExtension
     /**
      * {@inheritdoc}
      */
-    public function getMethod(ClassReflection $classReflection, $methodName) // MethodReflection
+    public function getMethod(ClassReflection $classReflection, /*string */$methodName)/*: MethodReflection*/
     {
         $methodName = cast_to_string($methodName);
 

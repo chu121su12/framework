@@ -70,7 +70,7 @@ final class Macro implements BuiltinMethodReflection
      * @param string   $methodName
      * @param callable $macro
      */
-    public function __construct($className, $methodName, $macro)
+    public function __construct(/*string */$className, /*string */$methodName, $macro)
     {
         $methodName = cast_to_string($methodName);
 
@@ -89,10 +89,10 @@ final class Macro implements BuiltinMethodReflection
                 $boundClosure = Closure::bind($closure, new stdClass());
                 $this->static = (!$boundClosure || (new ReflectionFunction($boundClosure))->getClosureThis() === null);
             } catch (\Exception $e) {
-                $this->static = true;
             } catch (\Error $e) {
-                $this->static = true;
             } catch (Throwable $e) {
+            }
+            if (isset($e)) {
                 $this->static = true;
             }
         }
@@ -101,7 +101,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getDeclaringClass() // ReflectionClass
+    public function getDeclaringClass()/*: ReflectionClass*/
     {
         return new ReflectionClass($this->className);
     }
@@ -109,7 +109,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isPrivate() //// bool
+    public function isPrivate()/*: bool*/
     {
         return false;
     }
@@ -117,7 +117,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isPublic() //// bool
+    public function isPublic()/*: bool*/
     {
         return true;
     }
@@ -125,7 +125,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isFinal() //// bool
+    public function isFinal()/*: bool*/
     {
         return false;
     }
@@ -133,7 +133,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isInternal() //// bool
+    public function isInternal()/*: bool*/
     {
         return false;
     }
@@ -141,7 +141,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isAbstract() //// bool
+    public function isAbstract()/*: bool*/
     {
         return false;
     }
@@ -149,7 +149,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isStatic() //// bool
+    public function isStatic()/*: bool*/
     {
         return $this->static;
     }
@@ -157,7 +157,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getDocComment() //// ?string
+    public function getDocComment()/*: ?string*/
     {
         return $this->reflectionFunction->getDocComment() ?: null;
     }
@@ -175,7 +175,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getName() //// string
+    public function getName()/*: string*/
     {
         return $this->methodName;
     }
@@ -183,7 +183,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getParameters() //// array
+    public function getParameters()/*: array*/
     {
         return $this->parameters;
     }
@@ -191,7 +191,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getReturnType() // ?ReflectionType
+    public function getReturnType()/*: ?ReflectionType*/
     {
         return $this->reflectionFunction->getReturnType();
     }
@@ -219,7 +219,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isDeprecated() // TrinaryLogic
+    public function isDeprecated()/*: TrinaryLogic*/
     {
         return TrinaryLogic::createFromBoolean(
             $this->reflectionFunction->isDeprecated() ||
@@ -230,7 +230,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isVariadic() //// bool
+    public function isVariadic()/*: bool*/
     {
         return $this->reflectionFunction->isVariadic();
     }
@@ -238,7 +238,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getPrototype() // BuiltinMethodReflection
+    public function getPrototype()/*: BuiltinMethodReflection*/
     {
         return $this;
     }
@@ -246,7 +246,7 @@ final class Macro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getReflection() // ?ReflectionMethod
+    public function getReflection()/*: ?ReflectionMethod*/
     {
         return $this->reflectionFunction instanceof ReflectionMethod
             ? $this->reflectionFunction

@@ -16,19 +16,22 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 if (!class_exists(LazyTranslator::class, false)) {
     class LazyTranslator extends AbstractTranslator implements TranslatorStrongTypeInterface
     {
-        public function trans(/*?string */$id, array $parameters = [], /*?string */$domain = null, /*?string */$locale = null)/*: string*/
+        public function trans(/*?string */$id = null, array $parameters = [], /*?string */$domain = null, /*?string */$locale = null)/*: string*/
         {
-            $id = cast_to_string($id, null);
-            $domain = cast_to_string($domain, null);
             $locale = cast_to_string($locale, null);
+
+            $domain = cast_to_string($domain, null);
+
+            $id = cast_to_string($id, null);
 
             return $this->translate($id, $parameters, $domain, $locale);
         }
 
         public function getFromCatalogue(MessageCatalogueInterface $catalogue, /*string */$id, /*string */$domain = 'messages')
         {
-            $id = cast_to_string($id);
             $domain = cast_to_string($domain);
+
+            $id = cast_to_string($id);
 
             $messages = $this->getPrivateProperty($catalogue, 'messages');
 

@@ -693,7 +693,7 @@ trait Date
      *
      * @return static
      */
-    public function avoidMutation()////: self
+    public function avoidMutation()/*: self*/
     {
         if ($this instanceof DateTimeImmutable) {
             return $this;
@@ -767,7 +767,7 @@ trait Date
      *
      * @return static
      */
-    protected function resolveUTC($date = null)////: self
+    protected function resolveUTC($date = null)/*: self*/
     {
         if (!$date) {
             return static::now('UTC');
@@ -1446,9 +1446,9 @@ trait Date
      *
      * @return int|static
      */
-    public function utcOffset($minuteOffset = null)
+    public function utcOffset(/*int */$minuteOffset = null)
     {
-        $offset = cast_to_int($offset, null);
+        $minuteOffset = cast_to_int($minuteOffset, null);
 
         if (\func_num_args() < 1) {
             return $this->offsetMinutes;
@@ -1693,7 +1693,7 @@ trait Date
     /////////////////////// WEEK SPECIAL DAYS /////////////////////////
     ///////////////////////////////////////////////////////////////////
 
-    private static function getFirstDayOfWeek() //// int
+    private static function getFirstDayOfWeek()/*: int*/
     {
         return (int) static::getTranslationMessageWith(
             static::getTranslator(),
@@ -2058,7 +2058,7 @@ trait Date
      *
      * @return string
      */
-    public function ordinal($key, $period = null) //// string
+    public function ordinal(/*string */$key, /*?string */$period = null)/*: string*/
     {
         $key = cast_to_string($key);
 
@@ -2080,7 +2080,7 @@ trait Date
      *
      * @return string
      */
-    public function meridiem($isLower = false) //// string
+    public function meridiem(/*bool */$isLower = false)/*: string*/
     {
         $isLower = cast_to_bool($isLower);
 
@@ -2122,7 +2122,7 @@ trait Date
      *
      * @return string
      */
-    public function getAltNumber($key) //// string
+    public function getAltNumber(/*string */$key)/*: string*/
     {
         $key = cast_to_string($key);
 
@@ -2137,7 +2137,7 @@ trait Date
      *
      * @return string
      */
-    public function isoFormat($format, $originalFormat = null) //// string
+    public function isoFormat(/*string */$format, /*?string */$originalFormat = null)/*: string*/
     {
         $format = cast_to_string($format);
 
@@ -2301,7 +2301,7 @@ trait Date
      *
      * @return string
      */
-    public function translatedFormat($format) //// string
+    public function translatedFormat(/*string */$format)/*: string*/
     {
         $format = cast_to_string($format);
 
@@ -2479,7 +2479,7 @@ trait Date
      *
      * @return string
      */
-    public static function singularUnit($unit) //// string
+    public static function singularUnit(/*string */$unit)/*: string*/
     {
         $unit = cast_to_string($unit);
 
@@ -2503,7 +2503,7 @@ trait Date
      *
      * @return string
      */
-    public static function pluralUnit($unit) //// string
+    public static function pluralUnit(/*string */$unit)/*: string*/
     {
         $unit = cast_to_string($unit);
 

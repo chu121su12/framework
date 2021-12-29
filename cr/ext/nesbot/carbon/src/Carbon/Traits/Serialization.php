@@ -13,6 +13,7 @@ namespace Carbon\Traits;
 
 use Carbon\Exceptions\InvalidFormatException;
 use ReturnTypeWillChange;
+use Throwable;
 
 /**
  * Trait Serialization.
@@ -148,9 +149,8 @@ trait Serialization
                 parent::__wakeup();
             } catch (\Exception $exception) {
             } catch (\Error $exception) {
-            } catch (\Throwable $exception) {
+            } catch (Throwable $exception) {
             }
-
             if (isset($exception)) {
                 // FatalError occurs when calling msgpack_unpack() in PHP 7.4 or later.
                 $date = $this->dumpDateProperties['date'];
@@ -179,6 +179,7 @@ trait Serialization
     public function jsonSerialize()
     {
         $serializer = isset($this->localSerializer) ? $this->localSerializer : static::$serializer;
+
         if ($serializer) {
             return \is_string($serializer)
                 ? $this->rawFormat($serializer)
@@ -221,7 +222,7 @@ trait Serialization
         return $this;
     }
 
-    private function getSleepProperties()////: array
+    private function getSleepProperties()/*: array*/
     {
         $properties = $this->dumpProperties;
 

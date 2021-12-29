@@ -170,7 +170,7 @@ trait Localization
      *
      * @return string
      */
-    public static function getTranslationMessageWith($translator, $key, $locale = null, $default = null)
+    public static function getTranslationMessageWith($translator, /*string */$key, /*?string */$locale = null, /*?string */$default = null)
     {
         $key = cast_to_string($key);
 
@@ -204,7 +204,7 @@ trait Localization
      *
      * @return string
      */
-    public function getTranslationMessage($key, $locale = null, $default = null, $translator = null)
+    public function getTranslationMessage(/*string */$key, /*?string */$locale = null, /*?string */$default = null, $translator = null)
     {
         $key = cast_to_string($key);
 
@@ -225,7 +225,7 @@ trait Localization
      *
      * @return string
      */
-    public static function translateWith(TranslatorInterface $translator, $key, array $parameters = [], $number = null) //// string
+    public static function translateWith(TranslatorInterface $translator, /*string */$key, array $parameters = [], $number = null)/*: string*/
     {
         $key = cast_to_string($key);
 
@@ -261,11 +261,11 @@ trait Localization
      *
      * @return string
      */
-    public function translate($key, array $parameters = [], $number = null, TranslatorInterface $translator = null, $altNumbers = false) //// string
+    public function translate(/*string */$key, array $parameters = [], $number = null, /*?*/TranslatorInterface $translator = null, /*bool */$altNumbers = false)/*: string*/
     {
-        $key = cast_to_string($key);
-
         $altNumbers = cast_to_bool($altNumbers);
+
+        $key = cast_to_string($key);
 
         $translation = static::translateWith($translator ?: $this->getLocalTranslator(), $key, $parameters, $number);
 
@@ -283,7 +283,7 @@ trait Localization
      *
      * @return string
      */
-    public function translateNumber($number) //// string
+    public function translateNumber(/*int */$number)/*: string*/
     {
         $number = cast_to_int($number);
 
@@ -453,7 +453,7 @@ trait Localization
      *
      * @return $this|string
      */
-    public function locale($locale = null, ...$fallbackLocales)
+    public function locale(/*string */$locale = null, ...$fallbackLocales)
     {
         $locale = cast_to_string($locale, null);
 
@@ -735,7 +735,7 @@ trait Localization
      *
      * @return string|null
      */
-    protected function getTranslatorLocale($translator = null) //// ?string
+    protected function getTranslatorLocale($translator = null)/*: ?string*/
     {
         if (\func_num_args() === 0) {
             $translator = $this->getLocalTranslator();
@@ -774,8 +774,9 @@ trait Localization
      */
     private static function getFromCatalogue($translator, $catalogue, /*string */$id, /*string */$domain = 'messages')
     {
-        $id = cast_to_string($id);
         $domain = cast_to_string($domain);
+
+        $id = cast_to_string($id);
 
         return $translator instanceof TranslatorStrongTypeInterface
             ? $translator->getFromCatalogue($catalogue, $id, $domain) // @codeCoverageIgnore
@@ -807,7 +808,7 @@ trait Localization
      *
      * @return string[]
      */
-    private static function translateWordsByKeys($keys, $messages, $key) //// array
+    private static function translateWordsByKeys($keys, $messages, $key)/*: array*/
     {
         return array_map(function ($wordKey) use ($messages, $key) {
             $message = $key === 'from' && isset($messages[$wordKey.'_regexp'])
@@ -835,7 +836,7 @@ trait Localization
      *
      * @return string[]
      */
-    private static function getTranslationArray($translation, $length, $timeString) //// array
+    private static function getTranslationArray($translation, $length, $timeString)/*: array*/
     {
         $filler = '>>DO NOT REPLACE<<';
 

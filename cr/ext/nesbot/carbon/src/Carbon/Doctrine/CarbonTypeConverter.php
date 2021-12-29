@@ -26,7 +26,7 @@ trait CarbonTypeConverter
     /**
      * @return class-string<T>
      */
-    protected function getCarbonClassName() //// string
+    protected function getCarbonClassName()/*: string*/
     {
         return Carbon::class;
     }

@@ -149,8 +149,6 @@ trait Timestamp
     }
 
     /**
-
-    /**
      * @alias getTimestamp
      *
      * Returns the UNIX timestamp for the current date.
