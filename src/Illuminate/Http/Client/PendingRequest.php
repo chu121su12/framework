@@ -168,7 +168,9 @@ class PendingRequest
         $this->asJson();
 
         $this->options = [
+            'connect_timeout' => 10,
             'http_errors' => false,
+            'timeout' => 30,
         ];
 
         $this->beforeSendingCallbacks = collect([function (Request $request, array $options, PendingRequest $pendingRequest) {
@@ -600,7 +602,7 @@ class PendingRequest
      * @param  array  $data
      * @return \Illuminate\Http\Client\Response
      */
-    public function post(/*string */$url, array $data = [])
+    public function post(/*string */$url, $data = [])
     {
         $url = cast_to_string($url);
 
@@ -687,21 +689,7 @@ class PendingRequest
 
         $url = ltrim(rtrim($this->baseUrl, '/').'/'.ltrim($url, '/'), '/');
 
-        if (isset($options[$this->bodyFormat])) {
-            if ($this->bodyFormat === 'multipart') {
-                $options[$this->bodyFormat] = $this->parseMultipartBodyFormat($options[$this->bodyFormat]);
-            } elseif ($this->bodyFormat === 'body') {
-                $options[$this->bodyFormat] = $this->pendingBody;
-            }
-
-            if (is_array($options[$this->bodyFormat])) {
-                $options[$this->bodyFormat] = array_merge(
-                    $options[$this->bodyFormat], $this->pendingFiles
-                );
-            }
-        } else {
-            $options[$this->bodyFormat] = $this->pendingBody;
-        }
+        $options = $this->parseHttpOptions($options);
 
         list($this->pendingBody, $this->pendingFiles) = [null, []];
 
@@ -726,6 +714,33 @@ class PendingRequest
                 throw new ConnectionException($e->getMessage(), 0, $e);
             }
         }, isset($this->retryDelay) ? $this->retryDelay : 100, $this->retryWhenCallback);
+    }
+
+    /**
+     * Parse the given HTTP options and set the appropriate additional options.
+     *
+     * @param  array  $options
+     * @return array
+     */
+    protected function parseHttpOptions(array $options)
+    {
+        if (isset($options[$this->bodyFormat])) {
+            if ($this->bodyFormat === 'multipart') {
+                $options[$this->bodyFormat] = $this->parseMultipartBodyFormat($options[$this->bodyFormat]);
+            } elseif ($this->bodyFormat === 'body') {
+                $options[$this->bodyFormat] = $this->pendingBody;
+            }
+
+            if (is_array($options[$this->bodyFormat])) {
+                $options[$this->bodyFormat] = array_merge(
+                    $options[$this->bodyFormat], $this->pendingFiles
+                );
+            }
+        } else {
+            $options[$this->bodyFormat] = $this->pendingBody;
+        }
+
+        return collect($options)->toArray();
     }
 
     /**

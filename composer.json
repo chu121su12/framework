@@ -138,7 +138,7 @@
     },
     "provide": {
         "psr/container-implementation": "1.0",
-        "psr/simple-cache-implementation": "1.0"
+        "psr/simple-cache-implementation": "1.0|2.0|3.0"
     },
     "conflict": {
         "tightenco/collect": "<5.5.33"
@@ -301,7 +301,10 @@
         "symfony/psr-http-message-bridge": "Required to use PSR-7 bridging features (^2.0)."
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
