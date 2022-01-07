@@ -78,7 +78,7 @@ class ImplicitRouteBindingTest extends TestCase
         $this->expectExceptionMessage(sprintf(
             'Case [%s] not found on Backed Enum [%s].',
             'cars',
-            CategoryBackedEnum::class,
+            CategoryBackedEnum::class
         ));
 
         ImplicitRouteBinding::resolveForRoute($container, $route);

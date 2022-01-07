@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Integration\Filesystem;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Support\Facades\File;
 use Orchestra\Testbench\TestCase;
 use Symfony\Component\Process\Process;
@@ -13,7 +14,7 @@ class FilesystemTest extends TestCase
 {
     protected $stubFile;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $this->afterApplicationCreated(function () {
             File::put($file = storage_path('app/public/StardewTaylor.png'), File::get(__DIR__.'/Fixtures/StardewTaylor.png'));
@@ -44,7 +45,7 @@ class FilesystemTest extends TestCase
         $this->assertTrue(File::exists($this->stubFile));
         $this->assertTrue(File::isFile($this->stubFile));
 
-        Process::fromShellCommandline("rm {$this->stubFile}")->run();
+        SymfonyHelper::processFromShellCommandline("rm {$this->stubFile}")->run();
 
         clearstatcache(true, $this->stubFile);
         $this->assertFalse(File::exists($this->stubFile));
@@ -65,7 +66,7 @@ class FilesystemTest extends TestCase
         $this->assertTrue(File::exists($this->stubFile));
         $this->assertTrue(File::isFile($this->stubFile));
 
-        Process::fromShellCommandline("rm {$this->stubFile}")->run();
+        SymfonyHelper::processFromShellCommandline("rm {$this->stubFile}")->run();
 
         clearstatcache(true, $this->stubFile);
         $this->assertFalse(File::isFile($this->stubFile));

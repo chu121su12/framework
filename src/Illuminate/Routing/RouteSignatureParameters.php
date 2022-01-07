@@ -26,11 +26,15 @@ class RouteSignatureParameters
                         ? static::fromClassMethodString($callback)
                         : (new ReflectionFunction($callback))->getParameters();
 
-        return match (true) {
-            ! empty($conditions['subClass']) => array_filter($parameters, fn ($p) => Reflector::isParameterSubclassOf($p, $conditions['subClass'])),
-            ! empty($conditions['backedEnum']) => array_filter($parameters, fn ($p) => Reflector::isParameterBackedEnumWithStringBackingType($p)),
-            default => $parameters,
-        };
+        return backport_match(true,
+            [! empty($conditions['subClass']), function () use ($conditions, $parameters) {
+                return array_filter($parameters, function ($p) use ($conditions) { return Reflector::isParameterSubclassOf($p, $conditions['subClass']);});
+            }],
+            [! empty($conditions['backedEnum']), function () use ($parameters) {
+                return array_filter($parameters, function ($p) { return Reflector::isParameterBackedEnumWithStringBackingType($p); });
+            }],
+            [__BACKPORT_MATCH_DEFAULT_CASE__, $parameters]
+        );
     }
 
     /**

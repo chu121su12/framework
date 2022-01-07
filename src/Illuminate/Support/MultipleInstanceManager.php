@@ -84,7 +84,7 @@ abstract class MultipleInstanceManager
      */
     protected function get($name)
     {
-        return $this->instances[$name] ?? $this->resolve($name);
+        return isset($this->instances[$name]) ? $this->instances[$name] : $this->resolve($name);
     }
 
     /**
@@ -139,7 +139,7 @@ abstract class MultipleInstanceManager
      */
     public function forgetInstance($name = null)
     {
-        $name = $name ?? $this->getDefaultInstance();
+        $name = isset($name) ? $name : $this->getDefaultInstance();
 
         foreach ((array) $name as $instanceName) {
             if (isset($this->instances[$instanceName])) {
@@ -158,7 +158,7 @@ abstract class MultipleInstanceManager
      */
     public function purge($name = null)
     {
-        $name = $name ?? $this->getDefaultInstance();
+        $name = isset($name) ? $name : $this->getDefaultInstance();
 
         unset($this->instances[$name]);
     }

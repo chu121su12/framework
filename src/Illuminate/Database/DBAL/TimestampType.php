@@ -7,7 +7,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\PhpDateTimeMappingType;
 use Doctrine\DBAL\Types\Type;
 
-class TimestampType extends Type implements PhpDateTimeMappingType
+class TimestampTypeBase extends Type/* implements PhpDateTimeMappingType*/
 {
     /**
      * {@inheritdoc}
@@ -95,5 +95,18 @@ class TimestampType extends Type implements PhpDateTimeMappingType
     public function getName()
     {
         return 'timestamp';
+    }
+}
+
+if (interface_exists(PhpDateTimeMappingType::class))
+{
+    class TimestampType extends TimestampTypeBase implements PhpDateTimeMappingType
+    {
+    }
+}
+else
+{
+    class TimestampType extends TimestampTypeBase
+    {
     }
 }

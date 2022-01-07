@@ -157,6 +157,10 @@ class Reflector
      */
     public static function isParameterBackedEnumWithStringBackingType($parameter)
     {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            return false;
+        }
+
         $backedEnumClass = (string) $parameter->getType();
 
         if (function_exists('enum_exists') && enum_exists($backedEnumClass)) {

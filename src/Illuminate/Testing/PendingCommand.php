@@ -220,7 +220,7 @@ class PendingCommand
      */
     public function assertSuccessful()
     {
-        return $this->assertExitCode(Command::SUCCESS);
+        return $this->assertExitCode(/*Command::SUCCESS*/ 0);
     }
 
     /**
@@ -230,7 +230,7 @@ class PendingCommand
      */
     public function assertFailed()
     {
-        return $this->assertNotExitCode(Command::SUCCESS);
+        return $this->assertNotExitCode(/*Command::SUCCESS*/ 0);
     }
 
     /**

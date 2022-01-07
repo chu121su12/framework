@@ -16,7 +16,7 @@ class ImplicitBackedEnumRouteBindingTest extends TestCase
 {
     public function testWithRouteCachingEnabled()
     {
-        $this->defineCacheRoutes(<<<PHP
+        $cacheRoutes = <<<PHP
 <?php
 
 use Illuminate\Tests\Integration\Routing\CategoryBackedEnum;
@@ -24,7 +24,9 @@ use Illuminate\Tests\Integration\Routing\CategoryBackedEnum;
 Route::get('/categories/{category}', function (CategoryBackedEnum \$category) {
     return \$category->value;
 })->middleware('web');
-PHP);
+PHP;
+
+        $this->defineCacheRoutes($cacheRoutes);
 
         $response = $this->get('/categories/fruits');
         $response->assertSee('fruits');

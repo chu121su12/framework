@@ -11,6 +11,19 @@ use Illuminate\Validation\ValidationServiceProvider;
 use Illuminate\Validation\Validator;
 use PHPUnit\Framework\TestCase;
 
+class ValidationPasswordRuleTest_testPassesWithCustomRules_class implements \Illuminate\Contracts\Validation\Rule
+        {
+            public function passes($attribute, $value)
+            {
+                return $value === 'aa';
+            }
+
+            public function message()
+            {
+                return 'Custom rule object failed';
+            }
+        }
+
 class ValidationPasswordRuleTest extends TestCase
 {
     public function testString()
@@ -285,18 +298,7 @@ class ValidationPasswordRuleTest extends TestCase
             }
         };
 
-        $ruleObject = new class implements \Illuminate\Contracts\Validation\Rule
-        {
-            public function passes($attribute, $value)
-            {
-                return $value === 'aa';
-            }
-
-            public function message()
-            {
-                return 'Custom rule object failed';
-            }
-        };
+        $ruleObject = new ValidationPasswordRuleTest_testPassesWithCustomRules_class;
 
         $this->passes(Password::min(2)->rules($closureRule), ['aa']);
         $this->passes(Password::min(2)->rules([$closureRule]), ['aa']);

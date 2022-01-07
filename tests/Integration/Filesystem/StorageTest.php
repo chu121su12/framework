@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Integration\Filesystem;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Orchestra\Testbench\TestCase;
@@ -14,7 +15,7 @@ class StorageTest extends TestCase
 {
     protected $stubFile;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $this->afterApplicationCreated(function () {
             File::put($file = storage_path('app/public/StardewTaylor.png'), File::get(__DIR__.'/Fixtures/StardewTaylor.png'));
@@ -57,7 +58,7 @@ class StorageTest extends TestCase
         Storage::disk('public')->assertExists('StardewTaylor.png');
         $this->assertTrue(Storage::disk('public')->exists('StardewTaylor.png'));
 
-        Process::fromShellCommandline("rm {$this->stubFile}")->run();
+        SymfonyHelper::processFromShellCommandline("rm {$this->stubFile}")->run();
 
         clearstatcache(true, $this->stubFile);
         Storage::disk('public')->assertMissing('StardewTaylor.png');

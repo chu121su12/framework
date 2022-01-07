@@ -212,7 +212,7 @@ class DatabaseManager implements ConnectionResolverInterface
      * @param  \Illuminate\Database\Connection  $connection
      * @return void
      */
-    protected function registerConfiguredDoctrineTypes(Connection $connection): void
+    protected function registerConfiguredDoctrineTypes(Connection $connection)/*: void*/
     {
         foreach ($this->app['config']->get('database.dbal.types', []) as $name => $class) {
             $connection->registerDoctrineType($class, $name, $name);

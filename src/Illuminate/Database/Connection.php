@@ -1024,8 +1024,12 @@ class Connection implements ConnectionInterface
      * @throws \Doctrine\DBAL\DBALException
      * @throws \RuntimeException
      */
-    public function registerDoctrineType(string $class, string $name, string $type): void
+    public function registerDoctrineType(/*string */$class, /*string */$name, /*string */$type)/*: void*/
     {
+        $class = cast_to_string($class);
+        $name = cast_to_string($name);
+        $type = cast_to_string($type);
+
         if (! $this->isDoctrineAvailable()) {
             throw new RuntimeException(
                 'Registering a custom Doctrine type requires Doctrine DBAL (doctrine/dbal).'

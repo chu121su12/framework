@@ -4,34 +4,39 @@ namespace Illuminate\Tests\Integration\Support\Fixtures;
 
 use Illuminate\Support\MultipleInstanceManager as BaseMultipleInstanceManager;
 
+
+class MultipleInstanceManager_createFooDriver_class
+        {
+            public $config;
+
+            public function __construct($config)
+            {
+                $this->config = $config;
+            }
+        }
+
+class MultipleInstanceManager_createBarDriver_class
+        {
+            public $config;
+
+            public function __construct($config)
+            {
+                $this->config = $config;
+            }
+        }
+
 class MultipleInstanceManager extends BaseMultipleInstanceManager
 {
     protected $defaultInstance = 'foo';
 
     protected function createFooDriver(array $config)
     {
-        return new class($config)
-        {
-            public $config;
-
-            public function __construct($config)
-            {
-                $this->config = $config;
-            }
-        };
+        return new MultipleInstanceManager_createFooDriver_class($config);
     }
 
     protected function createBarDriver(array $config)
     {
-        return new class($config)
-        {
-            public $config;
-
-            public function __construct($config)
-            {
-                $this->config = $config;
-            }
-        };
+        return new MultipleInstanceManager_createBarDriver_class($config);
     }
 
     /**

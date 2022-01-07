@@ -22,7 +22,7 @@ class RouteListCommandTest extends TestCase
      */
     private $urlGenerator;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -82,7 +82,7 @@ class RouteListCommandTest extends TestCase
             ->expectsOutput('');
     }
 
-    public function tearDown(): void
+    public function tearDown()/*: void*/
     {
         parent::tearDown();
 

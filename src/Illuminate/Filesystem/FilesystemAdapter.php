@@ -2,6 +2,7 @@
 
 namespace Illuminate\Filesystem;
 
+use Closure;
 use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Contracts\Filesystem\Cloud as CloudFilesystemContract;
 use Illuminate\Contracts\Filesystem\FileExistsException as ContractFileExistsException;

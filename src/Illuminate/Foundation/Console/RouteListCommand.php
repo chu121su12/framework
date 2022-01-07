@@ -297,11 +297,13 @@ class RouteListCommand extends Command
     protected function forCli($routes)
     {
         $routes = $routes->map(
-            fn ($route) => array_merge($route, [
-                'action' => $this->formatActionForCli($route),
-                'method' => $route['method'] == 'GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS' ? 'ANY' : $route['method'],
-                'uri' => $route['domain'] ? ($route['domain'].'/'.$route['uri']) : $route['uri'],
-            ]),
+            function ($route) {
+                return array_merge($route, [
+                    'action' => $this->formatActionForCli($route),
+                    'method' => $route['method'] == 'GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS' ? 'ANY' : $route['method'],
+                    'uri' => $route['domain'] ? ($route['domain'].'/'.$route['uri']) : $route['uri'],
+                ]);
+            }
         );
 
         $maxMethod = mb_strlen($routes->max('method'));
@@ -309,18 +311,18 @@ class RouteListCommand extends Command
         $terminalWidth = $this->getTerminalWidth();
 
         return $routes->map(function ($route) use ($maxMethod, $terminalWidth) {
-            [
-                'action' => $action,
-                'domain' => $domain,
-                'method' => $method,
-                'middleware' => $middleware,
-                'uri' => $uri,
-            ] = $route;
+            $action = $route['action'];
+            $domain = $route['domain'];
+            $method = $route['method'];
+            $middleware = $route['middleware'];
+            $uri = $route['uri'];
 
             $middleware = Str::of($middleware)->explode("\n")->filter()->whenNotEmpty(
-                fn ($collection) => $collection->map(
-                    fn ($middleware) => sprintf('         %s⇂ %s', str_repeat(' ', $maxMethod), $middleware)
-                )
+                function ($collection) use ($maxMethod) {
+                    return $collection->map(
+                        function ($middleware) use ($maxMethod) { return sprintf('         %s⇂ %s', str_repeat(' ', $maxMethod), $middleware); }
+                    );
+                }
             )->implode("\n");
 
             $spaces = str_repeat(' ', max($maxMethod + 6 - mb_strlen($method), 0));
@@ -336,7 +338,7 @@ class RouteListCommand extends Command
             }
 
             $method = Str::of($method)->explode('|')->map(
-                fn ($method) => sprintf('<fg=%s>%s</>', $this->verbColors[$method] ?? 'default', $method),
+                function ($method) { return sprintf('<fg=%s>%s</>', isset($this->verbColors[$method]) ? $this->verbColors[$method] : 'default', $method); }
             )->implode('<fg=#6C7280>|</>');
 
             return [sprintf(
@@ -345,7 +347,7 @@ class RouteListCommand extends Command
                 $spaces,
                 preg_replace('#({[^}]+})#', '<fg=yellow>$1</>', $uri),
                 $dots,
-                str_replace('   ', ' › ', $action),
+                str_replace('   ', ' › ', $action)
             ), $this->output->isVerbose() && ! empty($middleware) ? "<fg=#6C7280>$middleware</>" : null];
         })->flatten()->filter()->prepend('')->push('')->toArray();
     }
@@ -358,7 +360,8 @@ class RouteListCommand extends Command
      */
     protected function formatActionForCli($route)
     {
-        ['action' => $action, 'name' => $name] = $route;
+        $action = $route['action'];
+        $name = $route['name'];
 
         if ($action === 'Closure' || $action === ViewController::class) {
             return $name;
@@ -366,8 +369,9 @@ class RouteListCommand extends Command
 
         $name = $name ? "$name   " : null;
 
-        $rootControllerNamespace = $this->laravel[UrlGenerator::class]->getRootControllerNamespace()
-            ?? ($this->laravel->getNamespace().'Http\\Controllers');
+        $rcNamespace = $this->laravel[UrlGenerator::class]->getRootControllerNamespace();
+        $rootControllerNamespace = isset($rcNamespace) ? $rcNamespace
+            : ($this->laravel->getNamespace().'Http\\Controllers');
 
         if (str_starts_with($action, $rootControllerNamespace)) {
             return $name.substr($action, mb_strlen($rootControllerNamespace) + 1);
