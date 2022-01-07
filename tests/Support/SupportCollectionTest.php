@@ -1841,6 +1841,17 @@ class SupportCollectionTest extends TestCase
     /**
      * @dataProvider collectionClassProvider
      */
+    public function testSortByCallableString($collection)
+    {
+        $data = new $collection([['sort' => 2], ['sort' => 1]]);
+        $data = $data->sortBy([['sort', 'asc']]);
+
+        $this->assertEquals([['sort' => 1], ['sort' => 2]], array_values($data->all()));
+    }
+
+    /**
+     * @dataProvider collectionClassProvider
+     */
     public function testSortByAlwaysReturnsAssoc($collection)
     {
         $data = new $collection(['a' => 'taylor', 'b' => 'dayle']);
@@ -4004,6 +4015,25 @@ class SupportCollectionTest extends TestCase
         $instance = $data->pipeInto(TestCollectionMapIntoObject::class);
 
         $this->assertSame($data, $instance->value);
+    }
+
+    /**
+     * @dataProvider collectionClassProvider
+     */
+    public function testPipeThrough($collection)
+    {
+        $data = new $collection([1, 2, 3]);
+
+        $result = $data->pipeThrough([
+            function ($data) {
+                return $data->merge([4, 5]);
+            },
+            function ($data) {
+                return $data->sum();
+            },
+        ]);
+
+        $this->assertEquals(15, $result);
     }
 
     /**

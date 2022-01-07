@@ -218,7 +218,7 @@ class Application extends SymfonyApplication implements ApplicationContract
             $input = new ArrayInput($parameters);
         }
 
-        return [$command, isset($input) ? $input : null];
+        return [$command, $input];
     }
 
     /**

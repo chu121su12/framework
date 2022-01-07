@@ -163,6 +163,8 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
 
         $model = new TestEloquentModelWithAttributeCast;
 
+        $this->assertNull($model->password);
+
         $model->password = 'secret';
 
         $this->assertEquals(hash('sha256', 'secret'), $model->password);

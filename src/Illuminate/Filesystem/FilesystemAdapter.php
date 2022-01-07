@@ -147,6 +147,13 @@ class FilesystemAdapter implements CloudFilesystemContract
     protected $prefixer;
 
     /**
+     * The temporary URL builder callback.
+     *
+     * @var \Closure|null
+     */
+    protected $temporaryUrlCallback;
+
+    /**
      * Create a new filesystem adapter instance.
      *
      * #param  \League\Flysystem\FilesystemOperator  $driver
@@ -163,6 +170,7 @@ class FilesystemAdapter implements CloudFilesystemContract
         $this->driver = $driver;
         $this->adapter = $adapter;
         $this->config = $config;
+
         // $this->prefixer = new PathPrefixer(
         //     $config['root'] ?? '', $config['directory_separator'] ?? DIRECTORY_SEPARATOR
         // );
@@ -177,6 +185,8 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function assertExists($path, $content = null)
     {
+        clearstatcache();
+
         $paths = Arr::wrap($path);
 
         foreach ($paths as $path) {
@@ -206,6 +216,8 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function assertMissing($path)
     {
+        clearstatcache();
+
         $paths = Arr::wrap($path);
 
         foreach ($paths as $path) {
@@ -694,8 +706,8 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function temporaryUrl($path, $expiration, array $options = [])
     {
-        if (! method_exists($this->adapter, 'getTemporaryUrl')) {
-            throw new RuntimeException('This driver does not support creating temporary URLs.');
+        if (method_exists($this->adapter, 'getTemporaryUrl')) {
+            return $this->adapter->getTemporaryUrl($path, $expiration, $options);
         }
 
         if ($this->adapter instanceof AwsS3Adapter) {
@@ -703,6 +715,15 @@ class FilesystemAdapter implements CloudFilesystemContract
         }
 
         return $this->adapter->getTemporaryUrl($path, $expiration, $options);
+
+        if ($this->temporaryUrlCallback) {
+            $callback = $this->temporaryUrlCallback->bindTo($this, static::class);
+            return $callback(
+                $path, $expiration, $options
+            );
+        }
+
+        throw new RuntimeException('This driver does not support creating temporary URLs.');
     }
 
     /**
@@ -903,6 +924,17 @@ class FilesystemAdapter implements CloudFilesystemContract
         }
 
         throw new InvalidArgumentException("Unknown visibility: {$visibility}.");
+    }
+
+    /**
+     * Define a custom temporary URL builder callback.
+     *
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public function buildTemporaryUrlsUsing(Closure $callback)
+    {
+        $this->temporaryUrlCallback = $callback;
     }
 
     /**

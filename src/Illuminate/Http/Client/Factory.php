@@ -153,6 +153,8 @@ class Factory
     {
         $this->record();
 
+        $this->recorded = [];
+
         if (is_null($callback)) {
             $callback = function () {
                 return static::response();
