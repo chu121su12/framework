@@ -57,7 +57,7 @@ trait ParsesLogConfiguration
      */
     protected function actionLevel(array $config)
     {
-        $level = $config['action_level'] ?? 'debug';
+        $level = isset($config['action_level']) ? $config['action_level'] : 'debug';
 
         if (isset($this->levels[$level])) {
             return $this->levels[$level];

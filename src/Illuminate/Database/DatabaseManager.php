@@ -227,7 +227,7 @@ class DatabaseManager implements ConnectionResolverInterface
             $this->registerDoctrineType($class, $name, $name);
         }
 
-        foreach ($this->doctrineTypes as $name => [$type, $class]) {
+        foreach ($this->doctrineTypes as $name => list($type, $class)) {
             $connection->registerDoctrineType($class, $name, $type);
         }
     }
@@ -243,8 +243,12 @@ class DatabaseManager implements ConnectionResolverInterface
      * @throws \Doctrine\DBAL\DBALException
      * @throws \RuntimeException
      */
-    public function registerDoctrineType(string $class, string $name, string $type): void
+    public function registerDoctrineType(/*string */$class, /*string */$name, /*string */$type)/*: void*/
     {
+        $class = cast_to_string($class);
+        $name = cast_to_string($name);
+        $type = cast_to_string($type);
+
         if (! class_exists('Doctrine\DBAL\Connection')) {
             throw new RuntimeException(
                 'Registering a custom Doctrine type requires Doctrine DBAL (doctrine/dbal).'

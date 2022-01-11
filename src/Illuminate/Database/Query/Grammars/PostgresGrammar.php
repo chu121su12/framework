@@ -94,7 +94,7 @@ class PostgresGrammar extends Grammar
      */
     public function whereFullText(Builder $query, $where)
     {
-        $language = $where['options']['language'] ?? 'english';
+        $language = isset($where['options']) && isset($where['options']['language']) ? $where['options']['language'] : 'english';
 
         if (! in_array($language, $this->validFullTextLanguages())) {
             $language = 'english';
@@ -106,11 +106,11 @@ class PostgresGrammar extends Grammar
 
         $mode = 'plainto_tsquery';
 
-        if (($where['options']['mode'] ?? []) === 'phrase') {
+        if ((isset($where['options']) && isset($where['options']['mode']) ? $where['options']['mode'] : []) === 'phrase') {
             $mode = 'phraseto_tsquery';
         }
 
-        if (($where['options']['mode'] ?? []) === 'websearch') {
+        if ((isset($where['options']) && isset($where['options']['mode']) ? $where['options']['mode'] : []) === 'websearch') {
             $mode = 'websearch_to_tsquery';
         }
 

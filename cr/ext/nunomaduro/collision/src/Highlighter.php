@@ -242,8 +242,7 @@ final class Highlighter implements HighlighterContract
         $lines = [];
         foreach ($tokenLines as $lineCount => $tokenLine) {
             $line = '';
-            foreach ($tokenLine as $token) {
-                list($tokenType, $tokenValue) = $token;
+            foreach ($tokenLine as list($tokenType, $tokenValue)) {
                 if ($this->color->hasTheme($tokenType)) {
                     $line .= $this->color->apply($tokenType, $tokenValue);
                 } else {

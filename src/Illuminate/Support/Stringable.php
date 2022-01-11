@@ -780,11 +780,11 @@ class Stringable implements JsonSerializable
         if ($this->contains($needles)) {
             $result = $callback($this);
 
-            return $result ?? $this;
+            return isset($result) ? $result : $this;
         } elseif ($default) {
             $result = $default($this);
 
-            return $result ?? $this;
+            return isset($result) ? $result : $this;
         }
 
         return $this;
@@ -803,11 +803,11 @@ class Stringable implements JsonSerializable
         if ($this->containsAll($needles)) {
             $result = $callback($this);
 
-            return $result ?? $this;
+            return isset($result) ? $result : $this;
         } elseif ($default) {
             $result = $default($this);
 
-            return $result ?? $this;
+            return isset($result) ? $result : $this;
         }
 
         return $this;

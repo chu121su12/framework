@@ -104,7 +104,8 @@ class ApplicationStub implements ArrayAccess
         $this->attributes[$key] = $instance;
     }
 
-    public function offsetExists($offset): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($offset)/*: bool*/
     {
         return isset($this->attributes[$offset]);
     }
@@ -115,12 +116,14 @@ class ApplicationStub implements ArrayAccess
         return $this->attributes[$key];
     }
 
-    public function offsetSet($key, $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($key, $value)/*: void*/
     {
         $this->attributes[$key] = $value;
     }
 
-    public function offsetUnset($key): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($key)/*: void*/
     {
         unset($this->attributes[$key]);
     }

@@ -205,6 +205,10 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
 
     public function testCastsThatOnlyHaveGetterDoNotPeristAnythingToModelOnSave()
     {
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $this->markTestSkipped('Test uses ReturnType attribute.');
+        }
+
         $model = new TestEloquentModelWithAttributeCast;
 
         $model->virtual;

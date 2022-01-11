@@ -587,12 +587,13 @@ trait HasAttributes
         if (version_compare(PHP_VERSION, '7.1.0', '<')) {
             return static::$attributeMutatorCache[get_class($this)][$key] = $returnType &&
                 (string) $returnType === Attribute::class &&
-                is_callable($this->{$method}()->get);
+                is_callable($this->{$method}()->set);
         }
 
         return static::$attributeMutatorCache[get_class($this)][$key] = $returnType &&
                     $returnType instanceof ReflectionNamedType &&
-                    $returnType->getName() === Attribute::class;
+                    $returnType->getName() === Attribute::class &&
+                    is_callable($this->{$method}()->set);
     }
 
     /**

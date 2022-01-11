@@ -63,11 +63,11 @@ class MySqlGrammar extends Grammar
 
         $value = $this->parameter($where['value']);
 
-        $mode = ($where['options']['mode'] ?? []) === 'boolean'
+        $mode = (isset($where['options']) && isset($where['options']['mode']) ? $where['options']['mode'] : []) === 'boolean'
             ? ' in boolean mode'
             : ' in natural language mode';
 
-        $expanded = ($where['options']['expanded'] ?? []) && ($where['options']['mode'] ?? []) !== 'boolean'
+        $expanded = (isset($where['options']) && isset($where['options']['expanded']) ? $where['options']['expanded'] : []) && (isset($where['options']) && isset($where['options']['mode']) ? $where['options']['mode'] : []) !== 'boolean'
             ? ' with query expansion'
             : '';
 

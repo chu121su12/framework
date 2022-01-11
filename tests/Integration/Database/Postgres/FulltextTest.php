@@ -27,7 +27,7 @@ class FulltextTest extends PostgresTestCase
         Schema::drop('articles');
     }
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

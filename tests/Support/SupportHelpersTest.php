@@ -822,7 +822,8 @@ class SupportTestArrayAccess implements ArrayAccess
         $this->attributes = $attributes;
     }
 
-    public function offsetExists($offset): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($offset)/*: bool*/
     {
         return array_key_exists($offset, $this->attributes);
     }
@@ -833,12 +834,14 @@ class SupportTestArrayAccess implements ArrayAccess
         return $this->attributes[$offset];
     }
 
-    public function offsetSet($offset, $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($offset, $value)/*: void*/
     {
         $this->attributes[$offset] = $value;
     }
 
-    public function offsetUnset($offset): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($offset)/*: void*/
     {
         unset($this->attributes[$offset]);
     }
@@ -853,7 +856,8 @@ class SupportTestArrayIterable implements IteratorAggregate
         $this->items = $items;
     }
 
-    public function getIterator(): Traversable
+    #[\ReturnTypeWillChange]
+    public function getIterator()/*: Traversable*/
     {
         return new ArrayIterator($this->items);
     }

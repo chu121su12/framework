@@ -123,7 +123,7 @@ class Schedule
             $command = Container::getInstance()->make($command);
 
             return $this->exec(
-                Application::formatCommandString($command->getName()), $parameters,
+                Application::formatCommandString($command->getName()), $parameters
             )->description($command->getDescription());
         }
 
