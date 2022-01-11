@@ -249,7 +249,7 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
             }
 
             $content = json_encode(array_merge(
-                backport_json_decode($entry->content, true) ?: [], $update->changes
+                backport_json_decode(isset($entry->content) ? $entry->content : (isset($entry['content']) ? $entry['content'] : []), true) ?: [], $update->changes
             ));
 
             $this->table('telescope_entries')

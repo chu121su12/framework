@@ -95,10 +95,10 @@ trait InstallsInertiaStacks
         // NPM Packages...
         $this->updateNodePackages(function ($packages) {
             return [
-                '@headlessui/react' => '^1.2.0',
-                '@inertiajs/inertia' => '^0.9.0',
-                '@inertiajs/inertia-react' => '^0.6.0',
-                '@inertiajs/progress' => '^0.2.4',
+                '@headlessui/react' => '^1.4.2',
+                '@inertiajs/inertia' => '^0.10.0',
+                '@inertiajs/inertia-react' => '^0.7.0',
+                '@inertiajs/progress' => '^0.2.6',
                 '@tailwindcss/forms' => '^0.4.0',
                 'autoprefixer' => '^10.2.4',
                 'postcss' => '^8.2.13',
@@ -106,7 +106,7 @@ trait InstallsInertiaStacks
                 'tailwindcss' => '^3.0.0',
                 'react' => '^17.0.2',
                 'react-dom' => '^17.0.2',
-                '@babel/preset-react' => '^7.13.13',
+                '@babel/preset-react' => '^7.16.7',
             ] + $packages;
         });
 
