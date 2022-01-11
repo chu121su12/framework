@@ -79,6 +79,15 @@ class TestEloquentModelWithAttributeCast extends Model
             return hash('sha256', $value);
         });
     }
+
+    public function virtual(): Attribute
+    {
+        return new Attribute(
+            function () {
+                return collect();
+            }
+        );
+    }
 }
 
 class AttributeCastAddress

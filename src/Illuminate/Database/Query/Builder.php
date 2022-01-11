@@ -3,6 +3,7 @@
 namespace Illuminate\Database\Query;
 
 use BackedEnum;
+use Carbon\CarbonPeriod;
 use Closure;
 use DateTimeInterface;
 use Illuminate\Contracts\Database\Query\Builder as BuilderContract;
@@ -927,6 +928,10 @@ class Builder implements BuilderContract
     {
         $type = 'between';
 
+        if ($values instanceof CarbonPeriod) {
+            $values = $values->toArray();
+        }
+
         $this->wheres[] = compact('type', 'column', 'values', 'boolean', 'not');
 
         $this->addBinding(array_slice($this->cleanBindings(Arr::flatten($values)), 0, 2), 'where');
@@ -1460,6 +1465,30 @@ class Builder implements BuilderContract
         $bool = strtolower($connector);
 
         $this->where(Str::snake($segment), '=', $parameters[$index], $bool);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function whereFullText($columns, $value, array $options = [], $boolean = 'and')
+    {
+        $type = 'Fulltext';
+
+        $columns = (array) $columns;
+
+        $this->wheres[] = compact('type', 'columns', 'value', 'options', 'boolean');
+
+        $this->addBinding($value);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function orWhereFullText($columns, $value, array $options = [])
+    {
+        return $this->whereFulltext($columns, $value, $options, 'or');
     }
 
     /**

@@ -237,7 +237,7 @@ class FilesystemManager implements FactoryContract
     {
         $s3Config = $this->formatS3Config($config);
 
-        $root = isset($s3Config['root']) ? $s3Config['root'] : null;
+        $root = (string) (isset($s3Config['root']) ? $s3Config['root'] : '');
 
         $options = isset($config['options']) ? $config['options'] : [];
 
