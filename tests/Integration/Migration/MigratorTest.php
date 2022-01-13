@@ -15,7 +15,7 @@ class MigratorTest extends TestCase
      */
     private $output;
 
-    protected function setUp() ////: void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -77,7 +77,7 @@ class MigratorTest extends TestCase
         self::assertFalse(DB::getSchemaBuilder()->hasTable('people'));
     }
 
-    private function expectOutput($argument) ////: void
+    private function expectOutput($argument)/*: void*/
     {
         $this->output->shouldReceive('writeln')->once()->with($argument);
     }

@@ -10,10 +10,6 @@ use PHPUnit\Framework\Constraint\ExceptionMessage;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group queue
- * @group pesky
- */
 class SupportTestingQueueFakeTest extends TestCase
 {
     /**
@@ -26,7 +22,7 @@ class SupportTestingQueueFakeTest extends TestCase
      */
     private $job;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
         $this->fake = new QueueFake(new Application);

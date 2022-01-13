@@ -18,7 +18,7 @@ use Swift_Transport;
 
 class MailMailerTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         unset($_SERVER['__mailer.test']);
 

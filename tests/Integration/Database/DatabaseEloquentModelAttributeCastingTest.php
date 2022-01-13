@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
 
 class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
 {
-    protected function setUp()////: void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -27,12 +27,11 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
         });
     }
 
+    /**
+     * @requires PHP 7.0
+     */
     public function testBasicCustomCasting()
     {
-        if (version_compare(PHP_VERSION, '7.0', '<')) {
-            $this->markTestSkipped('Test uses ReturnType attribute.');
-        }
-
         $model = new TestEloquentModelWithAttributeCast;
         $model->uppercase = 'taylor';
 
@@ -111,12 +110,11 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
         $this->assertIsString($model->toArray()['birthday_at']);
     }
 
+    /**
+     * @requires PHP 7.0
+     */
     public function testGetOriginalWithCastValueObjects()
     {
-        if (version_compare(PHP_VERSION, '7.0', '<')) {
-            $this->markTestSkipped('Test uses ReturnType attribute.');
-        }
-
         $model = new TestEloquentModelWithAttributeCast([
             'address' => new AttributeCastAddress('110 Kingsbrook St.', 'My Childhood House'),
         ]);
@@ -155,12 +153,11 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
         $this->assertNull($model->address);
     }
 
+    /**
+     * @requires PHP 7.0
+     */
     public function testOneWayCasting()
     {
-        if (version_compare(PHP_VERSION, '7.0', '<')) {
-            $this->markTestSkipped('Test uses ReturnType attribute.');
-        }
-
         $model = new TestEloquentModelWithAttributeCast;
 
         $this->assertNull($model->password);
@@ -180,12 +177,11 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
         $this->assertEquals(hash('sha256', 'secret2'), $model->password);
     }
 
+    /**
+     * @requires PHP 7.0
+     */
     public function testSettingRawAttributesClearsTheCastCache()
     {
-        if (version_compare(PHP_VERSION, '7.0', '<')) {
-            $this->markTestSkipped('Test uses ReturnType attribute.');
-        }
-
         $model = new TestEloquentModelWithAttributeCast;
 
         $model->setRawAttributes([
@@ -203,12 +199,11 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
         $this->assertSame('117 Spencer St.', $model->address->lineOne);
     }
 
+    /**
+     * @requires PHP 7.0
+     */
     public function testCastsThatOnlyHaveGetterDoNotPeristAnythingToModelOnSave()
     {
-        if (version_compare(PHP_VERSION, '7.0', '<')) {
-            $this->markTestSkipped('Test uses ReturnType attribute.');
-        }
-
         $model = new TestEloquentModelWithAttributeCast;
 
         $model->virtual;

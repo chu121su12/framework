@@ -14,9 +14,6 @@ use Illuminate\Support\Str;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group redis
- */
 class RedisQueueIntegrationTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -32,14 +29,14 @@ class RedisQueueIntegrationTest extends TestCase
      */
     private $container;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         Carbon::setTestNow(Carbon::now());
         parent::setUp();
         $this->setUpRedis();
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         Carbon::setTestNow(null);
         parent::tearDown();

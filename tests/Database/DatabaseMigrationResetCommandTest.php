@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\NullOutput;
 
 class DatabaseMigrationResetCommandTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

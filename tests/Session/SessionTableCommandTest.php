@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\NullOutput;
 
 class SessionTableCommandTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

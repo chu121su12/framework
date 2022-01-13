@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentGlobalScopesTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -20,7 +20,7 @@ class DatabaseEloquentGlobalScopesTest extends TestCase
         ])->bootEloquent();
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 

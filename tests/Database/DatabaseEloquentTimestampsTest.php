@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentTimestampsTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         $db = new DB;
 
@@ -56,7 +56,7 @@ class DatabaseEloquentTimestampsTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         $this->schema()->drop('users');
         $this->schema()->drop('users_created_at');
@@ -130,7 +130,7 @@ class UserWithCreatedAndUpdated extends Eloquent
 
 class UserWithCreated extends Eloquent
 {
-    const UPDATED_AT = null;
+    /*public */const UPDATED_AT = null;
 
     protected $table = 'users_created_at';
 
@@ -141,7 +141,7 @@ class UserWithCreated extends Eloquent
 
 class UserWithUpdated extends Eloquent
 {
-    const CREATED_AT = null;
+    /*public */const CREATED_AT = null;
 
     protected $table = 'users_updated_at';
 

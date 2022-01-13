@@ -18,7 +18,7 @@ class DatabaseEloquentFactoryTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         $container = Container::getInstance();
         $container->singleton(Generator::class, function ($app, $parameters) {
@@ -87,7 +87,7 @@ class DatabaseEloquentFactoryTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         Mockery::close();
 

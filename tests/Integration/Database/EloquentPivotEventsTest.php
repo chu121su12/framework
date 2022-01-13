@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 
 class EloquentPivotEventsTest extends DatabaseTestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

@@ -13,7 +13,7 @@ class ThrottleRequestsWithRedisTest extends TestCase
 {
     use InteractsWithRedis;
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
         Carbon::setTestNow(null);
@@ -51,7 +51,7 @@ class ThrottleRequestsWithRedisTest extends TestCase
                 $this->withoutExceptionHandling()->get('/');
             } catch (\Exception $e) {
             } catch (\Error $e) {
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
             }
 
             if (isset($e)) {

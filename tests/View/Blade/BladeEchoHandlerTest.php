@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class BladeEchoHandlerTest extends AbstractBladeTestCase
 {
-    protected function setUp()////: void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

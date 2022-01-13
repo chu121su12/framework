@@ -23,36 +23,33 @@ class ForwardsCallsTest extends TestCase
         $this->assertEquals(['foo', 'bar'], $results);
     }
 
+    /**
+     * @requires PHP 7.0
+     */
     public function testMissingForwardedCallThrowsCorrectError()
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-            $this->markTestSkipped('Before php 7, call to undefined method raises fatal error.');
-        }
-
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('Call to undefined method Illuminate\Tests\Support\ForwardsCallsOne::missingMethod()');
 
         (new ForwardsCallsOne)->missingMethod('foo', 'bar');
     }
 
+    /**
+     * @requires PHP 7.0
+     */
     public function testMissingAlphanumericForwardedCallThrowsCorrectError()
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-            $this->markTestSkipped('Before php 7, call to undefined method raises fatal error.');
-        }
-
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('Call to undefined method Illuminate\Tests\Support\ForwardsCallsOne::this1_shouldWork_too()');
 
         (new ForwardsCallsOne)->this1_shouldWork_too('foo', 'bar');
     }
 
+    /**
+     * @requires PHP 7.0
+     */
     public function testNonForwardedErrorIsNotTamperedWith()
     {
-        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-            $this->markTestSkipped('Before php 7, call to undefined method raises fatal error.');
-        }
-
         $this->expectException(Error::class);
         $this->expectExceptionMessage('Call to undefined method Illuminate\Tests\Support\ForwardsCallsBase::missingMethod()');
 

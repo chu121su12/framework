@@ -15,7 +15,7 @@ class RedisManagerExtensionTest extends TestCase
      */
     protected $redis;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -43,7 +43,7 @@ class RedisManagerExtensionTest extends TestCase
         });
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

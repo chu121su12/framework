@@ -14,7 +14,7 @@ use Orchestra\Testbench\TestCase;
 
 class ThrottlesExceptionsTest extends TestCase
 {
-    protected function tearDown() ////: void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 

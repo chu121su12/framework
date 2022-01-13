@@ -14,7 +14,7 @@ use Illuminate\Validation\Validator;
 
 class ValidatorTest extends DatabaseTestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

@@ -20,14 +20,14 @@ class RateLimitedWithRedisTest extends TestCase
 {
     use InteractsWithRedis;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
         $this->setUpRedis();
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 
@@ -116,11 +116,11 @@ class RateLimitedWithRedisTest extends TestCase
 
         $restoredRateLimited = unserialize(serialize($rateLimited));
 
-        $callback = function ($name) {
+        $callback = (function (/*string */$name) {
             $name = cast_to_string($name);
 
             return $this->{$name};
-        };
+        });
         $fetch = $callback->bindTo($restoredRateLimited, RateLimitedWithRedis::class);
 
         $this->assertFalse($restoredRateLimited->shouldRelease);

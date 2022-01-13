@@ -15,7 +15,7 @@ class FrequencyTest extends TestCase
      */
     protected $event;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         Carbon::setTestNow();
 

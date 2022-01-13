@@ -20,7 +20,7 @@ class DatabaseEloquentBelongsToManyWithCastedAttributesTest_testModelsAreProperl
 
 class DatabaseEloquentBelongsToManyWithCastedAttributesTest extends TestCase
 {
-    protected function tearDown() ////: void
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

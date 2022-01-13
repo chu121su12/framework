@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentBelongsToManySyncReturnValueTypeTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         $db = new DB;
 
@@ -56,7 +56,7 @@ class DatabaseEloquentBelongsToManySyncReturnValueTypeTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         $this->schema()->drop('users');
         $this->schema()->drop('articles');

@@ -23,7 +23,7 @@ class CompiledRouteCollectionTest extends TestCase
      */
     protected $router;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -32,7 +32,7 @@ class CompiledRouteCollectionTest extends TestCase
         $this->routeCollection = new RouteCollection;
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 

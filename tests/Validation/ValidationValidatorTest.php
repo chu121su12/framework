@@ -213,7 +213,7 @@ class ValidationValidatorTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         Carbon::setTestNow();
         m::close();
@@ -3233,12 +3233,11 @@ class ValidationValidatorTest extends TestCase
         $this->assertFalse($v->passes());
     }
 
+    /**
+     * @requires PHP 7.1
+     */
     public function testValidateEmailWithFilterUnicodeCheck()
     {
-        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
-            $this->markTestSkipped('Before php 7, constant FILTER_FLAG_EMAIL_UNICODE is not available.');
-        }
-
         $v = new Validator($this->getIlluminateArrayTranslator(), ['x' => 'foo@bar'], ['x' => 'email:filter_unicode']);
         $this->assertFalse($v->passes());
 

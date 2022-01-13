@@ -24,7 +24,7 @@ class SendingMailNotificationsTest extends TestCase
     public $mailer;
     public $markdown;
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 
@@ -53,7 +53,7 @@ class SendingMailNotificationsTest extends TestCase
         View::addLocation(__DIR__.'/Fixtures');
     }
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

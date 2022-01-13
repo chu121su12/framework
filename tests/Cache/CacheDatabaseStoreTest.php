@@ -13,7 +13,7 @@ use stdClass;
 
 class CacheDatabaseStoreTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

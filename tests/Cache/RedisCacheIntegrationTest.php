@@ -7,20 +7,17 @@ use Illuminate\Cache\Repository;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithRedis;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group redis
- */
 class RedisCacheIntegrationTest extends TestCase
 {
     use InteractsWithRedis;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
         $this->setUpRedis();
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
         $this->tearDownRedis();

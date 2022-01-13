@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentMorphTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         Relation::morphMap([], false);
 

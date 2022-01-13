@@ -10,7 +10,7 @@ class SupportMacroableTest extends TestCase
 {
     private $macroable;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         $this->macroable = $this->createObjectForTrait();
     }

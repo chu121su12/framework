@@ -16,7 +16,7 @@ class FoundationProviderRepositoryTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Expect;
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

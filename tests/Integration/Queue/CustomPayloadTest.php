@@ -28,7 +28,7 @@ class CustomPayloadTest extends TestCase
     /**
      * @dataProvider websites
      */
-    public function test_custom_payload_gets_cleared_for_each_data_provider($websites)
+    public function test_custom_payload_gets_cleared_for_each_data_provider(/*string */$websites)
     {
         $websites = cast_to_string($websites);
 

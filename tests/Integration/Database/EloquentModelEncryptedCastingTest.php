@@ -17,7 +17,7 @@ class EloquentModelEncryptedCastingTest extends DatabaseTestCase
 {
     protected $encrypter;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

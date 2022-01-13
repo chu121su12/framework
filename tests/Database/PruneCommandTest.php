@@ -21,7 +21,7 @@ class PruneCommandTest extends TestCase
     use \PHPUnit\Framework\PhpUnit8Assert;
     use \PHPUnit\Framework\PhpUnit8Expect;
 
-    protected function setUp()////: void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -185,7 +185,7 @@ EOF;
         return $output;
     }
 
-    public function tearDown()////: void
+    public function tearDown()/*: void*/
     {
         parent::tearDown();
 

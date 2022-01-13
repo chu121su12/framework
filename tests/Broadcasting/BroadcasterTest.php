@@ -19,14 +19,14 @@ class BroadcasterTest extends TestCase
      */
     public $broadcaster;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
         $this->broadcaster = new FakeBroadcaster;
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
 

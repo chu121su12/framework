@@ -21,7 +21,7 @@ class MailableQueuedTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
@@ -101,7 +101,7 @@ class MailableQueueableStub extends Mailable implements ShouldQueue
 {
     use Queueable;
 
-    public function build()
+    public function build()/*: self*/
     {
         $this
             ->subject('lorem ipsum')

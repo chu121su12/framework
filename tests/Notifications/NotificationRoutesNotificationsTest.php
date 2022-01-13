@@ -13,7 +13,7 @@ use stdClass;
 
 class NotificationRoutesNotificationsTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
 

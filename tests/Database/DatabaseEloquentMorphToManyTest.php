@@ -11,7 +11,7 @@ use stdClass;
 
 class DatabaseEloquentMorphToManyTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

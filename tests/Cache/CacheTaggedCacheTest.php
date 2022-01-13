@@ -14,7 +14,7 @@ use stdClass;
 
 class CacheTaggedCacheTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
@@ -287,7 +287,7 @@ class CacheTaggedCacheTest extends TestCase
         $redis->flush();
     }
 
-    private function getTestCacheStoreWithTagValues() ///: ArrayStore
+    private function getTestCacheStoreWithTagValues()/*: ArrayStore*/
     {
         $store = new ArrayStore;
 

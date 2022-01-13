@@ -12,21 +12,18 @@ use PHPUnit\Framework\TestCase;
 use Predis\Client;
 use Redis;
 
-/**
- * @group redis
- */
 class RedisConnectionTest extends TestCase
 {
     use InteractsWithRedis;
     use \PHPUnit\Framework\PhpUnit8Assert;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
         $this->setUpRedis();
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 

@@ -36,7 +36,7 @@ class BusBatchTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         $db = new DB;
 
@@ -81,7 +81,7 @@ class BusBatchTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         unset($_SERVER['__finally.batch'], $_SERVER['__then.batch'], $_SERVER['__catch.batch'], $_SERVER['__catch.exception']);
 

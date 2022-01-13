@@ -43,14 +43,14 @@ class DatabaseEloquentModelTest extends TestCase
     use \PHPUnit\Framework\PhpUnit8Assert,
         InteractsWithTime;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
         Carbon::setTestNow(Carbon::now());
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 
@@ -648,10 +648,6 @@ class DatabaseEloquentModelTest extends TestCase
 
     public function testFromDateTimeMilliseconds()
     {
-        // if (version_compare(PHP_VERSION, '7.0.0', '<')) {
-        //     $this->markTestSkipped('Before php 7, v format (milliseconds) is not supported.');
-        // }
-
         $model = $this->getMockBuilder('Illuminate\Tests\Database\EloquentDateModelStub')->onlyMethods(['getDateFormat'])->getMock();
         $model->expects($this->any())->method('getDateFormat')->willReturn('Y-m-d H:s.vi');
         $model->setRawAttributes([
@@ -2721,8 +2717,10 @@ class UnsavedModel extends Model
 
 class Uppercase implements CastsInboundAttributes
 {
-    public function set($model, $key, $value, array $attributes)
+    public function set($model, /*string */$key, $value, array $attributes)
     {
+        // $key = cast_to_string($key);
+
         return is_string($value) ? strtoupper($value) : $value;
     }
 }

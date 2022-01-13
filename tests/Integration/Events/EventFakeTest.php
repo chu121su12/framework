@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
 
-/**
- * @group queue
- */
 class EventFakeTest extends TestCase
 {
     protected function setUp()/*: void*/

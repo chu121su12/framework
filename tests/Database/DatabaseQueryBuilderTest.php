@@ -29,7 +29,7 @@ use stdClass;
 
 class DatabaseQueryBuilderTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

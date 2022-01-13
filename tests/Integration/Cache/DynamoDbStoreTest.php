@@ -11,7 +11,7 @@ use Orchestra\Testbench\TestCase;
 
 class DynamoDbStoreTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         if (! env('DYNAMODB_CACHE_TABLE')) {
             $this->markTestSkipped('DynamoDB not configured.');

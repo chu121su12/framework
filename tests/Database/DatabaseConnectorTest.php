@@ -15,7 +15,7 @@ use stdClass;
 
 class DatabaseConnectorTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

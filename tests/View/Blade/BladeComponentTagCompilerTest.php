@@ -27,7 +27,7 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         Mockery::close();
     }

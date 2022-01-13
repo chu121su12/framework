@@ -15,7 +15,7 @@ use RuntimeException;
 
 class BusDispatcherTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

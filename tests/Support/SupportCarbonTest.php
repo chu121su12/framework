@@ -16,14 +16,14 @@ class SupportCarbonTest extends TestCase
      */
     protected $now;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
         Carbon::setTestNow($this->now = Carbon::create(2017, 6, 27, 13, 14, 15, 'UTC'));
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         Carbon::setTestNow();
         Carbon::serializeUsing(null);

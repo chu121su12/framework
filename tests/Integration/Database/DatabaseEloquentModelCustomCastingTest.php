@@ -438,8 +438,10 @@ class ValueObject implements Castable
 {
     public $name;
 
-    public function __construct($name)
+    public function __construct(/*string */$name)
     {
+        $name = cast_to_string($name);
+
         $this->name = $name;
     }
 

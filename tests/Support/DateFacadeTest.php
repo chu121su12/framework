@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class DateFacadeTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
         DateFactory::use_(Carbon::class);

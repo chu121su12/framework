@@ -15,7 +15,7 @@ class BusBatchableTest_test_batch_may_be_retrieved_class
 
 class BusBatchableTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

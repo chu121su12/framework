@@ -9,12 +9,9 @@ use PHPUnit\Framework\Constraint\ExceptionMessage;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group queue
- */
 class SupportTestingEventFakeTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
         $this->fake = new EventFake(m::mock(Dispatcher::class));

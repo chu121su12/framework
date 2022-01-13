@@ -25,7 +25,7 @@ class JobEncryptionTest extends DatabaseTestCase
         $app['config']->set('queue.default', 'database');
     }
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -40,7 +40,7 @@ class JobEncryptionTest extends DatabaseTestCase
         });
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         JobEncryptionTestEncryptedJob::$ran = false;
         JobEncryptionTestNonEncryptedJob::$ran = false;

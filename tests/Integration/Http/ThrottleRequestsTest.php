@@ -14,7 +14,7 @@ use Throwable;
 
 class ThrottleRequestsTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 
@@ -50,7 +50,7 @@ class ThrottleRequestsTest extends TestCase
             $this->withoutExceptionHandling()->get('/');
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -93,7 +93,7 @@ class ThrottleRequestsTest extends TestCase
             $this->withoutExceptionHandling()->get('/');
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {

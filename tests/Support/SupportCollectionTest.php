@@ -487,14 +487,11 @@ class SupportCollectionTest extends TestCase
     }
 
     /**
+     * @requires PHP 7.1
      * @dataProvider collectionClassProvider
      */
     public function testCollectionShuffleWithSeed($collection)
     {
-        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
-            $this->markTestSkipped('Before php 7, mt_srand with identical seed is not guaranteed to produce same output.');
-        }
-
         $data = new $collection(range(0, 100, 10));
 
         $firstRandom = $data->shuffle(1234);
@@ -5104,7 +5101,7 @@ class TestJsonableObject implements Jsonable
 
 class TestJsonSerializeObject implements JsonSerializable
 {
-    public function jsonSerialize()////: array
+    public function jsonSerialize()/*: array*/
     {
         return ['foo' => 'bar'];
     }
@@ -5112,7 +5109,7 @@ class TestJsonSerializeObject implements JsonSerializable
 
 class TestJsonSerializeWithScalarValueObject implements JsonSerializable
 {
-    public function jsonSerialize()////: string
+    public function jsonSerialize()/*: string*/
     {
         return 'foo';
     }

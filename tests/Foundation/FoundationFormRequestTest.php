@@ -22,7 +22,7 @@ class FoundationFormRequestTest extends TestCase
 {
     protected $mocks = [];
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
 

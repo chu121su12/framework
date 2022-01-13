@@ -11,13 +11,13 @@ use stdClass;
 
 class SupportFacadeTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         Facade::clearResolvedInstances();
         FacadeStub::setFacadeApplication(null);
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

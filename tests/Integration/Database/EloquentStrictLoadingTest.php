@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Schema;
 
 class EloquentStrictLoadingTest extends DatabaseTestCase
 {
-    protected function setUp()////: void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

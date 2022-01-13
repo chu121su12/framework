@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseMySqlBuilderTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

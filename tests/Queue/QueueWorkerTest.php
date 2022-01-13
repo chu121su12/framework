@@ -24,7 +24,7 @@ class QueueWorkerTest extends TestCase
     public $events;
     public $exceptionHandler;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         $this->events = m::spy(Dispatcher::class);
         $this->exceptionHandler = m::spy(ExceptionHandler::class);
@@ -35,7 +35,7 @@ class QueueWorkerTest extends TestCase
         $container->instance(ExceptionHandler::class, $this->exceptionHandler);
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         Container::setInstance(null);
     }
@@ -362,14 +362,14 @@ class QueueWorkerTest extends TestCase
     /**
      * Helpers...
      */
-    private function getWorker($connectionName = 'default', $jobs = [], callable $isInMaintenanceMode = null)
+    private function getWorker($connectionName = 'default', $jobs = [], /*?*/callable $isInMaintenanceMode = null)
     {
         return new InsomniacWorker(
             ...$this->workerDependencies($connectionName, $jobs, $isInMaintenanceMode)
         );
     }
 
-    private function workerDependencies($connectionName = 'default', $jobs = [], callable $isInMaintenanceMode = null)
+    private function workerDependencies($connectionName = 'default', $jobs = [], /*?*/callable $isInMaintenanceMode = null)
     {
         return [
             new WorkerFakeManager($connectionName, new WorkerFakeConnection($jobs)),

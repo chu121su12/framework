@@ -25,7 +25,7 @@ class BusPendingBatchTest_test_batch_is_deleted_from_storage_if_exception_thrown
 
 class BusPendingBatchTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

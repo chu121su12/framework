@@ -17,7 +17,7 @@ class TestDatabasesTest_switchToDatabase_class
 
 class TestDatabasesTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -99,7 +99,7 @@ class TestDatabasesTest extends TestCase
         ];
     }
 
-    public function tearDown()
+    public function tearDown()/*: void*/
     {
         parent::tearDown();
 

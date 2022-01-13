@@ -20,7 +20,7 @@ class MailMessageTest extends TestCase
      */
     protected $message;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

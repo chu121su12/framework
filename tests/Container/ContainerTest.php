@@ -13,7 +13,7 @@ use TypeError;
 
 class ContainerTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         Container::setInstance(null);
     }

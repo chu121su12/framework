@@ -9,21 +9,18 @@ use PHPUnit\Framework\Constraint\ExceptionMessage;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group queue
- */
 class SupportTestingBusFakeTest extends TestCase
 {
     /** @var \Illuminate\Support\Testing\Fakes\BusFake */
     protected $fake;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
         $this->fake = new BusFake(m::mock(QueueingDispatcher::class));
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
         m::close();

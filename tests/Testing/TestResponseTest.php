@@ -1685,7 +1685,7 @@ class TestResponseTest extends TestCase
 
 class JsonSerializableMixedResourcesStub implements JsonSerializable
 {
-    public function jsonSerialize()////: array
+    public function jsonSerialize()/*: array*/
     {
         return [
             'foo' => 'bar',
@@ -1719,7 +1719,7 @@ class JsonSerializableMixedResourcesStub implements JsonSerializable
 
 class JsonSerializableSingleResourceStub implements JsonSerializable
 {
-    public function jsonSerialize()////: array
+    public function jsonSerialize()/*: array*/
     {
         return [
             ['foo' => 'foo 0', 'bar' => 'bar 0', 'foobar' => 'foobar 0'],
@@ -1732,7 +1732,7 @@ class JsonSerializableSingleResourceStub implements JsonSerializable
 
 class JsonSerializableSingleResourceWithIntegersStub implements JsonSerializable
 {
-    public function jsonSerialize()////: array
+    public function jsonSerialize()/*: array*/
     {
         return [
             ['id' => 10, 'foo' => 'bar'],

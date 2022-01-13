@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag5 as ResponseHeaderBag;
 
 class HttpResponseTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
@@ -245,7 +245,7 @@ class JsonableStub implements Jsonable
 
 class JsonSerializableStub implements JsonSerializable
 {
-    public function jsonSerialize()////: array
+    public function jsonSerialize()/*: array*/
     {
         return ['foo' => 'bar'];
     }

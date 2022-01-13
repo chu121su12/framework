@@ -25,7 +25,7 @@ class FilesystemAdapterTest extends TestCase
     private $filesystem;
     private $adapter;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         $this->tempDir = __DIR__.'/tmp';
         $this->filesystem = new Filesystem(
@@ -33,7 +33,7 @@ class FilesystemAdapterTest extends TestCase
         );
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         $filesystem = new Filesystem(
             $this->adapter = new LocalFilesystemAdapter(dirname($this->tempDir))

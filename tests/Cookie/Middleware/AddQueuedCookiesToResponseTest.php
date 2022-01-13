@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag5 as ResponseHeaderBag;
 
 class AddQueuedCookiesToResponseTest extends TestCase
 {
-    public function testHandle()
+    public function testHandle()/*: void*/
     {
         $cookieJar = new CookieJar;
         $cookieOne = $cookieJar->make('foo', 'bar', 0, '/path');

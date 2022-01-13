@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentCollectionQueueableTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         Mockery::close();
     }

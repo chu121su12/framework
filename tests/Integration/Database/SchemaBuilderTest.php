@@ -39,11 +39,11 @@ class SchemaBuilderTest extends DatabaseTestCase
 
         if (version_compare(PHP_VERSION, '7.0.0', '<')) {
 
-        DB::statement('create view "foo" as select 1 as "id"');
+            DB::statement('create view "foo" as select 1 as "id"');
 
-        Schema::dropAllViews();
+            Schema::dropAllViews();
 
-        DB::statement('create view "foo" as select 1 as "id"');
+            DB::statement('create view "foo" as select 1 as "id"');
 
         } else {
 

@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseSQLiteBuilderTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         $app = new Container;
 
@@ -23,7 +23,7 @@ class DatabaseSQLiteBuilderTest extends TestCase
         Facade::setFacadeApplication($app);
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
 

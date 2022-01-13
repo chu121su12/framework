@@ -19,7 +19,7 @@ class RequirePasswordTest extends TestCase
         /** @var \Illuminate\Contracts\Routing\Registrar $router */
         $router = $this->app->make(Registrar::class);
 
-        $router->get('test-route', function () {
+        $router->get('test-route', function ()/*: Response */{
             return new Response('foobar');
         })->middleware([StartSession::class, RequirePassword::class]);
 
@@ -36,11 +36,11 @@ class RequirePasswordTest extends TestCase
         /** @var \Illuminate\Contracts\Routing\Registrar $router */
         $router = $this->app->make(Registrar::class);
 
-        $router->get('password-confirm', function () {
+        $router->get('password-confirm', function ()/*: Response */{
             return new Response('foo');
         })->name('password.confirm');
 
-        $router->get('test-route', function () {
+        $router->get('test-route', function ()/*: Response */{
             return new Response('foobar');
         })->middleware([StartSession::class, RequirePassword::class]);
 
@@ -57,11 +57,11 @@ class RequirePasswordTest extends TestCase
         /** @var \Illuminate\Contracts\Routing\Registrar $router */
         $router = $this->app->make(Registrar::class);
 
-        $router->get('confirm', function () {
+        $router->get('confirm', function ()/*: Response */{
             return new Response('foo');
         })->name('my-password.confirm');
 
-        $router->get('test-route', function () {
+        $router->get('test-route', function ()/*: Response */{
             return new Response('foobar');
         })->middleware([StartSession::class, RequirePassword::class.':my-password.confirm']);
 
@@ -78,11 +78,11 @@ class RequirePasswordTest extends TestCase
         /** @var \Illuminate\Contracts\Routing\Registrar $router */
         $router = $this->app->make(Registrar::class);
 
-        $router->get('password-confirm', function () {
+        $router->get('password-confirm', function ()/*: Response */{
             return new Response('foo');
         })->name('password.confirm');
 
-        $router->get('test-route', function () {
+        $router->get('test-route', function ()/*: Response */{
             return new Response('foobar');
         })->middleware([StartSession::class, RequirePassword::class]);
 

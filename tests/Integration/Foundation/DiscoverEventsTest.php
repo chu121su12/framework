@@ -37,10 +37,6 @@ class DiscoverEventsTest extends TestCase
      */
     public function testUnionEventsCanBeDiscovered()
     {
-        if (version_compare(phpversion(), '8.0.0', '<')) {
-            $this->markTestSkipped('Test uses union types.');
-        }
-
         class_alias(UnionListener::class, 'Tests\Integration\Foundation\Fixtures\EventDiscovery\UnionListeners\UnionListener');
 
         $events = DiscoverEvents::within(__DIR__.'/Fixtures/EventDiscovery/UnionListeners', getcwd());

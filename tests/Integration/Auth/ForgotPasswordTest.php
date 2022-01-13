@@ -63,6 +63,8 @@ class ForgotPasswordTest extends TestCase
         Notification::fake();
 
         ResetPassword::createUrlUsing(function ($user, /*string */$token) {
+            $token = cast_to_string($token);
+
             return route('custom.password.reset', $token);
         });
 

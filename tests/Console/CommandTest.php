@@ -47,7 +47,7 @@ class CommandTest_testGettingCommandArgumentsAndOptionsByClass_class extends Com
 
 class CommandTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

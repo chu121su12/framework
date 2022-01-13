@@ -27,7 +27,9 @@ class SupportReflectsClosuresTest extends TestCase
             //
         });
 
-        $this->assertParameterTypes([null, ExampleParameter::class], function ($one, ExampleParameter $two = null) {
+        $this->assertParameterTypes([null, ExampleParameter::class], function (/*string */$one, /*?*/ExampleParameter $two = null) {
+            $one = cast_to_string($one);
+
             //
         });
 

@@ -764,12 +764,11 @@ class SupportArrTest extends TestCase
         $this->assertSame(['products' => ['desk' => ['price' => 300]]], $array);
     }
 
+    /**
+     * @requires PHP 7.1
+     */
     public function testShuffleWithSeed()
     {
-        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
-            $this->markTestSkipped('Before php 7, mt_srand with identical seed is not guaranteed to produce same output.');
-        }
-
         $this->assertEquals(
             Arr::shuffle(range(0, 100, 10), 1234),
             Arr::shuffle(range(0, 100, 10), 1234)

@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentPolymorphicIntegrationTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         $db = new DB;
 
@@ -66,7 +66,7 @@ class DatabaseEloquentPolymorphicIntegrationTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         $this->schema()->drop('users');
         $this->schema()->drop('posts');

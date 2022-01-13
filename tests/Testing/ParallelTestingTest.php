@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class ParallelTestingTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -97,7 +97,7 @@ class ParallelTestingTest extends TestCase
         ];
     }
 
-    public function tearDown()
+    public function tearDown()/*: void*/
     {
         parent::tearDown();
 

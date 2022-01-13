@@ -19,7 +19,7 @@ if (!class_exists('Illuminate\Tests\Integration\Testing\AssertionFailedError')) 
 
 class ArtisanCommandTest extends TestCase
 {
-    protected function setUp() ////: void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

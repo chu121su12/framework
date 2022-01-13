@@ -17,7 +17,7 @@ class PusherBroadcasterTest extends TestCase
 
     public $pusher;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

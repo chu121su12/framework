@@ -9,16 +9,18 @@ class TypedPropertyTestClass
 {
     use SerializesModels;
 
-    public $user;
+    public /*ModelSerializationTestUser */$user;
 
-    public $unitializedUser;
+    public /*ModelSerializationTestUser */$unitializedUser;
 
-    protected $id;
+    protected /*int */$id;
 
-    private $names;
+    private /*array */$names;
 
-    public function __construct(ModelSerializationTestUser $user, $id, array $names)
+    public function __construct(ModelSerializationTestUser $user, /*int */$id, array $names)
     {
+        $id = cast_to_int($id);
+
         $this->user = $user;
         $this->id = $id;
         $this->names = $names;
@@ -45,7 +47,7 @@ class TypedPropertyCollectionTestClass
 {
     use SerializesModels;
 
-    public $users;
+    public /*Collection */$users;
 
     public function __construct(Collection $users)
     {

@@ -43,7 +43,7 @@ class ConcurrentLimiterTest extends TestCase
             });
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -86,7 +86,7 @@ class ConcurrentLimiterTest extends TestCase
             });
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -118,7 +118,7 @@ class ConcurrentLimiterTest extends TestCase
             });
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -148,7 +148,7 @@ class ConcurrentLimiterTest extends TestCase
             });
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {

@@ -13,9 +13,6 @@ use PHPUnit\Framework\Constraint\ExceptionMessage;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group queue
- */
 class SupportTestingNotificationFakeTest extends TestCase
 {
     /**
@@ -33,7 +30,7 @@ class SupportTestingNotificationFakeTest extends TestCase
      */
     private $user;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

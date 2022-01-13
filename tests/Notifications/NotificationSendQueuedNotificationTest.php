@@ -16,7 +16,7 @@ class NotificationSendQueuedNotificationTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

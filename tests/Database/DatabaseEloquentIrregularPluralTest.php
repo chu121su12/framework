@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentIrregularPluralTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         $db = new DB;
 
@@ -53,7 +53,7 @@ class DatabaseEloquentIrregularPluralTest extends TestCase
         });
     }
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         $this->schema()->drop('irregular_plural_tokens');
         $this->schema()->drop('irregular_plural_humans');

@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentHasOneThroughIntegrationTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         $db = new DB;
 
@@ -63,7 +63,7 @@ class DatabaseEloquentHasOneThroughIntegrationTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         $this->schema()->drop('users');
         $this->schema()->drop('contracts');

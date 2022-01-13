@@ -43,7 +43,7 @@ class SupportHelpersTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
@@ -575,7 +575,7 @@ class SupportHelpersTest extends TestCase
         $this->assertEquals(2, $attempts);
 
         // Make sure we waited 100ms for the first attempt
-        $this->assertEqualsWithDelta(0.1, microtime(true) - $startTime, 0.03);
+        $this->assertEqualsWithDelta(0.1, microtime(true) - $startTime, 0.02 + 0.01);
     }
 
     public function testRetryWithPassingSleepCallback()
@@ -596,10 +596,8 @@ class SupportHelpersTest extends TestCase
         $this->assertEquals(3, $attempts);
 
         // Make sure we waited 300ms for the first two attempts
-        $this->assertEqualsWithDelta(
-            0.3, microtime(true) - $startTime,
-            \version_compare(\PHP_VERSION, '7.1.0', '<') ? 0.05 : 0.02
-        );
+        $this->assertEqualsWithDelta(0.3, microtime(true) - $startTime, 0.02
+            + (\version_compare(\PHP_VERSION, '7.1.0', '<') ? 0.03 : 0));
     }
 
     public function testRetryWithPassingWhenCallback()
@@ -620,7 +618,7 @@ class SupportHelpersTest extends TestCase
         $this->assertEquals(2, $attempts);
 
         // Make sure we waited 100ms for the first attempt
-        $this->assertEqualsWithDelta(0.1, microtime(true) - $startTime, 0.03);
+        $this->assertEqualsWithDelta(0.1, microtime(true) - $startTime, 0.02 + 0.01);
     }
 
     public function testRetryWithFailingWhenCallback()

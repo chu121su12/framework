@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentSoftDeletesIntegrationTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         Carbon::setTestNow(Carbon::now());
 
@@ -87,7 +87,7 @@ class DatabaseEloquentSoftDeletesIntegrationTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         Carbon::setTestNow(null);
 

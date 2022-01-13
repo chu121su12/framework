@@ -108,6 +108,8 @@ class DatabaseEloquentBroadcastingTest extends DatabaseTestCase
                 && $event->model->name === 'Mohamed'
                 && $event->broadcastAs() === 'TestEloquentBroadcastUserCreated'
                 && $this->assertHandldedBroadcastableEvent($event, function (array $channels, /*string */$eventName, array $payload) {
+                    $eventName = cast_to_string($eventName);
+
                     return $eventName === 'TestEloquentBroadcastUserCreated';
                 });
         });
@@ -126,6 +128,8 @@ class DatabaseEloquentBroadcastingTest extends DatabaseTestCase
                 && $event->model->name === 'Nuno'
                 && $event->broadcastAs() === 'foo'
                 && $this->assertHandldedBroadcastableEvent($event, function (array $channels, /*string */$eventName, array $payload) {
+                    $eventName = cast_to_string($eventName);
+
                     return $eventName === 'foo';
                 });
         });
@@ -138,6 +142,8 @@ class DatabaseEloquentBroadcastingTest extends DatabaseTestCase
                 && $event->model->name === 'Dries'
                 && $event->broadcastAs() === 'TestEloquentBroadcastUserWithSpecificBroadcastNameUpdated'
                 && $this->assertHandldedBroadcastableEvent($event, function (array $channels, /*string */$eventName, array $payload) {
+                    $eventName = cast_to_string($eventName);
+
                     return $eventName === 'TestEloquentBroadcastUserWithSpecificBroadcastNameUpdated';
                 });
         });
@@ -156,6 +162,8 @@ class DatabaseEloquentBroadcastingTest extends DatabaseTestCase
                 && $event->model->name === 'Nuno'
                 && is_null($event->broadcastWith())
                 && $this->assertHandldedBroadcastableEvent($event, function (array $channels, /*string */$eventName, array $payload) {
+                    $eventName = cast_to_string($eventName);
+
                     return Arr::has($payload, ['model', 'connection', 'queue', 'socket']);
                 });
         });
@@ -174,6 +182,8 @@ class DatabaseEloquentBroadcastingTest extends DatabaseTestCase
                 && $event->model->name === 'Dries'
                 && $event->broadcastWith() === ['foo' => 'bar']
                 && $this->assertHandldedBroadcastableEvent($event, function (array $channels, /*string */$eventName, array $payload) {
+                    $eventName = cast_to_string($eventName);
+
                     return Arr::has($payload, ['foo', 'socket']);
                 });
         });
@@ -186,6 +196,8 @@ class DatabaseEloquentBroadcastingTest extends DatabaseTestCase
                 && $event->model->name === 'Graham'
                 && is_null($event->broadcastWith())
                 && $this->assertHandldedBroadcastableEvent($event, function (array $channels, /*string */$eventName, array $payload) {
+                    $eventName = cast_to_string($eventName);
+
                     return Arr::has($payload, ['model', 'connection', 'queue', 'socket']);
                 });
         });
@@ -196,6 +208,8 @@ class DatabaseEloquentBroadcastingTest extends DatabaseTestCase
         $broadcaster = m::mock(Broadcaster::class);
         $broadcaster->shouldReceive('broadcast')->once()
             ->withArgs(function (array $channels, /*string */$eventName, array $payload) use ($closure) {
+                $eventName = cast_to_string($eventName);
+
                 return $closure($channels, $eventName, $payload);
             });
 

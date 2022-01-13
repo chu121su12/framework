@@ -44,7 +44,7 @@ class DurationLimiterTest extends TestCase
             });
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -76,7 +76,7 @@ class DurationLimiterTest extends TestCase
             });
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {

@@ -43,12 +43,11 @@ class EncrypterTest extends TestCase
         $this->assertSame(min($lengths), max($lengths));
     }
 
+    /**
+     * @requires PHP 7.1
+     */
     public function testWithCustomCipher()
     {
-        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
-            $this->markTestSkipped('openssl_encrypt/openssl_decrypt does not support these ciphers.');
-        }
-
         $e = new Encrypter(str_repeat('b', 32), 'AES-256-GCM');
         $encrypted = $e->encrypt('bar');
         $this->assertNotSame('bar', $encrypted);
@@ -60,12 +59,11 @@ class EncrypterTest extends TestCase
         $this->assertSame('foo', $e->decrypt($encrypted));
     }
 
+    /**
+     * @requires PHP 7.1
+     */
     public function testCipherNamesCanBeMixedCase()
     {
-        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
-            $this->markTestSkipped('openssl_encrypt/openssl_decrypt does not support these ciphers.');
-        }
-
         $upper = new Encrypter(str_repeat('b', 16), 'AES-128-GCM');
         $encrypted = $upper->encrypt('bar');
         $this->assertNotSame('bar', $encrypted);
@@ -77,12 +75,11 @@ class EncrypterTest extends TestCase
         $this->assertSame('bar', $mixed->decrypt($encrypted));
     }
 
+    /**
+     * @requires PHP 7.1
+     */
     public function testThatAnAeadCipherIncludesTag()
     {
-        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
-            $this->markTestSkipped('openssl_encrypt/openssl_decrypt does not support these ciphers.');
-        }
-
         $e = new Encrypter(str_repeat('b', 32), 'AES-256-GCM');
         $encrypted = $e->encrypt('foo');
         $data = backport_json_decode(base64_decode($encrypted));
@@ -91,12 +88,11 @@ class EncrypterTest extends TestCase
         $this->assertNotEmpty($data->tag);
     }
 
+    /**
+     * @requires PHP 7.1
+     */
     public function testThatAnAeadTagMustBeProvidedInFullLength()
     {
-        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
-            $this->markTestSkipped('openssl_encrypt/openssl_decrypt does not support these ciphers.');
-        }
-
         $e = new Encrypter(str_repeat('b', 32), 'AES-256-GCM');
         $encrypted = $e->encrypt('foo');
         $data = backport_json_decode(base64_decode($encrypted));
@@ -109,12 +105,11 @@ class EncrypterTest extends TestCase
         $e->decrypt($encrypted);
     }
 
+    /**
+     * @requires PHP 7.1
+     */
     public function testThatAnAeadTagCantBeModified()
     {
-        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
-            $this->markTestSkipped('openssl_encrypt/openssl_decrypt does not support these ciphers.');
-        }
-
         $e = new Encrypter(str_repeat('b', 32), 'AES-256-GCM');
         $encrypted = $e->encrypt('foo');
         $data = backport_json_decode(base64_decode($encrypted));

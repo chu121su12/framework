@@ -27,7 +27,7 @@ class DatabaseEloquentHasOneTest extends TestCase
 
     protected $parent;
 
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

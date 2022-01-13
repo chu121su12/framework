@@ -16,7 +16,7 @@ use Orchestra\Testbench\TestCase;
 
 class RateLimitedTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 
@@ -123,11 +123,11 @@ class RateLimitedTest extends TestCase
 
         $restoredRateLimited = unserialize(serialize($rateLimited));
 
-        $callback = function ($name) {
+        $callback = (function (/*string */$name) {
             $name = cast_to_string($name);
 
             return $this->{$name};
-        };
+        });
         $fetch = $callback->bindTo($restoredRateLimited, RateLimited::class);
 
         $this->assertFalse($restoredRateLimited->shouldRelease);

@@ -11,9 +11,6 @@ use PHPUnit\Framework\Constraint\ExceptionMessage;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group queue
- */
 class SupportTestingMailFakeTest extends TestCase
 {
     /**
@@ -26,7 +23,7 @@ class SupportTestingMailFakeTest extends TestCase
      */
     private $mailable;
 
-    protected function setUp()
+    protected function setUp()/*: void*/
     {
         parent::setUp();
         $this->fake = new MailFake;
