@@ -24,7 +24,7 @@ class ForwardsCallsTest extends TestCase
     }
 
     /**
-     * @requires PHP 7.0
+     * @requires PHP 7
      */
     public function testMissingForwardedCallThrowsCorrectError()
     {
@@ -35,7 +35,7 @@ class ForwardsCallsTest extends TestCase
     }
 
     /**
-     * @requires PHP 7.0
+     * @requires PHP 7
      */
     public function testMissingAlphanumericForwardedCallThrowsCorrectError()
     {
@@ -46,7 +46,7 @@ class ForwardsCallsTest extends TestCase
     }
 
     /**
-     * @requires PHP 7.0
+     * @requires PHP 7
      */
     public function testNonForwardedErrorIsNotTamperedWith()
     {

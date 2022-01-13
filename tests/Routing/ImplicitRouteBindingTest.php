@@ -15,6 +15,8 @@ if (PHP_VERSION_ID >= 80100) {
 
 class ImplicitRouteBindingTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     /**
      * @requires PHP 8.1
      */

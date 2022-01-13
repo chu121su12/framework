@@ -275,7 +275,7 @@ class ModelSerializationTest extends TestCase
     }
 
     /**
-     * @requires PHP >= 7.4
+     * @requires PHP 7.4
      */
     public function testItSerializesTypedProperties()
     {

@@ -28,7 +28,7 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
     }
 
     /**
-     * @requires PHP 7.0
+     * @requires PHP 7
      */
     public function testBasicCustomCasting()
     {
@@ -111,7 +111,7 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
     }
 
     /**
-     * @requires PHP 7.0
+     * @requires PHP 7
      */
     public function testGetOriginalWithCastValueObjects()
     {
@@ -154,7 +154,7 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
     }
 
     /**
-     * @requires PHP 7.0
+     * @requires PHP 7
      */
     public function testOneWayCasting()
     {
@@ -178,7 +178,7 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
     }
 
     /**
-     * @requires PHP 7.0
+     * @requires PHP 7
      */
     public function testSettingRawAttributesClearsTheCastCache()
     {
@@ -200,7 +200,7 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
     }
 
     /**
-     * @requires PHP 7.0
+     * @requires PHP 7
      */
     public function testCastsThatOnlyHaveGetterDoNotPeristAnythingToModelOnSave()
     {
