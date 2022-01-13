@@ -133,15 +133,15 @@ class Response
 $1/*$2*/$3
 
    1     2   3                             4   5                                    6    7     8    9
-\n( {4})( *)(.*?function[^\(]+.*?[\(,]\s*)(\?)(self|string|int|float|bool|iterable)(\s+)(&?\$)(\w+)(\s*[^\{]+?\{)
+\n( {4})( *)(.*?function[^\(]+.*?[\(,]\s*)(\?)(string|int|float|bool|mixed)(\s+)(&?\$)(\w+)(\s*[^\{]+?\{)
 \n$1$2$3/*$4$5$6*/$7$8 = null$9\n$1$2$1\$$8 = cast_to_$5(\$$8, null);\n
 
    1     2   3                             4                                    5    6     7    8
-\n( {4})( *)(.*?function[^\(]+.*?[\(,]\s*)(self|string|int|float|bool|iterable)(\s+)(&?\$)(\w+)(\s*=\s*null\b[^\{]+?\{)
+\n( {4})( *)(.*?function[^\(]+.*?[\(,]\s*)(string|int|float|bool|mixed)(\s+)(&?\$)(\w+)(\s*=\s*null\b[^\{]+?\{)
 \n$1$2$3/*$4$5*/$6$7$8\n$1$2$1\$$7 = cast_to_$4(\$$7, null);\n
 
    1     2   3                             4                                    5    6     7    8
-\n( {4})( *)(.*?function[^\(]+.*?[\(,]\s*)(self|string|int|float|bool|iterable)(\s+)(&?\$)(\w+)(\s*[^\{]+?\{)
+\n( {4})( *)(.*?function[^\(]+.*?[\(,]\s*)(string|int|float|bool|mixed)(\s+)(&?\$)(\w+)(\s*[^\{]+?\{)
 \n$1$2$3/*$4$5*/$6$7$8\n$1$2$1\$$7 = cast_to_$4(\$$7);\n
 
  1                          2   3                 4
@@ -163,7 +163,7 @@ $1list($2)$3
 ((?:self::\$?|\$)\w+(?:->\w+)*)(\[[^\]]+\])+\s+\?\?
 // ?
 
-(\n\s+)(private|protected|public) (const\b)
+(\n\s+)(private |protected |public )(const\b)
 $1/*$2*/$3
 
    1     2   3                             4   5             6    7     8    9
@@ -178,12 +178,15 @@ $1/*$2*/$3
 \n( {4})( *)(.*?function[^\(]+.*?[\(,]\s*)(\\?Throwable)(\s+)(&?\$)(\w+)(\s*[^\{]+?\{)
 \n$1$2$3/*$4$5*/$6$7$8\n$1$2$1backport_type_throwable(\$$7);\n
 
+            1   2                3             4    5      6
+(?<=[;}])\n( +)(\}\s+catch\s+\()(\\?Throwable)(\s+)(\$\w+)(\)\s+\{)
+\n$1$2\\Exception$4$5$6\n$1$2\\Error$4$5$6\n$1$2$3$4$5$6\n$1}\n\n$1if (isset($5)) {
 
 
+(\bfunction (?:for|eval|finally|try|catch|default|class|if|use|include)\b)\(
+$1_(
 
-
-
-
+(->\s*(?:for|eval|finally|try|empty|catch|class|if|use|include)\b\(
 
 
 

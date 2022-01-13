@@ -126,6 +126,17 @@ if (! \function_exists('cast_to_iterable')) {
     }
 }
 
+if (! \function_exists('cast_to_mixed')) {
+    function cast_to_mixed($value, $default = null)
+    {
+        if (\func_num_args() > 1 && null === $value) {
+            return $default;
+        }
+
+        return $value;
+    }
+}
+
 if (! \function_exists('cast_to_object')) {
     function cast_to_object($value, $default = null, $strict = false)
     {

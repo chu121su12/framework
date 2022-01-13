@@ -294,3 +294,18 @@ if (! \function_exists('backport_closure_from_callable')) {
         };
     }
 }
+
+if (! \function_exists('backport_call_callable')) {
+    function backport_call_callable($callback, $value)
+    {
+        if (is_callable($callback)) {
+            return $callback($value);
+        }
+
+        if (is_object($callback)) {
+            throw new Error(sprintf('Object of type %s is not callable', get_class($callback)));
+        }
+
+        throw new Error(sprintf('Call to undefined function %s()', $callback));
+    }
+}
