@@ -95,7 +95,7 @@ class StartSession
 
             return $this->handleStatefulRequest($request, $session, $next);
         } finally {
-            $lock?->release();
+            optional($lock)->release();
         }
     }
 
