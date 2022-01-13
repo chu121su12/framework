@@ -3,6 +3,8 @@
 namespace Illuminate\Support;
 
 use Doctrine\Inflector\DepracatedInflector;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 
 class Pluralizer
 {
@@ -133,16 +135,8 @@ class Pluralizer
         static $inflector;
 
         if (is_null($inflector)) {
-            if (class_exists('Doctrine\Inflector\Inflector')) {
-                $inflector = new \Doctrine\Inflector\Inflector(
-                    new \Doctrine\Inflector\CachedWordInflector(new \Doctrine\Inflector\RulesetInflector(
-                        \Doctrine\Inflector\Rules\English\Rules::getSingularRuleset()
-                    )),
-                    new \Doctrine\Inflector\CachedWordInflector(new \Doctrine\Inflector\RulesetInflector(
-                        \Doctrine\Inflector\Rules\English\Rules::getPluralRuleset()
-                    ))
-                );
-
+            if (class_exists(Inflector::class) && class_exists(InflectorFactory::class)) {
+                $inflector = InflectorFactory::createForLanguage('english')->build();
             } else {
                 $inflector = new DepracatedInflector;
             }

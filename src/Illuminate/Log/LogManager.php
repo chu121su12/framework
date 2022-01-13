@@ -114,14 +114,6 @@ class LogManager implements LoggerInterface
     }
 
     /**
-     * @return array
-     */
-    public function getChannels()
-    {
-        return $this->channels;
-    }
-
-    /**
      * Attempt to get the log from the local cache.
      *
      * @param  string  $name
@@ -550,6 +542,16 @@ class LogManager implements LoggerInterface
         }
 
         return $driver;
+    }
+
+    /**
+     * Get all of the resolved log channels.
+     *
+     * @return array
+     */
+    public function getChannels()
+    {
+        return $this->channels;
     }
 
     /**

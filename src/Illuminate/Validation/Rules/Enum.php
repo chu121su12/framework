@@ -3,6 +3,7 @@
 namespace Illuminate\Validation\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+use TypeError;
 
 class Enum implements Rule
 {
@@ -37,9 +38,11 @@ class Enum implements Rule
             return false;
         }
 
-        $type = $this->type;
-
-        return ! is_null($type::tryFrom($value));
+        try {
+            return ! is_null($this->type::tryFrom($value));
+        } catch (TypeError $e) {
+            return false;
+        }
     }
 
     /**
