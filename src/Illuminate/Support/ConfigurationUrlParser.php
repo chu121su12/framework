@@ -160,11 +160,6 @@ class ConfigurationUrlParser
             return $value;
         }
 
-        // Why?
-        if ((string) $value === '') {
-            return $value;
-        }
-
         $parsedValue = backport_json_decode($value, true);
 
         if (json_last_error() === JSON_ERROR_NONE) {

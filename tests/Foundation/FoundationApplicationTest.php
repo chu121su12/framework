@@ -406,8 +406,6 @@ class FoundationApplicationTest extends TestCase
     public function testEnvPathsAreUsedForCachePathsWhenSpecified()
     {
         $app = new Application('/base/path');
-        $app->addAbsoluteCachePathPrefix('/');
-
         $_SERVER['APP_SERVICES_CACHE'] = '/absolute/path/services.php';
         $_SERVER['APP_PACKAGES_CACHE'] = '/absolute/path/packages.php';
         $_SERVER['APP_CONFIG_CACHE'] = '/absolute/path/config.php';

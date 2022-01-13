@@ -81,12 +81,12 @@ class SupportTestingMailFakeTest extends TestCase
             return $mail->hasTo('taylor@laravel.com');
         };
 
-        try {
-            $this->fake->assertNotSent($callback);
-            $this->fake->to('taylor@laravel.com')->send($this->mailable);
-        } catch (ExpectationFailedException $e) {
-            $this->expectExceptionMessageMatches('/The unexpected \['.preg_quote(MailableStub::class, '/').'\] mailable was sent./m');
-        }
+        $this->fake->assertNotSent($callback);
+
+        $this->fake->to('taylor@laravel.com')->send($this->mailable);
+
+        $this->expectException(ExpectationFailedException::class);
+        $this->expectExceptionMessageMatches('/The unexpected \['.preg_quote(MailableStub::class, '/').'\] mailable was sent./m');
 
         $this->fake->assertNotSent($callback);
     }

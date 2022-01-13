@@ -40,7 +40,5 @@ class OptimizeCommand extends Command
         $this->call('route:cache');
 
         $this->info('Files cached successfully!');
-        // TODO:
-        // $this->info('Caching not supported!');
     }
 }
