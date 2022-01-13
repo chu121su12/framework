@@ -97,6 +97,8 @@ class Connector
      */
     protected function tryAgainIfCausedByLostConnection(/*Throwable */$e, $dsn, $username, $password, $options)
     {
+        backport_type_throwable($e);
+
         if ($this->causedByLostConnection($e)) {
             return $this->createPdoConnection($dsn, $username, $password, $options);
         }

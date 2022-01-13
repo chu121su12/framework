@@ -45,6 +45,8 @@ class NotSoftDeletedInDatabase extends Constraint
      */
     public function __construct(Connection $database, array $data, /*string */$deletedAtColumn)
     {
+        $deletedAtColumn = cast_to_string($deletedAtColumn);
+
         $this->database = $database;
         $this->data = $data;
         $this->deletedAtColumn = $deletedAtColumn;

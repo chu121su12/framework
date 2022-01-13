@@ -483,8 +483,7 @@ abstract class AbstractCursorPaginator implements Htmlable
     public static function resolveCurrentCursor($cursorName = 'cursor', $default = null)
     {
         if (isset(static::$currentCursorResolver)) {
-            $currentCursorResolver = static::$currentCursorResolver;
-            return $currentCursorResolver($cursorName);
+            return call_user_func(static::$currentCursorResolver, $cursorName);
         }
 
         return $default;

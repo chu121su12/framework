@@ -260,13 +260,7 @@ if (! function_exists('tap')) {
             return new HigherOrderTapProxy($value);
         }
 
-        if (is_callable($callback)) {
-            $callback($value);
-        } elseif (is_object($callback)) {
-            throw new Error(sprintf('Object of type %s is not callable', get_class($callback)));
-        } else {
-            throw new Error(sprintf('Call to undefined function %s()', $callback));
-        }
+        backport_call_callable($callback, $value);
 
         return $value;
     }

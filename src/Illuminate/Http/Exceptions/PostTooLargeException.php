@@ -18,6 +18,8 @@ class PostTooLargeException extends HttpException
      */
     public function __construct($message = '', /*Throwable */$previous = null, array $headers = [], $code = 0)
     {
+        backport_type_throwable($previous, null);
+
         parent::__construct(413, $message, $previous, $headers, $code);
     }
 }

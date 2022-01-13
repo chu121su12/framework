@@ -37,6 +37,8 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
              */
             public function report(/*Throwable */$e)
             {
+                backport_type_throwable($e);
+
                 //
             }
 
@@ -48,6 +50,8 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
              */
             public function shouldReport(/*Throwable */$e)
             {
+                backport_type_throwable($e);
+
                 return false;
             }
 
@@ -62,6 +66,8 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
              */
             public function render($request, /*Throwable */$e)
             {
+                backport_type_throwable($e);
+
                 foreach ($this->except as $class) {
                     if ($e instanceof $class) {
                         return $this->originalHandler->render($request, $e);
@@ -86,6 +92,8 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
              */
             public function renderForConsole($output, /*Throwable */$e)
             {
+                backport_type_throwable($e);
+
                 SymfonyHelper::consoleApplicationRenderThrowable($e, $output);
             }
         }

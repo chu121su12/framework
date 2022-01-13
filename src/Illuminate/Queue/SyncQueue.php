@@ -102,6 +102,8 @@ class SyncQueue extends Queue implements QueueContract
      */
     protected function raiseExceptionOccurredJobEvent(Job $job, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         if ($this->container->bound('events')) {
             $this->container['events']->dispatch(new JobExceptionOccurred($this->connectionName, $job, $e));
         }
@@ -118,6 +120,8 @@ class SyncQueue extends Queue implements QueueContract
      */
     protected function handleException(Job $queueJob, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         $this->raiseExceptionOccurredJobEvent($queueJob, $e);
 
         $queueJob->fail($e);

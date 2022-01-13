@@ -42,6 +42,8 @@ class ReportableHandler
      */
     public function __invoke(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         $result = call_user_func($this->callback, $e);
 
         if ($result === false) {
@@ -59,6 +61,8 @@ class ReportableHandler
      */
     public function handles(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         foreach ($this->firstClosureParameterTypes($this->callback) as $type) {
             if (is_a($e, $type)) {
                 return true;

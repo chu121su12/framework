@@ -123,6 +123,8 @@ class WithoutOverlapping
      */
     public function withPrefix(/*string */$prefix)
     {
+        $prefix = cast_to_string($prefix);
+
         $this->prefix = $prefix;
 
         return $this;

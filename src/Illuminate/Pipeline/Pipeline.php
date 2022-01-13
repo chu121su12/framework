@@ -263,6 +263,8 @@ class Pipeline implements PipelineContract
      */
     protected function handleException($passable, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         throw $e;
     }
 }

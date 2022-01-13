@@ -17,7 +17,6 @@ use Monolog\Handler\SyslogHandler;
 use Monolog\Handler\WhatFailureGroupHandler;
 use Monolog\Logger as Monolog;
 use Psr\Log\LoggerInterface;
-use Stringable;
 use Throwable;
 
 class LogManager implements LoggerInterface
@@ -437,8 +436,7 @@ class LogManager implements LoggerInterface
         if (! isset($config['formatter'])) {
             $handler->setFormatter($this->formatter());
         } elseif ($config['formatter'] !== 'default') {
-            $handler->setFormatter($this->app->make($config['formatter'], isset($config['formatter_with'])
-                ? $config['formatter_with'] : []));
+            $handler->setFormatter($this->app->make($config['formatter'], isset($config['formatter_with']) ? $config['formatter_with'] : []));
         }
 
         return $handler;

@@ -19,6 +19,8 @@ class ThrottleRequestsException extends TooManyRequestsHttpException
      */
     public function __construct($message = '', /*Throwable */$previous = null, array $headers = [], $code = 0)
     {
+        backport_type_throwable($previous, null);
+
         parent::__construct(null, $message, $previous, $code);
 
         SymfonyHelper::prepareTooManyRequestsHttpException($this, null, $headers);

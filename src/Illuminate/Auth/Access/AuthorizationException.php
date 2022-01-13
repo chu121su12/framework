@@ -24,6 +24,8 @@ class AuthorizationException extends Exception
      */
     public function __construct($message = null, $code = null, /*Throwable */$previous = null)
     {
+        backport_type_throwable($previous, null);
+
         parent::__construct(isset($message) ? $message : 'This action is unauthorized.', 0, $previous);
 
         $this->code = $code ?: 0;

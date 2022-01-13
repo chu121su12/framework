@@ -465,6 +465,8 @@ class Worker
      */
     protected function handleJobException($connectionName, $job, WorkerOptions $options, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         try {
             // First, we will go ahead and mark the job as failed if it will exceed the maximum
             // attempts it is allowed to run the next time we process it. If so we will just
@@ -536,6 +538,8 @@ class Worker
      */
     protected function markJobAsFailedIfWillExceedMaxAttempts($connectionName, $job, $maxTries, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         $maxTries = ! is_null($job->maxTries()) ? $job->maxTries() : $maxTries;
 
         if ($job->retryUntil() && $job->retryUntil() <= Carbon::now()->getTimestamp()) {
@@ -557,6 +561,8 @@ class Worker
      */
     protected function markJobAsFailedIfWillExceedMaxExceptions($connectionName, $job, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         if (! $this->cache || is_null($uuid = $job->uuid()) ||
             is_null($maxExceptions = $job->maxExceptions())) {
             return;
@@ -583,6 +589,8 @@ class Worker
      */
     protected function markJobAsFailedIfItShouldFailOnTimeout($connectionName, $job, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         if (method_exists($job, 'shouldFailOnTimeout') ? $job->shouldFailOnTimeout() : false) {
             $this->failJob($job, $e);
         }
@@ -597,6 +605,8 @@ class Worker
      */
     protected function failJob($job, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return $job->fail($e);
     }
 
@@ -659,6 +669,8 @@ class Worker
      */
     protected function raiseExceptionOccurredJobEvent($connectionName, $job, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         $this->events->dispatch(new JobExceptionOccurred(
             $connectionName, $job, $e
         ));

@@ -239,8 +239,10 @@ class PendingBatch
      * @param  mixed  $value
      * @return $this
      */
-    public function withOption(string $key, $value)
+    public function withOption(/*string */$key, $value)
     {
+        $key = cast_to_string($key);
+
         $this->options[$key] = $value;
 
         return $this;

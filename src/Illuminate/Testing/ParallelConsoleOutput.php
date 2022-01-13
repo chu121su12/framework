@@ -51,8 +51,9 @@ class ParallelConsoleOutput extends ConsoleOutput
      */
     public function write($messages, /*bool */$newline = false, /*int */$options = 0)
     {
-        $newline = cast_to_bool($newline);
         $options = cast_to_int($options);
+
+        $newline = cast_to_bool($newline);
 
         $messages = collect($messages)->filter(function ($message) {
             return ! Str::contains($message, $this->ignore);

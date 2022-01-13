@@ -30,6 +30,8 @@ class ScheduledTaskFailed
      */
     public function __construct(Event $task, /*Throwable */$exception)
     {
+        backport_type_throwable($exception);
+
         $this->task = $task;
         $this->exception = $exception;
     }

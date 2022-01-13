@@ -158,6 +158,8 @@ class HandleExceptions
      */
     public function handleException(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         try {
             self::$reservedMemory = null;
 
@@ -181,6 +183,8 @@ class HandleExceptions
      */
     protected function renderForConsole(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         $this->getExceptionHandler()->renderForConsole(new ConsoleOutput, $e);
     }
 
@@ -192,6 +196,8 @@ class HandleExceptions
      */
     protected function renderHttpResponse(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         $this->getExceptionHandler()->render($this->app['request'], $e)->send();
     }
 

@@ -86,6 +86,8 @@ trait ManagesTransactions
      */
     protected function handleTransactionException(/*Throwable */$e, $currentAttempt, $maxAttempts)
     {
+        backport_type_throwable($e);
+
         // On a deadlock, MySQL rolls back the entire transaction so we can't just
         // retry the query. We have to throw this exception all the way out and
         // let the developer handle it in another way. We will decrement too.
@@ -184,6 +186,8 @@ trait ManagesTransactions
      */
     protected function handleBeginTransactionException(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         if ($this->causedByLostConnection($e)) {
             $this->reconnect();
 
@@ -227,6 +231,8 @@ trait ManagesTransactions
      */
     protected function handleCommitTransactionException(/*Throwable */$e, $currentAttempt, $maxAttempts)
     {
+        backport_type_throwable($e);
+
         $this->transactions = max(0, $this->transactions - 1);
 
         if ($this->causedByConcurrencyError($e) &&
@@ -314,6 +320,8 @@ trait ManagesTransactions
      */
     protected function handleRollBackException(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         if ($this->causedByLostConnection($e)) {
             $this->transactions = 0;
 

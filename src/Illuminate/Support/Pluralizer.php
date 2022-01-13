@@ -135,10 +135,12 @@ class Pluralizer
         static $inflector;
 
         if (is_null($inflector)) {
-            if (class_exists(Inflector::class) && class_exists(InflectorFactory::class)) {
-                $inflector = InflectorFactory::createForLanguage('english')->build();
-            } else {
+            if (!(class_exists(Inflector::class) && class_exists(InflectorFactory::class))) {
                 $inflector = new DepracatedInflector;
+            } else {
+
+            $inflector = InflectorFactory::createForLanguage('english')->build();
+
             }
         }
 

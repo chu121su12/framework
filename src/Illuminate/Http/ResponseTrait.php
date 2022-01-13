@@ -163,6 +163,8 @@ trait ResponseTrait
      */
     public function withException(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         $this->exception = $e;
 
         return $this;

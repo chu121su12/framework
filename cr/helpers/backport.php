@@ -296,7 +296,7 @@ if (! \function_exists('backport_closure_from_callable')) {
 }
 
 if (! \function_exists('backport_call_callable')) {
-    function backport_call_callable($callback, $value)
+    function backport_call_callable($callback, &$value)
     {
         if (is_callable($callback)) {
             return $callback($value);

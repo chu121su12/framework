@@ -197,11 +197,9 @@ abstract class Component
      */
     protected function createVariableFromMethod(ReflectionMethod $method)
     {
-        if ($method->getNumberOfParameters() === 0) {
-            return $this->createInvokableVariable($method->getName());
-        }
-
-        return backport_closure_from_callable([$this, $method->getName()]);
+        return $method->getNumberOfParameters() === 0
+                        ? $this->createInvokableVariable($method->getName())
+                        : backport_closure_from_callable([$this, $method->getName()]);
     }
 
     /**

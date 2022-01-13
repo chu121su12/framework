@@ -76,6 +76,8 @@ class CompilerEngine extends PhpEngine
      */
     protected function handleViewException(/*Throwable */$e, $obLevel)
     {
+        backport_type_throwable($e);
+
         $e = new ViewException($this->getMessage($e), 0, 1, $e->getFile(), $e->getLine(), $e);
 
         parent::handleViewException($e, $obLevel);
@@ -89,6 +91,8 @@ class CompilerEngine extends PhpEngine
      */
     protected function getMessage(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return $e->getMessage().' (View: '.realpath(last($this->lastCompiled)).')';
     }
 

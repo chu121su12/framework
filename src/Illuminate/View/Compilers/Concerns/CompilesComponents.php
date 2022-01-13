@@ -64,10 +64,13 @@ trait CompilesComponents
      */
     public static function compileClassComponentOpening(/*string */$component, /*string */$alias, /*string */$data, /*string */$hash)
     {
-        $component = cast_to_string($component);
-        $alias = cast_to_string($alias);
-        $data = cast_to_string($data);
         $hash = cast_to_string($hash);
+
+        $data = cast_to_string($data);
+
+        $alias = cast_to_string($alias);
+
+        $component = cast_to_string($component);
 
         return implode("\n", [
             '<?php if (isset($component)) { $__componentOriginal'.$hash.' = $component; } ?>',

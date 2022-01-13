@@ -242,8 +242,10 @@ abstract class Factory
      * @param  iterable<int, array<string, mixed>>  $records
      * @return \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Database\Eloquent\Model|TModel>
      */
-    public function createManyQuietly(iterable $records)
+    public function createManyQuietly(/*iterable */$records)
     {
+        $records = cast_to_iterable($records);
+
         return Model::withoutEvents(function () use ($records) {
             return $this->createMany($records);
         });

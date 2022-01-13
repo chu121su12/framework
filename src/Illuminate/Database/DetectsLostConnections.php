@@ -15,6 +15,8 @@ trait DetectsLostConnections
      */
     protected function causedByLostConnection(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         $message = $e->getMessage();
 
         return Str::contains($message, [

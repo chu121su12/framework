@@ -336,6 +336,8 @@ trait DecoratesQueryBuilder
      */
     public function whereBetween($column, /*iterable */$values, $boolean = 'and', $not = false)
     {
+        $values = cast_to_iterable($values);
+
         return $this->forwardDecoratedCallTo($this->query, __FUNCTION__, func_get_args());
     }
 
@@ -352,6 +354,8 @@ trait DecoratesQueryBuilder
      */
     public function orWhereBetween($column, /*iterable */$values)
     {
+        $values = cast_to_iterable($values);
+
         return $this->forwardDecoratedCallTo($this->query, __FUNCTION__, func_get_args());
     }
 
@@ -368,6 +372,8 @@ trait DecoratesQueryBuilder
      */
     public function whereNotBetween($column, /*iterable */$values, $boolean = 'and')
     {
+        $values = cast_to_iterable($values);
+
         return $this->forwardDecoratedCallTo($this->query, __FUNCTION__, func_get_args());
     }
 
@@ -384,6 +390,8 @@ trait DecoratesQueryBuilder
      */
     public function orWhereNotBetween($column, /*iterable */$values)
     {
+        $values = cast_to_iterable($values);
+
         return $this->forwardDecoratedCallTo($this->query, __FUNCTION__, func_get_args());
     }
 

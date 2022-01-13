@@ -101,17 +101,19 @@ class Encrypter implements EncrypterContract, StringEncrypter
     {
         $iv = random_bytes(openssl_cipher_iv_length(strtolower($this->cipher)));
 
-        $tag = '';
-
-        $value = self::$supportedCiphers[strtolower($this->cipher)]['aead'] && !version_compare(PHP_VERSION, '7.1.0', '<')
-            ? \openssl_encrypt(
-                $serialize ? serialize($value) : $value,
-                strtolower($this->cipher), $this->key, 0, $iv, $tag
-            )
-            : \openssl_encrypt(
+        if (!(self::$supportedCiphers[strtolower($this->cipher)]['aead'] && !version_compare(PHP_VERSION, '7.1.0', '<'))) {
+            $value = \openssl_encrypt(
                 $serialize ? serialize($value) : $value,
                 strtolower($this->cipher), $this->key, 0, $iv
             );
+        } else {
+
+        $value = \openssl_encrypt(
+            $serialize ? serialize($value) : $value,
+            strtolower($this->cipher), $this->key, 0, $iv, $tag
+        );
+
+        }
 
         if ($value === false) {
             throw new EncryptException('Could not encrypt the data.');
@@ -186,7 +188,7 @@ class Encrypter implements EncrypterContract, StringEncrypter
         } else {
 
         $decrypted = \openssl_decrypt(
-            $payload['value'], strtolower($this->cipher), $this->key, 0, $iv, $tag
+            $payload['value'], strtolower($this->cipher), $this->key, 0, $iv, isset($tag) ? $tag : ''
         );
 
         }

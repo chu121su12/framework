@@ -32,6 +32,8 @@ class QueryException extends PDOException
      */
     public function __construct($sql, array $bindings, /*Throwable */$previous)
     {
+        backport_type_throwable($previous);
+
         parent::__construct('', 0, $previous);
 
         $this->sql = $sql;
@@ -54,6 +56,8 @@ class QueryException extends PDOException
      */
     protected function formatMessage($sql, $bindings, /*Throwable */$previous)
     {
+        backport_type_throwable($previous);
+
         return $previous->getMessage().' (SQL: '.Str::replaceArray('?', $bindings, $sql).')';
     }
 

@@ -102,7 +102,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      */
     public function median($key = null)
     {
-        $values = isset($key) ? $this->pluck($key) : $this;
+        $values = (isset($key) ? $this->pluck($key) : $this);
 
         $values = $values
             ->filter(function ($item) {

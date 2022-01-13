@@ -45,6 +45,8 @@ class MaintenanceModeException extends ServiceUnavailableHttpException
      */
     public function __construct($time, $retryAfter = null, $message = null, /*Throwable */$previous = null, $code = 0)
     {
+        backport_type_throwable($previous, null);
+
         parent::__construct($retryAfter, $message, $previous, $code);
 
         $this->wentDownAt = Date::createFromTimestamp($time);

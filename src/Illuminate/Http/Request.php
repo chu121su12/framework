@@ -364,6 +364,8 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     {
         $key = cast_to_string($key);
 
+        $default = cast_to_mixed($default, null);
+
         return parent::get($key, $default);
     }
 

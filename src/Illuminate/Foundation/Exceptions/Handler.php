@@ -221,6 +221,8 @@ class Handler implements ExceptionHandlerContract
      */
     public function report(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         $e = $this->mapException($e);
 
         if ($this->shouldntReport($e)) {
@@ -262,6 +264,8 @@ class Handler implements ExceptionHandlerContract
      */
     public function shouldReport(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return ! $this->shouldntReport($e);
     }
 
@@ -273,6 +277,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function shouldntReport(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         $dontReport = array_merge($this->dontReport, $this->internalDontReport);
 
         return ! is_null(Arr::first($dontReport, function ($type) use ($e) {
@@ -288,6 +294,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function exceptionContext(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         if (method_exists($e, 'context')) {
             return $e->context();
         }
@@ -328,6 +336,8 @@ class Handler implements ExceptionHandlerContract
      */
     public function render($request, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         if (method_exists($e, 'render') && $response = $e->render($request)) {
             return Router::toResponse($request, $response);
         }
@@ -358,6 +368,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function prepareException(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return backport_match(true,
             [$e instanceof BackedEnumCaseNotFoundException, function () use ($e) { return new NotFoundHttpException($e->getMessage(), $e); }],
             [$e instanceof ModelNotFoundException, function () use ($e) { return new NotFoundHttpException($e->getMessage(), $e); }],
@@ -377,6 +389,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function mapException(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         foreach ($this->exceptionMap as $class => $mapper) {
             if (is_a($e, $class)) {
                 return $mapper($e);
@@ -397,6 +411,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function renderViaCallbacks($request, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         foreach ($this->renderCallbacks as $renderCallback) {
             foreach ($this->firstClosureParameterTypes($renderCallback) as $type) {
                 if (is_a($e, $type)) {
@@ -419,6 +435,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function renderExceptionResponse($request, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return $this->shouldReturnJson($request, $e)
                     ? $this->prepareJsonResponse($request, $e)
                     : $this->prepareResponse($request, $e);
@@ -498,6 +516,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function shouldReturnJson($request, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return $request->expectsJson();
     }
 
@@ -510,6 +530,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function prepareResponse($request, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         if (! $this->isHttpException($e) && config('app.debug')) {
             return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
         }
@@ -531,6 +553,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function convertExceptionToResponse(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return new SymfonyResponse(
             $this->renderExceptionContent($e),
             $this->isHttpException($e) ? $e->getStatusCode() : 500,
@@ -546,11 +570,18 @@ class Handler implements ExceptionHandlerContract
      */
     protected function renderExceptionContent(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         try {
             return config('app.debug') && app()->has(ExceptionRenderer::class)
                         ? $this->renderExceptionWithCustomRenderer($e)
                         : $this->renderExceptionWithSymfony($e, config('app.debug'));
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             return $this->renderExceptionWithSymfony($e, config('app.debug'));
         }
     }
@@ -563,6 +594,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function renderExceptionWithCustomRenderer(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return app(ExceptionRenderer::class)->render($e);
     }
 
@@ -575,6 +608,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function renderExceptionWithSymfony(/*Throwable */$e, $debug)
     {
+        backport_type_throwable($e);
+
         $renderer = new HtmlErrorRenderer($debug);
 
         return $renderer->render($e)->getAsString();
@@ -643,6 +678,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function toIlluminateResponse($response, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         if ($response instanceof SymfonyRedirectResponse) {
             $response = new RedirectResponse(
                 $response->getTargetUrl(), $response->getStatusCode(), $response->headers->all()
@@ -665,6 +702,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function prepareJsonResponse($request, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return new JsonResponse(
             $this->convertExceptionToArray($e),
             $this->isHttpException($e) ? $e->getStatusCode() : 500,
@@ -681,6 +720,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function convertExceptionToArray(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return config('app.debug') ? [
             'message' => $e->getMessage(),
             'exception' => get_class($e),
@@ -703,6 +744,8 @@ class Handler implements ExceptionHandlerContract
      */
     public function renderForConsole($output, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         SymfonyHelper::consoleApplicationRenderThrowable($e, $output);
     }
 
@@ -714,6 +757,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function isHttpException(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return $e instanceof HttpExceptionInterface;
     }
 }

@@ -369,6 +369,8 @@ class Kernel implements KernelContract
      */
     protected function reportException(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         $this->app[ExceptionHandler::class]->report($e);
     }
 
@@ -381,6 +383,8 @@ class Kernel implements KernelContract
      */
     protected function renderException($output, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         $this->app[ExceptionHandler::class]->renderForConsole($output, $e);
     }
 }
