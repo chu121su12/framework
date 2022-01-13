@@ -139,7 +139,7 @@ class Response implements ArrayAccess
      */
     public function effectiveUri()
     {
-        return optional($this->transferStats)->getEffectiveUri();
+        return $this->transferStats?->getEffectiveUri();
     }
 
     /**

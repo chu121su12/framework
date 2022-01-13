@@ -376,20 +376,20 @@ assertType('User|null', $collection->firstWhere('string', 'string', 'string'));
 
 assertType('Illuminate\Support\LazyCollection<string, int>', $collection::make(['string'])->flip());
 
-assertType('Illuminate\Support\LazyCollection<(int|string), array<User>>', $collection->groupBy('name'));
-assertType('Illuminate\Support\LazyCollection<(int|string), array<User>>', $collection->groupBy('name', true));
-assertType('Illuminate\Support\LazyCollection<(int|string), array<User>>', $collection->groupBy(function ($user, $int) {
+assertType('Illuminate\Support\LazyCollection<(int|string), Illuminate\Support\LazyCollection<(int|string), User>>', $collection->groupBy('name'));
+assertType('Illuminate\Support\LazyCollection<(int|string), Illuminate\Support\LazyCollection<(int|string), User>>', $collection->groupBy('name', true));
+assertType('Illuminate\Support\LazyCollection<(int|string), Illuminate\Support\LazyCollection<(int|string), User>>', $collection->groupBy(function ($user, $int) {
     // assertType('User', $user);
     // assertType('int', $int);
 
     return 'foo';
 }));
-assertType('Illuminate\Support\LazyCollection<(int|string), array<User>>', $collection->groupBy(function ($user) {
+assertType('Illuminate\Support\LazyCollection<(int|string), Illuminate\Support\LazyCollection<(int|string), User>>', $collection->groupBy(function ($user) {
     return 'foo';
 }));
 
-assertType('Illuminate\Support\LazyCollection<(int|string), array<User>>', $collection->keyBy('name'));
-assertType('Illuminate\Support\LazyCollection<(int|string), array<User>>', $collection->keyBy(function ($user, $int) {
+assertType('Illuminate\Support\LazyCollection<(int|string), User>', $collection->keyBy('name'));
+assertType('Illuminate\Support\LazyCollection<(int|string), User>', $collection->keyBy(function ($user, $int) {
     // assertType('User', $user);
     // assertType('int', $int);
 
@@ -476,7 +476,7 @@ assertType('Illuminate\Support\LazyCollection<int, mixed>', $collection::make(['
         return 1;
     }));
 
-assertType('Illuminate\Support\LazyCollection<int, mixed>', $collection->mapInto(User::class));
+assertType('Illuminate\Support\LazyCollection<int, User>', $collection->mapInto(User::class));
 
 assertType('Illuminate\Support\LazyCollection<int, int>', $collection->make([1])->merge([2]));
 assertType('Illuminate\Support\LazyCollection<int, string>', $collection->make(['string'])->merge(['string']));

@@ -23,7 +23,7 @@ trait CompilesComponents
      */
     protected function compileComponent($expression)
     {
-        list($component, $alias, $data) = strpos($expression, ',') !== false
+        list($component, $alias, $data) = str_contains($expression, ',')
                     ? array_map('trim', explode(',', trim($expression, '()'), 3)) + ['', '', '']
                     : [trim($expression, '()'), '', ''];
 

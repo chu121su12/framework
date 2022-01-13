@@ -95,7 +95,7 @@ class SeedCommand extends Command
 
         $class = isset($inputClass) ? $inputClass : $this->input->getOption('class');
 
-        if (strpos($class, '\\') === false) {
+        if (! str_contains($class, '\\')) {
             $class = 'Database\\Seeders\\'.$class;
         }
 
