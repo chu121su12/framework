@@ -90,7 +90,7 @@ class TestCommand extends Command
             ),
             null,
             // Envs ...
-            $parallel ? $this->paratestEnvironmentVariables() : $this->phpunitEnvironmentVariables(),
+            $parallel ? $this->paratestEnvironmentVariables() : $this->phpunitEnvironmentVariables()
         ))->setTimeout(null);
 
         try {
