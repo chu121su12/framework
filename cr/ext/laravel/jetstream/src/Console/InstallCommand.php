@@ -280,7 +280,7 @@ EOF;
     protected function installInertiaStack()
     {
         // Install Inertia...
-        // $this->requireComposerPackages('inertiajs/inertia-laravel:^0.4.3', 'tightenco/ziggy:^1.0');
+        // $this->requireComposerPackages('inertiajs/inertia-laravel:^0.5.2', 'tightenco/ziggy:^1.0');
         if (version_compare(PHP_VERSION, '7.0.0', '<')) {
             $this->requireComposerPackages('tightenco/ziggy:^0.9');
         }

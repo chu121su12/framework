@@ -20,7 +20,7 @@ final class Php81
 {
     public static function array_is_list(array $array)
     {
-        if ([] === $array) {
+        if ([] === $array || $array === array_values($array)) {
             return true;
         }
 
