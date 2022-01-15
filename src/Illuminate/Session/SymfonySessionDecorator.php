@@ -30,7 +30,7 @@ class SymfonySessionDecorator implements SessionInterface
     /**
      * {@inheritdoc}
      */
-    public function start(): bool
+    public function start()/*: bool*/
     {
         return $this->store->start();
     }
@@ -38,7 +38,7 @@ class SymfonySessionDecorator implements SessionInterface
     /**
      * {@inheritdoc}
      */
-    public function getId(): string
+    public function getId()/*: string*/
     {
         return $this->store->getId();
     }
@@ -46,15 +46,17 @@ class SymfonySessionDecorator implements SessionInterface
     /**
      * {@inheritdoc}
      */
-    public function setId(string $id)
+    public function setId(/*string */$id)
     {
+        $id = cast_to_string($id);
+
         $this->store->setId($id);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public function getName()/*: string*/
     {
         return $this->store->getName();
     }
@@ -62,16 +64,20 @@ class SymfonySessionDecorator implements SessionInterface
     /**
      * {@inheritdoc}
      */
-    public function setName(string $name)
+    public function setName(/*string */$name)
     {
+        $name = cast_to_string($name);
+
         $this->store->setName($name);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function invalidate(int $lifetime = null): bool
+    public function invalidate(/*int */$lifetime = null)/*: bool*/
     {
+        $lifetime = cast_to_int($lifetime, null);
+
         $this->store->invalidate();
 
         return true;
@@ -80,8 +86,12 @@ class SymfonySessionDecorator implements SessionInterface
     /**
      * {@inheritdoc}
      */
-    public function migrate(bool $destroy = false, int $lifetime = null): bool
+    public function migrate(/*bool */$destroy = false, /*int */$lifetime = null)/*: bool*/
     {
+        $destroy = cast_to_bool($destroy, null);
+
+        $lifetime = cast_to_int($lifetime, null);
+
         $this->store->migrate($destroy);
 
         return true;
@@ -98,31 +108,41 @@ class SymfonySessionDecorator implements SessionInterface
     /**
      * {@inheritdoc}
      */
-    public function has(string $name): bool
+    public function has(/*string */$name)/*: bool*/
     {
+        $name = cast_to_string($name);
+
         return $this->store->has($name);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get(string $name, mixed $default = null): mixed
+    public function get(/*string */$name, /*mixed */$default = null)/*: mixed*/
     {
+        $name = cast_to_string($name);
+
+        $default = cast_to_mixed($default, null);
+
         return $this->store->get($name, $default);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function set(string $name, mixed $value)
+    public function set(/*string */$name, /*mixed */$value)
     {
+        $name = cast_to_string($name);
+
+        $value = cast_to_mixed($value);
+
         $this->store->put($name, $value);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function all(): array
+    public function all()/*: array*/
     {
         return $this->store->all();
     }
@@ -138,8 +158,10 @@ class SymfonySessionDecorator implements SessionInterface
     /**
      * {@inheritdoc}
      */
-    public function remove(string $name): mixed
+    public function remove(/*string */$name)/*: mixed*/
     {
+        $name = cast_to_string($name);
+
         return $this->store->remove($name);
     }
 
@@ -154,7 +176,7 @@ class SymfonySessionDecorator implements SessionInterface
     /**
      * {@inheritdoc}
      */
-    public function isStarted(): bool
+    public function isStarted()/*: bool*/
     {
         return $this->store->isStarted();
     }
@@ -170,15 +192,17 @@ class SymfonySessionDecorator implements SessionInterface
     /**
      * {@inheritdoc}
      */
-    public function getBag(string $name): SessionBagInterface
+    public function getBag(/*string */$name)/*: SessionBagInterface*/
     {
+        // $name = cast_to_string($name);
+
         throw new BadMethodCallException('Method not implemented by Laravel.');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMetadataBag(): MetadataBag
+    public function getMetadataBag()/*: MetadataBag*/
     {
         throw new BadMethodCallException('Method not implemented by Laravel.');
     }

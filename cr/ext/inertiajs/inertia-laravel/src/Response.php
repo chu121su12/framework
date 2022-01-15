@@ -8,7 +8,7 @@ use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Response as ResponseFactory;
+use Illuminate\Support\Facades\Response as IlluminateResponseFactory;
 use Illuminate\Support\Traits\Macroable;
 
 class Response implements Responsable
@@ -107,6 +107,6 @@ class Response implements Responsable
             ]);
         }
 
-        return ResponseFactory::view($this->rootView, $this->viewData + ['page' => $page]);
+        return IlluminateResponseFactory::view($this->rootView, $this->viewData + ['page' => $page]);
     }
 }

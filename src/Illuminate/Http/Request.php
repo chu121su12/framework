@@ -508,19 +508,23 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function hasSession(bool $skipIfUninitialized = false): bool
+    public function hasSession(/*bool */$skipIfUninitialized = false)/*: bool*/
     {
+        // $skipIfUninitialized = cast_to_bool($skipIfUninitialized);
+
         return ! is_null($this->session);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSession(): SessionInterface
+    public function getSession()/*: SessionInterface*/
     {
-        return $this->hasSession()
-                    ? new SymfonySessionDecorator($this->session())
-                    : throw new SessionNotFoundException;
+        if ($this->hasSession()) {
+            return new SymfonySessionDecorator($this->session());
+        }
+
+        throw new SessionNotFoundException;
     }
 
     /**

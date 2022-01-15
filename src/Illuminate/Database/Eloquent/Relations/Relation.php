@@ -15,7 +15,7 @@ use Illuminate\Support\Traits\Macroable;
 
 abstract class Relation
 {
-    use /*ForwardsCalls, */Macroable {
+    use ForwardsCalls, Macroable {
         Macroable::__call as macroCall;
     }
 

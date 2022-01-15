@@ -45,6 +45,24 @@ class CommandTest_testGettingCommandArgumentsAndOptionsByClass_class extends Com
             }
         }
 
+class CommandTest_testSetHidden_class extends Command
+        {
+            public function parentIsHidden()
+            {
+                return parent::isHidden();
+            }
+        }
+
+class CommandTest_testHiddenProperty_class extends Command
+        {
+            protected $hidden = true;
+
+            public function parentIsHidden()
+            {
+                return parent::isHidden();
+            }
+        }
+
 class CommandTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -127,13 +145,7 @@ class CommandTest extends TestCase
 
     public function testSetHidden()
     {
-        $command = new class extends Command
-        {
-            public function parentIsHidden()
-            {
-                return parent::isHidden();
-            }
-        };
+        $command = new CommandTest_testSetHidden_class;
 
         $this->assertFalse($command->isHidden());
         $this->assertFalse($command->parentIsHidden());
@@ -146,15 +158,7 @@ class CommandTest extends TestCase
 
     public function testHiddenProperty()
     {
-        $command = new class extends Command
-        {
-            protected $hidden = true;
-
-            public function parentIsHidden()
-            {
-                return parent::isHidden();
-            }
-        };
+        $command = new CommandTest_testHiddenProperty_class;
 
         $this->assertTrue($command->isHidden());
         $this->assertTrue($command->parentIsHidden());

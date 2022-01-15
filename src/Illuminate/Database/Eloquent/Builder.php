@@ -26,7 +26,7 @@ use ReflectionMethod;
  */
 class Builder
 {
-    use BuildsQueries, /*ForwardsCalls, */QueriesRelationships {
+    use BuildsQueries, ForwardsCalls, QueriesRelationships {
         BuildsQueries::sole as baseSole;
     }
 
