@@ -1,13 +1,47 @@
 <?php
 
-namespace Inertia\Testing\Concerns;
+namespace Inertia\Testing;
 
-use Illuminate\Support\Arr;
+use Illuminate\Testing\Fluent\AssertableJson;
+use Illuminate\Testing\TestResponse;
 use InvalidArgumentException;
 use PHPUnit\Framework\Assert as PHPUnit;
+use PHPUnit\Framework\AssertionFailedError;
 
-trait PageObject
+class AssertableInertia extends AssertableJson
 {
+    /** @var string */
+    private $component;
+
+    /** @var string */
+    private $url;
+
+    /** @var string|null */
+    private $version;
+
+    public static function fromTestResponse(TestResponse $response)/*: self*/
+    {
+        try {
+            $response->assertViewHas('page');
+            $page = json_decode(json_encode($response->viewData('page')), true);
+
+            PHPUnit::assertIsArray($page);
+            PHPUnit::assertArrayHasKey('component', $page);
+            PHPUnit::assertArrayHasKey('props', $page);
+            PHPUnit::assertArrayHasKey('url', $page);
+            PHPUnit::assertArrayHasKey('version', $page);
+        } catch (AssertionFailedError $e) {
+            PHPUnit::fail('Not a valid Inertia response.');
+        }
+
+        $instance = static::fromArray($page['props']);
+        $instance->component = $page['component'];
+        $instance->url = $page['url'];
+        $instance->version = $page['version'];
+
+        return $instance;
+    }
+
     public function component(/*string */$value = null, $shouldExist = null)/*: self*/
     {
         $value = cast_to_string($value, null);
@@ -23,13 +57,6 @@ trait PageObject
         }
 
         return $this;
-    }
-
-    protected function prop(/*string */$key = null)
-    {
-        $key = cast_to_string($key, null);
-
-        return Arr::get($this->props, $key);
     }
 
     public function url(/*string */$value)/*: self*/
@@ -50,11 +77,11 @@ trait PageObject
         return $this;
     }
 
-    public function toArray()/*: array*/
+    public function toArray()
     {
         return [
             'component' => $this->component,
-            'props' => $this->props,
+            'props' => $this->prop(),
             'url' => $this->url,
             'version' => $this->version,
         ];

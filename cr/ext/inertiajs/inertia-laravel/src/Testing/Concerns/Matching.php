@@ -4,7 +4,8 @@ namespace Inertia\Testing\Concerns;
 
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceResponse;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert as PHPUnit;
 
@@ -19,8 +20,10 @@ trait Matching
         return $this;
     }
 
-    public function where($key, $expected)/*: self*/
+    public function where(/*string */$key, $expected)/*: self*/
     {
+        $key = cast_to_string($key);
+
         $this->has($key);
 
         $actual = $this->prop($key);
@@ -36,7 +39,7 @@ trait Matching
 
         if ($expected instanceof Arrayable) {
             $expected = $expected->toArray();
-        } elseif ($expected instanceof Responsable) {
+        } elseif ($expected instanceof ResourceResponse || $expected instanceof JsonResource) {
             $expected = json_decode(json_encode($expected->toResponse(request())->getData()), true);
         }
 
@@ -65,9 +68,9 @@ trait Matching
         ksort($value);
     }
 
-    abstract protected function dotPath($key)/*: string*/;
+    abstract protected function dotPath(/*string */$key)/*: string*/;
 
-    abstract protected function prop(string $key = null);
+    abstract protected function prop(/*string */$key = null);
 
-    abstract public function has(string $key, $value = null, Closure $scope = null);
+    abstract public function has(/*string */$key, $value = null, Closure $scope = null);
 }

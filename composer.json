@@ -49,7 +49,7 @@
         "facade/ignition": "^2.17.4",
         "facade/ignition-contracts": "^1.0.2",
         "fruitcake/laravel-cors": "^2.0.5",
-        "inertiajs/inertia-laravel": "^0.4.5",
+        "inertiajs/inertia-laravel": "^0.5.12",
         "laravel/breeze": "^1.7.0",
         "laravel/fortify": "^1.9.0",
         "laravel/jetstream": "^2.6.1",

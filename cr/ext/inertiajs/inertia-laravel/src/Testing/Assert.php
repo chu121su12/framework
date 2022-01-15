@@ -26,19 +26,27 @@ class Assert implements Arrayable
     /** @var string */
     private $url;
 
-    /** @var mixed|null */
+    /** @var string|null */
     private $version;
 
     /** @var string */
     private $path;
 
-    protected function __construct(/*string */$component, array $props, /*string */$url, $version = null, /*string */$path = null)
+    protected function __construct(/*string */$component, array $props, /*string */$url, /*string */$version = null, /*string */$path = null)
     {
         $url = cast_to_string($url);
 
         $component = cast_to_string($component);
 
         $path = cast_to_string($path, null);
+
+        $version = cast_to_string($version, null);
+
+        echo "\033[0;31mInertia's built-in 'Assert' library will be removed in a future version of inertia-laravel:\033[0m\n";
+        echo "\033[0;31m - If you are seeing this error while using \$response->assertInertia(...), please upgrade to Laravel 8.32.0 or higher.\033[0m\n";
+        echo "\033[0;31m - If you are using the 'Assert' class directly, please adapt your tests to use the 'AssertableInertia' class instead.\033[0m\n";
+        echo "\033[0;31mFor more information and questions, please see https://github.com/inertiajs/inertia-laravel/pull/338 \033[0m\n\n";
+        @trigger_error("Inertia's built-in 'Assert' library will be removed in a future version of inertia-laravel: https://github.com/inertiajs/inertia-laravel/pull/338", \E_USER_DEPRECATED);
 
         $this->path = $path;
 
@@ -48,8 +56,10 @@ class Assert implements Arrayable
         $this->version = $version;
     }
 
-    protected function dotPath($key)/*: string*/
+    protected function dotPath(/*string */$key)/*: string*/
     {
+        $key = cast_to_string($key);
+
         if (is_null($this->path)) {
             return $key;
         }
@@ -57,8 +67,10 @@ class Assert implements Arrayable
         return implode('.', [$this->path, $key]);
     }
 
-    protected function scope($key, Closure $callback)/*: self*/
+    protected function scope(/*string */$key, Closure $callback)/*: self*/
     {
+        $key = cast_to_string($key);
+
         $props = $this->prop($key);
         $path = $this->dotPath($key);
 
