@@ -473,8 +473,10 @@ class PendingRequest
      * @param  int  $seconds
      * @return $this
      */
-    public function connectTimeout(int $seconds)
+    public function connectTimeout(/*int */$seconds)
     {
+        $seconds = cast_to_int($seconds);
+
         return tap($this, function () use ($seconds) {
             $this->options['connect_timeout'] = $seconds;
         });
