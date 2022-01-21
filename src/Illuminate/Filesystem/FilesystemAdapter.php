@@ -261,7 +261,8 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function fileExists($path)
     {
-        return $this->driver->fileExists($path);
+        // return $this->driver->fileExists($path);
+        return $this->exists($path);
     }
 
     /**
@@ -283,7 +284,8 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function directoryExists($path)
     {
-        return $this->driver->directoryExists($path);
+        // return $this->driver->directoryExists($path);
+        return $this->exists($path);
     }
 
     /**

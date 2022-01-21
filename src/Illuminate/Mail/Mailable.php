@@ -910,7 +910,7 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertSeeInOrderInHtml($strings)
     {
-        [$html, $text] = $this->renderForAssertions();
+        list($html, $text) = $this->renderForAssertions();
 
         PHPUnit::assertThat($strings, new SeeInOrder($html));
 
@@ -961,7 +961,7 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertSeeInOrderInText($strings)
     {
-        [$html, $text] = $this->renderForAssertions();
+        list($html, $text) = $this->renderForAssertions();
 
         PHPUnit::assertThat($strings, new SeeInOrder($text));
 

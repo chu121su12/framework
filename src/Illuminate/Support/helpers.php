@@ -245,7 +245,7 @@ if (! function_exists('retry')) {
                 throw $e;
             }
 
-            $sleepMilliseconds = $backoff[$attempts - 1] ?? $sleepMilliseconds;
+            $sleepMilliseconds = isset($backoff[$attempts - 1]) ? $backoff[$attempts - 1] : $sleepMilliseconds;
 
             if ($sleepMilliseconds) {
                 usleep(value($sleepMilliseconds, $attempts) * 1000);

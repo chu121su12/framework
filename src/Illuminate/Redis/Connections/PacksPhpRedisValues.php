@@ -35,7 +35,7 @@ trait PacksPhpRedisValues
      * @param  array<int|string,string>  $values
      * @return array<int|string,string>
      */
-    public function pack(array $values): array
+    public function pack(array $values)/*: array*/
     {
         if (empty($values)) {
             return $values;
@@ -87,7 +87,7 @@ trait PacksPhpRedisValues
      *
      * @return bool
      */
-    public function compressed(): bool
+    public function compressed()/*: bool*/
     {
         return defined('Redis::OPT_COMPRESSION') &&
                $this->client->getOption(Redis::OPT_COMPRESSION) !== Redis::COMPRESSION_NONE;
@@ -98,7 +98,7 @@ trait PacksPhpRedisValues
      *
      * @return bool
      */
-    public function lzfCompressed(): bool
+    public function lzfCompressed()/*: bool*/
     {
         return defined('Redis::COMPRESSION_LZF') &&
                $this->client->getOption(Redis::OPT_COMPRESSION) === Redis::COMPRESSION_LZF;
@@ -109,7 +109,7 @@ trait PacksPhpRedisValues
      *
      * @return bool
      */
-    public function zstdCompressed(): bool
+    public function zstdCompressed()/*: bool*/
     {
         return defined('Redis::COMPRESSION_ZSTD') &&
                $this->client->getOption(Redis::OPT_COMPRESSION) === Redis::COMPRESSION_ZSTD;
@@ -120,7 +120,7 @@ trait PacksPhpRedisValues
      *
      * @return bool
      */
-    public function lz4Compressed(): bool
+    public function lz4Compressed()/*: bool*/
     {
         return defined('Redis::COMPRESSION_LZ4') &&
                $this->client->getOption(Redis::OPT_COMPRESSION) === Redis::COMPRESSION_LZ4;
@@ -131,7 +131,7 @@ trait PacksPhpRedisValues
      *
      * @return bool
      */
-    protected function supportsPacking(): bool
+    protected function supportsPacking()/*: bool*/
     {
         if ($this->supportsPacking === null) {
             $this->supportsPacking = $this->phpRedisVersionAtLeast('5.3.5');
@@ -145,7 +145,7 @@ trait PacksPhpRedisValues
      *
      * @return bool
      */
-    protected function supportsLzf(): bool
+    protected function supportsLzf()/*: bool*/
     {
         if ($this->supportsLzf === null) {
             $this->supportsLzf = $this->phpRedisVersionAtLeast('4.3.0');
@@ -159,7 +159,7 @@ trait PacksPhpRedisValues
      *
      * @return bool
      */
-    protected function supportsZstd(): bool
+    protected function supportsZstd()/*: bool*/
     {
         if ($this->supportsZstd === null) {
             $this->supportsZstd = $this->phpRedisVersionAtLeast('5.1.0');
@@ -174,8 +174,10 @@ trait PacksPhpRedisValues
      * @param  string  $version
      * @return bool
      */
-    protected function phpRedisVersionAtLeast(string $version): bool
+    protected function phpRedisVersionAtLeast(/*string */$version)/*: bool*/
     {
+        $version = cast_to_string($version);
+
         $phpredisVersion = phpversion('redis');
 
         return $phpredisVersion !== false && version_compare($phpredisVersion, $version, '>=');

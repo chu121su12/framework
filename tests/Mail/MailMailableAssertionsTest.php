@@ -3,8 +3,16 @@
 namespace Illuminate\Tests\Mail;
 
 use Illuminate\Mail\Mailable;
-use PHPUnit\Framework\AssertionFailedError;
+// use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
+
+if (!class_exists('Illuminate\Tests\Mail\AssertionFailedError')) {
+    if (class_exists('PHPUnit_Framework_AssertionFailedError')) {
+        class_alias(\PHPUnit_Framework_AssertionFailedError::class, 'Illuminate\Tests\Mail\AssertionFailedError');
+    } else {
+        class_alias(\PHPUnit\Framework\AssertionFailedError::class, 'Illuminate\Tests\Mail\AssertionFailedError');
+    }
+}
 
 class MailMailableAssertionsTest extends TestCase
 {
@@ -126,30 +134,30 @@ class MailableAssertionsStub extends Mailable
     protected function renderForAssertions()
     {
         $text = <<<'EOD'
-        # List
-        - First Item
-        - Second Item
-        - Third Item
-        EOD;
+# List
+- First Item
+- Second Item
+- Third Item
+EOD;
 
         $html = <<<'EOD'
-        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-        <html xmlns="http://www.w3.org/1999/xhtml">
-        <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        </style>
-        </head>
-        <body>
-        <h1>List</h1>
-        <ul>
-        <li>First Item</li>
-        <li>Second Item</li>
-        <li>Third Item</li>
-        </ul>
-        </body>
-        </html>
-        EOD;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</style>
+</head>
+<body>
+<h1>List</h1>
+<ul>
+<li>First Item</li>
+<li>Second Item</li>
+<li>Third Item</li>
+</ul>
+</body>
+</html>
+EOD;
 
         return [$html, $text];
     }

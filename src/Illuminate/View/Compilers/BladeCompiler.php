@@ -10,6 +10,21 @@ use Illuminate\Support\Traits\ReflectsClosures;
 use Illuminate\View\Component;
 use InvalidArgumentException;
 
+class BladeCompiler_render_class extends Component
+        {
+            protected $template;
+
+            public function __construct($template)
+            {
+                $this->template = $template;
+            }
+
+            public function render()
+            {
+                return $this->template;
+            }
+        }
+
 class BladeCompiler extends Compiler implements CompilerInterface
 {
     use Concerns\CompilesAuthorizations,
@@ -280,20 +295,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      */
     public static function render($string, $data = [], $deleteCachedView = false)
     {
-        $component = new class($string) extends Component
-        {
-            protected $template;
-
-            public function __construct($template)
-            {
-                $this->template = $template;
-            }
-
-            public function render()
-            {
-                return $this->template;
-            }
-        };
+        $component = new BladeCompiler_render_class($string);
 
         $view = Container::getInstance()
                     ->make(ViewFactory::class)
