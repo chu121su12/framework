@@ -142,7 +142,8 @@ class CursorPaginator extends AbstractCursorPaginator implements Arrayable, Arra
      *
      * @return array
      */
-    public function jsonSerialize(): array
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()/*: array*/
     {
         return $this->toArray();
     }

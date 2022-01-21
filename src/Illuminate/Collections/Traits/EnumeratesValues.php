@@ -907,7 +907,8 @@ trait EnumeratesValues
      *
      * @return array<TKey, mixed>
      */
-    public function jsonSerialize(): array
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()/*: array*/
     {
         return array_map(function ($value) {
             if ($value instanceof JsonSerializable) {

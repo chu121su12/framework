@@ -160,7 +160,8 @@ class ValidatedInput implements ValidatedData
      * @param  mixed  $key
      * @return bool
      */
-    public function offsetExists($key): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($key)/*: bool*/
     {
         return isset($this->input[$key]);
     }
@@ -171,7 +172,8 @@ class ValidatedInput implements ValidatedData
      * @param  mixed  $key
      * @return mixed
      */
-    public function offsetGet($key): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($key)/*: mixed*/
     {
         return $this->input[$key];
     }
@@ -183,7 +185,8 @@ class ValidatedInput implements ValidatedData
      * @param  mixed  $value
      * @return void
      */
-    public function offsetSet($key, $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($key, $value)/*: void*/
     {
         if (is_null($key)) {
             $this->input[] = $value;
@@ -198,7 +201,8 @@ class ValidatedInput implements ValidatedData
      * @param  string  $key
      * @return void
      */
-    public function offsetUnset($key): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($key)/*: void*/
     {
         unset($this->input[$key]);
     }
@@ -208,7 +212,8 @@ class ValidatedInput implements ValidatedData
      *
      * @return \ArrayIterator
      */
-    public function getIterator(): Traversable
+    #[\ReturnTypeWillChange]
+    public function getIterator()/*: Traversable*/
     {
         return new ArrayIterator($this->input);
     }

@@ -44,7 +44,8 @@ class InvokableComponentVariable implements DeferringDisplayableValue, IteratorA
      *
      * @return \ArrayIterator
      */
-    public function getIterator(): Traversable
+    #[\ReturnTypeWillChange]
+    public function getIterator()/*: Traversable*/
     {
         $result = $this->__invoke();
 

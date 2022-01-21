@@ -79,7 +79,8 @@ trait CollectsResources
      *
      * @return \ArrayIterator
      */
-    public function getIterator(): Traversable
+    #[\ReturnTypeWillChange]
+    public function getIterator()/*: Traversable*/
     {
         return $this->collection->getIterator();
     }

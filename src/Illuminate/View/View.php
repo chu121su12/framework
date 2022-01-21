@@ -311,7 +311,8 @@ class View implements ArrayAccess, Htmlable, ViewContract
      * @param  string  $key
      * @return bool
      */
-    public function offsetExists($key): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($key)/*: bool*/
     {
         return array_key_exists($key, $this->data);
     }
@@ -322,7 +323,8 @@ class View implements ArrayAccess, Htmlable, ViewContract
      * @param  string  $key
      * @return mixed
      */
-    public function offsetGet($key): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($key)/*: mixed*/
     {
         return $this->data[$key];
     }
@@ -334,7 +336,8 @@ class View implements ArrayAccess, Htmlable, ViewContract
      * @param  mixed  $value
      * @return void
      */
-    public function offsetSet($key, $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($key, $value)/*: void*/
     {
         $this->with($key, $value);
     }
@@ -345,7 +348,8 @@ class View implements ArrayAccess, Htmlable, ViewContract
      * @param  string  $key
      * @return void
      */
-    public function offsetUnset($key): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($key)/*: void*/
     {
         unset($this->data[$key]);
     }

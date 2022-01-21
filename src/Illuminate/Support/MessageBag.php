@@ -368,7 +368,8 @@ class MessageBag implements Jsonable, JsonSerializable, MessageBagContract, Mess
      *
      * @return int
      */
-    public function count(): int
+    #[\ReturnTypeWillChange]
+    public function count()/*: int*/
     {
         return count($this->messages, COUNT_RECURSIVE) - count($this->messages);
     }
@@ -388,7 +389,8 @@ class MessageBag implements Jsonable, JsonSerializable, MessageBagContract, Mess
      *
      * @return array
      */
-    public function jsonSerialize(): array
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()/*: array*/
     {
         return $this->toArray();
     }

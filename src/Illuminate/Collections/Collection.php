@@ -1586,7 +1586,8 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      *
      * @return \ArrayIterator<TKey, TValue>
      */
-    public function getIterator(): Traversable
+    #[\ReturnTypeWillChange]
+    public function getIterator()/*: Traversable*/
     {
         return new ArrayIterator($this->items);
     }
@@ -1596,7 +1597,8 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      *
      * @return int
      */
-    public function count(): int
+    #[\ReturnTypeWillChange]
+    public function count()/*: int*/
     {
         return count($this->items);
     }
@@ -1641,7 +1643,8 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      * @param  TKey  $key
      * @return bool
      */
-    public function offsetExists($key): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($key)/*: bool*/
     {
         return isset($this->items[$key]);
     }
@@ -1652,7 +1655,8 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      * @param  TKey  $key
      * @return TValue
      */
-    public function offsetGet($key): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($key)/*: mixed*/
     {
         return $this->items[$key];
     }
@@ -1664,7 +1668,8 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      * @param  TValue  $value
      * @return void
      */
-    public function offsetSet($key, $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($key, $value)/*: void*/
     {
         if (is_null($key)) {
             $this->items[] = $value;
@@ -1679,7 +1684,8 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      * @param  TKey  $key
      * @return void
      */
-    public function offsetUnset($key): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($key)/*: void*/
     {
         unset($this->items[$key]);
     }

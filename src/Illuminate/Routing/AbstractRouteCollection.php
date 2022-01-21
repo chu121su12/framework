@@ -239,7 +239,8 @@ abstract class AbstractRouteCollection implements Countable, IteratorAggregate, 
      *
      * @return \ArrayIterator
      */
-    public function getIterator(): Traversable
+    #[\ReturnTypeWillChange]
+    public function getIterator()/*: Traversable*/
     {
         return new ArrayIterator($this->getRoutes());
     }
@@ -249,7 +250,8 @@ abstract class AbstractRouteCollection implements Countable, IteratorAggregate, 
      *
      * @return int
      */
-    public function count(): int
+    #[\ReturnTypeWillChange]
+    public function count()/*: int*/
     {
         return count($this->getRoutes());
     }

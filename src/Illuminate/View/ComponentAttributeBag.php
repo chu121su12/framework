@@ -348,7 +348,8 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      * @param  string  $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($offset)/*: bool*/
     {
         return isset($this->attributes[$offset]);
     }
@@ -359,7 +360,8 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      * @param  string  $offset
      * @return mixed
      */
-    public function offsetGet($offset): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($offset)/*: mixed*/
     {
         return $this->get($offset);
     }
@@ -371,7 +373,8 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      * @param  mixed  $value
      * @return void
      */
-    public function offsetSet($offset, $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($offset, $value)/*: void*/
     {
         $this->attributes[$offset] = $value;
     }
@@ -382,7 +385,8 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      * @param  string  $offset
      * @return void
      */
-    public function offsetUnset($offset): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($offset)/*: void*/
     {
         unset($this->attributes[$offset]);
     }
@@ -392,7 +396,8 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      *
      * @return \ArrayIterator
      */
-    public function getIterator(): Traversable
+    #[\ReturnTypeWillChange]
+    public function getIterator()/*: Traversable*/
     {
         return new ArrayIterator($this->attributes);
     }

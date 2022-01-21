@@ -79,7 +79,8 @@ class Fluent implements Arrayable, ArrayAccess, Jsonable, JsonSerializable
      *
      * @return array<TKey, TValue>
      */
-    public function jsonSerialize(): array
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()/*: array*/
     {
         return $this->toArray();
     }
@@ -101,7 +102,8 @@ class Fluent implements Arrayable, ArrayAccess, Jsonable, JsonSerializable
      * @param  TKey  $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($offset)/*: bool*/
     {
         return isset($this->attributes[$offset]);
     }
@@ -112,7 +114,8 @@ class Fluent implements Arrayable, ArrayAccess, Jsonable, JsonSerializable
      * @param  TKey  $offset
      * @return TValue|null
      */
-    public function offsetGet($offset): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($offset)/*: mixed*/
     {
         return $this->get($offset);
     }
@@ -124,7 +127,8 @@ class Fluent implements Arrayable, ArrayAccess, Jsonable, JsonSerializable
      * @param  TValue  $value
      * @return void
      */
-    public function offsetSet($offset, $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($offset, $value)/*: void*/
     {
         $this->attributes[$offset] = $value;
     }
@@ -135,7 +139,8 @@ class Fluent implements Arrayable, ArrayAccess, Jsonable, JsonSerializable
      * @param  TKey  $offset
      * @return void
      */
-    public function offsetUnset($offset): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($offset)/*: void*/
     {
         unset($this->attributes[$offset]);
     }

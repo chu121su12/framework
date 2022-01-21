@@ -1414,7 +1414,8 @@ class Container implements ArrayAccess, ContainerContract
      * @param  string  $key
      * @return bool
      */
-    public function offsetExists($key): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($key)/*: bool*/
     {
         return $this->bound($key);
     }
@@ -1425,7 +1426,8 @@ class Container implements ArrayAccess, ContainerContract
      * @param  string  $key
      * @return mixed
      */
-    public function offsetGet($key): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($key)/*: mixed*/
     {
         return $this->make($key);
     }
@@ -1437,7 +1439,8 @@ class Container implements ArrayAccess, ContainerContract
      * @param  mixed  $value
      * @return void
      */
-    public function offsetSet($key, $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($key, $value)/*: void*/
     {
         $this->bind($key, $value instanceof Closure ? $value : function () use ($value) {
             return $value;
@@ -1450,7 +1453,8 @@ class Container implements ArrayAccess, ContainerContract
      * @param  string  $key
      * @return void
      */
-    public function offsetUnset($key): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($key)/*: void*/
     {
         unset($this->bindings[$key], $this->instances[$key], $this->resolved[$key]);
     }

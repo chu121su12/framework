@@ -1581,7 +1581,8 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
      *
      * @return \Traversable<TKey, TValue>
      */
-    public function getIterator(): Traversable
+    #[\ReturnTypeWillChange]
+    public function getIterator()/*: Traversable*/
     {
         return $this->makeIterator($this->source);
     }
@@ -1591,7 +1592,8 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
      *
      * @return int
      */
-    public function count(): int
+    #[\ReturnTypeWillChange]
+    public function count()/*: int*/
     {
         if (is_array($this->source)) {
             return count($this->source);
