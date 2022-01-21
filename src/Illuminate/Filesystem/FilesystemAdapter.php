@@ -178,7 +178,7 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
-     * Assert that the given file exists.
+     * Assert that the given file or directory exists.
      *
      * @param  string|array  $path
      * @param  string|null  $content
@@ -192,7 +192,7 @@ class FilesystemAdapter implements CloudFilesystemContract
 
         foreach ($paths as $path) {
             PHPUnit::assertTrue(
-                $this->exists($path), "Unable to find a file at path [{$path}]."
+                $this->exists($path), "Unable to find a file or directory at path [{$path}]."
             );
 
             if (! is_null($content)) {
@@ -201,7 +201,7 @@ class FilesystemAdapter implements CloudFilesystemContract
                 PHPUnit::assertSame(
                     $content,
                     $actual,
-                    "File [{$path}] was found, but content [{$actual}] does not match [{$content}]."
+                    "File or directory [{$path}] was found, but content [{$actual}] does not match [{$content}]."
                 );
             }
         }
@@ -210,7 +210,7 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
-     * Assert that the given file does not exist.
+     * Assert that the given file or directory does not exist.
      *
      * @param  string|array  $path
      * @return $this
@@ -223,7 +223,7 @@ class FilesystemAdapter implements CloudFilesystemContract
 
         foreach ($paths as $path) {
             PHPUnit::assertFalse(
-                $this->exists($path), "Found unexpected file at path [{$path}]."
+                $this->exists($path), "Found unexpected file or directory at path [{$path}]."
             );
         }
 
@@ -231,7 +231,7 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
-     * Determine if a file exists.
+     * Determine if a file or directory exists.
      *
      * @param  string  $path
      * @return bool
@@ -251,6 +251,50 @@ class FilesystemAdapter implements CloudFilesystemContract
     public function missing($path)
     {
         return ! $this->exists($path);
+    }
+
+    /**
+     * Determine if a file exists.
+     *
+     * @param  string  $path
+     * @return bool
+     */
+    public function fileExists($path)
+    {
+        return $this->driver->fileExists($path);
+    }
+
+    /**
+     * Determine if a file is missing.
+     *
+     * @param  string  $path
+     * @return bool
+     */
+    public function fileMissing($path)
+    {
+        return ! $this->fileExists($path);
+    }
+
+    /**
+     * Determine if a directory exists.
+     *
+     * @param  string  $path
+     * @return bool
+     */
+    public function directoryExists($path)
+    {
+        return $this->driver->directoryExists($path);
+    }
+
+    /**
+     * Determine if a directory is missing.
+     *
+     * @param  string  $path
+     * @return bool
+     */
+    public function directoryMissing($path)
+    {
+        return ! $this->directoryExists($path);
     }
 
     /**
@@ -470,7 +514,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function prepend($path, $data, $separator = PHP_EOL)
     {
-        if ($this->exists($path)) {
+        if ($this->fileExists($path)) {
             return $this->put($path, $data.$separator.$this->get($path));
         }
 
@@ -487,7 +531,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function append($path, $data, $separator = PHP_EOL)
     {
-        if ($this->exists($path)) {
+        if ($this->fileExists($path)) {
             return $this->put($path, $this->get($path).$separator.$data);
         }
 
@@ -814,7 +858,7 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
-     * Get all (recursive) of the directories within a given directory.
+     * Get all the directories within a given directory (recursive).
      *
      * @param  string|null  $directory
      * @return array
@@ -953,6 +997,6 @@ class FilesystemAdapter implements CloudFilesystemContract
             return $this->macroCall($method, $parameters);
         }
 
-        return $this->driver->{$method}(...array_values($parameters));
+        return $this->driver->{$method}(...$parameters);
     }
 }

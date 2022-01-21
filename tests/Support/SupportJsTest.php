@@ -16,7 +16,7 @@ class SupportJsStringTest_testJsonSerializable_class implements JsonSerializable
 
             public $bar = 'not world';
 
-            public function jsonSerialize()
+            public function jsonSerialize()/*: mixed*/
             {
                 return ['foo' => 'hello', 'bar' => 'world'];
             }
@@ -40,7 +40,7 @@ class SupportJsStringTest_testJsonable_class implements Jsonable, JsonSerializab
                 return json_encode(['foo' => 'hello', 'bar' => 'world'], $options);
             }
 
-            public function jsonSerialize()
+            public function jsonSerialize()/*: mixed*/
             {
                 return ['foo' => 'not hello', 'bar' => 'not world'];
             }
