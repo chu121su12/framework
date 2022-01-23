@@ -258,16 +258,7 @@ if (! function_exists('retry')) {
 }
 
 if (! function_exists('str')) {
-    /**
-     * Get a new stringable object from the given string.
-     *
-     * @param  string|null  $string
-     * @return \Illuminate\Support\Stringable|mixed
-     */
-    function str($string = null)
-    {
-        if (func_num_args() === 0) {
-            return new class
+    class __function_str_class
             {
                 public function __call($method, $parameters)
                 {
@@ -278,7 +269,18 @@ if (! function_exists('str')) {
                 {
                     return '';
                 }
-            };
+            }
+
+    /**
+     * Get a new stringable object from the given string.
+     *
+     * @param  string|null  $string
+     * @return \Illuminate\Support\Stringable|mixed
+     */
+    function str($string = null)
+    {
+        if (func_num_args() === 0) {
+            return new __function_str_class;
         }
 
         return Str::of($string);

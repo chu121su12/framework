@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
+/**
+ * @requires PHP 7
+ */
 class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
 {
     protected function setUp()/*: void*/
@@ -29,9 +32,6 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
         });
     }
 
-    /**
-     * @requires PHP 7
-     */
     public function testBasicCustomCasting()
     {
         $model = new TestEloquentModelWithAttributeCast;
@@ -112,9 +112,6 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
         $this->assertIsString($model->toArray()['birthday_at']);
     }
 
-    /**
-     * @requires PHP 7
-     */
     public function testGetOriginalWithCastValueObjects()
     {
         $model = new TestEloquentModelWithAttributeCast([
@@ -155,9 +152,6 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
         $this->assertNull($model->address);
     }
 
-    /**
-     * @requires PHP 7
-     */
     public function testOneWayCasting()
     {
         $model = new TestEloquentModelWithAttributeCast;
@@ -179,9 +173,6 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
         $this->assertEquals(hash('sha256', 'secret2'), $model->password);
     }
 
-    /**
-     * @requires PHP 7
-     */
     public function testSettingRawAttributesClearsTheCastCache()
     {
         $model = new TestEloquentModelWithAttributeCast;
@@ -201,9 +192,6 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
         $this->assertSame('117 Spencer St.', $model->address->lineOne);
     }
 
-    /**
-     * @requires PHP 7
-     */
     public function testCastsThatOnlyHaveGetterDoNotPeristAnythingToModelOnSave()
     {
         $model = new TestEloquentModelWithAttributeCast;

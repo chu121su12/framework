@@ -4,6 +4,8 @@ namespace Illuminate\Tests\Integration\Database;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Str;
 
 class TestEloquentModelWithAttributeCast extends Model
 {
