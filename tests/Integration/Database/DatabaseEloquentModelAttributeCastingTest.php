@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
 {
@@ -211,6 +213,83 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
         $model->getAttributes();
 
         $this->assertTrue(empty($model->getDirty()));
+    }
+
+    public function testCastsThatOnlyHaveGetterThatReturnsPrimitivesAreNotCached()
+    {
+        $model = new TestEloquentModelWithAttributeCast;
+
+        $previous = null;
+
+        foreach (range(0, 10) as $ignored) {
+            $this->assertNotSame($previous, $previous = $model->virtualString);
+        }
+    }
+
+    public function testCastsThatOnlyHaveGetterThatReturnsObjectAreCached()
+    {
+        $model = new TestEloquentModelWithAttributeCast;
+
+        $previous = $model->virtualObject;
+
+        foreach (range(0, 10) as $ignored) {
+            $this->assertSame($previous, $previous = $model->virtualObject);
+        }
+    }
+
+    public function testCastsThatOnlyHaveGetterThatReturnsDateTimeAreCached()
+    {
+        $model = new TestEloquentModelWithAttributeCast;
+
+        $previous = $model->virtualDateTime;
+
+        foreach (range(0, 10) as $ignored) {
+            $this->assertSame($previous, $previous = $model->virtualDateTime);
+        }
+    }
+
+    public function testCastsThatOnlyHaveGetterThatReturnsObjectAreNotCached()
+    {
+        $model = new TestEloquentModelWithAttributeCast;
+
+        $previous = $model->virtualObjectWithoutCaching;
+
+        foreach (range(0, 10) as $ignored) {
+            $this->assertNotSame($previous, $previous = $model->virtualObjectWithoutCaching);
+        }
+    }
+
+    public function testCastsThatOnlyHaveGetterThatReturnsDateTimeAreNotCached()
+    {
+        $model = new TestEloquentModelWithAttributeCast;
+
+        $previous = $model->virtualDateTimeWithoutCaching;
+
+        foreach (range(0, 10) as $ignored) {
+            $this->assertNotSame($previous, $previous = $model->virtualDateTimeWithoutCaching);
+        }
+    }
+
+    public function testCastsThatOnlyHaveGetterThatReturnsObjectAreNotCachedFluent()
+    {
+        $model = new TestEloquentModelWithAttributeCast;
+
+        $previous = $model->virtualObjectWithoutCachingFluent;
+
+        foreach (range(0, 10) as $ignored) {
+            $this->assertNotSame($previous, $previous = $model->virtualObjectWithoutCachingFluent);
+        }
+    }
+
+    public function testCastsThatOnlyHaveGetterThatReturnsDateTimeAreNotCachedFluent()
+    {
+        $model = new TestEloquentModelWithAttributeCast;
+
+        $previous = $model->virtualDateTimeWithoutCachingFluent;
+
+        foreach (range(0, 10) as $ignored) {
+            $this->assertNotSame($previous, $previous = $model->virtualDateTimeWithoutCachingFluent);
+        }
     }
 }
 

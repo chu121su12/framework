@@ -3464,7 +3464,7 @@ class Builder
     }
 
     /**
-     * Use the write pdo for query.
+     * Use the "write" PDO connection when executing the query.
      *
      * @return $this
      */

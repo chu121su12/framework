@@ -88,6 +88,65 @@ class TestEloquentModelWithAttributeCast extends Model
             }
         );
     }
+
+    public function virtualString(): Attribute
+    {
+        return new Attribute(
+            function () {
+                return Str::random(10);
+            }
+        );
+    }
+
+    public function virtualObject(): Attribute
+    {
+        return new Attribute(
+            function () {
+                return new AttributeCastAddress(Str::random(10), Str::random(10));
+            }
+        );
+    }
+
+    public function virtualDateTime(): Attribute
+    {
+        return new Attribute(
+            function () {
+                return Date::now()->addSeconds(mt_rand(0, 10000));
+            }
+        );
+    }
+
+    public function virtualObjectWithoutCachingFluent(): Attribute
+    {
+        return (new Attribute(
+            function () {
+                return new AttributeCastAddress(Str::random(10), Str::random(10));
+            }
+        ))->withoutObjectCaching();
+    }
+
+    public function virtualDateTimeWithoutCachingFluent(): Attribute
+    {
+        return (new Attribute(
+            function () {
+                return Date::now()->addSeconds(mt_rand(0, 10000));
+            }
+        ))->withoutObjectCaching();
+    }
+
+    public function virtualObjectWithoutCaching(): Attribute
+    {
+        return Attribute::get(function () {
+            return new AttributeCastAddress(Str::random(10), Str::random(10));
+        })->withoutObjectCaching();
+    }
+
+    public function virtualDateTimeWithoutCaching(): Attribute
+    {
+        return Attribute::get(function () {
+            return Date::now()->addSeconds(mt_rand(0, 10000));
+        })->withoutObjectCaching();
+    }
 }
 
 class AttributeCastAddress
