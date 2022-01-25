@@ -19,7 +19,11 @@ class ErrorPageRenderer
 
         app(Ignition::class)
             ->resolveDocumentationLink(
-                fn (Throwable $throwable) => (new LaravelDocumentationLinkFinder())->findLinkForThrowable($throwable)
+                function (/*Throwable */$throwable) {
+                    backport_type_throwable($throwable);
+
+                    return (new LaravelDocumentationLinkFinder())->findLinkForThrowable($throwable);
+                }
             )
             ->setFlare(app(Flare::class))
             ->setConfig(app(IgnitionConfig::class))

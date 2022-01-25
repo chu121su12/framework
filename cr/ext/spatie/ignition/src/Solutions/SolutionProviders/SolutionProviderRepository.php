@@ -66,7 +66,11 @@ class SolutionProviderRepository implements SolutionProviderRepositoryContract
 
                 return true;
             })
-            ->map(fn (string $solutionClass) => new $solutionClass)
+            ->map(function (/*string */$solutionClass) {
+                $solutionClass = cast_to_string($solutionClass);
+
+                return new $solutionClass;
+            })
             ->filter(function (HasSolutionsForThrowable $solutionProvider) use ($throwable) {
                 try {
                     return $solutionProvider->canSolve($throwable);

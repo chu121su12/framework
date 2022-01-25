@@ -26,7 +26,7 @@ class SentReports
     /** @return array<int, string> */
     public function uuids()/*: array*/
     {
-        return array_map(fn (Report $report) => $report->trackingUuid(), $this->reports);
+        return array_map(function (Report $report) { return $report->trackingUuid(); }, $this->reports);
     }
 
     /** @return array<int, string> */

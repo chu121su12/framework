@@ -101,7 +101,7 @@ class IgnitionServiceProvider extends ServiceProvider
         if (interface_exists('Whoops\Handler\HandlerInterface')) {
             $this->app->bind(
                 'Whoops\Handler\HandlerInterface',
-                fn (Application $app) => $app->make(IgnitionWhoopsHandler::class)
+                function (Application $app) { return $app->make(IgnitionWhoopsHandler::class); }
             );
         }
 
@@ -109,7 +109,7 @@ class IgnitionServiceProvider extends ServiceProvider
         if (interface_exists('Illuminate\Contracts\Foundation\ExceptionRenderer')) {
             $this->app->bind(
                 'Illuminate\Contracts\Foundation\ExceptionRenderer',
-                fn (Application $app) => $app->make(IgnitionExceptionRenderer::class)
+                function (Application $app) { return $app->make(IgnitionExceptionRenderer::class); }
             );
         }
     }
@@ -137,11 +137,11 @@ class IgnitionServiceProvider extends ServiceProvider
         $solutionProviders = $this->getSolutionProviders();
         $solutionProviderRepository = new SolutionProviderRepository($solutionProviders);
 
-        $this->app->singleton(IgnitionConfig::class, fn () => $ignitionConfig);
+        $this->app->singleton(IgnitionConfig::class, function () { return $ignitionConfig; });
 
-        $this->app->singleton(SolutionProviderRepositoryContract::class, fn () => $solutionProviderRepository);
+        $this->app->singleton(SolutionProviderRepositoryContract::class, function () { return $solutionProviderRepository; });
 
-        $this->app->singleton(Ignition::class, fn () => (new Ignition()));
+        $this->app->singleton(Ignition::class, function () { return (new Ignition()); });
     }
 
     protected function registerRecorders()/*: void*/
@@ -235,11 +235,11 @@ class IgnitionServiceProvider extends ServiceProvider
 
             return tap(
                 new Logger('Flare'),
-                fn (Logger $logger) => $logger->pushHandler($handler)
+                function (Logger $logger) { return $logger->pushHandler($handler); }
             );
         });
 
-        Log::extend('flare', fn ($app) => $app['flare.logger']);
+        Log::extend('flare', function ($app) { return $app['flare.logger']; });
     }
 
     protected function startRecorders()/*: void*/
@@ -312,7 +312,11 @@ class IgnitionServiceProvider extends ServiceProvider
     {
         return collect(config('ignition.solution_providers'))
             ->reject(
-                fn (string $class) => in_array($class, config('ignition.ignored_solution_providers'))
+                function (/*string */$class) {
+                    $class = cast_to_string($class);
+
+                    return in_array($class, config('ignition.ignored_solution_providers'));
+                }
             )
             ->toArray();
     }

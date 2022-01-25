@@ -77,13 +77,22 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
                 $paths = Arr::wrap($paths);
 
                 return collect($paths)
-                    ->flatMap(fn (string $path) => $this->getViewsInPath($path, $extensions))
-                    ->map(fn (string $view) => "{$namespace}::{$view}")
+                    ->flatMap(function (/*string */$path) use ($extensions) {
+                        $path = cast_to_string($path);
+                        return $this->getViewsInPath($path, $extensions);
+                    });
+                    ->map(function (/*string */$view) {
+                        $view = cast_to_string($view);
+                        return "{$namespace}::{$view}";
+                    })
                     ->toArray();
             });
 
         $viewsForViewPaths = collect($fileViewFinder->getPaths())
-            ->flatMap(fn (string $path) => $this->getViewsInPath($path, $extensions));
+            ->flatMap(function (/*string */$path) use ($extensions) {
+                $path = cast_to_string($path);
+                return $this->getViewsInPath($path, $extensions);
+            });
 
         return $viewsForHints->merge($viewsForViewPaths)->toArray();
     }
@@ -98,9 +107,15 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
     {
         $path = cast_to_string($path);
 
-        $filePatterns = array_map(fn (string $extension) => "*.{$extension}", $extensions);
+        $filePatterns = array_map(function (/*string */$extension) {
+            $extension = cast_to_string($extension);
+            return "*.{$extension}";
+        }, $extensions);
 
-        $extensionsWithDots = array_map(fn (string $extension) => ".{$extension}", $extensions);
+        $extensionsWithDots = array_map(function (/*string */$extension) {
+            $extension = cast_to_string($extension);
+            return ".{$extension}";
+        }, $extensions);
 
         $files = (new Finder())
             ->in($path)

@@ -27,18 +27,18 @@ class DumpRecorder
     {
         $multiDumpHandler = new MultiDumpHandler();
 
-        $this->app->singleton(MultiDumpHandler::class, fn () => $multiDumpHandler);
+        $this->app->singleton(MultiDumpHandler::class, function () { return $multiDumpHandler; });
 
         if (! self::$registeredHandler) {
             static::$registeredHandler = true;
 
             $this->ensureOriginalHandlerExists();
 
-            $originalHandler = VarDumper::setHandler(fn ($dumpedVariable) => $multiDumpHandler->dump($dumpedVariable));
+            $originalHandler = VarDumper::setHandler(function ($dumpedVariable) { return $multiDumpHandler->dump($dumpedVariable); });
 
             $multiDumpHandler?->addHandler($originalHandler);
 
-            $multiDumpHandler->addHandler(fn ($var) => (new DumpHandler($this))->dump($var));
+            $multiDumpHandler->addHandler(function ($var) { return (new DumpHandler($this))->dump($var); });
         }
 
         return $this;

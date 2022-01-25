@@ -90,7 +90,7 @@ class Report
         backport_type_throwable($throwable);
 
         /** @phpstan-ignore-next-line */
-        if ($throwable::class === ViewException::class) {
+        if (get_class($throwable) === ViewException::class) {
 
             /** @phpstan-ignore-next-line */
             if ($previous = $throwable->getPrevious()) {
@@ -331,7 +331,7 @@ class Report
     protected function stracktraceAsArray()/*: array*/
     {
         return array_map(
-            fn (SpatieFrame $frame) => Frame::fromSpatieFrame($frame)->toArray(),
+            function (SpatieFrame $frame) { return Frame::fromSpatieFrame($frame)->toArray(); },
             $this->stacktrace->frames(),
         );
     }

@@ -69,9 +69,9 @@ class UndefinedViewVariableSolutionProvider implements HasSolutionsForThrowable
                 return ['match' => $percentage, 'value' => $value];
             })
             ->sortByDesc('match')
-            ->filter(fn ($var) => $var['match'] > 40)
+            ->filter(function ($var) { return $var['match'] > 40; })
             ->keys()
-            ->map(fn ($suggestion) => new SuggestCorrectVariableNameSolution($variableName, $viewFile, $suggestion))
+            ->map(function ($suggestion) use ($variableName, $viewFile) { return new SuggestCorrectVariableNameSolution($variableName, $viewFile, $suggestion); })
             ->map(function ($solution) {
                 return $solution->isRunnable()
                     ? $solution

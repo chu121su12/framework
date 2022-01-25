@@ -20,7 +20,11 @@ class InvalidConfig extends Exception implements ProvidesSolution
     public function getSolution()/*: Solution*/
     {
         $validLogLevels = array_map(
-            fn (string $level) => strtolower($level),
+            function (/*string */$level) {
+                $level = cast_to_string($level);
+
+                return strtolower($level);
+            },
             array_keys(Logger::getLevels())
         );
 

@@ -76,11 +76,15 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
 
         $extensions = Collection::make((app('validator')->make([], []))->extensions)
             ->keys()
-            ->map(fn (string $extension) => 'validate'.Str::studly($extension));
+            ->map(function (/*string */$extension) {
+                $extension = cast_to_string($extension);
+
+                return 'validate'.Str::studly($extension);
+            });
 
         return Collection::make($class->getMethods())
-            ->filter(fn (ReflectionMethod $method) => preg_match('/(validate(?!(Attribute|UsingCustomRule))[A-Z][a-zA-Z]+)/', $method->name))
-            ->map(fn (ReflectionMethod $method) => $method->name)
+            ->filter(function (ReflectionMethod $method) { return preg_match('/(validate(?!(Attribute|UsingCustomRule))[A-Z][a-zA-Z]+)/', $method->name); })
+            ->map(function (ReflectionMethod $method) { return $method->name; })
             ->merge($extensions);
     }
 }

@@ -136,7 +136,7 @@ class Flare
             return null;
         }
 
-        return ($this->determineVersionCallable)();
+        return call_user_func($this->determineVersionCallable);
     }
 
     /**
@@ -447,7 +447,7 @@ class Flare
         $report = (new Pipeline())
             ->send($report)
             ->through($middleware)
-            ->then(fn ($report) => $report);
+            ->then(function ($report) { return $report; });
 
         return $report;
     }
