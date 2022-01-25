@@ -26,29 +26,29 @@ use Throwable;
 
 class Ignition
 {
-    protected Flare $flare;
+    protected /*Flare */$flare;
 
-    protected bool $shouldDisplayException = true;
+    protected /*bool */$shouldDisplayException = true;
 
-    protected string $flareApiKey = '';
+    protected /*string */$flareApiKey = '';
 
-    protected string $applicationPath = '';
+    protected /*string */$applicationPath = '';
 
     /** @var array<int, FlareMiddleware> */
-    protected array $middleware = [];
+    protected /*array */$middleware = [];
 
-    protected IgnitionConfig $ignitionConfig;
+    protected /*IgnitionConfig */$ignitionConfig;
 
-    protected ContextProviderDetector $contextProviderDetector;
+    protected /*ContextProviderDetector */$contextProviderDetector;
 
-    protected SolutionProviderRepositoryContract $solutionProviderRepository;
+    protected /*SolutionProviderRepositoryContract */$solutionProviderRepository;
 
-    protected ?bool $inProductionEnvironment = null;
+    protected /*?bool */$inProductionEnvironment = null;
 
-    protected ?string $solutionTransformerClass = null;
+    protected /*?string */$solutionTransformerClass = null;
 
     /** @var ArrayObject<int, callable(Throwable): mixed> */
-    protected ArrayObject $documentationLinkResolvers;
+    protected /*ArrayObject */$documentationLinkResolvers;
 
     public static function make()/*: self*/
     {

@@ -4,14 +4,14 @@ namespace Spatie\FlareClient\Concerns;
 
 trait HasContext
 {
-    protected ?string $messageLevel = null;
+    protected /*?string */$messageLevel = null;
 
-    protected ?string $stage = null;
+    protected /*?string */$stage = null;
 
     /**
      * @var array<string, mixed>
      */
-    protected array $userProvidedContext = [];
+    protected /*array */$userProvidedContext = [];
 
     public function stage(/*?string */$stage = null)/*: self*/
     {

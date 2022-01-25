@@ -8,7 +8,7 @@ use Spatie\LaravelIgnition\Recorders\LogRecorder\LogRecorder;
 
 class AddLogs implements FlareMiddleware
 {
-    protected LogRecorder $logRecorder;
+    protected /*LogRecorder */$logRecorder;
 
     public function __construct()
     {

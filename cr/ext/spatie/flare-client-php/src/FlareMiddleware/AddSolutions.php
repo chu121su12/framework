@@ -8,7 +8,7 @@ use Spatie\Ignition\Contracts\SolutionProviderRepository;
 
 class AddSolutions implements FlareMiddleware
 {
-    protected SolutionProviderRepository $solutionProviderRepository;
+    protected /*SolutionProviderRepository */$solutionProviderRepository;
 
     public function __construct(SolutionProviderRepository $solutionProviderRepository)
     {

@@ -25,20 +25,20 @@ class Flare
 {
     use HasContext;
 
-    protected Client $client;
+    protected /*Client */$client;
 
-    protected Api $api;
+    protected /*Api */$api;
 
     /** @var array<int, FlareMiddleware|class-string<FlareMiddleware>> */
-    protected array $middleware = [];
+    protected /*array */$middleware = [];
 
-    protected GlowRecorder $recorder;
+    protected /*GlowRecorder */$recorder;
 
-    protected ?string $applicationPath = null;
+    protected /*?string */$applicationPath = null;
 
-    protected ContextProviderDetector $contextDetector;
+    protected /*ContextProviderDetector */$contextDetector;
 
-    protected ?Closure $previousExceptionHandler = null;
+    protected /*?Closure */$previousExceptionHandler = null;
 
     /** @var null|callable */
     protected $previousErrorHandler = null;
@@ -46,16 +46,16 @@ class Flare
     /** @var null|callable */
     protected $determineVersionCallable = null;
 
-    protected ?int $reportErrorLevels = null;
+    protected /*?int */$reportErrorLevels = null;
 
     /** @var null|callable */
     protected $filterExceptionsCallable = null;
 
-    protected ?string $stage = null;
+    protected /*?string */$stage = null;
 
-    protected ?string $requestId = null;
+    protected /*?string */$requestId = null;
 
-    protected ?Container $container = null;
+    protected /*?Container */$container = null;
 
     public static function make(
         /*string */$apiKey = null,

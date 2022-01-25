@@ -6,7 +6,7 @@ use Spatie\Ignition\Contracts\Solution;
 
 class SuggestImportSolution implements Solution
 {
-    protected string $class;
+    protected /*string */$class;
 
     public function __construct(/*string */$class = '')
     {

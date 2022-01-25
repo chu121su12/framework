@@ -6,11 +6,11 @@ use Spatie\Ignition\Contracts\Solution;
 
 class SuggestCorrectVariableNameSolution implements Solution
 {
-    protected ?string $variableName;
+    protected /*?string */$variableName;
 
-    protected ?string $viewFile;
+    protected /*?string */$viewFile;
 
-    protected ?string $suggested;
+    protected /*?string */$suggested;
 
     public function __construct(/*string */$variableName = null, /*string */$viewFile = null, /*string */$suggested = null)
     {

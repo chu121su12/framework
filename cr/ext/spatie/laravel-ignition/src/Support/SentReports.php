@@ -8,7 +8,7 @@ use Spatie\FlareClient\Report;
 class SentReports
 {
     /** @var array<int, Report> */
-    protected array $reports = [];
+    protected /*array */$reports = [];
 
     public function add(Report $report)/*: self*/
     {

@@ -9,11 +9,11 @@ use Spatie\FlareClient\Http\Exceptions\NotFound;
 
 class Client
 {
-    protected ?string $apiToken;
+    protected /*?string */$apiToken;
 
-    protected ?string $baseUrl;
+    protected /*?string */$baseUrl;
 
-    protected int $timeout;
+    protected /*int */$timeout;
 
     public function __construct(
         /*?string */$apiToken = null,

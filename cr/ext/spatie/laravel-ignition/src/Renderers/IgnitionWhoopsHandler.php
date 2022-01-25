@@ -9,9 +9,9 @@ use Whoops\Handler\Handler;
 
 class IgnitionWhoopsHandler extends Handler
 {
-    protected ErrorPageRenderer $errorPageHandler;
+    protected /*ErrorPageRenderer */$errorPageHandler;
 
-    protected Throwable $exception;
+    protected /*Throwable */$exception;
 
     public function __construct(ErrorPageRenderer $errorPageHandler)
     {

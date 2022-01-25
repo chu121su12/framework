@@ -7,7 +7,7 @@ use Spatie\Ignition\Contracts\Solution;
 
 class ViewExceptionWithSolution extends ViewException implements ProvidesSolution
 {
-    protected Solution $solution;
+    protected /*Solution */$solution;
 
     public function setSolution(Solution $solution)/*: void*/
     {

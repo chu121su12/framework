@@ -8,13 +8,13 @@ use Illuminate\Database\Events\QueryExecuted;
 class QueryRecorder
 {
     /** @var \Spatie\LaravelIgnition\Recorders\QueryRecorder\Query[] */
-    protected array $queries = [];
+    protected /*array */$queries = [];
 
-    protected Application $app;
+    protected /*Application */$app;
 
-    protected bool $reportBindings = true;
+    protected /*bool */$reportBindings = true;
 
-    protected ?int $maxQueries;
+    protected /*?int */$maxQueries;
 
     public function __construct(
         Application $app,

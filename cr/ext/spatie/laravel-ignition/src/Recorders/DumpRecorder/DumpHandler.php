@@ -6,7 +6,7 @@ use Symfony\Component\VarDumper\Cloner\VarCloner;
 
 class DumpHandler
 {
-    protected DumpRecorder $dumpRecorder;
+    protected /*DumpRecorder */$dumpRecorder;
 
     public function __construct(DumpRecorder $dumpRecorder)
     {

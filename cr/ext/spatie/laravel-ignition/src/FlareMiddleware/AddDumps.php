@@ -9,7 +9,7 @@ use Spatie\LaravelIgnition\Recorders\DumpRecorder\DumpRecorder;
 
 class AddDumps implements FlareMiddleware
 {
-    protected DumpRecorder $dumpRecorder;
+    protected /*DumpRecorder */$dumpRecorder;
 
     public function __construct()
     {

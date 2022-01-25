@@ -8,7 +8,7 @@ use Spatie\LaravelIgnition\Recorders\JobRecorder\JobRecorder;
 
 class AddJobs implements FlareMiddleware
 {
-    protected JobRecorder $jobRecorder;
+    protected /*JobRecorder */$jobRecorder;
 
     public function __construct()
     {

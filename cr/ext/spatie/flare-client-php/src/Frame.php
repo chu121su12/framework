@@ -6,7 +6,7 @@ use Spatie\Backtrace\Frame as SpatieFrame;
 
 class Frame
 {
-    protected SpatieFrame $frame;
+    protected /*SpatieFrame */$frame;
 
     public static function fromSpatieFrame(SpatieFrame $frame)/*: self*/
     {

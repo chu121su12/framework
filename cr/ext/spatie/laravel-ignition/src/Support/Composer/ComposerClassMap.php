@@ -11,9 +11,9 @@ use Symfony\Component\Finder\SplFileInfo;
 class ComposerClassMap
 {
     /** @var \Spatie\LaravelIgnition\Support\Composer\Composer */
-    protected object $composer;
+    protected /*object */$composer;
 
-    protected string $basePath;
+    protected /*string */$basePath;
 
     public function __construct(/*?string */$autoloaderPath = null = null)
     {

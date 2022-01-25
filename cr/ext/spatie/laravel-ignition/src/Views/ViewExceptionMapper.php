@@ -17,9 +17,9 @@ use Throwable;
 
 class ViewExceptionMapper
 {
-    protected CompilerEngine $compilerEngine;
-    protected BladeSourceMapCompiler $bladeSourceMapCompiler;
-    protected array $knownPaths;
+    protected /*CompilerEngine */$compilerEngine;
+    protected /*BladeSourceMapCompiler */$bladeSourceMapCompiler;
+    protected /*array */$knownPaths;
 
     public function __construct(BladeSourceMapCompiler $bladeSourceMapCompiler)
     {

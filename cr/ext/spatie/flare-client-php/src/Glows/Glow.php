@@ -9,14 +9,14 @@ class Glow
 {
     use UsesTime;
 
-    protected string $name;
+    protected /*string */$name;
 
     /** @var array<int, mixed> */
-    protected array $metaData = [];
+    protected /*array */$metaData = [];
 
-    protected string $messageLevel;
+    protected /*string */$messageLevel;
 
-    protected float $microtime;
+    protected /*float */$microtime;
 
     /**
      * @param string $name

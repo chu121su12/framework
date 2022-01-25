@@ -9,11 +9,11 @@ use Throwable;
 class LogRecorder
 {
     /** @var \Spatie\LaravelIgnition\Recorders\LogRecorder\LogMessage[] */
-    protected array $logMessages = [];
+    protected /*array */$logMessages = [];
 
-    protected Application $app;
+    protected /*Application */$app;
 
-    protected ?int $maxLogs;
+    protected /*?int */$maxLogs;
 
     public function __construct(Application $app, /*?int */$maxLogs = null = null)
     {

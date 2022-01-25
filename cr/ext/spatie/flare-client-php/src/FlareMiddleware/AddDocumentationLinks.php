@@ -8,7 +8,7 @@ use Spatie\FlareClient\Report;
 
 class AddDocumentationLinks implements FlareMiddleware
 {
-    protected ArrayObject $documentationLinkResolvers;
+    protected /*ArrayObject */$documentationLinkResolvers;
 
     public function __construct(ArrayObject $documentationLinkResolvers)
     {

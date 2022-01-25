@@ -7,7 +7,7 @@ use Spatie\Ignition\Contracts\Solution;
 
 class SolutionTransformer implements Arrayable
 {
-    protected Solution $solution;
+    protected /*Solution */$solution;
 
     public function __construct(Solution $solution)
     {

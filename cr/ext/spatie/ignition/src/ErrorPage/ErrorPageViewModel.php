@@ -11,11 +11,11 @@ use Throwable;
 
 class ErrorPageViewModel
 {
-    protected /*?Throwable */$throwable;
-    protected /*IgnitionConfig */$ignitionConfig;
-    protected /*Report */$report;
-    protected /*array */$solutions;
-    protected /*?string */$solutionTransformerClass;
+    protected /*/*?Throwable */*/$throwable;
+    protected /*/*IgnitionConfig */*/$ignitionConfig;
+    protected /*/*Report */*/$report;
+    protected /*/*array */*/$solutions;
+    protected /*/*?string */*/$solutionTransformerClass;
 
     /**
      * @param \Throwable|null $throwable

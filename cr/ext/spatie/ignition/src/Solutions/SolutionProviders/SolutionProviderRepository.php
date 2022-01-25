@@ -12,7 +12,7 @@ use Throwable;
 class SolutionProviderRepository implements SolutionProviderRepositoryContract
 {
     /** @var Collection<int, class-string<HasSolutionsForThrowable>> */
-    protected Collection $solutionProviders;
+    protected /*Collection */$solutionProviders;
 
     /** @param array<int, class-string<HasSolutionsForThrowable>> $solutionProviders */
     public function __construct(array $solutionProviders = [])

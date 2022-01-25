@@ -7,7 +7,7 @@ use Spatie\FlareClient\Time\Time;
 
 trait UsesTime
 {
-    public static Time $time;
+    public static /*Time */$time;
 
     public static function useTime(Time $time)/*: void*/
     {

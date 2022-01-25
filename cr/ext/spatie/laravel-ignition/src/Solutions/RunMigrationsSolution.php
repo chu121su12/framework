@@ -7,7 +7,7 @@ use Spatie\Ignition\Contracts\RunnableSolution;
 
 class RunMigrationsSolution implements RunnableSolution
 {
-    protected string $customTitle;
+    protected /*string */$customTitle;
 
     public function __construct(/*string */$customTitle = '')
     {

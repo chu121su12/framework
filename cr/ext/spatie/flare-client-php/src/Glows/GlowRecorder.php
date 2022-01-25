@@ -7,7 +7,7 @@ class GlowRecorder
     const GLOW_LIMIT = 30;
 
     /** @var array<int, Glow> */
-    protected array $glows = [];
+    protected /*array */$glows = [];
 
     public function record(Glow $glow)/*: void*/
     {

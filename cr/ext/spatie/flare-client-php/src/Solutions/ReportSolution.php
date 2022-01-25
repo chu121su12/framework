@@ -7,7 +7,7 @@ use Spatie\Ignition\Contracts\Solution as SolutionContract;
 
 class ReportSolution
 {
-    protected SolutionContract $solution;
+    protected /*SolutionContract */$solution;
 
     public function __construct(SolutionContract $solution)
     {

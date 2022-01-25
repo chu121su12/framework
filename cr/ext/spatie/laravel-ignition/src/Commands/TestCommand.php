@@ -16,7 +16,7 @@ class TestCommand extends Command
 
     protected $description = 'Send a test notification to Flare';
 
-    protected Repository $config;
+    protected /*Repository */$config;
 
     public function handle(Repository $config)/*: void*/
     {

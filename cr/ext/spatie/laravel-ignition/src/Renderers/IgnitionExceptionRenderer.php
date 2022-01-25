@@ -6,7 +6,7 @@ use Illuminate\Contracts\Foundation\ExceptionRenderer;
 
 class IgnitionExceptionRenderer implements ExceptionRenderer
 {
-    protected ErrorPageRenderer $errorPageHandler;
+    protected /*ErrorPageRenderer */$errorPageHandler;
 
     public function __construct(ErrorPageRenderer $errorPageHandler)
     {

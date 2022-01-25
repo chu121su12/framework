@@ -8,12 +8,12 @@ use Spatie\FlareClient\Truncation\ReportTrimmer;
 
 class Api
 {
-    protected Client $client;
+    protected /*Client */$client;
 
-    protected bool $sendReportsImmediately = false;
+    protected /*bool */$sendReportsImmediately = false;
 
     /** @var array<int, Report> */
-    protected array $queue = [];
+    protected /*array */$queue = [];
 
     public function __construct(Client $client)
     {

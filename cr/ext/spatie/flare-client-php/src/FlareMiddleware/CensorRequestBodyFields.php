@@ -6,7 +6,7 @@ use Spatie\FlareClient\Report;
 
 class CensorRequestBodyFields implements FlareMiddleware
 {
-    protected array $fieldNames = [];
+    protected /*array */$fieldNames = [];
 
     public function __construct(array $fieldNames)
     {

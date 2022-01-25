@@ -11,11 +11,11 @@ use Throwable;
 
 class FlareLogHandler extends AbstractProcessingHandler
 {
-    protected Flare $flare;
+    protected /*Flare */$flare;
 
-    protected SentReports $sentReports;
+    protected /*SentReports */$sentReports;
 
-    protected int $minimumReportLogLevel = Logger::ERROR;
+    protected /*int */$minimumReportLogLevel = Logger::ERROR;
 
     public function __construct(Flare $flare, SentReports $sentReports, $level = Logger::DEBUG, $bubble = true)
     {

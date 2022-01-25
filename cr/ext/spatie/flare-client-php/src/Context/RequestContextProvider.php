@@ -11,7 +11,7 @@ use Throwable;
 
 class RequestContextProvider implements ContextProvider
 {
-    protected ?Request $request;
+    protected /*?Request */$request;
 
     public function __construct(Request $request = null)
     {

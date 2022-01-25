@@ -12,11 +12,11 @@ use Symfony\Component\VarDumper\VarDumper;
 class DumpRecorder
 {
     /** @var array<array<int,mixed>> */
-    protected array $dumps = [];
+    protected /*array */$dumps = [];
 
-    protected Application $app;
+    protected /*Application */$app;
 
-    protected static bool $registeredHandler = false;
+    protected static /*bool */$registeredHandler = false;
 
     public function __construct(Application $app)
     {

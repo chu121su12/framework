@@ -7,7 +7,7 @@ class ConsoleContextProvider implements ContextProvider
     /**
      * @var array<string, mixed>
      */
-    protected array $arguments = [];
+    protected /*array */$arguments = [];
 
     /**
      * @param array<string, mixed> $arguments

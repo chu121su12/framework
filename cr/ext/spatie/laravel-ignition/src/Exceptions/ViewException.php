@@ -9,9 +9,9 @@ use Spatie\LaravelIgnition\Recorders\DumpRecorder\HtmlDumper;
 class ViewException extends ErrorException implements ProvidesFlareContext
 {
     /** @var array<string, mixed> */
-    protected array $viewData = [];
+    protected /*array */$viewData = [];
 
-    protected string $view = '';
+    protected /*string */$view = '';
 
     /**
      * @param array<string, mixed> $data

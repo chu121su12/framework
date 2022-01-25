@@ -19,48 +19,48 @@ class Report
     use UsesTime;
     use HasContext;
 
-    protected Backtrace $stacktrace;
+    protected /*Backtrace */$stacktrace;
 
-    protected string $exceptionClass = '';
+    protected /*string */$exceptionClass = '';
 
-    protected string $message = '';
+    protected /*string */$message = '';
 
     /** @var array<int, array<string, mixed>> */
-    protected array $glows = [];
+    protected /*array */$glows = [];
 
     /** @var array<int, array<int|string, mixed>> */
-    protected array $solutions = [];
+    protected /*array */$solutions = [];
 
     /** @var array<int, string> */
-    public array $documentationLinks = [];
+    public /*array */$documentationLinks = [];
 
-    protected ContextProvider $context;
+    protected /*ContextProvider */$context;
 
-    protected ?string $applicationPath = null;
+    protected /*?string */$applicationPath = null;
 
-    protected ?string $applicationVersion = null;
-
-    /** @var array<int|string, mixed> */
-    protected array $userProvidedContext = [];
+    protected /*?string */$applicationVersion = null;
 
     /** @var array<int|string, mixed> */
-    protected array $exceptionContext = [];
+    protected /*array */$userProvidedContext = [];
 
-    protected ?Throwable $throwable = null;
+    /** @var array<int|string, mixed> */
+    protected /*array */$exceptionContext = [];
 
-    protected string $notifierName = 'Flare Client';
+    protected /*?Throwable */$throwable = null;
 
-    protected ?string $languageVersion = null;
+    protected /*string */$notifierName = 'Flare Client';
 
-    protected ?string $frameworkVersion = null;
+    protected /*?string */$languageVersion = null;
 
-    protected ?int $openFrameIndex = null;
+    protected /*?string */$frameworkVersion = null;
 
-    protected string $trackingUuid;
+    protected /*?int */$openFrameIndex = null;
 
-    protected ?View $view;
+    protected /*string */$trackingUuid;
 
-    public static ?string $fakeTrackingUuid = null;
+    protected /*?View */$view;
+
+    public static /*?string */$fakeTrackingUuid = null;
 
     public static function createForThrowable(
         /*Throwable */$throwable,

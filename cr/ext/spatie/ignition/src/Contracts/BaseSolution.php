@@ -4,12 +4,12 @@ namespace Spatie\Ignition\Contracts;
 
 class BaseSolution implements Solution
 {
-    protected string $title;
+    protected /*string */$title;
 
-    protected string $description = '';
+    protected /*string */$description = '';
 
     /** @var array<string, string> */
-    protected array $links = [];
+    protected /*array */$links = [];
 
     public static function create(/*string */$title = '')/*: static*/
     {

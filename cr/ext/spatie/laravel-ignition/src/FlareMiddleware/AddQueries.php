@@ -7,7 +7,7 @@ use Spatie\LaravelIgnition\Recorders\QueryRecorder\QueryRecorder;
 
 class AddQueries
 {
-    protected QueryRecorder $queryRecorder;
+    protected /*QueryRecorder */$queryRecorder;
 
     public function __construct()
     {

@@ -10,7 +10,7 @@ use Spatie\FlareClient\Report;
 
 class AddGlows implements FlareMiddleware
 {
-    protected GlowRecorder $recorder;
+    protected /*GlowRecorder */$recorder;
 
     public function __construct(GlowRecorder $recorder)
     {

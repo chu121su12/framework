@@ -12,9 +12,9 @@ use Throwable;
 
 class UndefinedViewVariableSolutionProvider implements HasSolutionsForThrowable
 {
-    protected string $variableName;
+    protected /*string */$variableName;
 
-    protected string $viewFile;
+    protected /*string */$viewFile;
 
     public function canSolve(/*Throwable */$throwable)/*: bool*/
     {

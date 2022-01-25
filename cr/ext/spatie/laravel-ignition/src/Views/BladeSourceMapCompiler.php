@@ -7,7 +7,7 @@ use Throwable;
 
 class BladeSourceMapCompiler
 {
-    protected BladeCompiler $bladeCompiler;
+    protected /*BladeCompiler */$bladeCompiler;
 
     public function __construct()
     {

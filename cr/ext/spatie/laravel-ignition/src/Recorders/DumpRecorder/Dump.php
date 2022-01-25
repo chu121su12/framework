@@ -4,13 +4,13 @@ namespace Spatie\LaravelIgnition\Recorders\DumpRecorder;
 
 class Dump
 {
-    protected string $htmlDump;
+    protected /*string */$htmlDump;
 
-    protected ?string $file;
+    protected /*?string */$file;
 
-    protected ?int $lineNumber;
+    protected /*?int */$lineNumber;
 
-    protected float $microtime;
+    protected /*float */$microtime;
 
     public function __construct(/*string */$htmlDump, /*?string */$file = null, /*?int */$lineNumber = null, /*?float */$microtime = null = null)
     {

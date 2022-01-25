@@ -8,7 +8,7 @@ use Symfony\Component\Process\Process;
 
 class AddGitInformation
 {
-    protected ?string $baseDir = null;
+    protected /*?string */$baseDir = null;
 
     public function handle(Report $report, Closure $next)
     {

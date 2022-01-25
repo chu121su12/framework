@@ -4,11 +4,11 @@ namespace Spatie\FlareClient\Http;
 
 class Response
 {
-    protected mixed $headers;
+    protected /*mixed */$headers;
 
-    protected mixed $body;
+    protected /*mixed */$body;
 
-    protected mixed $error;
+    protected /*mixed */$error;
 
     public function __construct(/*mixed */$headers, /*mixed */$body, /*mixed */$error)
     {

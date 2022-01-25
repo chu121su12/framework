@@ -7,10 +7,10 @@ use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
 class View
 {
-    protected string $file;
+    protected /*string */$file;
 
     /** @var array<string, mixed> */
-    protected array $data = [];
+    protected /*array */$data = [];
 
     /**
      * @param string $file

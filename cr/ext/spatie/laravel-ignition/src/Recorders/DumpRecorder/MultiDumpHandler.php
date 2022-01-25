@@ -5,7 +5,7 @@ namespace Spatie\LaravelIgnition\Recorders\DumpRecorder;
 class MultiDumpHandler
 {
     /** @var array<int, callable|null> */
-    protected array $handlers = [];
+    protected /*array */$handlers = [];
 
     public function dump(/*mixed */$value)/*: void*/
     {

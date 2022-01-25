@@ -8,9 +8,9 @@ use Spatie\Ignition\Contracts\RunnableSolution;
 
 class MakeViewVariableOptionalSolution implements RunnableSolution
 {
-    protected ?string $variableName;
+    protected /*?string */$variableName;
 
-    protected ?string $viewFile;
+    protected /*?string */$viewFile;
 
     public function __construct(/*string */$variableName = null, /*string */$viewFile = null)
     {

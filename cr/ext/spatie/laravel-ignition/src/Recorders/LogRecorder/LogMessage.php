@@ -6,14 +6,14 @@ use Illuminate\Log\Events\MessageLogged;
 
 class LogMessage
 {
-    protected ?string $message;
+    protected /*?string */$message;
 
-    protected string $level;
+    protected /*string */$level;
 
     /** @var array<string, string> */
-    protected array $context = [];
+    protected /*array */$context = [];
 
-    protected ?float $microtime;
+    protected /*?float */$microtime;
 
     /**
      * @param string|null $message
