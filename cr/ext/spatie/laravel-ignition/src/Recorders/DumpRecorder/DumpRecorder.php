@@ -32,6 +32,8 @@ class DumpRecorder
         if (! self::$registeredHandler) {
             static::$registeredHandler = true;
 
+            try {
+
             $this->ensureOriginalHandlerExists();
 
             $originalHandler = VarDumper::setHandler(function ($dumpedVariable) use ($multiDumpHandler) { return $multiDumpHandler->dump($dumpedVariable); });
@@ -39,6 +41,24 @@ class DumpRecorder
             $multiDumpHandler->addHandler($originalHandler);
 
             $multiDumpHandler->addHandler(function ($var) { return (new DumpHandler($this))->dump($var); });
+
+            } catch (\ReflectionException $e) {
+
+            $previousHandler = VarDumper::setHandler(function ($var) use ($multiDumpHandler) {
+                return $multiDumpHandler->dump($var);
+            });
+
+            if ($previousHandler) {
+                $multiDumpHandler->addHandler($previousHandler);
+            } else {
+                $multiDumpHandler->addHandler($this->getDefaultHandler());
+            }
+
+            $multiDumpHandler->addHandler(function ($var) {
+                return (new DumpHandler($this))->dump($var);
+            });
+
+            }
         }
 
         return $this;
