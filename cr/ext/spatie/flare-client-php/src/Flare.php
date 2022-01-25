@@ -252,8 +252,10 @@ class Flare
         return $this;
     }
 
-    public function handleException(Throwable $throwable)/*: void*/
+    public function handleException(/*Throwable */$throwable)/*: void*/
     {
+        backport_type_throwable($throwable);
+
         $this->report($throwable);
 
         if ($this->previousExceptionHandler) {
@@ -298,8 +300,10 @@ class Flare
         return $this;
     }
 
-    public function report(Throwable $throwable, callable $callback = null)/*: ?Report*/
+    public function report(/*Throwable */$throwable, callable $callback = null)/*: ?Report*/
     {
+        backport_type_throwable($throwable);
+
         if (! $this->shouldSendReport($throwable)) {
             return null;
         }
@@ -315,8 +319,10 @@ class Flare
         return $report;
     }
 
-    protected function shouldSendReport(Throwable $throwable)/*: bool*/
+    protected function shouldSendReport(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         if ($this->reportErrorLevels && $throwable instanceof Error) {
             return (bool)($this->reportErrorLevels & $throwable->getCode());
         }
@@ -347,8 +353,10 @@ class Flare
         $this->sendReportToApi($report);
     }
 
-    public function sendTestReport(Throwable $throwable)/*: void*/
+    public function sendTestReport(/*Throwable */$throwable)/*: void*/
     {
+        backport_type_throwable($throwable);
+
         $this->api->sendTestReport($this->createReport($throwable));
     }
 
@@ -397,8 +405,10 @@ class Flare
         return $this;
     }
 
-    public function createReport(Throwable $throwable)/*: Report*/
+    public function createReport(/*Throwable */$throwable)/*: Report*/
     {
+        backport_type_throwable($throwable);
+
         $report = Report::createForThrowable(
             $throwable,
             $this->contextDetector->detectCurrentContext(),

@@ -275,8 +275,10 @@ class Ignition
         throw new ErrorException($message, 0, $level, $file, $line);
     }
 
-    public function handleException(Throwable $throwable)/*: Report*/
+    public function handleException(/*Throwable */$throwable)/*: Report*/
     {
+        backport_type_throwable($throwable);
+
         $this->setUpFlare();
 
         $report = $this->flare->createReport($throwable);
@@ -321,8 +323,10 @@ class Ignition
         return $this;
     }
 
-    public function renderException(Throwable $throwable, Report $report)/*: void*/
+    public function renderException(/*Throwable */$throwable, Report $report)/*: void*/
     {
+        backport_type_throwable($throwable);
+
         $viewModel = new ErrorPageViewModel(
             $throwable,
             $this->ignitionConfig,

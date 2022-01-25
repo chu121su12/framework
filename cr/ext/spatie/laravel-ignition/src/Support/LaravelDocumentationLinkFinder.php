@@ -9,8 +9,10 @@ use Throwable;
 
 class LaravelDocumentationLinkFinder
 {
-    public function findLinkForThrowable(Throwable $throwable)/*: ?string*/
+    public function findLinkForThrowable(/*Throwable */$throwable)/*: ?string*/
     {
+        backport_type_throwable($throwable);
+
         if ($throwable instanceof ViewException) {
             $throwable = $throwable->getPrevious();
         }
@@ -42,8 +44,10 @@ class LaravelDocumentationLinkFinder
         };
     }
 
-    protected function getType(?Throwable $throwable)/*: ?string*/
+    protected function getType(/*?Throwable */$throwable = null)/*: ?string*/
     {
+        backport_type_throwable($throwable, null);
+
         if (! $throwable) {
             return null;
         }

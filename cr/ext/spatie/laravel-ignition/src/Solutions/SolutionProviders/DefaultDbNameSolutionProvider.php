@@ -11,8 +11,10 @@ class DefaultDbNameSolutionProvider implements HasSolutionsForThrowable
 {
     const MYSQL_UNKNOWN_DATABASE_CODE = 1049;
 
-    public function canSolve(Throwable $throwable)/*: bool*/
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         if (! $throwable instanceof QueryException) {
             return false;
         }
@@ -28,8 +30,10 @@ class DefaultDbNameSolutionProvider implements HasSolutionsForThrowable
         return true;
     }
 
-    public function getSolutions(Throwable $throwable)/*: array*/
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         return [new SuggestUsingCorrectDbNameSolution()];
     }
 }

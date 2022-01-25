@@ -57,8 +57,10 @@ class ViewExceptionMapper
         return $exception;
     }
 
-    protected function createException(Throwable $baseException)/*: IgnitionViewException*/
+    protected function createException(/*Throwable */$baseException)/*: IgnitionViewException*/
     {
+        backport_type_throwable($baseException);
+
         $viewExceptionClass = $baseException instanceof ProvidesSolution
             ? ViewExceptionWithSolution::class
             : IgnitionViewException::class;
@@ -98,8 +100,10 @@ class ViewExceptionMapper
      * Look at the previous exceptions to find the original exception.
      * This is usually the first Exception that is not a ViewException.
      */
-    protected function getRealException(Throwable $exception)/*: Throwable*/
+    protected function getRealException(/*Throwable */$exception)/*: Throwable*/
     {
+        backport_type_throwable($exception);
+
         $rootException = $exception->getPrevious() ?? $exception;
 
         while ($rootException instanceof ViewException && $rootException->getPrevious()) {
@@ -143,8 +147,10 @@ class ViewExceptionMapper
         return $this->bladeSourceMapCompiler->detectLineNumber($view, $compiledLineNumber);
     }
 
-    protected function getViewData(Throwable $exception)/*: array*/
+    protected function getViewData(/*Throwable */$exception)/*: array*/
     {
+        backport_type_throwable($exception);
+
         foreach ($exception->getTrace() as $frame) {
             if (Arr::get($frame, 'class') === PhpEngine::class) {
                 $data = Arr::get($frame, 'args.1', []);

@@ -11,8 +11,10 @@ class IncorrectValetDbCredentialsSolutionProvider implements HasSolutionsForThro
 {
     const MYSQL_ACCESS_DENIED_CODE = 1045;
 
-    public function canSolve(Throwable $throwable)/*: bool*/
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         if (PHP_OS !== 'Darwin') {
             return false;
         }
@@ -40,8 +42,10 @@ class IncorrectValetDbCredentialsSolutionProvider implements HasSolutionsForThro
         return true;
     }
 
-    public function getSolutions(Throwable $throwable)/*: array*/
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         return [new UseDefaultValetDbCredentialsSolution()];
     }
 

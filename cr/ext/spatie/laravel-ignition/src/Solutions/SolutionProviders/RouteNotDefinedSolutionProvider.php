@@ -13,8 +13,10 @@ class RouteNotDefinedSolutionProvider implements HasSolutionsForThrowable
 {
     protected const REGEX = '/Route \[(.*)\] not defined/m';
 
-    public function canSolve(Throwable $throwable)/*: bool*/
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         if (! $throwable instanceof RouteNotFoundException) {
             return false;
         }
@@ -22,8 +24,10 @@ class RouteNotDefinedSolutionProvider implements HasSolutionsForThrowable
         return (bool)preg_match(self::REGEX, $throwable->getMessage(), $matches);
     }
 
-    public function getSolutions(Throwable $throwable)/*: array*/
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         preg_match(self::REGEX, $throwable->getMessage(), $matches);
 
         $missingRoute = $matches[1] ?? null;

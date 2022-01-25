@@ -101,7 +101,12 @@ class RequestContextProvider implements ContextProvider
 
         try {
             json_encode($session->all());
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             return [];
         }
 

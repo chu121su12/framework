@@ -10,13 +10,17 @@ use Throwable;
 
 class UndefinedLivewireMethodSolutionProvider implements HasSolutionsForThrowable
 {
-    public function canSolve(Throwable $throwable)/*: bool*/
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         return $throwable instanceof MethodNotFoundException;
     }
 
-    public function getSolutions(Throwable $throwable)/*: array*/
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         ['methodName' => $methodName, 'component' => $component] = $this->getMethodAndComponent($throwable);
 
         if ($methodName === null || $component === null) {
@@ -39,8 +43,10 @@ class UndefinedLivewireMethodSolutionProvider implements HasSolutionsForThrowabl
     }
 
     /** @return array<string, string|null> */
-    protected function getMethodAndComponent(Throwable $throwable)/*: array*/
+    protected function getMethodAndComponent(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         preg_match_all('/\[([\d\w\-_]*)\]/m', $throwable->getMessage(), $matches, PREG_SET_ORDER);
 
         return [

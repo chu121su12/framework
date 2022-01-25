@@ -17,8 +17,10 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
 {
     protected const REGEX = '/View \[(.*)\] not found/m';
 
-    public function canSolve(Throwable $throwable)/*: bool*/
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         if (! $throwable instanceof InvalidArgumentException && ! $throwable instanceof ViewException) {
             return false;
         }
@@ -26,8 +28,10 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
         return (bool)preg_match(self::REGEX, $throwable->getMessage(), $matches);
     }
 
-    public function getSolutions(Throwable $throwable)/*: array*/
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         preg_match(self::REGEX, $throwable->getMessage(), $matches);
 
         $missingView = $matches[1] ?? null;

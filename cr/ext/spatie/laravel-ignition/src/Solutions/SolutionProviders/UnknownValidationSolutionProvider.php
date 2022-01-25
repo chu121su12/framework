@@ -17,8 +17,10 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
 {
     protected const REGEX = '/Illuminate\\\\Validation\\\\Validator::(?P<method>validate(?!(Attribute|UsingCustomRule))[A-Z][a-zA-Z]+)/m';
 
-    public function canSolve(Throwable $throwable)/*: bool*/
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         if (! $throwable instanceof BadMethodCallException) {
             return false;
         }
@@ -26,8 +28,10 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
         return ! is_null($this->getMethodFromExceptionMessage($throwable->getMessage()));
     }
 
-    public function getSolutions(Throwable $throwable)/*: array*/
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         return [
             BaseSolution::create()
                 ->setSolutionTitle('Unknown Validation Rule')
@@ -35,8 +39,10 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function getSolutionDescription(Throwable $throwable)/*: string*/
+    protected function getSolutionDescription(/*Throwable */$throwable)/*: string*/
     {
+        backport_type_throwable($throwable);
+
         $method = (string)$this->getMethodFromExceptionMessage($throwable->getMessage());
 
         $possibleMethod = StringComparator::findSimilarText(

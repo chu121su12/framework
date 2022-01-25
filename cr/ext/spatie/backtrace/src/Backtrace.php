@@ -33,13 +33,17 @@ class Backtrace
         return new static();
     }
 
-    public static function createForThrowable(Throwable $throwable)/*: self*/
+    public static function createForThrowable(/*Throwable */$throwable)/*: self*/
     {
+        backport_type_throwable($throwable);
+
         return (new static())->forThrowable($throwable);
     }
 
-    protected function forThrowable(Throwable $throwable)/*: self*/
+    protected function forThrowable(/*Throwable */$throwable)/*: self*/
     {
+        backport_type_throwable($throwable);
+
         $this->throwable = $throwable;
 
         return $this;

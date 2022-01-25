@@ -37,8 +37,10 @@ class SolutionProviderRepository implements SolutionProviderRepositoryContract
         return $this;
     }
 
-    public function getSolutionsForThrowable(Throwable $throwable)/*: array*/
+    public function getSolutionsForThrowable(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         $solutions = [];
 
         if ($throwable instanceof Solution) {
@@ -68,14 +70,24 @@ class SolutionProviderRepository implements SolutionProviderRepositoryContract
             ->filter(function (HasSolutionsForThrowable $solutionProvider) use ($throwable) {
                 try {
                     return $solutionProvider->canSolve($throwable);
+                } catch (\Exception $e) {
+                } catch (\Error $e) {
                 } catch (Throwable $e) {
+                }
+
+                if (isset($e)) {
                     return false;
                 }
             })
             ->map(function (HasSolutionsForThrowable $solutionProvider) use ($throwable) {
                 try {
                     return $solutionProvider->getSolutions($throwable);
+                } catch (\Exception $e) {
+                } catch (\Error $e) {
                 } catch (Throwable $e) {
+                }
+
+                if (isset($e)) {
                     return [];
                 }
             })

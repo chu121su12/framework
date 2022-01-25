@@ -14,8 +14,10 @@ class TableNotFoundSolutionProvider implements HasSolutionsForThrowable
      */
     const MYSQL_BAD_TABLE_CODE = '42S02';
 
-    public function canSolve(Throwable $throwable)/*: bool*/
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         if (! $throwable instanceof QueryException) {
             return false;
         }
@@ -30,8 +32,10 @@ class TableNotFoundSolutionProvider implements HasSolutionsForThrowable
         return $code === static::MYSQL_BAD_TABLE_CODE;
     }
 
-    public function getSolutions(Throwable $throwable)/*: array*/
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         return [new RunMigrationsSolution('A table was not found')];
     }
 }

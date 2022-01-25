@@ -31,8 +31,10 @@ class AddDocumentationLinks implements FlareMiddleware
     }
 
     /** @return array<int, string> */
-    protected function getLinks(\Throwable $throwable)/*: array*/
+    protected function getLinks(/*\Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         $allLinks = [];
 
         foreach ($this->documentationLinkResolvers as $resolver) {

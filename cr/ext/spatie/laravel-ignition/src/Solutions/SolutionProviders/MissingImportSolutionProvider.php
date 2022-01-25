@@ -13,8 +13,10 @@ class MissingImportSolutionProvider implements HasSolutionsForThrowable
 
     protected ComposerClassMap $composerClassMap;
 
-    public function canSolve(Throwable $throwable)/*: bool*/
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         $pattern = '/Class \'([^\s]+)\' not found/m';
 
         if (! preg_match($pattern, $throwable->getMessage(), $matches)) {
@@ -35,8 +37,10 @@ class MissingImportSolutionProvider implements HasSolutionsForThrowable
      *
      * @return array<int, SuggestImportSolution>
      */
-    public function getSolutions(Throwable $throwable)/*: array*/
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         if (is_null($this->foundClass)) {
             return [];
         }

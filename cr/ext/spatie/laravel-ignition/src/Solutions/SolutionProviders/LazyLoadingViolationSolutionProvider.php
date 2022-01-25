@@ -10,8 +10,10 @@ use Throwable;
 
 class LazyLoadingViolationSolutionProvider implements HasSolutionsForThrowable
 {
-    public function canSolve(Throwable $throwable)/*: bool*/
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         if ($throwable instanceof LazyLoadingViolationException) {
             return true;
         }
@@ -23,8 +25,10 @@ class LazyLoadingViolationSolutionProvider implements HasSolutionsForThrowable
         return $previous instanceof LazyLoadingViolationException;
     }
 
-    public function getSolutions(Throwable $throwable)/*: array*/
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         $majorVersion = LaravelVersion::major();
 
         return [BaseSolution::create(

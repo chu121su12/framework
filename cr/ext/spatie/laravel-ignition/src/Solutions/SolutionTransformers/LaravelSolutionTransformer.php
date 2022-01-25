@@ -49,7 +49,12 @@ class LaravelSolutionTransformer extends SolutionTransformer
     {
         try {
             return action(ExecuteSolutionController::class);
+        } catch (\Exception $exception) {
+        } catch (\Error $exception) {
         } catch (Throwable $exception) {
+        }
+
+        if (isset($exception)) {
             return null;
         }
     }

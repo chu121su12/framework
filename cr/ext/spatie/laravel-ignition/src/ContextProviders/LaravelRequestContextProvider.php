@@ -40,7 +40,12 @@ class LaravelRequestContextProvider extends RequestContextProvider
             if (method_exists($user, 'toArray')) {
                 return $user->toArray();
             }
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             return null;
         }
 

@@ -13,8 +13,10 @@ use Throwable;
 
 class ErrorPageRenderer
 {
-    public function render(Throwable $throwable)/*: void*/
+    public function render(/*Throwable */$throwable)/*: void*/
     {
+        backport_type_throwable($throwable);
+
         app(Ignition::class)
             ->resolveDocumentationLink(
                 fn (Throwable $throwable) => (new LaravelDocumentationLinkFinder())->findLinkForThrowable($throwable)

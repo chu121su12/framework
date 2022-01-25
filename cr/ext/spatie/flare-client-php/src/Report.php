@@ -63,11 +63,17 @@ class Report
     public static ?string $fakeTrackingUuid = null;
 
     public static function createForThrowable(
-        Throwable $throwable,
+        /*Throwable */$throwable,
         ContextProvider $context,
-        ?string $applicationPath = null,
-        ?string $version = null
-    )/*: self {*/
+        /*?string */$applicationPath = null,
+        /*?string */$version = null
+    )/*: self */{
+        backport_type_throwable($throwable);
+
+        $applicationPath = cast_to_string($applicationPath, null);
+
+        $version = cast_to_string($version, null);
+
         return (new self())
             ->setApplicationPath($applicationPath)
             ->throwable($throwable)
@@ -79,8 +85,10 @@ class Report
             ->setApplicationVersion($version);
     }
 
-    protected static function getClassForThrowable(Throwable $throwable)/*: string*/
+    protected static function getClassForThrowable(/*Throwable */$throwable)/*: string*/
     {
+        backport_type_throwable($throwable);
+
         /** @phpstan-ignore-next-line */
         if ($throwable::class === ViewException::class) {
 
@@ -138,8 +146,10 @@ class Report
         return $this->exceptionClass;
     }
 
-    public function throwable(Throwable $throwable)/*: self*/
+    public function throwable(/*Throwable */$throwable)/*: self*/
     {
+        backport_type_throwable($throwable);
+
         $this->throwable = $throwable;
 
         return $this;
@@ -304,8 +314,10 @@ class Report
         return array_merge_recursive_distinct($context, $this->userProvidedContext);
     }
 
-    protected function exceptionContext(Throwable $throwable)/*: self*/
+    protected function exceptionContext(/*Throwable */$throwable)/*: self*/
     {
+        backport_type_throwable($throwable);
+
         if ($throwable instanceof ProvidesFlareContext) {
             $this->exceptionContext = $throwable->context();
         }

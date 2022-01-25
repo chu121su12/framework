@@ -16,8 +16,10 @@ class UndefinedViewVariableSolutionProvider implements HasSolutionsForThrowable
 
     protected string $viewFile;
 
-    public function canSolve(Throwable $throwable)/*: bool*/
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         if (! $throwable instanceof ViewException) {
             return false;
         }
@@ -25,8 +27,10 @@ class UndefinedViewVariableSolutionProvider implements HasSolutionsForThrowable
         return $this->getNameAndView($throwable) !== null;
     }
 
-    public function getSolutions(Throwable $throwable)/*: array*/
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         $solutions = [];
 
         /** @phpstan-ignore-next-line  */
@@ -96,8 +100,10 @@ class UndefinedViewVariableSolutionProvider implements HasSolutionsForThrowable
      *
      * @return array<string, string>|null
      */
-    protected function getNameAndView(Throwable $throwable)/*: ?array*/
+    protected function getNameAndView(/*Throwable */$throwable)/*: ?array*/
     {
+        backport_type_throwable($throwable);
+
         $pattern = '/Undefined variable:? (.*?) \(View: (.*?)\)/';
 
         preg_match($pattern, $throwable->getMessage(), $matches);

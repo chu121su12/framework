@@ -10,13 +10,17 @@ use Throwable;
 
 class GenericLaravelExceptionSolutionProvider implements HasSolutionsForThrowable
 {
-    public function canSolve(Throwable $throwable)/*: bool*/
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         return ! is_null($this->getSolutionTexts($throwable));
     }
 
-    public function getSolutions(Throwable $throwable)/*: array*/
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         if (! $texts = $this->getSolutionTexts($throwable)) {
             return [];
         }
@@ -33,8 +37,10 @@ class GenericLaravelExceptionSolutionProvider implements HasSolutionsForThrowabl
      *
      * @return array<string, mixed>|null
      */
-    protected function getSolutionTexts(Throwable $throwable) : ?array
+    protected function getSolutionTexts(/*Throwable */$throwable) : ?array
     {
+        backport_type_throwable($throwable);
+
         foreach ($this->getSupportedExceptions() as $supportedClass => $texts) {
             if ($throwable instanceof $supportedClass) {
                 return $texts;

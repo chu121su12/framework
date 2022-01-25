@@ -15,8 +15,10 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
     protected const REGEX = '/([a-zA-Z\\\\]+)::\$([a-zA-Z]+)/m';
     protected const MINIMUM_SIMILARITY = 80;
 
-    public function canSolve(Throwable $throwable)/*: bool*/
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         if (! $throwable instanceof ErrorException) {
             return false;
         }
@@ -32,16 +34,20 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
         return true;
     }
 
-    public function getSolutions(Throwable $throwable)/*: array*/
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         return [
             BaseSolution::create('Unknown Property')
             ->setSolutionDescription($this->getSolutionDescription($throwable)),
         ];
     }
 
-    public function getSolutionDescription(Throwable $throwable)/*: string*/
+    public function getSolutionDescription(/*Throwable */$throwable)/*: string*/
     {
+        backport_type_throwable($throwable);
+
         if (! $this->canSolve($throwable) || ! $this->similarPropertyExists($throwable)) {
             return '';
         }
@@ -59,8 +65,10 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
         return "Did you mean {$class}::\${$possibleProperty->name} ?";
     }
 
-    protected function similarPropertyExists(Throwable $throwable)/*: bool*/
+    protected function similarPropertyExists(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         /** @phpstan-ignore-next-line  */
         extract($this->getClassAndPropertyFromExceptionMessage($throwable->getMessage()), EXTR_OVERWRITE);
 

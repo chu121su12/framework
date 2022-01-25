@@ -14,8 +14,10 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
 {
     protected const REGEX = '/([a-zA-Z\\\\]+)::([a-zA-Z]+)/m';
 
-    public function canSolve(Throwable $throwable)/*: bool*/
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         if (! $throwable instanceof BadMethodCallException) {
             return false;
         }
@@ -27,16 +29,20 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
         return true;
     }
 
-    public function getSolutions(Throwable $throwable)/*: array*/
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         return [
             BaseSolution::create('Bad Method Call')
             ->setSolutionDescription($this->getSolutionDescription($throwable)),
         ];
     }
 
-    public function getSolutionDescription(Throwable $throwable)/*: string*/
+    public function getSolutionDescription(/*Throwable */$throwable)/*: string*/
     {
+        backport_type_throwable($throwable);
+
         if (! $this->canSolve($throwable)) {
             return '';
         }

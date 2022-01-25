@@ -10,8 +10,10 @@ use Throwable;
 
 class MissingLivewireComponentSolutionProvider implements HasSolutionsForThrowable
 {
-    public function canSolve(Throwable $throwable)/*: bool*/
+    public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
+        backport_type_throwable($throwable);
+
         if (! $this->livewireIsInstalled()) {
             return false;
         }
@@ -23,8 +25,10 @@ class MissingLivewireComponentSolutionProvider implements HasSolutionsForThrowab
         return true;
     }
 
-    public function getSolutions(Throwable $throwable)/*: array*/
+    public function getSolutions(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         return [new LivewireDiscoverSolution('A Livewire component was not found')];
     }
 
