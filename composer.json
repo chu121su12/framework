@@ -45,9 +45,6 @@
     },
     "replace": {
         "asm89/stack-cors": "^2.0.5",
-        "facade/flare-client-php": "1.9.1",
-        "facade/ignition": "^2.17.4",
-        "facade/ignition-contracts": "^1.0.2",
         "fruitcake/laravel-cors": "^2.0.5",
         "inertiajs/inertia-laravel": "^0.5.12",
         "laravel/breeze": "^1.7.0",
@@ -155,8 +152,6 @@
             "cr/helpers/helpers.php",
             "cr/ext/inertiajs/inertia-laravel/helpers.php",
 
-            "cr/ext/facade/flare-client-php/src/helpers.php",
-            "cr/ext/facade/ignition/src/helpers.php",
             "cr/ext/symfony/deprecation-contracts/function.php",
             "cr/patch/symfony/polyfill/src/Apcu/bootstrap.php",
             "cr/patch/symfony/polyfill/src/bootstrap.php",
@@ -189,9 +184,6 @@
             "Asm89\\Stack\\": "cr/ext/asm89/stack-cors/src/",
             "Carbon\\": "cr/ext/nesbot/carbon/src/Carbon/",
             "Doctrine\\": "cr/patch/doctrine/doctrine/",
-            "Facade\\FlareClient\\": "cr/ext/facade/flare-client-php/src",
-            "Facade\\Ignition\\": "cr/ext/facade/ignition/src",
-            "Facade\\IgnitionContracts\\": "cr/ext/facade/ignition-contracts/src",
             "Fruitcake\\Cors\\": "cr/ext/fruitcake/laravel-cors/src/",
             "Illuminate\\": "src/Illuminate/",
             "Laravel\\Fortify\\": "cr/ext/laravel/fortify/src/",
@@ -252,7 +244,6 @@
                 "Laravel\\Jetstream\\JetstreamServiceProvider",
 
                 "Carbon\\Laravel\\ServiceProvider",
-                "Facade\\Ignition\\IgnitionServiceProvider",
                 "Fruitcake\\Cors\\CorsServiceProvider",
                 "Laravel\\Fortify\\FortifyServiceProvider",
                 "Laravel\\Octane\\OctaneServiceProvider",
@@ -262,7 +253,6 @@
                 "NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider"
             ],
             "aliases": {
-                "Flare": "Facade\\Ignition\\Facades\\Flare",
                 "Octane": "Laravel\\Octane\\Facades\\Octane"
             }
         }
