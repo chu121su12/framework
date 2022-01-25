@@ -156,7 +156,7 @@
             "cr/helpers/helpers.php",
             "cr/ext/inertiajs/inertia-laravel/helpers.php",
 
-            "cr/ext/spatie/flate-client-php/src/helpers.php",
+            "cr/ext/spatie/flare-client-php/src/helpers.php",
             "cr/ext/symfony/deprecation-contracts/function.php",
             "cr/patch/symfony/polyfill/src/Apcu/bootstrap.php",
             "cr/patch/symfony/polyfill/src/bootstrap.php",
@@ -201,7 +201,7 @@
             "League\\Flysystem\\": "cr/ext/league/flysystem/src/",
             "NunoMaduro\\Collision\\": "cr/ext/nunomaduro/collision/src/",
             "Spatie\\Backtrace\\": "cr/ext/spatie/backtrace/src/",
-            "Spatie\\FlareClient\\": "cr/ext/spatie/flate-client-php/src/",
+            "Spatie\\FlareClient\\": "cr/ext/spatie/flare-client-php/src/",
             "Spatie\\Ignition\\": "cr/ext/spatie/ignition/src/",
             "Spatie\\LaravelIgnition\\": "cr/ext/spatie/laravel-ignition/src/",
             "Symfony\\Component\\ErrorHandler\\": "cr/ext/symfony/error-handler/",
