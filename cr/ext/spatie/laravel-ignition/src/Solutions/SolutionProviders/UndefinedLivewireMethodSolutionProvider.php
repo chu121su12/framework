@@ -21,7 +21,9 @@ class UndefinedLivewireMethodSolutionProvider implements HasSolutionsForThrowabl
     {
         backport_type_throwable($throwable);
 
-        ['methodName' => $methodName, 'component' => $component] = $this->getMethodAndComponent($throwable);
+        $methodAndComponentlist = $this->getMethodAndComponent($throwable);
+        $methodName = $methodAndComponentlist['methodName'];
+        $component = $methodAndComponentlist['component'];
 
         if ($methodName === null || $component === null) {
             return [];

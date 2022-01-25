@@ -109,7 +109,7 @@ class UndefinedViewVariableSolutionProvider implements HasSolutionsForThrowable
         preg_match($pattern, $throwable->getMessage(), $matches);
 
         if (count($matches) === 3) {
-            [, $variableName, $viewFile] = $matches;
+            list($_, $variableName, $viewFile) = $matches;
             $variableName = ltrim($variableName, '$');
 
             return compact('variableName', 'viewFile');

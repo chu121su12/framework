@@ -21,7 +21,9 @@ class UndefinedLivewirePropertySolutionProvider implements HasSolutionsForThrowa
     {
         backport_type_throwable($throwable);
 
-        ['variable' => $variable, 'component' => $component] = $this->getMethodAndComponent($throwable);
+        $methodAndComponentlist = $this->getMethodAndComponent($throwable);
+        $variable = $methodAndComponentlist['variable'];
+        $component = $methodAndComponentlist['component'];
 
         if ($variable === null || $component === null) {
             return [];
