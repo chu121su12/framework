@@ -22,11 +22,13 @@ class LogMessage
      * @param float|null $microtime
      */
     public function __construct(
-        ?string $message,
+        /*?string */$message = null,
         string $level,
         array $context = [],
         ?float $microtime = null
     ) {
+        $message = cast_to_string($message, null);
+
         $this->message = $message;
         $this->level = $level;
         $this->context = $context;

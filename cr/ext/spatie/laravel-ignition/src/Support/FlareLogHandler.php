@@ -26,8 +26,10 @@ class FlareLogHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
     }
 
-    public function setMinimumReportLogLevel(int $level)/*: void*/
+    public function setMinimumReportLogLevel(/*int */$level)/*: void*/
     {
+        $level = cast_to_int($level);
+
         if (! in_array($level, Logger::getLevels())) {
             throw new InvalidArgumentException('The given minimum log level is not supported.');
         }

@@ -25,11 +25,15 @@ class Glow
      * @param float|null $microtime
      */
     public function __construct(
-        string $name,
-        string $messageLevel = MessageLevels::INFO,
+        /*string */$name,
+        /*string */$messageLevel = MessageLevels::INFO,
         array $metaData = [],
-        ?float $microtime = null
+        /*?float */$microtime = null
     ) {
+        $name = cast_to_string($name);
+        $messageLevel = cast_to_string($messageLevel);
+        $microtime = cast_to_float($microtime, null);
+
         $this->name = $name;
         $this->messageLevel = $messageLevel;
         $this->metaData = $metaData;

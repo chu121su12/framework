@@ -94,11 +94,15 @@ class Report
     }
 
     public static function createForMessage(
-        string $message,
-        string $logLevel,
+        /*string */$message,
+        /*string */$logLevel,
         ContextProvider $context,
-        ?string $applicationPath = null
-    )/*: self {*/
+        /*?string */$applicationPath = null
+    )/*: self */{
+        $message = cast_to_string($message);
+        $logLevel = cast_to_string($logLevel);
+        $applicationPath = cast_to_string($applicationPath, null);
+
         $stacktrace = Backtrace::create()->applicationPath($applicationPath ?? '');
 
         return (new self())
@@ -120,8 +124,10 @@ class Report
         return $this->trackingUuid;
     }
 
-    public function exceptionClass(string $exceptionClass)/*: self*/
+    public function exceptionClass(/*string */$exceptionClass)/*: self*/
     {
+        $exceptionClass = cast_to_string($exceptionClass);
+
         $this->exceptionClass = $exceptionClass;
 
         return $this;
@@ -144,8 +150,10 @@ class Report
         return $this->throwable;
     }
 
-    public function message(string $message)/*: self*/
+    public function message(/*string */$message)/*: self*/
     {
+        $message = cast_to_string($message);
+
         $this->message = $message;
 
         return $this;
@@ -168,22 +176,28 @@ class Report
         return $this->stacktrace;
     }
 
-    public function notifierName(string $notifierName)/*: self*/
+    public function notifierName(/*string */$notifierName)/*: self*/
     {
+        $notifierName = cast_to_string($notifierName);
+
         $this->notifierName = $notifierName;
 
         return $this;
     }
 
-    public function languageVersion(string $languageVersion)/*: self*/
+    public function languageVersion(/*string */$languageVersion)/*: self*/
     {
+        $languageVersion = cast_to_string($languageVersion);
+
         $this->languageVersion = $languageVersion;
 
         return $this;
     }
 
-    public function frameworkVersion(string $frameworkVersion)/*: self*/
+    public function frameworkVersion(/*string */$frameworkVersion)/*: self*/
     {
+        $frameworkVersion = cast_to_string($frameworkVersion);
+
         $this->frameworkVersion = $frameworkVersion;
 
         return $this;
@@ -196,15 +210,19 @@ class Report
         return $this;
     }
 
-    public function openFrameIndex(?int $index)/*: self*/
+    public function openFrameIndex(/*?int */$index = null)/*: self*/
     {
+        $index = cast_to_int($index, null);
+
         $this->openFrameIndex = $index;
 
         return $this;
     }
 
-    public function setApplicationPath(?string $applicationPath)/*: self*/
+    public function setApplicationPath(/*?string */$applicationPath = null)/*: self*/
     {
+        $applicationPath = cast_to_string($applicationPath, null);
+
         $this->applicationPath = $applicationPath;
 
         return $this;
@@ -215,8 +233,10 @@ class Report
         return $this->applicationPath;
     }
 
-    public function setApplicationVersion(?string $applicationVersion)/*: self*/
+    public function setApplicationVersion(/*?string */$applicationVersion = null)/*: self*/
     {
+        $applicationVersion = cast_to_string($applicationVersion, null);
+
         $this->applicationVersion = $applicationVersion;
 
         return $this;
@@ -227,7 +247,7 @@ class Report
         return $this->applicationVersion;
     }
 
-    public function view(?View $view)/*: self*/
+    public function view(/*?*/View $view = null)/*: self*/
     {
         $this->view = $view;
 

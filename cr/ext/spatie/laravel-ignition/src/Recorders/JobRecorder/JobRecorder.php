@@ -103,8 +103,10 @@ class JobRecorder
         }
     }
 
-    protected function resolveCommandProperties(object $command, int $maxChainDepth)/*: array*/
+    protected function resolveCommandProperties(object $command, /*int */$maxChainDepth)/*: array*/
     {
+        $maxChainDepth = cast_to_int($maxChainDepth);
+
         $propertiesToIgnore = ['job', 'closure'];
 
         $properties = collect((new ReflectionClass($command))->getProperties())
@@ -134,14 +136,18 @@ class JobRecorder
      *
      * @return array
      */
-    protected function resolveJobChain(array $chainedCommands, int $maxDepth)/*: array*/
+    protected function resolveJobChain(array $chainedCommands, /*int */$maxDepth)/*: array*/
     {
+        $maxDepth = cast_to_int($maxDepth);
+
         if ($maxDepth === 0) {
             return ['Ignition stopped recording jobs after this point since the max chain depth was reached'];
         }
 
         return array_map(
-            function (string $command) use ($maxDepth) {
+            function (/*string */$command) use ($maxDepth) {
+                $command = cast_to_string($command);
+
                 $commandObject = $this->resolveObjectFromCommand($command);
 
                 return [
@@ -154,8 +160,10 @@ class JobRecorder
     }
 
     // Taken from Illuminate\Queue\CallQueuedHandler
-    protected function resolveObjectFromCommand(string $command)/*: object*/
+    protected function resolveObjectFromCommand(/*string */$command)/*: object*/
     {
+        $command = cast_to_string($command);
+
         if (Str::startsWith($command, 'O:')) {
             return unserialize($command);
         }

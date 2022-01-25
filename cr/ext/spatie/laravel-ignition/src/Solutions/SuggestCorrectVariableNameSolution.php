@@ -12,8 +12,12 @@ class SuggestCorrectVariableNameSolution implements Solution
 
     protected ?string $suggested;
 
-    public function __construct(string $variableName = null, string $viewFile = null, string $suggested = null)
+    public function __construct(/*string */$variableName = null, /*string */$viewFile = null, /*string */$suggested = null)
     {
+        $suggested = cast_to_string($suggested, null);
+        $viewFile = cast_to_string($viewFile, null);
+        $variableName = cast_to_string($variableName, null);
+
         $this->variableName = $variableName;
 
         $this->viewFile = $viewFile;

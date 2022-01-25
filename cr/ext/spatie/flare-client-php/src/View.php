@@ -16,8 +16,10 @@ class View
      * @param string $file
      * @param array<string, mixed> $data
      */
-    public function __construct(string $file, array $data = [])
+    public function __construct(/*string */$file, array $data = [])
     {
+        $file = cast_to_string($file);
+
         $this->file = $file;
         $this->data = $data;
     }
@@ -28,13 +30,17 @@ class View
      *
      * @return self
      */
-    public static function create(string $file, array $data = [])/*: self*/
+    public static function create(/*string */$file, array $data = [])/*: self*/
     {
+        $file = cast_to_string($file);
+
         return new self($file, $data);
     }
 
-    protected function dumpViewData(mixed $variable)/*: string*/
+    protected function dumpViewData(/*mixed */$variable)/*: string*/
     {
+        $variable = cast_to_mixed($variable);
+
         $cloner = new VarCloner();
 
         $dumper = new HtmlDumper();

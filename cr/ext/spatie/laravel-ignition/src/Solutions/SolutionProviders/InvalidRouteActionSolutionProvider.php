@@ -55,15 +55,25 @@ class InvalidRouteActionSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function findRelatedController(string $invalidController)/*: ?string*/
+    protected function findRelatedController(/*string */$invalidController)/*: ?string*/
     {
+        $invalidController = cast_to_string($invalidController);
+
         $composerClassMap = app(ComposerClassMap::class);
 
         $controllers = collect($composerClassMap->listClasses())
-            ->filter(function (string $file, string $fqcn) {
+            ->filter(function (/*string */$file, /*string */$fqcn) {
+                $fqcn = cast_to_string($fqcn);
+
+                $file = cast_to_string($file);
+
                 return Str::endsWith($fqcn, 'Controller');
             })
-            ->mapWithKeys(function (string $file, string $fqcn) {
+            ->mapWithKeys(function (/*string */$file, /*string */$fqcn) {
+                $fqcn = cast_to_string($fqcn);
+
+                $file = cast_to_string($file);
+
                 return [$fqcn => class_basename($fqcn)];
             })
             ->toArray();

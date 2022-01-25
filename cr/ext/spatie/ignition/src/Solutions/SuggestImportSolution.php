@@ -8,8 +8,10 @@ class SuggestImportSolution implements Solution
 {
     protected string $class;
 
-    public function __construct(string $class)
+    public function __construct(/*string */$class)
     {
+        $class = cast_to_string($class);
+
         $this->class = $class;
     }
 

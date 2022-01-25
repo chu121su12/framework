@@ -53,8 +53,10 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
         return "Did you mean `{$rule}` ?";
     }
 
-    protected function getMethodFromExceptionMessage(string $message)/*: ?string*/
+    protected function getMethodFromExceptionMessage(/*string */$message)/*: ?string*/
     {
+        $message = cast_to_string($message);
+
         if (! preg_match(self::REGEX, $message, $matches)) {
             return null;
         }

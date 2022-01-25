@@ -36,15 +36,23 @@ class TrimContextItemsStrategy extends AbstractTruncationStrategy
      *
      * @return array<int|string, mixed>
      */
-    protected function iterateContextItems(array $contextItems, int $threshold)/*: array*/
+    protected function iterateContextItems(array $contextItems, /*int */$threshold)/*: array*/
     {
+        $threshold = cast_to_int($threshold);
+
         array_walk($contextItems, [$this, 'trimContextItems'], $threshold);
 
         return $contextItems;
     }
 
-    protected function trimContextItems(mixed &$value, mixed $key, int $threshold)/*: mixed*/
+    protected function trimContextItems(/*mixed */&$value, /*mixed */$key, /*int */$threshold)/*: mixed*/
     {
+        $threshold = cast_to_int($threshold);
+
+        $key = cast_to_mixed($key);
+
+        $value = cast_to_mixed($value);
+
         if (is_array($value)) {
             if (count($value) > $threshold) {
                 $value = array_slice($value, $threshold * -1, $threshold);

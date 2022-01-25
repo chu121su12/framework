@@ -67,8 +67,10 @@ class QueryRecorder
         return $this->reportBindings;
     }
 
-    public function setReportBindings(bool $reportBindings)/*: self*/
+    public function setReportBindings(/*bool */$reportBindings)/*: self*/
     {
+        $reportBindings = cast_to_bool($reportBindings);
+
         $this->reportBindings = $reportBindings;
 
         return $this;
@@ -79,8 +81,10 @@ class QueryRecorder
         return $this->maxQueries;
     }
 
-    public function setMaxQueries(?int $maxQueries)/*: self*/
+    public function setMaxQueries(/*?int */$maxQueries = null)/*: self*/
     {
+        $maxQueries = cast_to_int($maxQueries, null);
+
         $this->maxQueries = $maxQueries;
 
         return $this;

@@ -26,7 +26,9 @@ class UndefinedLivewireMethodSolutionProvider implements HasSolutionsForThrowabl
         $parsed = LivewireComponentParser::create($component);
 
         return $parsed->getMethodNamesLike($methodName)
-            ->map(function (string $suggested) use ($parsed, $methodName) {
+            ->map(function (/*string */$suggested) use ($parsed, $methodName) {
+                $suggested = cast_to_string($suggested);
+
                 return new SuggestLivewireMethodNameSolution(
                     $methodName,
                     $parsed->getComponentClass(),

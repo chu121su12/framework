@@ -29,13 +29,17 @@ class ViewException extends ErrorException implements ProvidesFlareContext
         return $this->viewData;
     }
 
-    public function setView(string $path)/*: void*/
+    public function setView(/*string */$path)/*: void*/
     {
+        $path = cast_to_string($path);
+
         $this->view = $path;
     }
 
-    protected function dumpViewData(mixed $variable)/*: string*/
+    protected function dumpViewData(/*mixed */$variable)/*: string*/
     {
+        $variable = cast_to_mixed($variable);
+
         return (new HtmlDumper())->dumpVariable($variable);
     }
 

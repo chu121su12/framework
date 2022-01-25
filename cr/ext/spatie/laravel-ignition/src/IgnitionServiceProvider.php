@@ -277,8 +277,10 @@ class IgnitionServiceProvider extends ServiceProvider
         // Note: the $queue->looping() event can't be used because it's not triggered on Vapor
     }
 
-    protected function getLogLevel(string $logLevelString)/*: int*/
+    protected function getLogLevel(/*string */$logLevelString)/*: int*/
     {
+        $logLevelString = cast_to_string($logLevelString);
+
         $logLevel = Logger::getLevels()[strtoupper($logLevelString)] ?? null;
 
         if (! $logLevel) {

@@ -71,8 +71,10 @@ class Ignition
         $this->middleware[] = new AddDocumentationLinks($this->documentationLinkResolvers);
     }
 
-    public function setSolutionTransformerClass(string $solutionTransformerClass)/*: self*/
+    public function setSolutionTransformerClass(/*string */$solutionTransformerClass)/*: self*/
     {
+        $solutionTransformerClass = cast_to_string($solutionTransformerClass);
+
         $this->solutionTransformerClass = $solutionTransformerClass;
 
         return $this;
@@ -93,8 +95,10 @@ class Ignition
         return $this;
     }
 
-    public function runningInProductionEnvironment(bool $boolean = true)/*: self*/
+    public function runningInProductionEnvironment(/*bool */$boolean = true)/*: self*/
     {
+        $boolean = cast_to_bool($boolean);
+
         $this->inProductionEnvironment = $boolean;
 
         return $this;
@@ -119,15 +123,19 @@ class Ignition
         return $this;
     }
 
-    public function shouldDisplayException(bool $shouldDisplayException)/*: self*/
+    public function shouldDisplayException(/*bool */$shouldDisplayException)/*: self*/
     {
+        $shouldDisplayException = cast_to_bool($shouldDisplayException);
+
         $this->shouldDisplayException = $shouldDisplayException;
 
         return $this;
     }
 
-    public function applicationPath(string $applicationPath)/*: self*/
+    public function applicationPath(/*string */$applicationPath)/*: self*/
     {
+        $applicationPath = cast_to_string($applicationPath);
+
         $this->applicationPath = $applicationPath;
 
         return $this;
@@ -141,10 +149,13 @@ class Ignition
      * @return $this
      */
     public function glow(
-        string $name,
-        string $messageLevel = MessageLevels::INFO,
+        /*string */$name,
+        /*string */$messageLevel = MessageLevels::INFO,
         array $metaData = []
-    )/*: self {*/
+    )/*: self */{
+        $name = cast_to_string($name);
+        $messageLevel = cast_to_string($messageLevel);
+
         $this->flare->glow($name, $messageLevel, $metaData);
 
         return $this;
@@ -169,15 +180,19 @@ class Ignition
         return $this;
     }
 
-    public function theme(string $theme)/*: self*/
+    public function theme(/*string */$theme)/*: self*/
     {
+        $theme = cast_to_string($theme);
+
         $this->ignitionConfig->setOption('theme', $theme);
 
         return $this;
     }
 
-    public function sendToFlare(?string $apiKey)/*: self*/
+    public function sendToFlare(/*?string */$apiKey = null)/*: self*/
     {
+        $apiKey = cast_to_string($apiKey, null);
+
         $this->flareApiKey = $apiKey ?? '';
 
         return $this;
@@ -246,12 +261,17 @@ class Ignition
      * @throws \ErrorException
      */
     public function renderError(
-        int $level,
-        string $message,
-        string $file = '',
-        int $line = 0,
+        /*int */$level,
+        /*string */$message,
+        /*string */$file = '',
+        /*int */$line = 0,
         array $context = []
-    )/*: void {*/
+    )/*: void */{
+        $level = cast_to_int($level);
+        $message = cast_to_string($message);
+        $file = cast_to_string($file);
+        $line = cast_to_int($line);
+
         throw new ErrorException($message, 0, $level, $file, $line);
     }
 

@@ -15,8 +15,10 @@ class LogRecorder
 
     protected ?int $maxLogs;
 
-    public function __construct(Application $app, ?int $maxLogs = null)
+    public function __construct(Application $app, /*?int */$maxLogs = null = null)
     {
+        $maxLogs = cast_to_int($maxLogs, null);
+
         $this->app = $app;
 
         $this->maxLogs = $maxLogs;
@@ -61,8 +63,10 @@ class LogRecorder
         return $logMessages;
     }
 
-    protected function shouldIgnore(mixed $event)/*: bool*/
+    protected function shouldIgnore(/*mixed */$event)/*: bool*/
     {
+        $event = cast_to_mixed($event);
+
         if (! isset($event->context['exception'])) {
             return false;
         }
@@ -84,8 +88,10 @@ class LogRecorder
         return $this->maxLogs;
     }
 
-    public function setMaxLogs(?int $maxLogs)/*: self*/
+    public function setMaxLogs(/*?int */$maxLogs = null)/*: self*/
     {
+        $maxLogs = cast_to_int($maxLogs, null);
+
         $this->maxLogs = $maxLogs;
 
         return $this;

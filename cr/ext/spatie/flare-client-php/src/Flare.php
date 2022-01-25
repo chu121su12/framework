@@ -58,16 +58,20 @@ class Flare
     protected ?Container $container = null;
 
     public static function make(
-        string $apiKey = null,
+        /*string */$apiKey = null,
         ContextProviderDetector $contextDetector = null
-    )/*: self {*/
+    )/*: self */{
+        $apiKey = cast_to_string($apiKey);
+
         $client = new Client($apiKey);
 
         return new self($client, $contextDetector);
     }
 
-    public function setApiToken(string $apiToken)/*: self*/
+    public function setApiToken(/*string */$apiToken)/*: self*/
     {
+        $apiToken = cast_to_string($apiToken);
+
         $this->client->setApiToken($apiToken);
 
         return $this;
@@ -78,15 +82,19 @@ class Flare
         return $this->client->apiTokenSet();
     }
 
-    public function setBaseUrl(string $baseUrl)/*: self*/
+    public function setBaseUrl(/*string */$baseUrl)/*: self*/
     {
+        $baseUrl = cast_to_string($baseUrl);
+
         $this->client->setBaseUrl($baseUrl);
 
         return $this;
     }
 
-    public function setStage(string $stage)/*: self*/
+    public function setStage(/*string */$stage)/*: self*/
     {
+        $stage = cast_to_string($stage);
+
         $this->stage = $stage;
 
         return $this;
@@ -106,8 +114,10 @@ class Flare
         return $this;
     }
 
-    public function reportErrorLevels(int $reportErrorLevels)/*: self*/
+    public function reportErrorLevels(/*int */$reportErrorLevels)/*: self*/
     {
+        $reportErrorLevels = cast_to_int($reportErrorLevels);
+
         $this->reportErrorLevels = $reportErrorLevels;
 
         return $this;
@@ -230,10 +240,13 @@ class Flare
      * @return $this
      */
     public function glow(
-        string $name,
-        string $messageLevel = MessageLevels::INFO,
+        /*string */$name,
+        /*string */$messageLevel = MessageLevels::INFO,
         array $metaData = []
-    )/*: self {*/
+    )/*: self */{
+        $name = cast_to_string($name);
+        $messageLevel = cast_to_string($messageLevel);
+
         $this->recorder->record(new Glow($name, $messageLevel, $metaData));
 
         return $this;
@@ -251,8 +264,16 @@ class Flare
     /**
      * @return mixed
      */
-    public function handleError(mixed $code, string $message, string $file = '', int $line = 0)
+    public function handleError(/*mixed */$code, /*string */$message, /*string */$file = '', /*int */$line = 0)
     {
+        $line = cast_to_int($line);
+
+        $file = cast_to_string($file);
+
+        $message = cast_to_string($message);
+
+        $code = cast_to_mixed($code);
+
         $exception = new ErrorException($message, 0, $code, $file, $line);
 
         $this->report($exception);
@@ -268,8 +289,10 @@ class Flare
         }
     }
 
-    public function applicationPath(string $applicationPath)/*: self*/
+    public function applicationPath(/*string */$applicationPath)/*: self*/
     {
+        $applicationPath = cast_to_string($applicationPath);
+
         $this->applicationPath = $applicationPath;
 
         return $this;
@@ -309,8 +332,12 @@ class Flare
         return true;
     }
 
-    public function reportMessage(string $message, string $logLevel, callable $callback = null)/*: void*/
+    public function reportMessage(/*string */$message, /*string */$logLevel, callable $callback = null)/*: void*/
     {
+        $logLevel = cast_to_string($logLevel);
+
+        $message = cast_to_string($message);
+
         $report = $this->createReportFromMessage($message, $logLevel);
 
         if (! is_null($callback)) {
@@ -382,8 +409,12 @@ class Flare
         return $this->applyMiddlewareToReport($report);
     }
 
-    public function createReportFromMessage(string $message, string $logLevel)/*: Report*/
+    public function createReportFromMessage(/*string */$message, /*string */$logLevel)/*: Report*/
     {
+        $logLevel = cast_to_string($logLevel);
+
+        $message = cast_to_string($message);
+
         $report = Report::createForMessage(
             $message,
             $logLevel,

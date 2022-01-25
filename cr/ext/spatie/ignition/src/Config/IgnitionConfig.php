@@ -22,8 +22,12 @@ class IgnitionConfig implements Arrayable
         $this->options = array_merge($defaultOptions, $options);
     }
 
-    public function setOption(string $name, string $value)/*: self*/
+    public function setOption(/*string */$name, /*string */$value)/*: self*/
     {
+        $value = cast_to_string($value);
+
+        $name = cast_to_string($name);
+
         $this->options[$name] = $value;
 
         return $this;

@@ -16,10 +16,14 @@ class Client
     protected int $timeout;
 
     public function __construct(
-        ?string $apiToken = null,
-        string $baseUrl = 'https://reporting.flareapp.io/api',
-        int $timeout = 10
+        /*?string */$apiToken = null,
+        /*string */$baseUrl = 'https://reporting.flareapp.io/api',
+        /*int */$timeout = 10
     ) {
+        $apiToken = cast_to_string($apiToken, null);
+        $baseUrl = cast_to_string($baseUrl);
+        $timeout = cast_to_int($timeout);
+
         $this->apiToken = $apiToken;
 
         if (! $baseUrl) {
@@ -35,8 +39,10 @@ class Client
         $this->timeout = $timeout;
     }
 
-    public function setApiToken(string $apiToken)/*: self*/
+    public function setApiToken(/*string */$apiToken)/*: self*/
     {
+        $apiToken = cast_to_string($apiToken);
+
         $this->apiToken = $apiToken;
 
         return $this;
@@ -47,8 +53,10 @@ class Client
         return ! empty($this->apiToken);
     }
 
-    public function setBaseUrl(string $baseUrl)/*: self*/
+    public function setBaseUrl(/*string */$baseUrl)/*: self*/
     {
+        $baseUrl = cast_to_string($baseUrl);
+
         $this->baseUrl = $baseUrl;
 
         return $this;
@@ -60,8 +68,10 @@ class Client
      *
      * @return array|false
      */
-    public function get(string $url, array $arguments = [])
+    public function get(/*string */$url, array $arguments = [])
     {
+        $url = cast_to_string($url);
+
         return $this->makeRequest('get', $url, $arguments);
     }
 
@@ -71,8 +81,10 @@ class Client
      *
      * @return array|false
      */
-    public function post(string $url, array $arguments = [])
+    public function post(/*string */$url, array $arguments = [])
     {
+        $url = cast_to_string($url);
+
         return $this->makeRequest('post', $url, $arguments);
     }
 
@@ -82,8 +94,10 @@ class Client
      *
      * @return array|false
      */
-    public function patch(string $url, array $arguments = [])
+    public function patch(/*string */$url, array $arguments = [])
     {
+        $url = cast_to_string($url);
+
         return $this->makeRequest('patch', $url, $arguments);
     }
 
@@ -93,8 +107,10 @@ class Client
      *
      * @return array|false
      */
-    public function put(string $url, array $arguments = [])
+    public function put(/*string */$url, array $arguments = [])
     {
+        $url = cast_to_string($url);
+
         return $this->makeRequest('put', $url, $arguments);
     }
 
@@ -104,8 +120,10 @@ class Client
      *
      * @return array|false
      */
-    public function delete(string $method, array $arguments = [])
+    public function delete(/*string */$method, array $arguments = [])
     {
+        $method = cast_to_string($method);
+
         return $this->makeRequest('delete', $method, $arguments);
     }
 
@@ -116,8 +134,12 @@ class Client
      *
      * @return array
      */
-    protected function makeRequest(string $httpVerb, string $url, array $arguments = [])
+    protected function makeRequest(/*string */$httpVerb, /*string */$url, array $arguments = [])
     {
+        $url = cast_to_string($url);
+
+        $httpVerb = cast_to_string($httpVerb);
+
         $queryString = http_build_query([
             'key' => $this->apiToken,
         ]);
@@ -145,8 +167,12 @@ class Client
         return $response->getBody();
     }
 
-    public function makeCurlRequest(string $httpVerb, string $fullUrl, array $headers = [], array $arguments = [])/*: Response*/
+    public function makeCurlRequest(/*string */$httpVerb, /*string */$fullUrl, array $headers = [], array $arguments = [])/*: Response*/
     {
+        $fullUrl = cast_to_string($fullUrl);
+
+        $httpVerb = cast_to_string($httpVerb);
+
         $curlHandle = $this->getCurlHandle($fullUrl, $headers);
 
         switch ($httpVerb) {
@@ -200,8 +226,10 @@ class Client
      *
      * @return resource
      */
-    protected function getCurlHandle(string $fullUrl, array $headers = [])
+    protected function getCurlHandle(/*string */$fullUrl, array $headers = [])
     {
+        $fullUrl = cast_to_string($fullUrl);
+
         $curlHandle = curl_init();
 
         curl_setopt($curlHandle, CURLOPT_URL, $fullUrl);

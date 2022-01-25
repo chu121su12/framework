@@ -26,7 +26,9 @@ class UndefinedLivewirePropertySolutionProvider implements HasSolutionsForThrowa
         $parsed = LivewireComponentParser::create($component);
 
         return $parsed->getPropertyNamesLike($variable)
-            ->map(function (string $suggested) use ($parsed, $variable) {
+            ->map(function (/*string */$suggested) use ($parsed, $variable) {
+                $suggested = cast_to_string($suggested);
+
                 return new SuggestLivewirePropertyNameSolution(
                     $variable,
                     $parsed->getComponentClass(),

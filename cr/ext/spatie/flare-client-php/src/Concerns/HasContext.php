@@ -13,15 +13,19 @@ trait HasContext
      */
     protected array $userProvidedContext = [];
 
-    public function stage(?string $stage)/*: self*/
+    public function stage(/*?string */$stage = null)/*: self*/
     {
+        $stage = cast_to_string($stage, null);
+
         $this->stage = $stage;
 
         return $this;
     }
 
-    public function messageLevel(?string $messageLevel)/*: self*/
+    public function messageLevel(/*?string */$messageLevel = null)/*: self*/
     {
+        $messageLevel = cast_to_string($messageLevel, null);
+
         $this->messageLevel = $messageLevel;
 
         return $this;
@@ -33,13 +37,19 @@ trait HasContext
      *
      * @return array<int, mixed>
      */
-    public function getGroup(string $groupName = 'context', $default = [])/*: array*/
+    public function getGroup(/*string */$groupName = 'context', $default = [])/*: array*/
     {
+        $groupName = cast_to_string($groupName);
+
         return $this->userProvidedContext[$groupName] ?? $default;
     }
 
-    public function context(string $key, mixed $value)/*: self*/
+    public function context(/*string */$key, /*mixed */$value)/*: self*/
     {
+        $value = cast_to_mixed($value);
+
+        $key = cast_to_string($key);
+
         return $this->group('context', [$key => $value]);
     }
 
@@ -49,8 +59,10 @@ trait HasContext
      *
      * @return $this
      */
-    public function group(string $groupName, array $properties)/*: self*/
+    public function group(/*string */$groupName, array $properties)/*: self*/
     {
+        $groupName = cast_to_string($groupName);
+
         $group = $this->userProvidedContext[$groupName] ?? [];
 
         $this->userProvidedContext[$groupName] = array_merge_recursive_distinct(

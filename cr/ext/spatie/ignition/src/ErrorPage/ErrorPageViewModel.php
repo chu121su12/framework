@@ -83,15 +83,19 @@ class ErrorPageViewModel
         return $this->report->toArray();
     }
 
-    public function jsonEncode(mixed $data)/*: string*/
+    public function jsonEncode(/*mixed */$data)/*: string*/
     {
+        $data = cast_to_mixed($data);
+
         $jsonOptions = JSON_PARTIAL_OUTPUT_ON_ERROR | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
 
         return (string)json_encode($data, $jsonOptions);
     }
 
-    public function getAssetContents(string $asset)/*: string*/
+    public function getAssetContents(/*string */$asset)/*: string*/
     {
+        $asset = cast_to_string($asset);
+
         $assetPath = __DIR__."/../../resources/compiled/{$asset}";
 
         return (string)file_get_contents($assetPath);

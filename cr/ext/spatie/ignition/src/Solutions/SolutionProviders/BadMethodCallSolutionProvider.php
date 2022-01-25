@@ -56,8 +56,10 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
      *
      * @return null|array<string, mixed>
      */
-    protected function getClassAndMethodFromExceptionMessage(string $message)/*: ?array*/
+    protected function getClassAndMethodFromExceptionMessage(/*string */$message)/*: ?array*/
     {
+        $message = cast_to_string($message);
+
         if (! preg_match(self::REGEX, $message, $matches)) {
             return null;
         }
@@ -74,8 +76,12 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
      *
      * @return \ReflectionMethod|null
      */
-    protected function findPossibleMethod(string $class, string $invalidMethodName)/*: ?ReflectionMethod*/
+    protected function findPossibleMethod(/*string */$class, /*string */$invalidMethodName)/*: ?ReflectionMethod*/
     {
+        $invalidMethodName = cast_to_string($invalidMethodName);
+
+        $class = cast_to_string($class);
+
         return $this->getAvailableMethods($class)
             ->sortByDesc(function (ReflectionMethod $method) use ($invalidMethodName) {
                 similar_text($invalidMethodName, $method->name, $percentage);
@@ -89,8 +95,10 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
      *
      * @return \Illuminate\Support\Collection<int, ReflectionMethod>
      */
-    protected function getAvailableMethods(string $class)/*: Collection*/
+    protected function getAvailableMethods(/*string */$class)/*: Collection*/
     {
+        $class = cast_to_string($class);
+
         $class = new ReflectionClass($class);
 
         return Collection::make($class->getMethods());

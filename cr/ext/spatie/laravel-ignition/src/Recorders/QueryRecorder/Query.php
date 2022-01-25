@@ -17,8 +17,10 @@ class Query
 
     protected float $microtime;
 
-    public static function fromQueryExecutedEvent(QueryExecuted $queryExecuted, bool $reportBindings = false)/*: self*/
+    public static function fromQueryExecutedEvent(QueryExecuted $queryExecuted, /*bool */$reportBindings = false)/*: self*/
     {
+        $reportBindings = cast_to_bool($reportBindings);
+
         return new self(
             $queryExecuted->sql,
             $queryExecuted->time,
@@ -36,12 +38,17 @@ class Query
      * @param float|null $microtime
      */
     protected function __construct(
-        string $sql,
-        float $time,
-        string $connectionName,
-        ?array $bindings = null,
-        ?float $microtime = null
+        /*string */$sql,
+        /*float */$time,
+        /*string */$connectionName,
+        /*?*/array $bindings = null,
+        /*?float */$microtime = null
     ) {
+        $sql = cast_to_string($sql);
+        $time = cast_to_float($time);
+        $connectionName = cast_to_string($connectionName);
+        $microtime = cast_to_float($microtime, null);
+
         $this->sql = $sql;
         $this->time = $time;
         $this->connectionName = $connectionName;

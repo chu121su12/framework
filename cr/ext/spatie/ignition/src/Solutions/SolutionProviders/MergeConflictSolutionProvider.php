@@ -46,8 +46,10 @@ class MergeConflictSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function getCurrentBranch(string $directory)/*: string*/
+    protected function getCurrentBranch(/*string */$directory)/*: string*/
     {
+        $directory = cast_to_string($directory);
+
         $branch = "'".trim((string)shell_exec("cd ${directory}; git branch | grep \\* | cut -d ' ' -f2"))."'";
 
         if ($branch === "''") {

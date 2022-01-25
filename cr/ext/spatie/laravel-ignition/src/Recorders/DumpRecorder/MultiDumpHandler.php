@@ -7,8 +7,10 @@ class MultiDumpHandler
     /** @var array<int, callable|null> */
     protected array $handlers = [];
 
-    public function dump(mixed $value)/*: void*/
+    public function dump(/*mixed */$value)/*: void*/
     {
+        $value = cast_to_mixed($value);
+
         foreach ($this->handlers as $handler) {
             if ($handler) {
                 $handler($value);

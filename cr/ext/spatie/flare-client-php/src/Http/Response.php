@@ -10,8 +10,14 @@ class Response
 
     protected mixed $error;
 
-    public function __construct(mixed $headers, mixed $body, mixed $error)
+    public function __construct(/*mixed */$headers, /*mixed */$body, /*mixed */$error)
     {
+        $error = cast_to_mixed($error);
+
+        $body = cast_to_mixed($body);
+
+        $headers = cast_to_mixed($headers);
+
         $this->headers = $headers;
 
         $this->body = $body;

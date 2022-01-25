@@ -9,8 +9,10 @@ class File
     /** @var \SplFileObject */
     protected $file;
 
-    public function __construct(string $path)
+    public function __construct(/*string */$path)
     {
+        $path = cast_to_string($path);
+
         $this->file = new SplFileObject($path);
     }
 
@@ -21,8 +23,10 @@ class File
         return $this->file->key() + 1;
     }
 
-    public function getLine(int $lineNumber = null)/*: string*/
+    public function getLine(/*int */$lineNumber = null)/*: string*/
     {
+        $lineNumber = cast_to_int($lineNumber, null);
+
         if (is_null($lineNumber)) {
             return $this->getNextLine();
         }

@@ -49,8 +49,10 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function findRelatedView(string $missingView)/*: ?string*/
+    protected function findRelatedView(/*string */$missingView)/*: ?string*/
     {
+        $missingView = cast_to_string($missingView);
+
         $views = $this->getAllViews();
 
         return StringComparator::findClosestMatch($views, $missingView);
@@ -65,7 +67,9 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
         $extensions = $fileViewFinder->getExtensions();
 
         $viewsForHints = collect($fileViewFinder->getHints())
-            ->flatMap(function ($paths, string $namespace) use ($extensions) {
+            ->flatMap(function ($paths, /*string */$namespace) use ($extensions) {
+                $namespace = cast_to_string($namespace);
+
                 $paths = Arr::wrap($paths);
 
                 return collect($paths)
@@ -86,8 +90,10 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
      *
      * @return array<int, string>
      */
-    protected function getViewsInPath(string $path, array $extensions)/*: array*/
+    protected function getViewsInPath(/*string */$path, array $extensions)/*: array*/
     {
+        $path = cast_to_string($path);
+
         $filePatterns = array_map(fn (string $extension) => "*.{$extension}", $extensions);
 
         $extensionsWithDots = array_map(fn (string $extension) => ".{$extension}", $extensions);

@@ -15,8 +15,10 @@ class ComposerClassMap
 
     protected string $basePath;
 
-    public function __construct(?string $autoloaderPath = null)
+    public function __construct(/*?string */$autoloaderPath = null = null)
     {
+        $autoloaderPath = cast_to_string($autoloaderPath, null);
+
         $autoloaderPath = $autoloaderPath ?? base_path('/vendor/autoload.php');
 
         $this->composer = file_exists($autoloaderPath)
@@ -34,8 +36,10 @@ class ComposerClassMap
         return array_merge($classes, $this->listClassesInPsrMaps());
     }
 
-    public function searchClassMap(string $missingClass)/*: ?string*/
+    public function searchClassMap(/*string */$missingClass)/*: ?string*/
     {
+        $missingClass = cast_to_string($missingClass);
+
         foreach ($this->composer->getClassMap() as $fqcn => $file) {
             $basename = basename($file, '.php');
 
@@ -81,8 +85,10 @@ class ComposerClassMap
         return $classes;
     }
 
-    public function searchPsrMaps(string $missingClass)/*: ?string*/
+    public function searchPsrMaps(/*string */$missingClass)/*: ?string*/
     {
+        $missingClass = cast_to_string($missingClass);
+
         $prefixes = array_merge(
             $this->composer->getPrefixes(),
             $this->composer->getPrefixesPsr4()
@@ -112,8 +118,10 @@ class ComposerClassMap
         return null;
     }
 
-    protected function getFullyQualifiedClassNameFromFile(string $rootNamespace, SplFileInfo $file)/*: string*/
+    protected function getFullyQualifiedClassNameFromFile(/*string */$rootNamespace, SplFileInfo $file)/*: string*/
     {
+        $rootNamespace = cast_to_string($rootNamespace);
+
         $class = trim(str_replace($this->basePath, '', (string)$file->getRealPath()), DIRECTORY_SEPARATOR);
 
         $class = str_replace(

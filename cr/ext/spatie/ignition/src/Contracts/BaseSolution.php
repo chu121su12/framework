@@ -11,8 +11,10 @@ class BaseSolution implements Solution
     /** @var array<string, string> */
     protected array $links = [];
 
-    public static function create(string $title = '')/*: static*/
+    public static function create(/*string */$title = '')/*: static*/
     {
+        $title = cast_to_string($title);
+
         // It's important to keep the return type as static because
         // the old Facade Ignition contracts extend from this method.
 
@@ -20,8 +22,10 @@ class BaseSolution implements Solution
         return new static($title);
     }
 
-    public function __construct(string $title = '')
+    public function __construct(/*string */$title = '')
     {
+        $title = cast_to_string($title);
+
         $this->title = $title;
     }
 
@@ -30,8 +34,10 @@ class BaseSolution implements Solution
         return $this->title;
     }
 
-    public function setSolutionTitle(string $title)/*: self*/
+    public function setSolutionTitle(/*string */$title)/*: self*/
     {
+        $title = cast_to_string($title);
+
         $this->title = $title;
 
         return $this;
@@ -42,8 +48,10 @@ class BaseSolution implements Solution
         return $this->description;
     }
 
-    public function setSolutionDescription(string $description)/*: self*/
+    public function setSolutionDescription(/*string */$description)/*: self*/
     {
+        $description = cast_to_string($description);
+
         $this->description = $description;
 
         return $this;

@@ -109,8 +109,10 @@ class ViewExceptionMapper
         return $rootException;
     }
 
-    protected function findCompiledView(string $compiledPath)/*: ?string*/
+    protected function findCompiledView(/*string */$compiledPath)/*: ?string*/
     {
+        $compiledPath = cast_to_string($compiledPath);
+
         $this->knownPaths ??= $this->getKnownPaths();
 
         return $this->knownPaths[$compiledPath] ?? null;
@@ -132,8 +134,12 @@ class ViewExceptionMapper
         return $knownPaths;
     }
 
-    protected function getBladeLineNumber(string $view, int $compiledLineNumber)/*: int*/
+    protected function getBladeLineNumber(/*string */$view, /*int */$compiledLineNumber)/*: int*/
     {
+        $compiledLineNumber = cast_to_int($compiledLineNumber);
+
+        $view = cast_to_string($view);
+
         return $this->bladeSourceMapCompiler->detectLineNumber($view, $compiledLineNumber);
     }
 

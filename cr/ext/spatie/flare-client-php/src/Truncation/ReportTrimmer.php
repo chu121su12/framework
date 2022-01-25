@@ -45,8 +45,10 @@ class ReportTrimmer
         return self::$maxPayloadSize;
     }
 
-    public static function setMaxPayloadSize(int $maxPayloadSize)/*: void*/
+    public static function setMaxPayloadSize(/*int */$maxPayloadSize)/*: void*/
     {
+        $maxPayloadSize = cast_to_int($maxPayloadSize);
+
         self::$maxPayloadSize = $maxPayloadSize;
     }
 }

@@ -59,22 +59,28 @@ class Backtrace
         return $this;
     }
 
-    public function applicationPath(string $applicationPath)/*: self*/
+    public function applicationPath(/*string */$applicationPath)/*: self*/
     {
+        $applicationPath = cast_to_string($applicationPath);
+
         $this->applicationPath = $applicationPath;
 
         return $this;
     }
 
-    public function offset(int $offset)/*: self*/
+    public function offset(/*int */$offset)/*: self*/
     {
+        $offset = cast_to_int($offset);
+
         $this->offset = $offset;
 
         return $this;
     }
 
-    public function limit(int $limit)/*: self*/
+    public function limit(/*int */$limit)/*: self*/
     {
+        $limit = cast_to_int($limit);
+
         $this->limit = $limit;
 
         return $this;
@@ -174,8 +180,10 @@ class Backtrace
         return array_values($frames);
     }
 
-    protected function isApplicationFrame(string $frameFilename)/*: bool*/
+    protected function isApplicationFrame(/*string */$frameFilename)/*: bool*/
     {
+        $frameFilename = cast_to_string($frameFilename);
+
         $relativeFile = str_replace('\\', DIRECTORY_SEPARATOR, $frameFilename);
 
         if (! empty($this->applicationPath)) {

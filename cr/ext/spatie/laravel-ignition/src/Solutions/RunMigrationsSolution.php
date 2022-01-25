@@ -9,8 +9,10 @@ class RunMigrationsSolution implements RunnableSolution
 {
     protected string $customTitle;
 
-    public function __construct(string $customTitle = '')
+    public function __construct(/*string */$customTitle = '')
     {
+        $customTitle = cast_to_string($customTitle);
+
         $this->customTitle = $customTitle;
     }
 

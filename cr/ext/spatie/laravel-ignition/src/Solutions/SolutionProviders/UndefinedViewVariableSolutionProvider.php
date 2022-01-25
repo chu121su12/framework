@@ -77,8 +77,12 @@ class UndefinedViewVariableSolutionProvider implements HasSolutionsForThrowable
             ->toArray();
     }
 
-    protected function findOptionalVariableSolution(string $variableName, string $viewFile)/*: Solution*/
+    protected function findOptionalVariableSolution(/*string */$variableName, /*string */$viewFile)/*: Solution*/
     {
+        $viewFile = cast_to_string($viewFile);
+
+        $variableName = cast_to_string($variableName);
+
         $optionalSolution = new MakeViewVariableOptionalSolution($variableName, $viewFile);
 
         return $optionalSolution->isRunnable()

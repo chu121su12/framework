@@ -20,8 +20,10 @@ class SolutionProviderRepository implements SolutionProviderRepositoryContract
         $this->solutionProviders = Collection::make($solutionProviders);
     }
 
-    public function registerSolutionProvider(string $solutionProviderClass)/*: SolutionProviderRepositoryContract*/
+    public function registerSolutionProvider(/*string */$solutionProviderClass)/*: SolutionProviderRepositoryContract*/
     {
+        $solutionProviderClass = cast_to_string($solutionProviderClass);
+
         $this->solutionProviders->push($solutionProviderClass);
 
         return $this;
@@ -47,7 +49,9 @@ class SolutionProviderRepository implements SolutionProviderRepositoryContract
         }
 
         $providedSolutions = $this->solutionProviders
-            ->filter(function (string $solutionClass) {
+            ->filter(function (/*string */$solutionClass) {
+                $solutionClass = cast_to_string($solutionClass);
+
                 if (! in_array(HasSolutionsForThrowable::class, class_implements($solutionClass) ?: [])) {
                     return false;
                 }
@@ -81,8 +85,10 @@ class SolutionProviderRepository implements SolutionProviderRepositoryContract
         return array_merge($solutions, $providedSolutions);
     }
 
-    public function getSolutionForClass(string $solutionClass)/*: ?Solution*/
+    public function getSolutionForClass(/*string */$solutionClass)/*: ?Solution*/
     {
+        $solutionClass = cast_to_string($solutionClass);
+
         if (! class_exists($solutionClass)) {
             return null;
         }

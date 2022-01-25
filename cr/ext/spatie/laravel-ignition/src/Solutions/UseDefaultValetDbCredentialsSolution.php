@@ -32,8 +32,12 @@ class UseDefaultValetDbCredentialsSolution implements RunnableSolution
         $this->ensureLineExists('DB_PASSWORD', '');
     }
 
-    protected function ensureLineExists(string $key, string $value)/*: void*/
+    protected function ensureLineExists(/*string */$key, /*string */$value)/*: void*/
     {
+        $value = cast_to_string($value);
+
+        $key = cast_to_string($key);
+
         $envPath = base_path('.env');
 
         $envLines = array_map(fn (string $envLine) => Str::startsWith($envLine, $key)

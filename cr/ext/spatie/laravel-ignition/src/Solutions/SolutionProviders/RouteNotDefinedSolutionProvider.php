@@ -43,8 +43,10 @@ class RouteNotDefinedSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function findRelatedRoute(string $missingRoute)/*: ?string*/
+    protected function findRelatedRoute(/*string */$missingRoute)/*: ?string*/
     {
+        $missingRoute = cast_to_string($missingRoute);
+
         Route::getRoutes()->refreshNameLookups();
 
         return StringComparator::findClosestMatch(array_keys(Route::getRoutes()->getRoutesByName()), $missingRoute);

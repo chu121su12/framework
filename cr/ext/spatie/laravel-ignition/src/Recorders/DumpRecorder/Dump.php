@@ -12,8 +12,16 @@ class Dump
 
     protected float $microtime;
 
-    public function __construct(string $htmlDump, ?string $file, ?int $lineNumber, ?float $microtime = null)
+    public function __construct(/*string */$htmlDump, /*?string */$file = null, /*?int */$lineNumber = null, /*?float */$microtime = null = null)
     {
+        $htmlDump = cast_to_string($htmlDump);
+
+        $microtime = cast_to_float($microtime, null);
+
+        $lineNumber = cast_to_int($lineNumber, null);
+
+        $file = cast_to_string($file, null);
+
         $this->htmlDump = $htmlDump;
         $this->file = $file;
         $this->lineNumber = $lineNumber;
