@@ -500,7 +500,7 @@ class PhpRedisConnection extends Connection implements ConnectionContract
     {
         $arguments = func_get_args();
 
-        if (strtoupper((string) ($arguments[0] ?? null)) === 'ASYNC') {
+        if (strtoupper((string) (isset($arguments[0]) ? $arguments[0] : null)) === 'ASYNC') {
             return $this->command('flushdb', [true]);
         }
 

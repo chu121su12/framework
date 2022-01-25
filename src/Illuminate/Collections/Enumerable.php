@@ -1151,14 +1151,14 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      *
      * @return \Traversable<TKey, TValue>
      */
-    public function getIterator(): Traversable;
+    public function getIterator()/*: Traversable*/;
 
     /**
      * Count the number of items in the collection.
      *
      * @return int
      */
-    public function count(): int;
+    public function count()/*: int*/;
 
     /**
      * Count the number of items in the collection by a field or using a callback.
@@ -1200,7 +1200,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      *
      * @return array<TKey, mixed>
      */
-    public function jsonSerialize(): array;
+    public function jsonSerialize()/*: array*/;
 
     /**
      * Get the collection of items as JSON.

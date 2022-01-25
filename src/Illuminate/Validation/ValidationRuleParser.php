@@ -119,7 +119,7 @@ class ValidationRuleParser
 
         if ($rule instanceof NestedRules) {
             return $rule->compile(
-                $attribute, $this->data[$attribute] ?? null, Arr::dot($this->data)
+                $attribute, isset($this->data[$attribute]) ? $this->data[$attribute] : null, Arr::dot($this->data)
             )->rules[$attribute];
         }
 
