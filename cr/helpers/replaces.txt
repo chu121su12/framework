@@ -129,7 +129,7 @@ class Response
 //=========================
 
 
-(function[^\(]+[^\)]+\))(:.*?)(;)?$
+(function[^\(]+[^\)]+\))(:.*?)(;\{)?$
 $1/*$2*/$3
 
    1     2   3                             4   5                                    6    7     8    9
@@ -148,23 +148,6 @@ $1/*$2*/$3
 (function[^\(]+.*?[\(,]\s*)(\?)(\\?\w+\s+&?\$\w+)(,|\))
 $1/*$2*/$3 = null$4
 
-((?:self::\$?|\$)\w+(?:->\w+)*(?:\[[^\]]+\])?)\s+\?\?
-isset($1) ? $1 :
-
-((?:self::\$?|\$)\w+(?:->\w+)*)(\[[^\]]+\])(\[[^\]]+\])\s+\?\?
-isset($1$2) && isset($1$2$3) ? $1$2$3 :
-
-(foreach.* as\s+)\[([^\]]+?)\](\))
-$1list($2)$3
-
-([{};]\s+)\[([^\]]+?)\](\s*=)
-$1list($2)$3
-
-((?:self::\$?|\$)\w+(?:->\w+)*)(\[[^\]]+\])+\s+\?\?
-// ?
-
-(\n\s+)(private |protected |public )(const\b)
-$1/*$2*/$3
 
    1     2   3                             4   5             6    7     8    9
 \n( {4})( *)(.*?function[^\(]+.*?[\(,]\s*)(\?)(\\?Throwable)(\s+)(&?\$)(\w+)(\s*[^\{]+?\{)
@@ -183,10 +166,32 @@ $1/*$2*/$3
 \n$1$2\\Exception$4$5$6\n$1$2\\Error$4$5$6\n$1$2$3$4$5$6\n$1}\n\n$1if (isset($5)) {
 
 
+((?:self::\$?|\$)\w+(?:->\w+)*(?:\[[^\]]+\])?)\s+\?\?
+isset($1) ? $1 :
+
+((?:self::\$?|\$)\w+(?:->\w+)*)(\[[^\]]+\])(\[[^\]]+\])\s+\?\?
+isset($1$2) && isset($1$2$3) ? $1$2$3 :
+
+(foreach.* as\s+)\[([^\]]+?)\](\))
+$1list($2)$3
+
+([{};]\s+)\[([^\]]+?)\](\s*=)
+$1list($2)$3
+
+((?:self::\$?|\$)\w+(?:->\w+)*)(\[[^\]]+\])+\s+\?\?
+// ?
+
+
+
+(\n\s+)(private |protected |public )(const\b)
+$1/*$2*/$3
+
+
 (\bfunction (?:for|eval|finally|try|catch|default|class|if|use|include)\b)\(
 $1_(
 
-(->\s*(?:for|eval|finally|try|empty|catch|class|if|use|include)\b\(
+->\s*(?:for|eval|finally|try|empty|catch|class|if|use|include)\b\(
 
 
-
+\n    (public|protected|private) +((?!(?:\$|static func|func))\S+\s+)
+\n    $1 /*$2*/
