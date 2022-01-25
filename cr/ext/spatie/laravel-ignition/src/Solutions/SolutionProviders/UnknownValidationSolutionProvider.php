@@ -15,7 +15,7 @@ use Throwable;
 
 class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
 {
-    protected const REGEX = '/Illuminate\\\\Validation\\\\Validator::(?P<method>validate(?!(Attribute|UsingCustomRule))[A-Z][a-zA-Z]+)/m';
+    /*protected */const REGEX = '/Illuminate\\\\Validation\\\\Validator::(?P<method>validate(?!(Attribute|UsingCustomRule))[A-Z][a-zA-Z]+)/m';
 
     public function canSolve(/*Throwable */$throwable)/*: bool*/
     {

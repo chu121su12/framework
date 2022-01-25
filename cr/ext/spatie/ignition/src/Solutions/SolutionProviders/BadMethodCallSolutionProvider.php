@@ -12,7 +12,7 @@ use Throwable;
 
 class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
 {
-    protected const REGEX = '/([a-zA-Z\\\\]+)::([a-zA-Z]+)/m';
+    /*protected */const REGEX = '/([a-zA-Z\\\\]+)::([a-zA-Z]+)/m';
 
     public function canSolve(/*Throwable */$throwable)/*: bool*/
     {

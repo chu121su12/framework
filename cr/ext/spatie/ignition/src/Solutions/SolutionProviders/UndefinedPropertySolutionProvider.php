@@ -12,8 +12,8 @@ use Throwable;
 
 class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
 {
-    protected const REGEX = '/([a-zA-Z\\\\]+)::\$([a-zA-Z]+)/m';
-    protected const MINIMUM_SIMILARITY = 80;
+    /*protected */const REGEX = '/([a-zA-Z\\\\]+)::\$([a-zA-Z]+)/m';
+    /*protected */const MINIMUM_SIMILARITY = 80;
 
     public function canSolve(/*Throwable */$throwable)/*: bool*/
     {

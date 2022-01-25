@@ -7,7 +7,7 @@ use Spatie\FlareClient\Report;
 
 class AddNotifierName implements FlareMiddleware
 {
-    public const NOTIFIER_NAME = 'Laravel Client';
+    /*public */const NOTIFIER_NAME = 'Laravel Client';
 
     public function handle(Report $report, $next)
     {

@@ -15,7 +15,7 @@ use Throwable;
 
 class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
 {
-    protected const REGEX = '/View \[(.*)\] not found/m';
+    /*protected */const REGEX = '/View \[(.*)\] not found/m';
 
     public function canSolve(/*Throwable */$throwable)/*: bool*/
     {

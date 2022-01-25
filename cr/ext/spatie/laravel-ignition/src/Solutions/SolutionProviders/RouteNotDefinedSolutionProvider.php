@@ -11,7 +11,7 @@ use Throwable;
 
 class RouteNotDefinedSolutionProvider implements HasSolutionsForThrowable
 {
-    protected const REGEX = '/Route \[(.*)\] not defined/m';
+    /*protected */const REGEX = '/Route \[(.*)\] not defined/m';
 
     public function canSolve(/*Throwable */$throwable)/*: bool*/
     {
