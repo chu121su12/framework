@@ -18,12 +18,17 @@ use RuntimeException;
 
 class JobRecorder
 {
-    protected ?Job $job = null;
+    protected /*?Job */$job = null;
+
+    protected /*Application */$app;
+    protected /*int */$maxChainedJobReportingDepth = 5;
 
     public function __construct(
-        protected Application $app,
-        protected int $maxChainedJobReportingDepth = 5,
+        /*protected */Application $app,
+        /*protected *//*int */$maxChainedJobReportingDepth = 5
     ) {
+        $this->app = $app;
+        $this->maxChainedJobReportingDepth = cast_to_int($maxChainedJobReportingDepth);
     }
 
     public function start()/*: self*/

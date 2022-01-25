@@ -11,6 +11,12 @@ use Throwable;
 
 class ErrorPageViewModel
 {
+    protected /*?Throwable */$throwable;
+    protected /*IgnitionConfig */$ignitionConfig;
+    protected /*Report */$report;
+    protected /*array */$solutions;
+    protected /*?string */$solutionTransformerClass;
+
     /**
      * @param \Throwable|null $throwable
      * @param \Spatie\Ignition\Config\IgnitionConfig $ignitionConfig
@@ -19,12 +25,16 @@ class ErrorPageViewModel
      * @param string|null $solutionTransformerClass
      */
     public function __construct(
-        protected ?Throwable $throwable,
-        protected IgnitionConfig $ignitionConfig,
-        protected Report $report,
-        protected array $solutions,
-        protected ?string $solutionTransformerClass = null
+        /*protected *//*?Throwable */$throwable,
+        /*protected */IgnitionConfig $ignitionConfig,
+        /*protected */Report $report,
+        /*protected */array $solutions,
+        /*protected *//*?string */$solutionTransformerClass = null
     ) {
+        backport_type_throwable($throwable, null);
+
+        $solutionTransformerClass = cast_to_string($solutionTransformerClass, null);
+
         if (!isset($this->solutionTransformerClass)) {
             $this->solutionTransformerClass = SolutionTransformer::class;
         }

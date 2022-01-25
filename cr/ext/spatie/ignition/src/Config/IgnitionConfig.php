@@ -12,11 +12,15 @@ class IgnitionConfig implements Arrayable
         return (new self())->loadConfigFile();
     }
 
+    protected $options = [];
+
     /**
      * @param array<string, mixed> $options
      */
-    public function __construct(protected array $options = [])
+    public function __construct(/*protected */array $options = [])
     {
+        $this->options = $options;
+
         $defaultOptions = $this->getDefaultOptions();
 
         $this->options = array_merge($defaultOptions, $options);

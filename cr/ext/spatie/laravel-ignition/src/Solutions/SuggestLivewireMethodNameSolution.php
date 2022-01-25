@@ -6,11 +6,18 @@ use Spatie\Ignition\Contracts\Solution;
 
 class SuggestLivewireMethodNameSolution implements Solution
 {
+    protected /*string */$methodName;
+    protected /*string */$componentClass;
+    protected /*string */$suggested;
+
     public function __construct(
-        protected string $methodName,
-        protected string $componentClass,
-        protected string $suggested
+        protected /*string */$methodName,
+        protected /*string */$componentClass,
+        protected /*string */$suggested
     ) {
+        $this->methodName = cast_to_string($methodName);
+        $this->componentClass = cast_to_string($componentClass);
+        $this->suggested = cast_to_string($suggested);
     }
 
     public function getSolutionTitle()/*: string*/

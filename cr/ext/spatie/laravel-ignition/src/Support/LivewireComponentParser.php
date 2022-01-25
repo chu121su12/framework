@@ -11,9 +11,9 @@ use ReflectionProperty;
 
 class LivewireComponentParser
 {
-    protected string $componentClass;
+    protected /*string */$componentClass;
 
-    protected ReflectionClass $reflectionClass;
+    protected /*ReflectionClass */$reflectionClass;
 
     public static function create(/*string */$componentAlias)/*: self*/
     {
@@ -22,8 +22,12 @@ class LivewireComponentParser
         return new self($componentAlias);
     }
 
-    public function __construct(protected string $componentAlias)
+    protected /*string */$componentAlias;
+
+    public function __construct(/*protected *//*string */$componentAlias)
     {
+        $this->componentAlias = cast_to_string($componentAlias);
+
         $this->componentClass = app(LivewireManager::class)->getClass($this->componentAlias);
         $this->reflectionClass = new ReflectionClass($this->componentClass);
     }
