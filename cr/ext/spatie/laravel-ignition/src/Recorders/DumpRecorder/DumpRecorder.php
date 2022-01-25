@@ -7,6 +7,9 @@ use Illuminate\Support\Arr;
 use ReflectionMethod;
 use ReflectionProperty;
 use Symfony\Component\VarDumper\Cloner\Data;
+use Symfony\Component\VarDumper\Cloner\VarCloner;
+use Symfony\Component\VarDumper\Dumper\CliDumper;
+use Symfony\Component\VarDumper\Dumper\HtmlDumper as BaseHtmlDumper;
 use Symfony\Component\VarDumper\VarDumper;
 
 class DumpRecorder
@@ -151,5 +154,31 @@ class DumpRecorder
         }
 
         return null;
+    }
+
+    protected function getDefaultHandler()
+    {
+        return function ($value) {
+            $data = (new VarCloner())->cloneVar($value);
+
+            $this->getDumper()->dump($data);
+        };
+    }
+
+    protected function getDumper()
+    {
+        if (isset($_SERVER['VAR_DUMPER_FORMAT'])) {
+            if ($_SERVER['VAR_DUMPER_FORMAT'] === 'html') {
+                return new BaseHtmlDumper();
+            }
+
+            return new CliDumper();
+        }
+
+        if (in_array(PHP_SAPI, ['cli', 'phpdbg']) && ! isset($_SERVER['LARAVEL_OCTANE'])) {
+            return new CliDumper() ;
+        }
+
+        return new BaseHtmlDumper();
     }
 }
