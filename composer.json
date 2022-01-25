@@ -58,6 +58,10 @@
         "league/flysystem": "^1.0.70",
         "nesbot/carbon": "^2.55.2",
         "nunomaduro/collision": "^6.0.0",
+        "spatie/backtrace": "^1.2.1",
+        "spatie/flare-client-php": "^1.0.0",
+        "spatie/ignition": "^1.0.2",
+        "spatie/laravel-ignition": "^1.0.2",
         "symfony/deprecation-contracts": "^3.0.0",
         "symfony/error-handler": "^5.4.2",
         "symfony/mime": "^5.4.2",
@@ -152,6 +156,7 @@
             "cr/helpers/helpers.php",
             "cr/ext/inertiajs/inertia-laravel/helpers.php",
 
+            "cr/ext/spatie/flate-client-php/src/helpers.php",
             "cr/ext/symfony/deprecation-contracts/function.php",
             "cr/patch/symfony/polyfill/src/Apcu/bootstrap.php",
             "cr/patch/symfony/polyfill/src/bootstrap.php",
@@ -195,6 +200,10 @@
             "Laravel\\Tinker\\": "cr/ext/laravel/tinker/src/",
             "League\\Flysystem\\": "cr/ext/league/flysystem/src/",
             "NunoMaduro\\Collision\\": "cr/ext/nunomaduro/collision/src/",
+            "Spatie\\Backtrace\\": "cr/ext/spatie/backtrace/src/",
+            "Spatie\\FlareClient\\": "cr/ext/spatie/flate-client-php/src/",
+            "Spatie\\Ignition\\": "cr/ext/spatie/ignition/src/",
+            "Spatie\\LaravelIgnition\\": "cr/ext/spatie/laravel-ignition/src/",
             "Symfony\\Component\\ErrorHandler\\": "cr/ext/symfony/error-handler/",
             "Symfony\\Component\\HttpFoundation\\": "cr/patch/symfony/http-foundation/",
             "Symfony\\Component\\Mime\\": "cr/ext/symfony/mime/",
@@ -250,9 +259,11 @@
                 "Laravel\\Sanctum\\SanctumServiceProvider",
                 "Laravel\\Telescope\\TelescopeServiceProvider",
                 "Laravel\\Tinker\\TinkerServiceProvider",
-                "NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider"
+                "NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider",
+                "Spatie\\LaravelIgnition\\IgnitionServiceProvider"
             ],
             "aliases": {
+                "Flare": "Spatie\\LaravelIgnition\\Facades\\Flare",
                 "Octane": "Laravel\\Octane\\Facades\\Octane"
             }
         }
