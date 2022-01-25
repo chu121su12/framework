@@ -80,7 +80,7 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
                     ->flatMap(function (/*string */$path) use ($extensions) {
                         $path = cast_to_string($path);
                         return $this->getViewsInPath($path, $extensions);
-                    });
+                    })
                     ->map(function (/*string */$view) {
                         $view = cast_to_string($view);
                         return "{$namespace}::{$view}";

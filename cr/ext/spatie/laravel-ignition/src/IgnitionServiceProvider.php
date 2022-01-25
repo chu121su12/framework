@@ -117,8 +117,10 @@ class IgnitionServiceProvider extends ServiceProvider
     protected function registerFlare()/*: void*/
     {
         $this->app->singleton(Flare::class, function () {
+            $configKey = config('flare.key');
+
             return Flare::make()
-                ->setApiToken(config('flare.key') ?? '')
+                ->setApiToken(isset($configKey) ? $configKey : '')
                 ->setBaseUrl(config('flare.base_url', 'https://flareapp.io/api'))
                 ->setStage(config('app.env'))
                 ->registerMiddleware($this->getFlareMiddleware())
@@ -148,7 +150,7 @@ class IgnitionServiceProvider extends ServiceProvider
     {
         $this->app->singleton(DumpRecorder::class);
 
-        $this->app->singleton(LogRecorder::class, function (Application $app)/*: LogRecorder {*/
+        $this->app->singleton(LogRecorder::class, function (Application $app)/*: LogRecorder */{
             return new LogRecorder(
                 $app,
                 config()->get('flare.flare_middleware' . AddLogs::class . 'maximum_number_of_collected_logs')
@@ -157,7 +159,7 @@ class IgnitionServiceProvider extends ServiceProvider
 
         $this->app->singleton(
             QueryRecorder::class,
-            function (Application $app)/*: QueryRecorder {*/
+            function (Application $app)/*: QueryRecorder */{
                 return new QueryRecorder(
                     $app,
                     config()->get('flare.flare_middleware.' . AddQueries::class . '.report_query_bindings'),
@@ -166,7 +168,7 @@ class IgnitionServiceProvider extends ServiceProvider
             }
         );
 
-        $this->app->singleton(JobRecorder::class, function (Application $app)/*: JobRecorder {*/
+        $this->app->singleton(JobRecorder::class, function (Application $app)/*: JobRecorder */{
             return new JobRecorder(
                 $app,
                 config()->get('flare.flare_middleware.' . AddJobs::class . '.max_chained_job_reporting_depth')
@@ -224,7 +226,7 @@ class IgnitionServiceProvider extends ServiceProvider
         $this->app->singleton('flare.logger', function ($app) {
             $handler = new FlareLogHandler(
                 $app->make(Flare::class),
-                $app->make(SentReports::class),
+                $app->make(SentReports::class)
             );
 
             $logLevelString = config('logging.channels.flare.level', 'error');
@@ -281,7 +283,8 @@ class IgnitionServiceProvider extends ServiceProvider
     {
         $logLevelString = cast_to_string($logLevelString);
 
-        $logLevel = Logger::getLevels()[strtoupper($logLevelString)] ?? null;
+        $loggerLevels = Logger::getLevels();
+        $logLevel = isset($loggerLevels) && $loggerLevels[strtoupper($logLevelString)] ? $loggerLevels[strtoupper($logLevelString)] : null;
 
         if (! $logLevel) {
             throw InvalidConfig::invalidLogLevel($logLevelString);

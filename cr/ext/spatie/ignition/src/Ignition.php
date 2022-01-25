@@ -200,7 +200,7 @@ class Ignition
 
     public function configureFlare(callable $callable)/*: self*/
     {
-        ($callable)($this->flare);
+        $callable($this->flare);
 
         return $this;
     }
@@ -210,7 +210,7 @@ class Ignition
      *
      * @return $this
      */
-    public function registerMiddleware(array|FlareMiddleware $middleware)/*: self*/
+    public function registerMiddleware(/*array|FlareMiddleware */$middleware)/*: self*/
     {
         if (! is_array($middleware)) {
             $middleware = [$middleware];
@@ -332,7 +332,7 @@ class Ignition
             $this->ignitionConfig,
             $report,
             $this->solutionProviderRepository->getSolutionsForThrowable($throwable),
-            $this->solutionTransformerClass,
+            $this->solutionTransformerClass
         );
 
         (new Renderer())->render(['viewModel' => $viewModel]);

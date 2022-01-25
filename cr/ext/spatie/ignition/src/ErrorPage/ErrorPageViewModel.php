@@ -11,11 +11,11 @@ use Throwable;
 
 class ErrorPageViewModel
 {
-    protected /*/*?Throwable */*/$throwable;
-    protected /*/*IgnitionConfig */*/$ignitionConfig;
-    protected /*/*Report */*/$report;
-    protected /*/*array */*/$solutions;
-    protected /*/*?string */*/$solutionTransformerClass;
+    protected /*?Throwable */$throwable;
+    protected /*IgnitionConfig */$ignitionConfig;
+    protected /*Report */$report;
+    protected /*array */$solutions;
+    protected /*?string */$solutionTransformerClass;
 
     /**
      * @param \Throwable|null $throwable
@@ -46,13 +46,14 @@ class ErrorPageViewModel
             return '';
         }
 
+        $maybeThrowable = $this->report->getThrowable();
         $throwableString = sprintf(
             "%s: %s in file %s on line %d\n\n%s\n",
             get_class($this->throwable),
             $this->throwable->getMessage(),
             $this->throwable->getFile(),
             $this->throwable->getLine(),
-            $this->report->getThrowable()?->getTraceAsString()
+            isset($maybeThrowable) ? $maybeThrowable->getTraceAsString() : $maybeThrowable
         );
 
         return htmlspecialchars($throwableString);
@@ -83,7 +84,7 @@ class ErrorPageViewModel
             /** @var SolutionTransformer $transformer */
             $transformer = new $transformerClass($solution);
 
-            return ($transformer)->toArray();
+            return $transformer->toArray();
         }, $this->solutions);
     }
 

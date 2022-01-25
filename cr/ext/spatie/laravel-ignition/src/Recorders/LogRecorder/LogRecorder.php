@@ -15,7 +15,7 @@ class LogRecorder
 
     protected /*?int */$maxLogs;
 
-    public function __construct(Application $app, /*?int */$maxLogs = null = null)
+    public function __construct(Application $app, /*?int */$maxLogs = null)
     {
         $maxLogs = cast_to_int($maxLogs, null);
 

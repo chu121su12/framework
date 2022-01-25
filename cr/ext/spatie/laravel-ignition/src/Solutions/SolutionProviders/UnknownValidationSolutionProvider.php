@@ -74,7 +74,7 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
     {
         $class = new ReflectionClass(Validator::class);
 
-        $extensions = Collection::make((app('validator')->make([], []))->extensions)
+        $extensions = Collection::make(app('validator')->make([], [])->extensions)
             ->keys()
             ->map(function (/*string */$extension) {
                 $extension = cast_to_string($extension);

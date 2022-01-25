@@ -18,9 +18,12 @@ class QueryRecorder
 
     public function __construct(
         Application $app,
-        bool $reportBindings = true,
-        ?int $maxQueries = null
+        /*bool */$reportBindings = true,
+        /*?int */$maxQueries = null
     ) {
+        $reportBindings = cast_to_bool($reportBindings);
+        $maxQueries = cast_to_int($maxQueries, null);
+
         $this->app = $app;
         $this->reportBindings = $reportBindings;
         $this->maxQueries = $maxQueries;

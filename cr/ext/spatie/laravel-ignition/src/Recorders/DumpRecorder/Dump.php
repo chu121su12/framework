@@ -12,7 +12,7 @@ class Dump
 
     protected /*float */$microtime;
 
-    public function __construct(/*string */$htmlDump, /*?string */$file = null, /*?int */$lineNumber = null, /*?float */$microtime = null = null)
+    public function __construct(/*string */$htmlDump, /*?string */$file = null, /*?int */$lineNumber = null, /*?float */$microtime = null)
     {
         $htmlDump = cast_to_string($htmlDump);
 

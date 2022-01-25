@@ -110,9 +110,9 @@ class TestCommand extends Command
                 ['spatie/laravel-ignition', InstalledVersions::getVersion('spatie/laravel-ignition')],
                 ['spatie/flare-client-php', InstalledVersions::getVersion('spatie/flare-client-php')],
                 /** @phpstan-ignore-next-line */
-                ['Curl', curl_version()['version'] ?? 'Unknown'],
+                ['Curl', isset(curl_version()['version']) ? curl_version()['version'] : 'Unknown'],
                 /** @phpstan-ignore-next-line */
-                ['SSL', curl_version()['ssl_version'] ?? 'Unknown'],
+                ['SSL', isset(curl_version()['ssl_version']) ? curl_version()['ssl_version'] : 'Unknown'],
             ]);
 
             if ($this->output->isVerbose()) {

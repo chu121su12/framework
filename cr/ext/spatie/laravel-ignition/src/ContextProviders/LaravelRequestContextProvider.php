@@ -21,14 +21,20 @@ class LaravelRequestContextProvider extends RequestContextProvider
     public function getUser()/*: array|null*/
     {
         try {
+            $request = $this->request;
             /** @var object|null $user */
             /** @phpstan-ignore-next-line */
-            $user = $this->request?->user();
+            $user = isset($request) ? $request->user() : null;
 
             if (! $user) {
                 return null;
             }
-        } catch (Throwable) {
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             return null;
         }
 
@@ -65,11 +71,12 @@ class LaravelRequestContextProvider extends RequestContextProvider
             return null;
         }
 
+        $middlewares = $route->gatherMiddleware();
         return [
             'route' => $route->getName(),
             'routeParameters' => $this->getRouteParameters(),
             'controllerAction' => $route->getActionName(),
-            'middleware' => array_values($route->gatherMiddleware() ?? []),
+            'middleware' => array_values(isset($middlewares) ? $middlewares : []),
         ];
     }
 
@@ -77,14 +84,20 @@ class LaravelRequestContextProvider extends RequestContextProvider
     protected function getRouteParameters()/*: array*/
     {
         try {
+            $optionalParameters = optional($this->request->route())->parameters;
             /** @phpstan-ignore-next-line */
-            return collect(optional($this->request->route())->parameters ?? [])
+            return collect(isset($optionalParameters) ? $optionalParameters : [])
                 ->map(function ($parameter) { return $parameter instanceof Model ? $parameter->withoutRelations() : $parameter; })
                 ->map(function ($parameter) {
                     return method_exists($parameter, 'toFlare') ? $parameter->toFlare() : $parameter;
                 })
                 ->toArray();
-        } catch (Throwable) {
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             return [];
         }
     }

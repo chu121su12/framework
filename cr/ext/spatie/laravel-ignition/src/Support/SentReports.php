@@ -41,7 +41,8 @@ class SentReports
 
     public function latestUuid()/*: ?string*/
     {
-        return Arr::last($this->reports)?->trackingUuid();
+        $report = Arr::last($this->reports);
+        return isset($report) ? $report->trackingUuid() : null;
     }
 
     public function latestUrl()/*: ?string*/

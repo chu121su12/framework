@@ -72,11 +72,13 @@ class LaravelLivewireRequestContextProvider extends LaravelRequestContextProvide
     /** @return array<string, mixed> */
     protected function resolveData()/*: array*/
     {
+        $serverMemoData = $this->request->input('serverMemo.data');
         /** @phpstan-ignore-next-line */
-        $data = $this->request->input('serverMemo.data') ?? [];
+        $data = isset($serverMemoData) ? $serverMemoData : [];
 
+        $serverMemoDataMeta = $this->request->input('serverMemo.dataMeta');
         /** @phpstan-ignore-next-line */
-        $dataMeta = $this->request->input('serverMemo.dataMeta') ?? [];
+        $dataMeta = isset($serverMemoDataMeta) ? $serverMemoDataMeta : [];
 
         /** @phpstan-ignore-next-line */
         foreach (isset($dataMeta['modelCollections']) ? $dataMeta['modelCollections'] : [] as $key => $value) {
@@ -94,8 +96,9 @@ class LaravelLivewireRequestContextProvider extends LaravelRequestContextProvide
     /** @return array<string, mixed> */
     protected function resolveUpdates()/*: array*/
     {
+        $requestUpdates = $this->request->input('updates');
         /** @phpstan-ignore-next-line */
-        $updates = $this->request->input('updates') ?? [];
+        $updates = isset($requestUpdates) ? $requestUpdates : [];
 
         return array_map(function (array $update) {
             $update['payload'] = Arr::except(isset($update['payload']) ? $update['payload'] : [], ['id']);

@@ -17,6 +17,7 @@ class RunnableSolutionsEnabled
 
     protected function ignitionEnabled()/*: bool*/
     {
-        return config('ignition.enable_runnable_solutions') ?? config('app.debug');
+        $runnableSolutions = config('ignition.enable_runnable_solutions');
+        return isset($runnableSolutions) ? $runnableSolutions : config('app.debug');
     }
 }

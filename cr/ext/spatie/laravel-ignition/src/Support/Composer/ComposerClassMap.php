@@ -15,7 +15,7 @@ class ComposerClassMap
 
     protected /*string */$basePath;
 
-    public function __construct(/*?string */$autoloaderPath = null = null)
+    public function __construct(/*?string */$autoloaderPath = null)
     {
         $autoloaderPath = cast_to_string($autoloaderPath, null);
 

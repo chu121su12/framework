@@ -52,9 +52,13 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
 
         $possibleMethod = $this->findPossibleMethod(isset($class) ? $class : '', isset($method) ? $method : '');
 
-        isset($class) ? $class := 'UnknownClass';
+        if (! isset($class)) {
+            $class = 'UnknownClass';
+        }
 
-        return "Did you mean {$class}::{$possibleMethod?->name}() ?";
+        $possibleMethodName = isset($possibleMethod) ? $possibleMethod->name : null;
+
+        return "Did you mean {$class}::{$possibleMethodName}() ?";
     }
 
     /**

@@ -332,7 +332,7 @@ class Report
     {
         return array_map(
             function (SpatieFrame $frame) { return Frame::fromSpatieFrame($frame)->toArray(); },
-            $this->stacktrace->frames(),
+            $this->stacktrace->frames()
         );
     }
 

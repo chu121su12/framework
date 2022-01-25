@@ -11,9 +11,9 @@ class SuggestLivewirePropertyNameSolution implements Solution
     protected /*string */$suggested;
 
     public function __construct(
-        protected /*string */$variableName,
-        protected /*string */$componentClass,
-        protected /*string */$suggested
+        /*protected *//*string */$variableName,
+        /*protected *//*string */$componentClass,
+        /*protected *//*string */$suggested
     ) {
         $this->variableName = cast_to_string($variableName);
         $this->componentClass = cast_to_string($componentClass);

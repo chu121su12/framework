@@ -11,9 +11,9 @@ class SuggestLivewireMethodNameSolution implements Solution
     protected /*string */$suggested;
 
     public function __construct(
-        protected /*string */$methodName,
-        protected /*string */$componentClass,
-        protected /*string */$suggested
+        /*protected *//*string */$methodName,
+        /*protected *//*string */$componentClass,
+        /*protected *//*string */$suggested
     ) {
         $this->methodName = cast_to_string($methodName);
         $this->componentClass = cast_to_string($componentClass);

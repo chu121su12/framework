@@ -37,7 +37,7 @@ class GenericLaravelExceptionSolutionProvider implements HasSolutionsForThrowabl
      *
      * @return array<string, mixed>|null
      */
-    protected function getSolutionTexts(/*Throwable */$throwable) : ?array
+    protected function getSolutionTexts(/*Throwable */$throwable)/* : ?array*/
     {
         backport_type_throwable($throwable);
 

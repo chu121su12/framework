@@ -104,7 +104,8 @@ class ViewExceptionMapper
     {
         backport_type_throwable($exception);
 
-        $rootException = $exception->getPrevious() ?? $exception;
+        $previous = $exception->getPrevious();
+        $rootException = isset($previous) ? $previous : $exception;
 
         while ($rootException instanceof ViewException && $rootException->getPrevious()) {
             $rootException = $rootException->getPrevious();
@@ -117,7 +118,9 @@ class ViewExceptionMapper
     {
         $compiledPath = cast_to_string($compiledPath);
 
-        isset($this->knownPaths) ? $this->knownPaths := $this->getKnownPaths();
+        if (!isset($this->knownPaths)) {
+            $this->knownPaths = $this->getKnownPaths();
+        }
 
         return isset($this->knownPaths[$compiledPath]) ? $this->knownPaths[$compiledPath] : null;
     }

@@ -62,7 +62,8 @@ class IgnitionConfig implements Arrayable
         if (file_exists($configFilePath)) {
             $content = (string)file_get_contents($configFilePath);
 
-            $options = json_decode($content, true) ?? [];
+            $decoded = json_decode($content, true);
+            $options = isset($decoded) ? $decoded : [];
         }
 
         return $options;
@@ -83,7 +84,12 @@ class IgnitionConfig implements Arrayable
 
         try {
             file_put_contents($configFilePath, json_encode($options));
-        } catch (Throwable) {
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             return false;
         }
 
