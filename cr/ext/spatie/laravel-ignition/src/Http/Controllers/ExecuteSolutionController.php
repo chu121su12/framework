@@ -27,7 +27,7 @@ class ExecuteSolutionController
         return response()->noContent();
     }
 
-    public function ensureLocalEnvironment(): self
+    public function ensureLocalEnvironment()/*: self*/
     {
         if (! app()->environment('local')) {
             throw CannotExecuteSolutionForNonLocalEnvironment::make();
@@ -36,7 +36,7 @@ class ExecuteSolutionController
         return $this;
     }
 
-    public function ensureLocalRequest(): self
+    public function ensureLocalRequest()/*: self*/
     {
         $ipIsPublic = filter_var(
             request()->ip(),

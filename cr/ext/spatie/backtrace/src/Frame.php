@@ -43,7 +43,7 @@ class Frame
         $this->applicationFrame = $isApplicationFrame;
     }
 
-    public function getSnippet(int $lineCount): array
+    public function getSnippet(int $lineCount)/*: array*/
     {
         return (new CodeSnippet())
             ->surroundingLine($this->lineNumber)
@@ -51,7 +51,7 @@ class Frame
             ->get($this->file);
     }
 
-    public function getSnippetProperties(int $lineCount): array
+    public function getSnippetProperties(int $lineCount)/*: array*/
     {
         $snippet = $this->getSnippet($lineCount);
 

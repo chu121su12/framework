@@ -13,7 +13,7 @@ class SolutionMakeCommand extends GeneratorCommand
 
     protected $type = 'Solution';
 
-    protected function getStub(): string
+    protected function getStub()/*: string*/
     {
         return $this->option('runnable')
             ? __DIR__.'/stubs/runnable-solution.stub'
@@ -26,7 +26,7 @@ class SolutionMakeCommand extends GeneratorCommand
     }
 
     /** @return array<int, mixed> */
-    protected function getOptions(): array
+    protected function getOptions()/*: array*/
     {
         return [
             ['runnable', null, InputOption::VALUE_NONE, 'Create runnable solution'],

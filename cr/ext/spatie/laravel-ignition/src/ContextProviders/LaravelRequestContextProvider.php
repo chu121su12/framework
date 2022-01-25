@@ -18,7 +18,7 @@ class LaravelRequestContextProvider extends RequestContextProvider
     }
 
     /** @return null|array<string, mixed> */
-    public function getUser(): array|null
+    public function getUser()/*: array|null*/
     {
         try {
             /** @var object|null $user */
@@ -48,7 +48,7 @@ class LaravelRequestContextProvider extends RequestContextProvider
     }
 
     /** @return null|array<string, mixed> */
-    public function getRoute(): array|null
+    public function getRoute()/*: array|null*/
     {
         /**
          * @phpstan-ignore-next-line
@@ -69,7 +69,7 @@ class LaravelRequestContextProvider extends RequestContextProvider
     }
 
     /** @return array<int, mixed> */
-    protected function getRouteParameters(): array
+    protected function getRouteParameters()/*: array*/
     {
         try {
             /** @phpstan-ignore-next-line */
@@ -85,7 +85,7 @@ class LaravelRequestContextProvider extends RequestContextProvider
     }
 
     /** @return array<int, mixed> */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         $properties = parent::toArray();
 

@@ -22,7 +22,7 @@ class LogRecorder
         $this->maxLogs = $maxLogs;
     }
 
-    public function start(): self
+    public function start()/*: self*/
     {
         /** @phpstan-ignore-next-line */
         $this->app['events']->listen(MessageLogged::class, [$this, 'record']);
@@ -30,7 +30,7 @@ class LogRecorder
         return $this;
     }
 
-    public function record(MessageLogged $event): void
+    public function record(MessageLogged $event)/*: void*/
     {
         if ($this->shouldIgnore($event)) {
             return;
@@ -44,13 +44,13 @@ class LogRecorder
     }
 
     /** @return array<array<int,string>> */
-    public function getLogMessages(): array
+    public function getLogMessages()/*: array*/
     {
         return $this->toArray();
     }
 
     /** @return array<int, mixed> */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         $logMessages = [];
 
@@ -61,7 +61,7 @@ class LogRecorder
         return $logMessages;
     }
 
-    protected function shouldIgnore(mixed $event): bool
+    protected function shouldIgnore(mixed $event)/*: bool*/
     {
         if (! isset($event->context['exception'])) {
             return false;
@@ -74,17 +74,17 @@ class LogRecorder
         return true;
     }
 
-    public function reset(): void
+    public function reset()/*: void*/
     {
         $this->logMessages = [];
     }
 
-    public function getMaxLogs(): ?int
+    public function getMaxLogs()/*: ?int*/
     {
         return $this->maxLogs;
     }
 
-    public function setMaxLogs(?int $maxLogs): self
+    public function setMaxLogs(?int $maxLogs)/*: self*/
     {
         $this->maxLogs = $maxLogs;
 

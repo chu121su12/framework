@@ -19,17 +19,17 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
         $this->viewFile = $viewFile;
     }
 
-    public function getSolutionTitle(): string
+    public function getSolutionTitle()/*: string*/
     {
         return "$$this->variableName is undefined";
     }
 
-    public function getDocumentationLinks(): array
+    public function getDocumentationLinks()/*: array*/
     {
         return [];
     }
 
-    public function getSolutionActionDescription(): string
+    public function getSolutionActionDescription()/*: string*/
     {
         $output = [
             'Make the variable optional in the blade template.',
@@ -39,17 +39,17 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
         return implode(PHP_EOL, $output);
     }
 
-    public function getRunButtonText(): string
+    public function getRunButtonText()/*: string*/
     {
         return 'Make variable optional';
     }
 
-    public function getSolutionDescription(): string
+    public function getSolutionDescription()/*: string*/
     {
         return '';
     }
 
-    public function getRunParameters(): array
+    public function getRunParameters()/*: array*/
     {
         return [
             'variableName' => $this->variableName,
@@ -62,7 +62,7 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
      *
      * @return bool
      */
-    public function isRunnable(array $parameters = []): bool
+    public function isRunnable(array $parameters = [])/*: bool*/
     {
         return $this->makeOptional($this->getRunParameters()) !== false;
     }
@@ -72,7 +72,7 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
      *
      * @return void
      */
-    public function run(array $parameters = []): void
+    public function run(array $parameters = [])/*: void*/
     {
         $output = $this->makeOptional($parameters);
         if ($output !== false) {
@@ -80,7 +80,7 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
         }
     }
 
-    protected function isSafePath(string $path): bool
+    protected function isSafePath(string $path)/*: bool*/
     {
         if (! Str::startsWith($path, ['/', './'])) {
             return false;
@@ -97,7 +97,7 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
      *
      * @return bool|string
      */
-    public function makeOptional(array $parameters = []): bool|string
+    public function makeOptional(array $parameters = [])/*: bool|string*/
     {
         if (! $this->isSafePath($parameters['viewFile'])) {
             return false;
@@ -124,7 +124,7 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
      *
      * @return array<int, mixed>
      */
-    protected function generateExpectedTokens(array $originalTokens, string $variableName): array
+    protected function generateExpectedTokens(array $originalTokens, string $variableName)/*: array*/
     {
         $expectedTokens = [];
         foreach ($originalTokens as $token) {

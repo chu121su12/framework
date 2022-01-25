@@ -18,7 +18,7 @@ class TestCommand extends Command
 
     protected Repository $config;
 
-    public function handle(Repository $config): void
+    public function handle(Repository $config)/*: void*/
     {
         $this->config = $config;
 
@@ -31,7 +31,7 @@ class TestCommand extends Command
         $this->sendTestException();
     }
 
-    protected function checkFlareKey(): self
+    protected function checkFlareKey()/*: self*/
     {
         $message = empty($this->config->get('flare.key'))
             ? '❌ Flare key not specified. Make sure you specify a value in the `key` key of the `flare` config file.'
@@ -42,7 +42,7 @@ class TestCommand extends Command
         return $this;
     }
 
-    public function checkFlareLogger(): self
+    public function checkFlareLogger()/*: self*/
     {
         $defaultLogChannel = $this->config->get('logging.default');
 
@@ -69,7 +69,7 @@ class TestCommand extends Command
         return $this;
     }
 
-    protected function sendTestException(): void
+    protected function sendTestException()/*: void*/
     {
         $testException = new Exception('This is an exception to test if the integration with Flare works.');
 

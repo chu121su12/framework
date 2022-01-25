@@ -18,7 +18,7 @@ class IgnitionWhoopsHandler extends Handler
         $this->errorPageHandler = $errorPageHandler;
     }
 
-    public function handle(): ?int
+    public function handle()/*: ?int*/
     {
         try {
             $this->errorPageHandler->render($this->exception);
@@ -40,7 +40,7 @@ class IgnitionWhoopsHandler extends Handler
     }
 
     /** @param \Throwable $exception */
-    public function setException($exception): void
+    public function setException($exception)/*: void*/
     {
         $this->exception = $exception;
     }

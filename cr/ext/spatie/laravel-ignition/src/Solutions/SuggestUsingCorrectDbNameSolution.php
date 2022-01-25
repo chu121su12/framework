@@ -6,12 +6,12 @@ use Spatie\Ignition\Contracts\Solution;
 
 class SuggestUsingCorrectDbNameSolution implements Solution
 {
-    public function getSolutionTitle(): string
+    public function getSolutionTitle()/*: string*/
     {
         return 'Database name seems incorrect';
     }
 
-    public function getSolutionDescription(): string
+    public function getSolutionDescription()/*: string*/
     {
         $defaultDatabaseName = env('DB_DATABASE');
 
@@ -19,7 +19,7 @@ class SuggestUsingCorrectDbNameSolution implements Solution
     }
 
     /** @return array<string, string> */
-    public function getDocumentationLinks(): array
+    public function getDocumentationLinks()/*: array*/
     {
         return [
             'Database: Getting Started docs' => 'https://laravel.com/docs/master/database#configuration',

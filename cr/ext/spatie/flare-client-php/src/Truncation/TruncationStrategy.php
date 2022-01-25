@@ -9,5 +9,5 @@ interface TruncationStrategy
      *
      * @return array<int|string, mixed>
      */
-    public function execute(array $payload): array;
+    public function execute(array $payload)/*: array*/;
 }

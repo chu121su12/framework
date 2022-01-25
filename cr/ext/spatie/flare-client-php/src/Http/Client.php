@@ -35,19 +35,19 @@ class Client
         $this->timeout = $timeout;
     }
 
-    public function setApiToken(string $apiToken): self
+    public function setApiToken(string $apiToken)/*: self*/
     {
         $this->apiToken = $apiToken;
 
         return $this;
     }
 
-    public function apiTokenSet(): bool
+    public function apiTokenSet()/*: bool*/
     {
         return ! empty($this->apiToken);
     }
 
-    public function setBaseUrl(string $baseUrl): self
+    public function setBaseUrl(string $baseUrl)/*: self*/
     {
         $this->baseUrl = $baseUrl;
 
@@ -145,7 +145,7 @@ class Client
         return $response->getBody();
     }
 
-    public function makeCurlRequest(string $httpVerb, string $fullUrl, array $headers = [], array $arguments = []): Response
+    public function makeCurlRequest(string $httpVerb, string $fullUrl, array $headers = [], array $arguments = [])/*: Response*/
     {
         $curlHandle = $this->getCurlHandle($fullUrl, $headers);
 

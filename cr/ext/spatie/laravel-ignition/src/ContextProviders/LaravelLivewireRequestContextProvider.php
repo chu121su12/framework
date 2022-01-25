@@ -17,7 +17,7 @@ class LaravelLivewireRequestContextProvider extends LaravelRequestContextProvide
     }
 
     /** @return array<string, string> */
-    public function getRequest(): array
+    public function getRequest()/*: array*/
     {
         $properties = parent::getRequest();
 
@@ -28,7 +28,7 @@ class LaravelLivewireRequestContextProvider extends LaravelRequestContextProvide
     }
 
     /** @return array<int|string, mixed> */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         $properties = parent::toArray();
 
@@ -38,7 +38,7 @@ class LaravelLivewireRequestContextProvider extends LaravelRequestContextProvide
     }
 
     /** @return array<string, mixed> */
-    protected function getLivewireInformation(): array
+    protected function getLivewireInformation()/*: array*/
     {
         /** @phpstan-ignore-next-line */
         $componentId = $this->request->input('fingerprint.id');
@@ -66,7 +66,7 @@ class LaravelLivewireRequestContextProvider extends LaravelRequestContextProvide
     }
 
     /** @return array<string, mixed> */
-    protected function resolveData(): array
+    protected function resolveData()/*: array*/
     {
         /** @phpstan-ignore-next-line */
         $data = $this->request->input('serverMemo.data') ?? [];
@@ -88,7 +88,7 @@ class LaravelLivewireRequestContextProvider extends LaravelRequestContextProvide
     }
 
     /** @return array<string, mixed> */
-    protected function resolveUpdates(): array
+    protected function resolveUpdates()/*: array*/
     {
         /** @phpstan-ignore-next-line */
         $updates = $this->request->input('updates') ?? [];

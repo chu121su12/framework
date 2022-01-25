@@ -33,7 +33,7 @@ class LogMessage
         $this->microtime = $microtime ?? microtime(true);
     }
 
-    public static function fromMessageLoggedEvent(MessageLogged $event): self
+    public static function fromMessageLoggedEvent(MessageLogged $event)/*: self*/
     {
         return new self(
             $event->message,
@@ -43,7 +43,7 @@ class LogMessage
     }
 
     /** @return array<string, mixed> */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'message' => $this->message,

@@ -13,14 +13,14 @@ trait HasContext
      */
     protected array $userProvidedContext = [];
 
-    public function stage(?string $stage): self
+    public function stage(?string $stage)/*: self*/
     {
         $this->stage = $stage;
 
         return $this;
     }
 
-    public function messageLevel(?string $messageLevel): self
+    public function messageLevel(?string $messageLevel)/*: self*/
     {
         $this->messageLevel = $messageLevel;
 
@@ -33,12 +33,12 @@ trait HasContext
      *
      * @return array<int, mixed>
      */
-    public function getGroup(string $groupName = 'context', $default = []): array
+    public function getGroup(string $groupName = 'context', $default = [])/*: array*/
     {
         return $this->userProvidedContext[$groupName] ?? $default;
     }
 
-    public function context(string $key, mixed $value): self
+    public function context(string $key, mixed $value)/*: self*/
     {
         return $this->group('context', [$key => $value]);
     }
@@ -49,7 +49,7 @@ trait HasContext
      *
      * @return $this
      */
-    public function group(string $groupName, array $properties): self
+    public function group(string $groupName, array $properties)/*: self*/
     {
         $group = $this->userProvidedContext[$groupName] ?? [];
 

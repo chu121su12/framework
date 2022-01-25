@@ -15,7 +15,7 @@ class SolutionTransformer implements Arrayable
     }
 
     /** @return array<string, array<string,string>|string|false> */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'class' => get_class($this->solution),

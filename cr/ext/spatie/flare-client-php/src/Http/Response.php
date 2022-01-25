@@ -19,27 +19,27 @@ class Response
         $this->error = $error;
     }
 
-    public function getHeaders(): mixed
+    public function getHeaders()/*: mixed*/
     {
         return $this->headers;
     }
 
-    public function getBody(): mixed
+    public function getBody()/*: mixed*/
     {
         return $this->body;
     }
 
-    public function hasBody(): bool
+    public function hasBody()/*: bool*/
     {
         return $this->body != false;
     }
 
-    public function getError(): mixed
+    public function getError()/*: mixed*/
     {
         return $this->error;
     }
 
-    public function getHttpResponseCode(): ?int
+    public function getHttpResponseCode()/*: ?int*/
     {
         if (! isset($this->headers['http_code'])) {
             return null;

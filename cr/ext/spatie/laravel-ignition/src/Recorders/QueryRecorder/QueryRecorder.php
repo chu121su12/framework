@@ -26,7 +26,7 @@ class QueryRecorder
         $this->maxQueries = $maxQueries;
     }
 
-    public function start(): self
+    public function start()/*: self*/
     {
         /** @phpstan-ignore-next-line  */
         $this->app['events']->listen(QueryExecuted::class, [$this, 'record']);
@@ -34,7 +34,7 @@ class QueryRecorder
         return $this;
     }
 
-    public function record(QueryExecuted $queryExecuted): void
+    public function record(QueryExecuted $queryExecuted)/*: void*/
     {
         $this->queries[] = Query::fromQueryExecutedEvent($queryExecuted, $this->reportBindings);
 
@@ -46,7 +46,7 @@ class QueryRecorder
     /**
      * @return array<int, array<string, mixed>>
      */
-    public function getQueries(): array
+    public function getQueries()/*: array*/
     {
         $queries = [];
 
@@ -57,29 +57,29 @@ class QueryRecorder
         return $queries;
     }
 
-    public function reset(): void
+    public function reset()/*: void*/
     {
         $this->queries = [];
     }
 
-    public function getReportBindings(): bool
+    public function getReportBindings()/*: bool*/
     {
         return $this->reportBindings;
     }
 
-    public function setReportBindings(bool $reportBindings): self
+    public function setReportBindings(bool $reportBindings)/*: self*/
     {
         $this->reportBindings = $reportBindings;
 
         return $this;
     }
 
-    public function getMaxQueries(): ?int
+    public function getMaxQueries()/*: ?int*/
     {
         return $this->maxQueries;
     }
 
-    public function setMaxQueries(?int $maxQueries): self
+    public function setMaxQueries(?int $maxQueries)/*: self*/
     {
         $this->maxQueries = $maxQueries;
 

@@ -6,7 +6,7 @@ use DateTimeImmutable;
 
 class SystemTime implements Time
 {
-    public function getCurrentTime(): int
+    public function getCurrentTime()/*: int*/
     {
         return (new DateTimeImmutable())->getTimestamp();
     }

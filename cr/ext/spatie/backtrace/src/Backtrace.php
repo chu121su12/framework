@@ -28,52 +28,52 @@ class Backtrace
     /** @var \Throwable|null */
     protected $throwable = null;
 
-    public static function create(): self
+    public static function create()/*: self*/
     {
         return new static();
     }
 
-    public static function createForThrowable(Throwable $throwable): self
+    public static function createForThrowable(Throwable $throwable)/*: self*/
     {
         return (new static())->forThrowable($throwable);
     }
 
-    protected function forThrowable(Throwable $throwable): self
+    protected function forThrowable(Throwable $throwable)/*: self*/
     {
         $this->throwable = $throwable;
 
         return $this;
     }
 
-    public function withArguments(): self
+    public function withArguments()/*: self*/
     {
         $this->withArguments = true;
 
         return $this;
     }
 
-    public function withObject(): self
+    public function withObject()/*: self*/
     {
         $this->withObject = true;
 
         return $this;
     }
 
-    public function applicationPath(string $applicationPath): self
+    public function applicationPath(string $applicationPath)/*: self*/
     {
         $this->applicationPath = $applicationPath;
 
         return $this;
     }
 
-    public function offset(int $offset): self
+    public function offset(int $offset)/*: self*/
     {
         $this->offset = $offset;
 
         return $this;
     }
 
-    public function limit(int $limit): self
+    public function limit(int $limit)/*: self*/
     {
         $this->limit = $limit;
 
@@ -90,14 +90,14 @@ class Backtrace
     /**
      * @return \Spatie\Backtrace\Frame[]
      */
-    public function frames(): array
+    public function frames()/*: array*/
     {
         $rawFrames = $this->getRawFrames();
 
         return $this->toFrameObjects($rawFrames);
     }
 
-    public function firstApplicationFrameIndex(): ?int
+    public function firstApplicationFrameIndex()/*: ?int*/
     {
         foreach ($this->frames() as $index => $frame) {
             if ($frame->applicationFrame) {
@@ -108,7 +108,7 @@ class Backtrace
         return null;
     }
 
-    protected function getRawFrames(): array
+    protected function getRawFrames()/*: array*/
     {
         if ($this->throwable) {
             return $this->throwable->getTrace();
@@ -136,7 +136,7 @@ class Backtrace
     /**
      * @return \Spatie\Backtrace\Frame[]
      */
-    protected function toFrameObjects(array $rawFrames): array
+    protected function toFrameObjects(array $rawFrames)/*: array*/
     {
         $currentFile = $this->throwable ? $this->throwable->getFile() : '';
         $currentLine = $this->throwable ? $this->throwable->getLine() : 0;
@@ -174,7 +174,7 @@ class Backtrace
         return array_values($frames);
     }
 
-    protected function isApplicationFrame(string $frameFilename): bool
+    protected function isApplicationFrame(string $frameFilename)/*: bool*/
     {
         $relativeFile = str_replace('\\', DIRECTORY_SEPARATOR, $frameFilename);
 
@@ -189,7 +189,7 @@ class Backtrace
         return true;
     }
 
-    protected function removeBacktracePackageFrames(array $frames): array
+    protected function removeBacktracePackageFrames(array $frames)/*: array*/
     {
         return $this->startAtFrameFromClosure($frames, function (Frame $frame) {
             return $frame->class !== static::class;
@@ -202,7 +202,7 @@ class Backtrace
      *
      * @return array
      */
-    protected function startAtFrameFromClosure(array $frames, Closure $closure): array
+    protected function startAtFrameFromClosure(array $frames, Closure $closure)/*: array*/
     {
         foreach ($frames as $i => $frame) {
             $foundStartingFrame = $closure($frame);

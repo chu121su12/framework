@@ -21,7 +21,7 @@ class RequestContextProvider implements ContextProvider
     /**
      * @return array<string, mixed>
      */
-    public function getRequest(): array
+    public function getRequest()/*: array*/
     {
         return [
             'url' => $this->request->getUri(),
@@ -34,7 +34,7 @@ class RequestContextProvider implements ContextProvider
     /**
      * @return array<int, mixed>
      */
-    protected function getFiles(): array
+    protected function getFiles()/*: array*/
     {
         if (is_null($this->request->files)) {
             return [];
@@ -48,7 +48,7 @@ class RequestContextProvider implements ContextProvider
      *
      * @return array<string, string>
      */
-    protected function mapFiles(array $files): array
+    protected function mapFiles(array $files)/*: array*/
     {
         return array_map(function ($file) {
             if (is_array($file)) {
@@ -82,7 +82,7 @@ class RequestContextProvider implements ContextProvider
     /**
      * @return array<string, mixed>
      */
-    public function getSession(): array
+    public function getSession()/*: array*/
     {
         try {
             $session = $this->request->getSession();
@@ -93,7 +93,7 @@ class RequestContextProvider implements ContextProvider
         return $session ? $this->getValidSessionData($session) : [];
     }
 
-    protected function getValidSessionData($session): array
+    protected function getValidSessionData($session)/*: array*/
     {
         if (! method_exists($session, 'all')) {
             return [];
@@ -111,7 +111,7 @@ class RequestContextProvider implements ContextProvider
     /**
      * @return array<int|string, mixed
      */
-    public function getCookies(): array
+    public function getCookies()/*: array*/
     {
         return $this->request->cookies->all();
     }
@@ -119,7 +119,7 @@ class RequestContextProvider implements ContextProvider
     /**
      * @return array<string, mixed>
      */
-    public function getHeaders(): array
+    public function getHeaders()/*: array*/
     {
         return $this->request->headers->all();
     }
@@ -127,7 +127,7 @@ class RequestContextProvider implements ContextProvider
     /**
      * @return array<string, mixed>
      */
-    public function getRequestData(): array
+    public function getRequestData()/*: array*/
     {
         return [
             'queryString' => $this->request->query->all(),
@@ -137,7 +137,7 @@ class RequestContextProvider implements ContextProvider
     }
 
     /** @return array<string, mixed> */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'request' => $this->getRequest(),

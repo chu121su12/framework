@@ -11,7 +11,7 @@ class IncorrectValetDbCredentialsSolutionProvider implements HasSolutionsForThro
 {
     const MYSQL_ACCESS_DENIED_CODE = 1045;
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(Throwable $throwable)/*: bool*/
     {
         if (PHP_OS !== 'Darwin') {
             return false;
@@ -40,27 +40,27 @@ class IncorrectValetDbCredentialsSolutionProvider implements HasSolutionsForThro
         return true;
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(Throwable $throwable)/*: array*/
     {
         return [new UseDefaultValetDbCredentialsSolution()];
     }
 
-    protected function envFileExists(): bool
+    protected function envFileExists()/*: bool*/
     {
         return file_exists(base_path('.env'));
     }
 
-    protected function isAccessDeniedCode(string $code): bool
+    protected function isAccessDeniedCode(string $code)/*: bool*/
     {
         return $code === static::MYSQL_ACCESS_DENIED_CODE;
     }
 
-    protected function isValetInstalled(): bool
+    protected function isValetInstalled()/*: bool*/
     {
         return file_exists('/usr/local/bin/valet');
     }
 
-    protected function usingCorrectDefaultCredentials(): bool
+    protected function usingCorrectDefaultCredentials()/*: bool*/
     {
         return env('DB_USERNAME') === 'root' && env('DB_PASSWORD') === '';
     }

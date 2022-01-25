@@ -22,14 +22,14 @@ class Api
         register_shutdown_function([$this, 'sendQueuedReports']);
     }
 
-    public function sendReportsImmediately(): self
+    public function sendReportsImmediately()/*: self*/
     {
         $this->sendReportsImmediately = true;
 
         return $this;
     }
 
-    public function report(Report $report): void
+    public function report(Report $report)/*: void*/
     {
         try {
             /** @phpstan-ignore-next-line */
@@ -41,21 +41,21 @@ class Api
         }
     }
 
-    public function sendTestReport(Report $report): self
+    public function sendTestReport(Report $report)/*: self*/
     {
         $this->sendReportToApi($report);
 
         return $this;
     }
 
-    protected function addReportToQueue(Report $report): self
+    protected function addReportToQueue(Report $report)/*: self*/
     {
         $this->queue[] = $report;
 
         return $this;
     }
 
-    public function sendQueuedReports(): void
+    public function sendQueuedReports()/*: void*/
     {
         try {
             foreach ($this->queue as $report) {
@@ -68,7 +68,7 @@ class Api
         }
     }
 
-    protected function sendReportToApi(Report $report): void
+    protected function sendReportToApi(Report $report)/*: void*/
     {
         $payload = $this->truncateReport($report->toArray());
 
@@ -80,7 +80,7 @@ class Api
      *
      * @return array<int|string, mixed>
      */
-    protected function truncateReport(array $payload): array
+    protected function truncateReport(array $payload)/*: array*/
     {
         return (new ReportTrimmer())->trim($payload);
     }

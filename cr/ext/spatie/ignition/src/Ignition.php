@@ -50,7 +50,7 @@ class Ignition
     /** @var ArrayObject<int, callable(Throwable): mixed> */
     protected ArrayObject $documentationLinkResolvers;
 
-    public static function make(): self
+    public static function make()/*: self*/
     {
         return new self();
     }
@@ -71,7 +71,7 @@ class Ignition
         $this->middleware[] = new AddDocumentationLinks($this->documentationLinkResolvers);
     }
 
-    public function setSolutionTransformerClass(string $solutionTransformerClass): self
+    public function setSolutionTransformerClass(string $solutionTransformerClass)/*: self*/
     {
         $this->solutionTransformerClass = $solutionTransformerClass;
 
@@ -79,54 +79,54 @@ class Ignition
     }
 
     /** @param callable(Throwable): mixed $callable */
-    public function resolveDocumentationLink(callable $callable): self
+    public function resolveDocumentationLink(callable $callable)/*: self*/
     {
         $this->documentationLinkResolvers[] = $callable;
 
         return $this;
     }
 
-    public function setConfig(IgnitionConfig $ignitionConfig): self
+    public function setConfig(IgnitionConfig $ignitionConfig)/*: self*/
     {
         $this->ignitionConfig = $ignitionConfig;
 
         return $this;
     }
 
-    public function runningInProductionEnvironment(bool $boolean = true): self
+    public function runningInProductionEnvironment(bool $boolean = true)/*: self*/
     {
         $this->inProductionEnvironment = $boolean;
 
         return $this;
     }
 
-    public function getFlare(): Flare
+    public function getFlare()/*: Flare*/
     {
         return $this->flare;
     }
 
-    public function setFlare(Flare $flare): self
+    public function setFlare(Flare $flare)/*: self*/
     {
         $this->flare = $flare;
 
         return $this;
     }
 
-    public function setSolutionProviderRepository(SolutionProviderRepositoryContract $solutionProviderRepository): self
+    public function setSolutionProviderRepository(SolutionProviderRepositoryContract $solutionProviderRepository)/*: self*/
     {
         $this->solutionProviderRepository = $solutionProviderRepository;
 
         return $this;
     }
 
-    public function shouldDisplayException(bool $shouldDisplayException): self
+    public function shouldDisplayException(bool $shouldDisplayException)/*: self*/
     {
         $this->shouldDisplayException = $shouldDisplayException;
 
         return $this;
     }
 
-    public function applicationPath(string $applicationPath): self
+    public function applicationPath(string $applicationPath)/*: self*/
     {
         $this->applicationPath = $applicationPath;
 
@@ -144,7 +144,7 @@ class Ignition
         string $name,
         string $messageLevel = MessageLevels::INFO,
         array $metaData = []
-    ): self {
+    )/*: self {*/
         $this->flare->glow($name, $messageLevel, $metaData);
 
         return $this;
@@ -155,35 +155,35 @@ class Ignition
      *
      * @return $this
      */
-    public function addSolutionProviders(array $solutionProviders): self
+    public function addSolutionProviders(array $solutionProviders)/*: self*/
     {
         $this->solutionProviderRepository->registerSolutionProviders($solutionProviders);
 
         return $this;
     }
 
-    public function useDarkMode(): self
+    public function useDarkMode()/*: self*/
     {
         $this->theme('dark');
 
         return $this;
     }
 
-    public function theme(string $theme): self
+    public function theme(string $theme)/*: self*/
     {
         $this->ignitionConfig->setOption('theme', $theme);
 
         return $this;
     }
 
-    public function sendToFlare(?string $apiKey): self
+    public function sendToFlare(?string $apiKey)/*: self*/
     {
         $this->flareApiKey = $apiKey ?? '';
 
         return $this;
     }
 
-    public function configureFlare(callable $callable): self
+    public function configureFlare(callable $callable)/*: self*/
     {
         ($callable)($this->flare);
 
@@ -195,7 +195,7 @@ class Ignition
      *
      * @return $this
      */
-    public function registerMiddleware(array|FlareMiddleware $middleware): self
+    public function registerMiddleware(array|FlareMiddleware $middleware)/*: self*/
     {
         if (! is_array($middleware)) {
             $middleware = [$middleware];
@@ -208,21 +208,21 @@ class Ignition
         return $this;
     }
 
-    public function setContextProviderDetector(ContextProviderDetector $contextProviderDetector): self
+    public function setContextProviderDetector(ContextProviderDetector $contextProviderDetector)/*: self*/
     {
         $this->contextProviderDetector = $contextProviderDetector;
 
         return $this;
     }
 
-    public function reset(): self
+    public function reset()/*: self*/
     {
         $this->flare->reset();
 
         return $this;
     }
 
-    public function register(): self
+    public function register()/*: self*/
     {
         error_reporting(-1);
 
@@ -251,11 +251,11 @@ class Ignition
         string $file = '',
         int $line = 0,
         array $context = []
-    ): void {
+    )/*: void {*/
         throw new ErrorException($message, 0, $level, $file, $line);
     }
 
-    public function handleException(Throwable $throwable): Report
+    public function handleException(Throwable $throwable)/*: Report*/
     {
         $this->setUpFlare();
 
@@ -273,7 +273,7 @@ class Ignition
     }
 
     /** @return array<class-string<HasSolutionsForThrowable>> */
-    protected function getDefaultSolutionProviders(): array
+    protected function getDefaultSolutionProviders()/*: array*/
     {
         return [
             BadMethodCallSolutionProvider::class,
@@ -282,7 +282,7 @@ class Ignition
         ];
     }
 
-    protected function setUpFlare(): self
+    protected function setUpFlare()/*: self*/
     {
         if (! $this->flare->apiTokenSet()) {
             $this->flare->setApiToken($this->flareApiKey ?? '');
@@ -301,7 +301,7 @@ class Ignition
         return $this;
     }
 
-    public function renderException(Throwable $throwable, Report $report): void
+    public function renderException(Throwable $throwable, Report $report)/*: void*/
     {
         $viewModel = new ErrorPageViewModel(
             $throwable,

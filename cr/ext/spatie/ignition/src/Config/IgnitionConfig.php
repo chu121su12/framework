@@ -7,7 +7,7 @@ use Throwable;
 
 class IgnitionConfig implements Arrayable
 {
-    public static function loadFromConfigFile(): self
+    public static function loadFromConfigFile()/*: self*/
     {
         return (new self())->loadConfigFile();
     }
@@ -22,7 +22,7 @@ class IgnitionConfig implements Arrayable
         $this->options = array_merge($defaultOptions, $options);
     }
 
-    public function setOption(string $name, string $value): self
+    public function setOption(string $name, string $value)/*: self*/
     {
         $this->options[$name] = $value;
 
@@ -30,14 +30,14 @@ class IgnitionConfig implements Arrayable
     }
 
     /** @param array<string, string> $options */
-    public function merge(array $options): self
+    public function merge(array $options)/*: self*/
     {
         $this->options = array_merge($this->options, $options);
 
         return $this;
     }
 
-    public function loadConfigFile(): self
+    public function loadConfigFile()/*: self*/
     {
         $this->merge($this->getConfigOptions());
 
@@ -45,7 +45,7 @@ class IgnitionConfig implements Arrayable
     }
 
     /** @return array<string, mixed> */
-    public function getConfigOptions(): array
+    public function getConfigOptions()/*: array*/
     {
         $configFilePath = (new DefaultConfigFinder())->getConfigFilePath();
 
@@ -65,7 +65,7 @@ class IgnitionConfig implements Arrayable
      *
      * @return bool
      */
-    public function saveValues(array $options): bool
+    public function saveValues(array $options)/*: bool*/
     {
         $configFilePath = (new DefaultConfigFinder())->getConfigFilePath();
 
@@ -82,12 +82,12 @@ class IgnitionConfig implements Arrayable
         return true;
     }
 
-    public function hideSolutions(): bool
+    public function hideSolutions()/*: bool*/
     {
         return $this->options['hide_solutions'] ?? false;
     }
 
-    public function editor(): ?string
+    public function editor()/*: ?string*/
     {
         return $this->options['editor'] ?? null;
     }
@@ -95,44 +95,44 @@ class IgnitionConfig implements Arrayable
     /**
      * @return array<string, mixed> $options
      */
-    public function editorOptions(): array
+    public function editorOptions()/*: array*/
     {
         return $this->options['editor_options'] ?? [];
     }
 
-    public function remoteSitesPath(): ?string
+    public function remoteSitesPath()/*: ?string*/
     {
         return $this->options['remote_sites_path'] ?? null;
     }
 
-    public function localSitesPath(): ?string
+    public function localSitesPath()/*: ?string*/
     {
         return $this->options['local_sites_path'] ?? null;
     }
 
-    public function theme(): ?string
+    public function theme()/*: ?string*/
     {
         return $this->options['theme'] ?? null;
     }
 
-    public function shareButtonEnabled(): bool
+    public function shareButtonEnabled()/*: bool*/
     {
         return (bool)($this->options['enable_share_button'] ?? false);
     }
 
-    public function shareEndpoint(): string
+    public function shareEndpoint()/*: string*/
     {
         return $this->options['share_endpoint']
             ?? $this->getDefaultOptions()['share_endpoint'];
     }
 
-    public function runnableSolutionsEnabled(): bool
+    public function runnableSolutionsEnabled()/*: bool*/
     {
         return (bool)($this->options['enable_runnable_solutions'] ?? false);
     }
 
     /** @return array<string, mixed> */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'editor' => $this->editor(),
@@ -152,7 +152,7 @@ class IgnitionConfig implements Arrayable
     /**
      * @return array<string, mixed> $options
      */
-    protected function getDefaultOptions(): array
+    protected function getDefaultOptions()/*: array*/
     {
         return [
             'share_endpoint' => 'https://flareapp.io/api/public-reports',

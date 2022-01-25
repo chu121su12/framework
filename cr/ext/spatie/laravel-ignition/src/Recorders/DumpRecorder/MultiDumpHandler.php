@@ -7,7 +7,7 @@ class MultiDumpHandler
     /** @var array<int, callable|null> */
     protected array $handlers = [];
 
-    public function dump(mixed $value): void
+    public function dump(mixed $value)/*: void*/
     {
         foreach ($this->handlers as $handler) {
             if ($handler) {
@@ -16,7 +16,7 @@ class MultiDumpHandler
         }
     }
 
-    public function addHandler(callable $callable = null): self
+    public function addHandler(callable $callable = null)/*: self*/
     {
         $this->handlers[] = $callable;
 

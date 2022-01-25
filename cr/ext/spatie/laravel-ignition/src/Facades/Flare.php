@@ -19,7 +19,7 @@ class Flare extends Facade
         return \Spatie\FlareClient\Flare::class;
     }
 
-    public static function sentReports(): SentReports
+    public static function sentReports()/*: SentReports*/
     {
         return app(SentReports::class);
     }

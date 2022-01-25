@@ -17,7 +17,7 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
 {
     protected const REGEX = '/View \[(.*)\] not found/m';
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(Throwable $throwable)/*: bool*/
     {
         if (! $throwable instanceof InvalidArgumentException && ! $throwable instanceof ViewException) {
             return false;
@@ -26,7 +26,7 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
         return (bool)preg_match(self::REGEX, $throwable->getMessage(), $matches);
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(Throwable $throwable)/*: array*/
     {
         preg_match(self::REGEX, $throwable->getMessage(), $matches);
 
@@ -49,7 +49,7 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function findRelatedView(string $missingView): ?string
+    protected function findRelatedView(string $missingView)/*: ?string*/
     {
         $views = $this->getAllViews();
 
@@ -57,7 +57,7 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
     }
 
     /** @return array<int, string> */
-    protected function getAllViews(): array
+    protected function getAllViews()/*: array*/
     {
         /** @var \Illuminate\View\FileViewFinder $fileViewFinder */
         $fileViewFinder = View::getFinder();
@@ -86,7 +86,7 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
      *
      * @return array<int, string>
      */
-    protected function getViewsInPath(string $path, array $extensions): array
+    protected function getViewsInPath(string $path, array $extensions)/*: array*/
     {
         $filePatterns = array_map(fn (string $extension) => "*.{$extension}", $extensions);
 

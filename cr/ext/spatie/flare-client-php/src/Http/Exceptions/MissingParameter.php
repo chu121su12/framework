@@ -6,7 +6,7 @@ use Exception;
 
 class MissingParameter extends Exception
 {
-    public static function create(string $parameterName): self
+    public static function create(string $parameterName)/*: self*/
     {
         return new self("`$parameterName` is a required parameter");
     }

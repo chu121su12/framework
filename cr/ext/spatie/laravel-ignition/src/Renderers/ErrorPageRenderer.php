@@ -13,7 +13,7 @@ use Throwable;
 
 class ErrorPageRenderer
 {
-    public function render(Throwable $throwable): void
+    public function render(Throwable $throwable)/*: void*/
     {
         app(Ignition::class)
             ->resolveDocumentationLink(

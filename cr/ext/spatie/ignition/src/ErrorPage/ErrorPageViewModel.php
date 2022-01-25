@@ -28,7 +28,7 @@ class ErrorPageViewModel
         $this->solutionTransformerClass ??= SolutionTransformer::class;
     }
 
-    public function throwableString(): string
+    public function throwableString()/*: string*/
     {
         if (! $this->throwable) {
             return '';
@@ -46,7 +46,7 @@ class ErrorPageViewModel
         return htmlspecialchars($throwableString);
     }
 
-    public function title(): string
+    public function title()/*: string*/
     {
         return htmlspecialchars($this->report->getMessage());
     }
@@ -54,7 +54,7 @@ class ErrorPageViewModel
     /**
      * @return array<string, mixed>
      */
-    public function config(): array
+    public function config()/*: array*/
     {
         return $this->ignitionConfig->toArray();
     }
@@ -62,7 +62,7 @@ class ErrorPageViewModel
     /**
      * @return array<int, mixed>
      */
-    public function solutions(): array
+    public function solutions()/*: array*/
     {
         return array_map(function (Solution $solution) {
             /** @var class-string $transformerClass */
@@ -78,19 +78,19 @@ class ErrorPageViewModel
     /**
      * @return array<string, mixed>
      */
-    public function report(): array
+    public function report()/*: array*/
     {
         return $this->report->toArray();
     }
 
-    public function jsonEncode(mixed $data): string
+    public function jsonEncode(mixed $data)/*: string*/
     {
         $jsonOptions = JSON_PARTIAL_OUTPUT_ON_ERROR | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
 
         return (string)json_encode($data, $jsonOptions);
     }
 
-    public function getAssetContents(string $asset): string
+    public function getAssetContents(string $asset)/*: string*/
     {
         $assetPath = __DIR__."/../../resources/compiled/{$asset}";
 
@@ -100,12 +100,12 @@ class ErrorPageViewModel
     /**
      * @return array<int|string, mixed>
      */
-    public function shareableReport(): array
+    public function shareableReport()/*: array*/
     {
         return (new ReportTrimmer())->trim($this->report());
     }
 
-    public function updateConfigEndpoint(): string
+    public function updateConfigEndpoint()/*: string*/
     {
         // TODO: Should be based on Ignition config
         return  '/_ignition/update-config';

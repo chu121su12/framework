@@ -29,32 +29,32 @@ class AddGitInformation
         return $next($report);
     }
 
-    protected function hash(): ?string
+    protected function hash()/*: ?string*/
     {
         return $this->command("git log --pretty=format:'%H' -n 1") ?: null;
     }
 
-    protected function message(): ?string
+    protected function message()/*: ?string*/
     {
         return $this->command("git log --pretty=format:'%s' -n 1") ?: null;
     }
 
-    protected function tag(): ?string
+    protected function tag()/*: ?string*/
     {
         return $this->command('git describe --tags --abbrev=0') ?: null;
     }
 
-    protected function remote(): ?string
+    protected function remote()/*: ?string*/
     {
         return $this->command('git config --get remote.origin.url') ?: null;
     }
 
-    protected function isClean(): bool
+    protected function isClean()/*: bool*/
     {
         return empty($this->command('git status -s'));
     }
 
-    protected function getGitBaseDirectory(): ?string
+    protected function getGitBaseDirectory()/*: ?string*/
     {
         /** @var Process $process */
         $process = Process::fromShellCommandline("echo $(git rev-parse --show-toplevel)");

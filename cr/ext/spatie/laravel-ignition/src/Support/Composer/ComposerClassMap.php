@@ -27,14 +27,14 @@ class ComposerClassMap
     }
 
     /** @return array<string, string> */
-    public function listClasses(): array
+    public function listClasses()/*: array*/
     {
         $classes = $this->composer->getClassMap();
 
         return array_merge($classes, $this->listClassesInPsrMaps());
     }
 
-    public function searchClassMap(string $missingClass): ?string
+    public function searchClassMap(string $missingClass)/*: ?string*/
     {
         foreach ($this->composer->getClassMap() as $fqcn => $file) {
             $basename = basename($file, '.php');
@@ -48,7 +48,7 @@ class ComposerClassMap
     }
 
     /** @return array<string, mixed> */
-    public function listClassesInPsrMaps(): array
+    public function listClassesInPsrMaps()/*: array*/
     {
         // TODO: This is incorrect. Doesnt list all fqcns. Need to parse namespace? e.g. App\LoginController is wrong
 
@@ -81,7 +81,7 @@ class ComposerClassMap
         return $classes;
     }
 
-    public function searchPsrMaps(string $missingClass): ?string
+    public function searchPsrMaps(string $missingClass)/*: ?string*/
     {
         $prefixes = array_merge(
             $this->composer->getPrefixes(),
@@ -112,7 +112,7 @@ class ComposerClassMap
         return null;
     }
 
-    protected function getFullyQualifiedClassNameFromFile(string $rootNamespace, SplFileInfo $file): string
+    protected function getFullyQualifiedClassNameFromFile(string $rootNamespace, SplFileInfo $file)/*: string*/
     {
         $class = trim(str_replace($this->basePath, '', (string)$file->getRealPath()), DIRECTORY_SEPARATOR);
 

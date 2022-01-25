@@ -39,7 +39,7 @@ class Glow
     /**
      * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'time' => $this->getCurrentTime(),

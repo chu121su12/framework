@@ -14,7 +14,7 @@ class InvalidRouteActionSolutionProvider implements HasSolutionsForThrowable
 {
     protected const REGEX = '/\[([a-zA-Z\\\\]+)\]/m';
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(Throwable $throwable)/*: bool*/
     {
         if (! $throwable instanceof UnexpectedValueException) {
             return false;
@@ -27,7 +27,7 @@ class InvalidRouteActionSolutionProvider implements HasSolutionsForThrowable
         return Str::startsWith($throwable->getMessage(), 'Invalid route action: ');
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(Throwable $throwable)/*: array*/
     {
         preg_match(self::REGEX, $throwable->getMessage(), $matches);
 
@@ -55,7 +55,7 @@ class InvalidRouteActionSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function findRelatedController(string $invalidController): ?string
+    protected function findRelatedController(string $invalidController)/*: ?string*/
     {
         $composerClassMap = app(ComposerClassMap::class);
 

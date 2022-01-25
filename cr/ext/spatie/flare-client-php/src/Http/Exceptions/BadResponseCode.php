@@ -14,7 +14,7 @@ class BadResponseCode extends Exception
      */
     public array $errors = [];
 
-    public static function createForResponse(Response $response): self
+    public static function createForResponse(Response $response)/*: self*/
     {
         $exception = new self(static::getMessageForResponse($response));
 
@@ -27,7 +27,7 @@ class BadResponseCode extends Exception
         return $exception;
     }
 
-    public static function getMessageForResponse(Response $response): string
+    public static function getMessageForResponse(Response $response)/*: string*/
     {
         return "Response code {$response->getHttpResponseCode()} returned";
     }

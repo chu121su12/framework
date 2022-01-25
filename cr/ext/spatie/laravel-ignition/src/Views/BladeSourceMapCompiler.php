@@ -14,14 +14,14 @@ class BladeSourceMapCompiler
         $this->bladeCompiler = app('blade.compiler');
     }
 
-    public function detectLineNumber(string $filename, int $compiledLineNumber): int
+    public function detectLineNumber(string $filename, int $compiledLineNumber)/*: int*/
     {
         $map = $this->compileSourcemap((string)file_get_contents($filename));
 
         return $this->findClosestLineNumberMapping($map, $compiledLineNumber);
     }
 
-    protected function compileSourcemap(string $value): string
+    protected function compileSourcemap(string $value)/*: string*/
     {
         try {
             $value = $this->addEchoLineNumbers($value);
@@ -40,7 +40,7 @@ class BladeSourceMapCompiler
         }
     }
 
-    protected function addEchoLineNumbers(string $value): string
+    protected function addEchoLineNumbers(string $value)/*: string*/
     {
         $echoPairs = [['{{', '}}'], ['{{{', '}}}'], ['{!!', '!!}']];
 
@@ -60,7 +60,7 @@ class BladeSourceMapCompiler
         return $value;
     }
 
-    protected function addStatementLineNumbers(string $value): string
+    protected function addStatementLineNumbers(string $value)/*: string*/
     {
         // Matches @bladeStatements() like @if, @component(...), @etc;
         $shouldInsertLineNumbers = preg_match_all(
@@ -81,7 +81,7 @@ class BladeSourceMapCompiler
         return $value;
     }
 
-    protected function addBladeComponentLineNumbers(string $value): string
+    protected function addBladeComponentLineNumbers(string $value)/*: string*/
     {
         // Matches the start of `<x-blade-component`
         $shouldInsertLineNumbers = preg_match_all(
@@ -102,7 +102,7 @@ class BladeSourceMapCompiler
         return $value;
     }
 
-    protected function insertLineNumberAtPosition(int $position, string $value): string
+    protected function insertLineNumberAtPosition(int $position, string $value)/*: string*/
     {
         $before = mb_substr($value, 0, $position);
         $lineNumber = count(explode("\n", $before));
@@ -110,14 +110,14 @@ class BladeSourceMapCompiler
         return mb_substr($value, 0, $position)."|---LINE:{$lineNumber}---|".mb_substr($value, $position);
     }
 
-    protected function trimEmptyLines(string $value): string
+    protected function trimEmptyLines(string $value)/*: string*/
     {
         $value = preg_replace('/^\|---LINE:([0-9]+)---\|$/m', '', $value);
 
         return ltrim((string)$value, PHP_EOL);
     }
 
-    protected function findClosestLineNumberMapping(string $map, int $compiledLineNumber): int
+    protected function findClosestLineNumberMapping(string $map, int $compiledLineNumber)/*: int*/
     {
         $map = explode("\n", $map);
 

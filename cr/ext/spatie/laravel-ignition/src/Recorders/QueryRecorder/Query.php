@@ -17,7 +17,7 @@ class Query
 
     protected float $microtime;
 
-    public static function fromQueryExecutedEvent(QueryExecuted $queryExecuted, bool $reportBindings = false): self
+    public static function fromQueryExecutedEvent(QueryExecuted $queryExecuted, bool $reportBindings = false)/*: self*/
     {
         return new self(
             $queryExecuted->sql,
@@ -52,7 +52,7 @@ class Query
     /**
      * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'sql' => $this->sql,

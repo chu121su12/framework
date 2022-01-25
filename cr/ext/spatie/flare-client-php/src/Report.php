@@ -67,7 +67,7 @@ class Report
         ContextProvider $context,
         ?string $applicationPath = null,
         ?string $version = null
-    ): self {
+    )/*: self {*/
         return (new self())
             ->setApplicationPath($applicationPath)
             ->throwable($throwable)
@@ -79,7 +79,7 @@ class Report
             ->setApplicationVersion($version);
     }
 
-    protected static function getClassForThrowable(Throwable $throwable): string
+    protected static function getClassForThrowable(Throwable $throwable)/*: string*/
     {
         /** @phpstan-ignore-next-line */
         if ($throwable::class === ViewException::class) {
@@ -98,7 +98,7 @@ class Report
         string $logLevel,
         ContextProvider $context,
         ?string $applicationPath = null
-    ): self {
+    )/*: self {*/
         $stacktrace = Backtrace::create()->applicationPath($applicationPath ?? '');
 
         return (new self())
@@ -115,133 +115,133 @@ class Report
         $this->trackingUuid = self::$fakeTrackingUuid ?? $this->generateUuid();
     }
 
-    public function trackingUuid(): string
+    public function trackingUuid()/*: string*/
     {
         return $this->trackingUuid;
     }
 
-    public function exceptionClass(string $exceptionClass): self
+    public function exceptionClass(string $exceptionClass)/*: self*/
     {
         $this->exceptionClass = $exceptionClass;
 
         return $this;
     }
 
-    public function getExceptionClass(): string
+    public function getExceptionClass()/*: string*/
     {
         return $this->exceptionClass;
     }
 
-    public function throwable(Throwable $throwable): self
+    public function throwable(Throwable $throwable)/*: self*/
     {
         $this->throwable = $throwable;
 
         return $this;
     }
 
-    public function getThrowable(): ?Throwable
+    public function getThrowable()/*: ?Throwable*/
     {
         return $this->throwable;
     }
 
-    public function message(string $message): self
+    public function message(string $message)/*: self*/
     {
         $this->message = $message;
 
         return $this;
     }
 
-    public function getMessage(): string
+    public function getMessage()/*: string*/
     {
         return $this->message;
     }
 
-    public function stacktrace(Backtrace $stacktrace): self
+    public function stacktrace(Backtrace $stacktrace)/*: self*/
     {
         $this->stacktrace = $stacktrace;
 
         return $this;
     }
 
-    public function getStacktrace(): Backtrace
+    public function getStacktrace()/*: Backtrace*/
     {
         return $this->stacktrace;
     }
 
-    public function notifierName(string $notifierName): self
+    public function notifierName(string $notifierName)/*: self*/
     {
         $this->notifierName = $notifierName;
 
         return $this;
     }
 
-    public function languageVersion(string $languageVersion): self
+    public function languageVersion(string $languageVersion)/*: self*/
     {
         $this->languageVersion = $languageVersion;
 
         return $this;
     }
 
-    public function frameworkVersion(string $frameworkVersion): self
+    public function frameworkVersion(string $frameworkVersion)/*: self*/
     {
         $this->frameworkVersion = $frameworkVersion;
 
         return $this;
     }
 
-    public function useContext(ContextProvider $request): self
+    public function useContext(ContextProvider $request)/*: self*/
     {
         $this->context = $request;
 
         return $this;
     }
 
-    public function openFrameIndex(?int $index): self
+    public function openFrameIndex(?int $index)/*: self*/
     {
         $this->openFrameIndex = $index;
 
         return $this;
     }
 
-    public function setApplicationPath(?string $applicationPath): self
+    public function setApplicationPath(?string $applicationPath)/*: self*/
     {
         $this->applicationPath = $applicationPath;
 
         return $this;
     }
 
-    public function getApplicationPath(): ?string
+    public function getApplicationPath()/*: ?string*/
     {
         return $this->applicationPath;
     }
 
-    public function setApplicationVersion(?string $applicationVersion): self
+    public function setApplicationVersion(?string $applicationVersion)/*: self*/
     {
         $this->applicationVersion = $applicationVersion;
 
         return $this;
     }
 
-    public function getApplicationVersion(): ?string
+    public function getApplicationVersion()/*: ?string*/
     {
         return $this->applicationVersion;
     }
 
-    public function view(?View $view): self
+    public function view(?View $view)/*: self*/
     {
         $this->view = $view;
 
         return $this;
     }
 
-    public function addGlow(Glow $glow): self
+    public function addGlow(Glow $glow)/*: self*/
     {
         $this->glows[] = $glow->toArray();
 
         return $this;
     }
 
-    public function addSolution(Solution $solution): self
+    public function addSolution(Solution $solution)/*: self*/
     {
         $this->solutions[] = ReportSolution::fromSolution($solution)->toArray();
 
@@ -253,7 +253,7 @@ class Report
      *
      * @return $this
      */
-    public function addDocumentationLinks(array $documentationLinks): self
+    public function addDocumentationLinks(array $documentationLinks)/*: self*/
     {
         $this->documentationLinks = $documentationLinks;
 
@@ -265,7 +265,7 @@ class Report
      *
      * @return $this
      */
-    public function userProvidedContext(array $userProvidedContext): self
+    public function userProvidedContext(array $userProvidedContext)/*: self*/
     {
         $this->userProvidedContext = $userProvidedContext;
 
@@ -275,7 +275,7 @@ class Report
     /**
      * @return array<int|string, mixed>
     */
-    public function allContext(): array
+    public function allContext()/*: array*/
     {
         $context = $this->context->toArray();
 
@@ -284,7 +284,7 @@ class Report
         return array_merge_recursive_distinct($context, $this->userProvidedContext);
     }
 
-    protected function exceptionContext(Throwable $throwable): self
+    protected function exceptionContext(Throwable $throwable)/*: self*/
     {
         if ($throwable instanceof ProvidesFlareContext) {
             $this->exceptionContext = $throwable->context();
@@ -296,7 +296,7 @@ class Report
     /**
      * @return array<int|string, mixed>
      */
-    protected function stracktraceAsArray(): array
+    protected function stracktraceAsArray()/*: array*/
     {
         return array_map(
             fn (SpatieFrame $frame) => Frame::fromSpatieFrame($frame)->toArray(),
@@ -307,7 +307,7 @@ class Report
     /**
      * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'notifier' => $this->notifierName ?? 'Flare Client',
@@ -334,7 +334,7 @@ class Report
     /*
      * Found on https://stackoverflow.com/questions/2040240/php-function-to-generate-v4-uuid/15875555#15875555
      */
-    protected function generateUuid(): string
+    protected function generateUuid()/*: string*/
     {
         // Generate 16 bytes (128 bits) of random data or use the data passed into the function.
         $data = random_bytes(16);

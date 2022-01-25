@@ -10,7 +10,7 @@ use Throwable;
 class LaravelSolutionTransformer extends SolutionTransformer
 {
     /** @return array<string|mixed> */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         $baseProperties = parent::toArray();
 
@@ -32,7 +32,7 @@ class LaravelSolutionTransformer extends SolutionTransformer
         return array_merge($baseProperties, $runnableProperties);
     }
 
-    protected function isRunnable(): bool
+    protected function isRunnable()/*: bool*/
     {
         if (! $this->solution instanceof RunnableSolution) {
             return false;
@@ -45,7 +45,7 @@ class LaravelSolutionTransformer extends SolutionTransformer
         return true;
     }
 
-    protected function executeEndpoint(): ?string
+    protected function executeEndpoint()/*: ?string*/
     {
         try {
             return action(ExecuteSolutionController::class);

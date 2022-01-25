@@ -12,7 +12,7 @@ class SolutionProviderMakeCommand extends GeneratorCommand
 
     protected $type = 'Solution Provider';
 
-    protected function getStub(): string
+    protected function getStub()/*: string*/
     {
         return __DIR__.'/stubs/solution-provider.stub';
     }

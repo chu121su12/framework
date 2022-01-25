@@ -30,7 +30,7 @@ class ViewExceptionMapper
         $this->bladeSourceMapCompiler = $bladeSourceMapCompiler;
     }
 
-    public function map(ViewException $viewException): IgnitionViewException
+    public function map(ViewException $viewException)/*: IgnitionViewException*/
     {
         $baseException = $this->getRealException($viewException);
 
@@ -57,7 +57,7 @@ class ViewExceptionMapper
         return $exception;
     }
 
-    protected function createException(Throwable $baseException): IgnitionViewException
+    protected function createException(Throwable $baseException)/*: IgnitionViewException*/
     {
         $viewExceptionClass = $baseException instanceof ProvidesSolution
             ? ViewExceptionWithSolution::class
@@ -77,7 +77,7 @@ class ViewExceptionMapper
         );
     }
 
-    protected function modifyViewsInTrace(IgnitionViewException $exception): void
+    protected function modifyViewsInTrace(IgnitionViewException $exception)/*: void*/
     {
         $trace = Collection::make($exception->getPrevious()->getTrace())
             ->map(function ($trace) {
@@ -98,7 +98,7 @@ class ViewExceptionMapper
      * Look at the previous exceptions to find the original exception.
      * This is usually the first Exception that is not a ViewException.
      */
-    protected function getRealException(Throwable $exception): Throwable
+    protected function getRealException(Throwable $exception)/*: Throwable*/
     {
         $rootException = $exception->getPrevious() ?? $exception;
 
@@ -109,14 +109,14 @@ class ViewExceptionMapper
         return $rootException;
     }
 
-    protected function findCompiledView(string $compiledPath): ?string
+    protected function findCompiledView(string $compiledPath)/*: ?string*/
     {
         $this->knownPaths ??= $this->getKnownPaths();
 
         return $this->knownPaths[$compiledPath] ?? null;
     }
 
-    protected function getKnownPaths(): array
+    protected function getKnownPaths()/*: array*/
     {
         $lastCompiled = new ReflectionProperty($this->compilerEngine, 'lastCompiled');
         $lastCompiled->setAccessible(true);
@@ -132,12 +132,12 @@ class ViewExceptionMapper
         return $knownPaths;
     }
 
-    protected function getBladeLineNumber(string $view, int $compiledLineNumber): int
+    protected function getBladeLineNumber(string $view, int $compiledLineNumber)/*: int*/
     {
         return $this->bladeSourceMapCompiler->detectLineNumber($view, $compiledLineNumber);
     }
 
-    protected function getViewData(Throwable $exception): array
+    protected function getViewData(Throwable $exception)/*: array*/
     {
         foreach ($exception->getTrace() as $frame) {
             if (Arr::get($frame, 'class') === PhpEngine::class) {
@@ -150,7 +150,7 @@ class ViewExceptionMapper
         return [];
     }
 
-    protected function filterViewData(array $data): array
+    protected function filterViewData(array $data)/*: array*/
     {
         // By default, Laravel views get two data keys:
         // __env and app. We try to filter them out.

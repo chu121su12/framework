@@ -10,12 +10,12 @@ use Spatie\Ignition\Contracts\Solution;
 
 class InvalidConfig extends Exception implements ProvidesSolution
 {
-    public static function invalidLogLevel(string $logLevel): self
+    public static function invalidLogLevel(string $logLevel)/*: self*/
     {
         return new self("Invalid log level `{$logLevel}` specified.");
     }
 
-    public function getSolution(): Solution
+    public function getSolution()/*: Solution*/
     {
         $validLogLevels = array_map(
             fn (string $level) => strtolower($level),

@@ -28,12 +28,12 @@ class View
      *
      * @return self
      */
-    public static function create(string $file, array $data = []): self
+    public static function create(string $file, array $data = [])/*: self*/
     {
         return new self($file, $data);
     }
 
-    protected function dumpViewData(mixed $variable): string
+    protected function dumpViewData(mixed $variable)/*: string*/
     {
         $cloner = new VarCloner();
 
@@ -55,7 +55,7 @@ class View
     }
 
     /** @return array<string, mixed> */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'file' => $this->file,

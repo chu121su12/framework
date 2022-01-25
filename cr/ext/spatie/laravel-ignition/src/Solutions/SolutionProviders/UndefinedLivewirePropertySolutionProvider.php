@@ -10,12 +10,12 @@ use Throwable;
 
 class UndefinedLivewirePropertySolutionProvider implements HasSolutionsForThrowable
 {
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(Throwable $throwable)/*: bool*/
     {
         return $throwable instanceof PropertyNotFoundException;
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(Throwable $throwable)/*: array*/
     {
         ['variable' => $variable, 'component' => $component] = $this->getMethodAndComponent($throwable);
 
@@ -41,7 +41,7 @@ class UndefinedLivewirePropertySolutionProvider implements HasSolutionsForThrowa
      *
      * @return array<string, string|null>
      */
-    protected function getMethodAndComponent(Throwable $throwable): array
+    protected function getMethodAndComponent(Throwable $throwable)/*: array*/
     {
         preg_match_all('/\[([\d\w\-_\$]*)\]/m', $throwable->getMessage(), $matches, PREG_SET_ORDER, 0);
 

@@ -11,7 +11,7 @@ class BaseSolution implements Solution
     /** @var array<string, string> */
     protected array $links = [];
 
-    public static function create(string $title = ''): static
+    public static function create(string $title = '')/*: static*/
     {
         // It's important to keep the return type as static because
         // the old Facade Ignition contracts extend from this method.
@@ -25,24 +25,24 @@ class BaseSolution implements Solution
         $this->title = $title;
     }
 
-    public function getSolutionTitle(): string
+    public function getSolutionTitle()/*: string*/
     {
         return $this->title;
     }
 
-    public function setSolutionTitle(string $title): self
+    public function setSolutionTitle(string $title)/*: self*/
     {
         $this->title = $title;
 
         return $this;
     }
 
-    public function getSolutionDescription(): string
+    public function getSolutionDescription()/*: string*/
     {
         return $this->description;
     }
 
-    public function setSolutionDescription(string $description): self
+    public function setSolutionDescription(string $description)/*: self*/
     {
         $this->description = $description;
 
@@ -50,13 +50,13 @@ class BaseSolution implements Solution
     }
 
     /** @return array<string, string> */
-    public function getDocumentationLinks(): array
+    public function getDocumentationLinks()/*: array*/
     {
         return $this->links;
     }
 
     /** @param array<string, string> $links */
-    public function setDocumentationLinks(array $links): self
+    public function setDocumentationLinks(array $links)/*: self*/
     {
         $this->links = $links;
 

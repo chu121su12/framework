@@ -23,7 +23,7 @@ class DumpRecorder
         $this->app = $app;
     }
 
-    public function start(): self
+    public function start()/*: self*/
     {
         $multiDumpHandler = new MultiDumpHandler();
 
@@ -44,7 +44,7 @@ class DumpRecorder
         return $this;
     }
 
-    public function record(Data $data): void
+    public function record(Data $data)/*: void*/
     {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 11);
 
@@ -58,7 +58,7 @@ class DumpRecorder
         $this->dumps[] = new Dump($htmlDump, $file, $lineNumber);
     }
 
-    public function getDumps(): array
+    public function getDumps()/*: array*/
     {
         return $this->toArray();
     }
@@ -68,7 +68,7 @@ class DumpRecorder
         $this->dumps = [];
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         $dumps = [];
 
@@ -87,7 +87,7 @@ class DumpRecorder
      *
      * @throws \ReflectionException
      */
-    protected function ensureOriginalHandlerExists(): void
+    protected function ensureOriginalHandlerExists()/*: void*/
     {
         $reflectionProperty = new ReflectionProperty(VarDumper::class, 'handler');
         $reflectionProperty->setAccessible(true);
@@ -110,7 +110,7 @@ class DumpRecorder
      *
      * @return null|T
      */
-    protected function findSourceFrame(array $stacktrace): ?array
+    protected function findSourceFrame(array $stacktrace)/*: ?array*/
     {
         $seenVarDumper = false;
 

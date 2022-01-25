@@ -7,7 +7,7 @@ use Illuminate\Validation\Rule;
 
 class UpdateConfigRequest extends FormRequest
 {
-    public function rules(): array
+    public function rules()/*: array*/
     {
         return [
             'theme' => ['required',  Rule::in(['light', 'dark', 'auto'])],

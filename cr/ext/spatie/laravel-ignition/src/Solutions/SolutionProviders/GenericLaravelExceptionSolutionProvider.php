@@ -10,12 +10,12 @@ use Throwable;
 
 class GenericLaravelExceptionSolutionProvider implements HasSolutionsForThrowable
 {
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(Throwable $throwable)/*: bool*/
     {
         return ! is_null($this->getSolutionTexts($throwable));
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(Throwable $throwable)/*: array*/
     {
         if (! $texts = $this->getSolutionTexts($throwable)) {
             return [];
@@ -45,7 +45,7 @@ class GenericLaravelExceptionSolutionProvider implements HasSolutionsForThrowabl
     }
 
     /** @return array<string, mixed> */
-    protected function getSupportedExceptions(): array
+    protected function getSupportedExceptions()/*: array*/
     {
         $majorVersion = LaravelVersion::major();
 

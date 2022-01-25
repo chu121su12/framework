@@ -7,7 +7,7 @@ class TrimStringsStrategy extends AbstractTruncationStrategy
     /**
      * @return array<int, int>
      */
-    public static function thresholds(): array
+    public static function thresholds()/*: array*/
     {
         return [1024, 512, 256];
     }
@@ -17,7 +17,7 @@ class TrimStringsStrategy extends AbstractTruncationStrategy
      *
      * @return array<int|string, mixed>
      */
-    public function execute(array $payload): array
+    public function execute(array $payload)/*: array*/
     {
         foreach (static::thresholds() as $threshold) {
             if (! $this->reportTrimmer->needsToBeTrimmed($payload)) {
@@ -36,7 +36,7 @@ class TrimStringsStrategy extends AbstractTruncationStrategy
      *
      * @return array<int|string, mixed>
      */
-    protected function trimPayloadString(array $payload, int $threshold): array
+    protected function trimPayloadString(array $payload, int $threshold)/*: array*/
     {
         array_walk_recursive($payload, function (&$value) use ($threshold) {
             if (is_string($value) && strlen($value) > $threshold) {

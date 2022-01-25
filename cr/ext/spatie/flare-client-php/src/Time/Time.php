@@ -4,5 +4,5 @@ namespace Spatie\FlareClient\Time;
 
 interface Time
 {
-    public function getCurrentTime(): int;
+    public function getCurrentTime()/*: int*/;
 }

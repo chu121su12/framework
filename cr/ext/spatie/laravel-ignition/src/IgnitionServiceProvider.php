@@ -41,7 +41,7 @@ use Spatie\LaravelIgnition\Views\ViewExceptionMapper;
 
 class IgnitionServiceProvider extends ServiceProvider
 {
-    public function register(): void
+    public function register()/*: void*/
     {
         $this->registerConfig();
         $this->registerFlare();
@@ -66,13 +66,13 @@ class IgnitionServiceProvider extends ServiceProvider
         $this->configureQueue();
     }
 
-    protected function registerConfig(): void
+    protected function registerConfig()/*: void*/
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/flare.php', 'flare');
         $this->mergeConfigFrom(__DIR__ . '/../config/ignition.php', 'ignition');
     }
 
-    protected function registerCommands(): void
+    protected function registerCommands()/*: void*/
     {
         if ($this->app['config']->get('flare.key')) {
             $this->commands([
@@ -88,7 +88,7 @@ class IgnitionServiceProvider extends ServiceProvider
         }
     }
 
-    protected function publishConfigs(): void
+    protected function publishConfigs()/*: void*/
     {
         $this->publishes([
             __DIR__ . '/../config/flare.php' => config_path('flare.php'),
@@ -96,7 +96,7 @@ class IgnitionServiceProvider extends ServiceProvider
         ]);
     }
 
-    protected function registerRenderer(): void
+    protected function registerRenderer()/*: void*/
     {
         if (interface_exists('Whoops\Handler\HandlerInterface')) {
             $this->app->bind(
@@ -114,7 +114,7 @@ class IgnitionServiceProvider extends ServiceProvider
         }
     }
 
-    protected function registerFlare(): void
+    protected function registerFlare()/*: void*/
     {
         $this->app->singleton(Flare::class, function () {
             return Flare::make()
@@ -128,7 +128,7 @@ class IgnitionServiceProvider extends ServiceProvider
         $this->app->singleton(SentReports::class);
     }
 
-    protected function registerIgnition(): void
+    protected function registerIgnition()/*: void*/
     {
         $ignitionConfig = (new IgnitionConfig())
             ->merge(config('ignition'))
@@ -144,11 +144,11 @@ class IgnitionServiceProvider extends ServiceProvider
         $this->app->singleton(Ignition::class, fn () => (new Ignition()));
     }
 
-    protected function registerRecorders(): void
+    protected function registerRecorders()/*: void*/
     {
         $this->app->singleton(DumpRecorder::class);
 
-        $this->app->singleton(LogRecorder::class, function (Application $app): LogRecorder {
+        $this->app->singleton(LogRecorder::class, function (Application $app)/*: LogRecorder {*/
             return new LogRecorder(
                 $app,
                 config()->get('flare.flare_middleware' . AddLogs::class . 'maximum_number_of_collected_logs')
@@ -157,7 +157,7 @@ class IgnitionServiceProvider extends ServiceProvider
 
         $this->app->singleton(
             QueryRecorder::class,
-            function (Application $app): QueryRecorder {
+            function (Application $app)/*: QueryRecorder {*/
                 return new QueryRecorder(
                     $app,
                     config()->get('flare.flare_middleware.' . AddQueries::class . '.report_query_bindings'),
@@ -166,7 +166,7 @@ class IgnitionServiceProvider extends ServiceProvider
             }
         );
 
-        $this->app->singleton(JobRecorder::class, function (Application $app): JobRecorder {
+        $this->app->singleton(JobRecorder::class, function (Application $app)/*: JobRecorder {*/
             return new JobRecorder(
                 $app,
                 config()->get('flare.flare_middleware.' . AddJobs::class . '.max_chained_job_reporting_depth')
@@ -174,7 +174,7 @@ class IgnitionServiceProvider extends ServiceProvider
         });
     }
 
-    public function configureTinker(): void
+    public function configureTinker()/*: void*/
     {
         if (! $this->app->runningInConsole()) {
             if (isset($_SERVER['argv']) && ['artisan', 'tinker'] === $_SERVER['argv']) {
@@ -183,14 +183,14 @@ class IgnitionServiceProvider extends ServiceProvider
         }
     }
 
-    protected function configureOctane(): void
+    protected function configureOctane()/*: void*/
     {
         if (isset($_SERVER['LARAVEL_OCTANE'])) {
             $this->setupOctane();
         }
     }
 
-    protected function registerViewExceptionMapper(): void
+    protected function registerViewExceptionMapper()/*: void*/
     {
         $handler = $this->app->make(ExceptionHandler::class);
 
@@ -203,7 +203,7 @@ class IgnitionServiceProvider extends ServiceProvider
         });
     }
 
-    protected function registerRoutes(): void
+    protected function registerRoutes()/*: void*/
     {
         Route::group([
             'as' => 'ignition.',
@@ -219,7 +219,7 @@ class IgnitionServiceProvider extends ServiceProvider
         });
     }
 
-    protected function registerLogHandler(): void
+    protected function registerLogHandler()/*: void*/
     {
         $this->app->singleton('flare.logger', function ($app) {
             $handler = new FlareLogHandler(
@@ -242,7 +242,7 @@ class IgnitionServiceProvider extends ServiceProvider
         Log::extend('flare', fn ($app) => $app['flare.logger']);
     }
 
-    protected function startRecorders(): void
+    protected function startRecorders()/*: void*/
     {
         // TODO: Ignition feature toggles
 
@@ -255,7 +255,7 @@ class IgnitionServiceProvider extends ServiceProvider
         $this->app->make(JobRecorder::class)->start();
     }
 
-    protected function configureQueue(): void
+    protected function configureQueue()/*: void*/
     {
         if (! $this->app->bound('queue')) {
             return;
@@ -277,7 +277,7 @@ class IgnitionServiceProvider extends ServiceProvider
         // Note: the $queue->looping() event can't be used because it's not triggered on Vapor
     }
 
-    protected function getLogLevel(string $logLevelString): int
+    protected function getLogLevel(string $logLevelString)/*: int*/
     {
         $logLevel = Logger::getLevels()[strtoupper($logLevelString)] ?? null;
 
@@ -288,7 +288,7 @@ class IgnitionServiceProvider extends ServiceProvider
         return $logLevel;
     }
 
-    protected function getFlareMiddleware(): array
+    protected function getFlareMiddleware()/*: array*/
     {
         return collect(config('flare.flare_middleware'))
             ->map(function ($value, $key) {
@@ -306,7 +306,7 @@ class IgnitionServiceProvider extends ServiceProvider
             ->toArray();
     }
 
-    protected function getSolutionProviders(): array
+    protected function getSolutionProviders()/*: array*/
     {
         return collect(config('ignition.solution_providers'))
             ->reject(
@@ -315,7 +315,7 @@ class IgnitionServiceProvider extends ServiceProvider
             ->toArray();
     }
 
-    protected function setupOctane(): void
+    protected function setupOctane()/*: void*/
     {
         $this->app['events']->listen(RequestReceived::class, function () {
             $this->resetFlareAndLaravelIgnition();
@@ -330,7 +330,7 @@ class IgnitionServiceProvider extends ServiceProvider
         });
     }
 
-    protected function resetFlareAndLaravelIgnition(): void
+    protected function resetFlareAndLaravelIgnition()/*: void*/
     {
         $this->app->get(SentReports::class)->clear();
         $this->app->get(Ignition::class)->reset();

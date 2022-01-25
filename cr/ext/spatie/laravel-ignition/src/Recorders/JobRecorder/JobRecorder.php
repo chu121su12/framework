@@ -26,7 +26,7 @@ class JobRecorder
     ) {
     }
 
-    public function start(): self
+    public function start()/*: self*/
     {
         /** @phpstan-ignore-next-line */
         $this->app['events']->listen(JobExceptionOccurred::class, [$this, 'record']);
@@ -34,7 +34,7 @@ class JobRecorder
         return $this;
     }
 
-    public function record(JobExceptionOccurred $event): void
+    public function record(JobExceptionOccurred $event)/*: void*/
     {
         $this->job = $event->job;
     }
@@ -42,7 +42,7 @@ class JobRecorder
     /**
      * @return array<string, mixed>|null
      */
-    public function getJob(): ?array
+    public function getJob()/*: ?array*/
     {
         if ($this->job === null) {
             return null;
@@ -58,12 +58,12 @@ class JobRecorder
         );
     }
 
-    public function reset(): void
+    public function reset()/*: void*/
     {
         $this->job = null;
     }
 
-    protected function getJobProperties(): array
+    protected function getJobProperties()/*: array*/
     {
         $payload = collect($this->resolveJobPayload());
 
@@ -90,7 +90,7 @@ class JobRecorder
         return $properties;
     }
 
-    protected function resolveJobPayload(): array
+    protected function resolveJobPayload()/*: array*/
     {
         if (! $this->job instanceof RedisJob) {
             return $this->job->payload();
@@ -103,7 +103,7 @@ class JobRecorder
         }
     }
 
-    protected function resolveCommandProperties(object $command, int $maxChainDepth): array
+    protected function resolveCommandProperties(object $command, int $maxChainDepth)/*: array*/
     {
         $propertiesToIgnore = ['job', 'closure'];
 
@@ -134,7 +134,7 @@ class JobRecorder
      *
      * @return array
      */
-    protected function resolveJobChain(array $chainedCommands, int $maxDepth): array
+    protected function resolveJobChain(array $chainedCommands, int $maxDepth)/*: array*/
     {
         if ($maxDepth === 0) {
             return ['Ignition stopped recording jobs after this point since the max chain depth was reached'];
@@ -154,7 +154,7 @@ class JobRecorder
     }
 
     // Taken from Illuminate\Queue\CallQueuedHandler
-    protected function resolveObjectFromCommand(string $command): object
+    protected function resolveObjectFromCommand(string $command)/*: object*/
     {
         if (Str::startsWith($command, 'O:')) {
             return unserialize($command);

@@ -16,7 +16,7 @@ class UndefinedViewVariableSolutionProvider implements HasSolutionsForThrowable
 
     protected string $viewFile;
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(Throwable $throwable)/*: bool*/
     {
         if (! $throwable instanceof ViewException) {
             return false;
@@ -25,7 +25,7 @@ class UndefinedViewVariableSolutionProvider implements HasSolutionsForThrowable
         return $this->getNameAndView($throwable) !== null;
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(Throwable $throwable)/*: array*/
     {
         $solutions = [];
 
@@ -57,7 +57,7 @@ class UndefinedViewVariableSolutionProvider implements HasSolutionsForThrowable
         ViewException $throwable,
         string $variableName,
         string $viewFile
-    ): array {
+    )/*: array {*/
         return collect($throwable->getViewData())
             ->map(function ($value, $key) use ($variableName) {
                 similar_text($variableName, $key, $percentage);
@@ -77,7 +77,7 @@ class UndefinedViewVariableSolutionProvider implements HasSolutionsForThrowable
             ->toArray();
     }
 
-    protected function findOptionalVariableSolution(string $variableName, string $viewFile): Solution
+    protected function findOptionalVariableSolution(string $variableName, string $viewFile)/*: Solution*/
     {
         $optionalSolution = new MakeViewVariableOptionalSolution($variableName, $viewFile);
 
@@ -92,7 +92,7 @@ class UndefinedViewVariableSolutionProvider implements HasSolutionsForThrowable
      *
      * @return array<string, string>|null
      */
-    protected function getNameAndView(Throwable $throwable): ?array
+    protected function getNameAndView(Throwable $throwable)/*: ?array*/
     {
         $pattern = '/Undefined variable:? (.*?) \(View: (.*?)\)/';
 

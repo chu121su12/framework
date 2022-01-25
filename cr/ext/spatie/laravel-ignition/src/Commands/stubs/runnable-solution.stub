@@ -6,32 +6,32 @@ use Spatie\Ignition\Contracts\RunnableSolution;
 
 class DummyClass implements RunnableSolution
 {
-    public function getSolutionTitle(): string
+    public function getSolutionTitle()/*: string*/
     {
         return '';
     }
 
-    public function getDocumentationLinks(): array
+    public function getDocumentationLinks()/*: array*/
     {
         return [];
     }
 
-    public function getSolutionActionDescription(): string
+    public function getSolutionActionDescription()/*: string*/
     {
         return '';
     }
 
-    public function getRunButtonText(): string
+    public function getRunButtonText()/*: string*/
     {
         return '';
     }
 
-    public function getSolutionDescription(): string
+    public function getSolutionDescription()/*: string*/
     {
         return '';
     }
 
-    public function getRunParameters(): array
+    public function getRunParameters()/*: array*/
     {
         return [];
     }

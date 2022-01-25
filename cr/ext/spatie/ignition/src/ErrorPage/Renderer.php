@@ -9,7 +9,7 @@ class Renderer
      *
      * @return void
      */
-    public function render(array $data): void
+    public function render(array $data)/*: void*/
     {
         $viewFile = __DIR__ . '/../../resources/views/errorPage.php';
 

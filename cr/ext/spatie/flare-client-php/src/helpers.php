@@ -8,7 +8,7 @@ if (! function_exists('array_merge_recursive_distinct')) {
      *
      * @return array<int|string, mixed>
      */
-    function array_merge_recursive_distinct(array &$array1, array &$array2): array
+    function array_merge_recursive_distinct(array &$array1, array &$array2)/*: array*/
     {
         $merged = $array1;
         foreach ($array2 as $key => &$value) {

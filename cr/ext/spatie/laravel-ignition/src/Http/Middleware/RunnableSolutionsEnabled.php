@@ -15,7 +15,7 @@ class RunnableSolutionsEnabled
         return $next($request);
     }
 
-    protected function ignitionEnabled(): bool
+    protected function ignitionEnabled()/*: bool*/
     {
         return config('ignition.enable_runnable_solutions') ?? config('app.debug');
     }

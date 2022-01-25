@@ -9,12 +9,12 @@ use Spatie\Ignition\Contracts\Solution;
 
 class CannotExecuteSolutionForNonLocalIp extends Exception implements ProvidesSolution
 {
-    public static function make(): self
+    public static function make()/*: self*/
     {
         return new self('Solutions cannot be run from your current IP address.');
     }
 
-    public function getSolution(): Solution
+    public function getSolution()/*: Solution*/
     {
         return BaseSolution::create()
             ->setSolutionTitle('Checking your environment settings')

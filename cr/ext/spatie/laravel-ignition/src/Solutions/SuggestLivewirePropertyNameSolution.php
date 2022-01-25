@@ -13,22 +13,22 @@ class SuggestLivewirePropertyNameSolution implements Solution
     ) {
     }
 
-    public function getSolutionTitle(): string
+    public function getSolutionTitle()/*: string*/
     {
         return "Possible typo {$this->variableName}";
     }
 
-    public function getDocumentationLinks(): array
+    public function getDocumentationLinks()/*: array*/
     {
         return [];
     }
 
-    public function getSolutionDescription(): string
+    public function getSolutionDescription()/*: string*/
     {
         return "Did you mean `$this->suggested`?";
     }
 
-    public function isRunnable(): bool
+    public function isRunnable()/*: bool*/
     {
         return false;
     }

@@ -15,7 +15,7 @@ class LivewireComponentParser
 
     protected ReflectionClass $reflectionClass;
 
-    public static function create(string $componentAlias): self
+    public static function create(string $componentAlias)/*: self*/
     {
         return new self($componentAlias);
     }
@@ -26,12 +26,12 @@ class LivewireComponentParser
         $this->reflectionClass = new ReflectionClass($this->componentClass);
     }
 
-    public function getComponentClass(): string
+    public function getComponentClass()/*: string*/
     {
         return $this->componentClass;
     }
 
-    public function getPropertyNamesLike(string $similar): Collection
+    public function getPropertyNamesLike(string $similar)/*: Collection*/
     {
         $properties = collect($this->reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC))
             ->reject(function (ReflectionProperty $reflectionProperty) {
@@ -58,7 +58,7 @@ class LivewireComponentParser
         );
     }
 
-    public function getMethodNamesLike(string $similar): Collection
+    public function getMethodNamesLike(string $similar)/*: Collection*/
     {
         $methods = collect($this->reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC))
             ->reject(function (ReflectionMethod $reflectionMethod) {
@@ -71,7 +71,7 @@ class LivewireComponentParser
         return $this->filterItemsBySimilarity($methods, $similar);
     }
 
-    protected function filterItemsBySimilarity(Collection $items, string $similar): Collection
+    protected function filterItemsBySimilarity(Collection $items, string $similar)/*: Collection*/
     {
         return $items
             ->map(function (string $name) use ($similar) {

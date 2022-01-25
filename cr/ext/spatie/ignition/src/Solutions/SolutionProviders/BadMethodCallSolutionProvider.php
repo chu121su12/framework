@@ -14,7 +14,7 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
 {
     protected const REGEX = '/([a-zA-Z\\\\]+)::([a-zA-Z]+)/m';
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(Throwable $throwable)/*: bool*/
     {
         if (! $throwable instanceof BadMethodCallException) {
             return false;
@@ -27,7 +27,7 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
         return true;
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(Throwable $throwable)/*: array*/
     {
         return [
             BaseSolution::create('Bad Method Call')
@@ -35,7 +35,7 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    public function getSolutionDescription(Throwable $throwable): string
+    public function getSolutionDescription(Throwable $throwable)/*: string*/
     {
         if (! $this->canSolve($throwable)) {
             return '';
@@ -56,7 +56,7 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
      *
      * @return null|array<string, mixed>
      */
-    protected function getClassAndMethodFromExceptionMessage(string $message): ?array
+    protected function getClassAndMethodFromExceptionMessage(string $message)/*: ?array*/
     {
         if (! preg_match(self::REGEX, $message, $matches)) {
             return null;
@@ -74,7 +74,7 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
      *
      * @return \ReflectionMethod|null
      */
-    protected function findPossibleMethod(string $class, string $invalidMethodName): ?ReflectionMethod
+    protected function findPossibleMethod(string $class, string $invalidMethodName)/*: ?ReflectionMethod*/
     {
         return $this->getAvailableMethods($class)
             ->sortByDesc(function (ReflectionMethod $method) use ($invalidMethodName) {
@@ -89,7 +89,7 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
      *
      * @return \Illuminate\Support\Collection<int, ReflectionMethod>
      */
-    protected function getAvailableMethods(string $class): Collection
+    protected function getAvailableMethods(string $class)/*: Collection*/
     {
         $class = new ReflectionClass($class);
 

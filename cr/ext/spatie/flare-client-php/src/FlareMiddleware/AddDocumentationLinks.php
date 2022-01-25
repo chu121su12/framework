@@ -31,7 +31,7 @@ class AddDocumentationLinks implements FlareMiddleware
     }
 
     /** @return array<int, string> */
-    protected function getLinks(\Throwable $throwable): array
+    protected function getLinks(\Throwable $throwable)/*: array*/
     {
         $allLinks = [];
 

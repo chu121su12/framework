@@ -60,67 +60,67 @@ class Flare
     public static function make(
         string $apiKey = null,
         ContextProviderDetector $contextDetector = null
-    ): self {
+    )/*: self {*/
         $client = new Client($apiKey);
 
         return new self($client, $contextDetector);
     }
 
-    public function setApiToken(string $apiToken): self
+    public function setApiToken(string $apiToken)/*: self*/
     {
         $this->client->setApiToken($apiToken);
 
         return $this;
     }
 
-    public function apiTokenSet(): bool
+    public function apiTokenSet()/*: bool*/
     {
         return $this->client->apiTokenSet();
     }
 
-    public function setBaseUrl(string $baseUrl): self
+    public function setBaseUrl(string $baseUrl)/*: self*/
     {
         $this->client->setBaseUrl($baseUrl);
 
         return $this;
     }
 
-    public function setStage(string $stage): self
+    public function setStage(string $stage)/*: self*/
     {
         $this->stage = $stage;
 
         return $this;
     }
 
-    public function sendReportsImmediately(): self
+    public function sendReportsImmediately()/*: self*/
     {
         $this->api->sendReportsImmediately();
 
         return $this;
     }
 
-    public function determineVersionUsing(callable $determineVersionCallable): self
+    public function determineVersionUsing(callable $determineVersionCallable)/*: self*/
     {
         $this->determineVersionCallable = $determineVersionCallable;
 
         return $this;
     }
 
-    public function reportErrorLevels(int $reportErrorLevels): self
+    public function reportErrorLevels(int $reportErrorLevels)/*: self*/
     {
         $this->reportErrorLevels = $reportErrorLevels;
 
         return $this;
     }
 
-    public function filterExceptionsUsing(callable $filterExceptionsCallable): self
+    public function filterExceptionsUsing(callable $filterExceptionsCallable)/*: self*/
     {
         $this->filterExceptionsCallable = $filterExceptionsCallable;
 
         return $this;
     }
 
-    public function version(): ?string
+    public function version()/*: ?string*/
     {
         if (! $this->determineVersionCallable) {
             return null;
@@ -149,26 +149,26 @@ class Flare
     }
 
     /** @return array<int, FlareMiddleware|class-string<FlareMiddleware>> */
-    public function getMiddleware(): array
+    public function getMiddleware()/*: array*/
     {
         return $this->middleware;
     }
 
-    public function setContextProviderDetector(ContextProviderDetector $contextDetector): self
+    public function setContextProviderDetector(ContextProviderDetector $contextDetector)/*: self*/
     {
         $this->contextDetector = $contextDetector;
 
         return $this;
     }
 
-    public function setContainer(Container $container): self
+    public function setContainer(Container $container)/*: self*/
     {
         $this->container = $container;
 
         return $this;
     }
 
-    public function registerFlareHandlers(): self
+    public function registerFlareHandlers()/*: self*/
     {
         $this->registerExceptionHandler();
 
@@ -177,7 +177,7 @@ class Flare
         return $this;
     }
 
-    public function registerExceptionHandler(): self
+    public function registerExceptionHandler()/*: self*/
     {
         /** @phpstan-ignore-next-line */
         $this->previousExceptionHandler = set_exception_handler([$this, 'handleException']);
@@ -185,14 +185,14 @@ class Flare
         return $this;
     }
 
-    public function registerErrorHandler(): self
+    public function registerErrorHandler()/*: self*/
     {
         $this->previousErrorHandler = set_error_handler([$this, 'handleError']);
 
         return $this;
     }
 
-    protected function registerDefaultMiddleware(): self
+    protected function registerDefaultMiddleware()/*: self*/
     {
         return $this->registerMiddleware(new AddGlows($this->recorder));
     }
@@ -202,7 +202,7 @@ class Flare
      *
      * @return $this
      */
-    public function registerMiddleware($middleware): self
+    public function registerMiddleware($middleware)/*: self*/
     {
         if (! is_array($middleware)) {
             $middleware = [$middleware];
@@ -217,7 +217,7 @@ class Flare
     /**
      * @return array<int,FlareMiddleware|class-string<FlareMiddleware>>
      */
-    public function getMiddlewares(): array
+    public function getMiddlewares()/*: array*/
     {
         return $this->middleware;
     }
@@ -233,13 +233,13 @@ class Flare
         string $name,
         string $messageLevel = MessageLevels::INFO,
         array $metaData = []
-    ): self {
+    )/*: self {*/
         $this->recorder->record(new Glow($name, $messageLevel, $metaData));
 
         return $this;
     }
 
-    public function handleException(Throwable $throwable): void
+    public function handleException(Throwable $throwable)/*: void*/
     {
         $this->report($throwable);
 
@@ -268,14 +268,14 @@ class Flare
         }
     }
 
-    public function applicationPath(string $applicationPath): self
+    public function applicationPath(string $applicationPath)/*: self*/
     {
         $this->applicationPath = $applicationPath;
 
         return $this;
     }
 
-    public function report(Throwable $throwable, callable $callback = null): ?Report
+    public function report(Throwable $throwable, callable $callback = null)/*: ?Report*/
     {
         if (! $this->shouldSendReport($throwable)) {
             return null;
@@ -292,7 +292,7 @@ class Flare
         return $report;
     }
 
-    protected function shouldSendReport(Throwable $throwable): bool
+    protected function shouldSendReport(Throwable $throwable)/*: bool*/
     {
         if ($this->reportErrorLevels && $throwable instanceof Error) {
             return (bool)($this->reportErrorLevels & $throwable->getCode());
@@ -309,7 +309,7 @@ class Flare
         return true;
     }
 
-    public function reportMessage(string $message, string $logLevel, callable $callback = null): void
+    public function reportMessage(string $message, string $logLevel, callable $callback = null)/*: void*/
     {
         $report = $this->createReportFromMessage($message, $logLevel);
 
@@ -320,12 +320,12 @@ class Flare
         $this->sendReportToApi($report);
     }
 
-    public function sendTestReport(Throwable $throwable): void
+    public function sendTestReport(Throwable $throwable)/*: void*/
     {
         $this->api->sendTestReport($this->createReport($throwable));
     }
 
-    protected function sendReportToApi(Report $report): void
+    protected function sendReportToApi(Report $report)/*: void*/
     {
         try {
             $this->api->report($report);
@@ -333,7 +333,7 @@ class Flare
         }
     }
 
-    public function reset(): void
+    public function reset()/*: void*/
     {
         $this->api->sendQueuedReports();
 
@@ -342,7 +342,7 @@ class Flare
         $this->recorder->reset();
     }
 
-    protected function applyAdditionalParameters(Report $report): void
+    protected function applyAdditionalParameters(Report $report)/*: void*/
     {
         $report
             ->stage($this->stage)
@@ -351,7 +351,7 @@ class Flare
             ->userProvidedContext($this->userProvidedContext);
     }
 
-    public function anonymizeIp(): self
+    public function anonymizeIp()/*: self*/
     {
         $this->registerMiddleware(new RemoveRequestIp());
 
@@ -363,14 +363,14 @@ class Flare
      *
      * @return $this
      */
-    public function censorRequestBodyFields(array $fieldNames): self
+    public function censorRequestBodyFields(array $fieldNames)/*: self*/
     {
         $this->registerMiddleware(new CensorRequestBodyFields($fieldNames));
 
         return $this;
     }
 
-    public function createReport(Throwable $throwable): Report
+    public function createReport(Throwable $throwable)/*: Report*/
     {
         $report = Report::createForThrowable(
             $throwable,
@@ -382,7 +382,7 @@ class Flare
         return $this->applyMiddlewareToReport($report);
     }
 
-    public function createReportFromMessage(string $message, string $logLevel): Report
+    public function createReportFromMessage(string $message, string $logLevel)/*: Report*/
     {
         $report = Report::createForMessage(
             $message,
@@ -394,7 +394,7 @@ class Flare
         return $this->applyMiddlewareToReport($report);
     }
 
-    protected function applyMiddlewareToReport(Report $report): Report
+    protected function applyMiddlewareToReport(Report $report)/*: Report*/
     {
         $this->applyAdditionalParameters($report);
         $middleware = array_map(function ($singleMiddleware) {

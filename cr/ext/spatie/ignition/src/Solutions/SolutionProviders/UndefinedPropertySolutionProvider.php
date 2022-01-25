@@ -15,7 +15,7 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
     protected const REGEX = '/([a-zA-Z\\\\]+)::\$([a-zA-Z]+)/m';
     protected const MINIMUM_SIMILARITY = 80;
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(Throwable $throwable)/*: bool*/
     {
         if (! $throwable instanceof ErrorException) {
             return false;
@@ -32,7 +32,7 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
         return true;
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(Throwable $throwable)/*: array*/
     {
         return [
             BaseSolution::create('Unknown Property')
@@ -40,7 +40,7 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    public function getSolutionDescription(Throwable $throwable): string
+    public function getSolutionDescription(Throwable $throwable)/*: string*/
     {
         if (! $this->canSolve($throwable) || ! $this->similarPropertyExists($throwable)) {
             return '';
@@ -59,7 +59,7 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
         return "Did you mean {$class}::\${$possibleProperty->name} ?";
     }
 
-    protected function similarPropertyExists(Throwable $throwable): bool
+    protected function similarPropertyExists(Throwable $throwable)/*: bool*/
     {
         /** @phpstan-ignore-next-line  */
         extract($this->getClassAndPropertyFromExceptionMessage($throwable->getMessage()), EXTR_OVERWRITE);
@@ -74,7 +74,7 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
      *
      * @return null|array<string, string>
      */
-    protected function getClassAndPropertyFromExceptionMessage(string $message): ?array
+    protected function getClassAndPropertyFromExceptionMessage(string $message)/*: ?array*/
     {
         if (! preg_match(self::REGEX, $message, $matches)) {
             return null;
@@ -92,7 +92,7 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
      *
      * @return mixed
      */
-    protected function findPossibleProperty(string $class, string $invalidPropertyName): mixed
+    protected function findPossibleProperty(string $class, string $invalidPropertyName)/*: mixed*/
     {
         return $this->getAvailableProperties($class)
             ->sortByDesc(function (ReflectionProperty $property) use ($invalidPropertyName) {
@@ -112,7 +112,7 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
      *
      * @return Collection<string, string>
      */
-    protected function getAvailableProperties(string $class): Collection
+    protected function getAvailableProperties(string $class)/*: Collection*/
     {
         $class = new ReflectionClass($class);
 

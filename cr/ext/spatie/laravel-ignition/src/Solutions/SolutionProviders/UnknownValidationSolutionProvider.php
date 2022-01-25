@@ -17,7 +17,7 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
 {
     protected const REGEX = '/Illuminate\\\\Validation\\\\Validator::(?P<method>validate(?!(Attribute|UsingCustomRule))[A-Z][a-zA-Z]+)/m';
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(Throwable $throwable)/*: bool*/
     {
         if (! $throwable instanceof BadMethodCallException) {
             return false;
@@ -26,7 +26,7 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
         return ! is_null($this->getMethodFromExceptionMessage($throwable->getMessage()));
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(Throwable $throwable)/*: array*/
     {
         return [
             BaseSolution::create()
@@ -35,7 +35,7 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
         ];
     }
 
-    protected function getSolutionDescription(Throwable $throwable): string
+    protected function getSolutionDescription(Throwable $throwable)/*: string*/
     {
         $method = (string)$this->getMethodFromExceptionMessage($throwable->getMessage());
 
@@ -53,7 +53,7 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
         return "Did you mean `{$rule}` ?";
     }
 
-    protected function getMethodFromExceptionMessage(string $message): ?string
+    protected function getMethodFromExceptionMessage(string $message)/*: ?string*/
     {
         if (! preg_match(self::REGEX, $message, $matches)) {
             return null;
@@ -62,7 +62,7 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
         return $matches['method'];
     }
 
-    protected function getAvailableMethods(): Collection
+    protected function getAvailableMethods()/*: Collection*/
     {
         $class = new ReflectionClass(Validator::class);
 

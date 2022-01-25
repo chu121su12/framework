@@ -14,7 +14,7 @@ class ReportSolution
         $this->solution = $solution;
     }
 
-    public static function fromSolution(SolutionContract $solution): self
+    public static function fromSolution(SolutionContract $solution)/*: self*/
     {
         return new self($solution);
     }
@@ -22,7 +22,7 @@ class ReportSolution
     /**
      * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         $isRunnable = ($this->solution instanceof RunnableSolution);
 

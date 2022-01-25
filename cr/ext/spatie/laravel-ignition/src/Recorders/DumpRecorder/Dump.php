@@ -21,7 +21,7 @@ class Dump
     }
 
     /** @return array<string, mixed> */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'html_dump' => $this->htmlDump,

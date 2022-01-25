@@ -9,7 +9,7 @@ class GlowRecorder
     /** @var array<int, Glow> */
     protected array $glows = [];
 
-    public function record(Glow $glow): void
+    public function record(Glow $glow)/*: void*/
     {
         $this->glows[] = $glow;
 
@@ -17,12 +17,12 @@ class GlowRecorder
     }
 
     /** @return array<int, Glow> */
-    public function glows(): array
+    public function glows()/*: array*/
     {
         return $this->glows;
     }
 
-    public function reset(): void
+    public function reset()/*: void*/
     {
         $this->glows = [];
     }

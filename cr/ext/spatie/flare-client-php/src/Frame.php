@@ -8,7 +8,7 @@ class Frame
 {
     protected SpatieFrame $frame;
 
-    public static function fromSpatieFrame(SpatieFrame $frame): self
+    public static function fromSpatieFrame(SpatieFrame $frame)/*: self*/
     {
         return new self($frame);
     }
@@ -21,7 +21,7 @@ class Frame
     /**
      * @return array<string, mixed>
      */
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'file' => $this->frame->file,

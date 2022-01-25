@@ -9,12 +9,12 @@ use Spatie\Ignition\Contracts\Solution;
 
 class CannotExecuteSolutionForNonLocalEnvironment extends Exception implements ProvidesSolution
 {
-    public static function make(): self
+    public static function make()/*: self*/
     {
         return new self('Cannot run solution in this environment');
     }
 
-    public function getSolution(): Solution
+    public function getSolution()/*: Solution*/
     {
         return BaseSolution::create()
             ->setSolutionTitle('Checking your environment settings')

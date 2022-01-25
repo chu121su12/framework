@@ -7,22 +7,22 @@ use Spatie\Ignition\Contracts\RunnableSolution;
 
 class UseDefaultValetDbCredentialsSolution implements RunnableSolution
 {
-    public function getSolutionActionDescription(): string
+    public function getSolutionActionDescription()/*: string*/
     {
         return 'Pressing the button will change `DB_USER` and `DB_PASSWORD` in your `.env` file.';
     }
 
-    public function getRunButtonText(): string
+    public function getRunButtonText()/*: string*/
     {
         return 'Use default Valet credentials';
     }
 
-    public function getSolutionTitle(): string
+    public function getSolutionTitle()/*: string*/
     {
         return 'Could not connect to database';
     }
 
-    public function run(array $parameters = []): void
+    public function run(array $parameters = [])/*: void*/
     {
         if (! file_exists(base_path('.env'))) {
             return;
@@ -32,7 +32,7 @@ class UseDefaultValetDbCredentialsSolution implements RunnableSolution
         $this->ensureLineExists('DB_PASSWORD', '');
     }
 
-    protected function ensureLineExists(string $key, string $value): void
+    protected function ensureLineExists(string $key, string $value)/*: void*/
     {
         $envPath = base_path('.env');
 
@@ -43,19 +43,19 @@ class UseDefaultValetDbCredentialsSolution implements RunnableSolution
         file_put_contents($envPath, implode('', $envLines));
     }
 
-    public function getRunParameters(): array
+    public function getRunParameters()/*: array*/
     {
         return [];
     }
 
-    public function getDocumentationLinks(): array
+    public function getDocumentationLinks()/*: array*/
     {
         return [
             'Valet documentation' => 'https://laravel.com/docs/master/valet',
         ];
     }
 
-    public function getSolutionDescription(): string
+    public function getSolutionDescription()/*: string*/
     {
         return 'You seem to be using Valet, but the .env file does not contain the right default database credentials.';
     }

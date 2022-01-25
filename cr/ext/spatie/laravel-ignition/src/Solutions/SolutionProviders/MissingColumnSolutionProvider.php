@@ -14,7 +14,7 @@ class MissingColumnSolutionProvider implements HasSolutionsForThrowable
      */
     const MYSQL_BAD_FIELD_CODE = '42S22';
 
-    public function canSolve(Throwable $throwable): bool
+    public function canSolve(Throwable $throwable)/*: bool*/
     {
         if (! $throwable instanceof QueryException) {
             return false;
@@ -23,12 +23,12 @@ class MissingColumnSolutionProvider implements HasSolutionsForThrowable
         return  $this->isBadTableErrorCode($throwable->getCode());
     }
 
-    protected function isBadTableErrorCode(string $code): bool
+    protected function isBadTableErrorCode(string $code)/*: bool*/
     {
         return $code === static::MYSQL_BAD_FIELD_CODE;
     }
 
-    public function getSolutions(Throwable $throwable): array
+    public function getSolutions(Throwable $throwable)/*: array*/
     {
         return [new RunMigrationsSolution('A column was not found')];
     }
