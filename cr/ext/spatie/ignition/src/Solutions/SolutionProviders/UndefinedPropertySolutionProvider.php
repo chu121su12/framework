@@ -58,9 +58,9 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
             EXTR_OVERWRITE,
         );
 
-        $possibleProperty = $this->findPossibleProperty($class ?? '', $property ?? '');
+        $possibleProperty = $this->findPossibleProperty(isset($class) ? $class : '', isset($property) ? $property : '');
 
-        $class = $class ?? '';
+        $class = isset($class) ? $class : '';
 
         return "Did you mean {$class}::\${$possibleProperty->name} ?";
     }
@@ -72,7 +72,7 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
         /** @phpstan-ignore-next-line  */
         extract($this->getClassAndPropertyFromExceptionMessage($throwable->getMessage()), EXTR_OVERWRITE);
 
-        $possibleProperty = $this->findPossibleProperty($class ?? '', $property ?? '');
+        $possibleProperty = $this->findPossibleProperty(isset($class) ? $class : '', isset($property) ? $property : '');
 
         return $possibleProperty !== null;
     }

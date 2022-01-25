@@ -296,7 +296,7 @@ class IgnitionServiceProvider extends ServiceProvider
             ->map(function ($value, $key) {
                 if (is_string($key)) {
                     $middlewareClass = $key;
-                    $parameters = $value ?? [];
+                    $parameters = isset($value) ? $value : [];
                 } else {
                     $middlewareClass = $value;
                     $parameters = [];

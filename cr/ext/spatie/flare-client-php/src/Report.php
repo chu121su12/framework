@@ -80,7 +80,7 @@ class Report
             ->useContext($context)
             ->exceptionClass(self::getClassForThrowable($throwable))
             ->message($throwable->getMessage())
-            ->stackTrace(Backtrace::createForThrowable($throwable)->applicationPath($applicationPath ?? ''))
+            ->stackTrace(Backtrace::createForThrowable($throwable)->applicationPath(isset($applicationPath) ? $applicationPath : ''))
             ->exceptionContext($throwable)
             ->setApplicationVersion($version);
     }
@@ -111,7 +111,7 @@ class Report
         $logLevel = cast_to_string($logLevel);
         $applicationPath = cast_to_string($applicationPath, null);
 
-        $stacktrace = Backtrace::create()->applicationPath($applicationPath ?? '');
+        $stacktrace = Backtrace::create()->applicationPath(isset($applicationPath) ? $applicationPath : '');
 
         return (new self())
             ->setApplicationPath($applicationPath)
@@ -124,7 +124,7 @@ class Report
 
     public function __construct()
     {
-        $this->trackingUuid = self::$fakeTrackingUuid ?? $this->generateUuid();
+        $this->trackingUuid = isset(self::$fakeTrackingUuid) ? self::$fakeTrackingUuid : $this->generateUuid();
     }
 
     public function trackingUuid()/*: string*/
@@ -342,10 +342,10 @@ class Report
     public function toArray()/*: array*/
     {
         return [
-            'notifier' => $this->notifierName ?? 'Flare Client',
+            'notifier' => isset($this->notifierName) ? $this->notifierName : 'Flare Client',
             'language' => 'PHP',
             'framework_version' => $this->frameworkVersion,
-            'language_version' => $this->languageVersion ?? phpversion(),
+            'language_version' => isset($this->languageVersion) ? $this->languageVersion : phpversion(),
             'exception_class' => $this->exceptionClass,
             'seen_at' => $this->getCurrentTime(),
             'message' => $this->message,

@@ -50,8 +50,8 @@ class UndefinedLivewireMethodSolutionProvider implements HasSolutionsForThrowabl
         preg_match_all('/\[([\d\w\-_]*)\]/m', $throwable->getMessage(), $matches, PREG_SET_ORDER);
 
         return [
-            'methodName' => $matches[0][1] ?? null,
-            'component' => $matches[1][1] ?? null,
+            'methodName' => isset($matches[0]) && isset($matches[0][1]) ? $matches[0][1] : null,
+            'component' => isset($matches[1]) && isset($matches[1][1]) ? $matches[1][1] : null,
         ];
     }
 }

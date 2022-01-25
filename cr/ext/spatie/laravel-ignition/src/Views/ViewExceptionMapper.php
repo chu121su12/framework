@@ -66,7 +66,7 @@ class ViewExceptionMapper
             : IgnitionViewException::class;
 
         $viewFile = $this->findCompiledView($baseException->getFile());
-        $file = $viewFile ?? $baseException->getFile();
+        $file = isset($viewFile) ? $viewFile : $baseException->getFile();
         $line = $viewFile ? $this->getBladeLineNumber($file, $baseException->getLine()) : $baseException->getLine();
 
         return new $viewExceptionClass(
@@ -117,9 +117,9 @@ class ViewExceptionMapper
     {
         $compiledPath = cast_to_string($compiledPath);
 
-        $this->knownPaths ??= $this->getKnownPaths();
+        isset($this->knownPaths) ? $this->knownPaths := $this->getKnownPaths();
 
-        return $this->knownPaths[$compiledPath] ?? null;
+        return isset($this->knownPaths[$compiledPath]) ? $this->knownPaths[$compiledPath] : null;
     }
 
     protected function getKnownPaths()/*: array*/
@@ -132,7 +132,7 @@ class ViewExceptionMapper
         foreach ($lastCompiled as $lastCompiledPath) {
             $compiledPath = $this->compilerEngine->getCompiler()->getCompiledPath($lastCompiledPath);
 
-            $knownPaths[$compiledPath ?? $lastCompiledPath] = $lastCompiledPath;
+            $knownPaths[isset($compiledPath) ? $compiledPath : $lastCompiledPath] = $lastCompiledPath;
         }
 
         return $knownPaths;

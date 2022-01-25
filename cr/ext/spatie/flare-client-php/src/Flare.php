@@ -151,7 +151,7 @@ class Flare
     ) {
         $this->client = $client;
         $this->recorder = new GlowRecorder();
-        $this->contextDetector = $contextDetector ?? new BaseContextProviderDetector();
+        $this->contextDetector = isset($contextDetector) ? $contextDetector : new BaseContextProviderDetector();
         $this->middleware = $middleware;
         $this->api = new Api($this->client);
 

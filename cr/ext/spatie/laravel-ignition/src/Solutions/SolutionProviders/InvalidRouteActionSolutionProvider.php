@@ -35,7 +35,7 @@ class InvalidRouteActionSolutionProvider implements HasSolutionsForThrowable
 
         preg_match(self::REGEX, $throwable->getMessage(), $matches);
 
-        $invalidController = $matches[1] ?? null;
+        $invalidController = isset($matches[1]) ? $matches[1] : null;
 
         $suggestedController = $this->findRelatedController($invalidController);
 
@@ -88,6 +88,6 @@ class InvalidRouteActionSolutionProvider implements HasSolutionsForThrowable
 
         $fqcnMatch = StringComparator::findClosestMatch($controllers, $invalidController, 4);
 
-        return $fqcnMatch ?? $basenameMatch;
+        return isset($fqcnMatch) ? $fqcnMatch : $basenameMatch;
     }
 }

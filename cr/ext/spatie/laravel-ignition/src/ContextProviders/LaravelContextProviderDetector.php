@@ -12,7 +12,7 @@ class LaravelContextProviderDetector implements ContextProviderDetector
     public function detectCurrentContext()/*: ContextProvider*/
     {
         if (app()->runningInConsole()) {
-            return new LaravelConsoleContextProvider($_SERVER['argv'] ?? []);
+            return new LaravelConsoleContextProvider(isset($_SERVER['argv']) ? $_SERVER['argv'] : []);
         }
 
         $request = app(Request::class);

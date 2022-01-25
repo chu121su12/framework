@@ -41,7 +41,7 @@ trait HasContext
     {
         $groupName = cast_to_string($groupName);
 
-        return $this->userProvidedContext[$groupName] ?? $default;
+        return isset($this->userProvidedContext[$groupName]) ? $this->userProvidedContext[$groupName] : $default;
     }
 
     public function context(/*string */$key, /*mixed */$value)/*: self*/
@@ -63,7 +63,7 @@ trait HasContext
     {
         $groupName = cast_to_string($groupName);
 
-        $group = $this->userProvidedContext[$groupName] ?? [];
+        $group = isset($this->userProvidedContext[$groupName]) ? $this->userProvidedContext[$groupName] : [];
 
         $this->userProvidedContext[$groupName] = array_merge_recursive_distinct(
             $group,

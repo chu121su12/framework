@@ -54,8 +54,8 @@ class UndefinedLivewirePropertySolutionProvider implements HasSolutionsForThrowa
         preg_match_all('/\[([\d\w\-_\$]*)\]/m', $throwable->getMessage(), $matches, PREG_SET_ORDER, 0);
 
         return [
-            'variable' => $matches[0][1] ?? null,
-            'component' => $matches[1][1] ?? null,
+            'variable' => isset($matches[0]) && isset($matches[0][1]) ? $matches[0][1] : null,
+            'component' => isset($matches[1]) && isset($matches[1][1]) ? $matches[1][1] : null,
         ];
     }
 }

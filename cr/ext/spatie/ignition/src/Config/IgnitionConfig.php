@@ -88,12 +88,12 @@ class IgnitionConfig implements Arrayable
 
     public function hideSolutions()/*: bool*/
     {
-        return $this->options['hide_solutions'] ?? false;
+        return isset($this->options['hide_solutions']) ? $this->options['hide_solutions'] : false;
     }
 
     public function editor()/*: ?string*/
     {
-        return $this->options['editor'] ?? null;
+        return isset($this->options['editor']) ? $this->options['editor'] : null;
     }
 
     /**
@@ -101,38 +101,37 @@ class IgnitionConfig implements Arrayable
      */
     public function editorOptions()/*: array*/
     {
-        return $this->options['editor_options'] ?? [];
+        return isset($this->options['editor_options']) ? $this->options['editor_options'] : [];
     }
 
     public function remoteSitesPath()/*: ?string*/
     {
-        return $this->options['remote_sites_path'] ?? null;
+        return isset($this->options['remote_sites_path']) ? $this->options['remote_sites_path'] : null;
     }
 
     public function localSitesPath()/*: ?string*/
     {
-        return $this->options['local_sites_path'] ?? null;
+        return isset($this->options['local_sites_path']) ? $this->options['local_sites_path'] : null;
     }
 
     public function theme()/*: ?string*/
     {
-        return $this->options['theme'] ?? null;
+        return isset($this->options['theme']) ? $this->options['theme'] : null;
     }
 
     public function shareButtonEnabled()/*: bool*/
     {
-        return (bool)($this->options['enable_share_button'] ?? false);
+        return (bool)(isset($this->options['enable_share_button']) ? $this->options['enable_share_button'] : false);
     }
 
     public function shareEndpoint()/*: string*/
     {
-        return $this->options['share_endpoint']
-            ?? $this->getDefaultOptions()['share_endpoint'];
+        return isset($this->options['share_endpoint']) ? $this->options['share_endpoint'] : $this->getDefaultOptions()['share_endpoint'];
     }
 
     public function runnableSolutionsEnabled()/*: bool*/
     {
-        return (bool)($this->options['enable_runnable_solutions'] ?? false);
+        return (bool)(isset($this->options['enable_runnable_solutions']) ? $this->options['enable_runnable_solutions'] : false);
     }
 
     /** @return array<string, mixed> */

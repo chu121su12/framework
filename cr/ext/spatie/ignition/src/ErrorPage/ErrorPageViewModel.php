@@ -25,7 +25,9 @@ class ErrorPageViewModel
         protected array $solutions,
         protected ?string $solutionTransformerClass = null
     ) {
-        $this->solutionTransformerClass ??= SolutionTransformer::class;
+        if (!isset($this->solutionTransformerClass)) {
+            $this->solutionTransformerClass = SolutionTransformer::class;
+        }
     }
 
     public function throwableString()/*: string*/

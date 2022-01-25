@@ -36,7 +36,7 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
     {
         $output = [
             'Make the variable optional in the blade template.',
-            "Replace `{{ $$this->variableName }}` with `{{ $$this->variableName ?? '' }}`",
+            "Replace `{{ $$this->variableName }}` with `{{ $isset($this->variableName) ? $this->variableName : '' }}`",
         ];
 
         return implode(PHP_EOL, $output);

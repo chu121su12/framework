@@ -162,7 +162,7 @@ class BladeSourceMapCompiler
                 return $compiledLineNumber > count($map) ? count($map) : $compiledLineNumber;
             }
 
-            if (preg_match($pattern, $map[$lineNumberToCheck] ?? '', $matches)) {
+            if (preg_match($pattern, isset($map[$lineNumberToCheck]) ? $map[$lineNumberToCheck] : '', $matches)) {
                 return (int)$matches['line'];
             }
 

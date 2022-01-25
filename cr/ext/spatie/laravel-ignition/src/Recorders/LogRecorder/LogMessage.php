@@ -32,7 +32,7 @@ class LogMessage
         $this->message = $message;
         $this->level = $level;
         $this->context = $context;
-        $this->microtime = $microtime ?? microtime(true);
+        $this->microtime = isset($microtime) ? $microtime : microtime(true);
     }
 
     public static function fromMessageLoggedEvent(MessageLogged $event)/*: self*/

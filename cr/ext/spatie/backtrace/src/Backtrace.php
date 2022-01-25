@@ -157,14 +157,14 @@ class Backtrace
             $frames[] = new Frame(
                 $currentFile,
                 $currentLine,
-                $rawFrame['args'] ?? null,
-                $rawFrame['function'] ?? null,
-                $rawFrame['class'] ?? null,
+                isset($rawFrame['args']) ? $rawFrame['args'] : null,
+                isset($rawFrame['function']) ? $rawFrame['function'] : null,
+                isset($rawFrame['class']) ? $rawFrame['class'] : null,
                 $this->isApplicationFrame($currentFile)
             );
 
-            $currentFile = $rawFrame['file'] ?? 'unknown';
-            $currentLine = $rawFrame['line'] ?? 0;
+            $currentFile = isset($rawFrame['file']) ? $rawFrame['file'] : 'unknown';
+            $currentLine = isset($rawFrame['line']) ? $rawFrame['line'] : 0;
         }
 
         $frames[] = new Frame(
@@ -191,7 +191,7 @@ class Backtrace
         $relativeFile = str_replace('\\', DIRECTORY_SEPARATOR, $frameFilename);
 
         if (! empty($this->applicationPath)) {
-            $relativeFile = array_reverse(explode($this->applicationPath ?? '', $frameFilename, 2))[0];
+            $relativeFile = array_reverse(explode(isset($this->applicationPath) ? $this->applicationPath : '', $frameFilename, 2))[0];
         }
 
         if (strpos($relativeFile, DIRECTORY_SEPARATOR . 'vendor') === 0) {

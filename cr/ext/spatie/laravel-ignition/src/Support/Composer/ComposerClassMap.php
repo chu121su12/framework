@@ -19,7 +19,7 @@ class ComposerClassMap
     {
         $autoloaderPath = cast_to_string($autoloaderPath, null);
 
-        $autoloaderPath = $autoloaderPath ?? base_path('/vendor/autoload.php');
+        $autoloaderPath = isset($autoloaderPath) ? $autoloaderPath : base_path('/vendor/autoload.php');
 
         $this->composer = file_exists($autoloaderPath)
             ? require $autoloaderPath

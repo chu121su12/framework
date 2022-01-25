@@ -75,13 +75,13 @@ class LaravelLivewireRequestContextProvider extends LaravelRequestContextProvide
         $dataMeta = $this->request->input('serverMemo.dataMeta') ?? [];
 
         /** @phpstan-ignore-next-line */
-        foreach ($dataMeta['modelCollections'] ?? [] as $key => $value) {
-            $data[$key] = array_merge($data[$key] ?? [], $value);
+        foreach (isset($dataMeta['modelCollections']) ? $dataMeta['modelCollections'] : [] as $key => $value) {
+            $data[$key] = array_merge(isset($data[$key]) ? $data[$key] : [], $value);
         }
 
         /** @phpstan-ignore-next-line */
-        foreach ($dataMeta['models'] ?? [] as $key => $value) {
-            $data[$key] = array_merge($data[$key] ?? [], $value);
+        foreach (isset($dataMeta['models']) ? $dataMeta['models'] : [] as $key => $value) {
+            $data[$key] = array_merge(isset($data[$key]) ? $data[$key] : [], $value);
         }
 
         return $data;
@@ -94,7 +94,7 @@ class LaravelLivewireRequestContextProvider extends LaravelRequestContextProvide
         $updates = $this->request->input('updates') ?? [];
 
         return array_map(function (array $update) {
-            $update['payload'] = Arr::except($update['payload'] ?? [], ['id']);
+            $update['payload'] = Arr::except(isset($update['payload']) ? $update['payload'] : [], ['id']);
 
             return $update;
         }, $updates);

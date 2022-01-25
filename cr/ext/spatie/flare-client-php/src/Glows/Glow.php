@@ -37,7 +37,7 @@ class Glow
         $this->name = $name;
         $this->messageLevel = $messageLevel;
         $this->metaData = $metaData;
-        $this->microtime = $microtime ?? microtime(true);
+        $this->microtime = isset($microtime) ? $microtime : microtime(true);
     }
 
     /**

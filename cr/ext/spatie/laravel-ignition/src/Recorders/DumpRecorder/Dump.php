@@ -25,7 +25,7 @@ class Dump
         $this->htmlDump = $htmlDump;
         $this->file = $file;
         $this->lineNumber = $lineNumber;
-        $this->microtime = $microtime ?? microtime(true);
+        $this->microtime = isset($microtime) ? $microtime : microtime(true);
     }
 
     /** @return array<string, mixed> */

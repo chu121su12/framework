@@ -34,7 +34,7 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
 
         preg_match(self::REGEX, $throwable->getMessage(), $matches);
 
-        $missingView = $matches[1] ?? null;
+        $missingView = isset($matches[1]) ? $matches[1] : null;
 
         $suggestedView = $this->findRelatedView($missingView);
 

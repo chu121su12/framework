@@ -7,7 +7,7 @@ class BaseContextProviderDetector implements ContextProviderDetector
     public function detectCurrentContext()/*: ContextProvider*/
     {
         if ($this->runningInConsole()) {
-            return new ConsoleContextProvider($_SERVER['argv'] ?? []);
+            return new ConsoleContextProvider(isset($_SERVER['argv']) ? $_SERVER['argv'] : []);
         }
 
         return new RequestContextProvider();

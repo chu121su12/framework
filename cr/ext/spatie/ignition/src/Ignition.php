@@ -193,7 +193,7 @@ class Ignition
     {
         $apiKey = cast_to_string($apiKey, null);
 
-        $this->flareApiKey = $apiKey ?? '';
+        $this->flareApiKey = isset($apiKey) ? $apiKey : '';
 
         return $this;
     }
@@ -307,7 +307,7 @@ class Ignition
     protected function setUpFlare()/*: self*/
     {
         if (! $this->flare->apiTokenSet()) {
-            $this->flare->setApiToken($this->flareApiKey ?? '');
+            $this->flare->setApiToken(isset($this->flareApiKey) ? $this->flareApiKey : '');
         }
 
         $this->flare->setContextProviderDetector($this->contextProviderDetector);

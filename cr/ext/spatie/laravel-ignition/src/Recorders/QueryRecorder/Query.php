@@ -25,7 +25,7 @@ class Query
             $queryExecuted->sql,
             $queryExecuted->time,
             /** @phpstan-ignore-next-line  */
-            $queryExecuted->connectionName ?? '',
+            isset($queryExecuted->connectionName) ? $queryExecuted->connectionName : '',
             $reportBindings ? $queryExecuted->bindings : null
         );
     }
@@ -53,7 +53,7 @@ class Query
         $this->time = $time;
         $this->connectionName = $connectionName;
         $this->bindings = $bindings;
-        $this->microtime = $microtime ?? microtime(true);
+        $this->microtime = isset($microtime) ? $microtime : microtime(true);
     }
 
     /**
