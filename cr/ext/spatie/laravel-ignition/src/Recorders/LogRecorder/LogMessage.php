@@ -22,7 +22,7 @@ class LogMessage
      * @param float|null $microtime
      */
     public function __construct(
-        /*?string */$message = null,
+        /*?string */$message/* = null*/,
         /*string */$level,
         array $context = [],
         /*?float */$microtime = null
