@@ -142,7 +142,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     /**
      * Get the full URL for the request without the given query string parameters.
      *
-     * @param  array|string  $query
+     * @param  array|string  $keys
      * @return string
      */
     public function fullUrlWithoutQuery($keys)
@@ -530,7 +530,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     /**
      * Get the session associated with the request.
      *
-     * @return \Illuminate\Session\Store
+     * @return \Illuminate\Contracts\Session\Session
      *
      * @throws \RuntimeException
      */

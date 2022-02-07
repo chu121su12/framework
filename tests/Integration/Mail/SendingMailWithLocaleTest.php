@@ -81,6 +81,8 @@ class SendingMailWithLocaleTest extends TestCase
         );
 
         $this->assertSame('en', Carbon::getLocale());
+
+        Carbon::setTestNow(null);
     }
 
     public function testLocaleIsSentWithModelPreferredLocale()

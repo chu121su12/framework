@@ -209,7 +209,7 @@ trait InteractsWithPivotTable
             return $this->updateExistingPivotUsingCustomClass($id, $attributes, $touch);
         }
 
-        if (in_array($this->updatedAt(), $this->pivotColumns)) {
+        if ($this->hasPivotColumn($this->updatedAt())) {
             $attributes = $this->addTimestampsToAttachment($attributes, true);
         }
 

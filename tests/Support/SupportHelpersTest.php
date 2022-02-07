@@ -12,6 +12,7 @@ use IteratorAggregate;
 use LogicException;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use RuntimeException;
 use stdClass;
 use Traversable;

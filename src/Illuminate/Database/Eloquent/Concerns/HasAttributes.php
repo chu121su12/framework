@@ -4,6 +4,7 @@ namespace Illuminate\Database\Eloquent\Concerns;
 
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsInboundAttributes;
@@ -943,7 +944,7 @@ trait HasAttributes
         // If this attribute contains a JSON ->, we'll set the proper value in the
         // attribute's underlying array. This takes care of properly nesting an
         // attribute in the array's value in the case of deeply nested items.
-        if (Str::contains($key, '->')) {
+        if (str_contains($key, '->')) {
             return $this->fillJsonAttribute($key, $value);
         }
 
@@ -1033,7 +1034,7 @@ trait HasAttributes
         $this->attributes = array_merge(
             $this->attributes,
             $this->normalizeCastClassResponse(
-                $key, call_user_func($callback, $value, $this->attributes)
+                $key, $callback($value, $this->attributes)
             )
         );
 
@@ -1383,7 +1384,7 @@ trait HasAttributes
      */
     protected function serializeDate(DateTimeInterface $date)
     {
-        return $date instanceof \DateTimeImmutable ?
+        return $date instanceof DateTimeImmutable ?
             CarbonImmutable::instance($date)->toJSON() :
             Carbon::instance($date)->toJSON();
     }
@@ -1678,7 +1679,7 @@ trait HasAttributes
             $this->attributes = array_merge(
                 $this->attributes,
                 $this->normalizeCastClassResponse(
-                    $key, call_user_func($callback, $value, $this->attributes)
+                    $key, $callback($value, $this->attributes)
                 )
             );
         }

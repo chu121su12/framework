@@ -264,6 +264,25 @@ class MailManager implements FactoryContract
     }
 
     /**
+     * Add the SES credentials to the configuration array.
+     *
+     * @param  array  $config
+     * @return array
+     */
+    protected function addSesCredentials(array $config)
+    {
+        if (! isset($config['session_token']) && isset($config['token'])) {
+            $config['session_token'] = $config['token'];
+        }
+
+        if (! empty($config['key']) && ! empty($config['secret'])) {
+            $config['credentials'] = Arr::only($config, ['key', 'secret', 'token']);
+        }
+
+        return $config;
+    }
+
+    /**
      * Create an instance of the Symfony Mail Transport driver.
      *
      * @return \Swift_SendmailTransport
@@ -527,25 +546,6 @@ class MailManager implements FactoryContract
         }
 
         return new Swift_Mailer($this->createSymfonyTransport($config));
-    }
-
-    /**
-     * Add the SES credentials to the configuration array.
-     *
-     * @param  array  $config
-     * @return array
-     */
-    protected function addSesCredentials(array $config)
-    {
-        if (! isset($config['session_token']) && isset($config['token'])) {
-            $config['session_token'] = $config['token'];
-        }
-
-        if (! empty($config['key']) && ! empty($config['secret'])) {
-            $config['credentials'] = Arr::only($config, ['key', 'secret', 'token']);
-        }
-
-        return $config;
     }
 
     /**

@@ -15,19 +15,11 @@ class AuthDatabaseTokenRepositoryTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
 
-    protected function setUp()/*: void*/
-    {
-        parent::setUp();
-
-        Carbon::setTestNow(Carbon::now());
-    }
-
     protected function tearDown()/*: void*/
     {
         parent::tearDown();
 
         m::close();
-        Carbon::setTestNow(null);
     }
 
     public function testCreateInsertsNewRecordIntoTable()

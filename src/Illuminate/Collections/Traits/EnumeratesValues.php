@@ -583,7 +583,6 @@ trait EnumeratesValues
      *
      * @param  string  $key
      * @param  mixed  $value
-     * @param  bool  $strict
      * @return static
      */
     public function whereStrict($key, $value)
@@ -725,14 +724,14 @@ trait EnumeratesValues
     /**
      * Pass the collection through a series of callable pipes and return the result.
      *
-     * @param  array<callable>  $pipes
+     * @param  array<callable>  $callbacks
      * @return mixed
      */
-    public function pipeThrough($pipes)
+    public function pipeThrough($callbacks)
     {
-        return static::make($pipes)->reduce(
-            function ($carry, $pipe) {
-                return $pipe($carry);
+        return Collection::make($callbacks)->reduce(
+            function ($carry, $callback) {
+                return $callback($carry);
             },
             $this
         );
@@ -744,7 +743,7 @@ trait EnumeratesValues
      * @template TReduceInitial
      * @template TReduceReturnType
      *
-     * @param  callable(TReduceInitial|TReduceReturnType, TValue): TReduceReturnType  $callback
+     * @param  callable(TReduceInitial|TReduceReturnType, TValue, TKey): TReduceReturnType  $callback
      * @param  TReduceInitial  $initial
      * @return TReduceReturnType
      */
@@ -757,22 +756,6 @@ trait EnumeratesValues
         }
 
         return $result;
-    }
-
-    /**
-     * Reduce the collection to multiple aggregate values.
-     *
-     * @param  callable  $callback
-     * @param  mixed  ...$initial
-     * @return array
-     *
-     * @deprecated Use "reduceSpread" instead
-     *
-     * @throws \UnexpectedValueException
-     */
-    public function reduceMany(callable $callback, ...$initial)
-    {
-        return $this->reduceSpread($callback, ...$initial);
     }
 
     /**
@@ -808,7 +791,7 @@ trait EnumeratesValues
      * @template TReduceWithKeysInitial
      * @template TReduceWithKeysReturnType
      *
-     * @param  callable(TReduceWithKeysInitial|TReduceWithKeysReturnType, TValue): TReduceWithKeysReturnType  $callback
+     * @param  callable(TReduceWithKeysInitial|TReduceWithKeysReturnType, TValue, TKey): TReduceWithKeysReturnType  $callback
      * @param  TReduceWithKeysInitial  $initial
      * @return TReduceWithKeysReturnType
      */

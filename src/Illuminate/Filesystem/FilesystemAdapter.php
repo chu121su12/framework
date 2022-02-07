@@ -331,7 +331,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      *
      * @param  string  $path
      * @param  string|null  $name
-     * @param  array|null  $headers
+     * @param  array  $headers
      * @param  string|null  $disposition
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
@@ -365,7 +365,6 @@ class FilesystemAdapter implements CloudFilesystemContract
      *
      * @param  string  $path
      * @param  string|null  $name
-     * @param  array|null  $headers
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function download($path, $name = null, array $headers = [])
@@ -734,7 +733,7 @@ class FilesystemAdapter implements CloudFilesystemContract
         // If the path contains "storage/public", it probably means the developer is using
         // the default disk to generate the path instead of the "public" disk like they
         // are really supposed to use. We will remove the public from this path here.
-        if (Str::contains($path, '/storage/public/')) {
+        if (str_contains($path, '/storage/public/')) {
             return Str::replaceFirst('/public/', '/', $path);
         }
 

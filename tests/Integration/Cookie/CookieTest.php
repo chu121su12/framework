@@ -38,7 +38,6 @@ class CookieTest extends TestCase
             return 'hello world';
         })->middleware('web');
 
-        Carbon::setTestNow(Carbon::now());
         $response = $this->get('/');
         $this->assertCount(2, $response->headers->getCookies());
 

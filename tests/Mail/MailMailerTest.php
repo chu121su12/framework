@@ -45,6 +45,31 @@ class MailMailerTest extends TestCase
         unset($_SERVER['__mailer.test']);
     }
 
+    public function testMailerSendSendsMessageWithCcAndBccRecipients()
+    {
+        $view = m::mock(Factory::class);
+        $view->shouldReceive('make')->once()->andReturn($view);
+        $view->shouldReceive('render')->once()->andReturn('rendered.view');
+
+        $mailer = new Mailer('array', $view, new ArrayTransport);
+
+        $sentMessage = $mailer->send('foo', ['data'], function (Message $message) {
+            $message->to('taylor@laravel.com')
+                ->cc('dries@laravel.com')
+                ->bcc('james@laravel.com')
+                ->from('hello@laravel.com');
+        });
+
+        $recipients = collect($sentMessage->getEnvelope()->getRecipients())->map(function ($recipient) {
+            return $recipient->getAddress();
+        });
+
+        $this->assertStringContainsString('rendered.view', $sentMessage->toString());
+        $this->assertStringContainsString('dries@laravel.com', $sentMessage->toString());
+        $this->assertStringNotContainsString('james@laravel.com', $sentMessage->toString());
+        $this->assertTrue($recipients->contains('james@laravel.com'));
+    }
+
     public function testMailerSendSendsMessageWithProperViewContentUsingHtmlStrings()
     {
         unset($_SERVER['__mailer.test']);
@@ -145,6 +170,46 @@ class MailMailerTest extends TestCase
         $mailer->send('foo', ['data'], function ($m) {
             //
         });
+    }
+
+    public function testGlobalReplyToIsRespectedOnAllMessages()
+    {
+        $view = m::mock(Factory::class);
+        $view->shouldReceive('make')->once()->andReturn($view);
+        $view->shouldReceive('render')->once()->andReturn('rendered.view');
+        $mailer = new Mailer('array', $view, new ArrayTransport);
+        $mailer->alwaysReplyTo('taylor@laravel.com', 'Taylor Otwell');
+
+        $sentMessage = $mailer->send('foo', ['data'], function (Message $message) {
+            $message->to('dries@laravel.com')->from('hello@laravel.com');
+        });
+
+        $this->assertSame('dries@laravel.com', $sentMessage->getEnvelope()->getRecipients()[0]->getAddress());
+        $this->assertStringContainsString('Reply-To: Taylor Otwell <taylor@laravel.com>', $sentMessage->toString());
+    }
+
+    public function testGlobalToIsRespectedOnAllMessages()
+    {
+        $view = m::mock(Factory::class);
+        $view->shouldReceive('make')->once()->andReturn($view);
+        $view->shouldReceive('render')->once()->andReturn('rendered.view');
+        $mailer = new Mailer('array', $view, new ArrayTransport);
+        $mailer->alwaysTo('taylor@laravel.com', 'Taylor Otwell');
+
+        $sentMessage = $mailer->send('foo', ['data'], function (Message $message) {
+            $message->from('hello@laravel.com');
+            $message->cc('dries@laravel.com');
+            $message->bcc('james@laravel.com');
+        });
+
+        $recipients = collect($sentMessage->getEnvelope()->getRecipients())->map(function ($recipient) {
+            return $recipient->getAddress();
+        });
+
+        $this->assertSame('taylor@laravel.com', $sentMessage->getEnvelope()->getRecipients()[0]->getAddress());
+        $this->assertStringNotContainsString('dries@laravel.com', $sentMessage->toString());
+        $this->assertStringNotContainsString('james@laravel.com', $sentMessage->toString());
+        $this->assertFalse($recipients->contains('james@laravel.com'));
     }
 
     public function testGlobalReturnPathIsRespectedOnAllMessages()

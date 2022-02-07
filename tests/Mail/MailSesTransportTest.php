@@ -14,7 +14,13 @@ use Swift_Message;
 
 class MailSesTransportTest extends TestCase
 {
-    /** @group Foo */
+    protected function tearDown()/*: void*/
+    {
+        m::close();
+
+        parent::tearDown();
+    }
+
     public function testGetTransport()
     {
         $container = new Container;

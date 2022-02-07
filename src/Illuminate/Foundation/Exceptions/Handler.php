@@ -391,6 +391,11 @@ class Handler implements ExceptionHandlerContract
     {
         backport_type_throwable($e);
 
+        if (method_exists($e, 'getInnerException') &&
+            ($inner = $e->getInnerException()) instanceof Throwable) {
+            return $inner;
+        }
+
         foreach ($this->exceptionMap as $class => $mapper) {
             if (is_a($e, $class)) {
                 return $mapper($e);

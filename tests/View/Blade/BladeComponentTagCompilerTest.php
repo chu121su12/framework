@@ -40,6 +40,14 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
         $this->assertSameStringDifferentLineEndings("@slot('foo', null, []) \n".' @endslot', trim($result));
     }
 
+    public function testInlineSlotsCanBeCompiled()
+    {
+        $result = $this->compiler()->compileSlots('<x-slot:foo>
+</x-slot>');
+
+        $this->assertSame("@slot('foo', null, []) \n".' @endslot', trim($result));
+    }
+
     public function testDynamicSlotsCanBeCompiled()
     {
         $result = $this->compiler()->compileSlots('<x-slot :name="$foo">
@@ -54,6 +62,14 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
 </x-slot>');
 
         $this->assertSameStringDifferentLineEndings("@slot('foo', null, ['class' => 'font-bold']) \n".' @endslot', trim($result));
+    }
+
+    public function testInlineSlotsWithAttributesCanBeCompiled()
+    {
+        $result = $this->compiler()->compileSlots('<x-slot:foo class="font-bold">
+</x-slot>');
+
+        $this->assertSame("@slot('foo', null, ['class' => 'font-bold']) \n".' @endslot', trim($result));
     }
 
     public function testSlotsWithDynamicAttributesCanBeCompiled()
@@ -429,7 +445,7 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
         eval(" ?> $template <?php ");
         ob_get_clean();
 
-        $this->assertSame($attributes->get('userId'), null);
+        $this->assertNull($attributes->get('userId'));
         $this->assertSame($attributes->get('other'), 'ok');
     }
 

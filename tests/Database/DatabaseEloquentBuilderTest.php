@@ -33,6 +33,10 @@ class DatabaseEloquentBuilderTest extends TestCase
 
     protected function tearDown()/*: void*/
     {
+        parent::tearDown();
+
+        Carbon::setTestNow(null);
+
         m::close();
     }
 
@@ -1666,8 +1670,6 @@ class DatabaseEloquentBuilderTest extends TestCase
 
         $result = $builder->update(['foo' => 'bar']);
         $this->assertEquals(1, $result);
-
-        Carbon::setTestNow(null);
     }
 
     public function testUpdateWithTimestampValue()
@@ -1712,8 +1714,6 @@ class DatabaseEloquentBuilderTest extends TestCase
 
         $result = $builder->from('table as alias')->update(['foo' => 'bar']);
         $this->assertEquals(1, $result);
-
-        Carbon::setTestNow(null);
     }
 
     public function testUpsert()
@@ -1737,8 +1737,6 @@ class DatabaseEloquentBuilderTest extends TestCase
         $result = $builder->upsert([['email' => 'foo', 'name' => 'bar'], ['name' => 'bar2', 'email' => 'foo2']], ['email']);
 
         $this->assertEquals(2, $result);
-
-        Carbon::setTestNow(null);
     }
 
     public function testWithCastsMethod()

@@ -2,7 +2,6 @@
 
 namespace Illuminate\Tests\Support;
 
-use Illuminate\Contracts\Mail\Mailable as MailableContract;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Mail\Mailable;
@@ -208,7 +207,7 @@ class SupportTestingMailFakeTest extends TestCase
     }
 }
 
-class MailableStub extends Mailable implements MailableContract
+class MailableStub extends Mailable
 {
     public $framework = 'Laravel';
 

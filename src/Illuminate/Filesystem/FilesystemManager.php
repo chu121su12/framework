@@ -174,7 +174,8 @@ class FilesystemManager implements FactoryContract
     public function createLocalDriver(array $config)
     {
         // $visibility = PortableVisibilityConverter::fromArray(
-        //     $config['permissions'] ?? []
+        //     $config['permissions'] ?? [],
+        //     $config['directory_visibility'] ?? $config['visibility'] ?? Visibility::PRIVATE
         // );
         $permissions = isset($config['permissions']) ? $config['permissions'] : [];
 
@@ -299,6 +300,14 @@ class FilesystemManager implements FactoryContract
         $config = Arr::only($config, ['visibility', 'disable_asserts', 'url', 'temporary_url']);
 
         return new Flysystem($adapter, count($config) > 0 ? $config : null);
+
+        return new Flysystem($adapter, Arr::only($config, [
+            'directory_visibility',
+            'disable_asserts',
+            'temporary_url',
+            'url',
+            'visibility',
+        ]));
     }
 
     /**

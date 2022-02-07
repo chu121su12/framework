@@ -76,15 +76,14 @@ trait InteractsWithRedis
      */
     public function tearDownRedis()
     {
-        if (is_null($this->redis['phpredis'])) {
-            $this->markTestSkipped('Cannot connect to phpredis @'.__CLASS__);
-            return;
+        if (isset($this->redis['phpredis'])) {
+            $this->redis['phpredis']->connection()->flushdb();
         }
 
-        $this->redis['phpredis']->connection()->flushdb();
-
         foreach ($this->redisDriverProvider() as $driver) {
-            $this->redis[$driver[0]]->connection()->disconnect();
+            if (isset($this->redis[$driver[0]])) {
+                $this->redis[$driver[0]]->connection()->disconnect();
+            }
         }
     }
 

@@ -611,7 +611,7 @@ class Container implements ArrayAccess, ContainerContract
         $instance = $this->make($abstract);
 
         foreach ($this->getReboundCallbacks($abstract) as $callback) {
-            call_user_func($callback, $this, $instance);
+            $callback($this, $instance);
         }
     }
 
@@ -892,10 +892,6 @@ class Container implements ArrayAccess, ContainerContract
         if (! $reflector->isInstantiable()) {
             return $this->notInstantiable($concrete);
         }
-
-        // if (in_array($concrete, $this->buildStack)) {
-        //     throw new CircularDependencyException("Circular dependency detected while resolving [{$concrete}].");
-        // }
 
         $this->buildStack[] = $concrete;
 
