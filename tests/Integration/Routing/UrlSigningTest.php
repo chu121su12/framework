@@ -13,7 +13,7 @@ use Orchestra\Testbench\TestCase;
 
 class UrlSigningTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 

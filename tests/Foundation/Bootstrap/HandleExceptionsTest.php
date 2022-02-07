@@ -212,11 +212,11 @@ class HandleExceptionsTest extends TestCase
 
     public function testForgetApp()
     {
-        $appResolver = fn () => with(new ReflectionClass($this->handleExceptions), function ($reflection) {
+        $appResolver = function () { return with(new ReflectionClass($this->handleExceptions), function ($reflection) {
             $property = tap($reflection->getProperty('app'))->setAccessible(true);
 
             return $property->getValue($this->handleExceptions);
-        });
+        }); };
 
         $this->assertNotNull($appResolver());
 
@@ -227,11 +227,11 @@ class HandleExceptionsTest extends TestCase
 
     public function testHandlerForgetsPreviousApp()
     {
-        $appResolver = fn () => with(new ReflectionClass($this->handleExceptions), function ($reflection) {
+        $appResolver = function () { return with(new ReflectionClass($this->handleExceptions), function ($reflection) {
             $property = tap($reflection->getProperty('app'))->setAccessible(true);
 
             return $property->getValue($this->handleExceptions);
-        });
+        }); };
 
         $this->assertSame($this->container, $appResolver());
 

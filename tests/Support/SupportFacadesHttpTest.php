@@ -12,18 +12,18 @@ class SupportFacadesHttpTest extends TestCase
 {
     protected $app;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $this->app = new Container;
         Facade::setFacadeApplication($this->app);
     }
 
-    public function testFacadeRootIsNotSharedByDefault(): void
+    public function testFacadeRootIsNotSharedByDefault()/*: void*/
     {
         $this->assertNotSame(Http::getFacadeRoot(), $this->app->make(Factory::class));
     }
 
-    public function testFacadeRootIsSharedWhenFaked(): void
+    public function testFacadeRootIsSharedWhenFaked()/*: void*/
     {
         Http::fake([
             'https://laravel.com' => Http::response('OK!'),
@@ -33,7 +33,7 @@ class SupportFacadesHttpTest extends TestCase
         $this->assertSame('OK!', $factory->get('https://laravel.com')->body());
     }
 
-    public function testFacadeRootIsSharedWhenFakedWithSequence(): void
+    public function testFacadeRootIsSharedWhenFakedWithSequence()/*: void*/
     {
         Http::fakeSequence('laravel.com/*')->push('OK!');
 
@@ -41,7 +41,7 @@ class SupportFacadesHttpTest extends TestCase
         $this->assertSame('OK!', $factory->get('https://laravel.com')->body());
     }
 
-    public function testFacadeRootIsSharedWhenStubbingUrls(): void
+    public function testFacadeRootIsSharedWhenStubbingUrls()/*: void*/
     {
         Http::stubUrl('laravel.com', Http::response('OK!'));
 

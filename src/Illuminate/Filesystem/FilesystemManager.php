@@ -297,17 +297,17 @@ class FilesystemManager implements FactoryContract
      */
     protected function createFlysystem(FlysystemAdapter $adapter, array $config)
     {
+        // return new Flysystem($adapter, Arr::only($config, [
+        //     'directory_visibility',
+        //     'disable_asserts',
+        //     'temporary_url',
+        //     'url',
+        //     'visibility',
+        // ]));
+
         $config = Arr::only($config, ['visibility', 'disable_asserts', 'url', 'temporary_url']);
 
         return new Flysystem($adapter, count($config) > 0 ? $config : null);
-
-        return new Flysystem($adapter, Arr::only($config, [
-            'directory_visibility',
-            'disable_asserts',
-            'temporary_url',
-            'url',
-            'visibility',
-        ]));
     }
 
     /**

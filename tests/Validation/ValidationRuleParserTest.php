@@ -98,7 +98,7 @@ class ValidationRuleParserTest extends TestCase
         ]));
 
         $results = $parser->explode([
-            'users.*.name' => Rule::forEach(function ($value, $attribute, $data) {
+            'users.*.name' => Rule::forEach_(function ($value, $attribute, $data) {
                 $this->assertEquals('Taylor Otwell', $value);
                 $this->assertEquals('users.0.name', $attribute);
                 $this->assertEquals($data['users.0.name'], 'Taylor Otwell');
@@ -118,7 +118,7 @@ class ValidationRuleParserTest extends TestCase
         ]));
 
         $results = $parser->explode([
-            'name' => Rule::forEach(function ($value, $attribute, $data = null) {
+            'name' => Rule::forEach_(function ($value, $attribute, $data = null) {
                 $this->assertEquals('Taylor Otwell', $value);
                 $this->assertEquals('name', $attribute);
                 $this->assertEquals(['name' => 'Taylor Otwell'], $data);
@@ -142,7 +142,7 @@ class ValidationRuleParserTest extends TestCase
 
         $results = $parser->explode([
             'users.*.name' => [
-                Rule::forEach(function ($value, $attribute, $data) {
+                Rule::forEach_(function ($value, $attribute, $data) {
                     $this->assertEquals([
                         'users.0.name' => 'Taylor Otwell',
                         'users.1.name' => 'Abigail Otwell',
@@ -150,7 +150,7 @@ class ValidationRuleParserTest extends TestCase
 
                     return [Rule::requiredIf(true)];
                 }),
-                Rule::forEach(function ($value, $attribute, $data) {
+                Rule::forEach_(function ($value, $attribute, $data) {
                     $this->assertEquals([
                         'users.0.name' => 'Taylor Otwell',
                         'users.1.name' => 'Abigail Otwell',
@@ -188,17 +188,17 @@ class ValidationRuleParserTest extends TestCase
 
         $results = $parser->explode([
             'users.*.name' => [
-                Rule::forEach(function ($value, $attribute, $data) {
+                Rule::forEach_(function ($value, $attribute, $data) {
                     $this->assertEquals('Taylor Otwell', $value);
                     $this->assertEquals('users.0.name', $attribute);
                     $this->assertEquals(['users.0.name' => 'Taylor Otwell'], $data);
 
-                    return Rule::forEach(function ($value, $attribute, $data) {
+                    return Rule::forEach_(function ($value, $attribute, $data) {
                         $this->assertNull($value);
                         $this->assertEquals('users.0.name', $attribute);
                         $this->assertEquals(['users.0.name' => 'Taylor Otwell'], $data);
 
-                        return Rule::forEach(function ($value, $attribute, $data) {
+                        return Rule::forEach_(function ($value, $attribute, $data) {
                             $this->assertNull($value);
                             $this->assertEquals('users.0.name', $attribute);
                             $this->assertEquals(['users.0.name' => 'Taylor Otwell'], $data);
@@ -224,7 +224,7 @@ class ValidationRuleParserTest extends TestCase
         ]));
 
         $rules = [
-            'items.*' => Rule::forEach(function () {
+            'items.*' => Rule::forEach_(function () {
                 return ['discounts.*.id' => 'distinct'];
             }),
         ];

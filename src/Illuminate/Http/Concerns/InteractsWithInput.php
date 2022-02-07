@@ -509,7 +509,8 @@ trait InteractsWithInput
         }
 
         if ($this->$source instanceof InputBag) {
-            return $this->$source->all()[$key] ?? $default;
+            $sources = $this->$source->all();
+            return isset($sources[$key]) ? $sources[$key] : $default;
         }
 
         return $this->$source->get($key, $default);

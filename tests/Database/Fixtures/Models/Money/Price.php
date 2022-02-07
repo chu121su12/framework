@@ -14,6 +14,6 @@ class Price extends Model
 
     public static function factory()
     {
-        return PriceFactory::new();
+        return PriceFactory::new_();
     }
 }

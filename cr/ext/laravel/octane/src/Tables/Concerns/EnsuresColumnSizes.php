@@ -26,7 +26,7 @@ trait EnsuresColumnSizes
                 throw new ValueTooLargeForColumnException(sprintf(
                     'Value [%s...] is too large for [%s] column.',
                     substr($value, 0, 20),
-                    $column,
+                    $column
                 ));
             }
         };

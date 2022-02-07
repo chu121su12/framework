@@ -123,8 +123,9 @@ class HelloComponent extends Component
 {
     public $name;
 
-    public function __construct(string $name)
+    public function __construct(/*string */$name)
     {
+        $name = cast_to_string($name);
         $this->name = $name;
     }
 

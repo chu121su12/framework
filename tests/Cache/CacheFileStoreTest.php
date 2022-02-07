@@ -78,7 +78,7 @@ class CacheFileStoreTest extends TestCase
 
         $files->expects($this->once())->method('put')->with(
             $this->equalTo($filePath),
-            $this->equalTo($fileContents),
+            $this->equalTo($fileContents)
         );
 
         (new FileStore($files, __DIR__))->put('O--L / key', 'gold', (int) $ten9s + 1);

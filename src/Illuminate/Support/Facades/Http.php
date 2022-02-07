@@ -82,8 +82,10 @@ class Http extends Facade
      * @param  string  $urlPattern
      * @return \Illuminate\Http\Client\ResponseSequence
      */
-    public static function fakeSequence(string $urlPattern = '*')
+    public static function fakeSequence(/*string */$urlPattern = '*')
     {
+        $urlPattern = cast_to_string($urlPattern);
+
         $fake = tap(static::getFacadeRoot(), function ($fake) {
             static::swap($fake);
         });

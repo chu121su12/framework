@@ -706,12 +706,16 @@ class SupportStrTest extends TestCase
     /**
      * @dataProvider specialCharacterProvider
      */
-    public function testTransliterate(string $value, string $expected): void
+    public function testTransliterate(/*string */$value, /*string */$expected)/*: void*/
     {
+        $expected = cast_to_string($expected);
+
+        $value = cast_to_string($value);
+
         $this->assertSame($expected, Str::transliterate($value));
     }
 
-    public function specialCharacterProvider(): array
+    public function specialCharacterProvider()/*: array*/
     {
         return [
             ['ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ', 'abcdefghijklmnopqrstuvwxyz'],
@@ -725,7 +729,7 @@ class SupportStrTest extends TestCase
         ];
     }
 
-    public function testTransliterateOverrideUnknown(): void
+    public function testTransliterateOverrideUnknown()/*: void*/
     {
         $this->assertSame('HHH', Str::transliterate('🎂🚧🏆', 'H'));
         $this->assertSame('Hello', Str::transliterate('🎂', 'Hello'));
@@ -734,8 +738,12 @@ class SupportStrTest extends TestCase
     /**
      * @dataProvider specialCharacterProvider
      */
-    public function testTransliterateStrict(string $value, string $expected): void
+    public function testTransliterateStrict(/*string */$value, /*string */$expected)/*: void*/
     {
+        $expected = cast_to_string($expected);
+
+        $value = cast_to_string($value);
+
         $this->assertSame($expected, Str::transliterate($value, '?', true));
     }
 }

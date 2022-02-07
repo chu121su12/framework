@@ -15,18 +15,6 @@ use Illuminate\Support\Carbon;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
-class DatabaseEloquentSoftDeletesIntegrationTest_testForceDeleteDoesntUpdateExistsPropertyIfFailed_class extends SoftDeletesTestUser
-        {
-            public $exists = true;
-
-            public function newModelQuery()
-            {
-                return Mockery::spy(parent::newModelQuery(), function (Mockery\MockInterface $mock) {
-                    $mock->shouldReceive('forceDelete')->andThrow(new Exception());
-                });
-            }
-        }
-
 class DatabaseEloquentSoftDeletesIntegrationTest extends TestCase
 {
     protected function setUp()/*: void*/
@@ -1036,3 +1024,15 @@ class SoftDeletesTestGroup extends Eloquent
         $this->hasMany(SoftDeletesTestUser::class);
     }
 }
+
+class DatabaseEloquentSoftDeletesIntegrationTest_testForceDeleteDoesntUpdateExistsPropertyIfFailed_class extends SoftDeletesTestUser
+        {
+            public $exists = true;
+
+            public function newModelQuery()
+            {
+                return Mockery::spy(parent::newModelQuery(), function (Mockery\MockInterface $mock) {
+                    $mock->shouldReceive('forceDelete')->andThrow(new Exception());
+                });
+            }
+        }
