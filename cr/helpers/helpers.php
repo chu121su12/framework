@@ -34,3 +34,12 @@ if (! \function_exists('_h_arr_get')) {
         return $array;
     }
 }
+
+if (! \function_exists('_reflection_call_inaccessible_method')) {
+    function _reflection_call_inaccessible_method($instance, $method, ...$args)
+    {
+        $r = new \ReflectionMethod($instance, $method);
+        $r->setAccessible(true);
+        return $r->invoke($instance, ...$args);
+    }
+}

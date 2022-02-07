@@ -27,9 +27,6 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
         Concerns\InteractsWithInput,
         Macroable;
 
-    // https://github.com/symfony/http-foundation/commit/9290442f1d4aca01dab1f44731e1781f14531f9a
-    const HEADER_X_FORWARDED_PREFIX = 0b100000;
-
     /**
      * The decoded JSON content for the request.
      *
@@ -749,5 +746,81 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
         return Arr::get($this->all(), $key, function () use ($key) {
             return $this->route($key);
         });
+    }
+
+    // https://github.com/symfony/http-foundation/blob/5.4/Request.php
+    const HEADER_X_FORWARDED_PREFIX = 0b100000;
+
+    protected static $trustedHeaders = [
+        self::HEADER_FORWARDED => 'FORWARDED',
+        self::HEADER_CLIENT_IP => 'X_FORWARDED_FOR',
+        self::HEADER_CLIENT_HOST => 'X_FORWARDED_HOST',
+        self::HEADER_CLIENT_PROTO => 'X_FORWARDED_PROTO',
+        self::HEADER_CLIENT_PORT => 'X_FORWARDED_PORT',
+        self::HEADER_X_FORWARDED_PREFIX => 'X_FORWARDED_PREFIX',
+    ];
+
+    public function getBaseUrl()
+    {
+        $trustedPrefix = '';
+
+        // the proxy prefix must be prepended to any prefix being needed at the webserver level
+        if ($this->isFromTrustedProxy() && $trustedPrefixValues = $this->getTrustedValuesOverride(self::HEADER_X_FORWARDED_PREFIX)) {
+            $trustedPrefix = rtrim($trustedPrefixValues[0], '/');
+        }
+
+        return $trustedPrefix.parent::getBaseUrl();
+    }
+
+    private function getTrustedValuesOverride(/*int */$type, /*string */$ip = null)
+    {
+        $type = cast_to_int($type);
+        $ip = cast_to_string($ip, null);
+
+        if ($type !== self::HEADER_X_FORWARDED_PREFIX) {
+            return _reflection_call_inaccessible_method($this, 'getTrustedValues', $type);
+        }
+
+        $clientValues = [];
+        $forwardedValues = [];
+
+        if (self::$trustedHeaders[$type] && $this->headers->has(self::$trustedHeaders[$type])) {
+            foreach (explode(',', $this->headers->get(self::$trustedHeaders[$type])) as $v) {
+                $clientValues[] = (self::HEADER_CLIENT_PORT === $type ? '0.0.0.0:' : '').trim($v);
+            }
+        }
+
+        if (self::$trustedHeaders[self::HEADER_FORWARDED] && $this->headers->has(self::$trustedHeaders[self::HEADER_FORWARDED])) {
+            $forwardedValues = $this->headers->get(self::$trustedHeaders[self::HEADER_FORWARDED]);
+            $forwardedValues = preg_match_all(sprintf('{(?:%s)="?([a-zA-Z0-9\.:_\-/\[\]]*+)}', self::$forwardedParams[$type]), $forwardedValues, $matches) ? $matches[1] : [];
+            if (self::HEADER_CLIENT_PORT === $type) {
+                foreach ($forwardedValues as $k => $v) {
+                    if (']' === substr($v, -1) || false === $v = strrchr($v, ':')) {
+                        $v = $this->isSecure() ? ':443' : ':80';
+                    }
+                    $forwardedValues[$k] = '0.0.0.0'.$v;
+                }
+            }
+        }
+
+        if (null !== $ip) {
+            $clientValues = _reflection_call_inaccessible_method($this, 'normalizeAndFilterClientIps', $clientValues, $ip);
+            $forwardedValues = _reflection_call_inaccessible_method($this, 'normalizeAndFilterClientIps', $forwardedValues, $ip);
+        }
+
+        if ($forwardedValues === $clientValues || !$clientValues) {
+            return $forwardedValues;
+        }
+
+        if (!$forwardedValues) {
+            return $clientValues;
+        }
+
+        if (!$this->isForwardedValid) {
+            return null !== $ip ? ['0.0.0.0', $ip] : [];
+        }
+        $this->isForwardedValid = false;
+
+        throw new ConflictingHeadersException(sprintf('The request has both a trusted "%s" header and a trusted "%s" header, conflicting with each other. You should either configure your proxy to remove one of them, or configure your project to distrust the offending one.', self::$trustedHeaders[self::HEADER_FORWARDED], self::$trustedHeaders[$type]));
     }
 }
