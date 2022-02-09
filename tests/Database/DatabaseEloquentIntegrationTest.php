@@ -619,7 +619,7 @@ class DatabaseEloquentIntegrationTest extends TestCase
         $this->expectException(ModelNotFoundException::class);
         $this->expectExceptionMessage('No query results for model [Illuminate\Tests\Database\EloquentTestUser] 1');
         $this->expectExceptionObject(
-            (new ModelNotFoundException())->setModel(EloquentTestUser::class, [1]),
+            (new ModelNotFoundException())->setModel(EloquentTestUser::class, [1])
         );
 
         EloquentTestUser::findOrFail(1);
@@ -630,7 +630,7 @@ class DatabaseEloquentIntegrationTest extends TestCase
         $this->expectException(ModelNotFoundException::class);
         $this->expectExceptionMessage('No query results for model [Illuminate\Tests\Database\EloquentTestUser] 2, 3');
         $this->expectExceptionObject(
-            (new ModelNotFoundException())->setModel(EloquentTestUser::class, [2, 3]),
+            (new ModelNotFoundException())->setModel(EloquentTestUser::class, [2, 3])
         );
 
         EloquentTestUser::create(['id' => 1, 'email' => 'taylorotwell@gmail.com']);
@@ -642,7 +642,7 @@ class DatabaseEloquentIntegrationTest extends TestCase
         $this->expectException(ModelNotFoundException::class);
         $this->expectExceptionMessage('No query results for model [Illuminate\Tests\Database\EloquentTestUser] 2, 3');
         $this->expectExceptionObject(
-            (new ModelNotFoundException())->setModel(EloquentTestUser::class, [2, 3]),
+            (new ModelNotFoundException())->setModel(EloquentTestUser::class, [2, 3])
         );
 
         EloquentTestUser::create(['id' => 1, 'email' => 'taylorotwell@gmail.com']);

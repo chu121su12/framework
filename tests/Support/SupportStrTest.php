@@ -623,7 +623,7 @@ class SupportStrTest extends TestCase
         $this->assertSame('Alien     ', Str::padRight('Alien', 10));
     }
 
-    public function testSwapKeywords(): void
+    public function testSwapKeywords()/*: void*/
     {
         $this->assertSame(
             'PHP 8 is fantastic',
