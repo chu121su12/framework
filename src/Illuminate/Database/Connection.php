@@ -871,6 +871,7 @@ class Connection implements ConnectionInterface
             case 'beganTransaction': return $this->events->dispatch(new TransactionBeginning($this));
             case 'committed': return $this->events->dispatch(new TransactionCommitted($this));
             case 'rollingBack': return $this->events->dispatch(new TransactionRolledBack($this));
+            default: return null;
         }
     }
 

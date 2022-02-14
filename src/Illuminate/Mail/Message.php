@@ -201,6 +201,10 @@ class Message
             $type = ucfirst($type);
 
             $addresses = collect($address)->each(function (/*string|array */$address) use ($type) {
+                // if (is_string($key) && is_string($address)) {
+                //     return new Address($key, $address);
+                // }
+
                 if (is_array($address)) {
                     $this->message->{"set{$type}"}(isset($address['email']) ? $address['email'] : $address['address'], isset($address['name']) ? $address['name'] : null);
                 } else {

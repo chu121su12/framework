@@ -4,14 +4,17 @@ namespace Illuminate\Mail\Events;
 
 use Swift_Attachment;
 
+/**
+ * @property \Symfony\Component\Mime\Email $message
+ */
 class MessageSent
 {
     /**
-     * The Symfony Email instance.
+     * The message that was sent.
      *
      * @var \Swift_Message
      */
-    public $message;
+    public $sent;
 
     /**
      * The message data.
@@ -29,8 +32,8 @@ class MessageSent
      */
     public function __construct(/*Email */$message, array $data = [])
     {
+        $this->sent = $message;
         $this->data = $data;
-        $this->message = $message;
     }
 
     /**
@@ -45,11 +48,11 @@ class MessageSent
             ->isNotEmpty();
 
         return $hasAttachments ? [
-            'message' => base64_encode(serialize($this->message)),
+            'sent' => base64_encode(serialize($this->sent)),
             'data' => base64_encode(serialize($this->data)),
             'hasAttachments' => true,
         ] : [
-            'message' => $this->message,
+            'sent' => $this->sent,
             'data' => $this->data,
             'hasAttachments' => false,
         ];
@@ -64,11 +67,28 @@ class MessageSent
     public function __unserialize(array $data)
     {
         if (isset($data['hasAttachments']) && $data['hasAttachments'] === true) {
-            $this->message = unserialize(base64_decode($data['message']));
+            $this->sent = unserialize(base64_decode($data['sent']));
             $this->data = unserialize(base64_decode($data['data']));
         } else {
-            $this->message = $data['message'];
+            $this->sent = $data['sent'];
             $this->data = $data['data'];
         }
+    }
+
+    /**
+     * Dynamically get the original message.
+     *
+     * @param  string  $key
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    public function __get($key)
+    {
+        if ($key === 'message') {
+            return $this->sent->getOriginalMessage();
+        }
+
+        throw new Exception('Unable to access undefined property on '.__CLASS__.': '.$key);
     }
 }

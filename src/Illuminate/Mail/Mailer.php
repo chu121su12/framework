@@ -284,11 +284,15 @@ class Mailer implements MailerContract, MailQueueContract
         $symfonyMessage = $message->{$message instanceof Message ? 'getSymfonyMessage' : 'getSwiftMessage'}();
 
         if ($this->shouldSendMessage($symfonyMessage, $data)) {
-            $sentMessage = $this->sendSymfonyMessage($symfonyMessage);
+            $symfonySentMessage = $this->sendSymfonyMessage($symfonyMessage);
 
-            $this->dispatchSentEvent($message, $data);
+            if ($symfonySentMessage) {
+                $sentMessage = new SentMessage($symfonySentMessage);
 
-            return $sentMessage === null ? null : new SentMessage($sentMessage);
+                $this->dispatchSentEvent($sentMessage, $data);
+
+                return $sentMessage;
+            }
         }
     }
 
@@ -543,7 +547,7 @@ class Mailer implements MailerContract, MailQueueContract
     /**
      * Dispatch the message sent event.
      *
-     * @param  \Illuminate\Mail\Message  $message
+     * @param  \Illuminate\Mail\SentMessage  $message
      * @param  array  $data
      * @return void
      */
@@ -551,7 +555,7 @@ class Mailer implements MailerContract, MailQueueContract
     {
         if ($this->events) {
             $this->events->dispatch(
-                new MessageSent($message->getSymfonyMessage(), $data)
+                new MessageSent($message, $data)
             );
         }
     }

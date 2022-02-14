@@ -297,7 +297,7 @@ trait HasAttributes
                 $attributes[$key] = $this->serializeClassCastableAttribute($key, $attributes[$key]);
             }
 
-            if ($this->isEnumCastable($key)) {
+            if ($this->isEnumCastable($key) && (! ($attributes[$key] ?? null) instanceof Arrayable)) {
                 $attributes[$key] = isset($attributes[$key]) ? $attributes[$key]->value : null;
             }
 
@@ -502,6 +502,10 @@ trait HasAttributes
      */
     public function isRelation($key)
     {
+        if ($this->hasAttributeMutator($key)) {
+            return false;
+        }
+
         $thisClass = get_class($this);
 
         return method_exists($this, $key) ||

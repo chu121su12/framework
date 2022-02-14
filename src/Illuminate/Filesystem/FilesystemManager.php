@@ -199,6 +199,10 @@ class FilesystemManager implements FactoryContract
      */
     public function createFtpDriver(array $config)
     {
+        if (! isset($config['root'])) {
+            $config['root'] = '';
+        }
+
         // $adapter = new FtpAdapter(FtpConnectionOptions::fromArray($config));
         $adapter = new FtpAdapter($config);
 
