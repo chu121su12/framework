@@ -12,7 +12,7 @@ use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\MountManager;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
-use League\Flysystem\Visibility;
+use League\Flysystem\UnixVisibility\Visibility;
 
 class VendorPublishCommand extends Command
 {
@@ -245,7 +245,7 @@ class VendorPublishCommand extends Command
      */
     protected function publishDirectory($from, $to)
     {
-        $visibility = PortableVisibilityConverter::fromArray([], Visibility::PUBLIC);
+        $visibility = PortableVisibilityConverter::fromArray([], Visibility::PUBLIC_);
 
         $this->moveManagedFiles(new MountManager([
             'from' => new Flysystem(new LocalAdapter($from)),

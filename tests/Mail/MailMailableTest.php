@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class MailMailableTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
@@ -429,6 +429,8 @@ class MailMailableTest extends TestCase
 
     public function testMailablePriorityGetsSent()
     {
+        $this->markTestSkipped('Wait for mail port.');
+
         $view = m::mock(Factory::class);
 
         $mailer = new Mailer('array', $view, new ArrayTransport);

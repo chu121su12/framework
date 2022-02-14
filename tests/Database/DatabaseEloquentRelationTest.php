@@ -283,8 +283,13 @@ class DatabaseEloquentRelationTest extends TestCase
         $this->assertSame(['key' => 'value'], $model->customer);
     }
 
+    /**
+     * @requires PHP >= 7.0
+     */
     public function testIsRelationIgnoresAttribute()
     {
+        require_once __DIR__.'/stubs/EloquentRelationAndAtrributeModelStub.php';
+
         $model = new EloquentRelationAndAtrributeModelStub;
 
         $this->assertTrue($model->isRelation('parent'));
@@ -358,27 +363,5 @@ class EloquentResolverRelationStub extends EloquentRelationStub
     public function getResults()
     {
         return ['key' => 'value'];
-    }
-}
-
-class EloquentRelationAndAtrributeModelStub extends Model
-{
-    protected $table = 'one_more_table';
-
-    public function field(): Attribute
-    {
-        return new Attribute(
-            function ($value) {
-                return $value;
-            },
-            function ($value) {
-                return $value;
-            },
-        );
-    }
-
-    public function parent()
-    {
-        return $this->belongsTo(self::class);
     }
 }

@@ -26,9 +26,11 @@ trait Conditionable
         }
 
         if ($value) {
-            return $callback($this, $value) ?? $this;
+            $result = $callback($this, $value);
+            return isset($result) ? $result : $this;
         } elseif ($default) {
-            return $default($this, $value) ?? $this;
+            $result = $default($this, $value);
+            return isset($result) ? $result : $this;
         }
 
         return $this;
@@ -53,9 +55,11 @@ trait Conditionable
         }
 
         if (! $value) {
-            return $callback($this, $value) ?? $this;
+            $result = $callback($this, $value);
+            return isset($result) ? $result : $this;
         } elseif ($default) {
-            return $default($this, $value) ?? $this;
+            $result = $default($this, $value);
+            return isset($result) ? $result : $this;
         }
 
         return $this;
