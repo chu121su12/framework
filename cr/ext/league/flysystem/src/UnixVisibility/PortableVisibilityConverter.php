@@ -7,6 +7,15 @@ namespace League\Flysystem\UnixVisibility;
 use InvalidArgumentException;
 use League\Flysystem\FilesystemException;
 
+interface VisibilityConverter
+{
+    public function forFile(/*string */$visibility)/*: int*/;
+    public function forDirectory(/*string */$visibility)/*: int*/;
+    public function inverseForFile(/*int */$visibility)/*: string*/;
+    public function inverseForDirectory(/*int */$visibility)/*: string*/;
+    public function defaultForDirectories()/*: int*/;
+}
+
 class InvalidVisibilityProvided extends InvalidArgumentException implements FilesystemException
 {
     public static function withVisibility(/*string */$visibility, /*string */$expectedMessage)/*: InvalidVisibilityProvided*/
