@@ -8,6 +8,8 @@ use finfo as Finfo;
 use League\Flysystem\Config;
 use League\Flysystem\Exception;
 use League\Flysystem\NotSupportedException;
+use League\Flysystem\UnixVisibility\Visibility;
+use League\Flysystem\UnixVisibility\VisibilityConverter;
 use League\Flysystem\UnreadableFileException;
 use League\Flysystem\Util;
 use LogicException;
@@ -82,7 +84,7 @@ class Local extends AbstractAdapter
         }
 
         $this->setPathPrefix($root);
-        $this->writeFlags = $writeFlags;
+        $this->writeFlags = $writeFlags instanceof VisibilityConverter ? $writeFlags->forFile(Visibility::PUBLIC_) : $writeFlags;
         $this->linkHandling = $linkHandling;
     }
 
