@@ -173,7 +173,7 @@ class SupportStrTest extends TestCase
         $this->assertSame(
               'This is the ultimate supercalifragilisticexpialidoceous very looooooooooooooooooong looooooooooooong beautiful morning with amazing sunshine and awesome tempera[...]',
               Str::excerpt('This is the ultimate supercalifragilisticexpialidoceous very looooooooooooooooooong looooooooooooong beautiful morning with amazing sunshine and awesome temperatures. So what are you gonna do about it?', 'very',
-              ['omission' => '[...]'],
+              ['omission' => '[...]']
         ));
 
         $this->assertSame('...y...', Str::excerpt('taylor', 'y', ['radius' => 0]));

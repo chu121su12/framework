@@ -245,11 +245,13 @@ class Message
      * @param  \Symfony\Component\Mime\Address[]  $addresses
      * @return $this
      */
-    protected function addAddressDebugHeader(string $header, array $addresses)
+    protected function addAddressDebugHeader(/*string */$header, array $addresses)
     {
+        $header = cast_to_string($header);
+
         $this->message->getHeaders()->addTextHeader(
             $header,
-            implode(', ', array_map(fn ($a) => $a->toString(), $addresses)),
+            implode(', ', array_map(function ($a) { return $a->toString(); }, $addresses))
         );
 
         return $this;

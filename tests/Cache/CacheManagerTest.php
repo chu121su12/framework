@@ -52,7 +52,7 @@ class CacheManagerTest extends TestCase
         $cacheManager = new CacheManager($app);
 
         $myArrayDriver = (object) ['flag' => 'mm(u_u)mm'];
-        $cacheManager->extend('array', fn () => $myArrayDriver);
+        $cacheManager->extend('array', function () use ($myArrayDriver) { return $myArrayDriver; });
 
         $driver = $cacheManager->store('my_store');
 
@@ -81,7 +81,7 @@ class CacheManagerTest extends TestCase
         $this->assertSame($theStore, $repo->getStore());
 
         // binding dispatcher after the repo's birth will have no effect.
-        $app->bind(Dispatcher::class, fn () => new Event);
+        $app->bind(Dispatcher::class, function () { return new Event; });
 
         $this->assertNull($repo->getEventDispatcher());
         $this->assertSame($theStore, $repo->getStore());
@@ -182,7 +182,7 @@ class CacheManagerTest extends TestCase
     protected function getApp(array $userConfig)
     {
         $app = Container::getInstance();
-        $app->bind('config', fn () => new Repository($userConfig));
+        $app->bind('config', function () use ($userConfig) { return new Repository($userConfig); });
 
         return $app;
     }

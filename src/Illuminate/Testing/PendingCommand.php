@@ -392,7 +392,7 @@ class PendingCommand
 
         foreach ($this->test->expectedOutputSubstrings as $i => $text) {
             $mock->shouldReceive('doWrite')
-                ->withArgs(fn ($output) => str_contains($output, $text))
+                ->withArgs(function ($output) use ($text) { return str_contains($output, $text); })
                 ->andReturnUsing(function () use ($i) {
                     unset($this->test->expectedOutputSubstrings[$i]);
                 });

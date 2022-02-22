@@ -34,6 +34,34 @@ if (!class_exists('Illuminate\Tests\Http\AssertionFailedError')) {
     }
 }
 
+class HttpClientTest_testCanSendJsonSerializableData_class implements JsonSerializable
+        {
+            public function jsonSerialize()/*: mixed*/
+            {
+                return [
+                    'name' => 'Taylor',
+                    'title' => 'Laravel Developer',
+                ];
+            }
+        }
+
+class HttpClientTest_testPrefersJsonSerializableOverArrayableData_class implements JsonSerializable, Arrayable
+        {
+            public function jsonSerialize()/*: mixed*/
+            {
+                return [
+                    'attributes' => (object) [],
+                ];
+            }
+
+            public function toArray()/*: array*/
+            {
+                return [
+                    'attributes' => [],
+                ];
+            }
+        }
+
 class HttpClientTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -219,16 +247,7 @@ class HttpClientTest extends TestCase
     {
         $this->factory->fake();
 
-        $this->factory->asJson()->post('http://foo.com/form', new class implements JsonSerializable
-        {
-            public function jsonSerialize(): mixed
-            {
-                return [
-                    'name' => 'Taylor',
-                    'title' => 'Laravel Developer',
-                ];
-            }
-        });
+        $this->factory->asJson()->post('http://foo.com/form', new HttpClientTest_testCanSendJsonSerializableData_class);
 
         $this->factory->assertSent(function (Request $request) {
             return $request->url() === 'http://foo.com/form' &&
@@ -241,22 +260,7 @@ class HttpClientTest extends TestCase
     {
         $this->factory->fake();
 
-        $this->factory->asJson()->post('http://foo.com/form', new class implements JsonSerializable, Arrayable
-        {
-            public function jsonSerialize(): mixed
-            {
-                return [
-                    'attributes' => (object) [],
-                ];
-            }
-
-            public function toArray(): array
-            {
-                return [
-                    'attributes' => [],
-                ];
-            }
-        });
+        $this->factory->asJson()->post('http://foo.com/form', new HttpClientTest_testPrefersJsonSerializableOverArrayableData_class);
 
         $this->factory->assertSent(function (Request $request) {
             return $request->url() === 'http://foo.com/form' &&

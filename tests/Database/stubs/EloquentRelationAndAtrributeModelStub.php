@@ -15,7 +15,7 @@ class EloquentRelationAndAtrributeModelStub extends Model
             },
             function ($value) {
                 return $value;
-            },
+            }
         );
     }
 
