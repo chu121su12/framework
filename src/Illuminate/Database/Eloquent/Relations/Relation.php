@@ -164,7 +164,7 @@ abstract class Relation implements BuilderContract
      * @param  array|string  $columns
      * @return \Illuminate\Database\Eloquent\Model
      *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException<\Illuminate\Database\Eloquent\Model>
      * @throws \Illuminate\Database\MultipleRecordsFoundException
      */
     public function sole($columns = ['*'])
@@ -294,18 +294,6 @@ abstract class Relation implements BuilderContract
     public function getQuery()
     {
         return $this->query;
-    }
-
-    /**
-     * Get the base query builder driving the Eloquent builder.
-     *
-     * @deprecated Use toBase() instead
-     *
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public function getBaseQuery()
-    {
-        return $this->toBase();
     }
 
     /**
