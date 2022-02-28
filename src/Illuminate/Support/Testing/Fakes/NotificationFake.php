@@ -6,7 +6,7 @@ use Closure;
 use Exception;
 use Illuminate\Contracts\Notifications\Dispatcher as NotificationDispatcher;
 use Illuminate\Contracts\Notifications\Factory as NotificationFactory;
-use Illuminate\Contracts\Translation\HasLocalePreference;
+use Illuminate\Contracts\Tarnslation\HasLocalePreference;
 use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -181,8 +181,9 @@ class NotificationFake implements NotificationDispatcher, NotificationFactory
         }
 
         PHPUnit::assertEmpty(
-            $this->notifications[get_class($notifiable)][$notifiable->getKey()] ?? [],
-            'Notifications were sent unexpectedly.',
+            isset($this->notifications[get_class($notifiable)])
+            && isset($this->notifications[get_class($notifiable)][$notifiable->getKey()]) ? $this->notifications[get_class($notifiable)][$notifiable->getKey()] : [],
+            'Notifications were sent unexpectedly.'
         );
     }
 

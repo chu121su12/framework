@@ -817,7 +817,8 @@ class Validator implements ValidatorContract
         if (! $rule->passes($attribute, $value)) {
             $this->failedRules[$attribute][get_class($rule)] = [];
 
-            $messages = $this->getFromLocalArray($attribute, get_class($rule)) ?? $rule->message();
+            $fromLocalArray = $this->getFromLocalArray($attribute, get_class($rule));
+            $messages = isset($fromLocalArray) ? $fromLocalArray : $rule->message();
 
             $messages = $messages ? (array) $messages : [get_class($rule)];
 

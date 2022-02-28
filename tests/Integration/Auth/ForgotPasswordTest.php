@@ -12,7 +12,7 @@ use Orchestra\Testbench\TestCase;
 
 class ForgotPasswordTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         ResetPassword::$createUrlCallback = null;
         ResetPassword::$toMailCallback = null;

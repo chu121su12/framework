@@ -18,6 +18,9 @@
 #   vendor/bin/phpunit --bootstrap cr/test.php
 #
 
+include_once __DIR__ . '/helpers/backport.php';
+include_once __DIR__ . '/helpers/casts.php';
+
 $_SERVER['CI_DB_AUTH_DRIVER'] = 'mysql';
 $_SERVER['CI_DB_MYSQL_PORT'] = '3306';
 

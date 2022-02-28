@@ -109,6 +109,9 @@ class DatabaseMigratorIntegrationTest extends TestCase
         $this->assertTrue(Str::contains($ran[1], 'password_resets'));
     }
 
+    /**
+     * @requires PHP 99.9
+     */
     public function testMigrationsCanEachDefineConnection()
     {
         $ran = $this->migrator->run([__DIR__.'/migrations/connection_configured']);
@@ -124,6 +127,9 @@ class DatabaseMigratorIntegrationTest extends TestCase
         $this->assertTrue(Str::contains($ran[1], 'jobs'));
     }
 
+    /**
+     * @requires PHP 99.9
+     */
     public function testMigratorCannotChangeDefinedMigrationConnection()
     {
         $ran = $this->migrator->usingConnection('sqlite2', function () {

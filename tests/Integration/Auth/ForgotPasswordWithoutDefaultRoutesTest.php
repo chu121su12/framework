@@ -12,7 +12,7 @@ use Orchestra\Testbench\TestCase;
 
 class ForgotPasswordWithoutDefaultRoutesTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         ResetPassword::$createUrlCallback = null;
         ResetPassword::$toMailCallback = null;
@@ -45,7 +45,7 @@ class ForgotPasswordWithoutDefaultRoutesTest extends TestCase
 
         Notification::fake();
 
-        UserFactory::new()->create();
+        UserFactory::new_()->create();
 
         $user = AuthenticationTestUser::first();
 
@@ -69,11 +69,13 @@ class ForgotPasswordWithoutDefaultRoutesTest extends TestCase
     {
         Notification::fake();
 
-        ResetPassword::createUrlUsing(function ($user, string $token) {
+        ResetPassword::createUrlUsing(function ($user, /*string */$token) {
+            $token = cast_to_string($token);
+
             return route('custom.password.reset', $token);
         });
 
-        UserFactory::new()->create();
+        UserFactory::new_()->create();
 
         $user = AuthenticationTestUser::first();
 
@@ -105,7 +107,7 @@ class ForgotPasswordWithoutDefaultRoutesTest extends TestCase
                 ->line(__('If you did not request a password reset, no further action is required.'));
         });
 
-        UserFactory::new()->create();
+        UserFactory::new_()->create();
 
         $user = AuthenticationTestUser::first();
 

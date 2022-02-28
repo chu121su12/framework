@@ -74,7 +74,7 @@ class HandleCors
      * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
-    protected function hasMatchingPath(Request $request): bool
+    protected function hasMatchingPath(Request $request)/*: bool*/
     {
         $paths = $this->getPathsByHost($request->getHost());
 
@@ -97,8 +97,10 @@ class HandleCors
      * @param  string  $host
      * @return array
      */
-    protected function getPathsByHost(string $host)
+    protected function getPathsByHost(/*string */$host)
     {
+        $host = cast_to_string($host);
+
         $paths = $this->container['config']->get('cors.paths', []);
 
         if (isset($paths[$host])) {

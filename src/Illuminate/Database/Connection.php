@@ -618,11 +618,11 @@ class Connection implements ConnectionInterface
             $statement->bindValue(
                 is_string($key) ? $key : $key + 1,
                 $value,
-                match (true) {
-                    is_int($value) => PDO::PARAM_INT,
-                    is_resource($value) => PDO::PARAM_LOB,
-                    default => PDO::PARAM_STR
-                },
+                backport_match(true,
+                    [is_int($value), PDO::PARAM_INT],
+                    [is_resource($value), PDO::PARAM_LOB],
+                    [__BACKPORT_MATCH_DEFAULT_CASE__, PDO::PARAM_STR]
+                )
             );
         }
     }

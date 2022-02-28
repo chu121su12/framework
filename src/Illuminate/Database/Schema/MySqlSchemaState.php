@@ -133,7 +133,7 @@ class MySqlSchemaState extends SchemaState
             'LARAVEL_LOAD_USER' => $config['username'],
             'LARAVEL_LOAD_PASSWORD' => isset($config['password']) ? $config['password'] : '',
             'LARAVEL_LOAD_DATABASE' => $config['database'],
-            'LARAVEL_LOAD_SSL_CA' => $config['options'][\PDO::MYSQL_ATTR_SSL_CA] ?? '',
+            'LARAVEL_LOAD_SSL_CA' => isset($config['options']) && isset($config['options'][\PDO::MYSQL_ATTR_SSL_CA]) ? $config['options'][\PDO::MYSQL_ATTR_SSL_CA] : '',
         ];
     }
 

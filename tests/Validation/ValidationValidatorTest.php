@@ -210,6 +210,19 @@ class ValidationValidatorTest_testCustomValidationObject_class_password_rule_val
 
 class ValidationValidatorTest_testCustomException_class extends ValidationException {};
 
+class ValidationValidatorTest_testInlineValidationMessagesForRuleObjectsAreRespected_class implements Rule
+        {
+            public function passes($attribute, $value)
+            {
+                return false;
+            }
+
+            public function message()
+            {
+                return 'this is my message';
+            }
+        }
+
 class ValidationValidatorTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -992,40 +1005,29 @@ class ValidationValidatorTest extends TestCase
 
     public function testInlineValidationMessagesForRuleObjectsAreRespected()
     {
-        $rule = new class implements Rule
-        {
-            public function passes($attribute, $value)
-            {
-                return false;
-            }
-
-            public function message()
-            {
-                return 'this is my message';
-            }
-        };
+        $rule = new ValidationValidatorTest_testInlineValidationMessagesForRuleObjectsAreRespected_class;
 
         $trans = $this->getIlluminateArrayTranslator();
-        $v = new Validator($trans, ['name' => 'Taylor'], ['name' => $rule], [$rule::class => 'my custom message']);
+        $v = new Validator($trans, ['name' => 'Taylor'], ['name' => $rule], [get_class($rule) => 'my custom message']);
         $this->assertFalse($v->passes());
         $v->messages()->setFormat(':message');
         $this->assertSame('my custom message', $v->messages()->first('name'));
 
         $trans = $this->getIlluminateArrayTranslator();
-        $v = new Validator($trans, ['name' => 'Ryan'], ['name' => $rule], ['name.'.$rule::class => 'my custom message']);
+        $v = new Validator($trans, ['name' => 'Ryan'], ['name' => $rule], ['name.'.get_class($rule) => 'my custom message']);
         $this->assertFalse($v->passes());
         $v->messages()->setFormat(':message');
         $this->assertSame('my custom message', $v->messages()->first('name'));
 
         $trans = $this->getIlluminateArrayTranslator();
-        $v = new Validator($trans, ['name' => ['foo', 'bar']], ['name.*' => $rule], ['name.*.'.$rule::class => 'my custom message']);
+        $v = new Validator($trans, ['name' => ['foo', 'bar']], ['name.*' => $rule], ['name.*.'.get_class($rule) => 'my custom message']);
         $this->assertFalse($v->passes());
         $v->messages()->setFormat(':message');
         $this->assertSame('my custom message', $v->messages()->first('name.0'));
         $this->assertSame('my custom message', $v->messages()->first('name.1'));
 
         $trans = $this->getIlluminateArrayTranslator();
-        $v = new Validator($trans, ['name' => 'Ryan'], ['name' => $rule], [$rule::class => 'my attribute is :attribute']);
+        $v = new Validator($trans, ['name' => 'Ryan'], ['name' => $rule], [get_class($rule) => 'my attribute is :attribute']);
         $this->assertFalse($v->passes());
         $v->messages()->setFormat(':message');
         $this->assertSame('my attribute is name', $v->messages()->first('name'));
