@@ -3,6 +3,7 @@
 namespace Illuminate\Tests\Validation;
 
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Validation\Rule as RuleContract;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Translation\ArrayLoader;
 use Illuminate\Translation\Translator;
@@ -11,7 +12,7 @@ use Illuminate\Validation\ValidationServiceProvider;
 use Illuminate\Validation\Validator;
 use PHPUnit\Framework\TestCase;
 
-class ValidationPasswordRuleTest_testPassesWithCustomRules_class implements \Illuminate\Contracts\Validation\Rule
+class ValidationPasswordRuleTest_testPassesWithCustomRules_class implements RuleContract
         {
             public function passes($attribute, $value)
             {

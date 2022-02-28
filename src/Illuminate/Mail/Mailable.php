@@ -23,7 +23,6 @@ use ReflectionProperty;
 use Symfony\Component\Mailer\Header\MetadataHeader;
 use Symfony\Component\Mailer\Header\TagHeader;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
 
 class Mailable implements MailableContract, Renderable
 {
@@ -234,7 +233,7 @@ class Mailable implements MailableContract, Renderable
     }
 
     /**
-     * Deliver the queued message after the given delay.
+     * Deliver the queued message after (n) seconds.
      *
      * @param  \DateTimeInterface|\DateInterval|int  $delay
      * @param  \Illuminate\Contracts\Queue\Factory  $queue

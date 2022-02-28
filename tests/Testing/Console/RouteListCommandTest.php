@@ -37,6 +37,10 @@ class RouteListCommandTest extends TestCase
     {
         $this->markTestSkipped('TODO: To fix '.__METHOD__);
 
+        $this->router->get('/', function () {
+            //
+        });
+
         $this->router->get('closure', function () {
             return new RedirectResponse($this->urlGenerator->signedRoute('signed-route'));
         });
@@ -44,6 +48,10 @@ class RouteListCommandTest extends TestCase
         $this->router->get('controller-method/{user}', [FooController::class, 'show']);
         $this->router->post('controller-invokable', FooController::class);
         $this->router->domain('{account}.example.com')->group(function () {
+            $this->router->get('/', function () {
+                //
+            });
+
             $this->router->get('user/{id}', function ($account, $id) {
                 //
             })->name('user.show')->middleware('web');
@@ -52,6 +60,8 @@ class RouteListCommandTest extends TestCase
         $this->artisan(RouteListCommand::class)
             ->assertSuccessful()
             ->expectsOutput('')
+            ->expectsOutput('  GET|HEAD   / ..................................................... ')
+            ->expectsOutput('  GET|HEAD   {account}.example.com/ ................................ ')
             ->expectsOutput('  GET|HEAD   closure ............................................... ')
             ->expectsOutput('  POST       controller-invokable Illuminate\Tests\Testing\Console\…')
             ->expectsOutput('  GET|HEAD   controller-method/{user} Illuminate\Tests\Testing\Cons…')
@@ -86,7 +96,7 @@ class RouteListCommandTest extends TestCase
             ->expectsOutput('');
     }
 
-    public function tearDown()/*: void*/
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 

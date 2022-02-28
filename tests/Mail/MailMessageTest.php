@@ -91,6 +91,9 @@ class MailMessageTest extends TestCase
     {
         $this->swift->shouldReceive('setSubject')->once()->with('foo');
         $this->assertInstanceOf(Message::class, $this->message->subject('foo'));
+
+        //$this->assertInstanceOf(Message::class, $message = $this->message->subject('foo'));
+        //$this->assertSame('foo', $message->getSymfonyMessage()->getSubject());
     }
 
     public function testPriorityMethod()
@@ -125,5 +128,10 @@ class MailMessageTest extends TestCase
         $swift->shouldReceive('attach')->once()->with($attachment);
         $attachment->shouldReceive('setContentType')->once()->with('image/jpeg');
         $message->attachData('foo', 'name', ['mime' => 'image/jpeg']);
+
+        // $message = new Message(new Email());
+        // $message->attachData('foo', 'foo.jpg', ['mime' => 'image/jpeg']);
+
+        // $this->assertSame('foo', $message->getSymfonyMessage()->getAttachments()[0]->getBody());
     }
 }

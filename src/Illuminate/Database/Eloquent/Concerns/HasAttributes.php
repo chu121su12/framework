@@ -288,7 +288,7 @@ trait HasAttributes
                 $attributes[$key] = $attributes[$key]->format(explode(':', $value, 2)[1]);
             }
 
-            if ($attributes[$key] && $attributes[$key] instanceof DateTimeInterface &&
+            if ($attributes[$key] instanceof DateTimeInterface &&
                 $this->isClassCastable($key)) {
                 $attributes[$key] = $this->serializeDate($attributes[$key]);
             }
@@ -594,7 +594,7 @@ trait HasAttributes
                 (string) $returnType === Attribute::class;
         }
 
-        return static::$attributeMutatorCache[get_class($this)][$key] = $returnType &&
+        return static::$attributeMutatorCache[get_class($this)][$key] =
                     $returnType instanceof ReflectionNamedType &&
                     $returnType->getName() === Attribute::class;
     }
@@ -1002,7 +1002,7 @@ trait HasAttributes
                 is_callable($this->{$method}()->set);
         }
 
-        return static::$setAttributeMutatorCache[$class][$key] = $returnType &&
+        return static::$setAttributeMutatorCache[$class][$key] =
                     $returnType instanceof ReflectionNamedType &&
                     $returnType->getName() === Attribute::class &&
                     is_callable($this->{$method}()->set);
@@ -1980,7 +1980,7 @@ trait HasAttributes
             return $this->castAttribute($key, $attribute) ==
                 $this->castAttribute($key, $original);
         } elseif ($this->hasCast($key, ['real', 'float', 'double'])) {
-            if (($attribute === null && $original !== null) || ($attribute !== null && $original === null)) {
+            if ($original === null) {
                 return false;
             }
 
@@ -2139,8 +2139,7 @@ trait HasAttributes
             $returnType = $method->getReturnType();
 
             if (version_compare(PHP_VERSION, '7.1.0', '<')) {
-                if ($returnType &&
-                    (string) $returnType === Attribute::class) {
+                if ((string) $returnType === Attribute::class) {
                     $method->setAccessible(true);
 
                     if (is_callable($method->invoke($instance)->get)) {
@@ -2151,8 +2150,7 @@ trait HasAttributes
                 return false;
             }
 
-            if ($returnType &&
-                $returnType instanceof ReflectionNamedType &&
+            if ($returnType instanceof ReflectionNamedType &&
                 $returnType->getName() === Attribute::class) {
                 $method->setAccessible(true);
 

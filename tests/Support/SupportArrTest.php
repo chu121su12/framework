@@ -866,7 +866,7 @@ class SupportArrTest extends TestCase
             'mt-4',
         ]);
 
-        $this->assertEquals('font-bold mt-4', $classes);
+        $this->assertSame('font-bold mt-4', $classes);
 
         $classes = Arr::toCssClasses([
             'font-bold',
@@ -875,7 +875,7 @@ class SupportArrTest extends TestCase
             'mr-2' => false,
         ]);
 
-        $this->assertEquals('font-bold mt-4 ml-2', $classes);
+        $this->assertSame('font-bold mt-4 ml-2', $classes);
     }
 
     public function testWhere()

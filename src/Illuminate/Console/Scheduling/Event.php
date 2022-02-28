@@ -791,7 +791,7 @@ class Event
         }
 
         return $this->then(function (Container $container) use ($callback) {
-            if (0 === $this->exitCode) {
+            if ($this->exitCode === 0) {
                 $container->call($callback);
             }
         });
@@ -826,7 +826,7 @@ class Event
         }
 
         return $this->then(function (Container $container) use ($callback) {
-            if (0 !== $this->exitCode) {
+            if ($this->exitCode !== 0) {
                 $container->call($callback);
             }
         });

@@ -111,7 +111,7 @@ class MySqlSchemaState extends SchemaState
 
         $value .= isset($config['unix_socket']) ? $config['unix_socket'] : false
                         ? ' --socket="${:LARAVEL_LOAD_SOCKET}"'
-                        : ' --host="${:LARAVEL_LOAD_HOST}" --port="${:LARAVEL_LOAD_PORT}"';
+                        : ' --host="${:LARAVEL_LOAD_HOST}" --port="${:LARAVEL_LOAD_PORT}" --ssl-ca="${:LARAVEL_LOAD_SSL_CA}"';
 
         return $value;
     }
@@ -133,6 +133,7 @@ class MySqlSchemaState extends SchemaState
             'LARAVEL_LOAD_USER' => $config['username'],
             'LARAVEL_LOAD_PASSWORD' => isset($config['password']) ? $config['password'] : '',
             'LARAVEL_LOAD_DATABASE' => $config['database'],
+            'LARAVEL_LOAD_SSL_CA' => $config['options'][\PDO::MYSQL_ATTR_SSL_CA] ?? '',
         ];
     }
 

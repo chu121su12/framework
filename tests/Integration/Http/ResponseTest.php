@@ -4,9 +4,10 @@ namespace Illuminate\Tests\Integration\Http;
 
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
+use JsonSerializable;
 use Orchestra\Testbench\TestCase;
 
-class ResponseTest_testResponseWithInvalidJsonThrowsException_class implements \JsonSerializable 
+class ResponseTest_testResponseWithInvalidJsonThrowsException_class implements JsonSerializable
             {
                 public function jsonSerialize()/*: string*/
                 {
