@@ -12,7 +12,7 @@ class FlushUploadedFiles
      * @param  mixed  $event
      * @return void
      */
-    public function handle($event): void
+    public function handle($event)/*: void*/
     {
         foreach ($event->request->files->all() as $file) {
             if (! $file instanceof SplFileInfo ||
