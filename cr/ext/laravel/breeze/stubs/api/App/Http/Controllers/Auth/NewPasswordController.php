@@ -44,12 +44,12 @@ class NewPasswordController extends Controller
             }
         );
 
-        if ($status == Password::PASSWORD_RESET) {
-            return response()->json(['status' => __($status)]);
+        if ($status != Password::PASSWORD_RESET) {
+            throw ValidationException::withMessages([
+                'email' => [__($status)],
+            ]);
         }
 
-        throw ValidationException::withMessages([
-            'email' => [__($status)],
-        ]);
+        return response()->json(['status' => __($status)]);
     }
 }

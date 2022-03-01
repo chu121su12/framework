@@ -14,21 +14,21 @@ trait InstallsInertiaStacks
     protected function installInertiaVueStack()
     {
         // Install Inertia...
-        $this->requireComposerPackages('inertiajs/inertia-laravel:^0.4.3', 'laravel/sanctum:^2.8', 'tightenco/ziggy:^1.0');
+        $this->requireComposerPackages('inertiajs/inertia-laravel:^0.5.4', 'laravel/sanctum:^2.8', 'tightenco/ziggy:^1.0');
 
         // NPM Packages...
         $this->updateNodePackages(function ($packages) {
             return [
-                '@inertiajs/inertia' => '^0.10.0',
-                '@inertiajs/inertia-vue3' => '^0.5.1',
+                '@inertiajs/inertia' => '^0.11.0',
+                '@inertiajs/inertia-vue3' => '^0.6.0',
                 '@inertiajs/progress' => '^0.2.6',
                 '@tailwindcss/forms' => '^0.4.0',
-                '@vue/compiler-sfc' => '^3.0.5',
-                'autoprefixer' => '^10.2.4',
-                'postcss' => '^8.2.13',
-                'postcss-import' => '^14.0.1',
-                'tailwindcss' => '^3.0.0',
-                'vue' => '^3.0.5',
+                '@vue/compiler-sfc' => '^3.2.30',
+                'autoprefixer' => '^10.4.2',
+                'postcss' => '^8.4.6',
+                'postcss-import' => '^14.0.2',
+                'tailwindcss' => '^3.0.18',
+                'vue' => '^3.2.30',
                 'vue-loader' => '^16.1.2',
             ] + $packages;
         });
@@ -90,20 +90,20 @@ trait InstallsInertiaStacks
     protected function installInertiaReactStack()
     {
         // Install Inertia...
-        $this->requireComposerPackages('inertiajs/inertia-laravel:^0.3.5', 'laravel/sanctum:^2.6', 'tightenco/ziggy:^1.0');
+        $this->requireComposerPackages('inertiajs/inertia-laravel:^0.5.4', 'laravel/sanctum:^2.8', 'tightenco/ziggy:^1.0');
 
         // NPM Packages...
         $this->updateNodePackages(function ($packages) {
             return [
                 '@headlessui/react' => '^1.4.2',
-                '@inertiajs/inertia' => '^0.10.0',
-                '@inertiajs/inertia-react' => '^0.7.0',
+                '@inertiajs/inertia' => '^0.11.0',
+                '@inertiajs/inertia-react' => '^0.8.0',
                 '@inertiajs/progress' => '^0.2.6',
                 '@tailwindcss/forms' => '^0.4.0',
-                'autoprefixer' => '^10.2.4',
-                'postcss' => '^8.2.13',
-                'postcss-import' => '^14.0.1',
-                'tailwindcss' => '^3.0.0',
+                'autoprefixer' => '^10.4.2',
+                'postcss' => '^8.4.6',
+                'postcss-import' => '^14.0.2',
+                'tailwindcss' => '^3.0.18',
                 'react' => '^17.0.2',
                 'react-dom' => '^17.0.2',
                 '@babel/preset-react' => '^7.16.7',

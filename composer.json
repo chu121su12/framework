@@ -46,7 +46,7 @@
     "replace": {
         "fruitcake/php-cors": "^1.2.0",
         "inertiajs/inertia-laravel": "^0.5.4",
-        "laravel/breeze": "^1.7.0",
+        "laravel/breeze": "^1.8.2",
         "laravel/fortify": "^1.9.0",
         "laravel/jetstream": "^2.6.1",
         "laravel/octane": "^1.1.3",
