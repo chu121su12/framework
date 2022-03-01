@@ -94,7 +94,7 @@ class ResponseFactory
      * @param  array|Arrayable  $props
      * @return Response
      */
-    public function render(/*string */$component, $props = []): Response
+    public function render(/*string */$component, $props = [])/*: Response*/
     {
         $component = cast_to_string($component);
 

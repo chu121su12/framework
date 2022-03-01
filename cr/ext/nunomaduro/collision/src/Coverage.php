@@ -63,14 +63,14 @@ final class Coverage
         if (!file_exists($reportPath = self::getPath())) {
             if (self::usingXdebug()) {
                 $output->writeln(
-                    "  <fg=black;bg=yellow;options=bold> WARN </> Unable to get coverage using Xdebug. Did you set <href=https://xdebug.org/docs/code_coverage#mode>Xdebug's coverage mode</>?</>",
+                    "  <fg=black;bg=yellow;options=bold> WARN </> Unable to get coverage using Xdebug. Did you set <href=https://xdebug.org/docs/code_coverage#mode>Xdebug's coverage mode</>?</>"
                 );
 
                 return 0.0;
             }
 
             $output->writeln(
-                "  <fg=black;bg=yellow;options=bold> WARN </> No coverage driver detected.</>",
+                "  <fg=black;bg=yellow;options=bold> WARN </> No coverage driver detected.</>"
             );
 
             return 0.0;
@@ -184,7 +184,7 @@ final class Coverage
             $lastKey = count($array) - 1;
 
             if (array_key_exists($lastKey, $array) && str_contains($array[$lastKey], '..')) {
-                [$from]          = explode('..', $array[$lastKey]);
+                list($from)      = explode('..', $array[$lastKey]);
                 $array[$lastKey] = $line > $from ? sprintf('%s..%s', $from, $line) : sprintf('%s..%s', $line, $from);
 
                 return $array;

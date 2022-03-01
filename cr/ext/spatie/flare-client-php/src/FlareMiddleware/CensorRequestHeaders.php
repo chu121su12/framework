@@ -6,7 +6,7 @@ use Spatie\FlareClient\Report;
 
 class CensorRequestHeaders implements FlareMiddleware
 {
-    protected array $headers = [];
+    protected /*array */$headers = [];
 
     public function __construct(array $headers)
     {
