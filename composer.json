@@ -50,7 +50,7 @@
         "laravel/fortify": "^1.11.1",
         "laravel/jetstream": "^2.6.6",
         "laravel/octane": "^1.2.3",
-        "laravel/sanctum": "^2.14.0",
+        "laravel/sanctum": "^2.14.2",
         "laravel/serializable-closure": "^1.0.5",
         "laravel/telescope": "^4.7.0",
         "laravel/tinker": "^2.7.0",
