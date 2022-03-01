@@ -6,6 +6,7 @@ use Closure;
 use CR\LaravelBackport\SymfonyHelper;
 use Spatie\FlareClient\Report;
 use Symfony\Component\Process\Process;
+use Throwable;
 
 class AddGitInformation
 {
@@ -13,19 +14,24 @@ class AddGitInformation
 
     public function handle(Report $report, Closure $next)
     {
-        $this->baseDir = $this->getGitBaseDirectory();
+        try {
+            $this->baseDir = $this->getGitBaseDirectory();
 
-        if (! $this->baseDir) {
-            return $next($report);
+            if (! $this->baseDir) {
+                return $next($report);
+            }
+
+            $report->group('git', [
+                'hash' => $this->hash(),
+                'message' => $this->message(),
+                'tag' => $this->tag(),
+                'remote' => $this->remote(),
+                'isDirty' => ! $this->isClean(),
+            ]);
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (Throwable $e) {
         }
-
-        $report->group('git', [
-            'hash' => $this->hash(),
-            'message' => $this->message(),
-            'tag' => $this->tag(),
-            'remote' => $this->remote(),
-            'isDirty' => ! $this->isClean(),
-        ]);
 
         return $next($report);
     }
@@ -58,7 +64,7 @@ class AddGitInformation
     protected function getGitBaseDirectory()/*: ?string*/
     {
         /** @var Process $process */
-        $process = SymfonyHelper::processFromShellCommandline("echo $(git rev-parse --show-toplevel)");
+        $process = SymfonyHelper::processFromShellCommandline("echo $(git rev-parse --show-toplevel)")->setTimeout(1);
 
         $process->run();
 
@@ -77,7 +83,7 @@ class AddGitInformation
 
     protected function command($command)
     {
-        $process = SymfonyHelper::processFromShellCommandline($command, $this->baseDir);
+        $process = SymfonyHelper::processFromShellCommandline($command, $this->baseDir)->setTimeout(1);
 
         $process->run();
 

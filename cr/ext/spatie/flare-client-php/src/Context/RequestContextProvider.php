@@ -86,7 +86,12 @@ class RequestContextProvider implements ContextProvider
     {
         try {
             $session = $this->request->getSession();
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
+        } catch (\Error $exception) {
+        } catch (Throwable $exception) {
+        }
+
+        if (isset($exception)) {
             $session = [];
         }
 
