@@ -2,6 +2,7 @@
 
 namespace Spatie\FlareClient\FlareMiddleware;
 
+use Closure;
 use Spatie\FlareClient\Report;
 
 class CensorRequestHeaders implements FlareMiddleware
@@ -13,7 +14,7 @@ class CensorRequestHeaders implements FlareMiddleware
         $this->headers = $headers;
     }
 
-    public function handle(Report $report, $next)
+    public function handle(Report $report, Closure $next)
     {
         $context = $report->allContext();
 
