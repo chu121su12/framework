@@ -51,7 +51,11 @@ on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
 ## Installation
 
-You can install the package via composer:
+For Laravel apps, head over to [laravel-ignition](https://github.com/spatie/laravel-ignition).
+
+For Symfony apps, go to [symfony-ignition-bundle](https://github.com/spatie/symfony-ignition-bundle).
+
+For all other PHP projects, install the package via composer:
 
 ```bash
 composer require spatie/ignition
@@ -118,9 +122,9 @@ the exception gets thrown.
 use Spatie\Ignition\Contracts\Solution;
 use Spatie\Ignition\Contracts\ProvidesSolution;
 
-class CustomException implements ProvidesSolution
+class CustomException extends Exception implements ProvidesSolution
 {
-    public function getSolution()/*: Solution*/
+    public function getSolution(): Solution
     {
         return new CustomSolution();
     }
@@ -132,17 +136,17 @@ use Spatie\Ignition\Contracts\Solution;
 
 class CustomSolution implements Solution
 {
-    public function getSolutionTitle()/*: string*/
+    public function getSolutionTitle(): string
     {
         return 'The solution title goes here';
     }
 
-    public function getSolutionDescription()/*: string*/
+    public function getSolutionDescription(): string
     {
         return 'This is a longer description of the solution that you want to show.';
     }
 
-    public function getDocumentationLinks()/*: array*/
+    public function getDocumentationLinks(): array
     {
         return [
             'Your documentation' => 'https://your-project.com/relevant-docs-page',
@@ -173,10 +177,10 @@ This is how the interface looks like:
 ```php
 interface HasSolutionsForThrowable
 {
-    public function canSolve(Throwable $throwable)/*: bool*/;
+    public function canSolve(Throwable $throwable): bool;
 
-    /** \Facade\Ignition\Contracts\Solution[] */
-    public function getSolutions(Throwable $throwable)/*: array*/;
+    /** @return \Spatie\Ignition\Contracts\Solution[] */
+    public function getSolutions(Throwable $throwable): array;
 }
 ```
 

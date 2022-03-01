@@ -76,6 +76,12 @@ class ErrorPageViewModel
         return $this->ignitionConfig->toArray();
     }
 
+    public function theme()/*: string*/
+    {
+        $config = $this->config();
+        return isset($config['theme']) ? $config['theme'] : 'auto';
+    }
+
     /**
      * @return array<int, mixed>
      */

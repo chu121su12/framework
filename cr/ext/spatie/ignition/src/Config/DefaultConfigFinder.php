@@ -10,12 +10,14 @@ class DefaultConfigFinder
             return '';
         }
 
-        return "{$homeDirectory}/.ignition.json";
+        $filepath = "{$homeDirectory}/.ignition.json";
+        
+        return @is_readable($filepath) ? $filepath : '';
     }
 
     protected function findHomeDirectory()/*: ?string*/
     {
-        if (str_starts_with(PHP_OS, 'WIN')) {
+        if ($this->isWindows()) {
             if (empty($_SERVER['HOMEDRIVE']) || empty($_SERVER['HOMEPATH'])) {
                 return null;
             }
@@ -30,5 +32,10 @@ class DefaultConfigFinder
         }
 
         return null;
+    }
+
+    private function isWindows()/*: bool*/
+    {
+        return str_starts_with(strtoupper(PHP_OS), 'WIN');
     }
 }
