@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 /**
  * This file is part of the Carbon package.
@@ -93,7 +93,7 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getDeclaringClass(): ReflectionClass
+    public function getDeclaringClass()/*: ReflectionClass*/
     {
         return new ReflectionClass($this->className);
     }
@@ -101,7 +101,7 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isPrivate(): bool
+    public function isPrivate()/*: bool*/
     {
         return false;
     }
@@ -109,7 +109,7 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isPublic(): bool
+    public function isPublic()/*: bool*/
     {
         return true;
     }
@@ -117,7 +117,7 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isFinal(): bool
+    public function isFinal()/*: bool*/
     {
         return false;
     }
@@ -125,7 +125,7 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isInternal(): bool
+    public function isInternal()/*: bool*/
     {
         return false;
     }
@@ -133,7 +133,7 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isAbstract(): bool
+    public function isAbstract()/*: bool*/
     {
         return false;
     }
@@ -141,7 +141,7 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isStatic(): bool
+    public function isStatic()/*: bool*/
     {
         return $this->static;
     }
@@ -149,7 +149,7 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getDocComment(): ?string
+    public function getDocComment()/*: ?string*/
     {
         return $this->reflectionFunction->getDocComment() ?: null;
     }
@@ -157,7 +157,7 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public function getName()/*: string*/
     {
         return $this->methodName;
     }
@@ -165,7 +165,7 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getParameters(): array
+    public function getParameters()/*: array*/
     {
         return $this->parameters;
     }
@@ -173,7 +173,7 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getReturnType(): ?ReflectionType
+    public function getReturnType()/*: ?ReflectionType*/
     {
         return $this->reflectionFunction->getReturnType();
     }
@@ -181,7 +181,7 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isDeprecated(): TrinaryLogic
+    public function isDeprecated()/*: TrinaryLogic*/
     {
         return TrinaryLogic::createFromBoolean(
             $this->reflectionFunction->isDeprecated() ||
@@ -192,7 +192,7 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function isVariadic(): bool
+    public function isVariadic()/*: bool*/
     {
         return $this->reflectionFunction->isVariadic();
     }
@@ -200,7 +200,7 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getPrototype(): BuiltinMethodReflection
+    public function getPrototype()/*: BuiltinMethodReflection*/
     {
         return $this;
     }
@@ -208,14 +208,14 @@ abstract class AbstractMacro implements BuiltinMethodReflection
     /**
      * {@inheritdoc}
      */
-    public function getReflection(): ?ReflectionMethod
+    public function getReflection()/*: ?ReflectionMethod*/
     {
         return $this->reflectionFunction instanceof ReflectionMethod
             ? $this->reflectionFunction
             : null;
     }
 
-    public function getTentativeReturnType(): ?ReflectionType
+    public function getTentativeReturnType()/*: ?ReflectionType*/
     {
         return null;
     }

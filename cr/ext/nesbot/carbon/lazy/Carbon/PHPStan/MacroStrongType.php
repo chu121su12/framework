@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 /**
  * This file is part of the Carbon package.
@@ -19,7 +19,7 @@ if (!class_exists(LazyMacro::class, false)) {
         /**
          * {@inheritdoc}
          */
-        public function getFileName(): ?string
+        public function getFileName()/*: ?string*/
         {
             return $this->reflectionFunction->getFileName();
         }
@@ -27,7 +27,7 @@ if (!class_exists(LazyMacro::class, false)) {
         /**
          * {@inheritdoc}
          */
-        public function getStartLine(): ?int
+        public function getStartLine()/*: ?int*/
         {
             return $this->reflectionFunction->getStartLine();
         }
@@ -35,7 +35,7 @@ if (!class_exists(LazyMacro::class, false)) {
         /**
          * {@inheritdoc}
          */
-        public function getEndLine(): ?int
+        public function getEndLine()/*: ?int*/
         {
             return $this->reflectionFunction->getEndLine();
         }
