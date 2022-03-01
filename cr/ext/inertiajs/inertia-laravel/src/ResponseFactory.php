@@ -89,8 +89,15 @@ class ResponseFactory
         return new LazyProp($callback);
     }
 
-    public function render($component, array $props = [])/*: Response*/
+    /**
+     * @param  string  $component
+     * @param  array|Arrayable  $props
+     * @return Response
+     */
+    public function render(/*string */$component, $props = []): Response
     {
+        $component = cast_to_string($component);
+
         if ($props instanceof Arrayable) {
             $props = $props->toArray();
         }
