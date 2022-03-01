@@ -48,6 +48,7 @@ class OnWorkerStart
     {
         $workerId = cast_to_int($workerId);
 
+        $this->workerState->server = $server;
         $this->workerState->workerId = $workerId;
         $this->workerState->workerPid = posix_getpid();
         $this->workerState->worker = $this->bootWorker($server);
