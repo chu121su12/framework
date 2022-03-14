@@ -4,6 +4,12 @@ namespace Illuminate\Filesystem;
 
 use Closure;
 use CR\LaravelBackport\SymfonyHelper;
+use Exception as UnableToCopyFile;
+use Exception as UnableToCreateDirectory;
+use Exception as UnableToDeleteDirectory;
+use Exception as UnableToDeleteFile;
+use Exception as UnableToMoveFile;
+use Exception as UnableToSetVisibility;
 use Illuminate\Contracts\Filesystem\Cloud as CloudFilesystemContract;
 use Illuminate\Contracts\Filesystem\FileExistsException as ContractFileExistsException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException as ContractFileNotFoundException;
@@ -231,6 +237,21 @@ class FilesystemAdapter implements CloudFilesystemContract
     }
 
     /**
+     * Assert that the given directory is empty.
+     *
+     * @param  string  $path
+     * @return $this
+     */
+    public function assertDirectoryEmpty($path)
+    {
+        PHPUnit::assertEmpty(
+            $this->allFiles($path), "Directory [{$path}] is not empty."
+        );
+
+        return $this;
+    }
+
+    /**
      * Determine if a file or directory exists.
      *
      * @param  string  $path
@@ -322,7 +343,13 @@ class FilesystemAdapter implements CloudFilesystemContract
         try {
             return $this->driver->read($path);
         } catch (UnableToReadFile $e) {
-            //
+        } catch (\Throwable $e) {
+        }
+
+        if (isset($e)) {
+            throw_if($this->throwsExceptions(), $e);
+
+            return false;
         }
     }
 
@@ -417,12 +444,13 @@ class FilesystemAdapter implements CloudFilesystemContract
             return is_resource($contents)
                     ? $this->driver->putStream($path, $contents, $options)
                     : $this->driver->put($path, $contents, $options);
-        } catch (\Exception $e) {
-        } catch (\Error $e) {
+        } catch (UnableToWriteFile $e) {
         } catch (Throwable $e) {
         }
 
         if (isset($e)) {
+            throw_if($this->throwsExceptions(), $e);
+
             return false;
         }
     }
@@ -495,12 +523,13 @@ class FilesystemAdapter implements CloudFilesystemContract
     {
         try {
             return $this->driver->setVisibility($path, $this->parseVisibility($visibility));
-        } catch (\Exception $e) {
-        } catch (\Error $e) {
+        } catch (UnableToSetVisibility $e) {
         } catch (\Throwable $e) {
         }
 
         if (isset($e)) {
+            throw_if($this->throwsExceptions(), $e);
+
             return false;
         }
     }
@@ -558,6 +587,10 @@ class FilesystemAdapter implements CloudFilesystemContract
                 }
             } catch (FileNotFoundException $e) {
                 $success = true;
+            } catch (UnableToDeleteFile $e) {
+                throw_if($this->throwsExceptions(), $e);
+
+                $success = false;
             }
         }
 
@@ -575,12 +608,13 @@ class FilesystemAdapter implements CloudFilesystemContract
     {
         try {
             return $this->driver->copy($from, $to);
-        } catch (\Exception $e) {
-        } catch (\Error $e) {
+        } catch (UnableToCopyFile $e) {
         } catch (\Throwable $e) {
         }
 
         if (isset($e)) {
+            throw_if($this->throwsExceptions(), $e);
+
             return false;
         }
     }
@@ -598,12 +632,13 @@ class FilesystemAdapter implements CloudFilesystemContract
             // $this->driver->move($from, $to);
 
             return $this->driver->rename($from, $to);
-        } catch (\Exception $e) {
-        } catch (\Error $e) {
+        } catch (UnableToMoveFile $e) {
         } catch (\Throwable $e) {
         }
 
         if (isset($e)) {
+            throw_if($this->throwsExceptions(), $e);
+
             return false;
         }
     }
@@ -652,7 +687,11 @@ class FilesystemAdapter implements CloudFilesystemContract
         try {
             return $this->driver->readStream($path);
         } catch (UnableToReadFile $e) {
-            //
+        } catch (\Throwable $e) {
+        }
+
+        if (isset($e)) {
+            throw_if($this->throwsExceptions(), $e);
         }
     }
 
@@ -664,8 +703,15 @@ class FilesystemAdapter implements CloudFilesystemContract
         try {
             $this->driver->writeStream($path, $resource, $options);
         } catch (UnableToWriteFile $e) {
-            $this->delete($path);
-            $this->driver->writeStream($path, $resource, $options);
+            try {
+                $this->delete($path);
+                $this->driver->writeStream($path, $resource, $options);
+            } catch (\Throwable $e) {
+            }
+
+            if (isset($e)) {
+                throw_if($this->throwsExceptions(), $e);
+            }
 
             return false;
         }
@@ -881,12 +927,13 @@ class FilesystemAdapter implements CloudFilesystemContract
             // $this->driver->createDirectory($path);
 
             return $this->driver->createDir($path);
-        } catch (\Exception $e) {
-        } catch (\Error $e) {
+        } catch (UnableToCreateDirectory $e) {
         } catch (\Throwable $e) {
         }
 
         if (isset($e)) {
+            throw_if($this->throwsExceptions(), $e);
+
             return false;
         }
     }
@@ -903,12 +950,13 @@ class FilesystemAdapter implements CloudFilesystemContract
             // $this->driver->deleteDirectory($directory);
 
             return $this->driver->deleteDir($directory);
-        } catch (\Exception $e) {
-        } catch (\Error $e) {
+        } catch (UnableToDeleteDirectory $e) {
         } catch (\Throwable $e) {
         }
 
         if (isset($e)) {
+            throw_if($this->throwsExceptions(), $e);
+
             return false;
         }
     }
@@ -981,6 +1029,16 @@ class FilesystemAdapter implements CloudFilesystemContract
     public function buildTemporaryUrlsUsing(Closure $callback)
     {
         $this->temporaryUrlCallback = $callback;
+    }
+
+    /**
+     * Determine if Flysystem exceptions should be thrown.
+     *
+     * @return bool
+     */
+    protected function throwsExceptions(): bool
+    {
+        return (bool) ($this->config['throw'] ?? false);
     }
 
     /**

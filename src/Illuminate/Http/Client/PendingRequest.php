@@ -610,7 +610,7 @@ class PendingRequest
     {
         $url = cast_to_string($url);
 
-        return $this->send('GET', $url, [
+        return $this->send('GET', $url, func_num_args() === 1 ? [] : [
             'query' => $query,
         ]);
     }
@@ -626,7 +626,7 @@ class PendingRequest
     {
         $url = cast_to_string($url);
 
-        return $this->send('HEAD', $url, [
+        return $this->send('HEAD', $url, func_num_args() === 1 ? [] : [
             'query' => $query,
         ]);
     }
@@ -723,7 +723,9 @@ class PendingRequest
         $method = cast_to_string($method);
         $url = cast_to_string($url);
 
-        $url = ltrim(rtrim($this->baseUrl, '/').'/'.ltrim($url, '/'), '/');
+        if (! Str::startsWith($url, ['http://', 'https://'])) {
+            $url = ltrim(rtrim($this->baseUrl, '/').'/'.ltrim($url, '/'), '/');
+        }
 
         $options = $this->parseHttpOptions($options);
 
@@ -819,7 +821,7 @@ class PendingRequest
                 });
             })
             ->otherwise(function (TransferException $e) {
-                return $e instanceof RequestException ? $this->populateResponse(new Response($e->getResponse())) : $e;
+                return $e instanceof RequestException && $e->hasResponse() ? $this->populateResponse(new Response($e->getResponse())) : $e;
             });
     }
 

@@ -804,6 +804,16 @@ class Stringable implements JsonSerializable
     }
 
     /**
+     * Make a string's first character lowercase.
+     *
+     * @return static
+     */
+    public function lcfirst()
+    {
+        return new static(Str::lcfirst($this->value));
+    }
+
+    /**
      * Make a string's first character uppercase.
      *
      * @return static
@@ -982,6 +992,18 @@ class Stringable implements JsonSerializable
     public function wordCount()
     {
         return str_word_count($this->value);
+    }
+
+    /**
+     * Wrap the string with the given strings.
+     *
+     * @param  string  $before
+     * @param  string|null  $after
+     * @return static
+     */
+    public function wrap($before, $after = null)
+    {
+        return new static($before.$this->value.($after ??= $before));
     }
 
     /**

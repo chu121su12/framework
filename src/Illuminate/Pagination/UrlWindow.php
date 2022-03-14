@@ -104,7 +104,7 @@ class UrlWindow
     }
 
     /**
-     * Get the slider of URLs when too close to beginning of window.
+     * Get the slider of URLs when too close to the beginning of the window.
      *
      * @param  int  $window
      * @param  int  $onEachSide
@@ -120,7 +120,7 @@ class UrlWindow
     }
 
     /**
-     * Get the slider of URLs when too close to ending of window.
+     * Get the slider of URLs when too close to the ending of the window.
      *
      * @param  int  $window
      * @param  int  $onEachSide

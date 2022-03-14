@@ -310,6 +310,13 @@ class MailManager implements FactoryContract
             $config['domain'],
             isset($config['endpoint']) ? $config['endpoint'] : null
         );
+
+        // return $factory->create(new Dsn(
+        //     'mailgun+'.($config['scheme'] ?? 'https'),
+        //     $config['endpoint'] ?? 'default',
+        //     $config['secret'],
+        //     $config['domain']
+        // ));
     }
 
     /**

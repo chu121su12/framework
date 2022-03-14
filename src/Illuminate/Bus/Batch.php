@@ -161,7 +161,7 @@ class Batch implements Arrayable, JsonSerializable
     /**
      * Add additional jobs to the batch.
      *
-     * @param  \Illuminate\Support\Enumerable|array  $jobs
+     * @param  \Illuminate\Support\Enumerable|object|array  $jobs
      * @return self
      */
     public function add($jobs)
@@ -488,5 +488,16 @@ class Batch implements Arrayable, JsonSerializable
     public function jsonSerialize()/*: array*/
     {
         return $this->toArray();
+    }
+
+    /**
+     * Dynamically access the batch's "options" via properties.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        return $this->options[$key] ?? null;
     }
 }

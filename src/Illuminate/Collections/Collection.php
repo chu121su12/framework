@@ -233,7 +233,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      * Get the items in the collection that are not present in the given items, using the callback.
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TValue>|iterable<array-key, TValue>  $items
-     * @param  callable(TValue): int  $callback
+     * @param  callable(TValue, TValue): int  $callback
      * @return static
      */
     public function diffUsing($items, callable $callback)
@@ -256,7 +256,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      * Get the items in the collection whose keys and values are not present in the given items, using the callback.
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
-     * @param  callable(TKey): int  $callback
+     * @param  callable(TKey, TKey): int  $callback
      * @return static
      */
     public function diffAssocUsing($items, callable $callback)
@@ -279,7 +279,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      * Get the items in the collection whose keys are not present in the given items, using the callback.
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
-     * @param  callable(TKey): int  $callback
+     * @param  callable(TKey, TKey): int  $callback
      * @return static
      */
     public function diffKeysUsing($items, callable $callback)
@@ -579,12 +579,16 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
     /**
      * Concatenate values of a given key as a string.
      *
-     * @param  string  $value
+     * @param  callable|string  $value
      * @param  string|null  $glue
      * @return string
      */
     public function implode($value, $glue = null)
     {
+        if (is_callable($value)) {
+            return implode($glue ?? '', $this->map($value)->all());
+        }
+
         $first = $this->first();
 
         if (is_array($first) || (is_object($first) && ! $first instanceof Stringable)) {
@@ -854,7 +858,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
     /**
      * Get the items with the specified keys.
      *
-     * @param  \Illuminate\Support\Enumerable<array-key, TKey>|array<array-key, TKey>  $keys
+     * @param  \Illuminate\Support\Enumerable<array-key, TKey>|array<array-key, TKey>|string  $keys
      * @return static
      */
     public function only($keys)
@@ -1438,7 +1442,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
     /**
      * Sort the collection keys using a callback.
      *
-     * @param  callable  $callback
+     * @param  callable(TKey, TKey): int  $callback
      * @return static
      */
     public function sortKeysUsing(callable $callback)

@@ -125,6 +125,10 @@ class ChangeColumn
             $options['length'] = static::calculateDoctrineTextLength($fluent['type']);
         }
 
+        if ($fluent['type'] === 'char') {
+            $options['fixed'] = true;
+        }
+
         if (static::doesntNeedCharacterOptions($fluent['type'])) {
             $options['customSchemaOptions'] = [
                 'collation' => '',
@@ -152,6 +156,7 @@ class ChangeColumn
             case 'longtext': return Type::getType('text');
             case 'binary': return Type::getType('blob');
             case 'uuid': return Type::getType('guid');
+            case 'char': return Type::getType('string');
             default: return Type::getType($type);
         }
     }

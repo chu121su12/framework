@@ -35,7 +35,7 @@ trait ManagesTransactions
 
             // If we catch an exception we'll rollback this transaction and try again if we
             // are not out of attempts. If we are out of attempts we will just throw the
-            // exception back out and let the developer handle an uncaught exceptions.
+            // exception back out, and let the developer handle an uncaught exception.
             if (isset($e)) {
                 $this->handleTransactionException(
                     $e, $currentAttempt, $attempts

@@ -3,6 +3,8 @@
 namespace Illuminate\Tests\Filesystem;
 
 use Carbon\Carbon;
+use Exception as UnableToReadFile;
+use Exception as UnableToWriteFile;
 use GuzzleHttp\Psr7\Stream;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Filesystem\FilesystemManager;
@@ -407,5 +409,56 @@ class FilesystemAdapterTest extends TestCase
             $path.$expiration->toString().implode('', $options),
             $filesystemAdapter->temporaryUrl($path, $expiration, $options)
         );
+    }
+
+    public function testThrowExceptionsForGet()
+    {
+        $adapter = new FilesystemAdapter($this->filesystem, $this->adapter, ['throw' => true]);
+
+        try {
+            $adapter->get('/foo.txt');
+        } catch (UnableToReadFile $e) {
+            $this->assertTrue(true);
+
+            return;
+        }
+
+        $this->fail('Exception was not thrown.');
+    }
+
+    public function testThrowExceptionsForReadStream()
+    {
+        $adapter = new FilesystemAdapter($this->filesystem, $this->adapter, ['throw' => true]);
+
+        try {
+            $adapter->readStream('/foo.txt');
+        } catch (UnableToReadFile $e) {
+            $this->assertTrue(true);
+
+            return;
+        }
+
+        $this->fail('Exception was not thrown.');
+    }
+
+    public function testThrowExceptionsForPut()
+    {
+        $this->filesystem->write('foo.txt', 'Hello World');
+
+        chmod(__DIR__.'/tmp/foo.txt', 0400);
+
+        $adapter = new FilesystemAdapter($this->filesystem, $this->adapter, ['throw' => true]);
+
+        try {
+            $adapter->put('/foo.txt', 'Hello World!');
+        } catch (UnableToWriteFile $e) {
+            $this->assertTrue(true);
+
+            return;
+        } finally {
+            chmod(__DIR__.'/tmp/foo.txt', 0600);
+        }
+
+        $this->fail('Exception was not thrown.');
     }
 }
