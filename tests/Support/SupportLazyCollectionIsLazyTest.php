@@ -1250,7 +1250,7 @@ class SupportLazyCollectionIsLazyTest extends TestCase
                             ->shouldReceive('now')
                             ->times(2)
                             ->andReturn(
-                                (clone $timeout)->sub(1, 'minute')->getTimestamp(),
+                                with(clone $timeout)->sub_(1, 'minute')->getTimestamp(),
                                 $timeout->getTimestamp()
                             );
                     })
@@ -1271,7 +1271,7 @@ class SupportLazyCollectionIsLazyTest extends TestCase
                             ->shouldReceive('now')
                             ->times(100)
                             ->andReturn(
-                                (clone $timeout)->sub(1, 'minute')->getTimestamp()
+                                with(clone $timeout)->sub_(1, 'minute')->getTimestamp()
                             );
                     })
                     ->takeUntilTimeout($timeout)

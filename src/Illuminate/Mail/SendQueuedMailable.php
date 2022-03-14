@@ -76,7 +76,7 @@ class SendQueuedMailable
             return;
         }
 
-        return $this->mailable->backoff ?? $this->mailable->backoff();
+        return isset($this->mailable->backoff) ? $this->mailable->backoff : $this->mailable->backoff();
     }
 
     /**
@@ -90,7 +90,7 @@ class SendQueuedMailable
             return;
         }
 
-        return $this->mailable->retryUntil ?? $this->mailable->retryUntil();
+        return isset($this->mailable->retryUntil) ? $this->mailable->retryUntil : $this->mailable->retryUntil();
     }
 
     /**

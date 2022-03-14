@@ -51,7 +51,7 @@ class ScheduleTestCommand extends Command
         }
 
         if (! empty($name = $this->option('name'))) {
-            $matches = array_filter($commandNames, fn ($commandName) => Str::endsWith($commandName, $name));
+            $matches = array_filter($commandNames, function ($commandName) use ($name) { return Str::endsWith($commandName, $name); });
 
             if (count($matches) !== 1) {
                 return $this->error('No matching scheduled command found.');

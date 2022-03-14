@@ -11,8 +11,10 @@ class DatabaseMySqlSchemaStateTest extends TestCase
     /**
      * @dataProvider provider
      */
-    public function testConnectionString(string $expectedConnectionString, array $expectedVariables, array $dbConfig): void
+    public function testConnectionString(/*string */$expectedConnectionString, array $expectedVariables, array $dbConfig)/*: void*/
     {
+        $expectedConnectionString = cast_to_string($expectedConnectionString);
+
         $connection = $this->createMock(MySqlConnection::class);
         $connection->method('getConfig')->willReturn($dbConfig);
 
@@ -31,7 +33,7 @@ class DatabaseMySqlSchemaStateTest extends TestCase
         self::assertEquals($expectedVariables, $variables);
     }
 
-    public function provider(): \Generator
+    public function provider()/*: \Generator*/
     {
         yield 'default' => [
             ' --user="${:LARAVEL_LOAD_USER}" --password="${:LARAVEL_LOAD_PASSWORD}" --host="${:LARAVEL_LOAD_HOST}" --port="${:LARAVEL_LOAD_PORT}"', [

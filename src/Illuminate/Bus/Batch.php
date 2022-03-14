@@ -498,6 +498,6 @@ class Batch implements Arrayable, JsonSerializable
      */
     public function __get($key)
     {
-        return $this->options[$key] ?? null;
+        return isset($this->options[$key]) ? $this->options[$key] : null;
     }
 }

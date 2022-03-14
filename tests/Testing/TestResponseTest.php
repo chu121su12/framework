@@ -850,7 +850,7 @@ class TestResponseTest extends TestCase
             'data' => ['foo' => 'bar'],
         ]));
 
-        $response->assertJsonPath('data.foo', fn ($value) => $value === 'bar');
+        $response->assertJsonPath('data.foo', function ($value) { return $value === 'bar'; });
     }
 
     public function testAssertJsonPathWithClosureCanFail()
@@ -862,7 +862,7 @@ class TestResponseTest extends TestCase
         $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('Failed asserting that false is true.');
 
-        $response->assertJsonPath('data.foo', fn ($value) => $value === null);
+        $response->assertJsonPath('data.foo', function ($value) { return $value === null; });
     }
 
     public function testAssertJsonFragment()

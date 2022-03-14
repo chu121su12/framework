@@ -335,7 +335,8 @@ class QueueFake extends QueueManager implements Queue
         }
 
         return $this->jobsToFake->contains(function ($jobToFake) use ($job) {
-            return $job instanceof ((string) $jobToFake);
+            $jobToFakeClassName = (string) $jobToFake;
+            return $job instanceof $jobToFakeClassName;
         });
     }
 

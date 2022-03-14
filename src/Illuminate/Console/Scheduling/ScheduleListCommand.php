@@ -63,9 +63,11 @@ class ScheduleListCommand extends Command
 
             $nextDueDateLabel = 'Next Due:';
 
-            $nextDueDate = Carbon::create((new CronExpression($event->expression))
+            $timezoneOption = $this->option('timezone');
+            $cron  =
+            $nextDueDate = Carbon::create(/*(new CronExpression($event->expression))*/CronExpression::factory($event->expression)
                 ->getNextRunDate(Carbon::now()->setTimezone($event->timezone))
-                ->setTimezone(new DateTimeZone($this->option('timezone') ?? config('app.timezone')))
+                ->setTimezone(new DateTimeZone(isset($timezoneOption) ? $timezoneOption : config('app.timezone')))
             );
 
             $nextDueDate = $this->output->isVerbose()
@@ -114,9 +116,9 @@ class ScheduleListCommand extends Command
      */
     private function getCronExpressionSpacing($events)
     {
-        $rows = $events->map(fn ($event) => array_map('mb_strlen', explode(' ', $event->expression)));
+        $rows = $events->map(function ($event) { return array_map('mb_strlen', explode(' ', $event->expression)); });
 
-        return collect($rows[0] ?? [])->keys()->map(fn ($key) => $rows->max($key));
+        return collect(isset($rows[0]) ? $rows[0] : [])->keys()->map(function ($key) use ($rows) { return $rows->max($key); });
     }
 
     /**
@@ -131,7 +133,7 @@ class ScheduleListCommand extends Command
         $expression = explode(' ', $expression);
 
         return collect($spacing)
-            ->map(fn ($length, $index) => $expression[$index] = str_pad($expression[$index], $length))
+            ->map(function ($length, $index) use ($expression) { return $expression[$index] = str_pad($expression[$index], $length); })
             ->implode(' ');
     }
 

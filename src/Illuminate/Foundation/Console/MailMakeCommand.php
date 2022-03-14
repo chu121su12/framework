@@ -105,7 +105,7 @@ class MailMakeCommand extends GeneratorCommand
             $name = str_replace('\\', '/', $this->argument('name'));
 
             $view = 'mail.'.collect(explode('/', $name))
-                ->map(fn ($part) => Str::kebab($part))
+                ->map(function ($part) { return Str::kebab($part); })
                 ->implode('.');
         }
 

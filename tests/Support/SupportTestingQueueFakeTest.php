@@ -31,7 +31,7 @@ class SupportTestingQueueFakeTest extends TestCase
         $this->job = new JobStub;
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 

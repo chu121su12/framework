@@ -299,10 +299,10 @@ class SupportCollectionTest extends TestCase
         $this->assertNull($data->firstWhere('material', 'nonexistent'));
         $this->assertNull($data->firstWhere('nonexistent', 'key'));
 
-        $this->assertSame('book', $data->firstWhere(fn ($value) => $value['material'] === 'paper')['type']);
-        $this->assertSame('gasket', $data->firstWhere(fn ($value) => $value['material'] === 'rubber')['type']);
-        $this->assertNull($data->firstWhere(fn ($value) => $value['material'] === 'nonexistent'));
-        $this->assertNull($data->firstWhere(fn ($value) => ($value['nonexistent'] ?? null) === 'key'));
+        $this->assertSame('book', $data->firstWhere(function ($value) { return $value['material'] === 'paper'; })['type']);
+        $this->assertSame('gasket', $data->firstWhere(function ($value) { return $value['material'] === 'rubber'; })['type']);
+        $this->assertNull($data->firstWhere(function ($value) { return $value['material'] === 'nonexistent'; }));
+        $this->assertNull($data->firstWhere(function ($value) { return (isset($value['nonexistent']) ? $value['nonexistent'] : null) === 'key'; }));
     }
 
     /**
@@ -1014,12 +1014,12 @@ class SupportCollectionTest extends TestCase
 
         $this->assertEquals(
             [['v' => 3], ['v' => '3']],
-            $c->where(fn ($value) => $value['v'] == 3)->values()->all()
+            $c->where(function ($value) { return $value['v'] == 3; })->values()->all()
         );
 
         $this->assertEquals(
             [['v' => 3]],
-            $c->where(fn ($value) => $value['v'] === 3)->values()->all()
+            $c->where(function ($value) { return $value['v'] === 3; })->values()->all()
         );
 
         $c = new $collection([['v' => 1], ['v' => $object]]);
@@ -2160,8 +2160,8 @@ class SupportCollectionTest extends TestCase
         $this->assertSame('taylor,dayle', $data->implode(','));
 
         $data = new $collection([['name' => 'taylor', 'email' => 'foo'], ['name' => 'dayle', 'email' => 'bar']]);
-        $this->assertSame('taylor-foodayle-bar', $data->implode(fn ($user) => $user['name'].'-'.$user['email']));
-        $this->assertSame('taylor-foo,dayle-bar', $data->implode(fn ($user) => $user['name'].'-'.$user['email'], ','));
+        $this->assertSame('taylor-foodayle-bar', $data->implode(function ($user) { return $user['name'].'-'.$user['email']; }));
+        $this->assertSame('taylor-foo,dayle-bar', $data->implode(function ($user) { return $user['name'].'-'.$user['email']; }, ','));
     }
 
     /**
