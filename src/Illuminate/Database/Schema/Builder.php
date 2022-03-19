@@ -180,10 +180,14 @@ class Builder
      * @param  \Closure  $callback
      * @return void
      */
-    public function whenTableHasColumn(string $table, string $column, Closure $callback)
+    public function whenTableHasColumn(/*string */$table, /*string */$column, Closure $callback)
     {
+        $table = cast_to_string($table);
+
+        $column = cast_to_string($column);
+
         if ($this->hasColumn($table, $column)) {
-            $this->table($table, fn (Blueprint $table) => $callback($table));
+            $this->table($table, function (Blueprint $table) { return $callback($table); });
         }
     }
 
@@ -195,10 +199,14 @@ class Builder
      * @param  \Closure  $callback
      * @return void
      */
-    public function whenTableDoesntHaveColumn(string $table, string $column, Closure $callback)
+    public function whenTableDoesntHaveColumn(/*string */$table, /*string */$column, Closure $callback)
     {
+        $table = cast_to_string($table);
+
+        $column = cast_to_string($column);
+
         if (! $this->hasColumn($table, $column)) {
-            $this->table($table, fn (Blueprint $table) => $callback($table));
+            $this->table($table, function (Blueprint $table) { return $callback($table); });
         }
     }
 

@@ -32,6 +32,18 @@ class BusBatchTest_test_secondJob_class
             use Batchable;
         }
 
+class BusBatchTest_test_thirdJob_class
+        {
+            use Batchable;
+        }
+
+class BusBatchTest_test_jobs_can_be_added_to_pending_batch_class
+        {
+            use Batchable;
+
+            public $anotherProperty;
+        }
+
 class BusBatchTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -128,19 +140,11 @@ class BusBatchTest extends TestCase
         $batch = new PendingBatch(new Container, collect());
         $this->assertCount(0, $batch->jobs);
 
-        $job = new class
-        {
-            use Batchable;
-        };
+        $job = new BusBatchTest_test_thirdJob_class;
         $batch->add([$job]);
         $this->assertCount(1, $batch->jobs);
 
-        $secondJob = new class
-        {
-            use Batchable;
-
-            public $anotherProperty;
-        };
+        $secondJob = new BusBatchTest_test_jobs_can_be_added_to_pending_batch_class;
         $batch->add($secondJob);
         $this->assertCount(2, $batch->jobs);
     }

@@ -44,9 +44,10 @@ class DatabaseTransactionsManager
      */
     public function rollback($connection, $level)
     {
-        $this->transactions = $this->transactions->reject(
-            fn ($transaction) => $transaction->connection == $connection && $transaction->level > $level
-        )->values();
+        $this->transactions = $this->transactions->reject(function ($transaction) use ($connection, $level) {
+            return $transaction->connection == $connection &&
+                   $transaction->level > $level;
+        })->values();
     }
 
     /**

@@ -218,7 +218,9 @@ class ConnectionFactory
      */
     protected function createPdoResolverWithoutHosts(array $config)
     {
-        return fn () => $this->createConnector($config)->connect($config);
+        return function () use ($config) {
+            return $this->createConnector($config)->connect($config);
+        };
     }
 
     /**

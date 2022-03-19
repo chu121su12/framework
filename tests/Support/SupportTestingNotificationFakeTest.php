@@ -114,6 +114,8 @@ class SupportTestingNotificationFakeTest extends TestCase
 
     public function testAssertNothingSent()
     {
+        phpunit_assert_v5_skip_test($this);
+
         $this->fake->assertNothingSent();
         $this->fake->send($this->user, new NotificationStub);
 
@@ -127,6 +129,8 @@ class SupportTestingNotificationFakeTest extends TestCase
 
     public function testAssertNothingSentTo()
     {
+        phpunit_assert_v5_skip_test($this);
+
         $this->fake->assertNothingSentTo($this->user);
         $this->fake->send($this->user, new NotificationStub);
 
@@ -211,6 +215,8 @@ class SupportTestingNotificationFakeTest extends TestCase
 
     public function testAssertSentToWhenNotifiableHasPreferredLocale()
     {
+        phpunit_assert_v5_skip_test($this);
+
         $user = new LocalizedUserStub;
 
         $this->fake->send($user, new NotificationStub);
