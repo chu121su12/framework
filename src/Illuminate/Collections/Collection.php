@@ -585,7 +585,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      */
     public function implode($value, $glue = null)
     {
-        if (is_callable($value)) {
+        if ($this->useAsCallable($value)) {
             return implode(isset($glue) ? $glue : '', $this->map($value)->all());
         }
 

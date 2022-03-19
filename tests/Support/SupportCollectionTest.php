@@ -2158,6 +2158,7 @@ class SupportCollectionTest extends TestCase
         $data = new $collection([Str::of('taylor'), Str::of('dayle')]);
         $this->assertSame('taylordayle', $data->implode(''));
         $this->assertSame('taylor,dayle', $data->implode(','));
+        $this->assertSame('taylor_dayle', $data->implode('_'));
 
         $data = new $collection([['name' => 'taylor', 'email' => 'foo'], ['name' => 'dayle', 'email' => 'bar']]);
         $this->assertSame('taylor-foodayle-bar', $data->implode(function ($user) { return $user['name'].'-'.$user['email']; }));
