@@ -45,21 +45,31 @@ class ScheduleListCommand extends Command
     public function handle(Schedule $schedule)
     {
         $events = collect($schedule->events());
-        $terminalWidth = $this->getTerminalWidth();
+
+        if ($events->isEmpty()) {
+            $this->comment('No scheduled tasks have been defined.');
+
+            return;
+        }
+
+        $terminalWidth = self::getTerminalWidth();
+
         $expressionSpacing = $this->getCronExpressionSpacing($events);
 
-        $events = $events->map(function ($event) use ($terminalWidth, $expressionSpacing) {
+        $timezoneOption = $this->option('timezone');
+        $timezone = new DateTimeZone(isset($timezoneOption) ? $timezoneOption : config('app.timezone'));
+
+        $events = $events->map(function ($event) use ($terminalWidth, $expressionSpacing, $timezone) {
             $expression = $this->formatCronExpression($event->expression, $expressionSpacing);
 
             $command = $event->command;
             $description = $event->description;
 
             if (! $this->output->isVerbose()) {
-                $command = str_replace(
-                    Application::artisanBinary(),
+                $command = str_replace([Application::phpBinary(), Application::artisanBinary()], [
+                    'php',
                     preg_replace("#['\"]#", '', Application::artisanBinary()),
-                    str_replace(Application::phpBinary(), 'php', $event->command)
-                );
+                ], $event->command);
             }
 
             if ($event instanceof CallbackEvent) {
@@ -79,7 +89,7 @@ class ScheduleListCommand extends Command
             $cron  =
             $nextDueDate = Carbon::create(/*(new CronExpression($event->expression))*/CronExpression::factory($event->expression)
                 ->getNextRunDate(Carbon::now()->setTimezone($event->timezone))
-                ->setTimezone(new DateTimeZone(isset($timezoneOption) ? $timezoneOption : config('app.timezone')))
+                ->setTimezone($timezone)
             );
 
             $nextDueDate = $this->output->isVerbose()
@@ -111,11 +121,7 @@ class ScheduleListCommand extends Command
             ) : ''];
         });
 
-        if ($events->isEmpty()) {
-            return $this->comment('No scheduled tasks have been defined.');
-        }
-
-        $this->output->writeln(
+        $this->line(
             $events->flatten()->filter()->prepend('')->push('')->toArray()
         );
     }
@@ -142,10 +148,10 @@ class ScheduleListCommand extends Command
      */
     private function formatCronExpression($expression, $spacing)
     {
-        $expression = explode(' ', $expression);
+        $expressions = explode(' ', $expression);
 
         return collect($spacing)
-            ->map(function ($length, $index) use ($expression) { return $expression[$index] = str_pad($expression[$index], $length); })
+            ->map(function ($length, $index) use ($expressions) { return str_pad($expressions[$index], $length); })
             ->implode(' ');
     }
 
