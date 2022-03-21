@@ -685,7 +685,11 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      */
     public function attempting($callback)
     {
-        $this->events?->listen(Events\Attempting::class, $callback);
+        if (! isset($this->events)) {
+            return;
+        }
+
+        $this->events->listen(Events\Attempting::class, $callback);
     }
 
     /**
@@ -697,7 +701,11 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      */
     protected function fireAttemptEvent(array $credentials, $remember = false)
     {
-        $this->events?->dispatch(new Attempting($this->name, $credentials, $remember));
+        if (! isset($this->events)) {
+            return;
+        }
+
+        $this->events->dispatch(new Attempting($this->name, $credentials, $remember));
     }
 
     /**
@@ -708,7 +716,11 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      */
     protected function fireValidatedEvent($user)
     {
-        $this->events?->dispatch(new Validated($this->name, $user));
+        if (! isset($this->events)) {
+            return;
+        }
+
+        $this->events->dispatch(new Validated($this->name, $user));
     }
 
     /**
@@ -720,7 +732,11 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      */
     protected function fireLoginEvent($user, $remember = false)
     {
-        $this->events?->dispatch(new Login($this->name, $user, $remember));
+        if (! isset($this->events)) {
+            return;
+        }
+
+        $this->events->dispatch(new Login($this->name, $user, $remember));
     }
 
     /**
@@ -731,7 +747,11 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      */
     protected function fireAuthenticatedEvent($user)
     {
-        $this->events?->dispatch(new Authenticated($this->name, $user));
+        if (! isset($this->events)) {
+            return;
+        }
+
+        $this->events->dispatch(new Authenticated($this->name, $user));
     }
 
     /**
@@ -742,7 +762,11 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      */
     protected function fireOtherDeviceLogoutEvent($user)
     {
-        $this->events?->dispatch(new OtherDeviceLogout($this->name, $user));
+        if (! isset($this->events)) {
+            return;
+        }
+
+        $this->events->dispatch(new OtherDeviceLogout($this->name, $user));
     }
 
     /**
@@ -754,7 +778,11 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      */
     protected function fireFailedEvent($user, array $credentials)
     {
-        $this->events?->dispatch(new Failed($this->name, $user, $credentials));
+        if (! isset($this->events)) {
+            return;
+        }
+
+        $this->events->dispatch(new Failed($this->name, $user, $credentials));
     }
 
     /**

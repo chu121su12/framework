@@ -854,7 +854,11 @@ class Connection implements ConnectionInterface
      */
     public function listen(Closure $callback)
     {
-        $this->events?->listen(Events\QueryExecuted::class, $callback);
+        if (! isset($this->events)) {
+            return;
+        }
+
+        $this->events->listen(Events\QueryExecuted::class, $callback);
     }
 
     /**
@@ -885,7 +889,11 @@ class Connection implements ConnectionInterface
      */
     protected function event($event)
     {
-        $this->events?->dispatch($event);
+        if (! isset($this->events)) {
+            return;
+        }
+
+        $this->events->dispatch($event);
     }
 
     /**

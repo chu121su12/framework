@@ -387,7 +387,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @param  callable|null  $callback
      * @return void
      */
-    public static function handleLazyLoadingViolationUsing(?callable $callback)
+    public static function handleLazyLoadingViolationUsing(/*?*/callable $callback = null)
     {
         static::$lazyLoadingViolationCallback = $callback;
     }
