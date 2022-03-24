@@ -90,7 +90,8 @@ class FileConfigManager implements ConfigManager
         }
 
         $content = (string)file_get_contents($this->file);
-        $settings = json_decode($content, true) ?? [];
+        $contentDecoded = json_decode($content, true);
+        $settings = isset($contentDecoded) ? $contentDecoded : [];
 
         return $settings;
     }

@@ -89,6 +89,7 @@ foreach ($deprecations as $class => $classDeprecations) {
     echo implode(PHP_EOL, $classDeprecations).PHP_EOL.PHP_EOL;
 }
 
-if ($deprecations && false !== strpos(getenv('SYMFONY_PATCH_TYPE_DECLARATIONS') ?? '', 'force')) {
+$typeDeclarations = getenv('SYMFONY_PATCH_TYPE_DECLARATIONS');
+if ($deprecations && false !== strpos(isset($typeDeclarations) ? $typeDeclarations : '', 'force')) {
     echo 'These deprecations might be fixed by the patch script, run this again to check for type deprecations.'.PHP_EOL;
 }
