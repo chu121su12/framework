@@ -671,7 +671,12 @@ class Telescope
                 }
 
                 collect(static::$afterStoringHooks)->every->__invoke(static::$entriesQueue, $batchId);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
+            } catch (\Error $e) {
+            } catch (Throwable $e) {
+            }
+
+            if (isset($e)) {
                 app(ExceptionHandler::class)->report($e);
             }
         });

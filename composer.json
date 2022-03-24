@@ -52,7 +52,7 @@
         "laravel/octane": "^1.2.4",
         "laravel/sanctum": "^2.14.2",
         "laravel/serializable-closure": "^1.1.1",
-        "laravel/telescope": "^4.7.3",
+        "laravel/telescope": "^4.8.0",
         "laravel/tinker": "^2.7.0",
         "league/flysystem": "^1.0.70",
         "nesbot/carbon": "^2.57.0",
