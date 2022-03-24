@@ -116,6 +116,16 @@ final class Php80
 
         $needle = cast_to_string($needle);
 
-        return '' === $needle || ('' !== $haystack && 0 === substr_compare($haystack, $needle, -\strlen($needle)));
+        if ('' === $needle || $needle === $haystack) {
+            return true;
+        }
+
+        if ('' === $haystack) {
+            return false;
+        }
+
+        $needleLength = \strlen($needle);
+
+        return $needleLength <= \strlen($haystack) && 0 === substr_compare($haystack, $needle, -$needleLength);
     }
 }

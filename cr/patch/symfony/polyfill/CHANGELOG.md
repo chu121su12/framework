@@ -1,3 +1,8 @@
+# 1.25.0
+
+  * Add `PhpToken` to the PHP 8.0 polyfill when the tokenizer extension is enabled
+  * Fix `str_ends_with()` when needle is longer than haystack
+
 # 1.24.0
 
   * Indicates that polyfills provides corresponding extensions
