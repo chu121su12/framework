@@ -60,7 +60,7 @@
         "spatie/backtrace": "^1.2.1",
         "spatie/flare-client-php": "^1.1.0",
         "spatie/ignition": "^1.2.6",
-        "spatie/laravel-ignition": "^1.0.6",
+        "spatie/laravel-ignition": "^1.1.1",
         "symfony/deprecation-contracts": "^3.0.0",
         "symfony/error-handler": "^5.4.3",
         "symfony/mime": "^5.4.3",
