@@ -79,6 +79,7 @@ trait InteractsWithServers
             (new ExecutableFinder)->find('node'),
             'file-watcher.js',
             json_encode(collect(config('octane.watch'))->map(function ($path) { return base_path($path); })),
+            $this->option('poll'),
         ], realpath(__DIR__.'/../../../bin'), null, null, null))->start();
     }
 
