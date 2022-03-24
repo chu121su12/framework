@@ -88,7 +88,7 @@
         "symfony/polyfill-uuid": "^1.25.0",
         "symfony/polyfill-xml": "^1.25.0",
         "symfony/routing": "^5.4.3",
-        "voku/portable-ascii": "^2.0.0",
+        "voku/portable-ascii": "^2.0.1",
 
         "illuminate/auth": "self.version",
         "illuminate/broadcasting": "self.version",
