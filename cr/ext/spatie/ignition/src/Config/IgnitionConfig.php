@@ -3,10 +3,13 @@
 namespace Spatie\Ignition\Config;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Spatie\Ignition\Contracts\ConfigManager;
 use Throwable;
 
 class IgnitionConfig implements Arrayable
 {
+    private /*ConfigManager */$manager;
+
     public static function loadFromConfigFile()/*: self*/
     {
         return (new self())->loadConfigFile();
@@ -24,6 +27,7 @@ class IgnitionConfig implements Arrayable
         $defaultOptions = $this->getDefaultOptions();
 
         $this->options = array_merge($defaultOptions, $options);
+        $this->manager = $this->initConfigManager();
     }
 
     public function setOption(/*string */$name, /*string */$value)/*: self*/
@@ -35,6 +39,20 @@ class IgnitionConfig implements Arrayable
         $this->options[$name] = $value;
 
         return $this;
+    }
+
+    private function initConfigManager()/*: ConfigManager*/
+    {
+        try {
+            return app(ConfigManager::class);
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
+            return new FileConfigManager();
+        }
     }
 
     /** @param array<string, string> $options */
@@ -55,45 +73,16 @@ class IgnitionConfig implements Arrayable
     /** @return array<string, mixed> */
     public function getConfigOptions()/*: array*/
     {
-        $configFilePath = (new DefaultConfigFinder())->getConfigFilePath();
-
-        $options = [];
-
-        if (file_exists($configFilePath)) {
-            $content = (string)file_get_contents($configFilePath);
-
-            $decoded = json_decode($content, true);
-            $options = isset($decoded) ? $decoded : [];
-        }
-
-        return $options;
+        return $this->manager->load();
     }
 
     /**
      * @param array<string, mixed> $options
-     *
      * @return bool
      */
     public function saveValues(array $options)/*: bool*/
     {
-        $configFilePath = (new DefaultConfigFinder())->getConfigFilePath();
-
-        if (! $configFilePath) {
-            return false;
-        }
-
-        try {
-            file_put_contents($configFilePath, json_encode($options));
-        } catch (\Exception $e) {
-        } catch (\Error $e) {
-        } catch (Throwable $e) {
-        }
-
-        if (isset($e)) {
-            return false;
-        }
-
-        return true;
+        return $this->manager->save($options);
     }
 
     public function hideSolutions()/*: bool*/
@@ -161,7 +150,6 @@ class IgnitionConfig implements Arrayable
         ];
     }
 
-
     /**
      * @return array<string, mixed> $options
      */
@@ -170,6 +158,7 @@ class IgnitionConfig implements Arrayable
         return [
             'share_endpoint' => 'https://flareapp.io/api/public-reports',
             'theme' => 'light',
+            'editor' => 'vscode',
             'editor_options' => [
                 'sublime' => [
                     'label' => 'Sublime',
