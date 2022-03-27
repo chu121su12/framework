@@ -78,6 +78,27 @@ class MailSesTransportTest extends TestCase
         $this->assertEquals($messageId, $message->getHeaders()->get('X-SES-Message-ID')->getFieldBody());
     }
 
+    public function _testSend8()
+    {
+        $message = new Email();
+        $message->subject('Foo subject');
+        $message->text('Bar body');
+        $message->sender('myself@example.com');
+        $message->to('me@example.com');
+        $message->bcc('you@example.com');
+
+        $client = m::mock(SesClient::class);
+        $sesResult = m::mock();
+        $sesResult->shouldReceive('get')
+            ->with('MessageId')
+            ->once()
+            ->andReturn('ses-message-id');
+        $client->shouldReceive('sendRawEmail')->once()
+            ->andReturn($sesResult);
+
+        (new SesTransport($client))->send($message);
+    }
+
     public function testSesLocalConfiguration()
     {
         $container = new Container;

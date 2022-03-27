@@ -214,6 +214,70 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
         }
     }
 
+    public function testAttributesCanCacheStrings()
+    {
+        $model = new TestEloquentModelWithAttributeCast;
+
+        $previous = $model->virtual_string_cached;
+
+        $this->assertIsString($previous);
+
+        $this->assertSame($previous, $model->virtual_string_cached);
+    }
+
+    public function testAttributesCanCacheBooleans()
+    {
+        $model = new TestEloquentModelWithAttributeCast;
+
+        $first = $model->virtual_boolean_cached;
+
+        $this->assertIsBool($first);
+
+        foreach (range(0, 10) as $ignored) {
+            $this->assertSame($first, $model->virtual_boolean_cached);
+        }
+    }
+
+    public function testAttributesCanCacheNull()
+    {
+        $model = new TestEloquentModelWithAttributeCast;
+
+        $this->assertSame(0, $model->virtualNullCalls);
+
+        $first = $model->virtual_null_cached;
+
+        $this->assertNull($first);
+
+        $this->assertSame(1, $model->virtualNullCalls);
+
+        foreach (range(0, 10) as $ignored) {
+            $this->assertSame($first, $model->virtual_null_cached);
+        }
+
+        $this->assertSame(1, $model->virtualNullCalls);
+    }
+
+    public function testAttributesByDefaultDontCacheBooleans()
+    {
+        $model = new TestEloquentModelWithAttributeCast;
+
+        $first = $model->virtual_boolean;
+
+        $this->assertIsBool($first);
+
+        foreach (range(0, 50) as $ignored) {
+            $current = $model->virtual_boolean;
+
+            $this->assertIsBool($current);
+
+            if ($first !== $current) {
+                return;
+            }
+        }
+
+        $this->fail('"virtual_boolean" seems to be cached.');
+    }
+
     public function testCastsThatOnlyHaveGetterThatReturnsObjectAreCached()
     {
         $model = new TestEloquentModelWithAttributeCast;

@@ -100,6 +100,38 @@ class TestEloquentModelWithAttributeCast extends Model
         );
     }
 
+    public function virtualStringCached(): Attribute
+    {
+        return Attribute::get(function () {
+            return Str::random(10);
+        })->shouldCache();
+    }
+
+    public function virtualBooleanCached(): Attribute
+    {
+        return Attribute::get(function () {
+            return (bool) mt_rand(0, 1);
+        })->shouldCache();
+    }
+
+    public function virtualBoolean(): Attribute
+    {
+        return Attribute::get(function () {
+            return (bool) mt_rand(0, 1);
+        });
+    }
+
+    public $virtualNullCalls = 0;
+
+    public function virtualNullCached(): Attribute
+    {
+        return Attribute::get(function () {
+            $this->virtualNullCalls++;
+
+            return null;
+        })->shouldCache();
+    }
+
     public function virtualObject(): Attribute
     {
         return new Attribute(
