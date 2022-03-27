@@ -490,11 +490,11 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
             }
 
             foreach ($groupKeys as $groupKey) {
-                $groupKey = match (true) {
-                    is_bool($groupKey) => (int) $groupKey,
-                    $groupKey instanceof \Stringable => (string) $groupKey,
-                    default => $groupKey,
-                };
+                $groupKey = backport_match(true,
+                    [is_bool($groupKey), function () use ($groupKey) { return (int) $groupKey; }],
+                    [$groupKey instanceof \Stringable || method_exists($groupKey, '__toString'), function () use ($groupKey) { return (string) $groupKey; }],
+                    [__BACKPORT_MATCH_DEFAULT_CASE__, $groupKey]
+                );
 
                 if (! array_key_exists($groupKey, $results)) {
                     $results[$groupKey] = new static;

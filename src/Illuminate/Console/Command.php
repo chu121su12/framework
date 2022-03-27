@@ -92,17 +92,19 @@ class Command extends SymfonyCommand
      *
      * @return string|null
      */
-    public static function getDefaultName(): ?string
+    public static function getDefaultName()/*: ?string*/
     {
         $class = static::class;
 
-        $signature = (new ReflectionClass($class))->getDefaultProperties()['signature'] ?? null;
+        $reflectedClass = (new ReflectionClass($class))->getDefaultProperties();
+
+        $signature = isset($reflectedClass['signature']) ? $reflectedClass['signature'] : null;
 
         if (isset($signature)) {
             return Parser::parse($signature)[0];
         }
 
-        $name = (new ReflectionClass($class))->getDefaultProperties()['name'] ?? null;
+        $name = isset($reflectedClass['name']) ? $reflectedClass['name'] : null;
 
         return $name ?: parent::getDefaultName();
     }
@@ -112,11 +114,13 @@ class Command extends SymfonyCommand
      *
      * @return string|null
      */
-    public static function getDefaultDescription(): ?string
+    public static function getDefaultDescription()/*: ?string*/
     {
         $class = static::class;
 
-        $description = (new ReflectionClass($class))->getDefaultProperties()['description'] ?? null;
+        $reflectedClass = (new ReflectionClass($class))->getDefaultProperties();
+
+        $description = isset($reflectedClass['description']) ? $reflectedClass['description'] : null;
 
         return $description ?: parent::getDefaultDescription();
     }

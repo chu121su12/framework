@@ -44,6 +44,14 @@ class SupportCollectionTest_testHigherOrderFilter_class_2
                 }
             }
 
+class SupportCollectionTest_testGroupByAttributeWithStringableKey_class
+            {
+                public function __toString()
+                {
+                    return 'Framework';
+                }
+            }
+
 class SupportCollectionTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -3040,13 +3048,7 @@ class SupportCollectionTest extends TestCase
         $data = new $collection($payload = [
             ['name' => Str::of('Laravel'), 'url' => '1'],
             ['name' => new HtmlString('Laravel'), 'url' => '1'],
-            ['name' => new class()
-            {
-                public function __toString()
-                {
-                    return 'Framework';
-                }
-            }, 'url' => '2', ],
+            ['name' => new SupportCollectionTest_testGroupByAttributeWithStringableKey_class(), 'url' => '2', ],
         ]);
 
         $result = $data->groupBy('name');
