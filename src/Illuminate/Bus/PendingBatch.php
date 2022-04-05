@@ -315,7 +315,12 @@ class PendingBatch
     {
         try {
             $batch = $batch->add($this->jobs);
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             if (isset($batch)) {
                 $batch->delete();
             }
