@@ -152,8 +152,8 @@
             "cr/helpers/backport.php",
             "cr/helpers/casts.php",
             "cr/helpers/helpers.php",
-            "cr/ext/inertiajs/inertia-laravel/helpers.php",
 
+            "cr/ext/inertiajs/inertia-laravel/helpers.php",
             "cr/ext/spatie/flare-client-php/src/helpers.php",
             "cr/ext/symfony/deprecation-contracts/function.php",
             "cr/patch/symfony/polyfill/src/Apcu/bootstrap.php",

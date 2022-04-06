@@ -11,6 +11,8 @@
 
 namespace Symfony\Polyfill\Intl\Normalizer;
 
+require_once __DIR__ . '/../../../../../../../cr/helpers/casts.php';
+
 /**
  * Normalizer is a PHP fallback implementation of the Normalizer class provided by the intl extension.
  *
