@@ -302,7 +302,9 @@ abstract class Factory
      */
     public function lazy(array $attributes = [], /*?*/Model $parent = null)
     {
-        return fn () => $this->create($attributes, $parent);
+        return function () use ($attributes, $parent) {
+            return $this->create($attributes, $parent);
+        };
     }
 
     /**
