@@ -100,7 +100,7 @@ trait ConfirmsPasswords
     {
         $maximumSecondsSinceConfirmation = $maximumSecondsSinceConfirmation ?: config('auth.password_timeout', 900);
 
-        return $this->passwordIsConfirmed($maximumSecondsSinceConfirmation) ? null : abort(403);
+        $this->passwordIsConfirmed($maximumSecondsSinceConfirmation) ? null : abort(403);
     }
 
     /**

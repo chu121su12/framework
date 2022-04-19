@@ -48,6 +48,10 @@ class SanctumServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../config/sanctum.php' => config_path('sanctum.php'),
             ], 'sanctum-config');
+
+            $this->commands([
+                PruneExpired::class,
+            ]);
         }
 
         $this->defineRoutes();

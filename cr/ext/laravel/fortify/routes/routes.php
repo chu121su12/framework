@@ -17,6 +17,7 @@ use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticationController;
 use Laravel\Fortify\Http\Controllers\TwoFactorQrCodeController;
+use Laravel\Fortify\Http\Controllers\TwoFactorSecretKeyController;
 use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 
 Route::group(['middleware' => config('fortify.middleware', ['web'])], function () {
@@ -157,6 +158,10 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         Route::get('/user/two-factor-recovery-codes', [RecoveryCodeController::class, 'index'])
             ->middleware($twoFactorMiddleware)
             ->name('two-factor.recovery-codes');
+
+        Route::get('/user/two-factor-secret-key', [TwoFactorSecretKeyController::class, 'show'])
+            ->middleware($twoFactorMiddleware)
+            ->name('two-factor.secret-key');
 
         Route::post('/user/two-factor-recovery-codes', [RecoveryCodeController::class, 'store'])
             ->middleware($twoFactorMiddleware);
