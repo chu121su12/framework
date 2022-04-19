@@ -19,6 +19,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Routing\Events\Routing;
 use Illuminate\Routing\Exceptions\UrlGenerationException;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\ResourceRegistrar;
@@ -802,6 +803,20 @@ class RoutingRouteTest extends TestCase
         $route->where('bar', '[0-9]+');
         $this->assertFalse($route->matches($request));
 
+        $request = Request::create('foo/123', 'GET');
+        $route = new Route('GET', 'foo/{bar}', ['where' => ['bar' => '123|456'], function () {
+            //
+        }]);
+        $route->where('bar', '123|456');
+        $this->assertTrue($route->matches($request));
+
+        $request = Request::create('foo/123abc', 'GET');
+        $route = new Route('GET', 'foo/{bar}', ['where' => ['bar' => '123|456'], function () {
+            //
+        }]);
+        $route->where('bar', '123|456');
+        $this->assertFalse($route->matches($request));
+
         /*
          * Optional
          */
@@ -1523,6 +1538,32 @@ class RoutingRouteTest extends TestCase
         $this->assertInstanceOf(Route::class, $_SERVER['__router.route']);
         $this->assertEquals($_SERVER['__router.route']->uri(), $route->uri());
         unset($_SERVER['__router.route']);
+    }
+
+    public function testRouterFiresRouteMatchingEvent()
+    {
+        $container = new Container;
+        $router = new Router($events = new Dispatcher, $container);
+        $container->singleton(Registrar::class, function () use ($router) {
+            return $router;
+        });
+        $router->get('foo/bar', function () {
+            return '';
+        });
+
+        $request = Request::create('http://foo.com/foo/bar', 'GET');
+
+        $_SERVER['__router.request'] = null;
+
+        $events->listen(Routing::class, function ($event) {
+            $_SERVER['__router.request'] = $event->request;
+        });
+
+        $router->dispatchToRoute($request);
+
+        $this->assertInstanceOf(Request::class, $_SERVER['__router.request']);
+        $this->assertEquals($_SERVER['__router.request'], $request);
+        unset($_SERVER['__router.request']);
     }
 
     public function testRouterPatternSetting()

@@ -48,6 +48,20 @@ class SupportTestingEventFakeTest extends TestCase
         });
     }
 
+    public function testAssertListening()
+    {
+        $listener = ListenerStub::class;
+
+        $dispatcher = m::mock(Dispatcher::class);
+        $dispatcher->shouldReceive('getListeners')->andReturn([function ($event, $payload) use ($listener) {
+            return $listener(...array_values($payload));
+        }]);
+
+        $fake = new EventFake($dispatcher);
+
+        $fake->assertListening(EventStub::class, ListenerStub::class);
+    }
+
     public function testAssertDispatchedWithCallbackInt()
     {
         phpunit_assert_v5_skip_test($this);
@@ -154,6 +168,11 @@ class SupportTestingEventFakeTest extends TestCase
 }
 
 class EventStub
+{
+    //
+}
+
+class ListenerStub
 {
     //
 }

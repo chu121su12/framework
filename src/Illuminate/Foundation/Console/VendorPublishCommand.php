@@ -13,7 +13,9 @@ use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\MountManager;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 use League\Flysystem\UnixVisibility\Visibility;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'vendor:publish')]
 class VendorPublishCommand extends Command
 {
     /**

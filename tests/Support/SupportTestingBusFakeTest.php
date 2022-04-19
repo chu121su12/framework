@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Support;
 
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Bus\QueueingDispatcher;
 use Illuminate\Support\Testing\Fakes\BusFake;
 use Mockery as m;
@@ -418,6 +419,19 @@ class SupportTestingBusFakeTest extends TestCase
         }
     }
 
+    public function testAssertChained()
+    {
+        $this->fake->chain([
+            new ChainedJobStub,
+            new OtherBusJobStub,
+        ])->dispatch();
+
+        $this->fake->assertChained([
+            ChainedJobStub::class,
+            OtherBusJobStub::class,
+        ]);
+    }
+
     public function testAssertDispatchedWithIgnoreClass()
     {
         $dispatcher = m::mock(QueueingDispatcher::class);
@@ -487,6 +501,11 @@ class SupportTestingBusFakeTest extends TestCase
 class BusJobStub
 {
     //
+}
+
+class ChainedJobStub
+{
+    use Queueable;
 }
 
 class OtherBusJobStub

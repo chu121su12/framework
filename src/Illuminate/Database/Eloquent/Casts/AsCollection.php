@@ -10,7 +10,13 @@ class AsCollection_castUsing_class implements CastsAttributes
         {
             public function get($model, $key, $value, array $attributes)
             {
-                return isset($attributes[$key]) ? new Collection(backport_json_decode($attributes[$key], true)) : null;
+                if (! isset($attributes[$key])) {
+                    return;
+                }
+
+                $data = backport_json_decode($attributes[$key], true);
+
+                return is_array($data) ? new Collection($data) : null;
             }
 
             public function set($model, $key, $value, array $attributes)

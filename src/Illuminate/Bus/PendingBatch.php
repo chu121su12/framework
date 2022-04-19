@@ -57,12 +57,14 @@ class PendingBatch
     /**
      * Add jobs to the batch.
      *
-     * @param  \Illuminate\Support\Enumerable|object|array  $jobs
+     * @param  iterable|object|array  $jobs
      * @return $this
      */
     public function add($jobs)
     {
-        foreach (Arr::wrap($jobs) as $job) {
+        $jobs = is_iterable($jobs) ? $jobs : Arr::wrap($jobs);
+
+        foreach ($jobs as $job) {
             $this->jobs->push($job);
         }
 
@@ -306,7 +308,7 @@ class PendingBatch
     /**
      * Dispatch an existing batch.
      *
-     * @param \Illuminate\Bus\Batch $batch
+     * @param  \Illuminate\Bus\Batch  $batch
      * @return void
      *
      * @throws \Throwable

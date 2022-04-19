@@ -28,6 +28,7 @@ use League\Flysystem\AdapterInterface as FlysystemAdapter;
 use League\Flysystem\AdapterInterface as Visibility;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\FileExistsException as UnableToWriteFile;
+use League\Flysystem\FileNotFoundException as UnableToSetVisibility;
 use League\Flysystem\FileNotFoundException as UnableToReadFile;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface as FilesystemOperator;
@@ -441,11 +442,11 @@ class FilesystemAdapter implements CloudFilesystemContract
                 return $this->driver->putStream($path, $contents->detach(), $options);
             }
 
-            return is_resource($contents)
-                    ? $this->driver->putStream($path, $contents, $options)
-                    : $this->driver->put($path, $contents, $options);
+            is_resource($contents)
+                ? $this->driver->writeStream($path, $contents, $options)
+                : $this->driver->write($path, $contents, $options);
         } catch (UnableToWriteFile $e) {
-        // } catch (Throwable $e) {
+        } catch (UnableToSetVisibility $e) {
         }
 
         if (isset($e)) {
@@ -702,16 +703,21 @@ class FilesystemAdapter implements CloudFilesystemContract
     {
         try {
             $this->driver->writeStream($path, $resource, $options);
-        } catch (UnableToWriteFile $e) {
+        } catch (UnableToWriteFile $e1) {
+        } catch (UnableToSetVisibility $e1) {
+        }
+
+        if (isset($e1)) {
             try {
                 $this->delete($path);
                 $this->driver->writeStream($path, $resource, $options);
-            } catch (UnableToWriteFile $e) {
+            } catch (UnableToWriteFile $e2) {
+            } catch (UnableToSetVisibility $e2) {
             // } catch (\Throwable $e) {
             }
 
-            if (isset($e)) {
-                throw_if($this->throwsExceptions(), $e);
+            if (isset($e2)) {
+                throw_if($this->throwsExceptions(), $e2);
             }
 
             return false;
@@ -929,6 +935,7 @@ class FilesystemAdapter implements CloudFilesystemContract
 
             return $this->driver->createDir($path);
         } catch (UnableToCreateDirectory $e) {
+        } catch (UnableToSetVisibility $e) {
         // } catch (\Throwable $e) {
         }
 

@@ -38,7 +38,7 @@ trait CompilesStacks
     {
         $parts = explode(',', $this->stripParentheses($expression), 2);
 
-        list($stack, $id) = [$parts[0], isset($parts[1]) ? $parts[1] : null];
+        list($stack, $id) = [$parts[0], isset($parts[1]) ? $parts[1] : ''];
 
         $id = trim($id) ?: "'".(string) Str::uuid()."'";
 
@@ -87,7 +87,7 @@ $__env->startPush('.$stack.'); ?>';
     {
         $parts = explode(',', $this->stripParentheses($expression), 2);
 
-        list($stack, $id) = [$parts[0], isset($parts[1]) ? $parts[1] : null];
+        list($stack, $id) = [$parts[0], isset($parts[1]) ? $parts[1] : ''];
 
         $id = trim($id) ?: "'".(string) Str::uuid()."'";
 

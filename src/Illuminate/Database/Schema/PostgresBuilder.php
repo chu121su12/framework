@@ -63,16 +63,15 @@ class PostgresBuilder extends Builder
         $tables = [];
 
         $connectionDoNotDropConfig = $this->connection->getConfig('dont_drop');
-
-        $excludedTables = isset($connectionDoNotDropConfig) ? $connectionDoNotDropConfig : ['spatial_ref_sys'];
+        $excludedTables = $this->grammar->escapeNames(
+            isset($connectionDoNotDropConfig) ? $connectionDoNotDropConfig : ['spatial_ref_sys']
+        );
 
         foreach ($this->getAllTables() as $row) {
             $row = (array) $row;
 
-            $table = reset($row);
-
-            if (! in_array($table, $excludedTables)) {
-                $tables[] = $table;
+            if (empty(array_intersect($this->grammar->escapeNames($row), $excludedTables))) {
+                $tables[] = $row['qualifiedname'] ?? reset($row);
             }
         }
 
@@ -97,7 +96,7 @@ class PostgresBuilder extends Builder
         foreach ($this->getAllViews() as $row) {
             $row = (array) $row;
 
-            $views[] = reset($row);
+            $views[] = $row['qualifiedname'] ?? reset($row);
         }
 
         if (empty($views)) {
@@ -241,14 +240,10 @@ class PostgresBuilder extends Builder
      */
     protected function parseSearchPath($searchPath)
     {
-        $searchPath = $this->baseParseSearchPath($searchPath);
-
-        array_walk($searchPath, function (&$schema) {
-            $schema = $schema === '$user'
+        return array_map(function ($schema) {
+            return $schema === '$user'
                 ? $this->connection->getConfig('username')
                 : $schema;
-        });
-
-        return $searchPath;
+        }, $this->baseParseSearchPath($searchPath));
     }
 }
