@@ -222,7 +222,9 @@ class NotificationFake implements NotificationDispatcher, NotificationFactory
             return collect();
         }
 
-        $callback = $callback ?: fn () => true;
+        $callback = $callback ?: function () {
+            return true;
+        };
 
         $notifications = collect($this->notificationsFor($notifiable, $notification));
 
@@ -295,7 +297,9 @@ class NotificationFake implements NotificationDispatcher, NotificationFactory
             if (method_exists($notification, 'shouldSend')) {
                 $notifiableChannels = array_filter(
                     $notifiableChannels,
-                    fn ($channel) => $notification->shouldSend($notifiable, $channel) !== false
+                    function ($channel) use ($notification, $notifiable) {
+                        return $notification->shouldSend($notifiable, $channel) !== false;
+                    }
                 );
 
                 if (empty($notifiableChannels)) {
