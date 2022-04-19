@@ -2,20 +2,25 @@
 
 namespace Illuminate\Tests\Integration\Support;
 
+use Doctrine\Inflector\DepracatedInflector;
 use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
 
 class PluralizerPortugueseTest extends TestCase
 {
-    public function setUp(): void
+    public function setUp()/*: void*/
     {
         parent::setUp();
 
         Pluralizer::useLanguage('portuguese');
+
+        if (Pluralizer::inflector() instanceof DepracatedInflector) {
+            $this->markTestSkipped('Cannot instantiate Doctrine\Inflector\Inflector.');
+        }
     }
 
-    public function tearDown(): void
+    public function tearDown()/*: void*/
     {
         parent::tearDown();
 

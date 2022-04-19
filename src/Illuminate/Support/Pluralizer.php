@@ -128,8 +128,10 @@ class Pluralizer
      * @param  string  $language
      * @return void
      */
-    public static function useLanguage(string $language)
+    public static function useLanguage(/*string */$language)
     {
+        $language = cast_to_string($language);
+
         static::$language = $language;
 
         static::$inflector = null;
