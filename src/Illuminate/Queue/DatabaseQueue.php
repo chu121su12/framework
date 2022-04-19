@@ -152,7 +152,7 @@ class DatabaseQueue extends Queue implements QueueContract, ClearableQueue
                 return $this->buildDatabaseRecord(
                     $queue,
                     $this->createPayload($job, $this->getQueue($queue), $data),
-                    isset($job->delay) ? $this->availableAt($job->delay) : $now,
+                    isset($job->delay) ? $this->availableAt($job->delay) : $now
                 );
             }
         )->all());

@@ -125,7 +125,7 @@ class DatabaseEloquentSoftDeletesIntegrationTest extends TestCase
 
     public function testSoftDeletesAreNotRetrievedFromRelationshipBaseQuery()
     {
-        [, $abigail] = $this->createUsers();
+        list($_, $abigail) = $this->createUsers();
 
         $abigail->posts()->create(['title' => 'Foo']);
         $abigail->posts()->create(['title' => 'Bar'])->delete();

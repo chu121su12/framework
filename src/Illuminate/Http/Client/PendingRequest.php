@@ -579,9 +579,9 @@ class PendingRequest
      * @param  callable|null  $callback
      * @return $this
      */
-    public function throw(callable $callback = null)
+    public function throw_(callable $callback = null)
     {
-        $this->throwCallback = $callback ?: fn () => null;
+        $this->throwCallback = $callback ?: function () { return null; };
 
         return $this;
     }
@@ -779,15 +779,15 @@ class PendingRequest
                         }
 
                         if ($this->throwCallback) {
-                            $response->throw($this->throwCallback);
+                            $response->throw_($this->throwCallback);
                         }
 
                         if ($attempt < $this->tries && $shouldRetry) {
-                            $response->throw();
+                            $response->throw_();
                         }
 
                         if ($this->tries > 1 && $this->retryThrow) {
-                            $response->throw();
+                            $response->throw_();
                         }
                     }
                 });

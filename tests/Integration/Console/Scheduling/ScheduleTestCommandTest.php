@@ -11,7 +11,7 @@ use Orchestra\Testbench\TestCase;
 
 class ScheduleTestCommandTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -41,7 +41,7 @@ class ScheduleTestCommandTest extends TestCase
     {
         $this->schedule->command(BarCommandStub::class)->name('bar-command');
         $this->schedule->job(BarJobStub::class);
-        $this->schedule->call(fn () => true)->name('callback');
+        $this->schedule->call(function () { return true; })->name('callback');
 
         $this->artisan(ScheduleTestCommand::class, ['--name' => 'bar:command'])
             ->assertSuccessful()
@@ -60,7 +60,7 @@ class ScheduleTestCommandTest extends TestCase
     {
         $this->schedule->command(BarCommandStub::class)->name('bar-command');
         $this->schedule->job(BarJobStub::class);
-        $this->schedule->call(fn () => true)->name('callback');
+        $this->schedule->call(function () { return true; })->name('callback');
 
         $this->artisan(ScheduleTestCommand::class)
             ->assertSuccessful()
@@ -73,7 +73,7 @@ class ScheduleTestCommandTest extends TestCase
             ->expectsOutput(sprintf('[%s] Running scheduled command: callback', $this->timestamp));
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 

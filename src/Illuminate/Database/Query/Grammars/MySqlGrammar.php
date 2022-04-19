@@ -108,7 +108,7 @@ class MySqlGrammar extends Grammar
      */
     protected function compileJsonContainsKey($column)
     {
-        [$field, $path] = $this->wrapJsonFieldAndPath($column);
+        list($field, $path) = $this->wrapJsonFieldAndPath($column);
 
         return 'ifnull(json_contains_path('.$field.', \'one\''.$path.'), 0)';
     }

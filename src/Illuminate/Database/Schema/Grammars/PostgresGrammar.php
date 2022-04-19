@@ -496,7 +496,7 @@ class PostgresGrammar extends Grammar
     {
         return array_map(static function ($name) {
             return '"'.collect(explode('.', $name))
-                ->map(fn ($segment) => trim($segment, '\'"'))
+                ->map(function ($segment) { return trim($segment, '\'"'); })
                 ->implode('"."').'"';
         }, $names);
     }

@@ -71,7 +71,7 @@ class PostgresBuilder extends Builder
             $row = (array) $row;
 
             if (empty(array_intersect($this->grammar->escapeNames($row), $excludedTables))) {
-                $tables[] = $row['qualifiedname'] ?? reset($row);
+                $tables[] = isset($row['qualifiedname']) ? $row['qualifiedname'] : reset($row);
             }
         }
 
@@ -96,7 +96,7 @@ class PostgresBuilder extends Builder
         foreach ($this->getAllViews() as $row) {
             $row = (array) $row;
 
-            $views[] = $row['qualifiedname'] ?? reset($row);
+            $views[] = isset($row['qualifiedname']) ? $row['qualifiedname'] : reset($row);
         }
 
         if (empty($views)) {

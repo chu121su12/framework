@@ -416,7 +416,8 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
         $container->instance(Factory::class, $factory = m::mock(Factory::class));
 
         $app->shouldReceive('getNamespace')->andReturn('App\\');
-        $factory->shouldReceive('exists')->andReturnUsing(function (string $viewNameBeingCheckedForExistence) {
+        $factory->shouldReceive('exists')->andReturnUsing(function (/*string */$viewNameBeingCheckedForExistence) {
+            $viewNameBeingCheckedForExistence = cast_to_string($viewNameBeingCheckedForExistence);
             // In our test, we'll do as if the 'public.frontend.anonymous-component'
             // view exists and not the others.
             return $viewNameBeingCheckedForExistence === 'admin.auth.components.anonymous-component.index';
@@ -525,7 +526,7 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
         Container::setInstance($container);
     }
 
-    protected function compiler(array $aliases = [], array $namespaces = [], ?BladeCompiler $blade = null)
+    protected function compiler(array $aliases = [], array $namespaces = [], /*?*/BladeCompiler $blade = null)
     {
         return new ComponentTagCompiler(
             $aliases, $namespaces, $blade

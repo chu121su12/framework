@@ -148,8 +148,8 @@ class PipelineTest extends TestCase
         $result = (new Pipeline(new Container))
             ->send('foo')
             ->through([
-                fn ($value, $next) => 'm(-_-)m',
-                fn ($value, $next) => $_SERVER['__test.pipe.second'] = 'm(-_-)m',
+                function ($value, $next) { return 'm(-_-)m'; },
+                function ($value, $next) { return $_SERVER['__test.pipe.second'] = 'm(-_-)m'; },
             ])
             ->then(function ($piped) {
                 $_SERVER['__test.pipe.then'] = '(0_0)';

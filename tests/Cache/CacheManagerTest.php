@@ -116,7 +116,7 @@ class CacheManagerTest extends TestCase
         $this->assertNull($repo2->getEventDispatcher());
 
         $dispatcher = new Event;
-        $app->bind(Dispatcher::class, fn () => $dispatcher);
+        $app->bind(Dispatcher::class, function () use ($dispatcher) { return $dispatcher; });
 
         $cacheManager->refreshEventDispatcher();
 

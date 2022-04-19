@@ -140,7 +140,7 @@ class SQLiteGrammar extends Grammar
      */
     protected function compileJsonContainsKey($column)
     {
-        [$field, $path] = $this->wrapJsonFieldAndPath($column);
+        list($field, $path) = $this->wrapJsonFieldAndPath($column);
 
         return 'json_type('.$field.$path.') is not null';
     }

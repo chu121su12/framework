@@ -1427,7 +1427,7 @@ class HttpClientTest extends TestCase
         ]);
 
         $response = $this->factory
-            ->throw()
+            ->throw_()
             ->get('http://foo.com/get');
 
         $this->assertSame(200, $response->status());
@@ -1443,7 +1443,7 @@ class HttpClientTest extends TestCase
 
         try {
             $this->factory
-                ->throw()
+                ->throw_()
                 ->get('http://foo.com/get');
         } catch (RequestException $e) {
             $exception = $e;
@@ -1465,7 +1465,7 @@ class HttpClientTest extends TestCase
 
         try {
             $this->factory
-                ->throw(function ($exception) use (&$flag) {
+                ->throw_(function ($exception) use (&$flag) {
                     $flag = true;
                 })
                 ->get('http://foo.com/get');
@@ -1481,14 +1481,15 @@ class HttpClientTest extends TestCase
 
     public function testRequestExceptionIsThrownIfTheRequestFails()
     {
+        $factory = $this->factory;
         $this->factory->fake([
-            '*' => $this->factory::response('', 400),
+            '*' => $factory::response('', 400),
         ]);
 
         $exception = null;
 
         try {
-            $this->factory->get('http://foo.com/api')->throw();
+            $this->factory->get('http://foo.com/api')->throw_();
         } catch (RequestException $e) {
             $exception = $e;
         }
@@ -1499,8 +1500,9 @@ class HttpClientTest extends TestCase
 
     public function testRequestExceptionIsThrownWithCallbackIfTheRequestFails()
     {
+        $factory = $this->factory;
         $this->factory->fake([
-            '*' => $this->factory::response('', 400),
+            '*' => $factory::response('', 400),
         ]);
 
         $exception = null;
@@ -1508,7 +1510,7 @@ class HttpClientTest extends TestCase
         $flag = false;
 
         try {
-            $this->factory->get('http://foo.com/api')->throw(function () use (&$flag) {
+            $this->factory->get('http://foo.com/api')->throw_(function () use (&$flag) {
                 $flag = true;
             });
         } catch (RequestException $e) {
@@ -1527,15 +1529,16 @@ class HttpClientTest extends TestCase
             '*' => ['result' => ['foo' => 'bar']],
         ]);
 
-        $response = $this->factory->get('http://foo.com/api')->throw();
+        $response = $this->factory->get('http://foo.com/api')->throw_();
 
         $this->assertSame('{"result":{"foo":"bar"}}', $response->body());
     }
 
     public function testRequestExceptionIsThrowIfConditionIsSatisfied()
     {
+        $factory = $this->factory;
         $this->factory->fake([
-            '*' => $this->factory::response('', 400),
+            '*' => $factory::response('', 400),
         ]);
 
         $exception = null;
@@ -1552,8 +1555,9 @@ class HttpClientTest extends TestCase
 
     public function testRequestExceptionIsNotThrownIfConditionIsNotSatisfied()
     {
+        $factory = $this->factory;
         $this->factory->fake([
-            '*' => $this->factory::response(['result' => ['foo' => 'bar']], 400),
+            '*' => $factory::response(['result' => ['foo' => 'bar']], 400),
         ]);
 
         $response = $this->factory->get('http://foo.com/api')->throwIf(false);

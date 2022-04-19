@@ -185,7 +185,7 @@ class SqlServerGrammar extends Grammar
             $key = "'".str_replace("'", "''", $lastSegment)."'";
         }
 
-        [$field, $path] = $this->wrapJsonFieldAndPath(implode('->', $segments));
+        list($field, $path) = $this->wrapJsonFieldAndPath(implode('->', $segments));
 
         return $key.' in (select [key] from openjson('.$field.$path.'))';
     }

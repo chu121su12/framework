@@ -423,7 +423,7 @@ class DatabaseEloquentFactoryTest extends TestCase
 
     public function test_counted_sequence()
     {
-        $factory = FactoryTestUserFactory::new()->forEachSequence(
+        $factory = FactoryTestUserFactory::new_()->forEachSequence(
             ['name' => 'Taylor Otwell'],
             ['name' => 'Abigail Otwell'],
             ['name' => 'Dayle Rees']

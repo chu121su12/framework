@@ -33,7 +33,7 @@ test
 
     public function testPushOnceIsCompiledWhenIdIsMissing()
     {
-        Str::createUuidsUsing(fn () => 'e60e8f77-9ac3-4f71-9f8e-a044ef481d7f');
+        Str::createUuidsUsing(function () { return 'e60e8f77-9ac3-4f71-9f8e-a044ef481d7f'; });
 
         $string = '@pushOnce(\'foo\')
 test

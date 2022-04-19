@@ -44,6 +44,12 @@ class BusBatchTest_test_jobs_can_be_added_to_pending_batch_class
             public $anotherProperty;
         }
 
+
+class BusBatchTest_test_jobs_can_be_added_to_the_pending_batch_from_iterable_class
+                {
+                    use Batchable;
+                }
+
 class BusBatchTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -157,10 +163,7 @@ class BusBatchTest extends TestCase
         $count = 3;
         $generator = function (int $jobsCount) {
             for ($i = 0; $i < $jobsCount; $i++) {
-                yield new class
-                {
-                    use Batchable;
-                };
+                yield new BusBatchTest_test_jobs_can_be_added_to_the_pending_batch_from_iterable_class;
             }
         };
 

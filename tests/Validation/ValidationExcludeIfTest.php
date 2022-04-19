@@ -37,7 +37,7 @@ class ValidationExcludeIfTest extends TestCase
     {
         new ExcludeIf(false);
         new ExcludeIf(true);
-        new ExcludeIf(fn () => true);
+        new ExcludeIf(function () { return true; });
 
         foreach ([1, 1.1, 'phpinfo', new stdClass] as $condition) {
             try {

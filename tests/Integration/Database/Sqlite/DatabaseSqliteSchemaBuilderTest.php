@@ -70,11 +70,12 @@ class DatabaseSqliteSchemaBuilderTest extends DatabaseTestCase
 
     public function testGetAllViews()
     {
-        DB::connection('conn1')->statement(<<<'SQL'
+        $sql = <<<'SQL'
 CREATE VIEW users_view
 AS
 SELECT name,age from users;
-SQL);
+SQL;
+        DB::connection('conn1')->statement($sql);
 
         $tableView = Schema::getAllViews();
 
@@ -83,9 +84,10 @@ SQL);
         $this->assertEquals('users_view', $obj->name);
         $this->assertEquals('view', $obj->type);
 
-        DB::connection('conn1')->statement(<<<'SQL'
+        $sql = <<<'SQL'
 DROP VIEW IF EXISTS users_view;
-SQL);
+SQL;
+        DB::connection('conn1')->statement($sql);
 
         $this->assertEmpty(Schema::getAllViews());
     }

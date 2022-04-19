@@ -503,7 +503,7 @@ trait QueriesRelationships
         $this->whereIn(
             $relationship->getQualifiedForeignKeyName(),
             $relatedCollection->pluck($relationship->getOwnerKeyName())->toArray(),
-            $boolean,
+            $boolean
         );
 
         return $this;

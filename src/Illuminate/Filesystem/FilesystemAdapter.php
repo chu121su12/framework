@@ -28,7 +28,6 @@ use League\Flysystem\AdapterInterface as FlysystemAdapter;
 use League\Flysystem\AdapterInterface as Visibility;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\FileExistsException as UnableToWriteFile;
-use League\Flysystem\FileNotFoundException as UnableToSetVisibility;
 use League\Flysystem\FileNotFoundException as UnableToReadFile;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface as FilesystemOperator;
@@ -447,6 +446,7 @@ class FilesystemAdapter implements CloudFilesystemContract
                 : $this->driver->write($path, $contents, $options);
         } catch (UnableToWriteFile $e) {
         } catch (UnableToSetVisibility $e) {
+        // } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -718,6 +718,9 @@ class FilesystemAdapter implements CloudFilesystemContract
 
             if (isset($e2)) {
                 throw_if($this->throwsExceptions(), $e2);
+            }
+            if (isset($e1)) {
+                throw_if($this->throwsExceptions(), $e1);
             }
 
             return false;

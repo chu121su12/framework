@@ -688,9 +688,12 @@ class BladeCompiler extends Compiler implements CompilerInterface
      * @param  string|null  $prefix
      * @return void
      */
-    public function anonymousComponentNamespace(string $directory, string $prefix = null)
+    public function anonymousComponentNamespace(/*string */$directory, /*string */$prefix = null)
     {
-        $prefix ??= $directory;
+        $directory = cast_to_string($directory);
+        $prefix = cast_to_string($prefix, null);
+
+        $prefix = isset($prefix) ? $prefix : $directory;
 
         $this->anonymousComponentNamespaces[$prefix] = Str::of($directory)
                 ->replace('/', '.')
