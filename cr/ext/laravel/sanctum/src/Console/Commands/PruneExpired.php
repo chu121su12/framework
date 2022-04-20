@@ -1,4 +1,4 @@
- <?php
+<?php
 
 namespace Laravel\Sanctum\Console\Commands;
 
