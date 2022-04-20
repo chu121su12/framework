@@ -228,11 +228,13 @@ class Telescope
             return $request->is($only);
         }
 
+        $horizonPath = config('horizon.path');
+
         return ! $request->is(
             collect([
                 'telescope-api*',
                 'vendor/telescope*',
-                (isset(config('horizon.path')) ? config('horizon.path') : 'horizon').'*',
+                (isset($horizonPath) ? $horizonPath : 'horizon').'*',
                 'vendor/horizon*',
             ])
             ->merge(config('telescope.ignore_paths', []))
