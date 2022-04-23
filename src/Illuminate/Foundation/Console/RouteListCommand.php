@@ -194,6 +194,21 @@ class RouteListCommand extends Command
     {
         $routes = collect($routes);
 
+        if ($this->option('ansi')) {
+            $output = $this->forCli($routes);
+
+            foreach ([
+                '/<fg=#[0-9a-zA-Z]{6}>/' => '',
+                '/ › /' => ' > ',
+                '/…/' => '~',
+            ] as $regex => $replace) {
+                $output = preg_replace($regex, $replace, $output);
+            }
+
+            $this->output->writeln($output);
+            return;
+        }
+
         $this->output->writeln(
             $this->option('json') ? $this->asJson($routes) : $this->forCli($routes)
         );

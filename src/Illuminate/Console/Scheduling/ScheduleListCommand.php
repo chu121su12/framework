@@ -121,6 +121,21 @@ class ScheduleListCommand extends Command
             ) : ''];
         });
 
+        if ($this->option('ansi')) {
+            $output = $events->flatten()->filter()->prepend('')->push('')->toArray();
+
+            foreach ([
+                '/<fg=#[0-9a-zA-Z]{6}>/' => '',
+                '/ › /' => ' > ',
+                '/…/' => '~',
+            ] as $regex => $replace) {
+                $output = preg_replace($regex, $replace, $output);
+            }
+
+            $this->line($output);
+            return;
+        }
+
         $this->line(
             $events->flatten()->filter()->prepend('')->push('')->toArray()
         );
