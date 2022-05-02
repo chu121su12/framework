@@ -7,7 +7,6 @@ use Illuminate\Config\Repository as Config;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler;
@@ -77,16 +76,12 @@ class FoundationExceptionsHandlerTest extends TestCase
 
         $this->container = Container::setInstance(new Container);
 
-        $this->container->singleton('config', function () {
-            return $this->config;
-        });
+        $this->container->instance('config', $this->config);
 
-        $this->container->singleton(ResponseFactoryContract::class, function () {
-            return new ResponseFactory(
-                m::mock(Factory::class),
-                m::mock(Redirector::class)
-            );
-        });
+        $this->container->instance(ResponseFactoryContract::class, new ResponseFactory(
+            m::mock(ViewFactory::class),
+            m::mock(Redirector::class)
+        ));
 
         $this->handler = new Handler($this->container);
     }
@@ -347,9 +342,7 @@ class FoundationExceptionsHandlerTest extends TestCase
         $viewFactory = m::mock(stdClass::class);
         $viewFactory->shouldReceive('exists')->with('errors::502')->andReturn(true);
 
-        $this->container->singleton(ViewFactory::class, function () use ($viewFactory) {
-            return $viewFactory;
-        });
+        $this->container->instance(ViewFactory::class, $viewFactory);
 
         $handler = new FoundationExceptionsHandlerTest_testItReturnsSpecificErrorViewIfExists($this->container);
 
@@ -362,9 +355,7 @@ class FoundationExceptionsHandlerTest extends TestCase
         $viewFactory->shouldReceive('exists')->once()->with('errors::502')->andReturn(false);
         $viewFactory->shouldReceive('exists')->once()->with('errors::5xx')->andReturn(true);
 
-        $this->container->singleton(ViewFactory::class, function () use ($viewFactory) {
-            return $viewFactory;
-        });
+        $this->container->instance(ViewFactory::class, $viewFactory);
 
         $handler = new FoundationExceptionsHandlerTest_testItReturnsFallbackErrorViewIfExists($this->container);
 
@@ -377,9 +368,7 @@ class FoundationExceptionsHandlerTest extends TestCase
         $viewFactory->shouldReceive('exists')->once()->with('errors::404')->andReturn(false);
         $viewFactory->shouldReceive('exists')->once()->with('errors::4xx')->andReturn(false);
 
-        $this->container->singleton(ViewFactory::class, function () use ($viewFactory) {
-            return $viewFactory;
-        });
+        $this->container->instance(ViewFactory::class, $viewFactory);
 
         $handler = new FoundationExceptionsHandlerTest_testItReturnsNullIfNoErrorViewExists($this->container);
 
