@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Console\Application as Artisan;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Bootstrap\HandleExceptions;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,21 +39,21 @@ trait Testing
     /**
      * The callbacks that should be run after the application is created.
      *
-     * @var array
+     * @var array<int, callable():void>
      */
     protected $afterApplicationCreatedCallbacks = [];
 
     /**
      * The callbacks that should be run after the application is refreshed.
      *
-     * @var array
+     * @var array<int, callable():void>
      */
     protected $afterApplicationRefreshedCallbacks = [];
 
     /**
      * The callbacks that should be run before the application is destroyed.
      *
-     * @var array
+     * @var array<int, callable():void>
      */
     protected $beforeApplicationDestroyedCallbacks = [];
 
@@ -148,6 +149,8 @@ trait Testing
 
         Queue::createPayloadUsing(null);
 
+        HandleExceptions::forgetApp();
+
         if ($this->callbackException) {
             throw $this->callbackException;
         }
@@ -156,9 +159,9 @@ trait Testing
     /**
      * Boot the testing helper traits.
      *
-     * @param  array  $uses
+     * @param  array<class-string, class-string>  $uses
      *
-     * @return array
+     * @return array<class-string, class-string>
      */
     final protected function setUpTheTestEnvironmentTraits(array $uses)////: array
     {
@@ -214,7 +217,7 @@ trait Testing
     /**
      * Register a callback to be run after the application is refreshed.
      *
-     * @param  callable  $callback
+     * @param  callable():void  $callback
      *
      * @return void
      */
@@ -230,7 +233,7 @@ trait Testing
     /**
      * Register a callback to be run after the application is created.
      *
-     * @param  callable  $callback
+     * @param  callable():void  $callback
      *
      * @return void
      */
@@ -246,7 +249,7 @@ trait Testing
     /**
      * Register a callback to be run before the application is destroyed.
      *
-     * @param  callable  $callback
+     * @param  callable():void  $callback
      *
      * @return void
      */
@@ -290,7 +293,7 @@ trait Testing
     /**
      * Boot the testing helper traits.
      *
-     * @return array
+     * @return array<class-string, class-string>
      */
     abstract protected function setUpTraits();
 

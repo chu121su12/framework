@@ -2,7 +2,9 @@
 
 namespace Orchestra\Testbench\Concerns;
 
-use function Orchestra\Testbench\artisan;
+use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Filesystem\Filesystem;
+use Orchestra\Testbench\Foundation\Application;
 
 trait HandlesRoutes
 {
@@ -64,24 +66,37 @@ trait HandlesRoutes
     {
         $route = cast_to_string($route);
 
-        $files = $this->app['files'];
+        $files = new Filesystem();
 
         $time = time();
 
+        $laravel = Application::create($this->getBasePath());
+
         $files->put(
-            base_path("routes/testbench-{$time}.php"), $route
+            $laravel->basePath("routes/testbench-{$time}.php"), $route
         );
 
-
-        artisan($this, 'route:cache');
-
-        $this->reloadApplication();
+        $laravel->make(Kernel::class)->call('route:cache');
 
         $this->assertTrue(
             $files->exists(base_path('bootstrap/cache/routes-v7.php'))
         );
 
-        $this->requireApplicationCachedRoutes();
+        if (isset($this->app)) {
+            $this->reloadApplication();
+        }
+
+        $this->requireApplicationCachedRoutes($files);
+    }
+
+    /**
+     * Require application cached routes.
+     */
+    protected function requireApplicationCachedRoutes(Filesystem $files)////: void
+    {
+        $this->afterApplicationCreated(function () {
+            require $this->app->getCachedRoutesPath();
+        });
 
         $this->beforeApplicationDestroyed(function () use ($files) {
             $files->delete(
@@ -90,16 +105,6 @@ trait HandlesRoutes
             );
 
             sleep(1);
-        });
-    }
-
-    /**
-     * Require application cached routes.
-     */
-    protected function requireApplicationCachedRoutes()////: void
-    {
-        $this->app->booted(function () {
-            require $this->app->getCachedRoutesPath();
         });
     }
 }

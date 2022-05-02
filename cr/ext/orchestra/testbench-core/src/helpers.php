@@ -3,6 +3,7 @@
 namespace Orchestra\Testbench;
 
 use Illuminate\Testing\PendingCommand;
+use Orchestra\Testbench\Foundation\Application;
 
 class function_container_class {
         use Concerns\CreatesApplication;
@@ -11,11 +12,17 @@ class function_container_class {
 /**
  * Create Laravel application instance.
  *
- * @return object
+ * @param  string|null  $basePath
+ * @param  callable(\Illuminate\Foundation\Application):void|null  $resolvingCallback
+ * @param  array  $options
+ *
+ * @return \Orchestra\Testbench\Foundation\Application
  */
-function container()
+function container(/*?string */$basePath = null, /*?*/callable $resolvingCallback = null, array $options = [])
 {
-    return new function_container_class;
+    $basePath = cast_to_string($basePath, null);
+
+    return tap(new Application($basePath, $resolvingCallback))->configure($options);
 }
 
 /**
@@ -23,7 +30,7 @@ function container()
  *
  * @param  \Orchestra\Testbench\Contracts\TestCase  $testbench
  * @param  string  $command
- * @param  array  $parameters
+ * @param  array<string, mixed>  $parameters
  *
  * @return \Illuminate\Testing\PendingCommand|int
  */

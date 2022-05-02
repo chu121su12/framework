@@ -12,6 +12,8 @@ trait WithFactories
      *
      * @param  string  $path
      *
+     * @throws \Exception
+     *
      * @return $this
      */
     protected function withFactories(/*string */$path)
@@ -26,6 +28,8 @@ trait WithFactories
      *
      * @param  \Illuminate\Contracts\Foundation\Application  $app
      * @param  string  $path
+     *
+     * @throws \Exception
      *
      * @return $this
      */

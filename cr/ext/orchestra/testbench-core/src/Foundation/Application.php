@@ -2,6 +2,7 @@
 
 namespace Orchestra\Testbench\Foundation;
 
+use Illuminate\Support\Arr;
 use Orchestra\Testbench\Concerns\CreatesApplication;
 
 class Application
@@ -13,14 +14,21 @@ class Application
     /**
      * The application base path.
      *
-     * @var string
+     * @var string|null
      */
     protected $basePath;
 
     /**
+     * List of configurations.
+     *
+     * @var array<string, mixed>
+     */
+    protected $config = [];
+
+    /**
      * The application resolving callback.
      *
-     * @var callable|null
+     * @var callable(\Illuminate\Foundation\Application):void|null
      */
     protected $resolvingCallback;
 
@@ -35,11 +43,11 @@ class Application
      * Create new application resolver.
      *
      * @param  string  $basePath
-     * @param  callable|null  $resolvingCallback
+     * @param  callable(\Illuminate\Foundation\Application):void|null  $resolvingCallback
      */
-    public function __construct(/*string */$basePath, /*?*/callable $resolvingCallback = null)
+    public function __construct(/*?string */$basePath = null, /*?*/callable $resolvingCallback = null)
     {
-        $basePath = cast_to_string($basePath);
+        $basePath = cast_to_string($basePath, null);
 
         $this->basePath = $basePath;
         $this->resolvingCallback = $resolvingCallback;
@@ -48,15 +56,15 @@ class Application
     /**
      * Create new application instance.
      *
-     * @param  string  $basePath
-     * @param  callable|null  $resolvingCallback
+     * @param  string|null  $basePath
+     * @param  callable(\Illuminate\Foundation\Application):void|null  $resolvingCallback
      * @param  array  $options
      *
      * @return \Illuminate\Foundation\Application
      */
-    public static function create(/*string */$basePath, /*?*/callable $resolvingCallback = null, array $options = [])
+    public static function create(/*?string */$basePath = null, /*?*/callable $resolvingCallback = null, array $options = [])
     {
-        $basePath = cast_to_string($basePath);
+        $basePath = cast_to_string($basePath, null);
 
         return (new static($basePath, $resolvingCallback))->configure($options)->createApplication();
     }
@@ -64,7 +72,7 @@ class Application
     /**
      * Configure the application options.
      *
-     * @param  array  $options
+     * @param  array<string, mixed>  $options
      *
      * @return $this
      */
@@ -74,7 +82,35 @@ class Application
             $this->loadEnvironmentVariables = $options['load_environment_variables'];
         }
 
+        if (isset($options['enables_package_discoveries']) && \is_bool($options['enables_package_discoveries'])) {
+            Arr::set($options, 'extra.dont-discover', []);
+        }
+
+        $this->config = Arr::only(isset($options['extra']) ? $options['extra'] : [], ['dont-discover', 'providers']);
+
         return $this;
+    }
+
+    /**
+     * Ignore package discovery from.
+     *
+     * @return array
+     */
+    public function ignorePackageDiscoveriesFrom()
+    {
+        return isset($this->config['dont-discover']) ? $this->config['dont-discover'] : [];
+    }
+
+    /**
+     * Get package providers.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     *
+     * @return array
+     */
+    protected function getPackageProviders($app)
+    {
+        return isset($this->config['providers']) ? $this->config['providers'] : [];
     }
 
     /**
@@ -98,6 +134,6 @@ class Application
      */
     protected function getBasePath()
     {
-        return $this->basePath;
+        return isset($this->basePath) ? $this->basePath : static::applicationBasePath();
     }
 }

@@ -2,11 +2,18 @@
 
 namespace Orchestra\Testbench\Concerns;
 
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\Facades\RateLimiter;
 use Orchestra\Testbench\Foundation\PackageManifest;
 
+/**
+ * @property bool|null $enablesPackageDiscoveries
+ * @property bool|null $loadEnvironmentVariables
+ */
 trait CreatesApplication
 {
     /**
@@ -26,6 +33,10 @@ trait CreatesApplication
      */
     public function ignorePackageDiscoveriesFrom()
     {
+        if (property_exists($this, 'enablesPackageDiscoveries') && $this->enablesPackageDiscoveries === true) {
+            return [];
+        }
+
         return ['*'];
     }
 
@@ -46,7 +57,7 @@ trait CreatesApplication
      *
      * @param  \Illuminate\Foundation\Application  $app
      *
-     * @return array<int, string>
+     * @return array<string|class-string, string|class-string>
      */
     protected function overrideApplicationBindings($app)
     {
@@ -72,7 +83,7 @@ trait CreatesApplication
      *
      * @param  \Illuminate\Foundation\Application  $app
      *
-     * @return array<string, string>
+     * @return array<string, class-string>
      */
     protected function getApplicationAliases($app)
     {
@@ -84,7 +95,7 @@ trait CreatesApplication
      *
      * @param  \Illuminate\Foundation\Application  $app
      *
-     * @return array<string, string>
+     * @return array<string, class-string>
      */
     protected function overrideApplicationAliases($app)
     {
@@ -96,7 +107,7 @@ trait CreatesApplication
      *
      * @param  \Illuminate\Foundation\Application  $app
      *
-     * @return array<string, string>
+     * @return array<string, class-string>
      */
     final protected function resolveApplicationAliases($app)////: array
     {
@@ -117,7 +128,7 @@ trait CreatesApplication
      *
      * @param  \Illuminate\Foundation\Application  $app
      *
-     * @return array<string, string>
+     * @return array<string, class-string>
      */
     protected function getPackageAliases($app)
     {
@@ -129,7 +140,7 @@ trait CreatesApplication
      *
      * @param  \Illuminate\Foundation\Application  $app
      *
-     * @return array<int, string>
+     * @return array<int, class-string>
      */
     protected function getPackageBootstrappers($app)
     {
@@ -141,7 +152,7 @@ trait CreatesApplication
      *
      * @param  \Illuminate\Foundation\Application  $app
      *
-     * @return array<int, string>
+     * @return array<int, class-string>
      */
     protected function getApplicationProviders($app)
     {
@@ -153,7 +164,7 @@ trait CreatesApplication
      *
      * @param  \Illuminate\Foundation\Application  $app
      *
-     * @return array<int, string>
+     * @return array<int, class-string>
      */
     protected function overrideApplicationProviders($app)
     {
@@ -165,7 +176,7 @@ trait CreatesApplication
      *
      * @param  \Illuminate\Foundation\Application  $app
      *
-     * @return array<int, string>
+     * @return array<int, class-string>
      */
     final protected function resolveApplicationProviders($app)////: array
     {
@@ -186,7 +197,7 @@ trait CreatesApplication
      *
      * @param  \Illuminate\Foundation\Application  $app
      *
-     * @return array<int, string>
+     * @return array<int, class-string>
      */
     protected function getPackageProviders($app)
     {
@@ -344,6 +355,8 @@ trait CreatesApplication
         $this->defineEnvironment($app);
         $this->getEnvironmentSetUp($app);
 
+        $this->resolveApplicationRateLimiting($app);
+
         $app->make('Illuminate\Foundation\Bootstrap\BootProviders')->bootstrap($app);
 
         foreach ($this->getPackageBootstrappers($app) as $bootstrap) {
@@ -360,6 +373,20 @@ trait CreatesApplication
 
         $app->resolving('url', static function ($url, $app) use ($refreshNameLookups) {
             $refreshNameLookups($app);
+        });
+    }
+
+    /**
+     * Resolve application rate limiting configuration.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     *
+     * @return void
+     */
+    protected function resolveApplicationRateLimiting($app)
+    {
+        RateLimiter::for_('api', function (Request $request) {
+            return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
     }
 
