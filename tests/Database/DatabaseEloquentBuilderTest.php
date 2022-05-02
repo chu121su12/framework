@@ -173,9 +173,9 @@ class DatabaseEloquentBuilderTest extends TestCase
         $builder->shouldReceive('first')->with(['column'])->andReturn($model)->once();
         $builder->shouldReceive('first')->andReturn(null)->once();
 
-        $this->assertSame($model, $builder->findOr(1, fn () => 'callback result'));
-        $this->assertSame($model, $builder->findOr(1, ['column'], fn () => 'callback result'));
-        $this->assertSame('callback result', $builder->findOr(2, fn () => 'callback result'));
+        $this->assertSame($model, $builder->findOr(1, function () { return 'callback result'; }));
+        $this->assertSame($model, $builder->findOr(1, ['column'], function () { return 'callback result'; }));
+        $this->assertSame('callback result', $builder->findOr(2, function () { return 'callback result'; }));
     }
 
     public function testFindOrMethodWithMany()
@@ -190,17 +190,17 @@ class DatabaseEloquentBuilderTest extends TestCase
         $builder->shouldReceive('get')->with(['column'])->andReturn(new Collection([$model1, $model2]))->once();
         $builder->shouldReceive('get')->andReturn(null)->once();
 
-        $result = $builder->findOr([1, 2], fn () => 'callback result');
+        $result = $builder->findOr([1, 2], function () { return 'callback result'; });
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertSame($model1, $result[0]);
         $this->assertSame($model2, $result[1]);
 
-        $result = $builder->findOr([1, 2], ['column'], fn () => 'callback result');
+        $result = $builder->findOr([1, 2], ['column'], function () { return 'callback result'; });
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertSame($model1, $result[0]);
         $this->assertSame($model2, $result[1]);
 
-        $result = $builder->findOr([1, 2, 3], fn () => 'callback result');
+        $result = $builder->findOr([1, 2, 3], function () { return 'callback result'; });
         $this->assertSame('callback result', $result);
     }
 
@@ -216,17 +216,17 @@ class DatabaseEloquentBuilderTest extends TestCase
         $builder->shouldReceive('get')->with(['column'])->andReturn(new Collection([$model1, $model2]))->once();
         $builder->shouldReceive('get')->andReturn(null)->once();
 
-        $result = $builder->findOr(new Collection([1, 2]), fn () => 'callback result');
+        $result = $builder->findOr(new Collection([1, 2]), function () { return 'callback result'; });
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertSame($model1, $result[0]);
         $this->assertSame($model2, $result[1]);
 
-        $result = $builder->findOr(new Collection([1, 2]), ['column'], fn () => 'callback result');
+        $result = $builder->findOr(new Collection([1, 2]), ['column'], function () { return 'callback result'; });
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertSame($model1, $result[0]);
         $this->assertSame($model2, $result[1]);
 
-        $result = $builder->findOr(new Collection([1, 2, 3]), fn () => 'callback result');
+        $result = $builder->findOr(new Collection([1, 2, 3]), function () { return 'callback result'; });
         $this->assertSame('callback result', $result);
     }
 

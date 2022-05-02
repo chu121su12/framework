@@ -60,10 +60,10 @@ class EventListCommand extends Command
         }
 
         $this->line(
-            $events->map(fn ($listeners, $event) => [
+            $events->map(function ($listeners, $event) { return [
                 sprintf('  <fg=white>%s</>', $this->appendEventInterfaces($event)),
-                collect($listeners)->map(fn ($listener) => sprintf('    <fg=#6C7280>⇂ %s</>', $listener)),
-            ])->flatten()->filter()->prepend('')->push('')->toArray()
+                collect($listeners)->map(function ($listener) { return sprintf('    <fg=#6C7280>⇂ %s</>', $listener); }),
+            ]; })->flatten()->filter()->prepend('')->push('')->toArray()
         );
     }
 
@@ -126,7 +126,8 @@ class EventListCommand extends Command
         $interfaces = class_implements($event);
 
         if (in_array(ShouldBroadcast::class, $interfaces)) {
-            $event .= ' <fg=bright-blue>(ShouldBroadcast)</>';
+            // $event .= ' <fg=bright-blue>(ShouldBroadcast)</>';
+            $event .= ' <fg=blue>(ShouldBroadcast)</>';
         }
 
         return $event;
@@ -147,7 +148,8 @@ class EventListCommand extends Command
         $listener = implode('@', $listener);
 
         if (in_array(ShouldQueue::class, $interfaces)) {
-            $listener .= ' <fg=bright-blue>(ShouldQueue)</>';
+            // $listener .= ' <fg=bright-blue>(ShouldQueue)</>';
+            $listener .= ' <fg=blue>(ShouldQueue)</>';
         }
 
         return $listener;
@@ -181,7 +183,7 @@ class EventListCommand extends Command
         }
 
         return $events->filter(
-            fn ($listeners, $event) => str_contains($event, $eventName)
+            function ($listeners, $event) use ($eventName) { return str_contains($event, $eventName); }
         );
     }
 

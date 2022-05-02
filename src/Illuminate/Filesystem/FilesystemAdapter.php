@@ -868,6 +868,10 @@ class FilesystemAdapter implements CloudFilesystemContract
     {
         $contents = $this->driver->listContents(isset($directory) ? $directory : '', $recursive);
 
+        usort($contents, function ($a, $b) {
+            return strcmp($a['path'], $b['path']);
+        });
+
         return $this->filterContentsByType($contents, 'file');
 
         // return $this->driver->listContents(isset($directory) ? $directory : '', $recursive)

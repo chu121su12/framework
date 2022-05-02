@@ -10,12 +10,12 @@ use Orchestra\Testbench\TestCase;
 
 class EventListCommandTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
         $this->dispatcher = new Dispatcher();
-        EventListCommand::resolveEventsUsing(fn () => $this->dispatcher);
+        EventListCommand::resolveEventsUsing(function () { return $this->dispatcher; });
     }
 
     public function testDisplayEmptyList()
@@ -31,7 +31,7 @@ class EventListCommandTest extends TestCase
         $this->dispatcher->listen(ExampleEvent::class, ExampleListener::class);
         $this->dispatcher->listen(ExampleEvent::class, ExampleQueueListener::class);
         $this->dispatcher->listen(ExampleBroadcastEvent::class, ExampleBroadcastListener::class);
-        $this->dispatcher->listen(ExampleEvent::class, fn () => '');
+        $this->dispatcher->listen(ExampleEvent::class, function () { return ''; });
         $closureLineNumber = __LINE__ - 1;
         $unixFilePath = str_replace('\\', '/', __FILE__);
 
@@ -59,7 +59,7 @@ class EventListCommandTest extends TestCase
             ->expectsOutputToContain('ExampleEvent');
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 

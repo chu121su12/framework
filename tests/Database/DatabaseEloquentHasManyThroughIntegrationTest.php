@@ -207,17 +207,17 @@ class DatabaseEloquentHasManyThroughIntegrationTest extends TestCase
                                  ->users()->create(['id' => 1, 'email' => 'taylorotwell@gmail.com', 'country_short' => 'us'])
                                  ->posts()->create(['id' => 1, 'title' => 'A title', 'body' => 'A body', 'email' => 'taylorotwell@gmail.com']);
 
-        $result = HasManyThroughTestCountry::first()->posts()->findOr(1, fn () => 'callback result');
+        $result = HasManyThroughTestCountry::first()->posts()->findOr(1, function () { return 'callback result'; });
         $this->assertInstanceOf(HasManyThroughTestPost::class, $result);
         $this->assertSame(1, $result->id);
         $this->assertSame('A title', $result->title);
 
-        $result = HasManyThroughTestCountry::first()->posts()->findOr(1, ['posts.id'], fn () => 'callback result');
+        $result = HasManyThroughTestCountry::first()->posts()->findOr(1, ['posts.id'], function () { return 'callback result'; });
         $this->assertInstanceOf(HasManyThroughTestPost::class, $result);
         $this->assertSame(1, $result->id);
         $this->assertNull($result->title);
 
-        $result = HasManyThroughTestCountry::first()->posts()->findOr(2, fn () => 'callback result');
+        $result = HasManyThroughTestCountry::first()->posts()->findOr(2, function () { return 'callback result'; });
         $this->assertSame('callback result', $result);
     }
 
@@ -230,21 +230,21 @@ class DatabaseEloquentHasManyThroughIntegrationTest extends TestCase
                                      ['id' => 2, 'title' => 'Another title', 'body' => 'Another body', 'email' => 'taylorotwell@gmail.com'],
                                  ]);
 
-        $result = HasManyThroughTestCountry::first()->posts()->findOr([1, 2], fn () => 'callback result');
+        $result = HasManyThroughTestCountry::first()->posts()->findOr([1, 2], function () { return 'callback result'; });
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertSame(1, $result[0]->id);
         $this->assertSame(2, $result[1]->id);
         $this->assertSame('A title', $result[0]->title);
         $this->assertSame('Another title', $result[1]->title);
 
-        $result = HasManyThroughTestCountry::first()->posts()->findOr([1, 2], ['posts.id'], fn () => 'callback result');
+        $result = HasManyThroughTestCountry::first()->posts()->findOr([1, 2], ['posts.id'], function () { return 'callback result'; });
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertSame(1, $result[0]->id);
         $this->assertSame(2, $result[1]->id);
         $this->assertNull($result[0]->title);
         $this->assertNull($result[1]->title);
 
-        $result = HasManyThroughTestCountry::first()->posts()->findOr([1, 2, 3], fn () => 'callback result');
+        $result = HasManyThroughTestCountry::first()->posts()->findOr([1, 2, 3], function () { return 'callback result'; });
         $this->assertSame('callback result', $result);
     }
 
@@ -257,21 +257,21 @@ class DatabaseEloquentHasManyThroughIntegrationTest extends TestCase
                                      ['id' => 2, 'title' => 'Another title', 'body' => 'Another body', 'email' => 'taylorotwell@gmail.com'],
                                  ]);
 
-        $result = HasManyThroughTestCountry::first()->posts()->findOr(new Collection([1, 2]), fn () => 'callback result');
+        $result = HasManyThroughTestCountry::first()->posts()->findOr(new Collection([1, 2]), function () { return 'callback result'; });
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertSame(1, $result[0]->id);
         $this->assertSame(2, $result[1]->id);
         $this->assertSame('A title', $result[0]->title);
         $this->assertSame('Another title', $result[1]->title);
 
-        $result = HasManyThroughTestCountry::first()->posts()->findOr(new Collection([1, 2]), ['posts.id'], fn () => 'callback result');
+        $result = HasManyThroughTestCountry::first()->posts()->findOr(new Collection([1, 2]), ['posts.id'], function () { return 'callback result'; });
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertSame(1, $result[0]->id);
         $this->assertSame(2, $result[1]->id);
         $this->assertNull($result[0]->title);
         $this->assertNull($result[1]->title);
 
-        $result = HasManyThroughTestCountry::first()->posts()->findOr(new Collection([1, 2, 3]), fn () => 'callback result');
+        $result = HasManyThroughTestCountry::first()->posts()->findOr(new Collection([1, 2, 3]), function () { return 'callback result'; });
         $this->assertSame('callback result', $result);
     }
 

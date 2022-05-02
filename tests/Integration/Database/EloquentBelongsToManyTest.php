@@ -418,17 +418,17 @@ class EloquentBelongsToManyTest extends DatabaseTestCase
         $post = Post::create(['title' => Str::random()]);
         $post->tags()->create(['name' => Str::random()]);
 
-        $result = $post->tags()->findOr(1, fn () => 'callback result');
+        $result = $post->tags()->findOr(1, function () { return 'callback result'; });
         $this->assertInstanceOf(Tag::class, $result);
         $this->assertSame(1, $result->id);
         $this->assertNotNull($result->name);
 
-        $result = $post->tags()->findOr(1, ['id'], fn () => 'callback result');
+        $result = $post->tags()->findOr(1, ['id'], function () { return 'callback result'; });
         $this->assertInstanceOf(Tag::class, $result);
         $this->assertSame(1, $result->id);
         $this->assertNull($result->name);
 
-        $result = $post->tags()->findOr(2, fn () => 'callback result');
+        $result = $post->tags()->findOr(2, function () { return 'callback result'; });
         $this->assertSame('callback result', $result);
     }
 
@@ -440,21 +440,21 @@ class EloquentBelongsToManyTest extends DatabaseTestCase
             ['name' => Str::random()],
         ]);
 
-        $result = $post->tags()->findOr([1, 2], fn () => 'callback result');
+        $result = $post->tags()->findOr([1, 2], function () { return 'callback result'; });
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertSame(1, $result[0]->id);
         $this->assertSame(2, $result[1]->id);
         $this->assertNotNull($result[0]->name);
         $this->assertNotNull($result[1]->name);
 
-        $result = $post->tags()->findOr([1, 2], ['id'], fn () => 'callback result');
+        $result = $post->tags()->findOr([1, 2], ['id'], function () { return 'callback result'; });
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertSame(1, $result[0]->id);
         $this->assertSame(2, $result[1]->id);
         $this->assertNull($result[0]->name);
         $this->assertNull($result[1]->name);
 
-        $result = $post->tags()->findOr([1, 2, 3], fn () => 'callback result');
+        $result = $post->tags()->findOr([1, 2, 3], function () { return 'callback result'; });
         $this->assertSame('callback result', $result);
     }
 
@@ -466,21 +466,21 @@ class EloquentBelongsToManyTest extends DatabaseTestCase
             ['name' => Str::random()],
         ]);
 
-        $result = $post->tags()->findOr(new Collection([1, 2]), fn () => 'callback result');
+        $result = $post->tags()->findOr(new Collection([1, 2]), function () { return 'callback result'; });
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertSame(1, $result[0]->id);
         $this->assertSame(2, $result[1]->id);
         $this->assertNotNull($result[0]->name);
         $this->assertNotNull($result[1]->name);
 
-        $result = $post->tags()->findOr(new Collection([1, 2]), ['id'], fn () => 'callback result');
+        $result = $post->tags()->findOr(new Collection([1, 2]), ['id'], function () { return 'callback result'; });
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertSame(1, $result[0]->id);
         $this->assertSame(2, $result[1]->id);
         $this->assertNull($result[0]->name);
         $this->assertNull($result[1]->name);
 
-        $result = $post->tags()->findOr(new Collection([1, 2, 3]), fn () => 'callback result');
+        $result = $post->tags()->findOr(new Collection([1, 2, 3]), function () { return 'callback result'; });
         $this->assertSame('callback result', $result);
     }
 

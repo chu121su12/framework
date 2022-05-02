@@ -14,6 +14,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Bus;
 use Orchestra\Testbench\TestCase;
 
+/**
+ * @requires extension pdo_sqlite
+ */
 class UniqueJobTest extends TestCase
 {
     protected function getEnvironmentSetUp($app)

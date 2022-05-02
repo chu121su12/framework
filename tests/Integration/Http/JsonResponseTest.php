@@ -16,6 +16,14 @@ class JsonResponseTest_testResponseWithInvalidJsonThrowsException_class implemen
                 }
             }
 
+class JsonResponseTest_testResponseSetDataPassesWithPriorJsonErrors_class implements Jsonable
+        {
+            public function toJson($options = 0)/*: string*/
+            {
+                return '{}';
+            }
+        }
+
 class JsonResponseTest extends TestCase
 {
     public function testResponseWithInvalidJsonThrowsException()
@@ -39,13 +47,7 @@ class JsonResponseTest extends TestCase
         // Trigger json_last_error() to have a non-zero value...
         json_encode(['a' => acos(2)]);
 
-        $response->setData(new class implements Jsonable
-        {
-            public function toJson($options = 0): string
-            {
-                return '{}';
-            }
-        });
+        $response->setData(new JsonResponseTest_testResponseSetDataPassesWithPriorJsonErrors_class);
 
         $this->assertJson($response->getContent());
     }

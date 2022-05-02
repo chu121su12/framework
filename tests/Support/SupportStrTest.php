@@ -738,6 +738,9 @@ class SupportStrTest extends TestCase
         );
     }
 
+    /**
+     * @requires PHP >= 7.0
+     */
     public function testWordCount()
     {
         $this->assertEquals(2, Str::wordCount('Hello, world!'));

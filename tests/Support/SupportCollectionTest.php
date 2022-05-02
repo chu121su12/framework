@@ -5213,7 +5213,7 @@ class TestJsonSerializeObject implements JsonSerializable
 
 class TestJsonSerializeToStringObject implements JsonSerializable
 {
-    public function jsonSerialize(): string
+    public function jsonSerialize()/*: string*/
     {
         return 'foobar';
     }

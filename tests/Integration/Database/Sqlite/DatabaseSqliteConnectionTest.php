@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Tests\Integration\Database\DatabaseTestCase;
 
+/**
+ * @requires PHP >= 7.0
+ */
 class DatabaseSqliteConnectionTest extends DatabaseTestCase
 {
     protected function getEnvironmentSetUp($app)

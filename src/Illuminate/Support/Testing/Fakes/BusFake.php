@@ -357,7 +357,7 @@ class BusFake implements QueueingDispatcher
 
         PHPUnit::assertTrue(
             $this->dispatched($command, $callback)->filter(
-                fn ($job) => $job->chained == $chain
+                function ($job) use ($chain) { return $job->chained == $chain; }
             )->isNotEmpty(),
             'The expected chain was not dispatched.'
         );
@@ -375,10 +375,10 @@ class BusFake implements QueueingDispatcher
     {
         $matching = $this->dispatched($command, $callback)->map->chained->map(function ($chain) {
             return collect($chain)->map(
-                fn ($job) => get_class(unserialize($job))
+                function ($job) { return get_class(unserialize($job)); }
             );
         })->filter(
-            fn ($chain) => $chain->all() === $expectedChain
+            function ($chain) use ($expectedChain) { return $chain->all() === $expectedChain; }
         );
 
         PHPUnit::assertTrue(
@@ -439,7 +439,7 @@ class BusFake implements QueueingDispatcher
             return collect();
         }
 
-        $callback = $callback ?: fn () => true;
+        $callback = $callback ?: function () { return true; };
 
         return collect($this->commands[$command])->filter(function ($command) use ($callback) {
             return $callback($command);
@@ -461,7 +461,7 @@ class BusFake implements QueueingDispatcher
             return collect();
         }
 
-        $callback = $callback ?: fn () => true;
+        $callback = $callback ?: function () { return true; };
 
         return collect($this->commandsSync[$command])->filter(function ($command) use ($callback) {
             return $callback($command);
@@ -483,7 +483,7 @@ class BusFake implements QueueingDispatcher
             return collect();
         }
 
-        $callback = $callback ?: fn () => true;
+        $callback = $callback ?: function () { return true; };
 
         return collect($this->commandsAfterResponse[$command])->filter(function ($command) use ($callback) {
             return $callback($command);
