@@ -68,7 +68,7 @@ class HandleExceptions
     public function handleError($level, $message, $file = '', $line = 0, $context = [])
     {
         if ($this->isDeprecation($level)) {
-            return $this->handleDeprecation($message, $file, $line);
+            return $this->handleDeprecationError($message, $file, $line, $level);
         }
 
         if (error_reporting() & $level) {
@@ -83,8 +83,24 @@ class HandleExceptions
      * @param  string  $file
      * @param  int  $line
      * @return void
+     *
+     * @deprecated Use handleDeprecationError instead.
      */
     public function handleDeprecation($message, $file, $line)
+    {
+        $this->handleDeprecationError($message, $file, $line);
+    }
+
+    /**
+     * Reports a deprecation to the "deprecations" logger.
+     *
+     * @param  string  $message
+     * @param  string  $file
+     * @param  int  $line
+     * @param  int  $level
+     * @return void
+     */
+    public function handleDeprecationError($message, $file, $line, $level = E_DEPRECATED)
     {
         if (! class_exists(LogManager::class)
             || ! static::$app->hasBeenBootstrapped()
@@ -101,10 +117,16 @@ class HandleExceptions
 
         $this->ensureDeprecationLoggerIsConfigured();
 
-        with($logger->channel('deprecations'), function ($log) use ($message, $file, $line) {
-            $log->warning(sprintf('%s in %s on line %s',
-                $message, $file, $line
-            ));
+        $options = static::$app['config']->get('logging.deprecations') ?? [];
+
+        with($logger->channel('deprecations'), function ($log) use ($message, $file, $line, $level, $options) {
+            if ($options['trace'] ?? false) {
+                $log->warning((string) new ErrorException($message, 0, $level, $file, $line));
+            } else {
+                $log->warning(sprintf('%s in %s on line %s',
+                    $message, $file, $line
+                ));
+            }
         });
     }
 
@@ -122,9 +144,9 @@ class HandleExceptions
 
             $this->ensureNullLogDriverIsConfigured();
 
-            $loggingDeprecationsDriver = $config->get('logging.deprecations');
+            $options = $config->get('logging.deprecations');
 
-            $driver = isset($loggingDeprecationsDriver) ? $loggingDeprecationsDriver : 'null';
+            $driver = is_array($options) ? $options['channel'] : (isset($options) ? $options : 'null');
 
             $config->set('logging.channels.deprecations', $config->get("logging.channels.{$driver}"));
         });

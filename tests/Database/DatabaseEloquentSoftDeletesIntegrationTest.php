@@ -44,6 +44,7 @@ class DatabaseEloquentSoftDeletesIntegrationTest extends TestCase
     {
         $this->schema()->create('users', function ($table) {
             $table->increments('id');
+            $table->integer('user_id')->nullable(); // circular reference to parent User
             $table->integer('group_id')->nullable();
             $table->string('email')->unique();
             $table->timestamps();
@@ -868,6 +869,20 @@ class DatabaseEloquentSoftDeletesIntegrationTest extends TestCase
         $this->assertNull($comment->owner);
     }
 
+    public function testSelfReferencingRelationshipWithSoftDeletes()
+    {
+        /*
+         * https://github.com/laravel/framework/issues/42075
+         */
+        [$taylor, $abigail] = $this->createUsers();
+
+        $this->assertCount(1, $abigail->self_referencing);
+        $this->assertTrue($abigail->self_referencing->first()->is($taylor));
+
+        $this->assertCount(0, $taylor->self_referencing);
+        $this->assertEquals(1, SoftDeletesTestUser::whereHas('self_referencing')->count());
+    }
+
     /**
      * Helpers...
      *
@@ -875,7 +890,7 @@ class DatabaseEloquentSoftDeletesIntegrationTest extends TestCase
      */
     protected function createUsers()
     {
-        $taylor = SoftDeletesTestUser::create(['id' => 1, 'email' => 'taylorotwell@gmail.com']);
+        $taylor = SoftDeletesTestUser::create(['id' => 1, 'email' => 'taylorotwell@gmail.com', 'user_id' => 2]);
         $abigail = SoftDeletesTestUser::create(['id' => 2, 'email' => 'abigailotwell@gmail.com']);
 
         $taylor->delete();
@@ -927,6 +942,11 @@ class SoftDeletesTestUser extends Eloquent
 
     protected $table = 'users';
     protected $guarded = [];
+
+    public function self_referencing()
+    {
+        return $this->hasMany(SoftDeletesTestUser::class, 'user_id')->onlyTrashed();
+    }
 
     public function posts()
     {

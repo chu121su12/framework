@@ -18,7 +18,7 @@ class AssertableJsonString implements ArrayAccess, Countable
     /**
      * The original encoded json.
      *
-     * @var \Illuminate\Contracts\Support\Jsonable|\JsonSerializable|array
+     * @var \Illuminate\Contracts\Support\Jsonable|\JsonSerializable|array|string
      */
     public $json;
 

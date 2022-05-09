@@ -10,17 +10,20 @@ use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler;
+use Illuminate\Foundation\Testing\Concerns\InteractsWithExceptionHandling;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Support\MessageBag;
+use Illuminate\Testing\Assert;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Validator;
 use InvalidArgumentException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery as m;
 use OutOfRangeException;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -57,8 +60,9 @@ class FoundationExceptionsHandlerTest_testItReturnsNullIfNoErrorViewExists exten
 
 class FoundationExceptionsHandlerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration,
-        \PHPUnit\Framework\PhpUnit8Assert;
+    use \PHPUnit\Framework\PhpUnit8Assert;
+    use MockeryPHPUnitIntegration;
+    use InteractsWithExceptionHandling;
 
     protected $config;
 
@@ -373,6 +377,54 @@ class FoundationExceptionsHandlerTest extends TestCase
         $handler = new FoundationExceptionsHandlerTest_testItReturnsNullIfNoErrorViewExists($this->container);
 
         $this->assertNull($handler->getErrorView(new HttpException(404)));
+    }
+
+    public function testAssertExceptionIsThrown()
+    {
+        $this->assertThrows(function () {
+            throw new Exception;
+        });
+        $this->assertThrows(function () {
+            throw new CustomException;
+        });
+        $this->assertThrows(function () {
+            throw new CustomException;
+        }, CustomException::class);
+        $this->assertThrows(function () {
+            throw new Exception('Some message.');
+        }, expectedMessage: 'Some message.');
+        $this->assertThrows(function () {
+            throw new CustomException('Some message.');
+        }, expectedMessage: 'Some message.');
+        $this->assertThrows(function () {
+            throw new CustomException('Some message.');
+        }, expectedClass: CustomException::class, expectedMessage: 'Some message.');
+
+        try {
+            $this->assertThrows(function () {
+                throw new Exception;
+            }, CustomException::class);
+            $testFailed = true;
+        } catch (AssertionFailedError $exception) {
+            $testFailed = false;
+        }
+
+        if ($testFailed) {
+            Assert::fail('assertThrows failed: non matching exceptions are thrown.');
+        }
+
+        try {
+            $this->assertThrows(function () {
+                throw new Exception('Some message.');
+            }, expectedClass: Exception::class, expectedMessage: 'Other message.');
+            $testFailed = true;
+        } catch (AssertionFailedError $exception) {
+            $testFailed = false;
+        }
+
+        if ($testFailed) {
+            Assert::fail('assertThrows failed: non matching message are thrown.');
+        }
     }
 }
 
