@@ -215,7 +215,9 @@ class NotificationSender
                 $delay = $notification->delay;
 
                 if (method_exists($notification, 'withDelay')) {
-                    $delay = $notification->withDelay($notifiable, $channel) ?? null;
+                    $notificationDelay = $notification->withDelay($notifiable, $channel);
+
+                    $delay = isset($notificationDelay) ? $notificationDelay : null;
                 }
 
                 $this->bus->dispatch(

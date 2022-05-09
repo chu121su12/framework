@@ -118,12 +118,12 @@ class ValidationPasswordRuleTest extends TestCase
         $this->passes(Password::min(2)->symbols(), ['n^d', 'd^!', 'âè$', '金廿土弓竹中；']);
     }
 
+    /**
+     * @requires PHP 7.0
+     * @requires OS Linux|Darwin
+     */
     public function testUncompromised()
     {
-        if (\version_compare(\PHP_VERSION, '7.0.0', '<') && windows_os()) {
-            $this->markTestSkipped('This PHP version may throw SSL error');
-        }
-
         $this->fails(Password::min(2)->uncompromised(), [
             '123456',
             'password',
@@ -154,10 +154,6 @@ class ValidationPasswordRuleTest extends TestCase
 
     public function testMessagesOrder()
     {
-        if (\version_compare(\PHP_VERSION, '7.0.0', '<') && windows_os()) {
-            $this->markTestSkipped('This PHP version may throw SSL error');
-        }
-
         $makeRules = function () {
             return ['required', Password::min(8)->mixedCase()->numbers()];
         };
@@ -214,9 +210,9 @@ class ValidationPasswordRuleTest extends TestCase
             'The my password must contain at least one symbol.',
         ]);
 
-        $this->fails($makeRules(), ['abcabcabc!'], [
-            'The given my password has appeared in a data leak. Please choose a different my password.',
-        ]);
+        // $this->fails($makeRules(), ['abcabcabc!'], [
+        //     'The given my password has appeared in a data leak. Please choose a different my password.',
+        // ]);
 
         $v = new Validator(
             resolve('translator'),
@@ -230,6 +226,21 @@ class ValidationPasswordRuleTest extends TestCase
             ['my_password' => ['validation.confirmed']],
             $v->messages()->toArray()
         );
+    }
+
+    /**
+     * @requires PHP 7.0
+     * @requires OS Linux|Darwin
+     */
+    public function testMessagesOrderApi()
+    {
+        $makeRules = function () {
+            return ['required', Password::min(8)->mixedCase()->numbers()];
+        };
+
+        $this->fails($makeRules(), ['abcabcabc!'], [
+            'The given my password has appeared in a data leak. Please choose a different my password.',
+        ]);
     }
 
     public function testItCanUseDefault()

@@ -270,11 +270,17 @@ class FileStore implements Store, LockProvider
         }
 
         try {
+            set_error_handler(function($errno, $errstr, $errfile, $errline ) {
+                throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
+            });
+
             $data = unserialize(substr($contents, 10));
         } catch (Exception $e) {
             $this->forget($key);
 
             return $this->emptyPayload();
+        } finally {
+            restore_error_handler();
         }
 
         // Next, we'll extract the number of seconds that are remaining for a cache
@@ -318,7 +324,17 @@ class FileStore implements Store, LockProvider
     {
         $time = $this->availableAt($seconds);
 
-        return $seconds === 0 || $time > 9999999999 ? 9999999999 : $time;
+        $max = 9999999999;
+
+        if (\strlen(\decbin(~0)) < 64) {
+            $max = (2 ** 31) - 1;
+
+            if ($seconds > $max && $time < 0) {
+                $time = $max + 1;
+            }
+        }
+
+        return $seconds === 0 || $time > $max ? $max : $time;
     }
 
     /**

@@ -23,18 +23,10 @@ use Illuminate\Support\Str;
 use JsonSerializable;
 use Mockery as m;
 use OutOfBoundsException;
-// use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Component\VarDumper\VarDumper;
-
-if (!class_exists('Illuminate\Tests\Http\AssertionFailedError')) {
-    if (class_exists('PHPUnit_Framework_AssertionFailedError')) {
-        class_alias(\PHPUnit_Framework_AssertionFailedError::class, 'Illuminate\Tests\Http\AssertionFailedError');
-    } else {
-        class_alias(\PHPUnit\Framework\AssertionFailedError::class, 'Illuminate\Tests\Http\AssertionFailedError');
-    }
-}
 
 class HttpClientTest_testCanSendJsonSerializableData_class implements JsonSerializable
         {

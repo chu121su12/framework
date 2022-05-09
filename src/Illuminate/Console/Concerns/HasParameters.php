@@ -21,6 +21,13 @@ trait HasParameters
             if ($arguments instanceof InputArgument) {
                 $this->getDefinition()->addArgument($arguments);
             } else {
+                $arguments = backport_named_arguments([
+                    'name' => null,
+                    'mode' => null,
+                    'description' => '',
+                    'default' => null,
+                ], $arguments);
+
                 $this->addArgument(...$arguments);
             }
         }
@@ -29,6 +36,14 @@ trait HasParameters
             if ($options instanceof InputOption) {
                 $this->getDefinition()->addOption($options);
             } else {
+                $options = backport_named_arguments([
+                    'name' => null,
+                    'shortcut' => null,
+                    'mode' => null,
+                    'description' => '',
+                    'default' => null,
+                ], $options);
+
                 $this->addOption(...$options);
             }
         }

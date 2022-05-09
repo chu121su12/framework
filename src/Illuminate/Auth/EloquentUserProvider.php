@@ -107,7 +107,7 @@ class EloquentUserProvider implements UserProvider
     {
         $credentials = array_filter(
             $credentials,
-            fn ($key) => ! str_contains($key, 'password'),
+            function ($key) { return ! str_contains($key, 'password'); },
             ARRAY_FILTER_USE_KEY
         );
 

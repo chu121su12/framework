@@ -172,13 +172,28 @@ trait InteractsWithExceptionHandling
      * @param  string|null  $expectedMessage
      * @return $this
      */
-    protected function assertThrows(Closure $test, string $expectedClass = Throwable::class, ?string $expectedMessage = null)
+    protected function assertThrows(Closure $test, /*string */$expectedClass = \Exception::class, /*?string */$expectedMessage = null)
     {
+        if (func_num_args() === 1 && class_exists('Throwable')) {
+            $expectedClass = Throwable::class;
+        } elseif ($expectedClass === null) {
+            $expectedClass = class_exists('Throwable') ? Throwable::class : \Exception::class;
+        }
+
+        $expectedClass = cast_to_string($expectedClass);
+
+        $expectedMessage = cast_to_string($expectedMessage, null);
+
         try {
             $test();
 
             $thrown = false;
+        } catch (\Exception $exception) {
+        } catch (\Error $exception) {
         } catch (Throwable $exception) {
+        }
+
+        if (isset($exception)) {
             $thrown = $exception instanceof $expectedClass;
 
             $actualMessage = $exception->getMessage();

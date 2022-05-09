@@ -117,10 +117,12 @@ class HandleExceptions
 
         $this->ensureDeprecationLoggerIsConfigured();
 
-        $options = static::$app['config']->get('logging.deprecations') ?? [];
+        $loggingDeprecations = static::$app['config']->get('logging.deprecations');
+
+        $options = isset($loggingDeprecations) ? $loggingDeprecations : [];
 
         with($logger->channel('deprecations'), function ($log) use ($message, $file, $line, $level, $options) {
-            if ($options['trace'] ?? false) {
+            if (isset($options['trace']) ? $options['trace'] : false) {
                 $log->warning((string) new ErrorException($message, 0, $level, $file, $line));
             } else {
                 $log->warning(sprintf('%s in %s on line %s',

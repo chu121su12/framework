@@ -74,20 +74,34 @@ class HandleExceptionsTest extends TestCase
             'trace' => true,
         ]);
 
+        $regexps = [
+            '#ErrorException#',
+            '#str_contains\(\): Passing null to parameter \#2 \(\$needle\) of type string is deprecated#',
+            '#in /home/user/laravel/routes/web\.php:17#',
+            '#Stack trace:#',
+            '#\#0 .*helpers.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions.*#',
+            '#\#1 .*HandleExceptions\.php\(.*\): with.*#',
+            '#\#2 .*HandleExceptions\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleDeprecation.*#',
+            '#\#3 .*HandleExceptionsTest\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleError.*#',
+        ];
+
         $logger->shouldReceive('channel')->with('deprecations')->andReturnSelf();
         $logger->shouldReceive('warning')->with(
-            m::on(fn (string $message) => (bool) preg_match(
-                <<<REGEXP
-                #ErrorException: str_contains\(\): Passing null to parameter \#2 \(\\\$needle\) of type string is deprecated in /home/user/laravel/routes/web\.php:17
-                Stack trace:
-                \#0 .*helpers.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions.*
-                \#1 .*HandleExceptions\.php\(.*\): with.*
-                \#2 .*HandleExceptions\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleDeprecation.*
-                \#3 .*HandleExceptionsTest\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleError.*
-                [\s\S]*#i
-                REGEXP,
-                $message
-            ))
+            m::on(function (/*string */$message) use ($regexps) {
+                $message = cast_to_string($message);
+
+                foreach ($regexps as $regexp) {
+                    if (!preg_match(
+                        $regexp,
+                        $message
+                    )) {
+                        var_dump($regexp);
+                        return false;
+                    }
+                }
+
+                return true;
+            })
         );
 
         $this->handleExceptions->handleError(
@@ -128,20 +142,34 @@ class HandleExceptionsTest extends TestCase
             'trace' => true,
         ]);
 
+        $regexps = [
+            '#ErrorException#',
+            '#str_contains\(\): Passing null to parameter \#2 \(\$needle\) of type string is deprecated#',
+            '#in /home/user/laravel/routes/web\.php:17#',
+            '#Stack trace:#',
+            '#\#0 .*helpers.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions.*#',
+            '#\#1 .*HandleExceptions\.php\(.*\): with.*#',
+            '#\#2 .*HandleExceptions\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleDeprecation.*#',
+            '#\#3 .*HandleExceptionsTest\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleError.*#',
+        ];
+
         $logger->shouldReceive('channel')->with('deprecations')->andReturnSelf();
         $logger->shouldReceive('warning')->with(
-            m::on(fn (string $message) => (bool) preg_match(
-                <<<REGEXP
-                #ErrorException: str_contains\(\): Passing null to parameter \#2 \(\\\$needle\) of type string is deprecated in /home/user/laravel/routes/web\.php:17
-                Stack trace:
-                \#0 .*helpers.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions.*
-                \#1 .*HandleExceptions\.php\(.*\): with.*
-                \#2 .*HandleExceptions\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleDeprecation.*
-                \#3 .*HandleExceptionsTest\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleError.*
-                [\s\S]*#i
-                REGEXP,
-                $message
-            ))
+            m::on(function (/*string */$message) use ($regexps) {
+                $message = cast_to_string($message);
+
+                foreach ($regexps as $regexp) {
+                    if (!preg_match(
+                        $regexp,
+                        $message
+                    )) {
+                        var_dump($regexp);
+                        return false;
+                    }
+                }
+
+                return true;
+            })
         );
 
         $this->handleExceptions->handleError(

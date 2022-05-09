@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentLocalScopesTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -18,7 +18,7 @@ class DatabaseEloquentLocalScopesTest extends TestCase
         ])->bootEloquent();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 

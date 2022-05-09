@@ -783,8 +783,12 @@ trait QueriesRelationships
      * @param  string  $to
      * @return array
      */
-    protected function requalifyWhereTables(array $wheres, string $from, string $to): array
+    protected function requalifyWhereTables(array $wheres, /*string */$from, /*string */$to)/*: array*/
     {
+        $to = cast_to_string($to);
+
+        $from = cast_to_string($from);
+
         return collect($wheres)->map(function ($where) use ($from, $to) {
             return collect($where)->map(function ($value) use ($from, $to) {
                 return str_starts_with($value, $from.'.')

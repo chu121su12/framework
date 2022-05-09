@@ -309,3 +309,22 @@ if (! \function_exists('backport_call_callable')) {
         throw new Error(sprintf('Call to undefined function %s()', $callback));
     }
 }
+
+if (! \function_exists('backport_named_arguments')) {
+    function backport_named_arguments($placeholders, array $arguments)
+    {
+        if (\Illuminate\Support\Arr::isList($arguments)) {
+            return $arguments;
+        }
+
+        $sortedArguments = [];
+
+        foreach ($placeholders as $key => $default) {
+            $sortedArguments[$key] = \array_key_exists($key, $arguments) 
+                ? $arguments[$key] 
+                : $default;
+        }
+
+        return \array_values($sortedArguments);
+    }
+}

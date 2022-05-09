@@ -9,6 +9,8 @@ use PHPUnit\Framework\TestCase;
 
 class ValidationRuleParserTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     public function testConditionalRulesAreProperlyExpandedAndFiltered()
     {
         $rules = ValidationRuleParser::filterConditionalRules([

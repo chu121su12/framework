@@ -739,7 +739,7 @@ class SupportStrTest extends TestCase
     }
 
     /**
-     * @requires PHP >= 7.0
+     * @requires PHP 7.0
      */
     public function testWordCount()
     {

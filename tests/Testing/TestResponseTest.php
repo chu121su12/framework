@@ -23,25 +23,11 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Testing\TestResponse;
 use JsonSerializable;
 use Mockery as m;
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Cookie;
-
-if (!class_exists('Illuminate\Tests\Testing\AssertionFailedError')) {
-    if (class_exists('PHPUnit_Framework_AssertionFailedError')) {
-        class_alias(\PHPUnit_Framework_AssertionFailedError::class, 'Illuminate\Tests\Testing\AssertionFailedError');
-    } else {
-        class_alias(\PHPUnit\Framework\AssertionFailedError::class, 'Illuminate\Tests\Testing\AssertionFailedError');
-    }
-}
-
-if (!class_exists('Illuminate\Tests\Testing\ExpectationFailedException')) {
-    if (class_exists('PHPUnit_Framework_ExpectationFailedException')) {
-        class_alias(\PHPUnit_Framework_ExpectationFailedException::class, 'Illuminate\Tests\Testing\ExpectationFailedException');
-    } else {
-        class_alias(\PHPUnit\Framework\ExpectationFailedException::class, 'Illuminate\Tests\Testing\ExpectationFailedException');
-    }
-}
 
 class TestResponseTest_testAssertViewHasModel_class extends Model 
         {

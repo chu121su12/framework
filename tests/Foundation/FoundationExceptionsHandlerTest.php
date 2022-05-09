@@ -392,13 +392,13 @@ class FoundationExceptionsHandlerTest extends TestCase
         }, CustomException::class);
         $this->assertThrows(function () {
             throw new Exception('Some message.');
-        }, expectedMessage: 'Some message.');
+        }, null, /*expectedMessage: */'Some message.');
         $this->assertThrows(function () {
             throw new CustomException('Some message.');
-        }, expectedMessage: 'Some message.');
+        }, null, /*expectedMessage: */'Some message.');
         $this->assertThrows(function () {
             throw new CustomException('Some message.');
-        }, expectedClass: CustomException::class, expectedMessage: 'Some message.');
+        }, /*expectedClass: */CustomException::class, /*expectedMessage: */'Some message.');
 
         try {
             $this->assertThrows(function () {
@@ -416,7 +416,7 @@ class FoundationExceptionsHandlerTest extends TestCase
         try {
             $this->assertThrows(function () {
                 throw new Exception('Some message.');
-            }, expectedClass: Exception::class, expectedMessage: 'Other message.');
+            }, /*expectedClass: */Exception::class, /*expectedMessage: */'Other message.');
             $testFailed = true;
         } catch (AssertionFailedError $exception) {
             $testFailed = false;

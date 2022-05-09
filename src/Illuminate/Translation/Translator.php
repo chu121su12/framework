@@ -229,8 +229,8 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
         $shouldReplace = [];
 
         foreach ($replace as $key => $value) {
-            $shouldReplace[':'.Str::ucfirst($key ?? '')] = Str::ucfirst($value ?? '');
-            $shouldReplace[':'.Str::upper($key ?? '')] = Str::upper($value ?? '');
+            $shouldReplace[':'.Str::ucfirst(isset($key) ? $key : '')] = Str::ucfirst(isset($value) ? $value : '');
+            $shouldReplace[':'.Str::upper(isset($key) ? $key : '')] = Str::upper(isset($value) ? $value : '');
             $shouldReplace[':'.$key] = $value;
         }
 
@@ -339,7 +339,7 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
     {
         $locales = array_filter([$locale ?: $this->locale, $this->fallback]);
 
-        return call_user_func($this->determineLocalesUsing ?: fn () => $locales, $locales);
+        return call_user_func($this->determineLocalesUsing ?: function () use ($locales) { return $locales; }, $locales);
     }
 
     /**

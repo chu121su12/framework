@@ -874,7 +874,7 @@ class DatabaseEloquentSoftDeletesIntegrationTest extends TestCase
         /*
          * https://github.com/laravel/framework/issues/42075
          */
-        [$taylor, $abigail] = $this->createUsers();
+        list($taylor, $abigail) = $this->createUsers();
 
         $this->assertCount(1, $abigail->self_referencing);
         $this->assertTrue($abigail->self_referencing->first()->is($taylor));

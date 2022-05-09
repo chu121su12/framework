@@ -348,8 +348,6 @@ class FilesystemAdapter implements CloudFilesystemContract
 
         if (isset($e)) {
             throw_if($this->throwsExceptions(), $e);
-
-            return false;
         }
     }
 
@@ -454,6 +452,8 @@ class FilesystemAdapter implements CloudFilesystemContract
 
             return false;
         }
+
+        return true;
     }
 
     /**
@@ -533,6 +533,8 @@ class FilesystemAdapter implements CloudFilesystemContract
 
             return false;
         }
+
+        return true;
     }
 
     /**
@@ -618,6 +620,8 @@ class FilesystemAdapter implements CloudFilesystemContract
 
             return false;
         }
+
+        return true;
     }
 
     /**
@@ -642,6 +646,8 @@ class FilesystemAdapter implements CloudFilesystemContract
 
             return false;
         }
+
+        return true;
     }
 
     /**
@@ -701,6 +707,10 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function writeStream($path, $resource, array $options = [])
     {
+        if (! is_resource($resource)) {
+            throw new \InvalidArgumentException;
+        }
+
         try {
             $this->driver->writeStream($path, $resource, $options);
         } catch (UnableToWriteFile $e1) {
@@ -952,6 +962,8 @@ class FilesystemAdapter implements CloudFilesystemContract
 
             return false;
         }
+
+        return true;
     }
 
     /**
@@ -975,6 +987,8 @@ class FilesystemAdapter implements CloudFilesystemContract
 
             return false;
         }
+
+        return true;
     }
 
     /**

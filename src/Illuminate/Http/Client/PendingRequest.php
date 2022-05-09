@@ -602,7 +602,7 @@ class PendingRequest
      */
     public function throwIf($condition)
     {
-        return $condition ? $this->throw() : $this;
+        return $condition ? $this->throw_() : $this;
     }
 
     /**

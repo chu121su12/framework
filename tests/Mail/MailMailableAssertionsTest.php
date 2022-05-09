@@ -3,16 +3,8 @@
 namespace Illuminate\Tests\Mail;
 
 use Illuminate\Mail\Mailable;
-// use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
-
-if (!class_exists('Illuminate\Tests\Mail\AssertionFailedError')) {
-    if (class_exists('PHPUnit_Framework_AssertionFailedError')) {
-        class_alias(\PHPUnit_Framework_AssertionFailedError::class, 'Illuminate\Tests\Mail\AssertionFailedError');
-    } else {
-        class_alias(\PHPUnit\Framework\AssertionFailedError::class, 'Illuminate\Tests\Mail\AssertionFailedError');
-    }
-}
 
 class MailMailableAssertionsTest extends TestCase
 {
