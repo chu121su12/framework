@@ -9,7 +9,7 @@ use GuzzleHttp\TransferStats;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
-use PHPUnit\Framework\Assert as PHPUnit;
+use Illuminate\Testing\Assert as PHPUnit;
 
 /**
  * @method \Illuminate\Http\Client\PendingRequest accept(string $contentType)

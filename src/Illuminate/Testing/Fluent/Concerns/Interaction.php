@@ -3,7 +3,7 @@
 namespace Illuminate\Testing\Fluent\Concerns;
 
 use Illuminate\Support\Str;
-use PHPUnit\Framework\Assert as PHPUnit;
+use Illuminate\Testing\Assert as PHPUnit;
 
 trait Interaction
 {

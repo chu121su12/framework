@@ -8,7 +8,7 @@ use Countable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use PHPUnit\Framework\Patch\FrameworkAssert as PHPUnit;
+use Illuminate\Testing\Assert as PHPUnit;
 use JsonSerializable;
 
 class AssertableJsonString implements ArrayAccess, Countable

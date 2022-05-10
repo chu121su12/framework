@@ -7,8 +7,8 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
+use Illuminate\Testing\Assert as PHPUnit;
 use Illuminate\Testing\AssertableJsonString;
-use PHPUnit\Framework\Patch\FrameworkAssert as PHPUnit;
 
 class AssertableJson implements Arrayable
 {

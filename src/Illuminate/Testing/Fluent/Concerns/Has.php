@@ -4,7 +4,7 @@ namespace Illuminate\Testing\Fluent\Concerns;
 
 use Closure;
 use Illuminate\Support\Arr;
-use PHPUnit\Framework\Patch\FrameworkAssert as PHPUnit;
+use Illuminate\Testing\Assert as PHPUnit;
 
 trait Has
 {
