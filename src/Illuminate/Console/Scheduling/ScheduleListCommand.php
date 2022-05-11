@@ -119,7 +119,7 @@ class ScheduleListCommand extends Command
             $command = preg_replace("#(php artisan [\w\-:]+) (.+)#", '$1 <fg=yellow;options=bold>$2</>', $command);
 
             return [sprintf(
-                '  <fg=yellow>%s</>  %s<fg=#6C7280>%s %s%s %s</>',
+                '  <fg=yellow>%s</>  %s<fg=cyan>%s %s%s %s</>',
                 $expression,
                 $command,
                 $dots,
@@ -127,7 +127,7 @@ class ScheduleListCommand extends Command
                 $nextDueDateLabel,
                 $nextDueDate
             ), $this->output->isVerbose() && mb_strlen($description) > 1 ? sprintf(
-                '  <fg=#6C7280>%s%s %s</>',
+                '  <fg=cyan>%s%s %s</>',
                 str_repeat(' ', mb_strlen($expression) + 2),
                 '⇁',
                 $description
@@ -138,7 +138,6 @@ class ScheduleListCommand extends Command
             $output = $events->flatten()->filter()->prepend('')->push('')->toArray();
 
             foreach ([
-                '/<fg=#[0-9a-zA-Z]{6}>/' => '',
                 '/ › /' => ' > ',
                 '/…/' => '~',
             ] as $regex => $replace) {

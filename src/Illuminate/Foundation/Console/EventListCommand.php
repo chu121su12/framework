@@ -59,10 +59,26 @@ class EventListCommand extends Command
             return;
         }
 
+        if ($this->option('ansi')) {
+            $output = $events->map(function ($listeners, $event) { return [
+                sprintf('  <fg=white>%s</>', $this->appendEventInterfaces($event)),
+                collect($listeners)->map(function ($listener) { return sprintf('    <fg=cyan>⇂ %s</>', $listener); }),
+            ]; })->flatten()->filter()->prepend('')->push('')->toArray();
+
+            foreach ([
+                '/⇂ /' => '| ',
+            ] as $regex => $replace) {
+                $output = preg_replace($regex, $replace, $output);
+            }
+
+            $this->line($output);
+            return;
+        }
+
         $this->line(
             $events->map(function ($listeners, $event) { return [
                 sprintf('  <fg=white>%s</>', $this->appendEventInterfaces($event)),
-                collect($listeners)->map(function ($listener) { return sprintf('    <fg=#6C7280>⇂ %s</>', $listener); }),
+                collect($listeners)->map(function ($listener) { return sprintf('    <fg=cyan>⇂ %s</>', $listener); }),
             ]; })->flatten()->filter()->prepend('')->push('')->toArray()
         );
     }

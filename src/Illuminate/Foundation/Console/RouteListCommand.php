@@ -73,8 +73,8 @@ class RouteListCommand extends Command
     protected $verbColors = [
         'ANY' => 'red',
         'GET' => 'blue',
-        'HEAD' => '#6C7280',
-        'OPTIONS' => '#6C7280',
+        'HEAD' => 'cyan',
+        'OPTIONS' => 'cyan',
         'POST' => 'yellow',
         'PUT' => 'yellow',
         'PATCH' => 'yellow',
@@ -198,7 +198,6 @@ class RouteListCommand extends Command
             $output = $this->forCli($routes);
 
             foreach ([
-                '/<fg=#[0-9a-zA-Z]{6}>/' => '',
                 '/ › /' => ' > ',
                 '/…/' => '~',
             ] as $regex => $replace) {
@@ -406,16 +405,16 @@ class RouteListCommand extends Command
 
             $method = Str::of($method)->explode('|')->map(
                 function ($method) { return sprintf('<fg=%s>%s</>', isset($this->verbColors[$method]) ? $this->verbColors[$method] : 'default', $method); }
-            )->implode('<fg=#6C7280>|</>');
+            )->implode('<fg=cyan>|</>');
 
             return [sprintf(
-                '  <fg=white;options=bold>%s</> %s<fg=white>%s</><fg=#6C7280>%s %s</>',
+                '  <fg=white;options=bold>%s</> %s<fg=white>%s</><fg=cyan>%s %s</>',
                 $method,
                 $spaces,
                 preg_replace('#({[^}]+})#', '<fg=yellow>$1</>', $uri),
                 $dots,
                 str_replace('   ', ' › ', $action)
-            ), $this->output->isVerbose() && ! empty($middleware) ? "<fg=#6C7280>$middleware</>" : null];
+            ), $this->output->isVerbose() && ! empty($middleware) ? "<fg=cyan>$middleware</>" : null];
         })->flatten()->filter()->prepend('')->push('')->toArray();
     }
 
