@@ -30,8 +30,6 @@ class ScheduleListCommandTest extends TestCase
 
     public function testDisplaySchedule()
     {
-        $this->markTestSkipped('TODO: To fix '.__METHOD__);
-
         $this->schedule->call(function () { return ''; })->everyMinute();
         $this->schedule->command(FooCommand::class)->quarterly();
         $this->schedule->command('inspire')->twiceDaily(14, 18);
@@ -53,8 +51,6 @@ class ScheduleListCommandTest extends TestCase
 
     public function testDisplayScheduleInVerboseMode()
     {
-        $this->markTestSkipped('TODO: To fix '.__METHOD__);
-
         $this->schedule->command(FooCommand::class)->everyMinute();
 
         $this->artisan(ScheduleListCommand::class, ['-v' => true])

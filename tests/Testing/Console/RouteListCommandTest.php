@@ -74,8 +74,6 @@ class RouteListCommandTest extends TestCase
 
     public function testDisplayRoutesForCliInVerboseMode()
     {
-        $this->markTestSkipped('TODO: To fix '.__METHOD__);
-
         $this->router->get('closure', function () {
             return new RedirectResponse($this->urlGenerator->signedRoute('signed-route'));
         });
@@ -101,8 +99,6 @@ class RouteListCommandTest extends TestCase
 
     public function testRouteCanBeFilteredByName()
     {
-        $this->markTestSkipped('TODO: To fix '.__METHOD__);
-
         $this->withoutDeprecationHandling();
 
         $this->router->get('/', function () {
@@ -121,8 +117,6 @@ class RouteListCommandTest extends TestCase
 
     public function testDisplayRoutesExceptVendor()
     {
-        $this->markTestSkipped('TODO: To fix '.__METHOD__);
-
         $this->router->get('foo/{user}', [FooController::class, 'show']);
         $this->router->view('view', 'blade.path');
         $this->router->redirect('redirect', 'destination');
