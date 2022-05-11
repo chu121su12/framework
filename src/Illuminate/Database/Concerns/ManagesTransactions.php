@@ -53,9 +53,6 @@ trait ManagesTransactions
 
                 $this->transactions = max(0, $this->transactions - 1);
 
-                if ($this->transactions == 0) {
-                    optional($this->transactionsManager)->commit($this->getName());
-                }
                 if ($this->afterCommitCallbacksShouldBeExecuted() && $this->transactionsManager) {
                     $this->transactionsManager->commit($this->getName());
                 }
