@@ -63,7 +63,7 @@ class Filesystem implements FilesystemInterface
     public function write($path, $contents, array $config = [])
     {
         $path = Util::normalizePath($path);
-        $this->assertAbsent($path);
+        // $this->assertAbsent($path);
         $config = $this->prepareConfig($config);
 
         return (bool) $this->getAdapter()->write($path, $contents, $config);
