@@ -14,6 +14,18 @@ class SymfonyHelper
     const DISPOSITION_ATTACHMENT = 'attachment';
     const DISPOSITION_INLINE = 'inline';
 
+    public static function headerUtilsCombine(array $parts)////: array
+    {
+        $assoc = [];
+        foreach ($parts as $part) {
+            $name = strtolower($part[0]);
+            $value = isset($part[1]) ? $part[1] : true;
+            $assoc[$name] = $value;
+        }
+
+        return $assoc;
+    }
+
     public static function headerUtilsQuote(/*string */$s)////: string
     {
         $s = cast_to_string($s);
@@ -23,6 +35,35 @@ class SymfonyHelper
         }
 
         return '"'.addcslashes($s, '"\\"').'"';
+    }
+
+    public static function headerUtilsSplit(/*string */$header, /*string */$separators)////: array
+    {
+        $separators = cast_to_string($separators);
+
+        $header = cast_to_string($header);
+
+        $quotedSeparators = preg_quote($separators, '/');
+
+        preg_match_all('
+            /
+                (?!\s)
+                    (?:
+                        # quoted-string
+                        "(?:[^"\\\\]|\\\\.)*(?:"|\\\\|$)
+                    |
+                        # token
+                        [^"'.$quotedSeparators.']+
+                    )+
+                (?<!\s)
+            |
+                # separator
+                \s*
+                (?<separator>['.$quotedSeparators.'])
+                \s*
+            /x', trim($header), $matches, \PREG_SET_ORDER);
+
+        return self::groupParts($matches, $separators);
     }
 
     public static function headerUtilsToString(array $assoc, /*string */$separator)////: string
@@ -39,6 +80,11 @@ class SymfonyHelper
         }
 
         return implode($separator.' ', $parts);
+    }
+
+    public static function headerUtilsUnquote(/*string */$s)////: string
+    {
+        return preg_replace('/\\\\(.)|"/', '$1', $s);
     }
 
     public static function httpFoundationMakeDisposition(/*string */$disposition, /*string */$filename, /*string */$filenameFallback = '')////: string
@@ -167,5 +213,51 @@ class SymfonyHelper
         $response->headers = new ResponseHeaderBag5($headers);
 
         return $response;
+    }
+
+    private static function groupParts(array $matches, /*string */$separators, /*bool */$first = true)////: array
+    {
+        $separators = cast_to_string($separators);
+
+        $first = cast_to_bool($first);
+
+        $separator = $separators[0];
+        $partSeparators = substr($separators, 1);
+
+        $i = 0;
+        $partMatches = [];
+        $previousMatchWasSeparator = false;
+        foreach ($matches as $match) {
+            if (!$first && $previousMatchWasSeparator && isset($match['separator']) && $match['separator'] === $separator) {
+                $previousMatchWasSeparator = true;
+                $partMatches[$i][] = $match;
+            } elseif (isset($match['separator']) && $match['separator'] === $separator) {
+                $previousMatchWasSeparator = true;
+                ++$i;
+            } else {
+                $previousMatchWasSeparator = false;
+                $partMatches[$i][] = $match;
+            }
+        }
+
+        $parts = [];
+        if ($partSeparators) {
+            foreach ($partMatches as $matches) {
+                $parts[] = self::groupParts($matches, $partSeparators, false);
+            }
+        } else {
+            foreach ($partMatches as $matches) {
+                $parts[] = self::headerUtilsUnquote($matches[0][0]);
+            }
+
+            if (!$first && 2 < \count($parts)) {
+                $parts = [
+                    $parts[0],
+                    implode($separator, \array_slice($parts, 1)),
+                ];
+            }
+        }
+
+        return $parts;
     }
 }

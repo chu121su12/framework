@@ -777,31 +777,35 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     private function getTrustedValuesOverride(/*int */$type, /*string */$ip = null)
     {
         $type = cast_to_int($type);
-        $ip = cast_to_string($ip, null);
 
-        if ($type !== self::HEADER_X_FORWARDED_PREFIX) {
-            return _reflection_call_inaccessible_method($this, 'getTrustedValues', $type);
-        }
+        $ip = cast_to_string($ip, null);
 
         $clientValues = [];
         $forwardedValues = [];
 
-        if (self::$trustedHeaders[$type] && $this->headers->has(self::$trustedHeaders[$type])) {
+        if ((self::getTrustedHeaderSet() & $type) && $this->headers->has(self::$trustedHeaders[$type])) {
             foreach (explode(',', $this->headers->get(self::$trustedHeaders[$type])) as $v) {
-                $clientValues[] = (self::HEADER_CLIENT_PORT === $type ? '0.0.0.0:' : '').trim($v);
+                $clientValues[] = (self::HEADER_X_FORWARDED_PORT === $type ? '0.0.0.0:' : '').trim($v);
             }
         }
 
-        if (self::$trustedHeaders[self::HEADER_FORWARDED] && $this->headers->has(self::$trustedHeaders[self::HEADER_FORWARDED])) {
-            $forwardedValues = $this->headers->get(self::$trustedHeaders[self::HEADER_FORWARDED]);
-            $forwardedValues = preg_match_all(sprintf('{(?:%s)="?([a-zA-Z0-9\.:_\-/\[\]]*+)}', self::$forwardedParams[$type]), $forwardedValues, $matches) ? $matches[1] : [];
-            if (self::HEADER_CLIENT_PORT === $type) {
-                foreach ($forwardedValues as $k => $v) {
-                    if (']' === substr($v, -1) || false === $v = strrchr($v, ':')) {
+        if ((self::getTrustedHeaderSet() & self::HEADER_FORWARDED) && (isset(self::$forwardedParams[$type])) && $this->headers->has(self::$trustedHeaders[self::HEADER_FORWARDED])) {
+            $forwarded = $this->headers->get(self::$trustedHeaders[self::HEADER_FORWARDED]);
+            $parts = SymfonyHelper::headerUtilsSplit($forwarded, ',;=');
+            $forwardedValues = [];
+            $param = self::FORWARDED_PARAMS[$type];
+            foreach ($parts as $subParts) {
+                $vCombined = SymfonyHelper::headerUtilsCombine($subParts);
+                if (null === ($v = (isset($vCombined[$param]) ? $vCombined[$param] : null))) {
+                    continue;
+                }
+                if (self::HEADER_X_FORWARDED_PORT === $type) {
+                    if (str_ends_with($v, ']') || false === $v = strrchr($v, ':')) {
                         $v = $this->isSecure() ? ':443' : ':80';
                     }
-                    $forwardedValues[$k] = '0.0.0.0'.$v;
+                    $v = '0.0.0.0'.$v;
                 }
+                $forwardedValues[] = $v;
             }
         }
 
