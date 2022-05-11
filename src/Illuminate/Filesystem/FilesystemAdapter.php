@@ -818,15 +818,13 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function temporaryUrl($path, $expiration, array $options = [])
     {
-        if (method_exists($this->adapter, 'getTemporaryUrl')) {
-            return $this->adapter->getTemporaryUrl($path, $expiration, $options);
-        }
-
         if ($this->adapter instanceof AwsS3Adapter) {
             return $this->getAwsTemporaryUrl($this->adapter, $path, $expiration, $options);
         }
 
-        return $this->adapter->getTemporaryUrl($path, $expiration, $options);
+        if (method_exists($this->adapter, 'getTemporaryUrl')) {
+            return $this->adapter->getTemporaryUrl($path, $expiration, $options);
+        }
 
         if ($this->temporaryUrlCallback) {
             $callback = $this->temporaryUrlCallback->bindTo($this, static::class);
