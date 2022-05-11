@@ -213,6 +213,9 @@ class JobChainingTest extends TestCase
         $this->assertNull(JobChainingTestThirdJob::$usedConnection);
     }
 
+    /**
+     * @requires PHP 7
+     */
     public function testChainJobsCanBePrepended()
     {
         JobChainAddingPrependingJob::withChain([new JobChainAddingExistingJob])->dispatch();
@@ -229,6 +232,9 @@ class JobChainingTest extends TestCase
         $this->assertNotNull(JobChainAddingAddedJob::$ranAt);
     }
 
+    /**
+     * @requires PHP 7
+     */
     public function testChainJobsCanBeAppended()
     {
         JobChainAddingAppendingJob::withChain([new JobChainAddingExistingJob])->dispatch();
