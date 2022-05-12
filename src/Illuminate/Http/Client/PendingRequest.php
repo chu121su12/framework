@@ -932,6 +932,10 @@ class PendingRequest
      */
     protected function parseRequestData($method, $url, array $options)
     {
+        if ($this->bodyFormat === 'body') {
+            return [];
+        }
+
         $laravelData = isset($options[$this->bodyFormat])
             ? $options[$this->bodyFormat]
             : (isset($options['query']) ? $options['query'] : []);
