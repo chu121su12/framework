@@ -135,7 +135,8 @@ class EventFakeTest extends TestCase
 
         Post::observe(new PostObserver);
 
-        ($post = new Post)->save();
+        $post = new Post;
+        $post->save();
 
         Event::assertListening('event', 'listener');
         Event::assertListening('event', PostEventSubscriber::class);

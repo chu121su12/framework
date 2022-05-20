@@ -94,22 +94,24 @@ EOF;
     {
         $output = $this->artisan(['--model' => NonPrunableTestModel::class]);
 
-        $actual = <<<'EOF'
+        $expected = <<<'EOF'
 No prunable [Illuminate\Tests\Database\NonPrunableTestModel] records found.
 
 EOF;
 
-        $this->assertSameStringDifferentLineEndings($actual, $output->fetch());
+        $this->assertSameStringDifferentLineEndings($expected, $output->fetch());
     }
 
     public function testNonPrunableTestWithATrait()
     {
         $output = $this->artisan(['--model' => NonPrunableTrait::class]);
 
-        $this->assertEquals(<<<'EOF'
+        $expected = <<<'EOF'
 No prunable models found.
 
-EOF, str_replace("\r", '', $output->fetch()));
+EOF;
+
+        $this->assertSameStringDifferentLineEndings($expected, str_replace("\r", '', $output->fetch()));
     }
 
     public function testTheCommandMayBePretended()

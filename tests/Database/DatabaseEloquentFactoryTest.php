@@ -141,11 +141,11 @@ class DatabaseEloquentFactoryTest extends TestCase
 
     public function test_expanded_closure_attribute_returning_a_factory_is_resolved()
     {
-        $post = FactoryTestPostFactory::new()->create([
+        $post = FactoryTestPostFactory::new_()->create([
             'title' => 'post',
-            'user_id' => fn ($attributes) => FactoryTestUserFactory::new([
+            'user_id' => function ($attributes) { return FactoryTestUserFactory::new_([
                 'options' => $attributes['title'].'-options',
-            ]),
+            ]); },
         ]);
 
         $this->assertEquals('post-options', $post->user->options);

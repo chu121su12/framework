@@ -816,8 +816,10 @@ EOF;
      * @param  array  $data
      * @return $this
      */
-    public function assertJsonMissingPath(string $path)
+    public function assertJsonMissingPath(/*string */$path)
     {
+        $path = cast_to_string($path);
+
         $this->decodeResponseJson()->assertMissingPath($path);
 
         return $this;
