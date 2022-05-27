@@ -281,8 +281,9 @@ class RedisConnectorTest extends TestCase
                 ],
             ],
         ]);
-        $phpRedisClient1 = $phpRedis1->connection()->client();
-        $this->assertEquals('test_default_options_', $phpRedisClient1->getOption(Redis::OPT_PREFIX));
+        if ($phpRedisClient1 = $this->redisConnectionClient($phpRedis1)) {
+            $this->assertEquals('test_default_options_', $phpRedisClient1->getOption(Redis::OPT_PREFIX));
+        }
 
         $phpRedis2 = new RedisManager(new Application, 'phpredis', [
             'cluster' => false,
@@ -301,7 +302,17 @@ class RedisConnectorTest extends TestCase
                 'prefix' => 'test_default_config_',
             ],
         ]);
-        $phpRedisClient2 = $phpRedis2->connection()->client();
-        $this->assertEquals('test_default_config_', $phpRedisClient2->getOption(Redis::OPT_PREFIX));
+        if ($phpRedisClient2 = $this->redisConnectionClient($phpRedis2)) {
+            $this->assertEquals('test_default_config_', $phpRedisClient2->getOption(Redis::OPT_PREFIX));
+        }
+    }
+
+    protected function redisConnectionClient($redis)
+    {
+        try {
+            return $redis->connection()->client();
+        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+        }
     }
 }
