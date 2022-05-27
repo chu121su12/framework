@@ -1065,7 +1065,7 @@ EOF;
             PHPUnit::assertInstanceOf(EloquentCollection::class, $actual);
             PHPUnit::assertSameSize($value, $actual);
 
-            $value->each(fn ($item, $index) => PHPUnit::assertTrue($actual->get($index)->is($item)));
+            $value->each(function ($item, $index) use ($actual) { return PHPUnit::assertTrue($actual->get($index)->is($item)); });
         } else {
             PHPUnit::assertEquals($value, Arr::get($this->original->gatherData(), $key));
         }
@@ -1557,7 +1557,9 @@ EOF;
             PHPUnit::fail('The response is not a streamed response.');
         }
 
-        ob_start(function (string $buffer): string {
+        ob_start(function (/*string */$buffer)/*: string*/ {
+            $buffer = cast_to_string($buffer);
+
             $this->streamedContent .= $buffer;
 
             return '';

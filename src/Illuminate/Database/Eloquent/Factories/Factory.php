@@ -870,7 +870,7 @@ abstract class Factory
 
         if ($method === 'trashed' && in_array(SoftDeletes::class, class_uses_recursive($this->modelName()))) {
             return $this->state([
-                $this->newModel()->getDeletedAtColumn() => $parameters[0] ?? Carbon::now()->subDay(),
+                $this->newModel()->getDeletedAtColumn() => isset($parameters[0]) ? $parameters[0] : Carbon::now()->subDay(),
             ]);
         }
 

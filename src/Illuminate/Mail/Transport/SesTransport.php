@@ -99,7 +99,8 @@ class SesTransport extends Transport
                 )
             );
         } catch (AwsException $e) {
-            $reason = $e->getAwsErrorMessage() ?? $e->getMessage();
+            $awsErrorMessage = $e->getAwsErrorMessage();
+            $reason = isset($awsErrorMessage) ? $awsErrorMessage : $e->getMessage();
 
             throw new Exception(
                 sprintf('Request to AWS SES API failed. Reason: %s.', $reason),

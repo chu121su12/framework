@@ -1164,12 +1164,12 @@ class EloquentBelongsToManyTest extends DatabaseTestCase
 
         $instance = $user->postsWithCustomPivot()->updateOrCreate(
             ['uuid' => $post->uuid],
-            ['title' => Str::random()],
+            ['title' => Str::random()]
         );
 
         $this->assertArrayNotHasKey(
             'user_uuid',
-            $instance->toArray(),
+            $instance->toArray()
         );
     }
 
@@ -1182,12 +1182,12 @@ class EloquentBelongsToManyTest extends DatabaseTestCase
 
         $instance = $user->postsWithCustomPivot()->firstOrCreate(
             ['uuid' => $post->uuid],
-            ['title' => Str::random()],
+            ['title' => Str::random()]
         );
 
         $this->assertArrayNotHasKey(
             'user_uuid',
-            $instance->toArray(),
+            $instance->toArray()
         );
     }
 }

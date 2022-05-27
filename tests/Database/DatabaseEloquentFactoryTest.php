@@ -599,12 +599,12 @@ class DatabaseEloquentFactoryTest extends TestCase
     {
         $now = Carbon::create(2020, 6, 7, 8, 9);
         Carbon::setTestNow($now);
-        $post = FactoryTestPostFactory::new()->trashed()->create();
+        $post = FactoryTestPostFactory::new_()->trashed()->create();
 
         $this->assertTrue($post->deleted_at->equalTo($now->subDay()));
 
         $deleted_at = Carbon::create(2020, 1, 2, 3, 4, 5);
-        $post = FactoryTestPostFactory::new()->trashed($deleted_at)->create();
+        $post = FactoryTestPostFactory::new_()->trashed($deleted_at)->create();
 
         $this->assertTrue($deleted_at->equalTo($post->deleted_at));
 
@@ -615,7 +615,7 @@ class DatabaseEloquentFactoryTest extends TestCase
     {
         $now = Carbon::create(2020, 6, 7, 8, 9);
         Carbon::setTestNow($now);
-        $comment = FactoryTestCommentFactory::new()->trashed()->create();
+        $comment = FactoryTestCommentFactory::new_()->trashed()->create();
 
         $this->assertTrue($comment->deleted_at->equalTo($now->subWeek()));
 
@@ -625,7 +625,7 @@ class DatabaseEloquentFactoryTest extends TestCase
     public function test_dynamic_trashed_state_throws_exception_when_not_a_softdeletes_model()
     {
         $this->expectException(\BadMethodCallException::class);
-        FactoryTestUserFactory::new()->trashed()->create();
+        FactoryTestUserFactory::new_()->trashed()->create();
     }
 
     /**

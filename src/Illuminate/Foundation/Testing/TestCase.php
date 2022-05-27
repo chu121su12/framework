@@ -148,7 +148,7 @@ abstract class TestCase extends BaseTestCase
             }
 
             if (method_exists($this, $method = 'tearDown'.class_basename($trait))) {
-                $this->beforeApplicationDestroyed(fn () => $this->{$method}());
+                $this->beforeApplicationDestroyed(function () use ($method) { return $this->{$method}(); });
             }
         }
 
