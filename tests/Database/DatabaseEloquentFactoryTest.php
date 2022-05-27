@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Database;
 
+use Carbon\Carbon;
 use Faker\Generator;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Tests\Database\Fixtures\Models\Money\Price;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
@@ -60,6 +62,7 @@ class DatabaseEloquentFactoryTest extends TestCase
             $table->increments('id');
             $table->foreignId('user_id');
             $table->string('title');
+            $table->softDeletes();
             $table->timestamps();
         });
 
@@ -68,6 +71,7 @@ class DatabaseEloquentFactoryTest extends TestCase
             $table->foreignId('commentable_id');
             $table->string('commentable_type');
             $table->string('body');
+            $table->softDeletes();
             $table->timestamps();
         });
 
@@ -591,6 +595,39 @@ class DatabaseEloquentFactoryTest extends TestCase
             });
     }
 
+    public function test_dynamic_trashed_state_for_softdeletes_models()
+    {
+        $now = Carbon::create(2020, 6, 7, 8, 9);
+        Carbon::setTestNow($now);
+        $post = FactoryTestPostFactory::new()->trashed()->create();
+
+        $this->assertTrue($post->deleted_at->equalTo($now->subDay()));
+
+        $deleted_at = Carbon::create(2020, 1, 2, 3, 4, 5);
+        $post = FactoryTestPostFactory::new()->trashed($deleted_at)->create();
+
+        $this->assertTrue($deleted_at->equalTo($post->deleted_at));
+
+        Carbon::setTestNow();
+    }
+
+    public function test_dynamic_trashed_state_respects_existing_state()
+    {
+        $now = Carbon::create(2020, 6, 7, 8, 9);
+        Carbon::setTestNow($now);
+        $comment = FactoryTestCommentFactory::new()->trashed()->create();
+
+        $this->assertTrue($comment->deleted_at->equalTo($now->subWeek()));
+
+        Carbon::setTestNow();
+    }
+
+    public function test_dynamic_trashed_state_throws_exception_when_not_a_softdeletes_model()
+    {
+        $this->expectException(\BadMethodCallException::class);
+        FactoryTestUserFactory::new()->trashed()->create();
+    }
+
     /**
      * Get a database connection instance.
      *
@@ -662,6 +699,8 @@ class FactoryTestPostFactory extends Factory
 
 class FactoryTestPost extends Eloquent
 {
+    use SoftDeletes;
+
     protected $table = 'posts';
 
     public function user()
@@ -697,10 +736,19 @@ class FactoryTestCommentFactory extends Factory
             'body' => $this->faker->name,
         ];
     }
+
+    public function trashed()
+    {
+        return $this->state([
+            'deleted_at' => Carbon::now()->subWeek(),
+        ]);
+    }
 }
 
 class FactoryTestComment extends Eloquent
 {
+    use SoftDeletes;
+
     protected $table = 'comments';
 
     public function commentable()

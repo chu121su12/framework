@@ -86,6 +86,7 @@ class MailSesTransportTest extends TestCase
         $message->sender('myself@example.com');
         $message->to('me@example.com');
         $message->bcc('you@example.com');
+        $message->getHeaders()->add(new MetadataHeader('FooTag', 'TagValue'));
 
         $client = m::mock(SesClient::class);
         $sesResult = m::mock();
@@ -94,6 +95,11 @@ class MailSesTransportTest extends TestCase
             ->once()
             ->andReturn('ses-message-id');
         $client->shouldReceive('sendRawEmail')->once()
+            ->with(m::on(function ($arg) {
+                return $arg['Source'] === 'myself@example.com' &&
+                    $arg['Destinations'] === ['me@example.com', 'you@example.com'] &&
+                    $arg['Tags'] === [['Name' => 'FooTag', 'Value' => 'TagValue']];
+            }))
             ->andReturn($sesResult);
 
         (new SesTransport($client))->send($message);
