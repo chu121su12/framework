@@ -32,10 +32,6 @@ class ViewController extends Controller
      */
     public function __invoke(...$args)
     {
-        $routeParameters = array_filter($args, function ($key) {
-            return ! in_array($key, ['view', 'data', 'status', 'headers']);
-        }, ARRAY_FILTER_USE_KEY);
-
         if (array_is_list($args)) {
             $args = [
                 'view' => isset($args[0]) ? $args[0] : null,
@@ -44,6 +40,10 @@ class ViewController extends Controller
                 'headers' => isset($args[3]) ? $args[3] : null,
             ];
         }
+
+        $routeParameters = array_filter($args, function ($key) {
+            return ! in_array($key, ['view', 'data', 'status', 'headers']);
+        }, ARRAY_FILTER_USE_KEY);
 
         $args['data'] = array_merge($args['data'], $routeParameters);
 
