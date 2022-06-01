@@ -100,7 +100,7 @@ class BladeTest extends TestCase
     {
         $view = View::make('consume')->render();
 
-        $this->assertSame('<h1>Menu</h1>
+        $this->assertSameStringDifferentLineEndings('<h1>Menu</h1>
 <div>Slot: A, Color: orange, Default: foo</div>
 <div>Slot: B, Color: red, Default: foo</div>
 <div>Slot: C, Color: blue, Default: foo</div>
@@ -113,7 +113,7 @@ class BladeTest extends TestCase
     {
         $view = View::make('consume', ['color' => 'rebeccapurple'])->render();
 
-        $this->assertSame('<h1>Menu</h1>
+        $this->assertSameStringDifferentLineEndings('<h1>Menu</h1>
 <div>Slot: A, Color: orange, Default: foo</div>
 <div>Slot: B, Color: rebeccapurple, Default: foo</div>
 <div>Slot: C, Color: blue, Default: foo</div>

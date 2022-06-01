@@ -36,6 +36,15 @@ class ViewController extends Controller
             return ! in_array($key, ['view', 'data', 'status', 'headers']);
         }, ARRAY_FILTER_USE_KEY);
 
+        if (array_is_list($args)) {
+            $args = [
+                'view' => isset($args[0]) ? $args[0] : null,
+                'data' => isset($args[1]) ? $args[1] : null,
+                'status' => isset($args[2]) ? $args[2] : null,
+                'headers' => isset($args[3]) ? $args[3] : null,
+            ];
+        }
+
         $args['data'] = array_merge($args['data'], $routeParameters);
 
         return $this->response->view(
@@ -55,6 +64,19 @@ class ViewController extends Controller
      */
     public function callAction($method, $parameters)
     {
+        if ($method === '__invoke' && \version_compare(\PHP_VERSION, '8', '<')) {
+            $routeParameters = array_filter($parameters, function ($key) {
+                return ! in_array($key, ['view', 'data', 'status', 'headers']);
+            }, ARRAY_FILTER_USE_KEY);
+
+            $parameters = [
+                isset($parameters['view']) ? $parameters['view'] : null,
+                array_merge(isset($parameters['data']) ? $parameters['data'] : [], $routeParameters),
+                isset($parameters['status']) ? $parameters['status'] : null,
+                isset($parameters['headers']) ? $parameters['headers'] : null,
+            ];
+        }
+
         return $this->{$method}(...$parameters);
     }
 }
