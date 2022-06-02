@@ -170,11 +170,11 @@ class HandleExceptions
      */
     public function handleException(/*Throwable */$e)
     {
-        backport_type_throwable($e);
+        // backport_type_throwable($e); // do not use
+
+        self::$reservedMemory = null;
 
         try {
-            self::$reservedMemory = null;
-
             $this->getExceptionHandler()->report($e);
         } catch (Exception $e) {
             //
@@ -236,6 +236,8 @@ class HandleExceptions
      */
     protected function fatalErrorFromPhpError(array $error, $traceOffset = null)
     {
+        self::$reservedMemory = null;
+
         return new FatalError($error['message'], 0, $error, $traceOffset);
     }
 
