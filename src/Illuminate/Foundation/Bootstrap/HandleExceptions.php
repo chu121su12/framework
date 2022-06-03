@@ -36,7 +36,7 @@ class HandleExceptions
      */
     public function bootstrap(Application $app)
     {
-        self::$reservedMemory = str_repeat('x', 10240);
+        self::$reservedMemory = str_repeat('x', 32768);
 
         static::$app = $app;
 
@@ -220,6 +220,8 @@ class HandleExceptions
      */
     public function handleShutdown()
     {
+        self::$reservedMemory = null;
+
         if (! is_null($error = error_get_last()) && $this->isFatal($error['type'])) {
             $this->handleException($this->fatalErrorFromPhpError($error, 0));
         }
