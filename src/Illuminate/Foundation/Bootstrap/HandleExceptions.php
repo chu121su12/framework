@@ -170,13 +170,14 @@ class HandleExceptions
      */
     public function handleException(/*Throwable */$e)
     {
-        backport_type_throwable($e);
+        // backport_type_throwable($e); // do not use
+
+        self::$reservedMemory = null;
 
         try {
-            self::$reservedMemory = null;
-
             $this->getExceptionHandler()->report($e);
         } catch (Exception $e) {
+        } catch (Throwable $e) {
             //
         }
 
