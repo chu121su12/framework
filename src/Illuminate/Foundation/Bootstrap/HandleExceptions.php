@@ -237,6 +237,8 @@ class HandleExceptions
      */
     protected function fatalErrorFromPhpError(array $error, $traceOffset = null)
     {
+        self::$reservedMemory = null;
+
         return new FatalError($error['message'], 0, $error, $traceOffset);
     }
 
