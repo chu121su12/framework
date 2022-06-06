@@ -177,6 +177,7 @@ class HandleExceptions
         try {
             $this->getExceptionHandler()->report($e);
         } catch (Exception $e) {
+        } catch (Throwable $e) {
             //
         }
 
