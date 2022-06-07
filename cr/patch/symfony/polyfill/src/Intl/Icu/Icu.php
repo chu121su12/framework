@@ -23,17 +23,17 @@ abstract class Icu
     /**
      * Indicates that no error occurred.
      */
-    public const U_ZERO_ERROR = 0;
+    /*public */const U_ZERO_ERROR = 0;
 
     /**
      * Indicates that an invalid argument was passed.
      */
-    public const U_ILLEGAL_ARGUMENT_ERROR = 1;
+    /*public */const U_ILLEGAL_ARGUMENT_ERROR = 1;
 
     /**
      * Indicates that the parse() operation failed.
      */
-    public const U_PARSE_ERROR = 9;
+    /*public */const U_PARSE_ERROR = 9;
 
     /**
      * All known error codes.
@@ -59,8 +59,10 @@ abstract class Icu
      *
      * @param int $errorCode The error code returned by Icu::getErrorCode()
      */
-    public static function isFailure(int $errorCode): bool
+    public static function isFailure(/*int */$errorCode)/*: bool*/
     {
+        $errorCode = cast_to_int($errorCode);
+
         return isset(self::$errorCodes[$errorCode])
             && $errorCode > self::U_ZERO_ERROR;
     }
@@ -82,7 +84,7 @@ abstract class Icu
      *
      * Returns "U_ZERO_ERROR" if no error occurred.
      */
-    public static function getErrorMessage(): string
+    public static function getErrorMessage()/*: string*/
     {
         return self::$errorMessage;
     }
@@ -92,9 +94,11 @@ abstract class Icu
      *
      * @param int $code The error code returned by Icu::getErrorCode()
      */
-    public static function getErrorName(int $code): string
+    public static function getErrorName(/*int */$code)/*: string*/
     {
-        return self::$errorCodes[$code] ?? '[BOGUS UErrorCode]';
+        $code = cast_to_int($code);
+
+        return isset(self::$errorCodes[$code]) ? self::$errorCodes[$code] : '[BOGUS UErrorCode]';
     }
 
     /**
@@ -105,8 +109,12 @@ abstract class Icu
      *
      * @throws \InvalidArgumentException If the code is not one of the error constants in this class
      */
-    public static function setError(int $code, string $message = '')
+    public static function setError(/*int */$code, /*string */$message = '')
     {
+        $message = cast_to_string($message);
+
+        $code = cast_to_int($code);
+
         if (!isset(self::$errorCodes[$code])) {
             throw new \InvalidArgumentException(sprintf('No such error code: "%s".', $code));
         }

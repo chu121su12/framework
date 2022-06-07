@@ -34,46 +34,48 @@ use Symfony\Polyfill\Intl\Icu\Exception\MethodNotImplementedException;
 abstract class Collator
 {
     /* Attribute constants */
-    public const FRENCH_COLLATION = 0;
-    public const ALTERNATE_HANDLING = 1;
-    public const CASE_FIRST = 2;
-    public const CASE_LEVEL = 3;
-    public const NORMALIZATION_MODE = 4;
-    public const STRENGTH = 5;
-    public const HIRAGANA_QUATERNARY_MODE = 6;
-    public const NUMERIC_COLLATION = 7;
+    /*public */const FRENCH_COLLATION = 0;
+    /*public */const ALTERNATE_HANDLING = 1;
+    /*public */const CASE_FIRST = 2;
+    /*public */const CASE_LEVEL = 3;
+    /*public */const NORMALIZATION_MODE = 4;
+    /*public */const STRENGTH = 5;
+    /*public */const HIRAGANA_QUATERNARY_MODE = 6;
+    /*public */const NUMERIC_COLLATION = 7;
 
     /* Attribute constants values */
-    public const DEFAULT_VALUE = -1;
+    /*public */const DEFAULT_VALUE = -1;
 
-    public const PRIMARY = 0;
-    public const SECONDARY = 1;
-    public const TERTIARY = 2;
-    public const DEFAULT_STRENGTH = 2;
-    public const QUATERNARY = 3;
-    public const IDENTICAL = 15;
+    /*public */const PRIMARY = 0;
+    /*public */const SECONDARY = 1;
+    /*public */const TERTIARY = 2;
+    /*public */const DEFAULT_STRENGTH = 2;
+    /*public */const QUATERNARY = 3;
+    /*public */const IDENTICAL = 15;
 
-    public const OFF = 16;
-    public const ON = 17;
+    /*public */const OFF = 16;
+    /*public */const ON = 17;
 
-    public const SHIFTED = 20;
-    public const NON_IGNORABLE = 21;
+    /*public */const SHIFTED = 20;
+    /*public */const NON_IGNORABLE = 21;
 
-    public const LOWER_FIRST = 24;
-    public const UPPER_FIRST = 25;
+    /*public */const LOWER_FIRST = 24;
+    /*public */const UPPER_FIRST = 25;
 
     /* Sorting options */
-    public const SORT_REGULAR = 0;
-    public const SORT_NUMERIC = 2;
-    public const SORT_STRING = 1;
+    /*public */const SORT_REGULAR = 0;
+    /*public */const SORT_NUMERIC = 2;
+    /*public */const SORT_STRING = 1;
 
     /**
      * @param string|null $locale The locale code. The only currently supported locale is "en" (or null using the default locale, i.e. "en")
      *
      * @throws MethodArgumentValueNotImplementedException When $locale different than "en" or null is passed
      */
-    public function __construct(?string $locale)
+    public function __construct(/*?string */$locale = null)
     {
+        $locale = cast_to_string($locale, null);
+
         if ('en' !== $locale && null !== $locale) {
             throw new MethodArgumentValueNotImplementedException(__METHOD__, 'locale', $locale, 'Only the locale "en" is supported');
         }
@@ -88,8 +90,10 @@ abstract class Collator
      *
      * @throws MethodArgumentValueNotImplementedException When $locale different than "en" or null is passed
      */
-    public static function create(?string $locale)
+    public static function create(/*?string */$locale = null)
     {
+        $locale = cast_to_string($locale, null);
+
         return new static($locale);
     }
 
@@ -104,15 +108,17 @@ abstract class Collator
      *
      * @return bool True on success or false on failure
      */
-    public function asort(array &$array, int $flags = self::SORT_REGULAR)
+    public function asort(array &$array, /*int */$flags = self::SORT_REGULAR)
     {
+        $flags = cast_to_int($flags);
+
         $intlToPlainFlagMap = [
             self::SORT_REGULAR => \SORT_REGULAR,
             self::SORT_NUMERIC => \SORT_NUMERIC,
             self::SORT_STRING => \SORT_STRING,
         ];
 
-        $plainSortFlag = $intlToPlainFlagMap[$flags] ?? self::SORT_REGULAR;
+        $plainSortFlag = isset($intlToPlainFlagMap[$flags]) ? $intlToPlainFlagMap[$flags] : self::SORT_REGULAR;
 
         return asort($array, $plainSortFlag);
     }
@@ -126,8 +132,12 @@ abstract class Collator
      *
      * @throws MethodNotImplementedException
      */
-    public function compare(string $string1, string $string2)
+    public function compare(/*string */$string1, /*string */$string2)
     {
+        $string2 = cast_to_string($string2);
+
+        $string1 = cast_to_string($string1);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -140,8 +150,10 @@ abstract class Collator
      *
      * @throws MethodNotImplementedException
      */
-    public function getAttribute(int $attribute)
+    public function getAttribute(/*int */$attribute)
     {
+        $attribute = cast_to_int($attribute);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -171,8 +183,10 @@ abstract class Collator
      * @return string The locale used to create the collator. Currently always
      *                returns "en".
      */
-    public function getLocale(int $type = Locale::ACTUAL_LOCALE)
+    public function getLocale(/*int */$type = Locale::ACTUAL_LOCALE)
     {
+        $type = cast_to_int($type);
+
         return 'en';
     }
 
@@ -185,8 +199,10 @@ abstract class Collator
      *
      * @throws MethodNotImplementedException
      */
-    public function getSortKey(string $string)
+    public function getSortKey(/*string */$string)
     {
+        $string = cast_to_string($string);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -213,8 +229,12 @@ abstract class Collator
      *
      * @throws MethodNotImplementedException
      */
-    public function setAttribute(int $attribute, int $value)
+    public function setAttribute(/*int */$attribute, /*int */$value)
     {
+        $value = cast_to_int($value);
+
+        $attribute = cast_to_int($attribute);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -227,8 +247,10 @@ abstract class Collator
      *
      * @throws MethodNotImplementedException
      */
-    public function setStrength(int $strength)
+    public function setStrength(/*int */$strength)
     {
+        $strength = cast_to_int($strength);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -255,8 +277,10 @@ abstract class Collator
      *
      * @throws MethodNotImplementedException
      */
-    public function sort(array &$array, int $flags = self::SORT_REGULAR)
+    public function sort(array &$array, /*int */$flags = self::SORT_REGULAR)
     {
+        $flags = cast_to_int($flags);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 }

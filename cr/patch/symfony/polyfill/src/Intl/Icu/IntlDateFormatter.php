@@ -61,21 +61,21 @@ abstract class IntlDateFormatter
     protected $errorMessage = 'U_ZERO_ERROR';
 
     /* date/time format types */
-    public const NONE = -1;
-    public const FULL = 0;
-    public const LONG = 1;
-    public const MEDIUM = 2;
-    public const SHORT = 3;
+    /*public */const NONE = -1;
+    /*public */const FULL = 0;
+    /*public */const LONG = 1;
+    /*public */const MEDIUM = 2;
+    /*public */const SHORT = 3;
 
     /* date format types */
-    public const RELATIVE_FULL = 128;
-    public const RELATIVE_LONG = 129;
-    public const RELATIVE_MEDIUM = 130;
-    public const RELATIVE_SHORT = 131;
+    /*public */const RELATIVE_FULL = 128;
+    /*public */const RELATIVE_LONG = 129;
+    /*public */const RELATIVE_MEDIUM = 130;
+    /*public */const RELATIVE_SHORT = 131;
 
     /* calendar formats */
-    public const TRADITIONAL = 0;
-    public const GREGORIAN = 1;
+    /*public */const TRADITIONAL = 0;
+    /*public */const GREGORIAN = 1;
 
     /**
      * Patterns used to format the date when no pattern is provided.
@@ -142,8 +142,16 @@ abstract class IntlDateFormatter
      * @throws MethodArgumentValueNotImplementedException When $locale different than "en" or null is passed
      * @throws MethodArgumentValueNotImplementedException When $calendar different than GREGORIAN is passed
      */
-    public function __construct(?string $locale, ?int $dateType, ?int $timeType, $timezone = null, $calendar = null, ?string $pattern = '')
+    public function __construct(/*?string */$locale = null, /*?int */$dateType = null, /*?int */$timeType = null, $timezone = null, $calendar = null, /*?string */$pattern = '')
     {
+        $pattern = cast_to_string($pattern, null);
+
+        $timeType = cast_to_int($timeType, null);
+
+        $dateType = cast_to_int($dateType, null);
+
+        $locale = cast_to_string($locale, null);
+
         if ('en' !== $locale && null !== $locale) {
             throw new MethodArgumentValueNotImplementedException(__METHOD__, 'locale', $locale, 'Only the locale "en" is supported');
         }
@@ -162,10 +170,10 @@ abstract class IntlDateFormatter
             }
         }
 
-        $this->dateType = $dateType ?? self::FULL;
-        $this->timeType = $timeType ?? self::FULL;
+        $this->dateType = isset($dateType) ? $dateType : self::FULL;
+        $this->timeType = isset($timeType) ? $timeType : self::FULL;
 
-        if ('' === ($pattern ?? '')) {
+        if ('' === (isset($pattern) ? $pattern : '')) {
             $pattern = $this->getDefaultPattern();
         }
 
@@ -193,8 +201,18 @@ abstract class IntlDateFormatter
      * @throws MethodArgumentValueNotImplementedException When $locale different than "en" or null is passed
      * @throws MethodArgumentValueNotImplementedException When $calendar different than GREGORIAN is passed
      */
-    public static function create(?string $locale, ?int $dateType, ?int $timeType, $timezone = null, int $calendar = null, ?string $pattern = '')
+    public static function create(/*?string */$locale = null, /*?int */$dateType = null, /*?int */$timeType = null, $timezone = null, /*int */$calendar = null, /*?string */$pattern = '')
     {
+        $calendar = cast_to_int($calendar, null);
+
+        $pattern = cast_to_string($pattern, null);
+
+        $timeType = cast_to_int($timeType, null);
+
+        $dateType = cast_to_int($dateType, null);
+
+        $locale = cast_to_string($locale, null);
+
         return new static($locale, $dateType, $timeType, $timezone, $calendar, $pattern);
     }
 
@@ -276,8 +294,10 @@ abstract class IntlDateFormatter
      *
      * @throws MethodNotImplementedException
      */
-    public function formatObject($datetime, $format = null, string $locale = null)
+    public function formatObject($datetime, $format = null, /*string */$locale = null)
     {
+        $locale = cast_to_string($locale, null);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -354,8 +374,10 @@ abstract class IntlDateFormatter
      *
      * @see https://php.net/intldateformatter.getlocale
      */
-    public function getLocale(int $type = Locale::ACTUAL_LOCALE)
+    public function getLocale(/*int */$type = Locale::ACTUAL_LOCALE)
     {
+        $type = cast_to_int($type);
+
         return 'en';
     }
 
@@ -436,8 +458,10 @@ abstract class IntlDateFormatter
      *
      * @throws MethodNotImplementedException
      */
-    public function localtime(string $string, &$offset = null)
+    public function localtime(/*string */$string, &$offset = null)
     {
+        $string = cast_to_string($string);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -450,8 +474,10 @@ abstract class IntlDateFormatter
      *
      * @throws MethodArgumentNotImplementedException When $offset different than null, behavior not implemented
      */
-    public function parse(string $string, &$offset = null)
+    public function parse(/*string */$string, &$offset = null)
     {
+        $string = cast_to_string($string);
+
         // We don't calculate the position when parsing the value
         if (null !== $offset) {
             throw new MethodArgumentNotImplementedException(__METHOD__, 'offset');
@@ -502,8 +528,10 @@ abstract class IntlDateFormatter
      *
      * @throws MethodArgumentValueNotImplementedException When $lenient is true
      */
-    public function setLenient(bool $lenient)
+    public function setLenient(/*bool */$lenient)
     {
+        $lenient = cast_to_bool($lenient);
+
         if ($lenient) {
             throw new MethodArgumentValueNotImplementedException(__METHOD__, 'lenient', $lenient, 'Only the strict parser is supported');
         }
@@ -519,8 +547,10 @@ abstract class IntlDateFormatter
      * @see https://php.net/intldateformatter.setpattern
      * @see http://userguide.icu-project.org/formatparse/datetime
      */
-    public function setPattern(string $pattern)
+    public function setPattern(/*string */$pattern)
     {
+        $pattern = cast_to_string($pattern);
+
         $this->pattern = $pattern;
 
         return true;
@@ -620,8 +650,10 @@ abstract class IntlDateFormatter
         return $pattern;
     }
 
-    private function getRelativeDateFormat(int $timestamp): string
+    private function getRelativeDateFormat(/*int */$timestamp)/*: string*/
     {
+        $timestamp = cast_to_int($timestamp);
+
         $today = $this->createDateTime(time());
         $today->setTime(0, 0, 0);
 

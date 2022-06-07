@@ -40,8 +40,12 @@ class FullTransformer
      * @param string $pattern  The pattern to be used to format and/or parse values
      * @param string $timezone The timezone to perform the date/time calculations
      */
-    public function __construct(string $pattern, string $timezone)
+    public function __construct(/*string */$pattern, /*string */$timezone)
     {
+        $timezone = cast_to_string($timezone);
+
+        $pattern = cast_to_string($pattern);
+
         $this->pattern = $pattern;
         $this->timezone = $timezone;
 
@@ -74,7 +78,7 @@ class FullTransformer
      *
      * @return string The formatted value
      */
-    public function format(\DateTime $dateTime): string
+    public function format(\DateTime $dateTime)/*: string*/
     {
         $formatted = preg_replace_callback($this->regExp, function ($matches) use ($dateTime) {
             return $this->formatReplace($matches[0], $dateTime);
@@ -88,8 +92,10 @@ class FullTransformer
      *
      * @throws NotImplementedException When it encounters a not implemented date character
      */
-    private function formatReplace(string $dateChars, \DateTime $dateTime): string
+    private function formatReplace(/*string */$dateChars, \DateTime $dateTime)/*: string*/
     {
+        $dateChars = cast_to_string($dateChars);
+
         $length = \strlen($dateChars);
 
         if ($this->isQuoteMatch($dateChars)) {
@@ -120,8 +126,10 @@ class FullTransformer
      *
      * @throws \InvalidArgumentException When the value can not be matched with pattern
      */
-    public function parse(\DateTime $dateTime, string $value)
+    public function parse(\DateTime $dateTime, /*string */$value)
     {
+        $value = cast_to_string($value);
+
         $reverseMatchingRegExp = $this->getReverseMatchingRegExp($this->pattern);
         $reverseMatchingRegExp = '/^'.$reverseMatchingRegExp.'$/';
 
@@ -155,8 +163,10 @@ class FullTransformer
      * @return string The reverse matching regular expression with named captures being formed by the
      *                transformer index in the $transformer array
      */
-    private function getReverseMatchingRegExp(string $pattern): string
+    private function getReverseMatchingRegExp(/*string */$pattern)/*: string*/
     {
+        $pattern = cast_to_string($pattern);
+
         $escapedPattern = preg_quote($pattern, '/');
 
         // ICU 4.8 recognizes slash ("/") in a value to be parsed as a dash ("-") and vice-versa
@@ -188,16 +198,20 @@ class FullTransformer
     /**
      * Check if the first char of a string is a single quote.
      */
-    private function isQuoteMatch(string $quoteMatch): bool
+    private function isQuoteMatch(/*string */$quoteMatch)/*: bool*/
     {
+        $quoteMatch = cast_to_string($quoteMatch);
+
         return "'" === $quoteMatch[0];
     }
 
     /**
      * Replaces single quotes at the start or end of a string with two single quotes.
      */
-    private function replaceQuoteMatch(string $quoteMatch): string
+    private function replaceQuoteMatch(/*string */$quoteMatch)/*: string*/
     {
+        $quoteMatch = cast_to_string($quoteMatch);
+
         if (preg_match("/^'+$/", $quoteMatch)) {
             return str_replace("''", "'", $quoteMatch);
         }
@@ -208,8 +222,10 @@ class FullTransformer
     /**
      * Builds a chars match regular expression.
      */
-    private function buildCharsMatch(string $specialChars): string
+    private function buildCharsMatch(/*string */$specialChars)/*: string*/
     {
+        $specialChars = cast_to_string($specialChars);
+
         $specialCharsArray = str_split($specialChars);
 
         $specialCharsMatch = implode('|', array_map(function ($char) {
@@ -223,7 +239,7 @@ class FullTransformer
      * Normalize a preg_replace match array, removing the numeric keys and returning an associative array
      * with the value and pattern values for the matched Transformer.
      */
-    private function normalizeArray(array $data): array
+    private function normalizeArray(array $data)/*: array*/
     {
         $ret = [];
 
@@ -295,18 +311,18 @@ class FullTransformer
      * Add sensible default values for missing items in the extracted date/time options array. The values
      * are base in the beginning of the Unix era.
      */
-    private function getDefaultValueForOptions(array $options): array
+    private function getDefaultValueForOptions(array $options)/*: array*/
     {
         return [
-            'year' => $options['year'] ?? 1970,
-            'month' => $options['month'] ?? 1,
-            'day' => $options['day'] ?? 1,
-            'hour' => $options['hour'] ?? 0,
-            'hourInstance' => $options['hourInstance'] ?? null,
-            'minute' => $options['minute'] ?? 0,
-            'second' => $options['second'] ?? 0,
-            'marker' => $options['marker'] ?? null,
-            'timezone' => $options['timezone'] ?? null,
+            'year' => isset($options['year']) ? $options['year'] : 1970,
+            'month' => isset($options['month']) ? $options['month'] : 1,
+            'day' => isset($options['day']) ? $options['day'] : 1,
+            'hour' => isset($options['hour']) ? $options['hour'] : 0,
+            'hourInstance' => isset($options['hourInstance']) ? $options['hourInstance'] : null,
+            'minute' => isset($options['minute']) ? $options['minute'] : 0,
+            'second' => isset($options['second']) ? $options['second'] : 0,
+            'marker' => isset($options['marker']) ? $options['marker'] : null,
+            'timezone' => isset($options['timezone']) ? $options['timezone'] : null,
         ];
     }
 }

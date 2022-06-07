@@ -23,8 +23,10 @@ class Hour2401Transformer extends HourTransformer
     /**
      * {@inheritdoc}
      */
-    public function format(\DateTime $dateTime, int $length): string
+    public function format(\DateTime $dateTime, /*int */$length)/*: string*/
     {
+        $length = cast_to_int($length);
+
         $hourOfDay = $dateTime->format('G');
         $hourOfDay = '0' === $hourOfDay ? '24' : $hourOfDay;
 
@@ -34,8 +36,12 @@ class Hour2401Transformer extends HourTransformer
     /**
      * {@inheritdoc}
      */
-    public function normalizeHour(int $hour, string $marker = null): int
+    public function normalizeHour(/*int */$hour, /*string */$marker = null)/*: int*/
     {
+        $hour = cast_to_int($hour);
+
+        $marker = cast_to_string($marker, null);
+
         if ((null === $marker && 24 === $hour) || 'AM' === $marker) {
             $hour = 0;
         } elseif ('PM' === $marker) {
@@ -48,16 +54,22 @@ class Hour2401Transformer extends HourTransformer
     /**
      * {@inheritdoc}
      */
-    public function getReverseMatchingRegExp(int $length): string
+    public function getReverseMatchingRegExp(/*int */$length)/*: string*/
     {
+        $length = cast_to_int($length);
+
         return '\d{1,2}';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function extractDateOptions(string $matched, int $length): array
+    public function extractDateOptions(/*string */$matched, /*int */$length)/*: array*/
     {
+        $length = cast_to_int($length);
+
+        $matched = cast_to_string($matched);
+
         return [
             'hour' => (int) $matched,
             'hourInstance' => $this,

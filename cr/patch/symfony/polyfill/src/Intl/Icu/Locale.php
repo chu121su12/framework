@@ -26,20 +26,20 @@ use Symfony\Polyfill\Intl\Icu\Exception\MethodNotImplementedException;
  */
 abstract class Locale
 {
-    public const DEFAULT_LOCALE = null;
+    /*public */const DEFAULT_LOCALE = null;
 
     /* Locale method constants */
-    public const ACTUAL_LOCALE = 0;
-    public const VALID_LOCALE = 1;
+    /*public */const ACTUAL_LOCALE = 0;
+    /*public */const VALID_LOCALE = 1;
 
     /* Language tags constants */
-    public const LANG_TAG = 'language';
-    public const EXTLANG_TAG = 'extlang';
-    public const SCRIPT_TAG = 'script';
-    public const REGION_TAG = 'region';
-    public const VARIANT_TAG = 'variant';
-    public const GRANDFATHERED_LANG_TAG = 'grandfathered';
-    public const PRIVATE_TAG = 'private';
+    /*public */const LANG_TAG = 'language';
+    /*public */const EXTLANG_TAG = 'extlang';
+    /*public */const SCRIPT_TAG = 'script';
+    /*public */const REGION_TAG = 'region';
+    /*public */const VARIANT_TAG = 'variant';
+    /*public */const GRANDFATHERED_LANG_TAG = 'grandfathered';
+    /*public */const PRIVATE_TAG = 'private';
 
     /**
      * Not supported. Returns the best available locale based on HTTP "Accept-Language" header according to RFC 2616.
@@ -50,8 +50,10 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function acceptFromHttp(string $header)
+    public static function acceptFromHttp(/*string */$header)
     {
+        $header = cast_to_string($header);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -63,8 +65,10 @@ abstract class Locale
      *
      * @return string
      */
-    public static function canonicalize(string $locale)
+    public static function canonicalize(/*string */$locale)
     {
+        $locale = cast_to_string($locale);
+
         if ('' === $locale || '.' === $locale[0]) {
             return self::getDefault();
         }
@@ -107,8 +111,14 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function filterMatches(string $languageTag, string $locale, bool $canonicalize = false)
+    public static function filterMatches(/*string */$languageTag, /*string */$locale, /*bool */$canonicalize = false)
     {
+        $canonicalize = cast_to_bool($canonicalize);
+
+        $locale = cast_to_string($locale);
+
+        $languageTag = cast_to_string($languageTag);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -121,8 +131,10 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function getAllVariants(string $locale)
+    public static function getAllVariants(/*string */$locale)
     {
+        $locale = cast_to_string($locale);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -147,8 +159,12 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function getDisplayLanguage(string $locale, string $displayLocale = null)
+    public static function getDisplayLanguage(/*string */$locale, /*string */$displayLocale = null)
     {
+        $locale = cast_to_string($locale);
+
+        $displayLocale = cast_to_string($displayLocale, null);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -161,8 +177,12 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function getDisplayName(string $locale, string $displayLocale = null)
+    public static function getDisplayName(/*string */$locale, /*string */$displayLocale = null)
     {
+        $locale = cast_to_string($locale);
+
+        $displayLocale = cast_to_string($displayLocale, null);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -175,8 +195,12 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function getDisplayRegion(string $locale, string $displayLocale = null)
+    public static function getDisplayRegion(/*string */$locale, /*string */$displayLocale = null)
     {
+        $locale = cast_to_string($locale);
+
+        $displayLocale = cast_to_string($displayLocale, null);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -189,8 +213,12 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function getDisplayScript(string $locale, string $displayLocale = null)
+    public static function getDisplayScript(/*string */$locale, /*string */$displayLocale = null)
     {
+        $locale = cast_to_string($locale);
+
+        $displayLocale = cast_to_string($displayLocale, null);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -203,8 +231,12 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function getDisplayVariant(string $locale, string $displayLocale = null)
+    public static function getDisplayVariant(/*string */$locale, /*string */$displayLocale = null)
     {
+        $locale = cast_to_string($locale);
+
+        $displayLocale = cast_to_string($displayLocale, null);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -217,8 +249,10 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function getKeywords(string $locale)
+    public static function getKeywords(/*string */$locale)
     {
+        $locale = cast_to_string($locale);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -231,8 +265,10 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function getPrimaryLanguage(string $locale)
+    public static function getPrimaryLanguage(/*string */$locale)
     {
+        $locale = cast_to_string($locale);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -245,8 +281,10 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function getRegion(string $locale)
+    public static function getRegion(/*string */$locale)
     {
+        $locale = cast_to_string($locale);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -259,8 +297,10 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function getScript(string $locale)
+    public static function getScript(/*string */$locale)
     {
+        $locale = cast_to_string($locale);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -271,8 +311,14 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function lookup(array $languageTag, string $locale, bool $canonicalize = false, string $defaultLocale = null)
+    public static function lookup(array $languageTag, /*string */$locale, /*bool */$canonicalize = false, /*string */$defaultLocale = null)
     {
+        $canonicalize = cast_to_bool($canonicalize);
+
+        $locale = cast_to_string($locale);
+
+        $defaultLocale = cast_to_string($defaultLocale, null);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -285,8 +331,10 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function parseLocale(string $locale)
+    public static function parseLocale(/*string */$locale)
     {
+        $locale = cast_to_string($locale);
+
         throw new MethodNotImplementedException(__METHOD__);
     }
 
@@ -299,8 +347,10 @@ abstract class Locale
      *
      * @throws MethodNotImplementedException
      */
-    public static function setDefault(string $locale)
+    public static function setDefault(/*string */$locale)
     {
+        $locale = cast_to_string($locale);
+
         if ('en' !== $locale) {
             throw new MethodNotImplementedException(__METHOD__);
         }

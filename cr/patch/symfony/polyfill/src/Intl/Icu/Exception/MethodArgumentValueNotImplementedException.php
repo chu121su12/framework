@@ -22,8 +22,14 @@ class MethodArgumentValueNotImplementedException extends NotImplementedException
      * @param mixed  $argValue          The argument value that is not implemented
      * @param string $additionalMessage An optional additional message to append to the exception message
      */
-    public function __construct(string $methodName, string $argName, $argValue, string $additionalMessage = '')
+    public function __construct(/*string */$methodName, /*string */$argName, $argValue, /*string */$additionalMessage = '')
     {
+        $additionalMessage = cast_to_string($additionalMessage);
+
+        $argName = cast_to_string($argName);
+
+        $methodName = cast_to_string($methodName);
+
         $message = sprintf(
             'The %s() method\'s argument $%s value %s behavior is not implemented.%s',
             $methodName,

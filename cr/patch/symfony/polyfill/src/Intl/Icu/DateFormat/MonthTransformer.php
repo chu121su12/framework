@@ -65,8 +65,10 @@ class MonthTransformer extends Transformer
     /**
      * {@inheritdoc}
      */
-    public function format(\DateTime $dateTime, int $length): string
+    public function format(\DateTime $dateTime, /*int */$length)/*: string*/
     {
+        $length = cast_to_int($length);
+
         $matchLengthMap = [
             1 => 'n',
             2 => 'm',
@@ -88,8 +90,10 @@ class MonthTransformer extends Transformer
     /**
      * {@inheritdoc}
      */
-    public function getReverseMatchingRegExp(int $length): string
+    public function getReverseMatchingRegExp(/*int */$length)/*: string*/
     {
+        $length = cast_to_int($length);
+
         switch ($length) {
             case 1:
                 $regExp = '\d{1,2}';
@@ -114,8 +118,12 @@ class MonthTransformer extends Transformer
     /**
      * {@inheritdoc}
      */
-    public function extractDateOptions(string $matched, int $length): array
+    public function extractDateOptions(/*string */$matched, /*int */$length)/*: array*/
     {
+        $length = cast_to_int($length);
+
+        $matched = cast_to_string($matched);
+
         if (!is_numeric($matched)) {
             if (3 === $length) {
                 $matched = self::$flippedShortMonths[$matched] + 1;

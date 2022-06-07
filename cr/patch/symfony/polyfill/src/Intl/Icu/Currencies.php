@@ -20,24 +20,36 @@ class Currencies
 {
     private static $data;
 
-    public static function getSymbol(string $currency): ?string
+    public static function getSymbol(/*string */$currency)/*: ?string*/
     {
-        $data = self::$data ?? self::$data = require __DIR__.'/Resources/currencies.php';
+        $currency = cast_to_string($currency);
 
-        return $data[$currency][0] ?? $data[strtoupper($currency)][0] ?? null;
+        $data = isset(self::$data) ? self::$data : self::$data = require __DIR__.'/Resources/currencies.php';
+
+        $currencyUppercase = strtoupper($currency);
+
+        return isset($data[$currency]) && isset($data[$currency][0]) ? $data[$currency][0] : (isset($data[$currencyUppercase]) && isset($data[$currencyUppercase][0]) ? $data[$currencyUppercase][0] : null);
     }
 
-    public static function getFractionDigits(string $currency): int
+    public static function getFractionDigits(/*string */$currency)/*: int*/
     {
-        $data = self::$data ?? self::$data = require __DIR__.'/Resources/currencies.php';
+        $currency = cast_to_string($currency);
 
-        return $data[$currency][1] ?? $data[strtoupper($currency)][1] ?? $data['DEFAULT'][1];
+        $data = isset(self::$data) ? self::$data : self::$data = require __DIR__.'/Resources/currencies.php';
+
+        $currencyUppercase = strtoupper($currency);
+
+        return isset($data[$currency]) && isset($data[$currency][1]) ? $data[$currency][1] : (isset($data[$currencyUppercase]) && isset($data[$currencyUppercase][1]) ? $data[$currencyUppercase][1] : $data['DEFAULT'][1]);
     }
 
-    public static function getRoundingIncrement(string $currency): int
+    public static function getRoundingIncrement(/*string */$currency)/*: int*/
     {
-        $data = self::$data ?? self::$data = require __DIR__.'/Resources/currencies.php';
+        $currency = cast_to_string($currency);
 
-        return $data[$currency][2] ?? $data[strtoupper($currency)][2] ?? $data['DEFAULT'][2];
+        $data = isset(self::$data) ? self::$data : self::$data = require __DIR__.'/Resources/currencies.php';
+
+        $currencyUppercase = strtoupper($currency);
+
+        return isset($data[$currency]) && isset($data[$currency][2]) ? $data[$currency][2] : (isset($data[$currencyUppercase]) && isset($data[$currencyUppercase][2]) ? $data[$currencyUppercase][2] : $data['DEFAULT'][2]);
     }
 }

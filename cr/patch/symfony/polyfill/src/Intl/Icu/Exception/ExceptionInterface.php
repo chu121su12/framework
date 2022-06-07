@@ -16,6 +16,15 @@ namespace Symfony\Polyfill\Intl\Icu\Exception;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-interface ExceptionInterface extends \Throwable
+if (interface_exists('Throwable'))
 {
+    interface ExceptionInterface extends \Throwable
+    {
+    }
+}
+else
+{
+    interface ExceptionInterface
+    {
+    }
 }
