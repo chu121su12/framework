@@ -474,7 +474,7 @@ class SupportStrTest extends TestCase
 
     public function testRandomStringFactoryCanBeSet()
     {
-        Str::createRandomStringsUsing(fn ($length) => 'length:'.$length);
+        Str::createRandomStringsUsing(function ($length) { return 'length:'.$length; });
 
         $this->assertSame('length:7', Str::random(7));
         $this->assertSame('length:7', Str::random(7));
@@ -506,7 +506,7 @@ class SupportStrTest extends TestCase
 
     public function testItCanSpecifyAFallbackForARandomStringSequence()
     {
-        Str::createRandomStringsUsingSequence([Str::random(), Str::random()], fn () => throw new \Exception('Out of random strings.'));
+        Str::createRandomStringsUsingSequence([Str::random(), Str::random()], function () { throw new \Exception('Out of random strings.'); });
         Str::random();
         Str::random();
 
@@ -1028,7 +1028,7 @@ class SupportStrTest extends TestCase
 
     public function testItCanSpecifyAFallbackForASequence()
     {
-        Str::createUuidsUsingSequence([Str::uuid(), Str::uuid()], fn () => throw new \Exception('Out of Uuids.'));
+        Str::createUuidsUsingSequence([Str::uuid(), Str::uuid()], function () { throw new \Exception('Out of Uuids.'); });
         Str::uuid();
         Str::uuid();
 

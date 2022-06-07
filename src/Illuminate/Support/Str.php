@@ -683,7 +683,7 @@ class Str
      */
     public static function random($length = 16)
     {
-        return (static::$randomStringFactory ?? function ($length) {
+        $factory = isset(static::$randomStringFactory) ? static::$randomStringFactory : function ($length) {
             $string = '';
 
             while (($len = strlen($string)) < $length) {
@@ -695,7 +695,9 @@ class Str
             }
 
             return $string;
-        })($length);
+        };
+
+        return $factory($length);
     }
 
     /**
@@ -720,7 +722,7 @@ class Str
     {
         $next = 0;
 
-        $whenMissing ??= function ($length) use (&$next) {
+        $whenMissing = isset($whenMissing) ? $whenMissing : function ($length) use (&$next) {
             $factoryCache = static::$randomStringFactory;
 
             static::$randomStringFactory = null;
@@ -1215,7 +1217,7 @@ class Str
     {
         $next = 0;
 
-        $whenMissing ??= function () use (&$next) {
+        $whenMissing = isset($whenMissing) ? $whenMissing : function () use (&$next) {
             $factoryCache = static::$uuidFactory;
 
             static::$uuidFactory = null;
@@ -1248,7 +1250,7 @@ class Str
     {
         $uuid = Str::uuid();
 
-        Str::createUuidsUsing(fn () => $uuid);
+        Str::createUuidsUsing(function () use ($uuid) { return $uuid; });
 
         if ($callback !== null) {
             $callback($uuid);
