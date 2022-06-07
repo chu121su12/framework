@@ -10,7 +10,7 @@ class CookieSessionHandlerTest extends TestCase
 {
     public function testCookieSessionDriverCookiesCanExpireOnClose()
     {
-        Route::get('/', fn () => '')->middleware('web');
+        Route::get('/', function () { return ''; })->middleware('web');
 
         $response = $this->get('/');
         $sessionIdCookie = $response->getCookie('laravel_session');
