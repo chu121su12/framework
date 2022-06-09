@@ -326,6 +326,7 @@ class FileStore implements Store, LockProvider
 
         $max = 9999999999;
 
+        // 32-bit compatibility
         if (\strlen(\decbin(~0)) < 64) {
             $max = (2 ** 31) - 1;
 

@@ -114,6 +114,7 @@ class Factory
 
         $this->stubCallbacks = collect();
 
+        // TODO: for test
         // $this->withOptions([
         //     'verify' => false, // to pass tests
         // ]);

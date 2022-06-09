@@ -71,8 +71,9 @@ class BatchRepositoryFake implements BatchRepository
      */
     public function incrementTotalJobs(/*string */$batchId, /*int */$amount)
     {
-        $batchId = cast_to_string($batchId);
-        $amount = cast_to_int($amount);
+        // $amount = cast_to_int($amount);
+
+        // $batchId = cast_to_string($batchId);
 
         //
     }
@@ -86,8 +87,9 @@ class BatchRepositoryFake implements BatchRepository
      */
     public function decrementPendingJobs(/*string */$batchId, /*string */$jobId)
     {
-        $batchId = cast_to_string($batchId);
-        $jobId = cast_to_string($jobId);
+        // $jobId = cast_to_string($jobId);
+
+        // $batchId = cast_to_string($batchId);
 
         return new UpdatedBatchJobCounts;
     }
@@ -101,8 +103,9 @@ class BatchRepositoryFake implements BatchRepository
      */
     public function incrementFailedJobs(/*string */$batchId, /*string */$jobId)
     {
-        $batchId = cast_to_string($batchId);
-        $jobId = cast_to_string($jobId);
+        // $jobId = cast_to_string($jobId);
+
+        // $batchId = cast_to_string($batchId);
 
         return new UpdatedBatchJobCounts;
     }

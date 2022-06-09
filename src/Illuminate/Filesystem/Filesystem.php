@@ -101,13 +101,11 @@ class Filesystem
             $__path = $path;
             $__data = $data;
 
-            $callback = (static function () use ($__path, $__data) {
+            return value(static function () use ($__path, $__data) {
                 extract($__data, EXTR_SKIP);
 
                 return require $__path;
             });
-
-            return $callback();
         }
 
         throw new FileNotFoundException("File does not exist at path {$path}.");
@@ -128,13 +126,11 @@ class Filesystem
             $__path = $path;
             $__data = $data;
 
-            $callback = (static function () use ($__path, $__data) {
+            return value(static function () use ($__path, $__data) {
                 extract($__data, EXTR_SKIP);
 
                 return require_once $__path;
             });
-
-            return $callback();
         }
 
         throw new FileNotFoundException("File does not exist at path {$path}.");
@@ -334,7 +330,7 @@ class Filesystem
     {
         if (! windows_os()) {
             /*return symlink($target, $link);*/
-            // Why?
+            // TODO: Why?
             exec("ln -s ".escapeshellarg($target).' '.escapeshellarg($link));
             return;
         }

@@ -56,6 +56,7 @@ class DatabaseLock extends Lock
      */
     public function acquire()
     {
+        // Needs default value
         $acquired = false;
 
         try {

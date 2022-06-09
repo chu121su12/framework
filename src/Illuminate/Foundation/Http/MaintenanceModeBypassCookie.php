@@ -34,8 +34,9 @@ class MaintenanceModeBypassCookie
      */
     public static function isValid(/*string */$cookie, /*string */$key)
     {
-        $cookie = cast_to_string($cookie);
         $key = cast_to_string($key);
+
+        $cookie = cast_to_string($cookie);
 
         $payload = backport_json_decode(base64_decode($cookie), true);
 

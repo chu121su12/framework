@@ -1348,13 +1348,13 @@ trait HasAttributes
      */
     public function fromDateTime($value)
     {
-        return empty($value) ? $value : $this->fromDateTimeWithMilisecond($this->asDateTime($value));
+        return empty($value) ? $value : $this->fromDateTimeWithMilisecond(
+            $this->asDateTime($value), $this->getDateFormat()
+        );
     }
 
-    protected function fromDateTimeWithMilisecond($value)
+    protected function fromDateTimeWithMilisecond($value, $format)
     {
-        $format = $this->getDateFormat();
-
         if (version_compare(PHP_VERSION, '7.0.0', '<') && Str::endsWith($format, '.v')) {
             $format = preg_replace('/\.v$/', '.u', $format);
 

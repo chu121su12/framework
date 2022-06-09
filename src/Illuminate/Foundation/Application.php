@@ -984,8 +984,9 @@ class Application extends Container implements ApplicationContract, CachesConfig
      */
     public function handle(SymfonyRequest $request, /*int */$type = /*self::MAIN_REQUEST*/self::MASTER_REQUEST, /*bool */$catch = true)/*: SymfonyResponse*/
     {
-        $type = cast_to_int($type);
         $catch = cast_to_bool($catch);
+
+        $type = cast_to_int($type);
 
         return $this[HttpKernelContract::class]->handle(Request::createFromBase($request));
     }

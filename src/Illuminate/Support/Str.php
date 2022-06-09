@@ -409,7 +409,7 @@ class Str
         }
 
         try {
-            json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+            backport_json_decode_throw($value, true, 512);
         } catch (JsonException $e) {
             return false;
         }
@@ -764,8 +764,9 @@ class Str
      */
     public static function repeat(/*string */$string, /*int */$times)
     {
-        $string = cast_to_string($string);
         $times = cast_to_int($times);
+
+        $string = cast_to_string($string);
 
         return str_repeat($string, $times);
     }

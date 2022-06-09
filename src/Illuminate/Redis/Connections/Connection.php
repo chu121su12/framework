@@ -132,11 +132,9 @@ abstract class Connection
      */
     protected function event($event)
     {
-        if (! isset($this->events)) {
-            return;
+        if (isset($this->events)) {
+            $this->events->dispatch($event);
         }
-
-        $this->events->dispatch($event);
     }
 
     /**
@@ -147,11 +145,9 @@ abstract class Connection
      */
     public function listen(Closure $callback)
     {
-        if (! isset($this->events)) {
-            return;
+        if (isset($this->events)) {
+            $this->events->listen(CommandExecuted::class, $callback);
         }
-
-        $this->events->listen(CommandExecuted::class, $callback);
     }
 
     /**

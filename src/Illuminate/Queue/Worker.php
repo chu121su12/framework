@@ -149,8 +149,7 @@ class Worker
             }
 
             if (isset($this->resetScope)) {
-                $resetScope = $this->resetScope;
-                $resetScope();
+                value($this->resetScope);
             }
 
             // First, we will attempt to get the next job off of the queue. We will also
@@ -263,9 +262,7 @@ class Worker
      */
     protected function daemonShouldRun(WorkerOptions $options, $connectionName, $queue)
     {
-        $isDownForMaintenance = $this->isDownForMaintenance;
-
-        return ! (($isDownForMaintenance() && ! $options->force) ||
+        return ! ((value($this->isDownForMaintenance) && ! $options->force) ||
             $this->paused ||
             $this->events->until(new Looping($connectionName, $queue)) === false);
     }

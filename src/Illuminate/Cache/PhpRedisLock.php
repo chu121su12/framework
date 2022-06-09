@@ -17,8 +17,10 @@ class PhpRedisLock extends RedisLock
      */
     public function __construct(PhpRedisConnection $redis, /*string */$name, /*int */$seconds, /*?string */$owner = null)
     {
-        $name = cast_to_string($name);
         $seconds = cast_to_int($seconds);
+
+        $name = cast_to_string($name);
+
         $owner = cast_to_string($owner, null);
 
         parent::__construct($redis, $name, $seconds, $owner);

@@ -62,8 +62,8 @@ class RouteListCommand extends Command
     protected $verbColors = [
         'ANY' => 'red',
         'GET' => 'blue',
-        'HEAD' => 'cyan',
-        'OPTIONS' => 'cyan',
+        'HEAD' => 'cyan', // cyan < #6C7280',
+        'OPTIONS' => 'cyan', // cyan < #6C7280',
         'POST' => 'yellow',
         'PUT' => 'yellow',
         'PATCH' => 'yellow',
@@ -393,6 +393,7 @@ class RouteListCommand extends Command
                 $action = substr($action, 0, $terminalWidth - 7 - mb_strlen($method.$spaces.$uri.$dots)).'…';
             }
 
+            // cyan < #6C7280
             $method = Str::of($method)->explode('|')->map(
                 function ($method) { return sprintf('<fg=%s>%s</>', isset($this->verbColors[$method]) ? $this->verbColors[$method] : 'default', $method); }
             )->implode('<fg=cyan>|</>');

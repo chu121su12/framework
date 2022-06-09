@@ -89,7 +89,6 @@ class ScheduleListCommand extends Command
             $nextDueDateLabel = 'Next Due:';
 
             $timezoneOption = $this->option('timezone');
-            $cron  =
             $nextDueDate = Carbon::create(/*(new CronExpression($event->expression))*/CronExpression::factory($event->expression)
                 ->getNextRunDate(Carbon::now()->setTimezone($event->timezone))
                 ->setTimezone($timezone)
@@ -108,6 +107,7 @@ class ScheduleListCommand extends Command
             // Highlight the parameters...
             $command = preg_replace("#(php artisan [\w\-:]+) (.+)#", '$1 <fg=yellow;options=bold>$2</>', $command);
 
+            // cyan < #6C7280
             return [sprintf(
                 '  <fg=yellow>%s</>  %s<fg=cyan>%s %s%s %s</>',
                 $expression,

@@ -109,7 +109,7 @@ class Store implements Session
     {
         if ($data = $this->handler->read($this->getId())) {
             if ($this->serialization === 'json') {
-                $data = json_decode($this->prepareForUnserialize($data), true);
+                $data = backport_json_decode($this->prepareForUnserialize($data), true);
             } else {
                 $data = @unserialize($this->prepareForUnserialize($data));
             }

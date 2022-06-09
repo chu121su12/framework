@@ -383,8 +383,9 @@ class PendingRequest
      */
     public function withBasicAuth(/*string */$username, /*string */$password)
     {
-        $username = cast_to_string($username);
         $password = cast_to_string($password);
+
+        $username = cast_to_string($username);
 
         return tap($this, function () use ($username, $password) {
             $this->options['auth'] = [$username, $password];
@@ -528,9 +529,11 @@ class PendingRequest
      */
     public function retry(/*int */$times, /*int */$sleepMilliseconds = 0, /*?*/callable $when = null, /*bool */$throw = true)
     {
-        $times = cast_to_int($times);
-        $sleepMilliseconds = cast_to_int($sleepMilliseconds);
         $throw = cast_to_bool($throw);
+
+        $sleepMilliseconds = cast_to_int($sleepMilliseconds);
+
+        $times = cast_to_int($times);
 
         $this->tries = $times;
         $this->retryDelay = $sleepMilliseconds;
@@ -772,8 +775,9 @@ class PendingRequest
      */
     public function send(/*string */$method, /*string */$url, array $options = [])
     {
-        $method = cast_to_string($method);
         $url = cast_to_string($url);
+
+        $method = cast_to_string($method);
 
         if (! Str::startsWith($url, ['http://', 'https://'])) {
             $url = ltrim(rtrim($this->baseUrl, '/').'/'.ltrim($url, '/'), '/');
@@ -892,8 +896,9 @@ class PendingRequest
      */
     protected function makePromise(/*string */$method, /*string */$url, array $options = [])
     {
-        $method = cast_to_string($method);
         $url = cast_to_string($url);
+
+        $method = cast_to_string($method);
 
         return $this->promise = $this->sendRequest($method, $url, $options)
             ->then(function (MessageInterface $message) {
@@ -919,8 +924,9 @@ class PendingRequest
      */
     protected function sendRequest(/*string */$method, /*string */$url, array $options = [])
     {
-        $method = cast_to_string($method);
         $url = cast_to_string($url);
+
+        $method = cast_to_string($method);
 
         $clientMethod = $this->async ? 'requestAsync' : 'request';
 
@@ -1088,10 +1094,12 @@ class PendingRequest
                 $promise = $handler($request, $options);
 
                 return $promise->then(function ($response) use ($request, $options) {
-                    optional($this->factory)->recordRequestResponsePair(
-                        (new Request($request))->withData($options['laravel_data']),
-                        new Response($response)
-                    );
+                    if (isset($this->factory)) {
+                        $this->factory->recordRequestResponsePair(
+                            (new Request($request))->withData($options['laravel_data']),
+                            new Response($response)
+                        );
+                    }
 
                     return $response;
                 });
@@ -1255,7 +1263,11 @@ class PendingRequest
      */
     protected function dispatchRequestSendingEvent()
     {
-        if ($dispatcher = optional($this->factory)->getDispatcher()) {
+        if (isset($this->factory)) {
+            $dispatcher = $this->factory->getDispatcher();
+        }
+
+        if (isset($dispatcher)) {
             $dispatcher->dispatch(new RequestSending($this->request));
         }
     }
@@ -1268,7 +1280,13 @@ class PendingRequest
      */
     protected function dispatchResponseReceivedEvent(Response $response)
     {
-        if (! ($dispatcher = optional($this->factory)->getDispatcher()) ||
+        if (isset($this->factory)) {
+            $dispatcher = $this->factory->getDispatcher();
+        } else {
+            $dispatcher = null;
+        }
+
+        if (! $dispatcher ||
             ! $this->request) {
             return;
         }
@@ -1283,7 +1301,11 @@ class PendingRequest
      */
     protected function dispatchConnectionFailedEvent()
     {
-        if ($dispatcher = optional($this->factory)->getDispatcher()) {
+        if (isset($this->factory)) {
+            $dispatcher = $this->factory->getDispatcher();
+        }
+
+        if (isset($dispatcher)) {
             $dispatcher->dispatch(new ConnectionFailed($this->request));
         }
     }

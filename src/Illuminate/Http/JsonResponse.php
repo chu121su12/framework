@@ -43,8 +43,6 @@ class JsonResponse extends BaseJsonResponse
 
         $data = cast_to_string($data, null);
 
-        $headers = cast_to_array($headers);
-
         return new static($data, $status, $headers, 0, true);
     }
 

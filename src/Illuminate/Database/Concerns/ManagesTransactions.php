@@ -53,8 +53,10 @@ trait ManagesTransactions
 
                 $this->transactions = max(0, $this->transactions - 1);
 
-                if ($this->afterCommitCallbacksShouldBeExecuted() && $this->transactionsManager) {
-                    $this->transactionsManager->commit($this->getName());
+                if ($this->afterCommitCallbacksShouldBeExecuted()) {
+                    if (isset($this->transactionsManager)) {
+                        $this->transactionsManager->commit($this->getName());
+                    }
                 }
             } catch (\Exception $e) {
             } catch (\Error $e) {
@@ -96,9 +98,11 @@ trait ManagesTransactions
             $this->transactions > 1) {
             $this->transactions--;
 
-            optional($this->transactionsManager)->rollback(
-                $this->getName(), $this->transactions
-            );
+            if (isset($this->transactionsManager)) {
+                $this->transactionsManager->rollback(
+                    $this->getName(), $this->transactions
+                );
+            }
 
             throw new DeadlockException($e->getMessage(), is_int($e->getCode()) ? $e->getCode() : 0, $e);
         }
@@ -129,9 +133,11 @@ trait ManagesTransactions
 
         $this->transactions++;
 
-        optional($this->transactionsManager)->begin(
-            $this->getName(), $this->transactions
-        );
+        if (isset($this->transactionsManager)) {
+            $this->transactionsManager->begin(
+                $this->getName(), $this->transactions
+            );
+        }
 
         $this->fireConnectionEvent('beganTransaction');
     }
@@ -213,8 +219,10 @@ trait ManagesTransactions
 
         $this->transactions = max(0, $this->transactions - 1);
 
-        if ($this->afterCommitCallbacksShouldBeExecuted() && $this->transactionsManager) {
-            $this->transactionsManager->commit($this->getName());
+        if ($this->afterCommitCallbacksShouldBeExecuted()) {
+            if (isset($this->transactionsManager)) {
+                $this->transactionsManager->commit($this->getName());
+            }
         }
 
         $this->fireConnectionEvent('committed');
@@ -296,9 +304,11 @@ trait ManagesTransactions
 
         $this->transactions = $toLevel;
 
-        optional($this->transactionsManager)->rollback(
-            $this->getName(), $this->transactions
-        );
+        if (isset($this->transactionsManager)) {
+            $this->transactionsManager->rollback(
+                $this->getName(), $this->transactions
+            );
+        }
 
         $this->fireConnectionEvent('rollingBack');
     }
@@ -337,9 +347,11 @@ trait ManagesTransactions
         if ($this->causedByLostConnection($e)) {
             $this->transactions = 0;
 
-            optional($this->transactionsManager)->rollback(
-                $this->getName(), $this->transactions
-            );
+            if (isset($this->transactionsManager)) {
+                $this->transactionsManager->rollback(
+                    $this->getName(), $this->transactions
+                );
+            }
         }
 
         throw $e;
@@ -365,7 +377,7 @@ trait ManagesTransactions
      */
     public function afterCommit($callback)
     {
-        if ($this->transactionsManager) {
+        if (isset($this->transactionsManager)) {
             return $this->transactionsManager->addCallback($callback);
         }
 

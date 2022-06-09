@@ -64,6 +64,7 @@ class EventListCommand extends Command
             return;
         }
 
+        // cyan < #6C7280
         $this->line(
             $events->map(function ($listeners, $event) { return [
                 sprintf('  <fg=white>%s</>', $this->appendEventInterfaces($event)),

@@ -111,7 +111,7 @@ class DatabaseStore implements LockProvider, Store
             return;
         }
 
-        // Why?
+        // TODO: Why?
         if (! isset($cache->value)) {
             $this->forget($key);
 

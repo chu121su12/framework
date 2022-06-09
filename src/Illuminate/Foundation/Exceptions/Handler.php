@@ -379,12 +379,12 @@ class Handler implements ExceptionHandlerContract
             return $response;
         }
 
-        return backport_match(true,
-            [$e instanceof HttpResponseException, function () use ($e) { return $e->getResponse(); }],
-            [$e instanceof AuthenticationException, function () use ($e, $request) { return $this->unauthenticated($request, $e); }],
-            [$e instanceof ValidationException, function () use ($e, $request) { return $this->convertValidationExceptionToResponse($e, $request); }],
-            [__BACKPORT_MATCH_DEFAULT_CASE__, function () use ($e, $request) { return $this->renderExceptionResponse($request, $e); }]
-        );
+        switch (true) {
+            case $e instanceof HttpResponseException: return $e->getResponse();
+            case $e instanceof AuthenticationException: return $this->unauthenticated($request, $e);
+            case $e instanceof ValidationException: return $this->convertValidationExceptionToResponse($e, $request);
+            default: return $this->renderExceptionResponse($request, $e);
+        }
     }
 
     /**
@@ -397,15 +397,15 @@ class Handler implements ExceptionHandlerContract
     {
         backport_type_throwable($e);
 
-        return backport_match(true,
-            [$e instanceof BackedEnumCaseNotFoundException, function () use ($e) { return new NotFoundHttpException($e->getMessage(), $e); }],
-            [$e instanceof ModelNotFoundException, function () use ($e) { return new NotFoundHttpException($e->getMessage(), $e); }],
-            [$e instanceof AuthorizationException, function () use ($e) { return new AccessDeniedHttpException($e->getMessage(), $e); }],
-            [$e instanceof TokenMismatchException, function () use ($e) { return new HttpException(419, $e->getMessage(), $e); }],
-            [$e instanceof SuspiciousOperationException, function () use ($e) { return new NotFoundHttpException('Bad hostname provided.', $e); }],
-            [$e instanceof RecordsNotFoundException, function () use ($e) { return new NotFoundHttpException('Not found.', $e); }],
-            [__BACKPORT_MATCH_DEFAULT_CASE__, $e]
-        );
+        switch (true) {
+            case $e instanceof BackedEnumCaseNotFoundException: return new NotFoundHttpException($e->getMessage(), $e);
+            case $e instanceof ModelNotFoundException: return new NotFoundHttpException($e->getMessage(), $e);
+            case $e instanceof AuthorizationException: return new AccessDeniedHttpException($e->getMessage(), $e);
+            case $e instanceof TokenMismatchException: return new HttpException(419, $e->getMessage(), $e);
+            case $e instanceof SuspiciousOperationException: return new NotFoundHttpException('Bad hostname provided.', $e);
+            case $e instanceof RecordsNotFoundException: return new NotFoundHttpException('Not found.', $e);
+            default: return $e;
+        }
     }
 
     /**
@@ -674,8 +674,7 @@ class Handler implements ExceptionHandlerContract
      */
     protected function registerErrorViewPaths()
     {
-        $errorViewPath = new RegisterErrorViewPaths;
-        $errorViewPath();
+        value(new RegisterErrorViewPaths);
     }
 
     /**

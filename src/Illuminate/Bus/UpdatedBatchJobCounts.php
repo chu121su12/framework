@@ -27,8 +27,9 @@ class UpdatedBatchJobCounts
      */
     public function __construct(/*int */$pendingJobs = 0, /*int */$failedJobs = 0)
     {
-        $pendingJobs = cast_to_int($pendingJobs);
         $failedJobs = cast_to_int($failedJobs);
+
+        $pendingJobs = cast_to_int($pendingJobs);
 
         $this->pendingJobs = $pendingJobs;
         $this->failedJobs = $failedJobs;

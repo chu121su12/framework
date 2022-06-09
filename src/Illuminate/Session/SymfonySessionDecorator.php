@@ -89,7 +89,7 @@ class SymfonySessionDecorator implements SessionInterface
      */
     public function migrate(/*bool */$destroy = false, /*int */$lifetime = null)/*: bool*/
     {
-        $destroy = cast_to_bool($destroy, null);
+        $destroy = cast_to_bool($destroy);
 
         $lifetime = cast_to_int($lifetime, null);
 
@@ -133,9 +133,9 @@ class SymfonySessionDecorator implements SessionInterface
      */
     public function set(/*string */$name, /*mixed */$value)
     {
-        $name = cast_to_string($name);
-
         $value = cast_to_mixed($value);
+
+        $name = cast_to_string($name);
 
         $this->store->put($name, $value);
     }

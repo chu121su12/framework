@@ -139,7 +139,9 @@ class Response implements ArrayAccess
      */
     public function effectiveUri()
     {
-        return optional($this->transferStats)->getEffectiveUri();
+        if (isset($this->transferStats)) {
+            return $this->transferStats->getEffectiveUri();
+        }
     }
 
     /**
@@ -254,7 +256,9 @@ class Response implements ArrayAccess
      */
     public function handlerStats()
     {
-        $handlerStats = optional($this->transferStats)->getHandlerStats();
+        if (isset($this->transferStats)) {
+            $handlerStats = $this->transferStats->getHandlerStats();
+        }
 
         return isset($handlerStats) ? $handlerStats : [];
     }

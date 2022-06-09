@@ -123,8 +123,7 @@ class DownCommand extends Command
      */
     protected function prerenderView()
     {
-        $errorViewPath = new RegisterErrorViewPaths;
-        $errorViewPath();
+        value(new RegisterErrorViewPaths);
 
         return view($this->option('render'), [
             'retryAfter' => $this->option('retry'),

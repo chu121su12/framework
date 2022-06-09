@@ -21,8 +21,10 @@ class StreamedResponseException extends RuntimeException
      * @param  \Throwable  $originalException
      * @return void
      */
-    public function __construct(Throwable $originalException)
+    public function __construct(/*Throwable */$originalException)
     {
+        backport_type_throwable($originalException);
+
         $this->originalException = $originalException;
 
         parent::__construct($originalException->getMessage());

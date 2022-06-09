@@ -100,7 +100,6 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
             }
         }
 
-
 trait InteractsWithExceptionHandling
 {
     /**

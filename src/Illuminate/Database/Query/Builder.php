@@ -1183,6 +1183,8 @@ class Builder implements BuilderContract
      */
     public function whereBetween($column, /*iterable */$values, $boolean = 'and', $not = false)
     {
+        $values = cast_to_iterable($values);
+
         $type = 'between';
 
         if ($values instanceof CarbonPeriod) {
@@ -1223,6 +1225,8 @@ class Builder implements BuilderContract
      */
     public function orWhereBetween($column, /*iterable */$values)
     {
+        $values = cast_to_iterable($values);
+
         return $this->whereBetween($column, $values, 'or');
     }
 
@@ -1248,6 +1252,8 @@ class Builder implements BuilderContract
      */
     public function whereNotBetween($column, /*iterable */$values, $boolean = 'and')
     {
+        $values = cast_to_iterable($values);
+
         return $this->whereBetween($column, $values, $boolean, true);
     }
 
@@ -1273,6 +1279,8 @@ class Builder implements BuilderContract
      */
     public function orWhereNotBetween($column, /*iterable */$values)
     {
+        $values = cast_to_iterable($values);
+
         return $this->whereNotBetween($column, $values, 'or');
     }
 

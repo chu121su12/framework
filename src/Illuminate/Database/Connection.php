@@ -401,7 +401,7 @@ class Connection implements ConnectionInterface
             $statement->execute();
 
             /*return $statement->fetchAll();*/
-            // Why?
+            // TODO: Why?
             return $statement->fetchAll($this->fetchMode);
         });
     }
@@ -641,14 +641,24 @@ class Connection implements ConnectionInterface
     public function bindValues($statement, $bindings)
     {
         foreach ($bindings as $key => $value) {
+            $pdoParam = null;
+            switch (true) {
+                case is_int($value): 
+                    $pdoParam = PDO::PARAM_INT;
+                    break;
+                
+                case is_resource($value): 
+                    $pdoParam = PDO::PARAM_LOB;
+                    break;
+
+                default:
+                    $pdoParam = PDO::PARAM_STR;
+            }
+
             $statement->bindValue(
                 is_string($key) ? $key : $key + 1,
                 $value,
-                backport_match(true,
-                    [is_int($value), PDO::PARAM_INT],
-                    [is_resource($value), PDO::PARAM_LOB],
-                    [__BACKPORT_MATCH_DEFAULT_CASE__, PDO::PARAM_STR]
-                )
+                $pdoParam
             );
         }
     }
@@ -897,15 +907,12 @@ class Connection implements ConnectionInterface
      */
     protected function fireConnectionEvent($event)
     {
-        if (! isset($this->events)) {
-            return;
-        }
-
-        switch ($event) {
-            case 'beganTransaction': return $this->events->dispatch(new TransactionBeginning($this));
-            case 'committed': return $this->events->dispatch(new TransactionCommitted($this));
-            case 'rollingBack': return $this->events->dispatch(new TransactionRolledBack($this));
-            default: return null;
+        if (isset($this->events)) {
+                switch ($event) {
+                case 'beganTransaction': return $this->events->dispatch(new TransactionBeginning($this));
+                case 'committed': return $this->events->dispatch(new TransactionCommitted($this));
+                case 'rollingBack': return $this->events->dispatch(new TransactionRolledBack($this));
+            }
         }
     }
 
@@ -917,11 +924,9 @@ class Connection implements ConnectionInterface
      */
     protected function event($event)
     {
-        if (! isset($this->events)) {
-            return;
+        if (isset($this->events)) {
+            $this->events->dispatch($event);
         }
-
-        $this->events->dispatch($event);
     }
 
     /**
@@ -1076,9 +1081,11 @@ class Connection implements ConnectionInterface
      */
     public function registerDoctrineType(/*string */$class, /*string */$name, /*string */$type)/*: void*/
     {
-        $class = cast_to_string($class);
-        $name = cast_to_string($name);
         $type = cast_to_string($type);
+
+        $name = cast_to_string($name);
+
+        $class = cast_to_string($class);
 
         if (! $this->isDoctrineAvailable()) {
             throw new RuntimeException(

@@ -209,7 +209,13 @@ trait InteractsWithDatabase
      */
     protected function getTable($table)
     {
-        return optional($this->newModelFor($table))->getTable() ?: $table;
+        $newModel = $this->newModelFor($table);
+
+        if (isset($newModel)) {
+            $newModel = $newModel->getTable();
+        }
+
+        return $newModel ?: $table;
     }
 
     /**
@@ -220,7 +226,13 @@ trait InteractsWithDatabase
      */
     protected function getTableConnection($table)
     {
-        return optional($this->newModelFor($table))->getConnectionName();
+        $newModel = $this->newModelFor($table);
+
+        if (isset($newModel)) {
+            $newModel = $newModel->getConnectionName();
+        }
+
+        return $newModel;
     }
 
     /**

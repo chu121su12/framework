@@ -126,6 +126,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
     public function incrementTotalJobs(/*string */$batchId, /*int */$amount)
     {
         $amount = cast_to_int($amount);
+
         $batchId = cast_to_string($batchId);
 
         $this->connection->table($this->table)->where('id', $batchId)->update([
@@ -145,6 +146,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
     public function decrementPendingJobs(/*string */$batchId, /*string */$jobId)
     {
         $jobId = cast_to_string($jobId);
+
         $batchId = cast_to_string($batchId);
 
         $values = $this->updateAtomicValues($batchId, function ($batch) use ($jobId) {
@@ -171,6 +173,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
     public function incrementFailedJobs(/*string */$batchId, /*string */$jobId)
     {
         $jobId = cast_to_string($jobId);
+
         $batchId = cast_to_string($batchId);
 
         $values = $this->updateAtomicValues($batchId, function ($batch) use ($jobId) {

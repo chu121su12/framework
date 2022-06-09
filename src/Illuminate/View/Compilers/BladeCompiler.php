@@ -691,6 +691,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
     public function anonymousComponentNamespace(/*string */$directory, /*string */$prefix = null)
     {
         $directory = cast_to_string($directory);
+
         $prefix = cast_to_string($prefix, null);
 
         $prefix = isset($prefix) ? $prefix : $directory;

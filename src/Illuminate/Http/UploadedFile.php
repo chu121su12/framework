@@ -123,15 +123,6 @@ class UploadedFile extends SymfonyUploadedFile
      */
     public static function createFromBase(SymfonyUploadedFile $file, $test = false)
     {
-        return $file instanceof static ? $file : new static(
-            $file->getPathname(),
-            $file->getClientOriginalName(),
-            $file->getClientMimeType(),
-            null,
-            $file->getError(),
-            $test
-        );
-
         // updated constructor signature:
         // return $file instanceof static ? $file : new static(
         //     $file->getPathname(),
@@ -140,6 +131,15 @@ class UploadedFile extends SymfonyUploadedFile
         //     $file->getError(),
         //     $test
         // );
+
+        return $file instanceof static ? $file : new static(
+            $file->getPathname(),
+            $file->getClientOriginalName(),
+            $file->getClientMimeType(),
+            null,
+            $file->getError(),
+            $test
+        );
     }
 
     /**

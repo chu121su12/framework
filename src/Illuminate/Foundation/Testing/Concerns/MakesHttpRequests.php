@@ -93,8 +93,9 @@ trait MakesHttpRequests
      */
     public function withHeader(/*string */$name, /*string */$value)
     {
-        $name = cast_to_string($name);
         $value = cast_to_string($value);
+
+        $name = cast_to_string($name);
 
         $this->defaultHeaders[$name] = $value;
 
@@ -110,8 +111,9 @@ trait MakesHttpRequests
      */
     public function withToken(/*string */$token, /*string */$type = 'Bearer')
     {
-        $token = cast_to_string($token);
         $type = cast_to_string($type);
+
+        $token = cast_to_string($token);
 
         return $this->withHeader('Authorization', $type.' '.$token);
     }
@@ -207,8 +209,9 @@ trait MakesHttpRequests
      */
     public function withCookie(/*string */$name, /*string */$value)
     {
-        $name = cast_to_string($name);
         $value = cast_to_string($value);
+
+        $name = cast_to_string($name);
 
         $this->defaultCookies[$name] = $value;
 
@@ -237,8 +240,9 @@ trait MakesHttpRequests
      */
     public function withUnencryptedCookie(/*string */$name, /*string */$value)
     {
-        $name = cast_to_string($name);
         $value = cast_to_string($value);
+
+        $name = cast_to_string($name);
 
         $this->unencryptedCookies[$name] = $value;
 
