@@ -1153,6 +1153,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      *
      * @return \Traversable<TKey, TValue>
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()/*: Traversable*/;
 
     /**
@@ -1160,6 +1161,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()/*: int*/;
 
     /**
@@ -1202,6 +1204,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()/*: mixed*/;
 
     /**
