@@ -74,7 +74,7 @@ class PotentiallyTranslatedString implements Stringable
      */
     public function __toString()
     {
-        return $this->translation ?? $this->string;
+        return isset($this->translation) ? $this->translation : $this->string;
     }
 
     /**

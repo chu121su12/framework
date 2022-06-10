@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class ConditionableTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $db = new DB;
 
@@ -21,7 +21,7 @@ class ConditionableTest extends TestCase
         $db->setAsGlobal();
     }
 
-    public function testWhen(): void
+    public function testWhen()/*: void*/
     {
         $this->assertInstanceOf(\Illuminate\Support\HigherOrderWhenProxy::class, TestConditionableModel::query()->when(true));
         $this->assertInstanceOf(\Illuminate\Support\HigherOrderWhenProxy::class, TestConditionableModel::query()->when(false));
@@ -30,7 +30,7 @@ class ConditionableTest extends TestCase
         }));
     }
 
-    public function testUnless(): void
+    public function testUnless()/*: void*/
     {
         $this->assertInstanceOf(\Illuminate\Support\HigherOrderWhenProxy::class, TestConditionableModel::query()->unless(true));
         $this->assertInstanceOf(\Illuminate\Support\HigherOrderWhenProxy::class, TestConditionableModel::query()->unless(false));

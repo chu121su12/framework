@@ -7,24 +7,67 @@ use Illuminate\Mail\Attachment;
 use Illuminate\Mail\Mailable;
 use PHPUnit\Framework\TestCase;
 
+class AttachableTest_testItCanHaveMacroConstructors_class implements Attachable
+        {
+            public function toMailAttachment()
+            {
+                return Attachment::fromInvoice('foo')
+                    ->as_('bar')
+                    ->withMime('image/jpeg');
+            }
+        }
+
+class AttachableTest_testItCanUtiliseExistingApisOnNonMailBasedResourcesWithPath_class_1
+        {
+            public $pathArgs;
+
+            public function withPathAttachment()
+            {
+                $this->pathArgs = func_get_args();
+            }
+        }
+
+class AttachableTest_testItCanUtiliseExistingApisOnNonMailBasedResourcesWithPath_class_2 implements Attachable
+        {
+            public function toMailAttachment()
+            {
+                return Attachment::fromPath('foo.jpg')
+                    ->as_('bar')
+                    ->withMime('text/css');
+            }
+        }
+
+class AttachableTest_testItCanUtiliseExistingApisOnNonMailBasedResourcesWithArgs_class_1
+        {
+            public $pathArgs;
+
+            public function withDataAttachment()
+            {
+                $this->dataArgs = func_get_args();
+            }
+        }
+
+class AttachableTest_testItCanUtiliseExistingApisOnNonMailBasedResourcesWithArgs_class_2 implements Attachable
+        {
+            public function toMailAttachment()
+            {
+                return Attachment::fromData(function () {
+                    return 'expected attachment body';
+                }, 'bar')
+                    ->withMime('text/css');
+            }
+        }
+
 class AttachableTest extends TestCase
 {
     public function testItCanHaveMacroConstructors()
     {
         Attachment::macro('fromInvoice', function ($name) {
-            return Attachment::fromData(fn () => 'pdf content', $name);
+            return Attachment::fromData(function () { return 'pdf content'; }, $name);
         });
         $mailable = new Mailable;
 
-        $mailable->attach(new class() implements Attachable
-        {
-            public function toMailAttachment()
-            {
-                return Attachment::fromInvoice('foo')
-                    ->as('bar')
-                    ->withMime('image/jpeg');
-            }
-        });
+        $mailable->attach(new AttachableTest_testItCanHaveMacroConstructors_class());
 
         $this->assertSame([
             'data' => 'pdf content',
@@ -40,28 +83,14 @@ class AttachableTest extends TestCase
         Attachment::macro('size', function () {
             return 99;
         });
-        $notification = new class()
-        {
-            public $pathArgs;
-
-            public function withPathAttachment()
-            {
-                $this->pathArgs = func_get_args();
-            }
-        };
-        $attachable = new class() implements Attachable
-        {
-            public function toMailAttachment()
-            {
-                return Attachment::fromPath('foo.jpg')
-                    ->as('bar')
-                    ->withMime('text/css');
-            }
-        };
+        $notification = new AttachableTest_testItCanUtiliseExistingApisOnNonMailBasedResourcesWithPath_class_1();
+        $attachable = new AttachableTest_testItCanUtiliseExistingApisOnNonMailBasedResourcesWithPath_class_2;
 
         $attachable->toMailAttachment()->attachWith(
-            fn ($path, $attachment) => $notification->withPathAttachment($path, $attachment->as, $attachment->mime, $attachment->size()),
-            fn () => null
+            function ($path, $attachment) use ($notification) {
+                return $notification->withPathAttachment($path, $attachment->as, $attachment->mime, $attachment->size());
+            },
+            function () { return null; }
         );
 
         $this->assertSame([
@@ -77,27 +106,14 @@ class AttachableTest extends TestCase
         Attachment::macro('size', function () {
             return 99;
         });
-        $notification = new class()
-        {
-            public $pathArgs;
-
-            public function withDataAttachment()
-            {
-                $this->dataArgs = func_get_args();
-            }
-        };
-        $attachable = new class() implements Attachable
-        {
-            public function toMailAttachment()
-            {
-                return Attachment::fromData(fn () => 'expected attachment body', 'bar')
-                    ->withMime('text/css');
-            }
-        };
+        $notification = new AttachableTest_testItCanUtiliseExistingApisOnNonMailBasedResourcesWithArgs_class_1();
+        $attachable = new AttachableTest_testItCanUtiliseExistingApisOnNonMailBasedResourcesWithArgs_class_2();
 
         $attachable->toMailAttachment()->attachWith(
-            fn () => null,
-            fn ($data, $attachment) => $notification->withDataAttachment($data(), $attachment->as, $attachment->mime, $attachment->size()),
+            function () { return null; },
+            function ($data, $attachment) use ($notification) {
+                return $notification->withDataAttachment($data(), $attachment->as, $attachment->mime, $attachment->size());
+            }
         );
 
         $this->assertSame([

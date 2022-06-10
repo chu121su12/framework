@@ -1715,7 +1715,7 @@ class RoutingRouteTest extends TestCase
         $router->apiResource(
             'teams.users',
             RouteTestNestedResourceControllerWithMissingUser::class,
-            ['only' => ['show']],
+            ['only' => ['show']]
         )
             ->middleware(SubstituteBindings::class)
             ->scoped();

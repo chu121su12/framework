@@ -11,6 +11,22 @@ use Illuminate\Mail\Transport\ArrayTransport;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+class MailMailableTest_testItAttachesFilesViaAttachableContractFromPath_class implements Attachable
+        {
+            public function toMailAttachment()
+            {
+                return Attachment::fromPath('/foo.jpg')->as_('bar')->withMime('image/png');
+            }
+        }
+
+class MailMailableTest_testItAttachesFilesViaAttachableContractFromData_class implements Attachable
+        {
+            public function toMailAttachment()
+            {
+                return Attachment::fromData(function () { return 'bar'; }, 'foo.jpg')->withMime('image/png');
+            }
+        }
+
 class MailMailableTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -507,13 +523,7 @@ class MailMailableTest extends TestCase
     {
         $mailable = new WelcomeMailableStub;
 
-        $mailable->attach(new class() implements Attachable
-        {
-            public function toMailAttachment()
-            {
-                return Attachment::fromPath('/foo.jpg')->as('bar')->withMime('image/png');
-            }
-        });
+        $mailable->attach(new MailMailableTest_testItAttachesFilesViaAttachableContractFromPath_class());
 
         $this->assertSame([
             'file' => '/foo.jpg',
@@ -528,13 +538,7 @@ class MailMailableTest extends TestCase
     {
         $mailable = new WelcomeMailableStub;
 
-        $mailable->attach(new class() implements Attachable
-        {
-            public function toMailAttachment()
-            {
-                return Attachment::fromData(fn () => 'bar', 'foo.jpg')->withMime('image/png');
-            }
-        });
+        $mailable->attach(new MailMailableTest_testItAttachesFilesViaAttachableContractFromData_class());
 
         $this->assertSame([
             'data' => 'bar',

@@ -38,7 +38,12 @@ class BroadcastController extends Controller
             $request->session()->reflash();
         }
 
-        return Broadcast::resolveAuthenticatedUser($request)
-                    ?? throw new AccessDeniedHttpException;
+        $broadcastUser = Broadcast::resolveAuthenticatedUser($request);
+
+        if (isset($broadcastUser)) {
+            return $broadcastUser;
+        }
+
+        throw new AccessDeniedHttpException;
     }
 }

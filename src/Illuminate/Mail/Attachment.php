@@ -51,7 +51,9 @@ class Attachment
      */
     public static function fromPath($path)
     {
-        return new static(fn ($attachment, $pathStrategy) => $pathStrategy($path, $attachment));
+        return new static(function ($attachment, $pathStrategy) use ($path) {
+            return $pathStrategy($path, $attachment);
+        });
     }
 
     /**
@@ -64,8 +66,10 @@ class Attachment
     public static function fromData(Closure $data, $name)
     {
         return (new static(
-            fn ($attachment, $pathStrategy, $dataStrategy) => $dataStrategy($data, $attachment)
-        ))->as($name);
+            function ($attachment, $pathStrategy, $dataStrategy) use ($data) {
+                return $dataStrategy($data, $attachment);
+            }
+        ))->as_($name);
     }
 
     /**
@@ -94,10 +98,12 @@ class Attachment
             )->disk($disk);
 
             $attachment
-                ->as($attachment->as ?? basename($path))
-                ->withMime($attachment->mime ?? $storage->mimeType($path));
+                ->as_(isset($attachment->as) ? $attachment->as : basename($path))
+                ->withMime(isset($attachment->mime) ? $attachment->mime : $storage->mimeType($path));
 
-            $dataStrategy(fn () => $storage->get($path), $attachment);
+            $dataStrategy(function () use ($storage, $path) {
+                return $storage->get($path);
+            }, $attachment);
         });
     }
 
@@ -107,7 +113,7 @@ class Attachment
      * @param  string  $name
      * @return $this
      */
-    public function as($name)
+    public function as_($name)
     {
         $this->as = $name;
 
@@ -136,7 +142,9 @@ class Attachment
      */
     public function attachWith(Closure $pathStrategy, Closure $dataStrategy)
     {
-        return ($this->resolver)($this, $pathStrategy, $dataStrategy);
+        $callback = $this->resolver;
+
+        return $callback($this, $pathStrategy, $dataStrategy);
     }
 
     /**
@@ -148,8 +156,12 @@ class Attachment
     public function attachTo($mail)
     {
         return $this->attachWith(
-            fn ($path) => $mail->attach($path, ['as' => $this->as, 'mime' => $this->mime]),
-            fn ($data) => $mail->attachData($data(), $this->as, ['mime' => $this->mime])
+            function ($path) use ($mail) {
+                return $mail->attach($path, ['as' => $this->as, 'mime' => $this->mime]);
+            },
+            function ($data) use ($mail) {
+                return $mail->attachData($data(), $this->as, ['mime' => $this->mime]);
+            }
         );
     }
 }

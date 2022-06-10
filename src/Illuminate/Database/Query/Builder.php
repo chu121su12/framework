@@ -2164,8 +2164,10 @@ class Builder implements BuilderContract
      * @param  bool  $not
      * @return $this
      */
-    public function havingBetween($column, iterable $values, $boolean = 'and', $not = false)
+    public function havingBetween($column, /*iterable */$values, $boolean = 'and', $not = false)
     {
+        $values = cast_to_iterable($values);
+
         $type = 'between';
 
         if ($values instanceof CarbonPeriod) {

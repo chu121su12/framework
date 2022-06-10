@@ -14,7 +14,7 @@ class AttachingFromStorageTest extends TestCase
         Storage::disk('local')->put('/dir/foo.png', 'expected body contents');
         $mail = new MailMessage();
         $attachment = Attachment::fromStorageDisk('local', '/dir/foo.png')
-            ->as('bar')
+            ->as_('bar')
             ->withMime('text/css');
 
         $attachment->attachTo($mail);

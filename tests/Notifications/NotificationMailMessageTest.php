@@ -7,6 +7,24 @@ use Illuminate\Mail\Attachment;
 use Illuminate\Notifications\Messages\MailMessage;
 use PHPUnit\Framework\TestCase;
 
+class NotificationMailMessageTest_testItAttachesFilesViaAttachableContractFromPath_class implements Attachable
+        {
+            public function toMailAttachment()
+            {
+                return Attachment::fromPath('/foo.jpg')->as_('bar')->withMime('image/png');
+            }
+        }
+
+class NotificationMailMessageTest_testItAttachesFilesViaAttachableContractFromData_class implements Attachable
+        {
+            public function toMailAttachment()
+            {
+                return Attachment::fromData(function () { return 'bar'; }, 'foo.jpg')->withMime('image/png');
+            }
+        }
+
+
+
 class NotificationMailMessageTest extends TestCase
 {
     public function testTemplate()
@@ -277,13 +295,7 @@ class NotificationMailMessageTest extends TestCase
     {
         $message = new MailMessage;
 
-        $message->attach(new class() implements Attachable
-        {
-            public function toMailAttachment()
-            {
-                return Attachment::fromPath('/foo.jpg')->as('bar')->withMime('image/png');
-            }
-        });
+        $message->attach(new NotificationMailMessageTest_testItAttachesFilesViaAttachableContractFromPath_class());
 
         $this->assertSame([
             'file' => '/foo.jpg',
@@ -298,13 +310,7 @@ class NotificationMailMessageTest extends TestCase
     {
         $mailMessage = new MailMessage();
 
-        $mailMessage->attach(new class() implements Attachable
-        {
-            public function toMailAttachment()
-            {
-                return Attachment::fromData(fn () => 'bar', 'foo.jpg')->withMime('image/png');
-            }
-        });
+        $mailMessage->attach(new NotificationMailMessageTest_testItAttachesFilesViaAttachableContractFromData_class());
 
         $this->assertSame([
             'data' => 'bar',

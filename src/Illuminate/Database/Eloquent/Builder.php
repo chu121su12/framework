@@ -1474,12 +1474,12 @@ class Builder implements BuilderContract
                 continue;
             }
 
-            [$attribute, $attributeSelectConstraint] = $this->parseNameAndAttributeSelectionConstraint($key);
+            list($attribute, $attributeSelectConstraint) = $this->parseNameAndAttributeSelectionConstraint($key);
 
             $preparedRelationships = array_merge(
                 $preparedRelationships,
                 ["{$prefix}{$attribute}" => $attributeSelectConstraint],
-                $this->prepareNestedWithRelationships($value, "{$prefix}{$attribute}"),
+                $this->prepareNestedWithRelationships($value, "{$prefix}{$attribute}")
             );
 
             unset($relations[$key]);
@@ -1490,14 +1490,18 @@ class Builder implements BuilderContract
         // the present Closures are merged + strings are made into constraints.
         foreach ($relations as $key => $value) {
             if (is_numeric($key) && is_string($value)) {
-                [$key, $value] = $this->parseNameAndAttributeSelectionConstraint($value);
+                list($key, $value) = $this->parseNameAndAttributeSelectionConstraint($value);
             }
+
+            $combine = isset($preparedRelationships[$prefix.$key])
+                ? $preparedRelationships[$prefix.$key]
+                : static function () {
+                    //
+                };
 
             $preparedRelationships[$prefix.$key] = $this->combineConstraints([
                 $value,
-                $preparedRelationships[$prefix.$key] ?? static function () {
-                    //
-                },
+                $combine,
             ]);
         }
 
@@ -1514,7 +1518,8 @@ class Builder implements BuilderContract
     {
         return function ($builder) use ($constraints) {
             foreach ($constraints as $constraint) {
-                $builder = $constraint($builder) ?? $builder;
+                $constraintResult = $constraint($builder);
+                $builder = isset($constraintResult) ? $constraintResult : $builder;
             }
 
             return $builder;

@@ -5,11 +5,11 @@ namespace Illuminate\Validation;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\ImplicitRule;
 use Illuminate\Contracts\Validation\InvokableRule;
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\Rule as RuleContract;
 use Illuminate\Contracts\Validation\ValidatorAwareRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
-class InvokableValidationRule implements Rule, ValidatorAwareRule
+class InvokableValidationRule implements RuleContract, ValidatorAwareRule
 {
     /**
      * The invokable that validates the attribute.
@@ -65,11 +65,8 @@ class InvokableValidationRule implements Rule, ValidatorAwareRule
      */
     public static function make($invokable)
     {
-        if ($invokable->implicit ?? false) {
-            return new class($invokable) extends InvokableValidationRule implements ImplicitRule
-            {
-                //
-            };
+        if (isset($invokable->implicit) ? $invokable->implicit : false) {
+            return new InvokableValidationRule_make_class($invokable);
         }
 
         return new InvokableValidationRule($invokable);
@@ -147,7 +144,22 @@ class InvokableValidationRule implements Rule, ValidatorAwareRule
      */
     protected function pendingPotentiallyTranslatedString($message)
     {
-        return new class($message, $this->validator->getTranslator(), fn ($message) => $this->messages[] = $message) extends PotentiallyTranslatedString
+        return new InvokableValidationRule_pendingPotentiallyTranslatedString_class(
+            $message, 
+            $this->validator->getTranslator(), 
+            function ($message) {
+                return $this->messages[] = $message;
+            }
+        );
+    }
+}
+
+class InvokableValidationRule_make_class extends InvokableValidationRule implements ImplicitRule
+            {
+                //
+            }
+
+class InvokableValidationRule_pendingPotentiallyTranslatedString_class extends PotentiallyTranslatedString
         {
             /**
              * The callback to call when the object destructs.
@@ -177,8 +189,8 @@ class InvokableValidationRule implements Rule, ValidatorAwareRule
              */
             public function __destruct()
             {
-                ($this->destructor)($this->toString());
+                $destructor = $this->destructor;
+
+                $destructor($this->toString());
             }
-        };
-    }
-}
+        }

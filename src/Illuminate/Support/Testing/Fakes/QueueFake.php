@@ -279,7 +279,9 @@ class QueueFake extends QueueManager implements Queue
             return collect();
         }
 
-        $callback = $callback ?: function () { return true; };
+        $callback = $callback ?: function () {
+            return true;
+        };
 
         return collect($this->jobs[$job])->filter(
             function ($data) use ($callback) { return $callback($data['job'], $data['queue'], $data['data']); }
