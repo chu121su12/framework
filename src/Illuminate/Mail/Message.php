@@ -24,6 +24,8 @@ class Message
     /**
      * CIDs of files embedded in the message.
      *
+     * @deprecated Will be removed in a future Laravel version.
+     *
      * @var array
      */
     protected $embeddedFiles = [];
@@ -286,7 +288,7 @@ class Message
     /**
      * Attach a file to the message.
      *
-     * @param  string  $file
+     * @param  string|\Illuminate\Contracts\Mail\Attachable|\Illuminate\Mail\Attachment  $file
      * @param  array  $options
      * @return $this
      */
@@ -315,7 +317,7 @@ class Message
     /**
      * Embed a file in the message and get the CID.
      *
-     * @param  string  $file
+     * @param  string|\Illuminate\Contracts\Mail\Attachable|\Illuminate\Mail\Attachment  $file
      * @return string
      */
     public function embed($file)

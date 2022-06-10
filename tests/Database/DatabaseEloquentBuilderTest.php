@@ -849,7 +849,7 @@ class DatabaseEloquentBuilderTest extends TestCase
         }]);
         $eagers = $builder->getEagerLoads();
 
-        $this->assertSame('foo', $eagers['orders']());
+        $this->assertSame('foo', $eagers['orders']($this->getBuilder()));
 
         $builder = $this->getBuilder();
         $builder->with(['orders.lines' => function () {
@@ -859,7 +859,7 @@ class DatabaseEloquentBuilderTest extends TestCase
 
         $this->assertInstanceOf(Closure::class, $eagers['orders']);
         $this->assertNull($eagers['orders']());
-        $this->assertSame('foo', $eagers['orders.lines']());
+        $this->assertSame('foo', $eagers['orders.lines']($this->getBuilder()));
 
         $builder = $this->getBuilder();
         $builder->with('orders.lines', function () {
@@ -869,7 +869,7 @@ class DatabaseEloquentBuilderTest extends TestCase
 
         $this->assertInstanceOf(Closure::class, $eagers['orders']);
         $this->assertNull($eagers['orders']());
-        $this->assertSame('foo', $eagers['orders.lines']());
+        $this->assertSame('foo', $eagers['orders.lines']($this->getBuilder()));
     }
 
     public function testQueryPassThru()

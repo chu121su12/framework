@@ -22,7 +22,7 @@ trait Conditionable
     {
         $value = $value instanceof Closure ? $value($this) : $value;
 
-        if (! $callback) {
+        if (func_num_args() === 1) {
             return new HigherOrderWhenProxy($this, $value);
         }
 
@@ -52,7 +52,7 @@ trait Conditionable
     {
         $value = $value instanceof Closure ? $value($this) : $value;
 
-        if (! $callback) {
+        if (func_num_args() === 1) {
             return new HigherOrderWhenProxy($this, ! $value);
         }
 

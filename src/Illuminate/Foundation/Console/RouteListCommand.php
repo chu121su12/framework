@@ -366,6 +366,8 @@ class RouteListCommand extends Command
 
         $terminalWidth = $this->getTerminalWidth();
 
+        $routeCount = $this->determineRouteCountOutput($routes, $terminalWidth);
+
         return $routes->map(function ($route) use ($maxMethod, $terminalWidth) {
             $action = $route['action'];
             $domain = $route['domain'];
@@ -404,9 +406,14 @@ class RouteListCommand extends Command
                 $spaces,
                 preg_replace('#({[^}]+})#', '<fg=yellow>$1</>', $uri),
                 $dots,
-                str_replace('   ', ' › ', $action)
+                str_replace('   ', ' › ', isset($action) ? $action : '')
             ), $this->output->isVerbose() && ! empty($middleware) ? "<fg=cyan>$middleware</>" : null];
-        })->flatten()->filter()->prepend('')->push('')->toArray();
+        })
+            ->flatten()
+            ->filter()
+            ->prepend('')
+            ->push('')->push($routeCount)->push('')
+            ->toArray();
     }
 
     /**
@@ -443,6 +450,24 @@ class RouteListCommand extends Command
         }
 
         return $name.$action;
+    }
+
+    /**
+     * Determine and return the output for displaying the number of routes in the CLI output.
+     *
+     * @param  \Illuminate\Support\Collection  $routes
+     * @param  int  $terminalWidth
+     * @return string
+     */
+    protected function determineRouteCountOutput($routes, $terminalWidth)
+    {
+        $routeCountText = 'Showing ['.$routes->count().'] routes';
+
+        $offset = $terminalWidth - mb_strlen($routeCountText) - 2;
+
+        $spaces = str_repeat(' ', $offset);
+
+        return $spaces.'<fg=blue;options=bold>Showing ['.$routes->count().'] routes</>';
     }
 
     /**

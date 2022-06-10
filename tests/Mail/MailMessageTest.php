@@ -2,6 +2,8 @@
 
 namespace Illuminate\Tests\Mail;
 
+use Illuminate\Contracts\Mail\Attachable;
+use Illuminate\Mail\Attachment;
 use Illuminate\Mail\Message;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
