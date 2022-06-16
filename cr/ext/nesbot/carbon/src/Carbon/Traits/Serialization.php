@@ -142,7 +142,7 @@ trait Serialization
     #[ReturnTypeWillChange]
     public function __wakeup()
     {
-        if (get_parent_class() && method_exists(parent::class, '__wakeup')) {
+        if (parent::class && method_exists(parent::class, '__wakeup')) {
             // @codeCoverageIgnoreStart
             try {
                 $exception = null;
@@ -151,6 +151,7 @@ trait Serialization
             } catch (\Error $exception) {
             } catch (Throwable $exception) {
             }
+
             if (isset($exception)) {
                 // FatalError occurs when calling msgpack_unpack() in PHP 7.4 or later.
                 $date = $this->dumpDateProperties['date'];

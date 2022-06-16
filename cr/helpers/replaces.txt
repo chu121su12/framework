@@ -187,7 +187,11 @@ backport_json_decode(
 ((?:self::\$?|\$)\w+(?:->\w+)*)(\[[^\]]+\])+\s+\?\?
 // ?
 
+> = null = <
+> = <
 
+^(declare\(strict_types=1\);)$
+/*$1*/
 
 (\n\s+)(private |protected |public )(const\b)
 $1/*$2*/$3

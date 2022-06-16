@@ -55,7 +55,7 @@
         "laravel/telescope": "^4.8.3",
         "laravel/tinker": "^2.7.2",
         "league/flysystem": "^1.0.70",
-        "nesbot/carbon": "^2.57.0",
+        "nesbot/carbon": "^2.58.0",
         "nunomaduro/collision": "^6.2.0",
         "spatie/backtrace": "^1.2.1",
         "spatie/flare-client-php": "^1.1.0",

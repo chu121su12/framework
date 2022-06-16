@@ -65,7 +65,7 @@ return [
 
         return $number.(
             $number > 20
-                ? (\in_array($number, [40, 50, 60, 80, 100]) ? 'fed' : 'ain')
+                ? (\in_array((int) $number, [40, 50, 60, 80, 100], true) ? 'fed' : 'ain')
                 : (isset($numbers[$number]) ? $numbers[$number] : '')
         );
     },
