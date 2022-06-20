@@ -6,6 +6,41 @@ use Illuminate\Contracts\Validation\Rule as RuleContract;
 use Illuminate\Contracts\Validation\ValidatorAwareRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
+class ClosureValidationRule_pendingPotentiallyTranslatedString_class extends PotentiallyTranslatedString
+        {
+            /**
+             * The callback to call when the object destructs.
+             *
+             * @var \Closure
+             */
+            protected $destructor;
+
+            /**
+             * Create a new pending potentially translated string.
+             *
+             * @param  string  $string
+             * @param  \Illuminate\Contracts\Translation\Translator  $translator
+             * @param  \Closure  $destructor
+             */
+            public function __construct($message, $translator, $destructor)
+            {
+                parent::__construct($message, $translator);
+
+                $this->destructor = $destructor;
+            }
+
+            /**
+             * Handle the object's destruction.
+             *
+             * @return void
+             */
+            public function __destruct()
+            {
+                $destructor = $this->destructor;
+                $destructor($this->toString());
+            }
+        }
+
 class ClosureValidationRule implements RuleContract, ValidatorAwareRule
 {
     /**
@@ -98,38 +133,12 @@ class ClosureValidationRule implements RuleContract, ValidatorAwareRule
      */
     protected function pendingPotentiallyTranslatedString($message)
     {
-        return new class($message, $this->validator->getTranslator(), fn ($message) => $this->messages[] = $message) extends PotentiallyTranslatedString
-        {
-            /**
-             * The callback to call when the object destructs.
-             *
-             * @var \Closure
-             */
-            protected $destructor;
-
-            /**
-             * Create a new pending potentially translated string.
-             *
-             * @param  string  $string
-             * @param  \Illuminate\Contracts\Translation\Translator  $translator
-             * @param  \Closure  $destructor
-             */
-            public function __construct($message, $translator, $destructor)
-            {
-                parent::__construct($message, $translator);
-
-                $this->destructor = $destructor;
+        return new ClosureValidationRule_pendingPotentiallyTranslatedString_class(
+            $message,
+            $this->validator->getTranslator(),
+            function ($message) {
+                return $this->messages[] = $message;
             }
-
-            /**
-             * Handle the object's destruction.
-             *
-             * @return void
-             */
-            public function __destruct()
-            {
-                ($this->destructor)($this->toString());
-            }
-        };
+        );
     }
 }

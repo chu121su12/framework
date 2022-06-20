@@ -224,7 +224,7 @@ class MimeType
     {
         return isset(static::$extensionToMimeTypeMap[$extension])
             ? static::$extensionToMimeTypeMap[$extension]
-            : 'text/plain';
+            : null;
     }
 
     /**

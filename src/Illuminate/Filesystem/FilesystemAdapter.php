@@ -684,7 +684,13 @@ class FilesystemAdapter implements CloudFilesystemContract
     {
         try {
             // return $this->driver->mimeType($path);
-            return $this->driver->getMimetype($path);
+            $result = $this->driver->getMimetype($path);
+
+            if ($result === null) {
+                throw new UnableToRetrieveMetadata('Unable to retrieve metadata');
+            }
+
+            return $result;
         } catch (UnableToRetrieveMetadata $e) {
             throw_if($this->throwsExceptions(), $e);
         }

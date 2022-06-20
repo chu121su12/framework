@@ -2719,7 +2719,9 @@ class Builder implements BuilderContract
     {
         $this->enforceOrderBy();
 
-        return collect($this->orders ?? $this->unionOrders ?? [])->filter(function ($order) {
+        $toCollect = isset($this->orders) ? $this->orders : (isset($this->unionOrders) ? $this->unionOrders : []);
+
+        return collect($toCollect)->filter(function ($order) {
             return Arr::has($order, 'direction');
         })->when($shouldReverse, function (Collection $orders) {
             return $orders->map(function ($order) {

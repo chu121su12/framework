@@ -185,7 +185,7 @@ class Util
     {
         $mimeType = MimeType::detectByContent($content);
 
-        if ( ! (empty($mimeType) || in_array($mimeType, ['application/x-empty', 'text/plain', 'text/x-asm']))) {
+        if ( ! (empty($mimeType) || in_array($mimeType, self::INCONCLUSIVE_MIME_TYPES))) {
             return $mimeType;
         }
 
@@ -350,4 +350,12 @@ class Util
         return $basename;
         // @codeCoverageIgnoreEnd
     }
+
+    const INCONCLUSIVE_MIME_TYPES = [
+        'application/x-empty',
+        'text/plain',
+        'text/x-asm',
+        'application/octet-stream',
+        'inode/x-empty',
+    ];
 }

@@ -114,6 +114,15 @@ class ValidationInvokableRuleTest_testItThrowsIfTranslationIsNotFound_class impl
             }
         }
 
+class ValidationInvokableRuleTest_testItCanSpecifyTheValidationErrorKeyForTheErrorMessage_class implements InvokableRule
+        {
+            public function __invoke($attribute, $value, $fail)
+            {
+                $fail('bar.baz', 'Another attribute error.');
+                $fail('This attribute error.');
+            }
+        }
+
 class ValidationInvokableRuleTest extends TestCase
 {
     public function testItCanPass()
@@ -253,14 +262,7 @@ class ValidationInvokableRuleTest extends TestCase
     public function testItCanSpecifyTheValidationErrorKeyForTheErrorMessage()
     {
         $trans = $this->getIlluminateArrayTranslator();
-        $rule = new class() implements InvokableRule
-        {
-            public function __invoke($attribute, $value, $fail)
-            {
-                $fail('bar.baz', 'Another attribute error.');
-                $fail('This attribute error.');
-            }
-        };
+        $rule = new ValidationInvokableRuleTest_testItCanSpecifyTheValidationErrorKeyForTheErrorMessage_class;
 
         $validator = new Validator($trans, ['foo' => 'xxxx'], ['foo' => $rule]);
 

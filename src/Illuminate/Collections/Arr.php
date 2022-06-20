@@ -555,9 +555,20 @@ class Arr
         $keys = array_keys($array);
 
         try {
+            set_error_handler(function($errno, $errstr, $errfile, $errline ) {
+                throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
+            });
+
             $items = array_map($callback, $array, $keys);
-        } catch (ArgumentCountError) {
+        } catch (ArgumentCountError $e) {
             $items = array_map($callback, $array);
+        } catch (\ErrorException $e) {
+            if (!preg_match('/expects exactly \d+ parameter.*\d+ given/', $e->getMessage())) {
+                throw $e;
+            }
+            $items = array_map($callback, $array);
+        } finally {
+            restore_error_handler();
         }
 
         return array_combine($keys, $items);
