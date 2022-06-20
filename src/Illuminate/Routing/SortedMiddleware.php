@@ -94,7 +94,11 @@ class SortedMiddleware extends Collection
 
         yield $stripped;
 
-        $interfaces = @class_implements($stripped);
+        $interfaces = false;
+
+        if (class_exists($stripped) || interface_exists($stripped)) {
+            $interfaces = @class_implements($stripped);
+        }
 
         if ($interfaces !== false) {
             foreach ($interfaces as $interface) {
