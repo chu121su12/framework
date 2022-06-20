@@ -9,6 +9,7 @@ use Exception as UnableToCreateDirectory;
 use Exception as UnableToDeleteDirectory;
 use Exception as UnableToDeleteFile;
 use Exception as UnableToMoveFile;
+use Exception as UnableToRetrieveMetadata;
 use Exception as UnableToSetVisibility;
 use Illuminate\Contracts\Filesystem\Cloud as CloudFilesystemContract;
 use Illuminate\Contracts\Filesystem\FileExistsException as ContractFileExistsException;
@@ -48,6 +49,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 // use League\Flysystem\UnableToDeleteFile;
 // use League\Flysystem\UnableToMoveFile;
 // use League\Flysystem\UnableToReadFile;
+// use League\Flysystem\UnableToRetrieveMetadata;
 // use League\Flysystem\UnableToSetVisibility;
 // use League\Flysystem\UnableToWriteFile;
 // use League\Flysystem\Visibility;
@@ -366,15 +368,25 @@ class FilesystemAdapter implements CloudFilesystemContract
 
         $filename = isset($name) ? $name : basename($path);
 
-        $disposition = $response->headers->makeDisposition(
-            $disposition, $filename, $this->fallbackName($filename)
-        );
+        if (! array_key_exists('Content-Type', $headers)) {
+            $headers['Content-Type'] = $this->mimeType($path);
+        }
 
-        $response->headers->replace($headers + [
-            'Content-Type' => $this->mimeType($path),
-            'Content-Length' => $this->size($path),
-            'Content-Disposition' => $disposition,
-        ]);
+        if (! array_key_exists('Content-Length', $headers)) {
+            $headers['Content-Length'] = $this->size($path);
+        }
+
+        if (! array_key_exists('Content-Disposition', $headers)) {
+            $filename = isset($name) ? $name : basename($path);
+
+            $disposition = $response->headers->makeDisposition(
+                $disposition, $filename, $this->fallbackName($filename)
+            );
+
+            $headers['Content-Disposition'] = $disposition;
+        }
+
+        $response->headers->replace($headers);
 
         $response->setCallback(function () use ($path) {
             $stream = $this->readStream($path);
@@ -670,8 +682,14 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function mimeType($path)
     {
-        // return $this->driver->mimeType($path);
-        return $this->driver->getMimetype($path);
+        try {
+            // return $this->driver->mimeType($path);
+            return $this->driver->getMimetype($path);
+        } catch (UnableToRetrieveMetadata $e) {
+            throw_if($this->throwsExceptions(), $e);
+        }
+
+        return false;
     }
 
     /**

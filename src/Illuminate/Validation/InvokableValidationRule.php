@@ -61,7 +61,7 @@ class InvokableValidationRule implements RuleContract, ValidatorAwareRule
      * Create a new implicit or explicit Invokable validation rule.
      *
      * @param  \Illuminate\Contracts\Validation\InvokableRule  $invokable
-     * @return \Illuminate\Contracts\Validation\ImplicitRule
+     * @return \Illuminate\Contracts\Validation\Rule
      */
     public static function make($invokable)
     {
@@ -91,10 +91,10 @@ class InvokableValidationRule implements RuleContract, ValidatorAwareRule
             $this->invokable->setValidator($this->validator);
         }
 
-        $this->invokable->__invoke($attribute, $value, function ($message) {
+        $this->invokable->__invoke($attribute, $value, function ($attribute, $message = null) {
             $this->failed = true;
 
-            return $this->pendingPotentiallyTranslatedString($message);
+            return $this->pendingPotentiallyTranslatedString($attribute, $message);
         });
 
         return ! $this->failed;
@@ -139,17 +139,20 @@ class InvokableValidationRule implements RuleContract, ValidatorAwareRule
     /**
      * Create a pending potentially translated string.
      *
-     * @param  string  $message
+     * @param  string  $attribute
+     * @param  ?string  $message
      * @return \Illuminate\Translation\PotentiallyTranslatedString
      */
-    protected function pendingPotentiallyTranslatedString($message)
+    protected function pendingPotentiallyTranslatedString($attribute, $message)
     {
+        $destructor = $message === null
+            ? function ($message) { return $this->messages[] = $message; }
+            : function ($message) use ($attribute) { return $this->messages[$attribute] = $message; };
+
         return new InvokableValidationRule_pendingPotentiallyTranslatedString_class(
-            $message, 
-            $this->validator->getTranslator(), 
-            function ($message) {
-                return $this->messages[] = $message;
-            }
+            isset($message) ? $message : $attribute,
+            $this->validator->getTranslator(),
+            $destructor
         );
     }
 }
@@ -171,7 +174,7 @@ class InvokableValidationRule_pendingPotentiallyTranslatedString_class extends P
             /**
              * Create a new pending potentially translated string.
              *
-             * @param  string  $string
+             * @param  string  $message
              * @param  \Illuminate\Contracts\Translation\Translator  $translator
              * @param  \Closure  $destructor
              */
