@@ -69,6 +69,8 @@ class RouteListCommandTest extends TestCase
             ->expectsOutput('  POST       controller-invokable Illuminate\Tests\Testing\Console\…')
             ->expectsOutput('  GET|HEAD   controller-method/{user} Illuminate\Tests\Testing\Cons…')
             ->expectsOutput('  GET|HEAD   {account}.example.com/user/{id} ............. user.show')
+            ->expectsOutput('')
+            ->expectsOutput('                                                  Showing [6] routes')
             ->expectsOutput('');
     }
 
