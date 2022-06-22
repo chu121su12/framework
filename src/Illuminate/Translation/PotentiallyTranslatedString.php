@@ -49,6 +49,11 @@ class PotentiallyTranslatedString implements Stringable
      */
     public function translate($replace = [], $locale = null)
     {
+        // TODO: why removed?
+        if (! $this->translator->has($this->string)) {
+            throw new \RuntimeException("Unable to find translation [{$this->string}] for locale [{$this->translator->getLocale()}].");
+        }
+
         $this->translation = $this->translator->get($this->string, $replace, $locale);
 
         return $this;

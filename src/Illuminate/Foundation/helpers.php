@@ -444,12 +444,17 @@ if (! function_exists('fake') && class_exists(\Faker\Factory::class)) {
      */
     function fake($locale = null)
     {
-        $locale ??= app('config')->get('app.faker_locale') ?? 'en_US';
+        if (! isset($locale)) {
+            $fakerLocale = app('config')->get('app.faker_locale');
+            $locale = isset($fakerLocale) ? $fakerLocale : 'en_US';
+        }
 
         $abstract = \Faker\Generator::class.':'.$locale;
 
         if (! app()->bound($abstract)) {
-            app()->singleton($abstract, fn () => \Faker\Factory::create($locale));
+            app()->singleton($abstract, function () use ($locale) {
+                return \Faker\Factory::create($locale);
+            });
         }
 
         return app()->make($abstract);

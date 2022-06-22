@@ -1210,6 +1210,8 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
 
                     break;
 
+                case 'f': // f will get here from fluent
+
                 case 'micro':
                 case 'microsecond':
                     $this->f = $value / Carbon::MICROSECONDS_PER_SECOND;

@@ -397,8 +397,10 @@ class JsonCaster implements CastsAttributes
 
 class JsonSettingsCaster implements CastsAttributes
 {
-    public function get($model, string $key, $value, array $attributes): ?Settings
+    public function get($model, /*string */$key, $value, array $attributes)/*: ?Settings*/
     {
+        $key = cast_to_string($key);
+
         if ($value === null) {
             return null;
         }
@@ -407,13 +409,15 @@ class JsonSettingsCaster implements CastsAttributes
             return $value;
         }
 
-        $payload = json_decode($value, true, JSON_THROW_ON_ERROR);
+        $payload = backport_json_decode_throw($value, true);
 
         return Settings::from($payload);
     }
 
-    public function set($model, string $key, $value, array $attributes): ?string
+    public function set($model, /*string */$key, $value, array $attributes)/*: ?string*/
     {
+        $key = cast_to_string($key);
+
         if ($value === null) {
             return null;
         }
@@ -521,24 +525,28 @@ class Address
 
 class Settings
 {
-    public ?bool $foo;
-    public ?bool $bar;
+    public /*?bool */$foo;
+    public /*?bool */$bar;
 
-    public function __construct(?bool $foo, ?bool $bar)
+    public function __construct(/*?bool */$foo = null, /*?bool */$bar = null)
     {
+        $foo = cast_to_bool($foo, null);
+
+        $bar = cast_to_bool($bar, null);
+
         $this->foo = $foo;
         $this->bar = $bar;
     }
 
-    public static function from(array $data): Settings
+    public static function from(array $data)/*: Settings*/
     {
         return new self(
-            $data['foo'] ?? null,
-            $data['bar'] ?? null,
+            isset($data['foo']) ? $data['foo'] : null,
+            isset($data['bar']) ? $data['bar'] : null
         );
     }
 
-    public function toJson($options = 0): string
+    public function toJson($options = 0)/*: string*/
     {
         return json_encode(['foo' => $this->foo, 'bar' => $this->bar], $options);
     }

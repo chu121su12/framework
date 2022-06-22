@@ -784,7 +784,7 @@ class Connection implements ConnectionInterface
      */
     public function logQuery($query, $bindings, $time = null)
     {
-        $this->totalQueryDuration += $time ?? 0.0;
+        $this->totalQueryDuration += isset($time) ? $time : 0.0;
 
         $this->event(new QueryExecuted($query, $bindings, $time, $this));
 
