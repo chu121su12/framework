@@ -56,6 +56,14 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
         $this->assertSameStringDifferentLineEndings("@slot(\$foo, null, []) \n".' @endslot', trim($result));
     }
 
+    public function testDynamicSlotsCanBeCompiledWithKeyOfObjects()
+    {
+        $result = $this->compiler()->compileSlots('<x-slot :name="$foo->name">
+</x-slot>');
+
+        $this->assertSame("@slot(\$foo->name, null, []) \n".' @endslot', trim($result));
+    }
+
     public function testSlotsWithAttributesCanBeCompiled()
     {
         $result = $this->compiler()->compileSlots('<x-slot name="foo" class="font-bold">

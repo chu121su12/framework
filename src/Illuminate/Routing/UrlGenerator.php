@@ -423,7 +423,7 @@ class UrlGenerator implements UrlGeneratorContract
 
         $url = $absolute ? $request->url() : '/'.$request->path();
 
-        $queryString = collect(explode('&', $request->server->get('QUERY_STRING')))
+        $queryString = collect(explode('&', (string) $request->server->get('QUERY_STRING')))
             ->reject(function ($parameter) use ($ignoreQuery) {
                 return in_array(Str::before($parameter, '='), $ignoreQuery);
             })
@@ -480,6 +480,8 @@ class UrlGenerator implements UrlGeneratorContract
      */
     public function toRoute($route, $parameters, $absolute)
     {
+        $route->excludedParameters = $this->getDefaultParameters();
+
         $parameters = collect(Arr::wrap($parameters))->map(function ($value, $key) use ($route) {
             return $value instanceof UrlRoutable && $route->bindingFieldFor($key)
                     ? $value->{$route->bindingFieldFor($key)}
