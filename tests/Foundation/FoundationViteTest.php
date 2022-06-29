@@ -9,17 +9,19 @@ use PHPUnit\Framework\TestCase;
 
 class FoundationViteTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         app()->instance('url', tap(
             m::mock(UrlGenerator::class),
-            fn ($url) => $url
-                ->shouldReceive('asset')
-                ->andReturnUsing(fn ($value) => "https://example.com{$value}")
+            function ($url) {
+                return $url
+                    ->shouldReceive('asset')
+                    ->andReturnUsing(function ($value) { return "https://example.com{$value}"; });
+            }
         ));
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         $this->cleanViteManifest();
         $this->cleanViteHotFile();
@@ -30,7 +32,8 @@ class FoundationViteTest extends TestCase
     {
         $this->makeViteManifest();
 
-        $result = (new Vite)('resources/js/app.js');
+        $vite = new Vite;
+        $result = $vite('resources/js/app.js');
 
         $this->assertSame('<script type="module" src="https://example.com/build/assets/app.versioned.js"></script>', $result->toHtml());
     }
@@ -39,7 +42,8 @@ class FoundationViteTest extends TestCase
     {
         $this->makeViteManifest();
 
-        $result = (new Vite)(['resources/css/app.css', 'resources/js/app.js']);
+        $vite = new Vite;
+        $result = $vite(['resources/css/app.css', 'resources/js/app.js']);
 
         $this->assertSame(
             '<link rel="stylesheet" href="https://example.com/build/assets/app.versioned.css" />'
@@ -52,7 +56,8 @@ class FoundationViteTest extends TestCase
     {
         $this->makeViteManifest();
 
-        $result = (new Vite)('resources/js/app-with-css-import.js');
+        $vite = new Vite;
+        $result = $vite('resources/js/app-with-css-import.js');
 
         $this->assertSame(
             '<link rel="stylesheet" href="https://example.com/build/assets/imported-css.versioned.css" />'
@@ -65,7 +70,8 @@ class FoundationViteTest extends TestCase
     {
         $this->makeViteManifest();
 
-        $result = (new Vite)(['resources/js/app-with-shared-css.js']);
+        $vite = new Vite;
+        $result = $vite(['resources/js/app-with-shared-css.js']);
 
         $this->assertSame(
             '<link rel="stylesheet" href="https://example.com/build/assets/shared-css.versioned.css" />'
@@ -78,7 +84,8 @@ class FoundationViteTest extends TestCase
     {
         $this->makeViteHotFile();
 
-        $result = (new Vite)('resources/js/app.js');
+        $vite = new Vite;
+        $result = $vite('resources/js/app.js');
 
         $this->assertSame(
             '<script type="module" src="http://localhost:3000/@vite/client"></script>'
@@ -91,7 +98,8 @@ class FoundationViteTest extends TestCase
     {
         $this->makeViteHotFile();
 
-        $result = (new Vite)(['resources/css/app.css', 'resources/js/app.js']);
+        $vite = new Vite;
+        $result = $vite(['resources/css/app.css', 'resources/js/app.js']);
 
         $this->assertSame(
             '<script type="module" src="http://localhost:3000/@vite/client"></script>'
@@ -103,7 +111,7 @@ class FoundationViteTest extends TestCase
 
     protected function makeViteManifest()
     {
-        app()->singleton('path.public', fn () => __DIR__);
+        app()->singleton('path.public', function () { return __DIR__; });
 
         if (! file_exists(public_path('build'))) {
             mkdir(public_path('build'));
@@ -151,7 +159,7 @@ class FoundationViteTest extends TestCase
 
     protected function makeViteHotFile()
     {
-        app()->singleton('path.public', fn () => __DIR__);
+        app()->singleton('path.public', function () { return __DIR__; });
 
         file_put_contents(public_path('hot'), 'http://localhost:3000');
     }

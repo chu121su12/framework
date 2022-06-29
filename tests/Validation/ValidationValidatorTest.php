@@ -3887,14 +3887,15 @@ class ValidationValidatorTest extends TestCase
         $svgUploadedFile = new UploadedFile(__DIR__.'/fixtures/image2.svg', '', 'image/svg', null, true);
         $trans = $this->getIlluminateArrayTranslator();
 
-        $v = new Validator($trans, ['x' => $svgUploadedFile], ['x' => 'dimensions:max_width=1,max_height=1']);
         if ($svgUploadedFile->getMimeType() !== 'text/plain') {
-            $this->assertTrue($v->passes());
+        $v = new Validator($trans, ['x' => $svgUploadedFile], ['x' => 'dimensions:max_width=1,max_height=1']);
+        $this->assertTrue($v->passes());
         }
 
         $svgFile = new File(__DIR__.'/fixtures/image2.svg', '', 'image/svg', null, true);
         $trans = $this->getIlluminateArrayTranslator();
 
+        // $v = new Validator($trans, ['x' => $svgFile], ['x' => 'dimensions:max_width=1,max_height=1']);
         $v = new Validator($trans, ['x' => $svgFile], ['x' => 'dimensions:max_width=200,max_height=300']);
         $this->assertTrue($v->passes());
 
@@ -6120,7 +6121,8 @@ class ValidationValidatorTest extends TestCase
             $this->getIlluminateArrayTranslator(),
             ['name' => 'taylor'],
             [
-                'name' => new ValidationValidatorTest_testCustomValidationObject_class_passing,
+                'name' =>
+                    new ValidationValidatorTest_testCustomValidationObject_class_passing,
             ]
         );
 
@@ -6176,7 +6178,8 @@ class ValidationValidatorTest extends TestCase
             $this->getIlluminateArrayTranslator(),
             ['name' => 'taylor', 'states' => ['AR', 'TX'], 'number' => 9],
             [
-                'states.*' => new ValidationValidatorTest_testCustomValidationObject_class_complex_failing,
+                'states.*' =>
+                    new ValidationValidatorTest_testCustomValidationObject_class_complex_failing,
                 'name' => function ($attribute, $value, $fail) {
                     if ($value !== 'taylor') {
                         $fail(':attribute must be taylor');
@@ -6204,7 +6207,8 @@ class ValidationValidatorTest extends TestCase
             $this->getIlluminateArrayTranslator(),
             ['name' => 42],
             [
-                'name' => new ValidationValidatorTest_testCustomValidationObject_class_array_of_messages_with_failing,
+                'name' =>
+                    new ValidationValidatorTest_testCustomValidationObject_class_array_of_messages_with_failing,
             ]
         );
 
@@ -6307,7 +6311,8 @@ class ValidationValidatorTest extends TestCase
             $this->getIlluminateArrayTranslator(),
             ['foo' => ['foo.bar' => 'baz']],
             [
-                'foo' => new ValidationValidatorTest_testCustomValidationObjectWithDotKeysIsCorrectlyPassedValue_class_passes,
+                'foo' =>
+                    new ValidationValidatorTest_testCustomValidationObjectWithDotKeysIsCorrectlyPassedValue_class_passes,
             ]
         );
 
@@ -6318,7 +6323,8 @@ class ValidationValidatorTest extends TestCase
             $this->getIlluminateArrayTranslator(),
             ['foo' => ['foo.bar' => 'baz']],
             [
-                'foo.foo\.bar' => new ValidationValidatorTest_testCustomValidationObjectWithDotKeysIsCorrectlyPassedValue_class_not_passes,
+                'foo.foo\.bar' =>
+                    new ValidationValidatorTest_testCustomValidationObjectWithDotKeysIsCorrectlyPassedValue_class_not_passes,
             ]
         );
 
@@ -6333,7 +6339,8 @@ class ValidationValidatorTest extends TestCase
             $this->getIlluminateArrayTranslator(),
             ['name' => ''],
             [
-                'name' => $rule = new ValidationValidatorTest_testImplicitCustomValidationObjects_class,
+                'name' =>
+                    $rule = new ValidationValidatorTest_testImplicitCustomValidationObjects_class,
             ]
         );
 

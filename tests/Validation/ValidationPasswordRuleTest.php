@@ -228,21 +228,6 @@ class ValidationPasswordRuleTest extends TestCase
         );
     }
 
-    /**
-     * @requires PHP 7.0
-     * @requires OS Linux|Darwin
-     */
-    public function testMessagesOrderApi()
-    {
-        $makeRules = function () {
-            return ['required', Password::min(8)->mixedCase()->numbers()];
-        };
-
-        $this->fails($makeRules(), ['abcabcabc!'], [
-            'The given my password has appeared in a data leak. Please choose a different my password.',
-        ]);
-    }
-
     public function testItCanUseDefault()
     {
         $this->assertInstanceOf(Password::class, Password::default_());
@@ -354,7 +339,7 @@ class ValidationPasswordRuleTest extends TestCase
         }
     }
 
-    protected function setUp() ////: void
+    protected function setUp()/*: void*/
     {
         $container = Container::getInstance();
 
@@ -369,7 +354,7 @@ class ValidationPasswordRuleTest extends TestCase
         (new ValidationServiceProvider($container))->register();
     }
 
-    protected function tearDown() ////: void
+    protected function tearDown()/*: void*/
     {
         Container::setInstance(null);
 

@@ -57,11 +57,11 @@ trait CompilesHelpers
      */
     protected function compileVite($arguments)
     {
-        $arguments ??= '()';
+        $arguments = isset($arguments) ? $arguments : '()';
 
         $class = Vite::class;
 
-        return "<?php echo app('$class'){$arguments}; ?>";
+        return "<?php echo call_user_func(function (\$vite) { return \$vite{$arguments}; }, app('$class')); ?>";
     }
 
     /**

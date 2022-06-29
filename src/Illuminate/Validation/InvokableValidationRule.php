@@ -193,7 +193,6 @@ class InvokableValidationRule_pendingPotentiallyTranslatedString_class extends P
             public function __destruct()
             {
                 $destructor = $this->destructor;
-
                 $destructor($this->toString());
             }
         }

@@ -29,7 +29,7 @@ class Vite
 
             return new HtmlString(
                 $entrypoints
-                    ->map(fn ($entrypoint) => $this->makeTag("{$url}/{$entrypoint}"))
+                    ->map(function ($entrypoint) use ($url) { return $this->makeTag("{$url}/{$entrypoint}"); })
                     ->prepend($this->makeScriptTag("{$url}/@vite/client"))
                     ->join('')
             );
@@ -73,7 +73,7 @@ class Vite
             }
         }
 
-        [$stylesheets, $scripts] = $tags->partition(fn ($tag) => str_starts_with($tag, '<link'));
+        list($stylesheets, $scripts) = $tags->partition(function ($tag) { return str_starts_with($tag, '<link'); });
 
         return new HtmlString($stylesheets->join('').$scripts->join(''));
     }
@@ -91,17 +91,19 @@ class Vite
 
         $url = rtrim(file_get_contents(public_path('/hot')));
 
+        $html = <<<'HTML'
+<script type="module">
+    import RefreshRuntime from '%s/@react-refresh'
+    RefreshRuntime.injectIntoGlobalHook(window)
+    window.$RefreshReg$ = () => {}
+    window.$RefreshSig$ = () => (type) => type
+    window.__vite_plugin_react_preamble_installed__ = true
+</script>
+HTML;
+
         return new HtmlString(
             sprintf(
-                <<<'HTML'
-                <script type="module">
-                    import RefreshRuntime from '%s/@react-refresh'
-                    RefreshRuntime.injectIntoGlobalHook(window)
-                    window.$RefreshReg$ = () => {}
-                    window.$RefreshSig$ = () => (type) => type
-                    window.__vite_plugin_react_preamble_installed__ = true
-                </script>
-                HTML,
+                $html,
                 $url
             )
         );

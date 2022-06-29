@@ -135,11 +135,11 @@ class ClosureValidationRule implements RuleContract, ValidatorAwareRule
     protected function pendingPotentiallyTranslatedString($attribute, $message)
     {
         $destructor = $message === null
-            ? fn ($message) => $this->messages[] = $message
-            : fn ($message) => $this->messages[$attribute] = $message;
+            ? function ($message) { return $this->messages[] = $message; }
+            : function ($message) use ($attribute) { return $this->messages[$attribute] = $message; };
 
         return new ClosureValidationRule_pendingPotentiallyTranslatedString_class(
-            $message,
+            isset($message) ? $message : $attribute,
             $this->validator->getTranslator(),
             $destructor
         );

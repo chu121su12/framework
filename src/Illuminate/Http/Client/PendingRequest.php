@@ -457,8 +457,10 @@ class PendingRequest
      * @param  int  $max
      * @return $this
      */
-    public function maxRedirects(int $max)
+    public function maxRedirects(/*int */$max)
     {
+        $max = cast_to_int($max);
+
         return tap($this, function () use ($max) {
             $this->options['allow_redirects']['max'] = $max;
         });

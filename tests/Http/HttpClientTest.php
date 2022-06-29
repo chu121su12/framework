@@ -1645,7 +1645,7 @@ class HttpClientTest extends TestCase
         });
     }
 
-    public function testItCanSetAllowMaxRedirects(): void
+    public function testItCanSetAllowMaxRedirects()/*: void*/
     {
         $request = new PendingRequest($this->factory);
 
