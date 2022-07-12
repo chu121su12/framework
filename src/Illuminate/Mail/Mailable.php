@@ -975,10 +975,13 @@ class Mailable implements MailableContract, Renderable
      * Assert that the given text is present in the HTML email body.
      *
      * @param  string  $string
+     * @param  bool  $escape
      * @return $this
      */
-    public function assertSeeInHtml($string)
+    public function assertSeeInHtml($string, $escape = true)
     {
+        $string = $escape ? e($string) : $string;
+
         list($html, $text) = $this->renderForAssertions();
 
         PHPUnit::assertTrue(
@@ -993,10 +996,13 @@ class Mailable implements MailableContract, Renderable
      * Assert that the given text is not present in the HTML email body.
      *
      * @param  string  $string
+     * @param  bool  $escape
      * @return $this
      */
-    public function assertDontSeeInHtml($string)
+    public function assertDontSeeInHtml($string, $escape = true)
     {
+        $string = $escape ? e($string) : $string;
+
         list($html, $text) = $this->renderForAssertions();
 
         PHPUnit::assertFalse(
@@ -1011,10 +1017,13 @@ class Mailable implements MailableContract, Renderable
      * Assert that the given text strings are present in order in the HTML email body.
      *
      * @param  array  $strings
+     * @param  bool  $escape
      * @return $this
      */
-    public function assertSeeInOrderInHtml($strings)
+    public function assertSeeInOrderInHtml($strings, $escape = true)
     {
+        $strings = $escape ? array_map('e', ($strings)) : $strings;
+
         list($html, $text) = $this->renderForAssertions();
 
         PHPUnit::assertThat($strings, new SeeInOrder($html));
