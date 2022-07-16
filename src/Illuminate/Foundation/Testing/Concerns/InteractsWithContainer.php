@@ -7,6 +7,19 @@ use Illuminate\Foundation\Mix;
 use Illuminate\Foundation\Vite;
 use Mockery;
 
+class InteractsWithContainer_withoutVite_class
+        {
+            public function __invoke()
+            {
+                return '';
+            }
+
+            public function __call($name, $arguments)
+            {
+                return '';
+            }
+        }
+
 trait InteractsWithContainer
 {
     /**
@@ -109,18 +122,7 @@ trait InteractsWithContainer
             $this->originalVite = app(Vite::class);
         }
 
-        $this->swap(Vite::class, new class
-        {
-            public function __invoke()
-            {
-                return '';
-            }
-
-            public function __call($name, $arguments)
-            {
-                return '';
-            }
-        });
+        $this->swap(Vite::class, new InteractsWithContainer_withoutVite_class);
 
         return $this;
     }

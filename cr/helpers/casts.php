@@ -175,6 +175,21 @@ if (! \function_exists('cast_to_string')) {
     }
 }
 
+if (! \function_exists('cast_to_compound_iterable_string')) {
+    function cast_to_compound_iterable_string($value, $default = null, $strict = false)
+    {
+        if (\func_num_args() > 1 && null === $value) {
+            return $default;
+        }
+
+        if (\is_string($value) || is_iterable($value)) {
+            return $value;
+        }
+
+        throw new TypeError;
+    }
+}
+
 if (! \function_exists('cast_to_bools')) {
     function cast_to_bools($strict/* = false*/, array $values)
     {

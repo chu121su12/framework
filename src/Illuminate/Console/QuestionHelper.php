@@ -44,7 +44,11 @@ class QuestionHelper extends SymfonyQuestionHelper
 
             case $question instanceof ChoiceQuestion:
                 $choices = $question->getChoices();
-                $text = sprintf('<info>%s</info> [<comment>%s</comment>]', $text, OutputFormatter::escape($choices[$default] ?? $default));
+                $text = sprintf(
+                    '<info>%s</info> [<comment>%s</comment>]',
+                    $text,
+                    OutputFormatter::escape(isset($choices[$default]) ? $choices[$default] : $default)
+                );
 
                 break;
         }

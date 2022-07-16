@@ -12,6 +12,14 @@ use Illuminate\Support\Facades\URL;
 use InvalidArgumentException;
 use Orchestra\Testbench\TestCase;
 
+class UrlSigningTest_createValidateSignatureMiddleware_class extends ValidateSignature
+        {
+            public function __construct(array $ignore)
+            {
+                $this->ignore = $ignore;
+            }
+        }
+
 class UrlSigningTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -273,13 +281,7 @@ class UrlSigningTest extends TestCase
 
     protected function createValidateSignatureMiddleware(array $ignore)
     {
-        return new class($ignore) extends ValidateSignature
-        {
-            public function __construct(array $ignore)
-            {
-                $this->ignore = $ignore;
-            }
-        };
+        return new UrlSigningTest_createValidateSignatureMiddleware_class($ignore);
     }
 }
 

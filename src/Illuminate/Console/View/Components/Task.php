@@ -2,6 +2,7 @@
 
 namespace Illuminate\Console\View\Components;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use function Termwind\terminal;
 use Throwable;
@@ -24,7 +25,8 @@ class Task extends Component
             Mutators\EnsureRelativePaths::class,
         ]);
 
-        $descriptionWidth = mb_strlen(preg_replace("/\<[\w=#\/\;,:.&,%?]+\>|\\e\[\d+m/", '$1', $description) ?? '');
+        $cleanDescription = preg_replace("/\<[\w=#\/\;,:.&,%?]+\>|\\e\[\d+m/", '$1', $description);
+        $descriptionWidth = mb_strlen(isset($cleanDescription) ? $cleanDescription : '');
 
         $this->output->write("  $description ", false, $verbosity);
 
@@ -33,24 +35,28 @@ class Task extends Component
         $result = false;
 
         try {
-            $result = ($task ?: fn () => true)();
-        } catch (Throwable $e) {
-            throw $e;
+            $callable = $task ?: function () { return true; };
+            $result = $callable();
+        // } catch (Throwable $e) {
+        //     throw $e;
         } finally {
             $runTime = $task
                 ? (' '.number_format((microtime(true) - $startTime) * 1000, 2).'ms')
                 : '';
 
+
             $runTimeWidth = mb_strlen($runTime);
-            $width = min(terminal()->width(), 150);
+            // $width = min(terminal()->width(), 150);
+            $width = min(SymfonyHelper::getTerminal()->getWidth(), 150);
             $dots = max($width - $descriptionWidth - $runTimeWidth - 10, 0);
 
-            $this->output->write(str_repeat('<fg=gray>.</>', $dots), false, $verbosity);
-            $this->output->write("<fg=gray>$runTime</>", false, $verbosity);
+            // black < gray
+            $this->output->write(str_repeat('<fg=black>.</>', $dots), false, $verbosity);
+            $this->output->write("<fg=black>$runTime</>", false, $verbosity);
 
             $this->output->writeln(
                 $result !== false ? ' <fg=green;options=bold>DONE</>' : ' <fg=red;options=bold>FAIL</>',
-                $verbosity,
+                $verbosity
             );
         }
     }

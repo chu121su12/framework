@@ -74,10 +74,12 @@ class ScheduleTestCommand extends Command
         $description = sprintf(
             'Running [%s]%s',
             $command,
-            $event->runInBackground ? ' in background' : '',
+            $event->runInBackground ? ' in background' : ''
         );
 
-        $this->components->task($description, fn () => $event->run($this->laravel));
+        $this->components->task($description, function () use ($event) {
+            return $event->run($this->laravel);
+        });
 
         if (! $event instanceof CallbackEvent) {
             $this->components->bulletList([$event->getSummaryForDisplay()]);

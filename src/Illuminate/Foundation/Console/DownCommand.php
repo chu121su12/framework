@@ -59,7 +59,7 @@ class DownCommand extends Command
         } catch (Exception $e) {
             $this->components->error(sprintf(
                 'Failed to enter maintenance mode: %s.',
-                $e->getMessage(),
+                $e->getMessage()
             ));
 
             return 1;

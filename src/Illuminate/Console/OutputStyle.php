@@ -40,18 +40,32 @@ class OutputStyle extends SymfonyStyle implements NewLineAware
     /**
      * {@inheritdoc}
      */
-    public function write(string|iterable $messages, bool $newline = false, int $options = 0)
+    public function write(/*string|iterable */$messages, /*bool */$newline = false, /*int */$options = 0)
     {
+        $messages = cast_to_compound_iterable_string($messages);
+
+        $newline = cast_to_bool($newline);
+
+        $options = cast_to_int($options);
+
         $this->newLineWritten = $newline;
 
-        parent::write($messages, $newline, $options);
+        parent::write(
+            preg_replace('/<fg=gray>/', '<fg=black>', $messages),
+            $newline,
+            $options
+        );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function writeln(string|iterable $messages, int $type = self::OUTPUT_NORMAL)
+    public function writeln(/*string|iterable */$messages, /*int */$type = self::OUTPUT_NORMAL)
     {
+        $messages = cast_to_compound_iterable_string($messages);
+
+        $type = cast_to_int($type);
+
         $this->newLineWritten = true;
 
         parent::writeln($messages, $type);
@@ -60,8 +74,10 @@ class OutputStyle extends SymfonyStyle implements NewLineAware
     /**
      * {@inheritdoc}
      */
-    public function newLine(int $count = 1)
+    public function newLine(/*int */$count = 1)
     {
+        $count = cast_to_int($count);
+
         $this->newLineWritten = $count > 0;
 
         parent::newLine($count);

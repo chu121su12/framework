@@ -161,7 +161,7 @@ class ScheduleRunCommand extends Command
             '<fg=gray>%s</> Running [%s]%s',
             Carbon::now()->format('Y-m-d H:i:s'),
             $command,
-            $event->runInBackground ? ' in background' : '',
+            $event->runInBackground ? ' in background' : ''
         );
 
         $this->components->task($description, function () use ($event) {

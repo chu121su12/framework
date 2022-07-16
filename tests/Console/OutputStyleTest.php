@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class OutputStyleTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

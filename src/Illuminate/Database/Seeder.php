@@ -54,7 +54,7 @@ abstract class Seeder
             } else {
                 with(new Task($this->command->getOutput()))->render(
                     $name,
-                    fn () => $seeder->__invoke($parameters),
+                    function () use ($seeder, $parameters) { return $seeder->__invoke($parameters); }
                 );
             }
 

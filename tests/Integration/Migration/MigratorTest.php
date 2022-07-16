@@ -85,7 +85,7 @@ class MigratorTest extends TestCase
     protected function expectInfo($message)/*: void*/
     {
         $this->output->shouldReceive('writeln')->once()->with(m::on(
-            fn ($argument) => str($argument)->contains($message),
+            function ($argument) use ($message) { return str($argument)->contains($message); }
         ), m::any());
     }
 
@@ -119,20 +119,20 @@ class MigratorTest extends TestCase
     {
         // Ignore dots...
         $this->output->shouldReceive('write')->with(m::on(
-            fn ($argument) => str($argument)->contains(['<fg=gray></>', '<fg=gray>.</>']),
+            function ($argument) { return str($argument)->contains(['<fg=gray></>', '<fg=gray>.</>']); }
         ), m::any(), m::any());
 
         // Ignore duration...
         $this->output->shouldReceive('write')->with(m::on(
-            fn ($argument) => str($argument)->contains(['ms</>']),
+            function ($argument) { return str($argument)->contains(['ms</>']); }
         ), m::any(), m::any());
 
         $this->output->shouldReceive('write')->once()->with(m::on(
-            fn ($argument) => str($argument)->contains($description),
+            function ($argument) use ($description) { return str($argument)->contains($description); }
         ), m::any(), m::any());
 
         $this->output->shouldReceive('writeln')->once()->with(m::on(
-            fn ($argument) => str($argument)->contains($result),
+            function ($argument) use ($result) { return str($argument)->contains($result); }
         ), m::any());
     }
 }

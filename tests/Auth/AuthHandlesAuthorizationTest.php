@@ -6,6 +6,56 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use PHPUnit\Framework\TestCase;
 
+class AuthHandlesAuthorizationTest_testDenyHasNullStatus_class
+        {
+            use HandlesAuthorization;
+
+            public function __invoke()
+            {
+                return $this->deny('xxxx', 321);
+            }
+        }
+
+class AuthHandlesAuthorizationTest_testItCanDenyWithStatus_1_class
+        {
+            use HandlesAuthorization;
+
+            public function __invoke()
+            {
+                return $this->denyWithStatus(418);
+            }
+        }
+
+class AuthHandlesAuthorizationTest_testItCanDenyWithStatus_2_class
+        {
+            use HandlesAuthorization;
+
+            public function __invoke()
+            {
+                return $this->denyWithStatus(418, 'foo', 3);
+            }
+        }
+
+class AuthHandlesAuthorizationTest_testItCanDenyAsNotFound_1_class
+        {
+            use HandlesAuthorization;
+
+            public function __invoke()
+            {
+                return $this->denyAsNotFound();
+            }
+        }
+
+class AuthHandlesAuthorizationTest_testItCanDenyAsNotFound_2_class
+        {
+            use HandlesAuthorization;
+
+            public function __invoke()
+            {
+                return $this->denyAsNotFound('foo', 3);
+            }
+        }
+
 class AuthHandlesAuthorizationTest extends TestCase
 {
     use HandlesAuthorization;
@@ -32,15 +82,7 @@ class AuthHandlesAuthorizationTest extends TestCase
 
     public function testDenyHasNullStatus()
     {
-        $class = new class()
-        {
-            use HandlesAuthorization;
-
-            public function __invoke()
-            {
-                return $this->deny('xxxx', 321);
-            }
-        };
+        $class = new AuthHandlesAuthorizationTest_testDenyHasNullStatus_class;
 
         try {
             $class()->authorize();
@@ -53,15 +95,7 @@ class AuthHandlesAuthorizationTest extends TestCase
 
     public function testItCanDenyWithStatus()
     {
-        $class = new class()
-        {
-            use HandlesAuthorization;
-
-            public function __invoke()
-            {
-                return $this->denyWithStatus(418);
-            }
-        };
+        $class = new AuthHandlesAuthorizationTest_testItCanDenyWithStatus_1_class;
 
         try {
             $class()->authorize();
@@ -73,15 +107,7 @@ class AuthHandlesAuthorizationTest extends TestCase
             $this->assertSame(0, $e->getCode());
         }
 
-        $class = new class()
-        {
-            use HandlesAuthorization;
-
-            public function __invoke()
-            {
-                return $this->denyWithStatus(418, 'foo', 3);
-            }
-        };
+        $class = new AuthHandlesAuthorizationTest_testItCanDenyWithStatus_2_class;
 
         try {
             $class()->authorize();
@@ -96,15 +122,7 @@ class AuthHandlesAuthorizationTest extends TestCase
 
     public function testItCanDenyAsNotFound()
     {
-        $class = new class()
-        {
-            use HandlesAuthorization;
-
-            public function __invoke()
-            {
-                return $this->denyAsNotFound();
-            }
-        };
+        $class = new AuthHandlesAuthorizationTest_testItCanDenyAsNotFound_1_class;
 
         try {
             $class()->authorize();
@@ -116,15 +134,7 @@ class AuthHandlesAuthorizationTest extends TestCase
             $this->assertSame(0, $e->getCode());
         }
 
-        $class = new class()
-        {
-            use HandlesAuthorization;
-
-            public function __invoke()
-            {
-                return $this->denyAsNotFound('foo', 3);
-            }
-        };
+        $class = new AuthHandlesAuthorizationTest_testItCanDenyAsNotFound_2_class;
 
         try {
             $class()->authorize();

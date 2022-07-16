@@ -10,7 +10,7 @@ class ExceptionHandlerTest extends TestCase
 {
     public function testItRendersAuthorizationExceptions()
     {
-        Route::get('test-route', fn () => Response::deny('expected message', 321)->authorize());
+        Route::get('test-route', function () { return Response::deny('expected message', 321)->authorize(); });
 
         // HTTP request...
         $this->get('test-route')
@@ -27,7 +27,7 @@ class ExceptionHandlerTest extends TestCase
 
     public function testItRendersAuthorizationExceptionsWithCustomStatusCode()
     {
-        Route::get('test-route', fn () => Response::deny('expected message', 321)->withStatus(404)->authorize());
+        Route::get('test-route', function () { return Response::deny('expected message', 321)->withStatus(404)->authorize(); });
 
         // HTTP request...
         $this->get('test-route')

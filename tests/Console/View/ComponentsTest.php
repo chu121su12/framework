@@ -11,7 +11,9 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class ComponentsTest extends TestCase
 {
-    protected function tearDown(): void
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
@@ -91,12 +93,12 @@ class ComponentsTest extends TestCase
     {
         $output = new BufferedOutput();
 
-        with(new Components\Task($output))->render('My task', fn () => true);
+        with(new Components\Task($output))->render('My task', function () { return true; });
         $result = $output->fetch();
         $this->assertStringContainsString('My task', $result);
         $this->assertStringContainsString('DONE', $result);
 
-        with(new Components\Task($output))->render('My task', fn () => false);
+        with(new Components\Task($output))->render('My task', function () { return false; });
         $result = $output->fetch();
         $this->assertStringContainsString('My task', $result);
         $this->assertStringContainsString('FAIL', $result);

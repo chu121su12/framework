@@ -2301,7 +2301,7 @@ class SupportCollectionTest extends TestCase
         $this->assertInstanceOf($collection, $random);
         $this->assertCount(2, $random);
 
-        $random = $data->random(fn ($items) => min(10, count($items)));
+        $random = $data->random(function ($items) { return min(10, count($items)); });
         $this->assertInstanceOf($collection, $random);
         $this->assertCount(6, $random);
     }

@@ -202,7 +202,9 @@ class Migrator
             return $this->pretendToRun($migration, 'up');
         }
 
-        $this->write(Task::class, $name, fn () => $this->runMigration($migration, 'up'));
+        $this->write(Task::class, $name, function () use ($migration) {
+            return $this->runMigration($migration, 'up');
+        });
 
         // Once we have run a migrations class, we will log that it was run in this
         // repository so that we don't try to run it next time we do a migration
@@ -367,7 +369,9 @@ class Migrator
             return $this->pretendToRun($instance, 'down');
         }
 
-        $this->write(Task::class, $name, fn () => $this->runMigration($instance, 'down'));
+        $this->write(Task::class, $name, function () use ($instance) {
+            return $this->runMigration($instance, 'down');
+        });
 
         // Once we have successfully run the migration "down" we will remove it from
         // the migration repository so it will be considered to have not been run
@@ -431,7 +435,7 @@ class Migrator
 
             $this->write(Error::class, sprintf(
                 '[%s] failed to dump queries. This may be due to changing database columns using Doctrine, which is not supported while pretending to run migrations.',
-                $name,
+                $name
             ));
         }
     }

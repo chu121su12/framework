@@ -529,14 +529,9 @@ class Str
      */
     public static function inlineMarkdown($string, array $options = [])
     {
-        $environment = new Environment($options);
+        $converter = new GithubFlavoredMarkdownConverter($options);
 
-        $environment->addExtension(new GithubFlavoredMarkdownExtension());
-        $environment->addExtension(new InlinesOnlyExtension());
-
-        $converter = new MarkdownConverter($environment);
-
-        return (string) $converter->convert($string);
+        return preg_replace(['/<(p|h\d+|pre|ul|ol|li)\b.*?>(.*)<\/\1>/', '/<hr.*?>/'], ['$2', ''], (string) $converter->convertToHtml($string));
     }
 
     /**

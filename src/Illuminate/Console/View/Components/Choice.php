@@ -17,9 +17,9 @@ class Choice extends Component
     public function render($question, $choices, $default = null)
     {
         return $this->usingQuestionHelper(
-            fn () => $this->output->askQuestion(
+            function () use ($question, $choices, $default) { return $this->output->askQuestion(
                 new ChoiceQuestion($question, $choices, $default)
-            ),
+            ); }
         );
     }
 }

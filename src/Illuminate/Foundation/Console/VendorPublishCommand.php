@@ -168,7 +168,7 @@ class VendorPublishCommand extends Command
         if ($publishing = count($pathsToPublish) > 0) {
             $this->components->info(sprintf(
                 'Publishing %sassets',
-                $tag ? "[$tag] " : '',
+                $tag ? "[$tag] " : ''
             ));
         }
 
@@ -234,7 +234,7 @@ class VendorPublishCommand extends Command
         } else {
             $this->components->twoColumnDetail(sprintf(
                 'File [%s] already exist',
-                str_replace(base_path().'/', '', realpath($to)),
+                str_replace(base_path().'/', '', realpath($to))
             ), '<fg=yellow;options=bold>SKIPPED</>');
         }
     }
@@ -306,7 +306,7 @@ class VendorPublishCommand extends Command
             'Copying %s [%s] to [%s]',
             $type,
             $from,
-            $to,
+            $to
         ));
     }
 }

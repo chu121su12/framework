@@ -12,7 +12,10 @@ use Symfony\Component\Process\Process;
 class SymfonyHelper
 {
     const DISPOSITION_ATTACHMENT = 'attachment';
+
     const DISPOSITION_INLINE = 'inline';
+
+    protected static $terminal;
 
     public static function headerUtilsCombine(array $parts)////: array
     {
@@ -213,6 +216,19 @@ class SymfonyHelper
         $response->headers = new ResponseHeaderBag5($headers);
 
         return $response;
+    }
+
+    public static function getTerminal($default = null)
+    {
+        if ($default) {
+            return $default;
+        }
+
+        if (! static::$terminal) {
+            static::$terminal = $default ?: new \Symfony\Component\Console\Terminal;
+        }
+
+        return static::$terminal;
     }
 
     private static function groupParts(array $matches, /*string */$separators, /*bool */$first = true)////: array

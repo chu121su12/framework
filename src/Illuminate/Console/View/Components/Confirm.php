@@ -14,7 +14,9 @@ class Confirm extends Component
     public function render($question, $default = true)
     {
         return $this->usingQuestionHelper(
-            fn () => $this->output->confirm($question, $default),
+            function () use ($question, $default) {
+                return $this->output->confirm($question, $default);
+            }
         );
     }
 }

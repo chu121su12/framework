@@ -50,7 +50,7 @@ class UpCommand extends Command
         } catch (Exception $e) {
             $this->components->error(sprintf(
                 'Failed to disable maintenance mode: %s.',
-                $e->getMessage(),
+                $e->getMessage()
             ));
 
             return 1;

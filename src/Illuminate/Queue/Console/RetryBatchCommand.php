@@ -45,7 +45,9 @@ class RetryBatchCommand extends Command
         $this->components->info("Pushing failed queue jobs of the batch [$id] back onto the queue.");
 
         foreach ($batch->failedJobIds as $failedJobId) {
-            $this->components->task($failedJobId, fn () => $this->callSilent('queue:retry', ['id' => $failedJobId]) == 0);
+            $this->components->task($failedJobId, function () use ($failedJobId) {
+                return $this->callSilent('queue:retry', ['id' => $failedJobId]) == 0;
+            });
         }
 
         $this->newLine();

@@ -118,10 +118,10 @@ class ValidationPasswordRuleTest extends TestCase
         $this->passes(Password::min(2)->symbols(), ['n^d', 'd^!', 'âè$', '金廿土弓竹中；']);
     }
 
-    /**
-     * @requires PHP 7.0
-     * @requires OS Linux|Darwin
-     */
+    ///**
+    // * @requires PHP 7.0
+    // * @requires OS Linux|Darwin
+    // */
     // public function testUncompromised()
     // {
     //     $this->fails(Password::min(2)->uncompromised(), [
