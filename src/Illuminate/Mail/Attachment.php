@@ -101,7 +101,7 @@ class Attachment
                 ->as_(isset($attachment->as) ? $attachment->as : basename($path))
                 ->withMime(isset($attachment->mime) ? $attachment->mime : $storage->mimeType($path));
 
-            $dataStrategy(function () use ($storage, $path) {
+            return $dataStrategy(function () use ($storage, $path) {
                 return $storage->get($path);
             }, $attachment);
         });

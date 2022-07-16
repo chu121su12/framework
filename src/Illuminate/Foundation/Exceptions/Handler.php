@@ -399,7 +399,8 @@ class Handler implements ExceptionHandlerContract
         switch (true) {
             case $e instanceof BackedEnumCaseNotFoundException: return new NotFoundHttpException($e->getMessage(), $e);
             case $e instanceof ModelNotFoundException: return new NotFoundHttpException($e->getMessage(), $e);
-            case $e instanceof AuthorizationException: return new AccessDeniedHttpException($e->getMessage(), $e);
+            case $e instanceof AuthorizationException && $e->hasStatus(): return new HttpException($e->status(), $e->getMessage(), $e);
+            case $e instanceof AuthorizationException && ! $e->hasStatus(): return new AccessDeniedHttpException($e->getMessage(), $e);
             case $e instanceof TokenMismatchException: return new HttpException(419, $e->getMessage(), $e);
             case $e instanceof SuspiciousOperationException: return new NotFoundHttpException('Bad hostname provided.', $e);
             case $e instanceof RecordsNotFoundException: return new NotFoundHttpException('Not found.', $e);

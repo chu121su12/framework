@@ -43,7 +43,7 @@ class EventListCommand extends Command
         $events = $this->getEvents()->sortKeys();
 
         if ($events->isEmpty()) {
-            $this->comment("Your application doesn't have any events matching the given criteria.");
+            $this->components->info("Your application doesn't have any events matching the given criteria.");
 
             return;
         }
@@ -65,12 +65,14 @@ class EventListCommand extends Command
         }
 
         // cyan < #6C7280
-        $this->line(
-            $events->map(function ($listeners, $event) { return [
-                sprintf('  <fg=white>%s</>', $this->appendEventInterfaces($event)),
-                collect($listeners)->map(function ($listener) { return sprintf('    <fg=cyan>⇂ %s</>', $listener); }),
-            ]; })->flatten()->filter()->prepend('')->push('')->toArray()
-        );
+        $this->newLine();
+
+        $events->each(function ($listeners, $event) {
+            $this->components->twoColumnDetail($this->appendEventInterfaces($event));
+            $this->components->bulletList($listeners);
+        });
+
+        $this->newLine();
     }
 
     /**

@@ -53,8 +53,6 @@ class ResponseSequence
     {
         $status = cast_to_int($status);
 
-        $body = is_array($body) ? json_encode($body) : $body;
-
         return $this->pushResponse(
             Factory::response($body, $status, $headers)
         );

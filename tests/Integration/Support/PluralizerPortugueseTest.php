@@ -9,7 +9,7 @@ use Orchestra\Testbench\TestCase;
 
 class PluralizerPortugueseTest extends TestCase
 {
-    public function setUp()/*: void*/
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -20,7 +20,7 @@ class PluralizerPortugueseTest extends TestCase
         }
     }
 
-    public function tearDown()/*: void*/
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 
