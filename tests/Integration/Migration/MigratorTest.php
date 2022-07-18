@@ -119,7 +119,8 @@ class MigratorTest extends TestCase
     {
         // Ignore dots...
         $this->output->shouldReceive('write')->with(m::on(
-            function ($argument) { return str($argument)->contains(['<fg=gray></>', '<fg=gray>.</>']); }
+            function ($argument) { return str($argument)->contains(['<fg=black></>', '<fg=black>.</>']); }
+            // function ($argument) { return str($argument)->contains(['<fg=gray></>', '<fg=gray>.</>']); }
         ), m::any(), m::any());
 
         // Ignore duration...

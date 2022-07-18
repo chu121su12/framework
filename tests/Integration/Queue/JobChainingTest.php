@@ -188,7 +188,7 @@ class JobChainingTest extends TestCase
                 new JobChainingTestFirstJob(),
                 new JobChainingTestThrowJob(),
                 new JobChainingTestSecondJob(),
-            ])->catch(function () {
+            ])->catch_(function () {
                 self::$catchCallbackCount++;
             })->onConnection('sync')->dispatch();
         } finally {

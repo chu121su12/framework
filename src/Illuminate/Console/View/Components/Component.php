@@ -46,13 +46,9 @@ abstract class Component
      */
     protected function renderView($view, $data, $verbosity)
     {
-        // renderUsing($this->output);
+        renderUsing($this->output);
 
-        // render((string) $this->compile($view, $data), $verbosity);
-
-        $renderer = $this->output ?: new \Symfony\Component\Console\Output\ConsoleOutput;
-
-        $renderer->writeln((string) $this->compile($view, $data), $verbosity);
+        render((string) $this->compile($view, $data), $verbosity);
     }
 
     /**

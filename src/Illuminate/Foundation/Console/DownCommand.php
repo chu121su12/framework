@@ -124,7 +124,7 @@ class DownCommand extends Command
      */
     protected function prerenderView()
     {
-        value(new RegisterErrorViewPaths);
+        call_user_func(new RegisterErrorViewPaths);
 
         return view($this->option('render'), [
             'retryAfter' => $this->option('retry'),

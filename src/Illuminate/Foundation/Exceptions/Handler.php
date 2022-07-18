@@ -674,7 +674,7 @@ class Handler implements ExceptionHandlerContract
      */
     protected function registerErrorViewPaths()
     {
-        value(new RegisterErrorViewPaths);
+        call_user_func(new RegisterErrorViewPaths);
     }
 
     /**

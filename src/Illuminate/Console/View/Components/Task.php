@@ -46,8 +46,7 @@ class Task extends Component
 
 
             $runTimeWidth = mb_strlen($runTime);
-            // $width = min(terminal()->width(), 150);
-            $width = min(SymfonyHelper::getTerminal()->getWidth(), 150);
+            $width = min(terminal()->width(), 150);
             $dots = max($width - $descriptionWidth - $runTimeWidth - 10, 0);
 
             // black < gray
