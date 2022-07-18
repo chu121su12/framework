@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Termwind\Exceptions;
 
@@ -14,16 +14,20 @@ final class StyleNotFound extends InvalidArgumentException
     /**
      * Creates a new style not found instance.
      */
-    private function __construct(string $message)
+    private function __construct(/*string */$message)
     {
+        $message = cast_to_string($message);
+
         parent::__construct($message, 0, $this->getPrevious());
     }
 
     /**
      * Creates a new style not found instance from the given style.
      */
-    public static function fromStyle(string $style): self
+    public static function fromStyle(/*string */$style)/*: self*/
     {
+        $style = cast_to_string($style);
+
         return new self(sprintf('Style [%s] not found.', $style));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Termwind;
 
@@ -14,20 +14,20 @@ final class Terminal
     /**
      * An instance of Symfony's console terminal.
      */
-    private ConsoleTerminal $terminal;
+    private /*ConsoleTerminal */$terminal;
 
     /**
      * Creates a new terminal instance.
      */
     public function __construct(ConsoleTerminal $terminal = null)
     {
-        $this->terminal = $terminal ?? new ConsoleTerminal();
+        $this->terminal = isset($terminal) ? $terminal : new ConsoleTerminal();
     }
 
     /**
      * Gets the terminal width.
      */
-    public function width(): int
+    public function width()/*: int*/
     {
         return $this->terminal->getWidth();
     }
@@ -35,7 +35,7 @@ final class Terminal
     /**
      * Gets the terminal height.
      */
-    public function height(): int
+    public function height()/*: int*/
     {
         return $this->terminal->getHeight();
     }
@@ -43,7 +43,7 @@ final class Terminal
     /**
      * Clears the terminal screen.
      */
-    public function clear(): void
+    public function clear()/*: void*/
     {
         Termwind::getRenderer()->write("\ec");
     }

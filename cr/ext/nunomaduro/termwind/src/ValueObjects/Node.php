@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Termwind\ValueObjects;
 
@@ -11,19 +11,21 @@ use Generator;
  */
 final class Node
 {
+    private /*\DOMNode */$node;
     /**
      * A value object with helper methods for working with DOM node.
      */
-    public function __construct(private \DOMNode $node)
+    public function __construct(/*private */\DOMNode $node)
     {
+        $this->node = $node;
     }
 
     /**
      * Gets the value of the node.
      */
-    public function getValue(): string
+    public function getValue()/*: string*/
     {
-        return $this->node->nodeValue ?? '';
+        return isset($this->node->nodeValue) ? $this->node->nodeValue : '';
     }
 
     /**
@@ -31,9 +33,9 @@ final class Node
      *
      * @return Generator<Node>
      */
-    public function getChildNodes(): Generator
+    public function getChildNodes()/*: Generator*/
     {
-        foreach ($this->node->childNodes as $node) {
+        foreach ($this->node->childNodes ?: [] as $node) {
             yield new static($node);
         }
     }
@@ -41,7 +43,7 @@ final class Node
     /**
      * Checks if the node is a text.
      */
-    public function isText(): bool
+    public function isText()/*: bool*/
     {
         return $this->node instanceof \DOMText;
     }
@@ -49,7 +51,7 @@ final class Node
     /**
      * Checks if the node is a comment.
      */
-    public function isComment(): bool
+    public function isComment()/*: bool*/
     {
         return $this->node instanceof \DOMComment;
     }
@@ -57,15 +59,17 @@ final class Node
     /**
      * Compares the current node name with a given name.
      */
-    public function isName(string $name): bool
+    public function isName(/*string */$name)/*: bool*/
     {
+        $name = cast_to_string($name);
+
         return $this->getName() === $name;
     }
 
     /**
      * Returns the current node type name.
      */
-    public function getName(): string
+    public function getName()/*: string*/
     {
         return $this->node->nodeName;
     }
@@ -73,7 +77,7 @@ final class Node
     /**
      * Returns value of [class] attribute.
      */
-    public function getClassAttribute(): string
+    public function getClassAttribute()/*: string*/
     {
         return $this->getAttribute('class');
     }
@@ -81,8 +85,10 @@ final class Node
     /**
      * Returns value of attribute with a given name.
      */
-    public function getAttribute(string $name): string
+    public function getAttribute(/*string */$name)/*: string*/
     {
+        $name = cast_to_string($name);
+
         if ($this->node instanceof \DOMElement) {
             return $this->node->getAttribute($name);
         }
@@ -93,7 +99,7 @@ final class Node
     /**
      * Checks if the node is empty.
      */
-    public function isEmpty(): bool
+    public function isEmpty()/*: bool*/
     {
         return $this->isText() && preg_replace('/\s+/', '', $this->getValue()) === '';
     }
@@ -101,7 +107,7 @@ final class Node
     /**
      * Gets the previous sibling from the node.
      */
-    public function getPreviousSibling(): static|null
+    public function getPreviousSibling()/*: static|null*/
     {
         $node = $this->node;
 
@@ -126,7 +132,7 @@ final class Node
     /**
      * Gets the next sibling from the node.
      */
-    public function getNextSibling(): static|null
+    public function getNextSibling()/*: static|null*/
     {
         $node = $this->node;
 
@@ -151,7 +157,7 @@ final class Node
     /**
      * Checks if the node is the first child.
      */
-    public function isFirstChild(): bool
+    public function isFirstChild()/*: bool*/
     {
         return is_null($this->getPreviousSibling());
     }
@@ -159,7 +165,7 @@ final class Node
     /**
      * Gets the inner HTML representation of the node including child nodes.
      */
-    public function getHtml(): string
+    public function getHtml()/*: string*/
     {
         $html = '';
         foreach ($this->node->childNodes as $child) {
@@ -174,7 +180,7 @@ final class Node
     /**
      * Converts the node to a string.
      */
-    public function __toString(): string
+    public function __toString()/*: string*/
     {
         if ($this->isComment()) {
             return '';
@@ -188,7 +194,8 @@ final class Node
             return '';
         }
 
-        $text = preg_replace('/\s+/', ' ', $this->getValue()) ?? '';
+        $matchedValue = preg_replace('/\s+/', ' ', $this->getValue());
+        $text = isset($matchedValue) ? $matchedValue : '';
 
         if (is_null($this->getPreviousSibling())) {
             $text = ltrim($text);

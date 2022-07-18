@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Termwind\Repositories;
 
@@ -16,7 +16,7 @@ final class Styles
     /**
      * @var array<string, Style>
      */
-    private static array $storage = [];
+    private static /*array */$storage = [];
 
     /**
      * Creates a new style from the given arguments.
@@ -24,10 +24,12 @@ final class Styles
      * @param (Closure(StylesValueObject $element, string|int ...$arguments): StylesValueObject)|null $callback
      * @return Style
      */
-    public static function create(string $name, Closure $callback = null): Style
+    public static function create(/*string */$name, Closure $callback = null)/*: Style*/
     {
+        $name = cast_to_string($name);
+
         self::$storage[$name] = $style = new Style(
-            $callback ?? static fn (StylesValueObject $styles) => $styles
+            isset($callback) ? $callback : static function (StylesValueObject $styles) { return $styles; }
         );
 
         return $style;
@@ -36,7 +38,7 @@ final class Styles
     /**
      * Removes all existing styles.
      */
-    public static function flush(): void
+    public static function flush()/*: void*/
     {
         self::$storage = [];
     }
@@ -44,16 +46,20 @@ final class Styles
     /**
      * Checks a style with the given name exists.
      */
-    public static function has(string $name): bool
+    public static function has(/*string */$name)/*: bool*/
     {
+        $name = cast_to_string($name);
+
         return array_key_exists($name, self::$storage);
     }
 
     /**
      * Gets the style with the given name.
      */
-    public static function get(string $name): Style
+    public static function get(/*string */$name)/*: Style*/
     {
+        $name = cast_to_string($name);
+
         return self::$storage[$name];
     }
 }

@@ -175,6 +175,24 @@ if (! \function_exists('cast_to_string')) {
     }
 }
 
+if (! \function_exists('cast_to_compound')) {
+    function cast_to_compound($types, $value)
+    {
+        return $value;
+
+        // throw new TypeError;
+    }
+}
+
+if (! \function_exists('cast_to_compounds')) {
+    function cast_to_compounds($types, $values)
+    {
+        return $values;
+
+        // throw new TypeError;
+    }
+}
+
 if (! \function_exists('cast_to_compound_iterable_string')) {
     function cast_to_compound_iterable_string($value, $default = null, $strict = false)
     {

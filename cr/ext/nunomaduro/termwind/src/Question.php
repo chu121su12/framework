@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Termwind;
 
@@ -18,39 +18,41 @@ final class Question
     /**
      * The streamable input to receive the input from the user.
      */
-    private static StreamableInputInterface|null $streamableInput;
+    private static /*StreamableInputInterface|null */$streamableInput;
 
     /**
      * An instance of Symfony's question helper.
      */
-    private SymfonyQuestionHelper $helper;
+    private /*SymfonyQuestionHelper */$helper;
 
     public function __construct(SymfonyQuestionHelper $helper = null)
     {
-        $this->helper = $helper ?? new QuestionHelper();
+        $this->helper = isset($helper) ? $helper : new QuestionHelper();
     }
 
     /**
      * Sets the streamable input implementation.
      */
-    public static function setStreamableInput(StreamableInputInterface|null $streamableInput): void
+    public static function setStreamableInput(StreamableInputInterface/*|null */$streamableInput = null)/*: void*/
     {
-        self::$streamableInput = $streamableInput ?? new ArgvInput();
+        self::$streamableInput = isset($streamableInput) ? $streamableInput : new ArgvInput();
     }
 
     /**
      * Gets the streamable input implementation.
      */
-    public static function getStreamableInput(): StreamableInputInterface
+    public static function getStreamableInput()/*: StreamableInputInterface*/
     {
-        return self::$streamableInput ??= new ArgvInput();
+        return isset(self::$streamableInput) ? self::$streamableInput := new ArgvInput();
     }
 
     /**
      * Renders a prompt to the user.
      */
-    public function ask(string $question): mixed
+    public function ask(/*string */$question)/*: mixed*/
     {
+        $question = cast_to_string($question);
+
         $html = (new HtmlRenderer)->parse($question)->toString();
 
         return $this->helper->ask(

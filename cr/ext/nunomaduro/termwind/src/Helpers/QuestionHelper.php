@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Termwind\Helpers;
 
@@ -17,7 +17,7 @@ final class QuestionHelper extends SymfonyQuestionHelper
     /**
      * @inheritdoc
      */
-    protected function writePrompt(OutputInterface $output, Question $question): void
+    protected function writePrompt(OutputInterface $output, Question $question)/*: void*/
     {
         $text = OutputFormatter::escapeTrailingBackslash($question->getQuestion());
         $output->write($text);

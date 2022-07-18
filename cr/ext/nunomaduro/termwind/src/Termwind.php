@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Termwind;
 
@@ -18,14 +18,14 @@ final class Termwind
     /**
      * The implementation of the output.
      */
-    private static OutputInterface|null $renderer;
+    private static /*OutputInterface|null */$renderer;
 
     /**
      * Sets the renderer implementation.
      */
-    public static function renderUsing(OutputInterface|null $renderer): void
+    public static function renderUsing(OutputInterface/*|null */$renderer = null)/*: void*/
     {
-        self::$renderer = $renderer ?? new ConsoleOutput();
+        self::$renderer = isset($renderer) ? $renderer : new ConsoleOutput();
     }
 
     /**
@@ -34,8 +34,12 @@ final class Termwind
      * @param  array<int, Element|string>|string  $content
      * @param  array<string, mixed>  $properties
      */
-    public static function div(array|string $content = '', string $styles = '', array $properties = []): Components\Div
+    public static function div(/*array|string */$content = '', /*string */$styles = '', array $properties = [])/*: Components\Div*/
     {
+        $styles = cast_to_string($styles);
+
+        $content = cast_to_compound('array|string', $content);
+
         $content = self::prepareElements($content, $styles);
 
         return Components\Div::fromStyles(
@@ -49,8 +53,12 @@ final class Termwind
      * @param  array<int, Element|string>|string  $content
      * @param  array<string, mixed>  $properties
      */
-    public static function paragraph(array|string $content = '', string $styles = '', array $properties = []): Components\Paragraph
+    public static function paragraph(/*array|string */$content = '', /*string */$styles = '', array $properties = [])/*: Components\Paragraph*/
     {
+        $styles = cast_to_string($styles);
+
+        $content = cast_to_compound('array|string', $content);
+
         $content = self::prepareElements($content, $styles);
 
         return Components\Paragraph::fromStyles(
@@ -64,8 +72,12 @@ final class Termwind
      * @param  array<int, Element|string>|string  $content
      * @param  array<string, mixed>  $properties
      */
-    public static function span(array|string $content = '', string $styles = '', array $properties = []): Components\Span
+    public static function span(/*array|string */$content = '', /*string */$styles = '', array $properties = [])/*: Components\Span*/
     {
+        $styles = cast_to_string($styles);
+
+        $content = cast_to_compound('array|string', $content);
+
         $content = self::prepareElements($content, $styles);
 
         return Components\Span::fromStyles(
@@ -78,8 +90,10 @@ final class Termwind
      *
      * @param  array<int, Element|string>|string  $content
      */
-    public static function raw(array|string $content = ''): Components\Raw
+    public static function raw(/*array|string */$content = '')/*: Components\Raw*/
     {
+        $content = cast_to_compound('array|string', $content);
+
         return Components\Raw::fromStyles(
             self::getRenderer(), $content
         );
@@ -91,8 +105,12 @@ final class Termwind
      * @param  array<int, Element|string>|string  $content
      * @param  array<string, mixed>  $properties
      */
-    public static function anchor(array|string $content = '', string $styles = '', array $properties = []): Components\Anchor
+    public static function anchor(/*array|string */$content = '', /*string */$styles = '', array $properties = [])/*: Components\Anchor*/
     {
+        $styles = cast_to_string($styles);
+
+        $content = cast_to_compound('array|string', $content);
+
         $content = self::prepareElements($content, $styles);
 
         return Components\Anchor::fromStyles(
@@ -106,8 +124,10 @@ final class Termwind
      * @param  array<int, string|Element>  $content
      * @param  array<string, mixed>  $properties
      */
-    public static function ul(array $content = [], string $styles = '', array $properties = []): Components\Ul
+    public static function ul(array $content = [], /*string */$styles = '', array $properties = [])/*: Components\Ul*/
     {
+        $styles = cast_to_string($styles);
+
         $ul = Components\Ul::fromStyles(
             self::getRenderer(), '', $styles, $properties
         );
@@ -115,7 +135,7 @@ final class Termwind
         $content = self::prepareElements(
             $content,
             $styles,
-            static function ($li) use ($ul): string|Element {
+            static function ($li) use ($ul)/*: string|Element */{
                 if (is_string($li)) {
                     return $li;
                 }
@@ -124,13 +144,13 @@ final class Termwind
                     throw new InvalidChild('Unordered lists only accept `li` as child');
                 }
 
-                return match (true) {
-                    $li->hasStyle('list-none') => $li,
-                    $ul->hasStyle('list-none') => $li->addStyle('list-none'),
-                    $ul->hasStyle('list-square') => $li->addStyle('list-square'),
-                    $ul->hasStyle('list-disc') => $li->addStyle('list-disc'),
-                    default => $li->addStyle('list-none'),
-                };
+                switch (true) {
+                    case $li->hasStyle('list-none'): return $li;
+                    case $ul->hasStyle('list-none'): return $li->addStyle('list-none');
+                    case $ul->hasStyle('list-square'): return $li->addStyle('list-square');
+                    case $ul->hasStyle('list-disc'): return $li->addStyle('list-disc');
+                    default: return $li->addStyle('list-none');
+                }
             }
         );
 
@@ -143,8 +163,10 @@ final class Termwind
      * @param  array<int, string|Element>  $content
      * @param  array<string, mixed>  $properties
      */
-    public static function ol(array $content = [], string $styles = '', array $properties = []): Components\Ol
+    public static function ol(array $content = [], /*string */$styles = '', array $properties = [])/*: Components\Ol*/
     {
+        $styles = cast_to_string($styles);
+
         $ol = Components\Ol::fromStyles(
             self::getRenderer(), '', $styles, $properties
         );
@@ -154,7 +176,7 @@ final class Termwind
         $content = self::prepareElements(
             $content,
             $styles,
-            static function ($li) use ($ol, &$index): string|Element {
+            static function ($li) use ($ol, &$index)/*: string|Element */{
                 if (is_string($li)) {
                     return $li;
                 }
@@ -163,12 +185,12 @@ final class Termwind
                     throw new InvalidChild('Ordered lists only accept `li` as child');
                 }
 
-                return match (true) {
-                    $li->hasStyle('list-none') => $li->addStyle('list-none'),
-                    $ol->hasStyle('list-none') => $li->addStyle('list-none'),
-                    $ol->hasStyle('list-decimal') => $li->addStyle('list-decimal-'.(++$index)),
-                    default => $li->addStyle('list-none'),
-                };
+                switch (true) {
+                    case $li->hasStyle('list-none'): return $li->addStyle('list-none');
+                    case $ol->hasStyle('list-none'): return $li->addStyle('list-none');
+                    case $ol->hasStyle('list-decimal'): return $li->addStyle('list-decimal-'.(++$index));
+                    default: return $li->addStyle('list-none');
+                }
             }
         );
 
@@ -181,8 +203,12 @@ final class Termwind
      * @param  array<int, Element|string>|string  $content
      * @param  array<string, mixed>  $properties
      */
-    public static function li(array|string $content = '', string $styles = '', array $properties = []): Components\Li
+    public static function li(/*array|string */$content = '', /*string */$styles = '', array $properties = [])/*: Components\Li*/
     {
+        $styles = cast_to_string($styles);
+
+        $content = cast_to_compound('array|string', $content);
+
         $content = self::prepareElements($content, $styles);
 
         return Components\Li::fromStyles(
@@ -196,12 +222,14 @@ final class Termwind
      * @param  array<int, string|Element>  $content
      * @param  array<string, mixed>  $properties
      */
-    public static function dl(array $content = [], string $styles = '', array $properties = []): Components\Dl
+    public static function dl(array $content = [], /*string */$styles = '', array $properties = [])/*: Components\Dl*/
     {
+        $styles = cast_to_string($styles);
+
         $content = self::prepareElements(
             $content,
             $styles,
-            static function ($element): string|Element {
+            static function ($element)/*: string|Element */{
                 if (is_string($element)) {
                     return $element;
                 }
@@ -225,8 +253,12 @@ final class Termwind
      * @param  array<int, Element|string>|string  $content
      * @param  array<string, mixed>  $properties
      */
-    public static function dt(array|string $content = '', string $styles = '', array $properties = []): Components\Dt
+    public static function dt(/*array|string */$content = '', /*string */$styles = '', array $properties = [])/*: Components\Dt*/
     {
+        $styles = cast_to_string($styles);
+
+        $content = cast_to_compound('array|string', $content);
+
         $content = self::prepareElements($content, $styles);
 
         return Components\Dt::fromStyles(
@@ -240,8 +272,12 @@ final class Termwind
      * @param  array<int, Element|string>|string  $content
      * @param  array<string, mixed>  $properties
      */
-    public static function dd(array|string $content = '', string $styles = '', array $properties = []): Components\Dd
+    public static function dd(/*array|string */$content = '', /*string */$styles = '', array $properties = [])/*: Components\Dd*/
     {
+        $styles = cast_to_string($styles);
+
+        $content = cast_to_compound('array|string', $content);
+
         $content = self::prepareElements($content, $styles);
 
         return Components\Dd::fromStyles(
@@ -254,8 +290,10 @@ final class Termwind
      *
      * @param  array<string, mixed>  $properties
      */
-    public static function hr(string $styles = '', array $properties = []): Components\Hr
+    public static function hr(/*string */$styles = '', array $properties = [])/*: Components\Hr*/
     {
+        $styles = cast_to_string($styles);
+
         return Components\Hr::fromStyles(
             self::getRenderer(), '', $styles, $properties
         );
@@ -266,8 +304,10 @@ final class Termwind
      *
      * @param  array<string, mixed>  $properties
      */
-    public static function breakLine(string $styles = '', array $properties = []): Components\BreakLine
+    public static function breakLine(/*string */$styles = '', array $properties = [])/*: Components\BreakLine*/
     {
+        $styles = cast_to_string($styles);
+
         return Components\BreakLine::fromStyles(
             self::getRenderer(), '', $styles, $properties
         );
@@ -276,9 +316,13 @@ final class Termwind
     /**
      * Gets the current renderer instance.
      */
-    public static function getRenderer(): OutputInterface
+    public static function getRenderer()/*: OutputInterface*/
     {
-        return self::$renderer ??= new ConsoleOutput();
+        if (! isset(self::$renderer)) {
+            self::$renderer = new ConsoleOutput();
+        }
+
+        return self::$renderer;
     }
 
     /**
@@ -287,10 +331,12 @@ final class Termwind
      * @param  array<int, string|Element>|string  $elements
      * @return array<int, string|Element>
      */
-    private static function prepareElements($elements, string $styles = '', Closure|null $callback = null): array
+    private static function prepareElements($elements, /*string */$styles = '', Closure/*|null */$callback = null)/*: array*/
     {
+        $styles = cast_to_string($styles);
+
         if ($callback === null) {
-            $callback = static fn ($element): string|Element => $element;
+            $callback = static function ($element)/*: string|Element */{ return $element; };
         }
 
         $elements = is_array($elements) ? $elements : [$elements];

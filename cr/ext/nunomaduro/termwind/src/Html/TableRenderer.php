@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Termwind\Html;
 
@@ -25,12 +25,12 @@ final class TableRenderer
     /**
      * Symfony table object uses for table generation.
      */
-    private Table $table;
+    private /*Table */$table;
 
     /**
      * This object is used for accumulating output data from Symfony table object and return it as a string.
      */
-    private BufferedOutput $output;
+    private /*BufferedOutput */$output;
 
     public function __construct()
     {
@@ -46,12 +46,13 @@ final class TableRenderer
     /**
      * Converts table output to the content element.
      */
-    public function toElement(Node $node): Element
+    public function toElement(Node $node)/*: Element*/
     {
         $this->parseTable($node);
         $this->table->render();
 
-        $content = preg_replace('/\n$/', '', $this->output->fetch()) ?? '';
+        $content = preg_replace('/\n$/', '', $this->output->fetch());
+        $content = isset($content) ? $content : '';
 
         return Termwind::div($content, '', [
             'isFirstChild' => $node->isFirstChild(),
@@ -61,7 +62,7 @@ final class TableRenderer
     /**
      * Looks for thead, tfoot, tbody, tr elements in a given DOM and appends rows from them to the Symfony table object.
      */
-    private function parseTable(Node $node): void
+    private function parseTable(Node $node)/*: void*/
     {
         $style = $node->getAttribute('style');
         if ($style !== '') {
@@ -69,19 +70,19 @@ final class TableRenderer
         }
 
         foreach ($node->getChildNodes() as $child) {
-            match ($child->getName()) {
-                'thead' => $this->parseHeader($child),
-                'tfoot' => $this->parseFoot($child),
-                'tbody' => $this->parseBody($child),
-                default => $this->parseRows($child)
-            };
+            switch ($child->getName()) {
+                case 'thead': $this->parseHeader($child); break;
+                case 'tfoot': $this->parseFoot($child); break;
+                case 'tbody': $this->parseBody($child); break;
+                default: $this->parseRows($child);
+            }
         }
     }
 
     /**
      * Looks for table header title and tr elements in a given thead DOM node and adds them to the Symfony table object.
      */
-    private function parseHeader(Node $node): void
+    private function parseHeader(Node $node)/*: void*/
     {
         $title = $node->getAttribute('title');
 
@@ -107,7 +108,7 @@ final class TableRenderer
     /**
      * Looks for table footer and tr elements in a given tfoot DOM node and adds them to the Symfony table object.
      */
-    private function parseFoot(Node $node): void
+    private function parseFoot(Node $node)/*: void*/
     {
         $title = $node->getAttribute('title');
 
@@ -132,7 +133,7 @@ final class TableRenderer
     /**
      * Looks for tr elements in a given DOM node and adds them to the Symfony table object.
      */
-    private function parseBody(Node $node): void
+    private function parseBody(Node $node)/*: void*/
     {
         foreach ($node->getChildNodes() as $child) {
             if ($child->isName('tr')) {
@@ -144,7 +145,7 @@ final class TableRenderer
     /**
      * Parses table tr elements.
      */
-    private function parseRows(Node $node): void
+    private function parseRows(Node $node)/*: void*/
     {
         foreach ($this->parseRow($node) as $row) {
             $this->table->addRow($row);
@@ -156,7 +157,7 @@ final class TableRenderer
      *
      * @return Iterator<array<int, TableCell>|TableSeparator>
      */
-    private function parseRow(Node $node): Iterator
+    private function parseRow(Node $node)/*: Iterator*/
     {
         $row = [];
 
@@ -170,8 +171,9 @@ final class TableRenderer
                     $class .= ' strong';
                 }
 
+                $replacedChildHtml = preg_replace('/<br\s?+\/?>/', "\n", $child->getHtml());
                 $text = (string) (new HtmlRenderer)->parse(
-                    trim(preg_replace('/<br\s?+\/?>/', "\n", $child->getHtml()) ?? '')
+                    trim(isset($replacedChildHtml) ? $replacedChildHtml : '')
                 );
 
                 if ((bool) preg_match(Styles::STYLING_REGEX, $text)) {
@@ -210,15 +212,20 @@ final class TableRenderer
     /**
      * Parses tr, td tag class attribute and passes bg, fg and options to a table cell style.
      */
-    private function parseCellStyle(string $styles, string $align = TableCellStyle::DEFAULT_ALIGN): TableCellStyle
+    private function parseCellStyle(/*string */$styles, /*string */$align = TableCellStyle::DEFAULT_ALIGN)/*: TableCellStyle*/
     {
+        $styles = cast_to_string($styles);
+
+        $align = cast_to_string($align);
+
         // I use this empty span for getting styles for bg, fg and options
         // It will be a good idea to get properties without element object and then pass them to an element object
         $element = Termwind::span('%s', $styles);
 
         $styles = [];
 
-        $colors = $element->getProperties()['colors'] ?? [];
+        $elementProperties = $element->getProperties();
+        $colors = isset($elementProperties['colors']) ? $elementProperties['colors'] : [];
 
         foreach ($colors as $option => $content) {
             if (in_array($option, ['fg', 'bg'], true)) {
@@ -244,7 +251,7 @@ final class TableRenderer
     /**
      * Get styled representation of title.
      */
-    private function parseTitleStyle(Node $node): string
+    private function parseTitleStyle(Node $node)/*: string*/
     {
         return (string) Termwind::span(' %s ', $node->getClassAttribute());
     }

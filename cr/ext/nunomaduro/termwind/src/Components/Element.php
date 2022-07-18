@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Termwind\Components;
 
@@ -28,9 +28,13 @@ use Termwind\ValueObjects\Styles;
 abstract class Element
 {
     /** @var string[] */
-    protected static array $defaultStyles = [];
+    protected static /*array */$defaultStyles = [];
 
-    protected Styles $styles;
+    protected /*Styles */$styles;
+
+    protected /*OutputInterface */$output;
+
+    protected /*array|string */$content;
 
     /**
      * Creates an element instance.
@@ -38,11 +42,17 @@ abstract class Element
      * @param  array<int, Element|string>|string  $content
      */
     final public function __construct(
-        protected OutputInterface $output,
-        protected array|string $content,
-        Styles|null $styles = null
+        OutputInterface $output,
+        /*array|string */$content,
+        Styles/*|null */$styles = null
     ) {
-        $this->styles = $styles ?? new Styles(defaultStyles: static::$defaultStyles);
+        $content = cast_to_compound('array|string', $content);
+
+        $this->output = $output;
+
+        $this->content = $content;
+
+        $this->styles = isset($styles) ? $styles : new Styles(null, null, null, static::$defaultStyles);
         $this->styles->setElement($this);
     }
 
@@ -52,8 +62,12 @@ abstract class Element
      * @param  array<int, Element|string>|string  $content
      * @param  array<string, mixed>  $properties
      */
-    final public static function fromStyles(OutputInterface $output, array|string $content, string $styles = '', array $properties = []): static
+    final public static function fromStyles(OutputInterface $output, /*array|string */$content, /*string */$styles = '', array $properties = [])/*: static*/
     {
+        $styles = cast_to_string($styles);
+
+        $content = cast_to_compound('array|string', $content);
+
         $element = new static($output, $content);
         if ($properties !== []) {
             $element->styles->setProperties($properties);
@@ -67,7 +81,7 @@ abstract class Element
     /**
      * Get the string representation of the element.
      */
-    public function toString(): string
+    public function toString()/*: string*/
     {
         if (is_array($this->content)) {
             $inheritance = new InheritStyles();
@@ -80,8 +94,10 @@ abstract class Element
     /**
      * @param  array<int, mixed>  $arguments
      */
-    public function __call(string $name, array $arguments): mixed
+    public function __call(/*string */$name, array $arguments)/*: mixed*/
     {
+        $name = cast_to_string($name);
+
         if (method_exists($this->styles, $name)) {
             $result = $this->styles->{$name}(...$arguments);
 
@@ -98,23 +114,27 @@ abstract class Element
      *
      * @param  array<int, Element|string>|string  $content
      */
-    final public function setContent(array|string $content): static
+    final public function setContent(/*array|string */$content)/*: static*/
     {
+        $content = cast_to_compound('array|string', $content);
+
         return new static($this->output, $content, $this->styles);
     }
 
     /**
      * Renders the string representation of the element on the output.
      */
-    final public function render(int $options): void
+    final public function render(/*int */$options)/*: void*/
     {
+        $options = cast_to_int($options);
+
         $this->output->writeln($this->toString(), $options);
     }
 
     /**
      * Get the string representation of the element.
      */
-    final public function __toString(): string
+    final public function __toString()/*: string*/
     {
         return $this->toString();
     }

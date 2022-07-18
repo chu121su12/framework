@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Termwind\Actions;
 
@@ -17,12 +17,12 @@ final class StyleToMethod
     /**
      * Finds if there is any media query on the style class.
      */
-    private const MEDIA_QUERIES_REGEX = "/^(sm|md|lg|xl|2xl)\:(.*)/";
+    /*private */const MEDIA_QUERIES_REGEX = "/^(sm|md|lg|xl|2xl)\:(.*)/";
 
     /**
      * Defines the Media Query Breakpoints.
      */
-    public const MEDIA_QUERY_BREAKPOINTS = [
+    /*public */const MEDIA_QUERY_BREAKPOINTS = [
         'sm' => 64,
         'md' => 76,
         'lg' => 102,
@@ -30,21 +30,28 @@ final class StyleToMethod
         '2xl' => 153,
     ];
 
+    private /*Styles */$styles;
+
+    private /*string */$style;
+
     /**
      * Creates a new action instance.
      */
     public function __construct(
-        private Styles $styles,
-        private string $style,
+        /*private */Styles $styles,
+        /*private string */$style
     ) {
-        // ..
+        $this->styles = $styles;
+        $this->style = $style;
     }
 
     /**
      * Applies multiple styles to the given styles.
      */
-    public static function multiple(Styles $styles, string $stylesString): Styles
+    public static function multiple(Styles $styles, /*string */$stylesString)/*: Styles*/
     {
+        $stylesString = cast_to_string($stylesString);
+
         $stylesString = self::sortStyles(array_merge(
             $styles->defaultStyles(),
             array_filter((array) preg_split('/(?![^\[]*\])\s/', $stylesString))
@@ -62,10 +69,13 @@ final class StyleToMethod
      *
      * @return Styles
      */
-    public function __invoke(string|int ...$arguments): Styles
+    public function __invoke(/*string|int */...$arguments)/*: Styles*/
     {
+        $arguments = cast_to_compounds('string|int', $arguments);
+
         if (StyleRepository::has($this->style)) {
-            return StyleRepository::get($this->style)($this->styles, ...$arguments);
+            $styled = StyleRepository::get($this->style);
+            return $styled($this->styles, ...$arguments);
         }
 
         $method = $this->applyMediaQuery($this->style);
@@ -76,7 +86,7 @@ final class StyleToMethod
 
         $method = array_filter(
             (array) preg_split('/(?![^\[]*\])-/', $method),
-            fn ($item) => $item !== false
+            function ($item) { return $item !== false; }
         );
 
         $method = array_slice($method, 0, count($method) - count($arguments));
@@ -109,7 +119,7 @@ final class StyleToMethod
      * @param  string[]  $styles
      * @return string[]
      */
-    private static function sortStyles(array $styles): array
+    private static function sortStyles(array $styles)/*: array*/
     {
         $keys = array_keys(self::MEDIA_QUERY_BREAKPOINTS);
 
@@ -134,15 +144,17 @@ final class StyleToMethod
     /**
      * Applies the media query if exists.
      */
-    private function applyMediaQuery(string $method): string
+    private function applyMediaQuery(/*string */$method)/*: string*/
     {
+        $method = cast_to_string($method);
+
         preg_match(self::MEDIA_QUERIES_REGEX, $method, $matches);
 
-        if (count($matches ?? []) < 1) {
+        if (count(isset($matches) ? $matches : []) < 1) {
             return $method;
         }
 
-        [, $size, $method] = $matches;
+        list(, $size, $method) = $matches;
 
         if ((new Terminal)->width() >= self::MEDIA_QUERY_BREAKPOINTS[$size]) {
             return $method;

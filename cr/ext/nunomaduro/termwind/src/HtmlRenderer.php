@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Termwind;
 
@@ -19,16 +19,22 @@ final class HtmlRenderer
     /**
      * Renders the given html.
      */
-    public function render(string $html, int $options): void
+    public function render(/*string */$html, /*int */$options)/*: void*/
     {
+        $html = cast_to_string($html);
+
+        $options = cast_to_int($options);
+
         $this->parse($html)->render($options);
     }
 
     /**
      * Parses the given html.
      */
-    public function parse(string $html): Components\Element
+    public function parse(/*string */$html)/*: Components\Element*/
     {
+        $html = cast_to_string($html);
+
         $dom = new DOMDocument();
 
         if (strip_tags($html) === $html) {
@@ -52,7 +58,7 @@ final class HtmlRenderer
     /**
      * Convert a tree of DOM nodes to a tree of termwind elements.
      */
-    private function convert(Node $node): Components\Element|string
+    private function convert(Node $node)/*: Components\Element|string*/
     {
         $children = [];
 
@@ -68,7 +74,7 @@ final class HtmlRenderer
             $children[] = $this->convert($child);
         }
 
-        $children = array_filter($children, fn ($child) => $child !== '');
+        $children = array_filter($children, function ($child) { return $child !== ''; });
 
         return $this->toElement($node, $children);
     }
@@ -78,7 +84,7 @@ final class HtmlRenderer
      *
      * @param  array<int, Components\Element|string>  $children
      */
-    private function toElement(Node $node, array $children): Components\Element|string
+    private function toElement(Node $node, array $children)/*: Components\Element|string*/
     {
         if ($node->isText() || $node->isComment()) {
             return (string) $node;
@@ -91,26 +97,27 @@ final class HtmlRenderer
 
         $styles = $node->getClassAttribute();
 
-        return match ($node->getName()) {
-            'body' => $children[0], // Pick only the first element from the body node
-            'div' => Termwind::div($children, $styles, $properties),
-            'p' => Termwind::paragraph($children, $styles, $properties),
-            'ul' => Termwind::ul($children, $styles, $properties),
-            'ol' => Termwind::ol($children, $styles, $properties),
-            'li' => Termwind::li($children, $styles, $properties),
-            'dl' => Termwind::dl($children, $styles, $properties),
-            'dt' => Termwind::dt($children, $styles, $properties),
-            'dd' => Termwind::dd($children, $styles, $properties),
-            'span' => Termwind::span($children, $styles, $properties),
-            'br' => Termwind::breakLine($styles, $properties),
-            'strong' => Termwind::span($children, $styles, $properties)->strong(),
-            'b' => Termwind::span($children, $styles, $properties)->fontBold(),
-            'em', 'i' => Termwind::span($children, $styles, $properties)->italic(),
-            'u' => Termwind::span($children, $styles, $properties)->underline(),
-            's' => Termwind::span($children, $styles, $properties)->lineThrough(),
-            'a' => Termwind::anchor($children, $styles, $properties)->href($node->getAttribute('href')),
-            'hr' => Termwind::hr($styles, $properties),
-            default => Termwind::div($children, $styles, $properties),
-        };
+        switch ($node->getName()) {
+            case 'body': return $children[0]; // Pick only the first element from the body node
+            case 'div': return Termwind::div($children, $styles, $properties);
+            case 'p': return Termwind::paragraph($children, $styles, $properties);
+            case 'ul': return Termwind::ul($children, $styles, $properties);
+            case 'ol': return Termwind::ol($children, $styles, $properties);
+            case 'li': return Termwind::li($children, $styles, $properties);
+            case 'dl': return Termwind::dl($children, $styles, $properties);
+            case 'dt': return Termwind::dt($children, $styles, $properties);
+            case 'dd': return Termwind::dd($children, $styles, $properties);
+            case 'span': return Termwind::span($children, $styles, $properties);
+            case 'br': return Termwind::breakLine($styles, $properties);
+            case 'strong': return Termwind::span($children, $styles, $properties)->strong();
+            case 'b': return Termwind::span($children, $styles, $properties)->fontBold();
+            case 'em':
+            case 'i': return Termwind::span($children, $styles, $properties)->italic();
+            case 'u': return Termwind::span($children, $styles, $properties)->underline();
+            case 's': return Termwind::span($children, $styles, $properties)->lineThrough();
+            case 'a': return Termwind::anchor($children, $styles, $properties)->href($node->getAttribute('href'));
+            case 'hr': return Termwind::hr($styles, $properties);
+            default: return Termwind::div($children, $styles, $properties);
+        }
     }
 }

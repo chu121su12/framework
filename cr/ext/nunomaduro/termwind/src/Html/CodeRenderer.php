@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Termwind\Html;
 
@@ -13,36 +13,36 @@ use Termwind\ValueObjects\Node;
  */
 final class CodeRenderer
 {
-    public const TOKEN_DEFAULT = 'token_default';
+    /*public */const TOKEN_DEFAULT = 'token_default';
 
-    public const TOKEN_COMMENT = 'token_comment';
+    /*public */const TOKEN_COMMENT = 'token_comment';
 
-    public const TOKEN_STRING = 'token_string';
+    /*public */const TOKEN_STRING = 'token_string';
 
-    public const TOKEN_HTML = 'token_html';
+    /*public */const TOKEN_HTML = 'token_html';
 
-    public const TOKEN_KEYWORD = 'token_keyword';
+    /*public */const TOKEN_KEYWORD = 'token_keyword';
 
-    public const ACTUAL_LINE_MARK = 'actual_line_mark';
+    /*public */const ACTUAL_LINE_MARK = 'actual_line_mark';
 
-    public const LINE_NUMBER = 'line_number';
+    /*public */const LINE_NUMBER = 'line_number';
 
-    private const ARROW_SYMBOL_UTF8 = '➜';
+    /*private */const ARROW_SYMBOL_UTF8 = '➜';
 
-    private const DELIMITER_UTF8 = '▕ '; // '▶';
+    /*private */const DELIMITER_UTF8 = '▕ '; // '▶';
 
-    private const LINE_NUMBER_DIVIDER = 'line_divider';
+    /*private */const LINE_NUMBER_DIVIDER = 'line_divider';
 
-    private const MARKED_LINE_NUMBER = 'marked_line';
+    /*private */const MARKED_LINE_NUMBER = 'marked_line';
 
-    private const WIDTH = 3;
+    /*private */const WIDTH = 3;
 
     /**
      * Holds the theme.
      *
      * @var array<string, string>
      */
-    private const THEME = [
+    /*private */const THEME = [
         self::TOKEN_STRING => 'text-gray',
         self::TOKEN_COMMENT => 'text-gray italic',
         self::TOKEN_KEYWORD => 'text-magenta strong',
@@ -55,16 +55,16 @@ final class CodeRenderer
         self::LINE_NUMBER_DIVIDER => 'text-gray',
     ];
 
-    private string $delimiter = self::DELIMITER_UTF8;
+    private /*string */$delimiter = self::DELIMITER_UTF8;
 
-    private string $arrow = self::ARROW_SYMBOL_UTF8;
+    private /*string */$arrow = self::ARROW_SYMBOL_UTF8;
 
-    private const NO_MARK = '    ';
+    /*private */const NO_MARK = '    ';
 
     /**
      * Highlights HTML content from a given node and converts to the content element.
      */
-    public function toElement(Node $node): Element
+    public function toElement(Node $node)/*: Element*/
     {
         $line = max((int) $node->getAttribute('line'), 0);
         $startLine = max((int) $node->getAttribute('start-line'), 1);
@@ -74,7 +74,9 @@ final class CodeRenderer
         $extraSpaces = $this->findExtraSpaces($lines);
 
         if ($extraSpaces !== '') {
-            $lines = array_map(static function (string $line) use ($extraSpaces): string {
+            $lines = array_map(static function (/*string */$line) use ($extraSpaces): string {
+                $line = cast_to_string($line);
+
                 return str_starts_with($line, $extraSpaces) ? substr($line, strlen($extraSpaces)) : $line;
             }, $lines);
             $html = implode("\n", $lines);
@@ -92,7 +94,7 @@ final class CodeRenderer
      *
      * @param  array<int, string>  $lines
      */
-    private function findExtraSpaces(array $lines): string
+    private function findExtraSpaces(array $lines)/*: string*/
     {
         foreach ($lines as $line) {
             if ($line === '') {
@@ -112,8 +114,12 @@ final class CodeRenderer
      *
      * @return array<int, array<int, array{0: string, 1: non-empty-string}>>
      */
-    private function getHighlightedLines(string $source, int $startLine): array
+    private function getHighlightedLines(/*string */$source, /*int */$startLine)/*: array*/
     {
+        $source = cast_to_string($source);
+
+        $startLine = cast_to_int($startLine);
+
         $source = str_replace(["\r\n", "\r"], "\n", $source);
         $tokens = $this->tokenize($source);
 
@@ -125,8 +131,10 @@ final class CodeRenderer
      *
      * @return array<int, array{0: string, 1: string}>
      */
-    private function tokenize(string $source): array
+    private function tokenize(/*string */$source)/*: array*/
     {
+        $source = cast_to_string($source);
+
         $tokens = token_get_all($source);
 
         $output = [];
@@ -137,15 +145,7 @@ final class CodeRenderer
         foreach ($tokens as $token) {
             if (is_array($token)) {
                 if ($token[0] !== T_WHITESPACE) {
-                    $newType = match ($token[0]) {
-                        T_OPEN_TAG, T_OPEN_TAG_WITH_ECHO, T_CLOSE_TAG, T_STRING, T_VARIABLE,
-                        T_DIR, T_FILE, T_METHOD_C, T_DNUMBER, T_LNUMBER, T_NS_C,
-                        T_LINE, T_CLASS_C, T_FUNC_C, T_TRAIT_C => self::TOKEN_DEFAULT,
-                        T_COMMENT, T_DOC_COMMENT => self::TOKEN_COMMENT,
-                        T_ENCAPSED_AND_WHITESPACE, T_CONSTANT_ENCAPSED_STRING => self::TOKEN_STRING,
-                        T_INLINE_HTML => self::TOKEN_HTML,
-                        default => self::TOKEN_KEYWORD
-                    };
+                    $newType = $this->matchTokenType($token[0]);
                 }
             } else {
                 $newType = $token === '"' ? self::TOKEN_STRING : self::TOKEN_KEYWORD;
@@ -169,6 +169,42 @@ final class CodeRenderer
         return $output;
     }
 
+    private function matchTokenType($type)
+    {
+        switch ($token[0]) {
+            case T_OPEN_TAG:
+            case T_OPEN_TAG_WITH_ECHO:
+            case T_CLOSE_TAG:
+            case T_STRING:
+            case T_VARIABLE:
+            case T_DIR:
+            case T_FILE:
+            case T_METHOD_C:
+            case T_DNUMBER:
+            case T_LNUMBER:
+            case T_NS_C:
+            case T_LINE:
+            case T_CLASS_C:
+            case T_FUNC_C:
+            case T_TRAIT_C:
+                return self::TOKEN_DEFAULT;
+
+            case T_COMMENT:
+            case T_DOC_COMMENT:
+                return self::TOKEN_COMMENT;
+
+            case T_ENCAPSED_AND_WHITESPACE:
+            case T_CONSTANT_ENCAPSED_STRING:
+                return self::TOKEN_STRING;
+
+            case T_INLINE_HTML:
+                return self::TOKEN_HTML;
+
+            default:
+                return self::TOKEN_KEYWORD;
+        };
+    }
+
     /**
      * Splits tokens into lines.
      *
@@ -176,8 +212,10 @@ final class CodeRenderer
      * @param  int  $startLine
      * @return array<int, array<int, array{0: string, 1: non-empty-string}>>
      */
-    private function splitToLines(array $tokens, int $startLine): array
+    private function splitToLines(array $tokens, /*int */$startLine)/*: array*/
     {
+        $startLine = cast_to_int($startLine);
+
         $lines = [];
 
         $line = [];
@@ -207,14 +245,14 @@ final class CodeRenderer
      * @param  array<int, array<int, array{0: string, 1: non-empty-string}>>  $tokenLines
      * @return array<int, string>
      */
-    private function colorLines(array $tokenLines): array
+    private function colorLines(array $tokenLines)/*: array*/
     {
         $lines = [];
 
         foreach ($tokenLines as $lineCount => $tokenLine) {
             $line = '';
             foreach ($tokenLine as $token) {
-                [$tokenType, $tokenValue] = $token;
+                list($tokenType, $tokenValue) = $token;
                 $line .= $this->styleToken($tokenType, $tokenValue);
             }
 
@@ -231,8 +269,10 @@ final class CodeRenderer
      * @param  int  $markLine
      * @return string
      */
-    private function lineNumbers(array $lines, int $markLine): string
+    private function lineNumbers(array $lines, /*int */$markLine)/*: string*/
     {
+        $markLine = cast_to_int($markLine);
+
         $lastLine = (int) array_key_last($lines);
         $lineLength = strlen((string) ($lastLine + 1));
         $lineLength = $lineLength < self::WIDTH ? self::WIDTH : $lineLength;
@@ -265,8 +305,14 @@ final class CodeRenderer
     /**
      * Formats line number and applies color according to a color schema.
      */
-    private function coloredLineNumber(string $token, int $lineNumber, int $length): string
+    private function coloredLineNumber(/*string */$token, /*int */$lineNumber, /*int */$length)/*: string*/
     {
+        $token = cast_to_string($token);
+
+        $lineNumber = cast_to_int($lineNumber);
+
+        $length = cast_to_int($length);
+
         return $this->styleToken(
             $token, str_pad((string) ($lineNumber + 1), $length, ' ', STR_PAD_LEFT)
         );
@@ -275,8 +321,12 @@ final class CodeRenderer
     /**
      * Formats string and applies color according to a color schema.
      */
-    private function styleToken(string $token, string $string): string
+    private function styleToken(/*string */$token, /*string */$string)/*: string*/
     {
+        $token = cast_to_string($token);
+
+        $string = cast_to_string($string);
+
         return (string) Termwind::span($string, self::THEME[$token]);
     }
 }

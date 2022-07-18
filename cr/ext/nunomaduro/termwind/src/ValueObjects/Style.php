@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Termwind\ValueObjects;
 
@@ -26,8 +26,10 @@ final class Style
     /**
      * Apply the given set of styles to the styles.
      */
-    public function apply(string $styles): void
+    public function apply(/*string */$styles)/*: void*/
     {
+        $styles = cast_to_string($styles);
+
         $callback = clone $this->callback;
 
         $this->callback = static function (
@@ -43,8 +45,10 @@ final class Style
     /**
      * Sets the color to the style.
      */
-    public function color(string $color): void
+    public function color(/*string */$color)/*: void*/
     {
+        $color = cast_to_string($color);
+
         if (preg_match('/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/', $color) < 1) {
             throw new InvalidColor(sprintf('The color %s is invalid.', $color));
         }
@@ -55,7 +59,7 @@ final class Style
     /**
      * Gets the color.
      */
-    public function getColor(): string
+    public function getColor()/*: string*/
     {
         return $this->color;
     }
@@ -63,8 +67,10 @@ final class Style
     /**
      * Styles the given formatter with this style.
      */
-    public function __invoke(Styles $styles, string|int ...$arguments): Styles
+    public function __invoke(Styles $styles, /*string|int */...$arguments)/*: Styles*/
     {
+        $arguments = cast_to_compounds('string|int', $arguments);
+
         return ($this->callback)($styles, ...$arguments);
     }
 }
