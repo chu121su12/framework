@@ -66,7 +66,7 @@ class StatusCommand extends BaseCommand
                 $this->components->twoColumnDetail('<fg=gray>Migration name</>', '<fg=gray>Batch / Status</>');
 
                 $migrations->each(
-                    function ($migration) use ($migration) { return $this->components->twoColumnDetail($migration[0], $migration[1]); }
+                    function ($migration) { return $this->components->twoColumnDetail($migration[0], $migration[1]); }
                 );
 
                 $this->newLine();
