@@ -112,10 +112,7 @@ class Response implements Responsable
         ];
 
         if ($request->header('X-Inertia')) {
-            return new JsonResponse($page, 200, [
-                'Vary' => 'Accept',
-                'X-Inertia' => 'true',
-            ]);
+            return new JsonResponse($page, 200, ['X-Inertia' => 'true']);
         }
 
         return ResponseFacade::view($this->rootView, $this->viewData + ['page' => $page]);

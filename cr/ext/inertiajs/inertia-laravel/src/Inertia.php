@@ -2,6 +2,7 @@
 
 namespace Inertia;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -12,8 +13,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static void version($version)
  * @method static int|string getVersion()
  * @method static LazyProp lazy(callable $callback)
- * @method static Response render($component, array $props = [])
- * @method static \Illuminate\Http\Response location(string $url)
+ * @method static Response render($component, array|Arrayable $props = [])
+ * @method static \Symfony\Component\HttpFoundation\Response location(string $url)
  *
  * @see \Inertia\ResponseFactory
  */
