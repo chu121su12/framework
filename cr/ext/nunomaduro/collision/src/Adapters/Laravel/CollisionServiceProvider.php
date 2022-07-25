@@ -24,7 +24,7 @@ use NunoMaduro\Collision\Writer;
 class CollisionServiceProvider extends ServiceProvider
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      *
      * @var bool
      */
@@ -43,11 +43,11 @@ class CollisionServiceProvider extends ServiceProvider
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function register()
     {
-        if ($this->app->runningInConsole() && !$this->app->runningUnitTests()) {
+        if ($this->app->runningInConsole() && ! $this->app->runningUnitTests()) {
             $this->app->bind(HighlighterContract::class, function () {
                 return new Highlighter(
                     $this->app->make(ConsoleColor::class),
@@ -56,6 +56,7 @@ class CollisionServiceProvider extends ServiceProvider
             });
 
             $this->app->bind(ProviderContract::class, function () {
+                // @phpstan-ignore-next-line
                 if ($this->app->has(\Facade\IgnitionContracts\SolutionProviderRepository::class)) {
                     /** @var \Facade\IgnitionContracts\SolutionProviderRepository $solutionProviderRepository */
                     $solutionProviderRepository = $this->app->get(\Facade\IgnitionContracts\SolutionProviderRepository::class);
@@ -84,7 +85,7 @@ class CollisionServiceProvider extends ServiceProvider
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function provides()
     {
