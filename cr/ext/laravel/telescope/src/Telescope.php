@@ -314,10 +314,6 @@ class Telescope
             return;
         }
 
-        $entry->type($type)->tags(Arr::collapse(array_map(function ($tagCallback) use ($entry) {
-            return $tagCallback($entry);
-        }, static::$tagUsing)));
-
         try {
             if (Auth::hasResolvedGuards() && Auth::hasUser()) {
                 $entry->user(Auth::user());
@@ -329,6 +325,10 @@ class Telescope
         } catch (Throwable $e) {
             // Do nothing.
         }
+
+        $entry->type($type)->tags(Arr::collapse(array_map(function ($tagCallback) use ($entry) {
+            return $tagCallback($entry);
+        }, static::$tagUsing)));
 
         static::withoutRecording(function () use ($entry) {
             if (collect(static::$filterUsing)->every->__invoke($entry)) {
