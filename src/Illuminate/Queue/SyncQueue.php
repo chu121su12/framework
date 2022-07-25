@@ -12,8 +12,6 @@ use Throwable;
 
 class SyncQueue extends Queue implements QueueContract
 {
-    protected $jobsCount = 0;
-
     /**
      * Get the size of the queue.
      *
@@ -39,8 +37,6 @@ class SyncQueue extends Queue implements QueueContract
     {
         $queueJob = $this->resolveJob($this->createPayload($job, $queue, $data), $queue);
 
-        $this->jobsCount++;
-
         try {
             $this->raiseBeforeJobEvent($queueJob);
 
@@ -52,12 +48,8 @@ class SyncQueue extends Queue implements QueueContract
         } catch (Throwable $e) {
         }
 
-        try {
-            if (isset($e)) {
-                $this->handleException($queueJob, $e);
-            }
-        } finally {
-            $this->jobsCount--;
+        if (isset($e)) {
+            $this->handleException($queueJob, $e);
         }
 
         return 0;
@@ -130,19 +122,11 @@ class SyncQueue extends Queue implements QueueContract
     {
         backport_type_throwable($e);
 
-        static $isGuarded = false;
+        $this->raiseExceptionOccurredJobEvent($queueJob, $e);
 
-        if ($isGuarded) {
-            $isGuarded = false;
-        } else {
-            $isGuarded = $this->jobsCount > 1;
+        $queueJob->fail($e);
 
-            $this->raiseExceptionOccurredJobEvent($queueJob, $e);
-
-            $queueJob->fail($e);
-
-            throw $e;
-        }
+        throw $e;
     }
 
     /**

@@ -39,6 +39,18 @@ class MigratorTest extends TestCase
         $this->assertTrue(DB::getSchemaBuilder()->hasColumn('people', 'last_name'));
     }
 
+    public function testMigrateWithoutOutput()
+    {
+        $this->app->forgetInstance('migrator');
+        $this->subject = $this->app->make('migrator');
+
+        $this->subject->run([__DIR__.'/fixtures']);
+
+        $this->assertTrue(DB::getSchemaBuilder()->hasTable('people'));
+        $this->assertTrue(DB::getSchemaBuilder()->hasColumn('people', 'first_name'));
+        $this->assertTrue(DB::getSchemaBuilder()->hasColumn('people', 'last_name'));
+    }
+
     public function testRollback()
     {
         if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
