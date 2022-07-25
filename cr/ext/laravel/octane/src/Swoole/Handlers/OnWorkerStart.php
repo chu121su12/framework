@@ -48,6 +48,8 @@ class OnWorkerStart
     {
         $workerId = cast_to_int($workerId);
 
+        $this->clearOpcodeCache();
+
         $this->workerState->server = $server;
         $this->workerState->workerId = $workerId;
         $this->workerState->workerPid = posix_getpid();
@@ -55,7 +57,6 @@ class OnWorkerStart
 
         $this->dispatchServerTickTaskEverySecond($server);
         $this->streamRequestsToConsole($server);
-        $this->clearOpcodeCache();
 
         if ($this->shouldSetProcessName) {
             $isTaskWorker = $workerId >= $server->setting['worker_num'];

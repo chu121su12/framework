@@ -10,6 +10,7 @@ if ((isset($serverState) && isset($serverState['octaneConfig']) && isset($server
 
     $timerTable->column('worker_pid', Table::TYPE_INT);
     $timerTable->column('time', Table::TYPE_INT);
+    $timerTable->column('fd', Table::TYPE_INT);
 
     $timerTable->create();
 
