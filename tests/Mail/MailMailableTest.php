@@ -27,6 +27,14 @@ class MailMailableTest_testItAttachesFilesViaAttachableContractFromData_class im
             }
         }
 
+class MailMailableTest_testItCanAttachMultipleFiles_class implements Attachable
+            {
+                public function toMailAttachment()
+                {
+                    return Attachment::fromPath('/foo.jpg')->as('bar')->withMime('image/png');
+                }
+            }
+
 class MailMailableTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -526,13 +534,7 @@ class MailMailableTest extends TestCase
         $mailable->attachMany([
             '/forge.svg',
             '/vapor.svg' => ['as' => 'Vapor Logo.svg', 'mime' => 'text/css'],
-            new class() implements Attachable
-            {
-                public function toMailAttachment()
-                {
-                    return Attachment::fromPath('/foo.jpg')->as('bar')->withMime('image/png');
-                }
-            },
+            new MailMailableTest_testItCanAttachMultipleFiles_class(),
         ]);
 
         $this->assertCount(3, $mailable->attachments);

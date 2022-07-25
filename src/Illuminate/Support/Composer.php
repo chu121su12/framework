@@ -127,6 +127,7 @@ class Composer
             return $version[1];
         }
 
-        return explode(' ', $output)[2] ?? null;
+        $outputs = explode(' ', $output);
+        return isset($outputs[2]) ? $outputs[2] : null;
     }
 }

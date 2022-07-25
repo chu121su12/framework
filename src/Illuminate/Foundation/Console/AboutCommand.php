@@ -80,22 +80,23 @@ class AboutCommand extends Command
         $this->gatherApplicationInformation();
 
         collect(static::$data)
-            ->map(fn ($items) => collect($items)
-                ->map(function ($value) {
-                    if (is_array($value)) {
-                        return [$value];
-                    }
+            ->map(function ($items) {
+                return collect($items)
+                    ->map(function ($value) {
+                        if (is_array($value)) {
+                            return [$value];
+                        }
 
-                    if (is_string($value)) {
-                        $value = $this->laravel->make($value);
-                    }
+                        if (is_string($value)) {
+                            $value = $this->laravel->make($value);
+                        }
 
-                    return collect($this->laravel->call($value))
-                        ->map(fn ($value, $key) => [$key, $value])
-                        ->values()
-                        ->all();
-                })->flatten(1)
-            )
+                        return collect($this->laravel->call($value))
+                            ->map(function ($value, $key) { return [$key, $value]; })
+                            ->values()
+                            ->all();
+                    })->flatten(1);
+            })
             ->sortBy(function ($data, $key) {
                 $index = array_search($key, ['Environment', 'Cache', 'Drivers']);
 
@@ -104,7 +105,7 @@ class AboutCommand extends Command
             ->filter(function ($data, $key) {
                 return $this->option('only') ? in_array(Str::of($key)->lower()->snake(), $this->sections()) : true;
             })
-            ->pipe(fn ($data) => $this->display($data));
+            ->pipe(function ($data) { return $this->display($data); });
 
         $this->newLine();
 
@@ -135,11 +136,15 @@ class AboutCommand extends Command
 
             $this->components->twoColumnDetail('  <fg=green;options=bold>'.$section.'</>');
 
-            $data->pipe(fn ($data) => $section !== 'Environment' ? $data->sort() : $data)->each(function ($detail) {
-                [$label, $value] = $detail;
+            $data
+                ->pipe(function ($data) use ($section) {
+                    return $section !== 'Environment' ? $data->sort() : $data;
+                })
+                ->each(function ($detail) {
+                    list($label, $value) = $detail;
 
-                $this->components->twoColumnDetail($label, value($value));
-            });
+                    $this->components->twoColumnDetail($label, value($value));
+                });
         });
     }
 
@@ -152,7 +157,9 @@ class AboutCommand extends Command
     protected function displayJson($data)
     {
         $output = $data->flatMap(function ($data, $section) {
-            return [(string) Str::of($section)->snake() => $data->mapWithKeys(fn ($item, $key) => [(string) Str::of($item[0])->lower()->snake() => value($item[1])])];
+            return [(string) Str::of($section)->snake() => $data->mapWithKeys(function ($item, $key) {
+                return [(string) Str::of($item[0])->lower()->snake() => value($item[1])];
+            })];
         });
 
         $this->output->writeln(strip_tags(json_encode($output)));
@@ -165,23 +172,27 @@ class AboutCommand extends Command
      */
     protected function gatherApplicationInformation()
     {
-        static::addToSection('Environment', fn () => [
-            'Application Name' => config('app.name'),
-            'Laravel Version' => $this->laravel->version(),
-            'PHP Version' => phpversion(),
-            'Composer Version' => $this->composer->getVersion() ?? '<fg=yellow;options=bold>-</>',
-            'Environment' => $this->laravel->environment(),
-            'Debug Mode' => config('app.debug') ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF',
-            'URL' => Str::of(config('app.url'))->replace(['http://', 'https://'], ''),
-            'Maintenance Mode' => $this->laravel->isDownForMaintenance() ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF',
-        ]);
+        static::addToSection('Environment', function () {
+            $composerVersion = $this->composer->getVersion();
 
-        static::addToSection('Cache', fn () => [
+            return [
+                'Application Name' => config('app.name'),
+                'Laravel Version' => $this->laravel->version(),
+                'PHP Version' => phpversion(),
+                'Composer Version' => isset($composerVersion) ? $composerVersion : '<fg=yellow;options=bold>-</>',
+                'Environment' => $this->laravel->environment(),
+                'Debug Mode' => config('app.debug') ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF',
+                'URL' => Str::of(config('app.url'))->replace(['http://', 'https://'], ''),
+                'Maintenance Mode' => $this->laravel->isDownForMaintenance() ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF',
+            ];
+        });
+
+        static::addToSection('Cache', function () { return [
             'Config' => file_exists($this->laravel->bootstrapPath('cache/config.php')) ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
             'Events' => file_exists($this->laravel->bootstrapPath('cache/events.php')) ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
             'Routes' => file_exists($this->laravel->bootstrapPath('cache/routes-v7.php')) ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
             'Views' => $this->hasPhpFiles($this->laravel->storagePath('framework/views')) ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
-        ]);
+        ]; });
 
         $logChannel = config('logging.default');
 
@@ -194,7 +205,7 @@ class AboutCommand extends Command
             $logs = $logChannel;
         }
 
-        static::addToSection('Drivers', fn () => array_filter([
+        static::addToSection('Drivers', function () { return array_filter([
             'Broadcasting' => config('broadcasting.default'),
             'Cache' => config('cache.default'),
             'Database' => config('database.default'),
@@ -204,7 +215,7 @@ class AboutCommand extends Command
             'Queue' => config('queue.default'),
             'Scout' => config('scout.driver'),
             'Session' => config('session.driver'),
-        ]));
+        ]); });
 
         collect(static::$customDataResolvers)->each->__invoke();
     }
@@ -215,8 +226,10 @@ class AboutCommand extends Command
      * @param  string  $path
      * @return bool
      */
-    protected function hasPhpFiles(string $path): bool
+    protected function hasPhpFiles(/*string */$path)/*: bool*/
     {
+        $path = cast_to_string($path);
+
         return count(glob($path.'/*.php')) > 0;
     }
 
@@ -228,9 +241,15 @@ class AboutCommand extends Command
      * @param  string|null  $value
      * @return void
      */
-    public static function add(string $section, $data, string $value = null)
+    public static function add(/*string */$section, $data, /*string */$value = null)
     {
-        static::$customDataResolvers[] = fn () => static::addToSection($section, $data, $value);
+        $section = cast_to_string($section);
+
+        $path = cast_to_string($path, null);
+
+        static::$customDataResolvers[] = function () use ($section, $data, $value) {
+            return static::addToSection($section, $data, $value);
+        };
     }
 
     /**
@@ -241,8 +260,12 @@ class AboutCommand extends Command
      * @param  string|null  $value
      * @return void
      */
-    protected static function addToSection(string $section, $data, string $value = null)
+    protected static function addToSection(/*string */$section, $data, /*string */$value = null)
     {
+        $section = cast_to_string($section);
+
+        $path = cast_to_string($path, null);
+
         if (is_array($data)) {
             foreach ($data as $key => $value) {
                 self::$data[$section][] = [$key, $value];
@@ -261,6 +284,8 @@ class AboutCommand extends Command
      */
     protected function sections()
     {
-        return array_filter(explode(',', $this->option('only') ?? ''));
+        $onlyOption = $this->option('only');
+
+        return array_filter(explode(',', isset($onlyOption) ? $onlyOption : ''));
     }
 }

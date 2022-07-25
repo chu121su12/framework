@@ -3,6 +3,7 @@
 namespace Illuminate\Foundation\Console;
 
 use BackedEnum;
+use CR\LaravelBackport\SymfonyHelper;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Types\DecimalType;
@@ -129,7 +130,7 @@ class ShowModelCommand extends Command
             $model->getConnection()->getName(),
             $model->getConnection()->getTablePrefix().$model->getTable(),
             $this->getAttributes($model),
-            $this->getRelations($model),
+            $this->getRelations($model)
         );
     }
 
@@ -148,7 +149,7 @@ class ShowModelCommand extends Command
 
         return collect($columns)
             ->values()
-            ->map(fn (Column $column) => [
+            ->map(function (Column $column) use ($model, $indexes) { return [
                 'name' => $column->getName(),
                 'type' => $this->getColumnType($column),
                 'increments' => $column->getAutoincrement(),
@@ -159,7 +160,7 @@ class ShowModelCommand extends Command
                 'hidden' => $this->attributeIsHidden($column->getName(), $model),
                 'appended' => null,
                 'cast' => $this->getCastType($column->getName(), $model),
-            ])
+            ]; })
             ->merge($this->getVirtualAttributes($model, $columns));
     }
 
@@ -175,10 +176,11 @@ class ShowModelCommand extends Command
         $class = new ReflectionClass($model);
 
         return collect($class->getMethods())
-            ->reject(fn (ReflectionMethod $method) => $method->isStatic()
-                || $method->isAbstract()
-                || $method->getDeclaringClass()->getName() !== get_class($model)
-            )
+            ->reject(function (ReflectionMethod $method) use ($model) {
+                return $method->isStatic()
+                    || $method->isAbstract()
+                    || $method->getDeclaringClass()->getName() !== get_class($model);
+            })
             ->mapWithKeys(function (ReflectionMethod $method) use ($model) {
                 if (preg_match('/^get(.*)Attribute$/', $method->getName(), $matches) === 1) {
                     return [Str::snake($matches[1]) => 'accessor'];
@@ -188,8 +190,8 @@ class ShowModelCommand extends Command
                     return [];
                 }
             })
-            ->reject(fn ($cast, $name) => collect($columns)->has($name))
-            ->map(fn ($cast, $name) => [
+            ->reject(function ($cast, $name) use ($columns) { return collect($columns)->has($name); })
+            ->map(function ($cast, $name) use ($model) { return [
                 'name' => $name,
                 'type' => null,
                 'increments' => false,
@@ -200,7 +202,7 @@ class ShowModelCommand extends Command
                 'hidden' => $this->attributeIsHidden($name, $model),
                 'appended' => $model->hasAppended($name),
                 'cast' => $cast,
-            ])
+            ]; })
             ->values();
     }
 
@@ -213,11 +215,12 @@ class ShowModelCommand extends Command
     protected function getRelations($model)
     {
         return collect(get_class_methods($model))
-            ->map(fn ($method) => new ReflectionMethod($model, $method))
-            ->reject(fn (ReflectionMethod $method) => $method->isStatic()
-                || $method->isAbstract()
-                || $method->getDeclaringClass()->getName() !== get_class($model)
-            )
+            ->map(function ($method) use ($model) { return new ReflectionMethod($model, $method); })
+            ->reject(function (ReflectionMethod $method) use ($model) {
+                return $method->isStatic()
+                    || $method->isAbstract()
+                    || $method->getDeclaringClass()->getName() !== get_class($model);
+            })
             ->filter(function (ReflectionMethod $method) {
                 $file = new SplFileObject($method->getFileName());
                 $file->seek($method->getStartLine() - 1);
@@ -228,7 +231,9 @@ class ShowModelCommand extends Command
                 }
 
                 return collect($this->relationMethods)
-                    ->contains(fn ($relationMethod) => str_contains($code, '$this->'.$relationMethod.'('));
+                    ->contains(function ($relationMethod) use ($code) {
+                        return str_contains($code, '$this->'.$relationMethod.'(');
+                    });
             })
             ->map(function (ReflectionMethod $method) use ($model) {
                 $relation = $method->invoke($model);
@@ -309,7 +314,7 @@ class ShowModelCommand extends Command
 
         $this->components->twoColumnDetail(
             '<fg=green;options=bold>Attributes</>',
-            'type <fg=gray>/</> <fg=yellow;options=bold>cast</>',
+            'type <fg=gray>/</> <fg=yellow;options=bold>cast</>'
         );
 
         foreach ($attributes as $attribute) {
@@ -317,8 +322,8 @@ class ShowModelCommand extends Command
                 '%s %s',
                 $attribute['name'],
                 collect(['increments', 'unique', 'nullable', 'fillable', 'hidden', 'appended'])
-                    ->filter(fn ($property) => $attribute[$property])
-                    ->map(fn ($property) => sprintf('<fg=gray>%s</>', $property))
+                    ->filter(function ($property) use ($attribute) { return $attribute[$property]; })
+                    ->map(function ($property) { return sprintf('<fg=gray>%s</>', $property); })
                     ->implode('<fg=gray>,</> ')
             ));
 
@@ -368,7 +373,8 @@ class ShowModelCommand extends Command
             return 'attribute';
         }
 
-        return $this->getCastsWithDates($model)->get($column) ?? null;
+        $dateColumn = $this->getCastsWithDates($model)->get($column);
+        return isset($dateColumn) ? $dateColumn : null;
     }
 
     /**
@@ -381,7 +387,7 @@ class ShowModelCommand extends Command
     {
         return collect($model->getDates())
             ->flip()
-            ->map(fn () => 'datetime')
+            ->map(function () { return 'datetime'; })
             ->merge($model->getCasts());
     }
 
@@ -397,10 +403,14 @@ class ShowModelCommand extends Command
 
         $unsigned = $column->getUnsigned() ? ' unsigned' : '';
 
-        $details = match (get_class($column->getType())) {
-            DecimalType::class => $column->getPrecision().','.$column->getScale(),
-            default => $column->getLength(),
-        };
+        switch (get_class($column->getType())) {
+            case DecimalType::class: 
+                $details = $column->getPrecision().','.$column->getScale();
+                break;
+
+            default:
+                $details = $column->getLength();
+        }
 
         if ($details) {
             return sprintf('%s(%s)%s', $name, $details, $unsigned);
@@ -418,13 +428,16 @@ class ShowModelCommand extends Command
      */
     protected function getColumnDefault($column, $model)
     {
-        $attributeDefault = $model->getAttributes()[$column->getName()] ?? null;
+        $modelAttributes = $model->getAttributes();
+        $columnName = $column->getName();
 
-        return match (true) {
-            $attributeDefault instanceof BackedEnum => $attributeDefault->value,
-            $attributeDefault instanceof UnitEnum => $attributeDefault->name,
-            default => $attributeDefault ?? $column->getDefault(),
-        };
+        $attributeDefault = isset($modelAttributes[$columnName]) ? $modelAttributes[$columnName] : null;
+
+        switch (true) {
+            case $attributeDefault instanceof BackedEnum: return $attributeDefault->value;
+            case $attributeDefault instanceof UnitEnum: return $attributeDefault->name;
+            default: return isset($attributeDefault) ? $attributeDefault : $column->getDefault();
+        }
     }
 
     /**
@@ -457,8 +470,8 @@ class ShowModelCommand extends Command
     protected function columnIsUnique($column, $indexes)
     {
         return collect($indexes)
-            ->filter(fn (Index $index) => count($index->getColumns()) === 1 && $index->getColumns()[0] === $column)
-            ->contains(fn (Index $index) => $index->isUnique());
+            ->filter(function (Index $index) use ($column) { return count($index->getColumns()) === 1 && $index->getColumns()[0] === $column; })
+            ->contains(function (Index $index) { return $index->isUnique(); });
     }
 
     /**
@@ -503,7 +516,7 @@ class ShowModelCommand extends Command
             ->push('require doctrine/dbal')
             ->implode(' ');
 
-        $process = Process::fromShellCommandline($command, null, null, null, null);
+        $process = SymfonyHelper::processFromShellCommandline($command, null, null, null, null);
 
         if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
             try {
@@ -514,7 +527,7 @@ class ShowModelCommand extends Command
         }
 
         try {
-            $process->run(fn ($type, $line) => $this->output->write($line));
+            $process->run(function ($type, $line) { return $this->output->write($line); });
         } catch (ProcessSignaledException $e) {
             if (extension_loaded('pcntl') && $e->getSignal() !== SIGINT) {
                 throw $e;

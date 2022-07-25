@@ -83,7 +83,7 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
     public static function defaults($callback = null)
     {
         if (is_null($callback)) {
-            return static::default();
+            return static::default_();
         }
 
         if (! is_callable($callback) && ! $callback instanceof static) {
@@ -98,7 +98,7 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
      *
      * @return static
      */
-    public static function default()
+    public static function default_()
     {
         $file = is_callable(static::$defaultCallback)
             ? call_user_func(static::$defaultCallback)
@@ -125,7 +125,7 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
      */
     public static function types($mimetypes)
     {
-        return tap(new static(), fn ($file) => $file->allowedMimetypes = (array) $mimetypes);
+        return tap(new static(), function ($file) use ($mimetypes) { return $file->allowedMimetypes = (array) $mimetypes; });
     }
 
     /**
@@ -232,12 +232,12 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
 
         $rules = array_merge($rules, $this->buildMimetypes());
 
-        $rules[] = match (true) {
-            is_null($this->minimumFileSize) && is_null($this->maximumFileSize) => null,
-            is_null($this->maximumFileSize) => "min:{$this->minimumFileSize}",
-            is_null($this->minimumFileSize) => "max:{$this->maximumFileSize}",
-            $this->minimumFileSize !== $this->maximumFileSize => "between:{$this->minimumFileSize},{$this->maximumFileSize}",
-            default => "size:{$this->minimumFileSize}",
+        switch (true) {
+            case is_null($this->minimumFileSize) && is_null($this->maximumFileSize): $rules[] = null; break;
+            case is_null($this->maximumFileSize): $rules[] = "min:{$this->minimumFileSize}"; break;
+            case is_null($this->minimumFileSize): $rules[] = "max:{$this->maximumFileSize}"; break;
+            case $this->minimumFileSize !== $this->maximumFileSize: $rules[] = "between:{$this->minimumFileSize},{$this->maximumFileSize}"; break;
+            default: $rules[] = "size:{$this->minimumFileSize}"; break;
         };
 
         return array_merge(array_filter($rules), $this->customRules);
@@ -258,7 +258,7 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
 
         $mimetypes = array_filter(
             $this->allowedMimetypes,
-            fn ($type) => str_contains($type, '/')
+            function ($type) { return str_contains($type, '/'); }
         );
 
         $mimes = array_diff($this->allowedMimetypes, $mimetypes);

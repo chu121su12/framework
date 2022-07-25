@@ -18,17 +18,17 @@ class ValidationFileRuleTest extends TestCase
     public function testBasic()
     {
         $this->fails(
-            File::default(),
+            File::default_(),
             'foo',
-            ['validation.file'],
+            ['validation.file']
         );
 
         $this->passes(
-            File::default(),
-            UploadedFile::fake()->create('foo.bar'),
+            File::default_(),
+            UploadedFile::fake()->create('foo.bar')
         );
 
-        $this->passes(File::default(), null);
+        $this->passes(File::default_(), null);
     }
 
     protected function fails($rule, $values, $messages)
@@ -71,7 +71,7 @@ class ValidationFileRuleTest extends TestCase
 
         $this->passes(
             File::types('image/png'),
-            UploadedFile::fake()->createWithContent('foo.png', file_get_contents(__DIR__.'/fixtures/image.png')),
+            UploadedFile::fake()->createWithContent('foo.png', file_get_contents(__DIR__.'/fixtures/image.png'))
         );
     }
 
@@ -85,7 +85,7 @@ class ValidationFileRuleTest extends TestCase
 
         $this->passes(
             File::types(['text/plain', 'image/png']),
-            UploadedFile::fake()->createWithContent('foo.png', file_get_contents(__DIR__.'/fixtures/image.png')),
+            UploadedFile::fake()->createWithContent('foo.png', file_get_contents(__DIR__.'/fixtures/image.png'))
         );
     }
 
@@ -99,7 +99,7 @@ class ValidationFileRuleTest extends TestCase
 
         $this->passes(
             File::types('png'),
-            UploadedFile::fake()->createWithContent('foo.png', file_get_contents(__DIR__.'/fixtures/image.png')),
+            UploadedFile::fake()->createWithContent('foo.png', file_get_contents(__DIR__.'/fixtures/image.png'))
         );
     }
 
@@ -130,7 +130,7 @@ class ValidationFileRuleTest extends TestCase
 
         $this->passes(
             File::types(['png', 'image/png']),
-            UploadedFile::fake()->createWithContent('foo.png', file_get_contents(__DIR__.'/fixtures/image.png')),
+            UploadedFile::fake()->createWithContent('foo.png', file_get_contents(__DIR__.'/fixtures/image.png'))
         );
     }
 
@@ -144,14 +144,14 @@ class ValidationFileRuleTest extends TestCase
 
         $this->passes(
             File::image(),
-            UploadedFile::fake()->image('foo.png'),
+            UploadedFile::fake()->image('foo.png')
         );
     }
 
     public function testSize()
     {
         $this->fails(
-            File::default()->size(1024),
+            File::default_()->size(1024),
             [
                 UploadedFile::fake()->create('foo.txt', 1025),
                 UploadedFile::fake()->create('foo.txt', 1023),
@@ -160,15 +160,15 @@ class ValidationFileRuleTest extends TestCase
         );
 
         $this->passes(
-            File::default()->size(1024),
-            UploadedFile::fake()->create('foo.txt', 1024),
+            File::default_()->size(1024),
+            UploadedFile::fake()->create('foo.txt', 1024)
         );
     }
 
     public function testBetween()
     {
         $this->fails(
-            File::default()->between(1024, 2048),
+            File::default_()->between(1024, 2048),
             [
                 UploadedFile::fake()->create('foo.txt', 1023),
                 UploadedFile::fake()->create('foo.txt', 2049),
@@ -177,7 +177,7 @@ class ValidationFileRuleTest extends TestCase
         );
 
         $this->passes(
-            File::default()->between(1024, 2048),
+            File::default_()->between(1024, 2048),
             [
                 UploadedFile::fake()->create('foo.txt', 1024),
                 UploadedFile::fake()->create('foo.txt', 2048),
@@ -190,13 +190,13 @@ class ValidationFileRuleTest extends TestCase
     public function testMin()
     {
         $this->fails(
-            File::default()->min(1024),
+            File::default_()->min(1024),
             UploadedFile::fake()->create('foo.txt', 1023),
             ['validation.min.file']
         );
 
         $this->passes(
-            File::default()->min(1024),
+            File::default_()->min(1024),
             [
                 UploadedFile::fake()->create('foo.txt', 1024),
                 UploadedFile::fake()->create('foo.txt', 1025),
@@ -208,13 +208,13 @@ class ValidationFileRuleTest extends TestCase
     public function testMax()
     {
         $this->fails(
-            File::default()->max(1024),
+            File::default_()->max(1024),
             UploadedFile::fake()->create('foo.txt', 1025),
             ['validation.max.file']
         );
 
         $this->passes(
-            File::default()->max(1024),
+            File::default_()->max(1024),
             [
                 UploadedFile::fake()->create('foo.txt', 1024),
                 UploadedFile::fake()->create('foo.txt', 1023),
@@ -226,7 +226,7 @@ class ValidationFileRuleTest extends TestCase
     public function testMacro()
     {
         File::macro('toDocument', function () {
-            return static::default()->rules('mimes:txt,csv');
+            return static::default_()->rules('mimes:txt,csv');
         });
 
         $this->fails(
@@ -246,14 +246,14 @@ class ValidationFileRuleTest extends TestCase
 
     public function testItCanSetDefaultUsing()
     {
-        $this->assertInstanceOf(File::class, File::default());
+        $this->assertInstanceOf(File::class, File::default_());
 
-        File::defaults(function () {
+        File::default_(function () {
             return File::types('txt')->max(12 * 1024);
         });
 
         $this->fails(
-            File::default(),
+            File::default_(),
             UploadedFile::fake()->create('foo.png', 13 * 1024),
             [
                 'validation.mimes',
@@ -261,15 +261,15 @@ class ValidationFileRuleTest extends TestCase
             ]
         );
 
-        File::defaults(File::image()->between(1024, 2048));
+        File::default_(File::image()->between(1024, 2048));
 
         $this->passes(
-            File::default(),
-            UploadedFile::fake()->create('foo.png', 1.5 * 1024),
+            File::default_(),
+            UploadedFile::fake()->create('foo.png', 1.5 * 1024)
         );
     }
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $container = Container::getInstance();
 
@@ -284,7 +284,7 @@ class ValidationFileRuleTest extends TestCase
         (new ValidationServiceProvider($container))->register();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         Container::setInstance(null);
 

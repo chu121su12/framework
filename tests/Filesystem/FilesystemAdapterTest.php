@@ -22,6 +22,14 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 // use League\Flysystem\Ftp\FtpAdapter;
 // use League\Flysystem\Local\LocalFilesystemAdapter;
 
+class FilesystemAdapterTest_testProvidesTemporaryUrls_class extends LocalFilesystemAdapter
+        {
+            public function getTemporaryUrl($path, Carbon $expiration, $options)/*: string*/
+            {
+                return $path.$expiration->toString().implode('', $options);
+            }
+        }
+
 class FilesystemAdapterTest extends TestCase
 {
     private $tempDir;
@@ -537,13 +545,7 @@ class FilesystemAdapterTest extends TestCase
 
     public function testProvidesTemporaryUrls()
     {
-        $localAdapter = new class($this->tempDir) extends LocalFilesystemAdapter
-        {
-            public function getTemporaryUrl($path, Carbon $expiration, $options): string
-            {
-                return $path.$expiration->toString().implode('', $options);
-            }
-        };
+        $localAdapter = new FilesystemAdapterTest_testProvidesTemporaryUrls_class($this->tempDir);
         $filesystemAdapter = new FilesystemAdapter($this->filesystem, $localAdapter);
 
         $this->assertTrue($filesystemAdapter->providesTemporaryUrls());

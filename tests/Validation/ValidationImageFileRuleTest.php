@@ -21,12 +21,12 @@ class ValidationImageFileRuleTest extends TestCase
         $this->fails(
             File::image()->dimensions(Rule::dimensions()->width(100)->height(100)),
             UploadedFile::fake()->image('foo.png', 101, 101),
-            ['validation.dimensions'],
+            ['validation.dimensions']
         );
 
         $this->passes(
             File::image()->dimensions(Rule::dimensions()->width(100)->height(100)),
-            UploadedFile::fake()->image('foo.png', 100, 100),
+            UploadedFile::fake()->image('foo.png', 100, 100)
         );
     }
 
@@ -60,7 +60,7 @@ class ValidationImageFileRuleTest extends TestCase
         $this->assertValidationRules($rule, $values, true, []);
     }
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $container = Container::getInstance();
 
@@ -75,7 +75,7 @@ class ValidationImageFileRuleTest extends TestCase
         (new ValidationServiceProvider($container))->register();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         Container::setInstance(null);
 

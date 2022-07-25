@@ -142,13 +142,16 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
 
         $counts = new static;
 
-        $collection->each(fn ($value) => $counts[$value] = isset($counts[$value]) ? $counts[$value] + 1 : 1);
+        $collection->each(function ($value) use ($counts) {
+            return $counts[$value] = isset($counts[$value]) ? $counts[$value] + 1 : 1;
+        });
 
         $sorted = $counts->sort();
 
         $highestValue = $sorted->last();
 
-        return $sorted->filter(fn ($value) => $value == $highestValue)
+        return $sorted
+            ->filter(function ($value) use ($highestValue) { return $value == $highestValue; })
             ->sort()->keys()->all();
     }
 
