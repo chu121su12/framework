@@ -282,16 +282,12 @@ class VendorPublishCommand extends Command
             if (
                 $file['type'] === 'file'
                 && (
-                    (! $this->option('existing') && (! $manager->fileExists('to://'.$path) || $this->option('force')))
-                    || ($this->option('existing') && $manager->fileExists('to://'.$path))
+                    (! $this->option('existing') && (! $manager->has('to://'.$path) || $this->option('force')))
+                    || ($this->option('existing') && $manager->has('to://'.$path))
                 )
             ) {
                 $manager->write('to://'.$path, $manager->read($file['path']));
             }
-
-            // if ($file['type'] === 'file' && (! $manager->has('to://'.$path) || $this->option('force'))) {
-            //     $manager->put('to://'.$path, $manager->read('from://'.$path));
-            // }
         }
     }
 
