@@ -286,7 +286,7 @@ class VendorPublishCommand extends Command
                     || ($this->option('existing') && $manager->has('to://'.$path))
                 )
             ) {
-                $manager->write('to://'.$path, $manager->read($file['path']));
+                $manager->put('to://'.$path, $manager->read('from://'.$path));
             }
         }
     }
