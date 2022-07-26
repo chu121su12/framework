@@ -128,7 +128,25 @@ abstract class Element
     {
         $options = cast_to_int($options);
 
-        $this->output->writeln($this->toString(), $options);
+        // TODO: check symfony version
+        $output = preg_replace_callback('/([<;])([bf]g)(=)(#?[\w\d]+)/i', function ($matches) {
+            $isForeground = strtolower($matches[2]) === 'fg';
+            switch ($color = strtolower($matches[4])) {
+                case '#6C7280':
+                    $color = 'cyan';
+
+                    break;
+
+                case 'gray':
+                    $color = $isForeground ? 'black' : 'white';
+
+                    break;
+            }
+
+            return $matches[1].$matches[2].$matches[3].$color;
+        }, $this->toString());
+
+        $this->output->writeln($output, $options);
     }
 
     /**

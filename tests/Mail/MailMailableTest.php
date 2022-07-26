@@ -31,7 +31,7 @@ class MailMailableTest_testItCanAttachMultipleFiles_class implements Attachable
             {
                 public function toMailAttachment()
                 {
-                    return Attachment::fromPath('/foo.jpg')->as('bar')->withMime('image/png');
+                    return Attachment::fromPath('/foo.jpg')->as_('bar')->withMime('image/png');
                 }
             }
 
