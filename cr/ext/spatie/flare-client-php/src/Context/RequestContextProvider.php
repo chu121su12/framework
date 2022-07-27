@@ -130,7 +130,15 @@ class RequestContextProvider implements ContextProvider
      */
     public function getHeaders()/*: array*/
     {
-        return $this->request->headers->all();
+        /** @var array<string, list<string|null>> $headers */
+        $headers = $this->request->headers->all();
+
+        return array_filter(
+            array_map(
+                function (array $header) { return $header[0]; },
+                $headers
+            )
+        );
     }
 
     /**
