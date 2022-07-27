@@ -12,6 +12,7 @@ use Spatie\FlareClient\Concerns\HasContext;
 use Spatie\FlareClient\Context\BaseContextProviderDetector;
 use Spatie\FlareClient\Context\ContextProviderDetector;
 use Spatie\FlareClient\Enums\MessageLevels;
+use Spatie\FlareClient\FlareMiddleware\AddEnvironmentInformation;
 use Spatie\FlareClient\FlareMiddleware\AddGlows;
 use Spatie\FlareClient\FlareMiddleware\CensorRequestBodyFields;
 use Spatie\FlareClient\FlareMiddleware\FlareMiddleware;
@@ -204,7 +205,10 @@ class Flare
 
     protected function registerDefaultMiddleware()/*: self*/
     {
-        return $this->registerMiddleware(new AddGlows($this->recorder));
+        return $this->registerMiddleware([
+            new AddGlows($this->recorder),
+            new AddEnvironmentInformation(),
+        ]);
     }
 
     /**
