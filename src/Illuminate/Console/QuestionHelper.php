@@ -25,7 +25,7 @@ class QuestionHelper extends SymfonyQuestionHelper
 
         $default = $question->getDefault();
 
-        if ($question->isMultiline()) {
+        if (method_exists($question, 'isMultiline') && $question->isMultiline()) {
             $text .= sprintf(' (press %s to continue)', 'Windows' == PHP_OS_FAMILY
                 ? '<comment>Ctrl+Z</comment> then <comment>Enter</comment>'
                 : '<comment>Ctrl+D</comment>');
