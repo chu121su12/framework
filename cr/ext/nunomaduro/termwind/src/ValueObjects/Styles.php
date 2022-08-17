@@ -166,7 +166,9 @@ final class Styles
 
         if (! is_null(isset($this->properties['options']) && isset($this->properties['options']['bold']) ? $this->properties['options']['bold'] : null) ||
             ! is_null(isset($styles->properties['options']) && isset($styles->properties['options']['bold']) ? $styles->properties['options']['bold'] : null)) {
-            $this->properties['options']['bold'] = isset($this->properties['options']) && isset($this->properties['options']['bold']) ? $this->properties['options']['bold'] : isset($styles->properties['options']) && isset($styles->properties['options']['bold']) ? $styles->properties['options']['bold'] : false;
+            $this->properties['options']['bold'] = isset($this->properties['options']) && isset($this->properties['options']['bold']) 
+                ? $this->properties['options']['bold']
+                : (isset($styles->properties['options']) && isset($styles->properties['options']['bold']) ? $styles->properties['options']['bold'] : false);
         }
 
         return $this;
@@ -881,10 +883,10 @@ final class Styles
         $spaceX = ! $isFirstChild ? end($spaceX) : 0;
 
         return [
-            $spaceY > 0 ? $spaceY : isset($this->properties['styles']) && isset($this->properties['styles']['mt']) ? $this->properties['styles']['mt'] : 0,
+            $spaceY > 0 ? $spaceY : (isset($this->properties['styles']) && isset($this->properties['styles']['mt']) ? $this->properties['styles']['mt'] : 0),
             isset($this->properties['styles']) && isset($this->properties['styles']['mr']) ? $this->properties['styles']['mr'] : 0,
             isset($this->properties['styles']) && isset($this->properties['styles']['mb']) ? $this->properties['styles']['mb'] : 0,
-            $spaceX > 0 ? $spaceX : isset($this->properties['styles']) && isset($this->properties['styles']['ml']) ? $this->properties['styles']['ml'] : 0,
+            $spaceX > 0 ? $spaceX : (isset($this->properties['styles']) && isset($this->properties['styles']['ml']) ? $this->properties['styles']['ml'] : 0),
         ];
     }
 
