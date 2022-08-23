@@ -18,6 +18,21 @@ class InteractsWithContainer_withoutVite_class
             {
                 return '';
             }
+
+            public function useIntegrityKey()
+            {
+                return $this;
+            }
+
+            public function useScriptTagAttributes()
+            {
+                return $this;
+            }
+
+            public function useStyleTagAttributes()
+            {
+                return $this;
+            }
         }
 
 trait InteractsWithContainer

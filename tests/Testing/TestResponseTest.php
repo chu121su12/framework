@@ -1652,9 +1652,6 @@ class TestResponseTest extends TestCase
         );
     }
 
-    /**
-     * @group 1
-     */
     public function testResponseCanBeReturnedAsCollection()
     {
         $response = TestResponse::fromBaseResponse(new Response(new JsonSerializableMixedResourcesStub));

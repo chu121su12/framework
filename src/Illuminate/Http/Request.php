@@ -458,9 +458,9 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
 
         $request->headers->replace($from->headers->all());
 
-        $request->setLocale($from->getLocale());
+        $request->setRequestLocale($from->getLocale());
 
-        $request->setDefaultLocale($from->getDefaultLocale());
+        $request->setDefaultRequestLocale($from->getDefaultLocale());
 
         $request->setJson($from->json());
 
@@ -581,6 +581,28 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     public function setLaravelSession($session)
     {
         $this->session = $session;
+    }
+
+    /**
+     * Set the locale for the request instance.
+     *
+     * @param  string  $locale
+     * @return void
+     */
+    public function setRequestLocale(string $locale)
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * Set the default locale for the request instance.
+     *
+     * @param  string  $locale
+     * @return void
+     */
+    public function setDefaultRequestLocale(string $locale)
+    {
+        $this->defaultLocale = $locale;
     }
 
     /**

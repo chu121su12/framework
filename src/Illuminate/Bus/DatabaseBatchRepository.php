@@ -82,6 +82,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
         $batchId = cast_to_string($batchId);
 
         $batch = $this->connection->table($this->table)
+                            ->useWritePdo()
                             ->where('id', $batchId)
                             ->first();
 

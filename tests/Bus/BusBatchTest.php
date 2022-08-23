@@ -15,6 +15,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\PostgresConnection;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\CallQueuedClosure;
 use Mockery as m;
@@ -390,9 +391,11 @@ class BusBatchTest extends TestCase
             ->onQueue('test-queue');
 
         $connection = m::spy(PostgresConnection::class);
+        $builder = m::spy(Builder::class);
 
-        $connection->shouldReceive('table')->andReturnSelf()
-            ->shouldReceive('where')->andReturnSelf();
+        $connection->shouldReceive('table')->andReturn($builder);
+        $builder->shouldReceive('useWritePdo')->andReturnSelf();
+        $builder->shouldReceive('where')->andReturnSelf();
 
         $repository = new DatabaseBatchRepository(
             new BatchFactory(m::mock(Factory::class)), $connection, 'job_batches'
@@ -400,10 +403,12 @@ class BusBatchTest extends TestCase
 
         $repository->store($pendingBatch);
 
-        $connection->shouldHaveReceived('insert')
+        $builder->shouldHaveReceived('insert')
             ->withArgs(function ($argument) use ($pendingBatch) {
                 return unserialize(base64_decode($argument['options'])) === $pendingBatch->options;
             });
+
+        $builder->shouldHaveReceived('first');
     }
 
     /**
@@ -415,7 +420,7 @@ class BusBatchTest extends TestCase
 
         $connection = m::spy(PostgresConnection::class);
 
-        $connection->shouldReceive('table->where->first')
+        $connection->shouldReceive('table->useWritePdo->where->first')
             ->andReturn($m = (object) [
                 'id' => '',
                 'name' => '',
