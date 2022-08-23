@@ -2,6 +2,7 @@
 
 namespace Illuminate\Database\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Illuminate\Console\Command;
 use Illuminate\Database\ConnectionInterface;
@@ -53,7 +54,7 @@ abstract class DatabaseInspectionCommand extends Command
     {
         parent::__construct();
 
-        $this->composer = $composer ?? $this->laravel->make(Composer::class);
+        $this->composer = isset($composer) ? $composer : $this->laravel->make(Composer::class);
     }
 
     /**
@@ -78,16 +79,17 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function getPlatformName(AbstractPlatform $platform, $database)
     {
-        return match (class_basename($platform)) {
-            'MySQLPlatform' => 'MySQL <= 5',
-            'MySQL57Platform' => 'MySQL 5.7',
-            'MySQL80Platform' => 'MySQL 8',
-            'PostgreSQL100Platform', 'PostgreSQLPlatform' => 'Postgres',
-            'SqlitePlatform' => 'SQLite',
-            'SQLServerPlatform' => 'SQL Server',
-            'SQLServer2012Platform' => 'SQL Server 2012',
-            default => $database,
-        };
+        switch (class_basename($platform)) {
+            case 'MySQLPlatform': return 'MySQL <= 5';
+            case 'MySQL57Platform': return 'MySQL 5.7';
+            case 'MySQL80Platform': return 'MySQL 8';
+            case 'PostgreSQL100Platform':
+            case 'PostgreSQLPlatform': return 'Postgres';
+            case 'SqlitePlatform': return 'SQLite';
+            case 'SQLServerPlatform': return 'SQL Server';
+            case 'SQLServer2012Platform': return 'SQL Server 2012';
+            default: return $database;
+        }
     }
 
     /**
@@ -97,14 +99,16 @@ abstract class DatabaseInspectionCommand extends Command
      * @param  string  $table
      * @return int|null
      */
-    protected function getTableSize(ConnectionInterface $connection, string $table)
+    protected function getTableSize(ConnectionInterface $connection, /*string */$table)
     {
-        return match (true) {
-            $connection instanceof MySqlConnection => $this->getMySQLTableSize($connection, $table),
-            $connection instanceof PostgresConnection => $this->getPostgresTableSize($connection, $table),
-            $connection instanceof SQLiteConnection => $this->getSqliteTableSize($connection, $table),
-            default => null,
-        };
+        $table = cast_to_string($table);
+
+        switch (true) {
+            case $connection instanceof MySqlConnection: return $this->getMySQLTableSize($connection, $table);
+            case $connection instanceof PostgresConnection: return $this->getPostgresTableSize($connection, $table);
+            case $connection instanceof SQLiteConnection: return $this->getSqliteTableSize($connection, $table);
+            default: return null;
+        }
     }
 
     /**
@@ -114,8 +118,10 @@ abstract class DatabaseInspectionCommand extends Command
      * @param  string  $table
      * @return mixed
      */
-    protected function getMySQLTableSize(ConnectionInterface $connection, string $table)
+    protected function getMySQLTableSize(ConnectionInterface $connection, /*string */$table)
     {
+        $table = cast_to_string($table);
+
         $result = $connection->selectOne('SELECT (data_length + index_length) AS size FROM information_schema.TABLES WHERE table_schema = ? AND table_name = ?', [
             $connection->getDatabaseName(),
             $table,
@@ -131,8 +137,10 @@ abstract class DatabaseInspectionCommand extends Command
      * @param  string  $table
      * @return mixed
      */
-    protected function getPostgresTableSize(ConnectionInterface $connection, string $table)
+    protected function getPostgresTableSize(ConnectionInterface $connection, /*string */$table)
     {
+        $table = cast_to_string($table);
+
         $result = $connection->selectOne('SELECT pg_total_relation_size(?) AS size;', [
             $table,
         ]);
@@ -147,8 +155,10 @@ abstract class DatabaseInspectionCommand extends Command
      * @param  string  $table
      * @return mixed
      */
-    protected function getSqliteTableSize(ConnectionInterface $connection, string $table)
+    protected function getSqliteTableSize(ConnectionInterface $connection, /*string */$table)
     {
+        $table = cast_to_string($table);
+
         $result = $connection->selectOne('SELECT SUM(pgsize) FROM dbstat WHERE name=?', [
             $table,
         ]);
@@ -164,12 +174,20 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function getConnectionCount(ConnectionInterface $connection)
     {
-        $result = match (true) {
-            $connection instanceof MySqlConnection => $connection->selectOne('show status where variable_name = "threads_connected"'),
-            $connection instanceof PostgresConnection => $connection->selectOne('select count(*) AS "Value" from pg_stat_activity'),
-            $connection instanceof SqlServerConnection => $connection->selectOne('SELECT COUNT(*) Value FROM sys.dm_exec_sessions WHERE status = ?', ['running']),
-            default => null,
-        };
+        $result = null;
+        switch (true) {
+            case $connection instanceof MySqlConnection:
+                $result = $connection->selectOne('show status where variable_name = "threads_connected"');
+                break;
+
+            case $connection instanceof PostgresConnection:
+                $result = $connection->selectOne('select count(*) AS "Value" from pg_stat_activity');
+                break;
+
+            case $connection instanceof SqlServerConnection:
+                $result = $connection->selectOne('SELECT COUNT(*) Value FROM sys.dm_exec_sessions WHERE status = ?', ['running']);
+                break;
+        }
 
         if (! $result) {
             return null;
@@ -186,7 +204,7 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function getConfigFromDatabase($database)
     {
-        $database ??= config('database.default');
+        $database = isset($database) ? $database : config('database.default');
 
         return Arr::except(config('database.connections.'.$database), ['password']);
     }
@@ -218,7 +236,7 @@ abstract class DatabaseInspectionCommand extends Command
             ->push('require doctrine/dbal')
             ->implode(' ');
 
-        $process = Process::fromShellCommandline($command, null, null, null, null);
+        $process = SymfonyHelper::processFromShellCommandline($command, null, null, null, null);
 
         if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
             try {
@@ -229,7 +247,7 @@ abstract class DatabaseInspectionCommand extends Command
         }
 
         try {
-            $process->run(fn ($type, $line) => $this->output->write($line));
+            $process->run(function ($type, $line) { return $this->output->write($line); });
         } catch (ProcessSignaledException $e) {
             if (extension_loaded('pcntl') && $e->getSignal() !== SIGINT) {
                 throw $e;

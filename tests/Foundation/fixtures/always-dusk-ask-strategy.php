@@ -1,3 +1,3 @@
 <?php
 
-return fn ($command) => 'dusk';
+return function ($command) { return 'dusk'; };

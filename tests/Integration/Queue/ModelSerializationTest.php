@@ -371,7 +371,7 @@ class ModelSerializationTypedCustomCollectionTestClass
 {
     use SerializesModels;
 
-    public ModelSerializationTestCustomUserCollection $collection;
+    public /*ModelSerializationTestCustomUserCollection */$collection;
 
     public function __construct(ModelSerializationTestCustomUserCollection $collection)
     {

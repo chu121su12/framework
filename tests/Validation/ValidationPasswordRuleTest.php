@@ -119,7 +119,7 @@ class ValidationPasswordRuleTest extends TestCase
     }
 
     /**
-     * @requires PHP 7.0
+     * ~@requires PHP 7.0
      * @requires OS Linux|Darwin
      */
     public function testUncompromised()

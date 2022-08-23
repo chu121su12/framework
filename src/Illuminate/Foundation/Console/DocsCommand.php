@@ -3,6 +3,7 @@
 namespace Illuminate\Foundation\Console;
 
 use Carbon\CarbonInterval;
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Http\Client\Factory as Http;
@@ -220,7 +221,8 @@ class DocsCommand extends Command
      */
     protected function askForPage()
     {
-        return $this->askForPageViaCustomStrategy() ?? $this->askForPageViaAutocomplete();
+        $page = $this->askForPageViaCustomStrategy();
+        return isset($page) ? $page : $this->askForPageViaAutocomplete();
     }
 
     /**
@@ -231,7 +233,14 @@ class DocsCommand extends Command
     protected function askForPageViaCustomStrategy()
     {
         try {
-            $strategy = require Env::get('ARTISAN_DOCS_ASK_STRATEGY');
+            $strategyPath = Env::get('ARTISAN_DOCS_ASK_STRATEGY');
+            if (empty($strategyPath)) {
+                return null;
+            }
+
+            $strategy = require $strategyPath;
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (Throwable $e) {
             return null;
         }
@@ -240,7 +249,8 @@ class DocsCommand extends Command
             return null;
         }
 
-        return $strategy($this) ?? '/';
+        $result = $strategy($this);
+        return isset($result) ? $result : '/';
     }
 
     /**
@@ -252,15 +262,19 @@ class DocsCommand extends Command
     {
         $choice = $this->components->choice(
             'Which page would you like to open?',
-            $this->pages()->mapWithKeys(fn ($option) => [
-                Str::lower($option['title']) => $option['title'],
-            ])->all(),
+            $this->pages()->mapWithKeys(function ($option) {
+                return [
+                    Str::lower($option['title']) => $option['title'],
+                ];
+            })->all(),
             'installation',
             3
         );
 
         return $this->pages()->filter(
-            fn ($page) => $page['title'] === $choice || Str::lower($page['title']) === $choice
+            function ($page) use ($choice) {
+                return $page['title'] === $choice || Str::lower($page['title']) === $choice;
+            }
         )->keys()->first() ?: null;
     }
 
@@ -271,21 +285,33 @@ class DocsCommand extends Command
      */
     protected function guessPage()
     {
-        return $this->pages()
-            ->filter(fn ($page) => str_starts_with(
-                Str::slug($page['title'], ' '),
-                Str::slug($this->argument('page'), ' ')
-            ))->keys()->first() ?? $this->pages()->map(fn ($page) => similar_text(
-                Str::slug($page['title'], ' '),
-                Str::slug($this->argument('page'), ' '),
-            ))
-            ->filter(fn ($score) => $score >= min(3, Str::length($this->argument('page'))))
+        $firstGuess = $this->pages()
+            ->filter(function ($page) {
+                return str_starts_with(
+                    Str::slug($page['title'], ' '),
+                    Str::slug($this->argument('page'), ' ')
+                );
+            })->keys()->first();
+
+        if (isset($firstGuess)) {
+            return $firstGuess;
+        }
+
+        return $this->pages()->map(function ($page) {
+                return similar_text(
+                    Str::slug($page['title'], ' '),
+                    Str::slug($this->argument('page'), ' ')
+                );
+            })
+            ->filter(function ($score) { return $score >= min(3, Str::length($this->argument('page'))); })
             ->sortDesc()
             ->keys()
-            ->sortByDesc(fn ($slug) => Str::contains(
-                Str::slug($this->pages()[$slug]['title'], ' '),
-                Str::slug($this->argument('page'), ' ')
-            ) ? 1 : 0)
+            ->sortByDesc(function ($slug) {
+                return Str::contains(
+                    Str::slug($this->pages()[$slug]['title'], ' '),
+                    Str::slug($this->argument('page'), ' ')
+                ) ? 1 : 0;
+            })
             ->first();
     }
 
@@ -320,21 +346,33 @@ class DocsCommand extends Command
      */
     protected function guessSection($page)
     {
-        return $this->sectionsFor($page)
-            ->filter(fn ($section) => str_starts_with(
-                Str::slug($section['title'], ' '),
-                Str::slug($this->argument('section'), ' ')
-            ))->keys()->first() ?? $this->sectionsFor($page)->map(fn ($section) => similar_text(
-                Str::slug($section['title'], ' '),
-                Str::slug($this->argument('section'), ' '),
-            ))
-            ->filter(fn ($score) => $score >= min(3, Str::length($this->argument('section'))))
+        $firstGuess = $this->sectionsFor($page)
+            ->filter(function ($section) {
+                return str_starts_with(
+                    Str::slug($section['title'], ' '),
+                    Str::slug($this->argument('section'), ' ')
+                );
+            })->keys()->first();
+
+        if (isset($firstGuess)) {
+            return $firstGuess;
+        }
+
+        return $this->sectionsFor($page)->map(function ($section) {
+                return similar_text(
+                    Str::slug($section['title'], ' '),
+                    Str::slug($this->argument('section'), ' ')
+                );
+            })
+            ->filter(function ($score) { return $score >= min(3, Str::length($this->argument('section'))); })
             ->sortDesc()
             ->keys()
-            ->sortByDesc(fn ($slug) => Str::contains(
-                Str::slug($this->sectionsFor($page)[$slug]['title'], ' '),
-                Str::slug($this->argument('section'), ' ')
-            ) ? 1 : 0)
+            ->sortByDesc(function ($slug) use ($page) {
+                return Str::contains(
+                    Str::slug($this->sectionsFor($page)[$slug]['title'], ' '),
+                    Str::slug($this->argument('section'), ' ')
+                ) ? 1 : 0;
+            })
             ->first();
     }
 
@@ -346,7 +384,7 @@ class DocsCommand extends Command
      */
     protected function open($url)
     {
-        ($this->urlOpener ?? function ($url) {
+        $opener = isset($this->urlOpener) ? $this->urlOpener : function ($url) {
             if (Env::get('ARTISAN_DOCS_OPEN_STRATEGY')) {
                 $this->openViaCustomStrategy($url);
             } elseif (in_array($this->systemOsFamily, ['Darwin', 'Windows', 'Linux'])) {
@@ -354,7 +392,9 @@ class DocsCommand extends Command
             } else {
                 $this->components->warn('Unable to open the URL on your system. You will need to open it yourself or create a custom opener for your system.');
             }
-        })($url);
+        };
+
+        $opener($url);
     }
 
     /**
@@ -367,7 +407,12 @@ class DocsCommand extends Command
     {
         try {
             $command = require Env::get('ARTISAN_DOCS_OPEN_STRATEGY');
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             $command = null;
         }
 
@@ -389,7 +434,7 @@ class DocsCommand extends Command
     protected function openViaBuiltInStrategy($url)
     {
         if ($this->systemOsFamily === 'Windows') {
-            $process = tap(Process::fromShellCommandline(escapeshellcmd("start {$url}")))->run();
+            $process = tap(SymfonyHelper::processFromShellCommandline(escapeshellcmd("start {$url}")))->run();
 
             if (! $process->isSuccessful()) {
                 throw new ProcessFailedException($process);
@@ -398,10 +443,24 @@ class DocsCommand extends Command
             return;
         }
 
-        $binary = Collection::make(match ($this->systemOsFamily) {
-            'Darwin' => ['open'],
-            'Linux' => ['xdg-open', 'wslview'],
-        })->first(fn ($binary) => (new ExecutableFinder)->find($binary) !== null);
+        switch ($this->systemOsFamily) {
+            case 'Darwin':
+                $collectionData = ['open'];
+                break;
+
+            case 'Linux':
+                $collectionData = ['xdg-open', 'wslview'];
+                break;
+
+            default:
+                throw \class_exists('UnhandledMatchError')
+                    ? new \UnhandledMatchError
+                    : new \Exception;
+        }
+
+        $binary = Collection::make($collectionData)->first(function ($binary) {
+            return (new ExecutableFinder)->find($binary) !== null;
+        });
 
         if ($binary === null) {
             $this->components->warn('Unable to open the URL on your system. You will need to open it yourself or create a custom opener for your system.');
@@ -409,7 +468,7 @@ class DocsCommand extends Command
             return;
         }
 
-        $process = tap(Process::fromShellCommandline(escapeshellcmd("{$binary} {$url}")))->run();
+        $process = tap(SymfonyHelper::processFromShellCommandline(escapeshellcmd("{$binary} {$url}")))->run();
 
         if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);
@@ -447,7 +506,7 @@ class DocsCommand extends Command
         return $this->cache->remember(
             "artisan.docs.{{$this->version()}}.index",
             CarbonInterval::months(2),
-            fn () => $this->fetchDocs()->throw()->collect()
+            function () { return $this->fetchDocs()->throw()->collect(); }
         );
     }
 
@@ -482,7 +541,7 @@ class DocsCommand extends Command
      */
     protected function version()
     {
-        return Str::before(($this->version ?? $this->laravel->version()), '.').'.x';
+        return Str::before((isset($this->version) ? $this->version : $this->laravel->version()), '.').'.x';
     }
 
     /**
@@ -502,7 +561,7 @@ class DocsCommand extends Command
      */
     protected function isSearching()
     {
-        return ($_SERVER['argv'][2] ?? null) === '--';
+        return (isset($_SERVER['argv']) && isset($_SERVER['argv'][2]) ? $_SERVER['argv'][2] : null) === '--';
     }
 
     /**

@@ -135,7 +135,9 @@ trait SoftDeletes
      */
     public function restoreQuietly()
     {
-        return static::withoutEvents(fn () => $this->restore());
+        return static::withoutEvents(function () {
+            return $this->restore();
+        });
     }
 
     /**

@@ -170,7 +170,9 @@ class AssertTest extends TestCase
 
         $assert->has('data', function ($bar) {
             $bar->has(2)
-                ->each(fn ($json) => $json->whereNot('id', 3)->etc());
+                ->each(function ($json) {
+                    return $json->whereNot('id', 3)->etc();
+                });
         });
     }
 
@@ -194,7 +196,9 @@ class AssertTest extends TestCase
 
         $assert->has('data', function ($bar) {
             $bar->has(2)
-                ->each(fn ($json) => $json->whereNot('id', 2)->etc());
+                ->each(function ($json) {
+                    return $json->whereNot('id', 2)->etc();
+                });
         });
     }
 
@@ -215,7 +219,9 @@ class AssertTest extends TestCase
 
         $assert->has('data', function ($bar) {
             $bar->has(2)
-                ->each(fn ($json) => $json->whereNot('id', fn ($value) => $value === 3)->etc());
+                ->each(function ($json) {
+                    return $json->whereNot('id', function ($value) { return $value === 3; })->etc();
+                });
         });
     }
 
@@ -239,7 +245,9 @@ class AssertTest extends TestCase
 
         $assert->has('data', function ($bar) {
             $bar->has(2)
-                ->each(fn ($json) => $json->whereNot('id', fn ($value) => $value === 2)->etc());
+                ->each(function ($json) {
+                    return $json->whereNot('id', function ($value) { return $value === 2; })->etc();
+                });
         });
     }
 

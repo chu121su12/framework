@@ -62,7 +62,7 @@ class Vite
      */
     public function useCspNonce($nonce = null)
     {
-        return $this->nonce = $nonce ?? Str::random(40);
+        return $this->nonce = isset($nonce) ? $nonce : Str::random(40);
     }
 
     /**
@@ -87,7 +87,7 @@ class Vite
     public function useScriptTagAttributes($attributes)
     {
         if (! is_callable($attributes)) {
-            $attributes = fn () => $attributes;
+            $attributes = function () use ($attributes) { return $attributes; };
         }
 
         $this->scriptTagAttributesResolvers[] = $attributes;
@@ -104,7 +104,7 @@ class Vite
     public function useStyleTagAttributes($attributes)
     {
         if (! is_callable($attributes)) {
-            $attributes = fn () => $attributes;
+            $attributes = function () use ($attributes) { return $attributes; };
         }
 
         $this->styleTagAttributesResolvers[] = $attributes;
@@ -130,7 +130,9 @@ class Vite
             return new HtmlString(
                 $entrypoints
                     ->prepend('@vite/client')
-                    ->map(fn ($entrypoint) => $this->makeTagForChunk($entrypoint, $this->hotAsset($entrypoint), null, null))
+                    ->map(function ($entrypoint) {
+                        return $this->makeTagForChunk($entrypoint, $this->hotAsset($entrypoint), null, null);
+                    })
                     ->join('')
             );
         }
@@ -149,7 +151,7 @@ class Vite
                 $manifest
             ));
 
-            foreach ($chunk['css'] ?? [] as $css) {
+            foreach (isset($chunk['css']) ? $chunk['css'] : [] as $css) {
                 $partialManifest = Collection::make($manifest)->where('file', $css);
 
                 $tags->push($this->makeTagForChunk(
@@ -160,8 +162,8 @@ class Vite
                 ));
             }
 
-            foreach ($chunk['imports'] ?? [] as $import) {
-                foreach ($manifest[$import]['css'] ?? [] as $css) {
+            foreach (isset($chunk['imports']) ? $chunk['imports'] : [] as $import) {
+                foreach (isset($manifest[$import]) && isset($manifest[$import]['css']) ? $manifest[$import]['css'] : [] as $css) {
                     $partialManifest = Collection::make($manifest)->where('file', $css);
 
                     $tags->push($this->makeTagForChunk(
@@ -193,7 +195,7 @@ class Vite
         if (
             $this->nonce === null
             && $this->integrityKey !== false
-            && ! array_key_exists($this->integrityKey, $chunk ?? [])
+            && ! array_key_exists($this->integrityKey, isset($chunk) ? $chunk : [])
             && $this->scriptTagAttributesResolvers === []
             && $this->styleTagAttributesResolvers === []) {
             return $this->makeTag($url);
@@ -224,7 +226,7 @@ class Vite
     protected function resolveScriptTagAttributes($src, $url, $chunk, $manifest)
     {
         $attributes = $this->integrityKey !== false
-            ? ['integrity' => $chunk[$this->integrityKey] ?? false]
+            ? ['integrity' => isset($chunk[$this->integrityKey]) ? $chunk[$this->integrityKey] : false]
             : [];
 
         foreach ($this->scriptTagAttributesResolvers as $resolver) {
@@ -246,7 +248,7 @@ class Vite
     protected function resolveStylesheetTagAttributes($src, $url, $chunk, $manifest)
     {
         $attributes = $this->integrityKey !== false
-            ? ['integrity' => $chunk[$this->integrityKey] ?? false]
+            ? ['integrity' => isset($chunk[$this->integrityKey]) ? $chunk[$this->integrityKey] : false]
             : [];
 
         foreach ($this->styleTagAttributesResolvers as $resolver) {
@@ -311,7 +313,7 @@ class Vite
         $attributes = $this->parseAttributes(array_merge([
             'type' => 'module',
             'src' => $url,
-            'nonce' => $this->nonce ?? false,
+            'nonce' => isset($this->nonce) ? $this->nonce : false,
         ], $attributes));
 
         return '<script '.implode(' ', $attributes).'></script>';
@@ -329,7 +331,7 @@ class Vite
         $attributes = $this->parseAttributes(array_merge([
             'rel' => 'stylesheet',
             'href' => $url,
-            'nonce' => $this->nonce ?? false,
+            'nonce' => isset($this->nonce) ? $this->nonce : false,
         ], $attributes));
 
         return '<link '.implode(' ', $attributes).' />';
@@ -355,9 +357,9 @@ class Vite
     protected function parseAttributes($attributes)
     {
         return Collection::make($attributes)
-            ->reject(fn ($value, $key) => in_array($value, [false, null], true))
-            ->flatMap(fn ($value, $key) => $value === true ? [$key] : [$key => $value])
-            ->map(fn ($value, $key) => is_int($key) ? $value : $key.'="'.$value.'"')
+            ->reject(function ($value, $key) { return in_array($value, [false, null], true); })
+            ->flatMap(function ($value, $key) { return $value === true ? [$key] : [$key => $value]; })
+            ->map(function ($value, $key) { return is_int($key) ? $value : $key.'="'.$value.'"'; })
             ->values()
             ->all();
     }
@@ -373,17 +375,19 @@ class Vite
             return;
         }
 
+        $html = <<<'HTML'
+<script type="module">
+    import RefreshRuntime from '%s'
+    RefreshRuntime.injectIntoGlobalHook(window)
+    window.$RefreshReg$ = () => {}
+    window.$RefreshSig$ = () => (type) => type
+    window.__vite_plugin_react_preamble_installed__ = true
+</script>
+HTML;
+
         return new HtmlString(
             sprintf(
-                <<<'HTML'
-                <script type="module">
-                    import RefreshRuntime from '%s'
-                    RefreshRuntime.injectIntoGlobalHook(window)
-                    window.$RefreshReg$ = () => {}
-                    window.$RefreshSig$ = () => (type) => type
-                    window.__vite_plugin_react_preamble_installed__ = true
-                </script>
-                HTML,
+                $html,
                 $this->hotAsset('@react-refresh')
             )
         );

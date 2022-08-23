@@ -75,13 +75,15 @@ class ShowCommand extends DatabaseInspectionCommand
      */
     protected function tables(ConnectionInterface $connection, AbstractSchemaManager $schema)
     {
-        return collect($schema->listTables())->map(fn (Table $table, $index) => [
-            'table' => $table->getName(),
-            'size' => $this->getTableSize($connection, $table->getName()),
-            'rows' => $this->option('counts') ? $connection->table($table->getName())->count() : null,
-            'engine' => rescue(fn () => $table->getOption('engine'), null, false),
-            'comment' => $table->getComment(),
-        ]);
+        return collect($schema->listTables())->map(function (Table $table, $index) use ($connection) {
+            return [
+                'table' => $table->getName(),
+                'size' => $this->getTableSize($connection, $table->getName()),
+                'rows' => $this->option('counts') ? $connection->table($table->getName())->count() : null,
+                'engine' => rescue(function () use ($table) { return $table->getOption('engine'); }, null, false),
+                'comment' => $table->getComment(),
+            ];
+        });
     }
 
     /**
@@ -94,12 +96,16 @@ class ShowCommand extends DatabaseInspectionCommand
     protected function collectViews(ConnectionInterface $connection, AbstractSchemaManager $schema)
     {
         return collect($schema->listViews())
-            ->reject(fn (View $view) => str($view->getName())
-                ->startsWith(['pg_catalog', 'information_schema', 'spt_']))
-            ->map(fn (View $view) => [
-                'view' => $view->getName(),
-                'rows' => $connection->table($view->getName())->count(),
-            ]);
+            ->reject(function (View $view) {
+                return str($view->getName())
+                    ->startsWith(['pg_catalog', 'information_schema', 'spt_']);
+            })
+            ->map(function (View $view) use ($connection) {
+                return [
+                    'view' => $view->getName(),
+                    'rows' => $connection->table($view->getName())->count(),
+                ];
+            });
     }
 
     /**
@@ -134,7 +140,7 @@ class ShowCommand extends DatabaseInspectionCommand
     {
         $platform = $data['platform'];
         $tables = $data['tables'];
-        $views = $data['views'] ?? null;
+        $views = isset($data['views']) ? $data['views'] : null;
 
         $this->newLine();
 
@@ -181,7 +187,9 @@ class ShowCommand extends DatabaseInspectionCommand
         if ($views && $views->isNotEmpty()) {
             $this->components->twoColumnDetail('<fg=green;options=bold>View</>', '<fg=green;options=bold>Rows</>');
 
-            $views->each(fn ($view) => $this->components->twoColumnDetail($view['view'], number_format($view['rows'])));
+            $views->each(function ($view) {
+                return $this->components->twoColumnDetail($view['view'], number_format($view['rows']));
+            });
 
             $this->newLine();
         }

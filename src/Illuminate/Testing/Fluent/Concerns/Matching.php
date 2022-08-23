@@ -56,8 +56,10 @@ trait Matching
      * @param  mixed|\Closure  $expected
      * @return $this
      */
-    public function whereNot(string $key, $expected): self
+    public function whereNot(/*string */$key, $expected)/*: self*/
     {
+        $key = cast_to_string($key);
+
         $this->has($key);
 
         $actual = $this->prop($key);

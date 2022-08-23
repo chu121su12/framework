@@ -589,8 +589,10 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      * @param  string  $locale
      * @return void
      */
-    public function setRequestLocale(string $locale)
+    public function setRequestLocale(/*string */$locale)
     {
+        $locale = cast_to_string($locale);
+
         $this->locale = $locale;
     }
 
@@ -600,8 +602,10 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      * @param  string  $locale
      * @return void
      */
-    public function setDefaultRequestLocale(string $locale)
+    public function setDefaultRequestLocale(/*string */$locale)
     {
+        $locale = cast_to_string($locale);
+
         $this->defaultLocale = $locale;
     }
 

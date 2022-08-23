@@ -106,11 +106,12 @@ class FoundationViteTest extends TestCase
 
     public function testItCanGenerateCspNonceWithHotFile()
     {
-        Str::createRandomStringsUsing(fn ($length) => "random-string-with-length:{$length}");
+        Str::createRandomStringsUsing(function ($length) { return "random-string-with-length:{$length}"; });
         $this->makeViteHotFile();
 
         $nonce = ViteFacade::useCspNonce();
-        $result = app(Vite::class)(['resources/css/app.css', 'resources/js/app.js']);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/css/app.css', 'resources/js/app.js']);
 
         $this->assertSame('random-string-with-length:40', $nonce);
         $this->assertSame('random-string-with-length:40', ViteFacade::cspNonce());
@@ -126,11 +127,12 @@ class FoundationViteTest extends TestCase
 
     public function testItCanGenerateCspNonceWithManifest()
     {
-        Str::createRandomStringsUsing(fn ($length) => "random-string-with-length:{$length}");
+        Str::createRandomStringsUsing(function ($length) { return "random-string-with-length:{$length}"; });
         $this->makeViteManifest();
 
         $nonce = ViteFacade::useCspNonce();
-        $result = app(Vite::class)(['resources/css/app.css', 'resources/js/app.js']);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/css/app.css', 'resources/js/app.js']);
 
         $this->assertSame('random-string-with-length:40', $nonce);
         $this->assertSame('random-string-with-length:40', ViteFacade::cspNonce());
@@ -148,7 +150,8 @@ class FoundationViteTest extends TestCase
         $this->makeViteHotFile();
 
         $nonce = ViteFacade::useCspNonce('expected-nonce');
-        $result = app(Vite::class)(['resources/css/app.css', 'resources/js/app.js']);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/css/app.css', 'resources/js/app.js']);
 
         $this->assertSame('expected-nonce', $nonce);
         $this->assertSame('expected-nonce', ViteFacade::cspNonce());
@@ -165,7 +168,8 @@ class FoundationViteTest extends TestCase
         $this->makeViteManifest();
 
         $nonce = ViteFacade::useCspNonce('expected-nonce');
-        $result = app(Vite::class)(['resources/css/app.css', 'resources/js/app.js']);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/css/app.css', 'resources/js/app.js']);
 
         $this->assertSame('expected-nonce', $nonce);
         $this->assertSame('expected-nonce', ViteFacade::cspNonce());
@@ -190,7 +194,8 @@ class FoundationViteTest extends TestCase
             ],
         ], $buildDir);
 
-        $result = app(Vite::class)(['resources/css/app.css', 'resources/js/app.js'], $buildDir);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/css/app.css', 'resources/js/app.js'], $buildDir);
 
         $this->assertSame(
             '<link rel="stylesheet" href="https://example.com/'.$buildDir.'/assets/app.versioned.css" integrity="expected-app.css-integrity" />'
@@ -226,7 +231,8 @@ class FoundationViteTest extends TestCase
             ],
         ], $buildDir);
 
-        $result = app(Vite::class)('resources/js/app.js', $buildDir);
+        $vite = app(Vite::class);
+        $result = $vite('resources/js/app.js', $buildDir);
 
         $this->assertSame(
             '<link rel="stylesheet" href="https://example.com/'.$buildDir.'/assets/direct-css-dependency.aabbcc.css" integrity="expected-imported-css.css-integrity" />'
@@ -262,7 +268,8 @@ class FoundationViteTest extends TestCase
             ],
         ], $buildDir);
 
-        $result = app(Vite::class)('resources/js/app.js', $buildDir);
+        $vite = app(Vite::class);
+        $result = $vite('resources/js/app.js', $buildDir);
 
         $this->assertSame(
             '<link rel="stylesheet" href="https://example.com/'.$buildDir.'/assets/imported-css.versioned.css" integrity="expected-imported-css.css-integrity" />'
@@ -289,7 +296,8 @@ class FoundationViteTest extends TestCase
         ], $buildDir);
         ViteFacade::useIntegrityKey('different-integrity-key');
 
-        $result = app(Vite::class)(['resources/css/app.css', 'resources/js/app.js'], $buildDir);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/css/app.css', 'resources/js/app.js'], $buildDir);
 
         $this->assertSame(
             '<link rel="stylesheet" href="https://example.com/'.$buildDir.'/assets/app.versioned.css" integrity="expected-app.css-integrity" />'
@@ -354,7 +362,8 @@ class FoundationViteTest extends TestCase
             ];
         });
 
-        $result = app(Vite::class)(['resources/css/app.css', 'resources/js/app.js']);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/css/app.css', 'resources/js/app.js']);
 
         $this->assertSame(
             '<link rel="stylesheet" href="https://example.com/build/assets/app.versioned.css" />'
@@ -413,7 +422,8 @@ class FoundationViteTest extends TestCase
             ];
         });
 
-        $result = app(Vite::class)(['resources/css/app.css', 'resources/js/app.js']);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/css/app.css', 'resources/js/app.js']);
 
         $this->assertSame(
             '<link rel="stylesheet" href="https://example.com/build/assets/app.versioned.css" general="attribute" crossorigin data-persistent-across-pages="YES" keep-me />'
@@ -448,7 +458,8 @@ class FoundationViteTest extends TestCase
             ];
         });
 
-        $result = app(Vite::class)(['resources/css/app.css', 'resources/js/app.js']);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/css/app.css', 'resources/js/app.js']);
 
         $this->assertSame(
             '<script type="module" src="http://localhost:3000/@vite/client" general="attribute" crossorigin data-persistent-across-pages="YES" keep-me></script>'
@@ -478,7 +489,8 @@ class FoundationViteTest extends TestCase
             ];
         });
 
-        $result = app(Vite::class)(['resources/css/app.css', 'resources/js/app.js']);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/css/app.css', 'resources/js/app.js']);
 
         $this->assertSame(
             '<script type="module" src="http://localhost:3000/@vite/client"></script>'
@@ -500,7 +512,8 @@ class FoundationViteTest extends TestCase
             'src' => 'expected-src',
         ]);
 
-        $result = app(Vite::class)(['resources/css/app.css', 'resources/js/app.js']);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/css/app.css', 'resources/js/app.js']);
 
         $this->assertSame(
             '<link rel="expected-rel" href="expected-href" />'
@@ -553,7 +566,7 @@ class FoundationViteTest extends TestCase
             mkdir(public_path($path));
         }
 
-        $manifest = json_encode($contents ?? [
+        $manifest = json_encode(isset($contents) ? $contents : [
             'resources/js/app.js' => [
                 'file' => 'assets/app.versioned.js',
             ],

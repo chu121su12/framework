@@ -10,11 +10,19 @@ use Illuminate\Database\Query\Builder as Query;
 use Illuminate\Tests\Database\DynamicRelationModel2 as Related;
 use PHPUnit\Framework\TestCase;
 
+class DynamicRelationModel2_newQuery__class extends Query
+        {
+            public function __construct()
+            {
+                //
+            }
+        };
+
 class DatabaseEloquentDynamicRelationsTest extends TestCase
 {
     public function testBasicDynamicRelations()
     {
-        DynamicRelationModel::resolveRelationUsing('dynamicRel_2', fn () => new FakeHasManyRel);
+        DynamicRelationModel::resolveRelationUsing('dynamicRel_2', function () { return new FakeHasManyRel; });
         $model = new DynamicRelationModel;
         $this->assertEquals(['many' => 'related'], $model->dynamicRel_2);
         $this->assertEquals(['many' => 'related'], $model->getRelationValue('dynamicRel_2'));
@@ -23,8 +31,8 @@ class DatabaseEloquentDynamicRelationsTest extends TestCase
     public function testDynamicRelationsOverride()
     {
         // Dynamic Relations can override each other.
-        DynamicRelationModel::resolveRelationUsing('dynamicRelConflict', fn ($m) => $m->hasOne(Related::class));
-        DynamicRelationModel::resolveRelationUsing('dynamicRelConflict', fn (DynamicRelationModel $m) => new FakeHasManyRel);
+        DynamicRelationModel::resolveRelationUsing('dynamicRelConflict', function ($m) { return $m->hasOne(Related::class); });
+        DynamicRelationModel::resolveRelationUsing('dynamicRelConflict', function (DynamicRelationModel $m) { return new FakeHasManyRel; });
 
         $model = new DynamicRelationModel;
         $this->assertInstanceOf(HasMany::class, $model->dynamicRelConflict());
@@ -38,7 +46,7 @@ class DatabaseEloquentDynamicRelationsTest extends TestCase
         $model = new DynamicRelationModel;
 
         // Dynamic relations can not override hard-coded methods.
-        DynamicRelationModel::resolveRelationUsing('hardCodedRelation', fn ($m) => $m->hasOne(Related::class));
+        DynamicRelationModel::resolveRelationUsing('hardCodedRelation', function ($m) { return $m->hasOne(Related::class); });
         $this->assertInstanceOf(HasMany::class, $model->hardCodedRelation());
         $this->assertEquals(['many' => 'related'], $model->hardCodedRelation);
         $this->assertEquals(['many' => 'related'], $model->getRelationValue('hardCodedRelation'));
@@ -51,8 +59,8 @@ class DatabaseEloquentDynamicRelationsTest extends TestCase
         $model3 = new DynamicRelationModel3;
 
         // Same dynamic methods with the same name on two models do not conflict or override.
-        DynamicRelationModel::resolveRelationUsing('dynamicRel', fn ($m) => $m->hasOne(Related::class));
-        DynamicRelationModel3::resolveRelationUsing('dynamicRel', fn (DynamicRelationModel3 $m) => $m->hasMany(Related::class));
+        DynamicRelationModel::resolveRelationUsing('dynamicRel', function ($m) { return $m->hasOne(Related::class); });
+        DynamicRelationModel3::resolveRelationUsing('dynamicRel', function (DynamicRelationModel3 $m) { return $m->hasMany(Related::class); });
         $this->assertInstanceOf(HasOne::class, $model1->dynamicRel());
         $this->assertInstanceOf(HasMany::class, $model3->dynamicRel());
         $this->assertTrue($model1->isRelation('dynamicRel'));
@@ -77,13 +85,7 @@ class DynamicRelationModel2 extends Model
 
     public function newQuery()
     {
-        $query = new class extends Query
-        {
-            public function __construct()
-            {
-                //
-            }
-        };
+        $query = new DynamicRelationModel2_newQuery__class;
 
         return new Builder($query);
     }

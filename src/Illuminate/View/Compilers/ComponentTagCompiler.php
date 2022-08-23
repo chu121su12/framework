@@ -598,8 +598,10 @@ class ComponentTagCompiler
      * @param  string  $attributeString
      * @return string
      */
-    protected function parseComponentTagClassStatements(string $attributeString)
+    protected function parseComponentTagClassStatements(/*string */$attributeString)
     {
+        $attributeString = cast_to_string($attributeString);
+
         return preg_replace_callback(
              '/@(class)(\( ( (?>[^()]+) | (?2) )* \))/x', function ($match) {
                  if ($match[1] === 'class') {

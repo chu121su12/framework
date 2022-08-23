@@ -51,7 +51,7 @@ class HigherOrderWhenProxy
      */
     public function condition($condition)
     {
-        [$this->condition, $this->hasCondition] = [$condition, true];
+        list($this->condition, $this->hasCondition) = [$condition, true];
 
         return $this;
     }

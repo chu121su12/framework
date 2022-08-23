@@ -70,7 +70,7 @@ trait SerializesAndRestoresModelIdentifiers
     protected function restoreCollection($value)
     {
         if (! $value->class || count($value->id) === 0) {
-            return ! is_null($value->collectionClass ?? null)
+            return ! is_null(isset($value->collectionClass) ? $value->collectionClass : null)
                 ? new $value->collectionClass
                 : new EloquentCollection;
         }

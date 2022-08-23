@@ -69,8 +69,8 @@ class EloquentDeleteTest extends DatabaseTestCase
     public function testDeleteQuietly()
     {
         $_SERVER['(-_-)'] = '\(^_^)/';
-        Post::deleting(fn () => $_SERVER['(-_-)'] = null);
-        Post::deleted(fn () => $_SERVER['(-_-)'] = null);
+        Post::deleting(function () { return $_SERVER['(-_-)'] = null; });
+        Post::deleted(function () { return $_SERVER['(-_-)'] = null; });
         $post = Post::query()->create([]);
         $result = $post->deleteQuietly();
 
@@ -79,9 +79,9 @@ class EloquentDeleteTest extends DatabaseTestCase
         $this->assertFalse($post->exists);
 
         // For a soft-deleted model:
-        Role::deleting(fn () => $_SERVER['(-_-)'] = null);
-        Role::deleted(fn () => $_SERVER['(-_-)'] = null);
-        Role::softDeleted(fn () => $_SERVER['(-_-)'] = null);
+        Role::deleting(function () { return $_SERVER['(-_-)'] = null; });
+        Role::deleted(function () { return $_SERVER['(-_-)'] = null; });
+        Role::softDeleted(function () { return $_SERVER['(-_-)'] = null; });
         $role = Role::create([]);
         $result = $role->deleteQuietly();
         $this->assertTrue($result);

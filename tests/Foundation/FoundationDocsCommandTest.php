@@ -25,7 +25,7 @@ class FoundationDocsCommandTest extends TestCase
      */
     protected $command;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -36,7 +36,7 @@ class FoundationDocsCommandTest extends TestCase
         $this->app[Kernel::class]->registerCommand($this->command());
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 
@@ -44,7 +44,7 @@ class FoundationDocsCommandTest extends TestCase
         putenv('ARTISAN_DOCS_OPEN_STRATEGY');
     }
 
-    public function testItCanOpenTheLaravelDocumentation(): void
+    public function testItCanOpenTheLaravelDocumentation()/*: void*/
     {
         $this->artisan('docs')
             ->expectsQuestion('Which page would you like to open?', '')
@@ -54,7 +54,7 @@ class FoundationDocsCommandTest extends TestCase
         $this->assertSame($this->openedUrl, 'https://laravel.com/docs/8.x');
     }
 
-    public function testItCanSpecifyAutocompleteInOriginalCasing(): void
+    public function testItCanSpecifyAutocompleteInOriginalCasing()/*: void*/
     {
         $this->artisan('docs')
             ->expectsQuestion('Which page would you like to open?', 'Laravel Dusk')
@@ -64,7 +64,7 @@ class FoundationDocsCommandTest extends TestCase
         $this->assertSame($this->openedUrl, 'https://laravel.com/docs/8.x/dusk');
     }
 
-    public function testItCanSpecifyAutocompleteInLowerCasing(): void
+    public function testItCanSpecifyAutocompleteInLowerCasing()/*: void*/
     {
         $this->artisan('docs')
             ->expectsQuestion('Which page would you like to open?', 'laravel dusk')
@@ -92,7 +92,7 @@ class FoundationDocsCommandTest extends TestCase
         $this->assertSame($this->openedUrl, 'https://laravel.com/docs/8.x/eloquent-collections#method-toquery');
     }
 
-    public function testItCanProvidePageToVisit(): void
+    public function testItCanProvidePageToVisit()/*: void*/
     {
         $this->artisan('docs eloquent\ collections')
             ->expectsOutputToContain('Opening the docs to: https://laravel.com/docs/8.x/eloquent-collections')
@@ -101,7 +101,7 @@ class FoundationDocsCommandTest extends TestCase
         $this->assertSame($this->openedUrl, 'https://laravel.com/docs/8.x/eloquent-collections');
     }
 
-    public function testItCanUseHyphensInsteadOfEscapingSpaces(): void
+    public function testItCanUseHyphensInsteadOfEscapingSpaces()/*: void*/
     {
         $this->artisan('docs eloquent-collections')
             ->expectsOutputToContain('Opening the docs to: https://laravel.com/docs/8.x/eloquent-collections')
@@ -110,7 +110,7 @@ class FoundationDocsCommandTest extends TestCase
         $this->assertSame($this->openedUrl, 'https://laravel.com/docs/8.x/eloquent-collections');
     }
 
-    public function testItHasMinimumScoreToMatch(): void
+    public function testItHasMinimumScoreToMatch()/*: void*/
     {
         $this->artisan('docs zag')
             ->expectsOutputToContain('Unable to determine the page you are trying to visit.')
@@ -119,7 +119,7 @@ class FoundationDocsCommandTest extends TestCase
         $this->assertSame($this->openedUrl, 'https://laravel.com/docs/8.x');
     }
 
-    public function testItMinimumScoreAccountsForInputLength(): void
+    public function testItMinimumScoreAccountsForInputLength()/*: void*/
     {
         $this->artisan('docs z')
             ->expectsOutputToContain('Opening the docs to: https://laravel.com/docs/8.x/localization')
@@ -139,7 +139,7 @@ class FoundationDocsCommandTest extends TestCase
         $this->assertSame($this->openedUrl, 'https://laravel.com/docs/8.x/dusk');
     }
 
-    public function testItFallsbackToAutocompleteWhenAskStrategyContainsBadSyntax(): void
+    public function testItFallsbackToAutocompleteWhenAskStrategyContainsBadSyntax()/*: void*/
     {
         putenv('ARTISAN_DOCS_ASK_STRATEGY='.__DIR__.'/fixtures/bad-syntax-strategy.php');
 
@@ -151,7 +151,7 @@ class FoundationDocsCommandTest extends TestCase
         $this->assertSame($this->openedUrl, 'https://laravel.com/docs/8.x/dusk');
     }
 
-    public function testItFallsbackToAutocompleteWithBadAskStrategyReturnValue(): void
+    public function testItFallsbackToAutocompleteWithBadAskStrategyReturnValue()/*: void*/
     {
         putenv('ARTISAN_DOCS_ASK_STRATEGY='.__DIR__.'/fixtures/bad-return-strategy.php');
 

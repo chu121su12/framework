@@ -1,3 +1,3 @@
 <?php
 
-return fn () => throw new RuntimeException('strategy failed');
+return function () { throw new RuntimeException('strategy failed'); };

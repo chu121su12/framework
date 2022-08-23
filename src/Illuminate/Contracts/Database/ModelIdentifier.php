@@ -64,8 +64,10 @@ class ModelIdentifier
      * @param  string|null  $collectionClass
      * @return $this
      */
-    public function useCollectionClass(?string $collectionClass)
+    public function useCollectionClass(/*?string */$collectionClass = null)
     {
+        $collectionClass = cast_to_string($collectionClass, null);
+
         $this->collectionClass = $collectionClass;
 
         return $this;

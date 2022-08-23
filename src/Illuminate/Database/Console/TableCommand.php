@@ -49,7 +49,7 @@ class TableCommand extends DatabaseInspectionCommand
 
         $table = $this->argument('table') ?: $this->components->choice(
             'Which table would you like to inspect?',
-            collect($schema->listTables())->flatMap(fn (Table $table) => [$table->getName()])->toArray()
+            collect($schema->listTables())->flatMap(function (Table $table) { return [$table->getName()]; })->toArray()
         );
 
         if (! $schema->tablesExist([$table])) {
@@ -86,12 +86,14 @@ class TableCommand extends DatabaseInspectionCommand
      */
     protected function columns(Table $table)
     {
-        return collect($table->getColumns())->map(fn (Column $column) => [
-            'column' => $column->getName(),
-            'attributes' => $this->getAttributesForColumn($column),
-            'default' => $column->getDefault(),
-            'type' => $column->getType()->getName(),
-        ]);
+        return collect($table->getColumns())->map(function (Column $column) {
+            return [
+                'column' => $column->getName(),
+                'attributes' => $this->getAttributesForColumn($column),
+                'default' => $column->getDefault(),
+                'type' => $column->getType()->getName(),
+            ];
+        });
     }
 
     /**
@@ -118,11 +120,13 @@ class TableCommand extends DatabaseInspectionCommand
      */
     protected function indexes(Table $table)
     {
-        return collect($table->getIndexes())->map(fn (Index $index) => [
-            'name' => $index->getName(),
-            'columns' => collect($index->getColumns()),
-            'attributes' => $this->getAttributesForIndex($index),
-        ]);
+        return collect($table->getIndexes())->map(function (Index $index) {
+            return [
+                'name' => $index->getName(),
+                'columns' => collect($index->getColumns()),
+                'attributes' => $this->getAttributesForIndex($index),
+            ];
+        });
     }
 
     /**
@@ -137,7 +141,7 @@ class TableCommand extends DatabaseInspectionCommand
             'compound' => count($index->getColumns()) > 1,
             'unique' => $index->isUnique(),
             'primary' => $index->isPrimary(),
-        ])->filter()->keys()->map(fn ($attribute) => Str::lower($attribute));
+        ])->filter()->keys()->map(function ($attribute) { return Str::lower($attribute); });
     }
 
     /**
@@ -148,15 +152,17 @@ class TableCommand extends DatabaseInspectionCommand
      */
     protected function foreignKeys(Table $table)
     {
-        return collect($table->getForeignKeys())->map(fn (ForeignKeyConstraint $foreignKey) => [
-            'name' => $foreignKey->getName(),
-            'local_table' => $table->getName(),
-            'local_columns' => collect($foreignKey->getLocalColumns()),
-            'foreign_table' => $foreignKey->getForeignTableName(),
-            'foreign_columns' => collect($foreignKey->getForeignColumns()),
-            'on_update' => Str::lower(rescue(fn () => $foreignKey->getOption('onUpdate'), 'N/A')),
-            'on_delete' => Str::lower(rescue(fn () => $foreignKey->getOption('onDelete'), 'N/A')),
-        ]);
+        return collect($table->getForeignKeys())->map(function (ForeignKeyConstraint $foreignKey) {
+            return [
+                'name' => $foreignKey->getName(),
+                'local_table' => $table->getName(),
+                'local_columns' => collect($foreignKey->getLocalColumns()),
+                'foreign_table' => $foreignKey->getForeignTableName(),
+                'foreign_columns' => collect($foreignKey->getForeignColumns()),
+                'on_update' => Str::lower(rescue(function () use ($foreignKey) { return $foreignKey->getOption('onUpdate'); }, 'N/A')),
+                'on_delete' => Str::lower(rescue(function () use ($foreignKey) { return $foreignKey->getOption('onDelete'); }, 'N/A')),
+            ];
+        });
     }
 
     /**
@@ -189,7 +195,7 @@ class TableCommand extends DatabaseInspectionCommand
      */
     protected function displayForCli(array $data)
     {
-        [$table, $columns, $indexes, $foreignKeys] = [
+        list($table, $columns, $indexes, $foreignKeys) = [
             $data['table'], $data['columns'], $data['indexes'], $data['foreign_keys'],
         ];
 
@@ -236,7 +242,7 @@ class TableCommand extends DatabaseInspectionCommand
             $foreignKeys->each(function ($foreignKey) {
                 $this->components->twoColumnDetail(
                     $foreignKey['name'].' <fg=gray;options=bold>'.$foreignKey['local_columns']->implode(', ').' references '.$foreignKey['foreign_columns']->implode(', ').' on '.$foreignKey['foreign_table'].'</>',
-                    $foreignKey['on_update'].' / '.$foreignKey['on_delete'],
+                    $foreignKey['on_update'].' / '.$foreignKey['on_delete']
                 );
             });
 
