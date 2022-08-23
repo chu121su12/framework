@@ -55,8 +55,6 @@ class QueueWorkerTest extends TestCase
 
     public function testWorkerCanWorkUntilQueueIsEmpty()
     {
-        $this->markTestSkipped('TODO: FIX');
-
         $workerOptions = new WorkerOptions;
         $workerOptions->stopWhenEmpty = true;
 
@@ -78,8 +76,6 @@ class QueueWorkerTest extends TestCase
 
     public function testWorkerStopsWhenMemoryExceeded()
     {
-        $this->markTestSkipped('TODO: FIX');
-
         $workerOptions = new WorkerOptions;
 
         $worker = $this->getWorker('default', ['queue' => [

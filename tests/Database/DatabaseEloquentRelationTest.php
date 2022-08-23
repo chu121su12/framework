@@ -270,7 +270,7 @@ class DatabaseEloquentRelationTest extends TestCase
     }
 
     /**
-     * @requires PHP 7.0
+     * @requires PHP 7
      */
     public function testIsRelationIgnoresAttribute()
     {

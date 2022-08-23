@@ -27,8 +27,6 @@ class FoundationDocsCommandTest extends TestCase
 
     protected function setUp()/*: void*/
     {
-        $this->markTestSkipped('TODO: FIX');
-
         parent::setUp();
 
         Http::preventStrayRequests()->fake([
@@ -96,6 +94,8 @@ class FoundationDocsCommandTest extends TestCase
 
     public function testItCanProvidePageToVisit()/*: void*/
     {
+        $this->markTestSkipped('Somewhere in Command class could not detect escaped space');
+
         $this->artisan('docs eloquent\ collections')
             ->expectsOutputToContain('Opening the docs to: https://laravel.com/docs/8.x/eloquent-collections')
             ->assertSuccessful();

@@ -7,6 +7,7 @@ use ArrayIterator;
 use Illuminate\Contracts\Support\CanBeEscapedWhenCastToString;
 use Illuminate\Support\Traits\EnumeratesValues;
 use Illuminate\Support\Traits\Macroable;
+use StableSort\StableSort;
 use stdClass;
 use Traversable;
 
@@ -1327,7 +1328,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
     {
         $items = $this->items;
 
-        arsort($items, $options);
+        StableSort::arsort($items, $options);
 
         return new static($items);
     }
@@ -1357,7 +1358,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
             $results[$key] = $callback($value, $key);
         }
 
-        $descending ? arsort($results, $options)
+        $descending ? StableSort::arsort($results, $options)
             : asort($results, $options);
 
         // Once we have sorted all of the keys in the array, we will loop through them

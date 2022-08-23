@@ -630,7 +630,7 @@ class HttpRequestTest extends TestCase
     }
 
     /**
-     * @requires PHP >= 8.1
+     * @requires PHP 8.1
      */
     public function testEnumMethod()
     {

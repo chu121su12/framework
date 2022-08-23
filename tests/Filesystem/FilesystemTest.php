@@ -628,7 +628,7 @@ class FilesystemTest extends TestCase
     }
 
     /**
-     * @requires PHP 7.0
+     * @requires PHP 7
      */
     public function testHashPhp7()
     {

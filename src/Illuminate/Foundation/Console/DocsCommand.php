@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\ExecutableFinder;
+use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Throwable;
 
@@ -135,7 +136,7 @@ class DocsCommand extends Command
 
         $this->refreshDocs();
 
-        return Command::SUCCESS;
+        return /*Command::SUCCESS*/ 0;
     }
 
     /**
@@ -234,14 +235,18 @@ class DocsCommand extends Command
     {
         try {
             $strategyPath = Env::get('ARTISAN_DOCS_ASK_STRATEGY');
-            if (empty($strategyPath)) {
-                return null;
+
+            if (version_compare(PHP_VERSION, '7.0', '<')) {
+                static::validateRequirePath($strategyPath);
             }
 
             $strategy = require $strategyPath;
         } catch (\Exception $e) {
         } catch (\Error $e) {
         } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             return null;
         }
 
@@ -406,7 +411,13 @@ class DocsCommand extends Command
     protected function openViaCustomStrategy($url)
     {
         try {
-            $command = require Env::get('ARTISAN_DOCS_OPEN_STRATEGY');
+            $strategyPath = Env::get('ARTISAN_DOCS_OPEN_STRATEGY');
+
+            if (version_compare(PHP_VERSION, '7.0', '<')) {
+                static::validateRequirePath($strategyPath);
+            }
+
+            $command = require $strategyPath;
         } catch (\Exception $e) {
         } catch (\Error $e) {
         } catch (Throwable $e) {
@@ -506,7 +517,7 @@ class DocsCommand extends Command
         return $this->cache->remember(
             "artisan.docs.{{$this->version()}}.index",
             CarbonInterval::months(2),
-            function () { return $this->fetchDocs()->throw()->collect(); }
+            function () { return $this->fetchDocs()->throw_()->collect(); }
         );
     }
 
@@ -601,5 +612,26 @@ class DocsCommand extends Command
         $this->systemOsFamily = $family;
 
         return $this;
+    }
+
+    private static function validateRequirePath($path)
+    {
+        if (empty($path)) {
+            throw new \ErrorException('require(): Filename cannot be empty');
+        }
+
+        $process = new Process([
+            (new PhpExecutableFinder)->find(false),
+            '-l',
+            $path,
+        ]);
+
+        $output = '';
+
+        if ($process->run(function ($_, $out) use (&$output) {
+            $output = $out;
+        }) !== 0) {
+            throw new \ErrorException(trim(preg_replace('/^.*?:/', '', $output)));
+        }
     }
 }

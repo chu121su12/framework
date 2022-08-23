@@ -41,6 +41,7 @@
         "symfony/translation": "^3.4",
         "symfony/var-dumper": "^3.4",
         "tijsverkoyen/css-to-inline-styles": "^2.2.2",
+        "vanderlee/php-stable-sort-functions": "^2.0",
         "vlucas/phpdotenv": "^4.0"
     },
     "replace": {

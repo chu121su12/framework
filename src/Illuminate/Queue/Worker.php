@@ -295,12 +295,12 @@ class Worker
     protected function stopIfNecessary(WorkerOptions $options, $lastRestart, $startTime = 0, $jobsProcessed = 0, $job = null)
     {
         switch (true) {
-            case $this->shouldQuit: static::EXIT_SUCCESS;
-            case $this->memoryExceeded($options->memory): static::EXIT_MEMORY_LIMIT;
-            case $this->queueShouldRestart($lastRestart): static::EXIT_SUCCESS;
-            case $options->stopWhenEmpty && is_null($job): static::EXIT_SUCCESS;
-            case $options->maxTime && hrtime(true) / 1e9 - $startTime >= $options->maxTime: static::EXIT_SUCCESS;
-            case $options->maxJobs && $jobsProcessed >= $options->maxJobs: static::EXIT_SUCCESS;
+            case $this->shouldQuit: return static::EXIT_SUCCESS;
+            case $this->memoryExceeded($options->memory): return static::EXIT_MEMORY_LIMIT;
+            case $this->queueShouldRestart($lastRestart): return static::EXIT_SUCCESS;
+            case $options->stopWhenEmpty && is_null($job): return static::EXIT_SUCCESS;
+            case $options->maxTime && hrtime(true) / 1e9 - $startTime >= $options->maxTime: return static::EXIT_SUCCESS;
+            case $options->maxJobs && $jobsProcessed >= $options->maxJobs: return static::EXIT_SUCCESS;
             default: return null;
         }
     }
