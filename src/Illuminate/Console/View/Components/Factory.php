@@ -2,6 +2,7 @@
 
 namespace Illuminate\Console\View\Components;
 
+use CR\LaravelBackport\SymfonyHelper;
 use InvalidArgumentException;
 
 /**
@@ -52,6 +53,8 @@ class Factory
         throw_unless(class_exists($component), new InvalidArgumentException(sprintf(
             'Console component [%s] not found.', $method
         )));
+
+        $parameters = SymfonyHelper::consoleOutputStyle($parameters, $this->output);
 
         return with(new $component($this->output))->render(...$parameters);
     }

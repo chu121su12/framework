@@ -48,23 +48,6 @@ class EventListCommand extends Command
             return;
         }
 
-        if ($this->option('ansi')) {
-            $output = $events->map(function ($listeners, $event) { return [
-                sprintf('  <fg=white>%s</>', $this->appendEventInterfaces($event)),
-                collect($listeners)->map(function ($listener) { return sprintf('    <fg=cyan>⇂ %s</>', $listener); }),
-            ]; })->flatten()->filter()->prepend('')->push('')->toArray();
-
-            foreach ([
-                '/⇂ /' => '| ',
-            ] as $regex => $replace) {
-                $output = preg_replace($regex, $replace, $output);
-            }
-
-            $this->line($output);
-            return;
-        }
-
-        // cyan < #6C7280
         $this->newLine();
 
         $events->each(function ($listeners, $event) {
@@ -134,8 +117,7 @@ class EventListCommand extends Command
         $interfaces = class_implements($event);
 
         if (in_array(ShouldBroadcast::class, $interfaces)) {
-            // $event .= ' <fg=bright-blue>(ShouldBroadcast)</>';
-            $event .= ' <fg=blue>(ShouldBroadcast)</>';
+            $event .= ' <fg=bright-blue>(ShouldBroadcast)</>';
         }
 
         return $event;
@@ -156,8 +138,7 @@ class EventListCommand extends Command
         $listener = implode('@', $listener);
 
         if (in_array(ShouldQueue::class, $interfaces)) {
-            // $listener .= ' <fg=bright-blue>(ShouldQueue)</>';
-            $listener .= ' <fg=blue>(ShouldQueue)</>';
+            $listener .= ' <fg=bright-blue>(ShouldQueue)</>';
         }
 
         return $listener;

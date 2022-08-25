@@ -3,6 +3,7 @@
 namespace Illuminate\Console\Scheduling;
 
 use Closure;
+use CR\LaravelBackport\SymfonyHelper;
 use Cron\CronExpression;
 use DateTimeZone;
 use Illuminate\Console\Application;
@@ -107,9 +108,8 @@ class ScheduleListCommand extends Command
             // Highlight the parameters...
             $command = preg_replace("#(php artisan [\w\-:]+) (.+)#", '$1 <fg=yellow;options=bold>$2</>', $command);
 
-            // cyan < #6C7280
             return [sprintf(
-                '  <fg=yellow>%s</>  %s<fg=cyan>%s %s%s %s</>',
+                '  <fg=yellow>%s</>  %s<fg=#6C7280>%s %s%s %s</>',
                 $expression,
                 $command,
                 $dots,
@@ -117,29 +117,19 @@ class ScheduleListCommand extends Command
                 $nextDueDateLabel,
                 $nextDueDate
             ), $this->output->isVerbose() && mb_strlen($description) > 1 ? sprintf(
-                '  <fg=cyan>%s%s %s</>',
+                '  <fg=#6C7280>%s%s %s</>',
                 str_repeat(' ', mb_strlen($expression) + 2),
                 '⇁',
                 $description
             ) : ''];
         });
 
-        if ($this->option('ansi')) {
-            $output = $events->flatten()->filter()->prepend('')->push('')->toArray();
-
-            foreach ([
-                '/ › /' => ' > ',
-                '/…/' => '~',
-            ] as $regex => $replace) {
-                $output = preg_replace($regex, $replace, $output);
-            }
-
-            $this->line($output);
-            return;
-        }
-
         $this->line(
-            $events->flatten()->filter()->prepend('')->push('')->toArray()
+            SymfonyHelper::consoleOutputStyle(
+                $events->flatten()->filter()->prepend('')->push('')->toArray(),
+                $this->output,
+                $this->option('ansi')
+            )
         );
     }
 

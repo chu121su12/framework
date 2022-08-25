@@ -3,6 +3,7 @@
 namespace Illuminate\Foundation\Console;
 
 use Closure;
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Routing\Route;
@@ -62,8 +63,8 @@ class RouteListCommand extends Command
     protected $verbColors = [
         'ANY' => 'red',
         'GET' => 'blue',
-        'HEAD' => 'cyan', // cyan < #6C7280',
-        'OPTIONS' => 'cyan', // cyan < #6C7280',
+        'HEAD' => '#6C7280',
+        'OPTIONS' => '#6C7280',
         'POST' => 'yellow',
         'PUT' => 'yellow',
         'PATCH' => 'yellow',
@@ -183,22 +184,10 @@ class RouteListCommand extends Command
     {
         $routes = collect($routes);
 
-        if ($this->option('ansi')) {
-            $output = $this->forCli($routes);
-
-            foreach ([
-                '/ › /' => ' > ',
-                '/…/' => '~',
-            ] as $regex => $replace) {
-                $output = preg_replace($regex, $replace, $output);
-            }
-
-            $this->output->writeln($output);
-            return;
-        }
-
         $this->output->writeln(
-            $this->option('json') ? $this->asJson($routes) : $this->forCli($routes)
+            $this->option('json')
+                ? $this->asJson($routes)
+                : SymfonyHelper::consoleOutputStyle($this->forCli($routes), $this->output, $this->option('ansi'))
         );
     }
 
@@ -395,19 +384,18 @@ class RouteListCommand extends Command
                 $action = substr($action, 0, $terminalWidth - 7 - mb_strlen($method.$spaces.$uri.$dots)).'…';
             }
 
-            // cyan < #6C7280
             $method = Str::of($method)->explode('|')->map(
                 function ($method) { return sprintf('<fg=%s>%s</>', isset($this->verbColors[$method]) ? $this->verbColors[$method] : 'default', $method); }
-            )->implode('<fg=cyan>|</>');
+            )->implode('<fg=#6C7280>|</>');
 
             return [sprintf(
-                '  <fg=white;options=bold>%s</> %s<fg=white>%s</><fg=cyan>%s %s</>',
+                '  <fg=white;options=bold>%s</> %s<fg=white>%s</><fg=#6C7280>%s %s</>',
                 $method,
                 $spaces,
                 preg_replace('#({[^}]+})#', '<fg=yellow>$1</>', $uri),
                 $dots,
                 str_replace('   ', ' › ', isset($action) ? $action : '')
-            ), $this->output->isVerbose() && ! empty($middleware) ? "<fg=cyan>$middleware</>" : null];
+            ), $this->output->isVerbose() && ! empty($middleware) ? "<fg=#6C7280>$middleware</>" : null];
         })
             ->flatten()
             ->filter()

@@ -49,9 +49,8 @@ class Task extends Component
             $width = min(terminal()->width(), 150);
             $dots = max($width - $descriptionWidth - $runTimeWidth - 10, 0);
 
-            // black < gray
-            $this->output->write(str_repeat('<fg=black>.</>', $dots), false, $verbosity);
-            $this->output->write("<fg=black>$runTime</>", false, $verbosity);
+            $this->output->write(str_repeat('<fg=gray>.</>', $dots), false, $verbosity);
+            $this->output->write("<fg=gray>$runTime</>", false, $verbosity);
 
             $this->output->writeln(
                 $result !== false ? ' <fg=green;options=bold>DONE</>' : ' <fg=red;options=bold>FAIL</>',

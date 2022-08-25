@@ -2,6 +2,7 @@
 
 namespace Illuminate\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Contracts\NewLineAware;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -51,7 +52,7 @@ class OutputStyle extends SymfonyStyle implements NewLineAware
         $this->newLineWritten = $newline;
 
         parent::write(
-            preg_replace('/<fg=gray>/', '<fg=black>', $messages),
+            SymfonyHelper::consoleOutputStyle($messages, $this->output),
             $newline,
             $options
         );

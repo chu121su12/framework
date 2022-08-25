@@ -2,7 +2,9 @@
 
 namespace CR\LaravelBackport;
 
+use ReflectionClass;
 use Symfony\Component\Console\Application as ConsoleApplication;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag5;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -11,6 +13,19 @@ use Symfony\Component\Process\Process;
 
 class SymfonyHelper
 {
+    const CONSOLE_ANSI_REPLACEMENTS = [
+        '/ › /' => ' > ',
+        '/…/' => '~',
+        '/⇂ /' => '| ',
+        '/❯ /' => '> ',
+    ];
+
+    const CONSOLE_STYLE_REPLACEMENTS = [
+        '/<fg=gray>/' => '<fg=black>',
+        '/<fg=#6C7280>/' => '<fg=cyan>',
+        '/<fg=bright-blue>/' => '<fg=blue>',
+    ];
+
     const DISPOSITION_ATTACHMENT = 'attachment';
 
     const DISPOSITION_INLINE = 'inline';
@@ -275,5 +290,38 @@ class SymfonyHelper
         }
 
         return $parts;
+    }
+
+    public static function consoleOutputStyle($messages, OutputInterface $output, $ansi = false)
+    {
+        if (\is_string($messages)) {
+            if (! $ansi) {
+                try {
+                    $consoleInput = optional((new ReflectionClass($output))->getParentClass())->getProperty('input');
+                    if ($consoleInput) {
+                        $inputValue = tap($consoleInput)->setAccessible(true)->getValue($output);
+                        $ansi = (bool) $inputValue->getOption('ansi');
+                    }
+                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
+                }
+            }
+
+            $messages = \preg_replace(\array_keys(self::CONSOLE_STYLE_REPLACEMENTS), \array_values(self::CONSOLE_STYLE_REPLACEMENTS), $messages);
+
+            return $ansi
+                ? \preg_replace(\array_keys(self::CONSOLE_STYLE_REPLACEMENTS), \array_values(self::CONSOLE_STYLE_REPLACEMENTS), $messages)
+                : $messages;
+        }
+
+        if (! \is_array($messages)) {
+            return $messages;
+        }
+
+        foreach ($messages as $key => $value) {
+            $messages[$key] = self::consoleOutputStyle($value, $output, $ansi);
+        }
+
+        return $messages;
     }
 }

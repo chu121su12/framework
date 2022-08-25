@@ -216,6 +216,13 @@ class ServeCommand extends Command
      */
     protected function handleProcessOutput()
     {
+        if (version_compare(PHP_VERSION, '7.4', '<')) {
+            $this->components->info("Server running on [http://{$this->host()}:{$this->port()}].");
+            $this->comment('  <fg=yellow;options=bold>Press Ctrl+C to stop the server</>');
+
+            $this->newLine();
+        }
+
         return function ($type, $buffer) {
             return str($buffer)->explode("\n")->each(function ($line) {
                 if (str($line)->contains('Development Server (http')) {
