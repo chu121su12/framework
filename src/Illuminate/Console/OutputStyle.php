@@ -69,7 +69,10 @@ class OutputStyle extends SymfonyStyle implements NewLineAware
 
         $this->newLineWritten = true;
 
-        parent::writeln($messages, $type);
+        parent::writeln(
+            SymfonyHelper::consoleOutputStyle($messages, $this->output),
+            $type
+        );
     }
 
     /**
