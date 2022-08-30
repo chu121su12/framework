@@ -42,7 +42,11 @@ final class HtmlRenderer
         }
 
         $html = '<?xml encoding="UTF-8">'.trim($html);
-        $dom->loadHTML($html, LIBXML_NOERROR | LIBXML_COMPACT | LIBXML_HTML_NODEFDTD | LIBXML_NOBLANKS | LIBXML_NOXMLDECL);
+        if (defined('LIBXML_HTML_NODEFDTD')) {
+            $dom->loadHTML($html, LIBXML_NOERROR | LIBXML_COMPACT | LIBXML_HTML_NODEFDTD | LIBXML_NOBLANKS | LIBXML_NOXMLDECL);
+        } else {
+            $dom->loadHTML($html, LIBXML_NOERROR | LIBXML_COMPACT | LIBXML_NOBLANKS | LIBXML_NOXMLDECL);
+        }
 
         /** @var DOMNode $body */
         $body = $dom->getElementsByTagName('body')->item(0);
