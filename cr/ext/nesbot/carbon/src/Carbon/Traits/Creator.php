@@ -84,7 +84,17 @@ trait Creator
         }
 
         try {
-            parent::__construct($time ?: 'now', static::safeCreateDateTimeZone($tz) ?: null);
+            $createTz = static::safeCreateDateTimeZone($tz) ?: null;
+
+            if ($isNow && \version_compare(\PHP_VERSION, '7.1.0', '<')) {
+                $microtime = \microtime(false);
+                $space = \strpos($microtime, ' ');
+                $microtime = \substr($microtime, $space + 1) . \substr($microtime, 1, $space - 1);
+
+                $time = static::createFromTimestamp($microtime, $createTz)->format('Y-m-d H:i:s.u');
+            }
+
+            parent::__construct($time ?: 'now', $createTz);
         } catch (Exception $exception) {
             throw new InvalidFormatException($exception->getMessage(), 0, $exception);
         }
