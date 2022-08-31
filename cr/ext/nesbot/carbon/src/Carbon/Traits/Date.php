@@ -1527,7 +1527,17 @@ trait Date
     public function setTime_($hour, $minute, $second = 0, $microseconds = 0)
     {
         if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
-            return parent::setTime((int) $hour, (int) $minute, (int) $second);
+            $ms = (int) $microseconds;
+            $f = (int) $this->format('u');
+
+            if ($ms === $f) {
+                return parent::setTime((int) $hour, (int) $minute, (int) $second);
+            }
+
+            $dateString = \sprintf("%s.%'.06d", $this->format('Y-m-d H:i:s'), (int) $microseconds);
+
+            return (new static($dateString, $this->getTimezone()))
+                ->setTime((int) $hour, (int) $minute, (int) $second);
         }
 
         return parent::setTime((int) $hour, (int) $minute, (int) $second, (int) $microseconds);
