@@ -965,7 +965,8 @@ class SupportTestArrayIterable implements IteratorAggregate
 
 class SupportTestCountable implements Countable
 {
-    public function count(): int
+    #[\ReturnTypeWillChange]
+    public function count()/*: int*/
     {
         return 0;
     }

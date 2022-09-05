@@ -230,7 +230,7 @@ class GMPCast implements CastsAttributes, SerializesCastableAttributes
      * @param  array  $attributes
      * @return string|null
      */
-    public function get($model, $key, $value, $attributes)
+    public function get($model, $key, $value, array $attributes)
     {
         return gmp_init($value, 10);
     }
@@ -244,7 +244,7 @@ class GMPCast implements CastsAttributes, SerializesCastableAttributes
      * @param  array  $attributes
      * @return string
      */
-    public function set($model, $key, $value, $attributes)
+    public function set($model, $key, $value, array $attributes)
     {
         return gmp_strval($value, 10);
     }
@@ -258,8 +258,10 @@ class GMPCast implements CastsAttributes, SerializesCastableAttributes
      * @param  array  $attributes
      * @return mixed
      */
-    public function serialize($model, string $key, $value, array $attributes)
+    public function serialize($model, /*string */$key, $value, array $attributes)
     {
+        $key = cast_to_string($key);
+
         return gmp_strval($value, 10);
     }
 }

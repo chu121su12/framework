@@ -69,11 +69,13 @@ trait Creator
         // instance then override as required
         $isNow = empty($time) || $time === 'now';
 
+        $hasTestTime = false;
         if (method_exists(static::class, 'hasTestNow') &&
             method_exists(static::class, 'getTestNow') &&
             static::hasTestNow() &&
             ($isNow || static::hasRelativeKeywords($time))
         ) {
+            $hasTestTime = true;
             static::mockConstructorParameters($time, $tz);
         }
 
@@ -86,7 +88,7 @@ trait Creator
         try {
             $createTz = static::safeCreateDateTimeZone($tz) ?: null;
 
-            if ($isNow && \version_compare(\PHP_VERSION, '7.1.0', '<')) {
+            if (!$hasTestTime && $isNow && \version_compare(\PHP_VERSION, '7.1.0', '<')) {
                 $microtime = \microtime(false);
                 $space = \strpos($microtime, ' ');
                 $microtime = \substr($microtime, $space + 1) . \substr($microtime, 1, $space - 1);

@@ -16,15 +16,15 @@ class CommandTrapTest extends TestCase
 
     protected $state;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
-        Signals::resolveAvailabilityUsing(fn () => true);
+        Signals::resolveAvailabilityUsing(function () { return true; });
 
         $this->registry = new FakeSignalsRegistry();
         $this->state = null;
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
@@ -44,7 +44,7 @@ class CommandTrapTest extends TestCase
 
     public function testTrapWhenNotAvailable()
     {
-        Signals::resolveAvailabilityUsing(fn () => false);
+        Signals::resolveAvailabilityUsing(function () { return false; });
 
         $command = $this->createCommand();
 
@@ -75,13 +75,13 @@ class CommandTrapTest extends TestCase
     public function testNestedTraps()
     {
         $a = $this->createCommand();
-        $a->trap('my-signal', fn () => $this->state .= '1');
+        $a->trap('my-signal', function () { return $this->state .= '1'; });
 
         $b = $this->createCommand();
-        $b->trap('my-signal', fn () => $this->state .= '2');
+        $b->trap('my-signal', function () { return $this->state .= '2'; });
 
         $c = $this->createCommand();
-        $c->trap('my-signal', fn () => $this->state .= '3');
+        $c->trap('my-signal', function () { return $this->state .= '3'; });
 
         $this->state = '';
         $this->registry->handle('my-signal');
@@ -93,7 +93,7 @@ class CommandTrapTest extends TestCase
         $this->assertSame('21', $this->state);
 
         $d = $this->createCommand();
-        $d->trap('my-signal', fn () => $this->state .= '3');
+        $d->trap('my-signal', function () { return $this->state .= '3'; });
 
         $this->state = '';
         $this->registry->handle('my-signal');
@@ -120,7 +120,7 @@ class CommandTrapTest extends TestCase
         $command = new Command;
         $registry = $this->registry;
 
-        (fn () => $this->signals = new Signals($registry))->call($command);
+        backport_function_call_able(function () use ($registry) { return $this->signals = new Signals($registry); })->call($command);
 
         return $command;
     }

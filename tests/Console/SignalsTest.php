@@ -15,13 +15,13 @@ class SignalsTest extends TestCase
 
     protected $state;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $this->registry = new FakeSignalsRegistry();
         $this->signals = new Signals($this->registry);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         $this->state = null;
 

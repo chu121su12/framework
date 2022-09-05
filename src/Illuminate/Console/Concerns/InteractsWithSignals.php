@@ -24,12 +24,14 @@ trait InteractsWithSignals
     public function trap($signals, $callback)
     {
         Signals::whenAvailable(function () use ($signals, $callback) {
-            $this->signals ??= new Signals(
-                $this->getApplication()->getSignalRegistry(),
+            $this->signals = isset($this->signals) ? $this->signals : new Signals(
+                $this->getApplication()->getSignalRegistry()
             );
 
             collect(Arr::wrap($signals))
-                ->each(fn ($signal) => $this->signals->register($signal, $callback));
+                ->each(function ($signal) use ($callback) {
+                    return $this->signals->register($signal, $callback);
+                });
         });
     }
 

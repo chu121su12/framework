@@ -292,6 +292,15 @@ class SymfonyHelper
         return $parts;
     }
 
+    public static function consoleOutputMessage($messages, $ansi)
+    {
+        $messages = \preg_replace(\array_keys(self::CONSOLE_STYLE_REPLACEMENTS), \array_values(self::CONSOLE_STYLE_REPLACEMENTS), $messages);
+
+        return $ansi
+            ? \preg_replace(\array_keys(self::CONSOLE_ANSI_REPLACEMENTS), \array_values(self::CONSOLE_ANSI_REPLACEMENTS), $messages)
+            : $messages;
+    }
+
     public static function consoleOutputStyle($messages, OutputInterface $output, $ansi = false)
     {
         if (\is_string($messages)) {
@@ -307,11 +316,7 @@ class SymfonyHelper
                 }
             }
 
-            $messages = \preg_replace(\array_keys(self::CONSOLE_STYLE_REPLACEMENTS), \array_values(self::CONSOLE_STYLE_REPLACEMENTS), $messages);
-
-            return $ansi
-                ? \preg_replace(\array_keys(self::CONSOLE_STYLE_REPLACEMENTS), \array_values(self::CONSOLE_STYLE_REPLACEMENTS), $messages)
-                : $messages;
+            return self::consoleOutputMessage($messages, $ansi);
         }
 
         if (! \is_array($messages)) {

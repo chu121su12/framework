@@ -154,6 +154,34 @@ class ValidationInvokableRuleTest_testItCanTranslateWithChoices_class implements
             }
         }
 
+class ValidationInvokableRuleTest_testExplicitRuleCanUseInlineValidationMessages_class implements InvokableRule
+        {
+            public $implicit = false;
+
+            public function __invoke($attribute, $value, $fail)
+            {
+                $fail('xxxx');
+            }
+        }
+
+class ValidationInvokableRuleTest_testImplicitRuleCanUseInlineValidationMessages_class implements InvokableRule
+        {
+            public $implicit = true;
+
+            public function __invoke($attribute, $value, $fail)
+            {
+                $fail('xxxx');
+            }
+        }
+
+class ValidationInvokableRuleTest_testItCanReturnInvokableRule_class implements InvokableRule
+        {
+            public function __invoke($attribute, $value, $fail)
+            {
+                $fail('xxxx');
+            }
+        }
+
 class ValidationInvokableRuleTest extends TestCase
 {
     public function testItCanPass()
@@ -365,17 +393,9 @@ class ValidationInvokableRuleTest extends TestCase
     public function testExplicitRuleCanUseInlineValidationMessages()
     {
         $trans = $this->getIlluminateArrayTranslator();
-        $rule = new class() implements InvokableRule
-        {
-            public $implicit = false;
+        $rule = new ValidationInvokableRuleTest_testExplicitRuleCanUseInlineValidationMessages_class();
 
-            public function __invoke($attribute, $value, $fail)
-            {
-                $fail('xxxx');
-            }
-        };
-
-        $validator = new Validator($trans, ['foo' => 'bar'], ['foo' => $rule], [$rule::class => ':attribute custom.']);
+        $validator = new Validator($trans, ['foo' => 'bar'], ['foo' => $rule], [get_class($rule) => ':attribute custom.']);
 
         $this->assertFalse($validator->passes());
         $this->assertSame([
@@ -384,7 +404,7 @@ class ValidationInvokableRuleTest extends TestCase
             ],
         ], $validator->messages()->messages());
 
-        $validator = new Validator($trans, ['foo' => 'bar'], ['foo' => $rule], ['foo.'.$rule::class => ':attribute custom with key.']);
+        $validator = new Validator($trans, ['foo' => 'bar'], ['foo' => $rule], ['foo.'.get_class($rule) => ':attribute custom with key.']);
 
         $this->assertFalse($validator->passes());
         $this->assertSame([
@@ -397,17 +417,9 @@ class ValidationInvokableRuleTest extends TestCase
     public function testImplicitRuleCanUseInlineValidationMessages()
     {
         $trans = $this->getIlluminateArrayTranslator();
-        $rule = new class() implements InvokableRule
-        {
-            public $implicit = true;
+        $rule = new ValidationInvokableRuleTest_testImplicitRuleCanUseInlineValidationMessages_class();
 
-            public function __invoke($attribute, $value, $fail)
-            {
-                $fail('xxxx');
-            }
-        };
-
-        $validator = new Validator($trans, ['foo' => ''], ['foo' => $rule], [$rule::class => ':attribute custom.']);
+        $validator = new Validator($trans, ['foo' => ''], ['foo' => $rule], [get_class($rule) => ':attribute custom.']);
 
         $this->assertFalse($validator->passes());
         $this->assertSame([
@@ -416,7 +428,7 @@ class ValidationInvokableRuleTest extends TestCase
             ],
         ], $validator->messages()->messages());
 
-        $validator = new Validator($trans, ['foo' => ''], ['foo' => $rule], ['foo.'.$rule::class => ':attribute custom with key.']);
+        $validator = new Validator($trans, ['foo' => ''], ['foo' => $rule], ['foo.'.get_class($rule) => ':attribute custom with key.']);
 
         $this->assertFalse($validator->passes());
         $this->assertSame([
@@ -428,13 +440,7 @@ class ValidationInvokableRuleTest extends TestCase
 
     public function testItCanReturnInvokableRule()
     {
-        $rule = new class() implements InvokableRule
-        {
-            public function __invoke($attribute, $value, $fail)
-            {
-                $fail('xxxx');
-            }
-        };
+        $rule = new ValidationInvokableRuleTest_testItCanReturnInvokableRule_class();
 
         $invokableValidationRule = InvokableValidationRule::make($rule);
 

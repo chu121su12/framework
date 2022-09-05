@@ -83,8 +83,10 @@ class PruneCommand extends Command
      * @param  string  $model
      * @return void
      */
-    protected function pruneModel(string $model)
+    protected function pruneModel(/*string */$model)
     {
+        $model = cast_to_string($model);
+
         $instance = new $model;
 
         $chunkSize = property_exists($instance, 'prunableChunkSize')

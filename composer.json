@@ -206,6 +206,7 @@
             "Spatie\\Ignition\\": "cr/ext/spatie/ignition/src/",
             "Spatie\\LaravelIgnition\\": "cr/ext/spatie/laravel-ignition/src/",
             "Symfony\\Component\\ErrorHandler\\": "cr/ext/symfony/error-handler/",
+            "Symfony\\Component\\Console\\": "cr/patch/symfony/console/",
             "Symfony\\Component\\HttpFoundation\\": "cr/patch/symfony/http-foundation/",
             "Symfony\\Component\\Mime\\": "cr/ext/symfony/mime/",
             "Symfony\\Component\\Routing\\": "cr/ext/symfony/routing/",

@@ -661,14 +661,14 @@ class FoundationViteTest extends TestCase
     {
         app()->singleton('path.public', function () { return __DIR__; });
 
-        $path ??= public_path('hot');
+        $path = isset($path) ? $path : public_path('hot');
 
         file_put_contents($path, 'http://localhost:3000');
     }
 
     protected function cleanViteHotFile($path = null)
     {
-        $path ??= public_path('hot');
+        $path = isset($path) ? $path : public_path('hot');
 
         if (file_exists($path)) {
             unlink($path);

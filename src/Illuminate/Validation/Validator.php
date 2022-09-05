@@ -822,7 +822,9 @@ class Validator implements ValidatorContract
 
             $this->failedRules[$attribute][$ruleClass] = [];
 
-            $messages = $this->getFromLocalArray($attribute, $ruleClass) ?? $rule->message();
+            $fromLocalArray = $this->getFromLocalArray($attribute, $ruleClass);
+
+            $messages = isset($fromLocalArray) ? $fromLocalArray : $rule->message();
 
             $messages = $messages ? (array) $messages : [$ruleClass];
 

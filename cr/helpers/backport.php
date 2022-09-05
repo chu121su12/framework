@@ -328,3 +328,27 @@ if (! \function_exists('backport_named_arguments')) {
         return \array_values($sortedArguments);
     }
 }
+
+if (! \function_exists('backport_function_call_able')) {
+    class BackportInternalFunctionCallAble
+    {
+        private $closure;
+
+        public function __construct(Closure $closure)
+        {
+            $this->closure = $closure;
+        }
+
+        public function call($newThis)
+        {
+            $bound = $this->closure->bindTo($newThis, $newThis);
+
+            return $bound();
+        }
+    }
+
+    function backport_function_call_able($closure)
+    {
+        return new BackportInternalFunctionCallAble($closure);
+    }
+}

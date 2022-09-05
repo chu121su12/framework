@@ -120,7 +120,7 @@ class Vite implements Htmlable
      */
     public function hotFile()
     {
-        return $this->hotFile ?? public_path('/hot');
+        return isset($this->hotFile) ? $this->hotFile : public_path('/hot');
     }
 
     /**
@@ -195,7 +195,7 @@ class Vite implements Htmlable
     public function __invoke($entrypoints, $buildDirectory = null)
     {
         $entrypoints = collect($entrypoints);
-        $buildDirectory ??= $this->buildDirectory;
+        $buildDirectory = isset($buildDirectory) ? $buildDirectory : $this->buildDirectory;
 
         if ($this->isRunningHot()) {
             return new HtmlString(
@@ -483,7 +483,7 @@ HTML;
      */
     public function asset($asset, $buildDirectory = null)
     {
-        $buildDirectory ??= $this->buildDirectory;
+        $buildDirectory = isset($buildDirectory) ? $buildDirectory : $this->buildDirectory;
 
         if ($this->isRunningHot()) {
             return $this->hotAsset($asset);

@@ -133,7 +133,7 @@ class MigrateCommand extends BaseCommand
      */
     protected function repositoryExists()
     {
-        return retry(2, fn () => $this->migrator->repositoryExists(), 0, function ($e) {
+        return retry(2, function () { return $this->migrator->repositoryExists(); }, 0, function ($e) {
             if (! $e->getPrevious() instanceof SQLiteDatabaseDoesNotExistException) {
                 return false;
             }

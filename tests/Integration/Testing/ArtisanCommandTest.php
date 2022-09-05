@@ -33,7 +33,7 @@ class ArtisanCommandTest extends TestCase
             $this->line($this->ask('Huh?'));
         });
 
-        Artisan::command('exit {code}', fn () => (int) $this->argument('code'));
+        Artisan::command('exit {code}', function () { return (int) $this->argument('code'); });
 
         Artisan::command('contains', function () {
             $this->line('My name is Taylor Otwell');

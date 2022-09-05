@@ -50,10 +50,10 @@ class Signals
      */
     public function register($signal, $callback)
     {
-        $this->previousHandlers[$signal] ??= $this->initializeSignal($signal);
+        $this->previousHandlers[$signal] = isset($this->previousHandlers[$signal]) ? $this->previousHandlers[$signal] : $this->initializeSignal($signal);
 
         with($this->getHandlers(), function ($handlers) use ($signal) {
-            $handlers[$signal] ??= $this->initializeSignal($signal);
+            $handlers[$signal] = isset($handlers[$signal]) ? $handlers[$signal] : $this->initializeSignal($signal);
 
             $this->setHandlers($handlers);
         });
@@ -123,7 +123,7 @@ class Signals
      */
     protected function getHandlers()
     {
-        return (fn () => $this->signalHandlers)
+        return backport_function_call_able(function () { return $this->signalHandlers; })
             ->call($this->registry);
     }
 
@@ -135,7 +135,7 @@ class Signals
      */
     protected function setHandlers($handlers)
     {
-        (fn () => $this->signalHandlers = $handlers)
+        backport_function_call_able(function () use ($handlers) { return $this->signalHandlers = $handlers; })
             ->call($this->registry);
     }
 

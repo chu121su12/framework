@@ -509,7 +509,7 @@ class FoundationApplicationTest extends TestCase
     }
 
     /** @test */
-    public function testMacroable(): void
+    public function testMacroable()/*: void*/
     {
         $app = new Application;
         $app['env'] = 'foo';

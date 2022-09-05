@@ -66,7 +66,9 @@ class TestView
             PHPUnit::assertInstanceOf(Collection::class, $actual);
             PHPUnit::assertSameSize($value, $actual);
 
-            $value->each(fn ($item, $index) => PHPUnit::assertTrue($actual->get($index)->is($item)));
+            $value->each(function ($item, $index) use ($actual) {
+                return PHPUnit::assertTrue($actual->get($index)->is($item));
+            });
         } else {
             PHPUnit::assertEquals($value, Arr::get($this->view->gatherData(), $key));
         }

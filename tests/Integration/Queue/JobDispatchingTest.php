@@ -38,11 +38,11 @@ class JobDispatchingTest extends TestCase
 
     public function testDispatchesConditionallyWithClosure()
     {
-        Job::dispatchIf(fn ($job) => $job instanceof Job ? 0 : 1, 'test')->replaceValue('new-test');
+        Job::dispatchIf(function ($job) { return $job instanceof Job ? 0 : 1; }, 'test')->replaceValue('new-test');
 
         $this->assertFalse(Job::$ran);
 
-        Job::dispatchIf(fn ($job) => $job instanceof Job ? 1 : 0, 'test')->replaceValue('new-test');
+        Job::dispatchIf(function ($job) { return $job instanceof Job ? 1 : 0; }, 'test')->replaceValue('new-test');
 
         $this->assertTrue(Job::$ran);
     }
@@ -62,11 +62,11 @@ class JobDispatchingTest extends TestCase
 
     public function testDoesNotDispatchesConditionallyWithClosure()
     {
-        Job::dispatchUnless(fn ($job) => $job instanceof Job ? 1 : 0, 'test')->replaceValue('new-test');
+        Job::dispatchUnless(function ($job) { return $job instanceof Job ? 1 : 0; }, 'test')->replaceValue('new-test');
 
         $this->assertFalse(Job::$ran);
 
-        Job::dispatchUnless(fn ($job) => $job instanceof Job ? 0 : 1, 'test')->replaceValue('new-test');
+        Job::dispatchUnless(function ($job) { return $job instanceof Job ? 0 : 1; }, 'test')->replaceValue('new-test');
 
         $this->assertTrue(Job::$ran);
     }

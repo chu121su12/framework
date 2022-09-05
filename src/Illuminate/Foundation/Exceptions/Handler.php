@@ -403,7 +403,24 @@ class Handler implements ExceptionHandlerContract
             case $e instanceof BackedEnumCaseNotFoundException: return new NotFoundHttpException($e->getMessage(), $e);
             case $e instanceof ModelNotFoundException: return new NotFoundHttpException($e->getMessage(), $e);
             case $e instanceof AuthorizationException && $e->hasStatus(): return new HttpException(
-                $e->status(), $e->response()?->message() ?: (Response::$statusTexts[$e->status()] ?? 'Whoops, looks like something went wrong.'), $e
+                $e->status(), value(function () use ($e) {
+                    $response = $e->response();
+
+                    $result = null;
+
+                    if (isset($response)) {
+                        $result = $response->message();
+                    }
+
+                    if (! $result) {
+                        $status = $e->status();
+                        $texts = Response::$statusTexts;
+
+                        $result = isset($texts[$status]) ? $texts[$status] : 'Whoops, looks like something went wrong.';
+                    }
+
+                    return $result;
+                }), $e
             );
             case $e instanceof AuthorizationException && ! $e->hasStatus(): return new AccessDeniedHttpException($e->getMessage(), $e);
             case $e instanceof TokenMismatchException: return new HttpException(419, $e->getMessage(), $e);

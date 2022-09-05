@@ -45,7 +45,7 @@ class ExceptionHandlerTest extends TestCase
 
     public function testItRendersAuthorizationExceptionsWithStatusCodeTextWhenNoMessageIsSet()
     {
-        Route::get('test-route', fn () => Response::denyWithStatus(404)->authorize());
+        Route::get('test-route', function () { return Response::denyWithStatus(404)->authorize(); });
 
         // HTTP request...
         $this->get('test-route')
@@ -59,7 +59,7 @@ class ExceptionHandlerTest extends TestCase
                 'message' => 'Not Found',
             ]);
 
-        Route::get('test-route', fn () => Response::denyWithStatus(418)->authorize());
+        Route::get('test-route', function () { return Response::denyWithStatus(418)->authorize(); });
 
         // HTTP request...
         $this->get('test-route')
@@ -76,7 +76,7 @@ class ExceptionHandlerTest extends TestCase
 
     public function testItRendersAuthorizationExceptionsWithStatusButWithoutResponse()
     {
-        Route::get('test-route', fn () => throw (new AuthorizationException())->withStatus(418));
+        Route::get('test-route', function () { throw (new AuthorizationException())->withStatus(418); });
 
         // HTTP request...
         $this->get('test-route')
@@ -93,7 +93,7 @@ class ExceptionHandlerTest extends TestCase
 
     public function testItHasFallbackErrorMessageForUnknownStatusCodes()
     {
-        Route::get('test-route', fn () => throw (new AuthorizationException())->withStatus(399));
+        Route::get('test-route', function () { throw (new AuthorizationException())->withStatus(399); });
 
         // HTTP request...
         $this->get('test-route')
