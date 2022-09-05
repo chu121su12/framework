@@ -173,6 +173,9 @@ class MailMailerTest extends TestCase
         $mailer->send('foo', ['data'], function ($m) {
             //
         });
+
+        $this->assertSame('taylor@laravel.com', $sentMessage->getEnvelope()->getRecipients()[0]->getAddress());
+        $this->assertSame('hello@laravel.com', $sentMessage->getEnvelope()->getSender()->getAddress());
     }
 
     public function testGlobalReplyToIsRespectedOnAllMessages()

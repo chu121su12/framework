@@ -159,7 +159,7 @@ abstract class DatabaseInspectionCommand extends Command
     {
         $table = cast_to_string($table);
 
-        $result = $connection->selectOne('SELECT SUM(pgsize) FROM dbstat WHERE name=?', [
+        $result = $connection->selectOne('SELECT SUM(pgsize) AS size FROM dbstat WHERE name=?', [
             $table,
         ]);
 

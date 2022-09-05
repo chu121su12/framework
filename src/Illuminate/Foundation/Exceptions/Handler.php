@@ -402,7 +402,9 @@ class Handler implements ExceptionHandlerContract
         switch (true) {
             case $e instanceof BackedEnumCaseNotFoundException: return new NotFoundHttpException($e->getMessage(), $e);
             case $e instanceof ModelNotFoundException: return new NotFoundHttpException($e->getMessage(), $e);
-            case $e instanceof AuthorizationException && $e->hasStatus(): return new HttpException($e->status(), $e->getMessage(), $e);
+            case $e instanceof AuthorizationException && $e->hasStatus(): return new HttpException(
+                $e->status(), $e->response()?->message() ?: (Response::$statusTexts[$e->status()] ?? 'Whoops, looks like something went wrong.'), $e
+            );
             case $e instanceof AuthorizationException && ! $e->hasStatus(): return new AccessDeniedHttpException($e->getMessage(), $e);
             case $e instanceof TokenMismatchException: return new HttpException(419, $e->getMessage(), $e);
             case $e instanceof SuspiciousOperationException: return new NotFoundHttpException('Bad hostname provided.', $e);
@@ -568,7 +570,7 @@ class Handler implements ExceptionHandlerContract
         backport_type_throwable($e);
 
         if (! $this->isHttpException($e) && config('app.debug')) {
-            return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
+            return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e)->prepare($request);
         }
 
         if (! $this->isHttpException($e)) {
@@ -577,7 +579,7 @@ class Handler implements ExceptionHandlerContract
 
         return $this->toIlluminateResponse(
             $this->renderHttpException($e), $e
-        );
+        )->prepare($request);
     }
 
     /**
