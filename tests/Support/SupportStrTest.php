@@ -1008,7 +1008,7 @@ class SupportStrTest extends TestCase
     {
         try {
             Str::freezeUuids(function () {
-                Str::createUuidsUsing(fn () => Str::of('1234'));
+                Str::createUuidsUsing(function () { return Str::of('1234'); });
                 $this->assertSame('1234', Str::uuid()->toString());
                 throw new \Exception('Something failed.');
             });

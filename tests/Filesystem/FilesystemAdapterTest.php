@@ -564,6 +564,8 @@ class FilesystemAdapterTest extends TestCase
 
     public function testProvidesTemporaryUrlsForS3Adapter()
     {
+        $this->markTestSkipped('Missing S3 adapter.');
+
         $filesystem = new FilesystemManager(new Application);
         $filesystemAdapter = $filesystem->createS3Driver([
             'region' => 'us-west-1',
