@@ -16,11 +16,12 @@ use League\Flysystem\FilesystemInterface as FilesystemOperator;
 use League\Flysystem\Sftp\SftpAdapter;
 
 // use League\Flysystem\FilesystemAdapter as FlysystemAdapter;
-// use League\Flysystem\Ftp\FtpAdapter as FtpAdapter;
+// use League\Flysystem\Ftp\FtpAdapter;
 // use League\Flysystem\Ftp\FtpConnectionOptions;
 // use League\Flysystem\Local\LocalFilesystemAdapter as LocalAdapter;
-// use League\Flysystem\PHPSecLibV2\SftpAdapter;
-// use League\Flysystem\PHPSecLibV2\SftpConnectionProvider;
+// use League\Flysystem\PhpseclibV3\SftpAdapter;
+// use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
+// use League\Flysystem\ReadOnly\ReadOnlyFilesystemAdapter;
 // use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 // use League\Flysystem\Visibility;
 
@@ -301,6 +302,10 @@ class FilesystemManager implements FactoryContract
      */
     protected function createFlysystem(FlysystemAdapter $adapter, array $config)
     {
+        // if ($config['read-only'] ?? false === true) {
+        //     $adapter = new ReadOnlyFilesystemAdapter($adapter);
+        // }
+
         // return new Flysystem($adapter, Arr::only($config, [
         //     'directory_visibility',
         //     'disable_asserts',
