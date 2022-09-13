@@ -1932,7 +1932,7 @@ trait HasAttributes
      */
     public function discardChanges()
     {
-        [$this->attributes, $this->changes] = [$this->original, []];
+        list($this->attributes, $this->changes) = [$this->original, []];
 
         return $this;
     }

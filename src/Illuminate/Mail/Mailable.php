@@ -923,21 +923,23 @@ class Mailable implements MailableContract, Renderable
 
         if ($file instanceof Attachment) {
             $parts = $file->attachWith(
-                fn ($path) => [$path, ['as' => $file->as, 'mime' => $file->mime]],
-                fn ($data) => $this->hasAttachedData($data(), $file->as, ['mime' => $file->mime])
+                function ($path) use ($file) { return [$path, ['as' => $file->as, 'mime' => $file->mime]]; },
+                function ($data) use ($file) { return $this->hasAttachedData($data(), $file->as, ['mime' => $file->mime]); }
             );
 
             if ($parts === true) {
                 return true;
             }
 
-            [$file, $options] = $parts === false
+            list($file, $options) = $parts === false
                 ? [null, []]
                 : $parts;
         }
 
         return collect($this->attachments)->contains(
-            fn ($attachment) => $attachment['file'] === $file && array_filter($attachment['options']) === array_filter($options)
+            function ($attachment) use ($file, $options) {
+                return $attachment['file'] === $file && array_filter($attachment['options']) === array_filter($options);
+            }
         );
     }
 
@@ -1002,10 +1004,12 @@ class Mailable implements MailableContract, Renderable
     public function hasAttachmentFromStorageDisk($disk, $path, $name = null, array $options = [])
     {
         return collect($this->diskAttachments)->contains(
-            fn ($attachment) => $attachment['disk'] === $disk
-                && $attachment['path'] === $path
-                && $attachment['name'] === ($name ?? basename($path))
-                && $attachment['options'] === $options
+            function ($attachment) use ($disk, $path, $name, $options) {
+                return $attachment['disk'] === $disk
+                    && $attachment['path'] === $path
+                    && $attachment['name'] === (isset($name) ? $name : basename($path))
+                    && $attachment['options'] === $options;
+            }
         );
     }
 
@@ -1039,9 +1043,11 @@ class Mailable implements MailableContract, Renderable
     public function hasAttachedData($data, $name, array $options = [])
     {
         return collect($this->rawAttachments)->contains(
-            fn ($attachment) => $attachment['data'] === $data
-                && $attachment['name'] === $name
-                && array_filter($attachment['options']) === array_filter($options)
+            function ($attachment) use ($data, $name, $options) {
+                return $attachment['data'] === $data
+                    && $attachment['name'] === $name
+                    && array_filter($attachment['options']) === array_filter($options);
+            }
         );
     }
 

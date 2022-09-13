@@ -37,6 +37,70 @@ class MailMailableTest_testItCanAttachMultipleFiles_class implements Attachable
                 }
             }
 
+class MailMailableTest_testAssertHasAttachment_class_1
+        {
+            public function render()
+            {
+                //
+            }
+        }
+
+class MailMailableTest_testAssertHasAttachment_class_2 extends Mailable
+        {
+            public function build()
+            {
+                //
+            }
+        }
+
+class MailMailableTest_testAssertHasAttachment_class_3 extends Mailable
+        {
+            public function build()
+            {
+                $this->attach('/path/to/foo.jpg');
+            }
+        }
+
+class MailMailableTest_testAssertHasAttachedData_class_1
+        {
+            public function render()
+            {
+                //
+            }
+        }
+
+class MailMailableTest_testAssertHasAttachedData_class_2 extends Mailable
+        {
+            public function build()
+            {
+                //
+            }
+        }
+
+class MailMailableTest_testAssertHasAttachedData_class_3 extends Mailable
+        {
+            public function build()
+            {
+                $this->attachData('data', 'foo.jpg');
+            }
+        }
+
+class MailMailableTest_testAssertHasAttachmentFromStorage_class_1 extends Mailable
+        {
+            public function build()
+            {
+                //
+            }
+        }
+
+class MailMailableTest_testAssertHasAttachmentFromStorage_class_2 extends Mailable
+        {
+            public function build()
+            {
+                $this->attachFromStorage('/path/to/foo.jpg');
+            }
+        }
+
 class MailMailableTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -708,7 +772,7 @@ class MailMailableTest extends TestCase
         $this->assertFalse($mailable->hasAttachedData('data', 'bar.jpg', ['mime' => 'text/html']));
 
         $mailable = new WelcomeMailableStub;
-        $mailable->attach(Attachment::fromData(fn () => 'data', 'foo.jpg'));
+        $mailable->attach(Attachment::fromData(function () { return 'data'; }, 'foo.jpg'));
 
         $this->assertTrue($mailable->hasAttachedData('data', 'foo.jpg'));
         $this->assertFalse($mailable->hasAttachedData('xxxx', 'foo.jpg'));
@@ -716,7 +780,7 @@ class MailMailableTest extends TestCase
         $this->assertFalse($mailable->hasAttachedData('data', 'foo.jpg', ['mime' => 'text/css']));
 
         $mailable = new WelcomeMailableStub;
-        $mailable->attach(Attachment::fromData(fn () => 'data', 'bar.jpg')->withMime('text/css'));
+        $mailable->attach(Attachment::fromData(function () { return 'data'; }, 'bar.jpg')->withMime('text/css'));
 
         $this->assertTrue($mailable->hasAttachedData('data', 'bar.jpg', ['mime' => 'text/css']));
         $this->assertFalse($mailable->hasAttachedData('xxxx', 'bar.jpg', ['mime' => 'text/css']));
@@ -756,21 +820,9 @@ class MailMailableTest extends TestCase
 
     public function testAssertHasAttachment()
     {
-        Container::getInstance()->instance('mailer', new class
-        {
-            public function render()
-            {
-                //
-            }
-        });
+        Container::getInstance()->instance('mailer', new MailMailableTest_testAssertHasAttachment_class_1);
 
-        $mailable = new class() extends Mailable
-        {
-            public function build()
-            {
-                //
-            }
-        };
+        $mailable = new MailMailableTest_testAssertHasAttachment_class_2;
 
         try {
             $mailable->assertHasAttachment('/path/to/foo.jpg');
@@ -779,34 +831,16 @@ class MailMailableTest extends TestCase
             $this->assertSame("Did not find the expected attachment.\nFailed asserting that false is true.", $e->getMessage());
         }
 
-        $mailable = new class() extends Mailable
-        {
-            public function build()
-            {
-                $this->attach('/path/to/foo.jpg');
-            }
-        };
+        $mailable = new MailMailableTest_testAssertHasAttachment_class_3;
 
         $mailable->assertHasAttachment('/path/to/foo.jpg');
     }
 
     public function testAssertHasAttachedData()
     {
-        Container::getInstance()->instance('mailer', new class
-        {
-            public function render()
-            {
-                //
-            }
-        });
+        Container::getInstance()->instance('mailer', new MailMailableTest_testAssertHasAttachedData_class_1);
 
-        $mailable = new class() extends Mailable
-        {
-            public function build()
-            {
-                //
-            }
-        };
+        $mailable = new MailMailableTest_testAssertHasAttachedData_class_2;
 
         try {
             $mailable->assertHasAttachedData('data', 'foo.jpg');
@@ -815,26 +849,14 @@ class MailMailableTest extends TestCase
             $this->assertSame("Did not find the expected attachment.\nFailed asserting that false is true.", $e->getMessage());
         }
 
-        $mailable = new class() extends Mailable
-        {
-            public function build()
-            {
-                $this->attachData('data', 'foo.jpg');
-            }
-        };
+        $mailable = new MailMailableTest_testAssertHasAttachedData_class_3;
 
         $mailable->assertHasAttachedData('data', 'foo.jpg');
     }
 
     public function testAssertHasAttachmentFromStorage()
     {
-        $mailable = new class() extends Mailable
-        {
-            public function build()
-            {
-                //
-            }
-        };
+        $mailable = new MailMailableTest_testAssertHasAttachmentFromStorage_class_1;
 
         try {
             $mailable->assertHasAttachmentFromStorage('/path/to/foo.jpg');
@@ -843,13 +865,7 @@ class MailMailableTest extends TestCase
             $this->assertSame("Did not find the expected attachment.\nFailed asserting that false is true.", $e->getMessage());
         }
 
-        $mailable = new class() extends Mailable
-        {
-            public function build()
-            {
-                $this->attachFromStorage('/path/to/foo.jpg');
-            }
-        };
+        $mailable = new MailMailableTest_testAssertHasAttachmentFromStorage_class_2;
 
         $mailable->assertHasAttachmentFromStorage('/path/to/foo.jpg');
     }
@@ -881,8 +897,12 @@ class MailableTestUserStub
 
 class MailTestAttachable implements Attachable
 {
-    public function __construct(protected $attachment)
+    protected $attachment;
+
+    public function __construct(/*protected */$attachment)
     {
+        $this->attachment = $attachment;
+
         //
     }
 

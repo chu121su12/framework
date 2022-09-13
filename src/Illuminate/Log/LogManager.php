@@ -438,7 +438,7 @@ class LogManager implements LoggerInterface
                 $this->actionLevel($config),
                 0,
                 true,
-                $config['stop_buffering'] ?? true
+                isset($config['stop_buffering']) ? $config['stop_buffering'] : true
             );
         }
 
