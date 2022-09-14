@@ -14,7 +14,8 @@ final class StyleNotFound extends InvalidArgumentException
     /**
      * Creates a new style not found instance.
      */
-    private function __construct(/*string */$message)
+    /*private */
+    final public function __construct(/*string */$message)
     {
         $message = cast_to_string($message);
 

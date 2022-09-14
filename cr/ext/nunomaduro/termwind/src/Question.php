@@ -43,7 +43,7 @@ final class Question
      */
     public static function getStreamableInput()/*: StreamableInputInterface*/
     {
-        return isset(self::$streamableInput) ? self::$streamableInput := new ArgvInput();
+        return self::$streamableInput = isset(self::$streamableInput) ? self::$streamableInput : new ArgvInput();
     }
 
     /**

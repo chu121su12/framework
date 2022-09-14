@@ -207,6 +207,8 @@ class SwooleClient implements Client, ServesStaticFiles
 
         foreach ($response->headers->getCookies() as $cookie) {
             $cookieDomain = $cookie->getDomain();
+            $cookieSameSite = $cookie->getSameSite();
+
             $swooleResponse->{$cookie->isRaw() ? 'rawcookie' : 'cookie'}(
                 $cookie->getName(),
                 $cookie->getValue(),
@@ -215,7 +217,7 @@ class SwooleClient implements Client, ServesStaticFiles
                 isset($cookieDomain) ? $cookieDomain : '',
                 $cookie->isSecure(),
                 $cookie->isHttpOnly(),
-                $cookie->getSameSite() ?? ''
+                isset($cookieSameSite) ? $cookieSameSite : ''
             );
         }
     }

@@ -13,13 +13,20 @@ use Termwind\Exceptions\InvalidColor;
  */
 final class Style
 {
+    private $callback;
+    private $color;
+
     /**
      * Creates a new value object instance.
      *
      * @param Closure(Styles $styles, string|int ...$argument): Styles  $callback
      */
-    public function __construct(private Closure $callback, private string $color = '')
+    public function __construct(/*private */Closure $callback, /*private string */$color = '')
     {
+        $this->callback = $callback;
+
+        $this->color = cast_to_string($color);
+
         // ..
     }
 
@@ -34,8 +41,10 @@ final class Style
 
         $this->callback = static function (
             Styles $formatter,
-            string|int ...$arguments
-        ) use ($callback, $styles): Styles {
+            /*string|int */...$arguments
+        ) use ($callback, $styles)/*: Styles*/ {
+            $arguments = cast_to_compounds('string|int', $arguments);
+
             $formatter = $callback($formatter, ...$arguments);
 
             return StyleToMethod::multiple($formatter, $styles);
@@ -71,6 +80,8 @@ final class Style
     {
         $arguments = cast_to_compounds('string|int', $arguments);
 
-        return ($this->callback)($styles, ...$arguments);
+        $callback = $this->callback;
+
+        return $this->callback($styles, ...$arguments);
     }
 }
