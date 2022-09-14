@@ -499,6 +499,8 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertNothingBatched()
     {
+        phpunit_assert_v5_skip_test($this);
+
         $this->fake->assertNothingBatched();
 
         $this->fake->batch([])->dispatch();

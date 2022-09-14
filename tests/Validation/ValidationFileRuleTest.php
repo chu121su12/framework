@@ -248,7 +248,7 @@ class ValidationFileRuleTest extends TestCase
     {
         $this->assertInstanceOf(File::class, File::default_());
 
-        File::default_(function () {
+        File::defaults(function () {
             return File::types('txt')->max(12 * 1024);
         });
 
@@ -261,7 +261,7 @@ class ValidationFileRuleTest extends TestCase
             ]
         );
 
-        File::default_(File::image()->between(1024, 2048));
+        File::defaults(File::image()->between(1024, 2048));
 
         $this->passes(
             File::default_(),
