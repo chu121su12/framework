@@ -7,23 +7,19 @@ use Closure;
 use Illuminate\Contracts\Filesystem\Factory as FactoryContract;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
-use League\Flysystem\Adapter\Ftp as FtpAdapter;
-use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\AdapterInterface as FlysystemAdapter;
-use League\Flysystem\AwsS3v3\AwsS3Adapter as S3Adapter;
 use League\Flysystem\Filesystem as Flysystem;
-use League\Flysystem\FilesystemInterface as FilesystemOperator;
-use League\Flysystem\Sftp\SftpAdapter;
+use League\Flysystem\Patch\AwsS3V3Adapter as S3Adapter;
+use League\Flysystem\Patch\FtpAdapter;
+use League\Flysystem\Patch\LocalFilesystemAdapter as LocalAdapter;
+use League\Flysystem\Patch\PortableVisibilityConverter;
+use League\Flysystem\Patch\ReadOnlyFilesystemAdapter;
+use League\Flysystem\Patch\SftpAdapter;
+use League\Flysystem\Patch\Visibility;
 
-// use League\Flysystem\FilesystemAdapter as FlysystemAdapter;
-// use League\Flysystem\Ftp\FtpAdapter;
+// use League\Flysystem\AwsS3V3\PortableVisibilityConverter as AwsS3PortableVisibilityConverter;
 // use League\Flysystem\Ftp\FtpConnectionOptions;
-// use League\Flysystem\Local\LocalFilesystemAdapter as LocalAdapter;
-// use League\Flysystem\PhpseclibV3\SftpAdapter;
 // use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
-// use League\Flysystem\ReadOnly\ReadOnlyFilesystemAdapter;
-// use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
-// use League\Flysystem\Visibility;
 
 /**
  * @mixin \Illuminate\Contracts\Filesystem\Filesystem
@@ -302,9 +298,9 @@ class FilesystemManager implements FactoryContract
      */
     protected function createFlysystem(FlysystemAdapter $adapter, array $config)
     {
-        // if ($config['read-only'] ?? false === true) {
-        //     $adapter = new ReadOnlyFilesystemAdapter($adapter);
-        // }
+        if (isset($config['read-only']) ? $config['read-only'] : false === true) {
+            $adapter = new ReadOnlyFilesystemAdapter($adapter);
+        }
 
         // return new Flysystem($adapter, Arr::only($config, [
         //     'directory_visibility',

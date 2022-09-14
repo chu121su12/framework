@@ -3,9 +3,6 @@
 namespace Illuminate\Tests\Filesystem;
 
 use Carbon\Carbon;
-use Exception as UnableToReadFile;
-use Exception as UnableToRetrieveMetadata;
-use Exception as UnableToWriteFile;
 use GuzzleHttp\Psr7\Stream;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Filesystem\FilesystemManager;
@@ -13,14 +10,16 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Testing\Assert;
 use InvalidArgumentException;
-use League\Flysystem\Adapter\Local as LocalFilesystemAdapter;
 use League\Flysystem\Filesystem;
+use League\Flysystem\Patch\FtpAdapter;
+use League\Flysystem\Patch\LocalFilesystemAdapter;
+use League\Flysystem\Patch\UnableToReadFile;
+use League\Flysystem\Patch\UnableToRetrieveMetadata;
+use League\Flysystem\Patch\UnableToWriteFile;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-// use League\Flysystem\Ftp\FtpAdapter;
-// use League\Flysystem\Local\LocalFilesystemAdapter;
 
 class FilesystemAdapterTest_testProvidesTemporaryUrls_class extends LocalFilesystemAdapter
         {
@@ -419,7 +418,7 @@ class FilesystemAdapterTest extends TestCase
             'unsupportedParam' => true,
         ]);
 
-        // $this->assertInstanceOf(FtpAdapter::class, $driver->getAdapter());
+        $this->assertInstanceOf(FtpAdapter::class, $driver->getAdapter());
 
         /** @var \League\Flysystem\Adapter\Ftp $adapter */
         $adapter = $driver->getAdapter();

@@ -8,8 +8,8 @@ use finfo as Finfo;
 use League\Flysystem\Config;
 use League\Flysystem\Exception;
 use League\Flysystem\NotSupportedException;
-use League\Flysystem\UnixVisibility\Visibility;
-use League\Flysystem\UnixVisibility\VisibilityConverter;
+use League\Flysystem\Patch\Visibility;
+use League\Flysystem\Patch\VisibilityConverter;
 use League\Flysystem\UnreadableFileException;
 use League\Flysystem\Util;
 use LogicException;
@@ -61,7 +61,7 @@ class Local extends AbstractAdapter
     /**
      * @var int
      */
-    private $linkHandling;
+    protected $linkHandling;
 
     /**
      * Constructor.

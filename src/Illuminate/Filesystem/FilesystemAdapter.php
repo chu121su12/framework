@@ -4,16 +4,7 @@ namespace Illuminate\Filesystem;
 
 use Closure;
 use CR\LaravelBackport\SymfonyHelper;
-use Exception as UnableToCopyFile;
-use Exception as UnableToCreateDirectory;
-use Exception as UnableToDeleteDirectory;
-use Exception as UnableToDeleteFile;
-use Exception as UnableToMoveFile;
-use Exception as UnableToRetrieveMetadata;
-use Exception as UnableToSetVisibility;
 use Illuminate\Contracts\Filesystem\Cloud as CloudFilesystemContract;
-use Illuminate\Contracts\Filesystem\FileExistsException as ContractFileExistsException;
-use Illuminate\Contracts\Filesystem\FileNotFoundException as ContractFileNotFoundException;
 use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
 use Illuminate\Http\File;
 use Illuminate\Http\UploadedFile;
@@ -23,37 +14,30 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
-use League\Flysystem\Adapter\Ftp as FtpAdapter;
-use League\Flysystem\Adapter\Ftp as SftpAdapter;
-use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\AdapterInterface as FlysystemAdapter;
-use League\Flysystem\AdapterInterface as Visibility;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
-use League\Flysystem\FileExistsException as UnableToWriteFile;
-use League\Flysystem\FileNotFoundException as UnableToReadFile;
+use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface as FilesystemOperator;
+use League\Flysystem\Local\LocalFilesystemAdapter as LocalAdapter;
+use League\Flysystem\Patch\FtpAdapter;
+use League\Flysystem\Patch\SftpAdapter;
+use League\Flysystem\Patch\UnableToCopyFile;
+use League\Flysystem\Patch\UnableToCreateDirectory;
+use League\Flysystem\Patch\UnableToDeleteDirectory;
+use League\Flysystem\Patch\UnableToDeleteFile;
+use League\Flysystem\Patch\UnableToMoveFile;
+use League\Flysystem\Patch\UnableToReadFile;
+use League\Flysystem\Patch\UnableToRetrieveMetadata;
+use League\Flysystem\Patch\UnableToSetVisibility;
+use League\Flysystem\Patch\UnableToWriteFile;
+use League\Flysystem\Patch\Visibility;
 use PHPUnit\Framework\Assert as PHPUnit;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-// use League\Flysystem\FilesystemAdapter as FlysystemAdapter;
-// use League\Flysystem\FilesystemOperator;
-// use League\Flysystem\Ftp\FtpAdapter;
-// use League\Flysystem\Local\LocalFilesystemAdapter as LocalAdapter;
 // use League\Flysystem\PathPrefixer;
 // use League\Flysystem\StorageAttributes;
-// use League\Flysystem\UnableToCopyFile;
-// use League\Flysystem\UnableToCreateDirectory;
-// use League\Flysystem\UnableToDeleteDirectory;
-// use League\Flysystem\UnableToDeleteFile;
-// use League\Flysystem\UnableToMoveFile;
-// use League\Flysystem\UnableToReadFile;
-// use League\Flysystem\UnableToRetrieveMetadata;
-// use League\Flysystem\UnableToSetVisibility;
-// use League\Flysystem\UnableToWriteFile;
-// use League\Flysystem\Visibility;
 
 /**
  * #mixin \League\Flysystem\FilesystemOperator
@@ -346,8 +330,9 @@ class FilesystemAdapter implements CloudFilesystemContract
     {
         try {
             return $this->driver->read($path);
+        } catch (FileNotFoundException $e) {
+            $e = new UnableToReadFile($e->getMessage(), $e->getCode(), $e);
         } catch (UnableToReadFile $e) {
-        // } catch (\Throwable $e) {
         }
 
         if (isset($e)) {
@@ -453,12 +438,19 @@ class FilesystemAdapter implements CloudFilesystemContract
                 return $this->driver->putStream($path, $contents->detach(), $options);
             }
 
+            set_error_handler(function($errno, $errstr, $errfile, $errline ) {
+                throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
+            });
+
             is_resource($contents)
                 ? $this->driver->writeStream($path, $contents, $options)
                 : $this->driver->write($path, $contents, $options);
         } catch (UnableToWriteFile $e) {
         } catch (UnableToSetVisibility $e) {
-        // } catch (Throwable $e) {
+        } catch (\ErrorException $e) {
+            $e = new UnableToWriteFile($e->getMessage(), $e->getCode(), $e);
+        } finally {
+            restore_error_handler();
         }
 
         if (isset($e)) {
@@ -539,16 +531,10 @@ class FilesystemAdapter implements CloudFilesystemContract
         try {
             return $this->driver->setVisibility($path, $this->parseVisibility($visibility));
         } catch (UnableToSetVisibility $e) {
-        // } catch (\Throwable $e) {
-        }
-
-        if (isset($e)) {
             throw_if($this->throwsExceptions(), $e);
 
             return false;
         }
-
-        return true;
     }
 
     /**
@@ -626,16 +612,10 @@ class FilesystemAdapter implements CloudFilesystemContract
         try {
             return $this->driver->copy($from, $to);
         } catch (UnableToCopyFile $e) {
-        // } catch (\Throwable $e) {
-        }
-
-        if (isset($e)) {
             throw_if($this->throwsExceptions(), $e);
 
             return false;
         }
-
-        return true;
     }
 
     /**
@@ -652,16 +632,10 @@ class FilesystemAdapter implements CloudFilesystemContract
 
             return $this->driver->rename($from, $to);
         } catch (UnableToMoveFile $e) {
-        // } catch (\Throwable $e) {
-        }
-
-        if (isset($e)) {
             throw_if($this->throwsExceptions(), $e);
 
             return false;
         }
-
-        return true;
     }
 
     /**
@@ -719,8 +693,9 @@ class FilesystemAdapter implements CloudFilesystemContract
     {
         try {
             return $this->driver->readStream($path);
+        } catch (FileNotFoundException $e) {
+            $e = new UnableToReadFile($e->getMessage(), $e->getCode(), $e);
         } catch (UnableToReadFile $e) {
-        // } catch (\Throwable $e) {
         }
 
         if (isset($e)) {
@@ -739,6 +714,7 @@ class FilesystemAdapter implements CloudFilesystemContract
 
         try {
             $this->driver->writeStream($path, $resource, $options);
+        } catch (FileExistsException $e1) {
         } catch (UnableToWriteFile $e1) {
         } catch (UnableToSetVisibility $e1) {
         }
@@ -747,9 +723,9 @@ class FilesystemAdapter implements CloudFilesystemContract
             try {
                 $this->delete($path);
                 $this->driver->writeStream($path, $resource, $options);
+            } catch (FileExistsException $e2) {
             } catch (UnableToWriteFile $e2) {
             } catch (UnableToSetVisibility $e2) {
-            // } catch (\Throwable $e) {
             }
 
             if (isset($e2)) {
@@ -988,7 +964,6 @@ class FilesystemAdapter implements CloudFilesystemContract
             return $this->driver->createDir($path);
         } catch (UnableToCreateDirectory $e) {
         } catch (UnableToSetVisibility $e) {
-        // } catch (\Throwable $e) {
         }
 
         if (isset($e)) {
@@ -1013,16 +988,10 @@ class FilesystemAdapter implements CloudFilesystemContract
 
             return $this->driver->deleteDir($directory);
         } catch (UnableToDeleteDirectory $e) {
-        // } catch (\Throwable $e) {
-        }
-
-        if (isset($e)) {
             throw_if($this->throwsExceptions(), $e);
 
             return false;
         }
-
-        return true;
     }
 
     /**

@@ -11,8 +11,8 @@ use Illuminate\Support\Str;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\MountManager;
-use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
-use League\Flysystem\UnixVisibility\Visibility;
+use League\Flysystem\Patch\PortableVisibilityConverter;
+use League\Flysystem\Patch\Visibility;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'vendor:publish')]
