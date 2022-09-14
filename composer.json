@@ -90,6 +90,7 @@
         "symfony/polyfill-uuid": "^1.26.0",
         "symfony/polyfill-xml": "^1.26.0",
         "symfony/routing": "^5.4.8",
+        "symfony/uid": "^5.4.11",
         "voku/portable-ascii": "^2.0.1",
 
         "illuminate/auth": "self.version",
@@ -210,6 +211,7 @@
             "Symfony\\Component\\HttpFoundation\\": "cr/patch/symfony/http-foundation/",
             "Symfony\\Component\\Mime\\": "cr/ext/symfony/mime/",
             "Symfony\\Component\\Routing\\": "cr/ext/symfony/routing/",
+            "Symfony\\Component\\Uid\\": "cr/ext/symfony/uid/",
             "Symfony\\Polyfill\\": "cr/patch/symfony/polyfill/src/",
             "voku\\": "cr/ext/voku/portable-ascii/src/voku/",
 
