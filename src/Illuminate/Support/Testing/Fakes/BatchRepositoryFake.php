@@ -14,6 +14,13 @@ use Illuminate\Support\Str;
 class BatchRepositoryFake implements BatchRepository
 {
     /**
+     * The batches stored in the repository.
+     *
+     * @var \Illuminate\Bus\Batch[]
+     */
+    protected $batches = [];
+
+    /**
      * Retrieve a list of batches.
      *
      * @param  int  $limit
@@ -22,7 +29,7 @@ class BatchRepositoryFake implements BatchRepository
      */
     public function get($limit, $before)
     {
-        return [];
+        return $this->batches;
     }
 
     /**
@@ -35,7 +42,7 @@ class BatchRepositoryFake implements BatchRepository
     {
         $batchId = cast_to_string($batchId);
 
-        //
+        return isset($this->batches[$batchId]) ? $this->batches[$batchId] : null;
     }
 
     /**
@@ -46,10 +53,12 @@ class BatchRepositoryFake implements BatchRepository
      */
     public function store(PendingBatch $batch)
     {
-        return new Batch(
+        $id = (string) Str::orderedUuid();
+
+        $this->batches[$id] = new Batch(
             new QueueFake(Facade::getFacadeApplication()),
             $this,
-            (string) Str::orderedUuid(),
+            $id,
             $batch->name,
             count($batch->jobs),
             count($batch->jobs),
@@ -60,6 +69,8 @@ class BatchRepositoryFake implements BatchRepository
             null,
             null
         );
+
+        return $this->batches[$id];
     }
 
     /**
@@ -120,7 +131,9 @@ class BatchRepositoryFake implements BatchRepository
     {
         $batchId = cast_to_string($batchId);
 
-        //
+        if (isset($this->batches[$batchId])) {
+            $this->batches[$batchId]->finishedAt = now();
+        }
     }
 
     /**
@@ -133,7 +146,9 @@ class BatchRepositoryFake implements BatchRepository
     {
         $batchId = cast_to_string($batchId);
 
-        //
+        if (isset($this->batches[$batchId])) {
+            $this->batches[$batchId]->cancelledAt = now();
+        }
     }
 
     /**
@@ -146,7 +161,7 @@ class BatchRepositoryFake implements BatchRepository
     {
         $batchId = cast_to_string($batchId);
 
-        //
+        unset($this->batches[$batchId]);
     }
 
     /**

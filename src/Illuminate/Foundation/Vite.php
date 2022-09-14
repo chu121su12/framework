@@ -221,7 +221,7 @@ class Vite implements Htmlable
 
                     $tags->push($this->makeTagForChunk(
                         $partialManifest->keys()->first(),
-                        asset("{$buildDirectory}/{$css}"),
+                        $this->assetPath("{$buildDirectory}/{$css}"),
                         $partialManifest->first(),
                         $manifest
                     ));
@@ -230,7 +230,7 @@ class Vite implements Htmlable
 
             $tags->push($this->makeTagForChunk(
                 $entrypoint,
-                asset("{$buildDirectory}/{$chunk['file']}"),
+                $this->assetPath("{$buildDirectory}/{$chunk['file']}"),
                 $chunk,
                 $manifest
             ));
@@ -240,7 +240,7 @@ class Vite implements Htmlable
 
                 $tags->push($this->makeTagForChunk(
                     $partialManifest->keys()->first(),
-                    asset("{$buildDirectory}/{$css}"),
+                    $this->assetPath("{$buildDirectory}/{$css}"),
                     $partialManifest->first(),
                     $manifest
                 ));
@@ -491,7 +491,19 @@ HTML;
 
         $chunk = $this->chunk($this->manifest($buildDirectory), $asset);
 
-        return asset($buildDirectory.'/'.$chunk['file']);
+        return $this->assetPath($buildDirectory.'/'.$chunk['file']);
+    }
+
+    /**
+     * Generate an asset path for the application.
+     *
+     * @param  string  $path
+     * @param  bool|null  $secure
+     * @return string
+     */
+    protected function assetPath($path, $secure = null)
+    {
+        return asset($path, $secure);
     }
 
     /**

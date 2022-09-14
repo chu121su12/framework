@@ -433,7 +433,13 @@ class LogManager implements LoggerInterface
     protected function prepareHandler(HandlerInterface $handler, array $config = [])
     {
         if (isset($config['action_level'])) {
-            $handler = new FingersCrossedHandler($handler, $this->actionLevel($config));
+            $handler = new FingersCrossedHandler(
+                $handler,
+                $this->actionLevel($config),
+                0,
+                true,
+                isset($config['stop_buffering']) ? $config['stop_buffering'] : true
+            );
         }
 
         if (Monolog::API !== 1 && (Monolog::API !== 2 || ! $handler instanceof FormattableHandlerInterface)) {
