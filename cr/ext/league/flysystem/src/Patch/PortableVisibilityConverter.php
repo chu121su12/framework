@@ -2,55 +2,7 @@
 
 // declare(strict_types=1);
 
-namespace League\Flysystem\UnixVisibility;
-
-use InvalidArgumentException;
-use League\Flysystem\FilesystemException;
-
-interface VisibilityConverter
-{
-    public function forFile(/*string */$visibility)/*: int*/;
-    public function forDirectory(/*string */$visibility)/*: int*/;
-    public function inverseForFile(/*int */$visibility)/*: string*/;
-    public function inverseForDirectory(/*int */$visibility)/*: string*/;
-    public function defaultForDirectories()/*: int*/;
-}
-
-class InvalidVisibilityProvided extends InvalidArgumentException implements FilesystemException
-{
-    public static function withVisibility(/*string */$visibility, /*string */$expectedMessage)/*: InvalidVisibilityProvided*/
-    {
-        $visibility = cast_to_string($visibility);
-        $expectedMessage = cast_to_string($expectedMessage);
-
-        $provided = var_export($visibility, true);
-        $message = "Invalid visibility provided. Expected {$expectedMessage}, received {$provided}";
-
-        throw new InvalidVisibilityProvided($message);
-    }
-}
-
-final class Visibility
-{
-    const PUBLIC_ = 'public';
-    const PRIVATE_ = 'private';
-}
-
-final class PortableVisibilityGuard
-{
-    public static function guardAgainstInvalidInput(/*string */$visibility)/*: void*/
-    {
-        $visibility = cast_to_string($visibility);
-
-        if ($visibility !== Visibility::PUBLIC_ && $visibility !== Visibility::PRIVATE_) {
-            $className = Visibility::class;
-            throw InvalidVisibilityProvided::withVisibility(
-                $visibility,
-                "either {$className}::PUBLIC or {$className}::PRIVATE"
-            );
-        }
-    }
-}
+namespace League\Flysystem\Patch;
 
 class PortableVisibilityConverter implements VisibilityConverter
 {
