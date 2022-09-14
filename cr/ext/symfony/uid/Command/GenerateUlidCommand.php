@@ -23,7 +23,7 @@ use Symfony\Component\Uid\Factory\UlidFactory;
 
 class GenerateUlidCommand extends Command
 {
-    private const FORMAT_OPTIONS = [
+    /*private */const FORMAT_OPTIONS = [
         'base32',
         'base58',
         'rfc4122',
@@ -36,7 +36,7 @@ class GenerateUlidCommand extends Command
 
     public function __construct(UlidFactory $factory = null)
     {
-        $this->factory = $factory ?? new UlidFactory();
+        $this->factory = isset($factory) ? $factory : new UlidFactory();
 
         parent::__construct();
     }
@@ -44,16 +44,9 @@ class GenerateUlidCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure(): void
+    protected function configure()/*: void*/
     {
-        $this
-            ->setDefinition([
-                new InputOption('time', null, InputOption::VALUE_REQUIRED, 'The ULID timestamp: a parsable date/time string'),
-                new InputOption('count', 'c', InputOption::VALUE_REQUIRED, 'The number of ULID to generate', 1),
-                new InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'The ULID output format: base32, base58 or rfc4122', 'base32'),
-            ])
-            ->setDescription(self::$defaultDescription)
-            ->setHelp(<<<'EOF'
+        $helpText = <<<'EOF'
 The <info>%command.name%</info> command generates a ULID.
 
     <info>php %command.full_name%</info>
@@ -69,8 +62,16 @@ To generate several ULIDs:
 To output a specific format:
 
     <info>php %command.full_name% --format=rfc4122</info>
-EOF
-            )
+EOF;
+
+        $this
+            ->setDefinition([
+                new InputOption('time', null, InputOption::VALUE_REQUIRED, 'The ULID timestamp: a parsable date/time string'),
+                new InputOption('count', 'c', InputOption::VALUE_REQUIRED, 'The number of ULID to generate', 1),
+                new InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'The ULID output format: base32, base58 or rfc4122', 'base32'),
+            ])
+            ->setDescription(self::$defaultDescription)
+            ->setHelp($helpText)
         ;
     }
 
@@ -115,7 +116,7 @@ EOF
         return 0;
     }
 
-    public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
+    public function complete(CompletionInput $input, CompletionSuggestions $suggestions)/*: void*/
     {
         if ($input->mustSuggestOptionValuesFor('format')) {
             $suggestions->suggestValues(self::FORMAT_OPTIONS);

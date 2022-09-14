@@ -20,13 +20,15 @@ namespace Symfony\Component\Uid;
  */
 class Ulid extends AbstractUid
 {
-    protected const NIL = '00000000000000000000000000';
+    /*protected */const NIL = '00000000000000000000000000';
 
     private static $time = '';
     private static $rand = [];
 
-    public function __construct(string $ulid = null)
+    public function __construct(/*string */$ulid = null)
     {
+        $ulid = cast_to_string($ulid);
+
         if (null === $ulid) {
             $this->uid = static::generate();
 
@@ -46,8 +48,10 @@ class Ulid extends AbstractUid
         $this->uid = strtoupper($ulid);
     }
 
-    public static function isValid(string $ulid): bool
+    public static function isValid(/*string */$ulid)/*: bool*/
     {
+        $ulid = cast_to_string($ulid);
+
         if (26 !== \strlen($ulid)) {
             return false;
         }
@@ -62,8 +66,10 @@ class Ulid extends AbstractUid
     /**
      * {@inheritdoc}
      */
-    public static function fromString(string $ulid): parent
+    public static function fromString(/*string */$ulid)/*: parent*/
     {
+        $ulid = cast_to_string($ulid);
+
         if (36 === \strlen($ulid) && Uuid::isValid($ulid)) {
             $ulid = (new Uuid($ulid))->toBinary();
         } elseif (22 === \strlen($ulid) && 22 === strspn($ulid, BinaryUtil::BASE58[''])) {
@@ -99,7 +105,7 @@ class Ulid extends AbstractUid
         return $u;
     }
 
-    public function toBinary(): string
+    public function toBinary()/*: string*/
     {
         $ulid = strtr($this->uid, 'ABCDEFGHJKMNPQRSTVWXYZ', 'abcdefghijklmnopqrstuv');
 
@@ -116,12 +122,12 @@ class Ulid extends AbstractUid
         return hex2bin($ulid);
     }
 
-    public function toBase32(): string
+    public function toBase32()/*: string*/
     {
         return $this->uid;
     }
 
-    public function getDateTime(): \DateTimeImmutable
+    public function getDateTime()/*: \DateTimeImmutable*/
     {
         $time = strtr(substr($this->uid, 0, 10), 'ABCDEFGHJKMNPQRSTVWXYZ', 'abcdefghijklmnopqrstuv');
 
@@ -143,7 +149,7 @@ class Ulid extends AbstractUid
         return \DateTimeImmutable::createFromFormat('U.u', substr_replace($time, '.', -3, 0));
     }
 
-    public static function generate(\DateTimeInterface $time = null): string
+    public static function generate(\DateTimeInterface $time = null)/*: string*/
     {
         if (null === $time) {
             return self::doGenerate();
@@ -156,8 +162,10 @@ class Ulid extends AbstractUid
         return self::doGenerate($time);
     }
 
-    private static function doGenerate(string $mtime = null): string
+    private static function doGenerate(/*string */$mtime = null)/*: string*/
     {
+        $mtime = cast_to_string($mtime);
+
         if (null === $time = $mtime) {
             $time = microtime(false);
             $time = substr($time, 11).substr($time, 2, 3);

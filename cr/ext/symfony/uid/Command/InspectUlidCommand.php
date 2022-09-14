@@ -28,21 +28,22 @@ class InspectUlidCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure(): void
+    protected function configure()/*: void*/
     {
-        $this
-            ->setDefinition([
-                new InputArgument('ulid', InputArgument::REQUIRED, 'The ULID to inspect'),
-            ])
-            ->setDescription(self::$defaultDescription)
-            ->setHelp(<<<'EOF'
+        $helpText = <<<'EOF'
 The <info>%command.name%</info> displays information about a ULID.
 
     <info>php %command.full_name% 01EWAKBCMWQ2C94EXNN60ZBS0Q</info>
     <info>php %command.full_name% 1BVdfLn3ERmbjYBLCdaaLW</info>
     <info>php %command.full_name% 01771535-b29c-b898-923b-b5a981f5e417</info>
-EOF
-            )
+EOF;
+
+        $this
+            ->setDefinition([
+                new InputArgument('ulid', InputArgument::REQUIRED, 'The ULID to inspect'),
+            ])
+            ->setDescription(self::$defaultDescription)
+            ->setHelp($helpText)
         ;
     }
 

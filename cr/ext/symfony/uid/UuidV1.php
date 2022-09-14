@@ -18,12 +18,14 @@ namespace Symfony\Component\Uid;
  */
 class UuidV1 extends Uuid
 {
-    protected const TYPE = 1;
+    /*protected */const TYPE = 1;
 
     private static $clockSeq;
 
-    public function __construct(string $uuid = null)
+    public function __construct(/*string */$uuid = null)
     {
+        $uuid = cast_to_string($uuid);
+
         if (null === $uuid) {
             $this->uid = uuid_create(static::TYPE);
         } else {
@@ -31,17 +33,17 @@ class UuidV1 extends Uuid
         }
     }
 
-    public function getDateTime(): \DateTimeImmutable
+    public function getDateTime()/*: \DateTimeImmutable*/
     {
         return BinaryUtil::hexToDateTime('0'.substr($this->uid, 15, 3).substr($this->uid, 9, 4).substr($this->uid, 0, 8));
     }
 
-    public function getNode(): string
+    public function getNode()/*: string*/
     {
         return uuid_mac($this->uid);
     }
 
-    public static function generate(\DateTimeInterface $time = null, Uuid $node = null): string
+    public static function generate(\DateTimeInterface $time = null, Uuid $node = null)/*: string*/
     {
         $uuid = !$time || !$node ? uuid_create(static::TYPE) : parent::NIL;
 

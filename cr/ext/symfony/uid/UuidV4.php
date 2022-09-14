@@ -18,10 +18,12 @@ namespace Symfony\Component\Uid;
  */
 class UuidV4 extends Uuid
 {
-    protected const TYPE = 4;
+    /*protected */const TYPE = 4;
 
-    public function __construct(string $uuid = null)
+    public function __construct(/*string */$uuid = null)
     {
+        $uuid = cast_to_string($uuid);
+
         if (null === $uuid) {
             $uuid = random_bytes(16);
             $uuid[6] = $uuid[6] & "\x0F" | "\x40";

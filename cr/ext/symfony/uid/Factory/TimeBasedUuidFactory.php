@@ -20,8 +20,10 @@ class TimeBasedUuidFactory
     private $class;
     private $node;
 
-    public function __construct(string $class, Uuid $node = null)
+    public function __construct(/*string */$class, Uuid $node = null)
     {
+        $class = cast_to_string($class);
+
         $this->class = $class;
         $this->node = $node;
     }
@@ -29,7 +31,7 @@ class TimeBasedUuidFactory
     /**
      * @return UuidV6|UuidV1
      */
-    public function create(\DateTimeInterface $time = null): Uuid
+    public function create(\DateTimeInterface $time = null)/*: Uuid*/
     {
         $class = $this->class;
 

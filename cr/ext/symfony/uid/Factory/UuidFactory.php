@@ -55,14 +55,14 @@ class UuidFactory
     /**
      * @return UuidV6|UuidV4|UuidV1
      */
-    public function create(): Uuid
+    public function create()/*: Uuid*/
     {
         $class = $this->defaultClass;
 
         return new $class();
     }
 
-    public function randomBased(): RandomBasedUuidFactory
+    public function randomBased()/*: RandomBasedUuidFactory*/
     {
         return new RandomBasedUuidFactory($this->randomBasedClass);
     }
@@ -70,9 +70,9 @@ class UuidFactory
     /**
      * @param Uuid|string|null $node
      */
-    public function timeBased($node = null): TimeBasedUuidFactory
+    public function timeBased($node = null)/*: TimeBasedUuidFactory*/
     {
-        $node ?? $node = $this->timeBasedNode;
+        isset($node) ? $node : ($node = $this->timeBasedNode);
 
         if (null !== $node && !$node instanceof Uuid) {
             $node = Uuid::fromString($node);
@@ -84,9 +84,9 @@ class UuidFactory
     /**
      * @param Uuid|string|null $namespace
      */
-    public function nameBased($namespace = null): NameBasedUuidFactory
+    public function nameBased($namespace = null)/*: NameBasedUuidFactory*/
     {
-        $namespace ?? $namespace = $this->nameBasedNamespace;
+        isset($namespace) ? $namespace : ($namespace = $this->nameBasedNamespace);
 
         if (null === $namespace) {
             throw new \LogicException(sprintf('A namespace should be defined when using "%s()".', __METHOD__));
@@ -98,7 +98,7 @@ class UuidFactory
     /**
      * @param Uuid|string $namespace
      */
-    private function getNamespace($namespace): Uuid
+    private function getNamespace($namespace)/*: Uuid*/
     {
         if ($namespace instanceof Uuid) {
             return $namespace;

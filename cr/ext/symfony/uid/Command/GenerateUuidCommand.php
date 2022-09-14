@@ -31,7 +31,7 @@ class GenerateUuidCommand extends Command
 
     public function __construct(UuidFactory $factory = null)
     {
-        $this->factory = $factory ?? new UuidFactory();
+        $this->factory = isset($factory) ? $factory : new UuidFactory();
 
         parent::__construct();
     }
@@ -39,20 +39,9 @@ class GenerateUuidCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure(): void
+    protected function configure()/*: void*/
     {
-        $this
-            ->setDefinition([
-                new InputOption('time-based', null, InputOption::VALUE_REQUIRED, 'The timestamp, to generate a time-based UUID: a parsable date/time string'),
-                new InputOption('node', null, InputOption::VALUE_REQUIRED, 'The UUID whose node part should be used as the node of the generated UUID'),
-                new InputOption('name-based', null, InputOption::VALUE_REQUIRED, 'The name, to generate a name-based UUID'),
-                new InputOption('namespace', null, InputOption::VALUE_REQUIRED, 'The UUID to use at the namespace for named-based UUIDs, predefined namespaces keywords "dns", "url", "oid" and "x500" are accepted'),
-                new InputOption('random-based', null, InputOption::VALUE_NONE, 'To generate a random-based UUID'),
-                new InputOption('count', 'c', InputOption::VALUE_REQUIRED, 'The number of UUID to generate', 1),
-                new InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'The UUID output format: rfc4122, base58 or base32', 'rfc4122'),
-            ])
-            ->setDescription(self::$defaultDescription)
-            ->setHelp(<<<'EOF'
+        $helpText = <<<'EOF'
 The <info>%command.name%</info> generates a UUID.
 
     <info>php %command.full_name%</info>
@@ -84,8 +73,20 @@ To generate several UUIDs:
 To output a specific format:
 
     <info>php %command.full_name% --format=base58</info>
-EOF
-            )
+EOF;
+
+        $this
+            ->setDefinition([
+                new InputOption('time-based', null, InputOption::VALUE_REQUIRED, 'The timestamp, to generate a time-based UUID: a parsable date/time string'),
+                new InputOption('node', null, InputOption::VALUE_REQUIRED, 'The UUID whose node part should be used as the node of the generated UUID'),
+                new InputOption('name-based', null, InputOption::VALUE_REQUIRED, 'The name, to generate a name-based UUID'),
+                new InputOption('namespace', null, InputOption::VALUE_REQUIRED, 'The UUID to use at the namespace for named-based UUIDs, predefined namespaces keywords "dns", "url", "oid" and "x500" are accepted'),
+                new InputOption('random-based', null, InputOption::VALUE_NONE, 'To generate a random-based UUID'),
+                new InputOption('count', 'c', InputOption::VALUE_REQUIRED, 'The number of UUID to generate', 1),
+                new InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'The UUID output format: rfc4122, base58 or base32', 'rfc4122'),
+            ])
+            ->setDescription(self::$defaultDescription)
+            ->setHelp($helpText)
         ;
     }
 
@@ -102,7 +103,7 @@ EOF
         $namespace = $input->getOption('namespace');
         $random = $input->getOption('random-based');
 
-        if (false !== ($time ?? $name ?? $random) && 1 < ((null !== $time) + (null !== $name) + $random)) {
+        if (false !== (isset($time) ? $time : (isset($name) ? $name : $random)) && 1 < ((null !== $time) + (null !== $name) + $random)) {
             $io->error('Only one of "--time-based", "--name-based" or "--random-based" can be provided at a time.');
 
             return 1;
@@ -140,7 +141,7 @@ EOF
                     return 1;
                 }
 
-                $create = function () use ($node, $time): Uuid {
+                $create = function () use ($node, $time)/*: Uuid */{
                     return $this->factory->timeBased($node)->create(new \DateTimeImmutable($time));
                 };
                 break;
@@ -156,7 +157,7 @@ EOF
                     }
                 }
 
-                $create = function () use ($namespace, $name): Uuid {
+                $create = function () use ($namespace, $name)/*: Uuid */{
                     try {
                         $factory = $this->factory->nameBased($namespace);
                     } catch (\LogicException $e) {
@@ -200,14 +201,14 @@ EOF
         return 0;
     }
 
-    public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
+    public function complete(CompletionInput $input, CompletionSuggestions $suggestions)/*: void*/
     {
         if ($input->mustSuggestOptionValuesFor('format')) {
             $suggestions->suggestValues($this->getAvailableFormatOptions());
         }
     }
 
-    private function getAvailableFormatOptions(): array
+    private function getAvailableFormatOptions()/*: array*/
     {
         return [
             'base32',

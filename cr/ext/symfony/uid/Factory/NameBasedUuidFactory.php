@@ -20,8 +20,10 @@ class NameBasedUuidFactory
     private $class;
     private $namespace;
 
-    public function __construct(string $class, Uuid $namespace)
+    public function __construct(/*string */$class, Uuid $namespace)
     {
+        $class = cast_to_string($class);
+
         $this->class = $class;
         $this->namespace = $namespace;
     }
@@ -29,8 +31,10 @@ class NameBasedUuidFactory
     /**
      * @return UuidV5|UuidV3
      */
-    public function create(string $name): Uuid
+    public function create(/*string */$name)/*: Uuid*/
     {
+        $name = cast_to_string($name);
+
         switch ($class = $this->class) {
             case UuidV5::class: return Uuid::v5($this->namespace, $name);
             case UuidV3::class: return Uuid::v3($this->namespace, $name);

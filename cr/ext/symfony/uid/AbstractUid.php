@@ -24,7 +24,7 @@ abstract class AbstractUid implements \JsonSerializable
     /**
      * Whether the passed value is valid for the constructor of the current class.
      */
-    abstract public static function isValid(string $uid): bool;
+    abstract public static function isValid(/*string */$uid)/*: bool*/;
 
     /**
      * Creates an AbstractUid from an identifier represented in any of the supported formats.
@@ -33,15 +33,17 @@ abstract class AbstractUid implements \JsonSerializable
      *
      * @throws \InvalidArgumentException When the passed value is not valid
      */
-    abstract public static function fromString(string $uid): self;
+    abstract public static function fromString(/*string */$uid)/*: self*/;
 
     /**
      * @return static
      *
      * @throws \InvalidArgumentException When the passed value is not valid
      */
-    public static function fromBinary(string $uid): self
+    public static function fromBinary(/*string */$uid)/*: self*/
     {
+        $uid = cast_to_string($uid);
+
         if (16 !== \strlen($uid)) {
             throw new \InvalidArgumentException('Invalid binary uid provided.');
         }
@@ -54,8 +56,10 @@ abstract class AbstractUid implements \JsonSerializable
      *
      * @throws \InvalidArgumentException When the passed value is not valid
      */
-    public static function fromBase58(string $uid): self
+    public static function fromBase58(/*string */$uid)/*: self*/
     {
+        $uid = cast_to_string($uid);
+
         if (22 !== \strlen($uid)) {
             throw new \InvalidArgumentException('Invalid base-58 uid provided.');
         }
@@ -68,8 +72,10 @@ abstract class AbstractUid implements \JsonSerializable
      *
      * @throws \InvalidArgumentException When the passed value is not valid
      */
-    public static function fromBase32(string $uid): self
+    public static function fromBase32(/*string */$uid)/*: self*/
     {
+        $uid = cast_to_string($uid);
+
         if (26 !== \strlen($uid)) {
             throw new \InvalidArgumentException('Invalid base-32 uid provided.');
         }
@@ -82,8 +88,10 @@ abstract class AbstractUid implements \JsonSerializable
      *
      * @throws \InvalidArgumentException When the passed value is not valid
      */
-    public static function fromRfc4122(string $uid): self
+    public static function fromRfc4122(/*string */$uid)/*: self*/
     {
+        $uid = cast_to_string($uid);
+
         if (36 !== \strlen($uid)) {
             throw new \InvalidArgumentException('Invalid RFC4122 uid provided.');
         }
@@ -94,12 +102,12 @@ abstract class AbstractUid implements \JsonSerializable
     /**
      * Returns the identifier as a raw binary string.
      */
-    abstract public function toBinary(): string;
+    abstract public function toBinary()/*: string*/;
 
     /**
      * Returns the identifier as a base58 case sensitive string.
      */
-    public function toBase58(): string
+    public function toBase58()/*: string*/
     {
         return strtr(sprintf('%022s', BinaryUtil::toBase($this->toBinary(), BinaryUtil::BASE58)), '0', '1');
     }
@@ -107,7 +115,7 @@ abstract class AbstractUid implements \JsonSerializable
     /**
      * Returns the identifier as a base32 case insensitive string.
      */
-    public function toBase32(): string
+    public function toBase32()/*: string*/
     {
         $uid = bin2hex($this->toBinary());
         $uid = sprintf('%02s%04s%04s%04s%04s%04s%04s',
@@ -126,7 +134,7 @@ abstract class AbstractUid implements \JsonSerializable
     /**
      * Returns the identifier as a RFC4122 case insensitive string.
      */
-    public function toRfc4122(): string
+    public function toRfc4122()/*: string*/
     {
         // don't use uuid_unparse(), it's slower
         $uuid = bin2hex($this->toBinary());
@@ -140,7 +148,7 @@ abstract class AbstractUid implements \JsonSerializable
     /**
      * Returns whether the argument is an AbstractUid and contains the same value as the current instance.
      */
-    public function equals($other): bool
+    public function equals($other)/*: bool*/
     {
         if (!$other instanceof self) {
             return false;
@@ -149,17 +157,17 @@ abstract class AbstractUid implements \JsonSerializable
         return $this->uid === $other->uid;
     }
 
-    public function compare(self $other): int
+    public function compare(self $other)/*: int*/
     {
-        return (\strlen($this->uid) - \strlen($other->uid)) ?: ($this->uid <=> $other->uid);
+        return (\strlen($this->uid) - \strlen($other->uid)) ?: backport_spaceship_operator($this->uid, $other->uid);
     }
 
-    public function __toString(): string
+    public function __toString()/*: string*/
     {
         return $this->uid;
     }
 
-    public function jsonSerialize(): string
+    public function jsonSerialize()/*: string*/
     {
         return $this->uid;
     }

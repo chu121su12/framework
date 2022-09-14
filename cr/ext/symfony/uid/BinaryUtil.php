@@ -18,12 +18,12 @@ namespace Symfony\Component\Uid;
  */
 class BinaryUtil
 {
-    public const BASE10 = [
+    /*public */const BASE10 = [
         '' => '0123456789',
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
     ];
 
-    public const BASE58 = [
+    /*public */const BASE58 = [
         '' => '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz',
         1 => 0, 1, 2, 3, 4, 5, 6, 7, 8, 'A' => 9,
         'B' => 10, 'C' => 11, 'D' => 12, 'E' => 13, 'F' => 14, 'G' => 15,
@@ -39,13 +39,15 @@ class BinaryUtil
     // https://tools.ietf.org/html/rfc4122#section-4.1.4
     // 0x01b21dd213814000 is the number of 100-ns intervals between the
     // UUID epoch 1582-10-15 00:00:00 and the Unix epoch 1970-01-01 00:00:00.
-    private const TIME_OFFSET_INT = 0x01B21DD213814000;
-    private const TIME_OFFSET_BIN = "\x01\xb2\x1d\xd2\x13\x81\x40\x00";
-    private const TIME_OFFSET_COM1 = "\xfe\x4d\xe2\x2d\xec\x7e\xbf\xff";
-    private const TIME_OFFSET_COM2 = "\xfe\x4d\xe2\x2d\xec\x7e\xc0\x00";
+    /*private */const TIME_OFFSET_INT = 0x01B21DD213814000;
+    /*private */const TIME_OFFSET_BIN = "\x01\xb2\x1d\xd2\x13\x81\x40\x00";
+    /*private */const TIME_OFFSET_COM1 = "\xfe\x4d\xe2\x2d\xec\x7e\xbf\xff";
+    /*private */const TIME_OFFSET_COM2 = "\xfe\x4d\xe2\x2d\xec\x7e\xc0\x00";
 
-    public static function toBase(string $bytes, array $map): string
+    public static function toBase(/*string */$bytes, array $map)/*: string*/
     {
+        $bytes = cast_to_string($bytes);
+
         $base = \strlen($alphabet = $map['']);
         $bytes = array_values(unpack(\PHP_INT_SIZE >= 8 ? 'n*' : 'C*', $bytes));
         $digits = '';
@@ -71,8 +73,10 @@ class BinaryUtil
         return $digits;
     }
 
-    public static function fromBase(string $digits, array $map): string
+    public static function fromBase(/*string */$digits, array $map)/*: string*/
     {
+        $digits = cast_to_string($digits);
+
         $base = \strlen($map['']);
         $count = \strlen($digits);
         $bytes = [];
@@ -104,8 +108,12 @@ class BinaryUtil
         return pack(\PHP_INT_SIZE >= 8 ? 'n*' : 'C*', ...array_reverse($bytes));
     }
 
-    public static function add(string $a, string $b): string
+    public static function add(/*string */$a, /*string */$b)/*: string*/
     {
+        $a = cast_to_string($a);
+
+        $b = cast_to_string($b);
+
         $carry = 0;
         for ($i = 7; 0 <= $i; --$i) {
             $carry += \ord($a[$i]) + \ord($b[$i]);
@@ -119,8 +127,10 @@ class BinaryUtil
     /**
      * @param string $time Count of 100-nanosecond intervals since the UUID epoch 1582-10-15 00:00:00 in hexadecimal
      */
-    public static function hexToDateTime(string $time): \DateTimeImmutable
+    public static function hexToDateTime(/*string */$time)/*: \DateTimeImmutable*/
     {
+        $time = cast_to_string($time);
+
         if (\PHP_INT_SIZE >= 8) {
             $time = (string) (hexdec($time) - self::TIME_OFFSET_INT);
         } else {
@@ -146,7 +156,7 @@ class BinaryUtil
     /**
      * @return string Count of 100-nanosecond intervals since the UUID epoch 1582-10-15 00:00:00 in hexadecimal
      */
-    public static function dateTimeToHex(\DateTimeInterface $time): string
+    public static function dateTimeToHex(\DateTimeInterface $time)/*: string*/
     {
         if (\PHP_INT_SIZE >= 8) {
             if (-self::TIME_OFFSET_INT > $time = (int) $time->format('Uu0')) {

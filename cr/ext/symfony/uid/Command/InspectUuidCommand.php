@@ -30,21 +30,22 @@ class InspectUuidCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure(): void
+    protected function configure()/*: void*/
     {
-        $this
-            ->setDefinition([
-                new InputArgument('uuid', InputArgument::REQUIRED, 'The UUID to inspect'),
-            ])
-            ->setDescription(self::$defaultDescription)
-            ->setHelp(<<<'EOF'
+        $helpText = <<<'EOF'
 The <info>%command.name%</info> displays information about a UUID.
 
     <info>php %command.full_name% a7613e0a-5986-11eb-a861-2bf05af69e52</info>
     <info>php %command.full_name% MfnmaUvvQ1h8B14vTwt6dX</info>
     <info>php %command.full_name% 57C4Z0MPC627NTGR9BY1DFD7JJ</info>
-EOF
-            )
+EOF;
+
+        $this
+            ->setDefinition([
+                new InputArgument('uuid', InputArgument::REQUIRED, 'The UUID to inspect'),
+            ])
+            ->setDescription(self::$defaultDescription)
+            ->setHelp($helpText)
         ;
     }
 

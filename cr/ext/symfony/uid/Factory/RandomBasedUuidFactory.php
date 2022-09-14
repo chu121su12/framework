@@ -17,12 +17,14 @@ class RandomBasedUuidFactory
 {
     private $class;
 
-    public function __construct(string $class)
+    public function __construct(/*string */$class)
     {
+        $class = cast_to_string($class);
+
         $this->class = $class;
     }
 
-    public function create(): UuidV4
+    public function create()/*: UuidV4*/
     {
         $class = $this->class;
 
