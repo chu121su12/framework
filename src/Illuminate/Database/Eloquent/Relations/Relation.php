@@ -395,9 +395,13 @@ abstract class Relation implements BuilderContract
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return void
      */
-    protected function whereInEager(string $whereIn, string $key, array $modelKeys, $query = null)
+    protected function whereInEager(/*string */$whereIn, /*string */$key, array $modelKeys, $query = null)
     {
-        ($query ?? $this->query)->{$whereIn}($key, $modelKeys);
+        $key = cast_to_string($key);
+
+        $whereIn = cast_to_string($whereIn);
+
+        with(isset($query) ? $query : $this->query)->{$whereIn}($key, $modelKeys);
 
         if ($modelKeys === []) {
             $this->eagerKeysWereEmpty = true;
