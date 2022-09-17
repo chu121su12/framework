@@ -31,10 +31,10 @@ use League\Flysystem\Patch\UnableToRetrieveMetadata;
 use League\Flysystem\Patch\UnableToSetVisibility;
 use League\Flysystem\Patch\UnableToWriteFile;
 use League\Flysystem\Patch\Visibility;
-use PHPUnit\Framework\Assert as PHPUnit;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Testing\Assert as PHPUnit;
 
 // use League\Flysystem\PathPrefixer;
 // use League\Flysystem\StorageAttributes;
