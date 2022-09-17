@@ -1980,6 +1980,7 @@ class TestResponseTest extends TestCase
 
 class JsonSerializableMixedResourcesStub implements JsonSerializable
 {
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()/*: array*/
     {
         return [
@@ -2014,6 +2015,7 @@ class JsonSerializableMixedResourcesStub implements JsonSerializable
 
 class JsonSerializableSingleResourceStub implements JsonSerializable
 {
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()/*: array*/
     {
         return [
@@ -2027,6 +2029,7 @@ class JsonSerializableSingleResourceStub implements JsonSerializable
 
 class JsonSerializableSingleResourceWithIntegersStub implements JsonSerializable
 {
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()/*: array*/
     {
         return [
