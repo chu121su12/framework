@@ -29,8 +29,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertDispatched()
     {
-        phpunit_assert_v5_skip_test($this);
-
         try {
             $this->fake->assertDispatched(BusJobStub::class);
             $this->fail();
@@ -54,8 +52,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertDispatchedAfterResponse()
     {
-        phpunit_assert_v5_skip_test($this);
-
         try {
             $this->fake->assertDispatchedAfterResponse(BusJobStub::class);
             $this->fail();
@@ -70,8 +66,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertDispatchedAfterResponseClosure()
     {
-        phpunit_assert_v5_skip_test($this);
-
         try {
             $this->fake->assertDispatchedAfterResponse(function (BusJobStub $job) {
                 return true;
@@ -84,8 +78,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertDispatchedSync()
     {
-        phpunit_assert_v5_skip_test($this);
-
         try {
             $this->fake->assertDispatchedSync(BusJobStub::class);
             $this->fail();
@@ -109,8 +101,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertDispatchedSyncClosure()
     {
-        phpunit_assert_v5_skip_test($this);
-
         try {
             $this->fake->assertDispatchedSync(function (BusJobStub $job) {
                 return true;
@@ -130,8 +120,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertDispatchedWithCallbackInt()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->dispatch(new BusJobStub);
         $this->fake->dispatchNow(new BusJobStub);
 
@@ -147,8 +135,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertDispatchedAfterResponseWithCallbackInt()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->dispatchAfterResponse(new BusJobStub);
         $this->fake->dispatchAfterResponse(new BusJobStub);
 
@@ -164,8 +150,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertDispatchedSyncWithCallbackInt()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->dispatchSync(new BusJobStub);
         $this->fake->dispatchSync(new BusJobStub);
 
@@ -181,8 +165,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertDispatchedWithCallbackFunction()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->dispatch(new OtherBusJobStub);
         $this->fake->dispatchNow(new OtherBusJobStub(1));
 
@@ -206,8 +188,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertDispatchedAfterResponseWithCallbackFunction()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->dispatchAfterResponse(new OtherBusJobStub);
         $this->fake->dispatchAfterResponse(new OtherBusJobStub(1));
 
@@ -231,8 +211,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertDispatchedSyncWithCallbackFunction()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->dispatchSync(new OtherBusJobStub);
         $this->fake->dispatchSync(new OtherBusJobStub(1));
 
@@ -256,8 +234,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertDispatchedTimes()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->dispatch(new BusJobStub);
         $this->fake->dispatchNow(new BusJobStub);
 
@@ -273,8 +249,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertDispatchedAfterResponseTimes()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->dispatchAfterResponse(new BusJobStub);
         $this->fake->dispatchAfterResponse(new BusJobStub);
 
@@ -290,8 +264,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertDispatchedSyncTimes()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->dispatchSync(new BusJobStub);
         $this->fake->dispatchSync(new BusJobStub);
 
@@ -307,8 +279,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertNotDispatched()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->assertNotDispatched(BusJobStub::class);
 
         $this->fake->dispatch(new BusJobStub);
@@ -324,8 +294,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertNotDispatchedWithClosure()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->dispatch(new BusJobStub);
         $this->fake->dispatchNow(new BusJobStub);
 
@@ -341,8 +309,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertNotDispatchedAfterResponse()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->assertNotDispatchedAfterResponse(BusJobStub::class);
 
         $this->fake->dispatchAfterResponse(new BusJobStub);
@@ -357,8 +323,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertNotDispatchedAfterResponseClosure()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->dispatchAfterResponse(new BusJobStub);
 
         try {
@@ -373,8 +337,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertNotDispatchedSync()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->assertNotDispatchedSync(BusJobStub::class);
 
         $this->fake->dispatchSync(new BusJobStub);
@@ -389,8 +351,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertNotDispatchedSyncClosure()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->dispatchSync(new BusJobStub);
 
         try {
@@ -405,8 +365,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertNothingDispatched()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->assertNothingDispatched();
 
         $this->fake->dispatch(new BusJobStub);
@@ -499,8 +457,6 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testAssertNothingBatched()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->assertNothingBatched();
 
         $this->fake->batch([])->dispatch();

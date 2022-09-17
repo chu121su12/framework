@@ -9,7 +9,7 @@ use Illuminate\Queue\CallQueuedClosure;
 use Illuminate\Queue\QueueManager;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\ReflectsClosures;
-use PHPUnit\Framework\Assert as PHPUnit;
+use Illuminate\Testing\Assert as PHPUnit;
 
 class QueueFake extends QueueManager implements Queue
 {

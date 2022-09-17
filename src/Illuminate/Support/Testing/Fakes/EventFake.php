@@ -7,7 +7,7 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ReflectsClosures;
-use PHPUnit\Framework\Assert as PHPUnit;
+use Illuminate\Testing\Assert as PHPUnit;
 use ReflectionFunction;
 
 class EventFake implements Dispatcher

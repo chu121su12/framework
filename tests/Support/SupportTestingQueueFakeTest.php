@@ -40,8 +40,6 @@ class SupportTestingQueueFakeTest extends TestCase
 
     public function testAssertPushed()
     {
-        phpunit_assert_v5_skip_test($this);
-
         try {
             $this->fake->assertPushed(JobStub::class);
             $this->fail();
@@ -106,8 +104,6 @@ class SupportTestingQueueFakeTest extends TestCase
 
     public function testAssertNotPushed()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->push($this->job);
 
         try {
@@ -120,8 +116,6 @@ class SupportTestingQueueFakeTest extends TestCase
 
     public function testAssertNotPushedWithClosure()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->assertNotPushed(JobStub::class);
 
         $this->fake->push($this->job);
@@ -138,8 +132,6 @@ class SupportTestingQueueFakeTest extends TestCase
 
     public function testAssertPushedOn()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->push($this->job, '', 'foo');
 
         try {
@@ -154,8 +146,6 @@ class SupportTestingQueueFakeTest extends TestCase
 
     public function testAssertPushedOnWithClosure()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->push($this->job, '', 'foo');
 
         try {
@@ -174,8 +164,6 @@ class SupportTestingQueueFakeTest extends TestCase
 
     public function testAssertPushedTimes()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->push($this->job);
         $this->fake->push($this->job);
 
@@ -191,8 +179,6 @@ class SupportTestingQueueFakeTest extends TestCase
 
     public function testAssertNothingPushed()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->assertNothingPushed();
 
         $this->fake->push($this->job);
@@ -263,8 +249,6 @@ class SupportTestingQueueFakeTest extends TestCase
 
     public function testAssertPushedWithChainUsingCallback()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->push(new JobWithChainAndParameterStub('first', [
             new JobStub,
             new JobStub,
@@ -295,8 +279,6 @@ class SupportTestingQueueFakeTest extends TestCase
 
     public function testAssertPushedWithChainErrorHandling()
     {
-        phpunit_assert_v5_skip_test($this);
-
         try {
             $this->fake->assertPushedWithChain(JobWithChainStub::class, []);
             $this->fail();

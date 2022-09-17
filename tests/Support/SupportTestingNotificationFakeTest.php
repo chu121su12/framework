@@ -41,8 +41,6 @@ class SupportTestingNotificationFakeTest extends TestCase
 
     public function testAssertSentTo()
     {
-        phpunit_assert_v5_skip_test($this);
-
         try {
             $this->fake->assertSentTo($this->user, NotificationStub::class);
             $this->fail();
@@ -82,8 +80,6 @@ class SupportTestingNotificationFakeTest extends TestCase
 
     public function testAssertNotSentTo()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->assertNotSentTo($this->user, NotificationStub::class);
 
         $this->fake->send($this->user, new NotificationStub);
@@ -98,8 +94,6 @@ class SupportTestingNotificationFakeTest extends TestCase
 
     public function testAssertNotSentToClosure()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->send($this->user, new NotificationStub);
 
         try {
@@ -114,8 +108,6 @@ class SupportTestingNotificationFakeTest extends TestCase
 
     public function testAssertNothingSent()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->assertNothingSent();
         $this->fake->send($this->user, new NotificationStub);
 
@@ -129,8 +121,6 @@ class SupportTestingNotificationFakeTest extends TestCase
 
     public function testAssertNothingSentTo()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->assertNothingSentTo($this->user);
         $this->fake->send($this->user, new NotificationStub);
 
@@ -215,8 +205,6 @@ class SupportTestingNotificationFakeTest extends TestCase
 
     public function testAssertSentToWhenNotifiableHasPreferredLocale()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $user = new LocalizedUserStub;
 
         $this->fake->send($user, new NotificationStub);
