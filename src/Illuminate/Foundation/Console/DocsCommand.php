@@ -236,7 +236,7 @@ class DocsCommand extends Command
         try {
             $strategyPath = Env::get('ARTISAN_DOCS_ASK_STRATEGY');
 
-            if (version_compare(PHP_VERSION, '7.0', '<')) {
+            if (version_compare(PHP_VERSION, '7.1', '<')) {
                 static::validateRequirePath($strategyPath);
             }
 

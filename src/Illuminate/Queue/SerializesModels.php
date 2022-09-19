@@ -73,7 +73,7 @@ trait SerializesModels
 
             $value = $this->getPropertyValue($property);
 
-            if ($property->hasDefaultValue() && $value === $property->getDefaultValue()) {
+            if (method_exists($property, 'hasDefaultValue') && $property->hasDefaultValue() && $value === $property->getDefaultValue()) {
                 continue;
             }
 

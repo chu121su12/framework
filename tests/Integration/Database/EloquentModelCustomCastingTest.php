@@ -60,6 +60,8 @@ class EloquentModelCustomCastingTest extends TestCase
 
     /**
      * Tests...
+     *
+     * @requires extension gmp
      */
     public function testSavingCastedAttributesToDatabase()
     {
@@ -97,6 +99,9 @@ class EloquentModelCustomCastingTest extends TestCase
         $this->assertInstanceOf(GMP::class, $model->amount);
     }
 
+    /**
+     * @requires extension gmp
+     */
     public function testInvalidArgumentExceptionOnInvalidValue()
     {
         /** @var \Illuminate\Tests\Integration\Database\CustomCasts $model */
@@ -115,6 +120,9 @@ class EloquentModelCustomCastingTest extends TestCase
         $this->assertSame('address_line_two_value', $model->address->lineTwo);
     }
 
+    /**
+     * @requires extension gmp
+     */
     public function testInvalidArgumentExceptionOnNull()
     {
         /** @var \Illuminate\Tests\Integration\Database\CustomCasts $model */
@@ -133,6 +141,9 @@ class EloquentModelCustomCastingTest extends TestCase
         $this->assertSame('address_line_two_value', $model->address->lineTwo);
     }
 
+    /**
+     * @requires extension gmp
+     */
     public function testModelsWithCustomCastsCanBeConvertedToArrays()
     {
         /** @var \Illuminate\Tests\Integration\Database\CustomCasts $model */

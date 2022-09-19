@@ -160,7 +160,11 @@ class Reflector
             return false;
         }
 
-        $backedEnumClass = (string) $parameter->getType();
+        if (! ($parameterType = $parameter->getType())) {
+            return false;
+        }
+
+        $backedEnumClass = backport_reflection_type_cast_string($parameterType);
 
         if (function_exists('enum_exists') && enum_exists($backedEnumClass)) {
             $reflectionBackedEnum = new ReflectionEnum($backedEnumClass);

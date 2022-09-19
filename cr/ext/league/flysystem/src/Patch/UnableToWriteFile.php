@@ -4,8 +4,8 @@
 
 namespace League\Flysystem\Patch;
 
-use League\Flysystem\FileExistsException;
+use RuntimeException;
 
-final class UnableToWriteFile extends FileExistsException
+final class UnableToWriteFile extends RuntimeException
 {
 }

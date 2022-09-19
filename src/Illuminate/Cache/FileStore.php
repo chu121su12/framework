@@ -269,18 +269,16 @@ class FileStore implements Store, LockProvider
             return $this->emptyPayload();
         }
 
-        try {
-            set_error_handler(function($errno, $errstr, $errfile, $errline ) {
-                throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
-            });
+        $_restore = backport_convert_error_to_error_exception();
 
+        try {
             $data = unserialize(substr($contents, 10));
         } catch (Exception $e) {
             $this->forget($key);
 
             return $this->emptyPayload();
         } finally {
-            restore_error_handler();
+            $_restore();
         }
 
         // Next, we'll extract the number of seconds that are remaining for a cache

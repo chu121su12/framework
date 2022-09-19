@@ -1,5 +1,7 @@
 <?php
 
+use desktopd\SHA3\Sponge as SHA3;
+
 if (! \function_exists('backport_instanceof_throwable')) {
     function backport_instanceof_throwable($any)
     {
@@ -350,5 +352,34 @@ if (! \function_exists('backport_function_call_able')) {
     function backport_function_call_able($closure)
     {
         return new BackportInternalFunctionCallAble($closure);
+    }
+}
+
+if (! \function_exists('backport_convert_error_to_error_exception')) {
+    function backport_convert_error_to_error_exception()
+    {
+        set_error_handler(function($errno, $errstr, $errfile, $errline ) {
+            throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
+        });
+
+        return function () {
+            restore_error_handler();
+        };
+    }
+}
+
+if (! \function_exists('backport_hash_file')) {
+    function backport_hash_file($algorithm, $path)
+    {
+        switch (strtolower($algorithm)) {
+            case 'sha3-256':
+                return with(SHA3::init(SHA3::SHA3_256), function ($sponge) use ($path) {
+                    $sponge->absorb(file_get_contents($path));
+                    return bin2hex($sponge->squeeze());
+                });
+
+            default:
+                return hash_file($algorithm, $path);
+        }
     }
 }

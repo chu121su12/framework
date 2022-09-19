@@ -190,6 +190,7 @@
             "Laravel\\Ui\\": "cr/patch/laravel-ui/src/",
 
             "Carbon\\": "cr/ext/nesbot/carbon/src/Carbon/",
+            "desktopd\\": "cr/patch/php-sha3-streamable/namespaced/desktopd/",
             "Doctrine\\": "cr/patch/doctrine/doctrine/",
             "Fruitcake\\Cors\\": "cr/ext/fruitcake/php-cors/src/",
             "Illuminate\\": "src/Illuminate/",

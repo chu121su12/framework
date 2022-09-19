@@ -429,6 +429,8 @@ class FilesystemAdapter implements CloudFilesystemContract
             return $this->putFile($path, $contents, $options);
         }
 
+        $_restore = backport_convert_error_to_error_exception();
+
         try {
             if ($contents instanceof StreamInterface) {
                 // $this->driver->writeStream($path, $contents->detach(), $options);
@@ -438,10 +440,6 @@ class FilesystemAdapter implements CloudFilesystemContract
                 return $this->driver->putStream($path, $contents->detach(), $options);
             }
 
-            set_error_handler(function($errno, $errstr, $errfile, $errline ) {
-                throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
-            });
-
             is_resource($contents)
                 ? $this->driver->writeStream($path, $contents, $options)
                 : $this->driver->write($path, $contents, $options);
@@ -450,7 +448,7 @@ class FilesystemAdapter implements CloudFilesystemContract
         } catch (\ErrorException $e) {
             $e = new UnableToWriteFile($e->getMessage(), $e->getCode(), $e);
         } finally {
-            restore_error_handler();
+            $_restore();
         }
 
         if (isset($e)) {

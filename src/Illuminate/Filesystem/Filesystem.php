@@ -174,7 +174,7 @@ class Filesystem
      */
     public function hash($path, $algorithm = 'md5')
     {
-        return hash_file($algorithm, $path);
+        return backport_hash_file($algorithm, $path);
     }
 
     /**

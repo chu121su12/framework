@@ -554,11 +554,9 @@ class Arr
     {
         $keys = array_keys($array);
 
-        try {
-            set_error_handler(function($errno, $errstr, $errfile, $errline ) {
-                throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
-            });
+        $_restore = backport_convert_error_to_error_exception();
 
+        try {
             $items = array_map($callback, $array, $keys);
         } catch (ArgumentCountError $e) {
             $items = array_map($callback, $array);
@@ -568,7 +566,7 @@ class Arr
             }
             $items = array_map($callback, $array);
         } finally {
-            restore_error_handler();
+            $_restore();
         }
 
         return array_combine($keys, $items);

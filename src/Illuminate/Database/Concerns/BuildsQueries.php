@@ -342,7 +342,7 @@ trait BuildsQueries
         $orders = $this->ensureOrderForCursorPagination(! is_null($cursor) && $cursor->pointsToPreviousItems());
 
         if (! is_null($cursor)) {
-            $addCursorConditions = function (self $builder, $previousColumn, $i) use (&$addCursorConditions, $cursor, $orders) {
+            $addCursorConditions = function (/*self */$builder, $previousColumn, $i) use (&$addCursorConditions, $cursor, $orders) {
                 $unionBuilders = isset($builder->unions) ? collect($builder->unions)->pluck('query') : collect();
 
                 if (! is_null($previousColumn)) {
@@ -365,7 +365,7 @@ trait BuildsQueries
                     });
                 }
 
-                $builder->where(function (self $builder) use ($addCursorConditions, $cursor, $orders, $i, $unionBuilders) {
+                $builder->where(function (/*self */$builder) use ($addCursorConditions, $cursor, $orders, $i, $unionBuilders) {
                     $column = $orders[$i]['column'];
                     $direction = $orders[$i]['direction'];
 
@@ -378,7 +378,7 @@ trait BuildsQueries
                     );
 
                     if ($i < $orders->count() - 1) {
-                        $builder->orWhere(function (self $builder) use ($addCursorConditions, $column, $i) {
+                        $builder->orWhere(function (/*self */$builder) use ($addCursorConditions, $column, $i) {
                             $addCursorConditions($builder, $column, $i + 1);
                         });
                     }
@@ -392,7 +392,7 @@ trait BuildsQueries
                             );
 
                             if ($i < $orders->count() - 1) {
-                                $unionBuilder->orWhere(function (self $builder) use ($addCursorConditions, $column, $i) {
+                                $unionBuilder->orWhere(function (/*self */$builder) use ($addCursorConditions, $column, $i) {
                                     $addCursorConditions($builder, $column, $i + 1);
                                 });
                             }
