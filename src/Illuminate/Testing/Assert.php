@@ -43,7 +43,7 @@ abstract class Assert extends PHPUnit
 
         $constraint = new ArraySubset($subset, $checkForIdentity);
 
-        PHPUnit::assertThat($array, $constraint, $msg);
+        static::assertThat($array, $constraint, $msg);
     }
 
     /**

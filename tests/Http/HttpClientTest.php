@@ -30,6 +30,7 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class HttpClientTest_testCanSendJsonSerializableData_class implements JsonSerializable
         {
+            #[\ReturnTypeWillChange]
             public function jsonSerialize()/*: mixed*/
             {
                 return [
@@ -41,6 +42,7 @@ class HttpClientTest_testCanSendJsonSerializableData_class implements JsonSerial
 
 class HttpClientTest_testPrefersJsonSerializableOverArrayableData_class implements JsonSerializable, Arrayable
         {
+            #[\ReturnTypeWillChange]
             public function jsonSerialize()/*: mixed*/
             {
                 return [

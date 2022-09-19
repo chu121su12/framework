@@ -31,8 +31,6 @@ class SupportTestingMailFakeTest extends TestCase
 
     public function testAssertSent()
     {
-        phpunit_assert_v5_skip_test($this);
-
         try {
             $this->fake->assertSent(MailableStub::class);
             $this->fail();
@@ -58,8 +56,6 @@ class SupportTestingMailFakeTest extends TestCase
 
     public function testAssertNotSent()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->assertNotSent(MailableStub::class);
 
         $this->fake->to('taylor@laravel.com')->send($this->mailable);
@@ -74,8 +70,6 @@ class SupportTestingMailFakeTest extends TestCase
 
     public function testAssertNotSentWithClosure()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $callback = function (MailableStub $mail) {
             return $mail->hasTo('taylor@laravel.com');
         };
@@ -92,8 +86,6 @@ class SupportTestingMailFakeTest extends TestCase
 
     public function testAssertSentTimes()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->to('taylor@laravel.com')->send($this->mailable);
         $this->fake->to('taylor@laravel.com')->send($this->mailable);
 
@@ -109,8 +101,6 @@ class SupportTestingMailFakeTest extends TestCase
 
     public function testAssertQueued()
     {
-        phpunit_assert_v5_skip_test($this);
-
         try {
             $this->fake->assertQueued(MailableStub::class);
             $this->fail();
@@ -125,8 +115,6 @@ class SupportTestingMailFakeTest extends TestCase
 
     public function testAssertQueuedTimes()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->to('taylor@laravel.com')->queue($this->mailable);
         $this->fake->to('taylor@laravel.com')->queue($this->mailable);
 
@@ -142,8 +130,6 @@ class SupportTestingMailFakeTest extends TestCase
 
     public function testSendQueuesAMailableThatShouldBeQueued()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->to('taylor@laravel.com')->send(new QueueableMailableStub);
 
         $this->fake->assertQueued(QueueableMailableStub::class);
@@ -158,8 +144,6 @@ class SupportTestingMailFakeTest extends TestCase
 
     public function testAssertNothingSent()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->assertNothingSent();
 
         $this->fake->to('taylor@laravel.com')->send($this->mailable);
@@ -174,8 +158,6 @@ class SupportTestingMailFakeTest extends TestCase
 
     public function testAssertNothingQueued()
     {
-        phpunit_assert_v5_skip_test($this);
-
         $this->fake->assertNothingQueued();
 
         $this->fake->to('taylor@laravel.com')->queue($this->mailable);

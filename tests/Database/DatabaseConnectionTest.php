@@ -83,6 +83,10 @@ class DatabaseConnectionTest extends TestCase
 
     public function testSelectProperlyCallsPDO()
     {
+        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
+            $this->markTestSkipped('Cannot mock method that needs #[\ReturnTypeWillChange].');
+        }
+
         $pdo = $this->getMockBuilder(DatabaseConnectionTestMockPDO::class)->onlyMethods(['prepare'])->getMock();
         $writePdo = $this->getMockBuilder(DatabaseConnectionTestMockPDO::class)->onlyMethods(['prepare'])->getMock();
         $writePdo->expects($this->never())->method('prepare');
@@ -131,6 +135,10 @@ class DatabaseConnectionTest extends TestCase
 
     public function testStatementProperlyCallsPDO()
     {
+        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
+            $this->markTestSkipped('Cannot mock method that needs #[\ReturnTypeWillChange].');
+        }
+
         $pdo = $this->getMockBuilder(DatabaseConnectionTestMockPDO::class)->onlyMethods(['prepare'])->getMock();
         $statement = $this->getMockBuilder('PDOStatement')->onlyMethods(['execute', 'bindValue'])->getMock();
         $statement->expects($this->once())->method('bindValue')->with(1, 'bar', 2);
@@ -148,6 +156,10 @@ class DatabaseConnectionTest extends TestCase
 
     public function testAffectingStatementProperlyCallsPDO()
     {
+        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
+            $this->markTestSkipped('Cannot mock method that needs #[\ReturnTypeWillChange].');
+        }
+
         $pdo = $this->getMockBuilder(DatabaseConnectionTestMockPDO::class)->onlyMethods(['prepare'])->getMock();
         $statement = $this->getMockBuilder('PDOStatement')->onlyMethods(['execute', 'rowCount', 'bindValue'])->getMock();
         $statement->expects($this->once())->method('bindValue')->with('foo', 'bar', 2);
@@ -272,6 +284,10 @@ class DatabaseConnectionTest extends TestCase
 
     public function testTransactionMethodRunsSuccessfully()
     {
+        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
+            $this->markTestSkipped('Cannot mock method that needs #[\ReturnTypeWillChange].');
+        }
+
         $pdo = $this->getMockBuilder(DatabaseConnectionTestMockPDO::class)->onlyMethods(['beginTransaction', 'commit'])->getMock();
         $mock = $this->getMockConnection([], $pdo);
         $pdo->expects($this->once())->method('beginTransaction');
@@ -284,6 +300,10 @@ class DatabaseConnectionTest extends TestCase
 
     public function testTransactionRetriesOnSerializationFailure()
     {
+        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
+            $this->markTestSkipped('Cannot mock method that needs #[\ReturnTypeWillChange].');
+        }
+
         $this->expectException(PDOException::class);
         $this->expectExceptionMessage('Serialization failure');
 
@@ -298,6 +318,10 @@ class DatabaseConnectionTest extends TestCase
 
     public function testTransactionMethodRetriesOnDeadlock()
     {
+        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
+            $this->markTestSkipped('Cannot mock method that needs #[\ReturnTypeWillChange].');
+        }
+
         $this->expectException(QueryException::class);
         $this->expectExceptionMessage('Deadlock found when trying to get lock (Connection: conn, SQL: )');
 
@@ -313,6 +337,10 @@ class DatabaseConnectionTest extends TestCase
 
     public function testTransactionMethodRollsbackAndThrows()
     {
+        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
+            $this->markTestSkipped('Cannot mock method that needs #[\ReturnTypeWillChange].');
+        }
+
         $pdo = $this->getMockBuilder(DatabaseConnectionTestMockPDO::class)->onlyMethods(['beginTransaction', 'commit', 'rollBack'])->getMock();
         $mock = $this->getMockConnection([], $pdo);
         $pdo->expects($this->once())->method('beginTransaction');
@@ -382,6 +410,10 @@ class DatabaseConnectionTest extends TestCase
 
     public function testRunMethodNeverRetriesIfWithinTransaction()
     {
+        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
+            $this->markTestSkipped('Cannot mock method that needs #[\ReturnTypeWillChange].');
+        }
+
         $this->expectException(QueryException::class);
         $this->expectExceptionMessage('(Connection: conn, SQL: ) (Connection: , SQL: )');
 

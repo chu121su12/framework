@@ -10,6 +10,7 @@ use Orchestra\Testbench\TestCase;
 
 class JsonResponseTest_testResponseWithInvalidJsonThrowsException_class implements JsonSerializable
             {
+                #[\ReturnTypeWillChange]
                 public function jsonSerialize()/*: string*/
                 {
                     return "\xB1\x31";
