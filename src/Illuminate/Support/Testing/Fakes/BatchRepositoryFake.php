@@ -4,11 +4,9 @@ namespace Illuminate\Support\Testing\Fakes;
 
 use Carbon\CarbonImmutable;
 use Closure;
-use Illuminate\Bus\Batch;
 use Illuminate\Bus\BatchRepository;
 use Illuminate\Bus\PendingBatch;
 use Illuminate\Bus\UpdatedBatchJobCounts;
-use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\Str;
 
 class BatchRepositoryFake implements BatchRepository
@@ -55,9 +53,7 @@ class BatchRepositoryFake implements BatchRepository
     {
         $id = (string) Str::orderedUuid();
 
-        $this->batches[$id] = new Batch(
-            new QueueFake(Facade::getFacadeApplication()),
-            $this,
+        $this->batches[$id] = new BatchFake(
             $id,
             $batch->name,
             count($batch->jobs),
@@ -147,7 +143,7 @@ class BatchRepositoryFake implements BatchRepository
         $batchId = cast_to_string($batchId);
 
         if (isset($this->batches[$batchId])) {
-            $this->batches[$batchId]->cancelledAt = now();
+            $this->batches[$batchId]->cancel();
         }
     }
 

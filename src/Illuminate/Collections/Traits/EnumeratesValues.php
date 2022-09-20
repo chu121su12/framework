@@ -1078,6 +1078,7 @@ trait EnumeratesValues
                 case '>=':  return $retrieved >= $value;
                 case '===': return $retrieved === $value;
                 case '!==': return $retrieved !== $value;
+                case '<=>': return $retrieved <=> $value;
             }
         };
     }

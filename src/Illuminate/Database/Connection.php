@@ -1155,7 +1155,7 @@ class Connection implements ConnectionInterface
     /**
      * Register a custom Doctrine mapping type.
      *
-     * @param  string  $class
+     * @param  Type|class-string<Type>  $class
      * @param  string  $name
      * @param  string  $type
      * @return void
@@ -1163,13 +1163,13 @@ class Connection implements ConnectionInterface
      * @throws \Doctrine\DBAL\DBALException
      * @throws \RuntimeException
      */
-    public function registerDoctrineType(/*string */$class, /*string */$name, /*string */$type)/*: void*/
+    public function registerDoctrineType(/*Type|string */$class, /*string */$name, /*string */$type)/*: void*/
     {
         $type = cast_to_string($type);
 
         $name = cast_to_string($name);
 
-        $class = cast_to_string($class);
+        // $class = cast_to_string($class);
 
         if (! $this->isDoctrineAvailable()) {
             throw new RuntimeException(
@@ -1178,7 +1178,8 @@ class Connection implements ConnectionInterface
         }
 
         if (! Type::hasType($name)) {
-            Type::addType($name, $class);
+            Type::getTypeRegistry()
+                ->register($name, is_string($class) ? new $class() : $class);
         }
 
         $this->doctrineTypeMappings[$name] = $type;

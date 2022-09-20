@@ -10,6 +10,7 @@ use Ramsey\Uuid\Codec\TimestampFirstCombCodec;
 use Ramsey\Uuid\Generator\CombGenerator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactory;
+use Symfony\Component\Uid\Ulid;
 use Traversable;
 use voku\helper\ASCII;
 
@@ -340,6 +341,18 @@ class Str
     }
 
     /**
+     * Wrap the string with the given strings.
+     *
+     * @param  string  $before
+     * @param  string|null  $after
+     * @return string
+     */
+    public static function wrap($value, $before, $after = null)
+    {
+        return $before.$value.($after ??= $before);
+    }
+
+    /**
      * Determine if a given string matches a given pattern.
      *
      * @param  string|iterable<string>  $pattern
@@ -435,6 +448,21 @@ class Str
         }
 
         return preg_match('/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/iD', $value) > 0;
+    }
+
+    /**
+     * Determine if a given string is a valid ULID.
+     *
+     * @param  string  $value
+     * @return bool
+     */
+    public static function isUlid($value)
+    {
+        if (! is_string($value)) {
+            return false;
+        }
+
+        return Ulid::isValid($value);
     }
 
     /**
@@ -1325,6 +1353,16 @@ class Str
     public static function createUuidsNormally()
     {
         static::$uuidFactory = null;
+    }
+
+    /**
+     * Generate a ULID.
+     *
+     * @return \Symfony\Component\Uid\Ulid
+     */
+    public static function ulid()
+    {
+        return new Ulid();
     }
 
     /**
