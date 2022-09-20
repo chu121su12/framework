@@ -12,6 +12,7 @@ use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\Patch\AwsS3V3Adapter as S3Adapter;
 use League\Flysystem\Patch\FtpAdapter;
 use League\Flysystem\Patch\LocalFilesystemAdapter as LocalAdapter;
+use League\Flysystem\Patch\PathPrefixedAdapter;
 use League\Flysystem\Patch\PortableVisibilityConverter;
 use League\Flysystem\Patch\ReadOnlyFilesystemAdapter;
 use League\Flysystem\Patch\SftpAdapter;
@@ -301,7 +302,7 @@ class FilesystemManager implements FactoryContract
 
         return $this->build(tap(
             $this->getConfig($config['disk']),
-            fn (&$parent) => $parent['prefix'] = $config['prefix']
+            function (&$parent) use ($config) { return $parent['prefix'] = $config['prefix']; }
         ));
     }
 
@@ -322,19 +323,17 @@ class FilesystemManager implements FactoryContract
             $adapter = new ReadOnlyFilesystemAdapter($adapter);
         }
 
-        // if (! empty($config['prefix'])) {
-        //     $adapter = new PathPrefixedAdapter($adapter, $config['prefix']);
-        // }
+        if (! empty($config['prefix'])) {
+            $adapter = new PathPrefixedAdapter($adapter, $config['prefix']);
+        }
 
-        // return new Flysystem($adapter, Arr::only($config, [
-        //     'directory_visibility',
-        //     'disable_asserts',
-        //     'temporary_url',
-        //     'url',
-        //     'visibility',
-        // ]));
-
-        $config = Arr::only($config, ['visibility', 'disable_asserts', 'url', 'temporary_url']);
+        $config = Arr::only($config, [
+            'directory_visibility',
+            'disable_asserts',
+            'temporary_url',
+            'url',
+            'visibility',
+        ]);
 
         return new Flysystem($adapter, count($config) > 0 ? $config : null);
     }

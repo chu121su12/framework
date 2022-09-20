@@ -3590,12 +3590,12 @@ SQL;
     public function testPrepareValueAndOperator()
     {
         $builder = $this->getBuilder();
-        [$value, $operator] = $builder->prepareValueAndOperator('>', '20');
+        list($value, $operator) = $builder->prepareValueAndOperator('>', '20');
         $this->assertSame('>', $value);
         $this->assertSame('20', $operator);
 
         $builder = $this->getBuilder();
-        [$value, $operator] = $builder->prepareValueAndOperator('>', '20', true);
+        list($value, $operator) = $builder->prepareValueAndOperator('>', '20', true);
         $this->assertSame('20', $value);
         $this->assertSame('=', $operator);
     }

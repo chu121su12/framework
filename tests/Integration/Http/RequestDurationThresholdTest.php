@@ -14,7 +14,7 @@ class RequestDurationThresholdTest extends TestCase
 {
     public function testItCanHandleExceedingRequestDuration()
     {
-        Route::get('test-route', fn () => 'ok');
+        Route::get('test-route', function () { return 'ok'; });
         $request = Request::create('http://localhost/test-route');
         $response = new Response();
         $called = false;
@@ -34,7 +34,7 @@ class RequestDurationThresholdTest extends TestCase
 
     public function testItDoesntCallWhenExactlyThresholdDuration()
     {
-        Route::get('test-route', fn () => 'ok');
+        Route::get('test-route', function () { return 'ok'; });
         $request = Request::create('http://localhost/test-route');
         $response = new Response();
         $called = false;
@@ -54,7 +54,7 @@ class RequestDurationThresholdTest extends TestCase
 
     public function testItProvidesRequestToHandler()
     {
-        Route::get('test-route', fn () => 'ok');
+        Route::get('test-route', function () { return 'ok'; });
         $request = Request::create('http://localhost/test-route');
         $response = new Response();
         $url = null;
@@ -74,7 +74,7 @@ class RequestDurationThresholdTest extends TestCase
 
     public function testItCanExceedThresholdWhenSpecifyingDurationAsMilliseconds()
     {
-        Route::get('test-route', fn () => 'ok');
+        Route::get('test-route', function () { return 'ok'; });
         $request = Request::create('http://localhost/test-route');
         $response = new Response();
         $called = false;
@@ -94,7 +94,7 @@ class RequestDurationThresholdTest extends TestCase
 
     public function testItCanStayUnderThresholdWhenSpecifyingDurationAsMilliseconds()
     {
-        Route::get('test-route', fn () => 'ok');
+        Route::get('test-route', function () { return 'ok'; });
         $request = Request::create('http://localhost/test-route');
         $response = new Response();
         $called = false;
@@ -114,7 +114,7 @@ class RequestDurationThresholdTest extends TestCase
 
     public function testItCanExceedThresholdWhenSpecifyingDurationAsDateTime()
     {
-        Route::get('test-route', fn () => 'ok');
+        Route::get('test-route', function () { return 'ok'; });
         $request = Request::create('http://localhost/test-route');
         $response = new Response();
         $called = false;
@@ -134,7 +134,7 @@ class RequestDurationThresholdTest extends TestCase
 
     public function testItCanStayUnderThresholdWhenSpecifyingDurationAsDateTime()
     {
-        Route::get('test-route', fn () => 'ok');
+        Route::get('test-route', function () { return 'ok'; });
         $request = Request::create('http://localhost/test-route');
         $response = new Response();
         $called = false;
@@ -155,7 +155,7 @@ class RequestDurationThresholdTest extends TestCase
     public function testItClearsStartTimeAfterHandlingRequest()
     {
         $kernel = $this->app[Kernel::class];
-        Route::get('test-route', fn () => 'ok');
+        Route::get('test-route', function () { return 'ok'; });
         $request = Request::create('http://localhost/test-route');
         $response = new Response();
 

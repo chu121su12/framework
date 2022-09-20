@@ -349,7 +349,9 @@ class Str
      */
     public static function wrap($value, $before, $after = null)
     {
-        return $before.$value.($after ??= $before);
+        $after = isset($after) ? $after : $before;
+
+        return $before.$value.($after);
     }
 
     /**

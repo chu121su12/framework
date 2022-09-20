@@ -749,14 +749,16 @@ trait ValidatesAttributes
 
         $validations = collect($parameters)
             ->unique()
-            ->map(fn ($validation) => match (true) {
-                $validation === 'strict' => new NoRFCWarningsValidation(),
-                $validation === 'dns' => new DNSCheckValidation(),
-                $validation === 'spoof' => new SpoofCheckValidation(),
-                $validation === 'filter' => new FilterEmailValidation(),
-                $validation === 'filter_unicode' => FilterEmailValidation::unicode(),
-                is_string($validation) && class_exists($validation) => $this->container->make($validation),
-                default => new RFCValidation(),
+            ->map(function ($validation) {
+                switch (true) {
+                    case $validation === 'strict': return new NoRFCWarningsValidation();
+                    case $validation === 'dns': return new DNSCheckValidation();
+                    case $validation === 'spoof': return new SpoofCheckValidation();
+                    case $validation === 'filter': return new FilterEmailValidation();
+                    case $validation === 'filter_unicode': return FilterEmailValidation::unicode();
+                    case is_string($validation) && class_exists($validation): return $this->container->make($validation);
+                    default: return new RFCValidation();
+                }
             })
             ->values()
             ->all() ?: [new RFCValidation];

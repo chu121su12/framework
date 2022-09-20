@@ -151,7 +151,12 @@ class MigrateCommand extends BaseCommand
                 }
 
                 return false;
-            } catch (Throwable) {
+            } catch (\Exception $exception) {
+            } catch (\ErrorException $exception) {
+            } catch (Throwable $exception) {
+            }
+
+            if (isset($exception)) {
                 return false;
             }
         });

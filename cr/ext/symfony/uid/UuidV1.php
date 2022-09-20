@@ -24,7 +24,7 @@ class UuidV1 extends Uuid
 
     public function __construct(/*string */$uuid = null)
     {
-        $uuid = cast_to_string($uuid);
+        $uuid = cast_to_string($uuid, null);
 
         if (null === $uuid) {
             $this->uid = uuid_create(static::TYPE);

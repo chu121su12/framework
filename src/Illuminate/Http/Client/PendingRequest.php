@@ -1021,7 +1021,7 @@ class PendingRequest
      */
     public function buildClient()
     {
-        return $this->client ?? $this->createClient($this->buildHandlerStack());
+        return isset($this->client) ? $this->client : $this->createClient($this->buildHandlerStack());
     }
 
     /**

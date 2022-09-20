@@ -547,7 +547,7 @@ HTML;
      */
     public function manifestHash($buildDirectory = null)
     {
-        $buildDirectory ??= $this->buildDirectory;
+        $buildDirectory = isset($buildDirectory) ? $buildDirectory : $this->buildDirectory;
 
         if ($this->isRunningHot()) {
             return null;

@@ -174,8 +174,11 @@ class Kernel implements KernelContract
     {
         $this->app->terminate();
 
-        foreach ($this->commandLifecycleDurationHandlers as ['threshold' => $threshold, 'handler' => $handler]) {
-            $end ??= Carbon::now();
+        foreach ($this->commandLifecycleDurationHandlers as $loop) {
+            $threshold = $loop['threshold'];
+            $handler = $loop['handler'];
+
+            $end = isset($end) ? $end : Carbon::now();
 
             if ($this->commandStartedAt->diffInMilliseconds($end) > $threshold) {
                 $handler($this->commandStartedAt, $input, $status);

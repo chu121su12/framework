@@ -27,7 +27,7 @@ class Ulid extends AbstractUid
 
     public function __construct(/*string */$ulid = null)
     {
-        $ulid = cast_to_string($ulid);
+        $ulid = cast_to_string($ulid, null);
 
         if (null === $ulid) {
             $this->uid = static::generate();
@@ -164,7 +164,7 @@ class Ulid extends AbstractUid
 
     private static function doGenerate(/*string */$mtime = null)/*: string*/
     {
-        $mtime = cast_to_string($mtime);
+        $mtime = cast_to_string($mtime, null);
 
         if (null === $time = $mtime) {
             $time = microtime(false);

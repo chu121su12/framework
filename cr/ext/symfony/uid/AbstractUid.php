@@ -24,7 +24,10 @@ abstract class AbstractUid implements \JsonSerializable
     /**
      * Whether the passed value is valid for the constructor of the current class.
      */
-    abstract public static function isValid(/*string */$uid)/*: bool*/;
+    /*abstract */public static function isValid(/*string */$uid)/*: bool*//*;*/
+    {
+        throw new \ErrorException(backport_abstract_error_message(self::class, __METHOD__));
+    }
 
     /**
      * Creates an AbstractUid from an identifier represented in any of the supported formats.
@@ -33,7 +36,10 @@ abstract class AbstractUid implements \JsonSerializable
      *
      * @throws \InvalidArgumentException When the passed value is not valid
      */
-    abstract public static function fromString(/*string */$uid)/*: self*/;
+    /*abstract */public static function fromString(/*string */$uid)/*: self*//*;*/
+    {
+        throw new \ErrorException(backport_abstract_error_message(self::class, __METHOD__));
+    }
 
     /**
      * @return static

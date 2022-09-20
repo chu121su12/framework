@@ -383,3 +383,15 @@ if (! \function_exists('backport_hash_file')) {
         }
     }
 }
+
+if (! \function_exists('backport_abstract_error_message')) {
+    function backport_abstract_error_message($class, $method)
+    {
+        return \sprintf(
+            'Class %s contains abstract method %s and must therefore be declared abstract or implement the remaining methods',
+            $class,
+            $method
+        );
+    }
+}
+

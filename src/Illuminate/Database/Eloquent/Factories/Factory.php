@@ -139,7 +139,7 @@ abstract class Factory
                                 /*?*/Collection $afterMaking = null,
                                 /*?*/Collection $afterCreating = null,
                                 $connection = null,
-                                ?Collection $recycle = null)
+                                /*?*/Collection $recycle = null)
     {
         $this->count = $count;
         $this->states = isset($states) ? $states : new Collection;
@@ -148,7 +148,7 @@ abstract class Factory
         $this->afterMaking = isset($afterMaking) ? $afterMaking : new Collection;
         $this->afterCreating = isset($afterCreating) ? $afterCreating : new Collection;
         $this->connection = $connection;
-        $this->recycle = $recycle ?? new Collection;
+        $this->recycle = isset($recycle) ? $recycle : new Collection;
         $this->faker = $this->withFaker();
     }
 
@@ -639,7 +639,7 @@ abstract class Factory
         return $this->newInstance([
             'recycle' => $this->recycle->merge(
                 Collection::wrap($model instanceof Model ? func_get_args() : $model)
-                    ->keyBy(fn ($model) => get_class($model))
+                    ->keyBy(function ($model) { return get_class($model); })
             ),
         ]);
     }

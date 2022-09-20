@@ -280,8 +280,10 @@ abstract class TestCase extends BaseTestCase
      * @param  \Throwable  $exception
      * @return void
      */
-    protected function onNotSuccessfulTest(Throwable $exception): void
+    protected function onNotSuccessfulTest(/*Throwable */$exception)/*: void*/
     {
+        backport_type_throwable($exception);
+
         if (! $exception instanceof ExpectationFailedException || is_null($this->latestResponse)) {
             parent::onNotSuccessfulTest($exception);
         }
@@ -328,15 +330,15 @@ abstract class TestCase extends BaseTestCase
 
         $exceptionToAppend = (string) $exceptionToAppend;
 
-        $message = <<<"EOF"
-            The following exception occurred during the last request:
+        $message = <<<'EOF'
+The following exception occurred during the last request:
 
-            $exceptionToAppend
+$exceptionToAppend
 
-            ----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 
-            $exceptionMessage
-            EOF;
+$exceptionMessage
+EOF;
 
         return $this->appendMessageToException($message, $exception);
     }
@@ -360,11 +362,11 @@ abstract class TestCase extends BaseTestCase
             return $exception;
         }
 
-        $message = <<<"EOF"
-            The following errors occurred during the last request:
+        $message = <<<'EOF'
+The following errors occurred during the last request:
 
-            $errors
-            EOF;
+$errors
+EOF;
 
         return $this->appendMessageToException($message, $exception);
     }

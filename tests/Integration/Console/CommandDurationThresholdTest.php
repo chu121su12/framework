@@ -14,7 +14,7 @@ class CommandDurationThresholdTest extends TestCase
     public function testItCanHandleExceedingCommandDuration()
     {
         $kernel = $this->app[Kernel::class];
-        $kernel->command('foo', fn () => null);
+        $kernel->command('foo', function () { return null; });
         $input = new StringInput('foo');
         $called = false;
         $kernel->whenCommandLifecycleIsLongerThan(CarbonInterval::seconds(1), function () use (&$called) {
@@ -35,7 +35,7 @@ class CommandDurationThresholdTest extends TestCase
     public function testItDoesntCallWhenExactlyThresholdDuration()
     {
         $kernel = $this->app[Kernel::class];
-        $kernel->command('foo', fn () => null);
+        $kernel->command('foo', function () { return null; });
         $input = new StringInput('foo');
         $called = false;
         $kernel->whenCommandLifecycleIsLongerThan(CarbonInterval::seconds(1), function () use (&$called) {
@@ -56,7 +56,7 @@ class CommandDurationThresholdTest extends TestCase
     public function testItProvidesArgsToHandler()
     {
         $kernel = $this->app[Kernel::class];
-        $kernel->command('foo', fn () => null);
+        $kernel->command('foo', function () { return null; });
         $input = new StringInput('foo');
         $args = null;
         $kernel->whenCommandLifecycleIsLongerThan(CarbonInterval::seconds(0), function () use (&$args) {
@@ -77,7 +77,7 @@ class CommandDurationThresholdTest extends TestCase
     public function testItCanExceedThresholdWhenSpecifyingDurationAsMilliseconds()
     {
         $kernel = $this->app[Kernel::class];
-        $kernel->command('foo', fn () => null);
+        $kernel->command('foo', function () { return null; });
         $input = new StringInput('foo');
         $called = false;
         $kernel->whenCommandLifecycleIsLongerThan(1000, function () use (&$called) {
@@ -98,7 +98,7 @@ class CommandDurationThresholdTest extends TestCase
     public function testItCanStayUnderThresholdWhenSpecifyingDurationAsMilliseconds()
     {
         $kernel = $this->app[Kernel::class];
-        $kernel->command('foo', fn () => null);
+        $kernel->command('foo', function () { return null; });
         $input = new StringInput('foo');
         $called = false;
         $kernel->whenCommandLifecycleIsLongerThan(1000, function () use (&$called) {
@@ -120,7 +120,7 @@ class CommandDurationThresholdTest extends TestCase
     {
         Carbon::setTestNow(Carbon::now());
         $kernel = $this->app[Kernel::class];
-        $kernel->command('foo', fn () => null);
+        $kernel->command('foo', function () { return null; });
         $input = new StringInput('foo');
         $called = false;
         $kernel->whenCommandLifecycleIsLongerThan(Carbon::now()->addSecond()->addMillisecond(), function () use (&$called) {
@@ -141,7 +141,7 @@ class CommandDurationThresholdTest extends TestCase
     {
         Carbon::setTestNow(Carbon::now());
         $kernel = $this->app[Kernel::class];
-        $kernel->command('foo', fn () => null);
+        $kernel->command('foo', function () { return null; });
         $input = new StringInput('foo');
         $called = false;
         $kernel->whenCommandLifecycleIsLongerThan(Carbon::now()->addSecond()->addMillisecond(), function () use (&$called) {
@@ -161,7 +161,7 @@ class CommandDurationThresholdTest extends TestCase
     public function testItClearsStartTimeAfterHandlingCommand()
     {
         $kernel = $this->app[Kernel::class];
-        $kernel->command('foo', fn () => null);
+        $kernel->command('foo', function () { return null; });
         $input = new StringInput('foo');
 
         $this->assertNull($kernel->commandStartedAt());

@@ -660,8 +660,8 @@ class DatabaseEloquentFactoryTest extends TestCase
             return $model.'Factory';
         });
 
-        $user = FactoryTestUserFactory::new()->create();
-        $post = FactoryTestPostFactory::new()
+        $user = FactoryTestUserFactory::new_()->create();
+        $post = FactoryTestPostFactory::new_()
             ->recycle($user)
             ->hasComments(2)
             ->create();
@@ -777,7 +777,7 @@ class FactoryTestCommentFactory extends Factory
         return [
             'commentable_id' => FactoryTestPostFactory::new_(),
             'commentable_type' => FactoryTestPost::class,
-            'user_id' => FactoryTestUserFactory::new(),
+            'user_id' => FactoryTestUserFactory::new_(),
             'body' => $this->faker->name,
         ];
     }

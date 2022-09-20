@@ -1078,7 +1078,7 @@ trait EnumeratesValues
                 case '>=':  return $retrieved >= $value;
                 case '===': return $retrieved === $value;
                 case '!==': return $retrieved !== $value;
-                case '<=>': return $retrieved <=> $value;
+                case '<=>': return backport_spaceship_operator($retrieved, $value);
             }
         };
     }

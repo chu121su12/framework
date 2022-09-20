@@ -137,7 +137,14 @@ trait Difference
         }
         // @codeCoverageIgnoreEnd
 
-        return parent::diff($other, (bool) $absolute);
+        $diffResult = parent::diff($other, (bool) $absolute);
+
+        if (! property_exists($diffResult, 'f')) {
+            $f = $other->format('u') - $this->format('u');
+            $diffResult->f = $absolute ? abs($f) : $f;
+        }
+
+        return $diffResult;
     }
 
     /**

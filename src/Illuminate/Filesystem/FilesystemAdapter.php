@@ -20,6 +20,7 @@ use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface as FilesystemOperator;
 use League\Flysystem\Local\LocalFilesystemAdapter as LocalAdapter;
 use League\Flysystem\Patch\FtpAdapter;
+use League\Flysystem\Patch\PathPrefixer;
 use League\Flysystem\Patch\SftpAdapter;
 use League\Flysystem\Patch\UnableToCopyFile;
 use League\Flysystem\Patch\UnableToCreateDirectory;
@@ -36,7 +37,6 @@ use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Testing\Assert as PHPUnit;
 
-// use League\Flysystem\PathPrefixer;
 // use League\Flysystem\StorageAttributes;
 
 /**
@@ -165,18 +165,13 @@ class FilesystemAdapter implements CloudFilesystemContract
         $this->driver = $driver;
         $this->adapter = $adapter;
         $this->config = $config;
-        $separator = $config['directory_separator'] ?? DIRECTORY_SEPARATOR;
+        $separator = isset($config['directory_separator']) ? $config['directory_separator'] : DIRECTORY_SEPARATOR;
 
-        // $this->prefixer = new PathPrefixer(
-        //     $config['root'] ?? '', $config['directory_separator'] ?? DIRECTORY_SEPARATOR
-        // );
+        $this->prefixer = new PathPrefixer(isset($config['root']) ? $config['root'] : '', $separator);
 
-        // merge 2022-09-20
-        // $this->prefixer = new PathPrefixer($config['root'] ?? '', $separator);
-
-        // if (isset($config['prefix'])) {
-        //     $this->prefixer = new PathPrefixer($this->prefixer->prefixPath($config['prefix']), $separator);
-        // }
+        if (isset($config['prefix'])) {
+            $this->prefixer = new PathPrefixer($this->prefixer->prefixPath($config['prefix']), $separator);
+        }
     }
 
     /**
@@ -324,8 +319,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function path($path)
     {
-        // return $this->prefixer->prefixPath($path);
-        return $this->adapter->getPathPrefix().$path;
+        return $this->prefixer->prefixPath($path);
     }
 
     /**

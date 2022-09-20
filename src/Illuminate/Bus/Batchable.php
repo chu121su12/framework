@@ -78,17 +78,23 @@ trait Batchable
      * @param  array  $options
      * @return array{0: $this, 1: \Illuminate\Support\Testing\BatchFake}
      */
-    public function withFakeBatch(string $id = '',
-                                  string $name = '',
-                                  int $totalJobs = 0,
-                                  int $pendingJobs = 0,
-                                  int $failedJobs = 0,
+    public function withFakeBatch(/*string */$id = '',
+                                  /*string */$name = '',
+                                  /*int */$totalJobs = 0,
+                                  /*int */$pendingJobs = 0,
+                                  /*int */$failedJobs = 0,
                                   array $failedJobIds = [],
                                   array $options = [],
                                   CarbonImmutable $createdAt = null,
-                                  ?CarbonImmutable $cancelledAt = null,
-                                  ?CarbonImmutable $finishedAt = null)
+                                  /*?*/CarbonImmutable $cancelledAt = null,
+                                  /*?*/CarbonImmutable $finishedAt = null)
     {
+        $id = cast_to_string($id);
+        $name = cast_to_string($name);
+        $totalJobs = cast_to_int($totalJobs);
+        $pendingJobs = cast_to_int($pendingJobs);
+        $failedJobs = cast_to_int($failedJobs);
+
         $this->fakeBatch = new BatchFake(
             empty($id) ? (string) Str::uuid() : $id,
             $name,
@@ -97,9 +103,9 @@ trait Batchable
             $failedJobs,
             $failedJobIds,
             $options,
-            $createdAt ?? CarbonImmutable::now(),
+            isset($createdAt) ? $createdAt : CarbonImmutable::now(),
             $cancelledAt,
-            $finishedAt,
+            $finishedAt
         );
 
         return [$this, $this->fakeBatch];

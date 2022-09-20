@@ -1178,8 +1178,12 @@ class Connection implements ConnectionInterface
         }
 
         if (! Type::hasType($name)) {
-            Type::getTypeRegistry()
-                ->register($name, is_string($class) ? new $class() : $class);
+            if (method_exists(Type::class, 'getTypeRegistry')) {
+                Type::getTypeRegistry()
+                    ->register($name, is_string($class) ? new $class() : $class);
+            } else {
+               Type::addType($name, is_string($class) ? $class : get_class($class));
+            }
         }
 
         $this->doctrineTypeMappings[$name] = $type;

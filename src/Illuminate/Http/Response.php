@@ -6,6 +6,7 @@ use ArrayObject;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 use JsonSerializable;
@@ -71,6 +72,8 @@ class Response extends SymfonyResponse
             $content = $content->render();
         }
 
+        $content = $this->patchShouldBeJson($content);
+
         parent::setContent($content);
 
         return $this;
@@ -106,5 +109,22 @@ class Response extends SymfonyResponse
         }
 
         return json_encode($content);
+    }
+
+    protected function patchShouldBeJson($content)
+    {
+        if ($this->headers->has('content-type') && Str::contains($this->headers->get('content-type'), ['/json', '+json'])) {
+            // if ($content === null) {
+            //     return "null";
+            // }
+            if ($content === false) {
+                return "false";
+            }
+            // if ($content === true) {
+            //     return "true";
+            // }
+        }
+
+        return $content;
     }
 }

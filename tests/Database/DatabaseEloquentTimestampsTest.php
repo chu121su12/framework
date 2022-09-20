@@ -157,7 +157,7 @@ class DatabaseEloquentTimestampsTest extends TestCase
                 throw new RuntimeException();
             });
             $this->fail();
-        } catch (RuntimeException) {
+        } catch (RuntimeException $e) {
             //
         }
 

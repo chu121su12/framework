@@ -37,17 +37,23 @@ class BatchFake extends Batch
      * @param  \Carbon\CarbonImmutable|null  $finishedAt
      * @return void
      */
-    public function __construct(string $id,
-                                string $name,
-                                int $totalJobs,
-                                int $pendingJobs,
-                                int $failedJobs,
+    public function __construct(/*string */$id,
+                                /*string */$name,
+                                /*int */$totalJobs,
+                                /*int */$pendingJobs,
+                                /*int */$failedJobs,
                                 array $failedJobIds,
                                 array $options,
                                 CarbonImmutable $createdAt,
-                                ?CarbonImmutable $cancelledAt = null,
-                                ?CarbonImmutable $finishedAt = null)
+                                /*?*/CarbonImmutable $cancelledAt = null,
+                                /*?*/CarbonImmutable $finishedAt = null)
     {
+        $id = cast_to_string($id);
+        $name = cast_to_string($name);
+        $totalJobs = cast_to_int($totalJobs);
+        $pendingJobs = cast_to_int($pendingJobs);
+        $failedJobs = cast_to_int($failedJobs);
+
         $this->id = $id;
         $this->name = $name;
         $this->totalJobs = $totalJobs;
@@ -89,8 +95,10 @@ class BatchFake extends Batch
      * @param  string  $jobId
      * @return void
      */
-    public function recordSuccessfulJob(string $jobId)
+    public function recordSuccessfulJob(/*string */$jobId)
     {
+        $jobId = cast_to_string($jobId);
+
         //
     }
 
@@ -100,8 +108,10 @@ class BatchFake extends Batch
      * @param  string  $jobId
      * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
-    public function decrementPendingJobs(string $jobId)
+    public function decrementPendingJobs(/*string */$jobId)
     {
+        $jobId = cast_to_string($jobId);
+
         //
     }
 
@@ -112,8 +122,10 @@ class BatchFake extends Batch
      * @param  \Throwable  $e
      * @return void
      */
-    public function recordFailedJob(string $jobId, $e)
+    public function recordFailedJob(/*string */$jobId, $e)
     {
+        $jobId = cast_to_string($jobId);
+
         //
     }
 
@@ -123,8 +135,10 @@ class BatchFake extends Batch
      * @param  string  $jobId
      * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
-    public function incrementFailedJobs(string $jobId)
+    public function incrementFailedJobs(/*string */$jobId)
     {
+        $jobId = cast_to_string($jobId);
+
         return new UpdatedBatchJobCounts;
     }
 

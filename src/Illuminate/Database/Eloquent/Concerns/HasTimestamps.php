@@ -120,7 +120,7 @@ trait HasTimestamps
      */
     public function usesTimestamps()
     {
-        return $this->timestamps && ! static::isIgnoringTimestamps($this::class);
+        return $this->timestamps && ! static::isIgnoringTimestamps(get_class($this));
     }
 
     /**
@@ -200,7 +200,7 @@ trait HasTimestamps
      */
     public static function isIgnoringTimestamps($class = null)
     {
-        $class ??= static::class;
+        $class = isset($class) ? $class : static::class;
 
         foreach (static::$ignoreTimestampsOn as $ignoredClass) {
             if ($class === $ignoredClass || is_subclass_of($class, $ignoredClass)) {
