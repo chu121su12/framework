@@ -1248,7 +1248,7 @@ class Str
     {
         return static::$uuidFactory
                     ? call_user_func(static::$uuidFactory)
-                    : UUID7::make();
+                    : Uuid7::make();
     }
 
     /**
