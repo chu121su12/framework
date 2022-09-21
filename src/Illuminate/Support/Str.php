@@ -3,12 +3,10 @@
 namespace Illuminate\Support;
 
 use Closure;
+use CR\Extra\Uuid7;
 use Illuminate\Support\Traits\Macroable;
 use JsonException;
 use League\CommonMark\CommonMarkConverter as GithubFlavoredMarkdownConverter;
-use Ramsey\Uuid\Codec\TimestampFirstCombCodec;
-use Ramsey\Uuid\Generator\CombGenerator;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\Uid\Ulid;
 use Traversable;
 use voku\helper\ASCII;
@@ -1250,7 +1248,7 @@ class Str
     {
         return static::$uuidFactory
                     ? call_user_func(static::$uuidFactory)
-                    : Uuid::uuid7();
+                    : UUID7::make();
     }
 
     /**

@@ -183,6 +183,8 @@
             "src/Illuminate/Support/helpers.php"
         ],
         "psr-4": {
+            "CR\\Extra\\": "cr/cr/",
+
             "Illuminate\\Foundation\\Auth\\": "cr/patch/laravel-ui/auth-backend/",
             "Inertia\\": "cr/ext/inertiajs/inertia-laravel/src",
             "Laravel\\Breeze\\": "cr/ext/laravel/breeze/src/",
