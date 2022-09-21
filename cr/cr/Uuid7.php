@@ -72,11 +72,11 @@ class Uuid7
     private static function calculateHexTime64Bit($seconds, $microseconds)
     {
         // Convert the seconds into milliseconds.
-        $sec = $seconds * $ms;
+        $sec = $seconds * self::MILLISECONDS;
 
         // Convert the microseconds into milliseconds; the scale is zero because
         // we need to discard the fractional part.
-        $usec = (int) ($microseconds / $ms);
+        $usec = (int) ($microseconds / self::MILLISECONDS);
 
         $unixTime = $sec + $usec;
 
