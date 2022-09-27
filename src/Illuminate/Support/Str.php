@@ -7,6 +7,7 @@ use CR\Extra\Uuid7;
 use Illuminate\Support\Traits\Macroable;
 use JsonException;
 use League\CommonMark\CommonMarkConverter as GithubFlavoredMarkdownConverter;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Uid\Ulid;
 use Traversable;
 use voku\helper\ASCII;
