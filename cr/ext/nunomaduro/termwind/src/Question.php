@@ -51,7 +51,7 @@ final class Question
      */
     public function ask(/*string */$question)/*: mixed*/
     {
-        $question = cast_to_string($question);
+        $question = backport_type_check('string', $question);
 
         $html = (new HtmlRenderer)->parse($question)->toString();
 

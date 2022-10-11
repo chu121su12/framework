@@ -35,21 +35,21 @@ class RequestContext
 
     public function __construct($baseUrl = '', $method = 'GET', $host = 'localhost', $scheme = 'http', $httpPort = 80, $httpsPort = 443, $path = '/', $queryString = '')
     {
-        $queryString = cast_to_string($queryString);
+        $queryString = backport_type_check('string', $queryString);
 
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
-        $httpsPort = cast_to_int($httpsPort);
+        $httpsPort = backport_type_check('int', $httpsPort);
 
-        $httpPort = cast_to_int($httpPort);
+        $httpPort = backport_type_check('int', $httpPort);
 
-        $scheme = cast_to_string($scheme);
+        $scheme = backport_type_check('string', $scheme);
 
-        $host = cast_to_string($host);
+        $host = backport_type_check('string', $host);
 
-        $method = cast_to_string($method);
+        $method = backport_type_check('string', $method);
 
-        $baseUrl = cast_to_string($baseUrl);
+        $baseUrl = backport_type_check('string', $baseUrl);
 
         $this->setBaseUrl($baseUrl);
         $this->setMethod($method);
@@ -63,15 +63,15 @@ class RequestContext
 
     public static function fromUri($uri, $host = 'localhost', $scheme = 'http', $httpPort = 80, $httpsPort = 443) /// self
     {
-        $uri = cast_to_string($uri);
+        $uri = backport_type_check('string', $uri);
 
-        $httpsPort = cast_to_int($httpsPort);
+        $httpsPort = backport_type_check('int', $httpsPort);
 
-        $httpPort = cast_to_int($httpPort);
+        $httpPort = backport_type_check('int', $httpPort);
 
-        $scheme = cast_to_string($scheme);
+        $scheme = backport_type_check('string', $scheme);
 
-        $host = cast_to_string($host);
+        $host = backport_type_check('string', $host);
 
         $uri = parse_url($uri);
         $scheme = isset($uri['scheme']) ? $uri['scheme'] : $scheme;
@@ -124,7 +124,7 @@ class RequestContext
      */
     public function setBaseUrl($baseUrl)
     {
-        $baseUrl = cast_to_string($baseUrl);
+        $baseUrl = backport_type_check('string', $baseUrl);
 
         $this->baseUrl = $baseUrl;
 
@@ -148,7 +148,7 @@ class RequestContext
      */
     public function setPathInfo($pathInfo)
     {
-        $pathInfo = cast_to_string($pathInfo);
+        $pathInfo = backport_type_check('string', $pathInfo);
 
         $this->pathInfo = $pathInfo;
 
@@ -174,7 +174,7 @@ class RequestContext
      */
     public function setMethod($method)
     {
-        $method = cast_to_string($method);
+        $method = backport_type_check('string', $method);
 
         $this->method = strtoupper($method);
 
@@ -200,7 +200,7 @@ class RequestContext
      */
     public function setHost($host)
     {
-        $host = cast_to_string($host);
+        $host = backport_type_check('string', $host);
 
         $this->host = strtolower($host);
 
@@ -224,7 +224,7 @@ class RequestContext
      */
     public function setScheme($scheme)
     {
-        $scheme = cast_to_string($scheme);
+        $scheme = backport_type_check('string', $scheme);
 
         $this->scheme = strtolower($scheme);
 
@@ -248,7 +248,7 @@ class RequestContext
      */
     public function setHttpPort($httpPort)
     {
-        $httpPort = cast_to_int($httpPort);
+        $httpPort = backport_type_check('int', $httpPort);
 
         $this->httpPort = $httpPort;
 
@@ -272,7 +272,7 @@ class RequestContext
      */
     public function setHttpsPort($httpsPort)
     {
-        $httpsPort = cast_to_int($httpsPort);
+        $httpsPort = backport_type_check('int', $httpsPort);
 
         $this->httpsPort = $httpsPort;
 
@@ -296,7 +296,7 @@ class RequestContext
      */
     public function setQueryString($queryString = null)
     {
-        $queryString = cast_to_string($queryString, null);
+        $queryString = backport_type_check('?string', $queryString);
 
         // string cast to be fault-tolerant, accepting null
         $this->queryString = (string) $queryString;
@@ -335,7 +335,7 @@ class RequestContext
      */
     public function getParameter($name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return isset($this->parameters[$name]) ? $this->parameters[$name] : null;
     }
@@ -347,7 +347,7 @@ class RequestContext
      */
     public function hasParameter($name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return \array_key_exists($name, $this->parameters);
     }
@@ -361,7 +361,7 @@ class RequestContext
      */
     public function setParameter($name, $parameter)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->parameters[$name] = $parameter;
 

@@ -17,7 +17,7 @@ trait HandlesAnnotations
      */
     protected function parseTestMethodAnnotations($app, /*string */$name)////: void
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $instance = new ReflectionClass($this);
 

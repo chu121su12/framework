@@ -27,7 +27,7 @@ class Ulid extends AbstractUid
 
     public function __construct(/*string */$ulid = null)
     {
-        $ulid = cast_to_string($ulid, null);
+        $ulid = backport_type_check('?string', $ulid);
 
         if (null === $ulid) {
             $this->uid = static::generate();
@@ -50,7 +50,7 @@ class Ulid extends AbstractUid
 
     public static function isValid(/*string */$ulid)/*: bool*/
     {
-        $ulid = cast_to_string($ulid);
+        $ulid = backport_type_check('string', $ulid);
 
         if (26 !== \strlen($ulid)) {
             return false;
@@ -68,7 +68,7 @@ class Ulid extends AbstractUid
      */
     public static function fromString(/*string */$ulid)/*: parent*/
     {
-        $ulid = cast_to_string($ulid);
+        $ulid = backport_type_check('string', $ulid);
 
         if (36 === \strlen($ulid) && Uuid::isValid($ulid)) {
             $ulid = (new Uuid($ulid))->toBinary();
@@ -164,7 +164,7 @@ class Ulid extends AbstractUid
 
     private static function doGenerate(/*string */$mtime = null)/*: string*/
     {
-        $mtime = cast_to_string($mtime, null);
+        $mtime = backport_type_check('?string', $mtime);
 
         if (null === $time = $mtime) {
             $time = microtime(false);

@@ -64,7 +64,7 @@ trait HandlesRoutes
      */
     protected function defineCacheRoutes(/*string */$route)
     {
-        $route = cast_to_string($route);
+        $route = backport_type_check('string', $route);
 
         $files = new Filesystem();
 

@@ -47,7 +47,7 @@ class ReportTrimmer
 
     public static function setMaxPayloadSize(/*int */$maxPayloadSize)/*: void*/
     {
-        $maxPayloadSize = cast_to_int($maxPayloadSize);
+        $maxPayloadSize = backport_type_check('int', $maxPayloadSize);
 
         self::$maxPayloadSize = $maxPayloadSize;
     }

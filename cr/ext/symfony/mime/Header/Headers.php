@@ -63,7 +63,7 @@ final class Headers
 
     public function setMaxLineLength($lineLength)
     {
-        $lineLength = cast_to_int($lineLength);
+        $lineLength = backport_type_check('int', $lineLength);
 
         $this->lineLength = $lineLength;
         foreach ($this->all() as $header) {
@@ -83,7 +83,7 @@ final class Headers
      */
     public function addMailboxListHeader($name, array $addresses) /// self
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $this->add(new MailboxListHeader($name, Address::createArray($addresses)));
     }
@@ -95,7 +95,7 @@ final class Headers
      */
     public function addMailboxHeader($name, $address) /// self
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $this->add(new MailboxHeader($name, Address::create($address)));
     }
@@ -107,7 +107,7 @@ final class Headers
      */
     public function addIdHeader($name, $ids) /// self
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $this->add(new IdentificationHeader($name, $ids));
     }
@@ -119,7 +119,7 @@ final class Headers
      */
     public function addPathHeader($name, $path) /// self
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $this->add(new PathHeader($name, $path instanceof Address ? $path : new Address($path)));
     }
@@ -129,7 +129,7 @@ final class Headers
      */
     public function addDateHeader($name, \DateTimeInterface $dateTime) /// self
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $this->add(new DateHeader($name, $dateTime));
     }
@@ -139,9 +139,9 @@ final class Headers
      */
     public function addTextHeader($name, $value) /// self
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $this->add(new UnstructuredHeader($name, $value));
     }
@@ -151,9 +151,9 @@ final class Headers
      */
     public function addParameterizedHeader($name, $value, array $params = []) /// self
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $this->add(new ParameterizedHeader($name, $value, $params));
     }
@@ -163,7 +163,7 @@ final class Headers
      */
     public function addHeader($name, $argument, array $more = []) /// self
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $headerClassMap = self::HEADER_CLASS_MAP;
 
@@ -182,7 +182,7 @@ final class Headers
 
     public function has($name) //// bool
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return isset($this->headers[strtolower($name)]);
     }
@@ -208,7 +208,7 @@ final class Headers
 
     public function get($name) // ?HeaderInterface
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $name = strtolower($name);
         if (!isset($this->headers[$name])) {
@@ -222,7 +222,7 @@ final class Headers
 
     public function all($name = null) //// iterable
     {
-        $name = cast_to_string($name, null);
+        $name = backport_type_check('?string', $name);
 
         if (null === $name) {
             foreach ($this->headers as $name => $collection) {
@@ -244,14 +244,14 @@ final class Headers
 
     public function remove($name) /// void
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         unset($this->headers[strtolower($name)]);
     }
 
     public static function isUniqueHeader($name) //// bool
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return \in_array(strtolower($name), self::UNIQUE_HEADERS, true);
     }
@@ -297,7 +297,7 @@ final class Headers
      */
     public function getHeaderBody($name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $this->has($name) ? $this->get($name)->getBody() : null;
     }
@@ -307,9 +307,9 @@ final class Headers
      */
     public function setHeaderBody($type, $name, $body) /// void
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
         if ($this->has($name)) {
             $this->get($name)->setBody($body);
@@ -320,9 +320,9 @@ final class Headers
 
     public function getHeaderParameter($name, $parameter) //// ?string
     {
-        $parameter = cast_to_string($parameter);
+        $parameter = backport_type_check('string', $parameter);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         if (!$this->has($name)) {
             return null;
@@ -341,11 +341,11 @@ final class Headers
      */
     public function setHeaderParameter($name, $parameter, $value = null) /// void
     {
-        $parameter = cast_to_string($parameter);
+        $parameter = backport_type_check('string', $parameter);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
-        $value = cast_to_string($value, null);
+        $value = backport_type_check('?string', $value);
 
         if (!$this->has($name)) {
             throw new LogicException(sprintf('Unable to set parameter "%s" on header "%s" as the header is not defined.', $parameter, $name));

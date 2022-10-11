@@ -78,7 +78,7 @@ class Builder
      */
     public static function defaultMorphKeyType(/*string */$type)
     {
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
         if (! in_array($type, ['int', 'uuid'])) {
             throw new InvalidArgumentException("Morph key type must be 'int' or 'uuid'.");
@@ -182,9 +182,9 @@ class Builder
      */
     public function whenTableHasColumn(/*string */$table, /*string */$column, Closure $callback)
     {
-        $column = cast_to_string($column);
+        $column = backport_type_check('string', $column);
 
-        $table = cast_to_string($table);
+        $table = backport_type_check('string', $table);
 
         if ($this->hasColumn($table, $column)) {
             $this->table($table, function (Blueprint $table) { return $callback($table); });
@@ -201,9 +201,9 @@ class Builder
      */
     public function whenTableDoesntHaveColumn(/*string */$table, /*string */$column, Closure $callback)
     {
-        $column = cast_to_string($column);
+        $column = backport_type_check('string', $column);
 
-        $table = cast_to_string($table);
+        $table = backport_type_check('string', $table);
 
         if (! $this->hasColumn($table, $column)) {
             $this->table($table, function (Blueprint $table) { return $callback($table); });

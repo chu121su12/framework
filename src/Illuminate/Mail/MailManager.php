@@ -406,7 +406,7 @@ class MailManager implements FactoryContract
      */
     protected function setGlobalAddress($mailer, array $config, /*string */$type)
     {
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
         $address = Arr::get($config, $type, $this->app['config']['mail.'.$type]);
 
@@ -423,7 +423,7 @@ class MailManager implements FactoryContract
      */
     protected function getConfig(/*string */$name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         // Here we will check if the "driver" key exists and if it does we will use
         // the entire mail configuration file as the "driver" config in order to
@@ -455,7 +455,7 @@ class MailManager implements FactoryContract
      */
     public function setDefaultDriver(/*string */$name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         if ($this->app['config']['mail.driver']) {
             $this->app['config']['mail.driver'] = $name;

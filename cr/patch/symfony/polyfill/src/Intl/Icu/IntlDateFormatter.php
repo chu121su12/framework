@@ -144,13 +144,13 @@ abstract class IntlDateFormatter
      */
     public function __construct(/*?string */$locale = null, /*?int */$dateType = null, /*?int */$timeType = null, $timezone = null, $calendar = null, /*?string */$pattern = '')
     {
-        $pattern = cast_to_string($pattern, null);
+        $pattern = backport_type_check('?string', $pattern);
 
-        $timeType = cast_to_int($timeType, null);
+        $timeType = backport_type_check('?int', $timeType);
 
-        $dateType = cast_to_int($dateType, null);
+        $dateType = backport_type_check('?int', $dateType);
 
-        $locale = cast_to_string($locale, null);
+        $locale = backport_type_check('?string', $locale);
 
         if ('en' !== $locale && null !== $locale) {
             throw new MethodArgumentValueNotImplementedException(__METHOD__, 'locale', $locale, 'Only the locale "en" is supported');
@@ -203,15 +203,15 @@ abstract class IntlDateFormatter
      */
     public static function create(/*?string */$locale = null, /*?int */$dateType = null, /*?int */$timeType = null, $timezone = null, /*int */$calendar = null, /*?string */$pattern = '')
     {
-        $calendar = cast_to_int($calendar, null);
+        $calendar = backport_type_check('?int', $calendar);
 
-        $pattern = cast_to_string($pattern, null);
+        $pattern = backport_type_check('?string', $pattern);
 
-        $timeType = cast_to_int($timeType, null);
+        $timeType = backport_type_check('?int', $timeType);
 
-        $dateType = cast_to_int($dateType, null);
+        $dateType = backport_type_check('?int', $dateType);
 
-        $locale = cast_to_string($locale, null);
+        $locale = backport_type_check('?string', $locale);
 
         return new static($locale, $dateType, $timeType, $timezone, $calendar, $pattern);
     }
@@ -296,7 +296,7 @@ abstract class IntlDateFormatter
      */
     public function formatObject($datetime, $format = null, /*string */$locale = null)
     {
-        $locale = cast_to_string($locale, null);
+        $locale = backport_type_check('?string', $locale);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -376,7 +376,7 @@ abstract class IntlDateFormatter
      */
     public function getLocale(/*int */$type = Locale::ACTUAL_LOCALE)
     {
-        $type = cast_to_int($type);
+        $type = backport_type_check('int', $type);
 
         return 'en';
     }
@@ -460,7 +460,7 @@ abstract class IntlDateFormatter
      */
     public function localtime(/*string */$string, &$offset = null)
     {
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -476,7 +476,7 @@ abstract class IntlDateFormatter
      */
     public function parse(/*string */$string, &$offset = null)
     {
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         // We don't calculate the position when parsing the value
         if (null !== $offset) {
@@ -530,7 +530,7 @@ abstract class IntlDateFormatter
      */
     public function setLenient(/*bool */$lenient)
     {
-        $lenient = cast_to_bool($lenient);
+        $lenient = backport_type_check('bool', $lenient);
 
         if ($lenient) {
             throw new MethodArgumentValueNotImplementedException(__METHOD__, 'lenient', $lenient, 'Only the strict parser is supported');
@@ -549,7 +549,7 @@ abstract class IntlDateFormatter
      */
     public function setPattern(/*string */$pattern)
     {
-        $pattern = cast_to_string($pattern);
+        $pattern = backport_type_check('string', $pattern);
 
         $this->pattern = $pattern;
 
@@ -652,7 +652,7 @@ abstract class IntlDateFormatter
 
     private function getRelativeDateFormat(/*int */$timestamp)/*: string*/
     {
-        $timestamp = cast_to_int($timestamp);
+        $timestamp = backport_type_check('int', $timestamp);
 
         $today = $this->createDateTime(time());
         $today->setTime(0, 0, 0);

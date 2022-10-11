@@ -120,7 +120,7 @@ abstract class AbstractTranslator extends Translation\Translator
      */
     public function addDirectory(/*string */$directory)
     {
-        $directory = cast_to_string($directory);
+        $directory = backport_type_check('string', $directory);
 
         $this->directories[] = $directory;
 
@@ -136,7 +136,7 @@ abstract class AbstractTranslator extends Translation\Translator
      */
     public function removeDirectory(/*string */$directory)
     {
-        $directory = cast_to_string($directory);
+        $directory = backport_type_check('string', $directory);
 
         $search = rtrim(strtr($directory, '\\', '/'), '/');
 
@@ -218,11 +218,11 @@ abstract class AbstractTranslator extends Translation\Translator
 
     protected function translate(/*?string */$id = null, array $parameters = [], /*?string */$domain = null, /*?string */$locale = null)/*: string*/
     {
-        $locale = cast_to_string($locale, null);
+        $locale = backport_type_check('?string', $locale);
 
-        $domain = cast_to_string($domain, null);
+        $domain = backport_type_check('?string', $domain);
 
-        $id = cast_to_string($id, null);
+        $id = backport_type_check('?string', $id);
 
         if ($domain === null) {
             $domain = 'messages';

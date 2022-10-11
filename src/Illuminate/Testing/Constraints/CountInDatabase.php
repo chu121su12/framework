@@ -38,7 +38,7 @@ class CountInDatabase extends Constraint
      */
     public function __construct(Connection $database, /*int */$expectedCount)
     {
-        $expectedCount = cast_to_int($expectedCount);
+        $expectedCount = backport_type_check('int', $expectedCount);
 
         $this->expectedCount = $expectedCount;
 

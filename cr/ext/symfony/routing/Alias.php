@@ -20,7 +20,7 @@ class Alias
 
     public function __construct(/*string */$id)
     {
-        $id = cast_to_string($id);
+        $id = backport_type_check('string', $id);
 
         $this->id = $id;
     }
@@ -30,7 +30,7 @@ class Alias
      */
     public function withId(/*string */$id)/*: self*/
     {
-        $id = cast_to_string($id);
+        $id = backport_type_check('string', $id);
 
         $new = clone $this;
 
@@ -62,9 +62,9 @@ class Alias
      */
     public function setDeprecated(/*string */$package, /*string */$version, /*string */$message)/*: self*/
     {
-        $package = cast_to_string($package);
-        $version = cast_to_string($version);
-        $message = cast_to_string($message);
+        $package = backport_type_check('string', $package);
+        $version = backport_type_check('string', $version);
+        $message = backport_type_check('string', $message);
 
         if ('' !== $message) {
             if (preg_match('#[\r\n]|\*/#', $message)) {
@@ -95,7 +95,7 @@ class Alias
      */
     public function getDeprecation(/*string */$name)/*: array*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return [
             'package' => $this->deprecation['package'],

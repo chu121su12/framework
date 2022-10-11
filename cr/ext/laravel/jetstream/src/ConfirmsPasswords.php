@@ -38,7 +38,7 @@ trait ConfirmsPasswords
      */
     public function startConfirmingPassword(/*string */$confirmableId)
     {
-        $confirmableId = cast_to_string($confirmableId);
+        $confirmableId = backport_type_check('string', $confirmableId);
 
         $this->resetErrorBag();
 

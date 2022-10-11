@@ -276,7 +276,7 @@ class IgnitionServiceProvider extends ServiceProvider
 
     protected function getLogLevel(/*string */$logLevelString)/*: int*/
     {
-        $logLevelString = cast_to_string($logLevelString);
+        $logLevelString = backport_type_check('string', $logLevelString);
 
         $loggerLevels = Logger::getLevels();
         $logLevel = isset($loggerLevels) && $loggerLevels[strtoupper($logLevelString)] ? $loggerLevels[strtoupper($logLevelString)] : null;
@@ -311,7 +311,7 @@ class IgnitionServiceProvider extends ServiceProvider
         return collect(config('ignition.solution_providers'))
             ->reject(
                 function (/*string */$class) {
-                    $class = cast_to_string($class);
+                    $class = backport_type_check('string', $class);
 
                     return in_array($class, config('ignition.ignored_solution_providers'));
                 }

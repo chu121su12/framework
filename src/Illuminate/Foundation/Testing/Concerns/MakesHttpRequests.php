@@ -100,9 +100,9 @@ trait MakesHttpRequests
      */
     public function withHeader(/*string */$name, /*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->defaultHeaders[$name] = $value;
 
@@ -118,9 +118,9 @@ trait MakesHttpRequests
      */
     public function withToken(/*string */$token, /*string */$type = 'Bearer')
     {
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
-        $token = cast_to_string($token);
+        $token = backport_type_check('string', $token);
 
         return $this->withHeader('Authorization', $type.' '.$token);
     }
@@ -228,9 +228,9 @@ trait MakesHttpRequests
      */
     public function withCookie(/*string */$name, /*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->defaultCookies[$name] = $value;
 
@@ -259,9 +259,9 @@ trait MakesHttpRequests
      */
     public function withUnencryptedCookie(/*string */$name, /*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->unencryptedCookies[$name] = $value;
 
@@ -312,7 +312,7 @@ trait MakesHttpRequests
      */
     public function from(/*string */$url)
     {
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
         $this->app['session']->setPreviousUrl($url);
 

@@ -10,7 +10,7 @@ trait PageObject
 {
     public function component(/*string */$value = null, $shouldExist = null)/*: self*/
     {
-        $value = cast_to_string($value, null);
+        $value = backport_type_check('?string', $value);
 
         PHPUnit::assertSame($value, $this->component, 'Unexpected Inertia page component.');
 
@@ -27,14 +27,14 @@ trait PageObject
 
     protected function prop(/*string */$key = null)
     {
-        $key = cast_to_string($key, null);
+        $key = backport_type_check('?string', $key);
 
         return Arr::get($this->props, $key);
     }
 
     public function url(/*string */$value)/*: self*/
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         PHPUnit::assertSame($value, $this->url, 'Unexpected Inertia page url.');
 
@@ -43,7 +43,7 @@ trait PageObject
 
     public function version(/*string */$value)/*: self*/
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         PHPUnit::assertSame($value, $this->version, 'Unexpected Inertia asset version.');
 

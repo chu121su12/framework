@@ -134,7 +134,7 @@ trait InteractsWithServers
      */
     public function handleSignal(/*int */$signal) ////: void
     {
-        // $signal = cast_to_int($signal);
+        // $signal = backport_type_check('int', $signal);
 
         $this->stopServer();
     }

@@ -45,7 +45,7 @@ class SoftDeletedInDatabase extends Constraint
      */
     public function __construct(Connection $database, array $data, /*string */$deletedAtColumn)
     {
-        $deletedAtColumn = cast_to_string($deletedAtColumn);
+        $deletedAtColumn = backport_type_check('string', $deletedAtColumn);
 
         $this->data = $data;
 

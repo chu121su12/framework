@@ -49,7 +49,7 @@ class Commander
      */
     public function __construct(array $config, /*string */$workingPath)
     {
-        $workingPath = cast_to_string($workingPath);
+        $workingPath = backport_type_check('string', $workingPath);
 
         $this->config = $config;
         $this->workingPath = $workingPath;

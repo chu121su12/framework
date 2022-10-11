@@ -33,9 +33,9 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          */
         public function __construct(/*iterable */$subset, /*bool */$strict = false)
         {
-            $strict = cast_to_bool($strict);
+            $strict = backport_type_check('bool', $strict);
 
-            $subset = cast_to_iterable($subset);
+            $subset = backport_type_check('iterable', $subset);
 
             $this->strict = $strict;
             $this->subset = $subset;
@@ -61,9 +61,9 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          */
         public function evaluate($other, /*string */$description = '', /*bool */$returnResult = false)/*: ?bool*/
         {
-            $returnResult = cast_to_bool($returnResult);
+            $returnResult = backport_type_check('bool', $returnResult);
 
-            $description = cast_to_string($description);
+            $description = backport_type_check('string', $description);
 
             // type cast $other & $this->subset as an array to allow
             // support in standard array functions.
@@ -135,7 +135,7 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          */
         private function toArray(/*iterable */$other)/*: array*/
         {
-            $other = cast_to_iterable($other);
+            $other = backport_type_check('iterable', $other);
 
             if (is_array($other)) {
                 return $other;
@@ -178,9 +178,9 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          */
         public function __construct(/*iterable */$subset, /*bool */$strict = false)
         {
-            $strict = cast_to_bool($strict);
+            $strict = backport_type_check('bool', $strict);
 
-            $subset = cast_to_iterable($subset);
+            $subset = backport_type_check('iterable', $subset);
 
             $this->strict = $strict;
             $this->subset = $subset;
@@ -206,9 +206,9 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          */
         public function evaluate($other, /*string */$description = '', /*bool */$returnResult = false)
         {
-            $returnResult = cast_to_bool($returnResult);
+            $returnResult = backport_type_check('bool', $returnResult);
 
-            $description = cast_to_string($description);
+            $description = backport_type_check('string', $description);
 
             // type cast $other & $this->subset as an array to allow
             // support in standard array functions.
@@ -278,7 +278,7 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
          */
         private function toArray(/*iterable */$other)/*: array*/
         {
-            $other = cast_to_iterable($other);
+            $other = backport_type_check('iterable', $other);
 
             if (is_array($other)) {
                 return $other;

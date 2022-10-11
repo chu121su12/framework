@@ -249,7 +249,7 @@ class Message
      */
     protected function addAddressDebugHeader(/*string */$header, array $addresses)
     {
-        $header = cast_to_string($header);
+        $header = backport_type_check('string', $header);
 
         $this->message->getHeaders()->addTextHeader(
             $header,

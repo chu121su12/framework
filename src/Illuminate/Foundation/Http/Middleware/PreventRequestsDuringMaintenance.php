@@ -132,7 +132,7 @@ class PreventRequestsDuringMaintenance
      */
     protected function bypassResponse(/*string */$secret)
     {
-        $secret = cast_to_string($secret);
+        $secret = backport_type_check('string', $secret);
 
         return redirect('/')->withCookie(
             MaintenanceModeBypassCookie::create($secret)

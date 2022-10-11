@@ -9,7 +9,7 @@ trait PhpUnit7AssertBackport
 {
     public static function assertCount($expectedCount, $haystack, $message = '')
     {
-        cast_to_int($expectedCount, null, true);
+        backport_type_check('?int', $expectedCount, true);
 
         parent::assertCount($expectedCount, $haystack, $message);
     }

@@ -28,7 +28,7 @@ final class MailboxListHeader extends AbstractHeader
      */
     public function __construct($name, array $addresses)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         parent::__construct($name);
 
@@ -133,7 +133,7 @@ final class MailboxListHeader extends AbstractHeader
      */
     protected function tokenNeedsEncoding($token) //// bool
     {
-        $token = cast_to_string($token);
+        $token = backport_type_check('string', $token);
 
         return preg_match('/[()<>\[\]:;@\,."]/', $token) || parent::tokenNeedsEncoding($token);
     }

@@ -272,7 +272,7 @@ class DebugClassLoader
 
     public function findFile(/*string */$class)/*: ?string*/
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         return $this->isFinder ? ($this->classLoader[0]->findFile($class) ?: null) : null;
     }
@@ -284,7 +284,7 @@ class DebugClassLoader
      */
     public function loadClass(/*string */$class)/*: void*/
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         $e = error_reporting(error_reporting() | \E_PARSE | \E_ERROR | \E_CORE_ERROR | \E_COMPILE_ERROR);
 
@@ -313,9 +313,9 @@ class DebugClassLoader
 
     private function checkClass(/*string */$class, /*string */$file = null)/*: void*/
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
-        $file = cast_to_string($file, null);
+        $file = backport_type_check('?string', $file);
 
         $exists = null === $file || class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false);
 
@@ -365,7 +365,7 @@ class DebugClassLoader
 
     public function checkAnnotations(\ReflectionClass $refl, /*string */$class)/*: array*/
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         if (
             'Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerForV7' === $class
@@ -655,9 +655,9 @@ class DebugClassLoader
 
     public function checkCase(\ReflectionClass $refl, /*string */$file, /*string */$class)/*: ?array*/
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         $real = explode('\\', $class.strrchr($file, '.'));
         $tail = explode(\DIRECTORY_SEPARATOR, str_replace('/', \DIRECTORY_SEPARATOR, $file));
@@ -698,7 +698,7 @@ class DebugClassLoader
      */
     private function darwinRealpath(/*string */$real)/*: string*/
     {
-        $real = cast_to_string($real);
+        $real = backport_type_check('string', $real);
 
         $i = 1 + strrpos($real, '/');
         $file = substr($real, $i);
@@ -773,9 +773,9 @@ class DebugClassLoader
      */
     private function getOwnInterfaces(/*string */$class, /*?string */$parent = null)/*: array*/
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
-        $parent = cast_to_string($parent, null);
+        $parent = backport_type_check('?string', $parent);
 
         $ownInterfaces = class_implements($class, false);
 
@@ -796,15 +796,15 @@ class DebugClassLoader
 
     private function setReturnType(/*string */$types, /*string */$class, /*string */$method, /*string */$filename, /*?string */$parent = null, \ReflectionType $returnType = null)/*: void*/
     {
-        $filename = cast_to_string($filename);
+        $filename = backport_type_check('string', $filename);
 
-        $method = cast_to_string($method);
+        $method = backport_type_check('string', $method);
 
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
-        $types = cast_to_string($types);
+        $types = backport_type_check('string', $types);
 
-        $parent = cast_to_string($parent, null);
+        $parent = backport_type_check('?string', $parent);
 
         if ('__construct' === $method) {
             return;
@@ -900,11 +900,11 @@ class DebugClassLoader
 
     private function normalizeType(/*string */$type, /*string */$class, /*?string */$parent = null, /*?*/\ReflectionType $returnType = null)/*: string*/
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
-        $parent = cast_to_string($parent, null);
+        $parent = backport_type_check('?string', $parent);
 
         $specialReturnTypes = self::SPECIAL_RETURN_TYPES;
         if (isset($specialReturnTypes[$lcType = strtolower($type)])) {
@@ -968,11 +968,11 @@ class DebugClassLoader
      */
     private function patchMethod(\ReflectionMethod $method, /*string */$returnType, /*string */$declaringFile, /*string */$normalizedType)
     {
-        $normalizedType = cast_to_string($normalizedType);
+        $normalizedType = backport_type_check('string', $normalizedType);
 
-        $declaringFile = cast_to_string($declaringFile);
+        $declaringFile = backport_type_check('string', $declaringFile);
 
-        $returnType = cast_to_string($returnType);
+        $returnType = backport_type_check('string', $returnType);
 
         static $patchedMethods = [];
         static $useStatements = [];
@@ -1071,7 +1071,7 @@ EOTXT;
 
     private static function getUseStatements(/*string */$file)/*: array*/
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         $namespace = '';
         $useMap = [];
@@ -1116,7 +1116,7 @@ EOTXT;
 
     private function fixReturnStatements(\ReflectionMethod $method, /*string */$returnType)
     {
-        $returnType = cast_to_string($returnType);
+        $returnType = backport_type_check('string', $returnType);
 
         if ('docblock' !== $this->patchTypes['force']) {
             if ('7.1' === $this->patchTypes['php'] && 'object' === ltrim($returnType, '?')) {

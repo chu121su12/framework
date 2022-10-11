@@ -397,7 +397,7 @@ trait FormatsMessages
      */
     protected function numberToIndexOrPositionWord(/*int */$value)
     {
-        $value = cast_to_int($value);
+        $value = backport_type_check('int', $value);
 
         $positions = [
             1 => 'first',

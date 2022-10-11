@@ -64,7 +64,7 @@ trait RouteTrait
      */
     final public function utf8($utf8 = true) /// self
     {
-        $utf8 = cast_to_bool($utf8);
+        $utf8 = backport_type_check('bool', $utf8);
 
         $this->route->addOptions(['utf8' => $utf8]);
 
@@ -78,7 +78,7 @@ trait RouteTrait
      */
     final public function condition($condition) /// self
     {
-        $condition = cast_to_string($condition);
+        $condition = backport_type_check('string', $condition);
 
         $this->route->setCondition($condition);
 
@@ -92,7 +92,7 @@ trait RouteTrait
      */
     final public function host($pattern) /// self
     {
-        $pattern = cast_to_string($pattern);
+        $pattern = backport_type_check('string', $pattern);
 
         $this->route->setHost($pattern);
 
@@ -150,7 +150,7 @@ trait RouteTrait
      */
     final public function locale($locale) /// self
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
         $this->route->addDefaults(['_locale' => $locale]);
 
@@ -164,7 +164,7 @@ trait RouteTrait
      */
     final public function format($format) /// self
     {
-        $format = cast_to_string($format);
+        $format = backport_type_check('string', $format);
 
         $this->route->addDefaults(['_format' => $format]);
 
@@ -178,7 +178,7 @@ trait RouteTrait
      */
     final public function stateless($stateless = true) /// self
     {
-        $stateless = cast_to_bool($stateless);
+        $stateless = backport_type_check('bool', $stateless);
 
         $this->route->addDefaults(['_stateless' => $stateless]);
 

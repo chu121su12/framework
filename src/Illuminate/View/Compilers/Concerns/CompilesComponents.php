@@ -46,7 +46,7 @@ trait CompilesComponents
      */
     public static function newComponentHash(/*string */$component)
     {
-        $component = cast_to_string($component);
+        $component = backport_type_check('string', $component);
 
         static::$componentHashStack[] = $hash = sha1($component);
 
@@ -64,13 +64,13 @@ trait CompilesComponents
      */
     public static function compileClassComponentOpening(/*string */$component, /*string */$alias, /*string */$data, /*string */$hash)
     {
-        $hash = cast_to_string($hash);
+        $hash = backport_type_check('string', $hash);
 
-        $data = cast_to_string($data);
+        $data = backport_type_check('string', $data);
 
-        $alias = cast_to_string($alias);
+        $alias = backport_type_check('string', $alias);
 
-        $component = cast_to_string($component);
+        $component = backport_type_check('string', $component);
 
         return implode("\n", [
             '<?php if (isset($component)) { $__componentOriginal'.$hash.' = $component; } ?>',

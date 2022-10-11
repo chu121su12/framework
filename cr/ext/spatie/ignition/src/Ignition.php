@@ -73,7 +73,7 @@ class Ignition
 
     public function setSolutionTransformerClass(/*string */$solutionTransformerClass)/*: self*/
     {
-        $solutionTransformerClass = cast_to_string($solutionTransformerClass);
+        $solutionTransformerClass = backport_type_check('string', $solutionTransformerClass);
 
         $this->solutionTransformerClass = $solutionTransformerClass;
 
@@ -97,7 +97,7 @@ class Ignition
 
     public function runningInProductionEnvironment(/*bool */$boolean = true)/*: self*/
     {
-        $boolean = cast_to_bool($boolean);
+        $boolean = backport_type_check('bool', $boolean);
 
         $this->inProductionEnvironment = $boolean;
 
@@ -125,7 +125,7 @@ class Ignition
 
     public function shouldDisplayException(/*bool */$shouldDisplayException)/*: self*/
     {
-        $shouldDisplayException = cast_to_bool($shouldDisplayException);
+        $shouldDisplayException = backport_type_check('bool', $shouldDisplayException);
 
         $this->shouldDisplayException = $shouldDisplayException;
 
@@ -134,7 +134,7 @@ class Ignition
 
     public function applicationPath(/*string */$applicationPath)/*: self*/
     {
-        $applicationPath = cast_to_string($applicationPath);
+        $applicationPath = backport_type_check('string', $applicationPath);
 
         $this->applicationPath = $applicationPath;
 
@@ -153,8 +153,8 @@ class Ignition
         /*string */$messageLevel = MessageLevels::INFO,
         array $metaData = []
     )/*: self */{
-        $name = cast_to_string($name);
-        $messageLevel = cast_to_string($messageLevel);
+        $name = backport_type_check('string', $name);
+        $messageLevel = backport_type_check('string', $messageLevel);
 
         $this->flare->glow($name, $messageLevel, $metaData);
 
@@ -187,7 +187,7 @@ class Ignition
 
     public function setTheme(/*string */$theme)/*: self*/
     {
-        $theme = cast_to_string($theme);
+        $theme = backport_type_check('string', $theme);
 
         $this->ignitionConfig->setOption('theme', $theme);
 
@@ -203,7 +203,7 @@ class Ignition
 
     public function sendToFlare(/*?string */$apiKey = null)/*: self*/
     {
-        $apiKey = cast_to_string($apiKey, null);
+        $apiKey = backport_type_check('?string', $apiKey);
 
         $this->flareApiKey = isset($apiKey) ? $apiKey : '';
 
@@ -279,10 +279,10 @@ class Ignition
         /*int */$line = 0,
         array $context = []
     )/*: void */{
-        $level = cast_to_int($level);
-        $message = cast_to_string($message);
-        $file = cast_to_string($file);
-        $line = cast_to_int($line);
+        $level = backport_type_check('int', $level);
+        $message = backport_type_check('string', $message);
+        $file = backport_type_check('string', $file);
+        $line = backport_type_check('int', $line);
 
         throw new ErrorException($message, 0, $level, $file, $line);
     }

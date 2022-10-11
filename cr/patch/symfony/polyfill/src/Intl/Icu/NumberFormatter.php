@@ -256,11 +256,11 @@ abstract class NumberFormatter
      */
     public function __construct(/*?string */$locale = 'en', /*int */$style = null, /*string */$pattern = null)
     {
-        $pattern = cast_to_string($pattern, null);
+        $pattern = backport_type_check('?string', $pattern);
 
-        $style = cast_to_int($style, null);
+        $style = backport_type_check('?int', $style);
 
-        $locale = cast_to_string($locale, null);
+        $locale = backport_type_check('?string', $locale);
 
         if ('en' !== $locale && null !== $locale) {
             throw new MethodArgumentValueNotImplementedException(__METHOD__, 'locale', $locale, 'Only the locale "en" is supported');
@@ -301,11 +301,11 @@ abstract class NumberFormatter
      */
     public static function create(/*?string */$locale = 'en', /*int */$style = null, /*string */$pattern = null)
     {
-        $pattern = cast_to_string($pattern, null);
+        $pattern = backport_type_check('?string', $pattern);
 
-        $style = cast_to_int($style, null);
+        $style = backport_type_check('?int', $style);
 
-        $locale = cast_to_string($locale, null);
+        $locale = backport_type_check('?string', $locale);
 
         return new static($locale, $style, $pattern);
     }
@@ -320,9 +320,9 @@ abstract class NumberFormatter
      */
     public function formatCurrency(/*float */$amount, /*string */$currency)
     {
-        $currency = cast_to_string($currency);
+        $currency = backport_type_check('string', $currency);
 
-        $amount = cast_to_float($amount);
+        $amount = backport_type_check('float', $amount);
 
         if (self::DECIMAL === $this->style) {
             return $this->format($amount);
@@ -365,7 +365,7 @@ abstract class NumberFormatter
      */
     public function format($num, /*int */$type = self::TYPE_DEFAULT)
     {
-        $type = cast_to_int($type);
+        $type = backport_type_check('int', $type);
 
         // The original NumberFormatter does not support this format type
         if (self::TYPE_CURRENCY === $type) {
@@ -407,7 +407,7 @@ abstract class NumberFormatter
      */
     public function getAttribute(/*int */$attribute)
     {
-        $attribute = cast_to_int($attribute);
+        $attribute = backport_type_check('int', $attribute);
 
         return isset($this->attributes[$attribute]) ? $this->attributes[$attribute] : null;
     }
@@ -450,7 +450,7 @@ abstract class NumberFormatter
      */
     public function getLocale(/*int */$type = Locale::ACTUAL_LOCALE)
     {
-        $type = cast_to_int($type);
+        $type = backport_type_check('int', $type);
 
         return 'en';
     }
@@ -478,7 +478,7 @@ abstract class NumberFormatter
      */
     public function getSymbol(/*int */$symbol)
     {
-        $symbol = cast_to_int($symbol);
+        $symbol = backport_type_check('int', $symbol);
 
         return \array_key_exists($this->style, self::$enSymbols) && \array_key_exists($symbol, self::$enSymbols[$this->style]) ? self::$enSymbols[$this->style][$symbol] : false;
     }
@@ -492,7 +492,7 @@ abstract class NumberFormatter
      */
     public function getTextAttribute(/*int */$attribute)
     {
-        $attribute = cast_to_int($attribute);
+        $attribute = backport_type_check('int', $attribute);
 
         return \array_key_exists($this->style, self::$enTextAttributes) && \array_key_exists($attribute, self::$enTextAttributes[$this->style]) ? self::$enTextAttributes[$this->style][$attribute] : false;
     }
@@ -508,7 +508,7 @@ abstract class NumberFormatter
      */
     public function parseCurrency(/*string */$string, &$currency, &$offset = null)
     {
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -522,9 +522,9 @@ abstract class NumberFormatter
      */
     public function parse(/*string */$string, /*int */$type = self::TYPE_DOUBLE, &$offset = null)
     {
-        $type = cast_to_int($type);
+        $type = backport_type_check('int', $type);
 
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         if (self::TYPE_DEFAULT === $type || self::TYPE_CURRENCY === $type) {
             if (\PHP_VERSION_ID >= 80000) {
@@ -584,7 +584,7 @@ abstract class NumberFormatter
      */
     public function setAttribute(/*int */$attribute, $value)
     {
-        $attribute = cast_to_int($attribute);
+        $attribute = backport_type_check('int', $attribute);
 
         if (!\in_array($attribute, self::$supportedAttributes)) {
             $message = sprintf(
@@ -634,7 +634,7 @@ abstract class NumberFormatter
      */
     public function setPattern(/*string */$pattern)
     {
-        $pattern = cast_to_string($pattern);
+        $pattern = backport_type_check('string', $pattern);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -650,9 +650,9 @@ abstract class NumberFormatter
      */
     public function setSymbol(/*int */$symbol, /*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $symbol = cast_to_int($symbol);
+        $symbol = backport_type_check('int', $symbol);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -668,9 +668,9 @@ abstract class NumberFormatter
      */
     public function setTextAttribute(/*int */$attribute, /*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $attribute = cast_to_int($attribute);
+        $attribute = backport_type_check('int', $attribute);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -700,9 +700,9 @@ abstract class NumberFormatter
      */
     private function roundCurrency(/*float */$value, /*string */$currency)/*: float*/
     {
-        $currency = cast_to_string($currency);
+        $currency = backport_type_check('string', $currency);
 
-        $value = cast_to_float($value);
+        $value = backport_type_check('float', $value);
 
         $fractionDigits = Currencies::getFractionDigits($currency);
         $roundingIncrement = Currencies::getRoundingIncrement($currency);
@@ -728,7 +728,7 @@ abstract class NumberFormatter
      */
     private function round($value, /*int */$precision)
     {
-        $precision = cast_to_int($precision);
+        $precision = backport_type_check('int', $precision);
 
         $precision = $this->getUninitializedPrecision($value, $precision);
 
@@ -768,7 +768,7 @@ abstract class NumberFormatter
      */
     private function formatNumber($value, /*int */$precision)/*: string*/
     {
-        $precision = cast_to_int($precision);
+        $precision = backport_type_check('int', $precision);
 
         $precision = $this->getUninitializedPrecision($value, $precision);
 
@@ -782,7 +782,7 @@ abstract class NumberFormatter
      */
     private function getUninitializedPrecision($value, /*int */$precision)/*: int*/
     {
-        $precision = cast_to_int($precision);
+        $precision = backport_type_check('int', $precision);
 
         if (self::CURRENCY === $this->style) {
             return $precision;
@@ -803,7 +803,7 @@ abstract class NumberFormatter
      */
     private function isInitializedAttribute(/*string */$attr)/*: bool*/
     {
-        $attr = cast_to_string($attr);
+        $attr = backport_type_check('string', $attr);
 
         return isset($this->initializedAttributes[$attr]);
     }
@@ -817,7 +817,7 @@ abstract class NumberFormatter
      */
     private function convertValueDataType($value, /*int */$type)
     {
-        $type = cast_to_int($type);
+        $type = backport_type_check('int', $type);
 
         if (self::TYPE_DOUBLE === $type) {
             $value = (float) $value;
@@ -867,7 +867,7 @@ abstract class NumberFormatter
      */
     private function isInvalidRoundingMode(/*int */$value)/*: bool*/
     {
-        $value = cast_to_int($value);
+        $value = backport_type_check('int', $value);
 
         if (\in_array($value, self::$roundingModes, true)) {
             return false;

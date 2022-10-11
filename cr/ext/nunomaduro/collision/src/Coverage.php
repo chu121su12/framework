@@ -164,7 +164,7 @@ final class Coverage
         $shouldBeNewLine = true;
 
         $eachLine = function (array $array, array $tests, /*int */$line) use (&$shouldBeNewLine)/*: array*/ {
-            $line = cast_to_int($line);
+            $line = backport_type_check('int', $line);
 
             if (count($tests) > 0) {
                 $shouldBeNewLine = true;

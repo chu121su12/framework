@@ -26,7 +26,7 @@ class ResponseFactory
 
     public function setRootView(/*string */$name)/*: void*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->rootView = $name;
     }
@@ -53,7 +53,7 @@ class ResponseFactory
      */
     public function getShared(/*string */$key = null, $default = null)
     {
-        $key = cast_to_string($key, null);
+        $key = backport_type_check('?string', $key);
 
         if ($key) {
             return Arr::get($this->sharedProps, $key, $default);
@@ -96,7 +96,7 @@ class ResponseFactory
      */
     public function render(/*string */$component, $props = [])/*: Response*/
     {
-        $component = cast_to_string($component);
+        $component = backport_type_check('string', $component);
 
         if ($props instanceof Arrayable) {
             $props = $props->toArray();

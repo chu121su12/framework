@@ -15,7 +15,7 @@ class MaintenanceModeBypassCookie
      */
     public static function create(/*string */$key)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $expiresAt = Carbon::now()->addHours(12);
 
@@ -34,9 +34,9 @@ class MaintenanceModeBypassCookie
      */
     public static function isValid(/*string */$cookie, /*string */$key)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
-        $cookie = cast_to_string($cookie);
+        $cookie = backport_type_check('string', $cookie);
 
         $payload = backport_json_decode(base64_decode($cookie), true);
 

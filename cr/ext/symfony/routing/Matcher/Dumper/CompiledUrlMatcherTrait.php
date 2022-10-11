@@ -38,7 +38,7 @@ trait CompiledUrlMatcherTrait
 
     public function match($pathinfo) //// array
     {
-        $pathinfo = cast_to_string($pathinfo);
+        $pathinfo = backport_type_check('string', $pathinfo);
 
         $allow = $allowSchemes = [];
         if ($ret = $this->doMatch($pathinfo, $allow, $allowSchemes)) {
@@ -78,7 +78,7 @@ trait CompiledUrlMatcherTrait
 
     private function doMatch($pathinfo, array &$allow = [], array &$allowSchemes = []) //// array
     {
-        $pathinfo = cast_to_string($pathinfo);
+        $pathinfo = backport_type_check('string', $pathinfo);
 
         $allow = $allowSchemes = [];
         $pathinfo = rawurldecode($pathinfo) ?: '/';

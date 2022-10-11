@@ -714,7 +714,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      */
     protected function getGetter(/*string */$name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         switch (strtolower(preg_replace('/[A-Z]/', '_$0', $name))) {
             case 'start':
@@ -748,7 +748,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      */
     public function get(/*string */$name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $getter = $this->getGetter($name);
 
@@ -768,7 +768,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      */
     public function __get(/*string */$name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $this->get($name);
     }
@@ -782,7 +782,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      */
     public function __isset(/*string */$name)/*: bool*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $this->getGetter($name) !== null;
     }
@@ -808,7 +808,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      */
     public function setDateClass(/*string */$dateClass)
     {
-        $dateClass = cast_to_string($dateClass);
+        $dateClass = backport_type_check('string', $dateClass);
 
         if (!is_a($dateClass, CarbonInterface::class, true)) {
             throw new NotACarbonClassException($dateClass);
@@ -989,7 +989,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      */
     public function getStartDate(/*string */$rounding = null)
     {
-        $rounding = cast_to_string($rounding, null);
+        $rounding = backport_type_check('?string', $rounding);
 
         $date = $this->startDate->avoidMutation();
 
@@ -1005,7 +1005,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      */
     public function getEndDate(/*string */$rounding = null)
     {
-        $rounding = cast_to_string($rounding, null);
+        $rounding = backport_type_check('?string', $rounding);
 
         if (!$this->endDate) {
             return null;
@@ -1524,7 +1524,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      */
     public function cast(/*string */$className)
     {
-        $className = cast_to_string($className);
+        $className = backport_type_check('string', $className);
 
         if (!method_exists($className, 'instance')) {
             if (is_a($className, DatePeriod::class, true)) {
@@ -1835,7 +1835,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      */
     public function calculateEnd(/*string */$rounding = null)
     {
-        $rounding = cast_to_string($rounding, null);
+        $rounding = backport_type_check('?string', $rounding);
 
         if ($end = $this->getEndDate($rounding)) {
             return $end;

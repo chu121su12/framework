@@ -29,7 +29,7 @@ class SwooleClient implements Client, ServesStaticFiles
 
     public function __construct(/*protected int */$chunkSize = 1048576)
     {
-        $this->chunkSize = cast_to_int($chunkSize);
+        $this->chunkSize = backport_type_check('int', $chunkSize);
     }
 
     /**
@@ -89,9 +89,9 @@ class SwooleClient implements Client, ServesStaticFiles
      */
     private function isValidFileWithinSymlink(Request $request, /*string */$publicPath, /*string */$pathToFile) ////: bool
     {
-        $publicPath = cast_to_string($publicPath);
+        $publicPath = backport_type_check('string', $publicPath);
 
-        $pathToFile = cast_to_string($pathToFile);
+        $pathToFile = backport_type_check('string', $pathToFile);
 
         $pathAfterSymlink = $this->pathAfterSymlink($publicPath, $request->path());
 
@@ -107,9 +107,9 @@ class SwooleClient implements Client, ServesStaticFiles
      */
     private function pathAfterSymlink(/*string */$publicPath, /*string */$path)
     {
-        $publicPath = cast_to_string($publicPath);
+        $publicPath = backport_type_check('string', $publicPath);
 
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $directories = explode('/', $path);
 
@@ -133,9 +133,9 @@ class SwooleClient implements Client, ServesStaticFiles
      */
     protected function fileIsServable(/*string */$publicPath, /*string */$pathToFile) ////: bool
     {
-        $publicPath = cast_to_string($publicPath);
+        $publicPath = backport_type_check('string', $publicPath);
 
-        $pathToFile = cast_to_string($pathToFile);
+        $pathToFile = backport_type_check('string', $pathToFile);
 
         return $pathToFile &&
                ! in_array(pathinfo($pathToFile, PATHINFO_EXTENSION), ['php', 'htaccess', 'config']) &&
@@ -305,7 +305,7 @@ class SwooleClient implements Client, ServesStaticFiles
      */
     protected function getReasonFromStatusCode(/*int */$code)/*: ?string*/
     {
-        $code = cast_to_int($code);
+        $code = backport_type_check('int', $code);
 
         if (array_key_exists($code, self::STATUS_CODE_REASONS)) {
             return self::STATUS_CODE_REASONS[$code];

@@ -20,7 +20,7 @@ class function_container_class {
  */
 function container(/*?string */$basePath = null, /*?*/callable $resolvingCallback = null, array $options = [])
 {
-    $basePath = cast_to_string($basePath, null);
+    $basePath = backport_type_check('?string', $basePath);
 
     return tap(new Application($basePath, $resolvingCallback))->configure($options);
 }
@@ -36,7 +36,7 @@ function container(/*?string */$basePath = null, /*?*/callable $resolvingCallbac
  */
 function artisan(Contracts\TestCase $testbench, /*string */$command, array $parameters = [])
 {
-    $command = cast_to_string($command);
+    $command = backport_type_check('string', $command);
 
     return tap($testbench->artisan($command, $parameters), function ($artisan) {
         if ($artisan instanceof PendingCommand) {

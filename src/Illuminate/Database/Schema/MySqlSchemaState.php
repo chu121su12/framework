@@ -37,7 +37,7 @@ class MySqlSchemaState extends SchemaState
      */
     protected function removeAutoIncrementingState(/*string */$path)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $this->files->put($path, preg_replace(
             '/\s+AUTO_INCREMENT=[0-9]+/iu',
@@ -54,7 +54,7 @@ class MySqlSchemaState extends SchemaState
      */
     protected function appendMigrationData(/*string */$path)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $process = $this->executeDumpProcess($this->makeProcess(
             $this->baseDumpCommand().' '.$this->migrationTable.' --no-create-info --skip-extended-insert --skip-routines --compact'

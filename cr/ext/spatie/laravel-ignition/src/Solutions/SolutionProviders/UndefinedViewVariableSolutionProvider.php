@@ -83,9 +83,9 @@ class UndefinedViewVariableSolutionProvider implements HasSolutionsForThrowable
 
     protected function findOptionalVariableSolution(/*string */$variableName, /*string */$viewFile)/*: Solution*/
     {
-        $viewFile = cast_to_string($viewFile);
+        $viewFile = backport_type_check('string', $viewFile);
 
-        $variableName = cast_to_string($variableName);
+        $variableName = backport_type_check('string', $variableName);
 
         $optionalSolution = new MakeViewVariableOptionalSolution($variableName, $viewFile);
 

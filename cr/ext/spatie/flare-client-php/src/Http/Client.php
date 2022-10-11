@@ -20,9 +20,9 @@ class Client
         /*string */$baseUrl = 'https://reporting.flareapp.io/api',
         /*int */$timeout = 10
     ) {
-        $apiToken = cast_to_string($apiToken, null);
-        $baseUrl = cast_to_string($baseUrl);
-        $timeout = cast_to_int($timeout);
+        $apiToken = backport_type_check('?string', $apiToken);
+        $baseUrl = backport_type_check('string', $baseUrl);
+        $timeout = backport_type_check('int', $timeout);
 
         $this->apiToken = $apiToken;
 
@@ -41,7 +41,7 @@ class Client
 
     public function setApiToken(/*string */$apiToken)/*: self*/
     {
-        $apiToken = cast_to_string($apiToken);
+        $apiToken = backport_type_check('string', $apiToken);
 
         $this->apiToken = $apiToken;
 
@@ -55,7 +55,7 @@ class Client
 
     public function setBaseUrl(/*string */$baseUrl)/*: self*/
     {
-        $baseUrl = cast_to_string($baseUrl);
+        $baseUrl = backport_type_check('string', $baseUrl);
 
         $this->baseUrl = $baseUrl;
 
@@ -70,7 +70,7 @@ class Client
      */
     public function get(/*string */$url, array $arguments = [])
     {
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
         return $this->makeRequest('get', $url, $arguments);
     }
@@ -83,7 +83,7 @@ class Client
      */
     public function post(/*string */$url, array $arguments = [])
     {
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
         return $this->makeRequest('post', $url, $arguments);
     }
@@ -96,7 +96,7 @@ class Client
      */
     public function patch(/*string */$url, array $arguments = [])
     {
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
         return $this->makeRequest('patch', $url, $arguments);
     }
@@ -109,7 +109,7 @@ class Client
      */
     public function put(/*string */$url, array $arguments = [])
     {
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
         return $this->makeRequest('put', $url, $arguments);
     }
@@ -122,7 +122,7 @@ class Client
      */
     public function delete(/*string */$method, array $arguments = [])
     {
-        $method = cast_to_string($method);
+        $method = backport_type_check('string', $method);
 
         return $this->makeRequest('delete', $method, $arguments);
     }
@@ -136,9 +136,9 @@ class Client
      */
     protected function makeRequest(/*string */$httpVerb, /*string */$url, array $arguments = [])
     {
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
-        $httpVerb = cast_to_string($httpVerb);
+        $httpVerb = backport_type_check('string', $httpVerb);
 
         $queryString = http_build_query([
             'key' => $this->apiToken,
@@ -169,9 +169,9 @@ class Client
 
     public function makeCurlRequest(/*string */$httpVerb, /*string */$fullUrl, array $headers = [], array $arguments = [])/*: Response*/
     {
-        $fullUrl = cast_to_string($fullUrl);
+        $fullUrl = backport_type_check('string', $fullUrl);
 
-        $httpVerb = cast_to_string($httpVerb);
+        $httpVerb = backport_type_check('string', $httpVerb);
 
         $curlHandle = $this->getCurlHandle($fullUrl, $headers);
 
@@ -228,7 +228,7 @@ class Client
      */
     protected function getCurlHandle(/*string */$fullUrl, array $headers = [])
     {
-        $fullUrl = cast_to_string($fullUrl);
+        $fullUrl = backport_type_check('string', $fullUrl);
 
         $curlHandle = curl_init();
 

@@ -39,9 +39,9 @@ class CacheBasedMaintenanceMode implements MaintenanceMode
      */
     public function __construct(Factory $cache, /*string */$store, /*string */$key)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
-        $store = cast_to_string($store);
+        $store = backport_type_check('string', $store);
 
         $this->cache = $cache;
         $this->store = $store;

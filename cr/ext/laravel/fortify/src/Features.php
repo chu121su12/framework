@@ -12,7 +12,7 @@ class Features
      */
     public static function enabled(/*string */$feature)
     {
-        $feature = cast_to_string($feature);
+        $feature = backport_type_check('string', $feature);
 
         return in_array($feature, config('fortify.features', []));
     }
@@ -26,9 +26,9 @@ class Features
      */
     public static function optionEnabled(/*string */$feature, /*string */$option)
     {
-        $option = cast_to_string($option);
+        $option = backport_type_check('string', $option);
 
-        $feature = cast_to_string($feature);
+        $feature = backport_type_check('string', $feature);
 
         return static::enabled($feature) &&
                config("fortify-options.{$feature}.{$option}") === true;

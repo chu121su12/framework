@@ -20,7 +20,7 @@ final class ArgumentFormatter implements ArgumentFormatterContract
      */
     public function format(array $arguments, /*bool */$recursive = true)/*: string*/
     {
-        $recursive = cast_to_bool($recursive);
+        $recursive = backport_type_check('bool', $recursive);
 
         $result = [];
 

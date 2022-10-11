@@ -70,7 +70,7 @@ return [
     'diff_before_yesterday' => 'eergisteren',
     'period_recurrences' => ':count keer',
     'period_interval' => function (/*string */$interval = '') {
-        $interval = cast_to_string($interval);
+        $interval = backport_type_check('string', $interval);
 
         /** @var string $output */
         $output = preg_replace('/^(een|één|1)\s+/u', '', $interval);

@@ -92,7 +92,7 @@ class HandleExceptionsTest extends TestCase
         $logger->shouldReceive('channel')->with('deprecations')->andReturnSelf();
         $logger->shouldReceive('warning')->with(
             m::on(function (/*string */$message) use ($regexps) {
-                $message = cast_to_string($message);
+                $message = backport_type_check('string', $message);
 
                 foreach ($regexps as $regexp) {
                     if (!preg_match(
@@ -190,7 +190,7 @@ class HandleExceptionsTest extends TestCase
         $logger->shouldReceive('channel')->with('deprecations')->andReturnSelf();
         $logger->shouldReceive('warning')->with(
             m::on(function (/*string */$message) use ($regexps) {
-                $message = cast_to_string($message);
+                $message = backport_type_check('string', $message);
 
                 foreach ($regexps as $regexp) {
                     if (!preg_match(

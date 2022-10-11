@@ -30,9 +30,9 @@ class Glow
         array $metaData = [],
         /*?float */$microtime = null
     ) {
-        $name = cast_to_string($name);
-        $messageLevel = cast_to_string($messageLevel);
-        $microtime = cast_to_float($microtime, null);
+        $name = backport_type_check('string', $name);
+        $messageLevel = backport_type_check('string', $messageLevel);
+        $microtime = backport_type_check('?float', $microtime);
 
         $this->name = $name;
         $this->messageLevel = $messageLevel;

@@ -37,7 +37,7 @@ class PhpFileLoader extends FileLoader
      */
     public function load($file, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         $path = $this->locator->locate($file);
         $this->setCurrentDir(\dirname($path));
@@ -66,16 +66,16 @@ class PhpFileLoader extends FileLoader
      */
     public function supports($resource, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         return \is_string($resource) && 'php' === pathinfo($resource, \PATHINFO_EXTENSION) && (!$type || 'php' === $type);
     }
 
     protected function callConfigurator(callable $result, $path, $file) // RouteCollection
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $collection = new RouteCollection();
 

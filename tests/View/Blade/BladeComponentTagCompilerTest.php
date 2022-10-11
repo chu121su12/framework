@@ -13,7 +13,7 @@ use Illuminate\View\ComponentAttributeBag;
 use InvalidArgumentException;
 use Mockery as m;
 
-class BladeComponentTagCompilerTest_testAttributeSanitization_class 
+class BladeComponentTagCompilerTest_testAttributeSanitization_class
         {
             public function __toString()
             {
@@ -445,7 +445,7 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
 
         $app->shouldReceive('getNamespace')->andReturn('App\\');
         $factory->shouldReceive('exists')->andReturnUsing(function (/*string */$viewNameBeingCheckedForExistence) {
-            $viewNameBeingCheckedForExistence = cast_to_string($viewNameBeingCheckedForExistence);
+            $viewNameBeingCheckedForExistence = backport_type_check('string', $viewNameBeingCheckedForExistence);
             // In our test, we'll do as if the 'public.frontend.anonymous-component'
             // view exists and not the others.
             return $viewNameBeingCheckedForExistence === 'admin.auth.components.anonymous-component.index';

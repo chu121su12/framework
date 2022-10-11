@@ -13,7 +13,7 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function __construct(FilesystemAdapter $adapter, /*string */$prefix)
     {
-        $prefix = cast_to_string($prefix);
+        $prefix = backport_type_check('string', $prefix);
 
         if ($prefix === '') {
             throw new \InvalidArgumentException('The prefix must not be empty.');
@@ -25,7 +25,7 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function read(/*string */$location)/*: string*/
     {
-        $location = cast_to_string($location);
+        $location = backport_type_check('string', $location);
 
         try {
             return $this->adapter->read($this->prefix->prefixPath($location));
@@ -42,7 +42,7 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function readStream(/*string */$location)
     {
-        $location = cast_to_string($location);
+        $location = backport_type_check('string', $location);
 
         try {
             return $this->adapter->readStream($this->prefix->prefixPath($location));
@@ -59,9 +59,9 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function listContents(/*string */$location = '', /*bool */$deep = false)/*: Generator*/
     {
-        $location = cast_to_string($location);
+        $location = backport_type_check('string', $location);
 
-        $deep = cast_to_bool($deep);
+        $deep = backport_type_check('bool', $deep);
 
         foreach ($this->adapter->listContents($this->prefix->prefixPath($location), $deep) as $attributes) {
             yield $attributes->withPath($this->prefix->stripPrefix($attributes->path()));
@@ -70,7 +70,7 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function fileExists(/*string */$location)/*: bool*/
     {
-        $location = cast_to_string($location);
+        $location = backport_type_check('string', $location);
 
         try {
             return $this->adapter->fileExists($this->prefix->prefixPath($location));
@@ -87,7 +87,7 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function directoryExists(/*string */$location)/*: bool*/
     {
-        $location = cast_to_string($location);
+        $location = backport_type_check('string', $location);
 
         try {
             return $this->adapter->directoryExists($this->prefix->prefixPath($location));
@@ -104,7 +104,7 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function lastModified(/*string */$path)/*: FileAttributes*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         try {
             return $this->adapter->lastModified($this->prefix->prefixPath($path));
@@ -121,7 +121,7 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function fileSize(/*string */$path)/*: FileAttributes*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         try {
             return $this->adapter->fileSize($this->prefix->prefixPath($path));
@@ -138,7 +138,7 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function mimeType(/*string */$path)/*: FileAttributes*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         try {
             return $this->adapter->mimeType($this->prefix->prefixPath($path));
@@ -155,7 +155,7 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function visibility(/*string */$path)/*: FileAttributes*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         try {
             return $this->adapter->visibility($this->prefix->prefixPath($path));
@@ -172,9 +172,9 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function write(/*string */$location, /*string */$contents, Config $config)/*: void*/
     {
-        $location = cast_to_string($location);
+        $location = backport_type_check('string', $location);
 
-        $contents = cast_to_string($contents);
+        $contents = backport_type_check('string', $contents);
 
         try {
             $this->adapter->write($this->prefix->prefixPath($location), $contents, $config);
@@ -191,7 +191,7 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function writeStream(/*string */$location, $contents, Config $config)/*: void*/
     {
-        $location = cast_to_string($location);
+        $location = backport_type_check('string', $location);
 
         try {
             $this->adapter->writeStream($this->prefix->prefixPath($location), $contents, $config);
@@ -208,9 +208,9 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function setVisibility(/*string */$path, /*string */$visibility)/*: void*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
-        $visibility = cast_to_string($visibility);
+        $visibility = backport_type_check('string', $visibility);
 
         try {
             $this->adapter->setVisibility($this->prefix->prefixPath($path), $visibility);
@@ -227,7 +227,7 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function delete(/*string */$location)/*: void*/
     {
-        $location = cast_to_string($location);
+        $location = backport_type_check('string', $location);
 
         try {
             $this->adapter->delete($this->prefix->prefixPath($location));
@@ -244,7 +244,7 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function deleteDirectory(/*string */$location)/*: void*/
     {
-        $location = cast_to_string($location);
+        $location = backport_type_check('string', $location);
 
         try {
             $this->adapter->deleteDirectory($this->prefix->prefixPath($location));
@@ -261,7 +261,7 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function createDirectory(/*string */$location, Config $config)/*: void*/
     {
-        $location = cast_to_string($location);
+        $location = backport_type_check('string', $location);
 
         try {
             $this->adapter->createDirectory($this->prefix->prefixPath($location), $config);
@@ -278,9 +278,9 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function move(/*string */$source, /*string */$destination, Config $config)/*: void*/
     {
-        $source = cast_to_string($source);
+        $source = backport_type_check('string', $source);
 
-        $destination = cast_to_string($destination);
+        $destination = backport_type_check('string', $destination);
 
         try {
             $this->adapter->move($this->prefix->prefixPath($source), $this->prefix->prefixPath($destination), $config);
@@ -297,9 +297,9 @@ class PathPrefixedAdapter implements FilesystemAdapter
 
     public function copy(/*string */$source, /*string */$destination/*, Config $config*/)/*: void*/
     {
-        $source = cast_to_string($source);
+        $source = backport_type_check('string', $source);
 
-        $destination = cast_to_string($destination);
+        $destination = backport_type_check('string', $destination);
 
         try {
             $this->adapter->copy($this->prefix->prefixPath($source), $this->prefix->prefixPath($destination), $config);

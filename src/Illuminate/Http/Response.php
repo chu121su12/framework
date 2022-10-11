@@ -48,7 +48,7 @@ class Response extends SymfonyResponse
      */
     public function setContent(/*mixed */$content)/*: static*/
     {
-        $content = cast_to_mixed($content);
+        $content = backport_type_check('mixed', $content);
 
         $this->original = $content;
 

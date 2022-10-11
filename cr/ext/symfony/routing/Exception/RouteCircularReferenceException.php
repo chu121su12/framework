@@ -15,7 +15,7 @@ class RouteCircularReferenceException extends RuntimeException
 {
     public function __construct(/*string */$routeId, array $path)
     {
-        $routeId = cast_to_string($routeId);
+        $routeId = backport_type_check('string', $routeId);
 
         parent::__construct(sprintf('Circular reference detected for route "%s", path: "%s".', $routeId, implode(' -> ', $path)));
     }

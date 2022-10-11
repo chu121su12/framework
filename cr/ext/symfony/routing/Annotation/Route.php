@@ -63,23 +63,23 @@ class Route
         $stateless = null,
         /*string */$env = null
     ) {
-        $name = cast_to_string($name, null);
+        $name = backport_type_check('?string', $name);
 
-        $host = cast_to_string($host, null);
+        $host = backport_type_check('?string', $host);
 
-        $condition = cast_to_string($condition, null);
+        $condition = backport_type_check('?string', $condition);
 
-        $locale = cast_to_string($locale, null);
+        $locale = backport_type_check('?string', $locale);
 
-        $format = cast_to_string($format, null);
+        $format = backport_type_check('?string', $format);
 
-        $priority = cast_to_int($priority, null);
+        $priority = backport_type_check('?int', $priority);
 
-        $utf8 = cast_to_bool($utf8, null);
+        $utf8 = backport_type_check('?bool', $utf8);
 
-        $stateless = cast_to_bool($stateless, nul);
+        $stateless = backport_type_check('bool', $stateless, nul);
 
-        $env = cast_to_string($env, null);
+        $env = backport_type_check('?string', $env);
 
         if (\is_string($data)) {
             $data = ['path' => $data];
@@ -169,7 +169,7 @@ class Route
 
     public function setPath(/*string */$path)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $this->path = $path;
     }
@@ -191,7 +191,7 @@ class Route
 
     public function setHost(/*string */$pattern)
     {
-        $pattern = cast_to_string($pattern);
+        $pattern = backport_type_check('string', $pattern);
 
         $this->host = $pattern;
     }
@@ -203,7 +203,7 @@ class Route
 
     public function setName(/*string */$name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->name = $name;
     }
@@ -265,7 +265,7 @@ class Route
 
     public function setCondition(/*?string */$condition = null)
     {
-        $condition = cast_to_string($condition, null);
+        $condition = backport_type_check('?string', $condition);
 
         $this->condition = $condition;
     }
@@ -277,7 +277,7 @@ class Route
 
     public function setPriority($priority) /// void
     {
-        $priority = cast_to_int($priority);
+        $priority = backport_type_check('int', $priority);
 
         $this->priority = $priority;
     }
@@ -289,7 +289,7 @@ class Route
 
     public function setEnv(/*?string */$env = null)////: void
     {
-        $enc = cast_to_string($enc, null);
+        $enc = backport_type_check('?string', $enc);
 
         $this->env = $env;
     }

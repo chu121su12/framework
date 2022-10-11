@@ -18,13 +18,13 @@ class Stream
      */
     public static function request(/*string */$method, /*string */$url, /*int */$statusCode, /*float */$duration)
     {
-        $method = cast_to_string($method);
+        $method = backport_type_check('string', $method);
 
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
-        $statusCode = cast_to_int($statusCode);
+        $statusCode = backport_type_check('int', $statusCode);
 
-        $duration = cast_to_float($duration);
+        $duration = backport_type_check('float', $duration);
 
         fwrite(STDOUT, json_encode([
             'type' => 'request',

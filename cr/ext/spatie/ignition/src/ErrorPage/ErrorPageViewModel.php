@@ -37,7 +37,7 @@ class ErrorPageViewModel
         $this->ignitionConfig = $ignitionConfig;
         $this->report = $report;
         $this->solutions = $solutions;
-        $this->solutionTransformerClass = cast_to_string($solutionTransformerClass, null);
+        $this->solutionTransformerClass = backport_type_check('?string', $solutionTransformerClass);
 
         if (!isset($this->solutionTransformerClass)) {
             $this->solutionTransformerClass = SolutionTransformer::class;
@@ -108,7 +108,7 @@ class ErrorPageViewModel
 
     public function jsonEncode(/*mixed */$data)/*: string*/
     {
-        $data = cast_to_mixed($data);
+        $data = backport_type_check('mixed', $data);
 
         $jsonOptions = JSON_PARTIAL_OUTPUT_ON_ERROR | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
 
@@ -117,7 +117,7 @@ class ErrorPageViewModel
 
     public function getAssetContents(/*string */$asset)/*: string*/
     {
-        $asset = cast_to_string($asset);
+        $asset = backport_type_check('string', $asset);
 
         $assetPath = __DIR__."/../../resources/compiled/{$asset}";
 

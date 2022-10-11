@@ -19,7 +19,7 @@ final class Timer
      */
     private function __construct(/*float */$start)
     {
-        $start = cast_to_float($start);
+        $start = backport_type_check('float', $start);
 
         $this->start = $start;
     }

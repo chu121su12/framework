@@ -22,9 +22,9 @@ class Response
      */
     public function __construct(/*string */$head, /*string */$body)
     {
-        $body = cast_to_string($body);
+        $body = backport_type_check('string', $body);
 
-        $head = cast_to_string($head);
+        $head = backport_type_check('string', $head);
 
         $this->head = $head;
         $this->body = $body;

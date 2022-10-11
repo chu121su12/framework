@@ -63,7 +63,7 @@ EOF;
      */
     public function getCompiledRoutes($forDump = false) //// array
     {
-        $forDump = cast_to_bool($forDump);
+        $forDump = backport_type_check('bool', $forDump);
 
         // Group hosts by same-suffix, re-order when possible
         $matchHost = false;
@@ -251,9 +251,9 @@ EOF;
      */
     private function compileDynamicRoutes(RouteCollection $collection, $matchHost, $chunkLimit, array &$conditions) //// array
     {
-        $chunkLimit = cast_to_int($chunkLimit);
+        $chunkLimit = backport_type_check('int', $chunkLimit);
 
-        $matchHost = cast_to_bool($matchHost);
+        $matchHost = backport_type_check('bool', $matchHost);
 
         if (!$collection->all()) {
             return [[], [], ''];
@@ -379,7 +379,7 @@ EOF;
      */
     private function compileStaticPrefixCollection(StaticPrefixCollection $tree, \stdClass $state, $prefixLen, array &$conditions) //// string
     {
-        $prefixLen = cast_to_int($prefixLen);
+        $prefixLen = backport_type_check('int', $prefixLen);
 
         $code = '';
         $prevRegex = null;
@@ -427,11 +427,11 @@ EOF;
      */
     private function compileRoute(Route $route, $name, $vars, $hasTrailingSlash, $hasTrailingVar, array &$conditions) //// array
     {
-        $hasTrailingVar = cast_to_bool($hasTrailingVar);
+        $hasTrailingVar = backport_type_check('bool', $hasTrailingVar);
 
-        $hasTrailingSlash = cast_to_bool($hasTrailingSlash);
+        $hasTrailingSlash = backport_type_check('bool', $hasTrailingSlash);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $defaults = $route->getDefaults();
 
@@ -474,9 +474,9 @@ EOF;
 
     private function indent($code, $level = 1) //// string
     {
-        $code = cast_to_string($code);
+        $code = backport_type_check('string', $code);
 
-        $level = cast_to_int($level);
+        $level = backport_type_check('int', $level);
 
         return preg_replace('/^./m', str_repeat('    ', $level).'$0', $code);
     }

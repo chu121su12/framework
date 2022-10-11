@@ -25,7 +25,7 @@ class NotImplementedException extends RuntimeException
      */
     public function __construct(/*string */$message)
     {
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         parent::__construct($message.' '.self::INTL_INSTALL_MESSAGE);
     }

@@ -36,9 +36,9 @@ class AliasConfigurator
      */
     public function deprecate(/*string */$package, /*string */$version, /*string */$message)/*: self*/
     {
-        $package = cast_to_string($package);
-        $version = cast_to_string($version);
-        $message = cast_to_string($message);
+        $package = backport_type_check('string', $package);
+        $version = backport_type_check('string', $version);
+        $message = backport_type_check('string', $message);
 
         $this->alias->setDeprecated($package, $version, $message);
 

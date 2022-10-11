@@ -41,9 +41,9 @@ final class Address
 
     public function __construct($address, $name = '')
     {
-        $address = cast_to_string($address);
+        $address = backport_type_check('string', $address);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         if (!class_exists(EmailValidator::class)) {
             throw new LogicException(sprintf('The "%s" class cannot be used as it needs "%s"; try running "composer require egulias/email-validator".', __CLASS__, EmailValidator::class));
@@ -139,7 +139,7 @@ final class Address
     {
         trigger_deprecation('symfony/mime', '5.2', '"%s()" is deprecated, use "%s::create()" instead.', __METHOD__, __CLASS__);
 
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         if (!str_contains($string, '<')) {
             return new self($string, '');

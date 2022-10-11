@@ -35,11 +35,11 @@ class DataPart extends TextPart
      */
     public function __construct($body, $filename = null, $contentType = null, $encoding = null)
     {
-        $encoding = cast_to_string($encoding, null);
+        $encoding = backport_type_check('?string', $encoding);
 
-        $contentType = cast_to_string($contentType, null);
+        $contentType = backport_type_check('?string', $contentType);
 
-        $filename = cast_to_string($filename, null);
+        $filename = backport_type_check('?string', $filename);
 
         unset($this->_parent);
 
@@ -59,11 +59,11 @@ class DataPart extends TextPart
 
     public static function fromPath($path, $name = null, $contentType = null) /// self
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
-        $contentType = cast_to_string($contentType, null);
+        $contentType = backport_type_check('?string', $contentType);
 
-        $name = cast_to_string($name, null);
+        $name = backport_type_check('?string', $name);
 
         if (null === $contentType) {
             $ext = strtolower(substr($path, strrpos($path, '.') + 1));

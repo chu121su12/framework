@@ -22,7 +22,7 @@ trait Matching
 
     public function where(/*string */$key, $expected)/*: self*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $this->has($key);
 

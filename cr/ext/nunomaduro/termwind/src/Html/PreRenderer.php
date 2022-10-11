@@ -30,9 +30,9 @@ final class PreRenderer
         $maxStrLen = array_reduce(
             $lines,
             static function (/*int */$max, /*string */$line) {
-                $max = cast_to_int($max);
+                $max = backport_type_check('int', $max);
 
-                $line = cast_to_string($line);
+                $line = backport_type_check('string', $line);
 
                 return ($max < strlen($line)) ? strlen($line) : $max;
             },
@@ -42,7 +42,7 @@ final class PreRenderer
         $styles = $node->getClassAttribute();
         $html = array_map(
             static function (/*string */$line) {
-                $line = cast_to_string($line);
+                $line = backport_type_check('string', $line);
 
                 return (string) Termwind::div(str_pad($line, $maxStrLen + 3), $styles);
             },

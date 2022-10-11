@@ -27,9 +27,9 @@ class LogMessage
         array $context = [],
         /*?float */$microtime = null
     ) {
-        $message = cast_to_string($message, null);
-        $level = cast_to_string($level);
-        $microtime = cast_to_float($microtime, null);
+        $message = backport_type_check('?string', $message);
+        $level = backport_type_check('string', $level);
+        $microtime = backport_type_check('?float', $microtime);
 
         $this->message = $message;
         $this->level = $level;

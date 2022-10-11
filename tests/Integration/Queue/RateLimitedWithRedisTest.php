@@ -117,7 +117,7 @@ class RateLimitedWithRedisTest extends TestCase
         $restoredRateLimited = unserialize(serialize($rateLimited));
 
         $callback = (function (/*string */$name) {
-            $name = cast_to_string($name);
+            $name = backport_type_check('string', $name);
 
             return $this->{$name};
         });

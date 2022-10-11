@@ -112,7 +112,7 @@ final class Styles
      */
     final public function setStyle(/*string */$style)/*: self*/
     {
-        $style = cast_to_string($style);
+        $style = backport_type_check('string', $style);
 
         $this->styles = array_unique(array_merge($this->styles, [$style]));
 
@@ -124,7 +124,7 @@ final class Styles
      */
     final public function hasStyle(/*string */$style)/*: bool*/
     {
-        $style = cast_to_string($style);
+        $style = backport_type_check('string', $style);
 
         return in_array($style, $this->styles, true);
     }
@@ -134,7 +134,7 @@ final class Styles
      */
     final public function addStyle(/*string */$style)/*: self*/
     {
-        $style = cast_to_string($style);
+        $style = backport_type_check('string', $style);
 
         return StyleToMethod::multiple($this, $style);
     }
@@ -179,9 +179,9 @@ final class Styles
      */
     final public function bg(/*string */$color, /*int */$variant = 0)/*: self*/
     {
-        $color = cast_to_string($color);
+        $color = backport_type_check('string', $color);
 
-        $variant = cast_to_int($variant);
+        $variant = backport_type_check('int', $variant);
 
         return $this->with(['colors' => [
             'bg' => $this->getColorVariant($color, $variant),
@@ -249,7 +249,7 @@ final class Styles
      */
     final public function ml(/*int */$margin)/*: self*/
     {
-        $margin = cast_to_int($margin);
+        $margin = backport_type_check('int', $margin);
 
         return $this->with(['styles' => [
             'ml' => $margin,
@@ -261,7 +261,7 @@ final class Styles
      */
     final public function mr(/*int */$margin)/*: self*/
     {
-        $margin = cast_to_int($margin);
+        $margin = backport_type_check('int', $margin);
 
         return $this->with(['styles' => [
             'mr' => $margin,
@@ -273,7 +273,7 @@ final class Styles
      */
     final public function mb(/*int */$margin)/*: self*/
     {
-        $margin = cast_to_int($margin);
+        $margin = backport_type_check('int', $margin);
 
         return $this->with(['styles' => [
             'mb' => $margin,
@@ -285,7 +285,7 @@ final class Styles
      */
     final public function mt(/*int */$margin)/*: self*/
     {
-        $margin = cast_to_int($margin);
+        $margin = backport_type_check('int', $margin);
 
         return $this->with(['styles' => [
             'mt' => $margin,
@@ -297,7 +297,7 @@ final class Styles
      */
     final public function mx(/*int */$margin)/*: self*/
     {
-        $margin = cast_to_int($margin);
+        $margin = backport_type_check('int', $margin);
 
         return $this->with(['styles' => [
             'ml' => $margin,
@@ -310,7 +310,7 @@ final class Styles
      */
     final public function my(/*int */$margin)/*: self*/
     {
-        $margin = cast_to_int($margin);
+        $margin = backport_type_check('int', $margin);
 
         return $this->with(['styles' => [
             'mt' => $margin,
@@ -323,7 +323,7 @@ final class Styles
      */
     final public function m(/*int */$margin)/*: self*/
     {
-        $margin = cast_to_int($margin);
+        $margin = backport_type_check('int', $margin);
 
         return $this->my($margin)->mx($margin);
     }
@@ -333,7 +333,7 @@ final class Styles
      */
     final public function pl(/*int */$padding)/*: static*/
     {
-        $padding = cast_to_int($padding);
+        $padding = backport_type_check('int', $padding);
 
         return $this->with(['styles' => [
             'pl' => $padding,
@@ -345,7 +345,7 @@ final class Styles
      */
     final public function pr(/*int */$padding)/*: static*/
     {
-        $padding = cast_to_int($padding);
+        $padding = backport_type_check('int', $padding);
 
         return $this->with(['styles' => [
             'pr' => $padding,
@@ -357,7 +357,7 @@ final class Styles
      */
     final public function px(/*int */$padding)/*: self*/
     {
-        $padding = cast_to_int($padding);
+        $padding = backport_type_check('int', $padding);
 
         return $this->pl($padding)->pr($padding);
     }
@@ -367,7 +367,7 @@ final class Styles
      */
     final public function pt(/*int */$padding)/*: static*/
     {
-        $padding = cast_to_int($padding);
+        $padding = backport_type_check('int', $padding);
 
         return $this->with(['styles' => [
             'pt' => $padding,
@@ -379,7 +379,7 @@ final class Styles
      */
     final public function pb(/*int */$padding)/*: static*/
     {
-        $padding = cast_to_int($padding);
+        $padding = backport_type_check('int', $padding);
 
         return $this->with(['styles' => [
             'pb' => $padding,
@@ -391,7 +391,7 @@ final class Styles
      */
     final public function py(/*int */$padding)/*: self*/
     {
-        $padding = cast_to_int($padding);
+        $padding = backport_type_check('int', $padding);
 
         return $this->pt($padding)->pb($padding);
     }
@@ -401,7 +401,7 @@ final class Styles
      */
     final public function p(/*int */$padding)/*: self*/
     {
-        $padding = cast_to_int($padding);
+        $padding = backport_type_check('int', $padding);
 
         return $this->pt($padding)->pr($padding)->pb($padding)->pl($padding);
     }
@@ -411,7 +411,7 @@ final class Styles
      */
     final public function spaceY(/*int */$space)/*: self*/
     {
-        $space = cast_to_int($space);
+        $space = backport_type_check('int', $space);
 
         return $this->with(['styles' => [
             'spaceY' => $space,
@@ -423,7 +423,7 @@ final class Styles
      */
     final public function spaceX(/*int */$space)/*: self*/
     {
-        $space = cast_to_int($space);
+        $space = backport_type_check('int', $space);
 
         return $this->with(['styles' => [
             'spaceX' => $space,
@@ -435,7 +435,7 @@ final class Styles
      */
     final public function borderT(/*int */$width = 1)/*: self*/
     {
-        $width = cast_to_int($width);
+        $width = backport_type_check('int', $width);
 
         if (! $this->element instanceof Hr) {
             throw new InvalidStyle('`border-t` can only be used on an "hr" element.');
@@ -460,9 +460,9 @@ final class Styles
      */
     final public function text(/*string */$value, /*int */$variant = 0)/*: self*/
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $variant = cast_to_string($variant);
+        $variant = backport_type_check('string', $variant);
 
         if (in_array($value, ['left', 'right', 'center'], true)) {
             return $this->with(['styles' => [
@@ -480,9 +480,9 @@ final class Styles
      */
     final public function truncate(/*int */$limit = 0, /*string */$end = '…')/*: self*/
     {
-        $limit = cast_to_int($limit);
+        $limit = backport_type_check('int', $limit);
 
-        $end = cast_to_string($end);
+        $end = backport_type_check('string', $end);
 
         $this->textModifiers[__METHOD__] = function ($text, $styles) use ($limit, $end)/*: string */{
             $limit = $limit > 0 ? $limit : (isset($styles['width']) ? $styles['width'] : 0);
@@ -507,7 +507,7 @@ final class Styles
      */
     final public function w(/*int|string */$width)/*: static*/
     {
-        $width = cast_to_compound('int|string', $width);
+        $width = backport_type_check('int|string', $width);
 
         return $this->with(['styles' => [
             'width' => $width,
@@ -527,7 +527,7 @@ final class Styles
      */
     final public function minW(/*int|string */$width)/*: static*/
     {
-        $width = cast_to_compound('int|string', $width);
+        $width = backport_type_check('int|string', $width);
 
         return $this->with(['styles' => [
             'minWidth' => $width,
@@ -539,7 +539,7 @@ final class Styles
      */
     final public function maxW(/*int|string */$width)/*: static*/
     {
-        $width = cast_to_compound('int|string', $width);
+        $width = backport_type_check('int|string', $width);
 
         return $this->with(['styles' => [
             'maxWidth' => $width,
@@ -707,7 +707,7 @@ final class Styles
      */
     final public function contentRepeat(/*string */$string)/*: self*/
     {
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         $replaced = preg_replace("/\[?'?([^'|\]]+)'?\]?/", '$1', $string);
         $string = isset($replaced) ? $replaced : '';
@@ -726,7 +726,7 @@ final class Styles
      */
     final public function prepend(/*string */$string)/*: self*/
     {
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         $this->textModifiers[__METHOD__] = static function ($text) use ($string) /*: string */{
             return $string.$text;
@@ -740,7 +740,7 @@ final class Styles
      */
     final public function append(/*string */$string)/*: self*/
     {
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         $this->textModifiers[__METHOD__] = static function ($text) use ($string) /*: string */{
             return $text.$string;
@@ -754,9 +754,9 @@ final class Styles
      */
     final public function list_(/*string */$type, /*int */$index = 0)/*: self*/
     {
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
-        $index = cast_to_int($index);
+        $index = backport_type_check('int', $index);
 
         if (! $this->element instanceof Ul && ! $this->element instanceof Ol && ! $this->element instanceof Li) {
             throw new InvalidStyle(sprintf(
@@ -794,7 +794,7 @@ final class Styles
      */
     final public function href(/*string */$href)/*: self*/
     {
-        $href = cast_to_string($href);
+        $href = backport_type_check('string', $href);
 
         $href = str_replace('%', '%%', $href);
 
@@ -806,7 +806,7 @@ final class Styles
      */
     final public function format(/*string */$content)/*: string*/
     {
-        $content = cast_to_string($content);
+        $content = backport_type_check('string', $content);
 
         foreach ($this->textModifiers as $modifier) {
             $content = $modifier(
@@ -910,7 +910,7 @@ final class Styles
      */
     private function applyWidth(/*string */$content)/*: string*/
     {
-        $content = cast_to_string($content);
+        $content = backport_type_check('string', $content);
 
         $styles = isset($this->properties['styles']) ? $this->properties['styles'] : [];
         $minWidth = isset($styles['minWidth']) ? $styles['minWidth'] : -1;
@@ -963,7 +963,7 @@ final class Styles
      */
     private function applyStyling(/*string */$content)/*: string*/
     {
-        $content = cast_to_string($content);
+        $content = backport_type_check('string', $content);
 
         $display = isset($this->properties['styles']) && isset($this->properties['styles']['display']) ? $this->properties['styles']['display'] : 'inline';
 
@@ -1032,7 +1032,7 @@ final class Styles
      */
     public function getLength(/*string */$text = null)/*: int*/
     {
-        $text = cast_to_string($text, null);
+        $text = backport_type_check('?string', $text);
 
         $toReplace = '';
 
@@ -1072,9 +1072,9 @@ final class Styles
      */
     private function getColorVariant(/*string */$color, /*int */$variant)/*: string*/
     {
-        $color = cast_to_string($color);
+        $color = backport_type_check('string', $color);
 
-        $variant = cast_to_int($variant);
+        $variant = backport_type_check('int', $variant);
 
         if ($variant > 0) {
             $color .= '-'.$variant;
@@ -1101,7 +1101,7 @@ final class Styles
      */
     private static function calcWidthFromFraction(/*string */$fraction, array $styles, array $parentStyles)/*: int*/
     {
-        $fraction = cast_to_string($fraction);
+        $fraction = backport_type_check('string', $fraction);
 
         $width = self::getParentWidth($parentStyles);
 
@@ -1161,9 +1161,9 @@ final class Styles
      */
     private static function trimText(/*string */$text, /*int */$width)/*: string*/
     {
-        $text = cast_to_string($text);
+        $text = backport_type_check('string', $text);
 
-        $width = cast_to_int($width);
+        $width = backport_type_check('int', $width);
 
         preg_match_all(self::STYLING_REGEX, $text, $matches, PREG_OFFSET_CAPTURE);
         $repalcedText = preg_replace(self::STYLING_REGEX, '', $text);

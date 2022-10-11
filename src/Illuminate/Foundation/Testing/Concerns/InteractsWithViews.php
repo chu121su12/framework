@@ -20,7 +20,7 @@ trait InteractsWithViews
      */
     protected function view(/*string */$view, $data = [])
     {
-        $view = cast_to_string($view);
+        $view = backport_type_check('string', $view);
 
         return new TestView(view($view, $data));
     }
@@ -34,7 +34,7 @@ trait InteractsWithViews
      */
     protected function blade(/*string */$template, $data = [])
     {
-        $template = cast_to_string($template);
+        $template = backport_type_check('string', $template);
 
         $tempDirectory = sys_get_temp_dir();
 
@@ -60,7 +60,7 @@ trait InteractsWithViews
      */
     protected function component(/*string */$componentClass, $data = [])
     {
-        $componentClass = cast_to_string($componentClass);
+        $componentClass = backport_type_check('string', $componentClass);
 
         $component = $this->app->make($componentClass, $data);
 

@@ -22,7 +22,7 @@ final class DateHeader extends AbstractHeader
 
     public function __construct($name, \DateTimeInterface $date)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         parent::__construct($name);
 

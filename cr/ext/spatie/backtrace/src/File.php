@@ -11,7 +11,7 @@ class File
 
     public function __construct(/*string */$path)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $this->file = new SplFileObject($path);
     }
@@ -25,7 +25,7 @@ class File
 
     public function getLine(/*int */$lineNumber = null)/*: string*/
     {
-        $lineNumber = cast_to_int($lineNumber, null);
+        $lineNumber = backport_type_check('?int', $lineNumber);
 
         if (is_null($lineNumber)) {
             return $this->getNextLine();

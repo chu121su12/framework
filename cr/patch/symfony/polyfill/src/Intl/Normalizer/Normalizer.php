@@ -43,13 +43,13 @@ class Normalizer
 
     public static function isNormalized($s, $form = self::FORM_C)
     {
-        $form = cast_to_int($form);
+        $form = backport_type_check('int', $form);
 
         if (!\in_array($form, [self::NFD, self::NFKD, self::NFC, self::NFKC])) {
             return false;
         }
 
-        $s = cast_to_string($s);
+        $s = backport_type_check('string', $s);
 
         if (!isset($s[strspn($s, self::$ASCII)])) {
             return true;
@@ -63,13 +63,13 @@ class Normalizer
 
     public static function normalize($s, $form = self::FORM_C)
     {
-        $s = cast_to_string($s);
+        $s = backport_type_check('string', $s);
 
         if (!preg_match('//u', $s)) {
             return false;
         }
 
-        $form = cast_to_int($form);
+        $form = backport_type_check('int', $form);
 
         switch ($form) {
             case self::NFC: $C = true; $K = false; break;

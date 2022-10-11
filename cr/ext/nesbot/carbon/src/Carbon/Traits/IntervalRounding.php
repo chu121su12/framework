@@ -22,7 +22,7 @@ trait IntervalRounding
 {
     protected function callRoundMethod(/*string */$method, array $parameters)
     {
-        $method = cast_to_string($method);
+        $method = backport_type_check('string', $method);
 
         $action = substr($method, 0, 4);
 

@@ -126,7 +126,7 @@ class ArgonHasher extends AbstractHasher implements HasherContract
      */
     public function setMemory(/*int */$memory)
     {
-        $memory = cast_to_int($memory);
+        $memory = backport_type_check('int', $memory);
 
         $this->memory = $memory;
 
@@ -141,7 +141,7 @@ class ArgonHasher extends AbstractHasher implements HasherContract
      */
     public function setTime(/*int */$time)
     {
-        $time = cast_to_int($time);
+        $time = backport_type_check('int', $time);
 
         $this->time = $time;
 
@@ -156,7 +156,7 @@ class ArgonHasher extends AbstractHasher implements HasherContract
      */
     public function setThreads(/*int */$threads)
     {
-        $threads = cast_to_int($threads);
+        $threads = backport_type_check('int', $threads);
 
         $this->threads = $threads;
 

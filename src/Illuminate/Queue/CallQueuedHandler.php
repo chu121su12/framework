@@ -247,7 +247,7 @@ class CallQueuedHandler
      */
     public function failed(array $data, $e, /*string */$uuid)
     {
-        $uuid = cast_to_string($uuid);
+        $uuid = backport_type_check('string', $uuid);
 
         $command = $this->getCommand($data);
 
@@ -277,7 +277,7 @@ class CallQueuedHandler
      */
     protected function ensureFailedBatchJobIsRecorded(/*string */$uuid, $command, $e)
     {
-        $uuid = cast_to_string($uuid);
+        $uuid = backport_type_check('string', $uuid);
 
         if (! in_array(Batchable::class, class_uses_recursive($command))) {
             return;
@@ -298,7 +298,7 @@ class CallQueuedHandler
      */
     protected function ensureChainCatchCallbacksAreInvoked(/*string */$uuid, $command, $e)
     {
-        $uuid = cast_to_string($uuid);
+        $uuid = backport_type_check('string', $uuid);
 
         if (method_exists($command, 'invokeChainCatchCallbacks')) {
             $command->invokeChainCatchCallbacks($e);

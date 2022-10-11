@@ -274,7 +274,7 @@ class CorsService
 
     public function varyHeader(Response $response, /*string */$header)/*: Response*/
     {
-        $header = cast_to_string($header);
+        $header = backport_type_check('string', $header);
 
         if (!$response->headers->has('Vary')) {
             $response->headers->set('Vary', $header);

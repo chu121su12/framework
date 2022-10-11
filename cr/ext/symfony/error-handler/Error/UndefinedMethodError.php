@@ -20,7 +20,7 @@ class UndefinedMethodError extends \Error
     {
         backport_type_throwable($previous);
 
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         parent::__construct($message, $previous->getCode(), $previous->getPrevious());
 

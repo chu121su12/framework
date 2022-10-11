@@ -52,11 +52,11 @@ class Route implements \Serializable
      */
     public function __construct($path, array $defaults = [], array $requirements = [], array $options = [], $host = '', $schemes = [], $methods = [], $condition = '')
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
-        $condition = cast_to_string($condition, null);
+        $condition = backport_type_check('?string', $condition);
 
-        $host = cast_to_string($host, null);
+        $host = backport_type_check('?string', $host);
 
         $this->setPath($path);
         $this->addDefaults($defaults);
@@ -130,7 +130,7 @@ class Route implements \Serializable
      */
     public function setPath($pattern)
     {
-        $pattern = cast_to_string($pattern);
+        $pattern = backport_type_check('string', $pattern);
 
         $pattern = $this->extractInlineDefaultsAndRequirements($pattern);
 
@@ -155,7 +155,7 @@ class Route implements \Serializable
      */
     public function setHost($pattern = null)
     {
-        $pattern = cast_to_string($pattern, null);
+        $pattern = backport_type_check('?string', $pattern);
 
         $this->host = $this->extractInlineDefaultsAndRequirements((string) $pattern);
         $this->compiled = null;
@@ -197,7 +197,7 @@ class Route implements \Serializable
      */
     public function hasScheme($scheme)
     {
-        $scheme = cast_to_string($scheme);
+        $scheme = backport_type_check('string', $scheme);
 
         return \in_array(strtolower($scheme), $this->schemes, true);
     }
@@ -271,7 +271,7 @@ class Route implements \Serializable
      */
     public function setOption($name, $value)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->options[$name] = $value;
         $this->compiled = null;
@@ -286,7 +286,7 @@ class Route implements \Serializable
      */
     public function getOption($name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return isset($this->options[$name]) ? $this->options[$name] : null;
     }
@@ -296,7 +296,7 @@ class Route implements \Serializable
      */
     public function hasOption($name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return \array_key_exists($name, $this->options);
     }
@@ -341,7 +341,7 @@ class Route implements \Serializable
      */
     public function getDefault($name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return isset($this->defaults[$name]) ? $this->defaults[$name] : null;
     }
@@ -351,7 +351,7 @@ class Route implements \Serializable
      */
     public function hasDefault($name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return \array_key_exists($name, $this->defaults);
     }
@@ -365,7 +365,7 @@ class Route implements \Serializable
      */
     public function setDefault($name, $default)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         if ('_locale' === $name && $this->isLocalized()) {
             return $this;
@@ -417,7 +417,7 @@ class Route implements \Serializable
      */
     public function getRequirement($key)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         return isset($this->requirements[$key]) ? $this->requirements[$key] : null;
     }
@@ -427,7 +427,7 @@ class Route implements \Serializable
      */
     public function hasRequirement($key)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         return \array_key_exists($key, $this->requirements);
     }
@@ -437,9 +437,9 @@ class Route implements \Serializable
      */
     public function setRequirement($key, $regex)
     {
-        $regex = cast_to_string($regex);
+        $regex = backport_type_check('string', $regex);
 
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         if ('_locale' === $key && $this->isLocalized()) {
             return $this;
@@ -464,7 +464,7 @@ class Route implements \Serializable
      */
     public function setCondition($condition = null)
     {
-        $condition = cast_to_string($condition, null);
+        $condition = backport_type_check('?string', $condition);
 
         $this->condition = (string) $condition;
         $this->compiled = null;
@@ -495,7 +495,7 @@ class Route implements \Serializable
 
     private function extractInlineDefaultsAndRequirements($pattern) //// string
     {
-        $pattern = cast_to_string($pattern);
+        $pattern = backport_type_check('string', $pattern);
 
         if (false === strpbrk($pattern, '?<')) {
             return $pattern;
@@ -515,9 +515,9 @@ class Route implements \Serializable
 
     private function sanitizeRequirement($key, $regex)
     {
-        $regex = cast_to_string($regex);
+        $regex = backport_type_check('string', $regex);
 
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         if ('' !== $regex) {
             if ('^' === $regex[0]) {

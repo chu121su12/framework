@@ -1055,7 +1055,7 @@ class Connection implements ConnectionInterface
      */
     public function setRecordModificationState(/*bool */$value)
     {
-        $value = cast_to_bool($value);
+        $value = backport_type_check('bool', $value);
 
         $this->recordsModified = $value;
 
@@ -1165,11 +1165,11 @@ class Connection implements ConnectionInterface
      */
     public function registerDoctrineType(/*Type|string */$class, /*string */$name, /*string */$type)/*: void*/
     {
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
-        // $class = cast_to_string($class);
+        // $class = backport_type_check('string', $class);
 
         if (! $this->isDoctrineAvailable()) {
             throw new RuntimeException(

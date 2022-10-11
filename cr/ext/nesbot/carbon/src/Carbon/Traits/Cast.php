@@ -30,7 +30,7 @@ trait Cast
      */
     public function cast(/*string */$className)
     {
-        $className = cast_to_string($className);
+        $className = backport_type_check('string', $className);
 
         if (!method_exists($className, 'instance')) {
             if (is_a($className, DateTimeInterface::class, true)) {

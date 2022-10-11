@@ -23,10 +23,10 @@ class InvokeTickCallable
         /*protected */$cache,
         /*protected */ExceptionHandler $exceptionHandler
     ) {
-        $this->key = cast_to_string($key);
+        $this->key = backport_type_check('string', $key);
         $this->callback = $callback;
-        $this->seconds = cast_to_int($seconds);
-        $this->immediate = cast_to_bool($immediate);
+        $this->seconds = backport_type_check('int', $seconds);
+        $this->immediate = backport_type_check('bool', $immediate);
         $this->cache = $cache;
         $this->exceptionHandler = $exceptionHandler;
     }
@@ -71,7 +71,7 @@ class InvokeTickCallable
      */
     public function seconds(/*int */$seconds)
     {
-        $seconds = cast_to_int($seconds);
+        $seconds = backport_type_check('int', $seconds);
 
         $this->seconds = $seconds;
 

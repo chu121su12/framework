@@ -15,7 +15,7 @@ class SequentialCoroutineDispatcher implements DispatchesCoroutines
      */
     public function resolve(array $coroutines, /*int */$waitSeconds = -1) ////: array
     {
-        $waitSeconds = cast_to_int($waitSeconds);
+        $waitSeconds = backport_type_check('int', $waitSeconds);
 
         return collect($coroutines)->mapWithKeys(
             function ($coroutine, $key) { return [$key => $coroutine()]; }

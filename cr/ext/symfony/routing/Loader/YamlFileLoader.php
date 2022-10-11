@@ -50,7 +50,7 @@ class YamlFileLoader extends FileLoader
      */
     public function load($file, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         $path = $this->locator->locate($file);
 
@@ -121,7 +121,7 @@ class YamlFileLoader extends FileLoader
      */
     public function supports($resource, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         return \is_string($resource) && \in_array(pathinfo($resource, \PATHINFO_EXTENSION), ['yml', 'yaml'], true) && (!$type || 'yaml' === $type);
     }
@@ -132,9 +132,9 @@ class YamlFileLoader extends FileLoader
      */
     protected function parseRoute(RouteCollection $collection, $name, array $config, $path)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         if (isset($config['alias'])) {
             $alias = $collection->addAlias($name, $config['alias']);
@@ -195,9 +195,9 @@ class YamlFileLoader extends FileLoader
      */
     protected function parseImport(RouteCollection $collection, array $config, $path, $file)
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $type = isset($config['type']) ? $config['type'] : null;
         $prefix = isset($config['prefix']) ? $config['prefix'] : '';
@@ -275,9 +275,9 @@ class YamlFileLoader extends FileLoader
      */
     protected function validate($config, $name, $path)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         if (!\is_array($config)) {
             throw new \InvalidArgumentException(sprintf('The definition of "%s" in "%s" must be a YAML array.', $name, $path));
@@ -313,8 +313,8 @@ class YamlFileLoader extends FileLoader
      */
     private function validateAlias(array $config, string $name, string $path)/*: void*/
     {
-        $name = cast_to_string($name);
-        $path = cast_to_string($path);
+        $name = backport_type_check('string', $name);
+        $path = backport_type_check('string', $path);
 
         foreach ($config as $key => $value) {
             if (!\in_array($key, ['alias', 'deprecated'], true)) {

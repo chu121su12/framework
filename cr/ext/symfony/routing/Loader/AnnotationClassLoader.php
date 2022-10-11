@@ -86,7 +86,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
 
     public function __construct(Reader $reader = null, /*string */$env = null)
     {
-        $env = cast_to_string($env, null);
+        $env = backport_type_check('?string', $env);
 
         $this->reader = $reader;
         $this->env = $env;
@@ -97,7 +97,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
      */
     public function setRouteAnnotationClass($class)
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         $this->routeAnnotationClass = $class;
     }
@@ -113,7 +113,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
      */
     public function load($class, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         if (!class_exists($class)) {
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
@@ -155,7 +155,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
      */
     protected function addRoute(RouteCollection $collection, $annot, array $globals, \ReflectionClass $class, \ReflectionMethod $method)
     {
-        $annot = cast_to_object($annot);
+        $annot = backport_type_check('object', $annot);
 
         if ($annot->getEnv() && $annot->getEnv() !== $this->env) {
             return;
@@ -251,7 +251,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
      */
     public function supports($resource, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         return \is_string($resource) && preg_match('/^(?:\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)+$/', $resource) && (!$type || 'annotation' === $type);
     }
@@ -376,11 +376,11 @@ abstract class AnnotationClassLoader implements LoaderInterface
 
     protected function createRoute($path, array $defaults, array $requirements, array $options, $host = null, array $schemes, array $methods, $condition = null)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
-        $condition = cast_to_string($condition, null);
+        $condition = backport_type_check('?string', $condition);
 
-        $host = cast_to_string($host, null);
+        $host = backport_type_check('?string', $host);
 
         return new Route($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
     }
@@ -394,7 +394,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
      */
     private function getAnnotations($reflection) //// iterable
     {
-        $reflection = cast_to_object($reflection);
+        $reflection = backport_type_check('object', $reflection);
 
         if (\PHP_VERSION_ID >= 80000) {
             foreach ($reflection->getAttributes($this->routeAnnotationClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {

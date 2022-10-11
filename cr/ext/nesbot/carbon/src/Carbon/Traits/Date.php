@@ -647,7 +647,7 @@ trait Date
      */
     protected static function getRangesByUnit(/*int */$daysInMonth = 31)/*: array*/
     {
-        $daysInMonth = cast_to_int($daysInMonth);
+        $daysInMonth = backport_type_check('int', $daysInMonth);
 
         return [
             // @call roundUnit
@@ -1450,7 +1450,7 @@ trait Date
      */
     public function utcOffset(/*int */$minuteOffset = null)
     {
-        $minuteOffset = cast_to_int($minuteOffset, null);
+        $minuteOffset = backport_type_check('?int', $minuteOffset);
 
         if (\func_num_args() < 1) {
             return $this->offsetMinutes;
@@ -2081,9 +2081,9 @@ trait Date
      */
     public function ordinal(/*string */$key, /*?string */$period = null)/*: string*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
-        $period = cast_to_string($period, null);
+        $period = backport_type_check('?string', $period);
 
         $number = $this->$key;
         $result = $this->translate('ordinal', [
@@ -2103,7 +2103,7 @@ trait Date
      */
     public function meridiem(/*bool */$isLower = false)/*: string*/
     {
-        $isLower = cast_to_bool($isLower);
+        $isLower = backport_type_check('bool', $isLower);
 
         $hour = $this->hour;
         $index = $hour < 12 ? 0 : 1;
@@ -2145,7 +2145,7 @@ trait Date
      */
     public function getAltNumber(/*string */$key)/*: string*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         return $this->translateNumber(\strlen($key) > 1 ? $this->$key : $this->rawFormat('h'));
     }
@@ -2160,9 +2160,9 @@ trait Date
      */
     public function isoFormat(/*string */$format, /*?string */$originalFormat = null)/*: string*/
     {
-        $format = cast_to_string($format);
+        $format = backport_type_check('string', $format);
 
-        $originalFormat = cast_to_string($originalFormat, null);
+        $originalFormat = backport_type_check('?string', $originalFormat);
 
         $result = '';
         $length = mb_strlen($format);
@@ -2324,7 +2324,7 @@ trait Date
      */
     public function translatedFormat(/*string */$format)/*: string*/
     {
-        $format = cast_to_string($format);
+        $format = backport_type_check('string', $format);
 
         $replacements = static::getFormatsToIsoReplacements();
         $context = '';
@@ -2502,7 +2502,7 @@ trait Date
      */
     public static function singularUnit(/*string */$unit)/*: string*/
     {
-        $unit = cast_to_string($unit);
+        $unit = backport_type_check('string', $unit);
 
         $unit = rtrim(mb_strtolower($unit), 's');
 
@@ -2526,7 +2526,7 @@ trait Date
      */
     public static function pluralUnit(/*string */$unit)/*: string*/
     {
-        $unit = cast_to_string($unit);
+        $unit = backport_type_check('string', $unit);
 
         $unit = rtrim(strtolower($unit), 's');
 

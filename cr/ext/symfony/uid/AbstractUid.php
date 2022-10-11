@@ -48,7 +48,7 @@ abstract class AbstractUid implements \JsonSerializable
      */
     public static function fromBinary(/*string */$uid)/*: self*/
     {
-        $uid = cast_to_string($uid);
+        $uid = backport_type_check('string', $uid);
 
         if (16 !== \strlen($uid)) {
             throw new \InvalidArgumentException('Invalid binary uid provided.');
@@ -64,7 +64,7 @@ abstract class AbstractUid implements \JsonSerializable
      */
     public static function fromBase58(/*string */$uid)/*: self*/
     {
-        $uid = cast_to_string($uid);
+        $uid = backport_type_check('string', $uid);
 
         if (22 !== \strlen($uid)) {
             throw new \InvalidArgumentException('Invalid base-58 uid provided.');
@@ -80,7 +80,7 @@ abstract class AbstractUid implements \JsonSerializable
      */
     public static function fromBase32(/*string */$uid)/*: self*/
     {
-        $uid = cast_to_string($uid);
+        $uid = backport_type_check('string', $uid);
 
         if (26 !== \strlen($uid)) {
             throw new \InvalidArgumentException('Invalid base-32 uid provided.');
@@ -96,7 +96,7 @@ abstract class AbstractUid implements \JsonSerializable
      */
     public static function fromRfc4122(/*string */$uid)/*: self*/
     {
-        $uid = cast_to_string($uid);
+        $uid = backport_type_check('string', $uid);
 
         if (36 !== \strlen($uid)) {
             throw new \InvalidArgumentException('Invalid RFC4122 uid provided.');

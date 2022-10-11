@@ -33,7 +33,7 @@ class UndefinedLivewirePropertySolutionProvider implements HasSolutionsForThrowa
 
         return $parsed->getPropertyNamesLike($variable)
             ->map(function (/*string */$suggested) use ($parsed, $variable) {
-                $suggested = cast_to_string($suggested);
+                $suggested = backport_type_check('string', $suggested);
 
                 return new SuggestLivewirePropertyNameSolution(
                     $variable,

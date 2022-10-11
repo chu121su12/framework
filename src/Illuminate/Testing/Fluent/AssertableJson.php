@@ -42,7 +42,7 @@ class AssertableJson implements Arrayable
      */
     protected function __construct(array $props, /*string */$path = null)
     {
-        $path = cast_to_string($path, null);
+        $path = backport_type_check('?string', $path);
 
         $this->path = $path;
         $this->props = $props;
@@ -56,7 +56,7 @@ class AssertableJson implements Arrayable
      */
     protected function dotPath(/*string */$key = '')/*: string*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         if (is_null($this->path)) {
             return $key;
@@ -73,7 +73,7 @@ class AssertableJson implements Arrayable
      */
     protected function prop(/*string */$key = null)
     {
-        $key = cast_to_string($key, null);
+        $key = backport_type_check('?string', $key);
 
         return Arr::get($this->props, $key);
     }
@@ -87,7 +87,7 @@ class AssertableJson implements Arrayable
      */
     protected function scope(/*string */$key, Closure $callback)/*: self*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $props = $this->prop($key);
         $path = $this->dotPath($key);

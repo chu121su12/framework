@@ -46,7 +46,7 @@ class SymfonyHelper
 
     public static function headerUtilsQuote(/*string */$s)////: string
     {
-        $s = cast_to_string($s);
+        $s = backport_type_check('string', $s);
 
         if (preg_match('/^[a-z0-9!#$%&\'*.^_`|~-]+$/i', $s)) {
             return $s;
@@ -57,9 +57,9 @@ class SymfonyHelper
 
     public static function headerUtilsSplit(/*string */$header, /*string */$separators)////: array
     {
-        $separators = cast_to_string($separators);
+        $separators = backport_type_check('string', $separators);
 
-        $header = cast_to_string($header);
+        $header = backport_type_check('string', $header);
 
         $quotedSeparators = preg_quote($separators, '/');
 
@@ -86,7 +86,7 @@ class SymfonyHelper
 
     public static function headerUtilsToString(array $assoc, /*string */$separator)////: string
     {
-        $separator = cast_to_string($separator);
+        $separator = backport_type_check('string', $separator);
 
         $parts = [];
         foreach ($assoc as $name => $value) {
@@ -107,11 +107,11 @@ class SymfonyHelper
 
     public static function httpFoundationMakeDisposition(/*string */$disposition, /*string */$filename, /*string */$filenameFallback = '')////: string
     {
-        $disposition = cast_to_string($disposition);
+        $disposition = backport_type_check('string', $disposition);
 
-        $filename = cast_to_string($filename);
+        $filename = backport_type_check('string', $filename);
 
-        $filenameFallback = cast_to_string($filenameFallback);
+        $filenameFallback = backport_type_check('string', $filenameFallback);
 
         if (!\in_array($disposition, [self::DISPOSITION_ATTACHMENT, self::DISPOSITION_INLINE])) {
             throw new \InvalidArgumentException(sprintf('The disposition must be either "%s" or "%s".', self::DISPOSITION_ATTACHMENT, self::DISPOSITION_INLINE));
@@ -155,9 +155,9 @@ class SymfonyHelper
 
     public static function newProcess($command, $cwd = null, array $env = null, $input = null, $timeout = 60)
     {
-        $cwd = cast_to_string($cwd, null);
+        $cwd = backport_type_check('?string', $cwd);
 
-        $timeout = cast_to_float($timeout, null);
+        $timeout = backport_type_check('?float', $timeout);
 
         if (windows_os()) {
             return new Process($command, $cwd, null, $input, $timeout);
@@ -168,7 +168,7 @@ class SymfonyHelper
 
     public static function processFromShellCommandline($command, $cwd = null, array $env = null, $input = null, $timeout = 60)
     {
-        $command = cast_to_string($command);
+        $command = backport_type_check('string', $command);
 
         return static::newProcess($command, $cwd, $env, $input, $timeout);
     }
@@ -203,11 +203,11 @@ class SymfonyHelper
 
     public static function makeBinaryFileResponse($file, /*int */$status = 200, array $headers = [], /*bool */$public = true, /*string */$contentDisposition = null, /*bool */$autoEtag = false, /*bool */$autoLastModified = true)
     {
-        $status = cast_to_int($status);
-        $public = cast_to_bool($public);
-        $contentDisposition = cast_to_string($contentDisposition, null);
-        $autoEtag = cast_to_bool($autoEtag);
-        $autoLastModified = cast_to_bool($autoLastModified);
+        $status = backport_type_check('int', $status);
+        $public = backport_type_check('bool', $public);
+        $contentDisposition = backport_type_check('?string', $contentDisposition);
+        $autoEtag = backport_type_check('bool', $autoEtag);
+        $autoLastModified = backport_type_check('bool', $autoLastModified);
 
         $response = new BinaryFileResponse($file, $status, $headers, $public, $contentDisposition, $autoEtag, $autoLastModified);
 
@@ -224,7 +224,7 @@ class SymfonyHelper
 
     public static function makeStreamedResponse(callable $callback = null, /*int */$status = 200, array $headers = [])
     {
-        $status = cast_to_int($status);
+        $status = backport_type_check('int', $status);
 
         $response = new StreamedResponse($callback, $status);
 
@@ -248,9 +248,9 @@ class SymfonyHelper
 
     private static function groupParts(array $matches, /*string */$separators, /*bool */$first = true)////: array
     {
-        $separators = cast_to_string($separators);
+        $separators = backport_type_check('string', $separators);
 
-        $first = cast_to_bool($first);
+        $first = backport_type_check('bool', $first);
 
         $separator = $separators[0];
         $partSeparators = substr($separators, 1);

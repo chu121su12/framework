@@ -15,9 +15,9 @@ class SuggestLivewirePropertyNameSolution implements Solution
         /*protected *//*string */$componentClass,
         /*protected *//*string */$suggested
     ) {
-        $this->variableName = cast_to_string($variableName);
-        $this->componentClass = cast_to_string($componentClass);
-        $this->suggested = cast_to_string($suggested);
+        $this->variableName = backport_type_check('string', $variableName);
+        $this->componentClass = backport_type_check('string', $componentClass);
+        $this->suggested = backport_type_check('string', $suggested);
     }
 
     public function getSolutionTitle()/*: string*/

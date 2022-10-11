@@ -34,13 +34,13 @@ class Assert implements Arrayable
 
     protected function __construct(/*string */$component, array $props, /*string */$url, /*string */$version = null, /*string */$path = null)
     {
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
-        $component = cast_to_string($component);
+        $component = backport_type_check('string', $component);
 
-        $path = cast_to_string($path, null);
+        $path = backport_type_check('?string', $path);
 
-        $version = cast_to_string($version, null);
+        $version = backport_type_check('?string', $version);
 
         echo "\033[0;31mInertia's built-in 'Assert' library will be removed in a future version of inertia-laravel:\033[0m\n";
         echo "\033[0;31m - If you are seeing this error while using \$response->assertInertia(...), please upgrade to Laravel 8.32.0 or higher.\033[0m\n";
@@ -58,7 +58,7 @@ class Assert implements Arrayable
 
     protected function dotPath(/*string */$key)/*: string*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         if (is_null($this->path)) {
             return $key;
@@ -69,7 +69,7 @@ class Assert implements Arrayable
 
     protected function scope(/*string */$key, Closure $callback)/*: self*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $props = $this->prop($key);
         $path = $this->dotPath($key);

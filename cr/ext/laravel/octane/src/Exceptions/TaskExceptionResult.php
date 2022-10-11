@@ -19,11 +19,11 @@ class TaskExceptionResult
         /*protected string */$file,
         /*protected int */$line
     ) {
-        $this->class = cast_to_string($class);
-        $this->message = cast_to_string($message);
-        $this->code = cast_to_int($code);
-        $this->file = cast_to_string($file);
-        $this->line = cast_to_int($line);
+        $this->class = backport_type_check('string', $class);
+        $this->message = backport_type_check('string', $message);
+        $this->code = backport_type_check('int', $code);
+        $this->file = backport_type_check('string', $file);
+        $this->line = backport_type_check('int', $line);
     }
 
     /**

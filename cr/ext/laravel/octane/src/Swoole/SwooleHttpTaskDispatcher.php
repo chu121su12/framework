@@ -23,8 +23,8 @@ class SwooleHttpTaskDispatcher implements DispatchesTasks
         /*protected string */$port,
         /*protected */DispatchesTasks $fallbackDispatcher
     ) {
-        $this->host = cast_to_string($host);
-        $this->port = cast_to_string($port);
+        $this->host = backport_type_check('string', $host);
+        $this->port = backport_type_check('string', $port);
         $this->fallbackDispatcher = $fallbackDispatcher;
     }
 
@@ -42,7 +42,7 @@ class SwooleHttpTaskDispatcher implements DispatchesTasks
      */
     public function resolve(array $tasks, /*int */$waitMilliseconds = 3000) ////: array
     {
-        $waitMilliseconds = cast_to_int($waitMilliseconds);
+        $waitMilliseconds = backport_type_check('int', $waitMilliseconds);
 
         $tasks = collect($tasks)->mapWithKeys(function ($task, $key) {
             return [$key => $task instanceof Closure

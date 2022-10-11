@@ -140,7 +140,7 @@ class Dispatcher implements QueueingDispatcher
      */
     public function findBatch(/*string */$batchId)
     {
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         return $this->container->make(BatchRepository::class)->find($batchId);
     }

@@ -1050,7 +1050,7 @@ class Grammar extends BaseGrammar
      */
     public function compileInsertUsing(Builder $query, array $columns, /*string */$sql)
     {
-        $sql = cast_to_string($sql);
+        $sql = backport_type_check('string', $sql);
 
         return "insert into {$this->wrapTable($query->from)} ({$this->columnize($columns)}) $sql";
     }

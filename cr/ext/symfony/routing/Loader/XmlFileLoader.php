@@ -47,7 +47,7 @@ class XmlFileLoader extends FileLoader
      */
     public function load($file, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         $path = $this->locator->locate($file);
 
@@ -75,9 +75,9 @@ class XmlFileLoader extends FileLoader
      */
     protected function parseNode(RouteCollection $collection, \DOMElement $node, $path, $file)
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         if (self::NAMESPACE_URI !== $node->namespaceURI) {
             return;
@@ -110,7 +110,7 @@ class XmlFileLoader extends FileLoader
      */
     public function supports($resource, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         return \is_string($resource) && 'xml' === pathinfo($resource, \PATHINFO_EXTENSION) && (!$type || 'xml' === $type);
     }
@@ -122,7 +122,7 @@ class XmlFileLoader extends FileLoader
      */
     protected function parseRoute(RouteCollection $collection, \DOMElement $node, $path)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         if ('' === $id = $node->getAttribute('id')) {
             throw new \InvalidArgumentException(sprintf('The <route> element in file "%s" must have an "id" attribute.', $path));
@@ -171,9 +171,9 @@ class XmlFileLoader extends FileLoader
      */
     protected function parseImport(RouteCollection $collection, \DOMElement $node, $path, $file)
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         if ('' === $resource = $node->getAttribute('resource')) {
             throw new \InvalidArgumentException(sprintf('The <import> element in file "%s" must have a "resource" attribute.', $path));
@@ -251,7 +251,7 @@ class XmlFileLoader extends FileLoader
      */
     protected function loadFile($file)
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         return XmlUtils::loadFile($file, __DIR__.static::SCHEME_PATH);
     }
@@ -263,7 +263,7 @@ class XmlFileLoader extends FileLoader
      */
     private function parseConfigs(\DOMElement $node, $path) //// array
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $defaults = [];
         $requirements = [];
@@ -353,7 +353,7 @@ class XmlFileLoader extends FileLoader
      */
     private function parseDefaultsConfig(\DOMElement $element, $path)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         if ($this->isElementValueNull($element)) {
             return null;
@@ -389,7 +389,7 @@ class XmlFileLoader extends FileLoader
      */
     private function parseDefaultNode(\DOMElement $node, $path)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         if ($this->isElementValueNull($node)) {
             return null;
@@ -459,7 +459,7 @@ class XmlFileLoader extends FileLoader
      */
     private function parseDeprecation(\DOMElement $node, /*string */$path)/*: array*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $deprecatedNode = null;
         foreach ($node->childNodes as $child) {

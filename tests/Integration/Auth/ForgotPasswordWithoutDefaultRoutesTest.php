@@ -70,7 +70,7 @@ class ForgotPasswordWithoutDefaultRoutesTest extends TestCase
         Notification::fake();
 
         ResetPassword::createUrlUsing(function ($user, /*string */$token) {
-            $token = cast_to_string($token);
+            $token = backport_type_check('string', $token);
 
             return route('custom.password.reset', $token);
         });

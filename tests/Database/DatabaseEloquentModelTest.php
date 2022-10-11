@@ -2922,7 +2922,7 @@ class Uppercase implements CastsInboundAttributes
 {
     public function set($model, /*string */$key, $value, array $attributes)
     {
-        // $key = cast_to_string($key);
+        // $key = backport_type_check('string', $key);
 
         return is_string($value) ? strtoupper($value) : $value;
     }

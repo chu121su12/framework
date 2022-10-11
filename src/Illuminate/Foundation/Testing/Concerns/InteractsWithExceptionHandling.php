@@ -179,9 +179,9 @@ trait InteractsWithExceptionHandling
             $expectedClass = class_exists('Throwable') ? Throwable::class : \Exception::class;
         }
 
-        $expectedClass = cast_to_string($expectedClass);
+        $expectedClass = backport_type_check('string', $expectedClass);
 
-        $expectedMessage = cast_to_string($expectedMessage, null);
+        $expectedMessage = backport_type_check('?string', $expectedMessage);
 
         try {
             $test();

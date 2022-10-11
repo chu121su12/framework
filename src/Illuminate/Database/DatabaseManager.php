@@ -250,11 +250,11 @@ class DatabaseManager implements ConnectionResolverInterface
      */
     public function registerDoctrineType(/*string */$class, /*string */$name, /*string */$type)/*: void*/
     {
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         if (! class_exists('Doctrine\DBAL\Connection')) {
             throw new RuntimeException(

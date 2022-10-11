@@ -25,9 +25,9 @@ class OpenSwooleTable extends Table
      */
     public function column(/*string */$name, /*int */$type, /*int */$size = 0)/*: bool*/
     {
-        $name = cast_to_string($name);
-        $type = cast_to_int($type);
-        $size = cast_to_int($size);
+        $name = backport_type_check('string', $name);
+        $type = backport_type_check('int', $type);
+        $size = backport_type_check('int', $size);
 
         $this->columns[$name] = [$type, $size];
 
@@ -43,7 +43,7 @@ class OpenSwooleTable extends Table
      */
     public function set(/*string */$key, array $values)/*: bool*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         collect($values)
             ->each($this->ensureColumnsSize());

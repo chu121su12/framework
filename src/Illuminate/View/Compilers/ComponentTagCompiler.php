@@ -71,7 +71,7 @@ class ComponentTagCompiler
      */
     public function compile(/*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         $value = $this->compileSlots($value);
 
@@ -88,7 +88,7 @@ class ComponentTagCompiler
      */
     public function compileTags(/*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         $value = $this->compileSelfClosingTags($value);
         $value = $this->compileOpeningTags($value);
@@ -107,7 +107,7 @@ class ComponentTagCompiler
      */
     protected function compileOpeningTags(/*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         $pattern = "/
             <
@@ -165,7 +165,7 @@ class ComponentTagCompiler
      */
     protected function compileSelfClosingTags(/*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         $pattern = "/
             <
@@ -224,7 +224,7 @@ class ComponentTagCompiler
      */
     protected function componentString(/*string */$component, array $attributes)
     {
-        $component = cast_to_string($component);
+        $component = backport_type_check('string', $component);
 
         $class = $this->componentClass($component);
 
@@ -265,7 +265,7 @@ class ComponentTagCompiler
      */
     public function componentClass(/*string */$component)
     {
-        $component = cast_to_string($component);
+        $component = backport_type_check('string', $component);
 
         $viewFactory = Container::getInstance()->make(Factory::class);
 
@@ -329,7 +329,7 @@ class ComponentTagCompiler
      */
     public function findClassByComponent(/*string */$component)
     {
-        $component = cast_to_string($component);
+        $component = backport_type_check('string', $component);
 
         $segments = explode('::', $component);
 
@@ -352,7 +352,7 @@ class ComponentTagCompiler
      */
     public function guessClassName(/*string */$component)
     {
-        $component = cast_to_string($component);
+        $component = backport_type_check('string', $component);
 
         $namespace = Container::getInstance()
                     ->make(Application::class)
@@ -371,7 +371,7 @@ class ComponentTagCompiler
      */
     public function formatClassName(/*string */$component)
     {
-        $component = cast_to_string($component);
+        $component = backport_type_check('string', $component);
 
         $componentPieces = array_map(function ($componentPiece) {
             return ucfirst(Str::camel($componentPiece));
@@ -437,7 +437,7 @@ class ComponentTagCompiler
      */
     protected function compileClosingTags(/*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         return preg_replace("/<\/\s*x[-\:][\w\-\:\.]*\s*>/", ' @endComponentClass##END-COMPONENT-CLASS##', $value);
     }
@@ -450,7 +450,7 @@ class ComponentTagCompiler
      */
     public function compileSlots(/*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         $pattern = "/
             <
@@ -520,7 +520,7 @@ class ComponentTagCompiler
      */
     protected function getAttributesFromAttributeString(/*string */$attributeString)
     {
-        $attributeString = cast_to_string($attributeString);
+        $attributeString = backport_type_check('string', $attributeString);
 
         $attributeString = $this->parseAttributeBag($attributeString);
         $attributeString = $this->parseComponentTagClassStatements($attributeString);
@@ -582,7 +582,7 @@ class ComponentTagCompiler
      */
     protected function parseAttributeBag(/*string */$attributeString)
     {
-        $attributeString = cast_to_string($attributeString);
+        $attributeString = backport_type_check('string', $attributeString);
 
         $pattern = "/
             (?:^|\s+)                                        # start of the string or whitespace between attributes
@@ -600,7 +600,7 @@ class ComponentTagCompiler
      */
     protected function parseComponentTagClassStatements(/*string */$attributeString)
     {
-        $attributeString = cast_to_string($attributeString);
+        $attributeString = backport_type_check('string', $attributeString);
 
         return preg_replace_callback(
              '/@(class)(\( ( (?>[^()]+) | (?2) )* \))/x', function ($match) {
@@ -623,7 +623,7 @@ class ComponentTagCompiler
      */
     protected function parseBindAttributes(/*string */$attributeString)
     {
-        $attributeString = cast_to_string($attributeString);
+        $attributeString = backport_type_check('string', $attributeString);
 
         $pattern = "/
             (?:^|\s+)     # start of the string or whitespace between attributes
@@ -645,7 +645,7 @@ class ComponentTagCompiler
      */
     protected function compileAttributeEchos(/*string */$attributeString)
     {
-        $attributeString = cast_to_string($attributeString);
+        $attributeString = backport_type_check('string', $attributeString);
 
         $value = $this->blade->compileEchos($attributeString);
 
@@ -665,7 +665,7 @@ class ComponentTagCompiler
      */
     protected function escapeSingleQuotesOutsideOfPhpBlocks(/*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         return collect(token_get_all($value))->map(function ($token) {
             if (! is_array($token)) {
@@ -689,9 +689,9 @@ class ComponentTagCompiler
     {
         return collect($attributes)
                 ->map(function (/*string */$value, /*string */$attribute) use ($escapeBound) {
-                    $attribute = cast_to_string($attribute);
+                    $attribute = backport_type_check('string', $attribute);
 
-                    $value = cast_to_string($value);
+                    $value = backport_type_check('string', $value);
 
                     return $escapeBound && isset($this->boundAttributes[$attribute]) && $value !== 'true' && ! is_numeric($value)
                                 ? "'{$attribute}' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute({$value})"
@@ -708,7 +708,7 @@ class ComponentTagCompiler
      */
     public function stripQuotes(/*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         return Str::startsWith($value, ['"', '\''])
                     ? substr($value, 1, -1)

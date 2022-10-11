@@ -74,7 +74,7 @@ abstract class Collator
      */
     public function __construct(/*?string */$locale = null)
     {
-        $locale = cast_to_string($locale, null);
+        $locale = backport_type_check('?string', $locale);
 
         if ('en' !== $locale && null !== $locale) {
             throw new MethodArgumentValueNotImplementedException(__METHOD__, 'locale', $locale, 'Only the locale "en" is supported');
@@ -92,7 +92,7 @@ abstract class Collator
      */
     public static function create(/*?string */$locale = null)
     {
-        $locale = cast_to_string($locale, null);
+        $locale = backport_type_check('?string', $locale);
 
         return new static($locale);
     }
@@ -110,7 +110,7 @@ abstract class Collator
      */
     public function asort(array &$array, /*int */$flags = self::SORT_REGULAR)
     {
-        $flags = cast_to_int($flags);
+        $flags = backport_type_check('int', $flags);
 
         $intlToPlainFlagMap = [
             self::SORT_REGULAR => \SORT_REGULAR,
@@ -134,9 +134,9 @@ abstract class Collator
      */
     public function compare(/*string */$string1, /*string */$string2)
     {
-        $string2 = cast_to_string($string2);
+        $string2 = backport_type_check('string', $string2);
 
-        $string1 = cast_to_string($string1);
+        $string1 = backport_type_check('string', $string1);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -152,7 +152,7 @@ abstract class Collator
      */
     public function getAttribute(/*int */$attribute)
     {
-        $attribute = cast_to_int($attribute);
+        $attribute = backport_type_check('int', $attribute);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -185,7 +185,7 @@ abstract class Collator
      */
     public function getLocale(/*int */$type = Locale::ACTUAL_LOCALE)
     {
-        $type = cast_to_int($type);
+        $type = backport_type_check('int', $type);
 
         return 'en';
     }
@@ -201,7 +201,7 @@ abstract class Collator
      */
     public function getSortKey(/*string */$string)
     {
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -231,9 +231,9 @@ abstract class Collator
      */
     public function setAttribute(/*int */$attribute, /*int */$value)
     {
-        $value = cast_to_int($value);
+        $value = backport_type_check('int', $value);
 
-        $attribute = cast_to_int($attribute);
+        $attribute = backport_type_check('int', $attribute);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -249,7 +249,7 @@ abstract class Collator
      */
     public function setStrength(/*int */$strength)
     {
-        $strength = cast_to_int($strength);
+        $strength = backport_type_check('int', $strength);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -279,7 +279,7 @@ abstract class Collator
      */
     public function sort(array &$array, /*int */$flags = self::SORT_REGULAR)
     {
-        $flags = cast_to_int($flags);
+        $flags = backport_type_check('int', $flags);
 
         throw new MethodNotImplementedException(__METHOD__);
     }

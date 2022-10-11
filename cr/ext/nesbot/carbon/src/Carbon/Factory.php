@@ -247,7 +247,7 @@ class Factory
 
     public function __construct(array $settings = [], /*?string */$className = null)
     {
-        $className = cast_to_string($className, null);
+        $className = backport_type_check('?string', $className);
 
         if ($className) {
             $this->className = $className;
@@ -263,7 +263,7 @@ class Factory
 
     public function setClassName(/*string */$className)
     {
-        $className = cast_to_string($className);
+        $className = backport_type_check('string', $className);
 
         $this->className = $className;
 
@@ -272,7 +272,7 @@ class Factory
 
     public function className(/*string */$className = null)
     {
-        $className = cast_to_string($className, null);
+        $className = backport_type_check('?string', $className);
 
         return $className === null ? $this->getClassName() : $this->setClassName($className);
     }

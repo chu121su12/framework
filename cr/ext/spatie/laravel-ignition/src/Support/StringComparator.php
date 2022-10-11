@@ -15,9 +15,9 @@ class StringComparator
      */
     public static function findClosestMatch(array $strings, /*string */$input, /*int */$sensitivity = 4)/*: ?string*/
     {
-        $sensitivity = cast_to_int($sensitivity);
+        $sensitivity = backport_type_check('int', $sensitivity);
 
-        $input = cast_to_string($input);
+        $input = backport_type_check('string', $input);
 
         $closestDistance = -1;
 
@@ -54,7 +54,7 @@ class StringComparator
      */
     public static function findSimilarText(array $strings, /*string */$input)/*: ?string*/
     {
-        $input = cast_to_string($input);
+        $input = backport_type_check('string', $input);
 
         if (empty($strings)) {
             return null;
@@ -62,7 +62,7 @@ class StringComparator
 
         return Collection::make($strings)
             ->sortByDesc(function (/*string */$string) use ($input) {
-                $string = cast_to_string($string);
+                $string = backport_type_check('string', $string);
 
                 similar_text($input, $string, $percentage);
 

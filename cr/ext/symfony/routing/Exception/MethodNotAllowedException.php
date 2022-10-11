@@ -27,9 +27,9 @@ class MethodNotAllowedException extends \RuntimeException implements ExceptionIn
      */
     public function __construct(array $allowedMethods, $message = null, $code = 0, $previous = null)
     {
-        $code = cast_to_int($code);
+        $code = backport_type_check('int', $code);
 
-        $message = cast_to_string($message, null);
+        $message = backport_type_check('?string', $message);
 
         if (null === $message) {
             trigger_deprecation('symfony/routing', '5.3', 'Passing null as $message to "%s()" is deprecated, pass an empty string instead.', __METHOD__);

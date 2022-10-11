@@ -8,13 +8,13 @@ class WorkerException extends Exception
 {
     public function __construct(/*string */$message, /*int */$code, /*string */$file, /*int */$line)
     {
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
-        $code = cast_to_int($code);
+        $code = backport_type_check('int', $code);
 
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
-        $line = cast_to_int($line);
+        $line = backport_type_check('int', $line);
 
         parent::__construct($message, $code);
 

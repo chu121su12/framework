@@ -19,7 +19,7 @@ class SignalDispatcher
      */
     public function canCommunicateWith(/*int */$processId) ////: bool
     {
-        $processId = cast_to_int($processId);
+        $processId = backport_type_check('int', $processId);
 
         return $this->signal($processId, 0);
     }
@@ -33,9 +33,9 @@ class SignalDispatcher
      */
     public function terminate(/*int */$processId, /*int */$wait = 0) ////: bool
     {
-        $processId = cast_to_int($processId);
+        $processId = backport_type_check('int', $processId);
 
-        $wait = cast_to_int($wait);
+        $wait = backport_type_check('int', $wait);
 
         $this->extension->dispatchProcessSignal($processId, SIGTERM);
 
@@ -65,9 +65,9 @@ class SignalDispatcher
      */
     public function signal(/*int */$processId, /*int */$signal) ////: bool
     {
-        $processId = cast_to_int($processId);
+        $processId = backport_type_check('int', $processId);
 
-        $signal = cast_to_int($signal);
+        $signal = backport_type_check('int', $signal);
 
         return $this->extension->dispatchProcessSignal($processId, $signal);
     }

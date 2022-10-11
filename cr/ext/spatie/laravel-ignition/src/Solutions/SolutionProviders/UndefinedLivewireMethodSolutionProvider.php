@@ -33,7 +33,7 @@ class UndefinedLivewireMethodSolutionProvider implements HasSolutionsForThrowabl
 
         return $parsed->getMethodNamesLike($methodName)
             ->map(function (/*string */$suggested) use ($parsed, $methodName) {
-                $suggested = cast_to_string($suggested);
+                $suggested = backport_type_check('string', $suggested);
 
                 return new SuggestLivewireMethodNameSolution(
                     $methodName,

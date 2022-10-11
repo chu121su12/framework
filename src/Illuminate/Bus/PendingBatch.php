@@ -177,7 +177,7 @@ class PendingBatch
      */
     public function name(/*string */$name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->name = $name;
 
@@ -192,7 +192,7 @@ class PendingBatch
      */
     public function onConnection(/*string */$connection)
     {
-        $connection = cast_to_string($connection);
+        $connection = backport_type_check('string', $connection);
 
         $this->options['connection'] = $connection;
 
@@ -217,7 +217,7 @@ class PendingBatch
      */
     public function onQueue(/*string */$queue)
     {
-        $queue = cast_to_string($queue);
+        $queue = backport_type_check('string', $queue);
 
         $this->options['queue'] = $queue;
 
@@ -243,7 +243,7 @@ class PendingBatch
      */
     public function withOption(/*string */$key, $value)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $this->options[$key] = $value;
 

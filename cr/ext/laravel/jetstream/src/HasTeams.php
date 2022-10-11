@@ -162,7 +162,7 @@ trait HasTeams
      */
     public function hasTeamRole($team, /*string */$role)
     {
-        $role = cast_to_string($role);
+        $role = backport_type_check('string', $role);
 
         if ($this->ownsTeam($team)) {
             return true;
@@ -201,7 +201,7 @@ trait HasTeams
      */
     public function hasTeamPermission($team, /*string */$permission)
     {
-        $permission = cast_to_string($permission);
+        $permission = backport_type_check('string', $permission);
 
         if ($this->ownsTeam($team)) {
             return true;

@@ -21,7 +21,7 @@ final class EmailTextBodyContains extends Constraint
 
     public function __construct($expectedText)
     {
-        $expectedText = cast_to_string($expectedText);
+        $expectedText = backport_type_check('string', $expectedText);
 
         $this->expectedText = $expectedText;
     }

@@ -39,7 +39,7 @@ class SqliteSchemaState extends SchemaState
      */
     protected function appendMigrationData(/*string */$path)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         with($process = $this->makeProcess(
             $this->baseCommand().' ".dump \''.$this->migrationTable.'\'"'

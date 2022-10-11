@@ -17,7 +17,7 @@ final class Attribute
 
     public function __construct($flags = self::TARGET_ALL)
     {
-        $flags = cast_to_int($flags);
+        $flags = backport_type_check('int', $flags);
 
         $this->flags = $flags;
     }

@@ -25,7 +25,7 @@ class DayOfYearTransformer extends Transformer
      */
     public function format(\DateTime $dateTime, /*int */$length)/*: string*/
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
         $dayOfYear = (int) $dateTime->format('z') + 1;
 
@@ -37,7 +37,7 @@ class DayOfYearTransformer extends Transformer
      */
     public function getReverseMatchingRegExp(/*int */$length)/*: string*/
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
         return '\d{'.$length.'}';
     }
@@ -47,9 +47,9 @@ class DayOfYearTransformer extends Transformer
      */
     public function extractDateOptions(/*string */$matched, /*int */$length)/*: array*/
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
-        $matched = cast_to_string($matched);
+        $matched = backport_type_check('string', $matched);
 
         return [];
     }

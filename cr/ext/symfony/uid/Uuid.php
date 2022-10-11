@@ -28,7 +28,7 @@ class Uuid extends AbstractUid
 
     public function __construct(/*string */$uuid)
     {
-        $uuid = cast_to_string($uuid);
+        $uuid = backport_type_check('string', $uuid);
 
         $type = preg_match('{^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$}Di', $uuid) ? (int) $uuid[14] : false;
 
@@ -44,7 +44,7 @@ class Uuid extends AbstractUid
      */
     public static function fromString(/*string */$uuid)/*: parent*/
     {
-        $uuid = cast_to_string($uuid);
+        $uuid = backport_type_check('string', $uuid);
 
         if (22 === \strlen($uuid) && 22 === strspn($uuid, BinaryUtil::BASE58[''])) {
             $uuid = str_pad(BinaryUtil::fromBase($uuid, BinaryUtil::BASE58), 16, "\0", \STR_PAD_LEFT);
@@ -89,7 +89,7 @@ class Uuid extends AbstractUid
 
     final public static function v3(self $namespace, /*string */$name)/*: UuidV3*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         // don't use uuid_generate_md5(), some versions are buggy
         $uuid = md5(hex2bin(str_replace('-', '', $namespace->uid)).$name, true);
@@ -104,7 +104,7 @@ class Uuid extends AbstractUid
 
     final public static function v5(self $namespace, /*string */$name)/*: UuidV5*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         // don't use uuid_generate_sha1(), some versions are buggy
         $uuid = substr(sha1(hex2bin(str_replace('-', '', $namespace->uid)).$name, true), 0, 16);
@@ -119,7 +119,7 @@ class Uuid extends AbstractUid
 
     public static function isValid(/*string */$uuid)/*: bool*/
     {
-        $uuid = cast_to_string($uuid);
+        $uuid = backport_type_check('string', $uuid);
 
         if (!preg_match('{^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$}Di', $uuid)) {
             return false;
@@ -149,9 +149,9 @@ class Uuid extends AbstractUid
 
     private static function format(/*string */$uuid, /*string */$version)/*: string*/
     {
-        $uuid = cast_to_string($uuid);
+        $uuid = backport_type_check('string', $uuid);
 
-        $version = cast_to_string($version);
+        $version = backport_type_check('string', $version);
 
         $uuid[8] = $uuid[8] & "\x3F" | "\x80";
         $uuid = substr_replace(bin2hex($uuid), '-', 8, 0);

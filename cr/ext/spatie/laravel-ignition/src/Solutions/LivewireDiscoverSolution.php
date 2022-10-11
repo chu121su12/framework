@@ -11,7 +11,7 @@ class LivewireDiscoverSolution implements RunnableSolution
 
     public function __construct(/*string */$customTitle = '')
     {
-        $customTitle = cast_to_string($customTitle);
+        $customTitle = backport_type_check('string', $customTitle);
 
         $this->customTitle = $customTitle;
     }

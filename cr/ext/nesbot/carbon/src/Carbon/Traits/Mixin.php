@@ -128,7 +128,7 @@ trait Mixin
 
     private static function getAnonymousClassCodeForTrait(/*string */$trait)
     {
-        $trait = cast_to_string($trait);
+        $trait = backport_type_check('string', $trait);
 
         return 'return new class() extends '.static::class.' {use '.$trait.';};';
     }

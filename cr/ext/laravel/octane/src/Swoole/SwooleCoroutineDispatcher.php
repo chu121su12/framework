@@ -12,7 +12,7 @@ class SwooleCoroutineDispatcher implements DispatchesCoroutines
 
     public function __construct(/*protected bool */$withinCoroutineContext)
     {
-        $this->withinCoroutineContext = cast_to_bool($withinCoroutineContext);
+        $this->withinCoroutineContext = backport_type_check('bool', $withinCoroutineContext);
     }
 
     /**
@@ -24,7 +24,7 @@ class SwooleCoroutineDispatcher implements DispatchesCoroutines
      */
     public function resolve(array $coroutines, /*int */$waitSeconds = -1) ////: array
     {
-        $waitSeconds = cast_to_int($waitSeconds);
+        $waitSeconds = backport_type_check('int', $waitSeconds);
 
         $results = [];
 

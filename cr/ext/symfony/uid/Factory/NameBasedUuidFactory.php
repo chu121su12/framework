@@ -22,7 +22,7 @@ class NameBasedUuidFactory
 
     public function __construct(/*string */$class, Uuid $namespace)
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         $this->class = $class;
         $this->namespace = $namespace;
@@ -33,7 +33,7 @@ class NameBasedUuidFactory
      */
     public function create(/*string */$name)/*: Uuid*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         switch ($class = $this->class) {
             case UuidV5::class: return Uuid::v5($this->namespace, $name);

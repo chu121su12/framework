@@ -22,9 +22,9 @@ final class PathPrefixer
 
     public function __construct(/*string */$prefix, /*string */$separator = '/')
     {
-        $prefix = cast_to_string($prefix);
+        $prefix = backport_type_check('string', $prefix);
 
-        $separator = cast_to_string($separator);
+        $separator = backport_type_check('string', $separator);
 
         $this->prefix = rtrim($prefix, '\\/');
 
@@ -37,14 +37,14 @@ final class PathPrefixer
 
     public function prefixPath(/*string */$path)/*: string*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         return $this->prefix . ltrim($path, '\\/');
     }
 
     public function stripPrefix(/*string */$path)/*: string*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         /* @var string */
         return substr($path, strlen($this->prefix));
@@ -52,14 +52,14 @@ final class PathPrefixer
 
     public function stripDirectoryPrefix(/*string */$path)/*: string*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         return rtrim($this->stripPrefix($path), '\\/');
     }
 
     public function prefixDirectoryPath(/*string */$path)/*: string*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $prefixedPath = $this->prefixPath(rtrim($path, '\\/'));
 

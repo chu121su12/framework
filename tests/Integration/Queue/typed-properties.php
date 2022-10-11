@@ -19,7 +19,7 @@ class TypedPropertyTestClass
 
     public function __construct(ModelSerializationTestUser $user, /*int */$id, array $names)
     {
-        $id = cast_to_int($id);
+        $id = backport_type_check('int', $id);
 
         $this->user = $user;
         $this->id = $id;

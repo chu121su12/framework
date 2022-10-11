@@ -49,7 +49,7 @@ class Email extends Message
      */
     public function subject($subject)
     {
-        $subject = cast_to_string($subject);
+        $subject = backport_type_check('string', $subject);
 
         return $this->setHeaderBody('Text', 'Subject', $subject);
     }
@@ -251,7 +251,7 @@ class Email extends Message
      */
     public function priority($priority)
     {
-        $priority = cast_to_int($priority);
+        $priority = backport_type_check('int', $priority);
 
         if ($priority > 5) {
             $priority = 5;
@@ -284,7 +284,7 @@ class Email extends Message
      */
     public function text($body, $charset = 'utf-8')
     {
-        $charset = cast_to_string($charset);
+        $charset = backport_type_check('string', $charset);
 
         $this->text = $body;
         $this->textCharset = $charset;
@@ -312,7 +312,7 @@ class Email extends Message
      */
     public function html($body, $charset = 'utf-8')
     {
-        $charset = cast_to_string($charset);
+        $charset = backport_type_check('string', $charset);
 
         $this->html = $body;
         $this->htmlCharset = $charset;
@@ -340,9 +340,9 @@ class Email extends Message
      */
     public function attach($body, $name = null, $contentType = null)
     {
-        $contentType = cast_to_string($contentType, null);
+        $contentType = backport_type_check('?string', $contentType);
 
-        $name = cast_to_string($name, null);
+        $name = backport_type_check('?string', $name);
 
         $this->attachments[] = ['body' => $body, 'name' => $name, 'content-type' => $contentType, 'inline' => false];
 
@@ -354,11 +354,11 @@ class Email extends Message
      */
     public function attachFromPath($path, $name = null, $contentType = null)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
-        $contentType = cast_to_string($contentType, null);
+        $contentType = backport_type_check('?string', $contentType);
 
-        $name = cast_to_string($name, null);
+        $name = backport_type_check('?string', $name);
 
         $this->attachments[] = ['path' => $path, 'name' => $name, 'content-type' => $contentType, 'inline' => false];
 
@@ -372,9 +372,9 @@ class Email extends Message
      */
     public function embed($body, $name = null, $contentType = null)
     {
-        $contentType = cast_to_string($contentType, null);
+        $contentType = backport_type_check('?string', $contentType);
 
-        $name = cast_to_string($name, null);
+        $name = backport_type_check('?string', $name);
 
         $this->attachments[] = ['body' => $body, 'name' => $name, 'content-type' => $contentType, 'inline' => true];
 
@@ -386,11 +386,11 @@ class Email extends Message
      */
     public function embedFromPath($path, $name = null, $contentType = null)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
-        $contentType = cast_to_string($contentType, null);
+        $contentType = backport_type_check('?string', $contentType);
 
-        $name = cast_to_string($name, null);
+        $name = backport_type_check('?string', $name);
 
         $this->attachments[] = ['path' => $path, 'name' => $name, 'content-type' => $contentType, 'inline' => true];
 
@@ -559,9 +559,9 @@ class Email extends Message
      */
     private function setHeaderBody($type, $name, $body) // object
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
         $this->getHeaders()->setHeaderBody($type, $name, $body);
 
@@ -570,7 +570,7 @@ class Email extends Message
 
     private function addListAddressHeaderBody($name, array $addresses)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         if (!$header = $this->getHeaders()->get($name)) {
             return $this->setListAddressHeaderBody($name, $addresses);
@@ -586,7 +586,7 @@ class Email extends Message
      */
     private function setListAddressHeaderBody($name, array $addresses)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $addresses = Address::createArray($addresses);
         $headers = $this->getHeaders();

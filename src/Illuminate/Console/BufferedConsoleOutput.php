@@ -30,9 +30,9 @@ class BufferedConsoleOutput extends ConsoleOutput
      */
     protected function doWrite(/*string */$message, /*bool */$newline)
     {
-        $newline = cast_to_bool($newline);
+        $newline = backport_type_check('bool', $newline);
 
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         $this->buffer .= $message;
 

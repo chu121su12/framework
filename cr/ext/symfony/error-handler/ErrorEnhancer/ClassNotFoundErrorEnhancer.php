@@ -72,7 +72,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
      */
     private function getClassCandidates(/*string */$class)/*: array*/
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         if (!\is_array($functions = spl_autoload_functions())) {
             return [];
@@ -114,11 +114,11 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
 
     private function findClassInPath(/*string */$path, /*string */$class, /*string */$prefix)/*: array*/
     {
-        $prefix = cast_to_string($prefix);
+        $prefix = backport_type_check('string', $prefix);
 
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         if (!$path = realpath($path.'/'.strtr($prefix, '\\_', '//')) ?: realpath($path.'/'.\dirname(strtr($prefix, '\\_', '//'))) ?: realpath($path)) {
             return [];
@@ -137,11 +137,11 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
 
     private function convertFileToClass(/*string */$path, /*string */$file, /*string */$prefix)/*: ?string*/
     {
-        $prefix = cast_to_string($prefix);
+        $prefix = backport_type_check('string', $prefix);
 
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $candidates = [
             // namespaced class
@@ -194,7 +194,7 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
 
     private function classExists(/*string */$class)/*: bool*/
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         return class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false);
     }

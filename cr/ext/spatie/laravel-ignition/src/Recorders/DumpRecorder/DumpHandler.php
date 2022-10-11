@@ -15,7 +15,7 @@ class DumpHandler
 
     public function dump(/*mixed */$value)/*: void*/
     {
-        $value = cast_to_mixed($value);
+        $value = backport_type_check('mixed', $value);
 
         $data = (new VarCloner)->cloneVar($value);
 

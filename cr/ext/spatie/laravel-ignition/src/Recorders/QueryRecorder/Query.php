@@ -19,7 +19,7 @@ class Query
 
     public static function fromQueryExecutedEvent(QueryExecuted $queryExecuted, /*bool */$reportBindings = false)/*: self*/
     {
-        $reportBindings = cast_to_bool($reportBindings);
+        $reportBindings = backport_type_check('bool', $reportBindings);
 
         return new self(
             $queryExecuted->sql,
@@ -44,10 +44,10 @@ class Query
         /*?*/array $bindings = null,
         /*?float */$microtime = null
     ) {
-        $sql = cast_to_string($sql);
-        $time = cast_to_float($time);
-        $connectionName = cast_to_string($connectionName);
-        $microtime = cast_to_float($microtime, null);
+        $sql = backport_type_check('string', $sql);
+        $time = backport_type_check('float', $time);
+        $connectionName = backport_type_check('string', $connectionName);
+        $microtime = backport_type_check('?float', $microtime);
 
         $this->sql = $sql;
         $this->time = $time;

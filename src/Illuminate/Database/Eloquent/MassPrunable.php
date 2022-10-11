@@ -15,7 +15,7 @@ trait MassPrunable
      */
     public function pruneAll(/*int */$chunkSize = 1000)
     {
-        $chunkSize = cast_to_int($chunkSize);
+        $chunkSize = backport_type_check('int', $chunkSize);
 
         $query = tap($this->prunable(), function ($query) use ($chunkSize) {
             $query->when(! $query->getQuery()->limit, function ($query) use ($chunkSize) {

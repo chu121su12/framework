@@ -31,7 +31,7 @@ trait HasApiTokens
      */
     public function tokenCan(/*string */$ability)
     {
-        $ability = cast_to_string($ability);
+        $ability = backport_type_check('string', $ability);
 
         return $this->accessToken && $this->accessToken->can($ability);
     }
@@ -45,7 +45,7 @@ trait HasApiTokens
      */
     public function createToken(/*string */$name, array $abilities = ['*'])
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $token = $this->tokens()->create([
             'name' => $name,

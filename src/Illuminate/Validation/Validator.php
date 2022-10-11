@@ -368,7 +368,7 @@ class Validator implements ValidatorContract
      */
     protected function replacePlaceholderInString(/*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         return str_replace(
             [$this->dotPlaceholder, '__asterisk__'],
@@ -506,7 +506,7 @@ class Validator implements ValidatorContract
      */
     public function validateWithBag(/*string */$errorBag)
     {
-        $errorBag = cast_to_string($errorBag);
+        $errorBag = backport_type_check('string', $errorBag);
 
         try {
             return $this->validate();
@@ -908,7 +908,7 @@ class Validator implements ValidatorContract
      */
     protected function excludeAttribute(/*string */$attribute)
     {
-        $attribute = cast_to_string($attribute);
+        $attribute = backport_type_check('string', $attribute);
 
         $this->excludeAttributes[] = $attribute;
 
@@ -1184,7 +1184,7 @@ class Validator implements ValidatorContract
      */
     private function dataForSometimesIteration(/*string */$attribute, $removeLastSegmentOfAttribute)
     {
-        $attribute = cast_to_string($attribute);
+        $attribute = backport_type_check('string', $attribute);
 
         $lastSegmentOfAttribute = strrchr($attribute, '.');
 

@@ -61,7 +61,7 @@ trait InteractsWithDatabase
      */
     protected function assertDatabaseCount($table, /*int */$count, $connection = null)
     {
-        $count = cast_to_int($count);
+        $count = backport_type_check('int', $count);
 
         $this->assertThat(
             $this->getTable($table), new CountInDatabase($this->getConnection($connection, $table), $count)

@@ -392,9 +392,9 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      */
     public function get(/*string */$key, /*mixed */$default = null)/*: mixed*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
-        $default = cast_to_mixed($default, null);
+        $default = backport_type_check('?mixed', $default);
 
         return parent::get($key, $default);
     }
@@ -539,7 +539,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      */
     public function hasSession(/*bool */$skipIfUninitialized = false)/*: bool*/
     {
-        // $skipIfUninitialized = cast_to_bool($skipIfUninitialized);
+        // $skipIfUninitialized = backport_type_check('bool', $skipIfUninitialized);
 
         return ! is_null($this->session);
     }
@@ -591,7 +591,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      */
     public function setRequestLocale(/*string */$locale)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
         $this->locale = $locale;
     }
@@ -604,7 +604,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      */
     public function setDefaultRequestLocale(/*string */$locale)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
         $this->defaultLocale = $locale;
     }
@@ -834,9 +834,9 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
 
     private function getTrustedValuesOverride(/*int */$type, /*string */$ip = null)
     {
-        $type = cast_to_int($type);
+        $type = backport_type_check('int', $type);
 
-        $ip = cast_to_string($ip, null);
+        $ip = backport_type_check('?string', $ip);
 
         $clientValues = [];
         $forwardedValues = [];

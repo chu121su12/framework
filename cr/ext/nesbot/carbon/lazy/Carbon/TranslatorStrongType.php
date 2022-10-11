@@ -18,20 +18,20 @@ if (!class_exists(LazyTranslator::class, false)) {
     {
         public function trans(/*?string */$id = null, array $parameters = [], /*?string */$domain = null, /*?string */$locale = null)/*: string*/
         {
-            $locale = cast_to_string($locale, null);
+            $locale = backport_type_check('?string', $locale);
 
-            $domain = cast_to_string($domain, null);
+            $domain = backport_type_check('?string', $domain);
 
-            $id = cast_to_string($id, null);
+            $id = backport_type_check('?string', $id);
 
             return $this->translate($id, $parameters, $domain, $locale);
         }
 
         public function getFromCatalogue(MessageCatalogueInterface $catalogue, /*string */$id, /*string */$domain = 'messages')
         {
-            $domain = cast_to_string($domain);
+            $domain = backport_type_check('string', $domain);
 
-            $id = cast_to_string($id);
+            $id = backport_type_check('string', $id);
 
             $messages = $this->getPrivateProperty($catalogue, 'messages');
 
@@ -54,10 +54,10 @@ if (!class_exists(LazyTranslator::class, false)) {
 
         private function getPrivateProperty($instance, /*string */$field)
         {
-            $field = cast_to_string($field);
+            $field = backport_type_check('string', $field);
 
             $function = function (/*string */$field) {
-                $field = cast_to_string($field);
+                $field = backport_type_check('string', $field);
 
                 return $this->$field;
             };

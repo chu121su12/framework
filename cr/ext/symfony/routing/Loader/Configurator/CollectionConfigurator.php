@@ -30,7 +30,7 @@ class CollectionConfigurator
 
     public function __construct(RouteCollection $parent, $name, self $parentConfigurator = null, array $parentPrefixes = null)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->parent = $parent;
         $this->name = $name;
@@ -70,7 +70,7 @@ class CollectionConfigurator
      */
     final public function collection($name = '') /// self
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return new self($this->collection, $this->name.$name, $this, $this->prefixes);
     }
@@ -124,7 +124,7 @@ class CollectionConfigurator
 
     private function createRoute($path) // Route
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $routeClone = clone $this->route;
         return $routeClone->setPath($path);

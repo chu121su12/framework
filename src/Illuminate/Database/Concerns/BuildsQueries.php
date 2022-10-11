@@ -424,7 +424,7 @@ trait BuildsQueries
      */
     protected function getOriginalColumnNameForCursorPagination($builder, /*string */$parameter)
     {
-        $parameter = cast_to_string($parameter);
+        $parameter = backport_type_check('string', $parameter);
 
         $columns = $builder instanceof Builder ? $builder->getQuery()->columns : $builder->columns;
 

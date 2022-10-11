@@ -55,7 +55,7 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
 
     protected function findRelatedView(/*string */$missingView)/*: ?string*/
     {
-        $missingView = cast_to_string($missingView);
+        $missingView = backport_type_check('string', $missingView);
 
         $views = $this->getAllViews();
 
@@ -72,17 +72,17 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
 
         $viewsForHints = collect($fileViewFinder->getHints())
             ->flatMap(function ($paths, /*string */$namespace) use ($extensions) {
-                $namespace = cast_to_string($namespace);
+                $namespace = backport_type_check('string', $namespace);
 
                 $paths = Arr::wrap($paths);
 
                 return collect($paths)
                     ->flatMap(function (/*string */$path) use ($extensions) {
-                        $path = cast_to_string($path);
+                        $path = backport_type_check('string', $path);
                         return $this->getViewsInPath($path, $extensions);
                     })
                     ->map(function (/*string */$view) {
-                        $view = cast_to_string($view);
+                        $view = backport_type_check('string', $view);
                         return "{$namespace}::{$view}";
                     })
                     ->toArray();
@@ -90,7 +90,7 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
 
         $viewsForViewPaths = collect($fileViewFinder->getPaths())
             ->flatMap(function (/*string */$path) use ($extensions) {
-                $path = cast_to_string($path);
+                $path = backport_type_check('string', $path);
                 return $this->getViewsInPath($path, $extensions);
             });
 
@@ -105,15 +105,15 @@ class ViewNotFoundSolutionProvider implements HasSolutionsForThrowable
      */
     protected function getViewsInPath(/*string */$path, array $extensions)/*: array*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $filePatterns = array_map(function (/*string */$extension) {
-            $extension = cast_to_string($extension);
+            $extension = backport_type_check('string', $extension);
             return "*.{$extension}";
         }, $extensions);
 
         $extensionsWithDots = array_map(function (/*string */$extension) {
-            $extension = cast_to_string($extension);
+            $extension = backport_type_check('string', $extension);
             return ".{$extension}";
         }, $extensions);
 

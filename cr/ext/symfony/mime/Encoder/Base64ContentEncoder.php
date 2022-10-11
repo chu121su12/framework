@@ -20,7 +20,7 @@ final class Base64ContentEncoder extends Base64Encoder implements ContentEncoder
 {
     public function encodeByteStream($stream, $maxLineLength = 0) //// iterable
     {
-        $maxLineLength = cast_to_int($maxLineLength);
+        $maxLineLength = backport_type_check('int', $maxLineLength);
 
         if (!\is_resource($stream)) {
             throw new \TypeError(sprintf('Method "%s" takes a stream as a first argument.', __METHOD__));

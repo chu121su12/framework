@@ -62,7 +62,7 @@ class Flare
         /*string */$apiKey = null,
         ContextProviderDetector $contextDetector = null
     )/*: self */{
-        $apiKey = cast_to_string($apiKey);
+        $apiKey = backport_type_check('string', $apiKey);
 
         $client = new Client($apiKey);
 
@@ -71,7 +71,7 @@ class Flare
 
     public function setApiToken(/*string */$apiToken)/*: self*/
     {
-        $apiToken = cast_to_string($apiToken);
+        $apiToken = backport_type_check('string', $apiToken);
 
         $this->client->setApiToken($apiToken);
 
@@ -85,7 +85,7 @@ class Flare
 
     public function setBaseUrl(/*string */$baseUrl)/*: self*/
     {
-        $baseUrl = cast_to_string($baseUrl);
+        $baseUrl = backport_type_check('string', $baseUrl);
 
         $this->client->setBaseUrl($baseUrl);
 
@@ -94,7 +94,7 @@ class Flare
 
     public function setStage(/*?string */$stage = null)/*: self*/
     {
-        $stage = cast_to_string($stage, null);
+        $stage = backport_type_check('?string', $stage);
 
         $this->stage = $stage;
 
@@ -117,7 +117,7 @@ class Flare
 
     public function reportErrorLevels(/*int */$reportErrorLevels)/*: self*/
     {
-        $reportErrorLevels = cast_to_int($reportErrorLevels);
+        $reportErrorLevels = backport_type_check('int', $reportErrorLevels);
 
         $this->reportErrorLevels = $reportErrorLevels;
 
@@ -247,8 +247,8 @@ class Flare
         /*string */$messageLevel = MessageLevels::INFO,
         array $metaData = []
     )/*: self */{
-        $name = cast_to_string($name);
-        $messageLevel = cast_to_string($messageLevel);
+        $name = backport_type_check('string', $name);
+        $messageLevel = backport_type_check('string', $messageLevel);
 
         $this->recorder->record(new Glow($name, $messageLevel, $metaData));
 
@@ -271,13 +271,13 @@ class Flare
      */
     public function handleError(/*mixed */$code, /*string */$message, /*string */$file = '', /*int */$line = 0)
     {
-        $line = cast_to_int($line);
+        $line = backport_type_check('int', $line);
 
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
-        $code = cast_to_mixed($code);
+        $code = backport_type_check('mixed', $code);
 
         $exception = new ErrorException($message, 0, $code, $file, $line);
 
@@ -296,7 +296,7 @@ class Flare
 
     public function applicationPath(/*string */$applicationPath)/*: self*/
     {
-        $applicationPath = cast_to_string($applicationPath);
+        $applicationPath = backport_type_check('string', $applicationPath);
 
         $this->applicationPath = $applicationPath;
 
@@ -343,9 +343,9 @@ class Flare
 
     public function reportMessage(/*string */$message, /*string */$logLevel, callable $callback = null)/*: void*/
     {
-        $logLevel = cast_to_string($logLevel);
+        $logLevel = backport_type_check('string', $logLevel);
 
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         $report = $this->createReportFromMessage($message, $logLevel);
 
@@ -424,9 +424,9 @@ class Flare
 
     public function createReportFromMessage(/*string */$message, /*string */$logLevel)/*: Report*/
     {
-        $logLevel = cast_to_string($logLevel);
+        $logLevel = backport_type_check('string', $logLevel);
 
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         $report = Report::createForMessage(
             $message,

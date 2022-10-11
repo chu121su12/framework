@@ -400,7 +400,7 @@ class JsonSettingsCaster implements CastsAttributes
 {
     public function get($model, /*string */$key, $value, array $attributes)/*: ?Settings*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         if ($value === null) {
             return null;
@@ -417,7 +417,7 @@ class JsonSettingsCaster implements CastsAttributes
 
     public function set($model, /*string */$key, $value, array $attributes)/*: ?string*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         if ($value === null) {
             return null;
@@ -493,7 +493,7 @@ class ValueObject implements Castable
 
     public function __construct(/*string */$name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->name = $name;
     }
@@ -531,9 +531,9 @@ class Settings
 
     public function __construct(/*?bool */$foo = null, /*?bool */$bar = null)
     {
-        $foo = cast_to_bool($foo, null);
+        $foo = backport_type_check('?bool', $foo);
 
-        $bar = cast_to_bool($bar, null);
+        $bar = backport_type_check('?bool', $bar);
 
         $this->foo = $foo;
         $this->bar = $bar;

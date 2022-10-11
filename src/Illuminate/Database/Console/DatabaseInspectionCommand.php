@@ -101,7 +101,7 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function getTableSize(ConnectionInterface $connection, /*string */$table)
     {
-        $table = cast_to_string($table);
+        $table = backport_type_check('string', $table);
 
         switch (true) {
             case $connection instanceof MySqlConnection: return $this->getMySQLTableSize($connection, $table);
@@ -120,7 +120,7 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function getMySQLTableSize(ConnectionInterface $connection, /*string */$table)
     {
-        $table = cast_to_string($table);
+        $table = backport_type_check('string', $table);
 
         $result = $connection->selectOne('SELECT (data_length + index_length) AS size FROM information_schema.TABLES WHERE table_schema = ? AND table_name = ?', [
             $connection->getDatabaseName(),
@@ -139,7 +139,7 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function getPostgresTableSize(ConnectionInterface $connection, /*string */$table)
     {
-        $table = cast_to_string($table);
+        $table = backport_type_check('string', $table);
 
         $result = $connection->selectOne('SELECT pg_total_relation_size(?) AS size;', [
             $table,
@@ -157,7 +157,7 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function getSqliteTableSize(ConnectionInterface $connection, /*string */$table)
     {
-        $table = cast_to_string($table);
+        $table = backport_type_check('string', $table);
 
         $result = $connection->selectOne('SELECT SUM(pgsize) AS size FROM dbstat WHERE name=?', [
             $table,

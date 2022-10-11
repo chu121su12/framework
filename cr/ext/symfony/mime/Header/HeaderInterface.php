@@ -60,11 +60,11 @@ interface HeaderInterface
      *
      * This is not necessarily RFC 2822 compliant since folding white space is
      * not added at this stage (see {
-        $lineLength = cast_to_int($lineLength);
+        $lineLength = backport_type_check('int', $lineLength);
 
-        $lang = cast_to_string($lang);
+        $lang = backport_type_check('string', $lang);
 
-        $charset = cast_to_string($charset);
+        $charset = backport_type_check('string', $charset);
 @link toString()} for that).
      */
     public function getBodyAsString(); //// string

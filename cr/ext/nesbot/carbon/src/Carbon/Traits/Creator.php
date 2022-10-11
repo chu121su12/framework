@@ -510,17 +510,17 @@ trait Creator
      */
     public static function createStrict(/*?int */$year = 0, /*?int */$month = 1, /*?int */$day = 1, /*?int */$hour = 0, /*?int */$minute = 0, /*?int */$second = 0, $tz = null)/*: self*/
     {
-        $second = cast_to_int($second, null);
+        $second = backport_type_check('?int', $second);
 
-        $minute = cast_to_int($minute, null);
+        $minute = backport_type_check('?int', $minute);
 
-        $hour = cast_to_int($hour, null);
+        $hour = backport_type_check('?int', $hour);
 
-        $day = cast_to_int($day, null);
+        $day = backport_type_check('?int', $day);
 
-        $month = cast_to_int($month, null);
+        $month = backport_type_check('?int', $month);
 
-        $year = cast_to_int($year, null);
+        $year = backport_type_check('?int', $year);
 
         $initialStrictMode = static::isStrictModeEnabled();
         static::useStrictMode(true);

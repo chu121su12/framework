@@ -26,7 +26,7 @@ class RouteConfigurator
 
     public function __construct(RouteCollection $collection, RouteCollection $route, $name = '', CollectionConfigurator $parentConfigurator = null, array $prefixes = null)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->collection = $collection;
         $this->route = $route;

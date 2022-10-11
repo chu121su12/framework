@@ -117,7 +117,7 @@ class ViewExceptionMapper
 
     protected function findCompiledView(/*string */$compiledPath)/*: ?string*/
     {
-        $compiledPath = cast_to_string($compiledPath);
+        $compiledPath = backport_type_check('string', $compiledPath);
 
         if (!isset($this->knownPaths)) {
             $this->knownPaths = $this->getKnownPaths();
@@ -155,9 +155,9 @@ class ViewExceptionMapper
 
     protected function getBladeLineNumber(/*string */$view, /*int */$compiledLineNumber)/*: int*/
     {
-        $compiledLineNumber = cast_to_int($compiledLineNumber);
+        $compiledLineNumber = backport_type_check('int', $compiledLineNumber);
 
-        $view = cast_to_string($view);
+        $view = backport_type_check('string', $view);
 
         return $this->bladeSourceMapCompiler->detectLineNumber($view, $compiledLineNumber);
     }

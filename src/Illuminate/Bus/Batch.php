@@ -128,11 +128,11 @@ class Batch implements Arrayable, JsonSerializable
                                 /*?*/CarbonImmutable $cancelledAt = null,
                                 /*?*/CarbonImmutable $finishedAt = null)
     {
-        $id = cast_to_string($id);
-        $name = cast_to_string($name);
-        $totalJobs = cast_to_int($totalJobs);
-        $pendingJobs = cast_to_int($pendingJobs);
-        $failedJobs = cast_to_int($failedJobs);
+        $id = backport_type_check('string', $id);
+        $name = backport_type_check('string', $name);
+        $totalJobs = backport_type_check('int', $totalJobs);
+        $pendingJobs = backport_type_check('int', $pendingJobs);
+        $failedJobs = backport_type_check('int', $failedJobs);
 
         $this->queue = $queue;
         $this->repository = $repository;
@@ -245,7 +245,7 @@ class Batch implements Arrayable, JsonSerializable
      */
     public function recordSuccessfulJob(/*string */$jobId)
     {
-        $jobId = cast_to_string($jobId);
+        $jobId = backport_type_check('string', $jobId);
 
         $counts = $this->decrementPendingJobs($jobId);
 
@@ -278,7 +278,7 @@ class Batch implements Arrayable, JsonSerializable
      */
     public function decrementPendingJobs(/*string */$jobId)
     {
-        $jobId = cast_to_string($jobId);
+        $jobId = backport_type_check('string', $jobId);
 
         return $this->repository->decrementPendingJobs($this->id, $jobId);
     }
@@ -332,7 +332,7 @@ class Batch implements Arrayable, JsonSerializable
      */
     public function recordFailedJob(/*string */$jobId, $e)
     {
-        $jobId = cast_to_string($jobId);
+        $jobId = backport_type_check('string', $jobId);
 
         $counts = $this->incrementFailedJobs($jobId);
 
@@ -365,7 +365,7 @@ class Batch implements Arrayable, JsonSerializable
      */
     public function incrementFailedJobs(/*string */$jobId)
     {
-        $jobId = cast_to_string($jobId);
+        $jobId = backport_type_check('string', $jobId);
 
         return $this->repository->incrementFailedJobs($this->id, $jobId);
     }

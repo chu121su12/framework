@@ -947,7 +947,7 @@ trait Comparison
      */
     public function is(/*string */$tester)
     {
-        $tester = cast_to_string($tester);
+        $tester = backport_type_check('string', $tester);
 
         $tester = trim($tester);
 
@@ -1032,9 +1032,9 @@ trait Comparison
      */
     private static function matchFormatPattern(/*string */$date, /*string */$format, array $replacements)/*: bool*/
     {
-        $format = cast_to_string($format);
+        $format = backport_type_check('string', $format);
 
-        $date = cast_to_string($date);
+        $date = backport_type_check('string', $date);
 
         // Preg quote, but remove escaped backslashes since we'll deal with escaped characters in the format string.
         $regex = str_replace('\\\\', '\\', $format);

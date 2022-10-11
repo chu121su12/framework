@@ -40,10 +40,10 @@ class PhpToken implements \Stringable
 
     public function __construct(/*int */$id, /*string */$text, /*int */$line = -1, /*int */$position = -1)
     {
-        $id = cast_to_int($id);
-        $text = cast_to_string($text);
-        $line = cast_to_int($line);
-        $position = cast_to_int($position);
+        $id = backport_type_check('int', $id);
+        $text = backport_type_check('string', $text);
+        $line = backport_type_check('int', $line);
+        $position = backport_type_check('int', $position);
 
         $this->id = $id;
         $this->text = $text;
@@ -89,8 +89,8 @@ class PhpToken implements \Stringable
      */
     public static function tokenize(/*string */$code, /*int */$flags = 0)/*: array*/
     {
-        $code = cast_to_string($code);
-        $flags = cast_to_int($flags);
+        $code = backport_type_check('string', $code);
+        $flags = backport_type_check('int', $flags);
 
         $line = 1;
         $position = 0;

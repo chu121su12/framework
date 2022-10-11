@@ -41,7 +41,7 @@ final class Style
      */
     public function write(/*string */$content)/*: void*/
     {
-        $content = cast_to_string($content);
+        $content = backport_type_check('string', $content);
 
         $this->output->write($content);
     }
@@ -90,7 +90,7 @@ final class Style
      */
     public function writeErrorsSummary(State $state, /*bool */$onFailure)/*: void*/
     {
-        $onFailure = cast_to_bool($onFailure);
+        $onFailure = backport_type_check('bool', $onFailure);
 
         $errors = array_filter($state->suiteTests, function (TestResult $testResult) {
             return $testResult->type === TestResult::FAIL;
@@ -165,7 +165,7 @@ final class Style
      */
     public function writeWarning(/*string */$message)/*: void*/
     {
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         $this->output->writeln($this->testLineFrom('yellow', $message, ''));
     }
@@ -242,10 +242,10 @@ final class Style
      */
     private function titleLineFrom(/*string */$fg, /*string */$bg, /*string */$title, /*string */$testCaseName)/*: string*/
     {
-        $fg = cast_to_string($fg);
-        $bg = cast_to_string($bg);
-        $title = cast_to_string($title);
-        $testCaseName = cast_to_string($testCaseName);
+        $fg = backport_type_check('string', $fg);
+        $bg = backport_type_check('string', $bg);
+        $title = backport_type_check('string', $title);
+        $testCaseName = backport_type_check('string', $testCaseName);
 
         return sprintf(
             "\n  <fg=%s;bg=%s;options=bold> %s </><fg=default> %s</>",
@@ -261,10 +261,10 @@ final class Style
      */
     private function testLineFrom(/*string */$fg, /*string */$icon, /*string */$description, /*string */$warning = null)/*: string*/
     {
-        $fg = cast_to_string($fg);
-        $icon = cast_to_string($icon);
-        $description = cast_to_string($description);
-        $warning = cast_to_string($warning, null);
+        $fg = backport_type_check('string', $fg);
+        $icon = backport_type_check('string', $icon);
+        $description = backport_type_check('string', $description);
+        $warning = backport_type_check('?string', $warning);
 
         if (! empty($warning)) {
             $warning = sprintf(

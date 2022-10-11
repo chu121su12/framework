@@ -33,7 +33,7 @@ class ClosureLoader extends Loader
      */
     public function load($closure, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         return $closure($this->env);
     }
@@ -43,7 +43,7 @@ class ClosureLoader extends Loader
      */
     public function supports($resource, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         return $resource instanceof \Closure && (!$type || 'closure' === $type);
     }

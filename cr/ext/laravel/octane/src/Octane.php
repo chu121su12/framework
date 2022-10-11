@@ -23,7 +23,7 @@ class Octane
      */
     public function table(/*string */$table) ///: Table
     {
-        $table = cast_to_string($table);
+        $table = backport_type_check('string', $table);
 
         if (! app()->bound(Server::class)) {
             throw new Exception('Tables may only be accessed when using the Swoole server.');
@@ -47,7 +47,7 @@ class Octane
      */
     public static function formatExceptionForClient(/*Throwable */$e, /*bool */$debug = false) ////: string
     {
-        $debug = cast_to_bool($debug);
+        $debug = backport_type_check('bool', $debug);
 
         return $debug ? (string) $e : 'Internal server error.';
     }

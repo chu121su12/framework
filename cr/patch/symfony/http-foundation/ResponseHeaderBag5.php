@@ -20,9 +20,9 @@ class ResponseHeaderBag5 extends ResponseHeaderBag
      */
     public function makeDisposition(/*string */$disposition, /*string */$filename, /*string */$filenameFallback = '')
     {
-        $disposition = cast_to_string($disposition);
-        $filename = cast_to_string($filename);
-        $filenameFallback = cast_to_string($filenameFallback);
+        $disposition = backport_type_check('string', $disposition);
+        $filename = backport_type_check('string', $filename);
+        $filenameFallback = backport_type_check('string', $filenameFallback);
 
         return SymfonyHelper::httpFoundationMakeDisposition($disposition, $filename, $filenameFallback);
     }

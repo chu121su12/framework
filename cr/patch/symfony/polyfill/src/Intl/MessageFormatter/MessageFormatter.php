@@ -66,9 +66,9 @@ class MessageFormatter
 
     public function __construct($locale, $pattern)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
-        $pattern = cast_to_string($pattern);
+        $pattern = backport_type_check('string', $pattern);
 
         $this->locale = $locale;
 
@@ -79,9 +79,9 @@ class MessageFormatter
 
     public static function create($locale, $pattern)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
-        $pattern = cast_to_string($pattern);
+        $pattern = backport_type_check('string', $pattern);
 
         $formatter = new static($locale, '-');
 
@@ -90,9 +90,9 @@ class MessageFormatter
 
     public static function formatMessage($locale, $pattern, array $values)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
-        $pattern = cast_to_string($pattern);
+        $pattern = backport_type_check('string', $pattern);
 
         if (null === $formatter = self::create($locale, $pattern)) {
             return false;
@@ -123,7 +123,7 @@ class MessageFormatter
 
     public function setPattern($pattern)
     {
-        $pattern = cast_to_string($pattern);
+        $pattern = backport_type_check('string', $pattern);
 
         try {
             $this->tokens = self::tokenizePattern($pattern);
@@ -156,7 +156,7 @@ class MessageFormatter
 
     public function parse($string)
     {
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         $this->errorCode = -1;
         $this->errorMessage = sprintf('The PHP intl extension is required to use "MessageFormatter::%s()".', __FUNCTION__);

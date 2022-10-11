@@ -163,7 +163,7 @@ class BusBatchTest extends TestCase
 
         $count = 3;
         $generator = function (/*int */$jobsCount) {
-            $jobsCount = cast_to_int($jobsCount);
+            $jobsCount = backport_type_check('int', $jobsCount);
 
             for ($i = 0; $i < $jobsCount; $i++) {
                 yield new BusBatchTest_test_jobs_can_be_added_to_the_pending_batch_from_iterable_class;

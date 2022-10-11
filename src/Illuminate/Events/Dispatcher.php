@@ -386,7 +386,7 @@ class Dispatcher implements DispatcherContract
      */
     protected function prepareListeners(/*string */$eventName)
     {
-        $eventName = cast_to_string($eventName);
+        $eventName = backport_type_check('string', $eventName);
 
         $listeners = [];
 

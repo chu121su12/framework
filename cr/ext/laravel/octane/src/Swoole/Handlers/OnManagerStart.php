@@ -16,8 +16,8 @@ class OnManagerStart
         /*protected bool */$shouldSetProcessName = true
     ) {
         $this->extension = $extension;
-        $this->appName = cast_to_string($appName);
-        $this->shouldSetProcessName = cast_to_bool($shouldSetProcessName);
+        $this->appName = backport_type_check('string', $appName);
+        $this->shouldSetProcessName = backport_type_check('bool', $shouldSetProcessName);
     }
 
     /**

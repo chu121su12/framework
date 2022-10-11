@@ -44,7 +44,7 @@ class AssertableInertia extends AssertableJson
 
     public function component(/*string */$value = null, $shouldExist = null)/*: self*/
     {
-        $value = cast_to_string($value, null);
+        $value = backport_type_check('?string', $value);
 
         PHPUnit::assertSame($value, $this->component, 'Unexpected Inertia page component.');
 
@@ -61,7 +61,7 @@ class AssertableInertia extends AssertableJson
 
     public function url(/*string */$value)/*: self*/
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         PHPUnit::assertSame($value, $this->url, 'Unexpected Inertia page url.');
 
@@ -70,7 +70,7 @@ class AssertableInertia extends AssertableJson
 
     public function version(/*string */$value)/*: self*/
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         PHPUnit::assertSame($value, $this->version, 'Unexpected Inertia asset version.');
 

@@ -143,7 +143,7 @@ class JetstreamServiceProvider extends ServiceProvider
      */
     protected function registerComponent(/*string */$component)
     {
-        $component = cast_to_string($component);
+        $component = backport_type_check('string', $component);
 
         Blade::component('jetstream::components.'.$component, 'jet-'.$component);
     }

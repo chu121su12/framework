@@ -52,7 +52,7 @@ abstract class Locale
      */
     public static function acceptFromHttp(/*string */$header)
     {
-        $header = cast_to_string($header);
+        $header = backport_type_check('string', $header);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -67,7 +67,7 @@ abstract class Locale
      */
     public static function canonicalize(/*string */$locale)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
         if ('' === $locale || '.' === $locale[0]) {
             return self::getDefault();
@@ -113,11 +113,11 @@ abstract class Locale
      */
     public static function filterMatches(/*string */$languageTag, /*string */$locale, /*bool */$canonicalize = false)
     {
-        $canonicalize = cast_to_bool($canonicalize);
+        $canonicalize = backport_type_check('bool', $canonicalize);
 
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
-        $languageTag = cast_to_string($languageTag);
+        $languageTag = backport_type_check('string', $languageTag);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -133,7 +133,7 @@ abstract class Locale
      */
     public static function getAllVariants(/*string */$locale)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -161,9 +161,9 @@ abstract class Locale
      */
     public static function getDisplayLanguage(/*string */$locale, /*string */$displayLocale = null)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
-        $displayLocale = cast_to_string($displayLocale, null);
+        $displayLocale = backport_type_check('?string', $displayLocale);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -179,9 +179,9 @@ abstract class Locale
      */
     public static function getDisplayName(/*string */$locale, /*string */$displayLocale = null)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
-        $displayLocale = cast_to_string($displayLocale, null);
+        $displayLocale = backport_type_check('?string', $displayLocale);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -197,9 +197,9 @@ abstract class Locale
      */
     public static function getDisplayRegion(/*string */$locale, /*string */$displayLocale = null)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
-        $displayLocale = cast_to_string($displayLocale, null);
+        $displayLocale = backport_type_check('?string', $displayLocale);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -215,9 +215,9 @@ abstract class Locale
      */
     public static function getDisplayScript(/*string */$locale, /*string */$displayLocale = null)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
-        $displayLocale = cast_to_string($displayLocale, null);
+        $displayLocale = backport_type_check('?string', $displayLocale);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -233,9 +233,9 @@ abstract class Locale
      */
     public static function getDisplayVariant(/*string */$locale, /*string */$displayLocale = null)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
-        $displayLocale = cast_to_string($displayLocale, null);
+        $displayLocale = backport_type_check('?string', $displayLocale);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -251,7 +251,7 @@ abstract class Locale
      */
     public static function getKeywords(/*string */$locale)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -267,7 +267,7 @@ abstract class Locale
      */
     public static function getPrimaryLanguage(/*string */$locale)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -283,7 +283,7 @@ abstract class Locale
      */
     public static function getRegion(/*string */$locale)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -299,7 +299,7 @@ abstract class Locale
      */
     public static function getScript(/*string */$locale)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -313,11 +313,11 @@ abstract class Locale
      */
     public static function lookup(array $languageTag, /*string */$locale, /*bool */$canonicalize = false, /*string */$defaultLocale = null)
     {
-        $canonicalize = cast_to_bool($canonicalize);
+        $canonicalize = backport_type_check('bool', $canonicalize);
 
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
-        $defaultLocale = cast_to_string($defaultLocale, null);
+        $defaultLocale = backport_type_check('?string', $defaultLocale);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -333,7 +333,7 @@ abstract class Locale
      */
     public static function parseLocale(/*string */$locale)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -349,7 +349,7 @@ abstract class Locale
      */
     public static function setDefault(/*string */$locale)
     {
-        $locale = cast_to_string($locale);
+        $locale = backport_type_check('string', $locale);
 
         if ('en' !== $locale) {
             throw new MethodNotImplementedException(__METHOD__);

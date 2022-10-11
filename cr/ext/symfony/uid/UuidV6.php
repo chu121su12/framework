@@ -26,7 +26,7 @@ class UuidV6 extends Uuid
 
     public function __construct(/*string */$uuid = null)
     {
-        $uuid = cast_to_string($uuid, null);
+        $uuid = backport_type_check('?string', $uuid);
 
         if (null === $uuid) {
             $this->uid = static::generate();

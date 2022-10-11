@@ -45,8 +45,8 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
      */
     public function __construct(/*string */$connection, /*int */$chunkSize = null)
     {
-        $connection = cast_to_string($connection);
-        $chunkSize = cast_to_int($chunkSize, null);
+        $connection = backport_type_check('string', $connection);
+        $chunkSize = backport_type_check('?int', $chunkSize);
 
         $this->connection = $connection;
 

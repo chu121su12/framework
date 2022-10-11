@@ -10,7 +10,7 @@ class ServerStateFile
 
     public function __construct(/*protected string*/ $path)
     {
-        $this->path = cast_to_string($path);
+        $this->path = backport_type_check('string', $path);
     }
 
     /**
@@ -40,9 +40,9 @@ class ServerStateFile
      */
     public function writeProcessIds(/*int */$masterProcessId, /*int */$managerProcessId) ////: void
     {
-        $masterProcessId = cast_to_int($masterProcessId);
+        $masterProcessId = backport_type_check('int', $masterProcessId);
 
-        $managerProcessId = cast_to_int($managerProcessId);
+        $managerProcessId = backport_type_check('int', $managerProcessId);
 
         if (! is_writable($this->path) && ! is_writable(dirname($this->path))) {
             throw new RuntimeException('Unable to write to process ID file.');

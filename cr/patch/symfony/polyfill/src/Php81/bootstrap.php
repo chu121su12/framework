@@ -28,5 +28,5 @@ if (!function_exists('array_is_list')) {
 }
 
 if (!function_exists('enum_exists')) {
-    function enum_exists($enum, $autoload = true) { return cast_to_bool($autoload) && class_exists(cast_to_string($enum)) && false; }
+    function enum_exists($enum, $autoload = true) { return backport_type_check('bool', $autoload) && class_exists(backport_type_check('string', $enum)) && false; }
 }

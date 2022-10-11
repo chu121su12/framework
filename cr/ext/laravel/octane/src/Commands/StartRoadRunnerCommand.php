@@ -238,7 +238,7 @@ class StartRoadRunnerCommand extends Command/* implements SignalableCommandInter
      */
     protected function calculateElapsedTime(/*string */$elapsed) ////: float
     {
-        $elapsed = cast_to_string($elapsed);
+        $elapsed = backport_type_check('string', $elapsed);
 
         if (Str::endsWith($elapsed, 'ms')) {
             return substr($elapsed, 0, -2);

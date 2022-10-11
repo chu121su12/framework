@@ -15,7 +15,7 @@ class FileConfigManager implements ConfigManager
 
     public function __construct(/*string */$path = '')
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $this->path = $this->initPath($path);
         $this->file = $this->initFile();
@@ -23,7 +23,7 @@ class FileConfigManager implements ConfigManager
 
     protected function initPath(/*string */$path)/*: string*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $path = $this->retrievePath($path);
 
@@ -36,7 +36,7 @@ class FileConfigManager implements ConfigManager
 
     protected function retrievePath(/*string */$path)/*: string*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         if ($path !== '') {
             return $path;
@@ -47,14 +47,14 @@ class FileConfigManager implements ConfigManager
 
     protected function isValidWritablePath(/*string */$path)/*: bool*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         return @file_exists($path) && @is_writable($path);
     }
 
     protected function preparePath(/*string */$path)/*: string*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         return rtrim($path, DIRECTORY_SEPARATOR);
     }
@@ -149,7 +149,7 @@ class FileConfigManager implements ConfigManager
 
     protected function writeToFile(/*string */$content)/*: bool*/
     {
-        $content = cast_to_string($content);
+        $content = backport_type_check('string', $content);
 
         if (! $this->isValidFile()) {
             return false;

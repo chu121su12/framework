@@ -77,7 +77,7 @@ class FoundationServiceProvider extends AggregateServiceProvider
         });
 
         Request::macro('validateWithBag', function (/*string */$errorBag, array $rules, ...$params) {
-            $errorBag = cast_to_string($errorBag);
+            $errorBag = backport_type_check('string', $errorBag);
 
             try {
                 return $this->validate($rules, ...$params);

@@ -73,7 +73,7 @@ class EntryQueryOptions
      */
     public static function forBatchId(/*?string */$batchId = null)
     {
-        $batchId = cast_to_string($batchId, null);
+        $batchId = backport_type_check('?string', $batchId);
 
         return (new static)->batchId($batchId);
     }
@@ -86,7 +86,7 @@ class EntryQueryOptions
      */
     public function batchId(/*?string */$batchId = null)
     {
-        $batchId = cast_to_string($batchId, null);
+        $batchId = backport_type_check('?string', $batchId);
 
         $this->batchId = $batchId;
 
@@ -127,7 +127,7 @@ class EntryQueryOptions
      */
     public function tag(/*?string */$tag = null)
     {
-        $tag = cast_to_string($tag, null);
+        $tag = backport_type_check('?string', $tag);
 
         $this->tag = $tag;
 
@@ -142,7 +142,7 @@ class EntryQueryOptions
      */
     public function familyHash(/*?string */$familyHash = null)
     {
-        $familyHash = cast_to_string($familyHash, null);
+        $familyHash = backport_type_check('?string', $familyHash);
 
         $this->familyHash = $familyHash;
 
@@ -157,7 +157,7 @@ class EntryQueryOptions
      */
     public function limit(/*int */$limit)
     {
-        $limit = cast_to_int($limit);
+        $limit = backport_type_check('int', $limit);
 
         $this->limit = $limit;
 

@@ -37,7 +37,7 @@ class SqlServerConnection implements ServerInfoAwareConnection
      */
     public function prepare(/*string */$sql)/*: StatementInterface*/
     {
-        $sql = cast_to_string($sql);
+        $sql = backport_type_check('string', $sql);
 
         return new Statement(
             $this->connection->prepare($sql)
@@ -52,7 +52,7 @@ class SqlServerConnection implements ServerInfoAwareConnection
      */
     public function query(/*string */$sql)/*: Result*/
     {
-        $sql = cast_to_string($sql);
+        $sql = backport_type_check('string', $sql);
 
         return $this->connection->query($sql);
     }
@@ -65,7 +65,7 @@ class SqlServerConnection implements ServerInfoAwareConnection
      */
     public function exec(/*string */$statement)/*: int*/
     {
-        $statement = cast_to_string($statement);
+        $statement = backport_type_check('string', $statement);
 
         return $this->connection->exec($statement);
     }

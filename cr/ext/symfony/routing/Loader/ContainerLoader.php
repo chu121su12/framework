@@ -24,7 +24,7 @@ class ContainerLoader extends ObjectLoader
 
     public function __construct(ContainerInterface $container, /*string */$env = null)
     {
-        $env = cast_to_string($env, null);
+        $env = backport_type_check('?string', $env);
 
         $this->container = $container;
         parent::__construct($env);
@@ -35,7 +35,7 @@ class ContainerLoader extends ObjectLoader
      */
     public function supports($resource, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         return 'service' === $type && \is_string($resource);
     }
@@ -45,7 +45,7 @@ class ContainerLoader extends ObjectLoader
      */
     protected function getObject($id)
     {
-        $id = cast_to_string($id);
+        $id = backport_type_check('string', $id);
 
         return $this->container->get($id);
     }

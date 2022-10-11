@@ -61,7 +61,7 @@ abstract class Icu
      */
     public static function isFailure(/*int */$errorCode)/*: bool*/
     {
-        $errorCode = cast_to_int($errorCode);
+        $errorCode = backport_type_check('int', $errorCode);
 
         return isset(self::$errorCodes[$errorCode])
             && $errorCode > self::U_ZERO_ERROR;
@@ -96,7 +96,7 @@ abstract class Icu
      */
     public static function getErrorName(/*int */$code)/*: string*/
     {
-        $code = cast_to_int($code);
+        $code = backport_type_check('int', $code);
 
         return isset(self::$errorCodes[$code]) ? self::$errorCodes[$code] : '[BOGUS UErrorCode]';
     }
@@ -111,9 +111,9 @@ abstract class Icu
      */
     public static function setError(/*int */$code, /*string */$message = '')
     {
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
-        $code = cast_to_int($code);
+        $code = backport_type_check('int', $code);
 
         if (!isset(self::$errorCodes[$code])) {
             throw new \InvalidArgumentException(sprintf('No such error code: "%s".', $code));

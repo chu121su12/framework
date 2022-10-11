@@ -68,7 +68,7 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
      */
     protected function getClassAndMethodFromExceptionMessage(/*string */$message)/*: ?array*/
     {
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         if (! preg_match(self::REGEX, $message, $matches)) {
             return null;
@@ -88,9 +88,9 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
      */
     protected function findPossibleMethod(/*string */$class, /*string */$invalidMethodName)/*: ?ReflectionMethod*/
     {
-        $invalidMethodName = cast_to_string($invalidMethodName);
+        $invalidMethodName = backport_type_check('string', $invalidMethodName);
 
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         return $this->getAvailableMethods($class)
             ->sortByDesc(function (ReflectionMethod $method) use ($invalidMethodName) {
@@ -107,7 +107,7 @@ class BadMethodCallSolutionProvider implements HasSolutionsForThrowable
      */
     protected function getAvailableMethods(/*string */$class)/*: Collection*/
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         $class = new ReflectionClass($class);
 

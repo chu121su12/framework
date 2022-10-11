@@ -308,7 +308,7 @@ class Telescope
      */
     protected static function record(/*string */$type, IncomingEntry $entry)
     {
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
         if (! static::isRecording()) {
             return;

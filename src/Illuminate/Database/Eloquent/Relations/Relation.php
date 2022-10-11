@@ -397,9 +397,9 @@ abstract class Relation implements BuilderContract
      */
     protected function whereInEager(/*string */$whereIn, /*string */$key, array $modelKeys, $query = null)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
-        $whereIn = cast_to_string($whereIn);
+        $whereIn = backport_type_check('string', $whereIn);
 
         with(isset($query) ? $query : $this->query)->{$whereIn}($key, $modelKeys);
 

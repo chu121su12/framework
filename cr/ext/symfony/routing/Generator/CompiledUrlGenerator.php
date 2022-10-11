@@ -25,7 +25,7 @@ class CompiledUrlGenerator extends UrlGenerator
 
     public function __construct(array $compiledRoutes, RequestContext $context, LoggerInterface $logger = null, $defaultLocale = null)
     {
-        $defaultLocale = cast_to_string($defaultLocale, null);
+        $defaultLocale = backport_type_check('?string', $defaultLocale);
 
         $this->compiledRoutes = $compiledRoutes;
         $this->context = $context;
@@ -35,9 +35,9 @@ class CompiledUrlGenerator extends UrlGenerator
 
     public function generate($name, array $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
-        $referenceType = cast_to_int($referenceType);
+        $referenceType = backport_type_check('int', $referenceType);
 
         $locale = isset($parameters['_locale'])
             ? $parameters['_locale']

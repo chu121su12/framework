@@ -25,9 +25,9 @@ class SwooleExtension
      */
     public function dispatchProcessSignal(/*int */$processId, /*int */$signal) ////: bool
     {
-        $processId = cast_to_int($processId);
+        $processId = backport_type_check('int', $processId);
 
-        $signal = cast_to_int($signal);
+        $signal = backport_type_check('int', $signal);
 
         if (Process::kill($processId, 0)) {
             return Process::kill($processId, $signal);
@@ -45,9 +45,9 @@ class SwooleExtension
      */
     public function setProcessName(/*string */$appName, /*string */$processName) ////: void
     {
-        $appName = cast_to_string($appName);
+        $appName = backport_type_check('string', $appName);
 
-        $processName = cast_to_string($processName);
+        $processName = backport_type_check('string', $processName);
 
         if (PHP_OS_FAMILY === 'Linux') {
             cli_set_process_title('swoole_http_server: '.$processName.' for '.$appName);

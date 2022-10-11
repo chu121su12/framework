@@ -36,9 +36,9 @@ final class Termwind
      */
     public static function div(/*array|string */$content = '', /*string */$styles = '', array $properties = [])/*: Components\Div*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
-        $content = cast_to_compound('array|string', $content);
+        $content = backport_type_check('array|string', $content);
 
         $content = self::prepareElements($content, $styles);
 
@@ -55,9 +55,9 @@ final class Termwind
      */
     public static function paragraph(/*array|string */$content = '', /*string */$styles = '', array $properties = [])/*: Components\Paragraph*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
-        $content = cast_to_compound('array|string', $content);
+        $content = backport_type_check('array|string', $content);
 
         $content = self::prepareElements($content, $styles);
 
@@ -74,9 +74,9 @@ final class Termwind
      */
     public static function span(/*array|string */$content = '', /*string */$styles = '', array $properties = [])/*: Components\Span*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
-        $content = cast_to_compound('array|string', $content);
+        $content = backport_type_check('array|string', $content);
 
         $content = self::prepareElements($content, $styles);
 
@@ -92,7 +92,7 @@ final class Termwind
      */
     public static function raw(/*array|string */$content = '')/*: Components\Raw*/
     {
-        $content = cast_to_compound('array|string', $content);
+        $content = backport_type_check('array|string', $content);
 
         return Components\Raw::fromStyles(
             self::getRenderer(), $content
@@ -107,9 +107,9 @@ final class Termwind
      */
     public static function anchor(/*array|string */$content = '', /*string */$styles = '', array $properties = [])/*: Components\Anchor*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
-        $content = cast_to_compound('array|string', $content);
+        $content = backport_type_check('array|string', $content);
 
         $content = self::prepareElements($content, $styles);
 
@@ -126,7 +126,7 @@ final class Termwind
      */
     public static function ul(array $content = [], /*string */$styles = '', array $properties = [])/*: Components\Ul*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
         $ul = Components\Ul::fromStyles(
             self::getRenderer(), '', $styles, $properties
@@ -165,7 +165,7 @@ final class Termwind
      */
     public static function ol(array $content = [], /*string */$styles = '', array $properties = [])/*: Components\Ol*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
         $ol = Components\Ol::fromStyles(
             self::getRenderer(), '', $styles, $properties
@@ -205,9 +205,9 @@ final class Termwind
      */
     public static function li(/*array|string */$content = '', /*string */$styles = '', array $properties = [])/*: Components\Li*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
-        $content = cast_to_compound('array|string', $content);
+        $content = backport_type_check('array|string', $content);
 
         $content = self::prepareElements($content, $styles);
 
@@ -224,7 +224,7 @@ final class Termwind
      */
     public static function dl(array $content = [], /*string */$styles = '', array $properties = [])/*: Components\Dl*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
         $content = self::prepareElements(
             $content,
@@ -255,9 +255,9 @@ final class Termwind
      */
     public static function dt(/*array|string */$content = '', /*string */$styles = '', array $properties = [])/*: Components\Dt*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
-        $content = cast_to_compound('array|string', $content);
+        $content = backport_type_check('array|string', $content);
 
         $content = self::prepareElements($content, $styles);
 
@@ -274,9 +274,9 @@ final class Termwind
      */
     public static function dd(/*array|string */$content = '', /*string */$styles = '', array $properties = [])/*: Components\Dd*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
-        $content = cast_to_compound('array|string', $content);
+        $content = backport_type_check('array|string', $content);
 
         $content = self::prepareElements($content, $styles);
 
@@ -292,7 +292,7 @@ final class Termwind
      */
     public static function hr(/*string */$styles = '', array $properties = [])/*: Components\Hr*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
         return Components\Hr::fromStyles(
             self::getRenderer(), '', $styles, $properties
@@ -306,7 +306,7 @@ final class Termwind
      */
     public static function breakLine(/*string */$styles = '', array $properties = [])/*: Components\BreakLine*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
         return Components\BreakLine::fromStyles(
             self::getRenderer(), '', $styles, $properties
@@ -333,7 +333,7 @@ final class Termwind
      */
     private static function prepareElements($elements, /*string */$styles = '', Closure/*|null */$callback = null)/*: array*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
         if ($callback === null) {
             $callback = static function ($element)/*: string|Element */{ return $element; };

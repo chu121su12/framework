@@ -227,7 +227,7 @@ class Worker implements WorkerContract
         /*bool */$hasResponded
     ) ////: void
     {
-        $hasResponded = cast_to_bool($hasResponded);
+        $hasResponded = backport_type_check('bool', $hasResponded);
 
         if (! $hasResponded) {
             $this->client->error($e, $app, $request, $context);

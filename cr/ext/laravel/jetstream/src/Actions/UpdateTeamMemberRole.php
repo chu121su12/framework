@@ -21,7 +21,7 @@ class UpdateTeamMemberRole
      */
     public function update($user, $team, $teamMemberId, /*string */$role)
     {
-        $role = cast_to_string($role);
+        $role = backport_type_check('string', $role);
 
         Gate::forUser($user)->authorize('updateTeamMember', $team);
 

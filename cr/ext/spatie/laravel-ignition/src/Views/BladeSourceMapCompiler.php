@@ -16,9 +16,9 @@ class BladeSourceMapCompiler
 
     public function detectLineNumber(/*string */$filename, /*int */$compiledLineNumber)/*: int*/
     {
-        $compiledLineNumber = cast_to_int($compiledLineNumber);
+        $compiledLineNumber = backport_type_check('int', $compiledLineNumber);
 
-        $filename = cast_to_string($filename);
+        $filename = backport_type_check('string', $filename);
 
         $map = $this->compileSourcemap((string)file_get_contents($filename));
 
@@ -27,7 +27,7 @@ class BladeSourceMapCompiler
 
     protected function compileSourcemap(/*string */$value)/*: string*/
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         try {
             $value = $this->addEchoLineNumbers($value);
@@ -53,7 +53,7 @@ class BladeSourceMapCompiler
 
     protected function addEchoLineNumbers(/*string */$value)/*: string*/
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         $echoPairs = [['{{', '}}'], ['{{{', '}}}'], ['{!!', '!!}']];
 
@@ -75,7 +75,7 @@ class BladeSourceMapCompiler
 
     protected function addStatementLineNumbers(/*string */$value)/*: string*/
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         // Matches @bladeStatements() like @if, @component(...), @etc;
         $shouldInsertLineNumbers = preg_match_all(
@@ -98,7 +98,7 @@ class BladeSourceMapCompiler
 
     protected function addBladeComponentLineNumbers(/*string */$value)/*: string*/
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         // Matches the start of `<x-blade-component`
         $shouldInsertLineNumbers = preg_match_all(
@@ -121,9 +121,9 @@ class BladeSourceMapCompiler
 
     protected function insertLineNumberAtPosition(/*int */$position, /*string */$value)/*: string*/
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $position = cast_to_int($position);
+        $position = backport_type_check('int', $position);
 
         $before = mb_substr($value, 0, $position);
         $lineNumber = count(explode("\n", $before));
@@ -133,7 +133,7 @@ class BladeSourceMapCompiler
 
     protected function trimEmptyLines(/*string */$value)/*: string*/
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         $value = preg_replace('/^\|---LINE:([0-9]+)---\|$/m', '', $value);
 
@@ -142,9 +142,9 @@ class BladeSourceMapCompiler
 
     protected function findClosestLineNumberMapping(/*string */$map, /*int */$compiledLineNumber)/*: int*/
     {
-        $compiledLineNumber = cast_to_int($compiledLineNumber);
+        $compiledLineNumber = backport_type_check('int', $compiledLineNumber);
 
-        $map = cast_to_string($map);
+        $map = backport_type_check('string', $map);
 
         $map = explode("\n", $map);
 

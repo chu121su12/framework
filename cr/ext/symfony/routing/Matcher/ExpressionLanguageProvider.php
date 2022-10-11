@@ -54,7 +54,7 @@ class ExpressionLanguageProvider implements ExpressionFunctionProviderInterface
 
     public function get($function) //// callable
     {
-        $function = cast_to_string($function);
+        $function = backport_type_check('string', $function);
 
         return $this->functions->get($function);
     }

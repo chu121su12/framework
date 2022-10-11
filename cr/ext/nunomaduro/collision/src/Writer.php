@@ -145,7 +145,7 @@ final class Writer implements WriterContract
      */
     public function showTrace(/*bool */$show)/*: WriterContract*/
     {
-        $show = cast_to_bool($show);
+        $show = backport_type_check('bool', $show);
 
         $this->showTrace = $show;
 
@@ -157,7 +157,7 @@ final class Writer implements WriterContract
      */
     public function showTitle(/*bool */$show)/*: WriterContract*/
     {
-        $show = cast_to_bool($show);
+        $show = backport_type_check('bool', $show);
 
         $this->showTitle = $show;
 
@@ -169,7 +169,7 @@ final class Writer implements WriterContract
      */
     public function showEditor(/*bool */$show)/*: WriterContract*/
     {
-        $show = cast_to_bool($show);
+        $show = backport_type_check('bool', $show);
 
         $this->showEditor = $show;
 
@@ -263,7 +263,7 @@ final class Writer implements WriterContract
                 rtrim($title, '.'),
                 $description,
                 implode(', ', array_map(function (/*string */$link) {
-                    $link = cast_to_string($link);
+                    $link = backport_type_check('string', $link);
                     return sprintf("\n    <fg=blue>%s</>", $link);
                 }, $links))
             ));
@@ -340,8 +340,8 @@ final class Writer implements WriterContract
      */
     protected function render(/*string */$message, /*bool */$break = true)/*: WriterContract*/
     {
-        $message = cast_to_string($message);
-        $break = cast_to_bool($break);
+        $message = backport_type_check('string', $message);
+        $break = backport_type_check('bool', $break);
 
         if ($break) {
             $this->output->writeln('');
@@ -357,7 +357,7 @@ final class Writer implements WriterContract
      */
     protected function getFileRelativePath(/*string */$filePath)/*: string*/
     {
-        $filePath = cast_to_string($filePath);
+        $filePath = backport_type_check('string', $filePath);
 
         $cwd = (string) getcwd();
 

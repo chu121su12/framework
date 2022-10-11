@@ -30,9 +30,9 @@ final class ParameterizedHeader extends UnstructuredHeader
 
     public function __construct($name, $value, array $parameters = [])
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         parent::__construct($name, $value);
 
@@ -47,16 +47,16 @@ final class ParameterizedHeader extends UnstructuredHeader
 
     public function setParameter($parameter, $value = null)
     {
-        $parameter = cast_to_string($parameter);
+        $parameter = backport_type_check('string', $parameter);
 
-        $value = cast_to_string($value, null);
+        $value = backport_type_check('?string', $value);
 
         $this->setParameters(array_merge($this->getParameters(), [$parameter => $value]));
     }
 
     public function getParameter($parameter) //// string
     {
-        $parameter = cast_to_string($parameter);
+        $parameter = backport_type_check('string', $parameter);
 
         $parameters = $this->getParameters();
         return isset($parameters[$parameter]) ? $parameters[$parameter] : '';
@@ -98,7 +98,7 @@ final class ParameterizedHeader extends UnstructuredHeader
      */
     protected function toTokens($string = null) //// array
     {
-        $string = cast_to_string($string, null);
+        $string = backport_type_check('?string', $string);
 
         $tokens = parent::toTokens(parent::getBodyAsString());
 
@@ -119,9 +119,9 @@ final class ParameterizedHeader extends UnstructuredHeader
      */
     private function createParameter($name, $value) //// string
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $origValue = $value;
 
@@ -191,11 +191,11 @@ final class ParameterizedHeader extends UnstructuredHeader
      */
     private function getEndOfParameterValue($value, $encoded = false, $firstLine = false) //// string
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $firstLine = cast_to_bool($firstLine);
+        $firstLine = backport_type_check('bool', $firstLine);
 
-        $encoded = cast_to_bool($encoded);
+        $encoded = backport_type_check('bool', $encoded);
 
         $forceHttpQuoting = 'form-data' === $this->getValue() && 'content-disposition' === strtolower($this->getName());
         if ($forceHttpQuoting || !preg_match('/^'.self::TOKEN_REGEX.'$/D', $value)) {

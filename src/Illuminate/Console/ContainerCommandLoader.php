@@ -46,7 +46,7 @@ class ContainerCommandLoader implements CommandLoaderInterface
      */
     public function get(/*string */$name)/*: Command*//*SymfonyCommand*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         if (! $this->has($name)) {
             throw new CommandNotFoundException(sprintf('Command "%s" does not exist.', $name));
@@ -63,7 +63,7 @@ class ContainerCommandLoader implements CommandLoaderInterface
      */
     public function has(/*string */$name)/*: bool*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $name && isset($this->commandMap[$name]);
     }

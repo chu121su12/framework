@@ -42,9 +42,9 @@ class Limit
      */
     public function __construct($key = '', /*int */$maxAttempts = 60, /*int */$decayMinutes = 1)
     {
-        $decayMinutes = cast_to_int($decayMinutes);
+        $decayMinutes = backport_type_check('int', $decayMinutes);
 
-        $maxAttempts = cast_to_int($maxAttempts);
+        $maxAttempts = backport_type_check('int', $maxAttempts);
 
         $this->key = $key;
         $this->maxAttempts = $maxAttempts;

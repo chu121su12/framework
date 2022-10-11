@@ -49,7 +49,7 @@ class AnnotationFileLoader extends FileLoader
      */
     public function load($file, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         $path = $this->locator->locate($file);
 
@@ -74,7 +74,7 @@ class AnnotationFileLoader extends FileLoader
      */
     public function supports($resource, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         return \is_string($resource) && 'php' === pathinfo($resource, \PATHINFO_EXTENSION) && (!$type || 'annotation' === $type);
     }
@@ -86,7 +86,7 @@ class AnnotationFileLoader extends FileLoader
      */
     protected function findClass($file)
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         $class = false;
         $namespace = false;

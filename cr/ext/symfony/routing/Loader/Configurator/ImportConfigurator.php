@@ -57,7 +57,7 @@ class ImportConfigurator
      */
     final public function prefix($prefix, $trailingSlashOnRoot = true) /// self
     {
-        $trailingSlashOnRoot = cast_to_bool($trailingSlashOnRoot);
+        $trailingSlashOnRoot = backport_type_check('bool', $trailingSlashOnRoot);
 
         $this->addPrefix($this->route, $prefix, $trailingSlashOnRoot);
 
@@ -71,7 +71,7 @@ class ImportConfigurator
      */
     final public function namePrefix($namePrefix) /// self
     {
-        $namePrefix = cast_to_string($namePrefix);
+        $namePrefix = backport_type_check('string', $namePrefix);
 
         $this->route->addNamePrefix($namePrefix);
 

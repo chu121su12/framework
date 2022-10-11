@@ -15,9 +15,9 @@ class SuggestLivewireMethodNameSolution implements Solution
         /*protected *//*string */$componentClass,
         /*protected *//*string */$suggested
     ) {
-        $this->methodName = cast_to_string($methodName);
-        $this->componentClass = cast_to_string($componentClass);
-        $this->suggested = cast_to_string($suggested);
+        $this->methodName = backport_type_check('string', $methodName);
+        $this->componentClass = backport_type_check('string', $componentClass);
+        $this->suggested = backport_type_check('string', $suggested);
     }
 
     public function getSolutionTitle()/*: string*/

@@ -29,7 +29,7 @@ final class IdnAddressEncoder implements AddressEncoderInterface
      */
     public function encodeString($address)
     {
-        $address = cast_to_string($address);
+        $address = backport_type_check('string', $address);
 
         $i = strrpos($address, '@');
         if (false !== $i) {

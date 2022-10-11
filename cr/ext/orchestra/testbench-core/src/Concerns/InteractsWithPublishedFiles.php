@@ -32,9 +32,9 @@ trait InteractsWithPublishedFiles
      */
     protected function assertFileContains(array $contains, /*string */$file, /*string */$message = '')////: void
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         $this->assertFilenameExists($file);
 
@@ -54,9 +54,9 @@ trait InteractsWithPublishedFiles
      */
     protected function assertFileNotContains(array $contains, /*string */$file, /*string */$message = '')////: void
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         $this->assertFilenameExists($file);
 
@@ -76,9 +76,9 @@ trait InteractsWithPublishedFiles
      */
     protected function assertMigrationFileContains(array $contains, /*string */$file, /*string */$message = '')////: void
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         $haystack = $this->app['files']->get($this->getMigrationFile($file));
 
@@ -94,9 +94,9 @@ trait InteractsWithPublishedFiles
      */
     protected function assertMigrationFileNotContains(array $contains, /*string */$file, /*string */$message = '')////: void
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         $haystack = $this->app['files']->get($this->getMigrationFile($file));
 
@@ -110,7 +110,7 @@ trait InteractsWithPublishedFiles
      */
     protected function assertFilenameExists(/*string */$file)////: void
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         $appFile = $this->app->basePath($file);
 
@@ -122,7 +122,7 @@ trait InteractsWithPublishedFiles
      */
     protected function assertFilenameNotExists(/*string */$file)////: void
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         $appFile = $this->app->basePath($file);
 
@@ -150,7 +150,7 @@ trait InteractsWithPublishedFiles
      */
     protected function getMigrationFile(/*string */$filename)////: string
     {
-        $filename = cast_to_string($filename);
+        $filename = backport_type_check('string', $filename);
 
         $migrationPath = $this->app->databasePath('migrations');
 

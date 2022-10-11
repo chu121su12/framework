@@ -14,7 +14,7 @@ class CodeSnippet
 
     public function surroundingLine(/*int */$surroundingLine)/*: self*/
     {
-        $surroundingLine = cast_to_int($surroundingLine);
+        $surroundingLine = backport_type_check('int', $surroundingLine);
 
         $this->surroundingLine = $surroundingLine;
 
@@ -23,7 +23,7 @@ class CodeSnippet
 
     public function snippetLineCount(/*int */$snippetLineCount)/*: self*/
     {
-        $snippetLineCount = cast_to_int($snippetLineCount);
+        $snippetLineCount = backport_type_check('int', $snippetLineCount);
 
         $this->snippetLineCount = $snippetLineCount;
 
@@ -32,7 +32,7 @@ class CodeSnippet
 
     public function get(/*string */$fileName)/*: array*/
     {
-        $fileName = cast_to_string($fileName);
+        $fileName = backport_type_check('string', $fileName);
 
         if (! file_exists($fileName)) {
             return [];
@@ -64,7 +64,7 @@ class CodeSnippet
 
     protected function getBounds(/*int */$totalNumberOfLineInFile)/*: array*/
     {
-        $totalNumberOfLineInFile = cast_to_int($totalNumberOfLineInFile);
+        $totalNumberOfLineInFile = backport_type_check('int', $totalNumberOfLineInFile);
 
         $startLine = max($this->surroundingLine - floor($this->snippetLineCount / 2), 1);
 

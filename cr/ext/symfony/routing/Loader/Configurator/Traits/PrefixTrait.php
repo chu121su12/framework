@@ -23,7 +23,7 @@ trait PrefixTrait
 {
     final protected function addPrefix(RouteCollection $routes, $prefix, $trailingSlashOnRoot)
     {
-        $trailingSlashOnRoot = cast_to_bool($trailingSlashOnRoot);
+        $trailingSlashOnRoot = backport_type_check('bool', $trailingSlashOnRoot);
 
         if (\is_array($prefix)) {
             foreach ($prefix as $locale => $localePrefix) {

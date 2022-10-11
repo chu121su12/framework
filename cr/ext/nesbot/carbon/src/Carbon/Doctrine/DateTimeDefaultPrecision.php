@@ -22,7 +22,7 @@ class DateTimeDefaultPrecision
      */
     public static function set(/*int */$precision)/*: void*/
     {
-        $precision = cast_to_int($precision);
+        $precision = backport_type_check('int', $precision);
 
         self::$precision = $precision;
     }

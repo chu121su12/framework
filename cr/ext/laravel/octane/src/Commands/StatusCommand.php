@@ -73,7 +73,7 @@ class StatusCommand extends Command
      */
     protected function invalidServer(/*string */$server)
     {
-        $server = cast_to_string($server);
+        $server = backport_type_check('string', $server);
 
         $this->error("Invalid server: {$server}.");
 

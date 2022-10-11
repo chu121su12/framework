@@ -21,11 +21,11 @@ trait RegistersTickHandlers
      */
     public function tick(/*string */$key, callable $callback, /*int */$seconds = 1, /*bool */$immediate = true)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
-        $seconds = cast_to_int($seconds);
+        $seconds = backport_type_check('int', $seconds);
 
-        $immediate = cast_to_bool($immediate);
+        $immediate = backport_type_check('bool', $immediate);
 
         $listener = new InvokeTickCallable(
             $key,

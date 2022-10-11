@@ -83,7 +83,7 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      */
     public function match($pathinfo)
     {
-        $pathinfo = cast_to_string($pathinfo);
+        $pathinfo = backport_type_check('string', $pathinfo);
 
         $this->allow = $this->allowSchemes = [];
 
@@ -130,7 +130,7 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      */
     protected function matchCollection($pathinfo, RouteCollection $routes)
     {
-        $pathinfo = cast_to_string($pathinfo);
+        $pathinfo = backport_type_check('string', $pathinfo);
 
         // HEAD and GET are equivalent as per RFC
         if ('HEAD' === $method = $this->context->getMethod()) {
@@ -213,7 +213,7 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      */
     protected function getAttributes(Route $route, $name, array $attributes)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $defaults = $route->getDefaults();
         if (isset($defaults['_canonical_route'])) {
@@ -232,9 +232,9 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      */
     protected function handleRouteRequirements($pathinfo, $name, Route $route)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
-        $pathinfo = cast_to_string($pathinfo);
+        $pathinfo = backport_type_check('string', $pathinfo);
 
         // expression condition
         if ($route->getCondition() && !$this->getExpressionLanguage()->evaluate($route->getCondition(), ['context' => $this->context, 'request' => $this->request ?: $this->createRequest($pathinfo)])) {
@@ -277,7 +277,7 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      */
     protected function createRequest($pathinfo) // ?Request
     {
-        $pathinfo = cast_to_string($pathinfo);
+        $pathinfo = backport_type_check('string', $pathinfo);
 
         if (!class_exists(Request::class)) {
             return null;

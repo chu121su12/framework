@@ -15,7 +15,7 @@ class ApplicationFactory
 
     public function __construct($basePath)
     {
-        $this->basePath = cast_to_string($basePath);
+        $this->basePath = backport_type_check('string', $basePath);
     }
 
     /**
@@ -86,9 +86,9 @@ class ApplicationFactory
      */
     protected function injectBootstrapperBefore(/*string */$before, /*string */$inject, array $bootstrappers) ////: array
     {
-        $before = cast_to_string($before);
+        $before = backport_type_check('string', $before);
 
-        $inject = cast_to_string($inject);
+        $inject = backport_type_check('string', $inject);
 
         $injectIndex = array_search($before, $bootstrappers, true);
 

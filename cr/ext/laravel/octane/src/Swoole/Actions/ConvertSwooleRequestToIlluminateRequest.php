@@ -17,7 +17,7 @@ class ConvertSwooleRequestToIlluminateRequest
      */
     public function __invoke($swooleRequest, /*string */$phpSapi) ///: Request
     {
-        $phpSapi = cast_to_string($phpSapi);
+        $phpSapi = backport_type_check('string', $phpSapi);
 
         $serverVariables = $this->prepareServerVariables(
             isset($swooleRequest) && isset($swooleRequest->server) ? $swooleRequest->server : [],
@@ -55,7 +55,7 @@ class ConvertSwooleRequestToIlluminateRequest
      */
     protected function prepareServerVariables(array $server, array $headers, /*string */$phpSapi) ////: array
     {
-        $phpSapi = cast_to_string($phpSapi);
+        $phpSapi = backport_type_check('string', $phpSapi);
 
         $results = [];
 

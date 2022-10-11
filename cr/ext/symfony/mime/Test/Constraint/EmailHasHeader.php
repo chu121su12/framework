@@ -20,7 +20,7 @@ final class EmailHasHeader extends Constraint
 
     public function __construct($headerName)
     {
-        $headerName = cast_to_string($headerName);
+        $headerName = backport_type_check('string', $headerName);
 
         $this->headerName = $headerName;
     }

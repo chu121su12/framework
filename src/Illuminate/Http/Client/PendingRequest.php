@@ -231,7 +231,7 @@ class PendingRequest
      */
     public function baseUrl(/*string */$url)
     {
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
         $this->baseUrl = $url;
 
@@ -325,7 +325,7 @@ class PendingRequest
      */
     public function bodyFormat(/*string */$format)
     {
-        $format = cast_to_string($format);
+        $format = backport_type_check('string', $format);
 
         return tap($this, function () use ($format) {
             $this->bodyFormat = $format;
@@ -340,7 +340,7 @@ class PendingRequest
      */
     public function contentType(/*string */$contentType)
     {
-        $contentType = cast_to_string($contentType);
+        $contentType = backport_type_check('string', $contentType);
 
         return $this->withHeaders(['Content-Type' => $contentType]);
     }
@@ -390,9 +390,9 @@ class PendingRequest
      */
     public function withBasicAuth(/*string */$username, /*string */$password)
     {
-        $password = cast_to_string($password);
+        $password = backport_type_check('string', $password);
 
-        $username = cast_to_string($username);
+        $username = backport_type_check('string', $username);
 
         return tap($this, function () use ($username, $password) {
             $this->options['auth'] = [$username, $password];
@@ -449,7 +449,7 @@ class PendingRequest
      */
     public function withCookies(array $cookies, /*string */$domain)
     {
-        $domain = cast_to_string($domain);
+        $domain = backport_type_check('string', $domain);
 
         return tap($this, function () use ($cookies, $domain) {
             $this->options = array_merge_recursive($this->options, [
@@ -466,7 +466,7 @@ class PendingRequest
      */
     public function maxRedirects(/*int */$max)
     {
-        $max = cast_to_int($max);
+        $max = backport_type_check('int', $max);
 
         return tap($this, function () use ($max) {
             $this->options['allow_redirects']['max'] = $max;
@@ -518,7 +518,7 @@ class PendingRequest
      */
     public function timeout(/*int */$seconds)
     {
-        $seconds = cast_to_int($seconds);
+        $seconds = backport_type_check('int', $seconds);
 
         return tap($this, function () use ($seconds) {
             $this->options['timeout'] = $seconds;
@@ -533,7 +533,7 @@ class PendingRequest
      */
     public function connectTimeout(/*int */$seconds)
     {
-        $seconds = cast_to_int($seconds);
+        $seconds = backport_type_check('int', $seconds);
 
         return tap($this, function () use ($seconds) {
             $this->options['connect_timeout'] = $seconds;
@@ -551,11 +551,11 @@ class PendingRequest
      */
     public function retry(/*int */$times, /*int */$sleepMilliseconds = 0, /*?*/callable $when = null, /*bool */$throw = true)
     {
-        $throw = cast_to_bool($throw);
+        $throw = backport_type_check('bool', $throw);
 
-        $sleepMilliseconds = cast_to_int($sleepMilliseconds);
+        $sleepMilliseconds = backport_type_check('int', $sleepMilliseconds);
 
-        $times = cast_to_int($times);
+        $times = backport_type_check('int', $times);
 
         $this->tries = $times;
         $this->retryDelay = $sleepMilliseconds;
@@ -685,7 +685,7 @@ class PendingRequest
      */
     public function get(/*string */$url, $query = null)
     {
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
         return $this->send('GET', $url, func_num_args() === 1 ? [] : [
             'query' => $query,
@@ -701,7 +701,7 @@ class PendingRequest
      */
     public function head(/*string */$url, $query = null)
     {
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
         return $this->send('HEAD', $url, func_num_args() === 1 ? [] : [
             'query' => $query,
@@ -717,7 +717,7 @@ class PendingRequest
      */
     public function post(/*string */$url, $data = [])
     {
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
         return $this->send('POST', $url, [
             $this->bodyFormat => $data,
@@ -797,9 +797,9 @@ class PendingRequest
      */
     public function send(/*string */$method, /*string */$url, array $options = [])
     {
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
-        $method = cast_to_string($method);
+        $method = backport_type_check('string', $method);
 
         if (! Str::startsWith($url, ['http://', 'https://'])) {
             $url = ltrim(rtrim($this->baseUrl, '/').'/'.ltrim($url, '/'), '/');
@@ -918,9 +918,9 @@ class PendingRequest
      */
     protected function makePromise(/*string */$method, /*string */$url, array $options = [])
     {
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
-        $method = cast_to_string($method);
+        $method = backport_type_check('string', $method);
 
         return $this->promise = $this->sendRequest($method, $url, $options)
             ->then(function (MessageInterface $message) {
@@ -946,9 +946,9 @@ class PendingRequest
      */
     protected function sendRequest(/*string */$method, /*string */$url, array $options = [])
     {
-        $url = cast_to_string($url);
+        $url = backport_type_check('string', $url);
 
-        $method = cast_to_string($method);
+        $method = backport_type_check('string', $method);
 
         $clientMethod = $this->async ? 'requestAsync' : 'request';
 
@@ -1259,7 +1259,7 @@ class PendingRequest
      */
     public function async(/*bool */$async = true)
     {
-        $async = cast_to_bool($async);
+        $async = backport_type_check('bool', $async);
 
         $this->async = $async;
 

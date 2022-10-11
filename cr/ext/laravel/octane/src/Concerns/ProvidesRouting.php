@@ -25,9 +25,9 @@ trait ProvidesRouting
      */
     public function route(/*string */$method, /*string */$uri, Closure $callback) ////: void
     {
-        $method = cast_to_string($method);
+        $method = backport_type_check('string', $method);
 
-        $uri = cast_to_string($uri);
+        $uri = backport_type_check('string', $uri);
 
         $this->routes[$method.$uri] = $callback;
     }
@@ -41,9 +41,9 @@ trait ProvidesRouting
      */
     public function hasRouteFor(/*string */$method, /*string */$uri) ////: bool
     {
-        $method = cast_to_string($method);
+        $method = backport_type_check('string', $method);
 
-        $uri = cast_to_string($uri);
+        $uri = backport_type_check('string', $uri);
 
         return isset($this->routes[$method.$uri]);
     }
@@ -58,9 +58,9 @@ trait ProvidesRouting
      */
     public function invokeRoute(Request $request, /*string */$method, /*string */$uri) ////: Response
     {
-        $method = cast_to_string($method);
+        $method = backport_type_check('string', $method);
 
-        $uri = cast_to_string($uri);
+        $uri = backport_type_check('string', $uri);
 
         return call_user_func($this->routes[$method.$uri], $request);
     }

@@ -46,7 +46,7 @@ class BinaryUtil
 
     public static function toBase(/*string */$bytes, array $map)/*: string*/
     {
-        $bytes = cast_to_string($bytes);
+        $bytes = backport_type_check('string', $bytes);
 
         $base = \strlen($alphabet = $map['']);
         $bytes = array_values(unpack(\PHP_INT_SIZE >= 8 ? 'n*' : 'C*', $bytes));
@@ -75,7 +75,7 @@ class BinaryUtil
 
     public static function fromBase(/*string */$digits, array $map)/*: string*/
     {
-        $digits = cast_to_string($digits);
+        $digits = backport_type_check('string', $digits);
 
         $base = \strlen($map['']);
         $count = \strlen($digits);
@@ -110,9 +110,9 @@ class BinaryUtil
 
     public static function add(/*string */$a, /*string */$b)/*: string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         $carry = 0;
         for ($i = 7; 0 <= $i; --$i) {
@@ -129,7 +129,7 @@ class BinaryUtil
      */
     public static function hexToDateTime(/*string */$time)/*: \DateTimeImmutable*/
     {
-        $time = cast_to_string($time);
+        $time = backport_type_check('string', $time);
 
         if (\PHP_INT_SIZE >= 8) {
             $time = (string) (hexdec($time) - self::TIME_OFFSET_INT);

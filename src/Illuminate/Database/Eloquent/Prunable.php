@@ -15,7 +15,7 @@ trait Prunable
      */
     public function pruneAll(/*int */$chunkSize = 1000)
     {
-        $chunkSize = cast_to_int($chunkSize);
+        $chunkSize = backport_type_check('int', $chunkSize);
 
         $total = 0;
 

@@ -34,7 +34,7 @@ class OnWorkerStart
         $this->basePath = $basePath;
         $this->serverState = $serverState;
         $this->workerState = $workerState;
-        $this->shouldSetProcessName = cast_to_bool($shouldSetProcessName);
+        $this->shouldSetProcessName = backport_type_check('bool', $shouldSetProcessName);
     }
 
     /**
@@ -46,7 +46,7 @@ class OnWorkerStart
      */
     public function __invoke($server, /*int */$workerId)
     {
-        $workerId = cast_to_int($workerId);
+        $workerId = backport_type_check('int', $workerId);
 
         $this->clearOpcodeCache();
 

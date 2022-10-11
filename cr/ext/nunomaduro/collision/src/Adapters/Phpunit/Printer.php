@@ -63,8 +63,8 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
      */
     public function __construct(\Symfony\Component\Console\Output\ConsoleOutputInterface $output = null, /*bool */$verbose = false, /*string */$colors = 'always')
     {
-        $verbose = cast_to_bool($verbose);
-        $colors = cast_to_string($colors);
+        $verbose = backport_type_check('bool', $verbose);
+        $colors = backport_type_check('string', $colors);
 
         $this->timer = Timer::start();
 
@@ -85,7 +85,7 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
      */
     public function addError(Test $testCase, /*Throwable */$throwable, /*float */$time)/*: void*/
     {
-        $time = cast_to_float($time);
+        $time = backport_type_check('float', $time);
 
         $this->failed = true;
 
@@ -99,7 +99,7 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
      */
     public function addWarning(Test $testCase, Warning $warning, /*float */$time)/*: void*/
     {
-        $time = cast_to_float($time);
+        $time = backport_type_check('float', $time);
 
         $testCase = $this->testCaseFromTest($testCase);
 
@@ -111,7 +111,7 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
      */
     public function addFailure(Test $testCase, AssertionFailedError $error, /*float */$time)/*: void*/
     {
-        $time = cast_to_float($time);
+        $time = backport_type_check('float', $time);
 
         $this->failed = true;
 
@@ -134,7 +134,7 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
      */
     public function addIncompleteTest(Test $testCase, /*Throwable */$throwable, /*float */$time)/*: void*/
     {
-        $time = cast_to_float($time);
+        $time = backport_type_check('float', $time);
 
         $testCase = $this->testCaseFromTest($testCase);
 
@@ -146,7 +146,7 @@ final class Printer implements \PHPUnit\TextUI\ResultPrinter
      */
     public function addRiskyTest(Test $testCase, /*Throwable */$throwable, /*float */$time)/*: void*/
     {
-        $time = cast_to_float($time);
+        $time = backport_type_check('float', $time);
 
         $testCase = $this->testCaseFromTest($testCase);
 

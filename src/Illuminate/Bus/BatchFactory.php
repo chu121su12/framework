@@ -53,11 +53,11 @@ class BatchFactory
                          /*?*/CarbonImmutable $cancelledAt = null,
                          /*?*/CarbonImmutable $finishedAt = null)
     {
-        $id = cast_to_string($id);
-        $name = cast_to_string($name);
-        $totalJobs = cast_to_int($totalJobs);
-        $pendingJobs = cast_to_int($pendingJobs);
-        $failedJobs = cast_to_int($failedJobs);
+        $id = backport_type_check('string', $id);
+        $name = backport_type_check('string', $name);
+        $totalJobs = backport_type_check('int', $totalJobs);
+        $pendingJobs = backport_type_check('int', $pendingJobs);
+        $failedJobs = backport_type_check('int', $failedJobs);
 
         return new Batch($this->queue, $repository, $id, $name, $totalJobs, $pendingJobs, $failedJobs, $failedJobIds, $options, $createdAt, $cancelledAt, $finishedAt);
     }

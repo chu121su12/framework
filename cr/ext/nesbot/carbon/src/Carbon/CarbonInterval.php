@@ -569,9 +569,9 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
      */
     public static function createFromFormat(/*string */$format, /*?string */$interval = null)
     {
-        $format = cast_to_string($format);
+        $format = backport_type_check('string', $format);
 
-        $interval = cast_to_string($interval, null);
+        $interval = backport_type_check('?string', $interval);
 
         $instance = new static(0);
         $length = mb_strlen($format);
@@ -897,7 +897,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
 
     private static function castIntervalToClass(DateInterval $interval, /*string */$className)
     {
-        $className = cast_to_string($className);
+        $className = backport_type_check('string', $className);
 
         $mainClass = DateInterval::class;
 
@@ -952,7 +952,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
      */
     public function cast(/*string */$className)
     {
-        $className = cast_to_string($className);
+        $className = backport_type_check('string', $className);
 
         return self::castIntervalToClass($this, $className);
     }
@@ -1005,7 +1005,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
 
     protected static function makeFromString(/*string */$interval)
     {
-        $interval = cast_to_string($interval);
+        $interval = backport_type_check('string', $interval);
 
         $interval = preg_replace('/\s+/', ' ', trim($interval));
 
@@ -1519,7 +1519,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
 
     protected static function getRoundingMethodFromOptions(/*int */$options)/*: ?string*/
     {
-        $options = cast_to_int($options);
+        $options = backport_type_check('int', $options);
 
         if ($options & CarbonInterface::ROUND) {
             return 'round';
@@ -2278,7 +2278,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
 
     private function doCascade(/*bool */$deep)
     {
-        $deep = cast_to_bool($deep);
+        $deep = backport_type_check('bool', $deep);
 
         $originalData = $this->toArray();
         $originalData['milliseconds'] = (int) ($originalData['microseconds'] / static::getMicrosecondsPerMillisecond());
@@ -2809,11 +2809,11 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
 
     private function needsDeclension(/*string */$mode, /*int */$index, /*int */$parts)/*: bool*/
     {
-        $parts = cast_to_int($parts);
+        $parts = backport_type_check('int', $parts);
 
-        $index = cast_to_int($index);
+        $index = backport_type_check('int', $index);
 
-        $mode = cast_to_string($mode);
+        $mode = backport_type_check('string', $mode);
 
         switch ($mode) {
             case 'last':

@@ -228,7 +228,7 @@ class AboutCommand extends Command
      */
     protected function hasPhpFiles(/*string */$path)/*: bool*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         return count(glob($path.'/*.php')) > 0;
     }
@@ -243,9 +243,9 @@ class AboutCommand extends Command
      */
     public static function add(/*string */$section, $data, /*string */$value = null)
     {
-        $section = cast_to_string($section);
+        $section = backport_type_check('string', $section);
 
-        $path = cast_to_string($path, null);
+        $path = backport_type_check('?string', $path);
 
         static::$customDataResolvers[] = function () use ($section, $data, $value) {
             return static::addToSection($section, $data, $value);
@@ -262,9 +262,9 @@ class AboutCommand extends Command
      */
     protected static function addToSection(/*string */$section, $data, /*string */$value = null)
     {
-        $section = cast_to_string($section);
+        $section = backport_type_check('string', $section);
 
-        $path = cast_to_string($path, null);
+        $path = backport_type_check('?string', $path);
 
         if (is_array($data)) {
             foreach ($data as $key => $value) {

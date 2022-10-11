@@ -144,7 +144,7 @@ class Password implements Rule
      */
     public function length(/*int */$length)
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
         $this->length = $length;
 
@@ -195,7 +195,7 @@ class Password implements Rule
      */
     public function withMessage(/*string */$message)
     {
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         $this->message = $message;
 

@@ -178,7 +178,7 @@ abstract class Factory
      */
     public static function times(/*int */$count)
     {
-        $count = cast_to_int($count);
+        $count = backport_type_check('int', $count);
 
         return static::new_()->count($count);
     }
@@ -241,7 +241,7 @@ abstract class Factory
      */
     public function createMany(/*iterable */$records)
     {
-        $records = cast_to_iterable($records);
+        $records = backport_type_check('iterable', $records);
 
         return new EloquentCollection(
             collect($records)->map(function ($record) {
@@ -258,7 +258,7 @@ abstract class Factory
      */
     public function createManyQuietly(/*iterable */$records)
     {
-        $records = cast_to_iterable($records);
+        $records = backport_type_check('iterable', $records);
 
         return Model::withoutEvents(function () use ($records) {
             return $this->createMany($records);
@@ -581,7 +581,7 @@ abstract class Factory
      */
     protected function guessRelationship(/*string */$related)
     {
-        $related = cast_to_string($related);
+        $related = backport_type_check('string', $related);
 
         $guess = Str::camel(Str::plural(class_basename($related)));
 
@@ -705,7 +705,7 @@ abstract class Factory
      */
     public function count(/*?int */$count = null)
     {
-        $count = cast_to_int($count, null);
+        $count = backport_type_check('?int', $count);
 
         return $this->newInstance(['count' => $count]);
     }
@@ -718,7 +718,7 @@ abstract class Factory
      */
     public function connection(/*string */$connection)
     {
-        $connection = cast_to_string($connection);
+        $connection = backport_type_check('string', $connection);
 
         return $this->newInstance(['connection' => $connection]);
     }
@@ -799,7 +799,7 @@ abstract class Factory
      */
     public static function useNamespace(/*string */$namespace)
     {
-        $namespace = cast_to_string($namespace);
+        $namespace = backport_type_check('string', $namespace);
 
         static::$namespace = $namespace;
     }
@@ -812,7 +812,7 @@ abstract class Factory
      */
     public static function factoryForModel(/*string */$modelName)
     {
-        $modelName = cast_to_string($modelName);
+        $modelName = backport_type_check('string', $modelName);
 
         $factory = static::resolveFactoryName($modelName);
 
@@ -848,10 +848,10 @@ abstract class Factory
      */
     public static function resolveFactoryName(/*string */$modelName)
     {
-        $modelName = cast_to_string($modelName);
+        $modelName = backport_type_check('string', $modelName);
 
         $resolver = isset(static::$factoryNameResolver) ? static::$factoryNameResolver : function (/*string */$modelName) {
-            $modelName = cast_to_string($modelName);
+            $modelName = backport_type_check('string', $modelName);
 
             $appNamespace = static::appNamespace();
 

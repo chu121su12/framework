@@ -22,7 +22,7 @@ class SuccessfulPasswordResetLinkRequestResponse implements SuccessfulPasswordRe
      */
     public function __construct(/*string */$status)
     {
-        $status = cast_to_string($status);
+        $status = backport_type_check('string', $status);
 
         $this->status = $status;
     }

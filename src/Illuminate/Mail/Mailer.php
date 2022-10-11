@@ -96,7 +96,7 @@ class Mailer implements MailerContract, MailQueueContract
      */
     public function __construct(/*string */$name, Factory $views, TransportInterface $transport = null, Dispatcher $events = null, Swift_Mailer $swift = null)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->name = $name;
         $this->views = $views;

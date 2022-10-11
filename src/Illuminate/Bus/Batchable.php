@@ -59,7 +59,7 @@ trait Batchable
      */
     public function withBatchId(/*string */$batchId)
     {
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         $this->batchId = $batchId;
 
@@ -89,11 +89,11 @@ trait Batchable
                                   /*?*/CarbonImmutable $cancelledAt = null,
                                   /*?*/CarbonImmutable $finishedAt = null)
     {
-        $id = cast_to_string($id);
-        $name = cast_to_string($name);
-        $totalJobs = cast_to_int($totalJobs);
-        $pendingJobs = cast_to_int($pendingJobs);
-        $failedJobs = cast_to_int($failedJobs);
+        $id = backport_type_check('string', $id);
+        $name = backport_type_check('string', $name);
+        $totalJobs = backport_type_check('int', $totalJobs);
+        $pendingJobs = backport_type_check('int', $pendingJobs);
+        $failedJobs = backport_type_check('int', $failedJobs);
 
         $this->fakeBatch = new BatchFake(
             empty($id) ? (string) Str::uuid() : $id,

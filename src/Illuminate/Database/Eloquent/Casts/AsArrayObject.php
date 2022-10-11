@@ -25,7 +25,7 @@ class AsArrayObject_castUsing_class implements CastsAttributes
 
             public function serialize($model, /*string */$key, $value, /*array */$attributes)
             {
-                // $key = cast_to_string($key);
+                // $key = backport_type_check('string', $key);
 
                 return $value->getArrayCopy();
             }

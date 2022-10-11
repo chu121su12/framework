@@ -492,7 +492,7 @@ class BusFake implements QueueingDispatcher
      */
     public function dispatchedSync(/*string */$command, $callback = null)
     {
-        $command = cast_to_string($command);
+        $command = backport_type_check('string', $command);
 
         if (! $this->hasDispatchedSync($command)) {
             return collect();
@@ -514,7 +514,7 @@ class BusFake implements QueueingDispatcher
      */
     public function dispatchedAfterResponse(/*string */$command, $callback = null)
     {
-        $command = cast_to_string($command);
+        $command = backport_type_check('string', $command);
 
         if (! $this->hasDispatchedAfterResponse($command)) {
             return collect();
@@ -677,7 +677,7 @@ class BusFake implements QueueingDispatcher
      */
     public function findBatch(/*string */$batchId)
     {
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         return $this->batchRepository->find($batchId);
     }

@@ -105,9 +105,9 @@ class RouteCompiler implements RouteCompilerInterface
 
     private static function compilePattern(Route $route, $pattern, $isHost) //// array
     {
-        $isHost = cast_to_bool($isHost);
+        $isHost = backport_type_check('bool', $isHost);
 
-        $pattern = cast_to_string($pattern);
+        $pattern = backport_type_check('string', $pattern);
 
         $tokens = [];
         $variables = [];
@@ -275,9 +275,9 @@ class RouteCompiler implements RouteCompilerInterface
      */
     private static function findNextSeparator($pattern, $useUtf8) //// string
     {
-        $useUtf8 = cast_to_bool($useUtf8);
+        $useUtf8 = backport_type_check('bool', $useUtf8);
 
-        $pattern = cast_to_string($pattern);
+        $pattern = backport_type_check('string', $pattern);
 
         if ('' == $pattern) {
             // return empty string if pattern is empty or false (false which can be returned by substr)
@@ -303,9 +303,9 @@ class RouteCompiler implements RouteCompilerInterface
      */
     private static function computeRegexp(array $tokens, $index, $firstOptional) //// string
     {
-        $firstOptional = cast_to_int($firstOptional);
+        $firstOptional = backport_type_check('int', $firstOptional);
 
-        $index = cast_to_int($index);
+        $index = backport_type_check('int', $index);
 
         $token = $tokens[$index];
         if ('text' === $token[0]) {
@@ -337,7 +337,7 @@ class RouteCompiler implements RouteCompilerInterface
 
     private static function transformCapturingGroupsToNonCapturings($regexp) //// string
     {
-        $regexp = cast_to_string($regexp);
+        $regexp = backport_type_check('string', $regexp);
 
         for ($i = 0; $i < \strlen($regexp); ++$i) {
             if ('\\' === $regexp[$i]) {

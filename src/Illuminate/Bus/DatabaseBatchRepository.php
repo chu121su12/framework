@@ -42,7 +42,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      */
     public function __construct(BatchFactory $factory, Connection $connection, /*string */$table)
     {
-        $table = cast_to_string($table);
+        $table = backport_type_check('string', $table);
 
         $this->factory = $factory;
         $this->connection = $connection;
@@ -79,7 +79,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      */
     public function find(/*string */$batchId)
     {
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         $batch = $this->connection->table($this->table)
                             ->useWritePdo()
@@ -126,9 +126,9 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      */
     public function incrementTotalJobs(/*string */$batchId, /*int */$amount)
     {
-        $amount = cast_to_int($amount);
+        $amount = backport_type_check('int', $amount);
 
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         $this->connection->table($this->table)->where('id', $batchId)->update([
             'total_jobs' => new Expression('total_jobs + '.$amount),
@@ -146,9 +146,9 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      */
     public function decrementPendingJobs(/*string */$batchId, /*string */$jobId)
     {
-        $jobId = cast_to_string($jobId);
+        $jobId = backport_type_check('string', $jobId);
 
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         $values = $this->updateAtomicValues($batchId, function ($batch) use ($jobId) {
             return [
@@ -173,9 +173,9 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      */
     public function incrementFailedJobs(/*string */$batchId, /*string */$jobId)
     {
-        $jobId = cast_to_string($jobId);
+        $jobId = backport_type_check('string', $jobId);
 
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         $values = $this->updateAtomicValues($batchId, function ($batch) use ($jobId) {
             return [
@@ -200,7 +200,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      */
     protected function updateAtomicValues(/*string */$batchId, Closure $callback)
     {
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         return $this->connection->transaction(function () use ($batchId, $callback) {
             $batch = $this->connection->table($this->table)->where('id', $batchId)
@@ -221,7 +221,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      */
     public function markAsFinished(/*string */$batchId)
     {
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         $this->connection->table($this->table)->where('id', $batchId)->update([
             'finished_at' => time(),
@@ -236,7 +236,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      */
     public function cancel(/*string */$batchId)
     {
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         $this->connection->table($this->table)->where('id', $batchId)->update([
             'cancelled_at' => time(),
@@ -252,7 +252,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      */
     public function delete(/*string */$batchId)
     {
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         $this->connection->table($this->table)->where('id', $batchId)->delete();
     }

@@ -22,7 +22,7 @@ class DirectoryLoader extends FileLoader
      */
     public function load($file, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         $path = $this->locator->locate($file);
 
@@ -53,7 +53,7 @@ class DirectoryLoader extends FileLoader
      */
     public function supports($resource, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         // only when type is forced to directory, not to conflict with AnnotationLoader
 

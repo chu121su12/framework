@@ -18,9 +18,9 @@ class SymfonyProcessFactory
      */
     public function createProcess(array $command, /*string */$cwd = null, array $env = null, $input = null, /*?float */$timeout = 60)
     {
-        $cwd = cast_to_string($cwd);
+        $cwd = backport_type_check('string', $cwd);
 
-        $timeout = cast_to_float($timeout, null);
+        $timeout = backport_type_check('?float', $timeout);
 
         return new Process($command, $cwd, $env, $input, $timeout);
     }

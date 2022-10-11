@@ -31,9 +31,9 @@ class SMimePart extends AbstractPart
      */
     public function __construct($body, $type, $subtype, array $parameters)
     {
-        $subtype = cast_to_string($subtype);
+        $subtype = backport_type_check('string', $subtype);
 
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
         unset($this->_headers);
 

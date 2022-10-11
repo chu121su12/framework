@@ -18,7 +18,7 @@ class View
      */
     public function __construct(/*string */$file, array $data = [])
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         $this->file = $file;
         $this->data = $data;
@@ -32,14 +32,14 @@ class View
      */
     public static function create(/*string */$file, array $data = [])/*: self*/
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         return new self($file, $data);
     }
 
     protected function dumpViewData(/*mixed */$variable)/*: string*/
     {
-        $variable = cast_to_mixed($variable);
+        $variable = backport_type_check('mixed', $variable);
 
         $cloner = new VarCloner();
 

@@ -334,7 +334,7 @@ abstract class HasOneOrMany extends Relation
      */
     public function createMany(/*iterable */$records)
     {
-        $records = cast_to_iterable($records);
+        $records = backport_type_check('iterable', $records);
 
         $instances = $this->related->newCollection();
 

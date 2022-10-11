@@ -514,7 +514,7 @@ class Migrator
      */
     protected function resolvePath(/*string */$path)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $class = $this->getMigrationClass($this->getMigrationName($path));
 
@@ -535,7 +535,7 @@ class Migrator
      */
     protected function getMigrationClass(/*string */$migrationName)/*: string*/
     {
-        $migrationName = cast_to_string($migrationName);
+        $migrationName = backport_type_check('string', $migrationName);
 
         return Str::studly(implode('_', array_slice(explode('_', $migrationName), 4)));
     }

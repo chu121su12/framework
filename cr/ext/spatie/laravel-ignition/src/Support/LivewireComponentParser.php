@@ -17,7 +17,7 @@ class LivewireComponentParser
 
     public static function create(/*string */$componentAlias)/*: self*/
     {
-        $componentAlias = cast_to_string($componentAlias);
+        $componentAlias = backport_type_check('string', $componentAlias);
 
         return new self($componentAlias);
     }
@@ -26,7 +26,7 @@ class LivewireComponentParser
 
     public function __construct(/*protected *//*string */$componentAlias)
     {
-        $this->componentAlias = cast_to_string($componentAlias);
+        $this->componentAlias = backport_type_check('string', $componentAlias);
 
         $this->componentClass = app(LivewireManager::class)->getClass($this->componentAlias);
         $this->reflectionClass = new ReflectionClass($this->componentClass);
@@ -39,7 +39,7 @@ class LivewireComponentParser
 
     public function getPropertyNamesLike(/*string */$similar)/*: Collection*/
     {
-        $similar = cast_to_string($similar);
+        $similar = backport_type_check('string', $similar);
 
         $properties = collect($this->reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC))
             ->reject(function (ReflectionProperty $reflectionProperty) {
@@ -68,7 +68,7 @@ class LivewireComponentParser
 
     public function getMethodNamesLike(/*string */$similar)/*: Collection*/
     {
-        $similar = cast_to_string($similar);
+        $similar = backport_type_check('string', $similar);
 
         $methods = collect($this->reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC))
             ->reject(function (ReflectionMethod $reflectionMethod) {
@@ -83,11 +83,11 @@ class LivewireComponentParser
 
     protected function filterItemsBySimilarity(Collection $items, /*string */$similar)/*: Collection*/
     {
-        $similar = cast_to_string($similar);
+        $similar = backport_type_check('string', $similar);
 
         return $items
             ->map(function (/*string */$name) use ($similar) {
-                $name = cast_to_string($name);
+                $name = backport_type_check('string', $name);
 
                 similar_text($similar, $name, $percentage);
 

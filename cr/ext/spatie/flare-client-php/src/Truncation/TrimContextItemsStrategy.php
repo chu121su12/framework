@@ -38,7 +38,7 @@ class TrimContextItemsStrategy extends AbstractTruncationStrategy
      */
     protected function iterateContextItems(array $contextItems, /*int */$threshold)/*: array*/
     {
-        $threshold = cast_to_int($threshold);
+        $threshold = backport_type_check('int', $threshold);
 
         array_walk($contextItems, [$this, 'trimContextItems'], $threshold);
 
@@ -47,11 +47,11 @@ class TrimContextItemsStrategy extends AbstractTruncationStrategy
 
     protected function trimContextItems(/*mixed */&$value, /*mixed */$key, /*int */$threshold)/*: mixed*/
     {
-        $threshold = cast_to_int($threshold);
+        $threshold = backport_type_check('int', $threshold);
 
-        $key = cast_to_mixed($key);
+        $key = backport_type_check('mixed', $key);
 
-        $value = cast_to_mixed($value);
+        $value = backport_type_check('mixed', $value);
 
         if (is_array($value)) {
             if (count($value) > $threshold) {

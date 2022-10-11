@@ -174,11 +174,11 @@ trait Localization
      */
     public static function getTranslationMessageWith($translator, /*string */$key, /*?string */$locale = null, /*?string */$default = null)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
-        $default = cast_to_string($default, null);
+        $default = backport_type_check('?string', $default);
 
-        $locale = cast_to_string($locale, null);
+        $locale = backport_type_check('?string', $locale);
 
         if (!($translator instanceof TranslatorBagInterface && $translator instanceof TranslatorInterface)) {
             throw new InvalidTypeException(
@@ -208,11 +208,11 @@ trait Localization
      */
     public function getTranslationMessage(/*string */$key, /*?string */$locale = null, /*?string */$default = null, $translator = null)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
-        $default = cast_to_string($default, null);
+        $default = backport_type_check('?string', $default);
 
-        $locale = cast_to_string($locale, null);
+        $locale = backport_type_check('?string', $locale);
 
         return static::getTranslationMessageWith($translator ?: $this->getLocalTranslator(), $key, $locale, $default);
     }
@@ -229,7 +229,7 @@ trait Localization
      */
     public static function translateWith(TranslatorInterface $translator, /*string */$key, array $parameters = [], $number = null)/*: string*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $message = static::getTranslationMessageWith($translator, $key, null, $key);
         if ($message instanceof Closure) {
@@ -265,9 +265,9 @@ trait Localization
      */
     public function translate(/*string */$key, array $parameters = [], $number = null, /*?*/TranslatorInterface $translator = null, /*bool */$altNumbers = false)/*: string*/
     {
-        $altNumbers = cast_to_bool($altNumbers);
+        $altNumbers = backport_type_check('bool', $altNumbers);
 
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $translation = static::translateWith($translator ?: $this->getLocalTranslator(), $key, $parameters, $number);
 
@@ -287,7 +287,7 @@ trait Localization
      */
     public function translateNumber(/*int */$number)/*: string*/
     {
-        $number = cast_to_int($number);
+        $number = backport_type_check('int', $number);
 
         $translateKey = "alt_numbers.$number";
         $symbol = $this->translate($translateKey);
@@ -457,7 +457,7 @@ trait Localization
      */
     public function locale(/*string */$locale = null, ...$fallbackLocales)
     {
-        $locale = cast_to_string($locale, null);
+        $locale = backport_type_check('?string', $locale);
 
         if ($locale === null) {
             return $this->getTranslatorLocale();
@@ -772,9 +772,9 @@ trait Localization
      */
     private static function getFromCatalogue($translator, $catalogue, /*string */$id, /*string */$domain = 'messages')
     {
-        $domain = cast_to_string($domain);
+        $domain = backport_type_check('string', $domain);
 
-        $id = cast_to_string($id);
+        $id = backport_type_check('string', $id);
 
         return $translator instanceof TranslatorStrongTypeInterface
             ? $translator->getFromCatalogue($catalogue, $id, $domain) // @codeCoverageIgnore

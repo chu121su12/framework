@@ -27,9 +27,9 @@ class UpdatedBatchJobCounts
      */
     public function __construct(/*int */$pendingJobs = 0, /*int */$failedJobs = 0)
     {
-        $failedJobs = cast_to_int($failedJobs);
+        $failedJobs = backport_type_check('int', $failedJobs);
 
-        $pendingJobs = cast_to_int($pendingJobs);
+        $pendingJobs = backport_type_check('int', $pendingJobs);
 
         $this->pendingJobs = $pendingJobs;
         $this->failedJobs = $failedJobs;

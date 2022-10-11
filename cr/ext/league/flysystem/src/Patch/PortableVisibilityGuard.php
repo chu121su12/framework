@@ -6,7 +6,7 @@ final class PortableVisibilityGuard
 {
     public static function guardAgainstInvalidInput(/*string */$visibility)/*: void*/
     {
-        $visibility = cast_to_string($visibility);
+        $visibility = backport_type_check('string', $visibility);
 
         if ($visibility !== Visibility::PUBLIC_ && $visibility !== Visibility::PRIVATE_) {
             $className = Visibility::class;

@@ -30,7 +30,7 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
      */
     public function __construct($magicFile = null)
     {
-        $magicFile = cast_to_string($magicFile, null);
+        $magicFile = backport_type_check('?string', $magicFile);
 
         $this->magicFile = $magicFile;
     }
@@ -48,7 +48,7 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
      */
     public function guessMimeType($path) //// ?string
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         if (!is_file($path) || !is_readable($path)) {
             throw new InvalidArgumentException(sprintf('The "%s" file does not exist or is not readable.', $path));

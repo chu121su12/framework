@@ -21,8 +21,8 @@ class QueryRecorder
         /*bool */$reportBindings = true,
         /*?int */$maxQueries = null
     ) {
-        $reportBindings = cast_to_bool($reportBindings);
-        $maxQueries = cast_to_int($maxQueries, null);
+        $reportBindings = backport_type_check('bool', $reportBindings);
+        $maxQueries = backport_type_check('?int', $maxQueries);
 
         $this->app = $app;
         $this->reportBindings = $reportBindings;
@@ -72,7 +72,7 @@ class QueryRecorder
 
     public function setReportBindings(/*bool */$reportBindings)/*: self*/
     {
-        $reportBindings = cast_to_bool($reportBindings);
+        $reportBindings = backport_type_check('bool', $reportBindings);
 
         $this->reportBindings = $reportBindings;
 
@@ -86,7 +86,7 @@ class QueryRecorder
 
     public function setMaxQueries(/*?int */$maxQueries = null)/*: self*/
     {
-        $maxQueries = cast_to_int($maxQueries, null);
+        $maxQueries = backport_type_check('?int', $maxQueries);
 
         $this->maxQueries = $maxQueries;
 

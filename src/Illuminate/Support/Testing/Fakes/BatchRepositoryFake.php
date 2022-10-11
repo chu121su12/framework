@@ -38,7 +38,7 @@ class BatchRepositoryFake implements BatchRepository
      */
     public function find(/*string */$batchId)
     {
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         return isset($this->batches[$batchId]) ? $this->batches[$batchId] : null;
     }
@@ -78,9 +78,9 @@ class BatchRepositoryFake implements BatchRepository
      */
     public function incrementTotalJobs(/*string */$batchId, /*int */$amount)
     {
-        // $amount = cast_to_int($amount);
+        // $amount = backport_type_check('int', $amount);
 
-        // $batchId = cast_to_string($batchId);
+        // $batchId = backport_type_check('string', $batchId);
 
         //
     }
@@ -94,9 +94,9 @@ class BatchRepositoryFake implements BatchRepository
      */
     public function decrementPendingJobs(/*string */$batchId, /*string */$jobId)
     {
-        // $jobId = cast_to_string($jobId);
+        // $jobId = backport_type_check('string', $jobId);
 
-        // $batchId = cast_to_string($batchId);
+        // $batchId = backport_type_check('string', $batchId);
 
         return new UpdatedBatchJobCounts;
     }
@@ -110,9 +110,9 @@ class BatchRepositoryFake implements BatchRepository
      */
     public function incrementFailedJobs(/*string */$batchId, /*string */$jobId)
     {
-        // $jobId = cast_to_string($jobId);
+        // $jobId = backport_type_check('string', $jobId);
 
-        // $batchId = cast_to_string($batchId);
+        // $batchId = backport_type_check('string', $batchId);
 
         return new UpdatedBatchJobCounts;
     }
@@ -125,7 +125,7 @@ class BatchRepositoryFake implements BatchRepository
      */
     public function markAsFinished(/*string */$batchId)
     {
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         if (isset($this->batches[$batchId])) {
             $this->batches[$batchId]->finishedAt = now();
@@ -140,7 +140,7 @@ class BatchRepositoryFake implements BatchRepository
      */
     public function cancel(/*string */$batchId)
     {
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         if (isset($this->batches[$batchId])) {
             $this->batches[$batchId]->cancel();
@@ -155,7 +155,7 @@ class BatchRepositoryFake implements BatchRepository
      */
     public function delete(/*string */$batchId)
     {
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         unset($this->batches[$batchId]);
     }

@@ -989,9 +989,9 @@ class Application extends Container implements ApplicationContract, CachesConfig
      */
     public function handle(SymfonyRequest $request, /*int */$type = /*self::MAIN_REQUEST*/self::MASTER_REQUEST, /*bool */$catch = true)/*: SymfonyResponse*/
     {
-        $catch = cast_to_bool($catch);
+        $catch = backport_type_check('bool', $catch);
 
-        $type = cast_to_int($type);
+        $type = backport_type_check('int', $type);
 
         return $this[HttpKernelContract::class]->handle(Request::createFromBase($request));
     }
@@ -1205,7 +1205,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
      */
     public function providerIsLoaded(/*string */$provider)
     {
-        $provider = cast_to_string($provider);
+        $provider = backport_type_check('string', $provider);
 
         return isset($this->loadedProviders[$provider]);
     }

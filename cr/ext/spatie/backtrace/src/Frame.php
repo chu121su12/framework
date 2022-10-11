@@ -30,11 +30,11 @@ class Frame
         /*string */$class = null,
         /*bool */$isApplicationFrame = false
     ) {
-        $file = cast_to_string($file);
-        $lineNumber = cast_to_int($lineNumber);
-        $method = cast_to_string($method, null);
-        $class = cast_to_string($class, null);
-        $isApplicationFrame = cast_to_bool($isApplicationFrame);
+        $file = backport_type_check('string', $file);
+        $lineNumber = backport_type_check('int', $lineNumber);
+        $method = backport_type_check('?string', $method);
+        $class = backport_type_check('?string', $class);
+        $isApplicationFrame = backport_type_check('bool', $isApplicationFrame);
 
         $this->file = $file;
 
@@ -51,7 +51,7 @@ class Frame
 
     public function getSnippet(/*int */$lineCount)/*: array*/
     {
-        $lineCount = cast_to_int($lineCount);
+        $lineCount = backport_type_check('int', $lineCount);
 
         return (new CodeSnippet())
             ->surroundingLine($this->lineNumber)
@@ -61,12 +61,12 @@ class Frame
 
     public function getSnippetProperties(/*int */$lineCount)/*: array*/
     {
-        $lineCount = cast_to_int($lineCount);
+        $lineCount = backport_type_check('int', $lineCount);
 
         $snippet = $this->getSnippet($lineCount);
 
         return array_map(function (/*int */$lineNumber) use ($snippet) {
-            $lineNumber = cast_to_int($lineNumber);
+            $lineNumber = backport_type_check('int', $lineNumber);
 
             return [
                 'line_number' => $lineNumber,

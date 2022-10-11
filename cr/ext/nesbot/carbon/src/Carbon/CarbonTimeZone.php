@@ -64,7 +64,7 @@ class CarbonTimeZone extends DateTimeZone
      */
     public function cast(/*string */$className)
     {
-        $className = cast_to_string($className);
+        $className = backport_type_check('string', $className);
 
         if (!method_exists($className, 'instance')) {
             if (is_a($className, DateTimeZone::class, true)) {
@@ -280,7 +280,7 @@ class CarbonTimeZone extends DateTimeZone
      */
     public static function createFromHourOffset(/*float */$hourOffset)
     {
-        $hourOffset = cast_to_float($hourOffset);
+        $hourOffset = backport_type_check('float', $hourOffset);
 
         return static::createFromMinuteOffset($hourOffset * Carbon::MINUTES_PER_HOUR);
     }
@@ -294,7 +294,7 @@ class CarbonTimeZone extends DateTimeZone
      */
     public static function createFromMinuteOffset(/*float */$minuteOffset)
     {
-        $minuteOffset = cast_to_float($minuteOffset);
+        $minuteOffset = backport_type_check('float', $minuteOffset);
 
         return static::instance(static::getOffsetNameFromMinuteOffset($minuteOffset));
     }
@@ -308,7 +308,7 @@ class CarbonTimeZone extends DateTimeZone
      */
     public static function getOffsetNameFromMinuteOffset(/*float */$minutes)/*: string*/
     {
-        $minutes = cast_to_float($minutes);
+        $minutes = backport_type_check('float', $minutes);
 
         $minutes = round($minutes);
         $unsignedMinutes = abs($minutes);

@@ -42,9 +42,9 @@ class FullTransformer
      */
     public function __construct(/*string */$pattern, /*string */$timezone)
     {
-        $timezone = cast_to_string($timezone);
+        $timezone = backport_type_check('string', $timezone);
 
-        $pattern = cast_to_string($pattern);
+        $pattern = backport_type_check('string', $pattern);
 
         $this->pattern = $pattern;
         $this->timezone = $timezone;
@@ -94,7 +94,7 @@ class FullTransformer
      */
     private function formatReplace(/*string */$dateChars, \DateTime $dateTime)/*: string*/
     {
-        $dateChars = cast_to_string($dateChars);
+        $dateChars = backport_type_check('string', $dateChars);
 
         $length = \strlen($dateChars);
 
@@ -128,7 +128,7 @@ class FullTransformer
      */
     public function parse(\DateTime $dateTime, /*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         $reverseMatchingRegExp = $this->getReverseMatchingRegExp($this->pattern);
         $reverseMatchingRegExp = '/^'.$reverseMatchingRegExp.'$/';
@@ -165,7 +165,7 @@ class FullTransformer
      */
     private function getReverseMatchingRegExp(/*string */$pattern)/*: string*/
     {
-        $pattern = cast_to_string($pattern);
+        $pattern = backport_type_check('string', $pattern);
 
         $escapedPattern = preg_quote($pattern, '/');
 
@@ -200,7 +200,7 @@ class FullTransformer
      */
     private function isQuoteMatch(/*string */$quoteMatch)/*: bool*/
     {
-        $quoteMatch = cast_to_string($quoteMatch);
+        $quoteMatch = backport_type_check('string', $quoteMatch);
 
         return "'" === $quoteMatch[0];
     }
@@ -210,7 +210,7 @@ class FullTransformer
      */
     private function replaceQuoteMatch(/*string */$quoteMatch)/*: string*/
     {
-        $quoteMatch = cast_to_string($quoteMatch);
+        $quoteMatch = backport_type_check('string', $quoteMatch);
 
         if (preg_match("/^'+$/", $quoteMatch)) {
             return str_replace("''", "'", $quoteMatch);
@@ -224,7 +224,7 @@ class FullTransformer
      */
     private function buildCharsMatch(/*string */$specialChars)/*: string*/
     {
-        $specialChars = cast_to_string($specialChars);
+        $specialChars = backport_type_check('string', $specialChars);
 
         $specialCharsArray = str_split($specialChars);
 

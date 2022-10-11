@@ -1259,7 +1259,7 @@ class BelongsToMany extends Relation
      */
     public function createMany(/*iterable */$records, array $joinings = [])
     {
-        $records = cast_to_iterable($records);
+        $records = backport_type_check('iterable', $records);
 
         $instances = [];
 

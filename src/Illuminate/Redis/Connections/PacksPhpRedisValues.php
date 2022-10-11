@@ -176,7 +176,7 @@ trait PacksPhpRedisValues
      */
     protected function phpRedisVersionAtLeast(/*string */$version)/*: bool*/
     {
-        $version = cast_to_string($version);
+        $version = backport_type_check('string', $version);
 
         $phpredisVersion = phpversion('redis');
 

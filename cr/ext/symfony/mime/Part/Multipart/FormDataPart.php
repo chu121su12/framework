@@ -85,7 +85,7 @@ final class FormDataPart extends AbstractMultipartPart
 
     private function preparePart($name, $value) // TextPart
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         if (\is_string($value)) {
             return $this->configurePart($name, new TextPart($value, 'utf-8', 'plain', '8bit'));
@@ -96,7 +96,7 @@ final class FormDataPart extends AbstractMultipartPart
 
     private function configurePart($name, TextPart $part) // TextPart
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         static $r;
 

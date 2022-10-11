@@ -84,7 +84,7 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
      */
     protected function getClassAndPropertyFromExceptionMessage(/*string */$message)/*: ?array*/
     {
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         if (! preg_match(self::REGEX, $message, $matches)) {
             return null;
@@ -104,9 +104,9 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
      */
     protected function findPossibleProperty(/*string */$class, /*string */$invalidPropertyName)/*: mixed*/
     {
-        $invalidPropertyName = cast_to_string($invalidPropertyName);
+        $invalidPropertyName = backport_type_check('string', $invalidPropertyName);
 
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         return $this->getAvailableProperties($class)
             ->sortByDesc(function (ReflectionProperty $property) use ($invalidPropertyName) {
@@ -128,7 +128,7 @@ class UndefinedPropertySolutionProvider implements HasSolutionsForThrowable
      */
     protected function getAvailableProperties(/*string */$class)/*: Collection*/
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         $class = new ReflectionClass($class);
 

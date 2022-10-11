@@ -28,7 +28,7 @@ class JobRecorder
         /*protected *//*int */$maxChainedJobReportingDepth = 5
     ) {
         $this->app = $app;
-        $this->maxChainedJobReportingDepth = cast_to_int($maxChainedJobReportingDepth);
+        $this->maxChainedJobReportingDepth = backport_type_check('int', $maxChainedJobReportingDepth);
     }
 
     public function start()/*: self*/
@@ -110,7 +110,7 @@ class JobRecorder
 
     protected function resolveCommandProperties(object $command, /*int */$maxChainDepth)/*: array*/
     {
-        $maxChainDepth = cast_to_int($maxChainDepth);
+        $maxChainDepth = backport_type_check('int', $maxChainDepth);
 
         $propertiesToIgnore = ['job', 'closure'];
 
@@ -143,7 +143,7 @@ class JobRecorder
      */
     protected function resolveJobChain(array $chainedCommands, /*int */$maxDepth)/*: array*/
     {
-        $maxDepth = cast_to_int($maxDepth);
+        $maxDepth = backport_type_check('int', $maxDepth);
 
         if ($maxDepth === 0) {
             return ['Ignition stopped recording jobs after this point since the max chain depth was reached'];
@@ -151,7 +151,7 @@ class JobRecorder
 
         return array_map(
             function (/*string */$command) use ($maxDepth) {
-                $command = cast_to_string($command);
+                $command = backport_type_check('string', $command);
 
                 $commandObject = $this->resolveObjectFromCommand($command);
 
@@ -167,7 +167,7 @@ class JobRecorder
     // Taken from Illuminate\Queue\CallQueuedHandler
     protected function resolveObjectFromCommand(/*string */$command)/*: object*/
     {
-        $command = cast_to_string($command);
+        $command = backport_type_check('string', $command);
 
         if (Str::startsWith($command, 'O:')) {
             return unserialize($command);

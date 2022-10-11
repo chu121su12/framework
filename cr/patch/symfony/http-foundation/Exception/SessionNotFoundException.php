@@ -22,9 +22,9 @@ class SessionNotFoundException extends \LogicException implements RequestExcepti
 {
     public function __construct(/*string */$message = 'There is currently no session available.', /*int */$code = 0, /*\Throwable */$previous = null)
     {
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
-        $code = cast_to_int($code);
+        $code = backport_type_check('int', $code);
 
         backport_type_throwable($previous, null);
 

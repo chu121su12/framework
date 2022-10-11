@@ -29,9 +29,9 @@ trait LocalizedRouteTrait
      */
     final protected function createLocalizedRoute(RouteCollection $collection, $name, $path, $namePrefix = '', array $prefixes = null) // RouteCollection
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
-        $namePrefix = cast_to_string($namePrefix);
+        $namePrefix = backport_type_check('string', $namePrefix);
 
         $paths = [];
 
@@ -75,7 +75,7 @@ trait LocalizedRouteTrait
 
     private function createRoute($path) // Route
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         return new Route($path);
     }

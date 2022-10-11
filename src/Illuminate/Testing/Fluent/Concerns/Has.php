@@ -17,7 +17,7 @@ trait Has
      */
     public function count($key, /*int */$length = null)/*: self*/
     {
-        $length = cast_to_int($length, null, true);
+        $length = backport_type_check('?int', $length, true);
 
         if (is_null($length)) {
             $path = $this->dotPath();
@@ -157,7 +157,7 @@ trait Has
      */
     public function missing(/*string */$key)/*: self*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         PHPUnit::assertNotTrue(
             Arr::has($this->prop(), $key),

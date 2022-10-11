@@ -23,9 +23,9 @@ final class EmailAddressContains extends Constraint
 
     public function __construct($headerName, $expectedValue)
     {
-        $expectedValue = cast_to_string($expectedValue);
+        $expectedValue = backport_type_check('string', $expectedValue);
 
-        $headerName = cast_to_string($headerName);
+        $headerName = backport_type_check('string', $headerName);
 
         $this->headerName = $headerName;
         $this->expectedValue = $expectedValue;

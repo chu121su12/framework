@@ -22,9 +22,9 @@ class UnstructuredHeader extends AbstractHeader
 
     public function __construct($name, $value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         parent::__construct($name);
 
@@ -60,7 +60,7 @@ class UnstructuredHeader extends AbstractHeader
      */
     public function setValue($value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         $this->value = $value;
     }

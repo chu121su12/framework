@@ -83,9 +83,9 @@ class EntryResult implements JsonSerializable
      */
     public function __construct($id, $sequence, /*string */$batchId, /*string */$type, /*?string */$familyHash = null, array $content, $createdAt, $tags = [])
     {
-        $batchId = cast_to_string($batchId);
-        $type = cast_to_string($type);
-        $familyHash = cast_to_string($familyHash, null);
+        $batchId = backport_type_check('string', $batchId);
+        $type = backport_type_check('string', $type);
+        $familyHash = backport_type_check('?string', $familyHash);
 
         $this->id = $id;
         $this->type = $type;

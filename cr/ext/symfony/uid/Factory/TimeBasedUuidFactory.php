@@ -22,7 +22,7 @@ class TimeBasedUuidFactory
 
     public function __construct(/*string */$class, Uuid $node = null)
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         $this->class = $class;
         $this->node = $node;

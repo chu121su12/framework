@@ -24,7 +24,7 @@ class InertiaManager
      */
     public function render(Request $request, /*string */$page, array $data = [])
     {
-        $page = cast_to_string($page);
+        $page = backport_type_check('string', $page);
 
         if (isset($this->renderingCallbacks[$page])) {
             foreach ($this->renderingCallbacks[$page] as $callback) {
@@ -44,7 +44,7 @@ class InertiaManager
      */
     public function whenRendering(/*string */$page, callable $callback)
     {
-        $page = cast_to_string($page);
+        $page = backport_type_check('string', $page);
 
         $this->renderingCallbacks[$page][] = $callback;
 

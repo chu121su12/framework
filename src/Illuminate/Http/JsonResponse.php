@@ -39,9 +39,9 @@ class JsonResponse extends BaseJsonResponse
      */
     public static function fromJsonString(/*?string */$data = null, /*int */$status = 200, /*array */$headers = [])/*: static*/
     {
-        $status = cast_to_int($status);
+        $status = backport_type_check('int', $status);
 
-        $data = cast_to_string($data, null);
+        $data = backport_type_check('?string', $data);
 
         return new static($data, $status, $headers, 0, true);
     }

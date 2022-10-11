@@ -13,7 +13,7 @@ class BaseSolution implements Solution
 
     public static function create(/*string */$title = '')/*: static*/
     {
-        $title = cast_to_string($title);
+        $title = backport_type_check('string', $title);
 
         // It's important to keep the return type as static because
         // the old Facade Ignition contracts extend from this method.
@@ -24,7 +24,7 @@ class BaseSolution implements Solution
 
     public function __construct(/*string */$title = '')
     {
-        $title = cast_to_string($title);
+        $title = backport_type_check('string', $title);
 
         $this->title = $title;
     }
@@ -36,7 +36,7 @@ class BaseSolution implements Solution
 
     public function setSolutionTitle(/*string */$title)/*: self*/
     {
-        $title = cast_to_string($title);
+        $title = backport_type_check('string', $title);
 
         $this->title = $title;
 
@@ -50,7 +50,7 @@ class BaseSolution implements Solution
 
     public function setSolutionDescription(/*string */$description)/*: self*/
     {
-        $description = cast_to_string($description);
+        $description = backport_type_check('string', $description);
 
         $this->description = $description;
 

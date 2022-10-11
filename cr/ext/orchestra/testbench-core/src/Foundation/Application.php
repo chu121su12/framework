@@ -47,7 +47,7 @@ class Application
      */
     public function __construct(/*?string */$basePath = null, /*?*/callable $resolvingCallback = null)
     {
-        $basePath = cast_to_string($basePath, null);
+        $basePath = backport_type_check('?string', $basePath);
 
         $this->basePath = $basePath;
         $this->resolvingCallback = $resolvingCallback;
@@ -64,7 +64,7 @@ class Application
      */
     public static function create(/*?string */$basePath = null, /*?*/callable $resolvingCallback = null, array $options = [])
     {
-        $basePath = cast_to_string($basePath, null);
+        $basePath = backport_type_check('?string', $basePath);
 
         return (new static($basePath, $resolvingCallback))->configure($options)->createApplication();
     }

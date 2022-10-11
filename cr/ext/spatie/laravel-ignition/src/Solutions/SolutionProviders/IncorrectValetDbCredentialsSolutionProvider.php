@@ -56,7 +56,7 @@ class IncorrectValetDbCredentialsSolutionProvider implements HasSolutionsForThro
 
     protected function isAccessDeniedCode(/*string */$code)/*: bool*/
     {
-        $code = cast_to_string($code);
+        $code = backport_type_check('string', $code);
 
         return $code === static::MYSQL_ACCESS_DENIED_CODE;
     }

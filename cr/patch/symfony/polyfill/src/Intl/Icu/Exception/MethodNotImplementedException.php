@@ -21,7 +21,7 @@ class MethodNotImplementedException extends NotImplementedException
      */
     public function __construct(/*string */$methodName)
     {
-        $methodName = cast_to_string($methodName);
+        $methodName = backport_type_check('string', $methodName);
 
         parent::__construct(sprintf('The %s() is not implemented.', $methodName));
     }

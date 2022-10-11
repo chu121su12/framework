@@ -101,7 +101,7 @@ class EncryptCookies
      */
     protected function validateValue(/*string */$key, $value)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         return is_array($value)
                     ? $this->validateArray($key, $value)
@@ -117,7 +117,7 @@ class EncryptCookies
      */
     protected function validateArray(/*string */$key, array $value)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $validated = [];
 

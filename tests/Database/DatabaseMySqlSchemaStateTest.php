@@ -15,7 +15,7 @@ class DatabaseMySqlSchemaStateTest extends TestCase
      */
     public function testConnectionString(/*string */$expectedConnectionString, array $expectedVariables, array $dbConfig)/*: void*/
     {
-        $expectedConnectionString = cast_to_string($expectedConnectionString);
+        $expectedConnectionString = backport_type_check('string', $expectedConnectionString);
 
         $connection = $this->createMock(MySqlConnection::class);
         $connection->method('getConfig')->willReturn($dbConfig);

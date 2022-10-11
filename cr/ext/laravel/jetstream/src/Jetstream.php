@@ -94,7 +94,7 @@ class Jetstream
      */
     public static function findRole(/*string */$key)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         return isset(static::$roles[$key]) ? static::$roles[$key] : null;
     }
@@ -109,9 +109,9 @@ class Jetstream
      */
     public static function role(/*string */$key, /*string */$name, array $permissions)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         static::$permissions = collect(array_merge(static::$permissions, $permissions))
                                     ->unique()
@@ -240,7 +240,7 @@ class Jetstream
      */
     public static function findUserByEmailOrFail(/*string */$email)
     {
-        $email = cast_to_string($email);
+        $email = backport_type_check('string', $email);
 
         return static::newUserModel()->where('email', $email)->firstOrFail();
     }
@@ -275,7 +275,7 @@ class Jetstream
      */
     public static function useUserModel(/*string */$model)
     {
-        $model = cast_to_string($model);
+        $model = backport_type_check('string', $model);
 
         static::$userModel = $model;
 
@@ -312,7 +312,7 @@ class Jetstream
      */
     public static function useTeamModel(/*string */$model)
     {
-        $model = cast_to_string($model);
+        $model = backport_type_check('string', $model);
 
         static::$teamModel = $model;
 
@@ -337,7 +337,7 @@ class Jetstream
      */
     public static function useMembershipModel(/*string */$model)
     {
-        $model = cast_to_string($model);
+        $model = backport_type_check('string', $model);
 
         static::$membershipModel = $model;
 
@@ -362,7 +362,7 @@ class Jetstream
      */
     public static function useTeamInvitationModel(/*string */$model)
     {
-        $model = cast_to_string($model);
+        $model = backport_type_check('string', $model);
 
         static::$teamInvitationModel = $model;
 
@@ -377,7 +377,7 @@ class Jetstream
      */
     public static function createTeamsUsing(/*string */$class)
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         return app()->singleton(CreatesTeams::class, $class);
     }
@@ -390,7 +390,7 @@ class Jetstream
      */
     public static function updateTeamNamesUsing(/*string */$class)
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         return app()->singleton(UpdatesTeamNames::class, $class);
     }
@@ -403,7 +403,7 @@ class Jetstream
      */
     public static function addTeamMembersUsing(/*string */$class)
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         return app()->singleton(AddsTeamMembers::class, $class);
     }
@@ -416,7 +416,7 @@ class Jetstream
      */
     public static function inviteTeamMembersUsing(/*string */$class)
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         return app()->singleton(InvitesTeamMembers::class, $class);
     }
@@ -429,7 +429,7 @@ class Jetstream
      */
     public static function removeTeamMembersUsing(/*string */$class)
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         return app()->singleton(RemovesTeamMembers::class, $class);
     }
@@ -442,7 +442,7 @@ class Jetstream
      */
     public static function deleteTeamsUsing(/*string */$class)
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         return app()->singleton(DeletesTeams::class, $class);
     }
@@ -455,7 +455,7 @@ class Jetstream
      */
     public static function deleteUsersUsing(/*string */$class)
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         return app()->singleton(DeletesUsers::class, $class);
     }

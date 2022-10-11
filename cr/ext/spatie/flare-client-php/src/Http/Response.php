@@ -12,11 +12,11 @@ class Response
 
     public function __construct(/*mixed */$headers, /*mixed */$body, /*mixed */$error)
     {
-        $error = cast_to_mixed($error);
+        $error = backport_type_check('mixed', $error);
 
-        $body = cast_to_mixed($body);
+        $body = backport_type_check('mixed', $body);
 
-        $headers = cast_to_mixed($headers);
+        $headers = backport_type_check('mixed', $headers);
 
         $this->headers = $headers;
 

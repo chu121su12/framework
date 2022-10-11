@@ -61,7 +61,7 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
 
     protected function getMethodFromExceptionMessage(/*string */$message)/*: ?string*/
     {
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         if (! preg_match(self::REGEX, $message, $matches)) {
             return null;
@@ -77,7 +77,7 @@ class UnknownValidationSolutionProvider implements HasSolutionsForThrowable
         $extensions = Collection::make(app('validator')->make([], [])->extensions)
             ->keys()
             ->map(function (/*string */$extension) {
-                $extension = cast_to_string($extension);
+                $extension = backport_type_check('string', $extension);
 
                 return 'validate'.Str::studly($extension);
             });

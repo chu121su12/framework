@@ -41,13 +41,13 @@ final class DkimSigner
      */
     public function __construct($pk, $domainName, $selector, array $defaultOptions = [], $passphrase = '')
     {
-        $pk = cast_to_string($pk);
+        $pk = backport_type_check('string', $pk);
 
-        $domainName = cast_to_string($domainName);
+        $domainName = backport_type_check('string', $domainName);
 
-        $selector = cast_to_string($selector);
+        $selector = backport_type_check('string', $selector);
 
-        $passphrase = cast_to_string($passphrase);
+        $passphrase = backport_type_check('string', $passphrase);
 
         if (!\extension_loaded('openssl')) {
             throw new \LogicException('PHP extension "openssl" is required to use DKIM.');
@@ -140,9 +140,9 @@ final class DkimSigner
 
     private function canonicalizeHeader($header, $headerCanon) //// string
     {
-        $header = cast_to_string($header);
+        $header = backport_type_check('string', $header);
 
-        $headerCanon = cast_to_string($headerCanon);
+        $headerCanon = backport_type_check('string', $headerCanon);
 
         if (self::CANON_RELAXED !== $headerCanon) {
             return $header."\r\n";
@@ -158,9 +158,9 @@ final class DkimSigner
 
     private function hashBody(AbstractPart $body, $bodyCanon, $maxLength) //// array
     {
-        $bodyCanon = cast_to_string($bodyCanon);
+        $bodyCanon = backport_type_check('string', $bodyCanon);
 
-        $maxLength = cast_to_int($maxLength);
+        $maxLength = backport_type_check('int', $maxLength);
 
         $hash = hash_init('sha256');
         $relaxed = self::CANON_RELAXED === $bodyCanon;

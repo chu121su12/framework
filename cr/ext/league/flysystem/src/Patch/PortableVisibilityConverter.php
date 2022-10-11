@@ -38,11 +38,11 @@ class PortableVisibilityConverter implements VisibilityConverter
         /*int */$directoryPrivate = 0700,
         /*string */$defaultForDirectories = Visibility::PRIVATE_
     ) {
-        $filePublic = cast_to_int($filePublic);
-        $filePrivate = cast_to_int($filePrivate);
-        $directoryPublic = cast_to_int($directoryPublic);
-        $directoryPrivate = cast_to_int($directoryPrivate);
-        $defaultForDirectories = cast_to_string($defaultForDirectories);
+        $filePublic = backport_type_check('int', $filePublic);
+        $filePrivate = backport_type_check('int', $filePrivate);
+        $directoryPublic = backport_type_check('int', $directoryPublic);
+        $directoryPrivate = backport_type_check('int', $directoryPrivate);
+        $defaultForDirectories = backport_type_check('string', $defaultForDirectories);
 
         $this->filePublic = $filePublic;
         $this->filePrivate = $filePrivate;
@@ -53,7 +53,7 @@ class PortableVisibilityConverter implements VisibilityConverter
 
     public function forFile(/*string */$visibility)/*: int*/
     {
-        $visibility = cast_to_string($visibility);
+        $visibility = backport_type_check('string', $visibility);
 
         PortableVisibilityGuard::guardAgainstInvalidInput($visibility);
 
@@ -64,7 +64,7 @@ class PortableVisibilityConverter implements VisibilityConverter
 
     public function forDirectory(/*string */$visibility)/*: int*/
     {
-        $visibility = cast_to_string($visibility);
+        $visibility = backport_type_check('string', $visibility);
 
         PortableVisibilityGuard::guardAgainstInvalidInput($visibility);
 
@@ -75,7 +75,7 @@ class PortableVisibilityConverter implements VisibilityConverter
 
     public function inverseForFile(/*int */$visibility)/*: string*/
     {
-        $visibility = cast_to_int($visibility);
+        $visibility = backport_type_check('int', $visibility);
 
         if ($visibility === $this->filePublic) {
             return Visibility::PUBLIC_;
@@ -88,7 +88,7 @@ class PortableVisibilityConverter implements VisibilityConverter
 
     public function inverseForDirectory(/*int */$visibility)/*: string*/
     {
-        $visibility = cast_to_int($visibility);
+        $visibility = backport_type_check('int', $visibility);
 
         if ($visibility === $this->directoryPublic) {
             return Visibility::PUBLIC_;
@@ -109,7 +109,7 @@ class PortableVisibilityConverter implements VisibilityConverter
      */
     public static function fromArray(array $permissionMap, /*string */$defaultForDirectories = Visibility::PRIVATE_)/*: PortableVisibilityConverter*/
     {
-        $defaultForDirectories = cast_to_string($defaultForDirectories);
+        $defaultForDirectories = backport_type_check('string', $defaultForDirectories);
 
         return new PortableVisibilityConverter(
             isset($permissionMap['file']) && isset($permissionMap['file']['public']) ? $permissionMap['file']['public'] : 0644,

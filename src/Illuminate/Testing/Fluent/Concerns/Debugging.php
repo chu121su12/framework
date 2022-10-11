@@ -12,7 +12,7 @@ trait Debugging
      */
     public function dump(/*string */$prop = null)/*: self*/
     {
-        $prop = cast_to_string($prop, null);
+        $prop = backport_type_check('?string', $prop);
 
         dump($this->prop($prop));
 
@@ -27,7 +27,7 @@ trait Debugging
      */
     public function dd(/*string */$prop = null)/*: void*/
     {
-        $prop = cast_to_string($prop, null);
+        $prop = backport_type_check('?string', $prop);
 
         dd($this->prop($prop));
     }

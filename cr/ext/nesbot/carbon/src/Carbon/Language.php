@@ -63,7 +63,7 @@ class Language implements JsonSerializable
 
     public function __construct(/*string */$id)
     {
-        $id = cast_to_string($id);
+        $id = backport_type_check('string', $id);
 
         $this->id = str_replace('-', '_', $id);
         $parts = explode('_', $this->id);
@@ -216,7 +216,7 @@ class Language implements JsonSerializable
      */
     public function setIsoName(/*string */$isoName)/*: self*/
     {
-        $isoName = cast_to_string($isoName);
+        $isoName = backport_type_check('string', $isoName);
 
         $this->isoName = $isoName;
 
@@ -244,7 +244,7 @@ class Language implements JsonSerializable
      */
     public function setNativeName(/*string */$nativeName)/*: self*/
     {
-        $nativeName = cast_to_string($nativeName);
+        $nativeName = backport_type_check('string', $nativeName);
 
         $this->nativeName = $nativeName;
 

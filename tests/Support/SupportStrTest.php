@@ -933,9 +933,9 @@ class SupportStrTest extends TestCase
      */
     public function testTransliterate(/*string */$value, /*string */$expected)/*: void*/
     {
-        $expected = cast_to_string($expected);
+        $expected = backport_type_check('string', $expected);
 
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         $this->assertSame($expected, Str::transliterate($value));
     }
@@ -965,9 +965,9 @@ class SupportStrTest extends TestCase
      */
     public function testTransliterateStrict(/*string */$value, /*string */$expected)/*: void*/
     {
-        $expected = cast_to_string($expected);
+        $expected = backport_type_check('string', $expected);
 
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         $this->assertSame($expected, Str::transliterate($value, '?', true));
     }

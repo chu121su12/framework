@@ -32,9 +32,9 @@ class IgnitionConfig implements Arrayable
 
     public function setOption(/*string */$name, /*string */$value)/*: self*/
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->options[$name] = $value;
 

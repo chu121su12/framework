@@ -22,9 +22,9 @@ class MethodArgumentNotImplementedException extends NotImplementedException
      */
     public function __construct(/*string */$methodName, /*string */$argName)
     {
-        $argName = cast_to_string($argName);
+        $argName = backport_type_check('string', $argName);
 
-        $methodName = cast_to_string($methodName);
+        $methodName = backport_type_check('string', $methodName);
 
         $message = sprintf('The %s() method\'s argument $%s behavior is not implemented.', $methodName, $argName);
         parent::__construct($message);

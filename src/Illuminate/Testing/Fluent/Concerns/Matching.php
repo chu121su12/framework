@@ -18,7 +18,7 @@ trait Matching
      */
     public function where(/*string */$key, $expected)/*: self*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $this->has($key);
 
@@ -58,7 +58,7 @@ trait Matching
      */
     public function whereNot(/*string */$key, $expected)/*: self*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $this->has($key);
 
@@ -118,7 +118,7 @@ trait Matching
      */
     public function whereType(/*string */$key, $expected)/*: self*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $this->has($key);
 
@@ -161,7 +161,7 @@ trait Matching
      */
     public function whereContains(/*string */$key, $expected)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $keyedProp = $this->prop($key);
 

@@ -18,7 +18,7 @@ final class QpContentEncoder implements ContentEncoderInterface
 {
     public function encodeByteStream($stream, $maxLineLength = 0) //// iterable
     {
-        $maxLineLength = cast_to_int($maxLineLength);
+        $maxLineLength = backport_type_check('int', $maxLineLength);
 
         if (!\is_resource($stream)) {
             throw new \TypeError(sprintf('Method "%s" takes a stream as a first argument.', __METHOD__));
@@ -35,13 +35,13 @@ final class QpContentEncoder implements ContentEncoderInterface
 
     public function encodeString($string, $charset = 'utf-8', $firstLineOffset = 0, $maxLineLength = 0) //// string
     {
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
-        $maxLineLength = cast_to_int($maxLineLength);
+        $maxLineLength = backport_type_check('int', $maxLineLength);
 
-        $firstLineOffset = cast_to_int($firstLineOffset);
+        $firstLineOffset = backport_type_check('int', $firstLineOffset);
 
-        $charset = cast_to_string($charset, null);
+        $charset = backport_type_check('?string', $charset);
 
         return $this->standardize(quoted_printable_encode($string));
     }
@@ -51,7 +51,7 @@ final class QpContentEncoder implements ContentEncoderInterface
      */
     private function standardize($string) //// string
     {
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         // transform CR or LF to CRLF
         $string = preg_replace('~=0D(?!=0A)|(?<!=0D)=0A~', '=0D=0A', $string);

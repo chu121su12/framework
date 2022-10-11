@@ -99,7 +99,7 @@ class HandleCors
      */
     protected function getPathsByHost(/*string */$host)
     {
-        $host = cast_to_string($host);
+        $host = backport_type_check('string', $host);
 
         $paths = $this->container['config']->get('cors.paths', []);
 

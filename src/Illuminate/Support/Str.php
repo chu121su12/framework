@@ -821,9 +821,9 @@ class Str
      */
     public static function repeat(/*string */$string, /*int */$times)
     {
-        $times = cast_to_int($times);
+        $times = backport_type_check('int', $times);
 
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         return str_repeat($string, $times);
     }
@@ -956,7 +956,7 @@ class Str
      */
     public static function reverse(/*string */$value)
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
         return implode(array_reverse(mb_str_split($value)));
     }

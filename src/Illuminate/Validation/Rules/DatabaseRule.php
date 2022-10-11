@@ -70,7 +70,7 @@ trait DatabaseRule
             }
 
             return implode('.', array_map(function (/*string */$part) {
-                $part = cast_to_string($part);
+                $part = backport_type_check('string', $part);
 
                 return trim($part, '.');
             }, array_filter([$model->getConnectionName(), $model->getTable()])));

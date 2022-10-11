@@ -126,7 +126,7 @@ class HttpTestingFileFactoryTest extends TestCase
      */
     private function isGDSupported(/*string */$driver = 'GD Version')/*: bool*/
     {
-        $driver = cast_to_string($driver);
+        $driver = backport_type_check('string', $driver);
 
         $gdInfo = gd_info();
 

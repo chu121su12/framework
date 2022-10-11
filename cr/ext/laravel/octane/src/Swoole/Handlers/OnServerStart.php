@@ -27,11 +27,11 @@ class OnServerStart
     ) {
         $this->serverStateFile = $serverStateFile;
         $this->extension = $extension;
-        $this->appName = cast_to_string($appName);
-        $this->maxExecutionTime = cast_to_int($maxExecutionTime);
+        $this->appName = backport_type_check('string', $appName);
+        $this->maxExecutionTime = backport_type_check('int', $maxExecutionTime);
         $this->timerTable = $timerTable;
-        $this->shouldTick = cast_to_bool($shouldTick);
-        $this->shouldSetProcessName = cast_to_bool($shouldSetProcessName);
+        $this->shouldTick = backport_type_check('bool', $shouldTick);
+        $this->shouldSetProcessName = backport_type_check('bool', $shouldSetProcessName);
     }
 
     /**

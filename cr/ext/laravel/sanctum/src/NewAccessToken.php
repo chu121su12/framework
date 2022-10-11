@@ -30,7 +30,7 @@ class NewAccessToken implements Arrayable, Jsonable
      */
     public function __construct(PersonalAccessToken $accessToken, /*string */$plainTextToken)
     {
-        $plainTextToken = cast_to_string($plainTextToken);
+        $plainTextToken = backport_type_check('string', $plainTextToken);
 
         $this->accessToken = $accessToken;
         $this->plainTextToken = $plainTextToken;

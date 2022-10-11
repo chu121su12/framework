@@ -39,11 +39,11 @@ class CompiledRoute implements \Serializable
      */
     public function __construct($staticPrefix, $regex, array $tokens, array $pathVariables, $hostRegex = null, array $hostTokens = [], array $hostVariables = [], array $variables = [])
     {
-        $regex = cast_to_string($regex);
+        $regex = backport_type_check('string', $regex);
 
-        $staticPrefix = cast_to_string($staticPrefix);
+        $staticPrefix = backport_type_check('string', $staticPrefix);
 
-        $hostRegex = cast_to_string($hostRegex, null);
+        $hostRegex = backport_type_check('?string', $hostRegex);
 
         $this->staticPrefix = $staticPrefix;
         $this->regex = $regex;

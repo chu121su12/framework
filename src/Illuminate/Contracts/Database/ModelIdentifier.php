@@ -66,7 +66,7 @@ class ModelIdentifier
      */
     public function useCollectionClass(/*?string */$collectionClass = null)
     {
-        $collectionClass = cast_to_string($collectionClass, null);
+        $collectionClass = backport_type_check('?string', $collectionClass);
 
         $this->collectionClass = $collectionClass;
 

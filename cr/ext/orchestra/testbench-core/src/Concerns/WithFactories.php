@@ -18,7 +18,7 @@ trait WithFactories
      */
     protected function withFactories(/*string */$path)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         return $this->loadFactoriesUsing($this->app, $path);
     }
@@ -35,7 +35,7 @@ trait WithFactories
      */
     protected function loadFactoriesUsing($app, /*string */$path)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         if (! class_exists(ModelFactory::class)) {
             $requirement = <<<'requirement'

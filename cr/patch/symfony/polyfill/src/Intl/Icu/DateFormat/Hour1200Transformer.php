@@ -25,7 +25,7 @@ class Hour1200Transformer extends HourTransformer
      */
     public function format(\DateTime $dateTime, /*int */$length)/*: string*/
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
         $hourOfDay = $dateTime->format('g');
         $hourOfDay = '12' === $hourOfDay ? '0' : $hourOfDay;
@@ -38,9 +38,9 @@ class Hour1200Transformer extends HourTransformer
      */
     public function normalizeHour(/*int */$hour, /*string */$marker = null)/*: int*/
     {
-        $hour = cast_to_int($hour);
+        $hour = backport_type_check('int', $hour);
 
-        $marker = cast_to_string($marker, null);
+        $marker = backport_type_check('?string', $marker);
 
         if ('PM' === $marker) {
             $hour += 12;
@@ -54,7 +54,7 @@ class Hour1200Transformer extends HourTransformer
      */
     public function getReverseMatchingRegExp(/*int */$length)/*: string*/
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
         return '\d{1,2}';
     }
@@ -64,9 +64,9 @@ class Hour1200Transformer extends HourTransformer
      */
     public function extractDateOptions(/*string */$matched, /*int */$length)/*: array*/
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
-        $matched = cast_to_string($matched);
+        $matched = backport_type_check('string', $matched);
 
         return [
             'hour' => (int) $matched,

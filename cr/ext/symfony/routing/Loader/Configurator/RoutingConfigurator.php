@@ -28,11 +28,11 @@ class RoutingConfigurator
 
     public function __construct(RouteCollection $collection, PhpFileLoader $loader, /*string */$path, /*string */$file, /*string */$env = null)
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
-        $env = cast_to_string($env, null);
+        $env = backport_type_check('?string', $env);
 
         $this->collection = $collection;
         $this->loader = $loader;
@@ -46,9 +46,9 @@ class RoutingConfigurator
      */
     final public function import($resource, $type = null, $ignoreErrors = false, $exclude = null) // ImportConfigurator
     {
-        $ignoreErrors = cast_to_bool($ignoreErrors);
+        $ignoreErrors = backport_type_check('bool', $ignoreErrors);
 
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         $this->loader->setCurrentDir(\dirname($this->path));
 
@@ -67,7 +67,7 @@ class RoutingConfigurator
 
     final public function collection($name = '') // CollectionConfigurator
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return new CollectionConfigurator($this->collection, $name);
     }
@@ -85,7 +85,7 @@ class RoutingConfigurator
      */
     final public function withPath($path) /// self
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $clone = clone $this;
         $clone->path = $clone->file = $path;

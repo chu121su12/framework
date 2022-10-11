@@ -30,7 +30,7 @@ class CustomPayloadTest extends TestCase
      */
     public function test_custom_payload_gets_cleared_for_each_data_provider(/*string */$websites)
     {
-        $websites = cast_to_string($websites);
+        $websites = backport_type_check('string', $websites);
 
         $dispatcher = $this->app->make(QueueingDispatcher::class);
 

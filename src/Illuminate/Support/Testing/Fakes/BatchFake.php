@@ -48,11 +48,11 @@ class BatchFake extends Batch
                                 /*?*/CarbonImmutable $cancelledAt = null,
                                 /*?*/CarbonImmutable $finishedAt = null)
     {
-        $id = cast_to_string($id);
-        $name = cast_to_string($name);
-        $totalJobs = cast_to_int($totalJobs);
-        $pendingJobs = cast_to_int($pendingJobs);
-        $failedJobs = cast_to_int($failedJobs);
+        $id = backport_type_check('string', $id);
+        $name = backport_type_check('string', $name);
+        $totalJobs = backport_type_check('int', $totalJobs);
+        $pendingJobs = backport_type_check('int', $pendingJobs);
+        $failedJobs = backport_type_check('int', $failedJobs);
 
         $this->id = $id;
         $this->name = $name;
@@ -97,7 +97,7 @@ class BatchFake extends Batch
      */
     public function recordSuccessfulJob(/*string */$jobId)
     {
-        $jobId = cast_to_string($jobId);
+        $jobId = backport_type_check('string', $jobId);
 
         //
     }
@@ -110,7 +110,7 @@ class BatchFake extends Batch
      */
     public function decrementPendingJobs(/*string */$jobId)
     {
-        $jobId = cast_to_string($jobId);
+        $jobId = backport_type_check('string', $jobId);
 
         //
     }
@@ -124,7 +124,7 @@ class BatchFake extends Batch
      */
     public function recordFailedJob(/*string */$jobId, $e)
     {
-        $jobId = cast_to_string($jobId);
+        $jobId = backport_type_check('string', $jobId);
 
         //
     }
@@ -137,7 +137,7 @@ class BatchFake extends Batch
      */
     public function incrementFailedJobs(/*string */$jobId)
     {
-        $jobId = cast_to_string($jobId);
+        $jobId = backport_type_check('string', $jobId);
 
         return new UpdatedBatchJobCounts;
     }

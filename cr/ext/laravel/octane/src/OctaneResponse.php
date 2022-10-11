@@ -14,6 +14,6 @@ class OctaneResponse
     {
         $this->response = $response;
 
-        $this->outputBuffer = cast_to_string($outputBuffer, null);
+        $this->outputBuffer = backport_type_check('?string', $outputBuffer);
     }
 }

@@ -28,7 +28,7 @@ if (! function_exists('Termwind\style')) {
      */
     function style(/*string */$name, Closure $callback = null)/*: Style*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return StyleRepository::create($name, $callback);
     }
@@ -40,9 +40,9 @@ if (! function_exists('Termwind\render')) {
      */
     function render(/*string */$html, /*int */$options = OutputInterface::OUTPUT_NORMAL)/*: void*/
     {
-        $html = cast_to_string($html);
+        $html = backport_type_check('string', $html);
 
-        $options = cast_to_int($options);
+        $options = backport_type_check('int', $options);
 
         (new HtmlRenderer)->render($html, $options);
     }
@@ -64,7 +64,7 @@ if (! function_exists('Termwind\ask')) {
      */
     function ask(/*string */$question)/*: mixed*/
     {
-        $question = cast_to_string($question);
+        $question = backport_type_check('string', $question);
 
         return (new Question)->ask($question);
     }

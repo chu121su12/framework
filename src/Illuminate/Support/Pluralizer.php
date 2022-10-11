@@ -130,7 +130,7 @@ class Pluralizer
      */
     public static function useLanguage(/*string */$language)
     {
-        $language = cast_to_string($language);
+        $language = backport_type_check('string', $language);
 
         static::$language = $language;
 

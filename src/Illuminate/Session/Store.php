@@ -428,7 +428,7 @@ class Store implements Session
      */
     public function flash(/*string */$key, $value = true)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $this->put($key, $value);
 

@@ -49,9 +49,9 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      */
     public function __construct($debug = false, /*string */$charset = null, $fileLinkFormat = null, /*string */$projectDir = null, $outputBuffer = '', LoggerInterface $logger = null)
     {
-        $projectDir = cast_to_string($projectDir, null);
+        $projectDir = backport_type_check('?string', $projectDir);
 
-        $charset = cast_to_string($charset, null);
+        $charset = backport_type_check('?string', $charset);
 
         if (!\is_bool($debug) && !\is_callable($debug)) {
             throw new \TypeError(sprintf('Argument 1 passed to "%s()" must be a boolean or a callable, "%s" given.', __METHOD__, \gettype($debug)));
@@ -109,7 +109,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
 
     public static function isDebug(RequestStack $requestStack, /*bool */$debug)/*: \Closure*/
     {
-        $debug = cast_to_bool($debug);
+        $debug = backport_type_check('bool', $debug);
 
         return static function () use ($requestStack, $debug)/*: bool*/ {
             if (!$request = $requestStack->getCurrentRequest()) {
@@ -141,7 +141,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
 
     private function renderException(FlattenException $exception, /*string */$debugTemplate = 'views/exception_full.html.php')/*: string*/
     {
-        $debugTemplate = cast_to_string($debugTemplate);
+        $debugTemplate = backport_type_check('string', $debugTemplate);
 
         $debug = \is_bool($this->debug) ? $this->debug : call_user_func($this->debug, $exception);
         $statusText = $this->escape($exception->getStatusText());
@@ -200,14 +200,14 @@ class HtmlErrorRenderer implements ErrorRendererInterface
 
     private function escape(/*string */$string)/*: string*/
     {
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         return htmlspecialchars($string, \ENT_COMPAT | \ENT_SUBSTITUTE, $this->charset);
     }
 
     private function abbrClass(/*string */$class)/*: string*/
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         $parts = explode('\\', $class);
         $short = array_pop($parts);
@@ -217,7 +217,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
 
     private function getFileRelative(/*string */$file)/*: ?string*/
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         $file = str_replace('\\', '/', $file);
 
@@ -235,9 +235,9 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      */
     private function getFileLink(/*string */$file, /*int */$line)
     {
-        $line = cast_to_int($line);
+        $line = backport_type_check('int', $line);
 
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         if ($fmt = $this->fileLinkFormat) {
             return \is_string($fmt) ? strtr($fmt, ['%f' => $file, '%l' => $line]) : $fmt->format($file, $line);
@@ -255,11 +255,11 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      */
     private function formatFile(/*string */$file, /*int */$line, /*string */$text = null)/*: string*/
     {
-        $line = cast_to_int($line);
+        $line = backport_type_check('int', $line);
 
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
-        $text = cast_to_string($text, null);
+        $text = backport_type_check('?string', $text);
 
         $file = trim($file);
 
@@ -291,11 +291,11 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      */
     private function fileExcerpt(/*string */$file, /*int */$line, /*int */$srcContext = 3)/*: string*/
     {
-        $srcContext = cast_to_int($srcContext);
+        $srcContext = backport_type_check('int', $srcContext);
 
-        $line = cast_to_int($line);
+        $line = backport_type_check('int', $line);
 
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         if (is_file($file) && is_readable($file)) {
             // highlight_file could throw warnings
@@ -326,7 +326,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
 
     private function fixCodeMarkup(/*string */$line)
     {
-        $line = cast_to_string($line);
+        $line = backport_type_check('string', $line);
 
         // </span> ending tag from previous line
         $opening = strpos($line, '<span');
@@ -347,7 +347,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
 
     private function formatFileFromText(/*string */$text)
     {
-        $text = cast_to_string($text);
+        $text = backport_type_check('string', $text);
 
         return preg_replace_callback('/in ("|&quot;)?(.+?)\1(?: +(?:on|at))? +line (\d+)/s', function ($match) {
             return 'in '.$this->formatFile($match[2], $match[3]);
@@ -356,7 +356,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
 
     private function formatLogMessage(/*string */$message, array $context)
     {
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         if ($context && false !== strpos($message, '{')) {
             $replacements = [];
@@ -387,7 +387,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
 
     private function include_(/*string */$name, array $context = [])/*: string*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         extract($context, \EXTR_SKIP);
         ob_start();
@@ -404,7 +404,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      */
     public static function setTemplate(/*string */$template)/*: void*/
     {
-        $template = cast_to_string($template);
+        $template = backport_type_check('string', $template);
 
         self::$template = $template;
     }

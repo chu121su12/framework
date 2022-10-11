@@ -11,9 +11,9 @@ trait Has
 {
     protected function count(/*string */$key, /*int */$length)/*: self*/
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         PHPUnit::assertCount(
             $length,
@@ -47,7 +47,7 @@ trait Has
      */
     public function has(/*string */$key, $value = null, Closure $scope = null)/*: self*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         PHPUnit::assertTrue(
             Arr::has($this->prop(), $key),
@@ -93,7 +93,7 @@ trait Has
 
     public function missing(/*string */$key)/*: self*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $this->interactsWith($key);
 
@@ -114,7 +114,7 @@ trait Has
 
     public function misses(/*string */$key)/*: self*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         return $this->missing($key);
     }

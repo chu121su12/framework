@@ -44,9 +44,9 @@ class Role implements JsonSerializable
      */
     public function __construct(/*string */$key, /*string */$name, array $permissions)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $this->key = $key;
         $this->name = $name;
@@ -61,7 +61,7 @@ class Role implements JsonSerializable
      */
     public function description(/*string */$description)
     {
-        $description = cast_to_string($description);
+        $description = backport_type_check('string', $description);
 
         $this->description = $description;
 

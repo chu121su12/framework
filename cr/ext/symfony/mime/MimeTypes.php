@@ -83,7 +83,7 @@ final class MimeTypes implements MimeTypesInterface
      */
     public function getExtensions($mimeType) //// array
     {
-        $mimeType = cast_to_string($mimeType);
+        $mimeType = backport_type_check('string', $mimeType);
 
         if ($this->extensions) {
             $extensions = isset($this->extensions[$mimeType])
@@ -115,7 +115,7 @@ final class MimeTypes implements MimeTypesInterface
      */
     public function getMimeTypes($ext) //// array
     {
-        $ext = cast_to_string($ext);
+        $ext = backport_type_check('string', $ext);
 
         if ($this->mimeTypes) {
             $mimeTypes = isset($this->mimeTypes[$ext])
@@ -166,7 +166,7 @@ final class MimeTypes implements MimeTypesInterface
      */
     public function guessMimeType($path) //// ?string
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         foreach ($this->guessers as $guesser) {
             if (!$guesser->isGuesserSupported()) {

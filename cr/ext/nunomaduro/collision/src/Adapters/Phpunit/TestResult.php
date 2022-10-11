@@ -81,11 +81,11 @@ final class TestResult
      */
     private function __construct(/*string */$testCaseName, /*string */$description, /*string */$type, /*string */$icon, /*string */$color, /*Throwable */$throwable = null)
     {
-        $testCaseName = cast_to_string($testCaseName);
-        $description = cast_to_string($description);
-        $type = cast_to_string($type);
-        $icon = cast_to_string($icon);
-        $color = cast_to_string($color);
+        $testCaseName = backport_type_check('string', $testCaseName);
+        $description = backport_type_check('string', $description);
+        $type = backport_type_check('string', $type);
+        $icon = backport_type_check('string', $icon);
+        $color = backport_type_check('string', $color);
 
         $this->testCaseName = $testCaseName;
         $this->description = $description;
@@ -109,7 +109,7 @@ final class TestResult
      */
     public static function fromTestCase(TestCase $testCase, /*string */$type, /*Throwable */$throwable = null)/*: self*/
     {
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
         $testCaseName = State::getPrintableTestCaseName($testCase);
 
@@ -165,7 +165,7 @@ final class TestResult
      */
     public static function makeIcon(/*string */$type)/*: string*/
     {
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
         switch ($type) {
             case self::FAIL:
@@ -190,7 +190,7 @@ final class TestResult
      */
     public static function makeColor(/*string */$type)/*: string*/
     {
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
         switch ($type) {
             case self::FAIL:

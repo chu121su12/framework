@@ -215,7 +215,7 @@ class Handler implements ExceptionHandlerContract
      */
     public function ignore(/*string */$class)
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         $this->dontReport[] = $class;
 

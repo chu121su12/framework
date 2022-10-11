@@ -14,8 +14,8 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
 
     public function __construct(/*string */$variableName = null, /*string */$viewFile = null)
     {
-        $viewFile = cast_to_string($viewFile, null);
-        $variableName = cast_to_string($variableName, null);
+        $viewFile = backport_type_check('?string', $viewFile);
+        $variableName = backport_type_check('?string', $variableName);
 
         $this->variableName = $variableName;
 
@@ -85,7 +85,7 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
 
     protected function isSafePath(/*string */$path)/*: bool*/
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         if (! Str::startsWith($path, ['/', './'])) {
             return false;
@@ -131,7 +131,7 @@ class MakeViewVariableOptionalSolution implements RunnableSolution
      */
     protected function generateExpectedTokens(array $originalTokens, /*string */$variableName)/*: array*/
     {
-        $variableName = cast_to_string($variableName);
+        $variableName = backport_type_check('string', $variableName);
 
         $expectedTokens = [];
         foreach ($originalTokens as $token) {

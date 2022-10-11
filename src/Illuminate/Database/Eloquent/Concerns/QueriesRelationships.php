@@ -812,9 +812,9 @@ trait QueriesRelationships
      */
     protected function requalifyWhereTables(array $wheres, /*string */$from, /*string */$to)/*: array*/
     {
-        $to = cast_to_string($to);
+        $to = backport_type_check('string', $to);
 
-        $from = cast_to_string($from);
+        $from = backport_type_check('string', $from);
 
         return collect($wheres)->map(function ($where) use ($from, $to) {
             return collect($where)->map(function ($value) use ($from, $to) {

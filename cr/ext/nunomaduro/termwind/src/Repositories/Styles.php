@@ -26,7 +26,7 @@ final class Styles
      */
     public static function create(/*string */$name, Closure $callback = null)/*: Style*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         self::$storage[$name] = $style = new Style(
             isset($callback) ? $callback : static function (StylesValueObject $styles) { return $styles; }
@@ -48,7 +48,7 @@ final class Styles
      */
     public static function has(/*string */$name)/*: bool*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return array_key_exists($name, self::$storage);
     }
@@ -58,7 +58,7 @@ final class Styles
      */
     public static function get(/*string */$name)/*: Style*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return self::$storage[$name];
     }

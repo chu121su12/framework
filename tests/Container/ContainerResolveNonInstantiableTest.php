@@ -46,7 +46,7 @@ class ParentClass
 
     public function __construct(TestInterface $testObject = null, /*int */$i = 0)
     {
-        $i = cast_to_int($i);
+        $i = backport_type_check('int', $i);
 
         $this->i = $i;
     }
@@ -66,7 +66,7 @@ class VariadicParentClass
 
     public function __construct(ChildClass $child, /*int */$i = 0)
     {
-        $i = cast_to_int($i);
+        $i = backport_type_check('int', $i);
 
         $this->child = $child;
         $this->i = $i;

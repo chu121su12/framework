@@ -380,7 +380,7 @@ class Factory implements FactoryContract
      */
     public function hasRenderedOnce(/*string */$id)
     {
-        $id = cast_to_string($id);
+        $id = backport_type_check('string', $id);
 
         return isset($this->renderedOnce[$id]);
     }
@@ -393,7 +393,7 @@ class Factory implements FactoryContract
      */
     public function markAsRenderedOnce(/*string */$id)
     {
-        $id = cast_to_string($id);
+        $id = backport_type_check('string', $id);
 
         $this->renderedOnce[$id] = true;
     }

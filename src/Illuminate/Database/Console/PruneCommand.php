@@ -85,7 +85,7 @@ class PruneCommand extends Command
      */
     protected function pruneModel(/*string */$model)
     {
-        $model = cast_to_string($model);
+        $model = backport_type_check('string', $model);
 
         $instance = new $model;
 

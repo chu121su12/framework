@@ -31,7 +31,7 @@ class TraceableUrlMatcher extends UrlMatcher
 
     public function getTraces($pathinfo)
     {
-        $pathinfo = cast_to_string($pathinfo);
+        $pathinfo = backport_type_check('string', $pathinfo);
 
         $this->traces = [];
 
@@ -54,7 +54,7 @@ class TraceableUrlMatcher extends UrlMatcher
 
     protected function matchCollection($pathinfo, RouteCollection $routes)
     {
-        $pathinfo = cast_to_string($pathinfo);
+        $pathinfo = backport_type_check('string', $pathinfo);
 
         // HEAD and GET are equivalent as per RFC
         if ('HEAD' === $method = $this->context->getMethod()) {
@@ -158,11 +158,11 @@ class TraceableUrlMatcher extends UrlMatcher
 
     private function addTrace($log, $level = self::ROUTE_DOES_NOT_MATCH, $name = null, Route $route = null)
     {
-        $log = cast_to_string($log);
+        $log = backport_type_check('string', $log);
 
-        $level = cast_to_int($level);
+        $level = backport_type_check('int', $level);
 
-        $name = cast_to_string($name, null);
+        $name = backport_type_check('?string', $name);
 
         $this->traces[] = [
             'log' => $log,

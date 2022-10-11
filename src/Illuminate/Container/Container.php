@@ -193,7 +193,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function has(/*string */$id)/*: bool*/
     {
-        $id = cast_to_string($id);
+        $id = backport_type_check('string', $id);
 
         return $this->bound($id);
     }
@@ -701,7 +701,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function get(/*string */$id)
     {
-        $id = cast_to_string($id);
+        $id = backport_type_check('string', $id);
 
         try {
             return $this->resolve($id);

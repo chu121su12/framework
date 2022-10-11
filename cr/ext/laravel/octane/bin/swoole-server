@@ -151,9 +151,9 @@ $server->on('request', function ($request, $response) use ($server, $workerState
 */
 
 $server->on('task', function (Server $server, /*int */$taskId, /*int */$fromWorkerId, $data) use ($workerState) {
-    // $taskId = cast_to_int($taskId);
+    // $taskId = backport_type_check('int', $taskId);
 
-    // $fromWorkerId = cast_to_int($fromWorkerId);
+    // $fromWorkerId = backport_type_check('int', $fromWorkerId);
 
     return $data === 'octane-tick'
             ? $workerState->worker->handleTick()
@@ -161,7 +161,7 @@ $server->on('task', function (Server $server, /*int */$taskId, /*int */$fromWork
 });
 
 $server->on('finish', function (Server $server, /*int */$taskId, $result) {
-    // $taskId = cast_to_int($taskId);
+    // $taskId = backport_type_check('int', $taskId);
 
     return $result;
 });

@@ -61,7 +61,7 @@ final class Node
      */
     public function isName(/*string */$name)/*: bool*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $this->getName() === $name;
     }
@@ -87,7 +87,7 @@ final class Node
      */
     public function getAttribute(/*string */$name)/*: string*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         if ($this->node instanceof \DOMElement) {
             return $this->node->getAttribute($name);

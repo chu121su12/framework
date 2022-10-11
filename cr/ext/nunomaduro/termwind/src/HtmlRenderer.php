@@ -21,9 +21,9 @@ final class HtmlRenderer
      */
     public function render(/*string */$html, /*int */$options)/*: void*/
     {
-        $html = cast_to_string($html);
+        $html = backport_type_check('string', $html);
 
-        $options = cast_to_int($options);
+        $options = backport_type_check('int', $options);
 
         $this->parse($html)->render($options);
     }
@@ -33,7 +33,7 @@ final class HtmlRenderer
      */
     public function parse(/*string */$html)/*: Components\Element*/
     {
-        $html = cast_to_string($html);
+        $html = backport_type_check('string', $html);
 
         $dom = new DOMDocument();
 

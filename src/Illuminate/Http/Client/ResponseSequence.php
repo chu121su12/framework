@@ -51,7 +51,7 @@ class ResponseSequence
      */
     public function push($body = null, /*int */$status = 200, array $headers = [])
     {
-        $status = cast_to_int($status);
+        $status = backport_type_check('int', $status);
 
         return $this->pushResponse(
             Factory::response($body, $status, $headers)
@@ -67,7 +67,7 @@ class ResponseSequence
      */
     public function pushStatus(/*int */$status, array $headers = [])
     {
-        $status = cast_to_int($status);
+        $status = backport_type_check('int', $status);
 
         return $this->pushResponse(
             Factory::response('', $status, $headers)
@@ -84,9 +84,9 @@ class ResponseSequence
      */
     public function pushFile(/*string */$filePath, /*int */$status = 200, array $headers = [])
     {
-        $status = cast_to_int($status);
+        $status = backport_type_check('int', $status);
 
-        $filePath = cast_to_string($filePath);
+        $filePath = backport_type_check('string', $filePath);
 
         $string = file_get_contents($filePath);
 

@@ -50,7 +50,7 @@ class MissingImportSolutionProvider implements HasSolutionsForThrowable
 
     protected function search(/*string */$missingClass)/*: void*/
     {
-        $missingClass = cast_to_string($missingClass);
+        $missingClass = backport_type_check('string', $missingClass);
 
         $this->foundClass = $this->composerClassMap->searchClassMap($missingClass);
 

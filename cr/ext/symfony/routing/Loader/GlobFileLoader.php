@@ -26,7 +26,7 @@ class GlobFileLoader extends FileLoader
      */
     public function load($resource, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         $collection = new RouteCollection();
 
@@ -44,7 +44,7 @@ class GlobFileLoader extends FileLoader
      */
     public function supports($resource, $type = null)
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         return 'glob' === $type;
     }

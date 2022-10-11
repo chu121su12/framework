@@ -85,7 +85,7 @@ return [
     'weekdays_short' => ['dg', 'dl', 'dm', 'dc', 'dj', 'dv', 'ds'],
     'weekdays_min' => ['dg', 'dl', 'dm', 'dc', 'dj', 'dv', 'ds'],
     'ordinal' => function ($number, /*string */$period = '') {
-        $period = cast_to_string($period);
+        $period = backport_type_check('string', $period);
 
         $ordinals = [1 => 'èr', 2 => 'nd'];
 

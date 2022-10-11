@@ -34,14 +34,14 @@ class UseDefaultValetDbCredentialsSolution implements RunnableSolution
 
     protected function ensureLineExists(/*string */$key, /*string */$value)/*: void*/
     {
-        $value = cast_to_string($value);
+        $value = backport_type_check('string', $value);
 
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $envPath = base_path('.env');
 
         $envLines = array_map(function (/*string */$envLine) use ($key) {
-            $envLine = cast_to_string($envLine);
+            $envLine = backport_type_check('string', $envLine);
 
             return Str::startsWith($envLine, $key);
         }

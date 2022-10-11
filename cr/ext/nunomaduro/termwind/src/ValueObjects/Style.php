@@ -25,7 +25,7 @@ final class Style
     {
         $this->callback = $callback;
 
-        $this->color = cast_to_string($color);
+        $this->color = backport_type_check('string', $color);
 
         // ..
     }
@@ -35,7 +35,7 @@ final class Style
      */
     public function apply(/*string */$styles)/*: void*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
         $callback = clone $this->callback;
 
@@ -43,7 +43,7 @@ final class Style
             Styles $formatter,
             /*string|int */...$arguments
         ) use ($callback, $styles)/*: Styles*/ {
-            $arguments = cast_to_compounds('string|int', $arguments);
+            $arguments = backport_array_type_check('string|int', $arguments);
 
             $formatter = $callback($formatter, ...$arguments);
 
@@ -56,7 +56,7 @@ final class Style
      */
     public function color(/*string */$color)/*: void*/
     {
-        $color = cast_to_string($color);
+        $color = backport_type_check('string', $color);
 
         if (preg_match('/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/', $color) < 1) {
             throw new InvalidColor(sprintf('The color %s is invalid.', $color));
@@ -78,7 +78,7 @@ final class Style
      */
     public function __invoke(Styles $styles, /*string|int */...$arguments)/*: Styles*/
     {
-        $arguments = cast_to_compounds('string|int', $arguments);
+        $arguments = backport_array_type_check('string|int', $arguments);
 
         $callback = $this->callback;
 

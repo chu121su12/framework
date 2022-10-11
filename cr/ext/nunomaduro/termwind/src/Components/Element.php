@@ -47,7 +47,7 @@ abstract class Element
         /*array|string */$content,
         Styles/*|null */$styles = null
     ) {
-        $content = cast_to_compound('array|string', $content);
+        $content = backport_type_check('array|string', $content);
 
         $this->output = $output;
 
@@ -65,9 +65,9 @@ abstract class Element
      */
     final public static function fromStyles(OutputInterface $output, /*array|string */$content, /*string */$styles = '', array $properties = [])/*: static*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
-        $content = cast_to_compound('array|string', $content);
+        $content = backport_type_check('array|string', $content);
 
         $element = new static($output, $content);
         if ($properties !== []) {
@@ -97,7 +97,7 @@ abstract class Element
      */
     public function __call(/*string */$name, array $arguments)/*: mixed*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         if (method_exists($this->styles, $name)) {
             $result = $this->styles->{$name}(...$arguments);
@@ -117,7 +117,7 @@ abstract class Element
      */
     final public function setContent(/*array|string */$content)/*: static*/
     {
-        $content = cast_to_compound('array|string', $content);
+        $content = backport_type_check('array|string', $content);
 
         return new static($this->output, $content, $this->styles);
     }
@@ -127,7 +127,7 @@ abstract class Element
      */
     final public function render(/*int */$options)/*: void*/
     {
-        $options = cast_to_int($options);
+        $options = backport_type_check('int', $options);
 
         $this->output->writeln(SymfonyHelper::consoleOutputStyle($this->toString(), $this->output), $options);
     }

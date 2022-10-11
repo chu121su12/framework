@@ -22,13 +22,13 @@ class FatalError extends \Error
      */
     public function __construct(/*string */$message, /*int */$code, array $error, /*int */$traceOffset = null, /*bool */$traceArgs = true, array $trace = null)
     {
-        $traceArgs = cast_to_bool($traceArgs);
+        $traceArgs = backport_type_check('bool', $traceArgs);
 
-        $code = cast_to_int($code);
+        $code = backport_type_check('int', $code);
 
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
-        $traceOffset = cast_to_int($traceOffset, null);
+        $traceOffset = backport_type_check('?int', $traceOffset);
 
         parent::__construct($message, $code);
 

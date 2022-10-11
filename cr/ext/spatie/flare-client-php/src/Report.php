@@ -70,9 +70,9 @@ class Report
     )/*: self */{
         backport_type_throwable($throwable);
 
-        $applicationPath = cast_to_string($applicationPath, null);
+        $applicationPath = backport_type_check('?string', $applicationPath);
 
-        $version = cast_to_string($version, null);
+        $version = backport_type_check('?string', $version);
 
         return (new self())
             ->setApplicationPath($applicationPath)
@@ -107,9 +107,9 @@ class Report
         ContextProvider $context,
         /*?string */$applicationPath = null
     )/*: self */{
-        $message = cast_to_string($message);
-        $logLevel = cast_to_string($logLevel);
-        $applicationPath = cast_to_string($applicationPath, null);
+        $message = backport_type_check('string', $message);
+        $logLevel = backport_type_check('string', $logLevel);
+        $applicationPath = backport_type_check('?string', $applicationPath);
 
         $stacktrace = Backtrace::create()->applicationPath(isset($applicationPath) ? $applicationPath : '');
 
@@ -134,7 +134,7 @@ class Report
 
     public function exceptionClass(/*string */$exceptionClass)/*: self*/
     {
-        $exceptionClass = cast_to_string($exceptionClass);
+        $exceptionClass = backport_type_check('string', $exceptionClass);
 
         $this->exceptionClass = $exceptionClass;
 
@@ -162,7 +162,7 @@ class Report
 
     public function message(/*string */$message)/*: self*/
     {
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         $this->message = $message;
 
@@ -188,7 +188,7 @@ class Report
 
     public function notifierName(/*string */$notifierName)/*: self*/
     {
-        $notifierName = cast_to_string($notifierName);
+        $notifierName = backport_type_check('string', $notifierName);
 
         $this->notifierName = $notifierName;
 
@@ -197,7 +197,7 @@ class Report
 
     public function languageVersion(/*string */$languageVersion)/*: self*/
     {
-        $languageVersion = cast_to_string($languageVersion);
+        $languageVersion = backport_type_check('string', $languageVersion);
 
         $this->languageVersion = $languageVersion;
 
@@ -206,7 +206,7 @@ class Report
 
     public function frameworkVersion(/*string */$frameworkVersion)/*: self*/
     {
-        $frameworkVersion = cast_to_string($frameworkVersion);
+        $frameworkVersion = backport_type_check('string', $frameworkVersion);
 
         $this->frameworkVersion = $frameworkVersion;
 
@@ -222,7 +222,7 @@ class Report
 
     public function openFrameIndex(/*?int */$index = null)/*: self*/
     {
-        $index = cast_to_int($index, null);
+        $index = backport_type_check('?int', $index);
 
         $this->openFrameIndex = $index;
 
@@ -231,7 +231,7 @@ class Report
 
     public function setApplicationPath(/*?string */$applicationPath = null)/*: self*/
     {
-        $applicationPath = cast_to_string($applicationPath, null);
+        $applicationPath = backport_type_check('?string', $applicationPath);
 
         $this->applicationPath = $applicationPath;
 
@@ -245,7 +245,7 @@ class Report
 
     public function setApplicationVersion(/*?string */$applicationVersion = null)/*: self*/
     {
-        $applicationVersion = cast_to_string($applicationVersion, null);
+        $applicationVersion = backport_type_check('?string', $applicationVersion);
 
         $this->applicationVersion = $applicationVersion;
 

@@ -49,7 +49,7 @@ class SymfonySessionDecorator implements SessionInterface
      */
     public function setId(/*string */$id)
     {
-        $id = cast_to_string($id);
+        $id = backport_type_check('string', $id);
 
         $this->store->setId($id);
     }
@@ -67,7 +67,7 @@ class SymfonySessionDecorator implements SessionInterface
      */
     public function setName(/*string */$name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->store->setName($name);
     }
@@ -77,7 +77,7 @@ class SymfonySessionDecorator implements SessionInterface
      */
     public function invalidate(/*int */$lifetime = null)/*: bool*/
     {
-        $lifetime = cast_to_int($lifetime, null);
+        $lifetime = backport_type_check('?int', $lifetime);
 
         $this->store->invalidate();
 
@@ -89,9 +89,9 @@ class SymfonySessionDecorator implements SessionInterface
      */
     public function migrate(/*bool */$destroy = false, /*int */$lifetime = null)/*: bool*/
     {
-        $destroy = cast_to_bool($destroy);
+        $destroy = backport_type_check('bool', $destroy);
 
-        $lifetime = cast_to_int($lifetime, null);
+        $lifetime = backport_type_check('?int', $lifetime);
 
         $this->store->migrate($destroy);
 
@@ -111,7 +111,7 @@ class SymfonySessionDecorator implements SessionInterface
      */
     public function has(/*string */$name)/*: bool*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $this->store->has($name);
     }
@@ -121,9 +121,9 @@ class SymfonySessionDecorator implements SessionInterface
      */
     public function get(/*string */$name, /*mixed */$default = null)/*: mixed*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
-        $default = cast_to_mixed($default, null);
+        $default = backport_type_check('?mixed', $default);
 
         return $this->store->get($name, $default);
     }
@@ -133,9 +133,9 @@ class SymfonySessionDecorator implements SessionInterface
      */
     public function set(/*string */$name, /*mixed */$value)
     {
-        $value = cast_to_mixed($value);
+        $value = backport_type_check('mixed', $value);
 
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->store->put($name, $value);
     }
@@ -161,7 +161,7 @@ class SymfonySessionDecorator implements SessionInterface
      */
     public function remove(/*string */$name)/*: mixed*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $this->store->remove($name);
     }
@@ -195,7 +195,7 @@ class SymfonySessionDecorator implements SessionInterface
      */
     public function getBag(/*string */$name)/*: SessionBagInterface*/
     {
-        // $name = cast_to_string($name);
+        // $name = backport_type_check('string', $name);
 
         throw new BadMethodCallException('Method not implemented by Laravel.');
     }

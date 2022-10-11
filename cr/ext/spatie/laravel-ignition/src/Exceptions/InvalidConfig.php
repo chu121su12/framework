@@ -12,7 +12,7 @@ class InvalidConfig extends Exception implements ProvidesSolution
 {
     public static function invalidLogLevel(/*string */$logLevel)/*: self*/
     {
-        $logLevel = cast_to_string($logLevel);
+        $logLevel = backport_type_check('string', $logLevel);
 
         return new self("Invalid log level `{$logLevel}` specified.");
     }
@@ -21,7 +21,7 @@ class InvalidConfig extends Exception implements ProvidesSolution
     {
         $validLogLevels = array_map(
             function (/*string */$level) {
-                $level = cast_to_string($level);
+                $level = backport_type_check('string', $level);
 
                 return strtolower($level);
             },

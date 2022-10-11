@@ -209,7 +209,7 @@ abstract class Component
      */
     protected function createInvokableVariable(/*string */$method)
     {
-        $method = cast_to_string($method);
+        $method = backport_type_check('string', $method);
 
         return new InvokableComponentVariable(function () use ($method) {
             return $this->{$method}();

@@ -29,7 +29,7 @@ class TimezoneTransformer extends Transformer
      */
     public function format(\DateTime $dateTime, /*int */$length)/*: string*/
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
         $timeZone = substr($dateTime->getTimezone()->getName(), 0, 3);
 
@@ -67,7 +67,7 @@ class TimezoneTransformer extends Transformer
      */
     public function getReverseMatchingRegExp(/*int */$length)/*: string*/
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
         return 'GMT[+-]\d{2}:?\d{2}';
     }
@@ -77,9 +77,9 @@ class TimezoneTransformer extends Transformer
      */
     public function extractDateOptions(/*string */$matched, /*int */$length)/*: array*/
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
-        $matched = cast_to_string($matched);
+        $matched = backport_type_check('string', $matched);
 
         return [
             'timezone' => self::getEtcTimeZoneId($matched),
@@ -107,7 +107,7 @@ class TimezoneTransformer extends Transformer
      */
     public static function getEtcTimeZoneId(/*string */$formattedTimeZone)/*: string*/
     {
-        $formattedTimeZone = cast_to_string($formattedTimeZone);
+        $formattedTimeZone = backport_type_check('string', $formattedTimeZone);
 
         if (preg_match('/GMT(?P<signal>[+-])(?P<hours>\d{2}):?(?P<minutes>\d{2})/', $formattedTimeZone, $matches)) {
             $hours = (int) $matches['hours'];

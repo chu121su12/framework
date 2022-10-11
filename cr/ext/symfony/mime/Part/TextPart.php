@@ -44,11 +44,11 @@ class TextPart extends AbstractPart
      */
     public function __construct($body, $charset = 'utf-8', $subtype = 'plain', $encoding = null)
     {
-        $encoding = cast_to_string($encoding, null);
+        $encoding = backport_type_check('?string', $encoding);
 
-        $charset = cast_to_string($charset, null);
+        $charset = backport_type_check('?string', $charset);
 
-        $subtype = cast_to_string($subtype, null);
+        $subtype = backport_type_check('?string', $subtype);
 
         unset($this->_headers);
 
@@ -90,7 +90,7 @@ class TextPart extends AbstractPart
      */
     public function setDisposition($disposition)
     {
-        $disposition = cast_to_string($disposition);
+        $disposition = backport_type_check('string', $disposition);
 
         $this->disposition = $disposition;
 
@@ -104,7 +104,7 @@ class TextPart extends AbstractPart
      */
     public function setName($name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->name = $name;
 

@@ -67,7 +67,7 @@ class MigrateProcessor
      */
     protected function dispatch(/*string */$command)////: void
     {
-        $command = cast_to_string($command);
+        $command = backport_type_check('string', $command);
 
         artisan($this->testbench, $command, $this->options);
     }

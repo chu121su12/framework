@@ -17,7 +17,7 @@ class Invoker
 
     protected function runWithCli(/*string */$className, array $parameters)/*: bool*/
     {
-        $className = cast_to_string($className);
+        $className = backport_type_check('string', $className);
 
         $cli = new $className();
 

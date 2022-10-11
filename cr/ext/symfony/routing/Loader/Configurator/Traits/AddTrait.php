@@ -37,7 +37,7 @@ trait AddTrait
      */
     public function add($name, $path) // RouteConfigurator
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $parentConfigurator = $this instanceof CollectionConfigurator ? $this : ($this instanceof RouteConfigurator ? $this->parentConfigurator : null);
         $route = $this->createLocalizedRoute($this->collection, $name, $path, $this->name, $this->prefixes);
@@ -47,8 +47,8 @@ trait AddTrait
 
     public function alias(/*string */$name, /*string */$alias)/*: AliasConfigurator*/
     {
-        $name = cast_to_string($name);
-        $alias = cast_to_string($alias);
+        $name = backport_type_check('string', $name);
+        $alias = backport_type_check('string', $alias);
 
         return new AliasConfigurator($this->collection->addAlias($name, $alias));
     }
@@ -60,7 +60,7 @@ trait AddTrait
      */
     public function __invoke($name, $path) // RouteConfigurator
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return $this->add($name, $path);
     }

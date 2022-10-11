@@ -14,9 +14,9 @@ class SuggestCorrectVariableNameSolution implements Solution
 
     public function __construct(/*string */$variableName = null, /*string */$viewFile = null, /*string */$suggested = null)
     {
-        $suggested = cast_to_string($suggested, null);
-        $viewFile = cast_to_string($viewFile, null);
-        $variableName = cast_to_string($variableName, null);
+        $suggested = backport_type_check('?string', $suggested);
+        $viewFile = backport_type_check('?string', $viewFile);
+        $variableName = backport_type_check('?string', $variableName);
 
         $this->variableName = $variableName;
 

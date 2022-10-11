@@ -42,9 +42,9 @@ abstract class ObjectLoader extends Loader
      */
     public function load($resource, $type = null)
     {
-        $id = cast_to_string($id);
+        $id = backport_type_check('string', $id);
 
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         if (!preg_match('/^[^\:]+(?:::(?:[^\:]+))?$/', $resource)) {
             throw new \InvalidArgumentException(sprintf('Invalid resource "%s" passed to the %s route loader: use the format "object_id::method" or "object_id" if your object class has an "__invoke" method.', $resource, \is_string($type) ? '"'.$type.'"' : 'object'));

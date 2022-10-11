@@ -134,7 +134,7 @@ class HelloComponent extends Component
 
     public function __construct(/*string */$name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
         $this->name = $name;
     }
 

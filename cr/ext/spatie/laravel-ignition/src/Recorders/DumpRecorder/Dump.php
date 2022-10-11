@@ -14,13 +14,13 @@ class Dump
 
     public function __construct(/*string */$htmlDump, /*?string */$file = null, /*?int */$lineNumber = null, /*?float */$microtime = null)
     {
-        $htmlDump = cast_to_string($htmlDump);
+        $htmlDump = backport_type_check('string', $htmlDump);
 
-        $microtime = cast_to_float($microtime, null);
+        $microtime = backport_type_check('?float', $microtime);
 
-        $lineNumber = cast_to_int($lineNumber, null);
+        $lineNumber = backport_type_check('?int', $lineNumber);
 
-        $file = cast_to_string($file, null);
+        $file = backport_type_check('?string', $file);
 
         $this->htmlDump = $htmlDump;
         $this->file = $file;

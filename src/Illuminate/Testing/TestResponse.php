@@ -744,7 +744,7 @@ class TestResponse implements ArrayAccess
      */
     public function assertJsonMissingPath(/*string */$path)
     {
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
         $this->decodeResponseJson()->assertMissingPath($path);
 
@@ -774,7 +774,7 @@ class TestResponse implements ArrayAccess
      */
     public function assertJsonCount(/*int */$count, $key = null)
     {
-        $count = cast_to_int($count);
+        $count = backport_type_check('int', $count);
 
         $this->decodeResponseJson()->assertCount($count, $key);
 
@@ -1489,7 +1489,7 @@ class TestResponse implements ArrayAccess
         }
 
         ob_start(function (/*string */$buffer)/*: string*/ {
-            $buffer = cast_to_string($buffer);
+            $buffer = backport_type_check('string', $buffer);
 
             $this->streamedContent .= $buffer;
 

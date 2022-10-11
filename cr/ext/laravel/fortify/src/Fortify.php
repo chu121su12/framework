@@ -73,7 +73,7 @@ class Fortify
      */
     public static function redirects(/*string */$redirect, $default = null)
     {
-        $redirect = cast_to_string($redirect);
+        $redirect = backport_type_check('string', $redirect);
 
         $fortifyRedirect = config('fortify.redirects.'.$redirect);
 
@@ -88,7 +88,7 @@ class Fortify
      */
     public static function viewNamespace(/*string */$namespace)
     {
-        $namespace = cast_to_string($namespace);
+        $namespace = backport_type_check('string', $namespace);
 
         static::viewPrefix($namespace.'::');
     }
@@ -101,7 +101,7 @@ class Fortify
      */
     public static function viewPrefix(/*string */$prefix)
     {
-        $prefix = cast_to_string($prefix);
+        $prefix = backport_type_check('string', $prefix);
 
         static::loginView($prefix.'login');
         static::twoFactorChallengeView($prefix.'two-factor-challenge');
@@ -255,7 +255,7 @@ class Fortify
      */
     public static function createUsersUsing(/*string */$callback)
     {
-        $callback = cast_to_string($callback);
+        $callback = backport_type_check('string', $callback);
 
         app()->singleton(CreatesNewUsers::class, $callback);
     }
@@ -268,7 +268,7 @@ class Fortify
      */
     public static function updateUserProfileInformationUsing(/*string */$callback)
     {
-        $callback = cast_to_string($callback);
+        $callback = backport_type_check('string', $callback);
 
         app()->singleton(UpdatesUserProfileInformation::class, $callback);
     }
@@ -281,7 +281,7 @@ class Fortify
      */
     public static function updateUserPasswordsUsing(/*string */$callback)
     {
-        $callback = cast_to_string($callback);
+        $callback = backport_type_check('string', $callback);
 
         app()->singleton(UpdatesUserPasswords::class, $callback);
     }
@@ -294,7 +294,7 @@ class Fortify
      */
     public static function resetUserPasswordsUsing(/*string */$callback)
     {
-        $callback = cast_to_string($callback);
+        $callback = backport_type_check('string', $callback);
 
         app()->singleton(ResetsUserPasswords::class, $callback);
     }

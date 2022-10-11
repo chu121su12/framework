@@ -23,9 +23,9 @@ class AddTeamMember implements AddsTeamMembers
      */
     public function add($user, $team, /*string */$email, /*string */$role = null)
     {
-        $email = cast_to_string($email);
+        $email = backport_type_check('string', $email);
 
-        $role = cast_to_string($role, null);
+        $role = backport_type_check('?string', $role);
 
         Gate::forUser($user)->authorize('addTeamMember', $team);
 
@@ -52,9 +52,9 @@ class AddTeamMember implements AddsTeamMembers
      */
     protected function validate($team, /*string */$email, /*?string */$role = null)
     {
-        $email = cast_to_string($email);
+        $email = backport_type_check('string', $email);
 
-        $role = cast_to_string($role, null);
+        $role = backport_type_check('?string', $role);
 
         Validator::make([
             'email' => $email,
@@ -90,7 +90,7 @@ class AddTeamMember implements AddsTeamMembers
      */
     protected function ensureUserIsNotAlreadyOnTeam($team, /*string */$email)
     {
-        $email = cast_to_string($email);
+        $email = backport_type_check('string', $email);
 
         return function ($validator) use ($team, $email) {
             $validator->errors()->addIf(

@@ -25,7 +25,7 @@ trait ProvidesConcurrencySupport
      */
     public function concurrently(array $tasks, /*int */$waitMilliseconds = 3000)
     {
-        $waitMilliseconds = cast_to_int($waitMilliseconds);
+        $waitMilliseconds = backport_type_check('int', $waitMilliseconds);
 
         return $this->tasks()->resolve($tasks, $waitMilliseconds);
     }

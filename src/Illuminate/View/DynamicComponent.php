@@ -37,7 +37,7 @@ class DynamicComponent extends Component
      */
     public function __construct(/*string */$component)
     {
-        $component = cast_to_string($component);
+        $component = backport_type_check('string', $component);
 
         $this->component = $component;
     }
@@ -149,7 +149,7 @@ EOF;
      */
     protected function bindings(/*string */$class)
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         list($data, $attributes) = $this->compiler()->partitionDataAndAttributes($class, $this->attributes->getAttributes());
 

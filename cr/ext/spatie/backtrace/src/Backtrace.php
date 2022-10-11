@@ -65,7 +65,7 @@ class Backtrace
 
     public function applicationPath(/*string */$applicationPath)/*: self*/
     {
-        $applicationPath = cast_to_string($applicationPath);
+        $applicationPath = backport_type_check('string', $applicationPath);
 
         $this->applicationPath = $applicationPath;
 
@@ -74,7 +74,7 @@ class Backtrace
 
     public function offset(/*int */$offset)/*: self*/
     {
-        $offset = cast_to_int($offset);
+        $offset = backport_type_check('int', $offset);
 
         $this->offset = $offset;
 
@@ -83,7 +83,7 @@ class Backtrace
 
     public function limit(/*int */$limit)/*: self*/
     {
-        $limit = cast_to_int($limit);
+        $limit = backport_type_check('int', $limit);
 
         $this->limit = $limit;
 
@@ -186,7 +186,7 @@ class Backtrace
 
     protected function isApplicationFrame(/*string */$frameFilename)/*: bool*/
     {
-        $frameFilename = cast_to_string($frameFilename);
+        $frameFilename = backport_type_check('string', $frameFilename);
 
         $relativeFile = str_replace('\\', DIRECTORY_SEPARATOR, $frameFilename);
 

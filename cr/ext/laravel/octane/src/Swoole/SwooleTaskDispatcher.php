@@ -26,7 +26,7 @@ class SwooleTaskDispatcher implements DispatchesTasks
      */
     public function resolve(array $tasks, /*int */$waitMilliseconds = 3000) ////: array
     {
-        $waitMilliseconds = cast_to_int($waitMilliseconds);
+        $waitMilliseconds = backport_type_check('int', $waitMilliseconds);
 
         if (! app()->bound(Server::class)) {
             throw new InvalidArgumentException('Tasks can only be resolved within a Swoole server context / web request.');

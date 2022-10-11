@@ -22,7 +22,7 @@ class SequentialTaskDispatcher implements DispatchesTasks
      */
     public function resolve(array $tasks, /*int */$waitMilliseconds = 1) ////: array
     {
-        $waitMilliseconds = cast_to_int($waitMilliseconds);
+        $waitMilliseconds = backport_type_check('int', $waitMilliseconds);
 
         return collect($tasks)->mapWithKeys(
             function ($task, $key) {

@@ -24,7 +24,7 @@ final class SignalRegistry
 
     public function register(/*int */$signal, callable $signalHandler)/*: void*/
     {
-        $signal = cast_to_int($signal);
+        $signal = backport_type_check('int', $signal);
 
         if (!isset($this->signalHandlers[$signal])) {
             $previousCallback = pcntl_signal_get_handler($signal);
@@ -57,7 +57,7 @@ final class SignalRegistry
      */
     public function handle(/*int */$signal)/*: void*/
     {
-        $signal = cast_to_int($signal);
+        $signal = backport_type_check('int', $signal);
 
         $count = \count($this->signalHandlers[$signal]);
 

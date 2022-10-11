@@ -113,9 +113,9 @@ class ErrorHandler
      */
     public static function register(self $handler = null, /*bool */$replace = true)/*: self*/
     {
-        $replace = cast_to_bool($replace);
+        $replace = backport_type_check('bool', $replace);
 
-        $handler = cast_to_self($handler, null);
+        $handler = backport_type_check('?self', $handler);
 
         if (null === self::$reservedMemory) {
             self::$reservedMemory = str_repeat('x', 32768);
@@ -172,13 +172,13 @@ class ErrorHandler
     public static function call(callable $function, ...$arguments)
     {
         set_error_handler(static function (/*int */$type, /*string */$message, /*string */$file, /*int */$line) {
-            $line = cast_to_int($line);
+            $line = backport_type_check('int', $line);
 
-            $file = cast_to_string($file);
+            $file = backport_type_check('string', $file);
 
-            $message = cast_to_string($message);
+            $message = backport_type_check('string', $message);
 
-            $type = cast_to_int($type);
+            $type = backport_type_check('int', $type);
 
             if (__FILE__ === $file) {
                 $trace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 3);
@@ -200,7 +200,7 @@ class ErrorHandler
 
     public function __construct(BufferingLogger $bootstrappingLogger = null, /*bool */$debug = false)
     {
-        $debug = cast_to_bool($debug);
+        $debug = backport_type_check('bool', $debug);
 
         if ($bootstrappingLogger) {
             $this->bootstrappingLogger = $bootstrappingLogger;
@@ -225,7 +225,7 @@ class ErrorHandler
      */
     public function setDefaultLogger(LoggerInterface $logger, $levels = \E_ALL, /*bool */$replace = false)/*: void*/
     {
-        $replace = cast_to_bool($replace);
+        $replace = backport_type_check('bool', $replace);
 
         $loggers = [];
 
@@ -328,9 +328,9 @@ class ErrorHandler
      */
     public function throwAt(/*int */$levels, /*bool */$replace = false)/*: int*/
     {
-        $replace = cast_to_bool($replace);
+        $replace = backport_type_check('bool', $replace);
 
-        $levels = cast_to_int($levels);
+        $levels = backport_type_check('int', $levels);
 
         $prev = $this->thrownErrors;
         $this->thrownErrors = ($levels | \E_RECOVERABLE_ERROR | \E_USER_ERROR) & ~\E_USER_DEPRECATED & ~\E_DEPRECATED;
@@ -352,9 +352,9 @@ class ErrorHandler
      */
     public function scopeAt(/*int */$levels, /*bool */$replace = false)/*: int*/
     {
-        $replace = cast_to_bool($replace);
+        $replace = backport_type_check('bool', $replace);
 
-        $levels = cast_to_int($levels);
+        $levels = backport_type_check('int', $levels);
 
         $prev = $this->scopedErrors;
         $this->scopedErrors = $levels;
@@ -375,9 +375,9 @@ class ErrorHandler
      */
     public function traceAt(/*int */$levels, /*bool */$replace = false)/*: int*/
     {
-        $replace = cast_to_bool($replace);
+        $replace = backport_type_check('bool', $replace);
 
-        $levels = cast_to_int($levels);
+        $levels = backport_type_check('int', $levels);
 
         $prev = $this->tracedErrors;
         $this->tracedErrors = $levels;
@@ -398,9 +398,9 @@ class ErrorHandler
      */
     public function screamAt(/*int */$levels, /*bool */$replace = false)/*: int*/
     {
-        $replace = cast_to_bool($replace);
+        $replace = backport_type_check('bool', $replace);
 
-        $levels = cast_to_int($levels);
+        $levels = backport_type_check('int', $levels);
 
         $prev = $this->screamedErrors;
         $this->screamedErrors = $levels;
@@ -416,7 +416,7 @@ class ErrorHandler
      */
     private function reRegister(/*int */$prev)/*: void*/
     {
-        $prev = cast_to_int($prev);
+        $prev = backport_type_check('int', $prev);
 
         if ($prev !== $this->thrownErrors | $this->loggedErrors) {
             $handler = set_error_handler('var_dump');
@@ -444,13 +444,13 @@ class ErrorHandler
      */
     public function handleError(/*int */$type, /*string */$message, /*string */$file, /*int */$line)/*: bool*/
     {
-        $line = cast_to_int($line);
+        $line = backport_type_check('int', $line);
 
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
-        $type = cast_to_int($type);
+        $type = backport_type_check('int', $type);
 
         if (\PHP_VERSION_ID >= 70300 && \E_WARNING === $type && '"' === $message[0] && false !== strpos($message, '" targeting switch is equivalent to "break')) {
             $type = \E_DEPRECATED;
@@ -802,13 +802,13 @@ class ErrorHandler
      */
     private function cleanTrace(array $backtrace, /*int */$type, /*string */&$file, /*int */&$line, /*bool */$throw)/*: array*/
     {
-         $throw = cast_to_bool($throw);
+         $throw = backport_type_check('bool', $throw);
 
-         $line = cast_to_int($line);
+         $line = backport_type_check('int', $line);
 
-         $file = cast_to_string($file);
+         $file = backport_type_check('string', $file);
 
-         $type = cast_to_int($type);
+         $type = backport_type_check('int', $type);
 
         $lightTrace = $backtrace;
 
@@ -853,7 +853,7 @@ class ErrorHandler
      */
     private function parseAnonymousClass(/*string */$message)/*: string*/
     {
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         return preg_replace_callback('/[a-zA-Z_\x7f-\xff][\\\\a-zA-Z0-9_\x7f-\xff]*+@anonymous\x00.*?\.php(?:0x?|:[0-9]++\$)[0-9a-fA-F]++/', static function ($m) {
             return class_exists($m[0], false) ? (get_parent_class($m[0]) ?: key(class_implements($m[0])) ?: 'class').'@anonymous' : $m[0];

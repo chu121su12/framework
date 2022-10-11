@@ -22,7 +22,7 @@ class SolutionProviderRepository implements SolutionProviderRepositoryContract
 
     public function registerSolutionProvider(/*string */$solutionProviderClass)/*: SolutionProviderRepositoryContract*/
     {
-        $solutionProviderClass = cast_to_string($solutionProviderClass);
+        $solutionProviderClass = backport_type_check('string', $solutionProviderClass);
 
         $this->solutionProviders->push($solutionProviderClass);
 
@@ -52,7 +52,7 @@ class SolutionProviderRepository implements SolutionProviderRepositoryContract
 
         $providedSolutions = $this->solutionProviders
             ->filter(function (/*string */$solutionClass) {
-                $solutionClass = cast_to_string($solutionClass);
+                $solutionClass = backport_type_check('string', $solutionClass);
 
                 if (! in_array(HasSolutionsForThrowable::class, class_implements($solutionClass) ?: [])) {
                     return false;
@@ -67,7 +67,7 @@ class SolutionProviderRepository implements SolutionProviderRepositoryContract
                 return true;
             })
             ->map(function (/*string */$solutionClass) {
-                $solutionClass = cast_to_string($solutionClass);
+                $solutionClass = backport_type_check('string', $solutionClass);
 
                 return new $solutionClass;
             })
@@ -103,7 +103,7 @@ class SolutionProviderRepository implements SolutionProviderRepositoryContract
 
     public function getSolutionForClass(/*string */$solutionClass)/*: ?Solution*/
     {
-        $solutionClass = cast_to_string($solutionClass);
+        $solutionClass = backport_type_check('string', $solutionClass);
 
         if (! class_exists($solutionClass)) {
             return null;

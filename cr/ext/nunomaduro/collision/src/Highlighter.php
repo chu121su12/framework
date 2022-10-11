@@ -90,7 +90,7 @@ final class Highlighter implements HighlighterContract
      */
     public function __construct(ConsoleColor $color = null, /*bool */$UTF8 = true)
     {
-        $UTF8 = cast_to_bool($UTF8);
+        $UTF8 = backport_type_check('bool', $UTF8);
 
         $this->color = $color ?: new ConsoleColor();
 
@@ -115,8 +115,8 @@ final class Highlighter implements HighlighterContract
      */
     public function highlight(/*string */$content, /*int */$line)/*: string*/
     {
-        $content = cast_to_string($content);
-        $line = cast_to_int($line);
+        $content = backport_type_check('string', $content);
+        $line = backport_type_check('int', $line);
 
         return rtrim($this->getCodeSnippet($content, $line, 4, 4));
     }

@@ -61,9 +61,9 @@ class RouteCollectionBuilder
      */
     public function import($resource, $prefix = '/', $type = null)
     {
-        $prefix = cast_to_string($prefix);
+        $prefix = backport_type_check('string', $prefix);
 
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         /** @var RouteCollection[] $collections */
         $collections = $this->load($resource, $type);
@@ -98,11 +98,11 @@ class RouteCollectionBuilder
      */
     public function add($path, $controller, $name = null)
     {
-        $controller = cast_to_string($controller);
+        $controller = backport_type_check('string', $controller);
 
-        $path = cast_to_string($path);
+        $path = backport_type_check('string', $path);
 
-        $name = cast_to_string($name, null);
+        $name = backport_type_check('?string', $name);
 
         $route = new Route($path);
         $route->setDefault('_controller', $controller);
@@ -126,7 +126,7 @@ class RouteCollectionBuilder
      */
     public function mount($prefix, self $builder)
     {
-        $prefix = cast_to_string($prefix);
+        $prefix = backport_type_check('string', $prefix);
 
         $builder->prefix = trim(trim($prefix), '/');
         $this->routes[] = $builder;
@@ -139,7 +139,7 @@ class RouteCollectionBuilder
      */
     public function addRoute(Route $route, $name = null)
     {
-        $name = cast_to_string($name, null);
+        $name = backport_type_check('?string', $name);
 
         if (null === $name) {
             // used as a flag to know which routes will need a name later
@@ -158,7 +158,7 @@ class RouteCollectionBuilder
      */
     public function setHost($pattern = null)
     {
-        $pattern = cast_to_string($pattern, null);
+        $pattern = backport_type_check('?string', $pattern);
 
         $this->host = $pattern;
 
@@ -172,7 +172,7 @@ class RouteCollectionBuilder
      */
     public function setCondition($condition = null)
     {
-        $condition = cast_to_string($condition, null);
+        $condition = backport_type_check('?string', $condition);
 
         $this->condition = $condition;
 
@@ -189,7 +189,7 @@ class RouteCollectionBuilder
      */
     public function setDefault($key, $value)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $this->defaults[$key] = $value;
 
@@ -206,7 +206,7 @@ class RouteCollectionBuilder
      */
     public function setRequirement($key, $regex)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $this->requirements[$key] = $regex;
 
@@ -223,7 +223,7 @@ class RouteCollectionBuilder
      */
     public function setOption($key, $value)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $this->options[$key] = $value;
 
@@ -363,7 +363,7 @@ class RouteCollectionBuilder
      */
     private function load($resource, $type = null) //// array
     {
-        $type = cast_to_string($type, null);
+        $type = backport_type_check('?string', $type);
 
         if (null === $this->loader) {
             throw new \BadMethodCallException('Cannot import other routing resources: you must pass a LoaderInterface when constructing RouteCollectionBuilder.');

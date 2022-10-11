@@ -12,7 +12,7 @@ trait Interaction
 
     protected function interactsWith(/*string */$key)/*: void*/
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         $prop = Str::before($key, '.');
 

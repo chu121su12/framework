@@ -38,7 +38,7 @@ class TrimStringsStrategy extends AbstractTruncationStrategy
      */
     protected function trimPayloadString(array $payload, /*int */$threshold)/*: array*/
     {
-        $threshold = cast_to_int($threshold);
+        $threshold = backport_type_check('int', $threshold);
 
         array_walk_recursive($payload, function (&$value) use ($threshold) {
             if (is_string($value) && strlen($value) > $threshold) {

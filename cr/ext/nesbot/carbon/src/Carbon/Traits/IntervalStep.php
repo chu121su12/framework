@@ -61,7 +61,7 @@ trait IntervalStep
      */
     public function convertDate(DateTimeInterface $dateTime, /*bool */$negated = false)/*: CarbonInterface*/
     {
-        $negated = cast_to_bool($negated);
+        $negated = backport_type_check('bool', $negated);
 
         /** @var CarbonInterface $carbonDate */
         $carbonDate = $dateTime instanceof CarbonInterface ? $dateTime : $this->resolveCarbon($dateTime);

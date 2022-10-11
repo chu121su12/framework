@@ -49,7 +49,7 @@ class RouteNotDefinedSolutionProvider implements HasSolutionsForThrowable
 
     protected function findRelatedRoute(/*string */$missingRoute)/*: ?string*/
     {
-        $missingRoute = cast_to_string($missingRoute);
+        $missingRoute = backport_type_check('string', $missingRoute);
 
         Route::getRoutes()->refreshNameLookups();
 

@@ -14,9 +14,9 @@ trait HandlesConnections
      */
     final protected function usesDatabaseConnectionsEnvironmentVariables(Repository $config, /*string */$driver, /*string */$keyword)////: void
     {
-        $driver = cast_to_string($driver);
+        $driver = backport_type_check('string', $driver);
 
-        $keyword = cast_to_string($keyword);
+        $keyword = backport_type_check('string', $keyword);
 
         $keyword = Str::upper($keyword);
 

@@ -24,7 +24,7 @@ abstract class RedirectableUrlMatcher extends UrlMatcher implements Redirectable
      */
     public function match($pathinfo)
     {
-        $pathinfo = cast_to_string($pathinfo);
+        $pathinfo = backport_type_check('string', $pathinfo);
 
         try {
             return parent::match($pathinfo);

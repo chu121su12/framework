@@ -214,9 +214,9 @@ final class TableRenderer
      */
     private function parseCellStyle(/*string */$styles, /*string */$align = TableCellStyle::DEFAULT_ALIGN)/*: TableCellStyle*/
     {
-        $styles = cast_to_string($styles);
+        $styles = backport_type_check('string', $styles);
 
-        $align = cast_to_string($align);
+        $align = backport_type_check('string', $align);
 
         // I use this empty span for getting styles for bg, fg and options
         // It will be a good idea to get properties without element object and then pass them to an element object

@@ -42,7 +42,7 @@ class StaticPrefixCollection
 
     public function __construct($prefix = '/')
     {
-        $prefix = cast_to_string($prefix);
+        $prefix = backport_type_check('string', $prefix);
 
         $this->prefix = $prefix;
     }
@@ -67,7 +67,7 @@ class StaticPrefixCollection
      */
     public function addRoute($prefix, $route)
     {
-        $prefix = cast_to_string($prefix);
+        $prefix = backport_type_check('string', $prefix);
 
         list($prefix, $staticPrefix) = $this->getCommonPrefix($prefix, $prefix);
 
@@ -150,9 +150,9 @@ class StaticPrefixCollection
      */
     private function getCommonPrefix($prefix, $anotherPrefix) //// array
     {
-        $anotherPrefix = cast_to_string($anotherPrefix);
+        $anotherPrefix = backport_type_check('string', $anotherPrefix);
 
-        $prefix = cast_to_string($prefix);
+        $prefix = backport_type_check('string', $prefix);
 
         $baseLength = \strlen($this->prefix);
         $end = min(\strlen($prefix), \strlen($anotherPrefix));
@@ -208,9 +208,9 @@ class StaticPrefixCollection
 
     public static function handleError(/*int */$type, /*string */$msg)
     {
-        $type = cast_to_int($type);
+        $type = backport_type_check('int', $type);
 
-        $msg = cast_to_string($msg);
+        $msg = backport_type_check('string', $msg);
 
         return str_contains($msg, 'Compilation failed: lookbehind assertion is not fixed length');
     }

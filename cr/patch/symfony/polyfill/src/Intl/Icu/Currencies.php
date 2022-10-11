@@ -22,7 +22,7 @@ class Currencies
 
     public static function getSymbol(/*string */$currency)/*: ?string*/
     {
-        $currency = cast_to_string($currency);
+        $currency = backport_type_check('string', $currency);
 
         $data = isset(self::$data) ? self::$data : self::$data = require __DIR__.'/Resources/currencies.php';
 
@@ -33,7 +33,7 @@ class Currencies
 
     public static function getFractionDigits(/*string */$currency)/*: int*/
     {
-        $currency = cast_to_string($currency);
+        $currency = backport_type_check('string', $currency);
 
         $data = isset(self::$data) ? self::$data : self::$data = require __DIR__.'/Resources/currencies.php';
 
@@ -44,7 +44,7 @@ class Currencies
 
     public static function getRoundingIncrement(/*string */$currency)/*: int*/
     {
-        $currency = cast_to_string($currency);
+        $currency = backport_type_check('string', $currency);
 
         $data = isset(self::$data) ? self::$data : self::$data = require __DIR__.'/Resources/currencies.php';
 

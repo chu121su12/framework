@@ -25,7 +25,7 @@ class RouteCachingTest extends TestCase
 
     protected function routes(/*string */$file)
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         $this->defineCacheRoutes(file_get_contents($file));
     }

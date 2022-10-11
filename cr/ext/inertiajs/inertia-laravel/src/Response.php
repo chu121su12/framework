@@ -33,11 +33,11 @@ class Response implements Responsable
      */
     public function __construct(/*string */$component, $props, /*string */$rootView = 'app', /*string */$version = '')
     {
-        $version = cast_to_string($version);
+        $version = backport_type_check('string', $version);
 
-        $rootView = cast_to_string($rootView);
+        $rootView = backport_type_check('string', $rootView);
 
-        $component = cast_to_string($component);
+        $component = backport_type_check('string', $component);
 
         $this->component = $component;
         $this->props = $props instanceof Arrayable ? $props->toArray() : $props;
@@ -79,7 +79,7 @@ class Response implements Responsable
 
     public function rootView(/*string */$rootView)/*: self*/
     {
-        $rootView = cast_to_string($rootView);
+        $rootView = backport_type_check('string', $rootView);
 
         $this->rootView = $rootView;
 
@@ -128,7 +128,7 @@ class Response implements Responsable
      */
     public function resolvePropertyInstances(array $props, Request $request, /*bool */$unpackDotProps = true)/*: array*/
     {
-        $unpackDotProps = cast_to_bool($unpackDotProps);
+        $unpackDotProps = backport_type_check('bool', $unpackDotProps);
 
         foreach ($props as $key => $value) {
             if ($value instanceof Closure) {

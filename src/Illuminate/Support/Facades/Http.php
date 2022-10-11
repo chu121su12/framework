@@ -91,7 +91,7 @@ class Http extends Facade
      */
     public static function fakeSequence(/*string */$urlPattern = '*')
     {
-        $urlPattern = cast_to_string($urlPattern);
+        $urlPattern = backport_type_check('string', $urlPattern);
 
         $fake = tap(static::getFacadeRoot(), function ($fake) {
             static::swap($fake);

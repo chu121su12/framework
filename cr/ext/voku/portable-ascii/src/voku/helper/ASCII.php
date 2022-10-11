@@ -258,7 +258,7 @@ final class ASCII
      */
     public static function charsArray(/*bool */$replace_extra_symbols = false)/*: array*/
     {
-        $replace_extra_symbols = cast_to_bool($replace_extra_symbols);
+        $replace_extra_symbols = backport_type_check('bool', $replace_extra_symbols);
 
         if ($replace_extra_symbols) {
             self::prepareAsciiAndExtrasMaps();
@@ -290,7 +290,7 @@ final class ASCII
      */
     public static function charsArrayWithMultiLanguageValues(/*bool */$replace_extra_symbols = false)/*: array*/
     {
-        $replace_extra_symbols = cast_to_bool($replace_extra_symbols);
+        $replace_extra_symbols = backport_type_check('bool', $replace_extra_symbols);
 
         /** @var array<string, array<string, array<int, string>>> */
         static $CHARS_ARRAY = [];
@@ -355,9 +355,9 @@ final class ASCII
         /*bool */$replace_extra_symbols = false,
         /*bool */$asOrigReplaceArray = true
     )/*: array*/ {
-        $language = cast_to_string($language);
-        $replace_extra_symbols = cast_to_bool($replace_extra_symbols);
-        $asOrigReplaceArray = cast_to_bool($asOrigReplaceArray);
+        $language = backport_type_check('string', $language);
+        $replace_extra_symbols = backport_type_check('bool', $replace_extra_symbols);
+        $asOrigReplaceArray = backport_type_check('bool', $asOrigReplaceArray);
 
         $language = self::get_language($language);
 
@@ -452,8 +452,8 @@ final class ASCII
         /*bool */$replace_extra_symbols = false,
         /*bool */$asOrigReplaceArray = true
     )/*: array*/ {
-        $replace_extra_symbols = cast_to_bool($replace_extra_symbols);
-        $asOrigReplaceArray = cast_to_bool($asOrigReplaceArray);
+        $replace_extra_symbols = backport_type_check('bool', $replace_extra_symbols);
+        $asOrigReplaceArray = backport_type_check('bool', $asOrigReplaceArray);
 
         // init
         /** @var array<string, array<string, string>|array{orig: string[], replace: string[]}> */
@@ -522,11 +522,11 @@ final class ASCII
         /*bool */$normalize_msword = true,
         /*bool */$remove_invisible_characters = true
     )/*: string*/ {
-        $str = cast_to_string($str);
-        $normalize_whitespace = cast_to_bool($normalize_whitespace);
-        $keep_non_breaking_space = cast_to_bool($keep_non_breaking_space);
-        $normalize_msword = cast_to_bool($normalize_msword);
-        $remove_invisible_characters = cast_to_bool($remove_invisible_characters);
+        $str = backport_type_check('string', $str);
+        $normalize_whitespace = backport_type_check('bool', $normalize_whitespace);
+        $keep_non_breaking_space = backport_type_check('bool', $keep_non_breaking_space);
+        $normalize_msword = backport_type_check('bool', $normalize_msword);
+        $remove_invisible_characters = backport_type_check('bool', $remove_invisible_characters);
 
         // http://stackoverflow.com/questions/1401317/remove-non-utf8-characters-from-string
         // caused connection reset problem on larger strings
@@ -578,7 +578,7 @@ final class ASCII
      */
     public static function is_ascii(/*string */$str)/*: bool*/
     {
-        $str = cast_to_string($str);
+        $str = backport_type_check('string', $str);
 
         if ($str === '') {
             return true;
@@ -605,7 +605,7 @@ final class ASCII
      */
     public static function normalize_msword(/*string */$str)/*: string*/
     {
-        $str = cast_to_string($str);
+        $str = backport_type_check('string', $str);
 
         if ($str === '') {
             return '';
@@ -653,10 +653,10 @@ final class ASCII
         /*bool */$keepBidiUnicodeControls = false,
         /*bool */$normalize_control_characters = false
     )/*: string*/ {
-        $str = cast_to_string($str);
-        $keepNonBreakingSpace = cast_to_bool($keepNonBreakingSpace);
-        $keepBidiUnicodeControls = cast_to_bool($keepBidiUnicodeControls);
-        $normalize_control_characters = cast_to_bool($normalize_control_characters);
+        $str = backport_type_check('string', $str);
+        $keepNonBreakingSpace = backport_type_check('bool', $keepNonBreakingSpace);
+        $keepBidiUnicodeControls = backport_type_check('bool', $keepBidiUnicodeControls);
+        $normalize_control_characters = backport_type_check('bool', $normalize_control_characters);
 
         if ($str === '') {
             return '';
@@ -734,10 +734,10 @@ final class ASCII
         /*string */$replacement = '',
         /*bool */$keep_basic_control_characters = true
     )/*: string*/ {
-        $str = cast_to_string($str);
-        $url_encoded = cast_to_bool($url_encoded);
-        $replacement = cast_to_string($replacement);
-        $keep_basic_control_characters = cast_to_bool($keep_basic_control_characters);
+        $str = backport_type_check('string', $str);
+        $url_encoded = backport_type_check('bool', $url_encoded);
+        $replacement = backport_type_check('string', $replacement);
+        $keep_basic_control_characters = backport_type_check('bool', $keep_basic_control_characters);
 
         // init
         $non_displayables = [];
@@ -784,8 +784,8 @@ final class ASCII
      */
     public static function to_ascii_remap(/*string */$str1, /*string */$str2)/*: array*/
     {
-        $str1 = cast_to_string($str1);
-        $str2 = cast_to_string($str2);
+        $str1 = backport_type_check('string', $str1);
+        $str2 = backport_type_check('string', $str2);
 
         $charMap = [];
         $str1 = self::to_ascii_remap_intern($str1, $charMap);
@@ -834,12 +834,12 @@ final class ASCII
         /*bool */$use_transliterate = false,
         /*bool */$replace_single_chars_only = null
     )/*: string*/ {
-        $str = cast_to_string($str);
-        $language = cast_to_string($language);
-        $remove_unsupported_chars = cast_to_bool($remove_unsupported_chars);
-        $replace_extra_symbols = cast_to_bool($replace_extra_symbols);
-        $use_transliterate = cast_to_bool($use_transliterate);
-        $replace_single_chars_only = cast_to_bool($replace_single_chars_only);
+        $str = backport_type_check('string', $str);
+        $language = backport_type_check('string', $language);
+        $remove_unsupported_chars = backport_type_check('bool', $remove_unsupported_chars);
+        $replace_extra_symbols = backport_type_check('bool', $replace_extra_symbols);
+        $use_transliterate = backport_type_check('bool', $use_transliterate);
+        $replace_single_chars_only = backport_type_check('bool', $replace_single_chars_only);
 
         if ($str === '') {
             return '';
@@ -1057,9 +1057,9 @@ final class ASCII
         /*bool */$use_transliterate = true,
         /*string */$fallback_char = '-'
     )/*: string*/ {
-        $str = cast_to_string($str);
-        $use_transliterate = cast_to_bool($use_transliterate);
-        $fallback_char = cast_to_string($fallback_char);
+        $str = backport_type_check('string', $str);
+        $use_transliterate = backport_type_check('bool', $use_transliterate);
+        $fallback_char = backport_type_check('string', $fallback_char);
 
         if ($use_transliterate) {
             $str = self::to_transliterate($str, $fallback_char);
@@ -1118,13 +1118,13 @@ final class ASCII
         /*bool */$use_str_to_lower = true,
         /*bool */$use_transliterate = false
     )/*: string*/ {
-        $str = cast_to_string($str);
-        $separator = cast_to_string($separator);
-        $language = cast_to_string($language);
-        $replacements = cast_to_array($replacements);
-        $replace_extra_symbols = cast_to_bool($replace_extra_symbols);
-        $use_str_to_lower = cast_to_bool($use_str_to_lower);
-        $use_transliterate = cast_to_bool($use_transliterate);
+        $str = backport_type_check('string', $str);
+        $separator = backport_type_check('string', $separator);
+        $language = backport_type_check('string', $language);
+        $replacements = backport_type_check('array', $replacements);
+        $replace_extra_symbols = backport_type_check('bool', $replace_extra_symbols);
+        $use_str_to_lower = backport_type_check('bool', $use_str_to_lower);
+        $use_transliterate = backport_type_check('bool', $use_transliterate);
 
         if ($str === '') {
             return '';
@@ -1196,8 +1196,8 @@ final class ASCII
         $unknown = '?',
         /*bool */$strict = false
     )/*: string*/ {
-        $str = cast_to_string($str);
-        $strict = cast_to_bool($strict);
+        $str = backport_type_check('string', $str);
+        $strict = backport_type_check('bool', $strict);
 
         /** @var array<int,string>|null */
         static $UTF8_TO_TRANSLIT = null;
@@ -1414,7 +1414,7 @@ final class ASCII
      */
     private static function to_ascii_remap_intern(/*string */$str, array &$map)/*: string*/
     {
-        $str = cast_to_string($str);
+        $str = backport_type_check('string', $str);
 
         // find all utf-8 characters
         $matches = [];
@@ -1453,7 +1453,7 @@ final class ASCII
      */
     private static function get_language(/*string */$language)
     {
-        $language = cast_to_string($language);
+        $language = backport_type_check('string', $language);
 
         if ($language === '') {
             return '';
@@ -1487,7 +1487,7 @@ final class ASCII
      */
     private static function getData(/*string */$file)
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         /** @noinspection PhpIncludeInspection */
         /** @noinspection UsingInclusionReturnValueInspection */
@@ -1506,7 +1506,7 @@ final class ASCII
      */
     private static function getDataIfExists(/*string */$file)/*: array*/
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         $file = __DIR__ . '/data/' . $file . '.php';
         /** @psalm-suppress ImpureFunctionCall */

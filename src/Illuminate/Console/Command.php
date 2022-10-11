@@ -184,7 +184,7 @@ class Command extends SymfonyCommand
      */
     public function setHidden(/*bool */$hidden = true)/*: static*/
     {
-        $hidden = cast_to_bool($hidden);
+        $hidden = backport_type_check('bool', $hidden);
 
         parent::setHidden($this->hidden = $hidden);
 

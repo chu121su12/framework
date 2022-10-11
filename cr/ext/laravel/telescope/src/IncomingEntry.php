@@ -100,7 +100,7 @@ class IncomingEntry
      */
     public function batchId(/*string */$batchId)
     {
-        $batchId = cast_to_string($batchId);
+        $batchId = backport_type_check('string', $batchId);
 
         $this->batchId = $batchId;
 
@@ -115,7 +115,7 @@ class IncomingEntry
      */
     public function type(/*string */$type)
     {
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
         $this->type = $type;
 

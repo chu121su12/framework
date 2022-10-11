@@ -25,7 +25,7 @@ class QuarterTransformer extends Transformer
      */
     public function format(\DateTime $dateTime, /*int */$length)/*: string*/
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
         $month = (int) $dateTime->format('n');
         $quarter = (int) floor(($month - 1) / 3) + 1;
@@ -47,7 +47,7 @@ class QuarterTransformer extends Transformer
      */
     public function getReverseMatchingRegExp(/*int */$length)/*: string*/
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
         switch ($length) {
             case 1:
@@ -65,9 +65,9 @@ class QuarterTransformer extends Transformer
      */
     public function extractDateOptions(/*string */$matched, /*int */$length)/*: array*/
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
-        $matched = cast_to_string($matched);
+        $matched = backport_type_check('string', $matched);
 
         return [];
     }

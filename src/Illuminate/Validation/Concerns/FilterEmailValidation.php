@@ -51,7 +51,7 @@ class FilterEmailValidation implements EmailValidation
      */
     public function isValid(/*string */$email, EmailLexer $emailLexer)/*: bool*/
     {
-        $email = cast_to_string($email);
+        $email = backport_type_check('string', $email);
 
         return is_null($this->flags)
                     ? filter_var($email, FILTER_VALIDATE_EMAIL) !== false

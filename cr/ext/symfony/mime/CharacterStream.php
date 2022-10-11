@@ -67,7 +67,7 @@ final class CharacterStream
      */
     public function __construct($input, $charset = 'utf-8')
     {
-        $charset = cast_to_string($charset, null);
+        $charset = backport_type_check('?string', $charset);
 
         $charset = strtolower(trim($charset)) ?: 'utf-8';
         if ('utf-8' === $charset || 'utf8' === $charset) {
@@ -110,7 +110,7 @@ final class CharacterStream
 
     public function read($length) //// ?string
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
         if ($this->currentPos >= $this->charCount) {
             return null;
@@ -145,7 +145,7 @@ final class CharacterStream
 
     public function readBytes($length) //// ?array
     {
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
         if (null !== $read = $this->read($length)) {
             return array_map('ord', str_split($read, 1));
@@ -156,7 +156,7 @@ final class CharacterStream
 
     public function setPointer($charOffset) /// void
     {
-        $charOffset = cast_to_int($charOffset);
+        $charOffset = backport_type_check('int', $charOffset);
 
         if ($this->charCount < $charOffset) {
             $charOffset = $this->charCount;
@@ -166,7 +166,7 @@ final class CharacterStream
 
     public function write($chars) /// void
     {
-        $chars = cast_to_string($chars);
+        $chars = backport_type_check('string', $chars);
 
         $ignored = '';
         $this->data .= $chars;
@@ -183,11 +183,11 @@ final class CharacterStream
 
     private function getUtf8CharPositions($string, $startOffset, &$ignoredChars) //// int
     {
-        $startOffset = cast_to_int($startOffset);
+        $startOffset = backport_type_check('int', $startOffset);
 
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
-        $ignoredChars = cast_to_string($ignoredChars);
+        $ignoredChars = backport_type_check('string', $ignoredChars);
 
         $strlen = \strlen($string);
         $charPos = \count($this->map['p']);

@@ -30,7 +30,7 @@ final class DkimOptions
      */
     public function algorithm(/*string */$algo) /// self
     {
-        $algo = cast_to_string($algo);
+        $algo = backport_type_check('string', $algo);
 
         $this->options['algorithm'] = $algo;
 
@@ -42,7 +42,7 @@ final class DkimOptions
      */
     public function signatureExpirationDelay($show) /// self
     {
-        $show = cast_to_int($show);
+        $show = backport_type_check('int', $show);
 
         $this->options['signature_expiration_delay'] = $show;
 
@@ -54,7 +54,7 @@ final class DkimOptions
      */
     public function bodyMaxLength($max) /// self
     {
-        $max = cast_to_int($max);
+        $max = backport_type_check('int', $max);
 
         $this->options['body_max_length'] = $max;
 
@@ -66,7 +66,7 @@ final class DkimOptions
      */
     public function bodyShowLength($show) /// self
     {
-        $show = cast_to_bool($show);
+        $show = backport_type_check('bool', $show);
 
         $this->options['body_show_length'] = $show;
 
@@ -78,7 +78,7 @@ final class DkimOptions
      */
     public function headerCanon($canon) /// self
     {
-        $canon = cast_to_string($canon);
+        $canon = backport_type_check('string', $canon);
 
         $this->options['header_canon'] = $canon;
 
@@ -90,7 +90,7 @@ final class DkimOptions
      */
     public function bodyCanon($canon) /// self
     {
-        $canon = cast_to_string($canon);
+        $canon = backport_type_check('string', $canon);
 
         $this->options['body_canon'] = $canon;
 

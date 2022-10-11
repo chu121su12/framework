@@ -29,7 +29,7 @@ final class IdentificationHeader extends AbstractHeader
      */
     public function __construct($name, $ids)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         parent::__construct($name);
 

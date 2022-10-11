@@ -65,7 +65,7 @@ class FlattenException
      */
     public static function create(\Exception $exception, /*int */$statusCode = null, array $headers = [])/*: self*/
     {
-        $statusCode = cast_to_int($statusCode, null);
+        $statusCode = backport_type_check('?int', $statusCode);
 
         return static::createFromThrowable($exception, $statusCode, $headers);
     }
@@ -77,7 +77,7 @@ class FlattenException
     {
         backport_type_throwable($exception);
 
-        $statusCode = cast_to_int($statusCode, null);
+        $statusCode = backport_type_check('?int', $statusCode);
 
         $e = new static();
         $e->setMessage($exception->getMessage());
@@ -141,7 +141,7 @@ class FlattenException
      */
     public function setStatusCode(/*int */$code)/*: self*/
     {
-        $code = cast_to_int($code);
+        $code = backport_type_check('int', $code);
 
         $this->statusCode = $code;
 
@@ -173,7 +173,7 @@ class FlattenException
      */
     public function setClass(/*string */$class)/*: self*/
     {
-        $class = cast_to_string($class);
+        $class = backport_type_check('string', $class);
 
         $this->class = false !== strpos($class, "@anonymous\0") ? (get_parent_class($class) ?: key(class_implements($class)) ?: 'class').'@anonymous' : $class;
 
@@ -190,7 +190,7 @@ class FlattenException
      */
     public function setFile(/*string */$file)/*: self*/
     {
-        $file = cast_to_string($file);
+        $file = backport_type_check('string', $file);
 
         $this->file = $file;
 
@@ -207,7 +207,7 @@ class FlattenException
      */
     public function setLine(/*int */$line)/*: self*/
     {
-        $line = cast_to_int($line);
+        $line = backport_type_check('int', $line);
 
         $this->line = $line;
 
@@ -224,7 +224,7 @@ class FlattenException
      */
     public function setStatusText(/*string */$statusText)/*: self*/
     {
-        $statusText = cast_to_string($statusText);
+        $statusText = backport_type_check('string', $statusText);
 
         $this->statusText = $statusText;
 
@@ -241,7 +241,7 @@ class FlattenException
      */
     public function setMessage(/*string */$message)/*: self*/
     {
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         if (false !== strpos($message, "@anonymous\0")) {
             $message = preg_replace_callback('/[a-zA-Z_\x7f-\xff][\\\\a-zA-Z0-9_\x7f-\xff]*+@anonymous\x00.*?\.php(?:0x?|:[0-9]++\$)[0-9a-fA-F]++/', function ($m) {
@@ -325,9 +325,9 @@ class FlattenException
      */
     public function setTrace(array $trace, /*?string */$file = null, /*?int */$line = null)/*: self*/
     {
-        $line = cast_to_int($line, null);
+        $line = backport_type_check('?int', $line);
 
-        $file = cast_to_string($file, null);
+        $file = backport_type_check('?string', $file);
 
         $this->trace = [];
         $this->trace[] = [
@@ -366,9 +366,9 @@ class FlattenException
 
     private function flattenArgs(array $args, /*int */$level = 0, /*int */&$count = 0)/*: array*/
     {
-        $count = cast_to_int($count);
+        $count = backport_type_check('int', $count);
 
-        $level = cast_to_int($level);
+        $level = backport_type_check('int', $level);
 
         $result = [];
         foreach ($args as $key => $value) {
@@ -420,7 +420,7 @@ class FlattenException
      */
     public function setAsString(/*?string */$asString = null)/*: self*/
     {
-        $asString = cast_to_string($asString, null);
+        $asString = backport_type_check('?string', $asString);
 
         $this->asString = $asString;
 

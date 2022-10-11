@@ -75,7 +75,7 @@ final class CodeRenderer
 
         if ($extraSpaces !== '') {
             $lines = array_map(static function (/*string */$line) use ($extraSpaces)/*: string*/ {
-                $line = cast_to_string($line);
+                $line = backport_type_check('string', $line);
 
                 return str_starts_with($line, $extraSpaces) ? substr($line, strlen($extraSpaces)) : $line;
             }, $lines);
@@ -116,9 +116,9 @@ final class CodeRenderer
      */
     private function getHighlightedLines(/*string */$source, /*int */$startLine)/*: array*/
     {
-        $source = cast_to_string($source);
+        $source = backport_type_check('string', $source);
 
-        $startLine = cast_to_int($startLine);
+        $startLine = backport_type_check('int', $startLine);
 
         $source = str_replace(["\r\n", "\r"], "\n", $source);
         $tokens = $this->tokenize($source);
@@ -133,7 +133,7 @@ final class CodeRenderer
      */
     private function tokenize(/*string */$source)/*: array*/
     {
-        $source = cast_to_string($source);
+        $source = backport_type_check('string', $source);
 
         $tokens = token_get_all($source);
 
@@ -214,7 +214,7 @@ final class CodeRenderer
      */
     private function splitToLines(array $tokens, /*int */$startLine)/*: array*/
     {
-        $startLine = cast_to_int($startLine);
+        $startLine = backport_type_check('int', $startLine);
 
         $lines = [];
 
@@ -271,7 +271,7 @@ final class CodeRenderer
      */
     private function lineNumbers(array $lines, /*int */$markLine)/*: string*/
     {
-        $markLine = cast_to_int($markLine);
+        $markLine = backport_type_check('int', $markLine);
 
         $lastLine = (int) array_key_last($lines);
         $lineLength = strlen((string) ($lastLine + 1));
@@ -307,11 +307,11 @@ final class CodeRenderer
      */
     private function coloredLineNumber(/*string */$token, /*int */$lineNumber, /*int */$length)/*: string*/
     {
-        $token = cast_to_string($token);
+        $token = backport_type_check('string', $token);
 
-        $lineNumber = cast_to_int($lineNumber);
+        $lineNumber = backport_type_check('int', $lineNumber);
 
-        $length = cast_to_int($length);
+        $length = backport_type_check('int', $length);
 
         return $this->styleToken(
             $token, str_pad((string) ($lineNumber + 1), $length, ' ', STR_PAD_LEFT)
@@ -323,9 +323,9 @@ final class CodeRenderer
      */
     private function styleToken(/*string */$token, /*string */$string)/*: string*/
     {
-        $token = cast_to_string($token);
+        $token = backport_type_check('string', $token);
 
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         return (string) Termwind::span($string, self::THEME[$token]);
     }

@@ -27,7 +27,7 @@ class TableNotFoundSolutionProvider implements HasSolutionsForThrowable
 
     protected function isBadTableErrorCode(/*string */$code)/*: bool*/
     {
-        $code = cast_to_string($code);
+        $code = backport_type_check('string', $code);
 
         return $code === static::MYSQL_BAD_TABLE_CODE;
     }

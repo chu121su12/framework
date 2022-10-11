@@ -61,22 +61,22 @@ class InvalidRouteActionSolutionProvider implements HasSolutionsForThrowable
 
     protected function findRelatedController(/*string */$invalidController)/*: ?string*/
     {
-        $invalidController = cast_to_string($invalidController);
+        $invalidController = backport_type_check('string', $invalidController);
 
         $composerClassMap = app(ComposerClassMap::class);
 
         $controllers = collect($composerClassMap->listClasses())
             ->filter(function (/*string */$file, /*string */$fqcn) {
-                $fqcn = cast_to_string($fqcn);
+                $fqcn = backport_type_check('string', $fqcn);
 
-                $file = cast_to_string($file);
+                $file = backport_type_check('string', $file);
 
                 return Str::endsWith($fqcn, 'Controller');
             })
             ->mapWithKeys(function (/*string */$file, /*string */$fqcn) {
-                $fqcn = cast_to_string($fqcn);
+                $fqcn = backport_type_check('string', $fqcn);
 
-                $file = cast_to_string($file);
+                $file = backport_type_check('string', $file);
 
                 return [$fqcn => class_basename($fqcn)];
             })

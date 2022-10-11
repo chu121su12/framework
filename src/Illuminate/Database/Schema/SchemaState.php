@@ -103,7 +103,7 @@ abstract class SchemaState
      */
     public function withMigrationTable(/*string */$table)
     {
-        $table = cast_to_string($table);
+        $table = backport_type_check('string', $table);
 
         $this->migrationTable = $table;
 

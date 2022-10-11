@@ -59,7 +59,7 @@ final class State
      */
     private function __construct(/*string */$testCaseName)
     {
-        $testCaseName = cast_to_string($testCaseName);
+        $testCaseName = backport_type_check('string', $testCaseName);
 
         $this->testCaseName = $testCaseName;
     }
@@ -173,7 +173,7 @@ final class State
 
     public function countTestsInTestSuiteBy(/*string */$type)/*: int*/
     {
-        $type = cast_to_string($type);
+        $type = backport_type_check('string', $type);
 
         return count(array_filter($this->suiteTests, function (TestResult $testResult) use ($type) {
             return $testResult->type === $type;

@@ -17,7 +17,7 @@ final class StyleNotFound extends InvalidArgumentException
     /*private */
     final public function __construct(/*string */$message)
     {
-        $message = cast_to_string($message);
+        $message = backport_type_check('string', $message);
 
         parent::__construct($message, 0, $this->getPrevious());
     }
@@ -27,7 +27,7 @@ final class StyleNotFound extends InvalidArgumentException
      */
     public static function fromStyle(/*string */$style)/*: self*/
     {
-        $style = cast_to_string($style);
+        $style = backport_type_check('string', $style);
 
         return new self(sprintf('Style [%s] not found.', $style));
     }

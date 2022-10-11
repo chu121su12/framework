@@ -50,7 +50,7 @@ final class StyleToMethod
      */
     public static function multiple(Styles $styles, /*string */$stylesString)/*: Styles*/
     {
-        $stylesString = cast_to_string($stylesString);
+        $stylesString = backport_type_check('string', $stylesString);
 
         $stylesString = self::sortStyles(array_merge(
             $styles->defaultStyles(),
@@ -71,7 +71,7 @@ final class StyleToMethod
      */
     public function __invoke(/*string|int */...$arguments)/*: Styles*/
     {
-        $arguments = cast_to_compounds('string|int', $arguments);
+        $arguments = backport_array_type_check('string|int', $arguments);
 
         if (StyleRepository::has($this->style)) {
             $styled = StyleRepository::get($this->style);
@@ -146,7 +146,7 @@ final class StyleToMethod
      */
     private function applyMediaQuery(/*string */$method)/*: string*/
     {
-        $method = cast_to_string($method);
+        $method = backport_type_check('string', $method);
 
         preg_match(self::MEDIA_QUERIES_REGEX, $method, $matches);
 

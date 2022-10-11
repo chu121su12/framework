@@ -33,15 +33,15 @@ final class SMimeSigner extends SMime
      */
     public function __construct($certificate, $privateKey, $privateKeyPassphrase = null, $extraCerts = null, $signOptions = null)
     {
-        $privateKey = cast_to_string($privateKey);
+        $privateKey = backport_type_check('string', $privateKey);
 
-        $certificate = cast_to_string($certificate);
+        $certificate = backport_type_check('string', $certificate);
 
-        $signOptions = cast_to_int($signOptions, null);
+        $signOptions = backport_type_check('?int', $signOptions);
 
-        $extraCerts = cast_to_string($extraCerts, null);
+        $extraCerts = backport_type_check('?string', $extraCerts);
 
-        $privateKeyPassphrase = cast_to_string($privateKeyPassphrase, null);
+        $privateKeyPassphrase = backport_type_check('?string', $privateKeyPassphrase);
 
         if (!\extension_loaded('openssl')) {
             throw new \LogicException('PHP extension "openssl" is required to use SMime.');

@@ -216,7 +216,7 @@ abstract class GeneratorCommand extends Command
      */
     protected function qualifyModel(/*string */$model)
     {
-        $model = cast_to_string($model);
+        $model = backport_type_check('string', $model);
 
         $model = ltrim($model, '\\/');
 

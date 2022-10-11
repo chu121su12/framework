@@ -17,7 +17,7 @@ class ConfirmPassword
      */
     public function __invoke(StatefulGuard $guard, $user, /*?string */$password = null)
     {
-        $password = cast_to_string($password, null);
+        $password = backport_type_check('?string', $password);
 
         $username = config('fortify.username');
 
@@ -36,7 +36,7 @@ class ConfirmPassword
      */
     protected function confirmPasswordUsingCustomCallback($user, /*?string */$password = null)
     {
-        $password = cast_to_string($password, null);
+        $password = backport_type_check('?string', $password);
 
         return call_user_func(
             Fortify::$confirmPasswordsUsingCallback,

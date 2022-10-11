@@ -111,7 +111,7 @@ class Response implements ArrayAccess
      */
     public function header(/*string */$header)
     {
-        $header = cast_to_string($header);
+        $header = backport_type_check('string', $header);
 
         return $this->response->getHeaderLine($header);
     }

@@ -55,7 +55,7 @@ class Pool
      */
     public function as_(/*string */$key)
     {
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         return $this->pool[$key] = $this->asyncRequest();
     }

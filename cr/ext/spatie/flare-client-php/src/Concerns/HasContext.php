@@ -15,7 +15,7 @@ trait HasContext
 
     public function stage(/*?string */$stage = null)/*: self*/
     {
-        $stage = cast_to_string($stage, null);
+        $stage = backport_type_check('?string', $stage);
 
         $this->stage = $stage;
 
@@ -24,7 +24,7 @@ trait HasContext
 
     public function messageLevel(/*?string */$messageLevel = null)/*: self*/
     {
-        $messageLevel = cast_to_string($messageLevel, null);
+        $messageLevel = backport_type_check('?string', $messageLevel);
 
         $this->messageLevel = $messageLevel;
 
@@ -39,16 +39,16 @@ trait HasContext
      */
     public function getGroup(/*string */$groupName = 'context', $default = [])/*: array*/
     {
-        $groupName = cast_to_string($groupName);
+        $groupName = backport_type_check('string', $groupName);
 
         return isset($this->userProvidedContext[$groupName]) ? $this->userProvidedContext[$groupName] : $default;
     }
 
     public function context(/*string */$key, /*mixed */$value)/*: self*/
     {
-        $value = cast_to_mixed($value);
+        $value = backport_type_check('mixed', $value);
 
-        $key = cast_to_string($key);
+        $key = backport_type_check('string', $key);
 
         return $this->group('context', [$key => $value]);
     }
@@ -61,7 +61,7 @@ trait HasContext
      */
     public function group(/*string */$groupName, array $properties)/*: self*/
     {
-        $groupName = cast_to_string($groupName);
+        $groupName = backport_type_check('string', $groupName);
 
         $group = isset($this->userProvidedContext[$groupName]) ? $this->userProvidedContext[$groupName] : [];
 

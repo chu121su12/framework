@@ -31,14 +31,14 @@ abstract class AbstractHeader implements HeaderInterface
 
     public function __construct($name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->name = $name;
     }
 
     public function setCharset($charset)
     {
-        $charset = cast_to_string($charset);
+        $charset = backport_type_check('string', $charset);
 
         $this->charset = $charset;
     }
@@ -55,7 +55,7 @@ abstract class AbstractHeader implements HeaderInterface
      */
     public function setLanguage($lang)
     {
-        $lang = cast_to_string($lang);
+        $lang = backport_type_check('string', $lang);
 
         $this->lang = $lang;
     }
@@ -72,7 +72,7 @@ abstract class AbstractHeader implements HeaderInterface
 
     public function setMaxLineLength($lineLength)
     {
-        $lineLength = cast_to_int($lineLength);
+        $lineLength = backport_type_check('int', $lineLength);
 
         $this->lineLength = $lineLength;
     }
@@ -95,11 +95,11 @@ abstract class AbstractHeader implements HeaderInterface
      */
     protected function createPhrase(HeaderInterface $header, $string, $charset, $shorten = false) //// string
     {
-        $charset = cast_to_string($charset);
+        $charset = backport_type_check('string', $charset);
 
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
-        $shorten = cast_to_bool($shorten);
+        $shorten = backport_type_check('bool', $shorten);
 
         // Treat token as exactly what was given
         $phraseStr = $string;
@@ -133,9 +133,9 @@ abstract class AbstractHeader implements HeaderInterface
      */
     protected function encodeWords(HeaderInterface $header, $input, $usedLength = -1) //// string
     {
-        $input = cast_to_string($input);
+        $input = backport_type_check('string', $input);
 
-        $usedLength = cast_to_int($usedLength);
+        $usedLength = backport_type_check('int', $usedLength);
 
         $value = '';
         $tokens = $this->getEncodableWordTokens($input);
@@ -165,7 +165,7 @@ abstract class AbstractHeader implements HeaderInterface
 
     protected function tokenNeedsEncoding($token) //// bool
     {
-        $token = cast_to_string($token);
+        $token = backport_type_check('string', $token);
 
         return (bool) preg_match('~[\x00-\x08\x10-\x19\x7F-\xFF\r\n]~', $token);
     }
@@ -177,7 +177,7 @@ abstract class AbstractHeader implements HeaderInterface
      */
     protected function getEncodableWordTokens($string) //// array
     {
-        $string = cast_to_string($string);
+        $string = backport_type_check('string', $string);
 
         $tokens = [];
         $encodedToken = '';
@@ -205,9 +205,9 @@ abstract class AbstractHeader implements HeaderInterface
      */
     protected function getTokenAsEncodedWord($token, $firstLineOffset = 0) //// string
     {
-        $token = cast_to_string($token);
+        $token = backport_type_check('string', $token);
 
-        $firstLineOffset = cast_to_int($firstLineOffset);
+        $firstLineOffset = backport_type_check('int', $firstLineOffset);
 
         if (null === self::$encoder) {
             self::$encoder = new QpMimeHeaderEncoder();
@@ -246,7 +246,7 @@ abstract class AbstractHeader implements HeaderInterface
      */
     protected function generateTokenLines($token) //// array
     {
-        $token = cast_to_string($token);
+        $token = backport_type_check('string', $token);
 
         return preg_split('~(\r\n)~', $token, -1, \PREG_SPLIT_DELIM_CAPTURE);
     }
@@ -256,7 +256,7 @@ abstract class AbstractHeader implements HeaderInterface
      */
     protected function toTokens($string = null) //// array
     {
-        $string = cast_to_string($string, null);
+        $string = backport_type_check('?string', $string);
 
         if (null === $string) {
             $string = $this->getBodyAsString();

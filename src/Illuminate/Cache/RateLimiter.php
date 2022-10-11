@@ -44,7 +44,7 @@ class RateLimiter
      */
     public function for_(/*string */$name, Closure $callback)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $this->limiters[$name] = $callback;
 
@@ -59,7 +59,7 @@ class RateLimiter
      */
     public function limiter(/*string */$name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return isset($this->limiters[$name]) ? $this->limiters[$name] : null;
     }

@@ -17,7 +17,7 @@ class LogRecorder
 
     public function __construct(Application $app, /*?int */$maxLogs = null)
     {
-        $maxLogs = cast_to_int($maxLogs, null);
+        $maxLogs = backport_type_check('?int', $maxLogs);
 
         $this->app = $app;
 
@@ -65,7 +65,7 @@ class LogRecorder
 
     protected function shouldIgnore(/*mixed */$event)/*: bool*/
     {
-        $event = cast_to_mixed($event);
+        $event = backport_type_check('mixed', $event);
 
         if (! isset($event->context['exception'])) {
             return false;
@@ -90,7 +90,7 @@ class LogRecorder
 
     public function setMaxLogs(/*?int */$maxLogs = null)/*: self*/
     {
-        $maxLogs = cast_to_int($maxLogs, null);
+        $maxLogs = backport_type_check('?int', $maxLogs);
 
         $this->maxLogs = $maxLogs;
 

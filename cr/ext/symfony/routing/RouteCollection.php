@@ -91,9 +91,9 @@ class RouteCollection implements \IteratorAggregate, \Countable
      */
     public function add($name, Route $route/*, $priority = 0*/)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
-        // $priority = cast_to_int($priority);
+        // $priority = backport_type_check('int', $priority);
 
         if (\func_num_args() < 3 && __CLASS__ !== static::class && __CLASS__ !== (new \ReflectionMethod($this, __FUNCTION__))->getDeclaringClass()->getName() && !$this instanceof \PHPUnit\Framework\MockObject\MockObject && !$this instanceof \Prophecy\Prophecy\ProphecySubjectInterface && !$this instanceof \Mockery\MockInterface) {
             trigger_deprecation('symfony/routing', '5.1', 'The "%s()" method will have a new "int $priority = 0" argument in version 6.0, not defining it is deprecated.', __METHOD__);
@@ -134,7 +134,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      */
     public function get($name)
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         $visited = [];
         $alias = isset($this->aliases[$name]) ? $this->aliases[$name] : null;
@@ -203,7 +203,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      */
     public function addPrefix($prefix, array $defaults = [], array $requirements = [])
     {
-        $prefix = cast_to_string($prefix);
+        $prefix = backport_type_check('string', $prefix);
 
         $prefix = trim(trim($prefix), '/');
 
@@ -223,7 +223,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      */
     public function addNamePrefix($prefix)
     {
-        $prefix = cast_to_string($prefix);
+        $prefix = backport_type_check('string', $prefix);
 
         $prefixedRoutes = [];
         $prefixedPriorities = [];
@@ -253,7 +253,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      */
     public function setHost($pattern = null, array $defaults = [], array $requirements = [])
     {
-        $pattern = cast_to_string($pattern, null);
+        $pattern = backport_type_check('?string', $pattern);
 
         foreach ($this->routes as $route) {
             $route->setHost($pattern);
@@ -269,7 +269,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      */
     public function setCondition($condition = null)
     {
-        $condition = cast_to_string($condition, null);
+        $condition = backport_type_check('?string', $condition);
 
         foreach ($this->routes as $route) {
             $route->setCondition($condition);
@@ -375,8 +375,8 @@ class RouteCollection implements \IteratorAggregate, \Countable
      */
     public function addAlias(/*string */$name, /*string */$alias)/*: Alias*/
     {
-        $name = cast_to_string($name);
-        $alias = cast_to_string($alias);
+        $name = backport_type_check('string', $name);
+        $alias = backport_type_check('string', $alias);
 
         if ($name === $alias) {
             throw new InvalidArgumentException(sprintf('Route alias "%s" can not reference itself.', $name));
@@ -397,7 +397,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
 
     public function getAlias(/*string */$name)/*: ?Alias*/
     {
-        $name = cast_to_string($name);
+        $name = backport_type_check('string', $name);
 
         return isset($this->aliases[$name]) ? $this->aliases[$name] : null;
     }

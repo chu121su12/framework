@@ -28,7 +28,7 @@ final class SMimeEncrypter extends SMime
      */
     public function __construct($certificate, $cipher = null)
     {
-        $cipher = cast_to_int($cipher, null);
+        $cipher = backport_type_check('?int', $cipher);
 
         if (!\extension_loaded('openssl')) {
             throw new \LogicException('PHP extension "openssl" is required to use SMime.');
