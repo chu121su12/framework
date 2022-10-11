@@ -395,3 +395,64 @@ if (! \function_exists('backport_abstract_error_message')) {
     }
 }
 
+if (! \function_exists('backport_type_assert')) {
+    function backport_type_assert($nullable, $type, $value)
+    {
+        if ($value === null) {
+            return (bool) $nullable;
+        }
+
+        switch ($type) {
+            case 'array': return \is_array($value);
+            case 'false': return $value === false;
+            case 'float': return \is_float($value);
+            case 'int': return \is_int($value);
+            case 'mixed': return ! \is_object($value);
+            case 'null': return $value === null;
+            case 'string': return \is_string($value);
+            case 'stdObject': return \is_object($value);
+            case 'true': return $value === true;
+            default: return $value instanceof $type;
+        }
+    }
+}
+
+if (! \function_exists('backport_type_check')) {
+    function backport_type_check($types, $value, $strict = false)
+    {
+        if (\is_string($types)) {
+            $types = \explode('|', $types);
+        }
+
+        foreach ($types as $type) {
+            $nullable = \substr($type, 0, 1) === '?';
+
+            if (backport_type_assert($nullable, (string) ($nullable ? \substr($type, 1) : $type), $value)) {
+                return $value;
+            }
+        }
+
+        if ($strict) {
+            $label = \is_object($value) ? \get_class($value) : (\gettype($value) . " ($value)");
+
+            throw new TypeError("Found value of {$label}; expected " . \implode('|', $types));
+        }
+
+        return $value;
+    }
+}
+
+if (! \function_exists('backport_array_type_check')) {
+    function backport_array_type_check($types, $values, $strict = false)
+    {
+        if (\is_string($types)) {
+            $types = \explode('|', $types);
+        }
+
+        foreach ($values as $key => $value) {
+            $values[$key] = backport_type_check($types, $value, $strict);
+        }
+
+        return $values;
+    }
+}

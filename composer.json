@@ -317,6 +317,9 @@
             "composer/package-versions-deprecated": true
         }
     },
+    "scripts": {
+        "lint": "@php cr/scripts/lint.php"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }
