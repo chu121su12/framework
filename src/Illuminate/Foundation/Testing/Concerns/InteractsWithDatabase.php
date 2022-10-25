@@ -182,7 +182,9 @@ trait InteractsWithDatabase
 
         $value = DB::connection()->getPdo()->quote($value);
 
-        return DB::raw("CAST($value AS JSON)");
+        return DB::raw(
+            DB::connection()->getQueryGrammar()->compileJsonValueCast($value)
+        );
     }
 
     /**

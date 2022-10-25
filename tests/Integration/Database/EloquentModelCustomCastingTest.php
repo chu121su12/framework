@@ -59,8 +59,6 @@ class EloquentModelCustomCastingTest extends TestCase
     }
 
     /**
-     * Tests...
-     *
      * @requires extension gmp
      */
     public function testSavingCastedAttributesToDatabase()

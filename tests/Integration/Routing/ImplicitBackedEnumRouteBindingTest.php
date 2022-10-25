@@ -24,6 +24,10 @@ use Illuminate\Tests\Integration\Routing\CategoryBackedEnum;
 Route::get('/categories/{category}', function (CategoryBackedEnum \$category) {
     return \$category->value;
 })->middleware('web');
+
+Route::get('/categories-default/{category?}', function (CategoryBackedEnum \$category = CategoryBackedEnum::Fruits) {
+    return \$category->value;
+})->middleware('web');
 PHP;
 
         $this->defineCacheRoutes($cacheRoutes);
@@ -36,6 +40,15 @@ PHP;
 
         $response = $this->get('/categories/cars');
         $response->assertNotFound(404);
+
+        $response = $this->get('/categories-default/');
+        $response->assertSee('fruits');
+
+        $response = $this->get('/categories-default/people');
+        $response->assertSee('people');
+
+        $response = $this->get('/categories-default/fruits');
+        $response->assertSee('fruits');
     }
 
     public function testWithoutRouteCachingEnabled()
@@ -46,6 +59,10 @@ PHP;
             return $category->value;
         })->middleware(['web']);
 
+        Route::post('/categories-default/{category?}', function (CategoryBackedEnum $category = CategoryBackedEnum::Fruits) {
+            return $category->value;
+        })->middleware('web');
+
         $response = $this->post('/categories/fruits');
         $response->assertSee('fruits');
 
@@ -54,5 +71,14 @@ PHP;
 
         $response = $this->post('/categories/cars');
         $response->assertNotFound(404);
+
+        $response = $this->post('/categories-default/');
+        $response->assertSee('fruits');
+
+        $response = $this->post('/categories-default/people');
+        $response->assertSee('people');
+
+        $response = $this->post('/categories-default/fruits');
+        $response->assertSee('fruits');
     }
 }

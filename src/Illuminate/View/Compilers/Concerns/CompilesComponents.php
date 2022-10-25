@@ -74,7 +74,7 @@ trait CompilesComponents
 
         return implode("\n", [
             '<?php if (isset($component)) { $__componentOriginal'.$hash.' = $component; } ?>',
-            '<?php $component = $__env->getContainer()->make('.Str::finish($component, '::class').', '.($data ?: '[]').' + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>',
+            '<?php $component = '.$component.'::resolve('.($data ?: '[]').' + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>',
             '<?php $component->withName('.$alias.'); ?>',
             '<?php if ($component->shouldRender()): ?>',
             '<?php $__env->startComponent($component->resolveView(), $component->data()); ?>',
@@ -159,7 +159,8 @@ trait CompilesComponents
      */
     protected function compileProps($expression)
     {
-        return "<?php foreach(\$attributes->onlyProps{$expression} as \$__key => \$__value) {
+        return "<?php \$attributes = isset(\$attributes) ? \$attributes : new \\Illuminate\\View\\ComponentAttributeBag; ?>
+<?php foreach(\$attributes->onlyProps{$expression} as \$__key => \$__value) {
     \$\$__key = isset(\$\$__key) ? \$\$__key : \$__value;
 } ?>
 <?php \$attributes = \$attributes->exceptProps{$expression}; ?>
