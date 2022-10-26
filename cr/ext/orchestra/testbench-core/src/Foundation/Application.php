@@ -28,7 +28,7 @@ class Application
     /**
      * The application resolving callback.
      *
-     * @var callable(\Illuminate\Foundation\Application):void|null
+     * @var (callable(\Illuminate\Foundation\Application):void)|null
      */
     protected $resolvingCallback;
 
@@ -43,28 +43,51 @@ class Application
      * Create new application resolver.
      *
      * @param  string  $basePath
-     * @param  callable(\Illuminate\Foundation\Application):void|null  $resolvingCallback
+     * @param  (callable(\Illuminate\Foundation\Application):void)|null  $resolvingCallback
      */
     public function __construct(/*?string */$basePath = null, /*?*/callable $resolvingCallback = null)
     {
         $basePath = backport_type_check('?string', $basePath);
+
+        $resolvingCallback = backport_type_check('?callable', $resolvingCallback);
 
         $this->basePath = $basePath;
         $this->resolvingCallback = $resolvingCallback;
     }
 
     /**
+     * Create symlink to vendor path via new application instance.
+     *
+     * @param  string|null  $basePath
+     * @param  string  $workingVendorPath
+     * @return void
+     */
+    public static function createVendorSymlink(/*?string */$basePath, /*string */$workingVendorPath)/*: void*/
+    {
+        $basePath = backport_type_check('?string', $basePath);
+
+        $workingVendorPath = backport_type_check('string', $workingVendorPath);
+
+        (new Bootstrap\CreateVendorSymlink($workingVendorPath))
+            ->bootstrap(
+                // static::create(basePath: $basePath, options: ['extra' => ['dont-discover' => ['*']]])
+                static::create($basePath, null, ['extra' => ['dont-discover' => ['*']]])
+            );
+    }
+
+    /**
      * Create new application instance.
      *
      * @param  string|null  $basePath
-     * @param  callable(\Illuminate\Foundation\Application):void|null  $resolvingCallback
+     * @param  (callable(\Illuminate\Foundation\Application):void)|null  $resolvingCallback
      * @param  array  $options
-     *
      * @return \Illuminate\Foundation\Application
      */
     public static function create(/*?string */$basePath = null, /*?*/callable $resolvingCallback = null, array $options = [])
     {
         $basePath = backport_type_check('?string', $basePath);
+
+        $resolvingCallback = backport_type_check('?callable', $resolvingCallback);
 
         return (new static($basePath, $resolvingCallback))->configure($options)->createApplication();
     }
@@ -73,7 +96,6 @@ class Application
      * Configure the application options.
      *
      * @param  array<string, mixed>  $options
-     *
      * @return $this
      */
     public function configure(array $options)
@@ -105,7 +127,6 @@ class Application
      * Get package providers.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return array
      */
     protected function getPackageProviders($app)

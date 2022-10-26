@@ -10,7 +10,7 @@ trait InteractsWithPublishedFiles
     /**
      * Setup Interacts with Published Files environment.
      */
-    protected function setUpInteractsWithPublishedFiles()////: void
+    protected function setUpInteractsWithPublishedFiles()/*: void*/
     {
         $this->cleanUpFiles();
         $this->cleanUpMigrationFiles();
@@ -19,7 +19,7 @@ trait InteractsWithPublishedFiles
     /**
      * Teardown Interacts with Published Files environment.
      */
-    protected function tearDownInteractsWithPublishedFiles()////: void
+    protected function tearDownInteractsWithPublishedFiles()/*: void*/
     {
         $this->cleanUpFiles();
         $this->cleanUpMigrationFiles();
@@ -30,7 +30,7 @@ trait InteractsWithPublishedFiles
      *
      * @param  array<int, string>  $contains
      */
-    protected function assertFileContains(array $contains, /*string */$file, /*string */$message = '')////: void
+    protected function assertFileContains(array $contains, /*string */$file, /*string */$message = '')/*: void*/
     {
         $file = backport_type_check('string', $file);
 
@@ -52,7 +52,7 @@ trait InteractsWithPublishedFiles
      *
      * @param  array<int, string>  $contains
      */
-    protected function assertFileNotContains(array $contains, /*string */$file, /*string */$message = '')////: void
+    protected function assertFileNotContains(array $contains, /*string */$file, /*string */$message = '')/*: void*/
     {
         $file = backport_type_check('string', $file);
 
@@ -74,7 +74,7 @@ trait InteractsWithPublishedFiles
      *
      * @param  array<int, string>  $contains
      */
-    protected function assertMigrationFileContains(array $contains, /*string */$file, /*string */$message = '')////: void
+    protected function assertMigrationFileContains(array $contains, /*string */$file, /*string */$message = '')/*: void*/
     {
         $file = backport_type_check('string', $file);
 
@@ -92,7 +92,7 @@ trait InteractsWithPublishedFiles
      *
      * @param  array<int, string>  $contains
      */
-    protected function assertMigrationFileNotContains(array $contains, /*string */$file, /*string */$message = '')////: void
+    protected function assertMigrationFileNotContains(array $contains, /*string */$file, /*string */$message = '')/*: void*/
     {
         $file = backport_type_check('string', $file);
 
@@ -108,7 +108,7 @@ trait InteractsWithPublishedFiles
     /**
      * Assert filename exists.
      */
-    protected function assertFilenameExists(/*string */$file)////: void
+    protected function assertFilenameExists(/*string */$file)/*: void*/
     {
         $file = backport_type_check('string', $file);
 
@@ -120,7 +120,7 @@ trait InteractsWithPublishedFiles
     /**
      * Assert filename not exists.
      */
-    protected function assertFilenameNotExists(/*string */$file)////: void
+    protected function assertFilenameNotExists(string $file)/*: void*/
     {
         $file = backport_type_check('string', $file);
 
@@ -132,23 +132,20 @@ trait InteractsWithPublishedFiles
     /**
      * Removes generated files.
      */
-    protected function cleanUpFiles()////: void
+    protected function cleanUpFiles()/*: void*/
     {
         $this->app['files']->delete(
             Collection::make(isset($this->files) ? $this->files : [])
-                ->transform(function ($file) {
-                    return $this->app->basePath($file);
-                })
-                ->filter(function ($file) {
-                    return $this->app['files']->exists($file);
-                })->all()
+                ->transform(function ($file) { return $this->app->basePath($file); })
+                ->filter(function ($file) { return $this->app['files']->exists($file); })
+                ->all()
         );
     }
 
     /**
      * Removes generated migration files.
      */
-    protected function getMigrationFile(/*string */$filename)////: string
+    protected function getMigrationFile(string $filename)/*: string*/
     {
         $filename = backport_type_check('string', $filename);
 
@@ -160,13 +157,12 @@ trait InteractsWithPublishedFiles
     /**
      * Removes generated migration files.
      */
-    protected function cleanUpMigrationFiles()////: void
+    protected function cleanUpMigrationFiles()/*: void*/
     {
         $this->app['files']->delete(
             Collection::make($this->app['files']->files($this->app->databasePath('migrations')))
-                ->filter(function ($file) {
-                    return Str::endsWith($file, '.php');
-                })->all()
+                ->filter(function ($file) { return Str::endsWith($file, '.php'); })
+                ->all()
         );
     }
 }

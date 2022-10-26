@@ -14,7 +14,7 @@ trait HandlesDatabases
      *
      * @param  \Closure():void  $callback
      */
-    protected function setUpDatabaseRequirements(Closure $callback)////: void
+    protected function setUpDatabaseRequirements(Closure $callback)/*: void*/
     {
         tap($this->app['config'], function ($config) {
             $this->usesDatabaseConnectionsEnvironmentVariables($config, 'mysql', 'MYSQL');

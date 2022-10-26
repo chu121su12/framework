@@ -12,7 +12,7 @@ trait HandlesConnections
     /**
      * Allow to use database connections environment variables.
      */
-    final protected function usesDatabaseConnectionsEnvironmentVariables(Repository $config, /*string */$driver, /*string */$keyword)////: void
+    final protected function usesDatabaseConnectionsEnvironmentVariables(Repository $config, /*string */$driver, /*string */$keyword)/*: void*/
     {
         $driver = backport_type_check('string', $driver);
 

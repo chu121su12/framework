@@ -8,9 +8,8 @@ use Dotenv\Parser\Parser;
 use Dotenv\Store\StringStore;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Contracts\Debug\ExceptionHandler;
-use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Application as LaravelApplication;
 use Illuminate\Support\Env;
-use function Orchestra\Testbench\container;
 use Orchestra\Testbench\Foundation\Application;
 use Orchestra\Testbench\Foundation\TestbenchServiceProvider;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -30,7 +29,7 @@ class Commander
     /**
      * List of configurations.
      *
-     * @var array
+     * @var array{laravel: string|null, env: array, providers: array, dont-discover: array}
      */
     protected $config = [];
 
@@ -44,7 +43,7 @@ class Commander
     /**
      * Construct a new Commander.
      *
-     * @param  array  $config
+     * @param  array{laravel: string|null, env: array, providers: array, dont-discover: array}  $config
      * @param  string  $workingPath
      */
     public function __construct(array $config, /*string */$workingPath)
@@ -62,9 +61,7 @@ class Commander
      */
     public static function applicationBasePath()
     {
-        $container = container();
-
-        return $container::applicationBasePath();
+        return Application::applicationBasePath();
     }
 
     /**
@@ -104,7 +101,7 @@ class Commander
      */
     public function laravel()
     {
-        if (! $this->app) {
+        if (! $this->app instanceof LaravelApplication) {
             $this->createSymlinkToVendorPath();
 
             $this->app = Application::create($this->getBasePath(), $this->resolveApplicationCallback(), [
@@ -135,7 +132,7 @@ class Commander
     /**
      * Create a Dotenv instance.
      */
-    protected function createDotenv()//: Dotenv
+    protected function createDotenv()/*: Dotenv*/
     {
         $laravelBasePath = $this->getBasePath();
 
@@ -172,34 +169,21 @@ class Commander
 
     /**
      * Create symlink on vendor path.
+     *
+     * @deprecated Use `Orchestra\Testbench\Foundation\Application::createVendorSymlink()` insteads
      */
-    protected function createSymlinkToVendorPath()////: void
+    protected function createSymlinkToVendorPath()/*: void*/
     {
-        $workingVendorPath = $this->workingPath.'/vendor';
-
-        tap(Application::create($this->getBasePath(), $this->resolveApplicationCallback()), static function ($laravel) use ($workingVendorPath) {
-            $filesystem = new Filesystem();
-
-            $laravelVendorPath = $laravel->basePath('vendor');
-
-            if (
-                "{$laravelVendorPath}/autoload.php" !== "{$workingVendorPath}/autoload.php"
-            ) {
-                $filesystem->delete($laravelVendorPath);
-                if (!is_dir($laravelVendorPath) && !file_exists($laravelVendorPath)) {
-                    $filesystem->link($workingVendorPath, $laravelVendorPath);
-                }
-            }
-
-            $laravel->flush();
-        });
+        Application::createVendorSymlink(
+            $this->getBasePath(),
+            $this->workingPath.'/vendor'
+        );
     }
 
     /**
      * Resolve application Console Kernel implementation.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return void
      */
     protected function resolveApplicationConsoleKernel($app)
@@ -217,7 +201,6 @@ class Commander
      * Resolve application HTTP Kernel implementation.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return void
      */
     protected function resolveApplicationHttpKernel($app)
@@ -236,10 +219,9 @@ class Commander
      *
      * @param  \Symfony\Component\Console\Output\OutputInterface  $output
      * @param  \Throwable  $error
-     *
      * @return int
      */
-    protected function handleException(OutputInterface $output, /*Throwable */$error)
+    protected function handleException(OutputInterface $output, Throwable $error)
     {
         $laravel = $this->laravel();
 

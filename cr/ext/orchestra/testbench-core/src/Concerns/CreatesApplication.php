@@ -44,7 +44,6 @@ trait CreatesApplication
      * Get application timezone.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return string|null
      */
     protected function getApplicationTimezone($app)
@@ -56,7 +55,6 @@ trait CreatesApplication
      * Override application bindings.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return array<string|class-string, string|class-string>
      */
     protected function overrideApplicationBindings($app)
@@ -68,10 +66,9 @@ trait CreatesApplication
      * Resolve application bindings.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return void
      */
-    final protected function resolveApplicationBindings($app)////: void
+    final protected function resolveApplicationBindings($app)/*: void*/
     {
         foreach ($this->overrideApplicationBindings($app) as $original => $replacement) {
             $app->bind($original, $replacement);
@@ -82,7 +79,6 @@ trait CreatesApplication
      * Get application aliases.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return array<string, class-string>
      */
     protected function getApplicationAliases($app)
@@ -94,7 +90,6 @@ trait CreatesApplication
      * Override application aliases.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return array<string, class-string>
      */
     protected function overrideApplicationAliases($app)
@@ -106,10 +101,9 @@ trait CreatesApplication
      * Resolve application aliases.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return array<string, class-string>
      */
-    final protected function resolveApplicationAliases($app)////: array
+    final protected function resolveApplicationAliases($app)/*: array*/
     {
         $aliases = new Collection($this->getApplicationAliases($app));
         $overrides = $this->overrideApplicationAliases($app);
@@ -127,7 +121,6 @@ trait CreatesApplication
      * Get package aliases.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return array<string, class-string>
      */
     protected function getPackageAliases($app)
@@ -139,7 +132,6 @@ trait CreatesApplication
      * Get package bootstrapper.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return array<int, class-string>
      */
     protected function getPackageBootstrappers($app)
@@ -151,7 +143,6 @@ trait CreatesApplication
      * Get application providers.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return array<int, class-string>
      */
     protected function getApplicationProviders($app)
@@ -163,8 +154,7 @@ trait CreatesApplication
      * Override application aliases.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
-     * @return array<int, class-string>
+     * @return array<class-string, class-string>
      */
     protected function overrideApplicationProviders($app)
     {
@@ -175,18 +165,17 @@ trait CreatesApplication
      * Resolve application aliases.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return array<int, class-string>
      */
-    final protected function resolveApplicationProviders($app)////: array
+    final protected function resolveApplicationProviders($app)/*: array*/
     {
         $providers = new Collection($this->getApplicationProviders($app));
         $overrides = $this->overrideApplicationProviders($app);
 
         if (! empty($overrides)) {
-            $providers->transform(static function ($provider) use ($overrides) {
-                return isset($overrides[$provider]) ? $overrides[$provider] : $provider;
-            });
+            $providers->transform(
+                function ($provider) use ($overrides) { return isset($overrides[$provider]) ? $overrides[$provider] : $provider; }
+            );
         }
 
         return $providers->merge($this->getPackageProviders($app))->all();
@@ -196,7 +185,6 @@ trait CreatesApplication
      * Get package providers.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return array<int, class-string>
      */
     protected function getPackageProviders($app)
@@ -257,7 +245,6 @@ trait CreatesApplication
      * Resolve application core configuration implementation.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return void
      */
     protected function resolveApplicationConfiguration($app)
@@ -280,7 +267,6 @@ trait CreatesApplication
      * Resolve application core implementation.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return void
      */
     protected function resolveApplicationCore($app)
@@ -288,16 +274,13 @@ trait CreatesApplication
         Facade::clearResolvedInstances();
         Facade::setFacadeApplication($app);
 
-        $app->detectEnvironment(static function () {
-            return 'testing';
-        });
+        $app->detectEnvironment(function () { return 'testing'; });
     }
 
     /**
      * Resolve application Console Kernel implementation.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return void
      */
     protected function resolveApplicationConsoleKernel($app)
@@ -309,7 +292,6 @@ trait CreatesApplication
      * Resolve application HTTP Kernel implementation.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return void
      */
     protected function resolveApplicationHttpKernel($app)
@@ -321,7 +303,6 @@ trait CreatesApplication
      * Resolve application HTTP exception handler.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return void
      */
     protected function resolveApplicationExceptionHandler($app)
@@ -333,7 +314,6 @@ trait CreatesApplication
      * Resolve application bootstrapper.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return void
      */
     protected function resolveApplicationBootstrappers($app)
@@ -371,16 +351,13 @@ trait CreatesApplication
 
         $refreshNameLookups($app);
 
-        $app->resolving('url', static function ($url, $app) use ($refreshNameLookups) {
-            $refreshNameLookups($app);
-        });
+        $app->resolving('url', function ($url, $app) use ($refreshNameLookups) { return $refreshNameLookups($app); });
     }
 
     /**
      * Resolve application rate limiting configuration.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return void
      */
     protected function resolveApplicationRateLimiting($app)
@@ -394,7 +371,6 @@ trait CreatesApplication
      * Reset artisan commands for the application.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return void
      */
     final protected function resetApplicationArtisanCommands($app)
@@ -406,7 +382,6 @@ trait CreatesApplication
      * Define environment setup.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return void
      */
     protected function defineEnvironment($app)
@@ -418,7 +393,6 @@ trait CreatesApplication
      * Define environment setup.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     *
      * @return void
      */
     protected function getEnvironmentSetUp($app)

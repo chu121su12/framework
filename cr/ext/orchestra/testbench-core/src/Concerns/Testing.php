@@ -15,6 +15,7 @@ use Illuminate\Foundation\Testing\WithoutEvents;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Queue\Queue;
 use Illuminate\Support\Facades\ParallelTesting;
+use Illuminate\View\Component;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Throwable;
@@ -76,7 +77,7 @@ trait Testing
      *
      * @return void
      */
-    final protected function setUpTheTestEnvironment()////: void
+    final protected function setUpTheTestEnvironment()/*: void*/
     {
         if (! $this->app) {
             $this->refreshApplication();
@@ -106,7 +107,7 @@ trait Testing
      *
      * @return void
      */
-    final protected function tearDownTheTestEnvironment()////: void
+    final protected function tearDownTheTestEnvironment()/*: void*/
     {
         if ($this->app) {
             $this->callBeforeApplicationDestroyedCallbacks();
@@ -145,10 +146,19 @@ trait Testing
         $this->afterApplicationCreatedCallbacks = [];
         $this->beforeApplicationDestroyedCallbacks = [];
 
+        if (property_exists($this, 'originalExceptionHandler')) {
+            $this->originalExceptionHandler = null;
+        }
+
+        if (property_exists($this, 'originalDeprecationHandler')) {
+            $this->originalDeprecationHandler = null;
+        }
+
         Artisan::forgetBootstrappers();
-
+        Component::flushCache();
+        Component::forgetComponentsResolver();
+        Component::forgetFactory();
         Queue::createPayloadUsing(null);
-
         HandleExceptions::forgetApp();
 
         if ($this->callbackException) {
@@ -160,10 +170,9 @@ trait Testing
      * Boot the testing helper traits.
      *
      * @param  array<class-string, class-string>  $uses
-     *
      * @return array<class-string, class-string>
      */
-    final protected function setUpTheTestEnvironmentTraits(array $uses)////: array
+    final protected function setUpTheTestEnvironmentTraits(array $uses)/*: array*/
     {
         $this->setUpDatabaseRequirements(function () use ($uses) {
             if (isset($uses[RefreshDatabase::class])) {
@@ -197,7 +206,7 @@ trait Testing
     /**
      * Setup parallel testing callback.
      */
-    protected function setUpParallelTestingCallbacks()////: void
+    protected function setUpParallelTestingCallbacks()/*: void*/
     {
         if (class_exists(ParallelTesting::class) && $this instanceof TestCase) {
             ParallelTesting::callSetUpTestCaseCallbacks($this);
@@ -207,7 +216,7 @@ trait Testing
     /**
      * Teardown parallel testing callback.
      */
-    protected function tearDownParallelTestingCallbacks()////: void
+    protected function tearDownParallelTestingCallbacks()/*: void*/
     {
         if (class_exists(ParallelTesting::class) && $this instanceof TestCase) {
             ParallelTesting::callTearDownTestCaseCallbacks($this);
@@ -218,10 +227,9 @@ trait Testing
      * Register a callback to be run after the application is refreshed.
      *
      * @param  callable():void  $callback
-     *
      * @return void
      */
-    protected function afterApplicationRefreshed(callable $callback)////: void
+    protected function afterApplicationRefreshed(callable $callback)/*: void*/
     {
         $this->afterApplicationRefreshedCallbacks[] = $callback;
 
@@ -234,10 +242,9 @@ trait Testing
      * Register a callback to be run after the application is created.
      *
      * @param  callable():void  $callback
-     *
      * @return void
      */
-    protected function afterApplicationCreated(callable $callback)////: void
+    protected function afterApplicationCreated(callable $callback)/*: void*/
     {
         $this->afterApplicationCreatedCallbacks[] = $callback;
 
@@ -250,10 +257,9 @@ trait Testing
      * Register a callback to be run before the application is destroyed.
      *
      * @param  callable():void  $callback
-     *
      * @return void
      */
-    protected function beforeApplicationDestroyed(callable $callback)////: void
+    protected function beforeApplicationDestroyed(callable $callback)/*: void*/
     {
         array_unshift($this->beforeApplicationDestroyedCallbacks, $callback);
     }
@@ -284,7 +290,7 @@ trait Testing
     /**
      * Reload the application instance with cached routes.
      */
-    protected function reloadApplication()////: void
+    protected function reloadApplication()/*: void*/
     {
         $this->tearDownTheTestEnvironment();
         $this->setUpTheTestEnvironment();

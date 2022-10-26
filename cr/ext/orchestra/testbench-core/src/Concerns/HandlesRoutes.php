@@ -4,6 +4,7 @@ namespace Orchestra\Testbench\Concerns;
 
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Application as LaravelApplication;
 use Orchestra\Testbench\Foundation\Application;
 
 trait HandlesRoutes
@@ -11,7 +12,7 @@ trait HandlesRoutes
     /**
      * Setup routes requirements.
      */
-    protected function setUpApplicationRoutes()////: void
+    protected function setUpApplicationRoutes()/*: void*/
     {
         if ($this->app->routesAreCached()) {
             return;
@@ -20,9 +21,7 @@ trait HandlesRoutes
         $this->defineRoutes($this->app['router']);
 
         $this->app['router']->middleware('web')
-            ->group(function ($router) {
-                $this->defineWebRoutes($router);
-            });
+            ->group(function ($router) { return $this->defineWebRoutes($router); });
 
         if (method_exists($this, 'parseTestMethodAnnotations')) {
             $this->parseTestMethodAnnotations($this->app, 'define-route');
@@ -35,7 +34,6 @@ trait HandlesRoutes
      * Define routes setup.
      *
      * @param  \Illuminate\Routing\Router  $router
-     *
      * @return void
      */
     protected function defineRoutes($router)
@@ -47,7 +45,6 @@ trait HandlesRoutes
      * Define web routes setup.
      *
      * @param  \Illuminate\Routing\Router  $router
-     *
      * @return void
      */
     protected function defineWebRoutes($router)
@@ -59,7 +56,6 @@ trait HandlesRoutes
      * Define cache routes setup.
      *
      * @param  string  $route
-     *
      * @return void
      */
     protected function defineCacheRoutes(/*string */$route)
@@ -82,7 +78,7 @@ trait HandlesRoutes
             $files->exists(base_path('bootstrap/cache/routes-v7.php'))
         );
 
-        if (isset($this->app)) {
+        if ($this->app instanceof LaravelApplication) {
             $this->reloadApplication();
         }
 
@@ -92,7 +88,7 @@ trait HandlesRoutes
     /**
      * Require application cached routes.
      */
-    protected function requireApplicationCachedRoutes(Filesystem $files)////: void
+    protected function requireApplicationCachedRoutes(Filesystem $files)/*: void*/
     {
         $this->afterApplicationCreated(function () {
             require $this->app->getCachedRoutesPath();

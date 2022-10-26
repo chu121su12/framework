@@ -15,7 +15,7 @@ trait HandlesAnnotations
      * @param  \Illuminate\Foundation\Application  $app
      * @param  string  $name
      */
-    protected function parseTestMethodAnnotations($app, /*string */$name)////: void
+    protected function parseTestMethodAnnotations($app, /*string */$name)/*: void*/
     {
         $name = backport_type_check('string', $name);
 

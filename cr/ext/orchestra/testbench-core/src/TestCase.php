@@ -4,11 +4,14 @@ namespace Orchestra\Testbench;
 
 use Illuminate\Foundation\Testing;
 use PHPUnit\Framework\TestCase as PHPUnit;
+use PHPUnit\Util\Annotation\Registry;
 
 abstract class TestCase extends PHPUnit implements Contracts\TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert,
-        \PHPUnit\Framework\PhpUnit8Expect,
+        \PHPUnit\Framework\PhpUnit8Expect;
+
+    use Concerns\HandlesTestFailures,
         Concerns\Testing,
         Testing\Concerns\InteractsWithAuthentication,
         Testing\Concerns\InteractsWithConsole,
@@ -45,8 +48,10 @@ abstract class TestCase extends PHPUnit implements Contracts\TestCase
      *
      * @return void
      */
-    protected function setUp()////: void
+    protected function setUp()/*: void*/
     {
+        static::$latestResponse = null;
+
         $this->setUpTheTestEnvironment();
     }
 
@@ -55,7 +60,7 @@ abstract class TestCase extends PHPUnit implements Contracts\TestCase
      *
      * @return void
      */
-    protected function tearDown()////: void
+    protected function tearDown()/*: void*/
     {
         $this->tearDownTheTestEnvironment();
     }
@@ -80,5 +85,24 @@ abstract class TestCase extends PHPUnit implements Contracts\TestCase
     protected function refreshApplication()
     {
         $this->app = $this->createApplication();
+    }
+
+    /**
+     * Clean up the testing environment before the next test case.
+     *
+     * @return void
+     */
+    public static function tearDownAfterClass()/*: void*/
+    {
+        static::$latestResponse = null;
+
+        if (! class_exists(Registry::class)) {
+            return;
+        }
+
+        backport_function_call_able(function () {
+            $this->classDocBlocks = [];
+            $this->methodDocBlocks = [];
+        })->call(Registry::getInstance());
     }
 }
