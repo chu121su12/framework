@@ -10,9 +10,14 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag5;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\Process\Process;
+use Symfony\Component\VarDumper\Caster\Caster;
 
 class SymfonyHelper
 {
+    const CONSOLE_SUCCESS = 0;
+
+    const CONSOLE_FAILURE = 1;
+
     const CONSOLE_ANSI_REPLACEMENTS = [
         '/ › /' => ' > ',
         '/…/' => '~',
@@ -328,5 +333,14 @@ class SymfonyHelper
         }
 
         return $messages;
+    }
+
+    public static function varDumperUnsetClosureFileInfoReflectionCaster()
+    {
+        return ['Closure' => function (\Closure $c, array $a) {
+            unset($a[Caster::PREFIX_VIRTUAL.'file'], $a[Caster::PREFIX_VIRTUAL.'line']);
+
+            return $a;
+        }];
     }
 }

@@ -1,15 +1,16 @@
 <?php
 
 use desktopd\SHA3\Sponge as SHA3;
+use Illuminate\Support\Arr;
 
 if (! \function_exists('backport_instanceof_throwable')) {
     function backport_instanceof_throwable($any)
     {
-        if (class_exists('Throwable')) {
-            return $any instanceof \Throwable;
+        if (\class_exists('Throwable')) {
+            return $any instanceof Throwable;
         }
 
-        return $any instanceof \Error || $any instanceof \Exception;
+        return $any instanceof Error || $any instanceof Exception;
     }
 }
 
@@ -20,8 +21,8 @@ if (! \function_exists('backport_type_throwable')) {
             return;
         }
 
-        if ((class_exists('Throwable') && !($any instanceof \Throwable))
-            || (!($any instanceof \Error) && !($any instanceof \Exception))) {
+        if ((\class_exists('Throwable') && !($any instanceof Throwable))
+            || (!($any instanceof Error) && !($any instanceof Exception))) {
             throw new TypeError;
         }
     }
@@ -43,7 +44,7 @@ if (! \function_exists('backport_match')) {
                 if ($arm === __BACKPORT_MATCH_DEFAULT_CASE__) {
                     if ($hasDefault) {
                         \trigger_error('Fatal error', \E_USER_ERROR);
-                        throw new \Exception('Fatal error');
+                        throw new Exception('Fatal error');
                     }
 
                     $hasDefault = true;
@@ -56,8 +57,8 @@ if (! \function_exists('backport_match')) {
         }
 
         throw \class_exists('UnhandledMatchError')
-            ? new \UnhandledMatchError
-            : new \Exception;
+            ? new UnhandledMatchError
+            : new Exception;
     }
 }
 
@@ -78,8 +79,8 @@ if (! \function_exists('backport_json_decode_throw')) {
     {
         $result = backport_json_decode($json, $assoc, $depth, $options);
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \JsonException(json_last_error_msg());
+        if (\json_last_error() !== \JSON_ERROR_NONE) {
+            throw new JsonException(\json_last_error_msg());
         }
 
         return $result;
@@ -118,7 +119,7 @@ if (! \function_exists('backport_substr_count')) {
 if (! \function_exists('backport_bcmod')) {
     function backport_bcmod($dividend, $divisor, $scale)
     {
-        if (\version_compare(\PHP_VERSION, '7.2', '<') && (new \ReflectionFunction('bcmod'))->getNumberOfParameters() === 2) {
+        if (\version_compare(\PHP_VERSION, '7.2', '<') && (new ReflectionFunction('bcmod'))->getNumberOfParameters() === 2) {
             $currentScale = \strlen(\bcsqrt('2')) - 2;
             \bcscale($scale);
             $modulo = \bcsub($dividend, \bcmul(\bcdiv($dividend, $divisor, 0), $divisor));
@@ -158,13 +159,13 @@ if (! \function_exists('backport_string_offset')) {
 }
 
 if (! \function_exists('backport_reflection_type_cast_string')) {
-    function backport_reflection_type_cast_string(\ReflectionType $type)
+    function backport_reflection_type_cast_string(ReflectionType $type)
     {
         if (\version_compare(\PHP_VERSION, '7.1', '<')) {
             return (string) $type;
         }
 
-        if (\version_compare(\PHP_VERSION, '8.0', '>=') && $type instanceof \ReflectionUnionType) {
+        if (\version_compare(\PHP_VERSION, '8.0', '>=') && $type instanceof ReflectionUnionType) {
             return 'mixed';
         }
 
@@ -173,12 +174,12 @@ if (! \function_exists('backport_reflection_type_cast_string')) {
 }
 
 if (! \function_exists('backport_only_reflection_parameter_get_type')) {
-    function backport_only_reflection_parameter_get_type(\ReflectionParameter $parameter)
+    function backport_only_reflection_parameter_get_type(ReflectionParameter $parameter)
     {
         $className = $parameter->getClass();
 
         if ($className && ($className = $className->getName())) {
-            return in_array($className, ['array', 'callable', 'self'], true) ? null : $className;
+            return \in_array($className, ['array', 'callable', 'self'], true) ? null : $className;
         }
 
         return null;
@@ -186,20 +187,20 @@ if (! \function_exists('backport_only_reflection_parameter_get_type')) {
 }
 
 if (! \function_exists('backport_reflection_parameter_get_class')) {
-    function backport_reflection_parameter_get_class(\ReflectionParameter $parameter)
+    function backport_reflection_parameter_get_class(ReflectionParameter $parameter)
     {
         if (\version_compare(\PHP_VERSION, '8.0', '<')) {
             return $parameter->getClass();
         }
 
         return $parameter->getType() && ! $parameter->getType()->isBuiltin()
-            ? new \ReflectionClass($parameter->getType()->getName())
+            ? new ReflectionClass($parameter->getType()->getName())
             : null;
     }
 }
 
 if (! \function_exists('backport_reflection_parameter_declares_array')) {
-    function backport_reflection_parameter_declares_array(\ReflectionParameter $parameter)
+    function backport_reflection_parameter_declares_array(ReflectionParameter $parameter)
     {
         if (\version_compare(\PHP_VERSION, '8.0', '<')) {
             return $parameter->isArray();
@@ -213,7 +214,7 @@ if (! \function_exists('backport_reflection_parameter_declares_array')) {
                 function ($t) {
                     return $t->getName();
                 },
-                $parameter instanceof \ReflectionUnionType
+                $parameter instanceof ReflectionUnionType
                     ? $parameter->getTypes()
                     : [$parameter]
                 ),
@@ -223,7 +224,7 @@ if (! \function_exists('backport_reflection_parameter_declares_array')) {
 }
 
 if (! \function_exists('backport_reflection_parameter_declares_callable')) {
-    function backport_reflection_parameter_declares_callable(\ReflectionParameter $parameter)
+    function backport_reflection_parameter_declares_callable(ReflectionParameter $parameter)
     {
         if (\version_compare(\PHP_VERSION, '8.0', '<')) {
             return $parameter->isCallable();
@@ -247,13 +248,13 @@ if (! \function_exists('backport_reflection_parameter_declares_callable')) {
 }
 
 if (! \function_exists('backport_reflection_parameter_first_classable')) {
-    function backport_reflection_parameter_first_classable(\ReflectionParameter $parameter)
+    function backport_reflection_parameter_first_classable(ReflectionParameter $parameter)
     {
         if (\version_compare(\PHP_VERSION, '8.0', '<')) {
             return $parameter->getClass();
         }
 
-        foreach ($parameter instanceof \ReflectionUnionType
+        foreach ($parameter instanceof ReflectionUnionType
             ? $parameter->getTypes()
             : [$parameter] as $type) {
             // return $type;
@@ -280,19 +281,19 @@ if (! \function_exists('backport_closure_from_callable')) {
     function backport_closure_from_callable($callable)
     {
         if (\version_compare(\PHP_VERSION, '7.1', '>=')) {
-            return \Closure::fromCallable($callable);
+            return Closure::fromCallable($callable);
         }
 
-        if (is_array($callable)) {
-            return (new \ReflectionMethod(...$callable))->getClosure($callable[0]);
+        if (\is_array($callable)) {
+            return (new ReflectionMethod(...$callable))->getClosure($callable[0]);
         }
 
-        if (is_object($callable) && method_exists($callable, '__invoke')) {
-            return (new \ReflectionMethod($callable, '__invoke'))->getClosure($callable);
+        if (\is_object($callable) && \method_exists($callable, '__invoke')) {
+            return (new ReflectionMethod($callable, '__invoke'))->getClosure($callable);
         }
 
         return function () use ($callable) {
-            return call_user_func_array($callable, func_get_args());
+            return \call_user_func_array($callable, \func_get_args());
         };
     }
 }
@@ -304,18 +305,18 @@ if (! \function_exists('backport_call_callable')) {
             return $callback($value);
         }
 
-        if (is_object($callback)) {
-            throw new Error(sprintf('Object of type %s is not callable', get_class($callback)));
+        if (\is_object($callback)) {
+            throw new Error(\sprintf('Object of type %s is not callable', \get_class($callback)));
         }
 
-        throw new Error(sprintf('Call to undefined function %s()', $callback));
+        throw new Error(\sprintf('Call to undefined function %s()', $callback));
     }
 }
 
 if (! \function_exists('backport_named_arguments')) {
     function backport_named_arguments($placeholders, array $arguments)
     {
-        if (\Illuminate\Support\Arr::isList($arguments)) {
+        if (Arr::isList($arguments)) {
             return $arguments;
         }
 
@@ -358,12 +359,12 @@ if (! \function_exists('backport_function_call_able')) {
 if (! \function_exists('backport_convert_error_to_error_exception')) {
     function backport_convert_error_to_error_exception()
     {
-        set_error_handler(function($errno, $errstr, $errfile, $errline ) {
-            throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
+        \set_error_handler(function($errno, $errstr, $errfile, $errline ) {
+            throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
         });
 
         return function () {
-            restore_error_handler();
+            \restore_error_handler();
         };
     }
 }
@@ -371,15 +372,15 @@ if (! \function_exists('backport_convert_error_to_error_exception')) {
 if (! \function_exists('backport_hash_file')) {
     function backport_hash_file($algorithm, $path)
     {
-        switch (strtolower($algorithm)) {
+        switch (\strtolower($algorithm)) {
             case 'sha3-256':
                 return with(SHA3::init(SHA3::SHA3_256), function ($sponge) use ($path) {
-                    $sponge->absorb(file_get_contents($path));
-                    return bin2hex($sponge->squeeze());
+                    $sponge->absorb(\file_get_contents($path));
+                    return \bin2hex($sponge->squeeze());
                 });
 
             default:
-                return hash_file($algorithm, $path);
+                return \hash_file($algorithm, $path);
         }
     }
 }
@@ -454,5 +455,31 @@ if (! \function_exists('backport_array_type_check')) {
         }
 
         return $values;
+    }
+}
+
+if (! \function_exists('backport_call_named_args')) {
+    function backport_call_named_args(array $target, array $arguments, $callback)
+    {
+        if (\version_compare(\PHP_VERSION, '8.0', '>=') || \array_is_list($arguments)) {
+            return $callback($arguments);
+        }
+
+        list($classOrObject, $methodName) = $target;
+
+        $unmatchedArguments = [];
+        $matchedArguments = [];
+
+        foreach ((new ReflectionClass($classOrObject))->getMethod($methodName)->getParameters() as $param) {
+            $name = $param->getName();
+            if (\array_key_exists($name, $arguments)) {
+                $matchedArguments[] = $arguments[$name];
+            }
+            else {
+                $unmatchedArguments[] = $arguments[$name];
+            }
+        }
+
+        return $callback(\array_merge($matchedArguments, $unmatchedArguments));
     }
 }
