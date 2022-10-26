@@ -682,7 +682,8 @@ class FoundationViteTest extends TestCase
         $buildDir = Str::random();
         $this->makeViteManifest($manifest, $buildDir);
 
-        $result = app(Vite::class)(['resources/js/Pages/Auth/Login.vue'], $buildDir);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/js/Pages/Auth/Login.vue'], $buildDir);
 
         $this->assertSame(
             '<link rel="preload" as="style" href="https://example.com/'.$buildDir.'/assets/app.9842b564.css" />'
@@ -781,8 +782,9 @@ class FoundationViteTest extends TestCase
                 ],
             ], $manifest);
 
-            (match ($src) {
-                'resources/js/app.js' => function () use ($url, $chunk, $buildDir) {
+            $switchResult = null;
+            switch ($src) {
+                case 'resources/js/app.js': $switchResult = function () use ($url, $chunk, $buildDir) {
                     $this->assertSame("https://example.com/{$buildDir}/assets/app.versioned.js", $url);
                     $this->assertSame([
                         'src' => 'resources/js/app.js',
@@ -794,21 +796,24 @@ class FoundationViteTest extends TestCase
                             'assets/app.versioned.css',
                         ],
                     ], $chunk);
-                },
-                'import.js' => function () use ($url, $chunk, $buildDir) {
+                }; break;
+
+                case 'import.js': $switchResult = function () use ($url, $chunk, $buildDir) {
                     $this->assertSame("https://example.com/{$buildDir}/assets/import.versioned.js", $url);
                     $this->assertSame([
                         'file' => 'assets/import.versioned.js',
                     ], $chunk);
-                },
-                'resources/css/app.css' => function () use ($url, $chunk, $buildDir) {
+                }; break;
+
+                case 'resources/css/app.css': $switchResult = function () use ($url, $chunk, $buildDir) {
                     $this->assertSame("https://example.com/{$buildDir}/assets/app.versioned.css", $url);
                     $this->assertSame([
                         'src' => 'resources/css/app.css',
                         'file' => 'assets/app.versioned.css',
                     ], $chunk);
-                },
-            })();
+                }; break;
+            }
+            $switchResult();
 
             return [
                 'crossorigin',
@@ -821,7 +826,8 @@ class FoundationViteTest extends TestCase
             ];
         });
 
-        $result = app(Vite::class)(['resources/js/app.js'], $buildDir);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/js/app.js'], $buildDir);
 
         $this->assertSame(
             '<link rel="preload" as="style" href="https://example.com/'.$buildDir.'/assets/app.versioned.css" general="attribute" crossorigin data-persistent-across-pages="YES" keep-me empty-string="" zero="0" />'

@@ -31,7 +31,12 @@ class {{ class }} extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: '{{ subject }}',
+            null,
+            [],
+            [],
+            [],
+            [],
+            /*subject: */'{{ subject }}'
         );
     }
 
@@ -43,7 +48,7 @@ class {{ class }} extends Mailable
     public function content()
     {
         return new Content(
-            view: 'view.name',
+            /*view: */'view.name'
         );
     }
 

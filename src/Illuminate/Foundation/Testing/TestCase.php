@@ -238,11 +238,15 @@ abstract class TestCase extends BaseTestCase
      *
      * @return void
      */
-    public static function tearDownAfterClass(): void
+    public static function tearDownAfterClass()/*: void*/
     {
         static::$latestResponse = null;
 
-        (function () {
+        if (! class_exists(Registry::class)) {
+            return;
+        }
+
+        backport_function_call_able(function () {
             $this->classDocBlocks = [];
             $this->methodDocBlocks = [];
         })->call(Registry::getInstance());

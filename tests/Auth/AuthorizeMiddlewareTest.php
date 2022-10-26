@@ -41,7 +41,7 @@ class AuthorizeMiddlewareTest extends TestCase
 
         $this->router = new Router(new Dispatcher, $this->container);
 
-        $this->container->bind(CallableDispatcherContract::class, fn ($app) => new CallableDispatcher($app));
+        $this->container->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
 
         $this->container->singleton(Registrar::class, function () {
             return $this->router;

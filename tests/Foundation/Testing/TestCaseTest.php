@@ -82,7 +82,7 @@ class TestCaseTest extends BaseTestCase
         $testCase->onNotSuccessfulTest(new ExpectationFailedException('Assertion message.'));
     }
 
-    public function tearDown(): void
+    public function tearDown()/*: void*/
     {
         ExampleTestCase::$latestResponse = null;
     }

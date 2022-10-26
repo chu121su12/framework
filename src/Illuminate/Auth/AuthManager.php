@@ -125,7 +125,7 @@ class AuthManager implements FactoryContract
         $guard = new SessionGuard(
             $name,
             $provider,
-            $this->app['session.store'],
+            $this->app['session.store']
         );
 
         // When using the remember me functionality of the authentication services we

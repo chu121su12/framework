@@ -18,8 +18,10 @@ class Timebox
      * @param  int  $microseconds
      * @return mixed
      */
-    public function call(callable $callback, int $microseconds)
+    public function call(callable $callback, /*int */$microseconds)
     {
+        $microseconds = backport_type_check('int', $microseconds);
+
         $start = microtime(true);
 
         $result = $callback($this);
@@ -63,8 +65,10 @@ class Timebox
      * @param  int  $microseconds
      * @return void
      */
-    protected function usleep(int $microseconds)
+    protected function usleep(/*int */$microseconds)
     {
+        $microseconds = backport_type_check('int', $microseconds);
+
         usleep($microseconds);
     }
 }

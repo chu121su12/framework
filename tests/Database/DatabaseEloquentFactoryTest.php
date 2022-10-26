@@ -678,10 +678,10 @@ class DatabaseEloquentFactoryTest extends TestCase
             return $model.'Factory';
         });
 
-        $user = FactoryTestUserFactory::new()->create();
-        $post = FactoryTestPostFactory::new()
+        $user = FactoryTestUserFactory::new_()->create();
+        $post = FactoryTestPostFactory::new_()
             ->recycle($user)
-            ->for(FactoryTestUserFactory::new())
+            ->for_(FactoryTestUserFactory::new_())
             ->create();
 
         $this->assertSame(1, FactoryTestUser::count());
@@ -693,11 +693,11 @@ class DatabaseEloquentFactoryTest extends TestCase
             return $model.'Factory';
         });
 
-        $post = FactoryTestPostFactory::new()->create();
-        $user = FactoryTestUserFactory::new()
+        $post = FactoryTestPostFactory::new_()->create();
+        $user = FactoryTestUserFactory::new_()
             ->recycle($post)
             // The recycled post already belongs to a user, so it shouldn't be recycled here.
-            ->has(FactoryTestPostFactory::new(), 'posts')
+            ->has(FactoryTestPostFactory::new_(), 'posts')
             ->create();
 
         $this->assertSame(2, FactoryTestPost::count());
@@ -709,12 +709,12 @@ class DatabaseEloquentFactoryTest extends TestCase
             return $model.'Factory';
         });
 
-        $users = FactoryTestUserFactory::new()->count(3)->create();
+        $users = FactoryTestUserFactory::new_()->count(3)->create();
 
-        $posts = FactoryTestPostFactory::new()
+        $posts = FactoryTestPostFactory::new_()
             ->recycle($users)
-            ->for(FactoryTestUserFactory::new())
-            ->has(FactoryTestCommentFactory::new()->count(5), 'comments')
+            ->for_(FactoryTestUserFactory::new_())
+            ->has(FactoryTestCommentFactory::new_()->count(5), 'comments')
             ->count(2)
             ->create();
 
@@ -727,23 +727,23 @@ class DatabaseEloquentFactoryTest extends TestCase
             return $model.'Factory';
         });
 
-        $users = FactoryTestUserFactory::new()
+        $users = FactoryTestUserFactory::new_()
             ->count(2)
             ->create();
-        $posts = FactoryTestPostFactory::new()
+        $posts = FactoryTestPostFactory::new_()
             ->recycle($users)
             ->count(2)
             ->create();
-        $additionalUser = FactoryTestUserFactory::new()
+        $additionalUser = FactoryTestUserFactory::new_()
             ->create();
-        $additionalPost = FactoryTestPostFactory::new()
+        $additionalPost = FactoryTestPostFactory::new_()
             ->recycle($additionalUser)
             ->create();
 
         $this->assertSame(3, FactoryTestUser::count());
         $this->assertSame(3, FactoryTestPost::count());
 
-        $comments = FactoryTestCommentFactory::new()
+        $comments = FactoryTestCommentFactory::new_()
             ->recycle($users)
             ->recycle($posts)
             ->recycle([$additionalUser, $additionalPost])
@@ -760,7 +760,7 @@ class DatabaseEloquentFactoryTest extends TestCase
             return $model.'Factory';
         });
 
-        $posts = FactoryTestPostFactory::new()
+        $posts = FactoryTestPostFactory::new_()
             ->recycle([])
             ->count(2)
             ->create();

@@ -219,7 +219,7 @@ class Vite implements Htmlable
     public function usePreloadTagAttributes($attributes)
     {
         if (! is_callable($attributes)) {
-            $attributes = fn () => $attributes;
+            $attributes = function () use ($attributes) { return $attributes; };
         }
 
         $this->preloadTagAttributesResolvers[] = $attributes;
@@ -322,8 +322,8 @@ class Vite implements Htmlable
 
         list($stylesheets, $scripts) = $tags->partition(function ($tag) { return str_starts_with($tag, '<link'); });
 
-        $preloads = $preloads->sortByDesc(fn ($args) => $this->isCssPath($args[1]))
-            ->map(fn ($args) => $this->makePreloadTagForChunk(...$args));
+        $preloads = $preloads->sortByDesc(function ($args) { return $this->isCssPath($args[1]); })
+            ->map(function ($args) { return $this->makePreloadTagForChunk(...$args); });
 
         return new HtmlString($preloads->join('').$stylesheets->join('').$scripts->join(''));
     }
@@ -446,7 +446,7 @@ class Vite implements Htmlable
         ];
 
         $attributes = $this->integrityKey !== false
-            ? array_merge($attributes, ['integrity' => $chunk[$this->integrityKey] ?? false])
+            ? array_merge($attributes, ['integrity' => isset($chunk[$this->integrityKey]) ? $chunk[$this->integrityKey] : false])
             : $attributes;
 
         foreach ($this->preloadTagAttributesResolvers as $resolver) {

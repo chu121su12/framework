@@ -89,8 +89,14 @@ class Envelope
      *
      * @named-arguments-supported
      */
-    public function __construct(Address|string $from = null, $to = [], $cc = [], $bcc = [], $replyTo = [], string $subject = null, array $tags = [], array $metadata = [], Closure|array $using = [])
+    public function __construct(/*Address|string */$from = null, $to = [], $cc = [], $bcc = [], $replyTo = [], /*string */$subject = null, array $tags = [], array $metadata = [], /*Closure|array */$using = [])
     {
+        $from = backport_type_check([Address::class, 'string'], $from);
+
+        $subject = backport_type_check('string', $subject);
+
+        $using = backport_type_check('\Closure|array', $using);
+
         $this->from = is_string($from) ? new Address($from) : $from;
         $this->to = $this->normalizeAddresses($to);
         $this->cc = $this->normalizeAddresses($cc);
@@ -122,8 +128,10 @@ class Envelope
      * @param  string|null  $name
      * @return $this
      */
-    public function from(Address|string $address, $name = null)
+    public function from(/*Address|string */$address, $name = null)
     {
+        $address = backport_type_check([Address::class, 'string'], $address);
+
         $this->from = is_string($address) ? new Address($address, $name) : $address;
 
         return $this;
@@ -136,10 +144,12 @@ class Envelope
      * @param  string|null  $name
      * @return $this
      */
-    public function to(Address|array|string $address, $name = null)
+    public function to(/*Address|array|string */$address, $name = null)
     {
+        $address = backport_type_check([Address::class, 'array', 'string'], $address);
+
         $this->to = array_merge($this->to, $this->normalizeAddresses(
-            is_string($name) ? [new Address($address, $name)] : Arr::wrap($address),
+            is_string($name) ? [new Address($address, $name)] : Arr::wrap($address)
         ));
 
         return $this;
@@ -152,10 +162,12 @@ class Envelope
      * @param  string|null  $name
      * @return $this
      */
-    public function cc(Address|array|string $address, $name = null)
+    public function cc(/*Address|array|string */$address, $name = null)
     {
+        $address = backport_type_check([Address::class, 'array', 'string'], $address);
+
         $this->cc = array_merge($this->cc, $this->normalizeAddresses(
-            is_string($name) ? [new Address($address, $name)] : Arr::wrap($address),
+            is_string($name) ? [new Address($address, $name)] : Arr::wrap($address)
         ));
 
         return $this;
@@ -168,10 +180,12 @@ class Envelope
      * @param  string|null  $name
      * @return $this
      */
-    public function bcc(Address|array|string $address, $name = null)
+    public function bcc(/*Address|array|string */$address, $name = null)
     {
+        $address = backport_type_check([Address::class, 'array', 'string'], $address);
+
         $this->bcc = array_merge($this->bcc, $this->normalizeAddresses(
-            is_string($name) ? [new Address($address, $name)] : Arr::wrap($address),
+            is_string($name) ? [new Address($address, $name)] : Arr::wrap($address)
         ));
 
         return $this;
@@ -184,10 +198,12 @@ class Envelope
      * @param  string|null  $name
      * @return $this
      */
-    public function replyTo(Address|array|string $address, $name = null)
+    public function replyTo(/*Address|array|string */$address, $name = null)
     {
+        $address = backport_type_check([Address::class, 'array', 'string'], $address);
+
         $this->replyTo = array_merge($this->replyTo, $this->normalizeAddresses(
-            is_string($name) ? [new Address($address, $name)] : Arr::wrap($address),
+            is_string($name) ? [new Address($address, $name)] : Arr::wrap($address)
         ));
 
         return $this;
@@ -199,8 +215,10 @@ class Envelope
      * @param  string  $subject
      * @return $this
      */
-    public function subject(string $subject)
+    public function subject(/*string */$subject)
     {
+        $subject = backport_type_check('string', $subject);
+
         $this->subject = $subject;
 
         return $this;
@@ -225,8 +243,10 @@ class Envelope
      * @param  string  $tag
      * @return $this
      */
-    public function tag(string $tag)
+    public function tag(/*string */$tag)
     {
+        $tag = backport_type_check('string', $tag);
+
         $this->tags[] = $tag;
 
         return $this;
@@ -239,8 +259,12 @@ class Envelope
      * @param  string|int  $value
      * @return $this
      */
-    public function metadata(string $key, string|int $value)
+    public function metadata(/*string */$key, /*string|int */$value)
     {
+        $key = backport_type_check('string', $key);
+
+        $value = backport_type_check('string|int', $value);
+
         $this->metadata[$key] = $value;
 
         return $this;
@@ -266,8 +290,12 @@ class Envelope
      * @param  string|null  $name
      * @return bool
      */
-    public function isFrom(string $address, string $name = null)
+    public function isFrom(/*string */$address, /*string */$name = null)
     {
+        $address = backport_type_check('string', $address);
+
+        $name = backport_type_check('string', $name);
+
         if (is_null($name)) {
             return $this->from->address === $address;
         }
@@ -283,8 +311,12 @@ class Envelope
      * @param  string|null  $name
      * @return bool
      */
-    public function hasTo(string $address, string $name = null)
+    public function hasTo(/*string */$address, /*string */$name = null)
     {
+        $address = backport_type_check('string', $address);
+
+        $name = backport_type_check('string', $name);
+
         return $this->hasRecipient($this->to, $address, $name);
     }
 
@@ -295,8 +327,12 @@ class Envelope
      * @param  string|null  $name
      * @return bool
      */
-    public function hasCc(string $address, string $name = null)
+    public function hasCc(/*string */$address, /*string */$name = null)
     {
+        $address = backport_type_check('string', $address);
+
+        $name = backport_type_check('string', $name);
+
         return $this->hasRecipient($this->cc, $address, $name);
     }
 
@@ -307,8 +343,12 @@ class Envelope
      * @param  string|null  $name
      * @return bool
      */
-    public function hasBcc(string $address, string $name = null)
+    public function hasBcc(/*string */$address, /*string */$name = null)
     {
+        $address = backport_type_check('string', $address);
+
+        $name = backport_type_check('string', $name);
+
         return $this->hasRecipient($this->bcc, $address, $name);
     }
 
@@ -319,8 +359,12 @@ class Envelope
      * @param  string|null  $name
      * @return bool
      */
-    public function hasReplyTo(string $address, string $name = null)
+    public function hasReplyTo(/*string */$address, /*string */$name = null)
     {
+        $address = backport_type_check('string', $address);
+
+        $name = backport_type_check('string', $name);
+
         return $this->hasRecipient($this->replyTo, $address, $name);
     }
 
@@ -332,8 +376,12 @@ class Envelope
      * @param  string|null  $name
      * @return bool
      */
-    protected function hasRecipient(array $recipients, string $address, ?string $name = null)
+    protected function hasRecipient(array $recipients, /*string */$address, /*?string */$name = null)
     {
+        $address = backport_type_check('string', $address);
+
+        $name = backport_type_check('?string', $name);
+
         return collect($recipients)->contains(function ($recipient) use ($address, $name) {
             if (is_null($name)) {
                 return $recipient->address === $address;
@@ -350,8 +398,10 @@ class Envelope
      * @param  string  $subject
      * @return bool
      */
-    public function hasSubject(string $subject)
+    public function hasSubject(/*string */$subject)
     {
+        $subject = backport_type_check('string', $subject);
+
         return $this->subject === $subject;
     }
 
@@ -362,8 +412,12 @@ class Envelope
      * @param  string  $value
      * @return bool
      */
-    public function hasMetadata(string $key, string $value)
+    public function hasMetadata(/*string */$key, /*string */$value)
     {
+        $key = backport_type_check('string', $key);
+
+        $value = backport_type_check('string', $value);
+
         return isset($this->metadata[$key]) && $this->metadata[$key] === $value;
     }
 }

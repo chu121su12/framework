@@ -2,6 +2,7 @@
 
 namespace Illuminate\Testing;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\OutputStyle;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Contracts\Container\Container;
@@ -246,7 +247,8 @@ class PendingCommand
      */
     public function assertSuccessful()
     {
-        return $this->assertExitCode(/*Command::SUCCESS*/ 0);
+        // return $this->assertExitCode(Command::SUCCESS);
+        return $this->assertExitCode(SymfonyHelper::CONSOLE_SUCCESS);
     }
 
     /**
@@ -266,7 +268,8 @@ class PendingCommand
      */
     public function assertFailed()
     {
-        return $this->assertNotExitCode(/*Command::SUCCESS*/ 0);
+        // return $this->assertNotExitCode(Command::SUCCESS);
+        return $this->assertNotExitCode(SymfonyHelper::CONSOLE_SUCCESS);
     }
 
     /**

@@ -821,7 +821,7 @@ class UrlGenerator implements UrlGeneratorContract
      */
     public function withKeyResolver(callable $keyResolver)
     {
-        return (clone $this)->setKeyResolver($keyResolver);
+        return with(clone $this)->setKeyResolver($keyResolver);
     }
 
     /**

@@ -780,13 +780,18 @@ class Mailable implements MailableContract, Renderable
      */
     private function hasEnvelopeRecipient($address, $name, $property)
     {
-        return method_exists($this, 'envelope') && match ($property) {
-            'from' => $this->envelope()->isFrom($address, $name),
-            'to' => $this->envelope()->hasTo($address, $name),
-            'cc' => $this->envelope()->hasCc($address, $name),
-            'bcc' => $this->envelope()->hasBcc($address, $name),
-            'replyTo' => $this->envelope()->hasReplyTo($address, $name),
-        };
+        if (! method_exists($this, 'envelope')) {
+            return false;
+        }
+
+        switch ($property) {
+            case 'from': return (bool) $this->envelope()->isFrom($address, $name);
+            case 'to': return (bool) $this->envelope()->hasTo($address, $name);
+            case 'cc': return (bool) $this->envelope()->hasCc($address, $name);
+            case 'bcc': return (bool) $this->envelope()->hasBcc($address, $name);
+            case 'replyTo': return (bool) $this->envelope()->hasReplyTo($address, $name);
+            default: throw new \Exception('MATCH not found');
+        }
     }
 
     /**
@@ -988,8 +993,8 @@ class Mailable implements MailableContract, Renderable
         $attachments = $this->attachments();
 
         return Collection::make(is_object($attachments) ? [$attachments] : $attachments)
-                ->map(fn ($attached) => $attached instanceof Attachable ? $attached->toMailAttachment() : $attached)
-                ->contains(fn ($attached) => $attached->isEquivalent($attachment));
+                ->map(function ($attached) { return $attached instanceof Attachable ? $attached->toMailAttachment() : $attached; })
+                ->contains(function ($attached) use ($attachment) { return $attached->isEquivalent($attachment); });
     }
 
     /**

@@ -43,7 +43,7 @@ class MailableAlternativeSyntaxTest extends TestCase
 
     public function testEnvelopesCanReceiveAdditionalRecipients()
     {
-        $envelope = new Envelope(to: ['taylor@example.com']);
+        $envelope = new Envelope(null, /*to: */['taylor@example.com']);
         $envelope->to(new Address('taylorotwell@example.com'));
 
         $this->assertCount(2, $envelope->to);
@@ -73,20 +73,25 @@ class MailableWithAlternativeSyntax extends Mailable
     public function envelope()
     {
         return new Envelope(
-            to: [new Address('taylor@laravel.com', 'Taylor Otwell')],
-            cc: [new Address('adam@laravel.com', 'Adam Wathan')],
-            bcc: [new Address('tyler@laravel.com', 'Tyler Blair')],
-            subject: 'Test Subject',
-            tags: ['tag-1', 'tag-2'],
-            metadata: ['test-meta' => 'test-meta-value'],
+            null,
+            /*to: */[new Address('taylor@laravel.com', 'Taylor Otwell')],
+            /*cc: */[new Address('adam@laravel.com', 'Adam Wathan')],
+            /*bcc: */[new Address('tyler@laravel.com', 'Tyler Blair')],
+            [],
+            /*subject: */'Test Subject',
+            /*tags: */['tag-1', 'tag-2'],
+            /*metadata: */['test-meta' => 'test-meta-value']
         );
     }
 
     public function content()
     {
         return new Content(
-            view: 'test-view',
-            with: ['test-data-key' => 'test-data-value'],
+            /*view: */'test-view',
+            null,
+            null,
+            null,
+            /*with: */['test-data-key' => 'test-data-value']
         );
     }
 }

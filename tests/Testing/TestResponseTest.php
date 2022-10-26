@@ -2003,7 +2003,8 @@ class JsonSerializableSingleResourceWithIntegersStub implements JsonSerializable
 
 class JsonSerializableSingleResourceWithUnicodeStub implements JsonSerializable
 {
-    public function jsonSerialize(): array
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()/*: array*/
     {
         return [
             ['id' => 10, 'foo' => 'bar'],

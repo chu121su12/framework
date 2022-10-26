@@ -2,6 +2,7 @@
 
 namespace Illuminate\Foundation\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Encryption\Encrypter;
@@ -76,7 +77,8 @@ class EnvironmentDecryptCommand extends Command
         if (! $key) {
             $this->components->error('A decryption key is required.');
 
-            return Command::FAILURE;
+            // return Command::FAILURE;
+            return SymfonyHelper::CONSOLE_FAILURE;
         }
 
         $cipher = $this->option('cipher') ?: 'AES-256-CBC';
@@ -92,19 +94,22 @@ class EnvironmentDecryptCommand extends Command
         if (Str::endsWith($outputFile, '.encrypted')) {
             $this->components->error('Invalid filename.');
 
-            return Command::FAILURE;
+            // return Command::FAILURE;
+            return SymfonyHelper::CONSOLE_FAILURE;
         }
 
         if (! $this->files->exists($encryptedFile)) {
             $this->components->error('Encrypted environment file not found.');
 
-            return Command::FAILURE;
+            // return Command::FAILURE;
+            return SymfonyHelper::CONSOLE_FAILURE;
         }
 
         if ($this->files->exists($outputFile) && ! $this->option('force')) {
             $this->components->error('Environment file already exists.');
 
-            return Command::FAILURE;
+            // return Command::FAILURE;
+            return SymfonyHelper::CONSOLE_FAILURE;
         }
 
         try {
@@ -117,7 +122,8 @@ class EnvironmentDecryptCommand extends Command
         } catch (Exception $e) {
             $this->components->error($e->getMessage());
 
-            return Command::FAILURE;
+            // return Command::FAILURE;
+            return SymfonyHelper::CONSOLE_FAILURE;
         }
 
         $this->components->info('Environment successfully decrypted.');
@@ -133,8 +139,10 @@ class EnvironmentDecryptCommand extends Command
      * @param  string  $key
      * @return string
      */
-    protected function parseKey(string $key)
+    protected function parseKey(/*string */$key)
     {
+        $key = backport_type_check('string', $key);
+
         if (Str::startsWith($key, $prefix = 'base64:')) {
             $key = base64_decode(Str::after($key, $prefix));
         }

@@ -39,7 +39,7 @@ class PrecognitionTest extends TestCase
     public function testItDoesntInvokeCallableControllerByDefault()
     {
         $resolved = false;
-        Route::get('test-route', fn (ClassThatBindsOnInstantiation $foo) => fail())
+        Route::get('test-route', function (ClassThatBindsOnInstantiation $foo) { return fail(); })
             ->middleware(HandlePrecognitiveRequests::class);
 
         $response = $this->get('test-route', ['Precognition' => 'true']);
@@ -50,7 +50,7 @@ class PrecognitionTest extends TestCase
 
     public function testItCanCheckPrecognitiveStateOnTheRequest()
     {
-        Route::get('test-route', fn () => fail())
+        Route::get('test-route', function () { return fail(); })
             ->middleware(PrecognitionInvokingController::class);
 
         $this->get('test-route');
@@ -98,7 +98,7 @@ class PrecognitionTest extends TestCase
 
     public function testItCanExcludeValidationRulesWhenPrecognitiveWithFormRequest()
     {
-        Route::post('test-route', fn (PrecognitionTestRequest $request) => fail())
+        Route::post('test-route', function (PrecognitionTestRequest $request) { return fail(); })
             ->middleware(PrecognitionInvokingController::class);
 
         $response = $this->postJson('test-route', [
@@ -118,7 +118,7 @@ class PrecognitionTest extends TestCase
 
     public function testItRunsExcludedRulesWhenNotPrecognitiveForFormRequest()
     {
-        Route::post('test-route', fn (PrecognitionTestRequest $request) => fail())
+        Route::post('test-route', function (PrecognitionTestRequest $request) { return fail(); })
             ->middleware(PrecognitionInvokingController::class);
 
         $response = $this->postJson('test-route', [
@@ -139,7 +139,7 @@ class PrecognitionTest extends TestCase
 
     public function testClientCanSpecifyInputToValidate()
     {
-        Route::post('test-route', fn (PrecognitionTestRequest $request) => fail())
+        Route::post('test-route', function (PrecognitionTestRequest $request) { return fail(); })
             ->middleware(PrecognitionInvokingController::class);
 
         $response = $this->postJson('test-route', [
@@ -164,7 +164,7 @@ class PrecognitionTest extends TestCase
 
     public function testClientCanSpecifyNoInputsToValidate()
     {
-        Route::post('test-route', fn (PrecognitionTestRequest $request) => fail())
+        Route::post('test-route', function (PrecognitionTestRequest $request) { return fail(); })
             ->middleware(PrecognitionInvokingController::class);
 
         $response = $this->postJson('test-route', [
@@ -199,8 +199,8 @@ class PrecognitionTest extends TestCase
     public function testItAppliesHeadersWhenFlowControlExceptionIsThrown()
     {
         // Check with Authorize middleware first...
-        Gate::define('alwaysDeny', fn () => false);
-        Route::get('test-route-before', fn () => fail())
+        Gate::define('alwaysDeny', function () { return false; });
+        Route::get('test-route-before', function () { return fail(); })
             ->middleware(['can:alwaysDeny', HandlePrecognitiveRequests::class]);
 
         $response = $this->get('test-route-before', ['Precognition' => 'true']);
@@ -210,7 +210,7 @@ class PrecognitionTest extends TestCase
         $response->assertHeader('Vary', 'Precognition');
 
         // Check with Authorize middleware last...
-        Route::get('test-route-after', fn () => fail())
+        Route::get('test-route-after', function () { return fail(); })
             ->middleware([HandlePrecognitiveRequests::class, 'can:alwaysDeny']);
 
         $response = $this->get('test-route-after', ['Precognition' => 'true']);
@@ -223,7 +223,7 @@ class PrecognitionTest extends TestCase
     public function testItCanReturnValuesFromPrecognitionClosure()
     {
         Route::get('test-route', function () {
-            [$first, $second, $third] = precognitive(function () {
+            list($first, $second, $third) = precognitive(function () {
                 return ['expected', 'values', 'passed'];
             });
 
@@ -340,12 +340,21 @@ class PrecognitionTest extends TestCase
     {
         Route::post('test-route', function (Request $request) {
             precognitive(function () use ($request) {
-                $request->validate([
-                    'required_integer' => 'required|integer',
-                    ...! $request->isPrecognitive() ? ['required_integer_when_not_precognitive' => 'required|integer'] : [],
-                    'optional_integer_1' => 'integer',
-                    'optional_integer_2' => 'integer',
-                ]);
+                if (! $request->isPrecognitive()) {
+                    $request->validate([
+                        'required_integer' => 'required|integer',
+                        'required_integer_when_not_precognitive' => 'required|integer',
+                        'optional_integer_1' => 'integer',
+                        'optional_integer_2' => 'integer',
+                    ]);
+
+                } else {
+                    $request->validate([
+                        'required_integer' => 'required|integer',
+                        'optional_integer_1' => 'integer',
+                        'optional_integer_2' => 'integer',
+                    ]);
+                }
 
                 fail();
             });
@@ -377,12 +386,20 @@ class PrecognitionTest extends TestCase
     {
         Route::post('test-route', function (Request $request) {
             precognitive(function () use ($request) {
-                $request->validateWithBag('custom-bag', [
-                    'required_integer' => 'required|integer',
-                    ! $request->isPrecognitive() ? ['required_integer_when_not_precognitive' => 'required|integer'] : [],
-                    'optional_integer_1' => 'integer',
-                    'optional_integer_2' => 'integer',
-                ]);
+                if (! $request->isPrecognitive()) {
+                    $request->validateWithBag('custom-bag', [
+                        'required_integer' => 'required|integer',
+                        'required_integer_when_not_precognitive' => 'required|integer',
+                        'optional_integer_1' => 'integer',
+                        'optional_integer_2' => 'integer',
+                    ]);
+                } else {
+                    $request->validateWithBag('custom-bag', [
+                        'required_integer' => 'required|integer',
+                        'optional_integer_1' => 'integer',
+                        'optional_integer_2' => 'integer',
+                    ]);
+                }
 
                 fail();
             });
@@ -454,7 +471,7 @@ class PrecognitionTest extends TestCase
 
     public function testSpacesAreImportantInValidationFilterLogicForJsonRequests()
     {
-        Route::post('test-route', fn (PrecognitionTestRequest $request) => fail())
+        Route::post('test-route', function (PrecognitionTestRequest $request) { return fail(); })
             ->middleware(PrecognitionInvokingController::class);
 
         $response = $this->postJson('test-route', [
@@ -474,7 +491,7 @@ class PrecognitionTest extends TestCase
 
     public function testVaryHeaderIsAppliedToNonPrecognitionResponses()
     {
-        Route::get('test-route', fn () => 'ok')
+        Route::get('test-route', function () { return 'ok'; })
             ->middleware(PrecognitionInvokingController::class);
 
         $response = $this->get('test-route');
@@ -721,23 +738,23 @@ class PrecognitionTest extends TestCase
 
     public function testItDoesNotSetLastUrl()
     {
-        Route::get('expected-route-1', fn () => 'ok')->middleware(StartSession::class);
-        Route::get('expected-route-2', fn () => 'ok')->middleware(StartSession::class);
-        Route::get('precognition-route', fn () => 'ok')->middleware([StartSession::class, HandlePrecognitiveRequests::class]);
+        Route::get('expected-route-1', function () { return 'ok'; })->middleware(StartSession::class);
+        Route::get('expected-route-2', function () { return 'ok'; })->middleware(StartSession::class);
+        Route::get('precognition-route', function () { return 'ok'; })->middleware([StartSession::class, HandlePrecognitiveRequests::class]);
 
-        $this->app->bind(CallableDispatcherContract::class, fn ($app) => new CallableDispatcher($app));
+        $this->app->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
 
         $response = $this->get('expected-route-1');
         $response->assertOk();
         $this->assertSame('http://localhost/expected-route-1', session()->previousUrl());
 
-        $this->app->bind(CallableDispatcherContract::class, fn ($app) => new CallableDispatcher($app));
+        $this->app->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
 
         $response = $this->get('precognition-route', ['Precognition' => 'true']);
         $response->assertNoContent();
         $this->assertSame('http://localhost/expected-route-1', session()->previousUrl());
 
-        $this->app->bind(CallableDispatcherContract::class, fn ($app) => new CallableDispatcher($app));
+        $this->app->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
 
         $response = $this->get('expected-route-2');
         $response->assertOk();
@@ -780,12 +797,20 @@ class PrecognitionTestController
     public function methodWherePredicitionValidatesViaControllerValidate(Request $request)
     {
         precognitive(function () use ($request) {
-            $this->validate($request, [
-                'required_integer' => 'required|integer',
-                ...! $request->isPrecognitive() ? ['required_integer_when_not_precognitive' => 'required|integer'] : [],
-                'optional_integer_1' => 'integer',
-                'optional_integer_2' => 'integer',
-            ]);
+            if (! $request->isPrecognitive()) {
+                $this->validate($request, [
+                    'required_integer' => 'required|integer',
+                    'required_integer_when_not_precognitive' => 'required|integer',
+                    'optional_integer_1' => 'integer',
+                    'optional_integer_2' => 'integer',
+                ]);
+            } else {
+                $this->validate($request, [
+                    'required_integer' => 'required|integer',
+                    'optional_integer_1' => 'integer',
+                    'optional_integer_2' => 'integer',
+                ]);
+            }
 
             fail();
         });
@@ -796,12 +821,20 @@ class PrecognitionTestController
     public function methodWherePredicitionValidatesViaControllerValidateWithBag(Request $request)
     {
         precognitive(function () use ($request) {
-            $this->validateWithBag('custom-bag', $request, [
-                'required_integer' => 'required|integer',
-                ...! $request->isPrecognitive() ? ['required_integer_when_not_precognitive' => 'required|integer'] : [],
-                'optional_integer_1' => 'integer',
-                'optional_integer_2' => 'integer',
-            ]);
+            if (! $request->isPrecognitive()) {
+                $this->validateWithBag('custom-bag', $request, [
+                    'required_integer' => 'required|integer',
+                    'required_integer_when_not_precognitive' => 'required|integer',
+                    'optional_integer_1' => 'integer',
+                    'optional_integer_2' => 'integer',
+                ]);
+            } else {
+                $this->validateWithBag('custom-bag', $request, [
+                    'required_integer' => 'required|integer',
+                    'optional_integer_1' => 'integer',
+                    'optional_integer_2' => 'integer',
+                ]);
+            }
 
             fail();
         });
@@ -812,12 +845,20 @@ class PrecognitionTestController
     public function methodWherePredicitionValidatesViaControllerValidateWith(Request $request)
     {
         precognitive(function () use ($request) {
-            $this->validateWith([
-                'required_integer' => 'required|integer',
-                ...! $request->isPrecognitive() ? ['required_integer_when_not_precognitive' => 'required|integer'] : [],
-                'optional_integer_1' => 'integer',
-                'optional_integer_2' => 'integer',
-            ]);
+            if (! $request->isPrecognitive()) {
+                $this->validateWith([
+                    'required_integer' => 'required|integer',
+                    'required_integer_when_not_precognitive' => 'required|integer',
+                    'optional_integer_1' => 'integer',
+                    'optional_integer_2' => 'integer',
+                ]);
+            } else {
+                $this->validateWith([
+                    'required_integer' => 'required|integer',
+                    'optional_integer_1' => 'integer',
+                    'optional_integer_2' => 'integer',
+                ]);
+            }
 
             fail();
         });
@@ -932,8 +973,8 @@ class PrecognitionInvokingController extends HandlePrecognitiveRequests
     {
         parent::prepareForPrecognition($request);
 
-        app()->bind(CallableDispatcherContract::class, fn ($app) => new CallableDispatcher($app));
-        app()->bind(ControllerDispatcherContract::class, fn ($app) => new ControllerDispatcher($app));
+        app()->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
+        app()->bind(ControllerDispatcherContract::class, function ($app) { return new ControllerDispatcher($app); });
     }
 }
 

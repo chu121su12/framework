@@ -472,8 +472,12 @@ abstract class Factory
         return collect($definition)
             ->map($evaluateRelations = function ($attribute) {
                 if ($attribute instanceof self) {
-                    $attribute = $this->getRandomRecycledModel($attribute->modelName())
-                        ?? $attribute->recycle($this->recycle)->create()->getKey();
+                    $tmpAttribute = $this->getRandomRecycledModel($attribute->modelName());
+                    if (isset($tmpAttribute)) {
+                        $attribute = $tmpAttribute;
+                    } else {
+                        $attribute = $attribute->recycle($this->recycle)->create()->getKey();
+                    }
                 } elseif ($attribute instanceof Model) {
                     $attribute = $attribute->getKey();
                 }
@@ -654,7 +658,10 @@ abstract class Factory
      */
     public function getRandomRecycledModel($modelClassName)
     {
-        return $this->recycle->get($modelClassName)?->random();
+        $recycled = $this->recycle->get($modelClassName);
+        if (isset($recycled)) {
+            return $recycled->random();
+        }
     }
 
     /**

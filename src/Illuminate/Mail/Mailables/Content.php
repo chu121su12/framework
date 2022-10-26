@@ -64,8 +64,16 @@ class Content
      *
      * @named-arguments-supported
      */
-    public function __construct(string $view = null, string $html = null, string $text = null, $markdown = null, array $with = [], string $htmlString = null)
+    public function __construct(/*string */$view = null, /*string */$html = null, /*string */$text = null, $markdown = null, array $with = [], /*string */$htmlString = null)
     {
+        $view = backport_type_check('string', $view);
+
+        $html = backport_type_check('string', $html);
+
+        $text = backport_type_check('string', $text);
+
+        $htmlString = backport_type_check('string', $htmlString);
+
         $this->view = $view;
         $this->html = $html;
         $this->text = $text;
@@ -80,8 +88,10 @@ class Content
      * @param  string  $view
      * @return $this
      */
-    public function view(string $view)
+    public function view(/*string */$view)
     {
+        $view = backport_type_check('string', $view);
+
         $this->view = $view;
 
         return $this;
@@ -93,8 +103,10 @@ class Content
      * @param  string  $view
      * @return $this
      */
-    public function html(string $view)
+    public function html(/*string */$view)
     {
+        $view = backport_type_check('string', $view);
+
         return $this->view($view);
     }
 
@@ -104,8 +116,10 @@ class Content
      * @param  string  $view
      * @return $this
      */
-    public function text(string $view)
+    public function text(/*string */$view)
     {
+        $view = backport_type_check('string', $view);
+
         $this->text = $view;
 
         return $this;
@@ -117,8 +131,10 @@ class Content
      * @param  string  $view
      * @return $this
      */
-    public function markdown(string $view)
+    public function markdown(/*string */$view)
     {
+        $view = backport_type_check('string', $view);
+
         $this->markdown = $view;
 
         return $this;
@@ -130,8 +146,10 @@ class Content
      * @param  string  $html
      * @return $this
      */
-    public function htmlString(string $html)
+    public function htmlString(/*string */$html)
     {
+        $html = backport_type_check('string', $html);
+
         $this->htmlString = $html;
 
         return $this;

@@ -15,6 +15,19 @@ use Illuminate\View\View;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+class ComponentTest_testResolveDependenciesWithoutContainer_class extends Component
+        {
+            public function __construct($a = null, $b = null)
+            {
+                $this->content = $a.$b;
+            }
+
+            public function render()
+            {
+                return $this->content;
+            }
+        }
+
 class ComponentTest extends TestCase
 {
     protected $viewFactory;
@@ -115,18 +128,7 @@ class ComponentTest extends TestCase
         $component = TestInlineViewComponentWhereRenderDependsOnProps::resolve(['content' => 'foo']);
         $this->assertSame('foo', $component->render());
 
-        $component = new class extends Component
-        {
-            public function __construct($a = null, $b = null)
-            {
-                $this->content = $a.$b;
-            }
-
-            public function render()
-            {
-                return $this->content;
-            }
-        };
+        $component = new ComponentTest_testResolveDependenciesWithoutContainer_class;
 
         $component = $component::resolve(['a' => 'a', 'b' => 'b']);
         $component = $component::resolve(['b' => 'b', 'a' => 'a']);
@@ -147,7 +149,7 @@ class ComponentTest extends TestCase
     {
         $component = new TestInlineViewComponent;
 
-        Component::resolveComponentsUsing(fn () => $component);
+        Component::resolveComponentsUsing(function () use ($component) { return $component; });
 
         $this->assertSame($component, Component::resolve('bar'));
     }
@@ -163,12 +165,12 @@ class ComponentTest extends TestCase
         $this->assertSame('alert', $component->resolveView());
         $this->assertSame('alert', $component->resolveView());
 
-        $cache = (fn () => $component::$bladeViewCache)->call($component);
-        $this->assertSame([$component::class.'::alert' => 'alert'], $cache);
+        $cache = backport_function_call_able(function () use ($component) { return $component::$bladeViewCache; })->call($component);
+        $this->assertSame([get_class($component).'::alert' => 'alert'], $cache);
 
         $component::flushCache();
 
-        $cache = (fn () => $component::$bladeViewCache)->call($component);
+        $cache = backport_function_call_able(function () use ($component) { return $component::$bladeViewCache; })->call($component);
         $this->assertSame([], $cache);
 
         $this->assertSame('alert', $component->resolveView());
@@ -191,19 +193,19 @@ class ComponentTest extends TestCase
 
         $compiledViewName = '__components::c6327913fef3fca4518bcd7df1d0ff630758e241';
         $contents = '::Hello {{ $title }}';
-        $cacheKey = $component::class.$contents;
+        $cacheKey = get_class($component).$contents;
 
         $this->assertSame($compiledViewName, $component->resolveView());
         $this->assertSame($compiledViewName, $component->resolveView());
         $this->assertSame($compiledViewName, $component->resolveView());
         $this->assertSame($compiledViewName, $component->resolveView());
 
-        $cache = (fn () => $component::$bladeViewCache)->call($component);
+        $cache = backport_function_call_able(function () use ($component) { return $component::$bladeViewCache; })->call($component);
         $this->assertSame([$cacheKey => $compiledViewName], $cache);
 
         $component::flushCache();
 
-        $cache = (fn () => $component::$bladeViewCache)->call($component);
+        $cache = backport_function_call_able(function () use ($component) { return $component::$bladeViewCache; })->call($component);
         $this->assertSame([], $cache);
 
         $this->assertSame($compiledViewName, $component->resolveView());
@@ -227,16 +229,16 @@ class ComponentTest extends TestCase
 
         $compiledViewNameA = '__components::6dcd4ce23d88e2ee9568ba546c007c63d9131c1b';
         $compiledViewNameB = '__components::ae4f281df5a5d0ff3cad6371f76d5c29b6d953ec';
-        $cacheAKey = $componentA::class.'::A';
-        $cacheBKey = $componentB::class.'::B';
+        $cacheAKey = get_class($componentA).'::A';
+        $cacheBKey = get_class($componentB).'::B';
 
         $this->assertSame($compiledViewNameA, $componentA->resolveView());
         $this->assertSame($compiledViewNameA, $componentA->resolveView());
         $this->assertSame($compiledViewNameB, $componentB->resolveView());
         $this->assertSame($compiledViewNameB, $componentB->resolveView());
 
-        $cacheA = (fn () => $componentA::$bladeViewCache)->call($componentA);
-        $cacheB = (fn () => $componentB::$bladeViewCache)->call($componentB);
+        $cacheA = backport_function_call_able(function () use ($componentA) { return $componentA::$bladeViewCache; })->call($componentA);
+        $cacheB = backport_function_call_able(function () use ($componentB) { return $componentB::$bladeViewCache; })->call($componentB);
         $this->assertSame($cacheA, $cacheB);
         $this->assertSame([
             $cacheAKey => $compiledViewNameA,
@@ -245,8 +247,8 @@ class ComponentTest extends TestCase
 
         $componentA::flushCache();
 
-        $cacheA = (fn () => $componentA::$bladeViewCache)->call($componentA);
-        $cacheB = (fn () => $componentB::$bladeViewCache)->call($componentB);
+        $cacheA = backport_function_call_able(function () use ($componentA) { return $componentA::$bladeViewCache; })->call($componentA);
+        $cacheB = backport_function_call_able(function () use ($componentB) { return $componentB::$bladeViewCache; })->call($componentB);
         $this->assertSame($cacheA, $cacheB);
         $this->assertSame([], $cacheA);
     }
@@ -256,7 +258,7 @@ class ComponentTest extends TestCase
         $regular = new TestRegularViewNameViewComponent;
         $inline = new TestInlineViewComponent;
 
-        $getFactory = fn ($component) => (fn () => $component->factory())->call($component);
+        $getFactory = function ($component) { return backport_function_call_able(function () use ($component) { return $component->factory(); })->call($component); };
 
         $this->assertSame($this->viewFactory, $getFactory($regular));
 

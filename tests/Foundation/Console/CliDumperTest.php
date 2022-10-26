@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Foundation\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Foundation\Console\CliDumper;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -12,7 +13,7 @@ use Symfony\Component\VarDumper\Cloner\VarCloner;
 
 class CliDumperTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         CliDumper::resolveDumpSourceUsing(function () {
             return [
@@ -55,18 +56,18 @@ class CliDumperTest extends TestCase
         $output = $this->dump(['string', 1, 1.1, ['string', 1, 1.1]]);
 
         $expected = <<<'EOF'
-        array:4 [ // app/routes/console.php:18
-          0 => "string"
-          1 => 1
-          2 => 1.1
-          3 => array:3 [
-            0 => "string"
-            1 => 1
-            2 => 1.1
-          ]
-        ]
+array:4 [ // app/routes/console.php:18
+  0 => "string"
+  1 => 1
+  2 => 1.1
+  3 => array:3 [
+    0 => "string"
+    1 => 1
+    2 => 1.1
+  ]
+]
 
-        EOF;
+EOF;
 
         $this->assertSame($expected, $output);
     }
@@ -90,11 +91,11 @@ class CliDumperTest extends TestCase
         $objectId = spl_object_id($user);
 
         $expected = <<<EOF
-        {#$objectId // app/routes/console.php:18
-          +"name": "Guus"
-        }
+{#$objectId // app/routes/console.php:18
+  +"name": "Guus"
+}
 
-        EOF;
+EOF;
 
         $this->assertSame($expected, $output);
     }
@@ -186,7 +187,7 @@ class CliDumperTest extends TestCase
 
     public function testUnresolvableSource()
     {
-        CliDumper::resolveDumpSourceUsing(fn () => null);
+        CliDumper::resolveDumpSourceUsing(function () { return null; });
 
         $output = $this->dump('string');
 
@@ -218,17 +219,18 @@ class CliDumperTest extends TestCase
         $dumper = new CliDumper(
             $output,
             '/my-work-directory',
-            '/my-work-directory/storage/framework/views',
+            '/my-work-directory/storage/framework/views'
         );
 
-        $cloner = tap(new VarCloner())->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
+        // $cloner = tap(new VarCloner())->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
+        $cloner = tap(new VarCloner())->addCasters(SymfonyHelper::varDumperUnsetClosureFileInfoReflectionCaster());
 
         $dumper->dumpWithSource($cloner->cloneVar($value));
 
         return $output->fetch();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         CliDumper::resolveDumpSourceUsing(null);
     }

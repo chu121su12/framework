@@ -404,8 +404,10 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @param  bool  $shouldBeStrict
      * @return void
      */
-    public static function shouldBeStrict(bool $shouldBeStrict = true)
+    public static function shouldBeStrict(/*bool */$shouldBeStrict = true)
     {
+        $shouldBeStrict = backport_type_check('bool', $shouldBeStrict);
+
         static::preventLazyLoading($shouldBeStrict);
         static::preventSilentlyDiscardingAttributes($shouldBeStrict);
         static::preventAccessingMissingAttributes($shouldBeStrict);
@@ -430,6 +432,8 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public static function handleLazyLoadingViolationUsing(/*?*/callable $callback = null)
     {
+        $callback = backport_type_check('?callable', $callback);
+
         static::$lazyLoadingViolationCallback = $callback;
     }
 
@@ -450,8 +454,10 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @param  callable|null  $callback
      * @return void
      */
-    public static function handleDiscardedAttributeViolationUsing(?callable $callback)
+    public static function handleDiscardedAttributeViolationUsing(/*?*/callable $callback = null)
     {
+        $callback = backport_type_check('?callable', $callback);
+
         static::$discardedAttributeViolationCallback = $callback;
     }
 
@@ -472,8 +478,10 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @param  callable|null  $callback
      * @return void
      */
-    public static function handleMissingAttributeViolationUsing(?callable $callback)
+    public static function handleMissingAttributeViolationUsing(/*?*/callable $callback = null)
     {
+        $callback = backport_type_check('?callable', $callback);
+
         static::$missingAttributeViolationCallback = $callback;
     }
 
@@ -2254,7 +2262,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     {
         try {
             return ! is_null($this->getAttribute($offset));
-        } catch (MissingAttributeException) {
+        } catch (MissingAttributeException $_e) {
             return false;
         }
     }

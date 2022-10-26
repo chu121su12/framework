@@ -597,8 +597,10 @@ class ComponentTagCompiler
      * @param  string  $value
      * @return string
      */
-    protected function parseShortAttributeSyntax(string $value)
+    protected function parseShortAttributeSyntax(/*string */$value)
     {
+        $value = backport_type_check('string', $value);
+
         $pattern = "/\s\:\\\$(\w+)/x";
 
         return preg_replace_callback($pattern, function (array $matches) {

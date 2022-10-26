@@ -40,8 +40,10 @@ class Headers
      *
      * @named-arguments-supported
      */
-    public function __construct(string $messageId = null, array $references = [], array $text = [])
+    public function __construct(/*string */$messageId = null, array $references = [], array $text = [])
     {
+        $messageId = backport_type_check('string', $messageId);
+
         $this->messageId = $messageId;
         $this->references = $references;
         $this->text = $text;
@@ -53,8 +55,10 @@ class Headers
      * @param  string  $messageId
      * @return $this
      */
-    public function messageId(string $messageId)
+    public function messageId(/*string */$messageId)
     {
+        $messageId = backport_type_check('string', $messageId);
+
         $this->messageId = $messageId;
 
         return $this;
@@ -79,8 +83,10 @@ class Headers
      * @param  array  $references
      * @return $this
      */
-    public function text(array $text)
+    public function text(/*string */$text)
     {
+        $text = backport_type_check('string', $text);
+
         $this->text = array_merge($this->text, $text);
 
         return $this;
@@ -91,7 +97,7 @@ class Headers
      *
      * @return string
      */
-    public function referencesString(): string
+    public function referencesString()/*: string*/
     {
         return collect($this->references)->map(function ($messageId) {
             return Str::finish(Str::start($messageId, '<'), '>');

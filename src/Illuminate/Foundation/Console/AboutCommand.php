@@ -172,16 +172,20 @@ class AboutCommand extends Command
      */
     protected function gatherApplicationInformation()
     {
-        static::addToSection('Environment', function () { return [
-            'Application Name' => config('app.name'),
-            'Laravel Version' => $this->laravel->version(),
-            'PHP Version' => phpversion(),
-            'Composer Version' => $this->composer->getVersion() ?? '<fg=yellow;options=bold>-</>',
-            'Environment' => $this->laravel->environment(),
-            'Debug Mode' => config('app.debug') ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF',
-            'URL' => Str::of(config('app.url'))->replace(['http://', 'https://'], ''),
-            'Maintenance Mode' => $this->laravel->isDownForMaintenance() ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF',
-        ]; });
+        static::addToSection('Environment', function () {
+            $composerVersion = $this->composer->getVersion();
+
+            return [
+                'Application Name' => config('app.name'),
+                'Laravel Version' => $this->laravel->version(),
+                'PHP Version' => phpversion(),
+                'Composer Version' => isset($composerVersion) ? $composerVersion : '<fg=yellow;options=bold>-</>',
+                'Environment' => $this->laravel->environment(),
+                'Debug Mode' => config('app.debug') ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF',
+                'URL' => Str::of(config('app.url'))->replace(['http://', 'https://'], ''),
+                'Maintenance Mode' => $this->laravel->isDownForMaintenance() ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF',
+            ];
+        });
 
         static::addToSection('Cache', function () { return [
             'Config' => $this->laravel->configurationIsCached() ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',

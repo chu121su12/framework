@@ -2,6 +2,7 @@
 
 namespace Illuminate\Foundation\Http;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Foundation\Concerns\ResolvesDumpSource;
 use Symfony\Component\VarDumper\Caster\ReflectionCaster;
 use Symfony\Component\VarDumper\Cloner\Data;
@@ -72,11 +73,12 @@ class HtmlDumper extends BaseHtmlDumper
      */
     public static function register($basePath, $compiledViewPath)
     {
-        $cloner = tap(new VarCloner())->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
+        // $cloner = tap(new VarCloner())->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
+        $cloner = tap(new VarCloner())->addCasters(SymfonyHelper::varDumperUnsetClosureFileInfoReflectionCaster());
 
         $dumper = new static($basePath, $compiledViewPath);
 
-        VarDumper::setHandler(fn ($value) => $dumper->dumpWithSource($cloner->cloneVar($value)));
+        VarDumper::setHandler(function ($value) use ($dumper, $cloner) { return $dumper->dumpWithSource($cloner->cloneVar($value)); });
     }
 
     /**
@@ -97,19 +99,23 @@ class HtmlDumper extends BaseHtmlDumper
 
         $output = (string) $this->dump($data, true);
 
-        $output = match (true) {
-            str_contains($output, static::EXPANDED_SEPARATOR) => str_replace(
-                static::EXPANDED_SEPARATOR,
-                static::EXPANDED_SEPARATOR.$this->getDumpSourceContent(),
-                $output,
-            ),
-            str_contains($output, static::NON_EXPANDED_SEPARATOR) => str_replace(
-                static::NON_EXPANDED_SEPARATOR,
-                $this->getDumpSourceContent().static::NON_EXPANDED_SEPARATOR,
-                $output,
-            ),
-            default => $output,
-        };
+        switch (true) {
+            case str_contains($output, static::EXPANDED_SEPARATOR):
+                $output = str_replace(
+                    static::EXPANDED_SEPARATOR,
+                    static::EXPANDED_SEPARATOR.$this->getDumpSourceContent(),
+                    $output
+                );
+                break;
+
+            case str_contains($output, static::NON_EXPANDED_SEPARATOR):
+                $output = str_replace(
+                    static::NON_EXPANDED_SEPARATOR,
+                    $this->getDumpSourceContent().static::NON_EXPANDED_SEPARATOR,
+                    $output
+                );
+                break;
+        }
 
         fwrite($this->outputStream, $output);
 
@@ -127,7 +133,7 @@ class HtmlDumper extends BaseHtmlDumper
             return '';
         }
 
-        [$file, $relativeFile, $line] = $dumpSource;
+        list($file, $relativeFile, $line) = $dumpSource;
 
         $source = sprintf('%s%s', $relativeFile, is_null($line) ? '' : ":$line");
 

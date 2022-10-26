@@ -602,13 +602,13 @@ if (! function_exists('precognitive')) {
      */
     function precognitive($callable = null)
     {
-        $callable ??= function () {
+        $callable = isset($callable) ? $callable : function () {
             //
         };
 
         $payload = $callable(function ($default, $precognition = null) {
             $response = request()->isPrecognitive()
-                ? ($precognition ?? $default)
+                ? (isset($precognition) ? $precognition : $default)
                 : $default;
 
             abort(Router::toResponse(request(), value($response)));

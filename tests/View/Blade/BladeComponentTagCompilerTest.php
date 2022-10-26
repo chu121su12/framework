@@ -639,7 +639,7 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
         $component->shouldReceive('data')->once()->andReturn([]);
         $component->shouldReceive('withAttributes')->once();
 
-        Component::resolveComponentsUsing(fn () => $component);
+        Component::resolveComponentsUsing(function () use ($component) { return $component; });
 
         $__env = m::mock(\Illuminate\View\Factory::class);
         $__env->shouldReceive('startComponent')->once();

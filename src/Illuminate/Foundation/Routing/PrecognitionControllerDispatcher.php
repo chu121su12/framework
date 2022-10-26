@@ -38,7 +38,7 @@ class PrecognitionControllerDispatcher extends ControllerDispatcher
             return $this;
         }
 
-        $class = $controller::class;
+        $class = get_class($controller);
 
         throw new RuntimeException("Attempting to predict the outcome of the [{$class}::{$method}()] method but the method is not defined.");
     }

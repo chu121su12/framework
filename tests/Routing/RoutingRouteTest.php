@@ -483,7 +483,7 @@ class RoutingRouteTest extends TestCase
 
         $container->bind(RoutingTestUserModel::class, function () {
         });
-        $container->bind(CallableDispatcherContract::class, fn ($app) => new CallableDispatcher($app));
+        $container->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
 
         $router->get('foo/{team}/{post}', [
             'middleware' => SubstituteBindings::class,
@@ -1087,7 +1087,7 @@ class RoutingRouteTest extends TestCase
         $container->singleton(Registrar::class, function () use ($router) {
             return $router;
         });
-        $container->bind(CallableDispatcherContract::class, fn ($app) => new CallableDispatcher($app));
+        $container->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
         $container->bind(RouteModelInterface::class, RouteModelBindingStub::class);
         $router->get('foo/{bar}', ['middleware' => SubstituteBindings::class, 'uses' => function ($name) {
             return $name;
@@ -1589,7 +1589,7 @@ class RoutingRouteTest extends TestCase
         $router->get('foo/bar', function () {
             return '';
         });
-        $container->bind(CallableDispatcherContract::class, fn ($app) => new CallableDispatcher($app));
+        $container->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
 
         $request = Request::create('http://foo.com/foo/bar', 'GET');
         $route = new Route('GET', 'foo/bar', ['http', function () {
@@ -1622,7 +1622,7 @@ class RoutingRouteTest extends TestCase
         $container->singleton(Registrar::class, function () use ($router) {
             return $router;
         });
-        $container->bind(CallableDispatcherContract::class, fn ($app) => new CallableDispatcher($app));
+        $container->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
         $router->get('foo/bar', function () {
             return '';
         });
@@ -1903,7 +1903,7 @@ class RoutingRouteTest extends TestCase
         $container->singleton(Registrar::class, function () use ($router) {
             return $router;
         });
-        $container->bind(CallableDispatcherContract::class, fn ($app) => new CallableDispatcher($app));
+        $container->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
 
         $container->bind(RoutingTestUserModel::class, RoutingTestExtendedUserModel::class);
         $router->get('foo/{bar}', [
@@ -2151,8 +2151,8 @@ class RoutingRouteTest extends TestCase
             return $router;
         });
 
-        $container->bind(ControllerDispatcherContract::class, fn ($app) => new ControllerDispatcher($app));
-        $container->bind(CallableDispatcherContract::class, fn ($app) => new CallableDispatcher($app));
+        $container->bind(ControllerDispatcherContract::class, function ($app) { return new ControllerDispatcher($app); });
+        $container->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
 
         return $router;
     }

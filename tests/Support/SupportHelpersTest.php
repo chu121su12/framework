@@ -44,6 +44,14 @@ class SupportHelpersTest_testOptionalIsMacroable_class
             }
         }
 
+class SupportHelpersTest_testValue_class
+        {
+            public function __call($method, $arguments)
+            {
+                return $arguments;
+            }
+        }
+
 class SupportHelpersTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -142,13 +150,7 @@ class SupportHelpersTest extends TestCase
 
     public function testValue()
     {
-        $callable = new class
-        {
-            public function __call($method, $arguments)
-            {
-                return $arguments;
-            }
-        };
+        $callable = new SupportHelpersTest_testValue_class;
 
         $this->assertSame($callable, value($callable, 'foo'));
         $this->assertSame('foo', value('foo'));

@@ -121,7 +121,7 @@ class WithoutOverlappingJobsTest extends TestCase
         $lockKey = (new WithoutOverlapping)->shared()->getLockKey(new OverlappingTestJobWithSharedKeyTwo);
         $this->app->get(Cache::class)->lock($lockKey, 10)->acquire();
 
-        $job = m::mock(Job::class);
+        $job = m::mock(JobContract::class);
 
         $job->shouldReceive('release')->once();
         $job->shouldReceive('hasFailed')->andReturn(false);

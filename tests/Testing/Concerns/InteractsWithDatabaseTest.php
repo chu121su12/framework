@@ -14,15 +14,20 @@ use Illuminate\Support\Facades\Facade;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+class InteractsWithDatabaseTest_castAsJson_class
+        {
+            use InteractsWithDatabase;
+        }
+
 class InteractsWithDatabaseTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         Facade::clearResolvedInstances();
         Facade::setFacadeApplication(null);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
@@ -31,21 +36,30 @@ class InteractsWithDatabaseTest extends TestCase
     {
         $grammar = new SQLiteGrammar();
 
-        $this->assertEquals(<<<'TEXT'
-        '["foo","bar"]'
-        TEXT,
+        $resultArray = <<<'TEXT'
+'["foo","bar"]'
+TEXT;
+
+        $resultObject = <<<'TEXT'
+'{"foo":"bar"}'
+TEXT;
+
+        $this->assertEquals($resultArray,
             $this->castAsJson(['foo', 'bar'], $grammar)
         );
 
-        $this->assertEquals(<<<'TEXT'
-        '["foo","bar"]'
-        TEXT,
+
+        $this->assertEquals($resultArray,
+            $this->castAsJson(collect(['foo', 'bar']), $grammar)
+        );
+        $this->assertEquals($resultArray,
             $this->castAsJson(collect(['foo', 'bar']), $grammar)
         );
 
-        $this->assertEquals(<<<'TEXT'
-        '{"foo":"bar"}'
-        TEXT,
+        $this->assertEquals($resultObject,
+            $this->castAsJson((object) ['foo' => 'bar'], $grammar)
+        );
+        $this->assertEquals($resultObject,
             $this->castAsJson((object) ['foo' => 'bar'], $grammar)
         );
     }
@@ -54,21 +68,23 @@ class InteractsWithDatabaseTest extends TestCase
     {
         $grammar = new PostgresGrammar();
 
-        $this->assertEquals(<<<'TEXT'
-        '["foo","bar"]'
-        TEXT,
+        $resultArray = <<<'TEXT'
+'["foo","bar"]'
+TEXT;
+
+        $resultObject = <<<'TEXT'
+'{"foo":"bar"}'
+TEXT;
+
+        $this->assertEquals($resultArray,
             $this->castAsJson(['foo', 'bar'], $grammar)
         );
 
-        $this->assertEquals(<<<'TEXT'
-        '["foo","bar"]'
-        TEXT,
+        $this->assertEquals($resultArray,
             $this->castAsJson(collect(['foo', 'bar']), $grammar)
         );
 
-        $this->assertEquals(<<<'TEXT'
-        '{"foo":"bar"}'
-        TEXT,
+        $this->assertEquals($resultObject,
             $this->castAsJson((object) ['foo' => 'bar'], $grammar)
         );
     }
@@ -77,21 +93,23 @@ class InteractsWithDatabaseTest extends TestCase
     {
         $grammar = new SqlServerGrammar();
 
-        $this->assertEquals(<<<'TEXT'
-        json_query('["foo","bar"]')
-        TEXT,
+        $resultArray = <<<'TEXT'
+json_query('["foo","bar"]')
+TEXT;
+
+        $resultObject = <<<'TEXT'
+json_query('{"foo":"bar"}')
+TEXT;
+
+        $this->assertEquals($resultArray,
             $this->castAsJson(['foo', 'bar'], $grammar)
         );
 
-        $this->assertEquals(<<<'TEXT'
-        json_query('["foo","bar"]')
-        TEXT,
+        $this->assertEquals($resultArray,
             $this->castAsJson(collect(['foo', 'bar']), $grammar)
         );
 
-        $this->assertEquals(<<<'TEXT'
-        json_query('{"foo":"bar"}')
-        TEXT,
+        $this->assertEquals($resultObject,
             $this->castAsJson((object) ['foo' => 'bar'], $grammar)
         );
     }
@@ -100,21 +118,23 @@ class InteractsWithDatabaseTest extends TestCase
     {
         $grammar = new MySqlGrammar();
 
-        $this->assertEquals(<<<'TEXT'
-        cast('["foo","bar"]' as json)
-        TEXT,
+        $resultArray = <<<'TEXT'
+cast('["foo","bar"]' as json)
+TEXT;
+
+        $resultObject = <<<'TEXT'
+cast('{"foo":"bar"}' as json)
+TEXT;
+
+        $this->assertEquals($resultArray,
             $this->castAsJson(['foo', 'bar'], $grammar)
         );
 
-        $this->assertEquals(<<<'TEXT'
-        cast('["foo","bar"]' as json)
-        TEXT,
+        $this->assertEquals($resultArray,
             $this->castAsJson(collect(['foo', 'bar']), $grammar)
         );
 
-        $this->assertEquals(<<<'TEXT'
-        cast('{"foo":"bar"}' as json)
-        TEXT,
+        $this->assertEquals($resultObject,
             $this->castAsJson((object) ['foo' => 'bar'], $grammar)
         );
     }
@@ -135,10 +155,7 @@ class InteractsWithDatabaseTest extends TestCase
             return new Expression($value);
         });
 
-        $instance = new class
-        {
-            use InteractsWithDatabase;
-        };
+        $instance = new InteractsWithDatabaseTest_castAsJson_class;
 
         return $instance->castAsJson($value)->getValue();
     }

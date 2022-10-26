@@ -2,6 +2,7 @@
 
 namespace Illuminate\Database\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Support\ConfigurationUrlParser;
 use Symfony\Component\Process\Process;
@@ -39,7 +40,8 @@ class DbCommand extends Command
             $this->line('  Use the <options=bold>[--read]</> and <options=bold>[--write]</> options to specify a read or write connection.');
             $this->newLine();
 
-            return Command::FAILURE;
+            // return Command::FAILURE;
+            return SymfonyHelper::CONSOLE_FAILURE;
         }
 
         (new Process(

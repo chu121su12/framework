@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentBelongsToManyAggregateTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $db = new DB;
 
@@ -87,7 +87,7 @@ class DatabaseEloquentBelongsToManyAggregateTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         $this->schema()->drop('orders');
         $this->schema()->drop('products');

@@ -12,7 +12,7 @@ class EnvironmentDecryptCommandTest extends TestCase
 {
     protected $filesystem;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -31,7 +31,7 @@ class EnvironmentDecryptCommandTest extends TestCase
             ->once()
             ->andReturn(false);
 
-        $this->artisan('env:decrypt', ['--cipher' => 'invalid', '--key' => 'abcdefghijklmnop'])
+        $this->artisan('env:decrypt', ['--cipher' => 'invalid', '--key' => 'aonmlkjihgfedcbaponmlkjihgfedcbp'])
             ->expectsOutputToContain('Unsupported cipher')
             ->assertExitCode(1);
     }
@@ -93,6 +93,8 @@ class EnvironmentDecryptCommandTest extends TestCase
 
     public function testItGeneratesTheEnvironmentFileWithUserProvidedKey()
     {
+        $encryption = version_compare(PHP_VERSION, '7.1', '>=') ? 'aes-128-gcm' : 'aes-256-cbc';
+
         $this->filesystem->shouldReceive('exists')
             ->once()
             ->andReturn(true)
@@ -102,11 +104,11 @@ class EnvironmentDecryptCommandTest extends TestCase
             ->shouldReceive('get')
             ->once()
             ->andReturn(
-                (new Encrypter('abcdefghijklmnop', 'aes-128-gcm'))
+                (new Encrypter('aonmlkjihgfedcbaponmlkjihgfedcbp', $encryption))
                     ->encrypt('APP_NAME="Laravel Two"')
             );
 
-        $this->artisan('env:decrypt', ['--cipher' => 'aes-128-gcm', '--key' => 'abcdefghijklmnop'])
+        $this->artisan('env:decrypt', ['--cipher' => $encryption, '--key' => 'aonmlkjihgfedcbaponmlkjihgfedcbp'])
             ->expectsOutputToContain('Environment successfully decrypted.')
             ->assertExitCode(0);
 
@@ -141,6 +143,8 @@ class EnvironmentDecryptCommandTest extends TestCase
 
     public function testItGeneratesTheEnvironmentFileWhenForcing()
     {
+        $encryption = version_compare(PHP_VERSION, '7.1', '>=') ? 'aes-128-gcm' : 'aes-256-cbc';
+
         $this->filesystem->shouldReceive('exists')
             ->once()
             ->andReturn(true)
@@ -150,11 +154,11 @@ class EnvironmentDecryptCommandTest extends TestCase
             ->shouldReceive('get')
             ->once()
             ->andReturn(
-                (new Encrypter('abcdefghijklmnop', 'aes-128-gcm'))
+                (new Encrypter('aonmlkjihgfedcbaponmlkjihgfedcbp', $encryption))
                     ->encrypt('APP_NAME="Laravel Two"')
             );
 
-        $this->artisan('env:decrypt', ['--force' => true, '--key' => 'abcdefghijklmnop', '--cipher' => 'aes-128-gcm'])
+        $this->artisan('env:decrypt', ['--force' => true, '--key' => 'aonmlkjihgfedcbaponmlkjihgfedcbp', '--cipher' => $encryption])
             ->expectsOutputToContain('Environment successfully decrypted.')
             ->assertExitCode(0);
 
@@ -165,22 +169,24 @@ class EnvironmentDecryptCommandTest extends TestCase
     public function testItDecryptsMultiLineEnvironmentCorrectly()
     {
         $contents = <<<'Text'
-        APP_NAME=Laravel
-        APP_ENV=local
-        APP_DEBUG=true
-        APP_URL=http://localhost
+APP_NAME=Laravel
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://localhost
 
-        LOG_CHANNEL=stack
-        LOG_DEPRECATIONS_CHANNEL=null
-        LOG_LEVEL=debug
+LOG_CHANNEL=stack
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
 
-        DB_CONNECTION=mysql
-        DB_HOST=127.0.0.1
-        DB_PORT=3306
-        DB_DATABASE=laravel
-        DB_USERNAME=root
-        DB_PASSWORD=
-        Text;
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+Text;
+
+        $encryption = version_compare(PHP_VERSION, '7.1', '>=') ? 'aes-128-gcm' : 'aes-256-cbc';
 
         $this->filesystem->shouldReceive('exists')
             ->once()
@@ -191,11 +197,11 @@ class EnvironmentDecryptCommandTest extends TestCase
             ->shouldReceive('get')
             ->once()
             ->andReturn(
-                (new Encrypter('abcdefghijklmnop', 'aes-128-gcm'))
+                (new Encrypter('aonmlkjihgfedcbaponmlkjihgfedcbp', $encryption))
                     ->encrypt($contents)
             );
 
-        $this->artisan('env:decrypt', ['--force' => true, '--key' => 'abcdefghijklmnop', '--cipher' => 'aes-128-gcm'])
+        $this->artisan('env:decrypt', ['--force' => true, '--key' => 'aonmlkjihgfedcbaponmlkjihgfedcbp', '--cipher' => $encryption])
             ->expectsOutputToContain('Environment successfully decrypted.')
             ->assertExitCode(0);
 
@@ -274,11 +280,11 @@ class EnvironmentDecryptCommandTest extends TestCase
 
     public function testItCannotOverwriteEncryptedFiles()
     {
-        $this->artisan('env:decrypt', ['--env' => 'production', '--key' => 'abcdefghijklmnop', '--filename' => '.env.production.encrypted'])
+        $this->artisan('env:decrypt', ['--env' => 'production', '--key' => 'aonmlkjihgfedcbaponmlkjihgfedcbp', '--filename' => '.env.production.encrypted'])
             ->expectsOutputToContain('Invalid filename.')
             ->assertExitCode(1);
 
-        $this->artisan('env:decrypt', ['--env' => 'production', '--key' => 'abcdefghijklmnop', '--filename' => '.env.staging.encrypted'])
+        $this->artisan('env:decrypt', ['--env' => 'production', '--key' => 'aonmlkjihgfedcbaponmlkjihgfedcbp', '--filename' => '.env.staging.encrypted'])
             ->expectsOutputToContain('Invalid filename.')
             ->assertExitCode(1);
     }

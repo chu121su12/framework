@@ -64,6 +64,10 @@ class ViewController extends Controller
      */
     public function callAction($method, $parameters)
     {
+        // return backport_call_named_args([$this, $method], $parameters, function ($args) {
+        //     return $this->{$method}(...$args);
+        // });
+
         if ($method === '__invoke' && \version_compare(\PHP_VERSION, '8', '<')) {
             $routeParameters = array_filter($parameters, function ($key) {
                 return ! in_array($key, ['view', 'data', 'status', 'headers']);

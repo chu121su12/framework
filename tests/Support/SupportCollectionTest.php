@@ -5634,12 +5634,14 @@ class TestTraversableAndJsonSerializableObject implements IteratorAggregate, Jso
         $this->items = $items;
     }
 
-    public function getIterator(): Traversable
+    #[\ReturnTypeWillChange]
+    public function getIterator()/*: Traversable*/
     {
         return new ArrayIterator($this->items);
     }
 
-    public function jsonSerialize(): array
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()/*: array*/
     {
         return json_decode(json_encode($this->items), true);
     }

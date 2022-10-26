@@ -25,8 +25,12 @@ class Address
      * @param  string|null  $name
      * @return void
      */
-    public function __construct(string $address, string $name = null)
+    public function __construct(/*string */$address, /*string */$name = null)
     {
+        $address = backport_type_check('string', $address);
+
+        $name = backport_type_check('string', $name);
+
         $this->address = $address;
         $this->name = $name;
     }

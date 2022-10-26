@@ -2,6 +2,7 @@
 
 namespace Illuminate\Foundation\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Foundation\Concerns\ResolvesDumpSource;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\VarDumper\Caster\ReflectionCaster;
@@ -68,11 +69,12 @@ class CliDumper extends BaseCliDumper
      */
     public static function register($basePath, $compiledViewPath)
     {
-        $cloner = tap(new VarCloner())->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
+        // $cloner = tap(new VarCloner())->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
+        $cloner = tap(new VarCloner())->addCasters(SymfonyHelper::varDumperUnsetClosureFileInfoReflectionCaster());
 
         $dumper = new static(new ConsoleOutput(), $basePath, $compiledViewPath);
 
-        VarDumper::setHandler(fn ($value) => $dumper->dumpWithSource($cloner->cloneVar($value)));
+        VarDumper::setHandler(function ($value) use ($dumper, $cloner) { return $dumper->dumpWithSource($cloner->cloneVar($value)); });
     }
 
     /**
@@ -112,7 +114,7 @@ class CliDumper extends BaseCliDumper
             return '';
         }
 
-        [$file, $relativeFile, $line] = $dumpSource;
+        list($file, $relativeFile, $line) = $dumpSource;
 
         $href = $this->resolveSourceHref($file, $line);
 
@@ -127,7 +129,7 @@ class CliDumper extends BaseCliDumper
     /**
      * {@inheritDoc}
      */
-    protected function supportsColors(): bool
+    protected function supportsColors()/*: bool*/
     {
         return $this->output->isDecorated();
     }

@@ -69,9 +69,14 @@ class BelongsToRelationship
     {
         return function () use ($key) {
             if (! $this->resolved) {
-                $instance = $this->factory instanceof Factory
-                    ? ($this->factory->getRandomRecycledModel($this->factory->modelName()) ?? $this->factory->create())
-                    : $this->factory;
+                if ($this->factory instanceof Factory) {
+                    $instance = $this->factory->getRandomRecycledModel($this->factory->modelName());
+                    if (! isset($instance)) {
+                        $instance = $this->factory->create();
+                    }
+                } else {
+                    $instance = $this->factory;
+                }
 
                 return $this->resolved = $key ? $instance->{$key} : $instance->getKey();
             }

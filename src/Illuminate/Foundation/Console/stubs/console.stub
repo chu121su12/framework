@@ -2,6 +2,7 @@
 
 namespace {{ namespace }};
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 
 class {{ class }} extends Command
@@ -27,6 +28,7 @@ class {{ class }} extends Command
      */
     public function handle()
     {
-        return Command::SUCCESS;
+        // return Command::SUCCESS;
+        return SymfonyHelper::CONSOLE_SUCCESS;
     }
 }

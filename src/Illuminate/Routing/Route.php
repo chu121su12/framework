@@ -1086,7 +1086,7 @@ class Route
             return [];
         }
 
-        [$controllerClass, $controllerMethod] = [
+        list($controllerClass, $controllerMethod) = [
             $this->getControllerClass(),
             $this->getControllerMethod(),
         ];
@@ -1113,10 +1113,15 @@ class Route
      * @param  string  $method
      * @return array
      */
-    protected function staticallyProvidedControllerMiddleware(string $class, string $method)
+    protected function staticallyProvidedControllerMiddleware(/*string */$class, /*string */$method)
     {
+        $class = backport_type_check('string', $class);
+
+        $method = backport_type_check('string', $method);
+
         return collect($class::middleware())->reject(function ($middleware) use ($method) {
-            return $this->controllerDispatcher()::methodExcludedByOptions(
+            $class = $this->controllerDispatcher();
+            return $class::methodExcludedByOptions(
                 $method, ['only' => $middleware->only, 'except' => $middleware->except]
             );
         })->map->middleware->values()->all();

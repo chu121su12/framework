@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Foundation\Http;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Foundation\Http\HtmlDumper;
@@ -13,9 +14,11 @@ use Symfony\Component\VarDumper\Cloner\VarCloner;
 
 class HtmlDumperTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     protected $app;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         HtmlDumper::resolveDumpSourceUsing(function () {
             return [
@@ -59,7 +62,8 @@ class HtmlDumperTest extends TestCase
     {
         $output = $this->dump(['string', 1, 1.1, ['string', 1, 1.1]]);
 
-        $expected = '<samp data-depth=1 class=sf-dump-expanded><span style="color: #A0A0A0;"> // app/routes/console.php:18</span>';
+        // $expected = '<samp data-depth=1 class=sf-dump-expanded><span style="color: #A0A0A0;"> // app/routes/console.php:18</span>';
+        $expected = '<span style="color: #A0A0A0;"> // app/routes/console.php:18</span>';
 
         $this->assertStringContainsString($expected, $output);
     }
@@ -80,7 +84,9 @@ class HtmlDumperTest extends TestCase
 
         $output = $this->dump($user);
 
-        $expected = '<samp data-depth=1 class=sf-dump-expanded><span style="color: #A0A0A0;"> // app/routes/console.php:18</span>';
+        // $expected = '<samp data-depth=1 class=sf-dump-expanded><span style="color: #A0A0A0;"> // app/routes/console.php:18</span>';
+        $expected = '</samp>}<span style="color: #A0A0A0;"> // app/routes/console.php:18</span>';
+
 
         $this->assertStringContainsString($expected, $output);
     }
@@ -96,7 +102,7 @@ class HtmlDumperTest extends TestCase
 
     public function testUnresolvableSource()
     {
-        HtmlDumper::resolveDumpSourceUsing(fn () => null);
+        HtmlDumper::resolveDumpSourceUsing(function () { return null; });
 
         $output = $this->dump('string');
 
@@ -198,18 +204,18 @@ class HtmlDumperTest extends TestCase
         );
 
         // Failure...
-        $href = (fn () => $this->resolveSourceHref(
+        $href = backport_function_call_able(function () { return $this->resolveSourceHref(
             '/my-work-directory/app/my-file',
-            10,
-        ))->call($dumper);
+            10
+        ); })->call($dumper);
         $this->assertNull($href);
 
         $config = new Repository();
         $this->app->instance('config', $config);
-        $resolveSourceHref = fn () => (fn () => $this->resolveSourceHref(
+        $resolveSourceHref = function () use ($dumper) { return backport_function_call_able(function () { return $this->resolveSourceHref(
             '/my-work-directory/app/my-file',
-            10,
-        ))->call($dumper);
+            10
+        ); })->call($dumper); };
 
         // Empty...
         $this->assertNull($resolveSourceHref());
@@ -250,13 +256,13 @@ class HtmlDumperTest extends TestCase
         // Missing line
         $config->set('app.editor', ['name' => 'vscode', 'base_path' => '/my-docker-work-directory']);
 
-        $href = (fn () => $this->resolveSourceHref(
+        $href = backport_function_call_able(function () { return $this->resolveSourceHref(
             '/my-work-directory/app/my-file',
-            null,
-        ))->call($dumper);
+            null
+        ); })->call($dumper);
         $this->assertSame(
             'vscode://file//my-docker-work-directory/app/my-file:1',
-            $href,
+            $href
         );
     }
 
@@ -271,14 +277,15 @@ class HtmlDumperTest extends TestCase
 
         $dumper->setOutput($outputFile);
 
-        $cloner = tap(new VarCloner())->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
+        // $cloner = tap(new VarCloner())->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
+        $cloner = tap(new VarCloner())->addCasters(SymfonyHelper::varDumperUnsetClosureFileInfoReflectionCaster());
 
         $dumper->dumpWithSource($cloner->cloneVar($value));
 
-        return tap(file_get_contents($outputFile), fn () => @unlink($outputFile));
+        return tap(file_get_contents($outputFile), function () use ($outputFile) { return @unlink($outputFile); });
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         HtmlDumper::resolveDumpSourceUsing(null);
         Container::setInstance(null);

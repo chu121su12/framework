@@ -2,6 +2,7 @@
 
 namespace Illuminate\Foundation\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Encryption\Encrypter;
@@ -86,13 +87,15 @@ class EnvironmentEncryptCommand extends Command
         if (! $this->files->exists($environmentFile)) {
             $this->components->error('Environment file not found.');
 
-            return Command::FAILURE;
+            // return Command::FAILURE;
+            return SymfonyHelper::CONSOLE_FAILURE;
         }
 
         if ($this->files->exists($encryptedFile) && ! $this->option('force')) {
             $this->components->error('Encrypted environment file already exists.');
 
-            return Command::FAILURE;
+            // return Command::FAILURE;
+            return SymfonyHelper::CONSOLE_FAILURE;
         }
 
         try {
@@ -105,7 +108,8 @@ class EnvironmentEncryptCommand extends Command
         } catch (Exception $e) {
             $this->components->error($e->getMessage());
 
-            return Command::FAILURE;
+            // return Command::FAILURE;
+            return SymfonyHelper::CONSOLE_FAILURE;
         }
 
         $this->components->info('Environment successfully encrypted.');

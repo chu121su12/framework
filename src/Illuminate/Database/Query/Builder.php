@@ -2617,8 +2617,10 @@ class Builder implements BuilderContract
      * @param  array  $bindings
      * @return mixed
      */
-    public function rawValue(string $expression, array $bindings = [])
+    public function rawValue(/*string */$expression, array $bindings = [])
     {
+        $expression = backport_type_check('string', $expression);
+
         $result = (array) $this->selectRaw($expression, $bindings)->first();
 
         return count($result) > 0 ? reset($result) : null;

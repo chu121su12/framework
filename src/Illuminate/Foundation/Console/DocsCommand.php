@@ -136,7 +136,8 @@ class DocsCommand extends Command
 
         $this->refreshDocs();
 
-        return /*Command::SUCCESS*/ 0;
+        // return Command::SUCCESS;
+        return SymfonyHelper::CONSOLE_SUCCESS;
     }
 
     /**

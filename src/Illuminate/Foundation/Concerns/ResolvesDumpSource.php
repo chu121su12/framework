@@ -70,8 +70,8 @@ trait ResolvesDumpSource
             return;
         }
 
-        $file = $trace[$sourceKey]['file'] ?? null;
-        $line = $trace[$sourceKey]['line'] ?? null;
+        $file = isset($trace[$sourceKey]) && isset($trace[$sourceKey]['file']) ? $trace[$sourceKey]['file'] : null;
+        $line = isset($trace[$sourceKey]) && isset($trace[$sourceKey]['line']) ? $trace[$sourceKey]['line'] : null;
 
         if (is_null($file) || is_null($line)) {
             return;
@@ -130,6 +130,8 @@ trait ResolvesDumpSource
     {
         try {
             $editor = config('app.editor');
+        } catch (\Exception $e) {
+        } catch (\ErrorException $e) {
         } catch (Throwable $e) {
             // ..
         }
@@ -138,18 +140,24 @@ trait ResolvesDumpSource
             return;
         }
 
-        $href = is_array($editor) && isset($editor['href'])
-            ? $editor['href']
-            : ($this->editorHrefs[$editor['name'] ?? $editor] ?? sprintf('%s://open?file={file}&line={line}', $editor['name'] ?? $editor));
+        if (is_array($editor) && isset($editor['href'])) {
+            $href = $editor['href'];
+        } else {
+            $hrefKey = isset($editor['name']) ? $editor['name'] : $editor;
 
-        if ($basePath = $editor['base_path'] ?? false) {
+            $href = isset($this->editorHrefs[$hrefKey])
+                ? $this->editorHrefs[$hrefKey]
+                : sprintf('%s://open?file={file}&line={line}', $hrefKey);
+        }
+
+        if ($basePath = (isset($editor['base_path']) ? $editor['base_path'] : false)) {
             $file = str_replace($this->basePath, $basePath, $file);
         }
 
         $href = str_replace(
             ['{file}', '{line}'],
             [$file, is_null($line) ? 1 : $line],
-            $href,
+            $href
         );
 
         return $href;

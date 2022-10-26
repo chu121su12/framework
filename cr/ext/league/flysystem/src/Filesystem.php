@@ -4,6 +4,7 @@ namespace League\Flysystem;
 
 use InvalidArgumentException;
 use League\Flysystem\Adapter\CanOverwriteFiles;
+use League\Flysystem\Patch\UnableToProvideChecksum;
 use League\Flysystem\Plugin\PluggableTrait;
 use League\Flysystem\Util\ContentListingFormatter;
 
@@ -403,6 +404,43 @@ class Filesystem implements FilesystemInterface
     {
         if ($this->config->get('disable_asserts', false) === false && $this->has($path)) {
             throw new FileExistsException($path);
+        }
+    }
+
+    //
+
+    public function checksum(/*string */$path, array $config = [])/*: string*/
+    {
+        $path = backport_type_check('string', $path);
+
+        $cloned = clone $this->config;
+        foreach ($config as $key => $value) {
+            $cloned->set($key, $value);
+        }
+
+        try {
+            if (method_exists($this->adapter, 'checksum')) {
+                return $this->adapter->checksum($path, $cloned);
+            }
+        } catch (ChecksumAlgoIsNotSupported $e) {
+        }
+
+        return $this->calculateChecksumFromStream($path, $cloned);
+    }
+
+    private function calculateChecksumFromStream(/*string */$path, Config $config)/*: string*/
+    {
+        $path = backport_type_check('string', $path);
+
+        try {
+            $stream = $this->readStream($path);
+            $algo = (string) $config->get('checksum_algo', 'md5');
+            $context = hash_init($algo);
+            hash_update_stream($context, $stream);
+
+            return hash_final($context);
+        } catch (FilesystemException $exception) {
+            throw new UnableToProvideChecksum($exception->getMessage(), $path, $exception);
         }
     }
 }

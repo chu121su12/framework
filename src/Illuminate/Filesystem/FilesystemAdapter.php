@@ -18,7 +18,7 @@ use League\Flysystem\AdapterInterface as FlysystemAdapter;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface as FilesystemOperator;
-use League\Flysystem\Local\LocalFilesystemAdapter as LocalAdapter;
+use League\Flysystem\Patch\LocalFilesystemAdapter as LocalAdapter;
 use League\Flysystem\Patch\FtpAdapter;
 use League\Flysystem\Patch\PathPrefixer;
 use League\Flysystem\Patch\SftpAdapter;
@@ -27,7 +27,7 @@ use League\Flysystem\Patch\UnableToCreateDirectory;
 use League\Flysystem\Patch\UnableToDeleteDirectory;
 use League\Flysystem\Patch\UnableToDeleteFile;
 use League\Flysystem\Patch\UnableToMoveFile;
-// use League\Flysystem\UnableToProvideChecksum;
+use League\Flysystem\Patch\UnableToProvideChecksum;
 use League\Flysystem\Patch\UnableToReadFile;
 use League\Flysystem\Patch\UnableToRetrieveMetadata;
 use League\Flysystem\Patch\UnableToSetVisibility;
@@ -658,8 +658,10 @@ class FilesystemAdapter implements CloudFilesystemContract
      *
      * @throws UnableToProvideChecksum
      */
-    public function checksum(string $path, array $options = [])
+    public function checksum(/*string */$path, array $options = [])
     {
+        $path = backport_type_check('string', $path);
+
         try {
             return $this->driver->checksum($path, $options);
         } catch (UnableToProvideChecksum $e) {

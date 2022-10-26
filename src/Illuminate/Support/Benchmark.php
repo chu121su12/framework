@@ -13,8 +13,12 @@ class Benchmark
      * @param  int  $iterations
      * @return array|float
      */
-    public static function measure(Closure|array $benchmarkables, int $iterations = 1): array|float
+    public static function measure(/*Closure|array */$benchmarkables, /*int */$iterations = 1)/*: array|float*/
     {
+        $benchmarkables = backport_type_check('\Closure|array', $benchmarkables);
+
+        $iterations = backport_type_check('int', $iterations);
+
         return collect(Arr::wrap($benchmarkables))->map(function ($callback) use ($iterations) {
             return collect(range(1, $iterations))->map(function () use ($callback) {
                 gc_collect_cycles();
@@ -27,8 +31,8 @@ class Benchmark
             })->average();
         })->when(
             $benchmarkables instanceof Closure,
-            fn ($c) => $c->first(),
-            fn ($c) => $c->all(),
+            function ($c) { return $c->first(); },
+            function ($c) { return $c->all(); }
         );
     }
 
@@ -39,11 +43,15 @@ class Benchmark
      * @param  int  $iterations
      * @return never
      */
-    public static function dd(Closure|array $benchmarkables, int $iterations = 1): void
+    public static function dd(/*Closure|array */$benchmarkables, /*int */$iterations = 1)/*: void*/
     {
+        $benchmarkables = backport_type_check('\Closure|array', $benchmarkables);
+
+        $iterations = backport_type_check('int', $iterations);
+
         $result = collect(static::measure(Arr::wrap($benchmarkables), $iterations))
-            ->map(fn ($average) => number_format($average, 3).'ms')
-            ->when($benchmarkables instanceof Closure, fn ($c) => $c->first(), fn ($c) => $c->all());
+            ->map(function ($average) { return number_format($average, 3).'ms'; })
+            ->when($benchmarkables instanceof Closure, function ($c) { return $c->first(); }, function ($c) { return $c->all(); });
 
         dd($result);
     }

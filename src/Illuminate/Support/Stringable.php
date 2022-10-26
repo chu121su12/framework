@@ -196,6 +196,16 @@ class Stringable implements JsonSerializable
      */
     public function dirname($levels = 1)
     {
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            $value = $this->value;
+
+            while ($levels--) {
+                $value = dirname($value);
+            }
+
+            return new static($value);
+        }
+
         return new static(dirname($this->value, $levels));
     }
 

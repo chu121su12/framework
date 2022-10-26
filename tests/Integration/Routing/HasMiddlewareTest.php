@@ -3,7 +3,7 @@
 namespace Illuminate\Tests\Integration\Routing;
 
 use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\Middleware as Md;
 use Illuminate\Support\Facades\Route;
 use Orchestra\Testbench\TestCase;
 
@@ -24,9 +24,9 @@ class HasMiddlewareTestController implements HasMiddleware
     public static function middleware()
     {
         return [
-            new Middleware('all'),
-            (new Middleware('only-index'))->only('index'),
-            (new Middleware('except-index'))->except('index'),
+            new Md('all'),
+            (new Md('only-index'))->only('index'),
+            (new Md('except-index'))->except('index'),
         ];
     }
 

@@ -208,7 +208,7 @@ class ViewFactoryTest extends TestCase
         $view = m::mock(View::class);
         $view->shouldReceive('name')->once()->andReturn('name');
 
-        $factory->creator('name', fn () => true);
+        $factory->creator('name', function () { return true; });
 
         $factory->callCreator($view);
     }
@@ -229,7 +229,7 @@ class ViewFactoryTest extends TestCase
         $view = m::mock(View::class);
         $view->shouldReceive('name')->once()->andReturn('namespaced::my-package-view');
 
-        $factory->creator('namespaced::*', fn () => true);
+        $factory->creator('namespaced::*', function () { return true; });
 
         $factory->callCreator($view);
     }
@@ -255,7 +255,7 @@ class ViewFactoryTest extends TestCase
         $view = m::mock(View::class);
         $view->shouldReceive('name')->once()->andReturn('namespaced::my-package-view');
 
-        $factory->creator(['namespaced::*', 'welcome'], fn () => true);
+        $factory->creator(['namespaced::*', 'welcome'], function () { return true; });
 
         $factory->callCreator($view);
     }
@@ -276,7 +276,7 @@ class ViewFactoryTest extends TestCase
         $view = m::mock(View::class);
         $view->shouldReceive('name')->once()->andReturn('name');
 
-        $factory->creator('*', fn () => true);
+        $factory->creator('*', function () { return true; });
 
         $factory->callCreator($view);
     }
@@ -299,7 +299,7 @@ class ViewFactoryTest extends TestCase
             ->once()
             ->andReturn('components/button');
 
-        $factory->creator('components.button', fn () => true);
+        $factory->creator('components.button', function () { return true; });
 
         $factory->callCreator($view);
     }
@@ -320,7 +320,7 @@ class ViewFactoryTest extends TestCase
         $view = m::mock(View::class);
         $view->shouldReceive('name')->once()->andReturn('name');
 
-        $factory->composer('name', fn () => true);
+        $factory->composer('name', function () { return true; });
 
         $factory->callComposer($view);
     }
@@ -341,7 +341,7 @@ class ViewFactoryTest extends TestCase
         $view = m::mock(View::class);
         $view->shouldReceive('name')->once()->andReturn('name');
 
-        $factory->composer(['name'], fn () => true);
+        $factory->composer(['name'], function () { return true; });
 
         $factory->callComposer($view);
     }
@@ -362,7 +362,7 @@ class ViewFactoryTest extends TestCase
         $view = m::mock(View::class);
         $view->shouldReceive('name')->once()->andReturn('namespaced::my-package-view');
 
-        $factory->composer('namespaced::*', fn () => true);
+        $factory->composer('namespaced::*', function () { return true; });
 
         $factory->callComposer($view);
     }
@@ -388,7 +388,7 @@ class ViewFactoryTest extends TestCase
         $view = m::mock(View::class);
         $view->shouldReceive('name')->once()->andReturn('namespaced::my-package-view');
 
-        $factory->composer(['namespaced::*', 'welcome'], fn () => true);
+        $factory->composer(['namespaced::*', 'welcome'], function () { return true; });
 
         $factory->callComposer($view);
     }
@@ -409,7 +409,7 @@ class ViewFactoryTest extends TestCase
         $view = m::mock(View::class);
         $view->shouldReceive('name')->once()->andReturn('name');
 
-        $factory->composer('*', fn () => true);
+        $factory->composer('*', function () { return true; });
 
         $factory->callComposer($view);
     }
@@ -430,7 +430,7 @@ class ViewFactoryTest extends TestCase
         $view = m::mock(View::class);
         $view->shouldReceive('name')->once()->andReturn('components/button');
 
-        $factory->composer('components.button', fn () => true);
+        $factory->composer('components.button', function () { return true; });
 
         $factory->callComposer($view);
     }
@@ -504,7 +504,7 @@ class ViewFactoryTest extends TestCase
 
         $view->shouldReceive('name')->once()->andReturn('name');
 
-        $factory->composer('name', fn () => true);
+        $factory->composer('name', function () { return true; });
 
         $factory->getDispatcher()->shouldReceive('dispatch')->once()->with('composing: name', [$view]);
 

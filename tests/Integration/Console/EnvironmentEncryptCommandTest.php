@@ -11,7 +11,7 @@ class EnvironmentEncryptCommandTest extends TestCase
 {
     protected $filesystem;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

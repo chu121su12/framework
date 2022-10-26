@@ -34,8 +34,10 @@ class Middleware
      * @param  \Closure|string|array  $middleware
      * @return void
      */
-    public function __construct(Closure|string|array $middleware)
+    public function __construct(/*Closure|string|array */$middleware)
     {
+        $middleware = backport_type_check('\Closure|string|array', $middleware);
+
         $this->middleware = $middleware;
     }
 
@@ -45,8 +47,10 @@ class Middleware
      * @param  array|string  $only
      * @return $this
      */
-    public function only(array|string $only)
+    public function only(/*array|string */$only)
     {
+        $only = backport_type_check('array|string', $only);
+
         $this->only = Arr::wrap($only);
 
         return $this;
@@ -58,8 +62,10 @@ class Middleware
      * @param  array|string  $only
      * @return $this
      */
-    public function except(array|string $except)
+    public function except(/*array|string */$except)
     {
+        $except = backport_type_check('array|string', $except);
+
         $this->except = Arr::wrap($except);
 
         return $this;
