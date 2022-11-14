@@ -360,6 +360,17 @@ class FilesystemAdapterTest extends TestCase
         $this->assertSame('normal file content', $filesystemAdapter->read($storagePath));
     }
 
+    public function testPutFileAsWithoutPath()
+    {
+        file_put_contents($filePath = $this->tempDir.'/foo.txt', 'normal file content');
+
+        $filesystemAdapter = new FilesystemAdapter($this->filesystem, $this->adapter);
+
+        $storagePath = $filesystemAdapter->putFileAs($filePath, 'new.txt');
+
+        $this->assertSame('normal file content', $filesystemAdapter->read($storagePath));
+    }
+
     public function testPutFile()
     {
         file_put_contents($filePath = $this->tempDir.'/foo.txt', 'uploaded file content');
@@ -398,6 +409,17 @@ class FilesystemAdapterTest extends TestCase
             $storagePath,
             'uploaded file content'
         );
+    }
+
+    public function testPutFileWithoutPath()
+    {
+        file_put_contents($filePath = $this->tempDir.'/foo.txt', 'normal file content');
+
+        $filesystemAdapter = new FilesystemAdapter($this->filesystem, $this->adapter);
+
+        $storagePath = $filesystemAdapter->putFile($filePath);
+
+        $this->assertSame('normal file content', $filesystemAdapter->read($storagePath));
     }
 
     /**
