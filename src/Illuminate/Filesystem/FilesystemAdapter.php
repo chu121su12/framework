@@ -474,7 +474,7 @@ class FilesystemAdapter implements CloudFilesystemContract
     public function putFile($path, $file = null, $options = [])
     {
         if (is_null($file) || is_array($file)) {
-            [$path, $file, $options] = ['', $path, $file ?? []];
+            list($path, $file, $options) = ['', $path, isset($file) ? $file : []];
         }
 
         $file = is_string($file) ? new File($file) : $file;
@@ -494,7 +494,7 @@ class FilesystemAdapter implements CloudFilesystemContract
     public function putFileAs($path, $file, $name = null, $options = [])
     {
         if (is_null($name) || is_array($name)) {
-            [$path, $file, $name, $options] = ['', $path, $file, $name ?? []];
+            list($path, $file, $name, $options) = ['', $path, $file, isset($name) ? $name : []];
         }
 
         $stream = fopen(is_string($file) ? $file : $file->getRealPath(), 'r');
