@@ -24,7 +24,7 @@ class SqlServerGrammar extends Grammar
      *
      * @var string[]
      */
-    protected $selectComponents = [
+    protected $selectComponents_ = [
         'aggregate',
         'columns',
         'from',
@@ -46,12 +46,33 @@ class SqlServerGrammar extends Grammar
      */
     public function compileSelect(Builder $query)
     {
-        // An order by clause is required for SQL Server offset to function...
-        if ($query->offset && empty($query->orders)) {
-            $query->orders[] = ['sql' => '(SELECT 0)'];
+        // // An order by clause is required for SQL Server offset to function...
+        // if ($query->offset && empty($query->orders)) {
+        //     $query->orders[] = ['sql' => '(SELECT 0)'];
+        // }
+
+        // return parent::compileSelect($query);
+
+        if (! $query->offset) {
+            return parent::compileSelect($query);
         }
 
-        return parent::compileSelect($query);
+        if (is_null($query->columns)) {
+            $query->columns = ['*'];
+        }
+
+        $components = $this->compileComponents($query);
+
+        if (! empty($components['orders'])) {
+            return parent::compileSelect($query)." offset {$query->offset} rows fetch next {$query->limit} rows only";
+        }
+
+        // If an offset is present on the query, we will need to wrap the query in
+        // a big "ANSI" offset syntax block. This is very nasty compared to the
+        // other database systems but is necessary for implementing features.
+        return $this->compileAnsiOffset(
+            $query, $components
+        );
     }
 
     /**
@@ -320,11 +341,11 @@ class SqlServerGrammar extends Grammar
      */
     protected function compileLimit(Builder $query, $limit)
     {
-        $limit = (int) $limit;
+        // $limit = (int) $limit;
 
-        if ($limit && $query->offset > 0) {
-            return "fetch next {$limit} rows only";
-        }
+        // if ($limit && $query->offset > 0) {
+        //     return "fetch next {$limit} rows only";
+        // }
 
         return '';
     }
@@ -338,11 +359,11 @@ class SqlServerGrammar extends Grammar
      */
     protected function compileOffset(Builder $query, $offset)
     {
-        $offset = (int) $offset;
+        // $offset = (int) $offset;
 
-        if ($offset) {
-            return "offset {$offset} rows";
-        }
+        // if ($offset) {
+        //     return "offset {$offset} rows";
+        // }
 
         return '';
     }
@@ -556,5 +577,82 @@ class SqlServerGrammar extends Grammar
         }
 
         return $table;
+    }
+
+    /**
+     * Create a full ANSI offset clause for the query.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $components
+     * @return string
+     */
+    protected function compileAnsiOffset(Builder $query, $components)
+    {
+        // An ORDER BY clause is required to make this offset query work, so if one does
+        // not exist we'll just create a dummy clause to trick the database and so it
+        // does not complain about the queries for not having an "order by" clause.
+        if (empty($components['orders'])) {
+            $components['orders'] = 'order by (select 0)';
+        }
+
+        // We need to add the row number to the query so we can compare it to the offset
+        // and limit values given for the statements. So we will add an expression to
+        // the "select" that will give back the row numbers on each of the records.
+        $components['columns'] .= $this->compileOver($components['orders']);
+
+        unset($components['orders']);
+
+        if ($this->queryOrderContainsSubquery($query)) {
+            $query->bindings = $this->sortBindingsForSubqueryOrderBy($query);
+        }
+
+        // Next we need to calculate the constraints that should be placed on the query
+        // to get the right offset and limit from our query but if there is no limit
+        // set we will just handle the offset only since that is all that matters.
+        $sql = $this->concatenate($components);
+
+        return $this->compileTableExpression($sql, $query);
+    }
+
+    /**
+     * Compile the over statement for a table expression.
+     *
+     * @param  string  $orderings
+     * @return string
+     */
+    protected function compileOver($orderings)
+    {
+        return ", row_number() over ({$orderings}) as row_num";
+    }
+
+    /**
+     * Determine if the query's order by clauses contain a subquery.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @return bool
+     */
+    protected function queryOrderContainsSubquery($query)
+    {
+        if (! is_array($query->orders)) {
+            return false;
+        }
+
+        return Arr::first($query->orders, function ($value) {
+            return $this->isExpression(isset($value['column']) ? $value['column'] : null);
+        }, false) !== false;
+    }
+
+    /**
+     * Compile a common table expression for a query.
+     *
+     * @param  string  $sql
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @return string
+     */
+    protected function compileTableExpression($sql, $query)
+    {
+        $constraint = $this->compileRowConstraint($query);
+
+        return "select * from ({$sql}) as temp_table where row_num {$constraint} order by row_num";
     }
 }
