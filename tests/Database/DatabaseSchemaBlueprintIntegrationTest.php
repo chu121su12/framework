@@ -76,6 +76,18 @@ class DatabaseSchemaBlueprintIntegrationTest extends TestCase
                 'INSERT INTO users (first_name, age) SELECT name, age FROM __temp__users',
                 'DROP TABLE __temp__users',
             ],
+            [
+                'CREATE TEMPORARY TABLE __temp__users AS SELECT name, age FROM users',
+                'DROP TABLE users',
+                'CREATE TABLE users (name VARCHAR(255) NOT NULL COLLATE BINARY, age INTEGER NOT NULL)',
+                'INSERT INTO users (name, age) SELECT name, age FROM __temp__users',
+                'DROP TABLE __temp__users',
+                'CREATE TEMPORARY TABLE __temp__users AS SELECT name, age FROM users',
+                'DROP TABLE users',
+                'CREATE TABLE users (age VARCHAR(255) NOT NULL COLLATE BINARY, first_name VARCHAR(255) NOT NULL)',
+                'INSERT INTO users (first_name, age) SELECT name, age FROM __temp__users',
+                'DROP TABLE __temp__users',
+            ],
         ];
 
         $this->assertContains($queries, $expected);
@@ -105,6 +117,13 @@ class DatabaseSchemaBlueprintIntegrationTest extends TestCase
                 'INSERT INTO users (age) SELECT age FROM __temp__users',
                 'DROP TABLE __temp__users',
             ],
+            [
+                'CREATE TEMPORARY TABLE __temp__users AS SELECT age FROM users',
+                'DROP TABLE users',
+                'CREATE TABLE users (age INTEGER NOT NULL COLLATE RTRIM)',
+                'INSERT INTO users (age) SELECT age FROM __temp__users',
+                'DROP TABLE __temp__users',
+            ],
         ];
 
         $this->assertContains($queries, $expected);
@@ -116,6 +135,13 @@ class DatabaseSchemaBlueprintIntegrationTest extends TestCase
                 'CREATE TEMPORARY TABLE __temp__users AS SELECT age FROM users',
                 'DROP TABLE users',
                 'CREATE TABLE users (age INTEGER NOT NULL COLLATE "NOCASE")',
+                'INSERT INTO users (age) SELECT age FROM __temp__users',
+                'DROP TABLE __temp__users',
+            ],
+            [
+                'CREATE TEMPORARY TABLE __temp__users AS SELECT age FROM users',
+                'DROP TABLE users',
+                'CREATE TABLE users (age INTEGER NOT NULL COLLATE NOCASE)',
                 'INSERT INTO users (age) SELECT age FROM __temp__users',
                 'DROP TABLE __temp__users',
             ],
@@ -141,6 +167,13 @@ class DatabaseSchemaBlueprintIntegrationTest extends TestCase
                 'CREATE TEMPORARY TABLE __temp__users AS SELECT name FROM users',
                 'DROP TABLE users',
                 'CREATE TABLE users (name CHAR(50) NOT NULL COLLATE "BINARY")',
+                'INSERT INTO users (name) SELECT name FROM __temp__users',
+                'DROP TABLE __temp__users',
+            ],
+            [
+                'CREATE TEMPORARY TABLE __temp__users AS SELECT name FROM users',
+                'DROP TABLE users',
+                'CREATE TABLE users (name CHAR(50) NOT NULL COLLATE BINARY)',
                 'INSERT INTO users (name) SELECT name FROM __temp__users',
                 'DROP TABLE __temp__users',
             ],
@@ -246,6 +279,14 @@ class DatabaseSchemaBlueprintIntegrationTest extends TestCase
                 'DROP TABLE __temp__users',
                 'alter table `users` add unique `users_name_unique`(`name`)',
             ],
+            [
+                'CREATE TEMPORARY TABLE __temp__users AS SELECT name FROM users',
+                'DROP TABLE users',
+                'CREATE TABLE users (name VARCHAR(255) DEFAULT NULL COLLATE BINARY)',
+                'INSERT INTO users (name) SELECT name FROM __temp__users',
+                'DROP TABLE __temp__users',
+                'alter table `users` add unique `users_name_unique`(`name`)',
+            ],
         ];
 
         $this->assertContains($queries, $expected);
@@ -261,6 +302,14 @@ class DatabaseSchemaBlueprintIntegrationTest extends TestCase
                 'CREATE TEMPORARY TABLE __temp__users AS SELECT name FROM users',
                 'DROP TABLE users',
                 'CREATE TABLE users (name VARCHAR(255) DEFAULT NULL COLLATE "BINARY")',
+                'INSERT INTO users (name) SELECT name FROM __temp__users',
+                'DROP TABLE __temp__users',
+                'alter table "users" add constraint "users_name_unique" unique ("name")',
+            ],
+            [
+                'CREATE TEMPORARY TABLE __temp__users AS SELECT name FROM users',
+                'DROP TABLE users',
+                'CREATE TABLE users (name VARCHAR(255) DEFAULT NULL COLLATE BINARY)',
                 'INSERT INTO users (name) SELECT name FROM __temp__users',
                 'DROP TABLE __temp__users',
                 'alter table "users" add constraint "users_name_unique" unique ("name")',
@@ -284,6 +333,14 @@ class DatabaseSchemaBlueprintIntegrationTest extends TestCase
                 'DROP TABLE __temp__users',
                 'create unique index "users_name_unique" on "users" ("name")',
             ],
+            [
+                'CREATE TEMPORARY TABLE __temp__users AS SELECT name FROM users',
+                'DROP TABLE users',
+                'CREATE TABLE users (name VARCHAR(255) DEFAULT NULL COLLATE BINARY)',
+                'INSERT INTO users (name) SELECT name FROM __temp__users',
+                'DROP TABLE __temp__users',
+                'create unique index "users_name_unique" on "users" ("name")',
+            ],
         ];
 
         $this->assertContains($queries, $expected);
@@ -299,6 +356,14 @@ class DatabaseSchemaBlueprintIntegrationTest extends TestCase
                 'CREATE TEMPORARY TABLE __temp__users AS SELECT name FROM users',
                 'DROP TABLE users',
                 'CREATE TABLE users (name VARCHAR(255) DEFAULT NULL COLLATE "BINARY")',
+                'INSERT INTO users (name) SELECT name FROM __temp__users',
+                'DROP TABLE __temp__users',
+                'create unique index "users_name_unique" on "users" ("name")',
+            ],
+            [
+                'CREATE TEMPORARY TABLE __temp__users AS SELECT name FROM users',
+                'DROP TABLE users',
+                'CREATE TABLE users (name VARCHAR(255) DEFAULT NULL COLLATE BINARY)',
                 'INSERT INTO users (name) SELECT name FROM __temp__users',
                 'DROP TABLE __temp__users',
                 'create unique index "users_name_unique" on "users" ("name")',
@@ -325,6 +390,14 @@ class DatabaseSchemaBlueprintIntegrationTest extends TestCase
                 'CREATE TEMPORARY TABLE __temp__users AS SELECT name FROM users',
                 'DROP TABLE users',
                 'CREATE TABLE users (name VARCHAR(255) DEFAULT NULL COLLATE "BINARY")',
+                'INSERT INTO users (name) SELECT name FROM __temp__users',
+                'DROP TABLE __temp__users',
+                'alter table `users` add unique `index1`(`name`)',
+            ],
+            [
+                'CREATE TEMPORARY TABLE __temp__users AS SELECT name FROM users',
+                'DROP TABLE users',
+                'CREATE TABLE users (name VARCHAR(255) DEFAULT NULL COLLATE BINARY)',
                 'INSERT INTO users (name) SELECT name FROM __temp__users',
                 'DROP TABLE __temp__users',
                 'alter table `users` add unique `index1`(`name`)',
