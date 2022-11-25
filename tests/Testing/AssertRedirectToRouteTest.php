@@ -20,7 +20,7 @@ class AssertRedirectToRouteTest extends TestCase
      */
     private $urlGenerator;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -70,7 +70,7 @@ class AssertRedirectToRouteTest extends TestCase
             ]);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 

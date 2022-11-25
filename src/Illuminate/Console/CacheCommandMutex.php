@@ -44,7 +44,7 @@ class CacheCommandMutex implements CommandMutex
             true,
             method_exists($command, 'isolationLockExpiresAt')
                     ? $command->isolationLockExpiresAt()
-                    : CarbonInterval::hour(),
+                    : CarbonInterval::hour()
         );
     }
 

@@ -12,6 +12,11 @@ use Illuminate\Support\Collection;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+class NotificationSendQueuedNotificationTest_testNotificationCanSetMaxExceptions_class
+        {
+            public $maxExceptions = 23;
+        };
+
 class NotificationSendQueuedNotificationTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -58,10 +63,7 @@ class NotificationSendQueuedNotificationTest extends TestCase
     public function testNotificationCanSetMaxExceptions()
     {
         $notifiable = new NotifiableUser;
-        $notification = new class
-        {
-            public $maxExceptions = 23;
-        };
+        $notification = new NotificationSendQueuedNotificationTest_testNotificationCanSetMaxExceptions_class;
 
         $job = new SendQueuedNotifications($notifiable, $notification);
 

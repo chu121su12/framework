@@ -46,7 +46,7 @@ class InteractsWithContainerTest extends TestCase
         $this->assertSame($this, $instance);
     }
 
-    public function testWithoutViteReturnsEmptyArrayForPreloadedAssets(): void
+    public function testWithoutViteReturnsEmptyArrayForPreloadedAssets()/*: void*/
     {
         $instance = $this->withoutVite();
 

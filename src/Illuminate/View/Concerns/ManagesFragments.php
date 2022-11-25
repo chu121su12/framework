@@ -62,7 +62,9 @@ trait ManagesFragments
      */
     public function getFragment($name, $default = null)
     {
-        return $this->getFragments()[$name] ?? $default;
+        $fragments = $this->getFragments();
+
+        return isset($fragments[$name]) ? $fragments[$name] : $default;
     }
 
     /**

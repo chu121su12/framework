@@ -416,19 +416,8 @@ class Str
             return false;
         }
 
-        if (! \version_compare(\PHP_VERSION, '7.3', '>=')) {
-            backport_json_decode($value, true, 512);
-
-            if (JSON_ERROR_NONE === json_last_error()) {
-                return true;
-            }
-
-            json_encode(''); // reset error
-            return false;
-        }
-
         try {
-            backport_json_decode_throw($value, true, 512);
+            backport_json_decode($value, true, 512, 0, true);
         } catch (JsonException $e) {
             return false;
         }

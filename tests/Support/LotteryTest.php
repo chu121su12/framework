@@ -8,7 +8,7 @@ use RuntimeException;
 
 class LotteryTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 
@@ -45,19 +45,19 @@ class LotteryTest extends TestCase
 
     public function testItCanReturnValues()
     {
-        $win = Lottery::odds(1, 1)->winner(fn () => 'win')->choose();
+        $win = Lottery::odds(1, 1)->winner(function () { return 'win'; })->choose();
         $this->assertSame('win', $win);
 
-        $lose = Lottery::odds(0, 1)->loser(fn () => 'lose')->choose();
+        $lose = Lottery::odds(0, 1)->loser(function () { return 'lose'; })->choose();
         $this->assertSame('lose', $lose);
     }
 
     public function testItCanChooseSeveralTimes()
     {
-        $results = Lottery::odds(1, 1)->winner(fn () => 'win')->choose(2);
+        $results = Lottery::odds(1, 1)->winner(function () { return 'win'; })->choose(2);
         $this->assertSame(['win', 'win'], $results);
 
-        $results = Lottery::odds(0, 1)->loser(fn () => 'lose')->choose(2);
+        $results = Lottery::odds(0, 1)->loser(function () { return 'lose'; })->choose(2);
         $this->assertSame(['lose', 'lose'], $results);
     }
 
@@ -67,9 +67,10 @@ class LotteryTest extends TestCase
         // DB::whenQueryingForLongerThan(Interval::seconds(5), Lottery::odds(1, 5)->winner(function ($connection) {
         //     Alert the team
         // }));
-        $result = (function (callable $callable) {
+        $fn = function (callable $callable) {
             return $callable('winner-chicken', '-dinner');
-        })(Lottery::odds(1, 1)->winner(fn ($first, $second) => 'winner-'.$first.$second));
+        };
+        $result = $fn(Lottery::odds(1, 1)->winner(function ($first, $second) { return 'winner-'.$first.$second; }));
 
         $this->assertSame('winner-winner-chicken-dinner', $result);
     }
@@ -87,7 +88,7 @@ class LotteryTest extends TestCase
     {
         $result = null;
         Lottery::alwaysWin(function () use (&$result) {
-            $result = Lottery::odds(1, 2)->winner(fn () => 'winner')->choose(10);
+            $result = Lottery::odds(1, 2)->winner(function () { return 'winner'; })->choose(10);
         });
 
         $this->assertSame([
@@ -100,7 +101,7 @@ class LotteryTest extends TestCase
     {
         $result = null;
         Lottery::alwaysLose(function () use (&$result) {
-            $result = Lottery::odds(1, 2)->loser(fn () => 'loser')->choose(10);
+            $result = Lottery::odds(1, 2)->loser(function () { return 'loser'; })->choose(10);
         });
 
         $this->assertSame([
@@ -117,7 +118,7 @@ class LotteryTest extends TestCase
             false, true, false, true, false,
         ]);
 
-        $result = Lottery::odds(1, 100)->winner(fn () => 'winner')->loser(fn () => 'loser')->choose(10);
+        $result = Lottery::odds(1, 100)->winner(function () { return 'winner'; })->loser(function () { return 'loser'; })->choose(10);
 
         $this->assertSame([
             'winner', 'loser', 'winner', 'loser', 'winner',
@@ -133,23 +134,26 @@ class LotteryTest extends TestCase
             1 => true,
             // 2 => ...
             3 => true,
-        ], fn () => throw new RuntimeException('Missing key in sequence.'));
+        ], function () { throw new RuntimeException('Missing key in sequence.'); });
 
-        $result = Lottery::odds(1, 10000)->winner(fn () => 'winner')->loser(fn () => 'loser')->choose();
+        $result = Lottery::odds(1, 10000)->winner(function () { return 'winner'; })->loser(function () { return 'loser'; })->choose();
         $this->assertSame('winner', $result);
 
-        $result = Lottery::odds(1, 10000)->winner(fn () => 'winner')->loser(fn () => 'loser')->choose();
+        $result = Lottery::odds(1, 10000)->winner(function () { return 'winner'; })->loser(function () { return 'loser'; })->choose();
         $this->assertSame('winner', $result);
 
         $this->expectException(RuntimeException::class);
-        $this->expectErrorMessage('Missing key in sequence.');
-        Lottery::odds(1, 10000)->winner(fn () => 'winner')->loser(fn () => 'loser')->choose();
+        // $this->expectErrorMessage('Missing key in sequence.');
+        $this->expectExceptionMessage('Missing key in sequence.');
+
+        Lottery::odds(1, 10000)->winner(function () { return 'winner'; })->loser(function () { return 'loser'; })->choose();
     }
 
     public function testItThrowsForFloatsOverOne()
     {
         $this->expectException(RuntimeException::class);
-        $this->expectErrorMessage('Float must not be greater than 1.');
+        // $this->expectErrorMessage('Float must not be greater than 1.');
+        $this->expectExceptionMessage('Float must not be greater than 1.');
 
         new Lottery(1.1);
     }

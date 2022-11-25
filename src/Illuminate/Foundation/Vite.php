@@ -456,17 +456,23 @@ class Vite implements Htmlable
      */
     protected function resolvePreloadTagAttributes($src, $url, $chunk, $manifest)
     {
-        $attributes = $this->isCssPath($url) ? [
+        $isCssPath = $this->isCssPath($url);
+
+        $tagAttributes = $isCssPath
+            ? $this->resolveStylesheetTagAttributes($src, $url, $chunk, $manifest)
+            : $this->resolveScriptTagAttributes($src, $url, $chunk, $manifest);
+
+        $attributes = $isCssPath ? [
             'rel' => 'preload',
             'as' => 'style',
             'href' => $url,
-            'nonce' => $this->nonce ?? false,
-            'crossorigin' => $this->resolveStylesheetTagAttributes($src, $url, $chunk, $manifest)['crossorigin'] ?? false,
+            'nonce' => isset($this->nonce) ? $this->nonce : false,
+            'crossorigin' => isset($tagAttributes['crossorigin']) ? $tagAttributes['crossorigin'] : false,
         ] : [
             'rel' => 'modulepreload',
             'href' => $url,
-            'nonce' => $this->nonce ?? false,
-            'crossorigin' => $this->resolveScriptTagAttributes($src, $url, $chunk, $manifest)['crossorigin'] ?? false,
+            'nonce' => isset($this->nonce) ? $this->nonce : false,
+            'crossorigin' => isset($tagAttributes['crossorigin']) ? $tagAttributes['crossorigin'] : false,
         ];
 
         $attributes = $this->integrityKey !== false

@@ -63,27 +63,51 @@ if (! \function_exists('backport_match')) {
 }
 
 if (! \function_exists('backport_json_decode')) {
-    function backport_json_decode($json, $assoc = false, $depth = 512, $options = 0)
+    function backport_json_decode($json, $assoc = false, $depth = 512, $options = 0, $throw = false)
     {
-        // https://www.php.net/manual/en/function.json-decode 7.0.0 changes
-        if (\version_compare(\PHP_VERSION, '7.0', '<') && (string) $json === '') {
-            return \json_decode('-', $assoc, $depth, $options);
+        if (\version_compare(\PHP_VERSION, '7.3', '>=')) {
+            return \json_decode($json, $assoc, $depth, $throw ? ($options | JSON_THROW_ON_ERROR) : $options);
         }
 
-        return \json_decode($json, $assoc, $depth, $options);
+        // https://www.php.net/manual/en/function.json-decode 7.0.0 changes
+        $result = \version_compare(\PHP_VERSION, '7.0', '<') && (string) $json === ''
+            ? \json_decode('-', $assoc, $depth, $options)
+            : \json_decode($json, $assoc, $depth, $options);
+
+        if (JSON_ERROR_NONE === json_last_error()) {
+            return $result;
+        }
+
+        if (! $throw) {
+            return null;
+        }
+
+        $jsonErrorMsg = \json_last_error_msg();
+        \json_encode(''); // reset error // NOT \json_decode() !
+        throw new \JsonException($jsonErrorMsg);
     }
 }
 
-if (! \function_exists('backport_json_decode_throw')) {
-    function backport_json_decode_throw($json, $assoc = false, $depth = 512, $options = 0)
+if (! \function_exists('backport_json_encode')) {
+    function backport_json_encode($value, $options = 0, $depth = 512, $throw = false)
     {
-        $result = backport_json_decode($json, $assoc, $depth, $options);
-
-        if (\json_last_error() !== \JSON_ERROR_NONE) {
-            throw new JsonException(\json_last_error_msg());
+        if (\version_compare(\PHP_VERSION, '7.3', '>=')) {
+            return \json_encode($value, $throw ? ($options | JSON_THROW_ON_ERROR) : $options, $depth);
         }
 
-        return $result;
+        $output = \json_encode($value, $options, $depth);
+
+        if (JSON_ERROR_NONE === json_last_error()) {
+            return $output;
+        }
+
+        if (! $throw) {
+            return false;
+        }
+
+        $jsonErrorMsg = \json_last_error_msg();
+        \json_encode(''); // reset error
+        throw new \JsonException($jsonErrorMsg);
     }
 }
 

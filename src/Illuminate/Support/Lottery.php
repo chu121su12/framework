@@ -137,8 +137,8 @@ class Lottery
     protected function runCallback(...$args)
     {
         return $this->wins()
-            ? ($this->winner ?? fn () => true)(...$args)
-            : ($this->loser ?? fn () => false)(...$args);
+            ? call_user_func(isset($this->winner) ? $this->winner : function () { return true; }, ...$args)
+            : call_user_func(isset($this->loser) ? $this->loser : function () { return false; }, ...$args);
     }
 
     /**
@@ -148,7 +148,9 @@ class Lottery
      */
     protected function wins()
     {
-        return static::resultFactory()($this->chances, $this->outOf);
+        $fn = static::resultFactory();
+
+        return $fn($this->chances, $this->outOf);
     }
 
     /**
@@ -158,9 +160,10 @@ class Lottery
      */
     protected static function resultFactory()
     {
-        return static::$resultFactory ?? fn ($chances, $outOf) => $outOf === null
+        return isset(static::$resultFactory) ? static::$resultFactory : function ($chances, $outOf) { return $outOf === null
             ? random_int(0, PHP_INT_MAX) / PHP_INT_MAX <= $chances
             : random_int(1, $outOf) <= $chances;
+        };
     }
 
     /**
@@ -171,7 +174,7 @@ class Lottery
      */
     public static function alwaysWin($callback = null)
     {
-        self::setResultFactory(fn () => true);
+        self::setResultFactory(function () { return true; });
 
         if ($callback === null) {
             return;
@@ -190,7 +193,7 @@ class Lottery
      */
     public static function alwaysLose($callback = null)
     {
-        self::setResultFactory(fn () => false);
+        self::setResultFactory(function () { return false; });
 
         if ($callback === null) {
             return;
@@ -224,12 +227,14 @@ class Lottery
     {
         $next = 0;
 
-        $whenMissing ??= function ($chances, $outOf) use (&$next) {
+        $whenMissing  = isset($whenMissing) ? $whenMissing : function ($chances, $outOf) use (&$next) {
             $factoryCache = static::$resultFactory;
 
             static::$resultFactory = null;
 
-            $result = static::resultFactory()($chances, $outOf);
+            $fn = static::resultFactory();
+
+            $result = $fn($chances, $outOf);
 
             static::$resultFactory = $factoryCache;
 

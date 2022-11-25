@@ -410,7 +410,7 @@ class JsonSettingsCaster implements CastsAttributes
             return $value;
         }
 
-        $payload = backport_json_decode_throw($value, true);
+        $payload = backport_json_decode($value, true, 512, 0, true);
 
         return Settings::from($payload);
     }

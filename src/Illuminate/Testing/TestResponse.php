@@ -265,7 +265,7 @@ class TestResponse implements ArrayAccess
 
         PHPUnit::assertTrue(
             $this->isRedirect(),
-            $this->statusMessageWithDetails('201, 301, 302, 303, 307, 308', $this->getStatusCode()),
+            $this->statusMessageWithDetails('201, 301, 302, 303, 307, 308', $this->getStatusCode())
         );
 
         $request = Request::create($this->headers->get('Location'));
@@ -1376,10 +1376,7 @@ class TestResponse implements ArrayAccess
     {
         $hasErrors = $this->session()->has('errors');
 
-        PHPUnit::assertFalse(
-            $hasErrors,
-            'Session has unexpected errors: '.PHP_EOL.PHP_EOL.
-            json_encode((function () use ($hasErrors) {
+        $fn = function () use ($hasErrors) {
                 $errors = [];
 
                 $sessionErrors = $this->session()->get('errors');
@@ -1393,7 +1390,12 @@ class TestResponse implements ArrayAccess
                 }
 
                 return $errors;
-            })(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+            };
+
+        PHPUnit::assertFalse(
+            $hasErrors,
+            'Session has unexpected errors: '.PHP_EOL.PHP_EOL.
+            backport_json_encode($fn(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE, 512, true)
         );
 
         return $this;
@@ -1635,14 +1637,14 @@ class TestResponse implements ArrayAccess
         $exceptionToAppend = (string) $exceptionToAppend;
 
         $message = <<<"EOF"
-            The following exception occurred during the last request:
+The following exception occurred during the last request:
 
-            $exceptionToAppend
+$exceptionToAppend
 
-            ----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 
-            $exceptionMessage
-            EOF;
+$exceptionMessage
+EOF;
 
         return $this->appendMessageToException($message, $exception);
     }
@@ -1667,10 +1669,10 @@ class TestResponse implements ArrayAccess
         }
 
         $message = <<<"EOF"
-            The following errors occurred during the last request:
+The following errors occurred during the last request:
 
-            $errors
-            EOF;
+$errors
+EOF;
 
         return $this->appendMessageToException($message, $exception);
     }

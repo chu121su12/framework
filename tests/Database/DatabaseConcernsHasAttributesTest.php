@@ -27,7 +27,7 @@ class HasAttributesWithoutConstructor
 {
     use HasAttributes;
 
-    public function someAttribute(): Attribute
+    public function someAttribute()/*: Attribute*/
     {
         return new Attribute(function () {
         });

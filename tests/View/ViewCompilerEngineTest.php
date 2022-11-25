@@ -121,7 +121,7 @@ class ViewCompilerEngineTest extends TestCase
             ->once()
             ->with($compiled, [])
             ->andThrow(new ErrorException(
-                "require({$path}): Failed to open stream: No such file or directory",
+                "require({$path}): Failed to open stream: No such file or directory"
             ));
 
         $files->shouldReceive('getRequire')

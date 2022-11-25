@@ -11,6 +11,16 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 
+class CommandMutexTest_setUp_class extends Command implements Isolatable
+        {
+            public $ran = 0;
+
+            public function __invoke()
+            {
+                $this->ran++;
+            }
+        }
+
 class CommandMutexTest extends TestCase
 {
     /**
@@ -23,17 +33,9 @@ class CommandMutexTest extends TestCase
      */
     protected $commandMutex;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
-        $this->command = new class extends Command implements Isolatable
-        {
-            public $ran = 0;
-
-            public function __invoke()
-            {
-                $this->ran++;
-            }
-        };
+        $this->command = new CommandMutexTest_setUp_class;
 
         $this->commandMutex = m::mock(CommandMutex::class);
 

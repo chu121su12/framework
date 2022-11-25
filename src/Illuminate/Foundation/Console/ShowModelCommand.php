@@ -238,14 +238,14 @@ class ShowModelCommand extends DatabaseInspectionCommand
 
         // Get the Eloquent observers for this model...
         $listeners = array_filter($listeners, function ($v, $key) use ($model) {
-            return Str::startsWith($key, 'eloquent.') && Str::endsWith($key, $model::class);
+            return Str::startsWith($key, 'eloquent.') && Str::endsWith($key, is_string($model) ? $model : get_class($model));
         }, ARRAY_FILTER_USE_BOTH);
 
         // Format listeners Eloquent verb => Observer methods...
         $extractVerb = function ($key) {
             preg_match('/eloquent.([a-zA-Z]+)\: /', $key, $matches);
 
-            return $matches[1] ?? '?';
+            return isset($matches[1]) ? $matches[1] : '?';
         };
 
         $formatted = [];
@@ -253,7 +253,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
         foreach ($listeners as $key => $observerMethods) {
             $formatted[] = [
                 'event' => $extractVerb($key),
-                'observer' => array_map(fn ($obs) => is_string($obs) ? $obs : 'Closure', $observerMethods),
+                'observer' => array_map(function ($obs) { return is_string($obs) ? $obs : 'Closure'; }, $observerMethods),
             ];
         }
 
@@ -506,8 +506,10 @@ class ShowModelCommand extends DatabaseInspectionCommand
      *
      * @see \Illuminate\Console\GeneratorCommand
      */
-    protected function qualifyModel(string $model)
+    protected function qualifyModel(/*string */$model)
     {
+        $model = backport_type_check('string', $model);
+
         if (str_contains($model, '\\') && class_exists($model)) {
             return $model;
         }

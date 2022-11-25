@@ -9,6 +9,11 @@ use Illuminate\Contracts\Cache\Repository;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+class CacheCommandMutexTest_setUp_class extends Command
+        {
+            protected $name = 'command-name';
+        };
+
 class CacheCommandMutexTest extends TestCase
 {
     /**
@@ -31,16 +36,13 @@ class CacheCommandMutexTest extends TestCase
      */
     protected $cacheRepository;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $this->cacheFactory = m::mock(Factory::class);
         $this->cacheRepository = m::mock(Repository::class);
         $this->cacheFactory->shouldReceive('store')->andReturn($this->cacheRepository);
         $this->mutex = new CacheCommandMutex($this->cacheFactory);
-        $this->command = new class extends Command
-        {
-            protected $name = 'command-name';
-        };
+        $this->command = new CacheCommandMutexTest_setUp_class;
     }
 
     public function testCanCreateMutex()

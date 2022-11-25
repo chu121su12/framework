@@ -80,7 +80,7 @@ class BroadcastManagerTest extends TestCase
     protected function getApp(array $userConfig)
     {
         $app = new Container;
-        $app->singleton('config', fn () => new Repository($userConfig));
+        $app->singleton('config', function () use ($userConfig) { return new Repository($userConfig); });
 
         return $app;
     }

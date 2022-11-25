@@ -122,7 +122,7 @@ class Js implements Htmlable
             $data = $data->toArray();
         }
 
-        return $this->jsonEncoded73(json_encode($data, $flags | static::requiredFlags(), $depth));
+        return backport_json_encode($data, $flags | static::requiredFlags(), $depth, true);
     }
 
     /**
@@ -141,7 +141,7 @@ class Js implements Htmlable
         }
 
         if (Str::startsWith($json, ['"', '{', '['])) {
-            return "JSON.parse('".substr($this->jsonEncoded73(json_encode($json, $flags | static::requiredFlags())), 1, -1)."')";
+            return "JSON.parse('".substr(backport_json_encode($json, $flags | static::requiredFlags(), 512, true), 1, -1)."')";
         }
 
         return $json;

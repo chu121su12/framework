@@ -51,7 +51,9 @@ trait HasTimestamps
      */
     public function touchQuietly($attribute = null)
     {
-        return static::withoutEvents(fn () => $this->touch($attribute));
+        return static::withoutEvents(function () use ($attribute) {
+            return $this->touch($attribute);
+        });
     }
 
     /**

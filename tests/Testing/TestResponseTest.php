@@ -33,6 +33,8 @@ use Symfony\Component\HttpFoundation\Cookie;
 
 class TestResponseTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     public function testAssertViewIs()
     {
         $response = $this->makeMockResponse([

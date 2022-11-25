@@ -908,7 +908,8 @@ class FoundationViteTest extends TestCase
         ], $buildDir);
         ViteFacade::useCspNonce('expected-nonce');
 
-        $result = app(Vite::class)(['resources/js/app.js'], $buildDir);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/js/app.js'], $buildDir);
 
         $this->assertSame(
             '<link rel="preload" as="style" href="https://example.com/'.$buildDir.'/assets/app.versioned.css" nonce="expected-nonce" />'
@@ -955,7 +956,8 @@ class FoundationViteTest extends TestCase
             'crossorigin' => 'style-crossorigin',
         ]);
 
-        $result = app(Vite::class)(['resources/js/app.js'], $buildDir);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/js/app.js'], $buildDir);
 
         $this->assertSame(
             '<link rel="preload" as="style" href="https://example.com/'.$buildDir.'/assets/app.versioned.css" crossorigin="style-crossorigin" />'
@@ -982,7 +984,7 @@ class FoundationViteTest extends TestCase
     public function testItCanConfigureTheManifestFilename()
     {
         $buildDir = Str::random();
-        app()->singleton('path.public', fn () => __DIR__);
+        app()->singleton('path.public', function () { return __DIR__; });
         if (! file_exists(public_path($buildDir))) {
             mkdir(public_path($buildDir));
         }
@@ -996,7 +998,8 @@ class FoundationViteTest extends TestCase
 
         ViteFacade::useManifestFilename('custom-manifest.json');
 
-        $result = app(Vite::class)(['resources/js/app.js'], $buildDir);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/js/app.js'], $buildDir);
 
         $this->assertSame(
             '<link rel="modulepreload" href="https://example.com/'.$buildDir.'/assets/app-from-custom-manifest.versioned.js" />'

@@ -2,6 +2,7 @@
 
 namespace Illuminate\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\View\Components\Factory;
 use Illuminate\Contracts\Console\Isolatable;
 use Illuminate\Support\Traits\Macroable;
@@ -169,7 +170,7 @@ class Command extends SymfonyCommand
 
             return (int) (is_numeric($this->option('isolated'))
                         ? $this->option('isolated')
-                        : self::SUCCESS);
+                        : SymfonyHelper::CONSOLE_SUCCESS /*self::SUCCESS */);
         }
 
         $method = method_exists($this, 'handle') ? 'handle' : '__invoke';

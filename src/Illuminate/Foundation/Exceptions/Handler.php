@@ -318,8 +318,10 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return array
      */
-    protected function buildExceptionContext(Throwable $e)
+    protected function buildExceptionContext(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return array_merge(
             $this->exceptionContext($e),
             $this->context(),

@@ -186,11 +186,11 @@ class DummyMultiChannelNotificationWithConditionalMiddlware extends Notification
 
     public function middleware($notifiable, $channel)
     {
-        return match ($channel) {
-            'mail' => [new TestMailNotificationMiddleware],
-            'database' => [new TestDatabaseNotificationMiddleware],
-            default => []
-        };
+        switch ($channel) {
+            case 'mail': return [new TestMailNotificationMiddleware];
+            case 'database': return [new TestDatabaseNotificationMiddleware];
+            default: return [];
+        }
     }
 }
 
