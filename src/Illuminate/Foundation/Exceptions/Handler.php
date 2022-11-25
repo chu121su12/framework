@@ -275,11 +275,7 @@ class Handler implements ExceptionHandlerContract
             return $e instanceof $type;
         }, LogLevel::ERROR);
 
-        $context = array_merge(
-            $this->exceptionContext($e),
-            $this->context(),
-            ['exception' => $e]
-        );
+        $context = $this->buildExceptionContext($e);
 
         method_exists($logger, $level)
             ? $logger->{$level}($e->getMessage(), $context)
@@ -314,6 +310,21 @@ class Handler implements ExceptionHandlerContract
         return ! is_null(Arr::first($dontReport, function ($type) use ($e) {
             return $e instanceof $type;
         }));
+    }
+
+    /**
+     * Create the context array for logging the given exception.
+     *
+     * @param  \Throwable  $e
+     * @return array
+     */
+    protected function buildExceptionContext(Throwable $e)
+    {
+        return array_merge(
+            $this->exceptionContext($e),
+            $this->context(),
+            ['exception' => $e]
+        );
     }
 
     /**

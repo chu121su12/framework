@@ -20,7 +20,7 @@ class BladeComponentsTest extends AbstractBladeTestCase
     {
         $this->assertSameStringDifferentLineEndings('<?php if (isset($component)) { $__componentOriginal32877a641c21ac6579f6376333c8770674a6058f = $component; } ?>
 <?php $component = Illuminate\Tests\View\Blade\ComponentStub::class; ?>
-<?php $component = $component::resolve(["foo" => "bar"] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = $component::resolve(["foo" => "bar"] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName(\'test\'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>', $this->compiler->compileString('@component(\'Illuminate\Tests\View\Blade\ComponentStub::class\', \'test\', ["foo" => "bar"])'));

@@ -49,6 +49,13 @@ class Vite implements Htmlable
     protected $buildDirectory = 'build';
 
     /**
+     * The name of the manifest file.
+     *
+     * @var string
+     */
+    protected $manifestFilename = 'manifest.json';
+
+    /**
      * The script tag attributes resolvers.
      *
      * @var array
@@ -136,6 +143,19 @@ class Vite implements Htmlable
     public function withEntryPoints($entryPoints)
     {
         $this->entryPoints = $entryPoints;
+
+        return $this;
+    }
+
+    /**
+     * Set the filename for the manifest file.
+     *
+     * @param  string  $filename
+     * @return $this
+     */
+    public function useManifestFilename($filename)
+    {
+        $this->manifestFilename = $filename;
 
         return $this;
     }
@@ -440,9 +460,13 @@ class Vite implements Htmlable
             'rel' => 'preload',
             'as' => 'style',
             'href' => $url,
+            'nonce' => $this->nonce ?? false,
+            'crossorigin' => $this->resolveStylesheetTagAttributes($src, $url, $chunk, $manifest)['crossorigin'] ?? false,
         ] : [
             'rel' => 'modulepreload',
             'href' => $url,
+            'nonce' => $this->nonce ?? false,
+            'crossorigin' => $this->resolveScriptTagAttributes($src, $url, $chunk, $manifest)['crossorigin'] ?? false,
         ];
 
         $attributes = $this->integrityKey !== false
@@ -573,8 +597,12 @@ class Vite implements Htmlable
             return;
         }
 
+        $attributes = $this->parseAttributes([
+            'nonce' => $this->cspNonce(),
+        ]);
+
         $html = <<<'HTML'
-<script type="module">
+<script type="module" %s>
     import RefreshRuntime from '%s'
     RefreshRuntime.injectIntoGlobalHook(window)
     window.$RefreshReg$ = () => {}
@@ -586,6 +614,7 @@ HTML;
         return new HtmlString(
             sprintf(
                 $html,
+                implode(' ', $attributes),
                 $this->hotAsset('@react-refresh')
             )
         );
@@ -664,7 +693,7 @@ HTML;
      */
     protected function manifestPath($buildDirectory)
     {
-        return public_path($buildDirectory.'/manifest.json');
+        return public_path($buildDirectory.'/'.$this->manifestFilename);
     }
 
     /**
@@ -710,7 +739,7 @@ HTML;
      *
      * @return bool
      */
-    protected function isRunningHot()
+    public function isRunningHot()
     {
         return is_file($this->hotFile());
     }

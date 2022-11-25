@@ -445,7 +445,7 @@ class BusBatchTest extends TestCase
     /**
      * @return array
      */
-    public function serializedOptions()
+    public static function serializedOptions()
     {
         $options = [1, 2];
 

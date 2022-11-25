@@ -74,8 +74,7 @@ trait CompilesComponents
 
         return implode("\n", [
             '<?php if (isset($component)) { $__componentOriginal'.$hash.' = $component; } ?>',
-            '<?php $component = '.Str::finish($component, '::class').'; ?>',
-            '<?php $component = $component::resolve('.($data ?: '[]').' + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>',
+            '<?php $component = '.$component.'::resolve('.($data ?: '[]').' + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>',
             '<?php $component->withName('.$alias.'); ?>',
             '<?php if ($component->shouldRender()): ?>',
             '<?php $__env->startComponent($component->resolveView(), $component->data()); ?>',

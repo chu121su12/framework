@@ -5,6 +5,7 @@ namespace Illuminate\Foundation\Testing\Concerns;
 use Closure;
 use Illuminate\Foundation\Mix;
 use Illuminate\Foundation\Vite;
+use Illuminate\Support\HtmlString;
 use Mockery;
 
 class InteractsWithContainer_withoutVite_class
@@ -52,6 +53,11 @@ class InteractsWithContainer_withoutVite_class
             public function useStyleTagAttributes()
             {
                 return $this;
+            }
+
+            public function preloadedAssets()
+            {
+                return [];
             }
         }
 
@@ -188,7 +194,7 @@ trait InteractsWithContainer
         }
 
         $this->swap(Mix::class, function () {
-            return '';
+            return new HtmlString('');
         });
 
         return $this;

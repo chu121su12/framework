@@ -17,6 +17,8 @@ use PHPUnit\Framework\TestCase;
 
 class ComponentTest_testResolveDependenciesWithoutContainer_class extends Component
         {
+            public $content;
+
             public function __construct($a = null, $b = null)
             {
                 $this->content = $a.$b;
