@@ -43,7 +43,7 @@ class DatabaseEloquentDynamicRelationsTest extends TestCase
 
     public function testInharitedDynamicRelations()
     {
-        DynamicRelationModel::resolveRelationUsing('inheritedDynamicRel', fn () => new FakeHasManyRel);
+        DynamicRelationModel::resolveRelationUsing('inheritedDynamicRel', function () { return new FakeHasManyRel; });
         $model = new DynamicRelationModel;
         $model2 = new DynamicRelationModel2;
         $model4 = new DynamicRelationModel4;
@@ -57,12 +57,12 @@ class DatabaseEloquentDynamicRelationsTest extends TestCase
     public function testInheritedDynamicRelationsOverride()
     {
         // Inherited Dynamic Relations can be overriden
-        DynamicRelationModel::resolveRelationUsing('dynamicRelConflict', fn ($m) => $m->hasOne(Related::class));
+        DynamicRelationModel::resolveRelationUsing('dynamicRelConflict', function ($m) { return $m->hasOne(Related::class); });
         $model = new DynamicRelationModel;
         $model4 = new DynamicRelationModel4;
         $this->assertInstanceOf(HasOne::class, $model->dynamicRelConflict());
         $this->assertInstanceOf(HasOne::class, $model4->dynamicRelConflict());
-        DynamicRelationModel4::resolveRelationUsing('dynamicRelConflict', fn ($m) => $m->hasMany(Related::class));
+        DynamicRelationModel4::resolveRelationUsing('dynamicRelConflict', function ($m) { return $m->hasMany(Related::class); });
         $this->assertInstanceOf(HasOne::class, $model->dynamicRelConflict());
         $this->assertInstanceOf(HasMany::class, $model4->dynamicRelConflict());
     }

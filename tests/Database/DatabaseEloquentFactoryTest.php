@@ -360,18 +360,18 @@ class DatabaseEloquentFactoryTest extends TestCase
 
     public function test_belongs_to_many_relationship_related_models_set_on_instance_when_touching_owner()
     {
-        $user = FactoryTestUserFactory::new()->create();
-        $role = FactoryTestRoleFactory::new()->hasAttached($user, [], 'users')->create();
+        $user = FactoryTestUserFactory::new_()->create();
+        $role = FactoryTestRoleFactory::new_()->hasAttached($user, [], 'users')->create();
 
         $this->assertCount(1, $role->users);
     }
 
     public function test_relation_can_be_loaded_before_model_is_created()
     {
-        $user = FactoryTestUserFactory::new(['name' => 'Taylor Otwell'])->createOne();
+        $user = FactoryTestUserFactory::new_(['name' => 'Taylor Otwell'])->createOne();
 
-        $post = FactoryTestPostFactory::new()
-            ->for($user, 'user')
+        $post = FactoryTestPostFactory::new_()
+            ->for_($user, 'user')
             ->afterMaking(function (FactoryTestPost $post) {
                 $post->load('user');
             })

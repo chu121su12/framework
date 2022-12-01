@@ -968,9 +968,13 @@ class Event
      * @param  \Closure|string  $mutexName
      * @return $this
      */
-    public function createMutexNameUsing(Closure|string $mutexName)
+    public function createMutexNameUsing(/*Closure|string */$mutexName)
     {
-        $this->mutexNameResolver = is_string($mutexName) ? fn () => $mutexName : $mutexName;
+        $mutexName = backport_type_check('\Closure|string', $mutexName);
+
+        $this->mutexNameResolver = is_string($mutexName)
+            ? (function () use ($mutexName) { return $mutexName; })
+            : $mutexName;
 
         return $this;
     }

@@ -98,7 +98,7 @@ class CliDumper extends BaseCliDumper
 
         $lines[0] .= $this->getDumpSourceContent();
 
-        $this->output->write(implode("\n", $lines));
+        $this->output->write(SymfonyHelper::consoleOutputMessage(implode("\n", $lines), false));
 
         $this->dumping = false;
     }

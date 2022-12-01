@@ -103,15 +103,15 @@ class ListenCommand extends Command
                 : $this->option('delay');
 
         return new ListenerOptions(
-            name: $this->option('name'),
-            environment: $this->option('env'),
-            backoff: $backoff,
-            memory: $this->option('memory'),
-            timeout: $this->option('timeout'),
-            sleep: $this->option('sleep'),
-            rest: $this->option('rest'),
-            maxTries: $this->option('tries'),
-            force: $this->option('force')
+            /*name: */$this->option('name'),
+            /*environment: */$this->option('env'),
+            /*backoff: */$backoff,
+            /*memory: */$this->option('memory'),
+            /*timeout: */$this->option('timeout'),
+            /*sleep: */$this->option('sleep'),
+            /*maxTries: */$this->option('tries'),
+            /*force: */$this->option('force'),
+            /*rest: */$this->option('rest')
         );
     }
 

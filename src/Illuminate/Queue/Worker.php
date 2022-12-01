@@ -706,10 +706,10 @@ class Worker
     {
         pcntl_async_signals(true);
 
-        pcntl_signal(SIGQUIT, fn () => $this->shouldQuit = true);
-        pcntl_signal(SIGTERM, fn () => $this->shouldQuit = true);
-        pcntl_signal(SIGUSR2, fn () => $this->paused = true);
-        pcntl_signal(SIGCONT, fn () => $this->paused = false);
+        pcntl_signal(SIGQUIT, function () { return $this->shouldQuit = true; });
+        pcntl_signal(SIGTERM, function () { return $this->shouldQuit = true; });
+        pcntl_signal(SIGUSR2, function () { return $this->paused = true; });
+        pcntl_signal(SIGCONT, function () { return $this->paused = false; });
     }
 
     /**

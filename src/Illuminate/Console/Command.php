@@ -267,4 +267,22 @@ class Command extends SymfonyCommand
     {
         $this->laravel = $laravel;
     }
+
+    // symfony
+    public static function getDefaultDescription()/*: ?string*/
+    {
+        $class = static::class;
+
+        // if (\PHP_VERSION_ID >= 80000 && $attribute = (new \ReflectionClass($class))->getAttributes(AsCommand::class)) {
+        //     return $attribute[0]->newInstance()->description;
+        // }
+
+        if (!property_exists($class, 'defaultDescription')) {
+            return null;
+        }
+
+        $r = new \ReflectionProperty($class, 'defaultDescription');
+
+        return $class === $r->class ? static::$defaultDescription : null;
+    }
 }

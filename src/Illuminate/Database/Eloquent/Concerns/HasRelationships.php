@@ -63,7 +63,9 @@ trait HasRelationships
      */
     public function relationResolver($class, $key)
     {
-        if ($resolver = static::$relationResolvers[$class][$key] ?? null) {
+        $resolver = isset(static::$relationResolvers[$class]) && isset(static::$relationResolvers[$class][$key]) ? static::$relationResolvers[$class][$key] : null;
+
+        if ($resolver) {
             return $resolver;
         }
 
