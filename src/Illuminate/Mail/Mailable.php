@@ -688,6 +688,11 @@ class Mailable implements MailableContract, Renderable
             ];
         }
 
+        $this->{$property} = collect($this->{$property})
+            ->unique('address')
+            ->values()
+            ->all();
+
         return $this;
     }
 
