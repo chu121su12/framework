@@ -180,6 +180,10 @@ class EloquentUserProvider implements UserProvider
     {
         $class = '\\'.ltrim($this->model, '\\');
 
+        if (! class_exists($class)) {
+            report(\Exception('Missing eloquent user class ' . $class));
+        }
+
         return new $class;
     }
 
