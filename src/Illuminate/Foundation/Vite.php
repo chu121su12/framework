@@ -93,7 +93,7 @@ class Vite implements Htmlable
     /**
      * Get the preloaded assets.
      *
-     * @var array
+     * @return array
      */
     public function preloadedAssets()
     {
@@ -705,6 +705,7 @@ HTML;
     /**
      * Get a unique hash representing the current manifest, or null if there is no manifest.
      *
+     * @param  string|null  $buildDirectory
      * @return string|null
      */
     public function manifestHash($buildDirectory = null)

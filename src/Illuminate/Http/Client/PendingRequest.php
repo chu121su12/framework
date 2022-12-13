@@ -106,6 +106,13 @@ class PendingRequest
     protected $throwCallback;
 
     /**
+     * A callback to check if an exception should be thrown when a server or client error occurs.
+     *
+     * @var \Closure
+     */
+    protected $throwIfCallback;
+
+    /**
      * The number of times to try the request.
      *
      * @var int
@@ -623,12 +630,19 @@ class PendingRequest
     /**
      * Throw an exception if a server or client error occurred and the given condition evaluates to true.
      *
-     * @param  bool  $condition
+     * @param  callable|bool  $condition
+     * @param  callable|null  $throwCallback
      * @return $this
      */
     public function throwIf($condition)
     {
-        return $condition ? $this->throw_() : $this;
+        if (is_callable($condition)) {
+            $this->throwIfCallback = $condition;
+        }
+
+        $fga = func_get_args();
+
+        return $condition ? $this->throw_(isset($fga[1]) ? $fga[1] : null) : $this;
     }
 
     /**
@@ -681,7 +695,7 @@ class PendingRequest
      *
      * @param  string  $url
      * @param  array|string|null  $query
-     * @return \Illuminate\Http\Client\Response
+     * @return \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface
      */
     public function get(/*string */$url, $query = null)
     {
@@ -697,7 +711,7 @@ class PendingRequest
      *
      * @param  string  $url
      * @param  array|string|null  $query
-     * @return \Illuminate\Http\Client\Response
+     * @return \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface
      */
     public function head(/*string */$url, $query = null)
     {
@@ -713,7 +727,7 @@ class PendingRequest
      *
      * @param  string  $url
      * @param  array  $data
-     * @return \Illuminate\Http\Client\Response
+     * @return \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface
      */
     public function post(/*string */$url, $data = [])
     {
@@ -729,7 +743,7 @@ class PendingRequest
      *
      * @param  string  $url
      * @param  array  $data
-     * @return \Illuminate\Http\Client\Response
+     * @return \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface
      */
     public function patch($url, $data = [])
     {
@@ -743,7 +757,7 @@ class PendingRequest
      *
      * @param  string  $url
      * @param  array  $data
-     * @return \Illuminate\Http\Client\Response
+     * @return \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface
      */
     public function put($url, $data = [])
     {
@@ -757,7 +771,7 @@ class PendingRequest
      *
      * @param  string  $url
      * @param  array  $data
-     * @return \Illuminate\Http\Client\Response
+     * @return \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface
      */
     public function delete($url, $data = [])
     {
@@ -791,7 +805,7 @@ class PendingRequest
      * @param  string  $method
      * @param  string  $url
      * @param  array  $options
-     * @return \Illuminate\Http\Client\Response
+     * @return \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface
      *
      * @throws \Exception
      */
@@ -835,7 +849,9 @@ class PendingRequest
                             throw $exception;
                         }
 
-                        if ($this->throwCallback) {
+                        if ($this->throwCallback &&
+                            ($this->throwIfCallback === null ||
+                             call_user_func($this->throwIfCallback, $response))) {
                             $response->throw_($this->throwCallback);
                         }
 

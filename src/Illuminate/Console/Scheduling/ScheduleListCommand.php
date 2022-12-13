@@ -22,14 +22,17 @@ class ScheduleListCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'schedule:list {--timezone= : The timezone that times should be displayed in}';
+    protected $signature = 'schedule:list
+        {--timezone= : The timezone that times should be displayed in}
+        {--next : Sort the listed tasks by their next due date}
+    ';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'List the scheduled commands';
+    protected $description = 'List all scheduled tasks';
 
     /**
      * The terminal width resolver callback.
@@ -63,6 +66,8 @@ class ScheduleListCommand extends Command
         $timezoneOption = $this->option('timezone');
         $timezone = new DateTimeZone(isset($timezoneOption) ? $timezoneOption : config('app.timezone'));
 
+        $events = $this->sortEvents($events, $timezone);
+
         $events = $events->map(function ($event) use ($terminalWidth, $expressionSpacing, $timezone) {
             $expression = $this->formatCronExpression($event->expression, $expressionSpacing);
 
@@ -89,11 +94,7 @@ class ScheduleListCommand extends Command
 
             $nextDueDateLabel = 'Next Due:';
 
-            $timezoneOption = $this->option('timezone');
-            $nextDueDate = Carbon::create(/*(new CronExpression($event->expression))*/CronExpression::factory($event->expression)
-                ->getNextRunDate(Carbon::now()->setTimezone($event->timezone))
-                ->setTimezone($timezone)
-            );
+            $nextDueDate = $this->getNextDueDateForEvent($event, $timezone);
 
             $nextDueDate = $this->output->isVerbose()
                 ? $nextDueDate->format('Y-m-d H:i:s P')
@@ -144,6 +145,37 @@ class ScheduleListCommand extends Command
         $rows = $events->map(function ($event) { return array_map('mb_strlen', preg_split("/\s+/", $event->expression)); });
 
         return collect(isset($rows[0]) ? $rows[0] : [])->keys()->map(function ($key) use ($rows) { return $rows->max($key); });
+    }
+
+    /**
+     * Sorts the events by due date if option set.
+     *
+     * @param  \Illuminate\Support\Collection  $events
+     * @param  \DateTimeZone  $timezone
+     * @return \Illuminate\Support\Collection
+     */
+    private function sortEvents(\Illuminate\Support\Collection $events, DateTimeZone $timezone)
+    {
+        return $this->option('next')
+                    ? $events->sortBy(fn ($event) => $this->getNextDueDateForEvent($event, $timezone))
+                    : $events;
+    }
+
+    /**
+     * Get the next due date for an event.
+     *
+     * @param  \Illuminate\Console\Scheduling\Event  $event
+     * @param  \DateTimeZone  $timezone
+     * @return \Illuminate\Support\Carbon
+     */
+    private function getNextDueDateForEvent($event, DateTimeZone $timezone)
+    {
+        return Carbon::create(
+            /*(new CronExpression($event->expression))*/
+            CronExpression::factory($event->expression)
+                ->getNextRunDate(Carbon::now()->setTimezone($event->timezone))
+                ->setTimezone($timezone)
+            );
     }
 
     /**
