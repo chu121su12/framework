@@ -8,6 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseConcernsHasAttributesTest extends TestCase
 {
+    /**
+     * @requires PHP 7
+     */
     public function testWithoutConstructor()
     {
         $instance = new HasAttributesWithoutConstructor();
@@ -15,6 +18,9 @@ class DatabaseConcernsHasAttributesTest extends TestCase
         $this->assertEquals(['some_attribute'], $attributes);
     }
 
+    /**
+     * @requires PHP 7
+     */
     public function testWithConstructorArguments()
     {
         $instance = new HasAttributesWithConstructorArguments(null);

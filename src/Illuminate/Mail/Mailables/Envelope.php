@@ -418,6 +418,6 @@ class Envelope
 
         $value = backport_type_check('string', $value);
 
-        return isset($this->metadata[$key]) && $this->metadata[$key] === $value;
+        return isset($this->metadata[$key]) && (string) $this->metadata[$key] === $value;
     }
 }

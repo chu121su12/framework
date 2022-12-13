@@ -80,7 +80,11 @@ class Command extends SymfonyCommand
         // Once we have constructed the command, we'll set the description and other
         // related properties of the command. If a signature wasn't used to build
         // the command we'll set the arguments and the options on this command.
-        $this->setDescription((string) $this->description);
+        if (! isset($this->description)) {
+            $this->setDescription((string) static::getDefaultDescription());
+        } else {
+            $this->setDescription((string) $this->description);
+        }
 
         $this->setHelp((string) $this->help);
 
@@ -262,5 +266,23 @@ class Command extends SymfonyCommand
     public function setLaravel($laravel)
     {
         $this->laravel = $laravel;
+    }
+
+    // symfony
+    public static function getDefaultDescription()/*: ?string*/
+    {
+        $class = static::class;
+
+        // if (\PHP_VERSION_ID >= 80000 && $attribute = (new \ReflectionClass($class))->getAttributes(AsCommand::class)) {
+        //     return $attribute[0]->newInstance()->description;
+        // }
+
+        if (!property_exists($class, 'defaultDescription')) {
+            return null;
+        }
+
+        $r = new \ReflectionProperty($class, 'defaultDescription');
+
+        return $class === $r->class ? static::$defaultDescription : null;
     }
 }
