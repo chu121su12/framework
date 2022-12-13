@@ -62,7 +62,7 @@ class ScheduleListCommandTest extends TestCase
         $this->schedule->command('inspire')->cron('0 9,17 * * *');
         $this->schedule->command('inspire')->cron("0 10\t* * *");
 
-        $this->schedule->call(fn () => '')->everyMinute();
+        $this->schedule->call(function () { return ''; })->everyMinute();
         $closureLineNumber = __LINE__ - 1;
         $closureFilePath = __FILE__;
 

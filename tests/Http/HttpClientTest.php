@@ -1693,8 +1693,10 @@ class HttpClientTest extends TestCase
 
     public function testRequestExceptionIsThrowIfConditionClosureIsSatisfied()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            '*' => $this->factory::response('', 400),
+            '*' => $factory::response('', 400),
         ]);
 
         $exception = null;
@@ -1723,8 +1725,10 @@ class HttpClientTest extends TestCase
 
     public function testRequestExceptionIsNotThrownIfConditionClosureIsNotSatisfied()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            '*' => $this->factory::response(['result' => ['foo' => 'bar']], 400),
+            '*' => $factory::response(['result' => ['foo' => 'bar']], 400),
         ]);
 
         $hitThrowCallback = false;

@@ -349,7 +349,7 @@ class Response implements ArrayAccess
     {
         $fga = func_get_args();
 
-        return value($condition, $this) ? $this->throw(isset($fga[1]) ? $fga[1] : null) : $this;
+        return value($condition, $this) ? $this->throw_(isset($fga[1]) ? $fga[1] : null) : $this;
     }
 
     /**

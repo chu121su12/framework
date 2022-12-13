@@ -210,7 +210,8 @@ class NotificationSender
                 $connection = $notification->connection;
 
                 if (method_exists($notification, 'viaConnections')) {
-                    $connection = $notification->viaConnections()[$channel] ?? null;
+                    $via = $notification->viaConnections();
+                    $connection = isset($via[$channel]) ? $via[$channel] : null;
                 }
 
                 $queue = $notification->queue;
