@@ -118,11 +118,11 @@ class FooJob
 
 class FooCall
 {
-    public function __invoke(): void
+    public function __invoke()/*: void*/
     {
     }
 
-    public function fooFunction(): void
+    public function fooFunction()/*: void*/
     {
     }
 }

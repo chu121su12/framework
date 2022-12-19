@@ -14,6 +14,8 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseSchemaBlueprintTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     protected function tearDown()/*: void*/
     {
         m::close();

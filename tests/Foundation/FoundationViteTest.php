@@ -959,8 +959,8 @@ class FoundationViteTest extends TestCase
                 ],
             ], $manifest);
 
-            (match ($src) {
-                'resources/js/app.js' => function () use ($url, $chunk, $buildDir) {
+            switch ($src) {
+                case 'resources/js/app.js': $callback = function () use ($url, $chunk, $buildDir) {
                     $this->assertSame("https://example.com/{$buildDir}/assets/app.versioned.js", $url);
                     $this->assertSame([
                         'src' => 'resources/js/app.js',
@@ -974,46 +974,53 @@ class FoundationViteTest extends TestCase
                             'assets/app-nopreload.versioned.css',
                         ],
                     ], $chunk);
-                },
-                'resources/js/app-nopreload.js' => function () use ($url, $chunk, $buildDir) {
+                }; break;
+
+                case 'resources/js/app-nopreload.js': $callback = function () use ($url, $chunk, $buildDir) {
                     $this->assertSame("https://example.com/{$buildDir}/assets/app-nopreload.versioned.js", $url);
                     $this->assertSame([
                         'src' => 'resources/js/app-nopreload.js',
                         'file' => 'assets/app-nopreload.versioned.js',
                     ], $chunk);
-                },
-                'import.js' => function () use ($url, $chunk, $buildDir) {
+                }; break;
+
+                case 'import.js': $callback = function () use ($url, $chunk, $buildDir) {
                     $this->assertSame("https://example.com/{$buildDir}/assets/import.versioned.js", $url);
                     $this->assertSame([
                         'file' => 'assets/import.versioned.js',
                     ], $chunk);
-                },
-                'import-nopreload.js' => function () use ($url, $chunk, $buildDir) {
+                }; break;
+
+                case 'import-nopreload.js': $callback = function () use ($url, $chunk, $buildDir) {
                     $this->assertSame("https://example.com/{$buildDir}/assets/import-nopreload.versioned.js", $url);
                     $this->assertSame([
                         'file' => 'assets/import-nopreload.versioned.js',
                     ], $chunk);
-                },
-                'resources/css/app.css' => function () use ($url, $chunk, $buildDir) {
+                }; break;
+
+                case 'resources/css/app.css': $callback = function () use ($url, $chunk, $buildDir) {
                     $this->assertSame("https://example.com/{$buildDir}/assets/app.versioned.css", $url);
                     $this->assertSame([
                         'src' => 'resources/css/app.css',
                         'file' => 'assets/app.versioned.css',
                     ], $chunk);
-                },
-                'resources/css/app-nopreload.css' => function () use ($url, $chunk, $buildDir) {
+                }; break;
+
+                case 'resources/css/app-nopreload.css': $callback = function () use ($url, $chunk, $buildDir) {
                     $this->assertSame("https://example.com/{$buildDir}/assets/app-nopreload.versioned.css", $url);
                     $this->assertSame([
                         'src' => 'resources/css/app-nopreload.css',
                         'file' => 'assets/app-nopreload.versioned.css',
                     ], $chunk);
-                },
-            })();
+                }; break;
+            }
+            $callback();
 
             return Str::contains($src, '-nopreload') ? false : [];
         });
 
-        $result = app(Vite::class)(['resources/js/app.js', 'resources/js/app-nopreload.js'], $buildDir);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/js/app.js', 'resources/js/app-nopreload.js'], $buildDir);
 
         $this->assertSame(
             '<link rel="preload" as="style" href="https://example.com/'.$buildDir.'/assets/app.versioned.css" />'

@@ -120,8 +120,10 @@ class Builder
      * @param  bool  $value
      * @return void
      */
-    public static function useNativeSchemaOperationsIfPossible(bool $value = true)
+    public static function useNativeSchemaOperationsIfPossible(/*bool */$value = true)
     {
+        $value = backport_type_check('bool', $value);
+
         static::$alwaysUsesNativeSchemaOperationsIfPossible = $value;
     }
 

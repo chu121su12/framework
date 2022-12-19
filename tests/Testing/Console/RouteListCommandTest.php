@@ -36,10 +36,8 @@ class RouteListCommandTest extends TestCase
         });
     }
 
-    public function testDisplayRoutesForCliOriginal()
+    public function testDisplayRoutesForCli()
     {
-        $this->markTestSkipped('TODO: To fix sorting '.__METHOD__);
-
         $this->router->get('/', function () {
             //
         });
@@ -65,46 +63,6 @@ class RouteListCommandTest extends TestCase
             ->expectsOutput('')
             ->expectsOutput('  GET|HEAD   / ..................................................... ') // 2
             ->expectsOutput('  GET|HEAD   {account}.example.com/ ................................ ') // 3
-            ->expectsOutput('  GET|HEAD   closure ............................................... ')
-            ->expectsOutput('  POST       controller-invokable Illuminate\Tests\Testing\Console\…')
-            ->expectsOutput('  GET|HEAD   controller-method/{user} Illuminate\Tests\Testing\Cons…')
-            ->expectsOutput('  GET|HEAD   {account}.example.com/user/{id} ............. user.show')
-            ->expectsOutput('')
-            ->expectsOutput('                                                  Showing [6] routes')
-            ->expectsOutput('');
-    }
-
-    public function testDisplayRoutesForCliPatched()
-    {
-        if (\version_compare(\PHP_VERSION, '7.0', '>=')) {
-            $this->markTestSkipped('TODO: To fix sorting '.__METHOD__);
-        }
-
-        $this->router->get('/', function () {
-            //
-        });
-
-        $this->router->get('closure', function () {
-            return new RedirectResponse($this->urlGenerator->signedRoute('signed-route'));
-        });
-
-        $this->router->get('controller-method/{user}', [FooController::class, 'show']);
-        $this->router->post('controller-invokable', FooController::class);
-        $this->router->domain('{account}.example.com')->group(function () {
-            $this->router->get('/', function () {
-                //
-            });
-
-            $this->router->get('user/{id}', function ($account, $id) {
-                //
-            })->name('user.show')->middleware('web');
-        });
-
-        $this->artisan(RouteListCommand::class)
-            ->assertSuccessful()
-            ->expectsOutput('')
-            ->expectsOutput('  GET|HEAD   {account}.example.com/ ................................ ') // 3
-            ->expectsOutput('  GET|HEAD   / ..................................................... ') // 2
             ->expectsOutput('  GET|HEAD   closure ............................................... ')
             ->expectsOutput('  POST       controller-invokable Illuminate\Tests\Testing\Console\…')
             ->expectsOutput('  GET|HEAD   controller-method/{user} Illuminate\Tests\Testing\Cons…')

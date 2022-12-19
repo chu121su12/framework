@@ -1379,7 +1379,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
         }
 
         $descending ? StableSort::arsort($results, $options)
-            : asort($results, $options);
+            : StableSort::asort($results, $options);
 
         // Once we have sorted all of the keys in the array, we will loop through them
         // and grab the corresponding model so we can set the underlying items list

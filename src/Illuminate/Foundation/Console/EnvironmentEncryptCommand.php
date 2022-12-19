@@ -128,8 +128,10 @@ class EnvironmentEncryptCommand extends Command
      * @param  string  $key
      * @return string
      */
-    protected function parseKey(string $key)
+    protected function parseKey(/*string */$key)
     {
+        $key = backport_type_check('string', $key);
+
         if (Str::startsWith($key, $prefix = 'base64:')) {
             $key = base64_decode(Str::after($key, $prefix));
         }

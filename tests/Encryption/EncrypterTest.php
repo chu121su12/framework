@@ -7,6 +7,9 @@ use Illuminate\Encryption\Encrypter;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
+class EncrypterTest_provideTamperedData_class_1 {}
+class EncrypterTest_provideTamperedData_class_2 {}
+
 class EncrypterTest extends TestCase
 {
     public function testEncryption()
@@ -226,9 +229,9 @@ class EncrypterTest extends TestCase
 
         return [
             [['iv' => ['value_in_array'], 'value' => '', 'mac' => '']],
-            [['iv' => new class() {}, 'value' => '', 'mac' => '']],
+            [['iv' => new EncrypterTest_provideTamperedData_class_1, 'value' => '', 'mac' => '']],
             [['iv' => $validIv, 'value' => ['value_in_array'], 'mac' => '']],
-            [['iv' => $validIv, 'value' => new class() {}, 'mac' => '']],
+            [['iv' => $validIv, 'value' => new EncrypterTest_provideTamperedData_class_2, 'mac' => '']],
             [['iv' => $validIv, 'value' => '', 'mac' => ['value_in_array']]],
             [['iv' => $validIv, 'value' => '', 'mac' => null]],
             [['iv' => $validIv, 'value' => '', 'mac' => '', 'tag' => ['value_in_array']]],
