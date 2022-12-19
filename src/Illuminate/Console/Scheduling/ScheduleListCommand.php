@@ -218,8 +218,14 @@ class ScheduleListCommand extends Command
             );
         }
 
+        if (is_string($callback)) {
+            return $callback;
+        }
+
         if (is_array($callback)) {
-            return sprintf('%s::%s', get_class($callback[0]), $callback[1]);
+            $className = is_string($callback[0]) ? $callback[0] : get_class($callback[0]);
+
+            return sprintf('%s::%s', $className, $callback[1]);
         }
 
         return sprintf('%s::__invoke', get_class($callback));

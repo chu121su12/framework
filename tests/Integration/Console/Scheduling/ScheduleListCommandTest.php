@@ -37,6 +37,8 @@ class ScheduleListCommandTest extends TestCase
         $this->schedule->job(FooJob::class)->everyMinute();
         $this->schedule->command('inspire')->cron('0 9,17 * * *');
         $this->schedule->command('inspire')->cron("0 10\t* * *");
+        $this->schedule->call(FooCall::class)->everyMinute();
+        $this->schedule->call([FooCall::class, 'fooFunction'])->everyMinute();
 
         $this->schedule->call(function () { return ''; })->everyMinute();
         $closureLineNumber = __LINE__ - 1;
@@ -50,6 +52,8 @@ class ScheduleListCommandTest extends TestCase
             ->expectsOutput('  * *     * *      *  Illuminate\Tests\Integration\Console\Scheduling\FooJob  Next Due: 1 minute from now')
             ->expectsOutput('  0 9,17  * *      *  php artisan inspire ......... Next Due: 9 hours from now')
             ->expectsOutput('  0 10    * *      *  php artisan inspire ........ Next Due: 10 hours from now')
+            ->expectsOutput('  * *     * *      *  Closure at: Illuminate\Tests\Integration\Console\Scheduling\FooCall  Next Due: 1 minute from now')
+            ->expectsOutput('  * *     * *      *  Closure at: Illuminate\Tests\Integration\Console\Scheduling\FooCall::fooFunction  Next Due: 1 minute from now')
             ->expectsOutput('  * *     * *      *  Closure at: '.$closureFilePath.':'.$closureLineNumber.'  Next Due: 1 minute from now');
     }
 
@@ -61,6 +65,8 @@ class ScheduleListCommandTest extends TestCase
         $this->schedule->job(FooJob::class)->everyMinute();
         $this->schedule->command('inspire')->cron('0 9,17 * * *');
         $this->schedule->command('inspire')->cron("0 10\t* * *");
+        $this->schedule->call(FooCall::class)->everyMinute();
+        $this->schedule->call([FooCall::class, 'fooFunction'])->everyMinute();
 
         $this->schedule->call(function () { return ''; })->everyMinute();
         $closureLineNumber = __LINE__ - 1;
@@ -70,6 +76,8 @@ class ScheduleListCommandTest extends TestCase
             ->assertSuccessful()
             ->expectsOutput('  * *     * *      *  php artisan foobar a='.ProcessUtils::escapeArgument('b').' ... Next Due: 1 minute from now')
             ->expectsOutput('  * *     * *      *  Illuminate\Tests\Integration\Console\Scheduling\FooJob  Next Due: 1 minute from now')
+            ->expectsOutput('  * *     * *      *  Closure at: Illuminate\Tests\Integration\Console\Scheduling\FooCall  Next Due: 1 minute from now')
+            ->expectsOutput('  * *     * *      *  Closure at: Illuminate\Tests\Integration\Console\Scheduling\FooCall::fooFunction  Next Due: 1 minute from now')
             ->expectsOutput('  * *     * *      *  Closure at: '.$closureFilePath.':'.$closureLineNumber.'  Next Due: 1 minute from now')
             ->expectsOutput('  0 9,17  * *      *  php artisan inspire ......... Next Due: 9 hours from now')
             ->expectsOutput('  0 10    * *      *  php artisan inspire ........ Next Due: 10 hours from now')
@@ -106,4 +114,15 @@ class FooCommand extends Command
 
 class FooJob
 {
+}
+
+class FooCall
+{
+    public function __invoke(): void
+    {
+    }
+
+    public function fooFunction(): void
+    {
+    }
 }
