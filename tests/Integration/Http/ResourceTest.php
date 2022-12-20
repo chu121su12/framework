@@ -171,7 +171,7 @@ class ResourceTest_testAllMergeValuesMayBeMissing_class
                     'Mohamed',
                     $this->mergeWhen(false, ['Adam', 'Matt']),
                     'Jeffrey',
-                    $this->mergeWhen(false, (['Abigail', 'Lydia'])),
+                    $this->mergeWhen(false, ['Abigail', 'Lydia']),
                 ]);
             }
         }

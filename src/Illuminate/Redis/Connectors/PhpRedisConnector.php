@@ -161,7 +161,8 @@ class PhpRedisConnector implements Connector
         $_restore = backport_convert_error_to_error_exception();
 
         try {
-            $client->{($persistent ? 'pconnect' : 'connect')}(...$parameters);
+            $client->{$persistent ? 'pconnect' : 'connect'}(...$parameters);
+            $client->{$persistent ? 'pconnect' : 'connect'}(...$parameters);
         } finally {
             $_restore();
         }

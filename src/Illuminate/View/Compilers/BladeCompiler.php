@@ -139,6 +139,13 @@ class BladeCompiler extends Compiler implements CompilerInterface
     protected $rawBlocks = [];
 
     /**
+     * The array of anonymous component paths to search for components in.
+     *
+     * @var array
+     */
+    protected $anonymousComponentPaths = [];
+
+    /**
      * The array of anonymous component namespaces to autoload from.
      *
      * @var array
@@ -382,7 +389,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      */
     protected function storePhpBlocks($value)
     {
-        return preg_replace_callback('/(?<!@)@php(.*?)@endphp/s', function ($matches) {
+        return preg_replace_callback('/(?<!@)@php(?! ?\()(.*?)@endphp/s', function ($matches) {
             return $this->storeRawBlock("<?php{$matches[1]}?>");
         }, $value);
     }
@@ -685,6 +692,28 @@ class BladeCompiler extends Compiler implements CompilerInterface
     }
 
     /**
+     * Register a new anonymous component path.
+     *
+     * @param  string  $path
+     * @param  string|null  $prefix
+     * @return void
+     */
+    public function anonymousComponentPath(string $path, string $prefix = null)
+    {
+        $prefixHash = md5($prefix ?: $path);
+
+        $this->anonymousComponentPaths[] = [
+            'path' => $path,
+            'prefix' => $prefix,
+            'prefixHash' => $prefixHash,
+        ];
+
+        Container::getInstance()
+                ->make(ViewFactory::class)
+                ->addNamespace($prefixHash, $path);
+    }
+
+    /**
      * Register an anonymous component namespace.
      *
      * @param  string  $directory
@@ -715,6 +744,16 @@ class BladeCompiler extends Compiler implements CompilerInterface
     public function componentNamespace($namespace, $prefix)
     {
         $this->classComponentNamespaces[$prefix] = $namespace;
+    }
+
+    /**
+     * Get the registered anonymous component paths.
+     *
+     * @return array
+     */
+    public function getAnonymousComponentPaths()
+    {
+        return $this->anonymousComponentPaths;
     }
 
     /**

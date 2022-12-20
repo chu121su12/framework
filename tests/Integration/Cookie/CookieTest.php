@@ -31,9 +31,7 @@ class CookieTest extends TestCase
 
         $response = $this->get('/');
         $this->assertCount(2, $response->headers->getCookies());
-
-        $firstCookie = $response->headers->getCookies()[1];
-        $this->assertEquals(0, $firstCookie->getExpiresTime());
+        $this->assertEquals(0, $response->headers->getCookies()[1]->getExpiresTime());
     }
 
     public function test_cookie_is_sent_back_with_proper_expire_time_with_respect_to_lifetime()
@@ -48,9 +46,7 @@ class CookieTest extends TestCase
         Carbon::setTestNow(Carbon::now());
         $response = $this->get('/');
         $this->assertCount(2, $response->headers->getCookies());
-
-        $firstCookie = $response->headers->getCookies()[1];
-        $this->assertEquals(Carbon::now()->getTimestamp() + 60, $firstCookie->getExpiresTime());
+        $this->assertEquals(Carbon::now()->getTimestamp() + 60, $response->headers->getCookies()[1]->getExpiresTime());
     }
 
     protected function getEnvironmentSetUp($app)

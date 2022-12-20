@@ -97,6 +97,11 @@ class SendingMailWithLocaleTest extends TestCase
         $this->assertStringContainsString('esm',
             app('mailer')->getSwiftMailer()->getTransport()->messages()[0]->getBody()
         );
+
+        $mailable = new Mailable;
+        $mailable->to($recipient);
+
+        $this->assertSame($recipient->email_locale, $mailable->locale);
     }
 
     public function testLocaleIsSentWithSelectedLocaleOverridingModelPreferredLocale()
