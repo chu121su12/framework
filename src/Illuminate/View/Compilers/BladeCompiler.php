@@ -698,8 +698,12 @@ class BladeCompiler extends Compiler implements CompilerInterface
      * @param  string|null  $prefix
      * @return void
      */
-    public function anonymousComponentPath(string $path, string $prefix = null)
+    public function anonymousComponentPath(/*string */$path, /*string */$prefix = null)
     {
+        $path = backport_type_check('string', $path);
+
+        $prefix = backport_type_check('?string', $prefix);
+
         $prefixHash = md5($prefix ?: $path);
 
         $this->anonymousComponentPaths[] = [

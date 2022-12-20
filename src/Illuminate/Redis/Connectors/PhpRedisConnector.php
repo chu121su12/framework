@@ -162,7 +162,6 @@ class PhpRedisConnector implements Connector
 
         try {
             $client->{$persistent ? 'pconnect' : 'connect'}(...$parameters);
-            $client->{$persistent ? 'pconnect' : 'connect'}(...$parameters);
         } finally {
             $_restore();
         }

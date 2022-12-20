@@ -324,8 +324,10 @@ class ComponentTagCompiler
      * @param  string  $component
      * @return string|null
      */
-    protected function guessAnonymousComponentUsingPaths(Factory $viewFactory, string $component)
+    protected function guessAnonymousComponentUsingPaths(Factory $viewFactory, /*string */$component)
     {
+        $component = backport_type_check('string', $component);
+
         $delimiter = ViewFinderInterface::HINT_PATH_DELIMITER;
 
         foreach ($this->blade->getAnonymousComponentPaths() as $path) {
@@ -339,11 +341,14 @@ class ComponentTagCompiler
                         ? Str::after($component, $delimiter)
                         : $component;
 
-                if (! is_null($guess = match (true) {
-                    $viewFactory->exists($guess = $path['prefixHash'].$delimiter.$formattedComponent) => $guess,
-                    $viewFactory->exists($guess = $path['prefixHash'].$delimiter.$formattedComponent.'.index') => $guess,
-                    default => null,
-                })) {
+                $guess = null;
+                switch (true) {
+                    case $viewFactory->exists($guess = $path['prefixHash'].$delimiter.$formattedComponent): break;
+                    case $viewFactory->exists($guess = $path['prefixHash'].$delimiter.$formattedComponent.'.index'): break;
+                    default: $guess = null;
+                }
+
+                if (! is_null($guess)) {
                     return $guess;
                 }
             } catch (InvalidArgumentException $e) {
@@ -359,8 +364,10 @@ class ComponentTagCompiler
      * @param  string  $component
      * @return string|null
      */
-    protected function guessAnonymousComponentUsingNamespaces(Factory $viewFactory, string $component)
+    protected function guessAnonymousComponentUsingNamespaces(Factory $viewFactory, /*string */$component)
     {
+        $component = backport_type_check('string', $component);
+
         return collect($this->blade->getAnonymousComponentNamespaces())
             ->filter(function ($directory, $prefix) use ($component) {
                 return Str::startsWith($component, $prefix.'::');

@@ -71,9 +71,9 @@ class ScheduleListCommand extends Command
         $events = $events->map(function ($event) use ($terminalWidth, $expressionSpacing, $timezone) {
             $expression = $this->formatCronExpression($event->expression, $expressionSpacing);
 
-            $command = $event->command ?? '';
+            $command = isset($event->command) ? $event->command : '';
 
-            $description = $event->description ?? '';
+            $description = isset($event->description) ? $event->description : '';
 
             if (! $this->output->isVerbose()) {
                 $command = str_replace([Application::phpBinary(), Application::artisanBinary()], [
