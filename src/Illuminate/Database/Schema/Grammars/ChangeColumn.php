@@ -41,7 +41,11 @@ class ChangeColumn
             $grammar, $blueprint, $schema
         );
 
-        if (! $tableDiff->isEmpty()) {
+        // Doctrine v3
+        // if (! $tableDiff->isEmpty()) {
+        //     return (array) $databasePlatform->getAlterTableSQL($tableDiff);
+        // }
+        if ($tableDiff !== false) {
             return (array) $databasePlatform->getAlterTableSQL($tableDiff);
         }
 
@@ -58,9 +62,15 @@ class ChangeColumn
      */
     protected static function getChangedDiff($grammar, Blueprint $blueprint, SchemaManager $schema)
     {
-        $current = $schema->introspectTable($grammar->getTablePrefix().$blueprint->getTable());
+        // Doctrine v3
+        // $current = $schema->introspectTable($grammar->getTablePrefix().$blueprint->getTable());
+        $current = $schema->listTableDetails($grammar->getTablePrefix().$blueprint->getTable());
 
-        return (new Comparator)->compareTables(
+        // Doctrine v3
+        // return (new Comparator)->compareTables(
+        //     $current, static::getTableWithColumnChanges($blueprint, $current)
+        // );
+        return (new Comparator)->diffTable(
             $current, static::getTableWithColumnChanges($blueprint, $current)
         );
     }
@@ -106,7 +116,11 @@ class ChangeColumn
      */
     protected static function getDoctrineColumn(Table $table, Fluent $fluent)
     {
-        return $table->modifyColumn(
+        // Doctrine v3
+        // return $table->modifyColumn(
+        //     $fluent['name'], static::getDoctrineColumnChangeOptions($fluent)
+        // )->getColumn($fluent['name']);
+        return $table->changeColumn(
             $fluent['name'], static::getDoctrineColumnChangeOptions($fluent)
         )->getColumn($fluent['name']);
     }

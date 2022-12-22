@@ -56,7 +56,9 @@ class TableCommand extends DatabaseInspectionCommand
             return $this->components->warn("Table [{$table}] doesn't exist.");
         }
 
-        $table = $schema->introspectTable($table);
+        // Doctrine v3
+        // $table = $schema->introspectTable($table);
+        $table = $schema->listTableDetails($table);
 
         $columns = $this->columns($table);
         $indexes = $this->indexes($table);
