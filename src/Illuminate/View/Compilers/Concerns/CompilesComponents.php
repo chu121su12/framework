@@ -48,7 +48,7 @@ trait CompilesComponents
     {
         $component = backport_type_check('string', $component);
 
-        static::$componentHashStack[] = $hash = sha1($component);
+        static::$componentHashStack[] = $hash = hash('sha1', $component);
 
         return $hash;
     }
