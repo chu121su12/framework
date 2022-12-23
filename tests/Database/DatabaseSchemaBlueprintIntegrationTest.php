@@ -94,6 +94,9 @@ class DatabaseSchemaBlueprintIntegrationTest extends TestCase
         $this->assertContains($queries, $expected);
     }
 
+    /**
+     * @requires PHP 8
+     */
     public function testRenamingColumnsWithoutDoctrineWorks()
     {
         $connection = $this->db->connection();
@@ -130,6 +133,30 @@ class DatabaseSchemaBlueprintIntegrationTest extends TestCase
         $this->assertFalse($schema->hasColumn('test', 'foo'));
         $this->assertFalse($schema->hasColumn('test', 'baz'));
         $this->assertTrue($schema->hasColumns('test', ['bar', 'qux']));
+    }
+
+    public function testRenamingColumnsWithoutDoctrineWorksWithOlderSqliteVersion()
+    {
+        $connection = $this->db->connection();
+        $schema = $connection->getSchemaBuilder();
+
+        $schema->useNativeSchemaOperationsIfPossible();
+
+        $base = new Blueprint('users', function ($table) {
+            $table->renameColumn('name', 'new_name');
+        });
+
+        $blueprint = clone $base;
+        $this->assertEquals(['alter table `users` rename column `name` to `new_name`'], $blueprint->toSql($connection, new MySqlGrammar));
+
+        $blueprint = clone $base;
+        $this->assertEquals(['alter table "users" rename column "name" to "new_name"'], $blueprint->toSql($connection, new PostgresGrammar));
+
+        $blueprint = clone $base;
+        $this->assertEquals(['alter table "users" rename column "name" to "new_name"'], $blueprint->toSql($connection, new SQLiteGrammar));
+
+        $blueprint = clone $base;
+        $this->assertEquals(['sp_rename \'"users"."name"\', "new_name", \'COLUMN\''], $blueprint->toSql($connection, new SqlServerGrammar));
     }
 
     public function testDroppingColumnsWithoutDoctrineWorks()

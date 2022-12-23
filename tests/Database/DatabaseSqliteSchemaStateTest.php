@@ -12,13 +12,13 @@ use Symfony\Component\Process\Process;
 
 class DatabaseSqliteSchemaStateTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
         m::close();
     }
 
-    public function testLoadSchemaToDatabase(): void
+    public function testLoadSchemaToDatabase()/*: void*/
     {
         $config = ['driver' => 'sqlite', 'database' => 'database/database.sqlite', 'prefix' => '', 'foreign_key_constraints' => true, 'name' => 'sqlite'];
         $connection = m::mock(SQLiteConnection::class);
@@ -41,7 +41,7 @@ class DatabaseSqliteSchemaStateTest extends TestCase
         ]);
     }
 
-    public function testLoadSchemaToInMemory(): void
+    public function testLoadSchemaToInMemory()/*: void*/
     {
         $config = ['driver' => 'sqlite', 'database' => ':memory:', 'prefix' => '', 'foreign_key_constraints' => true, 'name' => 'sqlite'];
         $connection = m::mock(SQLiteConnection::class);
