@@ -26,7 +26,7 @@ class CacheRedisStoreTest extends TestCase
     {
         $redis = $this->getRedis();
         $redis->getRedis()->shouldReceive('connection')->once()->with('default')->andReturn($redis->getRedis());
-        $redis->getRedis()->shouldReceive('get')->once()->with('prefix:foo')->andReturn(serialize('foo'));
+        $redis->getRedis()->shouldReceive('get')->once()->with('prefix:foo')->andReturn(backport_serialize('foo'));
         $this->assertSame('foo', $redis->get('foo'));
     }
 
@@ -36,9 +36,9 @@ class CacheRedisStoreTest extends TestCase
         $redis->getRedis()->shouldReceive('connection')->once()->with('default')->andReturn($redis->getRedis());
         $redis->getRedis()->shouldReceive('mget')->once()->with(['prefix:foo', 'prefix:fizz', 'prefix:norf', 'prefix:null'])
             ->andReturn([
-                serialize('bar'),
-                serialize('buzz'),
-                serialize('quz'),
+                backport_serialize('bar'),
+                backport_serialize('buzz'),
+                backport_serialize('quz'),
                 null,
             ]);
 
@@ -62,7 +62,7 @@ class CacheRedisStoreTest extends TestCase
     {
         $redis = $this->getRedis();
         $redis->getRedis()->shouldReceive('connection')->once()->with('default')->andReturn($redis->getRedis());
-        $redis->getRedis()->shouldReceive('setex')->once()->with('prefix:foo', 60, serialize('foo'))->andReturn('OK');
+        $redis->getRedis()->shouldReceive('setex')->once()->with('prefix:foo', 60, backport_serialize('foo'))->andReturn('OK');
         $result = $redis->put('foo', 'foo', 60);
         $this->assertTrue($result);
     }
@@ -74,9 +74,9 @@ class CacheRedisStoreTest extends TestCase
         $connection = $redis->getRedis();
         $connection->shouldReceive('connection')->with('default')->andReturn($redis->getRedis());
         $connection->shouldReceive('multi')->once();
-        $redis->getRedis()->shouldReceive('setex')->once()->with('prefix:foo', 60, serialize('bar'))->andReturn('OK');
-        $redis->getRedis()->shouldReceive('setex')->once()->with('prefix:baz', 60, serialize('qux'))->andReturn('OK');
-        $redis->getRedis()->shouldReceive('setex')->once()->with('prefix:bar', 60, serialize('norf'))->andReturn('OK');
+        $redis->getRedis()->shouldReceive('setex')->once()->with('prefix:foo', 60, backport_serialize('bar'))->andReturn('OK');
+        $redis->getRedis()->shouldReceive('setex')->once()->with('prefix:baz', 60, backport_serialize('qux'))->andReturn('OK');
+        $redis->getRedis()->shouldReceive('setex')->once()->with('prefix:bar', 60, backport_serialize('norf'))->andReturn('OK');
         $connection->shouldReceive('exec')->once();
 
         $result = $redis->putMany([
@@ -116,7 +116,7 @@ class CacheRedisStoreTest extends TestCase
     {
         $redis = $this->getRedis();
         $redis->getRedis()->shouldReceive('connection')->once()->with('default')->andReturn($redis->getRedis());
-        $redis->getRedis()->shouldReceive('set')->once()->with('prefix:foo', serialize('foo'))->andReturn('OK');
+        $redis->getRedis()->shouldReceive('set')->once()->with('prefix:foo', backport_serialize('foo'))->andReturn('OK');
         $result = $redis->forever('foo', 'foo', 60);
         $this->assertTrue($result);
     }

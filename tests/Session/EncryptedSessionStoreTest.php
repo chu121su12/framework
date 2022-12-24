@@ -19,13 +19,13 @@ class EncryptedSessionStoreTest extends TestCase
     public function testSessionIsProperlyEncrypted()
     {
         $session = $this->getSession();
-        $session->getEncrypter()->shouldReceive('decrypt')->once()->with(serialize([]))->andReturn(serialize([]));
-        $session->getHandler()->shouldReceive('read')->once()->andReturn(serialize([]));
+        $session->getEncrypter()->shouldReceive('decrypt')->once()->with(backport_serialize([]))->andReturn(backport_serialize([]));
+        $session->getHandler()->shouldReceive('read')->once()->andReturn(backport_serialize([]));
         $session->start();
         $session->put('foo', 'bar');
         $session->flash('baz', 'boom');
         $session->now('qux', 'norf');
-        $serialized = serialize([
+        $serialized = backport_serialize([
             '_token' => $session->token(),
             'foo' => 'bar',
             'baz' => 'boom',

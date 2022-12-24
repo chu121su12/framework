@@ -76,7 +76,7 @@ class ThrottlesExceptionsWithRedisTest extends TestCase
         $job->shouldReceive('isDeletedOrReleased')->once()->andReturn(true);
 
         $instance->call($job, [
-            'command' => serialize($command = new $class($key)),
+            'command' => backport_serialize($command = new $class($key)),
         ]);
 
         $this->assertTrue($class::$handled);
@@ -97,7 +97,7 @@ class ThrottlesExceptionsWithRedisTest extends TestCase
         $job->shouldReceive('isDeletedOrReleased')->once()->andReturn(true);
 
         $instance->call($job, [
-            'command' => serialize($command = new $class($key)),
+            'command' => backport_serialize($command = new $class($key)),
         ]);
 
         $this->assertFalse($class::$handled);
@@ -116,7 +116,7 @@ class ThrottlesExceptionsWithRedisTest extends TestCase
         $job->shouldReceive('delete')->once();
 
         $instance->call($job, [
-            'command' => serialize($command = new $class($key)),
+            'command' => backport_serialize($command = new $class($key)),
         ]);
 
         $this->assertTrue($class::$handled);

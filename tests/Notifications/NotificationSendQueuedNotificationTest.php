@@ -52,10 +52,10 @@ class NotificationSendQueuedNotificationTest extends TestCase
     public function testSerializationOfNormalNotifiable()
     {
         $notifiable = new AnonymousNotifiable;
-        $serializedNotifiable = serialize($notifiable);
+        $serializedNotifiable = backport_serialize($notifiable);
 
         $job = new SendQueuedNotifications($notifiable, 'notification');
-        $serialized = serialize($job);
+        $serialized = backport_serialize($job);
 
         $this->assertStringContainsString($serializedNotifiable, $serialized);
     }

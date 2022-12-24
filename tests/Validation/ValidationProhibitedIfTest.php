@@ -53,7 +53,7 @@ class ValidationProhibitedIfTest extends TestCase
     {
         $this->expectException(Exception::class);
 
-        $rule = serialize(new ProhibitedIf(function () {
+        $rule = backport_serialize(new ProhibitedIf(function () {
             return true;
         }));
     }

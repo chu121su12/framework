@@ -16,7 +16,7 @@ class RouteSignatureParametersTest extends TestCase
             return $user;
         };
 
-        $action = ['uses' => serialize(
+        $action = ['uses' => backport_serialize(
             new SerializableClosure($callable)
         )];
 

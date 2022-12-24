@@ -53,7 +53,7 @@ class EloquentPivotSerializationTest extends DatabaseTestCase
         $project = $project->fresh();
 
         $class = new PivotSerializationTestClass($project->collaborators->first()->pivot);
-        $class = unserialize(serialize($class));
+        $class = backport_unserialize(backport_serialize($class));
 
         $this->assertEquals($project->collaborators->first()->pivot->user_id, $class->pivot->user_id);
         $this->assertEquals($project->collaborators->first()->pivot->project_id, $class->pivot->project_id);
@@ -70,7 +70,7 @@ class EloquentPivotSerializationTest extends DatabaseTestCase
         $project = $project->fresh();
 
         $class = new PivotSerializationTestClass($project->tags->first()->pivot);
-        $class = unserialize(serialize($class));
+        $class = backport_unserialize(backport_serialize($class));
 
         $this->assertEquals($project->tags->first()->pivot->tag_id, $class->pivot->tag_id);
         $this->assertEquals($project->tags->first()->pivot->taggable_id, $class->pivot->taggable_id);
@@ -91,7 +91,7 @@ class EloquentPivotSerializationTest extends DatabaseTestCase
         $project = $project->fresh();
 
         $class = new PivotSerializationTestCollectionClass(DatabaseCollection::make($project->collaborators->map->pivot));
-        $class = unserialize(serialize($class));
+        $class = backport_unserialize(backport_serialize($class));
 
         $this->assertEquals($project->collaborators[0]->pivot->user_id, $class->pivots[0]->user_id);
         $this->assertEquals($project->collaborators[1]->pivot->project_id, $class->pivots[1]->project_id);
@@ -109,7 +109,7 @@ class EloquentPivotSerializationTest extends DatabaseTestCase
         $project = $project->fresh();
 
         $class = new PivotSerializationTestCollectionClass(DatabaseCollection::make($project->tags->map->pivot));
-        $class = unserialize(serialize($class));
+        $class = backport_unserialize(backport_serialize($class));
 
         $this->assertEquals($project->tags[0]->pivot->tag_id, $class->pivots[0]->tag_id);
         $this->assertEquals($project->tags[0]->pivot->taggable_id, $class->pivots[0]->taggable_id);

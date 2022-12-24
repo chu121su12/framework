@@ -31,17 +31,17 @@ class ValueObject_castUsing_class implements CastsAttributes, SerializesCastable
                     return $this->argument;
                 }
 
-                return unserialize($value);
+                return backport_unserialize($value);
             }
 
             public function set($model, $key, $value, array $attributes)
             {
-                return serialize($value);
+                return backport_serialize($value);
             }
 
             public function serialize($model, $key, $value, array $attributes)
             {
-                return serialize($value);
+                return backport_serialize($value);
             }
         }
 
@@ -65,7 +65,7 @@ class DatabaseEloquentModelCustomCastingTest extends DatabaseTestCase
         $this->assertSame('TAYLOR', $model->getAttributes()['uppercase']);
         $this->assertSame('TAYLOR', $model->toArray()['uppercase']);
 
-        $unserializedModel = unserialize(serialize($model));
+        $unserializedModel = backport_unserialize(backport_serialize($model));
 
         $this->assertSame('TAYLOR', $unserializedModel->uppercase);
         $this->assertSame('TAYLOR', $unserializedModel->getAttributes()['uppercase']);
@@ -202,7 +202,7 @@ class DatabaseEloquentModelCustomCastingTest extends DatabaseTestCase
         $this->assertSame('123.456', $model->getAttributes()['price']);
         $this->assertSame('123.456', $model->toArray()['price']);
 
-        $unserializedModel = unserialize(serialize($model));
+        $unserializedModel = backport_unserialize(backport_serialize($model));
 
         $this->assertSame($expectedValue, $unserializedModel->price->getValue());
         $this->assertSame('123.456', $unserializedModel->getAttributes()['price']);
@@ -265,11 +265,11 @@ class DatabaseEloquentModelCustomCastingTest extends DatabaseTestCase
         $model = new TestEloquentModelWithCustomCast;
 
         $model->setRawAttributes([
-            'value_object_with_caster' => serialize(new ValueObject('hello')),
+            'value_object_with_caster' => backport_serialize(new ValueObject('hello')),
         ]);
 
         $this->assertInstanceOf(ValueObject::class, $model->value_object_with_caster);
-        $this->assertSame(serialize(new ValueObject('hello')), $model->toArray()['value_object_with_caster']);
+        $this->assertSame(backport_serialize(new ValueObject('hello')), $model->toArray()['value_object_with_caster']);
 
         $model->setRawAttributes([
             'value_object_caster_with_argument' => null,
@@ -278,7 +278,7 @@ class DatabaseEloquentModelCustomCastingTest extends DatabaseTestCase
         $this->assertSame('argument', $model->value_object_caster_with_argument);
 
         $model->setRawAttributes([
-            'value_object_caster_with_caster_instance' => serialize(new ValueObject('hello')),
+            'value_object_caster_with_caster_instance' => backport_serialize(new ValueObject('hello')),
         ]);
 
         $this->assertInstanceOf(ValueObject::class, $model->value_object_caster_with_caster_instance);
@@ -480,12 +480,12 @@ class ValueObjectCaster implements CastsAttributes
             return $this->argument;
         }
 
-        return unserialize($value);
+        return backport_unserialize($value);
     }
 
     public function set($model, $key, $value, array $attributes)
     {
-        return serialize($value);
+        return backport_serialize($value);
     }
 }
 

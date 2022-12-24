@@ -46,7 +46,7 @@ class CallQueuedHandlerTest extends TestCase
         $job->shouldReceive('delete')->once();
 
         $instance->call($job, [
-            'command' => serialize(new CallQueuedHandlerTestJob),
+            'command' => backport_serialize(new CallQueuedHandlerTestJob),
         ]);
 
         $this->assertTrue(CallQueuedHandlerTestJob::$handled);
@@ -67,7 +67,7 @@ class CallQueuedHandlerTest extends TestCase
         $job->shouldReceive('delete')->once();
 
         $instance->call($job, [
-            'command' => serialize($command = new CallQueuedHandlerTestJobWithMiddleware),
+            'command' => backport_serialize($command = new CallQueuedHandlerTestJobWithMiddleware),
         ]);
 
         $this->assertInstanceOf(CallQueuedHandlerTestJobWithMiddleware::class, CallQueuedHandlerTestJobWithMiddleware::$middlewareCommand);
@@ -93,7 +93,7 @@ class CallQueuedHandlerTest extends TestCase
         $command->through([new TestJobMiddleware]);
 
         $instance->call($job, [
-            'command' => serialize($command),
+            'command' => backport_serialize($command),
         ]);
 
         $this->assertInstanceOf(CallQueuedHandlerTestJobWithMiddleware::class, CallQueuedHandlerTestJobWithMiddleware::$middlewareCommand);
@@ -110,7 +110,7 @@ class CallQueuedHandlerTest extends TestCase
         $job->shouldReceive('fail')->once();
 
         $instance->call($job, [
-            'command' => serialize(new CallQueuedHandlerExceptionThrower),
+            'command' => backport_serialize(new CallQueuedHandlerExceptionThrower),
         ]);
     }
 
@@ -129,7 +129,7 @@ class CallQueuedHandlerTest extends TestCase
         $job->shouldReceive('failed')->never();
 
         $instance->call($job, [
-            'command' => serialize(new CallQueuedHandlerExceptionThrower),
+            'command' => backport_serialize(new CallQueuedHandlerExceptionThrower),
         ]);
 
         Event::assertNotDispatched(JobFailed::class);

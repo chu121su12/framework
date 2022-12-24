@@ -1811,11 +1811,11 @@ class DatabaseEloquentModelTest extends TestCase
         $model = new EloquentModelBootingTestStub;
         $this->assertTrue(EloquentModelBootingTestStub::isBooted());
         $model->foo = 'bar';
-        $string = serialize($model);
+        $string = backport_serialize($model);
         $model = null;
         EloquentModelBootingTestStub::unboot();
         $this->assertFalse(EloquentModelBootingTestStub::isBooted());
-        unserialize($string);
+        backport_unserialize($string);
         $this->assertTrue(EloquentModelBootingTestStub::isBooted());
     }
 

@@ -53,7 +53,7 @@ class ValidationExcludeIfTest extends TestCase
     {
         $this->expectException(Exception::class);
 
-        $rule = serialize(new ExcludeIf(function () {
+        $rule = backport_serialize(new ExcludeIf(function () {
             return true;
         }));
     }

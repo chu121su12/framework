@@ -47,7 +47,7 @@ class ValidationRequiredIfTest extends TestCase
     {
         $this->expectException(Exception::class);
 
-        $rule = serialize(new RequiredIf(function () {
+        $rule = backport_serialize(new RequiredIf(function () {
             return true;
         }));
     }

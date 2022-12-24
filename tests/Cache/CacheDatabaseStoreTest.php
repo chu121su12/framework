@@ -47,7 +47,7 @@ class CacheDatabaseStoreTest extends TestCase
         $table = m::mock(stdClass::class);
         $store->getConnection()->shouldReceive('table')->once()->with('table')->andReturn($table);
         $table->shouldReceive('where')->once()->with('key', '=', 'prefixfoo')->andReturn($table);
-        $table->shouldReceive('first')->once()->andReturn((object) ['value' => serialize('bar'), 'expiration' => 999999999999999]);
+        $table->shouldReceive('first')->once()->andReturn((object) ['value' => backport_serialize('bar'), 'expiration' => 999999999999999]);
 
         $this->assertSame('bar', $store->get('foo'));
     }
@@ -58,7 +58,7 @@ class CacheDatabaseStoreTest extends TestCase
         $table = m::mock(stdClass::class);
         $store->getConnection()->shouldReceive('table')->once()->with('table')->andReturn($table);
         $table->shouldReceive('where')->once()->with('key', '=', 'prefixfoo')->andReturn($table);
-        $table->shouldReceive('first')->once()->andReturn((object) ['value' => base64_encode(serialize('bar')), 'expiration' => 999999999999999]);
+        $table->shouldReceive('first')->once()->andReturn((object) ['value' => base64_encode(backport_serialize('bar')), 'expiration' => 999999999999999]);
 
         $this->assertSame('bar', $store->get('foo'));
     }
@@ -69,7 +69,7 @@ class CacheDatabaseStoreTest extends TestCase
         $table = m::mock(stdClass::class);
         $store->getConnection()->shouldReceive('table')->once()->with('table')->andReturn($table);
         $store->expects($this->once())->method('getTime')->willReturn(1);
-        $table->shouldReceive('insert')->once()->with(['key' => 'prefixfoo', 'value' => serialize('bar'), 'expiration' => 61])->andReturnTrue();
+        $table->shouldReceive('insert')->once()->with(['key' => 'prefixfoo', 'value' => backport_serialize('bar'), 'expiration' => 61])->andReturnTrue();
 
         $result = $store->put('foo', 'bar', 60);
         $this->assertTrue($result);
@@ -81,11 +81,11 @@ class CacheDatabaseStoreTest extends TestCase
         $table = m::mock(stdClass::class);
         $store->getConnection()->shouldReceive('table')->with('table')->andReturn($table);
         $store->expects($this->once())->method('getTime')->willReturn(1);
-        $table->shouldReceive('insert')->once()->with(['key' => 'prefixfoo', 'value' => serialize('bar'), 'expiration' => 61])->andReturnUsing(function () {
+        $table->shouldReceive('insert')->once()->with(['key' => 'prefixfoo', 'value' => backport_serialize('bar'), 'expiration' => 61])->andReturnUsing(function () {
             throw new Exception;
         });
         $table->shouldReceive('where')->once()->with('key', 'prefixfoo')->andReturn($table);
-        $table->shouldReceive('update')->once()->with(['value' => serialize('bar'), 'expiration' => 61])->andReturnTrue();
+        $table->shouldReceive('update')->once()->with(['value' => backport_serialize('bar'), 'expiration' => 61])->andReturnTrue();
 
         $result = $store->put('foo', 'bar', 60);
         $this->assertTrue($result);
@@ -97,7 +97,7 @@ class CacheDatabaseStoreTest extends TestCase
         $table = m::mock(stdClass::class);
         $store->getConnection()->shouldReceive('table')->once()->with('table')->andReturn($table);
         $store->expects($this->once())->method('getTime')->willReturn(1);
-        $table->shouldReceive('insert')->once()->with(['key' => 'prefixfoo', 'value' => base64_encode(serialize("\0")), 'expiration' => 61])->andReturnTrue();
+        $table->shouldReceive('insert')->once()->with(['key' => 'prefixfoo', 'value' => base64_encode(backport_serialize("\0")), 'expiration' => 61])->andReturnTrue();
 
         $result = $store->put('foo', "\0", 60);
         $this->assertTrue($result);
@@ -148,7 +148,7 @@ class CacheDatabaseStoreTest extends TestCase
         $table->shouldReceive('first')->once()->andReturn(null);
         $this->assertFalse($store->increment('foo'));
 
-        $cache->value = serialize('bar');
+        $cache->value = backport_serialize('bar');
         $store->getConnection()->shouldReceive('transaction')->once()->with(m::type(Closure::class))->andReturnUsing(function ($closure) {
             return $closure();
         });
@@ -158,7 +158,7 @@ class CacheDatabaseStoreTest extends TestCase
         $table->shouldReceive('first')->once()->andReturn($cache);
         $this->assertFalse($store->increment('foo'));
 
-        $cache->value = serialize(2);
+        $cache->value = backport_serialize(2);
         $store->getConnection()->shouldReceive('transaction')->once()->with(m::type(Closure::class))->andReturnUsing(function ($closure) {
             return $closure();
         });
@@ -168,7 +168,7 @@ class CacheDatabaseStoreTest extends TestCase
         $table->shouldReceive('first')->once()->andReturn($cache);
         $store->getConnection()->shouldReceive('table')->once()->with('table')->andReturn($table);
         $table->shouldReceive('where')->once()->with('key', 'prefixfoo')->andReturn($table);
-        $table->shouldReceive('update')->once()->with(['value' => serialize(3)]);
+        $table->shouldReceive('update')->once()->with(['value' => backport_serialize(3)]);
         $this->assertEquals(3, $store->increment('foo'));
     }
 
@@ -187,7 +187,7 @@ class CacheDatabaseStoreTest extends TestCase
         $table->shouldReceive('first')->once()->andReturn(null);
         $this->assertFalse($store->decrement('foo'));
 
-        $cache->value = serialize('bar');
+        $cache->value = backport_serialize('bar');
         $store->getConnection()->shouldReceive('transaction')->once()->with(m::type(Closure::class))->andReturnUsing(function ($closure) {
             return $closure();
         });
@@ -197,7 +197,7 @@ class CacheDatabaseStoreTest extends TestCase
         $table->shouldReceive('first')->once()->andReturn($cache);
         $this->assertFalse($store->decrement('foo'));
 
-        $cache->value = serialize(3);
+        $cache->value = backport_serialize(3);
         $store->getConnection()->shouldReceive('transaction')->once()->with(m::type(Closure::class))->andReturnUsing(function ($closure) {
             return $closure();
         });
@@ -207,7 +207,7 @@ class CacheDatabaseStoreTest extends TestCase
         $table->shouldReceive('first')->once()->andReturn($cache);
         $store->getConnection()->shouldReceive('table')->once()->with('table')->andReturn($table);
         $table->shouldReceive('where')->once()->with('key', 'prefixbar')->andReturn($table);
-        $table->shouldReceive('update')->once()->with(['value' => serialize(2)]);
+        $table->shouldReceive('update')->once()->with(['value' => backport_serialize(2)]);
         $this->assertEquals(2, $store->decrement('bar'));
     }
 

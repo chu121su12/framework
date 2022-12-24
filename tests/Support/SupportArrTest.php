@@ -1034,7 +1034,7 @@ class SupportArrTest extends TestCase
 
         $obj = new stdClass;
         $obj->value = 'a';
-        $obj = unserialize(serialize($obj));
+        $obj = backport_unserialize(backport_serialize($obj));
         $this->assertEquals([$obj], Arr::wrap($obj));
         $this->assertSame($obj, Arr::wrap($obj)[0]);
     }

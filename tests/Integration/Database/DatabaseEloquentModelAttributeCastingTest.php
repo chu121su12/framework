@@ -41,7 +41,7 @@ class DatabaseEloquentModelAttributeCastingTest extends DatabaseTestCase
         $this->assertSame('TAYLOR', $model->getAttributes()['uppercase']);
         $this->assertSame('TAYLOR', $model->toArray()['uppercase']);
 
-        $unserializedModel = unserialize(serialize($model));
+        $unserializedModel = backport_unserialize(backport_serialize($model));
 
         $this->assertSame('TAYLOR', $unserializedModel->uppercase);
         $this->assertSame('TAYLOR', $unserializedModel->getAttributes()['uppercase']);

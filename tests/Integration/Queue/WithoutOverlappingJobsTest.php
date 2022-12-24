@@ -35,7 +35,7 @@ class WithoutOverlappingJobsTest extends TestCase
         $job->shouldReceive('delete')->once();
 
         $instance->call($job, [
-            'command' => serialize($command = new OverlappingTestJob),
+            'command' => backport_serialize($command = new OverlappingTestJob),
         ]);
 
         $lockKey = (new WithoutOverlapping)->getLockKey($command);
@@ -59,7 +59,7 @@ class WithoutOverlappingJobsTest extends TestCase
 
         try {
             $instance->call($job, [
-                'command' => serialize($command = new FailedOverlappingTestJob),
+                'command' => backport_serialize($command = new FailedOverlappingTestJob),
             ]);
         } finally {
             $lockKey = (new WithoutOverlapping)->getLockKey($command);
@@ -85,7 +85,7 @@ class WithoutOverlappingJobsTest extends TestCase
         $job->shouldReceive('isDeletedOrReleased')->andReturn(true);
 
         $instance->call($job, [
-            'command' => serialize($command),
+            'command' => backport_serialize($command),
         ]);
 
         $this->assertFalse(OverlappingTestJob::$handled);
@@ -107,7 +107,7 @@ class WithoutOverlappingJobsTest extends TestCase
         $job->shouldReceive('delete')->once();
 
         $instance->call($job, [
-            'command' => serialize($command),
+            'command' => backport_serialize($command),
         ]);
 
         $this->assertFalse(SkipOverlappingTestJob::$handled);
@@ -129,7 +129,7 @@ class WithoutOverlappingJobsTest extends TestCase
         $job->shouldReceive('isDeletedOrReleased')->andReturn(true);
 
         $instance->call($job, [
-            'command' => serialize(new OverlappingTestJobWithSharedKeyOne),
+            'command' => backport_serialize(new OverlappingTestJobWithSharedKeyOne),
         ]);
 
         $this->assertFalse(OverlappingTestJob::$handled);

@@ -70,16 +70,16 @@ class ModelSerializationTest extends TestCase
             'email' => 'taylor@laravel.com',
         ]);
 
-        $serialized = serialize(new ModelSerializationTestClass($user));
+        $serialized = backport_serialize(new ModelSerializationTestClass($user));
 
-        $unSerialized = unserialize($serialized);
+        $unSerialized = backport_unserialize($serialized);
 
         $this->assertSame('testing', $unSerialized->user->getConnectionName());
         $this->assertSame('mohamed@laravel.com', $unSerialized->user->email);
 
-        $serialized = serialize(new CollectionSerializationTestClass(ModelSerializationTestUser::on('testing')->get()));
+        $serialized = backport_serialize(new CollectionSerializationTestClass(ModelSerializationTestUser::on('testing')->get()));
 
-        $unSerialized = unserialize($serialized);
+        $unSerialized = backport_unserialize($serialized);
 
         $this->assertSame('testing', $unSerialized->users[0]->getConnectionName());
         $this->assertSame('mohamed@laravel.com', $unSerialized->users[0]->email);
@@ -97,16 +97,16 @@ class ModelSerializationTest extends TestCase
             'email' => 'taylor@laravel.com',
         ]);
 
-        $serialized = serialize(new ModelSerializationTestClass($user));
+        $serialized = backport_serialize(new ModelSerializationTestClass($user));
 
-        $unSerialized = unserialize($serialized);
+        $unSerialized = backport_unserialize($serialized);
 
         $this->assertSame('custom', $unSerialized->user->getConnectionName());
         $this->assertSame('mohamed@laravel.com', $unSerialized->user->email);
 
-        $serialized = serialize(new CollectionSerializationTestClass(ModelSerializationTestUser::on('custom')->get()));
+        $serialized = backport_serialize(new CollectionSerializationTestClass(ModelSerializationTestUser::on('custom')->get()));
 
-        $unSerialized = unserialize($serialized);
+        $unSerialized = backport_unserialize($serialized);
 
         $this->assertSame('custom', $unSerialized->users[0]->getConnectionName());
         $this->assertSame('mohamed@laravel.com', $unSerialized->users[0]->email);
@@ -131,7 +131,7 @@ class ModelSerializationTest extends TestCase
             new Collection([$user, $user2])
         ));
 
-        // unserialize($serialized);
+        // backport_unserialize($serialized);
     }
 
     public function testItReloadsRelationships()
@@ -148,8 +148,8 @@ class ModelSerializationTest extends TestCase
 
         $order->load('line', 'lines', 'products');
 
-        $serialized = serialize(new ModelRelationSerializationTestClass($order));
-        $unSerialized = unserialize($serialized);
+        $serialized = backport_serialize(new ModelRelationSerializationTestClass($order));
+        $unSerialized = backport_unserialize($serialized);
 
         $this->assertEquals($unSerialized->order->getRelations(), $order->getRelations());
     }
@@ -168,8 +168,8 @@ class ModelSerializationTest extends TestCase
 
         $order->load('line.product', 'lines', 'lines.product', 'products');
 
-        $nestedSerialized = serialize(new ModelRelationSerializationTestClass($order));
-        $nestedUnSerialized = unserialize($nestedSerialized);
+        $nestedSerialized = backport_serialize(new ModelRelationSerializationTestClass($order));
+        $nestedUnSerialized = backport_unserialize($nestedSerialized);
 
         $this->assertEquals($nestedUnSerialized->order->getRelations(), $order->getRelations());
     }
@@ -185,7 +185,7 @@ class ModelSerializationTest extends TestCase
 
         $this->assertFalse($model::hasGlobalScope('foo_bar'));
 
-        $unSerializedModel = unserialize(serialize($model));
+        $unSerializedModel = backport_unserialize(backport_serialize($model));
 
         $this->assertFalse($unSerializedModel->fooBar);
         $this->assertTrue($model::hasGlobalScope('foo_bar'));
@@ -212,17 +212,17 @@ class ModelSerializationTest extends TestCase
             $role->pivot->load('user', 'role');
         });
 
-        $serialized = serialize(new ModelSerializationTestClass($user));
-        unserialize($serialized);
+        $serialized = backport_serialize(new ModelSerializationTestClass($user));
+        backport_unserialize($serialized);
     }
 
     public function testItSerializesAnEmptyCollection()
     {
-        $serialized = serialize(new CollectionSerializationTestClass(
+        $serialized = backport_serialize(new CollectionSerializationTestClass(
             new Collection([])
         ));
 
-        unserialize($serialized);
+        backport_unserialize($serialized);
     }
 
     public function testItSerializesACollectionInCorrectOrder()
@@ -230,11 +230,11 @@ class ModelSerializationTest extends TestCase
         ModelSerializationTestUser::create(['email' => 'mohamed@laravel.com']);
         ModelSerializationTestUser::create(['email' => 'taylor@laravel.com']);
 
-        $serialized = serialize(new CollectionSerializationTestClass(
+        $serialized = backport_serialize(new CollectionSerializationTestClass(
             ModelSerializationTestUser::orderByDesc('email')->get()
         ));
 
-        $unserialized = unserialize($serialized);
+        $unserialized = backport_unserialize($serialized);
 
         $this->assertSame('taylor@laravel.com', $unserialized->users->first()->email);
         $this->assertSame('mohamed@laravel.com', $unserialized->users->last()->email);
@@ -265,11 +265,11 @@ class ModelSerializationTest extends TestCase
         ModelSerializationTestCustomUser::create(['email' => 'mohamed@laravel.com']);
         ModelSerializationTestCustomUser::create(['email' => 'taylor@laravel.com']);
 
-        $serialized = serialize(new CollectionSerializationTestClass(
+        $serialized = backport_serialize(new CollectionSerializationTestClass(
             ModelSerializationTestCustomUser::all()
         ));
 
-        $unserialized = unserialize($serialized);
+        $unserialized = backport_unserialize($serialized);
 
         $this->assertInstanceOf(ModelSerializationTestCustomUserCollection::class, $unserialized->users);
     }
@@ -289,18 +289,18 @@ class ModelSerializationTest extends TestCase
             'email' => 'taylor@laravel.com',
         ]);
 
-        $serialized = serialize(new TypedPropertyTestClass($user, 5, ['James', 'Taylor', 'Mohamed']));
+        $serialized = backport_serialize(new TypedPropertyTestClass($user, 5, ['James', 'Taylor', 'Mohamed']));
 
-        $unSerialized = unserialize($serialized);
+        $unSerialized = backport_unserialize($serialized);
 
         $this->assertSame('testing', $unSerialized->user->getConnectionName());
         $this->assertSame('mohamed@laravel.com', $unSerialized->user->email);
         $this->assertSame(5, $unSerialized->getId());
         $this->assertSame(['James', 'Taylor', 'Mohamed'], $unSerialized->getNames());
 
-        $serialized = serialize(new TypedPropertyCollectionTestClass(ModelSerializationTestUser::on('testing')->get()));
+        $serialized = backport_serialize(new TypedPropertyCollectionTestClass(ModelSerializationTestUser::on('testing')->get()));
 
-        $unSerialized = unserialize($serialized);
+        $unSerialized = backport_unserialize($serialized);
 
         $this->assertSame('testing', $unSerialized->users[0]->getConnectionName());
         $this->assertSame('mohamed@laravel.com', $unSerialized->users[0]->email);
@@ -336,9 +336,9 @@ class ModelSerializationTest extends TestCase
         $class = new ModelSerializationTypedCustomCollectionTestClass(
             new ModelSerializationTestCustomUserCollection());
 
-        $serialized = serialize($class);
+        $serialized = backport_serialize($class);
 
-        unserialize($serialized);
+        backport_unserialize($serialized);
 
         $this->assertTrue(true);
     }

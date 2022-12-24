@@ -67,7 +67,7 @@ class RateLimitedTest extends TestCase
         $job->shouldReceive('isDeletedOrReleased')->once()->andReturn(true);
 
         $instance->call($job, [
-            'command' => serialize($command = new RateLimitedTestJob),
+            'command' => backport_serialize($command = new RateLimitedTestJob),
         ]);
 
         $this->assertFalse(RateLimitedTestJob::$handled);
@@ -121,7 +121,7 @@ class RateLimitedTest extends TestCase
         $rateLimited = new RateLimited('limiterName');
         $rateLimited->shouldRelease = false;
 
-        $restoredRateLimited = unserialize(serialize($rateLimited));
+        $restoredRateLimited = backport_unserialize(backport_serialize($rateLimited));
 
         $callback = (function (/*string */$name) {
             $name = backport_type_check('string', $name);
@@ -148,7 +148,7 @@ class RateLimitedTest extends TestCase
         $job->shouldReceive('delete')->once();
 
         $instance->call($job, [
-            'command' => serialize($command = new $class),
+            'command' => backport_serialize($command = new $class),
         ]);
 
         $this->assertTrue($class::$handled);
@@ -167,7 +167,7 @@ class RateLimitedTest extends TestCase
         $job->shouldReceive('isDeletedOrReleased')->once()->andReturn(true);
 
         $instance->call($job, [
-            'command' => serialize($command = new $class),
+            'command' => backport_serialize($command = new $class),
         ]);
 
         $this->assertFalse($class::$handled);
@@ -187,7 +187,7 @@ class RateLimitedTest extends TestCase
         $job->shouldReceive('delete')->once();
 
         $instance->call($job, [
-            'command' => serialize($command = new $class),
+            'command' => backport_serialize($command = new $class),
         ]);
 
         $this->assertFalse($class::$handled);

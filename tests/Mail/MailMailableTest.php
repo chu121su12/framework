@@ -644,7 +644,7 @@ class MailMailableTest extends TestCase
 
         $mailable->mailer('array');
 
-        $mailable = unserialize(serialize($mailable));
+        $mailable = backport_unserialize(backport_serialize($mailable));
 
         $this->assertSame('array', $mailable->mailer);
     }

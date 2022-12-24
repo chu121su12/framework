@@ -368,8 +368,8 @@ class BusBatchTest extends TestCase
         $connection->shouldReceive('bulk')->once()->with(m::on(function ($args) use ($chainHeadJob, $secondJob, $thirdJob) {
             return
                 $args[0] == $chainHeadJob
-                && serialize($secondJob) == $args[0]->chained[0]
-                && serialize($thirdJob) == $args[0]->chained[1];
+                && backport_serialize($secondJob) == $args[0]->chained[0]
+                && backport_serialize($thirdJob) == $args[0]->chained[1];
         }), '', 'test-queue');
 
         $batch = $batch->add([
@@ -405,7 +405,7 @@ class BusBatchTest extends TestCase
 
         $builder->shouldHaveReceived('insert')
             ->withArgs(function ($argument) use ($pendingBatch) {
-                return unserialize(base64_decode($argument['options'])) === $pendingBatch->options;
+                return backport_unserialize(base64_decode($argument['options'])) === $pendingBatch->options;
             });
 
         $builder->shouldHaveReceived('first');
@@ -450,8 +450,8 @@ class BusBatchTest extends TestCase
         $options = [1, 2];
 
         return [
-            [serialize($options), $options],
-            [base64_encode(serialize($options)), $options],
+            [backport_serialize($options), $options],
+            [base64_encode(backport_serialize($options)), $options],
         ];
     }
 

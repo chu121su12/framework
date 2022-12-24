@@ -70,7 +70,7 @@ class CacheFileStoreTest extends TestCase
         $hash = sha1('O--L / key');
         $filePath = __DIR__.'/'.substr($hash, 0, 2).'/'.substr($hash, 2, 2).'/'.$hash;
         $ten9s = $this->foreverTimeValue(); // The "forever" time value.
-        $fileContents = $ten9s.serialize('gold');
+        $fileContents = $ten9s.backport_serialize('gold');
         $exclusiveLock = true;
 
         $files->expects($this->once())->method('put')->with(
@@ -89,7 +89,7 @@ class CacheFileStoreTest extends TestCase
         $hash = sha1('O--L / key');
         $filePath = __DIR__.'/'.substr($hash, 0, 2).'/'.substr($hash, 2, 2).'/'.$hash;
         $ten9s = $this->foreverTimeValue(); // The "forever" time value.
-        $fileContents = $ten9s.serialize('gold');
+        $fileContents = $ten9s.backport_serialize('gold');
 
         $files->expects($this->once())->method('put')->with(
             $this->equalTo($filePath),
@@ -113,7 +113,7 @@ class CacheFileStoreTest extends TestCase
     public function testValidItemReturnsContents()
     {
         $files = $this->mockFilesystem();
-        $contents = $this->foreverTimeValue().serialize('Hello World');
+        $contents = $this->foreverTimeValue().backport_serialize('Hello World');
         $files->expects($this->once())->method('get')->willReturn($contents);
         $store = new FileStore($files, __DIR__);
         $this->assertSame('Hello World', $store->get('foo'));
@@ -124,7 +124,7 @@ class CacheFileStoreTest extends TestCase
         $files = $this->mockFilesystem();
         $store = $this->getMockBuilder(FileStore::class)->onlyMethods(['expiration'])->setConstructorArgs([$files, __DIR__])->getMock();
         $store->expects($this->once())->method('expiration')->with($this->equalTo(10))->willReturn(1111111111);
-        $contents = '1111111111'.serialize('Hello World');
+        $contents = '1111111111'.backport_serialize('Hello World');
         $hash = sha1('foo');
         $cache_dir = substr($hash, 0, 2).'/'.substr($hash, 2, 2);
         $files->expects($this->once())->method('put')->with($this->equalTo(__DIR__.'/'.$cache_dir.'/'.$hash), $this->equalTo($contents))->willReturn(strlen($contents));
@@ -181,7 +181,7 @@ class CacheFileStoreTest extends TestCase
     public function testForeversAreStoredWithHighTimestamp()
     {
         $files = $this->mockFilesystem();
-        $contents = $this->foreverTimeValue().serialize('Hello World');
+        $contents = $this->foreverTimeValue().backport_serialize('Hello World');
         $hash = sha1('foo');
         $cache_dir = substr($hash, 0, 2).'/'.substr($hash, 2, 2);
         $files->expects($this->once())->method('put')->with($this->equalTo(__DIR__.'/'.$cache_dir.'/'.$hash), $this->equalTo($contents))->willReturn(strlen($contents));
@@ -193,7 +193,7 @@ class CacheFileStoreTest extends TestCase
     public function testForeversAreNotRemovedOnIncrement()
     {
         $files = $this->mockFilesystem();
-        $contents = $this->foreverTimeValue().serialize('Hello World');
+        $contents = $this->foreverTimeValue().backport_serialize('Hello World');
         $store = new FileStore($files, __DIR__);
         $store->forever('foo', 'Hello World');
         $store->increment('foo');
@@ -208,8 +208,8 @@ class CacheFileStoreTest extends TestCase
         $filePath = $this->getCachePath('foo');
         $files = $this->mockFilesystem();
         $now = Carbon::now()->getTimestamp();
-        $initialValue = ($now - 10).serialize(77);
-        $valueAfterIncrement = $this->foreverTimeValue().serialize(3);
+        $initialValue = ($now - 10).backport_serialize(77);
+        $valueAfterIncrement = $this->foreverTimeValue().backport_serialize(3);
         $store = new FileStore($files, __DIR__);
 
         $files->expects($this->once())->method('get')->with($this->equalTo($filePath), $this->equalTo(true))->willReturn($initialValue);
@@ -222,8 +222,8 @@ class CacheFileStoreTest extends TestCase
     {
         $filePath = $this->getCachePath('foo');
         $files = $this->mockFilesystem();
-        $initialValue = $this->foreverTimeValue().serialize(1);
-        $valueAfterIncrement = $this->foreverTimeValue().serialize(4);
+        $initialValue = $this->foreverTimeValue().backport_serialize(1);
+        $valueAfterIncrement = $this->foreverTimeValue().backport_serialize(4);
         $store = new FileStore($files, __DIR__);
 
         $files->expects($this->once())->method('get')->with($this->equalTo($filePath), $this->equalTo(true))->willReturn($initialValue);
@@ -238,8 +238,8 @@ class CacheFileStoreTest extends TestCase
         $filePath = $this->getCachePath('foo');
 
         $files = $this->mockFilesystem();
-        $initialValue = $this->foreverTimeValue().serialize(2);
-        $valueAfterIncrement = $this->foreverTimeValue().serialize(0);
+        $initialValue = $this->foreverTimeValue().backport_serialize(2);
+        $valueAfterIncrement = $this->foreverTimeValue().backport_serialize(0);
         $store = new FileStore($files, __DIR__);
 
         $files->expects($this->once())->method('get')->with($this->equalTo($filePath), $this->equalTo(true))->willReturn($initialValue);
@@ -254,8 +254,8 @@ class CacheFileStoreTest extends TestCase
         $filePath = $this->getCachePath('foo');
 
         $files = $this->mockFilesystem();
-        $initialValue = '1999999909'.serialize('foo');
-        $valueAfterIncrement = '1999999909'.serialize(1);
+        $initialValue = '1999999909'.backport_serialize('foo');
+        $valueAfterIncrement = '1999999909'.backport_serialize(1);
         $store = new FileStore($files, __DIR__);
         $files->expects($this->once())->method('get')->with($this->equalTo($filePath), $this->equalTo(true))->willReturn($initialValue);
         $files->expects($this->once())->method('put')->with($this->equalTo($filePath), $this->equalTo($valueAfterIncrement));
@@ -269,7 +269,7 @@ class CacheFileStoreTest extends TestCase
         $filePath = $this->getCachePath('foo');
 
         $files = $this->mockFilesystem();
-        $valueAfterIncrement = $this->foreverTimeValue().serialize(1);
+        $valueAfterIncrement = $this->foreverTimeValue().backport_serialize(1);
         $store = new FileStore($files, __DIR__);
         // simulates a missing item in file store by the exception
         $files->expects($this->once())->method('get')->with($this->equalTo($filePath), $this->equalTo(true))->willThrowException(new Exception);
@@ -285,8 +285,8 @@ class CacheFileStoreTest extends TestCase
 
         $files = $this->mockFilesystem();
         $expiration = Carbon::now()->addSeconds(50)->getTimestamp();
-        $initialValue = $expiration.serialize(1);
-        $valueAfterIncrement = $expiration.serialize(2);
+        $initialValue = $expiration.backport_serialize(1);
+        $valueAfterIncrement = $expiration.backport_serialize(2);
         $store = new FileStore($files, __DIR__);
         $files->expects($this->once())->method('get')->willReturn($initialValue);
         $hash = sha1('foo');

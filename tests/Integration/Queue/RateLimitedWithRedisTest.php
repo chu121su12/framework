@@ -114,7 +114,7 @@ class RateLimitedWithRedisTest extends TestCase
         $rateLimited = new RateLimitedWithRedis('limiterName');
         $rateLimited->shouldRelease = false;
 
-        $restoredRateLimited = unserialize(serialize($rateLimited));
+        $restoredRateLimited = backport_unserialize(backport_serialize($rateLimited));
 
         $callback = (function (/*string */$name) {
             $name = backport_type_check('string', $name);
@@ -142,7 +142,7 @@ class RateLimitedWithRedisTest extends TestCase
         $job->shouldReceive('delete')->once();
 
         $instance->call($job, [
-            'command' => serialize($testJob),
+            'command' => backport_serialize($testJob),
         ]);
 
         $this->assertTrue($testJob::$handled);
@@ -161,7 +161,7 @@ class RateLimitedWithRedisTest extends TestCase
         $job->shouldReceive('isDeletedOrReleased')->once()->andReturn(true);
 
         $instance->call($job, [
-            'command' => serialize($testJob),
+            'command' => backport_serialize($testJob),
         ]);
 
         $this->assertFalse($testJob::$handled);
@@ -181,7 +181,7 @@ class RateLimitedWithRedisTest extends TestCase
         $job->shouldReceive('delete')->once();
 
         $instance->call($job, [
-            'command' => serialize($testJob),
+            'command' => backport_serialize($testJob),
         ]);
 
         $this->assertFalse($testJob::$handled);

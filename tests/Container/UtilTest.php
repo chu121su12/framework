@@ -36,7 +36,7 @@ class UtilTest extends TestCase
 
         $obj = new stdClass;
         $obj->value = 'a';
-        $obj = unserialize(serialize($obj));
+        $obj = backport_unserialize(backport_serialize($obj));
         $this->assertEquals([$obj], Util::arrayWrap($obj));
         $this->assertSame($obj, Util::arrayWrap($obj)[0]);
     }

@@ -24,7 +24,7 @@ class SessionStoreTest extends TestCase
     public function testSessionIsLoadedFromHandler()
     {
         $session = $this->getSession();
-        $session->getHandler()->shouldReceive('read')->once()->with($this->getSessionId())->andReturn(serialize(['foo' => 'bar', 'bagged' => ['name' => 'taylor']]));
+        $session->getHandler()->shouldReceive('read')->once()->with($this->getSessionId())->andReturn(backport_serialize(['foo' => 'bar', 'bagged' => ['name' => 'taylor']]));
         $session->start();
 
         $this->assertSame('bar', $session->get('foo'));
@@ -99,14 +99,14 @@ class SessionStoreTest extends TestCase
     public function testBrandNewSessionIsProperlySaved()
     {
         $session = $this->getSession();
-        $session->getHandler()->shouldReceive('read')->once()->andReturn(serialize([]));
+        $session->getHandler()->shouldReceive('read')->once()->andReturn(backport_serialize([]));
         $session->start();
         $session->put('foo', 'bar');
         $session->flash('baz', 'boom');
         $session->now('qux', 'norf');
         $session->getHandler()->shouldReceive('write')->once()->with(
             $this->getSessionId(),
-            serialize([
+            backport_serialize([
                 '_token' => $session->token(),
                 'foo' => 'bar',
                 'baz' => 'boom',
@@ -124,7 +124,7 @@ class SessionStoreTest extends TestCase
     public function testSessionIsProperlyUpdated()
     {
         $session = $this->getSession();
-        $session->getHandler()->shouldReceive('read')->once()->andReturn(serialize([
+        $session->getHandler()->shouldReceive('read')->once()->andReturn(backport_serialize([
             '_token' => Str::random(40),
             'foo' => 'bar',
             'baz' => 'boom',
@@ -137,7 +137,7 @@ class SessionStoreTest extends TestCase
 
         $session->getHandler()->shouldReceive('write')->once()->with(
             $this->getSessionId(),
-            serialize([
+            backport_serialize([
                 '_token' => $session->token(),
                 'foo' => 'bar',
                 '_flash' => [
@@ -155,7 +155,7 @@ class SessionStoreTest extends TestCase
     public function testSessionIsReSavedWhenNothingHasChanged()
     {
         $session = $this->getSession();
-        $session->getHandler()->shouldReceive('read')->once()->andReturn(serialize([
+        $session->getHandler()->shouldReceive('read')->once()->andReturn(backport_serialize([
             '_token' => Str::random(40),
             'foo' => 'bar',
             'baz' => 'boom',
@@ -168,7 +168,7 @@ class SessionStoreTest extends TestCase
 
         $session->getHandler()->shouldReceive('write')->once()->with(
             $this->getSessionId(),
-            serialize([
+            backport_serialize([
                 '_token' => $session->token(),
                 'foo' => 'bar',
                 'baz' => 'boom',
@@ -189,7 +189,7 @@ class SessionStoreTest extends TestCase
         $session = $this->getSession();
         $oldId = $session->getId();
         $token = Str::random(40);
-        $session->getHandler()->shouldReceive('read')->once()->with($oldId)->andReturn(serialize([
+        $session->getHandler()->shouldReceive('read')->once()->with($oldId)->andReturn(backport_serialize([
             '_token' => $token,
             'foo' => 'bar',
             'baz' => 'boom',
@@ -208,7 +208,7 @@ class SessionStoreTest extends TestCase
 
         $session->getHandler()->shouldReceive('write')->once()->with(
             $newId,
-            serialize([
+            backport_serialize([
                 '_token' => $token,
                 'foo' => 'bar',
                 'baz' => 'boom',
@@ -567,7 +567,7 @@ class SessionStoreTest extends TestCase
     public function testValidationErrorsCanBeSerializedAsJson()
     {
         $session = $this->getSession('json');
-        $session->getHandler()->shouldReceive('read')->once()->andReturn(serialize([]));
+        $session->getHandler()->shouldReceive('read')->once()->andReturn(backport_serialize([]));
         $session->start();
         $session->put('errors', $errorBag = new ViewErrorBag);
         $messageBag = new MessageBag([
