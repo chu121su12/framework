@@ -507,3 +507,58 @@ if (! \function_exists('backport_call_named_args')) {
         return $callback(\array_merge($matchedArguments, $unmatchedArguments));
     }
 }
+
+if (! \function_exists('backport_serialize')) {
+    function backport_serialize($object)
+    {
+        if (\version_compare(\PHP_VERSION, '7.4', '>=')) {
+            return serialize($object);
+        }
+
+        if (\method_exists($object, '__serialize')) {
+            $custom = $object->__serialize();
+
+            if (! \is_array($custom)) {
+                throw new TypeError;
+            }
+
+            return serialize([
+                "['¯\_(ツ)_/¯']" => [
+                    get_class($object),
+                    $custom,
+                ],
+            ]);
+        }
+
+        return serialize($object); // maybe __sleep();
+    }
+}
+
+if (! \function_exists('backport_unserialize')) {
+    function backport_unserialize($serialized)
+    {
+        if (\version_compare(\PHP_VERSION, '7.4', '>=')) {
+            return unserialize($serialized);
+        }
+
+        $unserialized = unserialize($serialized);
+
+        if (! (\is_array($unserialized) && \array_key_exists("['¯\_(ツ)_/¯']", $unserialized) && count($unserialized) === 1)) {
+            return $unserialized;
+        }
+
+        list($class, $custom) = $unserialized["['¯\_(ツ)_/¯']"];
+
+        if (\method_exists($class, '__unserialize')) {
+            $object = (new ReflectionClass($class))->newInstanceWithoutConstructor();
+
+            if ($object->__unserialize($custom) === null) {
+                return $object;
+            }
+
+            throw new TypeError;
+        }
+
+        return $unserialized;
+    }
+}

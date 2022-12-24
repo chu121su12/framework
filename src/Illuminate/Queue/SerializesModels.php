@@ -29,7 +29,10 @@ trait SerializesModels
 
             $property->setAccessible(true);
 
-            if (! $property->isInitialized($this)) {
+            if (! version_compare(\PHP_VERSION, '7.4', '>=')) {
+                // noop
+            }
+            elseif (! $property->isInitialized($this)) {
                 continue;
             }
 

@@ -127,11 +127,11 @@ class ModelSerializationTest extends TestCase
             'email' => 'taylor@laravel.com',
         ]);
 
-        $serialized = serialize(new CollectionSerializationTestClass(
+        $serialized = backport_serialize(new CollectionSerializationTestClass(
             new Collection([$user, $user2])
         ));
 
-        unserialize($serialized);
+        // unserialize($serialized);
     }
 
     public function testItReloadsRelationships()
@@ -246,13 +246,13 @@ class ModelSerializationTest extends TestCase
         ModelSerializationTestUser::create(['email' => '3@laravel.com']);
         ModelSerializationTestUser::create(['email' => '1@laravel.com']);
 
-        $serialized = serialize(new CollectionSerializationTestClass(
+        $serialized = backport_serialize(new CollectionSerializationTestClass(
             ModelSerializationTestUser::orderByDesc('email')->get()
         ));
 
         ModelSerializationTestUser::where(['email' => '2@laravel.com'])->delete();
 
-        $unserialized = unserialize($serialized);
+        $unserialized = backport_unserialize($serialized);
 
         $this->assertCount(2, $unserialized->users);
 
@@ -314,11 +314,21 @@ class ModelSerializationTest extends TestCase
             'email' => 'taylor@laravel.com',
         ]);
 
-        $serialized = serialize(new ModelSerializationParentAccessibleTestClass($user, $user, $user));
+        $serialized = backport_serialize(new ModelSerializationParentAccessibleTestClass($user, $user, $user));
+
+        if (\version_compare(\PHP_VERSION, '7.4', '>=')) {
 
         $this->assertSame(
             'O:78:"Illuminate\\Tests\\Integration\\Queue\\ModelSerializationParentAccessibleTestClass":2:{s:4:"user";O:45:"Illuminate\\Contracts\\Database\\ModelIdentifier":5:{s:5:"class";s:61:"Illuminate\\Tests\\Integration\\Queue\\ModelSerializationTestUser";s:2:"id";i:1;s:9:"relations";a:0:{}s:10:"connection";s:7:"testing";s:15:"collectionClass";N;}s:8:"'."\0".'*'."\0".'user2";O:45:"Illuminate\\Contracts\\Database\\ModelIdentifier":5:{s:5:"class";s:61:"Illuminate\\Tests\\Integration\\Queue\\ModelSerializationTestUser";s:2:"id";i:1;s:9:"relations";a:0:{}s:10:"connection";s:7:"testing";s:15:"collectionClass";N;}}', $serialized
         );
+
+        } else {
+
+        $this->assertSame(
+            'a:1:{s:17:"[\'¯\_(ツ)_/¯\']";a:2:{i:0;s:78:"Illuminate\Tests\Integration\Queue\ModelSerializationParentAccessibleTestClass";i:1;a:2:{s:4:"user";O:45:"Illuminate\Contracts\Database\ModelIdentifier":5:{s:5:"class";s:61:"Illuminate\Tests\Integration\Queue\ModelSerializationTestUser";s:2:"id";i:1;s:9:"relations";a:0:{}s:10:"connection";s:7:"testing";s:15:"collectionClass";N;}s:8:"'."\0*\0".'user2";O:45:"Illuminate\Contracts\Database\ModelIdentifier":5:{s:5:"class";s:61:"Illuminate\Tests\Integration\Queue\ModelSerializationTestUser";s:2:"id";i:1;s:9:"relations";a:0:{}s:10:"connection";s:7:"testing";s:15:"collectionClass";N;}}}}', $serialized
+        );
+
+        }
     }
 
     public function test_serialization_types_empty_custom_eloquent_collection()
