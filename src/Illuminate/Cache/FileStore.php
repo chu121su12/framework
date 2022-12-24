@@ -76,7 +76,7 @@ class FileStore implements Store, LockProvider
         $this->ensureCacheDirectoryExists($path = $this->path($key));
 
         $result = $this->files->put(
-            $path, $this->expiration($seconds).serialize($value), true
+            $path, $this->expiration($seconds).backport_serialize($value), true
         );
 
         if ($result !== false && $result > 0) {
@@ -114,7 +114,7 @@ class FileStore implements Store, LockProvider
 
         if (empty($expire) || $this->currentTime() >= $expire) {
             $file->truncate()
-                ->write($this->expiration($seconds).serialize($value))
+                ->write($this->expiration($seconds).backport_serialize($value))
                 ->close();
 
             $this->ensurePermissionsAreCorrect($path);
@@ -272,7 +272,7 @@ class FileStore implements Store, LockProvider
         $_restore = backport_convert_error_to_error_exception();
 
         try {
-            $data = unserialize(substr($contents, 10));
+            $data = backport_unserialize(substr($contents, 10));
         } catch (Exception $e) {
             $this->forget($key);
 

@@ -314,7 +314,7 @@ class BusFake implements QueueingDispatcher
             $command = get_class($instance);
 
             $callback = function ($job) use ($instance) {
-                return serialize($this->resetChainPropertiesToDefaults($job)) === serialize($instance);
+                return backport_serialize($this->resetChainPropertiesToDefaults($job)) === backport_serialize($instance);
             };
         }
 
@@ -381,7 +381,7 @@ class BusFake implements QueueingDispatcher
     protected function assertDispatchedWithChainOfObjects($command, $expectedChain, $callback)
     {
         $chain = collect($expectedChain)->map(function ($job) {
-            return serialize($job);
+            return backport_serialize($job);
         })->all();
 
         PHPUnit::assertTrue(
@@ -404,7 +404,7 @@ class BusFake implements QueueingDispatcher
     {
         $matching = $this->dispatched($command, $callback)->map->chained->map(function ($chain) {
             return collect($chain)->map(
-                function ($job) { return get_class(unserialize($job)); }
+                function ($job) { return get_class(backport_unserialize($job)); }
             );
         })->filter(
             function ($chain) use ($expectedChain) { return $chain->all() === $expectedChain; }

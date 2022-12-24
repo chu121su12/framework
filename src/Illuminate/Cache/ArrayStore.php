@@ -63,7 +63,7 @@ class ArrayStore extends TaggableStore implements LockProvider
             return;
         }
 
-        return $this->serializesValues ? unserialize($item['value']) : $item['value'];
+        return $this->serializesValues ? backport_unserialize($item['value']) : $item['value'];
     }
 
     /**
@@ -77,7 +77,7 @@ class ArrayStore extends TaggableStore implements LockProvider
     public function put($key, $value, $seconds)
     {
         $this->storage[$key] = [
-            'value' => $this->serializesValues ? serialize($value) : $value,
+            'value' => $this->serializesValues ? backport_serialize($value) : $value,
             'expiresAt' => $this->calculateExpiration($seconds),
         ];
 
@@ -95,7 +95,7 @@ class ArrayStore extends TaggableStore implements LockProvider
     {
         if (! is_null($existing = $this->get($key))) {
             return tap(((int) $existing) + $value, function ($incremented) use ($key) {
-                $value = $this->serializesValues ? serialize($incremented) : $incremented;
+                $value = $this->serializesValues ? backport_serialize($incremented) : $incremented;
 
                 $this->storage[$key]['value'] = $value;
             });

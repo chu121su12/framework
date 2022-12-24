@@ -103,13 +103,13 @@ class Encrypter implements EncrypterContract, StringEncrypter
 
         if (!(self::$supportedCiphers[strtolower($this->cipher)]['aead'] && !version_compare(PHP_VERSION, '7.1.0', '<'))) {
             $value = \openssl_encrypt(
-                $serialize ? serialize($value) : $value,
+                $serialize ? backport_serialize($value) : $value,
                 strtolower($this->cipher), $this->key, 0, $iv
             );
         } else {
 
         $value = \openssl_encrypt(
-            $serialize ? serialize($value) : $value,
+            $serialize ? backport_serialize($value) : $value,
             strtolower($this->cipher), $this->key, 0, $iv, $tag
         );
 
@@ -195,7 +195,7 @@ class Encrypter implements EncrypterContract, StringEncrypter
             throw new DecryptException('Could not decrypt the data.');
         }
 
-        return $unserialize ? unserialize($decrypted) : $decrypted;
+        return $unserialize ? backport_unserialize($decrypted) : $decrypted;
     }
 
     /**

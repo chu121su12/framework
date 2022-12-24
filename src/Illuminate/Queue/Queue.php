@@ -154,8 +154,8 @@ abstract class Queue
         ]);
 
         $command = $this->jobShouldBeEncrypted($job) && $this->container->bound(Encrypter::class)
-                    ? $this->container[Encrypter::class]->encrypt(serialize(clone $job))
-                    : serialize(clone $job);
+                    ? $this->container[Encrypter::class]->encrypt(backport_serialize(clone $job))
+                    : backport_serialize(clone $job);
 
         return array_merge($payload, [
             'data' => array_merge($payload['data'], [

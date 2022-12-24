@@ -376,7 +376,7 @@ class DatabaseStore implements LockProvider, Store
      */
     protected function serialize($value)
     {
-        $result = serialize($value);
+        $result = backport_serialize($value);
 
         if ($this->connection instanceof PostgresConnection && str_contains($result, "\0")) {
             $result = base64_encode($result);
@@ -397,6 +397,6 @@ class DatabaseStore implements LockProvider, Store
             $value = base64_decode($value);
         }
 
-        return unserialize($value);
+        return backport_unserialize($value);
     }
 }

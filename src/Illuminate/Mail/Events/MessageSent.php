@@ -48,8 +48,8 @@ class MessageSent
             ->isNotEmpty();
 
         return $hasAttachments ? [
-            'sent' => base64_encode(serialize($this->sent)),
-            'data' => base64_encode(serialize($this->data)),
+            'sent' => base64_encode(backport_serialize($this->sent)),
+            'data' => base64_encode(backport_serialize($this->data)),
             'hasAttachments' => true,
         ] : [
             'sent' => $this->sent,
@@ -67,8 +67,8 @@ class MessageSent
     public function __unserialize(array $data)
     {
         if (isset($data['hasAttachments']) && $data['hasAttachments'] === true) {
-            $this->sent = unserialize(base64_decode($data['sent']));
-            $this->data = unserialize(base64_decode($data['data']));
+            $this->sent = backport_unserialize(base64_decode($data['sent']));
+            $this->data = backport_unserialize(base64_decode($data['data']));
         } else {
             $this->sent = $data['sent'];
             $this->data = $data['data'];

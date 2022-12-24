@@ -19,7 +19,7 @@ class RouteSignatureParameters
     public static function fromAction(array $action, $conditions = [])
     {
         $callback = RouteAction::containsSerializedClosure($action)
-                        ? unserialize($action['uses'])->getClosure()
+                        ? backport_unserialize($action['uses'])->getClosure()
                         : $action['uses'];
 
         $parameters = is_string($callback)

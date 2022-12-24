@@ -94,11 +94,11 @@ class CallQueuedHandler
     protected function getCommand(array $data)
     {
         if (str_starts_with($data['command'], 'O:')) {
-            return unserialize($data['command']);
+            return backport_unserialize($data['command']);
         }
 
         if ($this->container->bound(Encrypter::class)) {
-            return unserialize($this->container[Encrypter::class]->decrypt($data['command']));
+            return backport_unserialize($this->container[Encrypter::class]->decrypt($data['command']));
         }
 
         throw new RuntimeException('Unable to extract job payload.');

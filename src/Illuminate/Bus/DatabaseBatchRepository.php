@@ -347,7 +347,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
      */
     protected function serialize($value)
     {
-        $serialized = serialize($value);
+        $serialized = backport_serialize($value);
 
         return $this->connection instanceof PostgresConnection
             ? base64_encode($serialized)
@@ -367,7 +367,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
             $serialized = base64_decode($serialized);
         }
 
-        return unserialize($serialized);
+        return backport_unserialize($serialized);
     }
 
     /**

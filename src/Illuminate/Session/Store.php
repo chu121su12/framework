@@ -114,7 +114,7 @@ class Store implements Session
             if ($this->serialization === 'json') {
                 $data = backport_json_decode($this->prepareForUnserialize($data), true);
             } else {
-                $data = @unserialize($this->prepareForUnserialize($data));
+                $data = @backport_unserialize($this->prepareForUnserialize($data));
             }
 
             if ($data !== false && is_array($data)) {
@@ -170,7 +170,7 @@ class Store implements Session
         $this->prepareErrorBagForSerialization();
 
         $this->handler->write($this->getId(), $this->prepareForStorage(
-            $this->serialization === 'json' ? json_encode($this->attributes) : serialize($this->attributes)
+            $this->serialization === 'json' ? json_encode($this->attributes) : backport_serialize($this->attributes)
         ));
 
         $this->started = false;

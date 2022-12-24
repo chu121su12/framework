@@ -19,7 +19,7 @@ class Recaller
      */
     public function __construct($recaller)
     {
-        $this->recaller = @unserialize($recaller, ['allowed_classes' => false]) ?: $recaller;
+        $this->recaller = @backport_unserialize($recaller, ['allowed_classes' => false]) ?: $recaller;
     }
 
     /**
