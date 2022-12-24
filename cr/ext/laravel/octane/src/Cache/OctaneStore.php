@@ -43,7 +43,7 @@ class OctaneStore implements Store
         $record = $this->table->get($key);
 
         if (! $this->recordIsFalseOrExpired($record)) {
-            return unserialize($record['value']);
+            return backport_unserialize($record['value']);
         }
 
         if (in_array($key, $this->intervals) &&
@@ -62,7 +62,7 @@ class OctaneStore implements Store
     {
         $interval = $this->get('interval-'.$key);
 
-        return $interval ? unserialize($interval) : null;
+        return $interval ? backport_unserialize($interval) : null;
     }
 
     /**
@@ -91,7 +91,7 @@ class OctaneStore implements Store
     public function put($key, $value, $seconds)
     {
         return $this->table->set($key, [
-            'value' => serialize($value),
+            'value' => backport_serialize($value),
             'expiration' => Carbon::now()->getTimestamp() + $seconds,
         ]);
     }
@@ -129,7 +129,7 @@ class OctaneStore implements Store
             });
         }
 
-        return tap((int) (unserialize($record['value']) + $value), function ($value) use ($key, $record) {
+        return tap((int) (backport_unserialize($record['value']) + $value), function ($value) use ($key, $record) {
             $this->put($key, $value, $record['expiration'] - Carbon::now()->getTimestamp());
         });
     }
@@ -174,7 +174,7 @@ class OctaneStore implements Store
             return;
         }
 
-        $this->forever('interval-'.$key, serialize([
+        $this->forever('interval-'.$key, backport_serialize([
             'resolver' => new SerializableClosure($resolver),
             'lastRefreshedAt' => null,
             'refreshInterval' => $seconds,
@@ -197,7 +197,7 @@ class OctaneStore implements Store
 
             try {
                 $e = null;
-                $this->forever('interval-'.$key, serialize(array_merge(
+                $this->forever('interval-'.$key, backport_serialize(array_merge(
                     $interval, ['lastRefreshedAt' => Carbon::now()->getTimestamp()]
                 )));
 

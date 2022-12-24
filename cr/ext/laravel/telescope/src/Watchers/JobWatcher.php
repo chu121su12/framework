@@ -217,11 +217,11 @@ class JobWatcher extends Watcher
     protected function getCommand(array $data)
     {
         if (Str::startsWith($data['command'], 'O:')) {
-            return unserialize($data['command']);
+            return backport_unserialize($data['command']);
         }
 
         if (app()->bound(Encrypter::class)) {
-            return unserialize(app(Encrypter::class)->decrypt($data['command']));
+            return backport_unserialize(app(Encrypter::class)->decrypt($data['command']));
         }
 
         throw new RuntimeException('Unable to extract job payload.');

@@ -65,7 +65,7 @@ class Signed implements Serializable
         }
 
         return static::$signer->sign(
-            serialize(new Native($this->closure))
+            backport_serialize(new Native($this->closure))
         );
     }
 
@@ -83,6 +83,6 @@ class Signed implements Serializable
             throw new InvalidSignatureException();
         }
 
-        $this->closure = unserialize($signature['serializable'])->getClosure();
+        $this->closure = backport_unserialize($signature['serializable'])->getClosure();
     }
 }

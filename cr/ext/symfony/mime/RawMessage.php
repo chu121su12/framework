@@ -68,7 +68,7 @@ class RawMessage implements \Serializable
      */
     final public function serialize() //// string
     {
-        return serialize($this->__serialize());
+        return backport_serialize($this->__serialize());
     }
 
     /**
@@ -76,7 +76,7 @@ class RawMessage implements \Serializable
      */
     final public function unserialize($serialized)
     {
-        $this->__unserialize(unserialize($serialized));
+        $this->__unserialize(backport_unserialize($serialized));
     }
 
     public function __serialize() //// array

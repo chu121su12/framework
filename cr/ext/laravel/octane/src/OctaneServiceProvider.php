@@ -186,8 +186,8 @@ class OctaneServiceProvider extends ServiceProvider
     {
         OctaneFacade::route('POST', '/octane/resolve-tasks', function (Request $request) {
             try {
-                return new Response(serialize((new SwooleTaskDispatcher)->resolve(
-                    unserialize(Crypt::decryptString($request->input('tasks'))),
+                return new Response(backport_serialize((new SwooleTaskDispatcher)->resolve(
+                    backport_unserialize(Crypt::decryptString($request->input('tasks'))),
                     $request->input('wait')
                 )), 200);
             } catch (DecryptException $e) {
@@ -204,7 +204,7 @@ class OctaneServiceProvider extends ServiceProvider
         OctaneFacade::route('POST', '/octane/dispatch-tasks', function (Request $request) {
             try {
                 (new SwooleTaskDispatcher)->dispatch(
-                    unserialize(Crypt::decryptString($request->input('tasks')))
+                    backport_unserialize(Crypt::decryptString($request->input('tasks')))
                 );
             } catch (DecryptException $e) {
                 return new Response('', 403);

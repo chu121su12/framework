@@ -74,7 +74,7 @@ class CompiledRoute implements \Serializable
      */
     final public function serialize() //// string
     {
-        return serialize($this->__serialize());
+        return backport_serialize($this->__serialize());
     }
 
     public function __unserialize(array $data) /// void
@@ -94,7 +94,7 @@ class CompiledRoute implements \Serializable
      */
     final public function unserialize($serialized)
     {
-        $this->__unserialize(unserialize($serialized, ['allowed_classes' => false]));
+        $this->__unserialize(backport_unserialize($serialized, ['allowed_classes' => false]));
     }
 
     /**

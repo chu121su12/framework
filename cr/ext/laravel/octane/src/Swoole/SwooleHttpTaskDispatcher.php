@@ -52,12 +52,12 @@ class SwooleHttpTaskDispatcher implements DispatchesTasks
 
         try {
             $response = Http::timeout(($waitMilliseconds / 1000) + 5)->post("http://{$this->host}:{$this->port}/octane/resolve-tasks", [
-                'tasks' => Crypt::encryptString(serialize($tasks)),
+                'tasks' => Crypt::encryptString(backport_serialize($tasks)),
                 'wait' => $waitMilliseconds,
             ]);
 
             return backport_match ($response->status(),
-                [200, function () use ($response) { return unserialize($response); }],
+                [200, function () use ($response) { return backport_unserialize($response); }],
                 [504, function () use ($waitMilliseconds) { throw TaskTimeoutException::after($waitMilliseconds); }],
                 [__BACKPORT_MATCH_DEFAULT_CASE__, function () { throw TaskExceptionResult::from(
                     new Exception('Invalid response from task server.')
@@ -84,7 +84,7 @@ class SwooleHttpTaskDispatcher implements DispatchesTasks
 
         try {
             Http::post("http://{$this->host}:{$this->port}/octane/dispatch-tasks", [
-                'tasks' => Crypt::encryptString(serialize($tasks)),
+                'tasks' => Crypt::encryptString(backport_serialize($tasks)),
             ]);
         } catch (ConnectionException $e) {
             $this->fallbackDispatcher->dispatch($tasks);

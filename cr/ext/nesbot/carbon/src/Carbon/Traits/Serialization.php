@@ -72,7 +72,7 @@ trait Serialization
      */
     public function serialize()
     {
-        return serialize($this);
+        return backport_serialize($this);
     }
 
     /**
@@ -86,7 +86,7 @@ trait Serialization
      */
     public static function fromSerialized($value)
     {
-        $instance = @unserialize((string) $value);
+        $instance = @backport_unserialize((string) $value);
 
         if (!$instance instanceof static) {
             throw new InvalidFormatException("Invalid serialized value: $value");
@@ -156,7 +156,7 @@ trait Serialization
                 // FatalError occurs when calling msgpack_unpack() in PHP 7.4 or later.
                 $date = $this->dumpDateProperties['date'];
                 $timezone = $this->dumpDateProperties['timezone'];
-                parent::__construct($date, unserialize($timezone));
+                parent::__construct($date, backport_unserialize($timezone));
             }
             // @codeCoverageIgnoreEnd
         }
@@ -235,7 +235,7 @@ trait Serialization
         if (isset($this->constructedObjectId)) {
             $this->dumpDateProperties = [
                 'date' => $this->format('Y-m-d H:i:s.u'),
-                'timezone' => serialize(isset($this->timezone) ? $this->timezone : null),
+                'timezone' => backport_serialize(isset($this->timezone) ? $this->timezone : null),
             ];
 
             $properties[] = 'dumpDateProperties';

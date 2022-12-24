@@ -170,12 +170,12 @@ class JobRecorder
         $command = backport_type_check('string', $command);
 
         if (Str::startsWith($command, 'O:')) {
-            return unserialize($command);
+            return backport_unserialize($command);
         }
 
         if ($this->app->bound(Encrypter::class)) {
             /** @phpstan-ignore-next-line */
-            return unserialize($this->app[Encrypter::class]->decrypt($command));
+            return backport_unserialize($this->app[Encrypter::class]->decrypt($command));
         }
 
         throw new RuntimeException('Unable to extract job payload.');
