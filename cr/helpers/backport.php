@@ -2,6 +2,8 @@
 
 use desktopd\SHA3\Sponge as SHA3;
 use Illuminate\Support\Arr;
+use Laravel\SerializableClosure\SerializableClosure;
+use Opis\Closure\SerializableClosure as OpisSerializableClosure;
 
 if (! \function_exists('backport_instanceof_throwable')) {
     function backport_instanceof_throwable($any)
@@ -511,7 +513,7 @@ if (! \function_exists('backport_call_named_args')) {
 if (! \function_exists('backport_serialize')) {
     function backport_serialize($object)
     {
-        if (\version_compare(\PHP_VERSION, '7.4', '>=')) {
+        if (\version_compare(\PHP_VERSION, '7.4', '>=') || $object instanceof SerializableClosure || $object instanceof OpisSerializableClosure) {
             return serialize($object);
         }
 
@@ -548,6 +550,10 @@ if (! \function_exists('backport_unserialize')) {
         }
 
         list($class, $custom) = $unserialized["['¯\_(ツ)_/¯']"];
+
+        // if ($class === SerializableClosure::class || $class === OpisSerializableClosure::class) {
+        //     return $unserialized;
+        // }
 
         if (\method_exists($class, '__unserialize')) {
             $object = (new ReflectionClass($class))->newInstanceWithoutConstructor();
