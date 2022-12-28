@@ -6,6 +6,7 @@ composer.lock
 .DS_Store
 Thumbs.db
 /phpunit.xml
+/.fleet
 /.idea
 /.phpintel
 /.vscode

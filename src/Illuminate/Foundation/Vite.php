@@ -340,9 +340,10 @@ class Vite implements Htmlable
             }
         }
 
-        list($stylesheets, $scripts) = $tags->partition(function ($tag) { return str_starts_with($tag, '<link'); });
+        list($stylesheets, $scripts) = $tags->unique()->partition(function ($tag) { return str_starts_with($tag, '<link'); });
 
-        $preloads = $preloads->sortByDesc(function ($args) { return $this->isCssPath($args[1]); })
+        $preloads = $preloads->unique()
+            ->sortByDesc(function ($args) { return $this->isCssPath($args[1]); })
             ->map(function ($args) { return $this->makePreloadTagForChunk(...$args); });
 
         return new HtmlString($preloads->join('').$stylesheets->join('').$scripts->join(''));
