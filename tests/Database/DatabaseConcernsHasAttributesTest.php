@@ -2,8 +2,6 @@
 
 namespace Illuminate\Tests\Database;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use PHPUnit\Framework\TestCase;
 
 class DatabaseConcernsHasAttributesTest extends TestCase
@@ -13,6 +11,8 @@ class DatabaseConcernsHasAttributesTest extends TestCase
      */
     public function testWithoutConstructor()
     {
+        require_once __DIR__.'/stubs/DatabaseConcernsHasAttributesStub.php';
+
         $instance = new HasAttributesWithoutConstructor();
         $attributes = $instance->getMutatedAttributes();
         $this->assertEquals(['some_attribute'], $attributes);
@@ -23,26 +23,10 @@ class DatabaseConcernsHasAttributesTest extends TestCase
      */
     public function testWithConstructorArguments()
     {
+        require_once __DIR__.'/stubs/DatabaseConcernsHasAttributesStub.php';
+
         $instance = new HasAttributesWithConstructorArguments(null);
         $attributes = $instance->getMutatedAttributes();
         $this->assertEquals(['some_attribute'], $attributes);
-    }
-}
-
-class HasAttributesWithoutConstructor
-{
-    use HasAttributes;
-
-    public function someAttribute()/*: Attribute*/
-    {
-        return new Attribute(function () {
-        });
-    }
-}
-
-class HasAttributesWithConstructorArguments extends HasAttributesWithoutConstructor
-{
-    public function __construct($someValue)
-    {
     }
 }
