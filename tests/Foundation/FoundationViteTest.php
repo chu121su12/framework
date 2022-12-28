@@ -1192,7 +1192,8 @@ class FoundationViteTest extends TestCase
             ],
         ], $buildDir);
 
-        $result = app(Vite::class)(['resources/js/app.js', 'resources/js/Pages/Welcome.vue'], $buildDir);
+        $vite = app(Vite::class);
+        $result = $vite(['resources/js/app.js', 'resources/js/Pages/Welcome.vue'], $buildDir);
 
         $this->assertSame(
             '<link rel="preload" as="style" href="https://example.com/'.$buildDir.'/assets/app-versioned.css" />'
