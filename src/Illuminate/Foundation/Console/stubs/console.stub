@@ -23,12 +23,10 @@ class {{ class }} extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
-    public function handle()
+    public function handle()/*: void*/
     {
         // return Command::SUCCESS;
-        return SymfonyHelper::CONSOLE_SUCCESS;
+        // return SymfonyHelper::CONSOLE_SUCCESS;
     }
 }
