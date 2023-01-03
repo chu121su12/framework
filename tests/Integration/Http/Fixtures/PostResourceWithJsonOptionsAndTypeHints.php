@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Integration\Http\Fixtures;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PostResourceWithJsonOptionsAndTypeHints extends JsonResource
@@ -11,7 +12,7 @@ class PostResourceWithJsonOptionsAndTypeHints extends JsonResource
         parent::__construct($resource);
     }
 
-    public function toArray($request)
+    public function toArray(Request $request)
     {
         return [
             'id' => $this->id,

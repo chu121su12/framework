@@ -4,6 +4,7 @@ namespace Illuminate\Validation;
 
 use Illuminate\Contracts\Validation\Rule as RuleContract;
 use Illuminate\Contracts\Validation\ValidatorAwareRule;
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
 class ClosureValidationRule_pendingPotentiallyTranslatedString_class extends PotentiallyTranslatedString
@@ -118,7 +119,7 @@ class ClosureValidationRule implements RuleContract, ValidatorAwareRule
      * @param  \Illuminate\Validation\Validator  $validator
      * @return $this
      */
-    public function setValidator($validator)
+    public function setValidator(ValidatorContract $validator)
     {
         $this->validator = $validator;
 

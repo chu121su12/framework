@@ -2,7 +2,7 @@
 
 namespace Illuminate\Contracts\Validation;
 
-use Illuminate\Validation\Validator;
+// use Illuminate\Validation\Validator;
 
 interface ValidatorAwareRule
 {

@@ -2,18 +2,19 @@
 
 namespace Illuminate\Database\Eloquent\Casts;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Str;
 
 class AsStringable_castUsing_class implements CastsAttributes
         {
-            public function get($model, $key, $value, array $attributes)
+            public function get(Model $model, $key, $value, array $attributes)
             {
                 return isset($value) ? Str::of($value) : null;
             }
 
-            public function set($model, $key, $value, array $attributes)
+            public function set(Model $model, $key, $value, array $attributes)
             {
                 return isset($value) ? (string) $value : null;
             }

@@ -3074,7 +3074,7 @@ class UnsavedModel extends Model
 
 class Uppercase implements CastsInboundAttributes
 {
-    public function set($model, /*string */$key, $value, array $attributes)
+    public function set(Model $model, /*string */$key, $value, array $attributes)
     {
         // $key = backport_type_check('string', $key);
 

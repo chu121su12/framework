@@ -2,9 +2,11 @@
 
 namespace Illuminate\Tests\Integration\Http\Fixtures;
 
+use Illuminate\Http\Request;
+
 class PostResourceWithOptionalPivotRelationship extends PostResource
 {
-    public function toArray($request)
+    public function toArray(Request $request)
     {
         return [
             'id' => $this->id,

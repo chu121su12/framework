@@ -25,7 +25,7 @@ class ValueObject_castUsing_class implements CastsAttributes, SerializesCastable
                 $this->argument = $argument;
             }
 
-            public function get($model, $key, $value, array $attributes)
+            public function get(Model $model, $key, $value, array $attributes)
             {
                 if ($this->argument) {
                     return $this->argument;
@@ -34,12 +34,12 @@ class ValueObject_castUsing_class implements CastsAttributes, SerializesCastable
                 return backport_unserialize($value);
             }
 
-            public function set($model, $key, $value, array $attributes)
+            public function set(Model $model, $key, $value, array $attributes)
             {
                 return backport_serialize($value);
             }
 
-            public function serialize($model, $key, $value, array $attributes)
+            public function serialize(Model $model, $key, $value, array $attributes)
             {
                 return backport_serialize($value);
             }
@@ -342,7 +342,7 @@ class HashCaster implements CastsInboundAttributes
         $this->algorithm = $algorithm;
     }
 
-    public function set($model, $key, $value, array $attributes)
+    public function set(Model $model, $key, $value, array $attributes)
     {
         return [$key => hash($this->algorithm, $value)];
     }
@@ -350,12 +350,12 @@ class HashCaster implements CastsInboundAttributes
 
 class UppercaseCaster implements CastsAttributes
 {
-    public function get($model, $key, $value, array $attributes)
+    public function get(Model $model, $key, $value, array $attributes)
     {
         return strtoupper($value);
     }
 
-    public function set($model, $key, $value, array $attributes)
+    public function set(Model $model, $key, $value, array $attributes)
     {
         return [$key => strtoupper($value)];
     }
@@ -363,7 +363,7 @@ class UppercaseCaster implements CastsAttributes
 
 class AddressCaster implements CastsAttributes
 {
-    public function get($model, $key, $value, array $attributes)
+    public function get(Model $model, $key, $value, array $attributes)
     {
         if (is_null($attributes['address_line_one'])) {
             return;
@@ -372,7 +372,7 @@ class AddressCaster implements CastsAttributes
         return new Address($attributes['address_line_one'], $attributes['address_line_two']);
     }
 
-    public function set($model, $key, $value, array $attributes)
+    public function set(Model $model, $key, $value, array $attributes)
     {
         if (is_null($value)) {
             return [
@@ -387,12 +387,12 @@ class AddressCaster implements CastsAttributes
 
 class JsonCaster implements CastsAttributes
 {
-    public function get($model, $key, $value, array $attributes)
+    public function get(Model $model, $key, $value, array $attributes)
     {
         return backport_json_decode($value, true);
     }
 
-    public function set($model, $key, $value, array $attributes)
+    public function set(Model $model, $key, $value, array $attributes)
     {
         return json_encode($value);
     }
@@ -400,7 +400,7 @@ class JsonCaster implements CastsAttributes
 
 class JsonSettingsCaster implements CastsAttributes
 {
-    public function get($model, /*string */$key, $value, array $attributes)/*: ?Settings*/
+    public function get(Model $model, /*string */$key, $value, array $attributes)/*: ?Settings*/
     {
         $key = backport_type_check('string', $key);
 
@@ -417,7 +417,7 @@ class JsonSettingsCaster implements CastsAttributes
         return Settings::from($payload);
     }
 
-    public function set($model, /*string */$key, $value, array $attributes)/*: ?string*/
+    public function set(Model $model, /*string */$key, $value, array $attributes)/*: ?string*/
     {
         $key = backport_type_check('string', $key);
 
@@ -439,12 +439,12 @@ class JsonSettingsCaster implements CastsAttributes
 
 class DecimalCaster implements CastsAttributes, DeviatesCastableAttributes, SerializesCastableAttributes
 {
-    public function get($model, $key, $value, array $attributes)
+    public function get(Model $model, $key, $value, array $attributes)
     {
         return new Decimal($value);
     }
 
-    public function set($model, $key, $value, array $attributes)
+    public function set(Model $model, $key, $value, array $attributes)
     {
         return (string) $value;
     }
@@ -459,7 +459,7 @@ class DecimalCaster implements CastsAttributes, DeviatesCastableAttributes, Seri
         return new Decimal($attributes[$key] - $value);
     }
 
-    public function serialize($model, $key, $value, array $attributes)
+    public function serialize(Model $model, $key, $value, array $attributes)
     {
         return (string) $value;
     }
@@ -474,7 +474,7 @@ class ValueObjectCaster implements CastsAttributes
         $this->argument = $argument;
     }
 
-    public function get($model, $key, $value, array $attributes)
+    public function get(Model $model, $key, $value, array $attributes)
     {
         if ($this->argument) {
             return $this->argument;
@@ -483,7 +483,7 @@ class ValueObjectCaster implements CastsAttributes
         return backport_unserialize($value);
     }
 
-    public function set($model, $key, $value, array $attributes)
+    public function set(Model $model, $key, $value, array $attributes)
     {
         return backport_serialize($value);
     }
@@ -588,12 +588,12 @@ class DateObjectCaster implements CastsAttributes
         $this->argument = $argument;
     }
 
-    public function get($model, $key, $value, array $attributes)
+    public function get(Model $model, $key, $value, array $attributes)
     {
         return Carbon::parse($value);
     }
 
-    public function set($model, $key, $value, array $attributes)
+    public function set(Model $model, $key, $value, array $attributes)
     {
         return $value->format('Y-m-d');
     }

@@ -7,6 +7,7 @@ use Illuminate\Contracts\Validation\ImplicitRule;
 use Illuminate\Contracts\Validation\InvokableRule;
 use Illuminate\Contracts\Validation\Rule as RuleContract;
 use Illuminate\Contracts\Validation\ValidatorAwareRule;
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
 class InvokableValidationRule implements RuleContract, ValidatorAwareRule
@@ -139,7 +140,7 @@ class InvokableValidationRule implements RuleContract, ValidatorAwareRule
      * @param  \Illuminate\Validation\Validator  $validator
      * @return $this
      */
-    public function setValidator($validator)
+    public function setValidator(ValidatorContract $validator)
     {
         $this->validator = $validator;
 

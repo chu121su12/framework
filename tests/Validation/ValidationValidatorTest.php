@@ -13,6 +13,7 @@ use Illuminate\Contracts\Translation\Translator as TranslatorContract;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\ImplicitRule;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Contracts\Validation\ValidatorAwareRule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -169,7 +170,7 @@ class ValidationValidatorTest_testCustomValidationObject_class_password_rule imp
                     {
                         protected $data;
 
-                        public function setData($data)
+                        public function setData(array $data)
                         {
                             $this->data = $data;
                         }
@@ -189,7 +190,7 @@ class ValidationValidatorTest_testCustomValidationObject_class_password_rule_val
                     {
                         protected $validator;
 
-                        public function setValidator($validator)
+                        public function setValidator(ValidatorContract $validator)
                         {
                             $this->validator = $validator;
                         }

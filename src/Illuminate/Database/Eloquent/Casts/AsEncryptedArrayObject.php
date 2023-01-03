@@ -2,13 +2,14 @@
 
 namespace Illuminate\Database\Eloquent\Casts;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Facades\Crypt;
 
 class AsEncryptedArrayObject_castUsing_class implements CastsAttributes 
         {
-            public function get($model, $key, $value, array $attributes)
+            public function get(Model $model, $key, $value, array $attributes)
             {
                 if (isset($attributes[$key])) {
                     return new ArrayObject(backport_json_decode(Crypt::decryptString($attributes[$key]), true));
@@ -17,7 +18,7 @@ class AsEncryptedArrayObject_castUsing_class implements CastsAttributes
                 return null;
             }
 
-            public function set($model, $key, $value, array $attributes)
+            public function set(Model $model, $key, $value, array $attributes)
             {
                 if (! is_null($value)) {
                     return [$key => Crypt::encryptString(json_encode($value))];
@@ -26,7 +27,7 @@ class AsEncryptedArrayObject_castUsing_class implements CastsAttributes
                 return null;
             }
 
-            public function serialize($model, /*string */$key, $value, /*array */$attributes)
+            public function serialize(Model $model, /*string */$key, $value, /*array */$attributes)
             {
                 // $key = backport_type_check('string', $key);
 

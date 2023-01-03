@@ -2,13 +2,14 @@
 
 namespace Illuminate\Database\Eloquent\Casts;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Collection;
 
 class AsCollection_castUsing_class implements CastsAttributes 
         {
-            public function get($model, $key, $value, array $attributes)
+            public function get(Model $model, $key, $value, array $attributes)
             {
                 if (! isset($attributes[$key])) {
                     return;
@@ -19,7 +20,7 @@ class AsCollection_castUsing_class implements CastsAttributes
                 return is_array($data) ? new Collection($data) : null;
             }
 
-            public function set($model, $key, $value, array $attributes)
+            public function set(Model $model, $key, $value, array $attributes)
             {
                 return [$key => json_encode($value)];
             }

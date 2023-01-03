@@ -198,7 +198,7 @@ class AddressCast implements CastsAttributes
      * @param  array  $attributes
      * @return \Illuminate\Tests\Integration\Database\AddressModel
      */
-    public function get($model, $key, $value, array $attributes)
+    public function get(Eloquent $model, $key, $value, array $attributes)
     {
         return new AddressModel(
             $attributes['address_line_one'],
@@ -215,7 +215,7 @@ class AddressCast implements CastsAttributes
      * @param  array  $attributes
      * @return array
      */
-    public function set($model, $key, $value, array $attributes)
+    public function set(Eloquent $model, $key, $value, array $attributes)
     {
         if (! $value instanceof AddressModel) {
             throw new InvalidArgumentException('The given value is not an Address instance.');
@@ -239,7 +239,7 @@ class GMPCast implements CastsAttributes, SerializesCastableAttributes
      * @param  array  $attributes
      * @return string|null
      */
-    public function get($model, $key, $value, array $attributes)
+    public function get(Eloquent $model, $key, $value, array $attributes)
     {
         return gmp_init($value, 10);
     }
@@ -253,7 +253,7 @@ class GMPCast implements CastsAttributes, SerializesCastableAttributes
      * @param  array  $attributes
      * @return string
      */
-    public function set($model, $key, $value, array $attributes)
+    public function set(Eloquent $model, $key, $value, array $attributes)
     {
         return gmp_strval($value, 10);
     }
@@ -267,7 +267,7 @@ class GMPCast implements CastsAttributes, SerializesCastableAttributes
      * @param  array  $attributes
      * @return mixed
      */
-    public function serialize($model, /*string */$key, $value, array $attributes)
+    public function serialize(Eloquent $model, /*string */$key, $value, array $attributes)
     {
         $key = backport_type_check('string', $key);
 
@@ -286,7 +286,7 @@ class NonNullableString implements CastsAttributes
      * @param  array  $attributes
      * @return string|null
      */
-    public function get($model, $key, $value, array $attributes)
+    public function get(Eloquent $model, $key, $value, array $attributes)
     {
         return ($value != '') ? $value : null;
     }
@@ -300,7 +300,7 @@ class NonNullableString implements CastsAttributes
      * @param  array  $attributes
      * @return string
      */
-    public function set($model, $key, $value, array $attributes)
+    public function set(Eloquent $model, $key, $value, array $attributes)
     {
         return isset($value) ? $value : '';
     }
