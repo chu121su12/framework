@@ -19,9 +19,14 @@ class {{ class }} implements ShouldQueue
 
     /**
      * Handle the event.
+     *
+     * @param  object  $event
+     * @return void
      */
-    public function handle(object $event): void
+    public function handle(/*object */$event)/*: void*/
     {
+        $event = backport_type_check('object', $event);
+
         //
     }
 }

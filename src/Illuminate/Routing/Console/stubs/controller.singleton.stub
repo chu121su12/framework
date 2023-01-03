@@ -11,48 +11,60 @@ class {{ class }} extends Controller
 {
     /**
      * Show the form for creating the resource.
+     *
+     * @return never
      */
-    public function create(): never
+    public function create()/*: never*/
     {
         abort(404);
     }
 
     /**
      * Store the newly created resource in storage.
+     *
+     * @return never
      */
-    public function store(Request $request): never
+    public function store(Request $request)/*: never*/
     {
         abort(404);
     }
 
     /**
      * Display the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function show(): Response
+    public function show()/*: Response*/
     {
         //
     }
 
     /**
      * Show the form for editing the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function edit(): Response
+    public function edit()/*: Response*/
     {
         //
     }
 
     /**
      * Update the resource in storage.
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request): RedirectResponse
+    public function update(Request $request)/*: RedirectResponse*/
     {
         //
     }
 
     /**
      * Remove the resource from storage.
+     *
+     * @return never
      */
-    public function destroy(): never
+    public function destroy()/*: never*/
     {
         abort(404);
     }

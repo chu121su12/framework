@@ -14,5 +14,5 @@ interface InvokableRule
      * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      * @return void
      */
-    public function __invoke(string $attribute, mixed $value, Closure $fail);
+    public function __invoke(/*string */$attribute, /*mixed */$value, Closure $fail);
 }

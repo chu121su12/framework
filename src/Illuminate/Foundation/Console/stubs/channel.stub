@@ -16,8 +16,10 @@ class {{ class }}
 
     /**
      * Authenticate the user's access to the channel.
+     *
+     * @return array|bool
      */
-    public function join({{ userModel }} $user): array|bool
+    public function join({{ userModel }} $user)/*: array|bool*/
     {
         //
     }

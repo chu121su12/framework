@@ -20,8 +20,10 @@ class {{ class }} implements ShouldQueue
 
     /**
      * Handle the event.
+     *
+     * @return void
      */
-    public function handle({{ event }} $event): void
+    public function handle({{ event }} $event)/*: void*/
     {
         //
     }

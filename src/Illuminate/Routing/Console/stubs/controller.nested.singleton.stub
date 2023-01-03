@@ -13,48 +13,60 @@ class {{ class }} extends Controller
 {
     /**
      * Show the form for creating the new resource.
+     *
+     * @return never
      */
-    public function create({{ parentModel }} ${{ parentModelVariable }}): never
+    public function create({{ parentModel }} ${{ parentModelVariable }})/*: never*/
     {
         abort(404);
     }
 
     /**
      * Store the newly created resource in storage.
+     *
+     * @return never
      */
-    public function store(Request $request, {{ parentModel }} ${{ parentModelVariable }}): never
+    public function store(Request $request, {{ parentModel }} ${{ parentModelVariable }})/*: never*/
     {
         abort(404);
     }
 
     /**
      * Display the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function show({{ parentModel }} ${{ parentModelVariable }}): Response
+    public function show({{ parentModel }} ${{ parentModelVariable }})/*: Response*/
     {
         //
     }
 
     /**
      * Show the form for editing the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function edit({{ parentModel }} ${{ parentModelVariable }}): Response
+    public function edit({{ parentModel }} ${{ parentModelVariable }})/*: Response*/
     {
         //
     }
 
     /**
      * Update the resource in storage.
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, {{ parentModel }} ${{ parentModelVariable }}): RedirectResponse
+    public function update(Request $request, {{ parentModel }} ${{ parentModelVariable }})/*: RedirectResponse*/
     {
         //
     }
 
     /**
      * Remove the resource from storage.
+     *
+     * @return never
      */
-    public function destroy({{ parentModel }} ${{ parentModelVariable }}): never
+    public function destroy({{ parentModel }} ${{ parentModelVariable }})/*: never*/
     {
         abort(404);
     }

@@ -149,8 +149,10 @@ trait BroadcastsEvents
      * @param  string  $event
      * @return \Illuminate\Database\Eloquent\BroadcastableModelEventOccurred
      */
-    protected function newBroadcastableEvent(string $event)
+    protected function newBroadcastableEvent(/*string */$event)
     {
+        $event = backport_type_check('string', $event);
+
         return new BroadcastableModelEventOccurred($this, $event);
     }
 

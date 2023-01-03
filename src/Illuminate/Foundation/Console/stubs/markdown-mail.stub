@@ -23,8 +23,10 @@ class {{ class }} extends Mailable
 
     /**
      * Get the message envelope.
+     *
+     * @return \Illuminate\Mail\Mailables\Envelope
      */
-    public function envelope(): Envelope
+    public function envelope()/*: Envelope*/
     {
         return new Envelope(
             null,
@@ -38,8 +40,10 @@ class {{ class }} extends Mailable
 
     /**
      * Get the message content definition.
+     *
+     * @return \Illuminate\Mail\Mailables\Content
      */
-    public function content(): Content
+    public function content()/*: Content*/
     {
         return new Content(
             null,
@@ -54,7 +58,7 @@ class {{ class }} extends Mailable
      *
      * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */
-    public function attachments(): array
+    public function attachments()/*: array*/
     {
         return [];
     }

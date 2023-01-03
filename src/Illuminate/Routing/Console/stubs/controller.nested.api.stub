@@ -12,40 +12,50 @@ class {{ class }} extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function index({{ parentModel }} ${{ parentModelVariable }}): Response
+    public function index({{ parentModel }} ${{ parentModelVariable }})/*: Response*/
     {
         //
     }
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, {{ parentModel }} ${{ parentModelVariable }}): Response
+    public function store(Request $request, {{ parentModel }} ${{ parentModelVariable }})/*: Response*/
     {
         //
     }
 
     /**
      * Display the specified resource.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function show({{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }}): Response
+    public function show({{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})/*: Response*/
     {
         //
     }
 
     /**
      * Update the specified resource in storage.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, {{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }}): Response
+    public function update(Request $request, {{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})/*: Response*/
     {
         //
     }
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function destroy({{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }}): Response
+    public function destroy({{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})/*: Response*/
     {
         //
     }

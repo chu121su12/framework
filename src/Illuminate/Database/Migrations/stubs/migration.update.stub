@@ -9,8 +9,10 @@ class {{ class }} extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()/*: void*/
     {
         Schema::table('{{ table }}', function (Blueprint $table) {
             //
@@ -19,8 +21,10 @@ class {{ class }} extends Migration
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()/*: void*/
     {
         Schema::table('{{ table }}', function (Blueprint $table) {
             //

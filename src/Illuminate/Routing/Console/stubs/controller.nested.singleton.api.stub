@@ -12,32 +12,40 @@ class {{ class }} extends Controller
 {
     /**
      * Store the newly created resource in storage.
+     *
+     * @return never
      */
-    public function store(Request $request, {{ parentModel }} ${{ parentModelVariable }}): never
+    public function store(Request $request, {{ parentModel }} ${{ parentModelVariable }})/*: never*/
     {
         abort(404);
     }
 
     /**
      * Display the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function show({{ parentModel }} ${{ parentModelVariable }}): Response
+    public function show({{ parentModel }} ${{ parentModelVariable }})/*: Response*/
     {
         //
     }
 
     /**
      * Update the resource in storage.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, {{ parentModel }} ${{ parentModelVariable }}): Response
+    public function update(Request $request, {{ parentModel }} ${{ parentModelVariable }})/*: Response*/
     {
         //
     }
 
     /**
      * Remove the resource from storage.
+     *
+     * @return never
      */
-    public function destroy({{ parentModel }} ${{ parentModelVariable }}): never
+    public function destroy({{ parentModel }} ${{ parentModelVariable }})/*: never*/
     {
         abort(404);
     }

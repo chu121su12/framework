@@ -17,10 +17,17 @@ class {{ class }} implements InvokableRule
     /**
      * Run the validation rule.
      *
+     * @param  string  $attribute
+     * @param  mixed  $value
      * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     * @return void
      */
-    public function __invoke(string $attribute, mixed $value, Closure $fail): void
+    public function __invoke(/*string */$attribute, /*mixed */$value, Closure $fail)/*: void*/
     {
+        $attribute = backport_type_check('string', $attribute);
+
+        $value = backport_type_check('mixed', $value);
+
         //
     }
 }

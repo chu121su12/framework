@@ -10,32 +10,40 @@ class {{ class }} extends Controller
 {
     /**
      * Store the newly created resource in storage.
+     *
+     * @return never
      */
-    public function store(Request $request): never
+    public function store(Request $request)/*: never*/
     {
         abort(404);
     }
 
     /**
      * Display the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function show(): Response
+    public function show()/*: Response*/
     {
         //
     }
 
     /**
      * Update the resource in storage.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request): Response
+    public function update(Request $request)/*: Response*/
     {
         //
     }
 
     /**
      * Remove the resource from storage.
+     *
+     * @return never
      */
-    public function destroy(): never
+    public function destroy()/*: never*/
     {
         abort(404);
     }
