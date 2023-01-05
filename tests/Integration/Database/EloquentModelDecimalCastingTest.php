@@ -9,6 +9,78 @@ use Illuminate\Tests\Integration\Database\DatabaseTestCase;
 use TypeError;
 use ValueError;
 
+class EloquentModelDecimalCastingTest_testItHandlesExponent_class extends Model
+        {
+            public $timestamps = false;
+
+            protected $casts = [
+                'amount' => 'decimal:20',
+            ];
+        }
+
+class EloquentModelDecimalCastingTest_testItThrowsWhenPassingExponentAsString_class extends Model
+        {
+            public $timestamps = false;
+
+            protected $casts = [
+                'amount' => 'decimal:20',
+            ];
+        }
+
+class EloquentModelDecimalCastingTest_testItHandlesIntegersWithUnderscores_class extends Model
+        {
+            public $timestamps = false;
+
+            protected $casts = [
+                'amount' => 'decimal:2',
+            ];
+        }
+
+class EloquentModelDecimalCastingTest_testItThrowsOnNonNumericValues_class extends Model
+        {
+            public $timestamps = false;
+
+            protected $casts = [
+                'amount' => 'decimal:20',
+            ];
+        }
+
+class EloquentModelDecimalCastingTest_testItHandlesMissingIntegers_class extends Model
+        {
+            public $timestamps = false;
+
+            protected $casts = [
+                'amount' => 'decimal:2',
+            ];
+        }
+
+class EloquentModelDecimalCastingTest_testItHandlesLargeNumbers_class extends Model
+        {
+            public $timestamps = false;
+
+            protected $casts = [
+                'amount' => 'decimal:20',
+            ];
+        }
+
+class EloquentModelDecimalCastingTest_testItTrimsLongValues_class extends Model
+        {
+            public $timestamps = false;
+
+            protected $casts = [
+                'amount' => 'decimal:20',
+            ];
+        }
+
+class EloquentModelDecimalCastingTest_testItDoesntRoundNumbers_class extends Model
+        {
+            public $timestamps = false;
+
+            protected $casts = [
+                'amount' => 'decimal:1',
+            ];
+        }
+
 class EloquentModelDecimalCastingTest extends DatabaseTestCase
 {
     protected function defineDatabaseMigrationsAfterDatabaseRefreshed()
@@ -22,14 +94,7 @@ class EloquentModelDecimalCastingTest extends DatabaseTestCase
 
     public function testItHandlesExponent()
     {
-        $model = new class extends Model
-        {
-            public $timestamps = false;
-
-            protected $casts = [
-                'amount' => 'decimal:20',
-            ];
-        };
+        $model = new EloquentModelDecimalCastingTest_testItHandlesExponent_class;
 
         $model->amount = 0.123456789e3;
         $this->assertSame('123.45678900000000000000', $model->amount);
@@ -37,14 +102,7 @@ class EloquentModelDecimalCastingTest extends DatabaseTestCase
 
     public function testItThrowsWhenPassingExponentAsString()
     {
-        $model = new class extends Model
-        {
-            public $timestamps = false;
-
-            protected $casts = [
-                'amount' => 'decimal:20',
-            ];
-        };
+        $model = new EloquentModelDecimalCastingTest_testItThrowsWhenPassingExponentAsString_class;
         $model->amount = '0.1e3';
 
         if (extension_loaded('bcmath')) {
@@ -59,29 +117,15 @@ class EloquentModelDecimalCastingTest extends DatabaseTestCase
 
     public function testItHandlesIntegersWithUnderscores()
     {
-        $model = new class extends Model
-        {
-            public $timestamps = false;
+        $model = new EloquentModelDecimalCastingTest_testItHandlesIntegersWithUnderscores_class;
 
-            protected $casts = [
-                'amount' => 'decimal:2',
-            ];
-        };
-
-        $model->amount = 1_234.5;
+        $model->amount = 1234.5;
         $this->assertSame('1234.50', $model->amount);
     }
 
     public function testItThrowsOnNonNumericValues()
     {
-        $model = new class extends Model
-        {
-            public $timestamps = false;
-
-            protected $casts = [
-                'amount' => 'decimal:20',
-            ];
-        };
+        $model = new EloquentModelDecimalCastingTest_testItThrowsOnNonNumericValues_class;
         $model->amount = 'foo';
 
         if (extension_loaded('bcmath')) {
@@ -95,14 +139,7 @@ class EloquentModelDecimalCastingTest extends DatabaseTestCase
 
     public function testItHandlesMissingIntegers()
     {
-        $model = new class extends Model
-        {
-            public $timestamps = false;
-
-            protected $casts = [
-                'amount' => 'decimal:2',
-            ];
-        };
+        $model = new EloquentModelDecimalCastingTest_testItHandlesMissingIntegers_class;
 
         $model->amount = .8;
         $this->assertSame('0.80', $model->amount);
@@ -113,14 +150,7 @@ class EloquentModelDecimalCastingTest extends DatabaseTestCase
 
     public function testItHandlesLargeNumbers()
     {
-        $model = new class extends Model
-        {
-            public $timestamps = false;
-
-            protected $casts = [
-                'amount' => 'decimal:20',
-            ];
-        };
+        $model = new EloquentModelDecimalCastingTest_testItHandlesLargeNumbers_class;
 
         $model->amount = '0.89898989898989898989';
         $this->assertSame('0.89898989898989898989', $model->amount);
@@ -131,14 +161,7 @@ class EloquentModelDecimalCastingTest extends DatabaseTestCase
 
     public function testItTrimsLongValues()
     {
-        $model = new class extends Model
-        {
-            public $timestamps = false;
-
-            protected $casts = [
-                'amount' => 'decimal:20',
-            ];
-        };
+        $model = new EloquentModelDecimalCastingTest_testItTrimsLongValues_class;
 
         $model->amount = '0.89898989898989898989898989898989898989898989';
         $this->assertSame('0.89898989898989898989', $model->amount);
@@ -146,14 +169,7 @@ class EloquentModelDecimalCastingTest extends DatabaseTestCase
 
     public function testItDoesntRoundNumbers()
     {
-        $model = new class extends Model
-        {
-            public $timestamps = false;
-
-            protected $casts = [
-                'amount' => 'decimal:1',
-            ];
-        };
+        $model = new EloquentModelDecimalCastingTest_testItDoesntRoundNumbers_class;
 
         $model->amount = '0.99';
         $this->assertSame('0.9', $model->amount);

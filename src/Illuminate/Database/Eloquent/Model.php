@@ -1165,7 +1165,9 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public function saveOrFail(array $options = [])
     {
-        return $this->getConnection()->transaction(fn () => $this->save($options));
+        return $this->getConnection()->transaction(function () use ($options) {
+            return $this->save($options);
+        });
     }
 
     /**
@@ -1442,7 +1444,9 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
             return false;
         }
 
-        return $this->getConnection()->transaction(fn () => $this->delete());
+        return $this->getConnection()->transaction(function () {
+            return $this->delete();
+        });
     }
 
     /**

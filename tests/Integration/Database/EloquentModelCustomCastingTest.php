@@ -373,10 +373,12 @@ class AddressModel
 
 class Euro implements Castable
 {
-    public string $value;
+    public/* string*/ $value;
 
-    public function __construct(string $value)
+    public function __construct(/*string */$value)
     {
+        $value = backport_type_check('string', $value);
+
         $this->value = $value;
     }
 
@@ -388,25 +390,29 @@ class Euro implements Castable
 
 class EuroCaster implements CastsAttributes
 {
-    public function get($model, $key, $value, $attributes)
+    public function get(Model $model, $key, $value, array $attributes)
     {
         return new Euro($value);
     }
 
-    public function set($model, $key, $value, $attributes)
+    public function set(Model $model, $key, $value, array $attributes)
     {
         return $value->value;
     }
 
-    public function increment($model, $key, string $value, $attributes)
+    public function increment($model, $key, /*string */$value, $attributes)
     {
+        $value = backport_type_check('string', $value);
+
         $model->$key = new Euro(bcadd($model->$key->value, $value, 2));
 
         return $model->$key;
     }
 
-    public function decrement($model, $key, string $value, $attributes)
+    public function decrement($model, $key, /*string */$value, $attributes)
     {
+        $value = backport_type_check('string', $value);
+
         $model->$key = new Euro(bcsub($model->$key->value, $value, 2));
 
         return $model->$key;

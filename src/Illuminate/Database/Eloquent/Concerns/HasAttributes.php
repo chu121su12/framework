@@ -1348,7 +1348,7 @@ trait HasAttributes
             throw new RuntimeException('The "decimal" model cast is unable to handle string based floats with exponents.');
         }
 
-        [$int, $fraction] = explode('.', $value) + [1 => ''];
+        list($int, $fraction) = explode('.', $value) + [1 => ''];
 
         return Str::of($int)->padLeft('1', '0').'.'.Str::of($fraction)->limit($decimals, '')->padRight($decimals, '0');
     }
@@ -1655,7 +1655,7 @@ trait HasAttributes
 
         $castType = $this->resolveCasterClass($key);
 
-        return method_exists($castType::class, 'increment') && method_exists($castType::class, 'decrement');
+        return method_exists(get_class($castType), 'increment') && method_exists(get_class($castType), 'decrement');
     }
 
     /**
