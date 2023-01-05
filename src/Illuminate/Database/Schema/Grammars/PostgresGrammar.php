@@ -1148,9 +1148,11 @@ class PostgresGrammar extends Grammar
     {
         if ($column->change) {
             if (array_key_exists('virtualAs', $column->getAttributes())) {
-                return is_null($column->virtualAs)
-                    ? 'drop expression if exists'
-                    : throw new LogicException('This database driver does not support modifying generated columns.');
+                if (is_null($column->virtualAs)) {
+                    return 'drop expression if exists';
+                }
+
+                throw new LogicException('This database driver does not support modifying generated columns.');
             }
 
             return null;
@@ -1172,9 +1174,11 @@ class PostgresGrammar extends Grammar
     {
         if ($column->change) {
             if (array_key_exists('storedAs', $column->getAttributes())) {
-                return is_null($column->storedAs)
-                    ? 'drop expression if exists'
-                    : throw new LogicException('This database driver does not support modifying generated columns.');
+                if (is_null($column->storedAs)) {
+                    return 'drop expression if exists';
+                }
+
+                throw new LogicException('This database driver does not support modifying generated columns.');
             }
 
             return null;
