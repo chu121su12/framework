@@ -2295,7 +2295,7 @@ class Builder implements BuilderContract
     /**
      * Put the query's results in random order.
      *
-     * @param  string  $seed
+     * @param  string|int  $seed
      * @return $this
      */
     public function inRandomOrder($seed = '')
