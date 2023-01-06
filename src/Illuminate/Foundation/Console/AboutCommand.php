@@ -205,7 +205,7 @@ class AboutCommand extends Command
             $logs = $logChannel;
         }
 
-        static::addToSection('Drivers', function () { return array_filter([
+        static::addToSection('Drivers', function () use ($logs) { return array_filter([
             'Broadcasting' => config('broadcasting.default'),
             'Cache' => config('cache.default'),
             'Database' => config('database.default'),
@@ -264,7 +264,7 @@ class AboutCommand extends Command
     {
         $section = backport_type_check('string', $section);
 
-        $path = backport_type_check('?string', $path);
+        $value = backport_type_check('?string', $value);
 
         if (is_array($data)) {
             foreach ($data as $key => $value) {
