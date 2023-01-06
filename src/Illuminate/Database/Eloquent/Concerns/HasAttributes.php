@@ -1337,7 +1337,7 @@ trait HasAttributes
     protected function asDecimal($value, $decimals)
     {
         if (extension_loaded('bcmath')) {
-            return bcadd($value, 0, $decimals);
+            return backport_bcadd($value, 0, $decimals);
         }
 
         if (! is_numeric($value)) {

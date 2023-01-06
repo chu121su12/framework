@@ -142,6 +142,19 @@ if (! \function_exists('backport_substr_count')) {
     }
 }
 
+if (! \function_exists('backport_bcadd')) {
+    function backport_bcadd($num1, $num2, $scale = null)
+    {
+        if (\version_compare(\PHP_VERSION, '8.0', '<')) {
+            if (! \is_numeric($num1) || (\func_num_args() === 3 && \is_string($num1) && \str_contains($num1, 'e'))) {
+                throw new ValueError('backport: bcadd(): bcmath function argument is not well-formed');
+            }
+        }
+
+        return \bcadd(...func_get_args());
+    }
+}
+
 if (! \function_exists('backport_bcmod')) {
     function backport_bcmod($dividend, $divisor, $scale)
     {
