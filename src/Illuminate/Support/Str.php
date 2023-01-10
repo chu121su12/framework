@@ -7,7 +7,10 @@ use CR\Extra\Uuid7;
 use Illuminate\Support\Traits\Macroable;
 use JsonException;
 use League\CommonMark\CommonMarkConverter as GithubFlavoredMarkdownConverter;
+use Ramsey\Uuid\Codec\TimestampFirstCombCodec;
+use Ramsey\Uuid\Generator\CombGenerator;
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidFactory;
 use Symfony\Component\Uid\Ulid;
 use Traversable;
 use voku\helper\ASCII;
@@ -1255,7 +1258,22 @@ class Str
      */
     public static function orderedUuid()
     {
-        return Uuid7::make();
+        if (static::$uuidFactory) {
+            return call_user_func(static::$uuidFactory);
+        }
+
+        $factory = new UuidFactory;
+
+        $factory->setRandomGenerator(new CombGenerator(
+            $factory->getRandomGenerator(),
+            $factory->getNumberConverter()
+        ));
+
+        $factory->setCodec(new TimestampFirstCombCodec(
+            $factory->getUuidBuilder()
+        ));
+
+        return $factory->uuid4();
     }
 
     /**
