@@ -1249,7 +1249,7 @@ class Str
     }
 
     /**
-     * Generate a time-ordered UUID (version 7).
+     * Generate a time-ordered UUID (version 4).
      *
      * @return \Ramsey\Uuid\UuidInterface
      */

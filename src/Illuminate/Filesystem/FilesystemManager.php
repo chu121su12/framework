@@ -24,6 +24,7 @@ use League\Flysystem\Patch\Visibility;
 
 /**
  * @mixin \Illuminate\Contracts\Filesystem\Filesystem
+ * @mixin \Illuminate\Filesystem\FilesystemAdapter
  */
 class FilesystemManager implements FactoryContract
 {
