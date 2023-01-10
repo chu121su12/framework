@@ -189,11 +189,11 @@ class FoundationDocsCommandTest extends TestCase
         $this->expectException(ProcessFailedException::class);
 
         if (PHP_OS_FAMILY === 'Windows') {
-            $this->expectExceptionMessage('The command "expected-command" failed.
+            $this->expectExceptionMessage(preg_replace('/\r?\n/', "\n", 'The command "expected-command" failed.
 
 Exit Code: 1(General error)
 
-Working directory: expected-working-directory');
+Working directory: expected-working-directory'));
         } else {
             $this->expectExceptionMessage('The command "\'expected-command\'" failed.
 

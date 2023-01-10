@@ -537,7 +537,7 @@ class EventsDispatcherTest extends TestCase
         $d->listen(TestEvent::class, TestListener3::class);
 
         $_SERVER['__event.test'] = [];
-        $d->dispatch(TestEvent::class, halt: true);
+        $d->dispatch(TestEvent::class, [], true);
 
         $this->assertEquals([
             'cons-1',

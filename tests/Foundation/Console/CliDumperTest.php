@@ -13,6 +13,8 @@ use Symfony\Component\VarDumper\Cloner\VarCloner;
 
 class CliDumperTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     protected function setUp()/*: void*/
     {
         CliDumper::resolveDumpSourceUsing(function () {
@@ -69,7 +71,7 @@ array:4 [ // app/routes/console.php:18
 
 EOF;
 
-        $this->assertSame($expected, $output);
+        $this->assertSameStringDifferentLineEndings($expected, $output);
     }
 
     public function testBoolean()
@@ -97,7 +99,7 @@ EOF;
 
 EOF;
 
-        $this->assertSame($expected, $output);
+        $this->assertSameStringDifferentLineEndings($expected, $output);
     }
 
     public function testNull()

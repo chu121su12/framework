@@ -96,7 +96,7 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
         $result = $this->compiler()->compileSlots('<x-slot name="foo" @class($classes)>
 </x-slot>');
 
-        $this->assertSame("@slot('foo', null, ['class' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(\Illuminate\Support\Arr::toCssClasses(\$classes))]) \n".' @endslot', trim($result));
+        $this->assertSameStringDifferentLineEndings("@slot('foo', null, ['class' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(\Illuminate\Support\Arr::toCssClasses(\$classes))]) \n".' @endslot', trim($result));
     }
 
     public function testBasicComponentParsing()
