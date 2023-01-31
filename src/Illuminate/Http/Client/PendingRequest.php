@@ -87,7 +87,7 @@ class PendingRequest
     /**
      * The transfer stats for the request.
      *
-     * \GuzzleHttp\TransferStats
+     * @var \GuzzleHttp\TransferStats
      */
     protected $transferStats;
 
@@ -252,7 +252,7 @@ class PendingRequest
      * @param  string  $contentType
      * @return $this
      */
-    public function withBody($content, $contentType)
+    public function withBody($content, $contentType = 'application/json')
     {
         $this->bodyFormat('body');
 
@@ -1230,7 +1230,7 @@ class PendingRequest
     /**
      * Replace the given options with the current request options.
      *
-     * @param  array  $options
+     * @param  array  ...$options
      * @return array
      */
     public function mergeOptions(...$options)

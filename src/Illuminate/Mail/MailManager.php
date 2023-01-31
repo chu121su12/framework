@@ -300,6 +300,8 @@ class MailManager implements FactoryContract
      */
     protected function createMailgunTransport(array $config)
     {
+        // $factory = new MailgunTransportFactory(null, $this->getHttpClient($config));
+
         if (! isset($config['secret'])) {
             $config = $this->app['config']->get('services.mailgun', []);
         }
@@ -327,6 +329,8 @@ class MailManager implements FactoryContract
      */
     protected function createPostmarkTransport(array $config)
     {
+        // $factory = new PostmarkTransportFactory(null, $this->getHttpClient($config));
+
         $headers = isset($config['message_stream_id']) ? [
             'X-PM-Message-Stream' => $config['message_stream_id'],
         ] : [];
@@ -394,6 +398,21 @@ class MailManager implements FactoryContract
     protected function createArrayTransport()
     {
         return new ArrayTransport;
+    }
+
+    /**
+     * Get a configured Symfony HTTP client instance.
+     *
+     * @return \Symfony\Contracts\HttpClient\HttpClientInterface|null
+     */
+    protected function getHttpClient(array $config)
+    {
+        if ($options = ($config['client'] ?? false)) {
+            $maxHostConnections = Arr::pull($options, 'max_host_connections', 6);
+            $maxPendingPushes = Arr::pull($options, 'max_pending_pushes', 50);
+
+            return HttpClient::create($options, $maxHostConnections, $maxPendingPushes);
+        }
     }
 
     /**

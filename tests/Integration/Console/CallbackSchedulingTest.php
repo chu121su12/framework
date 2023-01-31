@@ -110,7 +110,7 @@ class CallbackSchedulingTest extends TestCase
 
         $this->artisan('schedule:run');
 
-        // Hooks and execution should happn in correct order
+        // Hooks and execution should happen in correct order
         $this->assertLogged('before', 'call', 'after');
 
         // Our exception should have resulted in a failure event

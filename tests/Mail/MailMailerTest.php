@@ -158,6 +158,21 @@ class MailMailerTest extends TestCase
         unset($_SERVER['__mailer.test']);
     }
 
+    public function testToAllowsEmailAndName()
+    {
+        $view = m::mock(Factory::class);
+        $view->shouldReceive('make')->once()->andReturn($view);
+        $view->shouldReceive('render')->once()->andReturn('rendered.view');
+        $mailer = new Mailer('array', $view, new ArrayTransport);
+
+        $sentMessage = $mailer->to('taylor@laravel.com', 'Taylor Otwell')->send(new TestMail());
+
+        $recipients = $sentMessage->getEnvelope()->getRecipients();
+        $this->assertCount(1, $recipients);
+        $this->assertSame('taylor@laravel.com', $recipients[0]->getAddress());
+        $this->assertSame('Taylor Otwell', $recipients[0]->getName());
+    }
+
     public function testGlobalFromIsRespectedOnAllMessages()
     {
         unset($_SERVER['__mailer.test']);
@@ -336,5 +351,14 @@ class FailingSwiftMailerStub
     public function createMessage()
     {
         return new Swift_Message;
+    }
+}
+
+class TestMail extends \Illuminate\Mail\Mailable
+{
+    public function build()
+    {
+        return $this->view('view')
+            ->from('hello@laravel.com');
     }
 }

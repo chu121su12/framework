@@ -51,6 +51,11 @@ class QuestionHelper extends SymfonyQuestionHelper
                 );
 
                 break;
+
+            default:
+                $text = sprintf('<info>%s</info> [<comment>%s</comment>]', $text, OutputFormatter::escape($default));
+
+                break;
         }
 
         $output->writeln($text);

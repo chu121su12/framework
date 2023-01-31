@@ -951,6 +951,8 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
         $this->loggedOut = false;
 
         $this->fireAuthenticatedEvent($user);
+
+        return $this;
     }
 
     /**

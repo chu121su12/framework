@@ -16,7 +16,7 @@ class TrimStrings extends TransformsRequest
     /**
      * The attributes that should not be trimmed.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $except = [
         //
@@ -53,7 +53,7 @@ class TrimStrings extends TransformsRequest
             return $value;
         }
 
-        $transformed = preg_replace('~^[\s﻿​]+|[\s﻿​]+$~u', '', $value);
+        $transformed = preg_replace('~^[\s\x{FEFF}\x{200B}]+|[\s\x{FEFF}\x{200B}]+$~u', '', $value);
 
         return isset($transformed) ? $transformed : trim($value);
     }

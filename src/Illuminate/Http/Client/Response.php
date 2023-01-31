@@ -9,7 +9,7 @@ use LogicException;
 
 class Response implements ArrayAccess
 {
-    use Macroable {
+    use Concerns\DeterminesStatusCode, Macroable {
         __call as macroCall;
     }
 
@@ -169,16 +169,6 @@ class Response implements ArrayAccess
     }
 
     /**
-     * Determine if the response code was "OK".
-     *
-     * @return bool
-     */
-    public function ok()
-    {
-        return $this->status() === 200;
-    }
-
-    /**
      * Determine if the response was a redirect.
      *
      * @return bool
@@ -186,26 +176,6 @@ class Response implements ArrayAccess
     public function redirect()
     {
         return $this->status() >= 300 && $this->status() < 400;
-    }
-
-    /**
-     * Determine if the response was a 401 "Unauthorized" response.
-     *
-     * @return bool
-     */
-    public function unauthorized()
-    {
-        return $this->status() === 401;
-    }
-
-    /**
-     * Determine if the response was a 403 "Forbidden" response.
-     *
-     * @return bool
-     */
-    public function forbidden()
-    {
-        return $this->status() === 403;
     }
 
     /**
@@ -350,6 +320,66 @@ class Response implements ArrayAccess
         $fga = func_get_args();
 
         return value($condition, $this) ? $this->throw_(isset($fga[1]) ? $fga[1] : null) : $this;
+    }
+
+    /**
+     * Throw an exception if the response status code matches the given code.
+     *
+     * @param  callable|int  $statusCode
+     * @return $this
+     *
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function throwIfStatus($statusCode)
+    {
+        if (is_callable($statusCode) &&
+            $statusCode($this->status(), $this)) {
+            return $this->throw();
+        }
+
+        return $this->status() === $statusCode ? $this->throw() : $this;
+    }
+
+    /**
+     * Throw an exception unless the response status code matches the given code.
+     *
+     * @param  callable|int  $statusCode
+     * @return $this
+     *
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function throwUnlessStatus($statusCode)
+    {
+        if (is_callable($statusCode) &&
+            ! $statusCode($this->status(), $this)) {
+            return $this->throw();
+        }
+
+        return $this->status() === $statusCode ? $this : $this->throw();
+    }
+
+    /**
+     * Throw an exception if the response status code is a 4xx level code.
+     *
+     * @return $this
+     *
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function throwIfClientError()
+    {
+        return $this->clientError() ? $this->throw() : $this;
+    }
+
+    /**
+     * Throw an exception if the response status code is a 5xx level code.
+     *
+     * @return $this
+     *
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function throwIfServerError()
+    {
+        return $this->serverError() ? $this->throw() : $this;
     }
 
     /**

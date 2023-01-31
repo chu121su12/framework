@@ -14,7 +14,7 @@ class FoundationDocsCommandTest extends TestCase
     /**
      * The URL opened by the command.
      *
-     * @var ?string
+     * @var string|null
      */
     protected $openedUrl;
 
@@ -289,7 +289,7 @@ Working directory: expected-working-directory');
         $_SERVER['argv'] = $argCache;
     }
 
-    public function testUnknownSystemNotifiedToOpenManualy()
+    public function testUnknownSystemNotifiedToOpenManually()
     {
         $this->app[Kernel::class]->registerCommand($this->command()->setUrlOpener(null)->setSystemOsFamily('Laravel OS'));
 
@@ -323,6 +323,12 @@ Working directory: expected-working-directory');
             ->assertSuccessful();
 
         $this->assertSame($this->openedUrl, 'https://laravel.com/docs/8.x');
+    }
+
+    public function testCanGetHelpWithoutInstantiatingDependencies()
+    {
+        $help = (new DocsCommand())->getHelp();
+        $this->stringContains('php artisan docs', $help);
     }
 
     protected function command()
