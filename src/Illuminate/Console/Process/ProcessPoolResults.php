@@ -41,7 +41,8 @@ class ProcessPoolResults implements ArrayAccess
      * @param  int  $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($offset)/*: bool*/
     {
         return isset($this->results[$offset]);
     }
@@ -52,7 +53,8 @@ class ProcessPoolResults implements ArrayAccess
      * @param  int  $offset
      * @return mixed
      */
-    public function offsetGet($offset): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($offset)/*: mixed*/
     {
         return $this->results[$offset];
     }
@@ -64,7 +66,8 @@ class ProcessPoolResults implements ArrayAccess
      * @param  mixed  $value
      * @return void
      */
-    public function offsetSet($offset, $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($offset, $value)/*: void*/
     {
         $this->results[$offset] = $value;
     }
@@ -75,7 +78,8 @@ class ProcessPoolResults implements ArrayAccess
      * @param  int  $offset
      * @return void
      */
-    public function offsetUnset($offset): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($offset)/*: void*/
     {
         unset($this->results[$offset]);
     }

@@ -14,8 +14,12 @@ class RedisTagSet extends TagSet
      * @param  string  $updateWhen
      * @return void
      */
-    public function addEntry(string $key, int $ttl = 0, $updateWhen = null)
+    public function addEntry(/*string */$key, /*int */$ttl = 0, $updateWhen = null)
     {
+        $key = backport_type_check('string', $key);
+
+        $ttl = backport_type_check('int', $ttl);
+
         $ttl = $ttl > 0 ? now()->addSeconds($ttl)->getTimestamp() : -1;
 
         foreach ($this->tagIds() as $tagKey) {
@@ -39,7 +43,7 @@ class RedisTagSet extends TagSet
                 $cursor = $defaultCursorValue = '0';
 
                 do {
-                    [$cursor, $entries] = $this->store->connection()->zscan(
+                    list($cursor, $entries) = $this->store->connection()->zscan(
                         $this->store->getPrefix().$tagKey,
                         $cursor,
                         ['match' => '*', 'count' => 1000]

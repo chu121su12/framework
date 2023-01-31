@@ -968,11 +968,16 @@ class Mailable implements MailableContract, Renderable
 
         if ($file instanceof Attachment) {
             $parts = $file->attachWith(
-                fn ($path) => [$path, [
-                    'as' => $options['as'] ?? $file->as,
-                    'mime' => $options['mime'] ?? $file->mime,
-                ]],
-                fn ($data) => $this->hasAttachedData($data(), $options['as'] ?? $file->as, ['mime' => $options['mime'] ?? $file->mime])
+                function ($path) use ($options, $file) { return [$path, [
+                    'as' => isset($options['as']) ? $options['as'] : $file->as,
+                    'mime' => isset($options['mime']) ? $options['mime'] : $file->mime,
+                ]]; },
+                function ($data) use ($options, $file) { return $this->hasAttachedData(
+                    $data(),
+                    isset($options['as']) ? $options['as'] : $file->as,
+                    ['mime' => isset($options['mime']) ? $options['mime'] : $file->mime]
+                );
+                }
             );
 
             if ($parts === true) {
@@ -1007,8 +1012,8 @@ class Mailable implements MailableContract, Renderable
         $attachments = $this->attachments();
 
         return Collection::make(is_object($attachments) ? [$attachments] : $attachments)
-                ->map(fn ($attached) => $attached instanceof Attachable ? $attached->toMailAttachment() : $attached)
-                ->contains(fn ($attached) => $attached->isEquivalent($attachment, $options));
+                ->map(function ($attached) { return $attached instanceof Attachable ? $attached->toMailAttachment() : $attached; })
+                ->contains(function ($attached) use ($attachment, $options) { return $attached->isEquivalent($attachment, $options); });
     }
 
     /**

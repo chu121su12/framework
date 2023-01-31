@@ -455,7 +455,9 @@ trait ValidatesAttributes
 
         return with(
             BigNumber::of($this->getSize($attribute, $value)),
-            fn ($size) => $size->isGreaterThanOrEqualTo($parameters[0]) && $size->isLessThanOrEqualTo($parameters[1])
+            function ($size) use ($parameters) {
+                return $size->isGreaterThanOrEqualTo($parameters[0]) && $size->isLessThanOrEqualTo($parameters[1]);
+            }
         );
     }
 
@@ -1552,7 +1554,7 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(2, $parameters, 'missing_if');
 
-        [$values, $other] = $this->parseDependentRuleParameters($parameters);
+        list($values, $other) = $this->parseDependentRuleParameters($parameters);
 
         if (in_array($other, $values, is_bool($other) || is_null($other))) {
             return $this->validateMissing($attribute, $value, $parameters);
@@ -1573,7 +1575,7 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(2, $parameters, 'missing_unless');
 
-        [$values, $other] = $this->parseDependentRuleParameters($parameters);
+        list($values, $other) = $this->parseDependentRuleParameters($parameters);
 
         if (! in_array($other, $values, is_bool($other) || is_null($other))) {
             return $this->validateMissing($attribute, $value, $parameters);
@@ -1646,7 +1648,11 @@ trait ValidatesAttributes
 
             return $numerator->remainder($denominator)->isZero();
         } catch (BrickMathException $e) {
-            throw new MathException('An error occurred while handling the mulitple_of input values.', previous: $e);
+            throw new MathException(
+                'An error occurred while handling the mulitple_of input values.',
+                0,
+                /*previous: */$e
+            );
         }
     }
 

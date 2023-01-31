@@ -45,8 +45,13 @@ class FakeProcessResult implements ProcessResultContract
      * @param  array|string  $errorOutput
      * @return void
      */
-    public function __construct(string $command = '', int $exitCode = 0, array|string $output = '', array|string $errorOutput = '')
+    public function __construct(/*string */$command = '', /*int */$exitCode = 0, /*array|string */$output = '', /*array|string */$errorOutput = '')
     {
+        $command = backport_type_check('string', $command);
+        $exitCode = backport_type_check('int', $exitCode);
+        $output = backport_type_check('array|string', $output);
+        $errorOutput = backport_type_check('array|string', $errorOutput);
+
         $this->command = $command;
         $this->exitCode = $exitCode;
         $this->output = $this->normalizeOutput($output);
@@ -59,8 +64,10 @@ class FakeProcessResult implements ProcessResultContract
      * @param  array|string  $output
      * @return string
      */
-    protected function normalizeOutput(array|string $output)
+    protected function normalizeOutput(/*array|string */$output)
     {
+        $output = backport_type_check('array|string', $output);
+
         if (empty($output)) {
             return '';
         } elseif (is_string($output)) {
@@ -68,7 +75,7 @@ class FakeProcessResult implements ProcessResultContract
         } elseif (is_array($output)) {
             return rtrim(
                 collect($output)
-                    ->map(fn ($line) => rtrim($line, "\n")."\n")
+                    ->map(function ($line) { return rtrim($line, "\n")."\n"; })
                     ->implode(''),
                 "\n"
             );
@@ -91,8 +98,10 @@ class FakeProcessResult implements ProcessResultContract
      * @param  string  $command
      * @return self
      */
-    public function withCommand(string $command)
+    public function withCommand(/*string */$command)
     {
+        $command = backport_type_check('string', $command);
+
         return new FakeProcessResult($command, $this->exitCode, $this->output, $this->errorOutput);
     }
 
@@ -142,8 +151,10 @@ class FakeProcessResult implements ProcessResultContract
      * @param  string  $output
      * @return bool
      */
-    public function seeInOutput(string $output)
+    public function seeInOutput(/*string */$output)
     {
+        $output = backport_type_check('string', $output);
+
         return str_contains($this->output(), $output);
     }
 
@@ -163,8 +174,10 @@ class FakeProcessResult implements ProcessResultContract
      * @param  string  $output
      * @return bool
      */
-    public function seeInErrorOutput(string $output)
+    public function seeInErrorOutput(/*string */$output)
     {
+        $output = backport_type_check('string', $output);
+
         return str_contains($this->errorOutput(), $output);
     }
 
@@ -174,7 +187,7 @@ class FakeProcessResult implements ProcessResultContract
      * @param  callable|null  $callback
      * @return $this
      */
-    public function throw(callable $callback = null)
+    public function throw_(callable $callback = null)
     {
         if ($this->successful()) {
             return $this;
@@ -196,10 +209,12 @@ class FakeProcessResult implements ProcessResultContract
      * @param  callable|null  $callback
      * @return $this
      */
-    public function throwIf(bool $condition, callable $callback = null)
+    public function throwIf(/*bool */$condition, callable $callback = null)
     {
+        $condition = backport_type_check('bool', $condition);
+
         if ($condition) {
-            return $this->throw($callback);
+            return $this->throw_($callback);
         }
 
         return $this;

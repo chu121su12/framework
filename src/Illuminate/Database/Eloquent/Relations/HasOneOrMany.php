@@ -334,7 +334,7 @@ abstract class HasOneOrMany extends Relation
      */
     public function createQuietly(array $attributes = [])
     {
-        return Model::withoutEvents(fn () => $this->create($attributes));
+        return Model::withoutEvents(function () use ($attributes) { return $this->create($attributes); });
     }
 
     /**

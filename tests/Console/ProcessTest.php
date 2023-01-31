@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Tests;
+namespace Illuminate\Tests\Console;
 
 use Illuminate\Console\Process\Exceptions\ProcessFailedException;
 use Illuminate\Console\Process\Factory;
@@ -12,7 +12,7 @@ use RuntimeException;
 
 class ProcessTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
@@ -29,7 +29,7 @@ class ProcessTest extends TestCase
         $this->assertTrue(str_contains($result->output(), 'ProcessTest.php'));
         $this->assertEquals('', $result->errorOutput());
 
-        $result->throw();
+        $result->throw_();
         $result->throwIf(true);
     }
 
@@ -84,8 +84,8 @@ class ProcessTest extends TestCase
 
         $pool = $factory->pool(function ($pool) {
             return [
-                $pool->as('first')->path(__DIR__)->command($this->ls()),
-                $pool->as('second')->path(__DIR__)->command($this->ls()),
+                $pool->as_('first')->path(__DIR__)->command($this->ls()),
+                $pool->as_('second')->path(__DIR__)->command($this->ls()),
             ];
         })->wait();
 
@@ -142,7 +142,7 @@ class ProcessTest extends TestCase
     public function testProcessFakeExitCodes()
     {
         $factory = new Factory;
-        $factory->fake(fn () => $factory->result('test output', exitCode: 1));
+        $factory->fake(function () use ($factory) { return $factory->result('test output', '', /*exitCode: */1); });
 
         $result = $factory->run('ls -la');
         $this->assertFalse($result->successful());
@@ -151,56 +151,56 @@ class ProcessTest extends TestCase
     public function testBasicProcessFakeWithCustomOutput()
     {
         $factory = new Factory;
-        $factory->fake(fn () => $factory->result('test output'));
+        $factory->fake(function () use ($factory) { return $factory->result('test output'); });
 
         $result = $factory->run('ls -la');
         $this->assertEquals("test output\n", $result->output());
 
         // Array of output...
         $factory = new Factory;
-        $factory->fake(fn () => $factory->result(['line 1', 'line 2']));
+        $factory->fake(function () use ($factory) { return $factory->result(['line 1', 'line 2']); });
 
         $result = $factory->run('ls -la');
         $this->assertEquals("line 1\nline 2\n", $result->output());
 
         // Array of output with empty line...
         $factory = new Factory;
-        $factory->fake(fn () => $factory->result(['line 1', '', 'line 2']));
+        $factory->fake(function () use ($factory) { return $factory->result(['line 1', '', 'line 2']); });
 
         $result = $factory->run('ls -la');
         $this->assertEquals("line 1\n\nline 2\n", $result->output());
 
         // Plain string...
         $factory = new Factory;
-        $factory->fake(fn () => 'test output');
+        $factory->fake(function () { return 'test output'; });
 
         $result = $factory->run('ls -la');
         $this->assertEquals("test output\n", $result->output());
 
         // Plain array...
         $factory = new Factory;
-        $factory->fake(fn () => ['line 1', 'line 2']);
+        $factory->fake(function () { return ['line 1', 'line 2']; });
 
         $result = $factory->run('ls -la');
         $this->assertEquals("line 1\nline 2\n", $result->output());
 
         // Plain array with empty line...
         $factory = new Factory;
-        $factory->fake(fn () => ['line 1', '', 'line 2']);
+        $factory->fake(function () { return ['line 1', '', 'line 2']; });
 
         $result = $factory->run('ls -la');
         $this->assertEquals("line 1\n\nline 2\n", $result->output());
 
         // Process description...
         $factory = new Factory;
-        $factory->fake(fn () => $factory->describe()->output('line 1')->output('line 2'));
+        $factory->fake(function () use ($factory) { return $factory->describe()->output('line 1')->output('line 2'); });
 
         $result = $factory->run('ls -la');
         $this->assertEquals("line 1\nline 2\n", $result->output());
 
         // Process description with empty line...
         $factory = new Factory;
-        $factory->fake(fn () => $factory->describe()->output('line 1')->output('')->output('line 2'));
+        $factory->fake(function () use ($factory) { return $factory->describe()->output('line 1')->output('')->output('line 2'); });
 
         $result = $factory->run('ls -la');
         $this->assertEquals("line 1\n\nline 2\n", $result->output());
@@ -209,7 +209,7 @@ class ProcessTest extends TestCase
     public function testProcessFakeWithErrorOutput()
     {
         $factory = new Factory;
-        $factory->fake(fn () => $factory->result('standard output', 'error output'));
+        $factory->fake(function () use ($factory) { return $factory->result('standard output', 'error output'); });
 
         $result = $factory->run('ls -la');
         $this->assertEquals("standard output\n", $result->output());
@@ -217,7 +217,7 @@ class ProcessTest extends TestCase
 
         // Array of error output...
         $factory = new Factory;
-        $factory->fake(fn () => $factory->result('standard output', ['line 1', 'line 2']));
+        $factory->fake(function () use ($factory) { return $factory->result('standard output', ['line 1', 'line 2']); });
 
         $result = $factory->run('ls -la');
         $this->assertEquals("standard output\n", $result->output());
@@ -225,7 +225,7 @@ class ProcessTest extends TestCase
 
         // Using process description...
         $factory = new Factory;
-        $factory->fake(fn () => $factory->describe()->output('standard output')->errorOutput('error output'));
+        $factory->fake(function () use ($factory) { return $factory->describe()->output('standard output')->errorOutput('error output'); });
 
         $result = $factory->run('ls -la');
         $this->assertEquals("standard output\n", $result->output());
@@ -345,10 +345,10 @@ class ProcessTest extends TestCase
 
         $factory = new Factory;
 
-        $factory->fake(fn () => $factory->result(exitCode: 1));
+        $factory->fake(function () use ($factory) { return $factory->result('', '', /*exitCode: */1); });
 
         $result = $factory->path(__DIR__)->run($this->ls());
-        $result->throw();
+        $result->throw_();
     }
 
     public function testFakeProcessesThrowIfTrue()
@@ -357,7 +357,7 @@ class ProcessTest extends TestCase
 
         $factory = new Factory;
 
-        $factory->fake(fn () => $factory->result(exitCode: 1));
+        $factory->fake(function () use ($factory) { return $factory->result('', '', /*exitCode: */1); });
 
         $result = $factory->path(__DIR__)->run($this->ls());
         $result->throwIf(true);
@@ -367,7 +367,7 @@ class ProcessTest extends TestCase
     {
         $factory = new Factory;
 
-        $factory->fake(fn () => $factory->result(exitCode: 1));
+        $factory->fake(function () use ($factory) { return $factory->result('', '', /*exitCode: */1); });
 
         $result = $factory->path(__DIR__)->run($this->ls());
         $result->throwIf(false);
@@ -400,7 +400,7 @@ class ProcessTest extends TestCase
         $factory = new Factory;
         $result = $factory->path(__DIR__)->run('echo "Hello World" >&2; exit 1;');
 
-        $result->throw();
+        $result->throw_();
     }
 
     public function testRealProcessesCanThrowIfTrue()
@@ -440,7 +440,7 @@ class ProcessTest extends TestCase
                     ->output('ONE')
                     ->output('TWO')
                     ->output('THREE')
-                    ->runsFor(iterations: 3);
+                    ->runsFor(/*iterations: */3);
         });
 
         $process = $factory->start('echo "ONE"; sleep 1; echo "TWO"; sleep 1; echo "THREE"; sleep 1;');

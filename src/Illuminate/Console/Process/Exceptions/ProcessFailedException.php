@@ -24,9 +24,11 @@ class ProcessFailedException extends RuntimeException
     {
         $this->result = $result;
 
+        $exitCode = $result->exitCode();
+
         parent::__construct(
             sprintf('The process "%s" failed.', $result->command()),
-            $result->exitCode() ?? 1,
+            isset($exitCode) ? $exitCode : 1
         );
     }
 }

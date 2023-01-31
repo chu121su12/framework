@@ -63,8 +63,10 @@ class FakeInvokedProcess implements InvokedProcessContract
      * @param  \Illuminate\Console\Process\FakeProcessDescription  $process
      * @return void
      */
-    public function __construct(string $command, FakeProcessDescription $process)
+    public function __construct(/*string */$command, FakeProcessDescription $process)
     {
+        $command = backport_type_check('string', $command);
+
         $this->command = $command;
         $this->process = $process;
     }
@@ -87,8 +89,10 @@ class FakeInvokedProcess implements InvokedProcessContract
      * @param  int  $signal
      * @return $this
      */
-    public function signal(int $signal)
+    public function signal(/*int */$signal)
     {
+        $signal = backport_type_check('int', $signal);
+
         $this->invokeOutputHandlerWithNextLineOfOutput();
 
         $this->receivedSignals[] = $signal;
@@ -102,8 +106,10 @@ class FakeInvokedProcess implements InvokedProcessContract
      * @param  int  $signal
      * @return bool
      */
-    public function hasReceivedSignal(int $signal)
+    public function hasReceivedSignal(/*int */$signal)
     {
+        $signal = backport_type_check('int', $signal);
+
         return in_array($signal, $this->receivedSignals);
     }
 
@@ -144,7 +150,7 @@ class FakeInvokedProcess implements InvokedProcessContract
             return false;
         }
 
-        [$outputCount, $outputStartingPoint] = [
+        list($outputCount, $outputStartingPoint) = [
             count($this->process->output),
             min($this->nextOutputIndex, $this->nextErrorOutputIndex),
         ];
@@ -295,8 +301,10 @@ class FakeInvokedProcess implements InvokedProcessContract
      * @param  callable|null  $output
      * @return $this
      */
-    public function withOutputHandler(?callable $outputHandler)
+    public function withOutputHandler(/*?*/callable $outputHandler = null)
     {
+        $outputHandler = backport_type_check('?callable', $outputHandler);
+
         $this->outputHandler = $outputHandler;
 
         return $this;

@@ -274,11 +274,19 @@ class RedisStore extends TaggableStore implements LockProvider
         $connection = $this->connection();
 
         // Connections can have a global prefix...
-        $connectionPrefix = match (true) {
-            $connection instanceof PhpRedisConnection => $connection->_prefix(''),
-            $connection instanceof PredisConnection => $connection->getOptions()->prefix ?: '',
-            default => '',
-        };
+        switch (true) {
+            case $connection instanceof PhpRedisConnection:
+                $connectionPrefix = $connection->_prefix('');
+                break;
+
+            case $connection instanceof PredisConnection:
+                $connectionPrefix = $connection->getOptions()->prefix ?: '';
+                break;
+
+            default:
+                $connectionPrefix = '';
+                break;
+        }
 
         $prefix = $connectionPrefix.$this->getPrefix();
 
@@ -286,7 +294,7 @@ class RedisStore extends TaggableStore implements LockProvider
             $cursor = $defaultCursorValue = '0';
 
             do {
-                [$cursor, $tagsChunk] = $connection->scan(
+                list($cursor, $tagsChunk) = $connection->scan(
                     $cursor,
                     ['match' => $prefix.'tag:*:entries', 'count' => $chunkSize]
                 );
@@ -305,7 +313,11 @@ class RedisStore extends TaggableStore implements LockProvider
                     yield $tag;
                 }
             } while (((string) $cursor) !== $defaultCursorValue);
-        })->map(fn (string $tagKey) => Str::match('/^'.preg_quote($prefix).'tag:(.*):entries$/', $tagKey));
+        })->map(function (/*string */$tagKey) use ($prefix) {
+            $tagKey = backport_type_check('string', $tagKey);
+
+            return Str::match('/^'.preg_quote($prefix).'tag:(.*):entries$/', $tagKey);
+        });
     }
 
     /**

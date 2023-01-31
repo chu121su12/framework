@@ -102,6 +102,55 @@ class MailMailableTest_testAssertHasAttachmentFromStorage_class_2 extends Mailab
             }
         }
 
+class MailMailableTest_testItCanJitNameAttachments_class implements Attachable
+        {
+            public function toMailAttachment()
+            {
+                return Attachment::fromData(function () { return 'bar'; })->withMime('image/png');
+            }
+        }
+
+class MailMailableTest_testHasAttachmentWithJitNamedAttachment_class implements Attachable
+        {
+            public function toMailAttachment()
+            {
+                return Attachment::fromData(function () { return 'bar'; })->withMime('image/png');
+            }
+        }
+
+class MailMailableTest_testHasAttachmentWithEnvelopeAttachments_class_1
+        {
+            public function render()
+            {
+                //
+            }
+        }
+
+class MailMailableTest_testHasAttachmentWithEnvelopeAttachments_class_2 extends Mailable
+        {
+            public function envelope()
+            {
+                return new Envelope();
+            }
+
+            public function attachments()
+            {
+                return [
+                    Attachment::fromData(function () { return 'bar'; })
+                        ->withMime('image/png')
+                        ->as_('foo.jpg'),
+                ];
+            }
+        }
+
+class MailMailableTest_testHasAttachmentWithEnvelopeAttachments_class_3 implements Attachable
+        {
+            public function toMailAttachment()
+            {
+                return Attachment::fromData(function () { return 'bar'; });
+            }
+        }
+
 class MailMailableTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -805,13 +854,7 @@ class MailMailableTest extends TestCase
     public function testItCanJitNameAttachments()
     {
         $mailable = new WelcomeMailableStub;
-        $unnamedAttachable = new class() implements Attachable
-        {
-            public function toMailAttachment()
-            {
-                return Attachment::fromData(fn () => 'bar')->withMime('image/png');
-            }
-        };
+        $unnamedAttachable = new MailMailableTest_testItCanJitNameAttachments_class;
 
         $mailable->attach($unnamedAttachable, ['as' => 'foo.jpg']);
 
@@ -827,13 +870,7 @@ class MailMailableTest extends TestCase
     public function testHasAttachmentWithJitNamedAttachment()
     {
         $mailable = new WelcomeMailableStub;
-        $unnamedAttachable = new class() implements Attachable
-        {
-            public function toMailAttachment()
-            {
-                return Attachment::fromData(fn () => 'bar')->withMime('image/png');
-            }
-        };
+        $unnamedAttachable = new MailMailableTest_testHasAttachmentWithJitNamedAttachment_class;
 
         $mailable->attach($unnamedAttachable, ['as' => 'foo.jpg']);
 
@@ -842,36 +879,9 @@ class MailMailableTest extends TestCase
 
     public function testHasAttachmentWithEnvelopeAttachments()
     {
-        Container::getInstance()->instance('mailer', new class
-        {
-            public function render()
-            {
-                //
-            }
-        });
-        $mailable = new class extends Mailable
-        {
-            public function envelope()
-            {
-                return new Envelope();
-            }
-
-            public function attachments()
-            {
-                return [
-                    Attachment::fromData(fn () => 'bar')
-                        ->withMime('image/png')
-                        ->as('foo.jpg'),
-                ];
-            }
-        };
-        $unnamedAttachable = new class() implements Attachable
-        {
-            public function toMailAttachment()
-            {
-                return Attachment::fromData(fn () => 'bar');
-            }
-        };
+        Container::getInstance()->instance('mailer', new MailMailableTest_testHasAttachmentWithEnvelopeAttachments_class_1);
+        $mailable = new MailMailableTest_testHasAttachmentWithEnvelopeAttachments_class_2;
+        $unnamedAttachable = new MailMailableTest_testHasAttachmentWithEnvelopeAttachments_class_3;
 
         $mailable->render();
 

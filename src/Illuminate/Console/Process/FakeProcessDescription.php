@@ -2,6 +2,7 @@
 
 namespace Illuminate\Console\Process;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Symfony\Component\Process\Process;
 
 class FakeProcessDescription
@@ -40,8 +41,10 @@ class FakeProcessDescription
      * @param  int  $processId
      * @return $this
      */
-    public function id(int $processId)
+    public function id(/*int */$processId)
     {
+        $processId = backport_type_check('int', $processId);
+
         $this->processId = $processId;
 
         return $this;
@@ -53,10 +56,12 @@ class FakeProcessDescription
      * @param  array|string  $output
      * @return $this
      */
-    public function output(array|string $output)
+    public function output(/*array|string */$output)
     {
+        $output = backport_type_check('array|string', $output);
+
         if (is_array($output)) {
-            collect($output)->each(fn ($line) => $this->output($line));
+            collect($output)->each(function ($line) { return $this->output($line); });
 
             return $this;
         }
@@ -72,10 +77,12 @@ class FakeProcessDescription
      * @param  array|string  $output
      * @return $this
      */
-    public function errorOutput(array|string $output)
+    public function errorOutput(/*array|string */$output)
     {
+        $output = backport_type_check('array|string', $output);
+
         if (is_array($output)) {
-            collect($output)->each(fn ($line) => $this->errorOutput($line));
+            collect($output)->each(function ($line) { return $this->errorOutput($line); });
 
             return $this;
         }
@@ -91,8 +98,10 @@ class FakeProcessDescription
      * @param  string  $output
      * @return $this
      */
-    public function replaceOutput(string $output)
+    public function replaceOutput(/*string */$output)
     {
+        $output = backport_type_check('string', $output);
+
         $this->output = collect($this->output)->reject(function ($output) {
             return $output['type'] === 'out';
         })->values()->all();
@@ -113,8 +122,10 @@ class FakeProcessDescription
      * @param  string  $output
      * @return $this
      */
-    public function replaceErrorOutput(string $output)
+    public function replaceErrorOutput(/*string */$output)
     {
+        $output = backport_type_check('string', $output);
+
         $this->output = collect($this->output)->reject(function ($output) {
             return $output['type'] === 'err';
         })->values()->all();
@@ -135,8 +146,10 @@ class FakeProcessDescription
      * @param  int  $exitCode
      * @return $this
      */
-    public function exitCode(int $exitCode)
+    public function exitCode(/*string */$exitCode)
     {
+        $exitCode = backport_type_check('string', $exitCode);
+
         $this->exitCode = $exitCode;
 
         return $this;
@@ -148,9 +161,11 @@ class FakeProcessDescription
      * @param  int  $iterations
      * @return $this
      */
-    public function iterations(int $iterations)
+    public function iterations(/*string */$iterations)
     {
-        return $this->runsFor(iterations: $iterations);
+        $iterations = backport_type_check('string', $iterations);
+
+        return $this->runsFor(/*iterations: */$iterations);
     }
 
     /**
@@ -159,8 +174,10 @@ class FakeProcessDescription
      * @param  int  $iterations
      * @return $this
      */
-    public function runsFor(int $iterations)
+    public function runsFor(/*string */$iterations)
     {
+        $iterations = backport_type_check('string', $iterations);
+
         $this->runIterations = $iterations;
 
         return $this;
@@ -172,9 +189,11 @@ class FakeProcessDescription
      * @param  string  $command
      * @return \Symfony\Component\Process\Process
      */
-    public function toSymfonyProcess(string $command)
+    public function toSymfonyProcess(/*string */$command)
     {
-        return Process::fromShellCommandline($command);
+        $command = backport_type_check('string', $command);
+
+        return SymfonyHelper::processFromShellCommandline($command);
     }
 
     /**
@@ -183,13 +202,15 @@ class FakeProcessDescription
      * @param  string  $command
      * @return \Illuminate\Contracts\Console\Process\ProcessResult
      */
-    public function toProcessResult(string $command)
+    public function toProcessResult(/*string */$command)
     {
+        $command = backport_type_check('string', $command);
+
         return new FakeProcessResult(
-            command: $command,
-            exitCode: $this->exitCode,
-            output: $this->resolveOutput(),
-            errorOutput: $this->resolveErrorOutput(),
+            /*command: */$command,
+            /*exitCode: */$this->exitCode,
+            /*output: */$this->resolveOutput(),
+            /*errorOutput: */$this->resolveErrorOutput()
         );
     }
 
@@ -201,7 +222,7 @@ class FakeProcessDescription
     protected function resolveOutput()
     {
         $output = collect($this->output)
-            ->filter(fn ($output) => $output['type'] === 'out');
+            ->filter(function ($output) { return $output['type'] === 'out'; });
 
         return $output->isNotEmpty()
                     ? rtrim($output->map->buffer->implode(''), "\n")."\n"
@@ -216,7 +237,7 @@ class FakeProcessDescription
     protected function resolveErrorOutput()
     {
         $output = collect($this->output)
-            ->filter(fn ($output) => $output['type'] === 'err');
+            ->filter(function ($output) { return $output['type'] === 'err'; });
 
         return $output->isNotEmpty()
                     ? rtrim($output->map->buffer->implode(''), "\n")."\n"

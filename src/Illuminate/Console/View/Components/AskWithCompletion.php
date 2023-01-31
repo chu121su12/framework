@@ -23,7 +23,9 @@ class AskWithCompletion extends Component
             : $question->setAutocompleterValues($choices);
 
         return $this->usingQuestionHelper(
-            fn () => $this->output->askQuestion($question)
+            function () use ($question) {
+                return $this->output->askQuestion($question);
+            }
         );
     }
 }

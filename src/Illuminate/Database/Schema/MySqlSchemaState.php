@@ -2,6 +2,7 @@
 
 namespace Illuminate\Database\Schema;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Exception;
 use Illuminate\Database\Connection;
 use Illuminate\Support\Str;
@@ -157,13 +158,13 @@ class MySqlSchemaState extends SchemaState
             $process->setTimeout(null)->mustRun($output, $variables);
         } catch (Exception $e) {
             if (Str::contains($e->getMessage(), ['column-statistics', 'column_statistics'])) {
-                return $this->executeDumpProcess(Process::fromShellCommandLine(
+                return $this->executeDumpProcess(SymfonyHelper::processFromShellCommandline(
                     str_replace(' --column-statistics=0', '', $process->getCommandLine())
                 ), $output, $variables);
             }
 
             if (str_contains($e->getMessage(), 'set-gtid-purged')) {
-                return $this->executeDumpProcess(Process::fromShellCommandLine(
+                return $this->executeDumpProcess(SymfonyHelper::processFromShellCommandline(
                     str_replace(' --set-gtid-purged=OFF', '', $process->getCommandLine())
                 ), $output, $variables);
             }

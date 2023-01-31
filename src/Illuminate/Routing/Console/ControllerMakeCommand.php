@@ -308,7 +308,7 @@ class ControllerMakeCommand extends GeneratorCommand
             'invokable',
             'resource',
             'singleton',
-        ], default: 0);
+        ], /*default: */0);
 
         if ($type !== 'empty') {
             $input->setOption($type, true);

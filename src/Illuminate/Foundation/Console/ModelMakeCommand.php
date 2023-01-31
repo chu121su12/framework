@@ -247,13 +247,15 @@ class ModelMakeCommand extends GeneratorCommand
             'policy',
             'resource controller',
             'seed',
-        ], default: 0, multiple: true))
+        ], /*default: */0, null, /*multiple: */true))
         ->reject('none')
-        ->map(fn ($option) => match ($option) {
-            'resource controller' => 'resource',
-            'form requests' => 'requests',
-            default => $option,
+        ->map(function ($option) {
+            switch ($option) {
+                case 'resource controller': return 'resource';
+                case 'form requests': return 'requests';
+                default: return $option;
+            }
         })
-        ->each(fn ($option) => $input->setOption($option, true));
+        ->each(function ($option) use ($input) { return $input->setOption($option, true); });
     }
 }

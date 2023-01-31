@@ -117,9 +117,9 @@ class EloquentDeleteTest extends DatabaseTestCase
         PostStringyKey::query()->create([]);
 
         PostStringyKey::query()->getConnection()->enableQueryLog();
-        PostStringyKey::retrieved(fn ($model) => $_SERVER['destroy']['retrieved'][] = $model->my_id);
-        PostStringyKey::deleting(fn ($model) => $_SERVER['destroy']['deleting'][] = $model->my_id);
-        PostStringyKey::deleted(fn ($model) => $_SERVER['destroy']['deleted'][] = $model->my_id);
+        PostStringyKey::retrieved(function ($model) { return $_SERVER['destroy']['retrieved'][] = $model->my_id; });
+        PostStringyKey::deleting(function ($model) { return $_SERVER['destroy']['deleting'][] = $model->my_id; });
+        PostStringyKey::deleted(function ($model) { return $_SERVER['destroy']['deleted'][] = $model->my_id; });
 
         // In case 0 ids are matched out of 2:
         PostStringyKey::query()->getConnection()->flushQueryLog();

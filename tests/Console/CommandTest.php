@@ -76,6 +76,13 @@ class CommandTest_testHiddenProperty_class extends Command
             }
         }
 
+class CommandTest_testAliasesProperty_class extends Command
+        {
+            protected $name = 'foo:bar';
+
+            protected $aliases = ['bar:baz', 'baz:qux'];
+        }
+
 class CommandTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -188,12 +195,7 @@ class CommandTest extends TestCase
 
     public function testAliasesProperty()
     {
-        $command = new class extends Command
-        {
-            protected $name = 'foo:bar';
-
-            protected $aliases = ['bar:baz', 'baz:qux'];
-        };
+        $command = new CommandTest_testAliasesProperty_class;
 
         $this->assertSame(['bar:baz', 'baz:qux'], $command->getAliases());
     }

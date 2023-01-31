@@ -43,8 +43,10 @@ class InvokedProcess implements InvokedProcessContract
      * @param  int  $signal
      * @return $this
      */
-    public function signal(int $signal)
+    public function signal(/*int */$signal)
     {
+        $signal = backport_type_check('int', $signal);
+
         $this->process->signal($signal);
 
         return $this;

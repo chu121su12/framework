@@ -45,8 +45,15 @@ class FakeProcessSequence
      * @param  \Illuminate\Contracts\Console\Process\ProcessResult|\Illuminate\Console\Process\FakeProcessDescription|array|string  $process
      * @return $this
      */
-    public function push(ProcessResultContract|FakeProcessDescription|array|string $process)
+    public function push(/*ProcessResultContract|FakeProcessDescription|array|string */$process)
     {
+        $process = backport_type_check([
+            ProcessResultContract::class,
+            FakeProcessDescription::class,
+            'array',
+            'string',
+        ], $process);
+
         $this->processes[] = $this->toProcessResult($process);
 
         return $this;
@@ -58,8 +65,15 @@ class FakeProcessSequence
      * @param  \Illuminate\Contracts\Console\Process\ProcessResult|\Illuminate\Console\Process\FakeProcessDescription|array|string  $process
      * @return $this
      */
-    public function whenEmpty(ProcessResultContract|FakeProcessDescription|array|string $process)
+    public function whenEmpty(/*ProcessResultContract|FakeProcessDescription|array|string */$process)
     {
+        $process = backport_type_check([
+            ProcessResultContract::class,
+            FakeProcessDescription::class,
+            'array',
+            'string',
+        ], $process);
+
         $this->failWhenEmpty = false;
         $this->emptyProcess = $this->toProcessResult($process);
 
@@ -72,10 +86,21 @@ class FakeProcessSequence
      * @param  \Illuminate\Contracts\Console\Process\ProcessResult|\Illuminate\Console\Process\FakeProcessDescription|array|string  $process
      * @return \Illuminate\Contracts\Console\Process\ProcessResult|\Illuminate\Console\Process\FakeProcessDescription
      */
-    protected function toProcessResult(ProcessResultContract|FakeProcessDescription|array|string $process)
+    protected function toProcessResult(/*ProcessResultContract|FakeProcessDescription|array|string */$process)
     {
+        $process = backport_type_check([
+            ProcessResultContract::class,
+            FakeProcessDescription::class,
+            'array',
+            'string',
+        ], $process);
+
         return is_array($process) || is_string($process)
-                ? new FakeProcessResult(output: $process)
+                ? new FakeProcessResult(
+                    '',
+                    0,
+                    /*output: */$process
+                )
                 : $process;
     }
 
@@ -113,7 +138,7 @@ class FakeProcessSequence
         }
 
         if (! $this->failWhenEmpty && count($this->processes) === 0) {
-            return value($this->emptyProcess ?? new FakeProcessResult);
+            return value(isset($this->emptyProcess) ? $this->emptyProcess : new FakeProcessResult);
         }
 
         return array_shift($this->processes);

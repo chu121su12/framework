@@ -53,7 +53,7 @@ class RedisTaggedCache extends TaggedCache
      */
     public function increment($key, $value = 1)
     {
-        $this->tags->addEntry($this->itemKey($key), updateWhen: 'NX');
+        $this->tags->addEntry($this->itemKey($key), 0, /*updateWhen: */'NX');
 
         return parent::increment($key, $value);
     }
@@ -67,7 +67,7 @@ class RedisTaggedCache extends TaggedCache
      */
     public function decrement($key, $value = 1)
     {
-        $this->tags->addEntry($this->itemKey($key), updateWhen: 'NX');
+        $this->tags->addEntry($this->itemKey($key), 0, /*updateWhen: */'NX');
 
         return parent::decrement($key, $value);
     }
@@ -107,7 +107,10 @@ class RedisTaggedCache extends TaggedCache
     protected function flushValues()
     {
         $entries = $this->tags->entries()
-            ->map(fn (string $key) => $this->store->getPrefix().$key)
+            ->map(function (/*string */$key) {
+                $key = backport_type_check('string', $key);
+                return $this->store->getPrefix().$key;
+            })
             ->chunk(1000);
 
         foreach ($entries as $cacheKeys) {

@@ -2,6 +2,7 @@
 
 namespace Laravel\Octane\Commands\Concerns;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Support\Str;
 use Laravel\Octane\RoadRunner\Concerns\FindsRoadRunnerBinary;
 use RuntimeException;
@@ -52,7 +53,7 @@ trait InstallsRoadRunnerDependencies
 
         $command = $this->findComposer().' require spiral/roadrunner:^2.8.2 --with-all-dependencies';
 
-        $process = Process::fromShellCommandline($command, null, null, null, null);
+        $process = SymfonyHelper::processFromShellCommandline($command, null, null, null, null);
 
         if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
             try {

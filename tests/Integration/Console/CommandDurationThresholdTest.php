@@ -125,7 +125,7 @@ class CommandDurationThresholdTest extends TestCase
             $called = false;
 
             $kernel = $this->app[Kernel::class];
-            $kernel->command('foo', fn () => null);
+            $kernel->command('foo', function () { return null; });
             $kernel->whenCommandLifecycleIsLongerThan(Carbon::now()->addSecond()->addMillisecond(), function () use (&$called) {
                 $called = true;
             });

@@ -98,7 +98,9 @@ class View implements ArrayAccess, Htmlable, ViewContract
      */
     public function fragments(array $fragments)
     {
-        return collect($fragments)->map(fn ($f) => $this->fragment($f))->implode('');
+        return collect($fragments)->map(function ($f) {
+            return $this->fragment($f);
+        })->implode('');
     }
 
     /**

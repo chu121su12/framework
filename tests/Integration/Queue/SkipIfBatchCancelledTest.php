@@ -5,7 +5,7 @@ namespace Illuminate\Tests\Integration\Queue;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Dispatcher;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\Job;
+use Illuminate\Contracts\Queue\Job as JobContract;
 use Illuminate\Queue\CallQueuedHandler;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\Middleware\SkipIfBatchCancelled;
@@ -14,7 +14,7 @@ use Orchestra\Testbench\TestCase;
 
 class SkipIfBatchCancelledTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 
@@ -23,9 +23,17 @@ class SkipIfBatchCancelledTest extends TestCase
 
     public function testJobsAreSkippedOnceBatchIsCancelled()
     {
-        [$beforeCancelled] = (new SkipCancelledBatchableTestJob())->withFakeBatch();
-        [$afterCancelled] = (new SkipCancelledBatchableTestJob())->withFakeBatch(
-            cancelledAt: \Carbon\CarbonImmutable::now()
+        list($beforeCancelled) = (new SkipCancelledBatchableTestJob())->withFakeBatch();
+        list($afterCancelled) = (new SkipCancelledBatchableTestJob())->withFakeBatch(
+            '',
+            '',
+            0,
+            0,
+            0,
+            [],
+            [],
+            null,
+            /*cancelledAt: */\Carbon\CarbonImmutable::now()
         );
 
         $this->assertJobRanSuccessfully($beforeCancelled);
@@ -47,7 +55,7 @@ class SkipIfBatchCancelledTest extends TestCase
         $class::$handled = false;
         $instance = new CallQueuedHandler(new Dispatcher($this->app), $this->app);
 
-        $job = m::mock(Job::class);
+        $job = m::mock(JobContract::class);
 
         $job->shouldReceive('uuid')->once()->andReturn('simple-test-uuid');
         $job->shouldReceive('hasFailed')->once()->andReturn(false);

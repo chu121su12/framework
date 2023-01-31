@@ -43,8 +43,10 @@ class FileLoader implements Loader
      * @param  array|string  $path
      * @return void
      */
-    public function __construct(Filesystem $files, array|string $path)
+    public function __construct(Filesystem $files, /*array|string */$path)
     {
+        $path = backport_type_check('array|string', $path);
+
         $this->files = $files;
 
         $this->paths = is_string($path) ? [$path] : $path;

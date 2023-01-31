@@ -67,7 +67,7 @@ trait SoftDeletes
      */
     public function forceDeleteQuietly()
     {
-        return static::withoutEvents(fn () => $this->forceDelete());
+        return static::withoutEvents(function () { return $this->forceDelete(); });
     }
 
     /**

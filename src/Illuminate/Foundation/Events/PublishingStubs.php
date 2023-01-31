@@ -31,8 +31,11 @@ class PublishingStubs
      * @param  string  $name
      * @return $this
      */
-    public function add(string $path, string $name)
+    public function add(/*string */$path, /*string */$name)
     {
+        $path = backport_type_check('string', $path);
+        $name = backport_type_check('string', $name);
+
         $this->stubs[$path] = $name;
 
         return $this;

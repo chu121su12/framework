@@ -407,7 +407,7 @@ class MailManager implements FactoryContract
      */
     protected function getHttpClient(array $config)
     {
-        if ($options = ($config['client'] ?? false)) {
+        if ($options = (isset($config['client']) ? $config['client'] : false)) {
             $maxHostConnections = Arr::pull($options, 'max_host_connections', 6);
             $maxPendingPushes = Arr::pull($options, 'max_pending_pushes', 50);
 

@@ -158,14 +158,14 @@ class Attachment
     public function attachTo($mail, $options = [])
     {
         return $this->attachWith(
-            fn ($path) => $mail->attach($path, [
-                'as' => $options['as'] ?? $this->as,
-                'mime' => $options['mime'] ?? $this->mime,
-            ]),
+            function ($path) use ($mail, $options) { return $mail->attach($path, [
+                'as' => isset($options['as']) ? $options['as'] : $this->as,
+                'mime' => isset($options['mime']) ? $options['mime'] : $this->mime,
+            ]); },
             function ($data) use ($mail, $options) {
                 $options = [
-                    'as' => $options['as'] ?? $this->as,
-                    'mime' => $options['mime'] ?? $this->mime,
+                    'as' => isset($options['as']) ? $options['as'] : $this->as,
+                    'mime' => isset($options['mime']) ? $options['mime'] : $this->mime,
                 ];
 
                 if ($options['as'] === null) {
@@ -187,14 +187,14 @@ class Attachment
     public function isEquivalent(Attachment $attachment, $options = [])
     {
         return with([
-            'as' => $options['as'] ?? $attachment->as,
-            'mime' => $options['mime'] ?? $attachment->mime,
-        ], fn ($options) => $this->attachWith(
-            fn ($path) => [$path, ['as' => $this->as, 'mime' => $this->mime]],
-            fn ($data) => [$data(), ['as' => $this->as, 'mime' => $this->mime]],
+            'as' => isset($options['as']) ? $options['as'] : $attachment->as,
+            'mime' => isset($options['mime']) ? $options['mime'] : $attachment->mime,
+        ], function ($options) use ($attachment) { return $this->attachWith(
+            function ($path) { return [$path, ['as' => $this->as, 'mime' => $this->mime]]; },
+            function ($data) { return [$data(), ['as' => $this->as, 'mime' => $this->mime]]; }
         ) === $attachment->attachWith(
-            fn ($path) => [$path, $options],
-            fn ($data) => [$data(), $options],
-        ));
+            function ($path) use ($options) { return [$path, $options]; },
+            function ($data) use ($options) { return [$data(), $options]; }
+        ); } );
     }
 }

@@ -7,19 +7,7 @@ use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Collection;
 
-class AsEnumCollection implements Castable
-{
-    /**
-     * Get the caster class to use when casting from / to this cast target.
-     *
-     * @template TEnum of \UnitEnum|\BackedEnum
-     *
-     * @param  array{class-string<TEnum>}  $arguments
-     * @return CastsAttributes<Collection<array-key, TEnum>, iterable<TEnum>>
-     */
-    public static function castUsing(array $arguments)
-    {
-        return new class($arguments) implements CastsAttributes
+class AsEnumArrayObject_castUsing_class implements CastsAttributes
         {
             protected $arguments;
 
@@ -28,7 +16,7 @@ class AsEnumCollection implements Castable
                 $this->arguments = $arguments;
             }
 
-            public function get($model, $key, $value, $attributes)
+            public function get(Model $model, $key, $value, array $attributes)
             {
                 if (! isset($attributes[$key]) || is_null($attributes[$key])) {
                     return;
@@ -49,7 +37,7 @@ class AsEnumCollection implements Castable
                 });
             }
 
-            public function set($model, $key, $value, $attributes)
+            public function set(Model $model, $key, $value, array $attributes)
             {
                 $value = $value !== null
                     ? (new Collection($value))->map(function ($enum) {
@@ -60,8 +48,10 @@ class AsEnumCollection implements Castable
                 return [$key => $value];
             }
 
-            public function serialize($model, string $key, $value, array $attributes)
+            public function serialize(Model $model, /*string */$key, $value, /*array */$attributes)
             {
+                // $key = backport_type_check('string', $key);
+
                 return (new Collection($value))->map(function ($enum) {
                     return $this->getStorableEnumValue($enum);
                 })->toArray();
@@ -75,6 +65,20 @@ class AsEnumCollection implements Castable
 
                 return $enum instanceof BackedEnum ? $enum->value : $enum->name;
             }
-        };
+        }
+
+class AsEnumCollection implements Castable
+{
+    /**
+     * Get the caster class to use when casting from / to this cast target.
+     *
+     * @template TEnum of \UnitEnum|\BackedEnum
+     *
+     * @param  array{class-string<TEnum>}  $arguments
+     * @return CastsAttributes<Collection<array-key, TEnum>, iterable<TEnum>>
+     */
+    public static function castUsing(array $arguments)
+    {
+        return new AsEnumArrayObject_castUsing_class($arguments);
     }
 }

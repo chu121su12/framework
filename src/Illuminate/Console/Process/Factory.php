@@ -49,12 +49,17 @@ class Factory
      * @param  int  $exitCode
      * @return \Illuminate\Console\Process\FakeProcessResult
      */
-    public function result(array|string $output = '', array|string $errorOutput = '', int $exitCode = 0)
+    public function result(/*array|string */$output = '', /*array|string */$errorOutput = '', /*int */$exitCode = 0)
     {
+        $output = backport_type_check('array|string', $output);
+        $errorOutput = backport_type_check('array|string', $errorOutput);
+        $exitCode = backport_type_check('int', $exitCode);
+
         return new FakeProcessResult(
-            output: $output,
-            errorOutput: $errorOutput,
-            exitCode: $exitCode,
+            '',
+            /*exitCode: */$exitCode,
+            /*output: */$output,
+            /*errorOutput: */$errorOutput
         );
     }
 
@@ -85,12 +90,14 @@ class Factory
      * @param  \Closure|array|null  $callback
      * @return $this
      */
-    public function fake(Closure|array $callback = null)
+    public function fake(/*Closure|array */$callback = null)
     {
+        $callback = backport_type_check('Closure|array', $callback);
+
         $this->recording = true;
 
         if (is_null($callback)) {
-            $this->fakeHandlers = ['*' => fn () => new FakeProcessResult];
+            $this->fakeHandlers = ['*' => function () { return new FakeProcessResult; }];
 
             return $this;
         }
@@ -104,7 +111,7 @@ class Factory
         foreach ($callback as $command => $handler) {
             $this->fakeHandlers[is_numeric($command) ? '*' : $command] = $handler instanceof Closure
                     ? $handler
-                    : fn () => $handler;
+                    : function () use ($handler) { return $handler; };
         }
 
         return $this;
@@ -156,8 +163,10 @@ class Factory
      * @param  bool  $prevent
      * @return $this
      */
-    public function preventStrayProcesses(bool $prevent = true)
+    public function preventStrayProcesses(/*bool */$prevent = true)
     {
+        $prevent = backport_type_check('bool', $prevent);
+
         $this->preventStrayProcesses = $prevent;
 
         return $this;
@@ -179,9 +188,11 @@ class Factory
      * @param  \Closure|string  $callback
      * @return $this
      */
-    public function assertRan(Closure|string $callback)
+    public function assertRan(/*Closure|string */$callback)
     {
-        $callback = is_string($callback) ? fn ($process) => $process->command === $callback : $callback;
+        $callback = backport_type_check('Closure|string', $callback);
+
+        $callback = is_string($callback) ? function ($process) use ($callback) { return $process->command === $callback; } : $callback;
 
         PHPUnit::assertTrue(
             collect($this->recorded)->filter(function ($pair) use ($callback) {
@@ -200,9 +211,12 @@ class Factory
      * @param  int  $times
      * @return $this
      */
-    public function assertRanTimes(Closure|string $callback, int $times = 1)
+    public function assertRanTimes(/*Closure|string */$callback, /*int */$times = 1)
     {
-        $callback = is_string($callback) ? fn ($process) => $process->command === $callback : $callback;
+        $callback = backport_type_check('Closure|string', $callback);
+        $times = backport_type_check('int', $times);
+
+        $callback = is_string($callback) ? function ($process) use ($callback) { return $process->command === $callback; } : $callback;
 
         $count = collect($this->recorded)->filter(function ($pair) use ($callback) {
             return $callback($pair[0], $pair[1]);
@@ -220,9 +234,11 @@ class Factory
      * @param  \Closure|string  $callback
      * @return $this
      */
-    public function assertNotRan(Closure|string $callback)
+    public function assertNotRan(/*Closure|string */$callback)
     {
-        $callback = is_string($callback) ? fn ($process) => $process->command === $callback : $callback;
+        $callback = backport_type_check('Closure|string', $callback);
+
+        $callback = is_string($callback) ? function ($process) use ($callback) { return $process->command === $callback; } : $callback;
 
         PHPUnit::assertTrue(
             collect($this->recorded)->filter(function ($pair) use ($callback) {
@@ -240,8 +256,10 @@ class Factory
      * @param  \Closure|string  $callback
      * @return $this
      */
-    public function assertDidntRun(Closure|string $callback)
+    public function assertDidntRun(/*Closure|string */$callback)
     {
+        $callback = backport_type_check('Closure|string', $callback);
+
         return $this->assertNotRan($callback);
     }
 
@@ -278,8 +296,10 @@ class Factory
      * @param  callable|null  $output
      * @return \Illuminate\Console\Process\ProcessPoolResults
      */
-    public function concurrently(callable $callback, ?callable $output = null)
+    public function concurrently(callable $callback, /*?*/callable $output = null)
     {
+        $output = backport_type_check('?callable', $output);
+
         return (new Pool($this, $callback))->start($output)->wait();
     }
 

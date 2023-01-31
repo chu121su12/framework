@@ -446,10 +446,14 @@ if (! function_exists('fake') && class_exists(\Faker\Factory::class)) {
     function fake($locale = null)
     {
         if (app()->bound('config')) {
-            $locale ??= app('config')->get('app.faker_locale');
+            if (! isset($locale)) {
+                $locale = app('config')->get('app.faker_locale');
+            }
         }
 
-        $locale ??= 'en_US';
+        if (! isset($locale)) {
+            $locale = 'en_US';
+        }
 
         $abstract = \Faker\Generator::class.':'.$locale;
 

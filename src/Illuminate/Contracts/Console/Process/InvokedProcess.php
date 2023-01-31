@@ -17,7 +17,7 @@ interface InvokedProcess
      * @param  int  $signal
      * @return $this
      */
-    public function signal(int $signal);
+    public function signal(/*int */$signal);
 
     /**
      * Determine if the process is still running.

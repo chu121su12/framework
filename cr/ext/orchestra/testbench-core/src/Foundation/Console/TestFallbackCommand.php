@@ -2,6 +2,7 @@
 
 namespace Orchestra\Testbench\Foundation\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessSignaledException;
@@ -69,7 +70,7 @@ class TestFallbackCommand extends Command
     {
         $command = $this->findComposer().' require "nunomaduro/collision:^6.2" --dev';
 
-        $process = Process::fromShellCommandline($command, null, null, null, null);
+        $process = SymfonyHelper::processFromShellCommandline($command, null, null, null, null);
 
         if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
             try {

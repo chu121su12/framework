@@ -13,8 +13,11 @@ class SkipIfBatchCancelled
      */
     public function handle($job, $next)
     {
-        if (method_exists($job, 'batch') && $job->batch()?->cancelled()) {
-            return;
+        if (method_exists($job, 'batch')) {
+            $jobBatch = $job->batch();
+            if (isset($jobBatch) && $jobBatch->cancelled()) {
+                return;
+            }
         }
 
         $next($job);

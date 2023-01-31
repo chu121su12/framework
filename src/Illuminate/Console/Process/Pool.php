@@ -46,8 +46,10 @@ class Pool
      * @param  string  $key
      * @return \Illuminate\Console\Process\PendingProcess
      */
-    public function as(string $key)
+    public function as_(/*string */$key)
     {
+        $key = backport_type_check('string', $key);
+
         return tap($this->factory->newPendingProcess(), function ($pendingProcess) use ($key) {
             $this->pendingProcesses[$key] = $pendingProcess;
         });
@@ -59,8 +61,10 @@ class Pool
      * @param  callable|null  $output
      * @return \Illuminate\Console\Process\InvokedProcessPool
      */
-    public function start(?callable $output = null)
+    public function start(/*?*/callable $output = null)
     {
+        $output = backport_type_check('?callable', $output);
+
         call_user_func($this->callback, $this);
 
         return new InvokedProcessPool(
@@ -70,9 +74,14 @@ class Pool
                         throw new InvalidArgumentException('Process pool must only contain pending processes.');
                     }
                 })->mapWithKeys(function ($pendingProcess, $key) use ($output) {
-                    return [$key => $pendingProcess->start(output: $output ? function ($type, $buffer) use ($key, $output) {
+                    $outputParameter = $output ? function ($type, $buffer) use ($key, $output) {
                         $output($type, $buffer, $key);
-                    } : null)];
+                    } : null;
+
+                    return [$key => $pendingProcess->start(
+                        null,
+                        /*output: */$outputParameter
+                    )];
                 })
             ->all()
         );

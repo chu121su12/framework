@@ -334,10 +334,10 @@ class Response implements ArrayAccess
     {
         if (is_callable($statusCode) &&
             $statusCode($this->status(), $this)) {
-            return $this->throw();
+            return $this->throw_();
         }
 
-        return $this->status() === $statusCode ? $this->throw() : $this;
+        return $this->status() === $statusCode ? $this->throw_() : $this;
     }
 
     /**
@@ -352,10 +352,10 @@ class Response implements ArrayAccess
     {
         if (is_callable($statusCode) &&
             ! $statusCode($this->status(), $this)) {
-            return $this->throw();
+            return $this->throw_();
         }
 
-        return $this->status() === $statusCode ? $this : $this->throw();
+        return $this->status() === $statusCode ? $this : $this->throw_();
     }
 
     /**
@@ -367,7 +367,7 @@ class Response implements ArrayAccess
      */
     public function throwIfClientError()
     {
-        return $this->clientError() ? $this->throw() : $this;
+        return $this->clientError() ? $this->throw_() : $this;
     }
 
     /**
@@ -379,7 +379,7 @@ class Response implements ArrayAccess
      */
     public function throwIfServerError()
     {
-        return $this->serverError() ? $this->throw() : $this;
+        return $this->serverError() ? $this->throw_() : $this;
     }
 
     /**

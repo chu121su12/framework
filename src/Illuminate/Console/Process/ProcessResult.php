@@ -82,8 +82,10 @@ class ProcessResult implements ProcessResultContract
      * @param  string  $output
      * @return bool
      */
-    public function seeInOutput(string $output)
+    public function seeInOutput(/*string */$output)
     {
+        $output = backport_type_check('string', $output);
+
         return str_contains($this->output(), $output);
     }
 
@@ -103,8 +105,10 @@ class ProcessResult implements ProcessResultContract
      * @param  string  $output
      * @return bool
      */
-    public function seeInErrorOutput(string $output)
+    public function seeInErrorOutput(/*string */$output)
     {
+        $output = backport_type_check('string', $output);
+
         return str_contains($this->errorOutput(), $output);
     }
 
@@ -114,7 +118,7 @@ class ProcessResult implements ProcessResultContract
      * @param  callable|null  $callback
      * @return $this
      */
-    public function throw(callable $callback = null)
+    public function throw_(callable $callback = null)
     {
         if ($this->successful()) {
             return $this;
@@ -136,10 +140,12 @@ class ProcessResult implements ProcessResultContract
      * @param  callable|null  $callback
      * @return $this
      */
-    public function throwIf(bool $condition, callable $callback = null)
+    public function throwIf(/*bool */$condition, callable $callback = null)
     {
+        $condition = backport_type_check('bool', $condition);
+
         if ($condition) {
-            return $this->throw($callback);
+            return $this->throw_($callback);
         }
 
         return $this;

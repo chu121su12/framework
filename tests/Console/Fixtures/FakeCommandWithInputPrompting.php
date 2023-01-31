@@ -3,6 +3,7 @@
 namespace Illuminate\Tests\Console\Fixtures;
 
 use BadMethodCallException;
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 
@@ -14,14 +15,18 @@ class FakeCommandWithInputPrompting extends Command implements PromptsForMissing
 
     protected $signature = 'fake-command-for-testing {name : An argument}';
 
-    public function __construct(private $expectToRequestInput = true)
+    private $expectToRequestInput;
+
+    public function __construct(/*private */$expectToRequestInput = true)
     {
+        $this->expectToRequestInput = $expectToRequestInput;
+
         parent::__construct();
     }
 
-    public function handle(): int
+    public function handle()/*: int*/
     {
-        return self::SUCCESS;
+        return SymfonyHelper::CONSOLE_SUCCESS;
     }
 
     private function askPersistently($question)

@@ -4,6 +4,7 @@
 
 namespace NunoMaduro\Collision\Adapters\Laravel\Commands;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Dotenv\Exception\InvalidPathException;
 use Dotenv\Parser\Parser;
 use Dotenv\Store\StoreBuilder;
@@ -341,7 +342,7 @@ class TestCommand extends Command
     {
         $command = $this->findComposer().' require brianium/paratest --dev';
 
-        $process = Process::fromShellCommandline($command, null, null, null, null);
+        $process = SymfonyHelper::processFromShellCommandline($command, null, null, null, null);
 
         if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
             try {

@@ -551,8 +551,10 @@ class BladeCompiler extends Compiler implements CompilerInterface
      * @param  string  $expression
      * @return bool
      */
-    protected function hasEvenNumberOfParentheses(string $expression)
+    protected function hasEvenNumberOfParentheses(/*string */$expression)
     {
+        $expression = backport_type_check('string', $expression);
+
         $tokens = token_get_all('<?php '.$expression);
 
         if (Arr::last($tokens) !== ')') {

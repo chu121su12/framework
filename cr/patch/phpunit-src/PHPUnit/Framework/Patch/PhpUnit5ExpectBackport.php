@@ -9,6 +9,16 @@ trait PhpUnit5ExpectBackport
         $this->doesNotPerformAssertions = true;
     }
 
+    public function expectError()
+    {
+        $this->expectException(\Error::class);
+    }
+
+    public function expectErrorMessage($message)
+    {
+        $this->expectExceptionMessage($message);
+    }
+
     public function expectExceptionMessageMatches($regularExpression)
     {
         $this->expectedExceptionMessageRegExp = $regularExpression;

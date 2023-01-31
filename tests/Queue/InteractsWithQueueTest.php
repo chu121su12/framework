@@ -8,6 +8,13 @@ use Illuminate\Queue\InteractsWithQueue;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+class InteractsWithQueueTest_testCreatesAnExceptionFromString_class
+        {
+            use InteractsWithQueue;
+
+            public $job;
+        }
+
 class InteractsWithQueueTest extends TestCase
 {
     public function testCreatesAnExceptionFromString()
@@ -20,12 +27,7 @@ class InteractsWithQueueTest extends TestCase
             return true;
         });
 
-        $job = new class
-        {
-            use InteractsWithQueue;
-
-            public $job;
-        };
+        $job = new InteractsWithQueueTest_testCreatesAnExceptionFromString_class;
 
         $job->job = $queueJob;
         $job->fail('Whoops!');

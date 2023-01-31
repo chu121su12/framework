@@ -92,9 +92,11 @@ class HttpClientTest extends TestCase
 
     public function testCreatedRequest()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'vapor.laravel.com' => $this->factory::response('', HttpResponse::HTTP_CREATED),
-            'forge.laravel.com' => $this->factory::response('', HttpResponse::HTTP_OK),
+            'vapor.laravel.com' => $factory::response('', HttpResponse::HTTP_CREATED),
+            'forge.laravel.com' => $factory::response('', HttpResponse::HTTP_OK),
         ]);
 
         $response = $this->factory->post('http://vapor.laravel.com');
@@ -106,9 +108,11 @@ class HttpClientTest extends TestCase
 
     public function testAcceptedRequest()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'vapor.laravel.com' => $this->factory::response('', HttpResponse::HTTP_ACCEPTED),
-            'forge.laravel.com' => $this->factory::response('', HttpResponse::HTTP_OK),
+            'vapor.laravel.com' => $factory::response('', HttpResponse::HTTP_ACCEPTED),
+            'forge.laravel.com' => $factory::response('', HttpResponse::HTTP_OK),
         ]);
 
         $response = $this->factory->post('http://vapor.laravel.com');
@@ -120,9 +124,11 @@ class HttpClientTest extends TestCase
 
     public function testMovedPermanentlyRequest()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'vapor.laravel.com' => $this->factory::response('', HttpResponse::HTTP_MOVED_PERMANENTLY),
-            'forge.laravel.com' => $this->factory::response('', HttpResponse::HTTP_OK),
+            'vapor.laravel.com' => $factory::response('', HttpResponse::HTTP_MOVED_PERMANENTLY),
+            'forge.laravel.com' => $factory::response('', HttpResponse::HTTP_OK),
         ]);
 
         $response = $this->factory->post('http://vapor.laravel.com');
@@ -134,9 +140,11 @@ class HttpClientTest extends TestCase
 
     public function testNoContentRequest()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'vapor.laravel.com' => $this->factory::response('', HttpResponse::HTTP_NO_CONTENT),
-            'forge.laravel.com' => $this->factory::response('', HttpResponse::HTTP_OK),
+            'vapor.laravel.com' => $factory::response('', HttpResponse::HTTP_NO_CONTENT),
+            'forge.laravel.com' => $factory::response('', HttpResponse::HTTP_OK),
         ]);
 
         $response = $this->factory->post('http://vapor.laravel.com');
@@ -148,9 +156,11 @@ class HttpClientTest extends TestCase
 
     public function testFoundRequest()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'vapor.laravel.com' => $this->factory::response('', HttpResponse::HTTP_FOUND),
-            'forge.laravel.com' => $this->factory::response('', HttpResponse::HTTP_OK),
+            'vapor.laravel.com' => $factory::response('', HttpResponse::HTTP_FOUND),
+            'forge.laravel.com' => $factory::response('', HttpResponse::HTTP_OK),
         ]);
 
         $response = $this->factory->post('http://vapor.laravel.com');
@@ -162,9 +172,11 @@ class HttpClientTest extends TestCase
 
     public function testBadRequestRequest()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'vapor.laravel.com' => $this->factory::response('', HttpResponse::HTTP_BAD_REQUEST),
-            'forge.laravel.com' => $this->factory::response('', HttpResponse::HTTP_OK),
+            'vapor.laravel.com' => $factory::response('', HttpResponse::HTTP_BAD_REQUEST),
+            'forge.laravel.com' => $factory::response('', HttpResponse::HTTP_OK),
         ]);
 
         $response = $this->factory->post('http://vapor.laravel.com');
@@ -176,9 +188,11 @@ class HttpClientTest extends TestCase
 
     public function testPaymentRequiredRequest()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'vapor.laravel.com' => $this->factory::response('', HttpResponse::HTTP_PAYMENT_REQUIRED),
-            'forge.laravel.com' => $this->factory::response('', HttpResponse::HTTP_OK),
+            'vapor.laravel.com' => $factory::response('', HttpResponse::HTTP_PAYMENT_REQUIRED),
+            'forge.laravel.com' => $factory::response('', HttpResponse::HTTP_OK),
         ]);
 
         $response = $this->factory->post('http://vapor.laravel.com');
@@ -190,9 +204,11 @@ class HttpClientTest extends TestCase
 
     public function testRequestTimeoutRequest()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'vapor.laravel.com' => $this->factory::response('', HttpResponse::HTTP_REQUEST_TIMEOUT),
-            'forge.laravel.com' => $this->factory::response('', HttpResponse::HTTP_OK),
+            'vapor.laravel.com' => $factory::response('', HttpResponse::HTTP_REQUEST_TIMEOUT),
+            'forge.laravel.com' => $factory::response('', HttpResponse::HTTP_OK),
         ]);
 
         $response = $this->factory->post('http://vapor.laravel.com');
@@ -204,9 +220,11 @@ class HttpClientTest extends TestCase
 
     public function testConflictResponseRequest()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'vapor.laravel.com' => $this->factory::response('', HttpResponse::HTTP_CONFLICT),
-            'forge.laravel.com' => $this->factory::response('', HttpResponse::HTTP_OK),
+            'vapor.laravel.com' => $factory::response('', HttpResponse::HTTP_CONFLICT),
+            'forge.laravel.com' => $factory::response('', HttpResponse::HTTP_OK),
         ]);
 
         $response = $this->factory->post('http://vapor.laravel.com');
@@ -218,9 +236,11 @@ class HttpClientTest extends TestCase
 
     public function testUnprocessableEntityRequest()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'vapor.laravel.com' => $this->factory::response('', HttpResponse::HTTP_UNPROCESSABLE_ENTITY),
-            'forge.laravel.com' => $this->factory::response('', HttpResponse::HTTP_OK),
+            'vapor.laravel.com' => $factory::response('', HttpResponse::HTTP_UNPROCESSABLE_ENTITY),
+            'forge.laravel.com' => $factory::response('', HttpResponse::HTTP_OK),
         ]);
 
         $response = $this->factory->post('http://vapor.laravel.com');
@@ -232,9 +252,11 @@ class HttpClientTest extends TestCase
 
     public function testTooManyRequestsRequest()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'vapor.laravel.com' => $this->factory::response('', HttpResponse::HTTP_TOO_MANY_REQUESTS),
-            'forge.laravel.com' => $this->factory::response('', HttpResponse::HTTP_OK),
+            'vapor.laravel.com' => $factory::response('', HttpResponse::HTTP_TOO_MANY_REQUESTS),
+            'forge.laravel.com' => $factory::response('', HttpResponse::HTTP_OK),
         ]);
 
         $response = $this->factory->post('http://vapor.laravel.com');
@@ -272,8 +294,10 @@ class HttpClientTest extends TestCase
 
     public function testNotFoundResponse()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'laravel.com' => $this->factory::response('', 404),
+            'laravel.com' => $factory::response('', 404),
         ]);
 
         $response = $this->factory->post('http://laravel.com');
@@ -937,8 +961,9 @@ class HttpClientTest extends TestCase
 
     public function testOnErrorDoesntCallClosureOnInformational()
     {
-        $status = 0;
         $factory = $this->factory;
+
+        $status = 0;
         $client = $this->factory->fake([
             'laravel.com' => $factory::response('', 101),
         ]);
@@ -954,8 +979,9 @@ class HttpClientTest extends TestCase
 
     public function testOnErrorDoesntCallClosureOnSuccess()
     {
-        $status = 0;
         $factory = $this->factory;
+
+        $status = 0;
         $client = $this->factory->fake([
             'laravel.com' => $factory::response('', 201),
         ]);
@@ -971,8 +997,9 @@ class HttpClientTest extends TestCase
 
     public function testOnErrorDoesntCallClosureOnRedirection()
     {
-        $status = 0;
         $factory = $this->factory;
+
+        $status = 0;
         $client = $this->factory->fake([
             'laravel.com' => $factory::response('', 301),
         ]);
@@ -988,8 +1015,9 @@ class HttpClientTest extends TestCase
 
     public function testOnErrorCallsClosureOnClientError()
     {
-        $status = 0;
         $factory = $this->factory;
+
+        $status = 0;
         $client = $this->factory->fake([
             'laravel.com' => $factory::response('', 401),
         ]);
@@ -1005,8 +1033,9 @@ class HttpClientTest extends TestCase
 
     public function testOnErrorCallsClosureOnServerError()
     {
-        $status = 0;
         $factory = $this->factory;
+
+        $status = 0;
         $client = $this->factory->fake([
             'laravel.com' => $factory::response('', 501),
         ]);
@@ -1776,6 +1805,7 @@ class HttpClientTest extends TestCase
     public function testRequestExceptionIsThrownIfTheRequestFails()
     {
         $factory = $this->factory;
+
         $this->factory->fake([
             '*' => $factory::response('', 400),
         ]);
@@ -1795,6 +1825,7 @@ class HttpClientTest extends TestCase
     public function testRequestExceptionIsThrownWithCallbackIfTheRequestFails()
     {
         $factory = $this->factory;
+
         $this->factory->fake([
             '*' => $factory::response('', 400),
         ]);
@@ -1831,6 +1862,7 @@ class HttpClientTest extends TestCase
     public function testRequestExceptionIsThrowIfConditionIsSatisfied()
     {
         $factory = $this->factory;
+
         $this->factory->fake([
             '*' => $factory::response('', 400),
         ]);
@@ -1850,6 +1882,7 @@ class HttpClientTest extends TestCase
     public function testRequestExceptionIsNotThrownIfConditionIsNotSatisfied()
     {
         $factory = $this->factory;
+
         $this->factory->fake([
             '*' => $factory::response(['result' => ['foo' => 'bar']], 400),
         ]);
@@ -1915,8 +1948,10 @@ class HttpClientTest extends TestCase
 
     public function testRequestExceptionIsThrownIfStatusCodeIsSatisfied()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            '*' => $this->factory::response('', 400),
+            '*' => $factory::response('', 400),
         ]);
 
         $exception = null;
@@ -1933,14 +1968,16 @@ class HttpClientTest extends TestCase
 
     public function testRequestExceptionIsThrownIfStatusCodeIsSatisfiedWithClosure()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            '*' => $this->factory::response('', 400),
+            '*' => $factory::response('', 400),
         ]);
 
         $exception = null;
 
         try {
-            $this->factory->get('http://foo.com/api')->throwIfStatus(fn ($status) => $status === 400);
+            $this->factory->get('http://foo.com/api')->throwIfStatus(function ($status) { return $status === 400; });
         } catch (RequestException $e) {
             $exception = $e;
         }
@@ -1951,8 +1988,10 @@ class HttpClientTest extends TestCase
 
     public function testRequestExceptionIsNotThrownIfStatusCodeIsNotSatisfied()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            '*' => $this->factory::response('', 400),
+            '*' => $factory::response('', 400),
         ]);
 
         $exception = null;
@@ -1968,10 +2007,12 @@ class HttpClientTest extends TestCase
 
     public function testRequestExceptionIsThrownUnlessStatusCodeIsSatisfied()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'http://foo.com/api/400' => $this->factory::response('', 400),
-            'http://foo.com/api/408' => $this->factory::response('', 408),
-            'http://foo.com/api/500' => $this->factory::response('', 500),
+            'http://foo.com/api/400' => $factory::response('', 400),
+            'http://foo.com/api/408' => $factory::response('', 408),
+            'http://foo.com/api/500' => $factory::response('', 500),
         ]);
 
         $exception = null;
@@ -1988,15 +2029,15 @@ class HttpClientTest extends TestCase
         $exception = null;
 
         $this->factory->fake([
-            'http://foo.com/api/400' => $this->factory::response('', 400),
-            'http://foo.com/api/408' => $this->factory::response('', 408),
-            'http://foo.com/api/500' => $this->factory::response('', 500),
+            'http://foo.com/api/400' => $factory::response('', 400),
+            'http://foo.com/api/408' => $factory::response('', 408),
+            'http://foo.com/api/500' => $factory::response('', 500),
         ]);
 
         $exception = null;
 
         try {
-            $this->factory->get('http://foo.com/api/400')->throwUnlessStatus(fn ($status) => $status === 500);
+            $this->factory->get('http://foo.com/api/400')->throwUnlessStatus(function ($status) { return $status === 500; });
         } catch (RequestException $e) {
             $exception = $e;
         }
@@ -2028,11 +2069,13 @@ class HttpClientTest extends TestCase
 
     public function testRequestExceptionIsThrownIfIsClientError()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'http://foo.com/api/400' => $this->factory::response('', 400),
-            'http://foo.com/api/408' => $this->factory::response('', 408),
-            'http://foo.com/api/500' => $this->factory::response('', 500),
-            'http://foo.com/api/504' => $this->factory::response('', 504),
+            'http://foo.com/api/400' => $factory::response('', 400),
+            'http://foo.com/api/408' => $factory::response('', 408),
+            'http://foo.com/api/500' => $factory::response('', 500),
+            'http://foo.com/api/504' => $factory::response('', 504),
         ]);
 
         $exception = null;
@@ -2080,11 +2123,13 @@ class HttpClientTest extends TestCase
 
     public function testRequestExceptionIsThrownIfIsServerError()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'http://foo.com/api/400' => $this->factory::response('', 400),
-            'http://foo.com/api/408' => $this->factory::response('', 408),
-            'http://foo.com/api/500' => $this->factory::response('', 500),
-            'http://foo.com/api/504' => $this->factory::response('', 504),
+            'http://foo.com/api/400' => $factory::response('', 400),
+            'http://foo.com/api/408' => $factory::response('', 408),
+            'http://foo.com/api/500' => $factory::response('', 500),
+            'http://foo.com/api/504' => $factory::response('', 504),
         ]);
 
         $exception = null;

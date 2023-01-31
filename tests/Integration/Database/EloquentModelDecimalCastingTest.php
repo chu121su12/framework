@@ -57,6 +57,15 @@ class EloquentModelDecimalCastingTest_testItHandlesLargeNumbers_class extends Mo
             ];
         }
 
+class EloquentModelDecimalCastingTest_testItRounds_class extends Model
+        {
+            public $timestamps = false;
+
+            protected $casts = [
+                'amount' => 'decimal:2',
+            ];
+        }
+
 class EloquentModelDecimalCastingTest_testItTrimsLongValues_class extends Model
         {
             public $timestamps = false;
@@ -72,6 +81,13 @@ class EloquentModelDecimalCastingTest_testItDoesntRoundNumbers_class extends Mod
 
             protected $casts = [
                 'amount' => 'decimal:1',
+            ];
+        }
+
+class EloquentModelDecimalCastingTest_testRoundingDirection_class extends Model
+        {
+            protected $casts = [
+                'amount' => 'decimal:2',
             ];
         }
 
@@ -144,14 +160,7 @@ class EloquentModelDecimalCastingTest extends DatabaseTestCase
 
     public function testItRounds()
     {
-        $model = new class extends Model
-        {
-            public $timestamps = false;
-
-            protected $casts = [
-                'amount' => 'decimal:2',
-            ];
-        };
+        $model = new EloquentModelDecimalCastingTest_testItRounds_class;
 
         $model->amount = '0.8989898989';
         $this->assertSame('0.90', $model->amount);
@@ -197,12 +206,7 @@ class EloquentModelDecimalCastingTest extends DatabaseTestCase
 
     public function testRoundingDirection()
     {
-        $model = new class extends Model
-        {
-            protected $casts = [
-                'amount' => 'decimal:2',
-            ];
-        };
+        $model = new EloquentModelDecimalCastingTest_testRoundingDirection_class;
 
         $model->amount = '0.999';
         $this->assertSame('1.00', $model->amount);

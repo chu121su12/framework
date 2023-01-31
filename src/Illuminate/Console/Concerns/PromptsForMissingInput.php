@@ -34,15 +34,19 @@ trait PromptsForMissingInput
     protected function promptForMissingArguments(InputInterface $input, OutputInterface $output)
     {
         $prompted = collect($this->getDefinition()->getArguments())
-            ->filter(fn ($argument) => $argument->isRequired() && is_null($input->getArgument($argument->getName())))
-            ->filter(fn ($argument) => $argument->getName() !== 'command')
-            ->each(fn ($argument) => $input->setArgument(
-                $argument->getName(),
-                $this->askPersistently(
-                    $this->promptForMissingArgumentsUsing()[$argument->getName()] ??
-                    'What is '.lcfirst($argument->getDescription()).'?'
-                )
-            ))
+            ->filter(function ($argument) use ($input) { return $argument->isRequired() && is_null($input->getArgument($argument->getName())); })
+            ->filter(function ($argument) { return $argument->getName() !== 'command'; })
+            ->each(function ($argument) use ($input) {
+                $missingArgumentPrompts = $this->promptForMissingArgumentsUsing();
+
+                return $input->setArgument(
+                    $argument->getName(),
+                    $this->askPersistently(
+                        isset($missingArgumentPrompts[$argument->getName()]) ? $missingArgumentPrompts[$argument->getName()] :
+                        'What is '.lcfirst($argument->getDescription()).'?'
+                    )
+                );
+            })
             ->isNotEmpty();
 
         if ($prompted) {
@@ -81,7 +85,9 @@ trait PromptsForMissingInput
     protected function didReceiveOptions(InputInterface $input)
     {
         return collect($this->getDefinition()->getOptions())
-            ->reject(fn ($option) => $input->getOption($option->getName()) === $option->getDefault())
+            ->reject(function ($option) use ($input) {
+                return $input->getOption($option->getName()) === $option->getDefault();
+            })
             ->isNotEmpty();
     }
 

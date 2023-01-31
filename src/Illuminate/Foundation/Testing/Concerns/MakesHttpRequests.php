@@ -132,8 +132,11 @@ trait MakesHttpRequests
      * @param  string  $password
      * @return $this
      */
-    public function withBasicAuth(string $username, string $password)
+    public function withBasicAuth(/*string */$username, /*string */$password)
     {
+        $username = backport_type_check('string', $username);
+        $password = backport_type_check('string', $password);
+
         return $this->withToken(base64_encode("$username:$password"), 'Basic');
     }
 

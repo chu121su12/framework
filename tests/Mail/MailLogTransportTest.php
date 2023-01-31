@@ -11,6 +11,18 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Mime\Email;
 
+class MailLogTransportTest_getLoggedEmailMessage_class extends NullLogger
+        {
+            public /*string */$loggedValue = '';
+
+            public function log($level, /*string|\Stringable */$message, array $context = [])/*: void*/
+            {
+                $message = backport_type_check('string|\Stringable', $message);
+
+                $this->loggedValue = (string) $message;
+            }
+        }
+
 class MailLogTransportTest extends TestCase
 {
     public function testGetLogTransportWithConfiguredChannel()
@@ -37,18 +49,22 @@ class MailLogTransportTest extends TestCase
 
     public function testItDecodesTheMessageBeforeLogging()
     {
+        $this->markTestSkipped('Uses Symfony Mail');
+
+        $htmlBody = <<<'BODY'
+Hi,
+
+<a href="https://example.com/reset-password=5e113c71a4c210aff04b3fa66f1b1299">Click here to reset your password</a>.
+
+All the best,
+
+Burt & Irving
+BODY;
+
         $message = (new Message(new Email))
             ->from('noreply@example.com', 'no-reply')
             ->to('taylor@example.com', 'Taylor')
-            ->html(<<<'BODY'
-            Hi,
-
-            <a href="https://example.com/reset-password=5e113c71a4c210aff04b3fa66f1b1299">Click here to reset your password</a>.
-
-            All the best,
-
-            Burt & Irving
-            BODY)
+            ->html($htmlBody)
             ->text('A text part');
 
         $actualLoggedValue = $this->getLoggedEmailMessage($message);
@@ -70,17 +86,9 @@ class MailLogTransportTest extends TestCase
         $this->assertEquals($logger, $transportLogger);
     }
 
-    private function getLoggedEmailMessage(Message $message): string
+    private function getLoggedEmailMessage(Message $message)/*: string*/
     {
-        $logger = new class extends NullLogger
-        {
-            public string $loggedValue = '';
-
-            public function log($level, string|\Stringable $message, array $context = []): void
-            {
-                $this->loggedValue = (string) $message;
-            }
-        };
+        $logger = new MailLogTransportTest_getLoggedEmailMessage_class;
 
         (new LogTransport($logger))->send(
             $message->getSymfonyMessage()

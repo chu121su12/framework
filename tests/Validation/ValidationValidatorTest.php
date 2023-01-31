@@ -227,6 +227,60 @@ class ValidationValidatorTest_testInlineValidationMessagesForRuleObjectsAreRespe
             }
         }
 
+class ValidationValidatorTest_prohibitedRulesData_class implements Countable
+        {
+            #[\ReturnTypeWillChange]
+            public function count()/*: int*/
+            {
+                return 0;
+            }
+        }
+
+class ValidationValidatorTest_testValidateMissing_class implements Countable
+        {
+            #[\ReturnTypeWillChange]
+            public function count()/*: int*/
+            {
+                return 0;
+            }
+        }
+
+class ValidationValidatorTest_testValidateMissingIf_class implements Countable
+        {
+            #[\ReturnTypeWillChange]
+            public function count()/*: int*/
+            {
+                return 0;
+            }
+        }
+
+class ValidationValidatorTest_testValidateMissingUnless_class implements Countable
+        {
+            #[\ReturnTypeWillChange]
+            public function count()/*: int*/
+            {
+                return 0;
+            }
+        }
+
+class ValidationValidatorTest_testValidateMissingWith_class implements Countable
+        {
+            #[\ReturnTypeWillChange]
+            public function count()/*: int*/
+            {
+                return 0;
+            }
+        }
+
+class ValidationValidatorTest_testValidateMissingWithAll_class implements Countable
+        {
+            #[\ReturnTypeWillChange]
+            public function count()/*: int*/
+            {
+                return 0;
+            }
+        }
+
 class ValidationValidatorTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -1831,13 +1885,7 @@ class ValidationValidatorTest extends TestCase
 
     public function prohibitedRulesData()
     {
-        $emptyCountable = new class implements Countable
-        {
-            public function count(): int
-            {
-                return 0;
-            }
-        };
+        $emptyCountable = new ValidationValidatorTest_prohibitedRulesData_class;
 
         return [
             // prohibited...
@@ -2446,13 +2494,9 @@ class ValidationValidatorTest extends TestCase
         $this->assertFalse($v->passes());
         $this->assertSame('The foo field must be missing.', $v->errors()->first('foo'));
 
-        $v = new Validator($trans, ['foo' => new class implements Countable
-        {
-            public function count(): int
-            {
-                return 0;
-            }
-        }, ], ['foo' => 'missing']);
+        $v = new Validator($trans, ['foo' =>
+            new ValidationValidatorTest_testValidateMissing_class
+        , ], ['foo' => 'missing']);
         $this->assertFalse($v->passes());
         $this->assertSame('The foo field must be missing.', $v->errors()->first('foo'));
 
@@ -2485,13 +2529,9 @@ class ValidationValidatorTest extends TestCase
         $this->assertFalse($v->passes());
         $this->assertSame('The foo field must be missing when bar is 1.', $v->errors()->first('foo'));
 
-        $v = new Validator($trans, ['foo' => new class implements Countable
-        {
-            public function count(): int
-            {
-                return 0;
-            }
-        }, 'bar' => '1', ], ['foo' => 'missing_if:bar,1']);
+        $v = new Validator($trans, ['foo' =>
+            new ValidationValidatorTest_testValidateMissingIf_class
+        , 'bar' => '1', ], ['foo' => 'missing_if:bar,1']);
         $this->assertFalse($v->passes());
         $this->assertSame('The foo field must be missing when bar is 1.', $v->errors()->first('foo'));
 
@@ -2524,13 +2564,9 @@ class ValidationValidatorTest extends TestCase
         $this->assertFalse($v->passes());
         $this->assertSame('The foo field must be missing unless bar is 2.', $v->errors()->first('foo'));
 
-        $v = new Validator($trans, ['foo' => new class implements Countable
-        {
-            public function count(): int
-            {
-                return 0;
-            }
-        }, 'bar' => '2', ], ['foo' => 'missing_unless:bar,1']);
+        $v = new Validator($trans, ['foo' =>
+            new ValidationValidatorTest_testValidateMissingUnless_class
+        , 'bar' => '2', ], ['foo' => 'missing_unless:bar,1']);
         $this->assertFalse($v->passes());
         $this->assertSame('The foo field must be missing unless bar is 2.', $v->errors()->first('foo'));
 
@@ -2563,13 +2599,9 @@ class ValidationValidatorTest extends TestCase
         $this->assertFalse($v->passes());
         $this->assertSame('The foo field must be missing when baz / bar is present.', $v->errors()->first('foo'));
 
-        $v = new Validator($trans, ['foo' => new class implements Countable
-        {
-            public function count(): int
-            {
-                return 0;
-            }
-        }, 'bar' => '2', ], ['foo' => 'missing_with:baz,bar']);
+        $v = new Validator($trans, ['foo' =>
+            new ValidationValidatorTest_testValidateMissingWith_class
+        , 'bar' => '2', ], ['foo' => 'missing_with:baz,bar']);
         $this->assertFalse($v->passes());
         $this->assertSame('The foo field must be missing when baz / bar is present.', $v->errors()->first('foo'));
 
@@ -2602,13 +2634,9 @@ class ValidationValidatorTest extends TestCase
         $this->assertFalse($v->passes());
         $this->assertSame('The foo field must be missing when baz / bar are present.', $v->errors()->first('foo'));
 
-        $v = new Validator($trans, ['foo' => new class implements Countable
-        {
-            public function count(): int
-            {
-                return 0;
-            }
-        }, 'bar' => '2', 'baz' => '2', ], ['foo' => 'missing_with_all:baz,bar']);
+        $v = new Validator($trans, ['foo' =>
+            new ValidationValidatorTest_testValidateMissingWithAll_class
+        , 'bar' => '2', 'baz' => '2', ], ['foo' => 'missing_with_all:baz,bar']);
         $this->assertFalse($v->passes());
         $this->assertSame('The foo field must be missing when baz / bar are present.', $v->errors()->first('foo'));
 

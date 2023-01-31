@@ -28,8 +28,10 @@ class InvokedProcessPool
      * @param  int  $signal
      * @return \Illuminate\Support\Collection
      */
-    public function signal(int $signal)
+    public function signal(/*int */$signal)
     {
+        $signal = backport_type_check('int', $signal);
+
         return $this->running()->each->signal($signal);
     }
 

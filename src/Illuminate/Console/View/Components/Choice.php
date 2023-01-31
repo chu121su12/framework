@@ -19,11 +19,11 @@ class Choice extends Component
     public function render($question, $choices, $default = null, $attempts = null, $multiple = false)
     {
         return $this->usingQuestionHelper(
-            fn () => $this->output->askQuestion(
+            function () use ($question, $choices, $default, $attempts, $multiple) { return $this->output->askQuestion(
                 (new ChoiceQuestion($question, $choices, $default))
                     ->setMaxAttempts($attempts)
                     ->setMultiselect($multiple)
-            ),
+            ); }
         );
     }
 }

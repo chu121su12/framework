@@ -8,6 +8,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use UnhandledMatchError;
 
 #[AsCommand(name: 'make:test')]
 class TestMakeCommand extends GeneratorCommand
@@ -130,13 +131,27 @@ class TestMakeCommand extends GeneratorCommand
             'unit',
             'pest feature',
             'pest unit',
-        ], default: 0);
+        ], /*default: */0);
 
-        match ($type) {
-            'feature' => null,
-            'unit' => $input->setOption('unit', true),
-            'pest feature' => $input->setOption('pest', true),
-            'pest unit' => tap($input)->setOption('pest', true)->setOption('unit', true),
+        switch ($type) {
+            case 'feature':
+                null;
+                break;
+
+            case 'unit':
+                $input->setOption('unit', true);
+                break;
+
+            case 'pest feature':
+                $input->setOption('pest', true);
+                break;
+
+            case 'pest unit':
+                tap($input)->setOption('pest', true)->setOption('unit', true);
+                break;
+
+            default:
+                throw new UnhandledMatchError;
         };
     }
 }

@@ -3,6 +3,7 @@
 namespace Illuminate\Console\Process;
 
 use Closure;
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Support\Str;
 use LogicException;
 use RuntimeException;
@@ -98,8 +99,10 @@ class PendingProcess
      * @param  array<array-key, string>|string  $command
      * @return $this
      */
-    public function command(array|string $command)
+    public function command(/*array|string */$command)
     {
+        $command = backport_type_check('array|string', $command);
+
         $this->command = $command;
 
         return $this;
@@ -111,8 +114,10 @@ class PendingProcess
      * @param  string  $path
      * @return $this
      */
-    public function path(string $path)
+    public function path(/*string */$path)
     {
+        $path = backport_type_check('string', $path);
+
         $this->path = $path;
 
         return $this;
@@ -124,8 +129,10 @@ class PendingProcess
      * @param  int  $timeout
      * @return $this
      */
-    public function timeout(int $timeout)
+    public function timeout(/*int */$timeout)
     {
+        $timeout = backport_type_check('int', $timeout);
+
         $this->timeout = $timeout;
 
         return $this;
@@ -137,8 +144,10 @@ class PendingProcess
      * @param  int  $timeout
      * @return $this
      */
-    public function idleTimeout(int $timeout)
+    public function idleTimeout(/*int */$timeout)
     {
+        $timeout = backport_type_check('int', $timeout);
+
         $this->idleTimeout = $timeout;
 
         return $this;
@@ -186,8 +195,10 @@ class PendingProcess
      * @param  bool  $tty
      * @return $this
      */
-    public function tty(bool $tty = true)
+    public function tty(/*bool */$tty = true)
     {
+        $tty = backport_type_check('bool', $tty);
+
         $this->tty = $tty;
 
         return $this;
@@ -213,8 +224,10 @@ class PendingProcess
      * @param  callable|null  $output
      * @return \Illuminate\Contracts\Console\Process\ProcessResult
      */
-    public function run(array|string $command = null, callable $output = null)
+    public function run(/*array|string */$command = null, callable $output = null)
     {
+        $command = backport_type_check('array|string', $command);
+
         $this->command = $command ?: $this->command;
 
         try {
@@ -241,8 +254,10 @@ class PendingProcess
      * @param  callable  $output
      * @return \Illuminate\Console\Process\InvokedProcess
      */
-    public function start(array|string $command = null, callable $output = null)
+    public function start(/*array|string */$command = null, callable $output = null)
     {
+        $command = backport_type_check('array|string', $command);
+
         $this->command = $command ?: $this->command;
 
         $process = $this->toSymfonyProcess($command);
@@ -264,15 +279,17 @@ class PendingProcess
      * @param  array<array-key, string>|string|null  $command
      * @return \Symfony\Component\Process\Process
      */
-    protected function toSymfonyProcess(array|string|null $command)
+    protected function toSymfonyProcess(/*array|string|null */$command = null)
     {
-        $command = $command ?? $this->command;
+        $command = backport_type_check('array|string|null', $command);
+
+        $command = isset($command) ? $command : $this->command;
 
         $process = is_iterable($command)
                 ? new Process($command, null, $this->environment)
-                : Process::fromShellCommandline((string) $command, null, $this->environment);
+                : SymfonyHelper::processFromShellCommandline((string) $command, null, $this->environment);
 
-        $process->setWorkingDirectory((string) ($this->path ?? getcwd()));
+        $process->setWorkingDirectory((string) (isset($this->path) ? $this->path : getcwd()));
         $process->setTimeout($this->timeout);
 
         if ($this->idleTimeout) {
@@ -313,10 +330,12 @@ class PendingProcess
      * @param  string  $command
      * @return \Closure|null
      */
-    protected function fakeFor(string $command)
+    protected function fakeFor(/*string */$command)
     {
+        $command = backport_type_check('string', $command);
+
         return collect($this->fakeHandlers)
-                ->first(fn ($handler, $pattern) => Str::is($pattern, $command));
+                ->first(function ($handler, $pattern) use ($command) { return Str::is($pattern, $command); });
     }
 
     /**
@@ -326,12 +345,18 @@ class PendingProcess
      * @param  \Closure  $fake
      * @return mixed
      */
-    protected function resolveSynchronousFake(string $command, Closure $fake)
+    protected function resolveSynchronousFake(/*string */$command, Closure $fake)
     {
+        $command = backport_type_check('string', $command);
+
         $result = $fake($this);
 
         if (is_string($result) || is_array($result)) {
-            return (new FakeProcessResult(output: $result))->withCommand($command);
+            return (new FakeProcessResult(
+                '',
+                0,
+                /*output: */$result
+            ))->withCommand($command);
         } elseif ($result instanceof ProcessResult) {
             return $result;
         } elseif ($result instanceof FakeProcessResult) {
@@ -339,7 +364,7 @@ class PendingProcess
         } elseif ($result instanceof FakeProcessDescription) {
             return $result->toProcessResult($command);
         } elseif ($result instanceof FakeProcessSequence) {
-            return $this->resolveSynchronousFake($command, fn () => $result());
+            return $this->resolveSynchronousFake($command, function () use ($result) { return $result(); });
         }
 
         throw new LogicException('Unsupported synchronous process fake result provided.');
@@ -353,12 +378,21 @@ class PendingProcess
      * @param  \Closure  $fake
      * @return \Illuminate\Console\Process\FakeInvokedProcess
      */
-    protected function resolveAsynchronousFake(string $command, ?callable $output, Closure $fake)
+    protected function resolveAsynchronousFake(/*string */$command, /*?callable */$output, Closure $fake)
     {
+        $command = backport_type_check('string', $command);
+
+        $command = backport_type_check('string', $command);
+        $output = backport_type_check('?callable', $output);
+
         $result = $fake($this);
 
         if (is_string($result) || is_array($result)) {
-            $result = new FakeProcessResult(output: $result);
+            $result = new FakeProcessResult(
+                '',
+                0,
+                /*output: */$result
+            );
         }
 
         if ($result instanceof ProcessResult) {
@@ -367,7 +401,7 @@ class PendingProcess
                 (new FakeProcessDescription)
                     ->replaceOutput($result->output())
                     ->replaceErrorOutput($result->errorOutput())
-                    ->runsFor(iterations: 0)
+                    ->runsFor(/*iterations: */0)
                     ->exitCode($result->exitCode())
             ))->withOutputHandler($output);
         } elseif ($result instanceof FakeProcessResult) {
@@ -376,13 +410,13 @@ class PendingProcess
                 (new FakeProcessDescription)
                     ->replaceOutput($result->output())
                     ->replaceErrorOutput($result->errorOutput())
-                    ->runsFor(iterations: 0)
+                    ->runsFor(/*iterations: */0)
                     ->exitCode($result->exitCode())
             ))->withOutputHandler($output);
         } elseif ($result instanceof FakeProcessDescription) {
             return (new FakeInvokedProcess($command, $result))->withOutputHandler($output);
         } elseif ($result instanceof FakeProcessSequence) {
-            return $this->resolveAsynchronousFake($command, $output, fn () => $result());
+            return $this->resolveAsynchronousFake($command, $output, function () use ($result) { return $result(); });
         }
 
         throw new LogicException('Unsupported asynchronous process fake result provided.');
