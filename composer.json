@@ -45,6 +45,7 @@
         "vlucas/phpdotenv": "^4.0"
     },
     "replace": {
+        "brick/math": "^0.10.0",
         "fruitcake/php-cors": "^1.2.0",
         "inertiajs/inertia-laravel": "^0.6.3",
         "laravel/breeze": "^1.11.1",
@@ -191,6 +192,7 @@
             "Laravel\\Jetstream\\": "cr/ext/laravel/jetstream/src/",
             "Laravel\\Ui\\": "cr/patch/laravel-ui/src/",
 
+            "Brick\\Math\\": "cr/ext/brick/math/src/",
             "Carbon\\": "cr/ext/nesbot/carbon/src/Carbon/",
             "desktopd\\": "cr/patch/php-sha3-streamable/namespaced/desktopd/",
             "Doctrine\\": "cr/patch/doctrine/doctrine/",
