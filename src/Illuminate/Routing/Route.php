@@ -1001,6 +1001,7 @@ class Route
         return is_string($missing) &&
             Str::startsWith($missing, [
                 'O:47:"Laravel\\SerializableClosure\\SerializableClosure',
+                'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure',
             ]) ? backport_unserialize($missing) : $missing;
     }
 
@@ -1349,13 +1350,13 @@ class Route
     {
         if ($this->action['uses'] instanceof Closure) {
             $this->action['uses'] = backport_serialize(
-                new SerializableClosure($this->action['uses'])
+                SerializableClosure::unsigned($this->action['uses'])
             );
         }
 
         if (isset($this->action['missing']) && $this->action['missing'] instanceof Closure) {
             $this->action['missing'] = backport_serialize(
-                new SerializableClosure($this->action['missing'])
+                SerializableClosure::unsigned($this->action['missing'])
             );
         }
 
