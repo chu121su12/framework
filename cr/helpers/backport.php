@@ -1,7 +1,6 @@
 <?php
 
 use desktopd\SHA3\Sponge as SHA3;
-use Illuminate\Support\Arr;
 use Laravel\SerializableClosure\SerializableClosure;
 use Opis\Closure\SerializableClosure as OpisSerializableClosure;
 
@@ -355,7 +354,8 @@ if (! \function_exists('backport_call_callable')) {
 if (! \function_exists('backport_named_arguments')) {
     function backport_named_arguments($placeholders, array $arguments)
     {
-        if (Arr::isList($arguments)) {
+        $keys = array_keys($arguments);
+        if (array_keys($keys) === $keys) {
             return $arguments;
         }
 
