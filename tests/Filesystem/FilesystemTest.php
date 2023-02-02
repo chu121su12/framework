@@ -20,7 +20,11 @@ class FilesystemTest extends TestCase
     public static function setUpTempDir()
     {
         self::$tempDir = sys_get_temp_dir().'/tmp'.time();
-        mkdir(self::$tempDir);
+
+        $path = realpath(self::$tempDir);
+        if (!($path !== false && is_dir($path))) {
+            mkdir(self::$tempDir);
+        }
     }
 
     /**
