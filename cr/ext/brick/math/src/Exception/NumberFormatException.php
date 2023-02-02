@@ -1,6 +1,6 @@
 <?php
 
-////declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Brick\Math\Exception;
 
@@ -16,9 +16,9 @@ class NumberFormatException extends MathException
      *
      * @psalm-pure
      */
-    public static function charNotInAlphabet(/*string */$char)//// : self
+    public static function charNotInAlphabet(/*string */$char)/* : self*/
     {
-        $char = cast_to_string($char);
+        $char = backport_type_check('string', $char);
 
         $ord = \ord($char);
 

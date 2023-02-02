@@ -1,6 +1,6 @@
 <?php
 
-////declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Brick\Math;
 
@@ -57,8 +57,15 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      *
      * @psalm-pure
      */
-    public static function of($value)// : BigNumber
+    public static function of(/*BigNumber|int|float|string */$value)/* : BigNumber*/
     {
+        $value = backport_type_check([
+            BigNumber::class,
+            'int',
+            'float',
+            'string',
+        ], $value);
+
         if ($value instanceof BigNumber) {
             return $value;
         }
@@ -67,8 +74,7 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
             return new BigInteger((string) $value);
         }
 
-        /** @psalm-suppress RedundantCastGivenDocblockType We cannot trust the untyped $value here! */
-        $value = \is_float($value) ? self::floatToString($value) : (string) $value;
+        $value = \is_float($value) ? self::floatToString($value) : $value;
 
         $throw = static function() use ($value)/* : void*/ {
             throw new NumberFormatException(\sprintf(
@@ -82,7 +88,7 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
         }
 
         $getMatch = static function(/*string */$value) use ($matches)/* : ?string*/ {
-            $value = cast_to_string($value);
+            $value = backport_type_check('string', $value);
 
             return isset($matches[$value]) && $matches[$value] !== '' ? $matches[$value] : null;
         };
@@ -164,9 +170,9 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      * @psalm-pure
      * @psalm-suppress ImpureFunctionCall
      */
-    private static function floatToString(/*float */$float)//// : string
+    private static function floatToString(/*float */$float)/* : string*/
     {
-        $float = cast_to_float($float);
+        $float = backport_type_check('float', $float);
 
         $currentLocale = \setlocale(LC_NUMERIC, '0');
         \setlocale(LC_NUMERIC, 'C');
@@ -179,21 +185,44 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
     }
 
     /**
-     * Proxy method to access protected constructors from sibling classes.
+     * Proxy method to access BigInteger's protected constructor from sibling classes.
      *
      * @internal
-     *
-     * @param mixed ...$args The arguments to the constructor.
-     *
-     * @return static
-     *
      * @psalm-pure
-     * @psalm-suppress TooManyArguments
-     * @psalm-suppress UnsafeInstantiation
      */
-    protected static function create(... $args)// : BigNumber
+    protected function newBigInteger(/*string */$value)/* : BigInteger*/
     {
-        return new static(... $args);
+        $value = backport_type_check('string', $value);
+
+        return new BigInteger($value);
+    }
+
+    /**
+     * Proxy method to access BigDecimal's protected constructor from sibling classes.
+     *
+     * @internal
+     * @psalm-pure
+     */
+    protected function newBigDecimal(/*string */$value, /*int */$scale = 0)/* : BigDecimal*/
+    {
+        $value = backport_type_check('string', $value);
+
+        $scale = backport_type_check('int', $scale);
+
+        return new BigDecimal($value, $scale);
+    }
+
+    /**
+     * Proxy method to access BigRational's protected constructor from sibling classes.
+     *
+     * @internal
+     * @psalm-pure
+     */
+    protected function newBigRational(BigInteger $numerator, BigInteger $denominator, /*bool */$checkDenominator)/* : BigRational*/
+    {
+        $checkDenominator = backport_type_check('bool', $checkDenominator);
+
+        return new BigRational($numerator, $denominator, $checkDenominator);
     }
 
     /**
@@ -211,8 +240,15 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-pure
      */
-    public static function min(...$values)// : BigNumber
+    public static function min(/*BigNumber|int|float|string */...$values)/* : static*/
     {
+        $values = backport_array_type_check([
+            BigNumber::class,
+            'int',
+            'float',
+            'string',
+        ], $values);
+
         $min = null;
 
         foreach ($values as $value) {
@@ -245,8 +281,15 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-pure
      */
-    public static function max(...$values)// : BigNumber
+    public static function max(/*BigNumber|int|float|string */...$values)/* : static*/
     {
+        $values = backport_array_type_check([
+            BigNumber::class,
+            'int',
+            'float',
+            'string',
+        ], $values);
+
         $max = null;
 
         foreach ($values as $value) {
@@ -275,13 +318,18 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      * @throws \InvalidArgumentException If no values are given.
      * @throws MathException             If an argument is not valid.
      *
-     * @psalm-suppress LessSpecificReturnStatement
-     * @psalm-suppress MoreSpecificReturnType
      * @psalm-pure
      */
-    public static function sum(...$values)// : BigNumber
+    public static function sum(/*BigNumber|int|float|string */...$values)/* : static*/
     {
-        /** @var BigNumber|null $sum */
+        $values = backport_array_type_check([
+            BigNumber::class,
+            'int',
+            'float',
+            'string',
+        ], $values);
+
+        /** @var static|null $sum */
         $sum = null;
 
         foreach ($values as $value) {
@@ -305,14 +353,11 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      *       depending on their ability to perform the operation. This will also require a version bump because we're
      *       potentially breaking custom BigNumber implementations (if any...)
      *
-     * @param BigNumber $a
-     * @param BigNumber $b
-     *
      * @return BigNumber
      *
      * @psalm-pure
      */
-    private static function add(BigNumber $a, BigNumber $b)// : BigNumber
+    private static function add(BigNumber $a, BigNumber $b)/* : BigNumber*/
     {
         if ($a instanceof BigRational) {
             return $a->plus($b);
@@ -344,9 +389,9 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      *
      * @psalm-pure
      */
-    private static function cleanUp(/*string */$number)//// : string
+    private static function cleanUp(/*string */$number)/* : string*/
     {
-        $number = cast_to_string($number);
+        $number = backport_type_check('string', $number);
 
         $firstChar = $number[0];
 
@@ -374,8 +419,15 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      *
      * @return bool
      */
-    public function isEqualTo($that)//// : bool
+    public function isEqualTo(/*BigNumber|int|float|string */$that)/* : bool*/
     {
+        $that = backport_type_check([
+            BigNumber::class,
+            'int',
+            'float',
+            'string',
+        ], $that);
+
         return $this->compareTo($that) === 0;
     }
 
@@ -386,8 +438,15 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      *
      * @return bool
      */
-    public function isLessThan($that)//// : bool
+    public function isLessThan(/*BigNumber|int|float|string */$that)/* : bool*/
     {
+        $that = backport_type_check([
+            BigNumber::class,
+            'int',
+            'float',
+            'string',
+        ], $that);
+
         return $this->compareTo($that) < 0;
     }
 
@@ -398,8 +457,15 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      *
      * @return bool
      */
-    public function isLessThanOrEqualTo($that)//// : bool
+    public function isLessThanOrEqualTo(/*BigNumber|int|float|string */$that)/* : bool*/
     {
+        $that = backport_type_check([
+            BigNumber::class,
+            'int',
+            'float',
+            'string',
+        ], $that);
+
         return $this->compareTo($that) <= 0;
     }
 
@@ -410,8 +476,15 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      *
      * @return bool
      */
-    public function isGreaterThan($that)//// : bool
+    public function isGreaterThan(/*BigNumber|int|float|string */$that)/* : bool*/
     {
+        $that = backport_type_check([
+            BigNumber::class,
+            'int',
+            'float',
+            'string',
+        ], $that);
+
         return $this->compareTo($that) > 0;
     }
 
@@ -422,8 +495,15 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      *
      * @return bool
      */
-    public function isGreaterThanOrEqualTo($that)//// : bool
+    public function isGreaterThanOrEqualTo(/*BigNumber|int|float|string */$that)/* : bool*/
     {
+        $that = backport_type_check([
+            BigNumber::class,
+            'int',
+            'float',
+            'string',
+        ], $that);
+
         return $this->compareTo($that) >= 0;
     }
 
@@ -432,7 +512,7 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      *
      * @return bool
      */
-    public function isZero()//// : bool
+    public function isZero()/* : bool*/
     {
         return $this->getSign() === 0;
     }
@@ -442,7 +522,7 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      *
      * @return bool
      */
-    public function isNegative()//// : bool
+    public function isNegative()/* : bool*/
     {
         return $this->getSign() < 0;
     }
@@ -452,7 +532,7 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      *
      * @return bool
      */
-    public function isNegativeOrZero()//// : bool
+    public function isNegativeOrZero()/* : bool*/
     {
         return $this->getSign() <= 0;
     }
@@ -462,7 +542,7 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      *
      * @return bool
      */
-    public function isPositive()//// : bool
+    public function isPositive()/* : bool*/
     {
         return $this->getSign() > 0;
     }
@@ -472,7 +552,7 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      *
      * @return bool
      */
-    public function isPositiveOrZero()//// : bool
+    public function isPositiveOrZero()/* : bool*/
     {
         return $this->getSign() >= 0;
     }
@@ -493,7 +573,7 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
      *
      * @throws MathException If the number is not valid.
      */
-    abstract public function compareTo($that)/* : int*/;
+    abstract public function compareTo(/*BigNumber|int|float|string */$that)/* : int*/;
 
     /**
      * Converts this number to a BigInteger.
@@ -571,7 +651,7 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function jsonSerialize()//// : string
+    public function jsonSerialize()/* : string*/
     {
         return $this->__toString();
     }

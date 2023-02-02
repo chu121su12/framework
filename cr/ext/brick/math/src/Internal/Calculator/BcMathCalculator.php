@@ -1,6 +1,6 @@
 <?php
 
-////declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Brick\Math\Internal\Calculator;
 
@@ -18,11 +18,11 @@ class BcMathCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function add(/*string */$a, /*string */$b)//// : string
+    public function add(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return \bcadd($a, $b, 0);
     }
@@ -30,11 +30,11 @@ class BcMathCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function sub(/*string */$a, /*string */$b)//// : string
+    public function sub(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return \bcsub($a, $b, 0);
     }
@@ -42,11 +42,11 @@ class BcMathCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function mul(/*string */$a, /*string */$b)//// : string
+    public function mul(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return \bcmul($a, $b, 0);
     }
@@ -57,11 +57,11 @@ class BcMathCalculator extends Calculator
      * @psalm-suppress InvalidNullableReturnType
      * @psalm-suppress NullableReturnStatement
      */
-    public function divQ(/*string */$a, /*string */$b)//// : string
+    public function divQ(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return \bcdiv($a, $b, 0);
     }
@@ -72,11 +72,11 @@ class BcMathCalculator extends Calculator
      * @psalm-suppress InvalidNullableReturnType
      * @psalm-suppress NullableReturnStatement
      */
-    public function divR(/*string */$a, /*string */$b)//// : string
+    public function divR(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return backport_bcmod($a, $b, 0);
         // if (version_compare(PHP_VERSION, '7.2') >= 0) {
@@ -89,11 +89,11 @@ class BcMathCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function divQR(/*string */$a, /*string */$b)//// : array
+    public function divQR(/*string */$a, /*string */$b)/* : array*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         $q = \bcdiv($a, $b, 0);
 
@@ -113,11 +113,11 @@ class BcMathCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function pow(/*string */$a, /*int */$e)//// : string
+    public function pow(/*string */$a, /*int */$e)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $e = cast_to_int($e);
+        $e = backport_type_check('int', $e);
 
         return \bcpow($a, (string) $e, 0);
     }
@@ -128,13 +128,13 @@ class BcMathCalculator extends Calculator
      * @psalm-suppress InvalidNullableReturnType
      * @psalm-suppress NullableReturnStatement
      */
-    public function modPow(/*string */$base, /*string */$exp, /*string */$mod)//// : string
+    public function modPow(/*string */$base, /*string */$exp, /*string */$mod)/* : string*/
     {
-        $base = cast_to_string($base);
+        $base = backport_type_check('string', $base);
 
-        $exp = cast_to_string($exp);
+        $exp = backport_type_check('string', $exp);
 
-        $mod = cast_to_string($mod);
+        $mod = backport_type_check('string', $mod);
 
         return \bcpowmod($base, $exp, $mod, 0);
     }
@@ -142,12 +142,12 @@ class BcMathCalculator extends Calculator
     /**
      * {@inheritDoc}
      *
-     * @psalm-suppress NullableReturnStatement
      * @psalm-suppress InvalidNullableReturnType
+     * @psalm-suppress NullableReturnStatement
      */
-    public function sqrt(/*string */$n)//// : string
+    public function sqrt(/*string */$n)/* : string*/
     {
-        $n = cast_to_string($n);
+        $n = backport_type_check('string', $n);
 
         return \bcsqrt($n, 0);
     }

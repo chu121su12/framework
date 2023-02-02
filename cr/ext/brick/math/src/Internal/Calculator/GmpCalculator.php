@@ -1,6 +1,6 @@
 <?php
 
-////declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Brick\Math\Internal\Calculator;
 
@@ -18,11 +18,11 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function add(/*string */$a, /*string */$b)//// : string
+    public function add(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return \gmp_strval(\gmp_add($a, $b));
     }
@@ -30,11 +30,11 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function sub(/*string */$a, /*string */$b)//// : string
+    public function sub(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return \gmp_strval(\gmp_sub($a, $b));
     }
@@ -42,11 +42,11 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function mul(/*string */$a, /*string */$b)//// : string
+    public function mul(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return \gmp_strval(\gmp_mul($a, $b));
     }
@@ -54,11 +54,11 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function divQ(/*string */$a, /*string */$b)//// : string
+    public function divQ(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return \gmp_strval(\gmp_div_q($a, $b));
     }
@@ -66,11 +66,11 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function divR(/*string */$a, /*string */$b)//// : string
+    public function divR(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return \gmp_strval(\gmp_div_r($a, $b));
     }
@@ -78,11 +78,11 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function divQR(/*string */$a, /*string */$b)//// : array
+    public function divQR(/*string */$a, /*string */$b)/* : array*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         list($q, $r) = \gmp_div_qr($a, $b);
 
@@ -95,11 +95,11 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function pow(/*string */$a, /*int */$e)//// : string
+    public function pow(/*string */$a, /*int */$e)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $e = cast_to_int($e);
+        $e = backport_type_check('int', $e);
 
         return \gmp_strval(\gmp_pow($a, $e));
     }
@@ -107,11 +107,11 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function modInverse(/*string */$x, /*string */$m)//// : ?string
+    public function modInverse(/*string */$x, /*string */$m)/* : ?string*/
     {
-        $x = cast_to_string($x);
+        $x = backport_type_check('string', $x);
 
-        $m = cast_to_string($m);
+        $m = backport_type_check('string', $m);
 
         $result = \gmp_invert($x, $m);
 
@@ -125,13 +125,13 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function modPow(/*string */$base, /*string */$exp, /*string */$mod)//// : string
+    public function modPow(/*string */$base, /*string */$exp, /*string */$mod)/* : string*/
     {
-        $base = cast_to_string($base);
+        $base = backport_type_check('string', $base);
 
-        $exp = cast_to_string($exp);
+        $exp = backport_type_check('string', $exp);
 
-        $mod = cast_to_string($mod);
+        $mod = backport_type_check('string', $mod);
 
         return \gmp_strval(\gmp_powm($base, $exp, $mod));
     }
@@ -139,11 +139,11 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function gcd(/*string */$a, /*string */$b)//// : string
+    public function gcd(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return \gmp_strval(\gmp_gcd($a, $b));
     }
@@ -151,11 +151,11 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function fromBase(/*string */$number, /*int */$base)//// : string
+    public function fromBase(/*string */$number, /*int */$base)/* : string*/
     {
-        $number = cast_to_string($number);
+        $number = backport_type_check('string', $number);
 
-        $base = cast_to_int($base);
+        $base = backport_type_check('int', $base);
 
         return \gmp_strval(\gmp_init($number, $base));
     }
@@ -163,11 +163,11 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function toBase(/*string */$number, /*int */$base)//// : string
+    public function toBase(/*string */$number, /*int */$base)/* : string*/
     {
-        $number = cast_to_string($number);
+        $number = backport_type_check('string', $number);
 
-        $base = cast_to_int($base);
+        $base = backport_type_check('int', $base);
 
         return \gmp_strval($number, $base);
     }
@@ -175,11 +175,11 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function and_(/*string */$a, /*string */$b)//// : string
+    public function and_(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return \gmp_strval(\gmp_and($a, $b));
     }
@@ -187,11 +187,11 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function or_(/*string */$a, /*string */$b)//// : string
+    public function or_(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return \gmp_strval(\gmp_or($a, $b));
     }
@@ -199,11 +199,11 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function xor_(/*string */$a, /*string */$b)//// : string
+    public function xor_(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return \gmp_strval(\gmp_xor($a, $b));
     }
@@ -211,9 +211,9 @@ class GmpCalculator extends Calculator
     /**
      * {@inheritDoc}
      */
-    public function sqrt(/*string */$n)//// : string
+    public function sqrt(/*string */$n)/* : string*/
     {
-        $n = cast_to_string($n);
+        $n = backport_type_check('string', $n);
 
         return \gmp_strval(\gmp_sqrt($n));
     }

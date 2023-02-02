@@ -1,6 +1,6 @@
 <?php
 
-////declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Brick\Math\Exception;
 
@@ -12,13 +12,11 @@ use Brick\Math\BigInteger;
 class IntegerOverflowException extends MathException
 {
     /**
-     * @param BigInteger $value
-     *
      * @return IntegerOverflowException
      *
      * @psalm-pure
      */
-    public static function toIntOverflow(BigInteger $value)// : IntegerOverflowException
+    public static function toIntOverflow(BigInteger $value)/* : IntegerOverflowException*/
     {
         $message = '%s is out of range %d to %d and cannot be represented as an integer.';
 

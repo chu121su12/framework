@@ -92,7 +92,7 @@
         "symfony/cache": "^3.4"
     },
     "provide": {
-        "brick/math": "^0.10.0",
+        "brick/math": "^0.11.0",
         "fruitcake/php-cors": "^1.2.0",
         "inertiajs/inertia-laravel": "^0.6.3",
         "laravel/breeze": "^1.11.1",

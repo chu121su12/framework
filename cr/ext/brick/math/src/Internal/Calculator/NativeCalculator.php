@@ -1,6 +1,6 @@
 <?php
 
-////declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Brick\Math\Internal\Calculator;
 
@@ -19,7 +19,7 @@ class NativeCalculator extends Calculator
      * The max number of digits the platform can natively add, subtract, multiply or divide without overflow.
      * For multiplication, this represents the max sum of the lengths of both operands.
      *
-     * For addition, it is assumed that an extra digit can hold a carry (1) without overflowing.
+     * In addition, it is assumed that an extra digit can hold a carry (1) without overflowing.
      * Example: 32-bit: max number 1,999,999,999 (9 digits + carry)
      *          64-bit: max number 1,999,999,999,999,999,999 (18 digits + carry)
      *
@@ -28,8 +28,6 @@ class NativeCalculator extends Calculator
     private /*int */$maxDigits;
 
     /**
-     * Class constructor.
-     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -51,11 +49,11 @@ class NativeCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function add(/*string */$a, /*string */$b)//// : string
+    public function add(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         /**
          * @psalm-var numeric-string $a
@@ -89,11 +87,11 @@ class NativeCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function sub(/*string */$a, /*string */$b)//// : string
+    public function sub(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return $this->add($a, $this->neg($b));
     }
@@ -101,11 +99,11 @@ class NativeCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function mul(/*string */$a, /*string */$b)//// : string
+    public function mul(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         /**
          * @psalm-var numeric-string $a
@@ -151,11 +149,11 @@ class NativeCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function divQ(/*string */$a, /*string */$b)//// : string
+    public function divQ(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return $this->divQR($a, $b)[0];
     }
@@ -163,11 +161,11 @@ class NativeCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function divR(/*string */$a, /*string */$b)////: string
+    public function divR(/*string */$a, /*string */$b)/*: string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return $this->divQR($a, $b)[1];
     }
@@ -175,11 +173,11 @@ class NativeCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function divQR(/*string */$a, /*string */$b)//// : array
+    public function divQR(/*string */$a, /*string */$b)/* : array*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         if ($a === '0') {
             return ['0', '0'];
@@ -237,11 +235,11 @@ class NativeCalculator extends Calculator
     /**
      * {@inheritdoc}
      */
-    public function pow(/*string */$a, /*int */$e)//// : string
+    public function pow(/*string */$a, /*int */$e)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $e = cast_to_int($e);
+        $e = backport_type_check('int', $e);
 
         if ($e === 0) {
             return '1';
@@ -271,13 +269,13 @@ class NativeCalculator extends Calculator
      *
      * {@inheritdoc}
      */
-    public function modPow(/*string */$base, /*string */$exp, /*string */$mod)//// : string
+    public function modPow(/*string */$base, /*string */$exp, /*string */$mod)/* : string*/
     {
-        $base = cast_to_string($base);
+        $base = backport_type_check('string', $base);
 
-        $exp = cast_to_string($exp);
+        $exp = backport_type_check('string', $exp);
 
-        $mod = cast_to_string($mod);
+        $mod = backport_type_check('string', $mod);
 
         // special case: the algorithm below fails with 0 power 0 mod 1 (returns 1 instead of 0)
         if ($base === '0' && $exp === '0' && $mod === '1') {
@@ -313,9 +311,9 @@ class NativeCalculator extends Calculator
      *
      * {@inheritDoc}
      */
-    public function sqrt(/*string */$n)//// : string
+    public function sqrt(/*string */$n)/* : string*/
     {
-        $n = cast_to_string($n);
+        $n = backport_type_check('string', $n);
 
         if ($n === '0') {
             return '0';
@@ -348,11 +346,11 @@ class NativeCalculator extends Calculator
      *
      * @return string
      */
-    private function doAdd(/*string */$a, /*string */$b)//// : string
+    private function doAdd(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         list($a, $b, $length) = $this->pad($a, $b);
 
@@ -409,11 +407,11 @@ class NativeCalculator extends Calculator
      *
      * @return string
      */
-    private function doSub(/*string */$a, /*string */$b)//// : string
+    private function doSub(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         if ($a === $b) {
             return '0';
@@ -495,11 +493,11 @@ class NativeCalculator extends Calculator
      *
      * @return string
      */
-    private function doMul(/*string */$a, /*string */$b)//// : string
+    private function doMul(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         $x = \strlen($a);
         $y = \strlen($b);
@@ -575,11 +573,11 @@ class NativeCalculator extends Calculator
      *
      * @return string[] The quotient and remainder.
      */
-    private function doDiv(/*string */$a, /*string */$b)//// : array
+    private function doDiv(/*string */$a, /*string */$b)/* : array*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         $cmp = $this->doCmp($a, $b);
 
@@ -640,11 +638,11 @@ class NativeCalculator extends Calculator
      *
      * @return int [-1, 0, 1]
      */
-    private function doCmp(/*string */$a, /*string */$b)//// : int
+    private function doCmp(/*string */$a, /*string */$b)/* : int*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         $x = \strlen($a);
         $y = \strlen($b);
@@ -668,11 +666,11 @@ class NativeCalculator extends Calculator
      *
      * @return array{string, string, int}
      */
-    private function pad(/*string */$a, /*string */$b)//// : array
+    private function pad(/*string */$a, /*string */$b)/* : array*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         $x = \strlen($a);
         $y = \strlen($b);

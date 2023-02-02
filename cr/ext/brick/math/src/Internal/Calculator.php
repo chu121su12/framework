@@ -1,6 +1,6 @@
 <?php
 
-////declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Brick\Math\Internal;
 
@@ -48,7 +48,7 @@ abstract class Calculator
      *
      * @return void
      */
-    final public static function set(/*?*/Calculator $calculator = null)//// : void
+    final public static function set(/*?*/Calculator $calculator = null)/* : void*/
     {
         self::$instance = $calculator;
     }
@@ -63,7 +63,7 @@ abstract class Calculator
      * @psalm-pure
      * @psalm-suppress ImpureStaticProperty
      */
-    final public static function get()// : Calculator
+    final public static function get()/* : Calculator*/
     {
         if (self::$instance === null) {
             /** @psalm-suppress ImpureMethodCall */
@@ -80,7 +80,7 @@ abstract class Calculator
      *
      * @return Calculator
      */
-    private static function detect()// : Calculator
+    private static function detect()/* : Calculator*/
     {
         if (\extension_loaded('gmp')) {
             return new Calculator\GmpCalculator();
@@ -101,11 +101,11 @@ abstract class Calculator
      *
      * @return array{bool, bool, string, string} Whether $a and $b are negative, followed by their digits.
      */
-    final protected function init(/*string */$a, /*string */$b)//// : array
+    final protected function init(/*string */$a, /*string */$b)/* : array*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return [
             $aNeg = ($a[0] === '-'),
@@ -123,9 +123,9 @@ abstract class Calculator
      *
      * @return string The absolute value.
      */
-    final public function abs(/*string */$n)//// : string
+    final public function abs(/*string */$n)/* : string*/
     {
-        $n = cast_to_string($n);
+        $n = backport_type_check('string', $n);
 
         return ($n[0] === '-') ? \substr($n, 1) : $n;
     }
@@ -137,9 +137,9 @@ abstract class Calculator
      *
      * @return string The negated value.
      */
-    final public function neg(/*string */$n)//// : string
+    final public function neg(/*string */$n)/* : string*/
     {
-        $n = cast_to_string($n);
+        $n = backport_type_check('string', $n);
 
         if ($n === '0') {
             return '0';
@@ -160,11 +160,11 @@ abstract class Calculator
      *
      * @return int [-1, 0, 1] If the first number is less than, equal to, or greater than the second number.
      */
-    final public function cmp(/*string */$a, /*string */$b)//// : int
+    final public function cmp(/*string */$a, /*string */$b)/* : int*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         list($aNeg, $bNeg, $aDig, $bDig) = $this->init($a, $b);
 
@@ -246,7 +246,7 @@ abstract class Calculator
      * @param string $a The dividend.
      * @param string $b The divisor, must not be zero.
      *
-     * @return string[] An array containing the quotient and remainder.
+     * @return array{string, string} An array containing the quotient and remainder.
      */
     abstract public function divQR(/*string */$a, /*string */$b)/* : array*/;
 
@@ -266,11 +266,11 @@ abstract class Calculator
      *
      * @return string
      */
-    public function mod(/*string */$a, /*string */$b)//// : string
+    public function mod(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return $this->divR($this->add($this->divR($a, $b), $b), $b);
     }
@@ -289,9 +289,9 @@ abstract class Calculator
      */
     public function modInverse(/*string */$x, /*string */$m)//// : ?string
     {
-        $x = cast_to_string($x);
+        $x = backport_type_check('string', $x);
 
-        $m = cast_to_string($m);
+        $m = backport_type_check('string', $m);
 
         if ($m === '1') {
             return '0';
@@ -303,9 +303,7 @@ abstract class Calculator
             $modVal = $this->mod($x, $m);
         }
 
-        $x = '0';
-        $y = '0';
-        $g = $this->gcdExtended($modVal, $m, $x, $y);
+        list($g, $x) = $this->gcdExtended($modVal, $m);
 
         if ($g !== '1') {
             return null;
@@ -336,11 +334,11 @@ abstract class Calculator
      *
      * @return string The GCD, always positive, or zero if both arguments are zero.
      */
-    public function gcd(/*string */$a, /*string */$b)//// : string
+    public function gcd(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         if ($a === '0') {
             return $this->abs($b);
@@ -353,32 +351,29 @@ abstract class Calculator
         return $this->gcd($b, $this->divR($a, $b));
     }
 
-    private function gcdExtended(/*string */$a, /*string */$b, /*string */&$x, /*string */&$y)//// : string
+    /**
+     * @return array{string, string, string} GCD, X, Y
+     */
+    private function gcdExtended(/*string */$a, /*string */$b)/* : array*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
-        $x = cast_to_string($x);
+        $x = backport_type_check('string', $x);
 
-        $y = cast_to_string($y);
+        $y = backport_type_check('string', $y);
 
         if ($a === '0') {
-            $x = '0';
-            $y = '1';
-
-            return $b;
+            return [$b, '0', '1'];
         }
 
-        $x1 = '0';
-        $y1 = '0';
-
-        $gcd = $this->gcdExtended($this->mod($b, $a), $a, $x1, $y1);
+        list($gcd, $x1, $y1) = $this->gcdExtended($this->mod($b, $a), $a);
 
         $x = $this->sub($y1, $this->mul($this->divQ($b, $a), $x1));
         $y = $x1;
 
-        return $gcd;
+        return [$gcd, $x, $y];
     }
 
     /**
@@ -404,11 +399,11 @@ abstract class Calculator
      *
      * @return string The converted number, following the Calculator conventions.
      */
-    public function fromBase(/*string */$number, /*int */$base)//// : string
+    public function fromBase(/*string */$number, /*int */$base)/* : string*/
     {
-        $number = cast_to_string($number);
+        $number = backport_type_check('string', $number);
 
-        $base = cast_to_int($base);
+        $base = backport_type_check('int', $base);
 
         return $this->fromArbitraryBase(\strtolower($number), self::ALPHABET, $base);
     }
@@ -424,11 +419,11 @@ abstract class Calculator
      *
      * @return string The converted number, lowercase.
      */
-    public function toBase(/*string */$number, /*int */$base)//// : string
+    public function toBase(/*string */$number, /*int */$base)/* : string*/
     {
-        $number = cast_to_string($number);
+        $number = backport_type_check('string', $number);
 
-        $base = cast_to_int($base);
+        $base = backport_type_check('int', $base);
 
         $negative = ($number[0] === '-');
 
@@ -455,13 +450,13 @@ abstract class Calculator
      *
      * @return string The number in base 10, following the Calculator conventions.
      */
-    final public function fromArbitraryBase(/*string */$number, /*string */$alphabet, /*int */$base)//// : string
+    final public function fromArbitraryBase(/*string */$number, /*string */$alphabet, /*int */$base)/* : string*/
     {
-        $number = cast_to_string($number);
+        $number = backport_type_check('string', $number);
 
-        $alphabet = cast_to_string($alphabet);
+        $alphabet = backport_type_check('string', $alphabet);
 
-        $base = cast_to_int($base);
+        $base = backport_type_check('int', $base);
 
         // remove leading "zeros"
         $number = \ltrim($number, $alphabet[0]);
@@ -507,13 +502,13 @@ abstract class Calculator
      *
      * @return string The converted number in the given alphabet.
      */
-    final public function toArbitraryBase(/*string */$number, /*string */$alphabet, /*int */$base)//// : string
+    final public function toArbitraryBase(/*string */$number, /*string */$alphabet, /*int */$base)/* : string*/
     {
-        $number = cast_to_string($number);
+        $number = backport_type_check('string', $number);
 
-        $alphabet = cast_to_string($alphabet);
+        $alphabet = backport_type_check('string', $alphabet);
 
-        $base = cast_to_int($base);
+        $base = backport_type_check('int', $base);
 
         if ($number === '0') {
             return $alphabet[0];
@@ -548,13 +543,13 @@ abstract class Calculator
      *
      * @psalm-suppress ImpureFunctionCall
      */
-    final public function divRound(/*string */$a, /*string */$b, /*int */$roundingMode)//// : string
+    final public function divRound(/*string */$a, /*string */$b, /*int */$roundingMode)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
-        $roundingMode = cast_to_int($roundingMode);
+        $roundingMode = backport_type_check('int', $roundingMode);
 
         list($quotient, $remainder) = $this->divQR($a, $b);
 
@@ -636,11 +631,11 @@ abstract class Calculator
      *
      * @return string
      */
-    public function and_(/*string */$a, /*string */$b)//// : string
+    public function and_(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return $this->bitwise('and', $a, $b);
     }
@@ -656,11 +651,11 @@ abstract class Calculator
      *
      * @return string
      */
-    public function or_(/*string */$a, /*string */$b)//// : string
+    public function or_(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return $this->bitwise('or', $a, $b);
     }
@@ -676,11 +671,11 @@ abstract class Calculator
      *
      * @return string
      */
-    public function xor_(/*string */$a, /*string */$b)//// : string
+    public function xor_(/*string */$a, /*string */$b)/* : string*/
     {
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         return $this->bitwise('xor', $a, $b);
     }
@@ -688,19 +683,19 @@ abstract class Calculator
     /**
      * Performs a bitwise operation on a decimal number.
      *
-     * @param string $operator The operator to use, must be "and", "or" or "xor".
-     * @param string $a        The left operand.
-     * @param string $b        The right operand.
+     * @param 'and'|'or'|'xor' $operator The operator to use.
+     * @param string           $a        The left operand.
+     * @param string           $b        The right operand.
      *
      * @return string
      */
-    private function bitwise(/*string */$operator, /*string */$a, /*string */$b)//// : string
+    private function bitwise(/*string */$operator, /*string */$a, /*string */$b)/* : string*/
     {
-        $operator = cast_to_string($operator);
+        $operator = backport_type_check('string', $operator);
 
-        $a = cast_to_string($a);
+        $a = backport_type_check('string', $a);
 
-        $b = cast_to_string($b);
+        $b = backport_type_check('string', $b);
 
         list($aNeg, $bNeg, $aDig, $bDig) = $this->init($a, $b);
 
@@ -759,9 +754,9 @@ abstract class Calculator
      *
      * @return string
      */
-    private function twosComplement(/*string */$number)//// : string
+    private function twosComplement(/*string */$number)/* : string*/
     {
-        $number = cast_to_string($number);
+        $number = backport_type_check('string', $number);
 
         $xor = \str_repeat("\xff", \strlen($number));
 
@@ -792,9 +787,9 @@ abstract class Calculator
      *
      * @return string
      */
-    private function toBinary(/*string */$number)//// : string
+    private function toBinary(/*string */$number)/* : string*/
     {
-        $number = cast_to_string($number);
+        $number = backport_type_check('string', $number);
 
         $result = '';
 
@@ -813,9 +808,9 @@ abstract class Calculator
      *
      * @return string
      */
-    private function toDecimal(/*string */$bytes)//// : string
+    private function toDecimal(/*string */$bytes)/* : string*/
     {
-        $bytes = cast_to_string($bytes);
+        $bytes = backport_type_check('string', $bytes);
 
         $result = '0';
         $power = '1';
