@@ -14,6 +14,8 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
      */
     final class ArraySubset extends Constraint
     {
+        use \PHPUnit\Framework\Patch\Exporter;
+
         /**
          * @var iterable
          */
@@ -159,6 +161,8 @@ if (class_exists(Version::class) && (int) Version::series()[0] >= 9) {
      */
     final class ArraySubset extends Constraint
     {
+        use \PHPUnit\Framework\Patch\Exporter;
+
         /**
          * @var iterable
          */
