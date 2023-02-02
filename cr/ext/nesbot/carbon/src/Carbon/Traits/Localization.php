@@ -377,6 +377,13 @@ trait Localization
             $weekdays = isset($messages['weekdays']) ? $messages['weekdays'] : [];
             $meridiem = isset($messages['meridiem']) ? $messages['meridiem'] : ['AM', 'PM'];
 
+            if (isset($messages['ordinal_words'])) {
+                $timeString = self::replaceOrdinalWords(
+                    $timeString,
+                    $key === 'from' ? array_flip($messages['ordinal_words']) : $messages['ordinal_words']
+                );
+            }
+
             if ($key === 'from') {
                 foreach (['months', 'weekdays'] as $variable) {
                     $list = isset($messages[$variable.'_standalone']) ? $messages[$variable.'_standalone'] : null;
@@ -758,7 +765,7 @@ trait Localization
         }
 
         if ($translator && !($translator instanceof LocaleAwareInterface || method_exists($translator, 'getLocale'))) {
-            throw new NotLocaleAwareException($translator);
+            throw new NotLocaleAwareException($translator); // @codeCoverageIgnore
         }
 
         return $translator;
@@ -851,5 +858,15 @@ trait Localization
         }
 
         return $list;
+    }
+
+    private static function replaceOrdinalWords(/*string */$timeString, array $ordinalWords)/*: string*/
+    {
+        $timeString = backport_type_check('string', $timeString);
+
+        return preg_replace_callback('/(?<![a-z])[a-z]+(?![a-z])/i', function (array $match) use ($ordinalWords) {
+            $lowerMatch = mb_strtolower($match[0]);
+            return isset($ordinalWords[$lowerMatch]) ? $ordinalWords[$lowerMatch] : $match[0];
+        }, $timeString);
     }
 }

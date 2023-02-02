@@ -532,6 +532,7 @@ trait Date
     use Creator;
     use Difference;
     use Macro;
+    use MagicParameter;
     use Modifiers;
     use Mutability;
     use ObjectInitialisation;
@@ -642,6 +643,8 @@ trait Date
 
     /**
      * List of minimum and maximums for each unit.
+     *
+     * @param int $daysInMonth
      *
      * @return array
      */
@@ -1362,10 +1365,15 @@ trait Date
      */
     public function weekday($value = null)
     {
-        $translationMessage = $this->getTranslationMessage('first_day_of_week');
-        $dayOfWeek = ($this->dayOfWeek + 7 - (int) (isset($translationMessage) ? $translationMessage : 0)) % 7;
+        if ($value === null) {
+            return $this->dayOfWeek;
+        }
 
-        return $value === null ? $dayOfWeek : $this->addDays($value - $dayOfWeek);
+        $translationMessage = $this->getTranslationMessage('first_day_of_week');
+        $firstDay = (int) (isset($translationMessage) ? $translationMessage : 0);
+        $dayOfWeek = ($this->dayOfWeek + 7 - $firstDay) % 7;
+
+        return $this->addDays((($value + 7 - $firstDay) % 7) - $dayOfWeek);
     }
 
     /**
@@ -1380,6 +1388,51 @@ trait Date
         $dayOfWeekIso = $this->dayOfWeekIso;
 
         return $value === null ? $dayOfWeekIso : $this->addDays($value - $dayOfWeekIso);
+    }
+
+    /**
+     * Return the number of days since the start of the week (using the current locale or the first parameter
+     * if explicitly given).
+     *
+     * @param int|null $weekStartsAt optional start allow you to specify the day of week to use to start the week,
+     *                               if not provided, start of week is inferred from the locale
+     *                               (Sunday for en_US, Monday for de_DE, etc.)
+     *
+     * @return int
+     */
+    public function getDaysFromStartOfWeek(/*int */$weekStartsAt = null)/*: int*/
+    {
+        $weekStartsAt = backport_type_check('int', $weekStartsAt);
+
+        if (isset($weekStartsAt)) {
+            $firstDay = $weekStartsAt;
+        } else {
+            $translationMessage = $this->getTranslationMessage('first_day_of_week');
+            $firstDay = isset($translationMessage) ? $translationMessage : 0;
+        }
+
+        $firstDay = (int) $firstDay;
+
+        return ($this->dayOfWeek + 7 - $firstDay) % 7;
+    }
+
+    /**
+     * Set the day (keeping the current time) to the start of the week + the number of days passed as the first
+     * parameter. First day of week is driven by the locale unless explicitly set with the second parameter.
+     *
+     * @param int      $numberOfDays number of days to add after the start of the current week
+     * @param int|null $weekStartsAt optional start allow you to specify the day of week to use to start the week,
+     *                               if not provided, start of week is inferred from the locale
+     *                               (Sunday for en_US, Monday for de_DE, etc.)
+     *
+     * @return static
+     */
+    public function setDaysFromStartOfWeek(/*int */$numberOfDays, /*int */$weekStartsAt = null)
+    {
+        $numberOfDays = backport_type_check('int', $numberOfDays);
+        $weekStartsAt = backport_type_check('int', $weekStartsAt);
+
+        return $this->addDays($numberOfDays - $this->getDaysFromStartOfWeek($weekStartsAt));
     }
 
     /**
@@ -1905,6 +1958,10 @@ trait Date
             'LL' => $this->getTranslationMessage('formats.LL', $locale, 'MMMM D, YYYY'),
             'LLL' => $this->getTranslationMessage('formats.LLL', $locale, 'MMMM D, YYYY h:mm A'),
             'LLLL' => $this->getTranslationMessage('formats.LLLL', $locale, 'dddd, MMMM D, YYYY h:mm A'),
+            'l' => $this->getTranslationMessage('formats.l', $locale),
+            'll' => $this->getTranslationMessage('formats.ll', $locale),
+            'lll' => $this->getTranslationMessage('formats.lll', $locale),
+            'llll' => $this->getTranslationMessage('formats.llll', $locale),
         ];
     }
 
@@ -2200,7 +2257,7 @@ trait Date
 
             $input = mb_substr($format, $i);
 
-            if (preg_match('/^(LTS|LT|[Ll]{1,4})/', $input, $match)) {
+            if (preg_match('/^(LTS|LT|l{1,4}|L{1,4})/', $input, $match)) {
                 if ($formats === null) {
                     $formats = $this->getIsoFormats();
                 }
@@ -2676,7 +2733,7 @@ trait Date
         }
 
         if (static::isModifiableUnit($unit)) {
-            return $this->{"{$action}Unit"}($unit, isset($parameters[0]) ? $parameters[0] : 1, $overflow);
+            return $this->{"{$action}Unit"}($unit, $this->getMagicParameter($parameters, 0, 'value', 1), $overflow);
         }
 
         $sixFirstLetters = substr($unit, 0, 6);
@@ -2717,7 +2774,11 @@ trait Date
             try {
                 $unit = static::singularUnit(substr($method, 0, -5));
 
-                return $this->range(isset($parameters[0]) ? $parameters[0] : $this, isset($parameters[1]) ? $parameters[1] : 1, $unit);
+                return $this->range(
+                    $this->getMagicParameter($parameters, 0, 'endDate', $this),
+                    $this->getMagicParameter($parameters, 1, 'factor', 1),
+                    $unit
+                );
             } catch (InvalidArgumentException $exception) {
                 // Try macros
             }

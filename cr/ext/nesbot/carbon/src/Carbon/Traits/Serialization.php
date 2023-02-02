@@ -120,6 +120,8 @@ trait Serialization
     /**
      * Returns the list of properties to dump on serialize() called on.
      *
+     * Only used by PHP < 7.4.
+     *
      * @return array
      */
     public function __sleep()
@@ -135,7 +137,51 @@ trait Serialization
     }
 
     /**
+     * Returns the values to dump on serialize() called on.
+     *
+     * Only used by PHP >= 7.4.
+     *
+     * @return array
+     */
+    public function __serialize()/*: array*/
+    {
+        // @codeCoverageIgnoreStart
+        if (isset($this->timezone_type)) {
+            return [
+                'date' => isset($this->date) ? $this->date : null,
+                'timezone_type' => $this->timezone_type,
+                'timezone' => isset($this->timezone) ? $this->timezone : null,
+            ];
+        }
+        // @codeCoverageIgnoreEnd
+
+        $timezone = $this->getTimezone();
+        $export = [
+            'date' => $this->format('Y-m-d H:i:s.u'),
+            'timezone_type' => $timezone->getType(),
+            'timezone' => $timezone->getName(),
+        ];
+
+        // @codeCoverageIgnoreStart
+        if (\extension_loaded('msgpack') && isset($this->constructedObjectId)) {
+            $export['dumpDateProperties'] = [
+                'date' => $this->format('Y-m-d H:i:s.u'),
+                'timezone' => backport_serialize(isset($this->timezone) ? $this->timezone : null),
+            ];
+        }
+        // @codeCoverageIgnoreEnd
+
+        if (isset($this->localTranslator) ? $this->localTranslator : null) {
+            $export['dumpLocale'] = isset($this->locale) ? $this->locale : null;
+        }
+
+        return $export;
+    }
+
+    /**
      * Set locale if specified on unserialize() called.
+     *
+     * Only used by PHP < 7.4.
      *
      * @return void
      */
@@ -169,6 +215,49 @@ trait Serialization
         }
 
         $this->cleanupDumpProperties();
+    }
+
+    /**
+     * Set locale if specified on unserialize() called.
+     *
+     * Only used by PHP >= 7.4.
+     *
+     * @return void
+     */
+    public function __unserialize(array $data)/*: void*/
+    {
+        // @codeCoverageIgnoreStart
+        try {
+            $this->__construct(isset($data['date']) ? $data['date'] : null, isset($data['timezone']) ? $data['timezone'] : null);
+        } catch (\Exception $exception) {
+        } catch (\Error $exception) {
+        } catch (Throwable $exception) {
+        }
+
+        if (isset($exception)) {
+            if (!isset($data['dumpDateProperties']['date'], $data['dumpDateProperties']['timezone'])) {
+                throw $exception;
+            }
+
+            try {
+                // FatalError occurs when calling msgpack_unpack() in PHP 7.4 or later.
+                $date = $data['dumpDateProperties']['date'];
+                $timezone = $data['dumpDateProperties']['timezone'];
+
+                $this->__construct($date, unserialize($timezone));
+            } catch (\Exception $ignoredException) {
+                throw $exception;
+            } catch (\Error $ignoredException) {
+                throw $exception;
+            } catch (Throwable $ignoredException) {
+                throw $exception;
+            }
+        }
+        // @codeCoverageIgnoreEnd
+
+        if (isset($data['dumpLocale'])) {
+            $this->locale($data['dumpLocale']);
+        }
     }
 
     /**
@@ -214,11 +303,15 @@ trait Serialization
      */
     public function cleanupDumpProperties()
     {
-        foreach ($this->dumpProperties as $property) {
-            if (isset($this->$property)) {
-                unset($this->$property);
+        // @codeCoverageIgnoreStart
+        if (PHP_VERSION < 8.2) {
+            foreach ($this->dumpProperties as $property) {
+                if (isset($this->$property)) {
+                    unset($this->$property);
+                }
             }
         }
+        // @codeCoverageIgnoreEnd
 
         return $this;
     }
