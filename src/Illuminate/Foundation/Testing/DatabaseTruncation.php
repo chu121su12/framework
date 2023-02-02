@@ -15,14 +15,14 @@ trait DatabaseTruncation
      *
      * @var array
      */
-    protected static array $allTables;
+    protected static /*array */$allTables;
 
     /**
      * Truncate the database tables for all configured connections.
      *
      * @return void
      */
-    protected function truncateDatabaseTables(): void
+    protected function truncateDatabaseTables()/*: void*/
     {
         // Migrate and seed the database on first run...
         if (! RefreshDatabaseState::$migrated) {
@@ -52,7 +52,7 @@ trait DatabaseTruncation
      *
      * @return void
      */
-    protected function truncateTablesForAllConnections(): void
+    protected function truncateTablesForAllConnections()/*: void*/
     {
         $database = $this->app->make('db');
 
@@ -61,7 +61,9 @@ trait DatabaseTruncation
                 $connection = $database->connection($name);
 
                 $connection->getSchemaBuilder()->withoutForeignKeyConstraints(
-                    fn () => $this->truncateTablesForConnection($connection, $name)
+                    function () use ($connection, $name) {
+                        return $this->truncateTablesForConnection($connection, $name);
+                    }
                 );
             });
     }
@@ -73,16 +75,22 @@ trait DatabaseTruncation
      * @param  string|null  $name
      * @return void
      */
-    protected function truncateTablesForConnection(ConnectionInterface $connection, ?string $name): void
+    protected function truncateTablesForConnection(ConnectionInterface $connection, /*?string */$name = null)/*: void*/
     {
+        $name = backport_type_check('?string', $name);
+
         $dispatcher = $connection->getEventDispatcher();
 
         $connection->unsetEventDispatcher();
 
-        collect(static::$allTables[$name] ??= $connection->getDoctrineSchemaManager()->listTableNames())
+        if (! isset(static::$allTables[$name])) {
+            static::$allTables[$name] = $connection->getDoctrineSchemaManager()->listTableNames();
+        }
+
+        collect(static::$allTables[$name])
             ->diff($this->exceptTables($name))
-            ->filter(fn ($table) => $connection->table($table)->exists())
-            ->each(fn ($table) => $connection->table($table)->truncate());
+            ->filter(function ($table) use ($connection) { return $connection->table($table)->exists(); })
+            ->each(function ($table) use ($connection) { return $connection->table($table)->truncate(); });
 
         $connection->setEventDispatcher($dispatcher);
     }
@@ -92,7 +100,7 @@ trait DatabaseTruncation
      *
      * @return array
      */
-    protected function connectionsToTruncate(): array
+    protected function connectionsToTruncate()/*: array*/
     {
         return property_exists($this, 'connectionsToTruncate')
                     ? $this->connectionsToTruncate : [null];
@@ -104,11 +112,13 @@ trait DatabaseTruncation
      * @param  string|null  $connectionName
      * @return array
      */
-    protected function exceptTables(?string $connectionName): array
+    protected function exceptTables(/*?string */$connectionName = null)/*: array*/
     {
+        $connectionName = backport_type_check('?string', $connectionName);
+
         if (property_exists($this, 'exceptTables')) {
             return array_merge(
-                $this->exceptTables[$connectionName] ?? [],
+                isset($this->exceptTables[$connectionName]) ? $this->exceptTables[$connectionName] : [],
                 [$this->app['config']->get('database.migrations')]
             );
         }

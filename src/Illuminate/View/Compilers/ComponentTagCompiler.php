@@ -721,8 +721,10 @@ class ComponentTagCompiler
      * @param  string  $attributeString
      * @return string
      */
-    protected function parseComponentTagStyleStatements(string $attributeString)
+    protected function parseComponentTagStyleStatements(/*string */$attributeString)
     {
+        $attributeString = backport_type_check('string', $attributeString);
+
         return preg_replace_callback(
              '/@(style)(\( ( (?>[^()]+) | (?2) )* \))/x', function ($match) {
                  if ($match[1] === 'style') {

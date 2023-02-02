@@ -480,7 +480,7 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
     public function stringable($class, $handler = null)
     {
         if ($class instanceof Closure) {
-            [$class, $handler] = [
+            list($class, $handler) = [
                 $this->firstClosureParameterType($class),
                 $class,
             ];
