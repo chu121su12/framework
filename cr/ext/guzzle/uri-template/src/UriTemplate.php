@@ -78,8 +78,10 @@ final class UriTemplate
      *
      * @throws \RuntimeException
      */
-    public static function expand(string $template, array $variables): string
+    public static function expand(/*string */$template, array $variables)/*: string*/
     {
+        $template = backport_type_check('string', $template);
+
         if (false === \strpos($template, '{')) {
             return $template;
         }
@@ -103,7 +105,7 @@ final class UriTemplate
      *
      * @return callable(string[]): string
      */
-    private static function expandMatchCallback(array $variables): callable
+    private static function expandMatchCallback(array $variables)/*: callable*/
     {
         return static function (array $matches) use ($variables): string {
             return self::expandMatch($matches, $variables);
@@ -118,7 +120,7 @@ final class UriTemplate
      *
      * @return string Returns the replacement string
      */
-    private static function expandMatch(array $matches, array $variables): string
+    private static function expandMatch(array $matches, array $variables)/*: string*/
     {
         $replacements = [];
         $parsed = self::parseExpression($matches[1]);
@@ -240,8 +242,10 @@ final class UriTemplate
      *
      * @return array{operator:string, values:array<array{value:string, modifier:(''|'*'|':'), position?:int}>}
      */
-    private static function parseExpression(string $expression): array
+    private static function parseExpression(/*string */$expression)/*: array*/
     {
+        $expression = backport_type_check('string', $expression);
+
         $result = [];
 
         if (isset(self::$operatorHash[$expression[0]])) {
@@ -281,7 +285,7 @@ final class UriTemplate
      * should work in almost every case where input is supplied for a URI
      * template.
      */
-    private static function isAssoc(array $array): bool
+    private static function isAssoc(array $array)/*: bool*/
     {
         return $array && \array_keys($array)[0] !== 0;
     }
@@ -290,8 +294,10 @@ final class UriTemplate
      * Removes percent encoding on reserved characters (used with + and #
      * modifiers).
      */
-    private static function decodeReserved(string $string): string
+    private static function decodeReserved(/*string */$string)/*: string*/
     {
+        $string = backport_type_check('string', $string);
+
         return \str_replace(self::$delimsPct, self::$delims, $string);
     }
 }
