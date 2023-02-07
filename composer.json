@@ -94,6 +94,7 @@
     "provide": {
         "brick/math": "^0.11.0",
         "fruitcake/php-cors": "^1.2.0",
+        "guzzlehttp/uri-template": "^1.0.1",
         "inertiajs/inertia-laravel": "^0.6.3",
         "laravel/breeze": "^1.11.1",
         "laravel/fortify": "^1.13.1",
@@ -197,6 +198,7 @@
             "desktopd\\": "cr/patch/php-sha3-streamable/namespaced/desktopd/",
             "Doctrine\\": "cr/patch/doctrine/doctrine/",
             "Fruitcake\\Cors\\": "cr/ext/fruitcake/php-cors/src/",
+            "GuzzleHttp\\UriTemplate\\": "cr/ext/guzzle/uri-template/src/",
             "Illuminate\\": "src/Illuminate/",
             "Laravel\\Fortify\\": "cr/ext/laravel/fortify/src/",
             "Laravel\\Octane\\": "cr/ext/laravel/octane/src/",
