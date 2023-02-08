@@ -2228,7 +2228,7 @@ class HttpClientTest extends TestCase
         $this->assertSame(['connect_timeout' => 10, 'http_errors' => false, 'timeout' => 30, 'allow_redirects' => ['max' => 10]], $request->getOptions());
     }
 
-    public function testPreventDuplicatedContentType(): void
+    public function testPreventDuplicatedContentType()/*: void*/
     {
         $client = $this->factory->asJson();
 
@@ -2244,7 +2244,7 @@ class HttpClientTest extends TestCase
         $this->assertSame('foo', Arr::get($client->getOptions(), 'headers.Content-Type'));
     }
 
-    public function testItCanSubstituteUrlParams(): void
+    public function testItCanSubstituteUrlParams()/*: void*/
     {
         $this->factory->fake();
 

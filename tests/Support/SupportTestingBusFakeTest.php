@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 
 class SupportTestingBusFakeTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     /** @var \Illuminate\Support\Testing\Fakes\BusFake */
     protected $fake;
 

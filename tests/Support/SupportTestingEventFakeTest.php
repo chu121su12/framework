@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 
 class SupportTestingEventFakeTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     protected $fake;
 
     protected function setUp()/*: void*/

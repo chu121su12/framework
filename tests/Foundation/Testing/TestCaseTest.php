@@ -24,7 +24,7 @@ class TestCaseTest extends BaseTestCase
         $this->expectExceptionMessageMatches('/Assertion message.*Unexpected exception/s');
 
         $testCase::$latestResponse->transformNotSuccessfulException(
-            $exception = new ExpectationFailedException('Assertion message.'),
+            $exception = new ExpectationFailedException('Assertion message.')
         );
 
         throw $exception;
@@ -45,7 +45,7 @@ class TestCaseTest extends BaseTestCase
         $this->expectExceptionMessageMatches('/Assertion message.*The first name field is required/s');
 
         $testCase::$latestResponse->transformNotSuccessfulException(
-            $exception = new ExpectationFailedException('Assertion message.'),
+            $exception = new ExpectationFailedException('Assertion message.')
         );
 
         throw $exception;
@@ -62,7 +62,7 @@ class TestCaseTest extends BaseTestCase
         $this->expectExceptionMessageMatches('/Assertion message.*The first name field is required/s');
 
         $testCase::$latestResponse->transformNotSuccessfulException(
-            $exception = new ExpectationFailedException('Assertion message.'),
+            $exception = new ExpectationFailedException('Assertion message.')
         );
 
         throw $exception;
@@ -79,7 +79,7 @@ class TestCaseTest extends BaseTestCase
         $this->expectExceptionMessageMatches('/Assertion message/s');
 
         $testCase::$latestResponse->transformNotSuccessfulException(
-            $exception = new ExpectationFailedException('Assertion message.'),
+            $exception = new ExpectationFailedException('Assertion message.')
         );
 
         throw $exception;
@@ -100,7 +100,7 @@ class TestCaseTest extends BaseTestCase
         $this->expectExceptionMessageMatches('/Assertion message/s');
 
         $testCase::$latestResponse->transformNotSuccessfulException(
-            $exception = new ExpectationFailedException('Assertion message.'),
+            $exception = new ExpectationFailedException('Assertion message.')
         );
 
         throw $exception;

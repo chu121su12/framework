@@ -155,7 +155,7 @@ class User extends Model
     public function teamMatesWithPendingRelation()
     {
         return $this->through($this->ownedTeams())
-            ->has(fn (Team $team) => $team->members());
+            ->has(function (Team $team) { return $team->members(); });
     }
 
     public function teamMatesBySlug()
@@ -166,7 +166,7 @@ class User extends Model
     public function teamMatesBySlugWithPendingRelationship()
     {
         return $this->through($this->hasMany(Team::class, 'owner_slug', 'slug'))
-            ->has(fn ($team) => $team->hasMany(User::class, 'team_id'));
+            ->has(function ($team) { return $team->hasMany(User::class, 'team_id'); });
     }
 
     public function teamMatesWithGlobalScope()
@@ -177,7 +177,7 @@ class User extends Model
     public function teamMatesWithGlobalScopeWithPendingRelation()
     {
         return $this->through($this->ownedTeams())
-            ->has(fn (Team $team) => $team->membersWithGlobalScope());
+            ->has(function (Team $team) { return $team->membersWithGlobalScope(); });
     }
 
     public function ownedTeams()

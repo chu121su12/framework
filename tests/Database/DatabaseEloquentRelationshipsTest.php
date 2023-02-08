@@ -21,6 +21,58 @@ use Illuminate\Database\Query\Processors\Processor;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+class DatabaseEloquentRelationshipsTest_testStringyHasThroughApi_class_1 extends FluentMechanic
+        {
+            public function owner()
+            {
+                return $this->through('car')->has('owner');
+            }
+
+            public function getTable()
+            {
+                return 'stringy_mechanics';
+            }
+        }
+
+class DatabaseEloquentRelationshipsTest_testStringyHasThroughApi_class_2 extends FluentProject
+        {
+            public function deployments()
+            {
+                return $this->through('environments')->has('deployments');
+            }
+
+            public function getTable()
+            {
+                return 'stringy_projects';
+            }
+        }
+
+class DatabaseEloquentRelationshipsTest_testHigherOrderHasThroughApi_class_1 extends FluentMechanic
+        {
+            public function owner()
+            {
+                return $this->throughCar()->hasOwner();
+            }
+
+            public function getTable()
+            {
+                return 'higher_mechanics';
+            }
+        }
+
+class DatabaseEloquentRelationshipsTest_testHigherOrderHasThroughApi_class_2 extends FluentProject
+        {
+            public function deployments()
+            {
+                return $this->throughEnvironments()->hasDeployments();
+            }
+
+            public function getTable()
+            {
+                return 'higher_projects';
+            }
+        }
+
 class DatabaseEloquentRelationshipsTest extends TestCase
 {
     public function testStandardRelationships()
@@ -122,18 +174,9 @@ class DatabaseEloquentRelationshipsTest extends TestCase
     public function testStringyHasThroughApi()
     {
         $fluent = (new FluentMechanic())->owner();
-        $stringy = (new class extends FluentMechanic
-        {
-            public function owner()
-            {
-                return $this->through('car')->has('owner');
-            }
-
-            public function getTable()
-            {
-                return 'stringy_mechanics';
-            }
-        })->owner();
+        $stringy = (
+            new DatabaseEloquentRelationshipsTest_testStringyHasThroughApi_class_1
+        )->owner();
 
         $this->assertInstanceOf(HasOneThrough::class, $fluent);
         $this->assertInstanceOf(HasOneThrough::class, $stringy);
@@ -151,18 +194,9 @@ class DatabaseEloquentRelationshipsTest extends TestCase
         $this->assertSame('cars.mechanic_id', $fluent->getQualifiedFirstKeyName());
 
         $fluent = (new FluentProject())->deployments();
-        $stringy = (new class extends FluentProject
-        {
-            public function deployments()
-            {
-                return $this->through('environments')->has('deployments');
-            }
-
-            public function getTable()
-            {
-                return 'stringy_projects';
-            }
-        })->deployments();
+        $stringy = (
+            new DatabaseEloquentRelationshipsTest_testStringyHasThroughApi_class_2
+        )->deployments();
 
         $this->assertInstanceOf(HasManyThrough::class, $fluent);
         $this->assertInstanceOf(HasManyThrough::class, $stringy);
@@ -183,18 +217,9 @@ class DatabaseEloquentRelationshipsTest extends TestCase
     public function testHigherOrderHasThroughApi()
     {
         $fluent = (new FluentMechanic())->owner();
-        $higher = (new class extends FluentMechanic
-        {
-            public function owner()
-            {
-                return $this->throughCar()->hasOwner();
-            }
-
-            public function getTable()
-            {
-                return 'higher_mechanics';
-            }
-        })->owner();
+        $higher = (
+            new DatabaseEloquentRelationshipsTest_testHigherOrderHasThroughApi_class_1
+        )->owner();
 
         $this->assertInstanceOf(HasOneThrough::class, $fluent);
         $this->assertInstanceOf(HasOneThrough::class, $higher);
@@ -212,18 +237,9 @@ class DatabaseEloquentRelationshipsTest extends TestCase
         $this->assertSame('cars.mechanic_id', $fluent->getQualifiedFirstKeyName());
 
         $fluent = (new FluentProject())->deployments();
-        $higher = (new class extends FluentProject
-        {
-            public function deployments()
-            {
-                return $this->throughEnvironments()->hasDeployments();
-            }
-
-            public function getTable()
-            {
-                return 'higher_projects';
-            }
-        })->deployments();
+        $higher = (
+            new DatabaseEloquentRelationshipsTest_testHigherOrderHasThroughApi_class_2
+        )->deployments();
 
         $this->assertInstanceOf(HasManyThrough::class, $fluent);
         $this->assertInstanceOf(HasManyThrough::class, $higher);
@@ -443,7 +459,7 @@ class FluentMechanic extends MockedConnectionModel
     public function owner()
     {
         return $this->through($this->car())
-            ->has(fn (Car $car) => $car->owner());
+            ->has(function (Car $car) { return $car->owner(); });
     }
 
     public function car()
@@ -470,7 +486,7 @@ class ClassicProject extends MockedConnectionModel
             'pro_id',
             'env_id',
             'p_id',
-            'e_id',
+            'e_id'
         );
     }
 }
@@ -479,7 +495,7 @@ class FluentProject extends MockedConnectionModel
 {
     public function deployments()
     {
-        return $this->through($this->environments())->has(fn (Environment $env) => $env->deployments());
+        return $this->through($this->environments())->has(function (Environment $env) { return $env->deployments(); });
     }
 
     public function environments()

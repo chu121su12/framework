@@ -44,29 +44,31 @@ class PendingHasThroughRelationship
     public function has($callback)
     {
         if (is_string($callback)) {
-            $callback = fn () => $this->localRelationship->getRelated()->{$callback}();
+            $callback = function () use ($callback) {
+                return $this->localRelationship->getRelated()->{$callback}();
+            };
         }
 
         $distantRelation = $callback($this->localRelationship->getRelated());
 
         if ($distantRelation instanceof HasMany) {
             return $this->rootModel->hasManyThrough(
-                $distantRelation->getRelated()::class,
-                $this->localRelationship->getRelated()::class,
+                get_class($distantRelation->getRelated()),
+                get_class($this->localRelationship->getRelated()),
                 $this->localRelationship->getForeignKeyName(),
                 $distantRelation->getForeignKeyName(),
                 $this->localRelationship->getLocalKeyName(),
-                $distantRelation->getLocalKeyName(),
+                $distantRelation->getLocalKeyName()
             );
         }
 
         return $this->rootModel->hasOneThrough(
-            $distantRelation->getRelated()::class,
-            $this->localRelationship->getRelated()::class,
+            get_class($distantRelation->getRelated()),
+            get_class($this->localRelationship->getRelated()),
             $this->localRelationship->getForeignKeyName(),
             $distantRelation->getForeignKeyName(),
             $this->localRelationship->getLocalKeyName(),
-            $distantRelation->getLocalKeyName(),
+            $distantRelation->getLocalKeyName()
         );
     }
 

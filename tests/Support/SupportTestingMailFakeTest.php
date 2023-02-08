@@ -11,6 +11,8 @@ use PHPUnit\Framework\TestCase;
 
 class SupportTestingMailFakeTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     /**
      * @var \Illuminate\Support\Testing\Fakes\MailFake
      */

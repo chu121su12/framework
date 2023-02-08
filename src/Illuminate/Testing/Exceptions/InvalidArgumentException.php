@@ -2,17 +2,21 @@
 
 namespace Illuminate\Testing\Exceptions;
 
-use PHPUnit\Framework\Exception;
+use PHPUnit_Framework_Exception;
 
-class InvalidArgumentException extends Exception
+class InvalidArgumentException extends PHPUnit_Framework_Exception
 {
     /**
      * Creates a new exception for an invalid argument.
      *
      * @return static
      */
-    public static function create(int $argument, string $type): static
+    public static function create(/*int */$argument, /*string */$type)/*: static*/
     {
+        $argument = backport_type_check('int', $argument);
+
+        $type = backport_type_check('string', $type);
+
         $stack = debug_backtrace();
 
         $function = $stack[1]['function'];

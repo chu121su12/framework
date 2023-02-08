@@ -54,8 +54,13 @@ class InvokableValidationRule implements RuleContract, ValidatorAwareRule
      * @param  \Illuminate\Contracts\Validation\ValidationRule|\Illuminate\Contracts\Validation\InvokableRule  $invokable
      * @return void
      */
-    protected function __construct(ValidationRule|InvokableRule $invokable)
+    protected function __construct(/*ValidationRule|InvokableRule */$invokable)
     {
+        $invokable = backport_type_check([
+            ValidationRule::class,
+            InvokableRule::class,
+        ], $invokable);
+
         $this->invokable = $invokable;
     }
 

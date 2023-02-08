@@ -14,6 +14,8 @@ use PHPUnit\Framework\TestCase;
 
 class SupportTestingNotificationFakeTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     /**
      * @var \Illuminate\Support\Testing\Fakes\NotificationFake
      */

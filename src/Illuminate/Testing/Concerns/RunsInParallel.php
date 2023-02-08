@@ -9,6 +9,13 @@ use RuntimeException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
+if (trait_exists(\Tests\CreatesApplication::class)) {
+    class ParallelRunner_createApplication_class
+                {
+                    use \Tests\CreatesApplication;
+                }
+}
+
 trait RunsInParallel
 {
     /**
@@ -99,7 +106,7 @@ trait RunsInParallel
      *
      * @return int
      */
-    public function execute(): int
+    public function execute()/*: int*/
     {
         $phpHandlerClass = class_exists(\PHPUnit\TextUI\Configuration\PhpHandler::class)
             ? \PHPUnit\TextUI\Configuration\PhpHandler::class
@@ -131,7 +138,7 @@ trait RunsInParallel
      *
      * @return int
      */
-    public function getExitCode(): int
+    public function getExitCode()/*: int*/
     {
         return $this->runner->getExitCode();
     }
@@ -168,10 +175,7 @@ trait RunsInParallel
     {
         $applicationResolver = static::$applicationResolver ?: function () {
             if (trait_exists(\Tests\CreatesApplication::class)) {
-                $applicationCreator = new class
-                {
-                    use \Tests\CreatesApplication;
-                };
+                $applicationCreator = new ParallelRunner_createApplication_class;
 
                 return $applicationCreator->createApplication();
             } elseif (file_exists($path = getcwd().'/bootstrap/app.php') ||

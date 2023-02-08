@@ -3577,7 +3577,7 @@ class Builder implements BuilderContract
     public function getColumns()
     {
         return ! is_null($this->columns)
-                ? array_map(fn ($column) => $this->grammar->getValue($column), $this->columns)
+                ? array_map(function ($column) { return $this->grammar->getValue($column); }, $this->columns)
                 : [];
     }
 

@@ -14,6 +14,43 @@ use Orchestra\Testbench\Concerns\CreatesApplication;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 
+class FoundationInteractsWithDatabaseTest_testExpectsDatabaseQueryCount_class_1 extends TestingTestCase
+        {
+            use CreatesApplication;
+
+            public function testExpectsDatabaseQueryCount()
+            {
+                $this->expectsDatabaseQueryCount(0);
+            }
+        }
+
+class FoundationInteractsWithDatabaseTest_testExpectsDatabaseQueryCount_class_2 extends TestingTestCase
+        {
+            use CreatesApplication;
+
+            public function testExpectsDatabaseQueryCount()
+            {
+                $this->expectsDatabaseQueryCount(3);
+            }
+        }
+
+class FoundationInteractsWithDatabaseTest_testExpectsDatabaseQueryCount_class_3 extends TestingTestCase
+        {
+            use CreatesApplication;
+
+            public function testExpectsDatabaseQueryCount()
+            {
+                $this->expectsDatabaseQueryCount(3);
+
+                DB::pretend(function ($db) {
+                    $db->table('foo')->count();
+                    $db->table('foo')->count();
+                    $db->table('foo')->count();
+                    $db->table('foo')->count();
+                });
+            }
+        }
+
 class FoundationInteractsWithDatabaseTest extends TestCase
 {
     use InteractsWithDatabase;
@@ -326,29 +363,13 @@ class FoundationInteractsWithDatabaseTest extends TestCase
 
     public function testExpectsDatabaseQueryCount()
     {
-        $case = new class('foo') extends TestingTestCase
-        {
-            use CreatesApplication;
-
-            public function testExpectsDatabaseQueryCount()
-            {
-                $this->expectsDatabaseQueryCount(0);
-            }
-        };
+        $case = new FoundationInteractsWithDatabaseTest_testExpectsDatabaseQueryCount_class_1('foo');
 
         $case->setUp();
         $case->testExpectsDatabaseQueryCount();
         $case->tearDown();
 
-        $case = new class('foo') extends TestingTestCase
-        {
-            use CreatesApplication;
-
-            public function testExpectsDatabaseQueryCount()
-            {
-                $this->expectsDatabaseQueryCount(3);
-            }
-        };
+        $case = new FoundationInteractsWithDatabaseTest_testExpectsDatabaseQueryCount_class_2('foo');
 
         $case->setUp();
         $case->testExpectsDatabaseQueryCount();
@@ -360,22 +381,7 @@ class FoundationInteractsWithDatabaseTest extends TestCase
             $this->assertSame("Expected 3 database queries on the [testing] connection. 0 occurred.\nFailed asserting that 3 is identical to 0.", $e->getMessage());
         }
 
-        $case = new class('foo') extends TestingTestCase
-        {
-            use CreatesApplication;
-
-            public function testExpectsDatabaseQueryCount()
-            {
-                $this->expectsDatabaseQueryCount(3);
-
-                DB::pretend(function ($db) {
-                    $db->table('foo')->count();
-                    $db->table('foo')->count();
-                    $db->table('foo')->count();
-                    $db->table('foo')->count();
-                });
-            }
-        };
+        $case = new FoundationInteractsWithDatabaseTest_testExpectsDatabaseQueryCount_class_3('foo');
 
         $case->setUp();
         $case->testExpectsDatabaseQueryCount();

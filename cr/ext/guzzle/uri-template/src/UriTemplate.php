@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace GuzzleHttp\UriTemplate;
 
@@ -107,7 +107,7 @@ final class UriTemplate
      */
     private static function expandMatchCallback(array $variables)/*: callable*/
     {
-        return static function (array $matches) use ($variables): string {
+        return static function (array $matches) use ($variables)/*: string*/ {
             return self::expandMatch($matches, $variables);
         };
     }

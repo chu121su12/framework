@@ -32,7 +32,12 @@ class Timebox
 
         try {
             $result = $callback($this);
+        } catch (\Exception $caught) {
+        } catch (\ErrorException $caught) {
         } catch (Throwable $caught) {
+        }
+
+        if (isset($caught)) {
             $exception = $caught;
         }
 

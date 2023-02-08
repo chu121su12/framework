@@ -768,8 +768,10 @@ class PendingRequest
      * @param  array  $data
      * @return \Illuminate\Http\Client\Response
      */
-    public function patch(string $url, $data = [])
+    public function patch(/*string */$url, $data = [])
     {
+        $url = backport_type_check('string', $url);
+
         return $this->send('PATCH', $url, [
             $this->bodyFormat => $data,
         ]);
@@ -782,8 +784,10 @@ class PendingRequest
      * @param  array  $data
      * @return \Illuminate\Http\Client\Response
      */
-    public function put(string $url, $data = [])
+    public function put(/*string */$url, $data = [])
     {
+        $url = backport_type_check('string', $url);
+
         return $this->send('PUT', $url, [
             $this->bodyFormat => $data,
         ]);
@@ -796,8 +800,10 @@ class PendingRequest
      * @param  array  $data
      * @return \Illuminate\Http\Client\Response
      */
-    public function delete(string $url, $data = [])
+    public function delete(/*string */$url, $data = [])
     {
+        $url = backport_type_check('string', $url);
+
         return $this->send('DELETE', $url, empty($data) ? [] : [
             $this->bodyFormat => $data,
         ]);
@@ -909,8 +915,10 @@ class PendingRequest
      * @param  string  $url
      * @return string
      */
-    protected function expandUrlParameters(string $url)
+    protected function expandUrlParameters(/*string */$url)
     {
+        $url = backport_type_check('string', $url);
+
         return UriTemplate::expand($url, $this->urlParameters);
     }
 

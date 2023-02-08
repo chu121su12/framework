@@ -542,7 +542,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
                 $match[4] = $match[4].$rest;
             }
 
-            [$template, $offset] = $this->replaceFirstStatement(
+            list($template, $offset) = $this->replaceFirstStatement(
                 $match[0],
                 $this->compileStatement($match),
                 $template,

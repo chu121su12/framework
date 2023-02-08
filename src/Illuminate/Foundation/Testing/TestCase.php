@@ -165,13 +165,18 @@ abstract class TestCase extends BaseTestCase
     /**
      * {@inheritdoc}
      */
-    protected function runTest(): mixed
+    protected function runTest()/*: mixed*/
     {
         $result = null;
 
         try {
             $result = parent::runTest();
+        } catch (\Exception $e) {
+        } catch (\ErrorException $e) {
         } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             if (! is_null(static::$latestResponse)) {
                 static::$latestResponse->transformNotSuccessfulException($e);
             }

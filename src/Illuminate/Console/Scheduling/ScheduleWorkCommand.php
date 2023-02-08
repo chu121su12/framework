@@ -2,6 +2,7 @@
 
 namespace Illuminate\Console\Scheduling;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\ProcessUtils;
@@ -40,7 +41,7 @@ class ScheduleWorkCommand extends Command
 
         list($lastExecutionStartedAt, $executions) = [null, []];
 
-        $command = implode(' ', array_map(fn ($arg) => ProcessUtils::escapeArgument($arg), [
+        $command = implode(' ', array_map(function ($arg) { return ProcessUtils::escapeArgument($arg); }, [
             PHP_BINARY,
             defined('ARTISAN_BINARY') ? ARTISAN_BINARY : 'artisan',
             'schedule:run',
@@ -55,7 +56,7 @@ class ScheduleWorkCommand extends Command
 
             if (Carbon::now()->second === 0 &&
                 ! Carbon::now()->startOfMinute()->equalTo($lastExecutionStartedAt)) {
-                $executions[] = $execution = Process::fromShellCommandline($command);
+                $executions[] = $execution = SymfonyHelper::processFromShellCommandline($command);
 
                 $execution->start();
 

@@ -439,6 +439,12 @@ class Dispatcher implements DispatcherContract
 
             $callable = $this->createClassCallable($listener);
 
+            if (is_array($callable) && isset($callable[0]) && isset($callable[1]) && ! method_exists($callable[0], $callable[1])) {
+                $className = is_object($callable[0]) ? get_class($callable[0]) : $callable[0];
+
+                throw new \Error('Call to undefined method '.$className.'::'.$callable[1].'()');
+            }
+
             return $callable(...array_values($payload));
         };
     }

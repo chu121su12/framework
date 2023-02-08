@@ -14,5 +14,5 @@ interface ValidationRule
      * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      * @return void
      */
-    public function validate(string $attribute, mixed $value, Closure $fail): void;
+    public function validate(/*string */$attribute, /*mixed */$value, Closure $fail)/*: void*/;
 }

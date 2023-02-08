@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 
 class SupportTestingQueueFakeTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     /**
      * @var \Illuminate\Support\Testing\Fakes\QueueFake
      */
