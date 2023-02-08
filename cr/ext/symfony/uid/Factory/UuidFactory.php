@@ -44,10 +44,10 @@ class UuidFactory
             $nameBasedNamespace = $this->getNamespace($nameBasedNamespace);
         }
 
-        $this->defaultClass = is_numeric($defaultClass) ? Uuid::class.'V'.$defaultClass : $defaultClass;
-        $this->timeBasedClass = is_numeric($timeBasedClass) ? Uuid::class.'V'.$timeBasedClass : $timeBasedClass;
-        $this->nameBasedClass = is_numeric($nameBasedClass) ? Uuid::class.'V'.$nameBasedClass : $nameBasedClass;
-        $this->randomBasedClass = is_numeric($randomBasedClass) ? Uuid::class.'V'.$randomBasedClass : $randomBasedClass;
+        $this->defaultClass = backport_is_numeric($defaultClass) ? Uuid::class.'V'.$defaultClass : $defaultClass;
+        $this->timeBasedClass = backport_is_numeric($timeBasedClass) ? Uuid::class.'V'.$timeBasedClass : $timeBasedClass;
+        $this->nameBasedClass = backport_is_numeric($nameBasedClass) ? Uuid::class.'V'.$nameBasedClass : $nameBasedClass;
+        $this->randomBasedClass = backport_is_numeric($randomBasedClass) ? Uuid::class.'V'.$randomBasedClass : $randomBasedClass;
         $this->timeBasedNode = $timeBasedNode;
         $this->nameBasedNamespace = $nameBasedNamespace;
     }

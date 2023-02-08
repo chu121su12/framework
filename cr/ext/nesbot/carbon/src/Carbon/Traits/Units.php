@@ -227,7 +227,7 @@ trait Units
             return parent::add($unit);
         }
 
-        if (is_numeric($unit)) {
+        if (backport_is_numeric($unit)) {
             list($value, $unit) = [$unit, $value];
         }
 
@@ -249,7 +249,7 @@ trait Units
 
         $date = $this;
 
-        if (!is_numeric($value) || !(float) $value) {
+        if (!backport_is_numeric($value) || !(float) $value) {
             return $date->isMutable() ? $date : $date->avoidMutation();
         }
 
@@ -392,7 +392,7 @@ trait Units
             return parent::sub($unit);
         }
 
-        if (is_numeric($unit)) {
+        if (backport_is_numeric($unit)) {
             list($value, $unit) = [$unit, $value];
         }
 

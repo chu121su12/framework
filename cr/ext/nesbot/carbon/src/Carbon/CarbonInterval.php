@@ -1969,7 +1969,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
      */
     public function add($unit, $value = 1)
     {
-        if (is_numeric($unit)) {
+        if (backport_is_numeric($unit)) {
             list($value, $unit) = [$unit, $value];
         }
 
@@ -2012,7 +2012,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
      */
     public function sub($unit, $value = 1)
     {
-        if (is_numeric($unit)) {
+        if (backport_is_numeric($unit)) {
             list($value, $unit) = [$unit, $value];
         }
 

@@ -43,7 +43,7 @@ class CarbonTimeZone extends DateTimeZone
             $timezone = preg_replace('/^\s*([+-]\d+)(\d{2})\s*$/', '$1:$2', $timezone);
         }
 
-        if (is_numeric($timezone)) {
+        if (backport_is_numeric($timezone)) {
             return static::parseNumericTimezone($timezone);
         }
 

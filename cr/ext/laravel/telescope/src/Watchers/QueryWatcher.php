@@ -93,7 +93,7 @@ class QueryWatcher extends Watcher
         $sql = $event->sql;
 
         foreach ($this->formatBindings($event) as $key => $binding) {
-            $regex = is_numeric($key)
+            $regex = backport_is_numeric($key)
                 ? "/\?(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/"
                 : "/:{$key}(?=(?:[^'\\\']*'[^'\\\']*')*[^'\\\']*$)/";
 

@@ -61,7 +61,7 @@ trait Creator
             $time = $this->constructTimezoneFromDateTime($time, $tz)->format('Y-m-d H:i:s.u');
         }
 
-        if (is_numeric($time) && (!\is_string($time) || !preg_match('/^\d{1,14}$/', $time))) {
+        if (backport_is_numeric($time) && (!\is_string($time) || !preg_match('/^\d{1,14}$/', $time))) {
             $time = static::createFromTimestampUTC($time)->format('Y-m-d\TH:i:s.uP');
         }
 
@@ -380,7 +380,7 @@ trait Creator
      */
     public static function create($year = 0, $month = 1, $day = 1, $hour = 0, $minute = 0, $second = 0, $tz = null)
     {
-        if ((\is_string($year) && !is_numeric($year)) || $year instanceof DateTimeInterface) {
+        if ((\is_string($year) && !backport_is_numeric($year)) || $year instanceof DateTimeInterface) {
             return static::parse($year, $tz ?: (\is_string($month) || $month instanceof DateTimeZone ? $month : null));
         }
 

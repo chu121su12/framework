@@ -103,7 +103,7 @@ final class StyleToMethod
         if (! method_exists($this->styles, $methodName)) {
             $argument = array_pop($method);
 
-            $arguments[] = is_numeric($argument) ? (int) $argument : (string) $argument;
+            $arguments[] = backport_is_numeric($argument) ? (int) $argument : (string) $argument;
 
             return $this->__invoke(...$arguments);
         }

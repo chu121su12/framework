@@ -246,7 +246,7 @@ class MessageFormatter
                 throw new \DomainException(sprintf('The PHP intl extension is required to use the "%s" message format.', $type));
             case 'number':
                 $format = isset($token[2]) ? trim($token[2]) : null;
-                if (!is_numeric($arg) || (null !== $format && 'integer' !== $format)) {
+                if (!backport_is_numeric($arg) || (null !== $format && 'integer' !== $format)) {
                     throw new \DomainException('The PHP intl extension is required to use the "number" message format with non-integer values.');
                 }
 

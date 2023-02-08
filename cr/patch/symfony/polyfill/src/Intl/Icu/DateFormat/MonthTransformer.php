@@ -124,7 +124,7 @@ class MonthTransformer extends Transformer
 
         $matched = backport_type_check('string', $matched);
 
-        if (!is_numeric($matched)) {
+        if (!backport_is_numeric($matched)) {
             if (3 === $length) {
                 $matched = self::$flippedShortMonths[$matched] + 1;
             } elseif (4 === $length) {

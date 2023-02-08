@@ -681,7 +681,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
                 $this->setStartDate($parsedDate);
             } elseif ($this->endDate === null && ($parsedDate = isset($parsedDate) ? $parsedDate : $this->makeDateTime($argument))) {
                 $this->setEndDate($parsedDate);
-            } elseif ($this->recurrences === null && $this->endDate === null && is_numeric($argument)) {
+            } elseif ($this->recurrences === null && $this->endDate === null && backport_is_numeric($argument)) {
                 $this->setRecurrences($argument);
             } elseif ($this->options === null && (\is_int($argument) || $argument === null)) {
                 $this->setOptions($argument);
@@ -1277,7 +1277,7 @@ class CarbonPeriod implements Iterator, Countable, JsonSerializable
      */
     public function setRecurrences($recurrences)
     {
-        if ((!is_numeric($recurrences) && $recurrences !== null) || $recurrences < 0) {
+        if ((!backport_is_numeric($recurrences) && $recurrences !== null) || $recurrences < 0) {
             throw new InvalidPeriodParameterException('Invalid number of recurrences.');
         }
 

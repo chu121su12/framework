@@ -472,7 +472,7 @@ abstract class AbstractFtpAdapter extends AbstractAdapter
      */
     protected function normalizeUnixTimestamp($month, $day, $timeOrYear)
     {
-        if (is_numeric($timeOrYear)) {
+        if (backport_is_numeric($timeOrYear)) {
             $year = $timeOrYear;
             $hour = '00';
             $minute = '00';
@@ -557,7 +557,7 @@ abstract class AbstractFtpAdapter extends AbstractAdapter
      */
     protected function normalizePermissions($permissions)
     {
-        if (is_numeric($permissions)) {
+        if (backport_is_numeric($permissions)) {
             return ((int) $permissions) & 0777;
         }
 

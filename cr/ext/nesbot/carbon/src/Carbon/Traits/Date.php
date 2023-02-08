@@ -915,7 +915,7 @@ trait Date
                 $method = str_starts_with($format, '%') ? 'formatLocalized' : 'rawFormat';
                 $value = $this->$method($format);
 
-                return is_numeric($value) ? (int) $value : $value;
+                return backport_is_numeric($value) ? (int) $value : $value;
 
             // @property-read string long name of weekday translated according to Carbon locale, in english if no translation available for current language
             case $name === 'dayName':

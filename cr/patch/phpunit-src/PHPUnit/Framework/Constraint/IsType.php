@@ -147,7 +147,7 @@ final class IsType extends Constraint
     {
         switch ($this->type) {
             case 'numeric':
-                return \is_numeric($other);
+                return backport_is_numeric($other);
 
             case 'integer':
             case 'int':

@@ -41,7 +41,7 @@ final class Uuid
 
     public static function uuid_create($uuid_type = \UUID_TYPE_DEFAULT)
     {
-        if (!is_numeric($uuid_type) && null !== $uuid_type) {
+        if (!backport_is_numeric($uuid_type) && null !== $uuid_type) {
             trigger_error(sprintf('uuid_create() expects parameter 1 to be int, %s given', \gettype($uuid_type)), \E_USER_WARNING);
 
             return null;
