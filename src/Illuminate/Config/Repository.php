@@ -67,7 +67,7 @@ class Repository implements ArrayAccess, ConfigContract
         $config = [];
 
         foreach ($keys as $key => $default) {
-            if (is_numeric($key)) {
+            if (backport_is_numeric($key)) {
                 list($key, $default) = [$default, null];
             }
 

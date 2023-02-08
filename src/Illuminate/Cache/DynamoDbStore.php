@@ -485,7 +485,7 @@ class DynamoDbStore implements LockProvider, Store
      */
     protected function serialize($value)
     {
-        return is_numeric($value) ? (string) $value : backport_serialize($value);
+        return backport_is_numeric($value) ? (string) $value : backport_serialize($value);
     }
 
     /**
@@ -500,7 +500,7 @@ class DynamoDbStore implements LockProvider, Store
             return (int) $value;
         }
 
-        if (is_numeric($value)) {
+        if (backport_is_numeric($value)) {
             return (float) $value;
         }
 
@@ -515,7 +515,7 @@ class DynamoDbStore implements LockProvider, Store
      */
     protected function type($value)
     {
-        return is_numeric($value) ? 'N' : 'S';
+        return backport_is_numeric($value) ? 'N' : 'S';
     }
 
     /**

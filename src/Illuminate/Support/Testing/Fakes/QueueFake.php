@@ -86,7 +86,7 @@ class QueueFake extends QueueManager implements Queue
             list($job, $callback) = [$this->firstClosureParameterType($job), $job];
         }
 
-        if (is_numeric($callback)) {
+        if (backport_is_numeric($callback)) {
             return $this->assertPushedTimes($job, $callback);
         }
 

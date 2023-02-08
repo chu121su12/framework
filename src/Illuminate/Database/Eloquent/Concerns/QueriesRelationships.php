@@ -857,7 +857,7 @@ trait QueriesRelationships
         return $this->where(
             new Expression('('.$query->toSql().')'),
             $operator,
-            is_numeric($count) ? new Expression($count) : $count,
+            backport_is_numeric($count) ? new Expression($count) : $count,
             $boolean
         );
     }

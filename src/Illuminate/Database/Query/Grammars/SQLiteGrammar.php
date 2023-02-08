@@ -211,7 +211,7 @@ class SQLiteGrammar extends Grammar
         $sql .= ' on conflict ('.$this->columnize($uniqueBy).') do update set ';
 
         $columns = collect($update)->map(function ($value, $key) {
-            return is_numeric($key)
+            return backport_is_numeric($key)
                 ? $this->wrap($value).' = '.$this->wrapValue('excluded').'.'.$this->wrap($value)
                 : $this->wrap($key).' = '.$this->parameter($value);
         })->implode(', ');

@@ -190,7 +190,7 @@ class Collection extends BaseCollection implements QueueableCollection
         }
 
         foreach ($relations as $key => $value) {
-            if (is_numeric($key)) {
+            if (backport_is_numeric($key)) {
                 $key = $value;
             }
 

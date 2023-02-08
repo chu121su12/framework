@@ -26,7 +26,7 @@ trait ConditionallyLoadsAttributes
                 continue;
             }
 
-            if (is_numeric($key) && $value instanceof MergeValue) {
+            if (backport_is_numeric($key) && $value instanceof MergeValue) {
                 return $this->mergeData(
                     $data, $index, $this->filter($value->data),
                     array_values($value->data) === $value->data
@@ -81,7 +81,7 @@ trait ConditionallyLoadsAttributes
                 $value->isMissing())) {
                 unset($data[$key]);
             } else {
-                $numericKeys = $numericKeys && is_numeric($key);
+                $numericKeys = $numericKeys && backport_is_numeric($key);
             }
         }
 

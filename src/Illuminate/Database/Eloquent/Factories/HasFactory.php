@@ -16,7 +16,7 @@ trait HasFactory
         $factory = static::newFactory() ?: Factory::factoryForModel(get_called_class());
 
         return $factory
-                    ->count(is_numeric($count) ? $count : null)
+                    ->count(backport_is_numeric($count) ? $count : null)
                     ->state(is_callable($count) || is_array($count) ? $count : $state);
     }
 

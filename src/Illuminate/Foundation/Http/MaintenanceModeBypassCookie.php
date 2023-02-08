@@ -41,7 +41,7 @@ class MaintenanceModeBypassCookie
         $payload = backport_json_decode(base64_decode($cookie), true);
 
         return is_array($payload) &&
-            is_numeric(isset($payload['expires_at']) ? $payload['expires_at'] : null) &&
+            backport_is_numeric(isset($payload['expires_at']) ? $payload['expires_at'] : null) &&
             isset($payload['mac']) &&
             hash_equals(hash_hmac('sha256', $payload['expires_at'], $key), $payload['mac']) &&
             (int) $payload['expires_at'] >= Carbon::now()->getTimestamp();

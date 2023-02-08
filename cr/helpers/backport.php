@@ -581,3 +581,18 @@ if (! \function_exists('backport_unserialize')) {
         return $unserialized;
     }
 }
+
+if (! \function_exists('backport_is_numeric')) {
+    function backport_is_numeric($value)
+    {
+        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
+            return \is_numeric($value);
+        }
+
+        if (! \is_string($value)) {
+            return \is_numeric($value);
+        }
+
+        return \is_numeric(\rtrim($value));
+    }
+}

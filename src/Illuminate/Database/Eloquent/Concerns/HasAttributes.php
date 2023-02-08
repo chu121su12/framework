@@ -1385,7 +1385,7 @@ trait HasAttributes
         // If this value is an integer, we will assume it is a UNIX timestamp's value
         // and format a Carbon object from this timestamp. This allows flexibility
         // when defining your date fields as they might be UNIX timestamps here.
-        if (is_numeric($value)) {
+        if (backport_is_numeric($value)) {
             return Date::createFromTimestamp($value);
         }
 
@@ -2084,7 +2084,7 @@ trait HasAttributes
             return $this->fromEncryptedString($attribute) === $this->fromEncryptedString($original);
         }
 
-        return is_numeric($attribute) && is_numeric($original)
+        return backport_is_numeric($attribute) && backport_is_numeric($original)
             && strcmp((string) $attribute, (string) $original) === 0;
     }
 

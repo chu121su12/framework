@@ -231,7 +231,7 @@ class DatabaseStore implements LockProvider, Store
             // so we do not have to recreate all this logic in each of the functions.
             $new = $callback((int) $current, $value);
 
-            if (! is_numeric($current)) {
+            if (! backport_is_numeric($current)) {
                 return false;
             }
 

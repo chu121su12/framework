@@ -141,7 +141,7 @@ abstract class Broadcaster implements BroadcasterContract
         $callbackParameters = $this->extractParameters($callback);
 
         return collect($this->extractChannelKeys($pattern, $channel))->reject(function ($value, $key) {
-            return is_numeric($key);
+            return backport_is_numeric($key);
         })->map(function ($value, $key) use ($callbackParameters) {
             return $this->resolveBinding($key, $value, $callbackParameters);
         })->values()->all();

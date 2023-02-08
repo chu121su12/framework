@@ -29,7 +29,7 @@ class SqlServerProcessor extends Processor
             $id = $connection->getPdo()->lastInsertId();
         }
 
-        return is_numeric($id) ? (int) $id : $id;
+        return backport_is_numeric($id) ? (int) $id : $id;
     }
 
     /**

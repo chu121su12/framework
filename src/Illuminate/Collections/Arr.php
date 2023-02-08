@@ -792,7 +792,7 @@ class Arr
         $classes = [];
 
         foreach ($classList as $class => $constraint) {
-            if (is_numeric($class)) {
+            if (backport_is_numeric($class)) {
                 $classes[] = $constraint;
             } elseif ($constraint) {
                 $classes[] = $class;
@@ -815,7 +815,7 @@ class Arr
         $styles = [];
 
         foreach ($styleList as $class => $constraint) {
-            if (is_numeric($class)) {
+            if (backport_is_numeric($class)) {
                 $styles[] = Str::finish($constraint, ';');
             } elseif ($constraint) {
                 $styles[] = Str::finish($class, ';');

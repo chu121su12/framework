@@ -93,7 +93,7 @@ class SqlServerGrammar extends Grammar
         // If there is a limit on the query, but not an offset, we will add the top
         // clause to the query, which serves as a "limit" type clause within the
         // SQL Server system similar to the limit keywords available in MySQL.
-        if (is_numeric($query->limit) && $query->limit > 0 && $query->offset <= 0) {
+        if (backport_is_numeric($query->limit) && $query->limit > 0 && $query->offset <= 0) {
             $select .= 'top '.((int) $query->limit).' ';
         }
 
@@ -453,7 +453,7 @@ class SqlServerGrammar extends Grammar
 
         if ($update) {
             $update = collect($update)->map(function ($value, $key) {
-                return is_numeric($key)
+                return backport_is_numeric($key)
                     ? $this->wrap($value).' = '.$this->wrap('laravel_source.'.$value)
                     : $this->wrap($key).' = '.$this->parameter($value);
             })->implode(', ');

@@ -222,7 +222,7 @@ class MySqlGrammar extends Grammar
         $sql .= ' on duplicate key update ';
 
         $columns = collect($update)->map(function ($value, $key) use ($useUpsertAlias) {
-            if (! is_numeric($key)) {
+            if (! backport_is_numeric($key)) {
                 return $this->wrap($key).' = '.$this->parameter($value);
             }
 

@@ -816,7 +816,7 @@ class ComponentTagCompiler
 
                     $value = backport_type_check('string', $value);
 
-                    return $escapeBound && isset($this->boundAttributes[$attribute]) && $value !== 'true' && ! is_numeric($value)
+                    return $escapeBound && isset($this->boundAttributes[$attribute]) && $value !== 'true' && ! backport_is_numeric($value)
                                 ? "'{$attribute}' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute({$value})"
                                 : "'{$attribute}' => {$value}";
                 })

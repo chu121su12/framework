@@ -258,11 +258,11 @@ class Schedule
                 return $this->compileArrayInput($key, $value);
             }
 
-            if (! is_numeric($value) && ! preg_match('/^(-.$|--.*)/i', $value)) {
+            if (! backport_is_numeric($value) && ! preg_match('/^(-.$|--.*)/i', $value)) {
                 $value = ProcessUtils::escapeArgument($value);
             }
 
-            return is_numeric($key) ? $value : "{$key}={$value}";
+            return backport_is_numeric($key) ? $value : "{$key}={$value}";
         })->implode(' ');
     }
 

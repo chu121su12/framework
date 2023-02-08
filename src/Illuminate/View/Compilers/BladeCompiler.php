@@ -772,7 +772,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
     public function components(array $components, $prefix = '')
     {
         foreach ($components as $key => $value) {
-            if (is_numeric($key)) {
+            if (backport_is_numeric($key)) {
                 $this->component($value, null, $prefix);
             } else {
                 $this->component($key, $value, $prefix);

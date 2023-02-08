@@ -109,7 +109,7 @@ class Factory
         }
 
         foreach ($callback as $command => $handler) {
-            $this->fakeHandlers[is_numeric($command) ? '*' : $command] = $handler instanceof Closure
+            $this->fakeHandlers[backport_is_numeric($command) ? '*' : $command] = $handler instanceof Closure
                     ? $handler
                     : function () use ($handler) { return $handler; };
         }

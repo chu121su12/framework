@@ -34,7 +34,7 @@ class ValidatePostSize
      */
     protected function getPostMaxSize()
     {
-        if (is_numeric($postMaxSize = ini_get('post_max_size'))) {
+        if (backport_is_numeric($postMaxSize = ini_get('post_max_size'))) {
             return (int) $postMaxSize;
         }
 

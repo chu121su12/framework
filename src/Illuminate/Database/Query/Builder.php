@@ -802,7 +802,7 @@ class Builder implements BuilderContract
     {
         return $this->whereNested(function ($query) use ($column, $method, $boolean) {
             foreach ($column as $key => $value) {
-                if (is_numeric($key) && is_array($value)) {
+                if (backport_is_numeric($key) && is_array($value)) {
                     $query->{$method}(...array_values($value));
                 } else {
                     $query->{$method}($key, '=', $value, $boolean);
@@ -3437,7 +3437,7 @@ class Builder implements BuilderContract
      */
     public function increment($column, $amount = 1, array $extra = [])
     {
-        if (! is_numeric($amount)) {
+        if (! backport_is_numeric($amount)) {
             throw new InvalidArgumentException('Non-numeric value passed to increment method.');
         }
 
@@ -3456,7 +3456,7 @@ class Builder implements BuilderContract
     public function incrementEach(array $columns, array $extra = [])
     {
         foreach ($columns as $column => $amount) {
-            if (! is_numeric($amount)) {
+            if (! backport_is_numeric($amount)) {
                 throw new InvalidArgumentException("Non-numeric value passed as increment amount for column: '$column'.");
             } elseif (! is_string($column)) {
                 throw new InvalidArgumentException('Non-associative array passed to incrementEach method.');
@@ -3480,7 +3480,7 @@ class Builder implements BuilderContract
      */
     public function decrement($column, $amount = 1, array $extra = [])
     {
-        if (! is_numeric($amount)) {
+        if (! backport_is_numeric($amount)) {
             throw new InvalidArgumentException('Non-numeric value passed to decrement method.');
         }
 
@@ -3499,7 +3499,7 @@ class Builder implements BuilderContract
     public function decrementEach(array $columns, array $extra = [])
     {
         foreach ($columns as $column => $amount) {
-            if (! is_numeric($amount)) {
+            if (! backport_is_numeric($amount)) {
                 throw new InvalidArgumentException("Non-numeric value passed as decrement amount for column: '$column'.");
             } elseif (! is_string($column)) {
                 throw new InvalidArgumentException('Non-associative array passed to decrementEach method.');

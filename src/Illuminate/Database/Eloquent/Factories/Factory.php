@@ -952,7 +952,7 @@ abstract class Factory
         } elseif (str_starts_with($method, 'has')) {
             return $this->has(
                 $factory
-                    ->count(is_numeric(isset($parameters[0]) ? $parameters[0] : null) ? $parameters[0] : 1)
+                    ->count(backport_is_numeric(isset($parameters[0]) ? $parameters[0] : null) ? $parameters[0] : 1)
                     ->state((is_callable(isset($parameters[0]) ? $parameters[0] : null) || is_array(isset($parameters[0]) ? $parameters[0] : null))
                         ? $parameters[0]
                         : (isset($parameters[1]) ? $parameters[1] : [])),

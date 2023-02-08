@@ -184,7 +184,7 @@ class Command extends SymfonyCommand
                 'The [%s] command is already running.', $this->getName()
             ));
 
-            return (int) (is_numeric($this->option('isolated'))
+            return (int) (backport_is_numeric($this->option('isolated'))
                         ? $this->option('isolated')
                         : SymfonyHelper::CONSOLE_SUCCESS /*self::SUCCESS */);
         }

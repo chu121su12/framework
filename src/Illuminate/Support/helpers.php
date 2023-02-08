@@ -20,7 +20,7 @@ if (! function_exists('append_config')) {
         $start = 9999;
 
         foreach ($array as $key => $value) {
-            if (is_numeric($key)) {
+            if (backport_is_numeric($key)) {
                 $start++;
 
                 $array[$start] = Arr::pull($array, $key);
@@ -48,7 +48,7 @@ if (! function_exists('blank')) {
             return trim($value) === '';
         }
 
-        if (is_numeric($value) || is_bool($value)) {
+        if (backport_is_numeric($value) || is_bool($value)) {
             return false;
         }
 

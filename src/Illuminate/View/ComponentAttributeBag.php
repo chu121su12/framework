@@ -201,7 +201,7 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
         $props = [];
 
         foreach ($keys as $key => $defaultValue) {
-            $key = is_numeric($key) ? $defaultValue : $key;
+            $key = backport_is_numeric($key) ? $defaultValue : $key;
 
             $props[] = $key;
             $props[] = Str::kebab($key);

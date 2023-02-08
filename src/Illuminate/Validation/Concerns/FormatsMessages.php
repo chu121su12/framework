@@ -371,7 +371,7 @@ trait FormatsMessages
         $numericIndex = 1;
 
         foreach ($segments as $segment) {
-            if (is_numeric($segment)) {
+            if (backport_is_numeric($segment)) {
                 if ($numericIndex === 1) {
                     $message = str_ireplace(':'.$placeholder, $modifier((int) $segment), $message);
                 }

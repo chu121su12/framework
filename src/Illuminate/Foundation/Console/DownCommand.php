@@ -140,6 +140,6 @@ class DownCommand extends Command
     {
         $retry = $this->option('retry');
 
-        return is_numeric($retry) && $retry > 0 ? (int) $retry : null;
+        return backport_is_numeric($retry) && $retry > 0 ? (int) $retry : null;
     }
 }

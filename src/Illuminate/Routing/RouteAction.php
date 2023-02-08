@@ -74,7 +74,7 @@ class RouteAction
     protected static function findCallable(array $action)
     {
         return Arr::first($action, function ($value, $key) {
-            return Reflector::isCallable($value) && is_numeric($key);
+            return Reflector::isCallable($value) && backport_is_numeric($key);
         });
     }
 

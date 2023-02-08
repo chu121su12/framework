@@ -1524,7 +1524,7 @@ class Builder implements BuilderContract
         // and may be a string or Closure. We'll loop over them and ensure all of
         // the present Closures are merged + strings are made into constraints.
         foreach ($relations as $key => $value) {
-            if (is_numeric($key) && is_string($value)) {
+            if (backport_is_numeric($key) && is_string($value)) {
                 list($key, $value) = $this->parseNameAndAttributeSelectionConstraint($value);
             }
 

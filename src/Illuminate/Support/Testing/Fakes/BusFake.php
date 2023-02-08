@@ -112,7 +112,7 @@ class BusFake implements QueueingDispatcher
             list($command, $callback) = [$this->firstClosureParameterType($command), $command];
         }
 
-        if (is_numeric($callback)) {
+        if (backport_is_numeric($callback)) {
             return $this->assertDispatchedTimes($command, $callback);
         }
 
@@ -187,7 +187,7 @@ class BusFake implements QueueingDispatcher
             list($command, $callback) = [$this->firstClosureParameterType($command), $command];
         }
 
-        if (is_numeric($callback)) {
+        if (backport_is_numeric($callback)) {
             return $this->assertDispatchedSyncTimes($command, $callback);
         }
 
@@ -246,7 +246,7 @@ class BusFake implements QueueingDispatcher
             list($command, $callback) = [$this->firstClosureParameterType($command), $command];
         }
 
-        if (is_numeric($callback)) {
+        if (backport_is_numeric($callback)) {
             return $this->assertDispatchedAfterResponseTimes($command, $callback);
         }
 

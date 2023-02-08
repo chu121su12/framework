@@ -224,7 +224,7 @@ class MailChannel
         }
 
         return collect($recipients)->mapWithKeys(function ($recipient, $email) {
-            return is_numeric($email)
+            return backport_is_numeric($email)
                     ? [$email => (is_string($recipient) ? $recipient : $recipient->email)]
                     : [$email => $recipient];
         })->all();

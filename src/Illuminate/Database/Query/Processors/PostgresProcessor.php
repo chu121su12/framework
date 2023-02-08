@@ -27,7 +27,7 @@ class PostgresProcessor extends Processor
 
         $id = is_object($result) ? $result->{$sequence} : $result[$sequence];
 
-        return is_numeric($id) ? (int) $id : $id;
+        return backport_is_numeric($id) ? (int) $id : $id;
     }
 
     /**

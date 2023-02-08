@@ -241,7 +241,7 @@ trait ValidatesAttributes
      */
     protected function compareDates($attribute, $value, $parameters, $operator)
     {
-        if (! is_string($value) && ! is_numeric($value) && ! $value instanceof DateTimeInterface) {
+        if (! is_string($value) && ! backport_is_numeric($value) && ! $value instanceof DateTimeInterface) {
             return false;
         }
 
@@ -365,7 +365,7 @@ trait ValidatesAttributes
      */
     public function validateAlphaDash($attribute, $value, $parameters)
     {
-        if (! is_string($value) && ! is_numeric($value)) {
+        if (! is_string($value) && ! backport_is_numeric($value)) {
             return false;
         }
 
@@ -386,7 +386,7 @@ trait ValidatesAttributes
      */
     public function validateAlphaNum($attribute, $value, $parameters)
     {
-        if (! is_string($value) && ! is_numeric($value)) {
+        if (! is_string($value) && ! backport_is_numeric($value)) {
             return false;
         }
 
@@ -523,7 +523,7 @@ trait ValidatesAttributes
         }
 
         try {
-            if ((! is_string($value) && ! is_numeric($value)) || strtotime($value) === false) {
+            if ((! is_string($value) && ! backport_is_numeric($value)) || strtotime($value) === false) {
                 return false;
             }
         } catch (Exception $e) {
@@ -547,7 +547,7 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(1, $parameters, 'date_format');
 
-        if (! is_string($value) && ! is_numeric($value)) {
+        if (! is_string($value) && ! backport_is_numeric($value)) {
             return false;
         }
 
@@ -1031,7 +1031,7 @@ trait ValidatesAttributes
     public function guessColumnForQuery($attribute)
     {
         if (in_array($attribute, Arr::collapse($this->implicitAttributes))
-                && ! is_numeric($last = last(explode('.', $attribute)))) {
+                && ! backport_is_numeric($last = last(explode('.', $attribute)))) {
             return $last;
         }
 
@@ -1101,15 +1101,15 @@ trait ValidatesAttributes
 
         $this->shouldBeNumeric($attribute, 'Gt');
 
-        if (is_null($comparedToValue) && (is_numeric($value) && is_numeric($parameters[0]))) {
+        if (is_null($comparedToValue) && (backport_is_numeric($value) && backport_is_numeric($parameters[0]))) {
             return BigNumber::of($this->getSize($attribute, $value))->isGreaterThan($this->trim($parameters[0]));
         }
 
-        if (is_numeric($parameters[0])) {
+        if (backport_is_numeric($parameters[0])) {
             return false;
         }
 
-        if ($this->hasRule($attribute, $this->numericRules) && is_numeric($value) && is_numeric($comparedToValue)) {
+        if ($this->hasRule($attribute, $this->numericRules) && backport_is_numeric($value) && backport_is_numeric($comparedToValue)) {
             return BigNumber::of($this->trim($value))->isGreaterThan($this->trim($comparedToValue));
         }
 
@@ -1136,15 +1136,15 @@ trait ValidatesAttributes
 
         $this->shouldBeNumeric($attribute, 'Lt');
 
-        if (is_null($comparedToValue) && (is_numeric($value) && is_numeric($parameters[0]))) {
+        if (is_null($comparedToValue) && (backport_is_numeric($value) && backport_is_numeric($parameters[0]))) {
             return BigNumber::of($this->getSize($attribute, $value))->isLessThan($this->trim($parameters[0]));
         }
 
-        if (is_numeric($parameters[0])) {
+        if (backport_is_numeric($parameters[0])) {
             return false;
         }
 
-        if ($this->hasRule($attribute, $this->numericRules) && is_numeric($value) && is_numeric($comparedToValue)) {
+        if ($this->hasRule($attribute, $this->numericRules) && backport_is_numeric($value) && backport_is_numeric($comparedToValue)) {
             return BigNumber::of($this->trim($value))->isLessThan($this->trim($comparedToValue));
         }
 
@@ -1171,15 +1171,15 @@ trait ValidatesAttributes
 
         $this->shouldBeNumeric($attribute, 'Gte');
 
-        if (is_null($comparedToValue) && (is_numeric($value) && is_numeric($parameters[0]))) {
+        if (is_null($comparedToValue) && (backport_is_numeric($value) && backport_is_numeric($parameters[0]))) {
             return BigNumber::of($this->getSize($attribute, $value))->isGreaterThanOrEqualTo($this->trim($parameters[0]));
         }
 
-        if (is_numeric($parameters[0])) {
+        if (backport_is_numeric($parameters[0])) {
             return false;
         }
 
-        if ($this->hasRule($attribute, $this->numericRules) && is_numeric($value) && is_numeric($comparedToValue)) {
+        if ($this->hasRule($attribute, $this->numericRules) && backport_is_numeric($value) && backport_is_numeric($comparedToValue)) {
             return BigNumber::of($this->trim($value))->isGreaterThanOrEqualTo($this->trim($comparedToValue));
         }
 
@@ -1206,15 +1206,15 @@ trait ValidatesAttributes
 
         $this->shouldBeNumeric($attribute, 'Lte');
 
-        if (is_null($comparedToValue) && (is_numeric($value) && is_numeric($parameters[0]))) {
+        if (is_null($comparedToValue) && (backport_is_numeric($value) && backport_is_numeric($parameters[0]))) {
             return BigNumber::of($this->getSize($attribute, $value))->isLessThanOrEqualTo($this->trim($parameters[0]));
         }
 
-        if (is_numeric($parameters[0])) {
+        if (backport_is_numeric($parameters[0])) {
             return false;
         }
 
-        if ($this->hasRule($attribute, $this->numericRules) && is_numeric($value) && is_numeric($comparedToValue)) {
+        if ($this->hasRule($attribute, $this->numericRules) && backport_is_numeric($value) && backport_is_numeric($comparedToValue)) {
             return BigNumber::of($this->trim($value))->isLessThanOrEqualTo($this->trim($comparedToValue));
         }
 
@@ -1698,7 +1698,7 @@ trait ValidatesAttributes
      */
     public function validateNumeric($attribute, $value)
     {
-        return is_numeric($value);
+        return backport_is_numeric($value);
     }
 
     /**
@@ -1723,7 +1723,7 @@ trait ValidatesAttributes
      */
     public function validateRegex($attribute, $value, $parameters)
     {
-        if (! is_string($value) && ! is_numeric($value)) {
+        if (! is_string($value) && ! backport_is_numeric($value)) {
             return false;
         }
 
@@ -1742,7 +1742,7 @@ trait ValidatesAttributes
      */
     public function validateNotRegex($attribute, $value, $parameters)
     {
-        if (! is_string($value) && ! is_numeric($value)) {
+        if (! is_string($value) && ! backport_is_numeric($value)) {
             return false;
         }
 
@@ -2365,7 +2365,7 @@ trait ValidatesAttributes
         // return the proper size accordingly. If it is a number, then number itself
         // is the size. If it is a file, we take kilobytes, and for a string the
         // entire length of the string will be considered the attribute size.
-        if (is_numeric($value) && $hasNumeric) {
+        if (backport_is_numeric($value) && $hasNumeric) {
             return $this->trim($value);
         } elseif (is_array($value)) {
             return count($value);
@@ -2468,7 +2468,7 @@ trait ValidatesAttributes
      */
     protected function shouldBeNumeric($attribute, $rule)
     {
-        if (is_numeric($this->getValue($attribute))) {
+        if (backport_is_numeric($this->getValue($attribute))) {
             $this->numericRules[] = $rule;
         }
     }
