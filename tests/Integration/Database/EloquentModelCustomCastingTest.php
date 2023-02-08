@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Integration\Database;
 
+use Brick\Math\BigNumber;
 use GMP;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
@@ -404,7 +405,7 @@ class EuroCaster implements CastsAttributes
     {
         $value = backport_type_check('string', $value);
 
-        $model->$key = new Euro(bcadd($model->$key->value, $value, 2));
+        $model->$key = new Euro((string) BigNumber::of($model->$key->value)->plus($value)->toScale(2));
 
         return $model->$key;
     }
@@ -413,7 +414,7 @@ class EuroCaster implements CastsAttributes
     {
         $value = backport_type_check('string', $value);
 
-        $model->$key = new Euro(bcsub($model->$key->value, $value, 2));
+        $model->$key = new Euro((string) BigNumber::of($model->$key->value)->subtract($value)->toScale(2));
 
         return $model->$key;
     }

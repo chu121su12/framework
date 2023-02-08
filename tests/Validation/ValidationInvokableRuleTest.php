@@ -4,7 +4,7 @@ namespace Illuminate\Tests\Validation;
 
 use Closure;
 use Illuminate\Contracts\Validation\DataAwareRule;
-use Illuminate\Contracts\Validation\InvokableRule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Contracts\Validation\ValidatorAwareRule;
 use Illuminate\Translation\ArrayLoader;
@@ -13,40 +13,40 @@ use Illuminate\Validation\InvokableValidationRule;
 use Illuminate\Validation\Validator;
 use PHPUnit\Framework\TestCase;
 
-class ValidationInvokableRuleTest_testItCanPass_class implements InvokableRule
+class ValidationInvokableRuleTest_testItCanPass_class implements ValidationRule
         {
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 //
             }
         }
 
-class ValidationInvokableRuleTest_testItCanFail_class implements InvokableRule
+class ValidationInvokableRuleTest_testItCanFail_class implements ValidationRule
         {
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 $fail("The {$attribute} attribute is not 'foo'. Got '{$value}' instead.");
             }
         }
 
-class ValidationInvokableRuleTest_testItCanReturnMultipleErrorMessages_class implements InvokableRule
+class ValidationInvokableRuleTest_testItCanReturnMultipleErrorMessages_class implements ValidationRule
         {
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 $fail('Error message 1.');
                 $fail('Error message 2.');
             }
         }
 
-class ValidationInvokableRuleTest_testItCanTranslateMessages_class implements InvokableRule
+class ValidationInvokableRuleTest_testItCanTranslateMessages_class implements ValidationRule
         {
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 $fail('validation.translated-error')->translate();
             }
         }
 
-class ValidationInvokableRuleTest_testItCanAccessDataDuringValidation_class implements InvokableRule, DataAwareRule
+class ValidationInvokableRuleTest_testItCanAccessDataDuringValidation_class implements ValidationRule, DataAwareRule
         {
             public $data = [];
 
@@ -55,7 +55,7 @@ class ValidationInvokableRuleTest_testItCanAccessDataDuringValidation_class impl
                 $this->data = $data;
             }
 
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 if ($this->data === []) {
                     $fail('xxxx');
@@ -63,7 +63,7 @@ class ValidationInvokableRuleTest_testItCanAccessDataDuringValidation_class impl
             }
         }
 
-class ValidationInvokableRuleTest_testItCanAccessValidatorDuringValidation_class implements InvokableRule, ValidatorAwareRule
+class ValidationInvokableRuleTest_testItCanAccessValidatorDuringValidation_class implements ValidationRule, ValidatorAwareRule
         {
             public $validator = null;
 
@@ -72,7 +72,7 @@ class ValidationInvokableRuleTest_testItCanAccessValidatorDuringValidation_class
                 $this->validator = $validator;
             }
 
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 if ($this->validator === null) {
                     $fail('xxxx');
@@ -80,46 +80,46 @@ class ValidationInvokableRuleTest_testItCanAccessValidatorDuringValidation_class
             }
         }
 
-class ValidationInvokableRuleTest_testItCanBeExplicit_class implements InvokableRule
+class ValidationInvokableRuleTest_testItCanBeExplicit_class implements ValidationRule
         {
             public $implicit = false;
 
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 $fail('xxxx');
             }
         }
 
-class ValidationInvokableRuleTest_testItCanBeImplicit_class implements InvokableRule
+class ValidationInvokableRuleTest_testItCanBeImplicit_class implements ValidationRule
         {
             public $implicit = true;
 
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 $fail('xxxx');
             }
         }
 
-class ValidationInvokableRuleTest_testItIsExplicitByDefault_class implements InvokableRule
+class ValidationInvokableRuleTest_testItIsExplicitByDefault_class implements ValidationRule
         {
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 $fail('xxxx');
             }
         }
 
-class ValidationInvokableRuleTest_testItCanSpecifyTheValidationErrorKeyForTheErrorMessage_class implements InvokableRule
+class ValidationInvokableRuleTest_testItCanSpecifyTheValidationErrorKeyForTheErrorMessage_class implements ValidationRule
         {
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 $fail('bar.baz', 'Another attribute error.');
                 $fail('This attribute error.');
             }
         }
 
-class ValidationInvokableRuleTest_testItPerformsReplacementsWhenTranslating_class implements InvokableRule
+class ValidationInvokableRuleTest_testItPerformsReplacementsWhenTranslating_class implements ValidationRule
         {
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 if ($value !== null) {
                     $fail('validation.translated-error')->translate([
@@ -129,9 +129,9 @@ class ValidationInvokableRuleTest_testItPerformsReplacementsWhenTranslating_clas
             }
         }
 
-class ValidationInvokableRuleTest_testItLooksForLanguageFileCustomisations_class implements InvokableRule
+class ValidationInvokableRuleTest_testItLooksForLanguageFileCustomisations_class implements ValidationRule
         {
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 if ($value !== null) {
                     $fail('validation.translated-error')->translate();
@@ -139,46 +139,46 @@ class ValidationInvokableRuleTest_testItLooksForLanguageFileCustomisations_class
             }
         }
 
-class ValidationInvokableRuleTest_testItCanSpecifyLocaleWhenTranslating_class implements InvokableRule
+class ValidationInvokableRuleTest_testItCanSpecifyLocaleWhenTranslating_class implements ValidationRule
         {
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 $fail('validation.translated-error')->translate([], 'en');
                 $fail('validation.translated-error')->translate([], 'fr');
             }
         }
 
-class ValidationInvokableRuleTest_testItCanTranslateWithChoices_class implements InvokableRule
+class ValidationInvokableRuleTest_testItCanTranslateWithChoices_class implements ValidationRule
         {
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 $fail('validation.translated-error')->translateChoice(2);
             }
         }
 
-class ValidationInvokableRuleTest_testExplicitRuleCanUseInlineValidationMessages_class implements InvokableRule
+class ValidationInvokableRuleTest_testExplicitRuleCanUseInlineValidationMessages_class implements ValidationRule
         {
             public $implicit = false;
 
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 $fail('xxxx');
             }
         }
 
-class ValidationInvokableRuleTest_testImplicitRuleCanUseInlineValidationMessages_class implements InvokableRule
+class ValidationInvokableRuleTest_testImplicitRuleCanUseInlineValidationMessages_class implements ValidationRule
         {
             public $implicit = true;
 
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 $fail('xxxx');
             }
         }
 
-class ValidationInvokableRuleTest_testItCanReturnInvokableRule_class implements InvokableRule
+class ValidationInvokableRuleTest_testItCanReturnInvokableRule_class implements ValidationRule
         {
-            public function __invoke($attribute, $value, Closure $fail)
+            public function validate($attribute, $value, Closure $fail)/*: void*/
             {
                 $fail('xxxx');
             }

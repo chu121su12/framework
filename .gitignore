@@ -1,13 +1,13 @@
-/ignore
-
+/.phpunit.cache
 /vendor
 # composer.phar
 composer.lock
 .DS_Store
 Thumbs.db
 /phpunit.xml
-/.fleet
 /.idea
-/.phpintel
+/.fleet
 /.vscode
 .phpunit.result.cache
+
+/.phpintel

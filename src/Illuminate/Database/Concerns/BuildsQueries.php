@@ -426,7 +426,7 @@ trait BuildsQueries
     {
         $parameter = backport_type_check('string', $parameter);
 
-        $columns = $builder instanceof Builder ? $builder->getQuery()->columns : $builder->columns;
+        $columns = $builder instanceof Builder ? $builder->getQuery()->getColumns() : $builder->getColumns();
 
         if (! is_null($columns)) {
             foreach ($columns as $column) {

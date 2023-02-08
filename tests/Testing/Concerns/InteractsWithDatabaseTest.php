@@ -157,6 +157,6 @@ TEXT;
 
         $instance = new InteractsWithDatabaseTest_castAsJson_class;
 
-        return $instance->castAsJson($value)->getValue();
+        return $instance->castAsJson($value)->getValue($grammar);
     }
 }

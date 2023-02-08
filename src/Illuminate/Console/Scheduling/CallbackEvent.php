@@ -134,6 +134,8 @@ class CallbackEvent extends Event
     /**
      * Do not allow the event to overlap each other.
      *
+     * The expiration time of the underlying cache lock may be specified in minutes.
+     *
      * @param  int  $expiresAt
      * @return $this
      *

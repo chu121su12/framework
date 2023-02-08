@@ -143,16 +143,13 @@ class LotteryTest extends TestCase
         $this->assertSame('winner', $result);
 
         $this->expectException(RuntimeException::class);
-        // $this->expectErrorMessage('Missing key in sequence.');
         $this->expectExceptionMessage('Missing key in sequence.');
-
         Lottery::odds(1, 10000)->winner(function () { return 'winner'; })->loser(function () { return 'loser'; })->choose();
     }
 
     public function testItThrowsForFloatsOverOne()
     {
         $this->expectException(RuntimeException::class);
-        // $this->expectErrorMessage('Float must not be greater than 1.');
         $this->expectExceptionMessage('Float must not be greater than 1.');
 
         new Lottery(1.1);
