@@ -102,7 +102,7 @@ final class BigRational extends BigNumber
      */
     public static function nd(
         /*BigNumber|int|float|string */$numerator,
-        /*BigNumber|int|float|string */$denominator,
+        /*BigNumber|int|float|string */$denominator
     ) : BigRational {
         $numerator = backport_type_check([
             BigNumber::class,
