@@ -528,7 +528,10 @@ class Migrator
             return new $class;
         }
 
-        $migration = static::$requiredPathCache[$path] ??= $this->files->getRequire($path);
+        if (! isset(static::$requiredPathCache[$path])) {
+            static::$requiredPathCache[$path] = $this->files->getRequire($path);
+        }
+        $migration = static::$requiredPathCache[$path];
 
         if (is_object($migration)) {
             return clone $migration;

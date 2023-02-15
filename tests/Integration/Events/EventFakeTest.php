@@ -176,7 +176,7 @@ class EventFakeTest extends TestCase
 
     public function testMissingMethodsAreForwarded()
     {
-        Event::macro('foo', fn () => 'bar');
+        Event::macro('foo', function () { return 'bar'; });
 
         $this->assertEquals('bar', Event::fake()->foo());
     }

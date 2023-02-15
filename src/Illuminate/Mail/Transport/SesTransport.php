@@ -151,7 +151,8 @@ class SesTransport extends Transport
      *
      * @return string
      */
-    public function __toString(): string
+    #[\ReturnTypeWillChange]
+    public function __toString()/*: string*/
     {
         return 'ses';
     }

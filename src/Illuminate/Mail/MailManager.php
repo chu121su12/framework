@@ -283,7 +283,7 @@ class MailManager implements FactoryContract
 
         return new SesV2Transport(
             new SesV2Client($this->addSesCredentials($config)),
-            $config['options'] ?? []
+            isset($config['options']) ? $config['options'] : []
         );
     }
 

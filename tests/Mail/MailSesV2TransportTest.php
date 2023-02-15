@@ -15,7 +15,7 @@ use Symfony\Component\Mime\Email;
 
 class MailSesV2TransportTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
 
@@ -24,6 +24,8 @@ class MailSesV2TransportTest extends TestCase
 
     public function testGetTransport()
     {
+        $this->markTestSkipped('Needs symfony/mailer 6');
+
         $container = new Container;
 
         $container->singleton('config', function () {
@@ -50,6 +52,8 @@ class MailSesV2TransportTest extends TestCase
 
     public function testSend()
     {
+        $this->markTestSkipped('Needs symfony/mailer 6');
+
         $message = new Email();
         $message->subject('Foo subject');
         $message->text('Bar body');
@@ -78,6 +82,8 @@ class MailSesV2TransportTest extends TestCase
 
     public function testSesV2LocalConfiguration()
     {
+        $this->markTestSkipped('Needs symfony/mailer 6');
+
         $container = new Container;
 
         $container->singleton('config', function () {

@@ -375,9 +375,13 @@ abstract class HasOneOrMany extends Relation
      * @param  iterable  $records
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function createManyQuietly(iterable $records)
+    public function createManyQuietly(/*iterable */$records)
     {
-        return Model::withoutEvents(fn () => $this->createMany($records));
+        $records = backport_type_check('iterable', $records);
+
+        return Model::withoutEvents(function () use ($records) {
+            return $this->createMany($records);
+        });
     }
 
     /**

@@ -66,11 +66,15 @@ class StatusCommand extends BaseCommand
                 $this->components->twoColumnDetail('<fg=gray>Migration name</>', '<fg=gray>Batch / Status</>');
 
                 $migrations
-                    ->when($this->option('pending'), fn ($collection) => $collection->filter(function ($migration) {
-                        return str($migration[1])->contains('Pending');
-                    }))
+                    ->when($this->option('pending'), function ($collection) {
+                        return $collection->filter(function ($migration) {
+                            return str($migration[1])->contains('Pending');
+                        });
+                    })
                     ->each(
-                        function ($migration) { return $this->components->twoColumnDetail($migration[0], $migration[1]); }
+                        function ($migration) {
+                            return $this->components->twoColumnDetail($migration[0], $migration[1]);
+                        }
                     );
 
                 $this->newLine();

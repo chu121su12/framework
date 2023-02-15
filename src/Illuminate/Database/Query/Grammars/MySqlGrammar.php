@@ -83,11 +83,11 @@ class MySqlGrammar extends Grammar
      */
     protected function compileIndexHint(Builder $query, $indexHint)
     {
-        return match ($indexHint->type) {
-            'hint' => "use index ({$indexHint->index})",
-            'force' => "force index ({$indexHint->index})",
-            default => "ignore index ({$indexHint->index})",
-        };
+        switch ($indexHint->type) {
+            case 'hint': return "use index ({$indexHint->index})";
+            case 'force': return "force index ({$indexHint->index})";
+            default:  return "ignore index ({$indexHint->index})";
+        }
     }
 
     /**

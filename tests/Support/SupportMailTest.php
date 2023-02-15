@@ -9,20 +9,26 @@ class SupportMailTest extends TestCase
 {
     public function testItRegisterAndCallMacros()
     {
-        Mail::macro('test', fn (string $str) => $str === 'foo'
-            ? 'it works!'
-            : 'it failed.',
-        );
+        Mail::macro('test', function (/*string */$str) {
+            $str = backport_type_check('string', $str);
+
+            return $str === 'foo'
+                ? 'it works!'
+                : 'it failed.';
+        });
 
         $this->assertEquals('it works!', Mail::test('foo'));
     }
 
     public function testItRegisterAndCallMacrosWhenFaked()
     {
-        Mail::macro('test', fn (string $str) => $str === 'foo'
-            ? 'it works!'
-            : 'it failed.',
-        );
+        Mail::macro('test', function (/*string */$str) {
+            $str = backport_type_check('string', $str);
+
+            return $str === 'foo'
+                ? 'it works!'
+                : 'it failed.';
+        });
 
         Mail::fake();
 

@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class FoundationInteractsWithDatabaseTest_testExpectsDatabaseQueryCount_class_1 extends TestingTestCase
         {
+            use \PHPUnit\Framework\PhpUnit8Assert;
             use CreatesApplication;
 
             public function testExpectsDatabaseQueryCount()
@@ -26,6 +27,7 @@ class FoundationInteractsWithDatabaseTest_testExpectsDatabaseQueryCount_class_1 
 
 class FoundationInteractsWithDatabaseTest_testExpectsDatabaseQueryCount_class_2 extends TestingTestCase
         {
+            use \PHPUnit\Framework\PhpUnit8Assert;
             use CreatesApplication;
 
             public function testExpectsDatabaseQueryCount()
@@ -36,6 +38,7 @@ class FoundationInteractsWithDatabaseTest_testExpectsDatabaseQueryCount_class_2 
 
 class FoundationInteractsWithDatabaseTest_testExpectsDatabaseQueryCount_class_3 extends TestingTestCase
         {
+            use \PHPUnit\Framework\PhpUnit8Assert;
             use CreatesApplication;
 
             public function testExpectsDatabaseQueryCount()

@@ -526,7 +526,7 @@ class FoundationApplicationTest extends TestCase
     }
 
     /** @test */
-    public function testUseConfigPath(): void
+    public function testUseConfigPath()/*: void*/
     {
         $app = new Application;
         $app->useConfigPath(__DIR__.'/fixtures/config');

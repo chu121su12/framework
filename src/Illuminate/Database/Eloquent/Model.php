@@ -1100,7 +1100,9 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public function pushQuietly()
     {
-        return static::withoutEvents(fn () => $this->push());
+        return static::withoutEvents(function () {
+            return $this->push();
+        });
     }
 
     /**

@@ -44,7 +44,7 @@ class SesV2Transport extends AbstractTransport
     /**
      * {@inheritDoc}
      */
-    protected function doSend(SentMessage $message): void
+    protected function doSend(SentMessage $message)/*: void*/
     {
         $options = $this->options;
 
@@ -77,7 +77,9 @@ class SesV2Transport extends AbstractTransport
                 )
             );
         } catch (AwsException $e) {
-            $reason = $e->getAwsErrorMessage() ?? $e->getMessage();
+            $awsReason = $e->getAwsErrorMessage();
+
+            $reason = isset($awsReason) ? $awsReason : $e->getMessage();
 
             throw new Exception(
                 sprintf('Request to AWS SES V2 API failed. Reason: %s.', $reason),
@@ -128,7 +130,8 @@ class SesV2Transport extends AbstractTransport
      *
      * @return string
      */
-    public function __toString(): string
+    #[\ReturnTypeWillChange]
+    public function __toString()/*: string*/
     {
         return 'ses-v2';
     }

@@ -320,11 +320,15 @@ class Handler implements ExceptionHandlerContract
      */
     public function stopIgnoring(string $exception)
     {
+        $exception = backport_type_check('string', $exception);
+
         $this->dontReport = collect($this->dontReport)
-                ->reject(fn ($ignored) => $ignored === $exception)->values()->all();
+                ->reject(function ($ignored) use ($exception) { return $ignored === $exception; })
+                ->values()->all();
 
         $this->internalDontReport = collect($this->internalDontReport)
-                ->reject(fn ($ignored) => $ignored === $exception)->values()->all();
+                ->reject(function ($ignored) use ($exception) { return $ignored === $exception; })
+                ->values()->all();
 
         return $this;
     }

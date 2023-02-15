@@ -90,11 +90,11 @@ trait DatabaseTruncation
         collect(static::$allTables[$name])
             ->when(
                 property_exists($this, 'tablesToTruncate'),
-                fn ($tables) => $tables->intersect($this->tablesToTruncate),
-                fn ($tables) => $tables->diff($this->exceptTables($name))
+                function ($tables) { return $tables->intersect($this->tablesToTruncate); },
+                function ($tables) { return $tables->diff($this->exceptTables($name)); }
             )
-            ->filter(fn ($table) => $connection->table($table)->exists())
-            ->each(fn ($table) => $connection->table($table)->truncate());
+            ->filter(function ($table) use ($connection) { return $connection->table($table)->exists(); })
+            ->each(function ($table) use ($connection) { return $connection->table($table)->truncate(); });
 
         $connection->setEventDispatcher($dispatcher);
     }
