@@ -123,14 +123,16 @@ trait RunsInParallel
         });
 
         try {
-            $this->runner->run();
+            $potentialExitCode = $this->runner->run();
         } finally {
             $this->forEachProcess(function () {
                 ParallelTesting::callTearDownProcessCallbacks();
             });
         }
 
-        return $this->getExitCode();
+        return $potentialExitCode === null
+            ? $this->getExitCode()
+            : $potentialExitCode;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Console\Process;
+namespace Illuminate\Process;
 
 class InvokedProcessPool
 {
@@ -48,7 +48,7 @@ class InvokedProcessPool
     /**
      * Wait for the processes to finish.
      *
-     * @return \Illuminate\Console\Process\ProcessPoolResults
+     * @return \Illuminate\Process\ProcessPoolResults
      */
     public function wait()
     {

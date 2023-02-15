@@ -11,6 +11,7 @@ use Illuminate\Mail\Transport\ArrayTransport;
 use Illuminate\Mail\Transport\LogTransport;
 use Illuminate\Mail\Transport\MailgunTransport;
 use Illuminate\Mail\Transport\SesTransport;
+use Illuminate\Mail\Transport\SesV2Transport;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
@@ -157,7 +158,8 @@ class MailManager implements FactoryContract
             return call_user_func($this->customCreators[$transport], $config);
         }
 
-        if (trim(isset($transport) ? $transport : '') === '' || ! method_exists($this, $method = 'create'.ucfirst($transport).'Transport')) {
+        if (trim(isset($transport) ? $transport : '') === '' ||
+            ! method_exists($this, $method = 'create'.ucfirst(Str::camel($transport)).'Transport')) {
             throw new InvalidArgumentException("Unsupported mail transport [{$transport}].");
         }
 
@@ -260,6 +262,28 @@ class MailManager implements FactoryContract
         return new SesTransport(
             new SesV2Client($this->addSesCredentials($config)),
             isset($config['options']) ? $config['options'] : []
+        );
+    }
+
+    /**
+     * Create an instance of the Symfony Amazon SES V2 Transport driver.
+     *
+     * @param  array  $config
+     * @return \Illuminate\Mail\Transport\Se2VwTransport
+     */
+    protected function createSesV2Transport(array $config)
+    {
+        $config = array_merge(
+            $this->app['config']->get('services.ses', []),
+            ['version' => 'latest'],
+            $config
+        );
+
+        $config = Arr::except($config, ['transport']);
+
+        return new SesV2Transport(
+            new SesV2Client($this->addSesCredentials($config)),
+            $config['options'] ?? []
         );
     }
 

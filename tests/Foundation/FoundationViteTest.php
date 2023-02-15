@@ -1142,7 +1142,7 @@ class FoundationViteTest extends TestCase
     public function testItCanConfigureTheManifestFilename()
     {
         $buildDir = Str::random();
-        app()->singleton('path.public', function () { return __DIR__; });
+        app()->usePublicPath(__DIR__);
         if (! file_exists(public_path($buildDir))) {
             mkdir(public_path($buildDir));
         }
@@ -1222,7 +1222,7 @@ class FoundationViteTest extends TestCase
 
     protected function makeViteManifest($contents = null, $path = 'build')
     {
-        app()->singleton('path.public', function () { return __DIR__; });
+        app()->usePublicPath(__DIR__);
 
         if (! file_exists(public_path($path))) {
             mkdir(public_path($path));
@@ -1283,7 +1283,7 @@ class FoundationViteTest extends TestCase
 
     protected function makeViteHotFile($path = null)
     {
-        app()->singleton('path.public', function () { return __DIR__; });
+        app()->usePublicPath(__DIR__);
 
         $path = isset($path) ? $path : public_path('hot');
 

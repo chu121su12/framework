@@ -1693,7 +1693,7 @@ EOF;
      * Proxy isset() checks to the underlying base response.
      *
      * @param  string  $key
-     * @return mixed
+     * @return bool
      */
     public function __isset($key)
     {

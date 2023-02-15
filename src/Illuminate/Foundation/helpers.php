@@ -636,7 +636,7 @@ if (! function_exists('public_path')) {
      */
     function public_path($path = '')
     {
-        return app()->joinPaths(app()->make('path.public'), $path);
+        return app()->publicPath($path);
     }
 }
 

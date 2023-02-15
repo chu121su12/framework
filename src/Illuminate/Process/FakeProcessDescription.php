@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Console\Process;
+namespace Illuminate\Process;
 
 use CR\LaravelBackport\SymfonyHelper;
 use Symfony\Component\Process\Process;
@@ -200,7 +200,7 @@ class FakeProcessDescription
      * Conver the process description into a process result.
      *
      * @param  string  $command
-     * @return \Illuminate\Contracts\Console\Process\ProcessResult
+     * @return \Illuminate\Contracts\Process\ProcessResult
      */
     public function toProcessResult(/*string */$command)
     {

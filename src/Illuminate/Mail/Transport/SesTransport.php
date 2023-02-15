@@ -145,4 +145,14 @@ class SesTransport extends Transport
     {
         return $this->options = $options;
     }
+
+    /**
+     * Get the string representation of the transport.
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return 'ses';
+    }
 }

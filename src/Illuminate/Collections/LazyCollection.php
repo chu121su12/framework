@@ -433,9 +433,7 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
     public function filter(callable $callback = null)
     {
         if (is_null($callback)) {
-            $callback = function ($value) {
-                return (bool) $value;
-            };
+            $callback = fn ($value) => (bool) $value;
         }
 
         return new static(function () use ($callback) {
@@ -1521,9 +1519,7 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
         /** @var callable(TValue, TKey): bool $callback */
         $callback = $this->useAsCallable($value) ? $value : $this->equality($value);
 
-        return $this->takeUntil(function ($item, $key) use ($callback) {
-            return ! $callback($item, $key);
-        });
+        return $this->takeUntil(fn ($item, $key) => ! $callback($item, $key));
     }
 
     /**

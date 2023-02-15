@@ -1,9 +1,10 @@
 <?php
 
-namespace Illuminate\Console\Process;
+namespace Illuminate\Process;
 
 use Closure;
 use CR\LaravelBackport\SymfonyHelper;
+use Illuminate\Process\Exceptions\ProcessTimedOutException;
 use Illuminate\Support\Str;
 use LogicException;
 use RuntimeException;
@@ -15,7 +16,7 @@ class PendingProcess
     /**
      * The process factory instance.
      *
-     * @var \Illuminate\Console\Process\Factory
+     * @var \Illuminate\Process\Factory
      */
     protected $factory;
 
@@ -29,7 +30,7 @@ class PendingProcess
     /**
      * The working directory of the process.
      *
-     * @var string
+     * @var string|null
      */
     public $path;
 
@@ -57,9 +58,9 @@ class PendingProcess
     /**
      * Indicates whether output should be disabled for the process.
      *
-     * @var array
+     * @var bool
      */
-    public $withoutOutput = false;
+    public $quietly = false;
 
     /**
      * Indicates if TTY mode should be enabled.
@@ -85,7 +86,7 @@ class PendingProcess
     /**
      * Create a new pending process instance.
      *
-     * @param  \Illuminate\Console\Process\Factory  $factory
+     * @param  \Illuminate\Process\Factory  $factory
      * @return void
      */
     public function __construct(Factory $factory)
@@ -169,6 +170,7 @@ class PendingProcess
      * Set the additional environent variables for the process.
      *
      * @param  array  $environment
+     * @return $this
      */
     public function env(array $environment)
     {
@@ -182,9 +184,9 @@ class PendingProcess
      *
      * @return $this
      */
-    public function withoutOutput()
+    public function quietly()
     {
-        $this->withoutOutput = true;
+        $this->quietly = true;
 
         return $this;
     }
@@ -222,7 +224,7 @@ class PendingProcess
      *
      * @param  array<array-key, string>|string|null  $command
      * @param  callable|null  $output
-     * @return \Illuminate\Contracts\Console\Process\ProcessResult
+     * @return \Illuminate\Contracts\Process\ProcessResult
      */
     public function run(/*array|string */$command = null, callable $output = null)
     {
@@ -238,7 +240,7 @@ class PendingProcess
                     $this->factory->recordIfRecording($this, $result);
                 });
             } elseif ($this->factory->isRecording() && $this->factory->preventingStrayProcesses()) {
-                throw new RuntimeException('Attempted process ['.(string) $this->command.'] without a matching fake.');
+                throw new RuntimeException('Attempted process ['.$command.'] without a matching fake.');
             }
 
             return new ProcessResult(tap($process)->run($output));
@@ -252,7 +254,7 @@ class PendingProcess
      *
      * @param  array<array-key, string>|string|null  $command
      * @param  callable  $output
-     * @return \Illuminate\Console\Process\InvokedProcess
+     * @return \Illuminate\Process\InvokedProcess
      */
     public function start(/*array|string */$command = null, callable $output = null)
     {
@@ -267,7 +269,7 @@ class PendingProcess
                 $this->factory->recordIfRecording($this, $process->predictProcessResult());
             });
         } elseif ($this->factory->isRecording() && $this->factory->preventingStrayProcesses()) {
-            throw new RuntimeException('Attempted process ['.(string) $this->command.'] without a matching fake.');
+            throw new RuntimeException('Attempted process ['.$command.'] without a matching fake.');
         }
 
         return new InvokedProcess(tap($process)->start($output));
@@ -296,7 +298,7 @@ class PendingProcess
             $process->setIdleTimeout($this->idleTimeout);
         }
 
-        if ($this->withoutOutput) {
+        if ($this->quietly) {
             $process->disableOutput();
         }
 
@@ -376,7 +378,7 @@ class PendingProcess
      * @param  string  $command
      * @param  callable|null  $output
      * @param  \Closure  $fake
-     * @return \Illuminate\Console\Process\FakeInvokedProcess
+     * @return \Illuminate\Process\FakeInvokedProcess
      */
     protected function resolveAsynchronousFake(/*string */$command, /*?callable */$output, Closure $fake)
     {
