@@ -2935,7 +2935,7 @@ class Builder implements BuilderContract
     /**
      * Get a collection instance containing the values of a given column.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string|null  $key
      * @return \Illuminate\Support\Collection
      */
@@ -2981,9 +2981,13 @@ class Builder implements BuilderContract
             return $column;
         }
 
-        $separator = str_contains(strtolower($column), ' as ') ? ' as ' : '\.';
+        $columnString = $column instanceof ExpressionContract
+            ? $this->grammar->getValue($column)
+            : $column;
 
-        return last(preg_split('~'.$separator.'~i', $column));
+        $separator = str_contains(strtolower($columnString), ' as ') ? ' as ' : '\.';
+
+        return last(preg_split('~'.$separator.'~i', $columnString));
     }
 
     /**
