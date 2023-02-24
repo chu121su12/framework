@@ -104,7 +104,7 @@ class FileStore implements Store, LockProvider
 
         try {
             $file->getExclusiveLock();
-        } catch (LockTimeoutException $e) {
+        } catch (LockTimeoutException) {
             $file->close();
 
             return false;
@@ -281,7 +281,7 @@ class FileStore implements Store, LockProvider
             $expire = substr(
                 $contents = $this->files->get($path, true), 0, 10
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             return $this->emptyPayload();
         }
 

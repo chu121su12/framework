@@ -1431,7 +1431,7 @@ class DatabaseEloquentModelTest extends TestCase
             Model::unguarded(function () {
                 throw new Exception;
             });
-        } catch (Exception $e) {
+        } catch (Exception) {
             // ignore the exception
         }
         $this->assertFalse(Model::isUnguarded());

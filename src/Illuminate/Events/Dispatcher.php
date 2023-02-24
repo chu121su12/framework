@@ -499,7 +499,7 @@ class Dispatcher implements DispatcherContract
             return (new ReflectionClass($class))->implementsInterface(
                 ShouldQueue::class
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }

@@ -1044,7 +1044,7 @@ class SupportStrTest extends TestCase
                 $this->assertSame('1234', Str::uuid()->toString());
                 throw new \Exception('Something failed.');
             });
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $this->assertNotSame('1234', Str::uuid()->toString());
         }
     }

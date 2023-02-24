@@ -3,9 +3,7 @@
 namespace {{ namespace }};
 
 use {{ rootNamespace }}Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class {{ class }} extends Controller
 {
@@ -14,7 +12,7 @@ class {{ class }} extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()/*: Response*/
+    public function index()
     {
         //
     }
@@ -24,7 +22,7 @@ class {{ class }} extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()/*: Response*/
+    public function create()
     {
         //
     }
@@ -34,7 +32,7 @@ class {{ class }} extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)/*: RedirectResponse*/
+    public function store(Request $request)
     {
         //
     }
@@ -45,7 +43,7 @@ class {{ class }} extends Controller
      * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(/*string */$id)/*: Response*/
+    public function show(/*string */$id)
     {
         $id = backport_type_check('string', $id);
 
@@ -58,7 +56,7 @@ class {{ class }} extends Controller
      * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(/*string */$id)/*: Response*/
+    public function edit(/*string */$id)
     {
         $id = backport_type_check('string', $id);
 
@@ -71,7 +69,7 @@ class {{ class }} extends Controller
      * @param  string  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, /*string */$id)/*: RedirectResponse*/
+    public function update(Request $request, /*string */$id)
     {
         $id = backport_type_check('string', $id);
 
@@ -84,7 +82,7 @@ class {{ class }} extends Controller
      * @param  string  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(/*string */$id)/*: RedirectResponse*/
+    public function destroy(/*string */$id)
     {
         $id = backport_type_check('string', $id);
 

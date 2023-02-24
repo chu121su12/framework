@@ -11,7 +11,7 @@ use Illuminate\Support\Traits\ReflectsClosures;
 use Illuminate\Testing\Assert as PHPUnit;
 use ReflectionFunction;
 
-class EventFake implements Dispatcher
+class EventFake implements Dispatcher, Fake
 {
     use ForwardsCalls, ReflectsClosures;
 

@@ -5,9 +5,7 @@ namespace {{ namespace }};
 use {{ namespacedModel }};
 use {{ rootNamespace }}Http\Controllers\Controller;
 use {{ namespacedParentModel }};
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class {{ class }} extends Controller
 {
@@ -16,7 +14,7 @@ class {{ class }} extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index({{ parentModel }} ${{ parentModelVariable }})/*: Response*/
+    public function index({{ parentModel }} ${{ parentModelVariable }})
     {
         //
     }
@@ -26,7 +24,7 @@ class {{ class }} extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create({{ parentModel }} ${{ parentModelVariable }})/*: Response*/
+    public function create({{ parentModel }} ${{ parentModelVariable }})
     {
         //
     }
@@ -36,7 +34,7 @@ class {{ class }} extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request, {{ parentModel }} ${{ parentModelVariable }})/*: RedirectResponse*/
+    public function store(Request $request, {{ parentModel }} ${{ parentModelVariable }})
     {
         //
     }
@@ -46,7 +44,7 @@ class {{ class }} extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show({{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})/*: Response*/
+    public function show({{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})
     {
         //
     }
@@ -56,7 +54,7 @@ class {{ class }} extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit({{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})/*: Response*/
+    public function edit({{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})
     {
         //
     }
@@ -66,7 +64,7 @@ class {{ class }} extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, {{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})/*: RedirectResponse*/
+    public function update(Request $request, {{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})
     {
         //
     }
@@ -76,7 +74,7 @@ class {{ class }} extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy({{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})/*: RedirectResponse*/
+    public function destroy({{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})
     {
         //
     }

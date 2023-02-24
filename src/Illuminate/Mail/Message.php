@@ -302,7 +302,7 @@ class Message
     /**
      * Attach in-memory data as an attachment.
      *
-     * @param  string  $data
+     * @param  string|resource  $data
      * @param  string  $name
      * @param  array  $options
      * @return $this
@@ -334,7 +334,7 @@ class Message
     /**
      * Embed in-memory data in the message and get the CID.
      *
-     * @param  string  $data
+     * @param  string|resource  $data
      * @param  string  $name
      * @param  string|null  $contentType
      * @return string
