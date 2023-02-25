@@ -153,6 +153,42 @@ class MailMailableTest_testHasAttachmentWithEnvelopeAttachments_class_3 implemen
             }
         }
 
+class MailMailableTest_testMailableSetsMarkdownThemeCorrectly_class_1
+        {
+            public function render()
+            {
+                //
+            }
+        }
+
+class MailMailableTest_testMailableSetsMarkdownThemeCorrectly_class_2 extends Mailable
+        {
+            public $theme = 'custom-theme';
+
+            public function content()
+            {
+                return new Content(
+                    /*string $view = */null,
+                    /*string $html = */null,
+                    /*string $text = */null,
+                    /*markdown: */'mail.markdown'
+                );
+            }
+        }
+
+class MailMailableTest_testMailableSetsMarkdownThemeCorrectly_class_3 extends Mailable
+        {
+            public function content()
+            {
+                return new Content(
+                    /*string $view = */null,
+                    /*string $html = */null,
+                    /*string $text = */null,
+                    /*markdown: */'mail.markdown'
+                );
+            }
+        }
+
 class MailMailableTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -587,37 +623,19 @@ class MailMailableTest extends TestCase
 
         Container::getInstance()->instance(Factory::class, $viewFactory);
         Container::getInstance()->singleton(Markdown::class);
-        Container::getInstance()->instance('mailer', new class
-        {
-            public function render()
-            {
-                //
-            }
-        });
+        Container::getInstance()->instance('mailer', 
+            new MailMailableTest_testMailableSetsMarkdownThemeCorrectly_class_1
+        );
 
-        (new class() extends Mailable
-        {
-            public $theme = 'custom-theme';
-
-            public function content()
-            {
-                return new Content(
-                    markdown: 'mail.markdown',
-                );
-            }
-        })->render();
+        (
+            new MailMailableTest_testMailableSetsMarkdownThemeCorrectly_class_2
+        )->render();
 
         $this->assertEquals('custom-theme', Container::getInstance()->make(Markdown::class)->getTheme());
 
-        (new class() extends Mailable
-        {
-            public function content()
-            {
-                return new Content(
-                    markdown: 'mail.markdown',
-                );
-            }
-        })->render();
+        (
+            new MailMailableTest_testMailableSetsMarkdownThemeCorrectly_class_3
+        )->render();
 
         $this->assertEquals('default', Container::getInstance()->make(Markdown::class)->getTheme());
     }

@@ -490,7 +490,7 @@ class FilesystemAdapterTest extends TestCase
 
         try {
             $adapter->get('/foo.txt');
-        } catch (UnableToReadFile) {
+        } catch (UnableToReadFile $_e) {
             $this->assertTrue(true);
 
             return;
@@ -505,7 +505,7 @@ class FilesystemAdapterTest extends TestCase
 
         try {
             $adapter->readStream('/foo.txt');
-        } catch (UnableToReadFile) {
+        } catch (UnableToReadFile $_e) {
             $this->assertTrue(true);
 
             return;
@@ -524,7 +524,7 @@ class FilesystemAdapterTest extends TestCase
 
         try {
             $adapter->put('/foo.txt', 'Hello World!');
-        } catch (UnableToWriteFile) {
+        } catch (UnableToWriteFile $_e) {
             $this->assertTrue(true);
 
             return;
@@ -543,7 +543,7 @@ class FilesystemAdapterTest extends TestCase
 
         try {
             $adapter->mimeType('unknown.mime-type');
-        } catch (UnableToRetrieveMetadata) {
+        } catch (UnableToRetrieveMetadata $_e) {
             $this->assertTrue(true);
 
             return;

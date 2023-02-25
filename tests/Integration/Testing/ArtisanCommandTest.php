@@ -172,7 +172,7 @@ class ArtisanCommandTest extends TestCase
         } finally {
             try {
                 m::close();
-            } catch (InvalidCountException) {
+            } catch (InvalidCountException $_e) {
                 // Ignore mock exception from PendingCommand::expectsOutput().
             }
         }

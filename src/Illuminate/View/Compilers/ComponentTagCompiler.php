@@ -359,7 +359,7 @@ class ComponentTagCompiler
                 if (! is_null($guess)) {
                     return $guess;
                 }
-            } catch (InvalidArgumentException) {
+            } catch (InvalidArgumentException $_e) {
                 //
             }
         }

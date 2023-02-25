@@ -712,8 +712,11 @@ class EloquentTestCommentModel extends Model
 
 class EloquentTestKey
 {
-    public function __construct(private readonly string $key)
+    private $key;
+
+    public function __construct(/*private readonly string */$key)
     {
+        $this->key = $key;
     }
 
     public function __toString()

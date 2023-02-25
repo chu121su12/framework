@@ -406,7 +406,7 @@ class FoundationExceptionsHandlerTest extends TestCase
                 throw new Exception;
             }, CustomException::class);
             $testFailed = true;
-        } catch (AssertionFailedError) {
+        } catch (AssertionFailedError $_e) {
             $testFailed = false;
         }
 
@@ -419,7 +419,7 @@ class FoundationExceptionsHandlerTest extends TestCase
                 throw new Exception('Some message.');
             }, /*expectedClass: */Exception::class, /*expectedMessage: */'Other message.');
             $testFailed = true;
-        } catch (AssertionFailedError) {
+        } catch (AssertionFailedError $_e) {
             $testFailed = false;
         }
 

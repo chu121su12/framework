@@ -445,7 +445,7 @@ class Migrator
             $this->write(BulletList::class, collect($this->getQueries($migration, $method))->map(function ($query) {
                 return $query['query'];
             }));
-        } catch (SchemaException) {
+        } catch (SchemaException $_e) {
             $name = get_class($migration);
 
             $this->write(Error::class, sprintf(

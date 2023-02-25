@@ -488,7 +488,9 @@ class Collection extends BaseCollection implements QueueableCollection
             return new static($this->items);
         }
 
-        $dictionary = Arr::only($this->getDictionary(), array_map($this->getDictionaryKey(...), (array) $keys));
+        $dictionary = Arr::only($this->getDictionary(), array_map(function (...$args) {
+            return $this->getDictionaryKey(...$args);
+        }, (array) $keys));
 
         return new static(array_values($dictionary));
     }
@@ -501,7 +503,9 @@ class Collection extends BaseCollection implements QueueableCollection
      */
     public function except($keys)
     {
-        $dictionary = Arr::except($this->getDictionary(), array_map($this->getDictionaryKey(...), (array) $keys));
+        $dictionary = Arr::except($this->getDictionary(), array_map(function (...$args) {
+            return $this->getDictionaryKey(...$args);
+        }, (array) $keys));
 
         return new static(array_values($dictionary));
     }
