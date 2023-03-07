@@ -90,7 +90,7 @@ class HandleExceptions
 
         try {
             $logger = static::$app->make(LogManager::class);
-        } catch (Exception $e) {
+        } catch (Exception $_e) {
             return;
         }
 

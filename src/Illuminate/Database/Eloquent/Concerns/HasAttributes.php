@@ -1403,7 +1403,7 @@ trait HasAttributes
         // that is returned back out to the developers after we convert it here.
         try {
             $date = Date::createFromFormat($format, $value);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $_e) {
             $date = false;
         }
 

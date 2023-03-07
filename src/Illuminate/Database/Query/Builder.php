@@ -508,7 +508,7 @@ class Builder implements BuilderContract
     /**
      * Add a join clause to the query.
      *
-     * @param  string  $table
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $table
      * @param  \Closure|string  $first
      * @param  string|null  $operator
      * @param  string|null  $second
@@ -548,7 +548,7 @@ class Builder implements BuilderContract
     /**
      * Add a "join where" clause to the query.
      *
-     * @param  string  $table
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $table
      * @param  \Closure|string  $first
      * @param  string  $operator
      * @param  string  $second
@@ -588,7 +588,7 @@ class Builder implements BuilderContract
     /**
      * Add a left join to the query.
      *
-     * @param  string  $table
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $table
      * @param  \Closure|string  $first
      * @param  string|null  $operator
      * @param  string|null  $second
@@ -602,7 +602,7 @@ class Builder implements BuilderContract
     /**
      * Add a "join where" clause to the query.
      *
-     * @param  string  $table
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $table
      * @param  \Closure|string  $first
      * @param  string  $operator
      * @param  string  $second
@@ -631,7 +631,7 @@ class Builder implements BuilderContract
     /**
      * Add a right join to the query.
      *
-     * @param  string  $table
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $table
      * @param  \Closure|string  $first
      * @param  string|null  $operator
      * @param  string|null  $second
@@ -645,7 +645,7 @@ class Builder implements BuilderContract
     /**
      * Add a "right join where" clause to the query.
      *
-     * @param  string  $table
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $table
      * @param  \Closure|string  $first
      * @param  string  $operator
      * @param  string  $second
@@ -674,7 +674,7 @@ class Builder implements BuilderContract
     /**
      * Add a "cross join" clause to the query.
      *
-     * @param  string  $table
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $table
      * @param  \Closure|string|null  $first
      * @param  string|null  $operator
      * @param  string|null  $second
@@ -745,7 +745,7 @@ class Builder implements BuilderContract
     /**
      * Add a basic where clause to the query.
      *
-     * @param  \Closure|string|array  $column
+     * @param  \Closure|string|array|\Illuminate\Contracts\Database\Query\Expression  $column
      * @param  mixed  $operator
      * @param  mixed  $value
      * @param  string  $boolean
@@ -924,7 +924,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where" clause to the query.
      *
-     * @param  \Closure|string|array  $column
+     * @param  \Closure|string|array|\Illuminate\Contracts\Database\Query\Expression  $column
      * @param  mixed  $operator
      * @param  mixed  $value
      * @return $this
@@ -941,7 +941,7 @@ class Builder implements BuilderContract
     /**
      * Add a basic "where not" clause to the query.
      *
-     * @param  \Closure|string|array  $column
+     * @param  \Closure|string|array|\Illuminate\Contracts\Database\Query\Expression  $column
      * @param  mixed  $operator
      * @param  mixed  $value
      * @param  string  $boolean
@@ -961,7 +961,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where not" clause to the query.
      *
-     * @param  \Closure|string|array  $column
+     * @param  \Closure|string|array|\Illuminate\Contracts\Database\Query\Expression  $column
      * @param  mixed  $operator
      * @param  mixed  $value
      * @return $this
@@ -1053,7 +1053,7 @@ class Builder implements BuilderContract
     /**
      * Add a "where in" clause to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  mixed  $values
      * @param  string  $boolean
      * @param  bool  $not
@@ -1098,7 +1098,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where in" clause to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  mixed  $values
      * @return $this
      */
@@ -1110,7 +1110,7 @@ class Builder implements BuilderContract
     /**
      * Add a "where not in" clause to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  mixed  $values
      * @param  string  $boolean
      * @return $this
@@ -1123,7 +1123,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where not in" clause to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  mixed  $values
      * @return $this
      */
@@ -1200,7 +1200,7 @@ class Builder implements BuilderContract
     /**
      * Add a "where null" clause to the query.
      *
-     * @param  string|array  $columns
+     * @param  string|array|\Illuminate\Contracts\Database\Query\Expression  $columns
      * @param  string  $boolean
      * @param  bool  $not
      * @return $this
@@ -1219,7 +1219,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where null" clause to the query.
      *
-     * @param  string|array  $column
+     * @param  string|array|\Illuminate\Contracts\Database\Query\Expression  $column
      * @return $this
      */
     public function orWhereNull($column)
@@ -1230,7 +1230,7 @@ class Builder implements BuilderContract
     /**
      * Add a "where not null" clause to the query.
      *
-     * @param  string|array  $columns
+     * @param  string|array|\Illuminate\Contracts\Database\Query\Expression  $columns
      * @param  string  $boolean
      * @return $this
      */
@@ -1242,7 +1242,7 @@ class Builder implements BuilderContract
     /**
      * Add a where between statement to the query.
      *
-     * @param  string|\Illuminate\Contracts\Database\Query\Expression  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  iterable  $values
      * @param  string  $boolean
      * @param  bool  $not
@@ -1268,7 +1268,7 @@ class Builder implements BuilderContract
     /**
      * Add a where between statement using columns to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  array  $values
      * @param  string  $boolean
      * @param  bool  $not
@@ -1286,7 +1286,7 @@ class Builder implements BuilderContract
     /**
      * Add an or where between statement to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  iterable  $values
      * @return $this
      */
@@ -1300,7 +1300,7 @@ class Builder implements BuilderContract
     /**
      * Add an or where between statement using columns to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  array  $values
      * @return $this
      */
@@ -1312,7 +1312,7 @@ class Builder implements BuilderContract
     /**
      * Add a where not between statement to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  iterable  $values
      * @param  string  $boolean
      * @return $this
@@ -1327,7 +1327,7 @@ class Builder implements BuilderContract
     /**
      * Add a where not between statement using columns to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  array  $values
      * @param  string  $boolean
      * @return $this
@@ -1340,7 +1340,7 @@ class Builder implements BuilderContract
     /**
      * Add an or where not between statement to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  iterable  $values
      * @return $this
      */
@@ -1354,7 +1354,7 @@ class Builder implements BuilderContract
     /**
      * Add an or where not between statement using columns to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  array  $values
      * @return $this
      */
@@ -1366,7 +1366,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where not null" clause to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @return $this
      */
     public function orWhereNotNull($column)
@@ -1377,7 +1377,7 @@ class Builder implements BuilderContract
     /**
      * Add a "where date" statement to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $operator
      * @param  \DateTimeInterface|string|null  $value
      * @param  string  $boolean
@@ -1401,7 +1401,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where date" statement to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $operator
      * @param  \DateTimeInterface|string|null  $value
      * @return $this
@@ -1418,7 +1418,7 @@ class Builder implements BuilderContract
     /**
      * Add a "where time" statement to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $operator
      * @param  \DateTimeInterface|string|null  $value
      * @param  string  $boolean
@@ -1442,7 +1442,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where time" statement to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $operator
      * @param  \DateTimeInterface|string|null  $value
      * @return $this
@@ -1459,7 +1459,7 @@ class Builder implements BuilderContract
     /**
      * Add a "where day" statement to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $operator
      * @param  \DateTimeInterface|string|int|null  $value
      * @param  string  $boolean
@@ -1487,7 +1487,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where day" statement to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $operator
      * @param  \DateTimeInterface|string|int|null  $value
      * @return $this
@@ -1504,7 +1504,7 @@ class Builder implements BuilderContract
     /**
      * Add a "where month" statement to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $operator
      * @param  \DateTimeInterface|string|int|null  $value
      * @param  string  $boolean
@@ -1532,7 +1532,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where month" statement to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $operator
      * @param  \DateTimeInterface|string|int|null  $value
      * @return $this
@@ -1549,7 +1549,7 @@ class Builder implements BuilderContract
     /**
      * Add a "where year" statement to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $operator
      * @param  \DateTimeInterface|string|int|null  $value
      * @param  string  $boolean
@@ -1573,7 +1573,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where year" statement to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $operator
      * @param  \DateTimeInterface|string|int|null  $value
      * @return $this
@@ -1591,7 +1591,7 @@ class Builder implements BuilderContract
      * Add a date based (year, month, day, time) statement to the query.
      *
      * @param  string  $type
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $operator
      * @param  mixed  $value
      * @param  string  $boolean
@@ -1655,7 +1655,7 @@ class Builder implements BuilderContract
     /**
      * Add a full sub-select to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $operator
      * @param  \Closure  $callback
      * @param  string  $boolean
@@ -2047,7 +2047,7 @@ class Builder implements BuilderContract
     /**
      * Add a "group by" clause to the query.
      *
-     * @param  array|string|\Illuminate\Contracts\Database\Query\Expression  ...$groups
+     * @param  array|\Illuminate\Contracts\Database\Query\Expression|string  ...$groups
      * @return $this
      */
     public function groupBy(...$groups)
@@ -3112,7 +3112,7 @@ class Builder implements BuilderContract
     /**
      * Retrieve the "count" result of the query.
      *
-     * @param  string  $columns
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $columns
      * @return int
      */
     public function count($columns = '*')
@@ -3123,7 +3123,7 @@ class Builder implements BuilderContract
     /**
      * Retrieve the minimum value of a given column.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @return mixed
      */
     public function min($column)
@@ -3134,7 +3134,7 @@ class Builder implements BuilderContract
     /**
      * Retrieve the maximum value of a given column.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @return mixed
      */
     public function max($column)
@@ -3145,7 +3145,7 @@ class Builder implements BuilderContract
     /**
      * Retrieve the sum of the values of a given column.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @return mixed
      */
     public function sum($column)
@@ -3158,7 +3158,7 @@ class Builder implements BuilderContract
     /**
      * Retrieve the average of the values of a given column.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @return mixed
      */
     public function avg($column)
@@ -3169,7 +3169,7 @@ class Builder implements BuilderContract
     /**
      * Alias for the "avg" method.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @return mixed
      */
     public function average($column)

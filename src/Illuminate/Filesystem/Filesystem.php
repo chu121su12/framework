@@ -295,7 +295,7 @@ class Filesystem
                 } else {
                     $success = false;
                 }
-            } catch (ErrorException $e) {
+            } catch (ErrorException $_e) {
                 $success = false;
             }
         }

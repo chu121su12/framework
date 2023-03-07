@@ -635,7 +635,7 @@ class Builder implements BuilderContract
     {
         try {
             return $this->baseSole($columns);
-        } catch (RecordsNotFoundException $exception) {
+        } catch (RecordsNotFoundException $_e) {
             throw (new ModelNotFoundException)->setModel(get_class($this->model));
         }
     }
@@ -775,7 +775,7 @@ class Builder implements BuilderContract
         $relation = Relation::noConstraints(function () use ($name) {
             try {
                 return $this->getModel()->newInstance()->$name();
-            } catch (BadMethodCallException $e) {
+            } catch (BadMethodCallException $_e) {
                 throw RelationNotFoundException::make($this->getModel(), $name);
             }
         });

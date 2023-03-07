@@ -73,7 +73,7 @@ final class BigRational extends BigNumber
      */
     public static function of(/*BigNumber|int|float|string */$value)/* : BigRational*/
     {
-        $value = backport_array_type_check([
+        $value = backport_type_check([
             BigNumber::class,
             'int',
             'float',

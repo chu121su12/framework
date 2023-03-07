@@ -72,7 +72,7 @@ class QueueConnectionTest extends TestCase
 
         try {
             Bus::dispatch((new QueueConnectionTestJob)->afterCommit());
-        } catch (SqsException $e) {
+        } catch (SqsException $_e) {
             // This job was dispatched
         }
     }

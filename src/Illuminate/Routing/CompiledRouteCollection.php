@@ -128,7 +128,7 @@ class CompiledRouteCollection extends AbstractRouteCollection
         if (isset($e)) {
             try {
                 return $this->routes->match($request);
-            } catch (NotFoundHttpException $e) {
+            } catch (NotFoundHttpException $_e) {
                 //
             }
         }

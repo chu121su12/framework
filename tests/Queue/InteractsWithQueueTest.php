@@ -12,7 +12,7 @@ class InteractsWithQueueTest_testCreatesAnExceptionFromString_class
         {
             use InteractsWithQueue;
 
-            public $job;
+            /*public $job;*/
         }
 
 class InteractsWithQueueTest extends TestCase
