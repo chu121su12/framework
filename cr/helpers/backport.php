@@ -489,6 +489,10 @@ if (! \function_exists('backport_array_type_check')) {
             $types = \explode('|', $types);
         }
 
+        if (! \is_array($values)) {
+            throw new TypeError('Splat value must be an array');
+        }
+
         foreach ($values as $key => $value) {
             $values[$key] = backport_type_check($types, $value, $strict);
         }
