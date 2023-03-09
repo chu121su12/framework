@@ -138,7 +138,7 @@ class MigrateCommand extends BaseCommand implements Isolatable
         return retry(2, function () { return $this->migrator->repositoryExists(); }, 0, function ($e) {
             try {
                 if ($e->getPrevious() instanceof SQLiteDatabaseDoesNotExistException) {
-                    return $this->createMissingSqliteDatbase($e->getPrevious()->path);
+                    return $this->createMissingSqliteDatabase($e->getPrevious()->path);
                 }
 
                 $connection = $this->migrator->resolveConnection($this->option('database'));
@@ -168,7 +168,7 @@ class MigrateCommand extends BaseCommand implements Isolatable
      * @param  string  $path
      * @return bool
      */
-    protected function createMissingSqliteDatbase($path)
+    protected function createMissingSqliteDatabase($path)
     {
         if ($this->option('force')) {
             return touch($path);

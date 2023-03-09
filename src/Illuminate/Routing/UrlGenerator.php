@@ -486,9 +486,7 @@ class UrlGenerator implements UrlGeneratorContract
                     ? $value->{$route->bindingFieldFor($key)}
                     : $value;
 
-            return function_exists('enum_exists') && $value instanceof BackedEnum
-                ? $value->value
-                : $value;
+            return $value instanceof BackedEnum ? $value->value : $value;
         })->all();
 
         return $this->routeUrl()->to(

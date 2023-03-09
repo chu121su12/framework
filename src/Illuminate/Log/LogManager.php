@@ -16,6 +16,8 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogHandler;
 use Monolog\Handler\WhatFailureGroupHandler;
 use Monolog\Logger as Monolog;
+use Monolog\Processor\ProcessorInterface;
+use Monolog\Processor\PsrLogMessageProcessor;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
@@ -303,7 +305,7 @@ class LogManager implements LoggerInterface
                     isset($config['locking']) ? $config['locking'] : false
                 ), $config
             ),
-        ]);
+        ], $config['replace_placeholders'] ?? false ? [new PsrLogMessageProcessor()] : []);
     }
 
     /**
@@ -323,7 +325,7 @@ class LogManager implements LoggerInterface
                 isset($config['permission']) ? $config['permission'] : null,
                 isset($config['locking']) ? $config['locking'] : false
             ), $config),
-        ]);
+        ], $config['replace_placeholders'] ?? false ? [new PsrLogMessageProcessor()] : []);
     }
 
     /**
@@ -347,7 +349,7 @@ class LogManager implements LoggerInterface
                 isset($config['bubble']) ? $config['bubble'] : true,
                 isset($config['exclude_fields']) ? $config['exclude_fields'] : []
             ), $config),
-        ]);
+        ], $config['replace_placeholders'] ?? false ? [new PsrLogMessageProcessor()] : []);
     }
 
     /**
@@ -364,7 +366,7 @@ class LogManager implements LoggerInterface
                 isset($config['facility']) ? $config['facility'] : LOG_USER,
                 $this->level($config)
             ), $config),
-        ]);
+        ], $config['replace_placeholders'] ?? false ? [new PsrLogMessageProcessor()] : []);
     }
 
     /**
@@ -380,7 +382,7 @@ class LogManager implements LoggerInterface
                 isset($config['type']) ? $config['type'] : ErrorLogHandler::OPERATING_SYSTEM,
                 $this->level($config)
             )),
-        ]);
+        ], $config['replace_placeholders'] ?? false ? [new PsrLogMessageProcessor()] : []);
     }
 
     /**
@@ -400,15 +402,32 @@ class LogManager implements LoggerInterface
             );
         }
 
+        collect($config['processors'] ?? [])->each(function ($processor) {
+            $processor = $processor['processor'] ?? $processor;
+
+            if (! is_a($processor, ProcessorInterface::class, true)) {
+                throw new InvalidArgumentException(
+                    $processor.' must be an instance of '.ProcessorInterface::class
+                );
+            }
+        });
+
         $with = array_merge(
             ['level' => $this->level($config)],
             isset($config['with']) ? $config['with'] : [],
             isset($config['handler_with']) ? $config['handler_with'] : []
         );
 
-        return new Monolog($this->parseChannel($config), [$this->prepareHandler(
-            $this->app->make($config['handler'], $with), $config
-        )]);
+        return new Monolog(
+            $this->parseChannel($config),
+            [
+                $this->prepareHandler(
+                    $this->app->make($config['handler'], $with), $config
+                ),
+            ],
+            collect($config['processors'] ?? [])
+                ->map(fn ($processor) => $this->app->make($processor['processor'] ?? $processor, $processor['with'] ?? [])
+        )->toArray());
     }
 
     /**

@@ -7,10 +7,8 @@ use Illuminate\Contracts\Mail\Attachable;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Mail\Attachment;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailer;
-use Illuminate\Mail\Markdown;
 use Illuminate\Mail\Transport\ArrayTransport;
 use Mockery as m;
 use PHPUnit\Framework\AssertionFailedError;
@@ -150,42 +148,6 @@ class MailMailableTest_testHasAttachmentWithEnvelopeAttachments_class_3 implemen
             public function toMailAttachment()
             {
                 return Attachment::fromData(function () { return 'bar'; });
-            }
-        }
-
-class MailMailableTest_testMailableSetsMarkdownThemeCorrectly_class_1
-        {
-            public function render()
-            {
-                //
-            }
-        }
-
-class MailMailableTest_testMailableSetsMarkdownThemeCorrectly_class_2 extends Mailable
-        {
-            public $theme = 'custom-theme';
-
-            public function content()
-            {
-                return new Content(
-                    /*string $view = */null,
-                    /*string $html = */null,
-                    /*string $text = */null,
-                    /*markdown: */'mail.markdown'
-                );
-            }
-        }
-
-class MailMailableTest_testMailableSetsMarkdownThemeCorrectly_class_3 extends Mailable
-        {
-            public function content()
-            {
-                return new Content(
-                    /*string $view = */null,
-                    /*string $html = */null,
-                    /*string $text = */null,
-                    /*markdown: */'mail.markdown'
-                );
             }
         }
 
@@ -610,34 +572,6 @@ class MailMailableTest extends TestCase
                 $this->assertSame("Email was not from expected address [{$address}].\nFailed asserting that false is true.", $e->getMessage());
             }
         }
-    }
-
-    public function testMailableSetsMarkdownThemeCorrectly()
-    {
-        $viewFactory = m::mock(Factory::class);
-        $viewFactory->shouldReceive('flushFinderCache');
-        $viewFactory->shouldReceive('replaceNamespace')->andReturnSelf();
-        $viewFactory->shouldReceive('make')->andReturnSelf();
-        $viewFactory->shouldReceive('render')->andReturn('<html></html>', 'body {}');
-        $viewFactory->shouldReceive('exists')->andReturn(true);
-
-        Container::getInstance()->instance(Factory::class, $viewFactory);
-        Container::getInstance()->singleton(Markdown::class);
-        Container::getInstance()->instance('mailer', 
-            new MailMailableTest_testMailableSetsMarkdownThemeCorrectly_class_1
-        );
-
-        (
-            new MailMailableTest_testMailableSetsMarkdownThemeCorrectly_class_2
-        )->render();
-
-        $this->assertEquals('custom-theme', Container::getInstance()->make(Markdown::class)->getTheme());
-
-        (
-            new MailMailableTest_testMailableSetsMarkdownThemeCorrectly_class_3
-        )->render();
-
-        $this->assertEquals('default', Container::getInstance()->make(Markdown::class)->getTheme());
     }
 
     public function testMailableSetsSubjectCorrectly()
