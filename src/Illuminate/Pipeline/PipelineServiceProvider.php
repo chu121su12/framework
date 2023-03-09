@@ -20,7 +20,9 @@ class PipelineServiceProvider extends ServiceProvider implements DeferrableProvi
             Hub::class
         );
 
-        $this->app->bind('pipeline', fn ($app) => new Pipeline($app));
+        $this->app->bind('pipeline', function ($app) {
+            return new Pipeline($app);
+        });
     }
 
     /**

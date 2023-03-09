@@ -98,7 +98,7 @@ class ChannelListCommand extends Command
                 $channelName,
                 $spaces,
                 $resolver,
-                $dots,
+                $dots
             );
         })
             ->filter()

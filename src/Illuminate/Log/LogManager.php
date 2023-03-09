@@ -305,7 +305,7 @@ class LogManager implements LoggerInterface
                     isset($config['locking']) ? $config['locking'] : false
                 ), $config
             ),
-        ], $config['replace_placeholders'] ?? false ? [new PsrLogMessageProcessor()] : []);
+        ], (isset($config['replace_placeholders']) ? $config['replace_placeholders'] : false) ? [new PsrLogMessageProcessor()] : []);
     }
 
     /**
@@ -325,7 +325,7 @@ class LogManager implements LoggerInterface
                 isset($config['permission']) ? $config['permission'] : null,
                 isset($config['locking']) ? $config['locking'] : false
             ), $config),
-        ], $config['replace_placeholders'] ?? false ? [new PsrLogMessageProcessor()] : []);
+        ], (isset($config['replace_placeholders']) ? $config['replace_placeholders'] : false) ? [new PsrLogMessageProcessor()] : []);
     }
 
     /**
@@ -349,7 +349,7 @@ class LogManager implements LoggerInterface
                 isset($config['bubble']) ? $config['bubble'] : true,
                 isset($config['exclude_fields']) ? $config['exclude_fields'] : []
             ), $config),
-        ], $config['replace_placeholders'] ?? false ? [new PsrLogMessageProcessor()] : []);
+        ], (isset($config['replace_placeholders']) ? $config['replace_placeholders'] : false) ? [new PsrLogMessageProcessor()] : []);
     }
 
     /**
@@ -366,7 +366,7 @@ class LogManager implements LoggerInterface
                 isset($config['facility']) ? $config['facility'] : LOG_USER,
                 $this->level($config)
             ), $config),
-        ], $config['replace_placeholders'] ?? false ? [new PsrLogMessageProcessor()] : []);
+        ], (isset($config['replace_placeholders']) ? $config['replace_placeholders'] : false) ? [new PsrLogMessageProcessor()] : []);
     }
 
     /**
@@ -382,7 +382,7 @@ class LogManager implements LoggerInterface
                 isset($config['type']) ? $config['type'] : ErrorLogHandler::OPERATING_SYSTEM,
                 $this->level($config)
             )),
-        ], $config['replace_placeholders'] ?? false ? [new PsrLogMessageProcessor()] : []);
+        ], (isset($config['replace_placeholders']) ? $config['replace_placeholders'] : false) ? [new PsrLogMessageProcessor()] : []);
     }
 
     /**
@@ -402,8 +402,8 @@ class LogManager implements LoggerInterface
             );
         }
 
-        collect($config['processors'] ?? [])->each(function ($processor) {
-            $processor = $processor['processor'] ?? $processor;
+        collect(isset($config['processors']) ? $config['processors'] : [])->each(function ($processor) {
+            $processor = isset($processor['processor']) ? $processor['processor'] : $processor;
 
             if (! is_a($processor, ProcessorInterface::class, true)) {
                 throw new InvalidArgumentException(
@@ -425,8 +425,10 @@ class LogManager implements LoggerInterface
                     $this->app->make($config['handler'], $with), $config
                 ),
             ],
-            collect($config['processors'] ?? [])
-                ->map(fn ($processor) => $this->app->make($processor['processor'] ?? $processor, $processor['with'] ?? [])
+            collect(isset($config['processors']) ? $config['processors'] : [])
+                ->map(function ($processor) {
+                    return $this->app->make(isset($processor['processor']) ? $processor['processor'] : $processor, isset($processor['with']) ? $processor['with'] : []);
+                }
         )->toArray());
     }
 

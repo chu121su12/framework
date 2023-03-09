@@ -900,7 +900,8 @@ class Builder implements BuilderContract
     {
         $page = $page ?: Paginator::resolveCurrentPage($pageName);
 
-        $total = value($total) ?? $this->toBase()->getCountForPagination();
+        $total = value($total);
+        $total = isset($total) ? $total : $this->toBase()->getCountForPagination();
 
         $perPage = ($perPage instanceof Closure
             ? $perPage($total)

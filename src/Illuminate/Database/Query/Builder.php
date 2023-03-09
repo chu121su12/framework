@@ -2746,7 +2746,8 @@ class Builder implements BuilderContract
     {
         $page = $page ?: Paginator::resolveCurrentPage($pageName);
 
-        $total = value($total) ?? $this->getCountForPagination();
+        $total = value($total);
+        $total = isset($total) ? $total : $this->getCountForPagination();
 
         $perPage = $perPage instanceof Closure ? $perPage($total) : $perPage;
 
@@ -3722,7 +3723,11 @@ class Builder implements BuilderContract
      */
     public function castBinding($value)
     {
-        return $value instanceof BackedEnum ? $value->value : $value;
+        if (function_exists('enum_exists') && $value instanceof BackedEnum) {
+            return $value->value;
+        }
+
+        return $value;
     }
 
     /**

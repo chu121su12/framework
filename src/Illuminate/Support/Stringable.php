@@ -1247,8 +1247,11 @@ class Stringable implements JsonSerializable, ArrayAccess
      * @param  mixed  $offset
      * @return bool
      */
-    public function offsetExists(mixed $offset): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists(/*mixed */$offset)/*: bool*/
     {
+        $offset = backport_type_check('mixed', $offset);
+
         return isset($this->value[$offset]);
     }
 
@@ -1258,8 +1261,11 @@ class Stringable implements JsonSerializable, ArrayAccess
      * @param  mixed  $offset
      * @return string
      */
-    public function offsetGet(mixed $offset): string
+    #[\ReturnTypeWillChange]
+    public function offsetGet(/*mixed */$offset)/*: string*/
     {
+        $offset = backport_type_check('mixed', $offset);
+
         return $this->value[$offset];
     }
 
@@ -1269,8 +1275,12 @@ class Stringable implements JsonSerializable, ArrayAccess
      * @param  mixed  $offset
      * @return void
      */
-    public function offsetSet(mixed $offset, mixed $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet(/*mixed */$offset, /*mixed */$value)/*: void*/
     {
+        $offset = backport_type_check('mixed', $offset);
+        $value = backport_type_check('mixed', $value);
+
         $this->value[$offset] = $value;
     }
 
@@ -1280,8 +1290,11 @@ class Stringable implements JsonSerializable, ArrayAccess
      * @param  mixed  $offset
      * @return void
      */
-    public function offsetUnset(mixed $offset): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset(/*mixed */$offset)/*: void*/
     {
+        $offset = backport_type_check('mixed', $offset);
+
         unset($this->value[$offset]);
     }
 
