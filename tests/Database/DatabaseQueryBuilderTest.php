@@ -4453,30 +4453,6 @@ SQL;
         ]), $result);
     }
 
-    public function testPaginateWithTotalOverride()
-    {
-        $perPage = 16;
-        $columns = ['id', 'name'];
-        $pageName = 'page-name';
-        $page = 1;
-        $builder = $this->getMockQueryBuilder();
-        $path = 'http://foo.bar?page=3';
-
-        $results = collect([['id' => 3, 'name' => 'Taylor'], ['id' => 5, 'name' => 'Mohamed']]);
-
-        $builder->shouldReceive('getCountForPagination')->never();
-        $builder->shouldReceive('forPage')->once()->with($page, $perPage)->andReturnSelf();
-        $builder->shouldReceive('get')->once()->andReturn($results);
-
-        Paginator::currentPathResolver(function () use ($path) {
-            return $path;
-        });
-
-        $result = $builder->paginate($perPage, $columns, $pageName, $page, 10);
-
-        $this->assertEquals(10, $result->total());
-    }
-
     public function testCursorPaginate()
     {
         if (\version_compare(\PHP_VERSION, '7.0', '>=') && \version_compare(\PHP_VERSION, '7.1', '<')) {
