@@ -507,11 +507,12 @@ use DateTimeZone;
  *
  * </autodoc>
  */
-class CarbonImmutable extends DateTimeImmutable implements CarbonInterface
+class CarbonImmutable extends DateTimeImmutable implements CarbonInterface, Patch\CarbonInterface
 {
     use Date {
         __clone as dateTraitClone;
     }
+    use Patch\DateTrait;
 
     public function __clone()
     {

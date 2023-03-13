@@ -173,6 +173,7 @@ abstract class AbstractUid implements \JsonSerializable
         return $this->uid;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()/*: string*/
     {
         return $this->uid;

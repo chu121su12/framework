@@ -24,7 +24,7 @@ abstract class Relation implements BuilderContract
      *
      * @var \Illuminate\Database\Eloquent\Builder
      */
-    /*protected $query;*/
+    protected $query;
 
     /**
      * The parent model instance.

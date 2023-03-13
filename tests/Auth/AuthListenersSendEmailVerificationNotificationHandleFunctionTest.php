@@ -5,6 +5,7 @@ namespace Illuminate\Tests\Auth;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
 use PHPUnit\Framework\TestCase;
 
@@ -31,6 +32,8 @@ class AuthListenersSendEmailVerificationNotificationHandleFunctionTest extends T
      */
     public function testUserIsNotInstanceOfMustVerifyEmail()
     {
+        Model::getConnectionResolver();
+
         $user = $this->getMockBuilder(User::class)->getMock();
         $user->expects($this->never())->method('sendEmailVerificationNotification');
 

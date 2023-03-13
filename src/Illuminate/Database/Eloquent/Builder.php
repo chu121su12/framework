@@ -39,7 +39,7 @@ class Builder implements BuilderContract
      *
      * @var \Illuminate\Database\Query\Builder
      */
-    /*protected $query;*/
+    protected $query;
 
     /**
      * The model being queried.

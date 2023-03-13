@@ -507,9 +507,10 @@ use DateTimeZone;
  *
  * </autodoc>
  */
-class Carbon extends DateTime implements CarbonInterface
+class Carbon extends DateTime implements CarbonInterface, Patch\CarbonInterface
 {
     use Date;
+    use Patch\DateTrait;
 
     /**
      * Returns true if the current class/instance is mutable.

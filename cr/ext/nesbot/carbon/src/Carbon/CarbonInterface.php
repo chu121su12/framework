@@ -709,7 +709,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return array
      */
-    public function __serialize()/*: array*/;
+    // public function __serialize()/*: array*/;
 
     /**
      * Set a part of the Carbon object
@@ -761,7 +761,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      *
      * @return void
      */
-    public function __unserialize(array $data)/*: void*/;
+    // public function __unserialize(array $data)/*: void*/;
 
     /**
      * Add given units or interval to the current instance.

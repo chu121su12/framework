@@ -21,6 +21,7 @@ class CallbackFilterIterator extends FilterIterator
         parent::__construct($iterator);
     }
 
+    #[\ReturnTypeWillChange]
     public function accept()
     {
         return call_user_func($this->callback, $this->current(), $this->key(), $this->iterator);

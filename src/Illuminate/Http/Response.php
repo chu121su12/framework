@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 use JsonSerializable;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag5 as ResponseHeaderBag;
 
@@ -126,5 +127,18 @@ class Response extends SymfonyResponse
         }
 
         return $content;
+    }
+
+    protected function ensureIEOverSSLCompatibility(SymfonyRequest $request)/*: void*/
+    {
+        $contentDisposition = $this->headers->get('Content-Disposition');
+        $htpUserAgent = $request->server->get('HTTP_USER_AGENT');
+
+        if (false !== stripos(isset($contentDisposition) ? $contentDisposition : '', 'attachment')
+            && 1 == preg_match('/MSIE (.*?);/i', isset($htpUserAgent) ? $htpUserAgent : '', $match) && true === $request->isSecure()) {
+            if ((int) preg_replace('/(MSIE )(.*?);/', '$2', $match[0]) < 9) {
+                $this->headers->remove('Cache-Control');
+            }
+        }
     }
 }

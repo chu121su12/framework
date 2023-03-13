@@ -5,9 +5,10 @@ namespace Illuminate\Database\Eloquent\Casts;
 use BackedEnum;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-class AsEnumArrayObject_castUsing_class implements CastsAttributes
+class AsEnumCollection_castUsing_class implements CastsAttributes
         {
             protected $arguments;
 
@@ -79,6 +80,6 @@ class AsEnumCollection implements Castable
      */
     public static function castUsing(array $arguments)
     {
-        return new AsEnumArrayObject_castUsing_class($arguments);
+        return new AsEnumCollection_castUsing_class($arguments);
     }
 }

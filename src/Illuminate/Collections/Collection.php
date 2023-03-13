@@ -517,8 +517,9 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
                         $groupKey = (int) $groupKey;
                         break;
                     
-                    case $groupKey instanceof \Stringable:
-                    case method_exists($groupKey, '__toString'):
+                    case is_string($groupKey)
+                        || $groupKey instanceof \Stringable
+                        || is_object($groupKey) && method_exists($groupKey, '__toString'):
                         $groupKey = (string) $groupKey;
                         break;
 

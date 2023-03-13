@@ -143,7 +143,7 @@ trait Serialization
      *
      * @return array
      */
-    public function __serialize()/*: array*/
+    public function __serialize_()/*: array*/
     {
         // @codeCoverageIgnoreStart
         if (isset($this->timezone_type)) {
@@ -224,7 +224,7 @@ trait Serialization
      *
      * @return void
      */
-    public function __unserialize(array $data)/*: void*/
+    public function __unserialize_(array $data)/*: void*/
     {
         // @codeCoverageIgnoreStart
         try {

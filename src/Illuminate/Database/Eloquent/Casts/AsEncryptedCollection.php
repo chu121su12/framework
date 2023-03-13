@@ -2,9 +2,9 @@
 
 namespace Illuminate\Database\Eloquent\Casts;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
 

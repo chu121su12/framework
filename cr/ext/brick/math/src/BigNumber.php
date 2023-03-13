@@ -651,6 +651,7 @@ abstract class BigNumber implements \Serializable, \JsonSerializable
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()/* : string*/
     {
         return $this->__toString();

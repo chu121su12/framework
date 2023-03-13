@@ -207,3 +207,26 @@ function$1{\nreturn
 
 \n    (public|protected|private) +((?!(?:\$|static func|func))\S+\s+)
 \n    $1 /*$2*/
+
+
+
+
+
+
+>= 8.0
+    #[\ReturnTypeWillChange]
+
+vendor/phpoption/phpoption/src/PhpOption/Some.php
+    public function getIterator
+
+vendor/symfony/var-dumper/Cloner/Data.php
+    public function count
+    getIterator
+    offsetExists
+    offsetGet
+    offsetSet
+    offsetUnset
+
+vendor/symfony/finder/Iterator/FilenameFilterIterator.php
+
+vendor/phpunit/phpunit-mock-objects/src/Framework/MockObject/Generator/*.tpl.dist

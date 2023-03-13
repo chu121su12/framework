@@ -5,6 +5,7 @@ namespace Illuminate\Database\Eloquent\Casts;
 use BackedEnum;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class AsEnumArrayObject_castUsing_class implements CastsAttributes
