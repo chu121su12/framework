@@ -431,7 +431,7 @@ class LogManager implements LoggerInterface
         return new Monolog(
             $this->parseChannel($config),
             [$handler],
-            $processors,
+            $processors
         );
     }
 
