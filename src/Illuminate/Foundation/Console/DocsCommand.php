@@ -532,7 +532,7 @@ class DocsCommand extends Command
      */
     protected function version()
     {
-        return Str::before((isset($this->version) ? $this->version : $this->laravel->version()), '.').'.x';
+        return Str::before(isset($this->version) ? $this->version : $this->laravel->version(), '.').'.x';
     }
 
     /**

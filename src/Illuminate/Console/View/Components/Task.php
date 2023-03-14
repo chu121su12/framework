@@ -4,8 +4,9 @@ namespace Illuminate\Console\View\Components;
 
 use CR\LaravelBackport\SymfonyHelper;
 use Symfony\Component\Console\Output\OutputInterface;
-use function Termwind\terminal;
 use Throwable;
+
+use function Termwind\terminal;
 
 class Task extends Component
 {

@@ -418,18 +418,21 @@ class LogManager implements LoggerInterface
             isset($config['handler_with']) ? $config['handler_with'] : []
         );
 
+        $handler = $this->prepareHandler(
+            $this->app->make($config['handler'], $with), $config
+        );
+
+        $processors = collect(isset($config['processors']) ? $config['processors'] : [])
+            ->map(function ($processor) {
+                return $this->app->make(isset($processor['processor']) ? $processor['processor'] : $processor, isset($processor['with']) ? $processor['with'] : []);
+            })
+            ->toArray();
+
         return new Monolog(
             $this->parseChannel($config),
-            [
-                $this->prepareHandler(
-                    $this->app->make($config['handler'], $with), $config
-                ),
-            ],
-            collect(isset($config['processors']) ? $config['processors'] : [])
-                ->map(function ($processor) {
-                    return $this->app->make(isset($processor['processor']) ? $processor['processor'] : $processor, isset($processor['with']) ? $processor['with'] : []);
-                }
-        )->toArray());
+            [$handler],
+            $processors,
+        );
     }
 
     /**
