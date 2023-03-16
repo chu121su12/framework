@@ -1,6 +1,6 @@
 <?php
 
-namespace Inertia\Console;
+namespace Inertia\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputOption;
@@ -30,10 +30,8 @@ class CreateMiddleware extends GeneratorCommand
 
     /**
      * Get the stub file for the generator.
-     *
-     * @return string
      */
-    protected function getStub()/*: string*/
+    protected function getStub(): string
     {
         return __DIR__.'/../../stubs/middleware.stub';
     }
@@ -41,20 +39,17 @@ class CreateMiddleware extends GeneratorCommand
     /**
      * Get the default namespace for the class.
      *
-     * @param  string  $rootNamespace
-     * @return string
+     * @param string $rootNamespace
      */
-    protected function getDefaultNamespace($rootNamespace)/*: string*/
+    protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace.'\Http\Middleware';
     }
 
     /**
      * Get the console command arguments.
-     *
-     * @return array
      */
-    protected function getArguments()/*: array*/
+    protected function getArguments(): array
     {
         return [
             ['name', InputOption::VALUE_REQUIRED, 'Name of the Middleware that should be created', 'HandleInertiaRequests'],
@@ -63,10 +58,8 @@ class CreateMiddleware extends GeneratorCommand
 
     /**
      * Get the console command options.
-     *
-     * @return array
      */
-    protected function getOptions()/*: array*/
+    protected function getOptions(): array
     {
         return [
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the Middleware already exists'],

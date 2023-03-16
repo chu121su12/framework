@@ -103,7 +103,7 @@
     "provide": {
         "brick/math": "^0.11.0",
         "fruitcake/php-cors": "^1.2.0",
-        "inertiajs/inertia-laravel": "^0.6.3",
+        "inertiajs/inertia-laravel": "^0.6.9",
         "laravel/breeze": "^1.11.1",
         "laravel/fortify": "^1.13.1",
         "laravel/jetstream": "^2.10.1",
