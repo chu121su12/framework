@@ -43,6 +43,8 @@ final class StyleToMethod
     ) {
         $this->styles = $styles;
         $this->style = $style;
+
+        // ..
     }
 
     /**
@@ -148,9 +150,10 @@ final class StyleToMethod
     {
         $method = backport_type_check('string', $method);
 
+        $matches = [];
         preg_match(self::MEDIA_QUERIES_REGEX, $method, $matches);
 
-        if (count(isset($matches) ? $matches : []) < 1) {
+        if (count($matches) < 1) {
             return $method;
         }
 

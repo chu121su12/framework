@@ -4,10 +4,12 @@
 
 namespace Termwind;
 
-use Symfony\Component\Console\Helper\QuestionHelper as SymfonyQuestionHelper;
+use ReflectionClass;
+use Symfony\Component\Console\Helper\SymfonyQuestionHelper;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\StreamableInputInterface;
 use Symfony\Component\Console\Question\Question as SymfonyQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Termwind\Helpers\QuestionHelper;
 
 /**
@@ -48,17 +50,47 @@ final class Question
 
     /**
      * Renders a prompt to the user.
+     *
+     * @param  iterable<array-key, string>|null  $autocomplete
      */
-    public function ask(/*string */$question)/*: mixed*/
+    public function ask(/*string */$question, /*iterable */$autocomplete = null)/*: mixed*/
     {
         $question = backport_type_check('string', $question);
+        $autocomplete = backport_type_check('?iterable', $autocomplete);
 
         $html = (new HtmlRenderer)->parse($question)->toString();
+
+        $question = new SymfonyQuestion($html);
+
+        if ($autocomplete !== null) {
+            $question->setAutocompleterValues($autocomplete);
+        }
+
+        $output = Termwind::getRenderer();
+
+        if ($output instanceof SymfonyStyle) {
+            $property = (new ReflectionClass(SymfonyStyle::class))
+                ->getProperty('questionHelper');
+
+            $property->setAccessible(true);
+
+            $currentHelper = $property->isInitialized($output)
+                ? $property->getValue($output)
+                : new SymfonyQuestionHelper();
+
+            $property->setValue($output, new QuestionHelper);
+
+            try {
+                return $output->askQuestion($question);
+            } finally {
+                $property->setValue($output, $currentHelper);
+            }
+        }
 
         return $this->helper->ask(
             self::getStreamableInput(),
             Termwind::getRenderer(),
-            new SymfonyQuestion($html)
+            $question,
         );
     }
 }

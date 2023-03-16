@@ -93,6 +93,10 @@ final class InheritStyles
      */
     private function applyJustifyBetween(array $elements)/*: array*/
     {
+        if (count($elements) <= 1) {
+            return $elements;
+        }
+
         list($totalWidth, $parentWidth) = $this->getWidthFromElements($elements);
         $space = ($parentWidth - $totalWidth) / (count($elements) - 1);
 
@@ -150,6 +154,10 @@ final class InheritStyles
      */
     private function applyJustifyAround(array $elements)/*: array*/
     {
+        if (count($elements) === 0) {
+            return $elements;
+        }
+
         list($totalWidth, $parentWidth) = $this->getWidthFromElements($elements);
         $space = ($parentWidth - $totalWidth) / count($elements);
 
@@ -169,10 +177,11 @@ final class InheritStyles
             $arr[] = $element;
         }
 
-        array_unshift($arr, str_repeat(' ', (int) floor(($parentWidth - $contentSize) / 2)));
-        array_push($arr, str_repeat(' ', (int) ceil(($parentWidth - $contentSize) / 2)));
-
-        return $arr;
+        return array_merge(...[
+            [str_repeat(' ', (int) floor(($parentWidth - $contentSize) / 2))],
+            $arr,
+            [str_repeat(' ', (int) ceil(($parentWidth - $contentSize) / 2))],
+        ]);
     }
 
     /**
@@ -190,10 +199,11 @@ final class InheritStyles
             return $elements;
         }
 
-        array_unshift($elements, str_repeat(' ', (int) floor($space / 2)));
-        array_push($elements, str_repeat(' ', (int) ceil($space / 2)));
-
-        return $elements;
+        return array_merge(...[
+            [str_repeat(' ', (int) floor($space / 2))],
+            $elements,
+            [str_repeat(' ', (int) ceil($space / 2))],
+        ]);
     }
 
     /**
