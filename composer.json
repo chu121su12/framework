@@ -114,7 +114,7 @@
         "laravel/tinker": "^2.7.2",
         "league/flysystem": "^1.0.70",
         "nesbot/carbon": "^2.66.0",
-        "nunomaduro/collision": "^6.2.1",
+        "nunomaduro/collision": "^7.1.2",
         "nunomaduro/termwind": "^1.13.0",
         "spatie/backtrace": "^1.2.1",
         "spatie/flare-client-php": "^1.2.0",

@@ -4,7 +4,7 @@
 
 namespace NunoMaduro\Collision\Contracts;
 
-use Facade\IgnitionContracts\Solution;
+use Spatie\Ignition\Contracts\Solution;
 use Throwable;
 
 /**

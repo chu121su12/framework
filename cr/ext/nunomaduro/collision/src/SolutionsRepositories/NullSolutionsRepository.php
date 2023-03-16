@@ -13,10 +13,12 @@ use Throwable;
 final class NullSolutionsRepository implements SolutionsRepository
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFromThrowable(/*Throwable */$throwable)/*: array*/
     {
+        backport_type_throwable($throwable);
+
         return [];
     }
 }

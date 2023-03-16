@@ -4,12 +4,12 @@
 
 namespace NunoMaduro\Collision\Exceptions;
 
-use RuntimeException;
+use PHPUnit\Framework\Exception;
 
 /**
  * @internal
  */
-final class InvalidStyleException extends RuntimeException
+final class TestOutcome extends Exception
 {
     // ...
 }

@@ -4,12 +4,10 @@
 
 namespace NunoMaduro\Collision;
 
-use NunoMaduro\Collision\Contracts\Highlighter as HighlighterContract;
-
 /**
  * @internal
  */
-final class Highlighter implements HighlighterContract
+final class Highlighter
 {
     /*public */const TOKEN_DEFAULT = 'token_default';
 
@@ -45,44 +43,40 @@ final class Highlighter implements HighlighterContract
      * @var array
      */
     /*private */const THEME = [
-        self::TOKEN_STRING  => ['light_gray'],
+        self::TOKEN_STRING => ['light_gray'],
         self::TOKEN_COMMENT => ['dark_gray', 'italic'],
         self::TOKEN_KEYWORD => ['magenta', 'bold'],
         self::TOKEN_DEFAULT => ['default', 'bold'],
-        self::TOKEN_HTML    => ['blue', 'bold'],
+        self::TOKEN_HTML => ['blue', 'bold'],
 
-        self::ACTUAL_LINE_MARK    => ['red', 'bold'],
-        self::LINE_NUMBER         => ['dark_gray'],
-        self::MARKED_LINE_NUMBER  => ['italic', 'bold'],
+        self::ACTUAL_LINE_MARK => ['red', 'bold'],
+        self::LINE_NUMBER => ['dark_gray'],
+        self::MARKED_LINE_NUMBER => ['italic', 'bold'],
         self::LINE_NUMBER_DIVIDER => ['dark_gray'],
     ];
 
     /** @var ConsoleColor */
-    private $color;
+    private /*ConsoleColor */$color;
 
-    /** @var array */
     /*private */const DEFAULT_THEME = [
-        self::TOKEN_STRING  => 'red',
+        self::TOKEN_STRING => 'red',
         self::TOKEN_COMMENT => 'yellow',
         self::TOKEN_KEYWORD => 'green',
         self::TOKEN_DEFAULT => 'default',
-        self::TOKEN_HTML    => 'cyan',
+        self::TOKEN_HTML => 'cyan',
 
-        self::ACTUAL_LINE_MARK    => 'dark_gray',
-        self::LINE_NUMBER         => 'dark_gray',
-        self::MARKED_LINE_NUMBER  => 'dark_gray',
+        self::ACTUAL_LINE_MARK => 'dark_gray',
+        self::LINE_NUMBER => 'dark_gray',
+        self::MARKED_LINE_NUMBER => 'dark_gray',
         self::LINE_NUMBER_DIVIDER => 'dark_gray',
     ];
 
     /** @var string */
-    private $delimiter = self::DELIMITER_UTF8;
+    private /*string */$delimiter = self::DELIMITER_UTF8;
 
     /** @var string */
-    private $arrow = self::ARROW_SYMBOL_UTF8;
+    private /*string */$arrow = self::ARROW_SYMBOL_UTF8;
 
-    /**
-     * @var string
-     */
     /*private */const NO_MARK = '    ';
 
     /**
@@ -111,7 +105,7 @@ final class Highlighter implements HighlighterContract
     }
 
     /**
-     * @inheritdoc
+     * Highlights the provided content.
      */
     public function highlight(/*string */$content, /*int */$line)/*: string*/
     {
@@ -122,13 +116,20 @@ final class Highlighter implements HighlighterContract
     }
 
     /**
+     * Highlights the provided content.
+     *
      * @param  string  $source
      * @param  int  $lineNumber
      * @param  int  $linesBefore
      * @param  int  $linesAfter
      */
-    public function getCodeSnippet($source, $lineNumber, $linesBefore = 2, $linesAfter = 2)/*: string*/
+    public function getCodeSnippet(/*string */$source, /*int */$lineNumber, /*int */$linesBefore = 2, /*int */$linesAfter = 2)/*: string*/
     {
+        $source = backport_type_check('string', $source);
+        $lineNumber = backport_type_check('int', $lineNumber);
+        $linesBefore = backport_type_check('int', $linesBefore);
+        $linesAfter = backport_type_check('int', $linesAfter);
+
         $tokenLines = $this->getHighlightedLines($source);
 
         $offset = $lineNumber - $linesBefore - 1;
@@ -141,27 +142,26 @@ final class Highlighter implements HighlighterContract
         return $this->lineNumbers($lines, $lineNumber);
     }
 
-    /**
-     * @param  string  $source
-     */
-    private function getHighlightedLines($source)/*: array*/
+    private function getHighlightedLines(/*string */$source)/*: array*/
     {
+        $source = backport_type_check('string', $source);
+
         $source = str_replace(["\r\n", "\r"], "\n", $source);
         $tokens = $this->tokenize($source);
 
         return $this->splitToLines($tokens);
     }
 
-    /**
-     * @param  string  $source
-     */
-    private function tokenize($source)/*: array*/
+    private function tokenize(/*string */$source)/*: array*/
     {
+        $source = backport_type_check('string', $source);
+
         $tokens = token_get_all($source);
 
         $output = [];
         $currentType = null;
         $buffer = '';
+        $newType = null;
 
         foreach ($tokens as $token) {
             if (is_array($token)) {
@@ -259,7 +259,8 @@ final class Highlighter implements HighlighterContract
         $lines = [];
         foreach ($tokenLines as $lineCount => $tokenLine) {
             $line = '';
-            foreach ($tokenLine as list($tokenType, $tokenValue)) {
+            foreach ($tokenLine as $token) {
+                list($tokenType, $tokenValue) = $token;
                 if ($this->color->hasTheme($tokenType)) {
                     $line .= $this->color->apply($tokenType, $tokenValue);
                 } else {
@@ -275,9 +276,11 @@ final class Highlighter implements HighlighterContract
     /**
      * @param  int|null  $markLine
      */
-    private function lineNumbers(array $lines, $markLine = null)/*: string*/
+    private function lineNumbers(array $lines, /*int */$markLine = null)/*: string*/
     {
-        $lineStrlen = strlen((string) (array_key_last($lines) + 1));
+        $markLine = backport_type_check('?int', $markLine);
+
+        $lineStrlen = strlen((string) ((int) array_key_last($lines) + 1));
         $lineStrlen = $lineStrlen < self::WIDTH ? self::WIDTH : $lineStrlen;
         $snippet = '';
         $mark = '  '.$this->arrow.' ';
@@ -313,8 +316,12 @@ final class Highlighter implements HighlighterContract
      * @param  int  $i
      * @param  int  $lineStrlen
      */
-    private function coloredLineNumber($style, $i, $lineStrlen)/*: string*/
+    private function coloredLineNumber(/*string */$style, /*int */$i, /*int */$length)/*: string*/
     {
-        return $this->color->apply($style, str_pad((string) ($i + 1), $lineStrlen, ' ', STR_PAD_LEFT));
+        $style = backport_type_check('string', $style);
+        $i = backport_type_check('int', $i);
+        $length = backport_type_check('int', $length);
+
+        return $this->color->apply($style, str_pad((string) ($i + 1), $length, ' ', STR_PAD_LEFT));
     }
 }

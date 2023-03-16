@@ -6,7 +6,7 @@ namespace NunoMaduro\Collision\Adapters\Laravel;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler as ExceptionHandlerContract;
-use NunoMaduro\Collision\Contracts\Provider as ProviderContract;
+use NunoMaduro\Collision\Provider;
 use Symfony\Component\Console\Exception\ExceptionInterface as SymfonyConsoleExceptionInterface;
 use Throwable;
 
@@ -39,31 +39,37 @@ final class ExceptionHandler implements ExceptionHandlerContract
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function report(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         $this->appExceptionHandler->report($e);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function render($request, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return $this->appExceptionHandler->render($request, $e);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function renderForConsole($output, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         if ($e instanceof SymfonyConsoleExceptionInterface) {
             $this->appExceptionHandler->renderForConsole($output, $e);
         } else {
-            /** @var \NunoMaduro\Collision\Contracts\Provider $provider */
-            $provider = $this->container->make(ProviderContract::class);
+            /** @var Provider $provider */
+            $provider = $this->container->make(Provider::class);
 
             $handler = $provider->register()
                 ->getHandler()
@@ -82,6 +88,8 @@ final class ExceptionHandler implements ExceptionHandlerContract
      */
     public function shouldReport(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return $this->appExceptionHandler->shouldReport($e);
     }
 }

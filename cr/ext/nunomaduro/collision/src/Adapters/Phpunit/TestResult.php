@@ -5,8 +5,11 @@
 namespace NunoMaduro\Collision\Adapters\Phpunit;
 
 use NunoMaduro\Collision\Contracts\Adapters\Phpunit\HasPrintableTestCaseName;
-use PHPUnit\Framework\TestCase;
-use Throwable;
+use NunoMaduro\Collision\Exceptions\ShouldNotHappen;
+use PHPUnit\Event\Code\Test;
+use PHPUnit\Event\Code\TestMethod;
+use PHPUnit\Event\Code\Throwable;
+use PHPUnit\Event\Test\BeforeFirstTestMethodErrored;
 
 /**
  * @internal
@@ -17,9 +20,15 @@ final class TestResult
 
     /*public */const SKIPPED = 'skipped';
 
-    /*public */const INCOMPLETE = 'incompleted';
+    /*public */const INCOMPLETE = 'incomplete';
+
+    /*public */const TODO = 'todo';
 
     /*public */const RISKY = 'risky';
+
+    /*public */const DEPRECATED = 'deprecated';
+
+    /*public */const NOTICE = 'notice';
 
     /*public */const WARN = 'warnings';
 
@@ -32,106 +41,194 @@ final class TestResult
      *
      * @var string
      */
-    public $testCaseName;
+    public /*string */$id;
 
     /**
      * @readonly
      *
      * @var string
      */
-    public $description;
+    public /*string */$testCaseName;
 
     /**
      * @readonly
      *
      * @var string
      */
-    public $type;
+    public /*string */$description;
 
     /**
      * @readonly
      *
      * @var string
      */
-    public $icon;
+    public /*string */$type;
 
     /**
      * @readonly
      *
      * @var string
      */
-    public $color;
+    public /*string */$compactIcon;
+
+    /**
+     * @readonly
+     *
+     * @var string
+     */
+    public /*string */$icon;
+
+    /**
+     * @readonly
+     *
+     * @var string
+     */
+    public /*string */$compactColor;
+
+    /**
+     * @readonly
+     *
+     * @var string
+     */
+    public /*string */$color;
+
+    /**
+     * @readonly
+     *
+     * @var float
+     */
+    public /*float */$duration;
 
     /**
      * @readonly
      *
      * @var Throwable|null
      */
-    public $throwable;
+    public /*?Throwable */$throwable;
 
     /**
      * @readonly
      *
      * @var string
      */
-    public $warning = '';
+    public /*string */$warning = '';
 
     /**
-     * Test constructor.
+     * Creates a new TestResult instance.
      */
-    private function __construct(/*string */$testCaseName, /*string */$description, /*string */$type, /*string */$icon, /*string */$color, /*Throwable */$throwable = null)
+    private function __construct(/*string */$id, /*string */$testCaseName, /*string */$description, /*string */$type, /*string */$icon, /*string */$compactIcon, /*string */$color, /*string */$compactColor, /*Throwable */$throwable = null)
     {
+        $id = backport_type_check('string', $id);
         $testCaseName = backport_type_check('string', $testCaseName);
         $description = backport_type_check('string', $description);
         $type = backport_type_check('string', $type);
-        $icon = backport_type_check('string', $icon);
+        $compactIcon = backport_type_check('string', $compactIcon);
         $color = backport_type_check('string', $color);
+        $compactColor = backport_type_check('string', $compactColor);
+        backport_type_throwable($throwable, null);
 
+        $this->id = $id;
         $this->testCaseName = $testCaseName;
         $this->description = $description;
         $this->type = $type;
         $this->icon = $icon;
+        $this->compactIcon = $compactIcon;
         $this->color = $color;
+        $this->compactColor = $compactColor;
         $this->throwable = $throwable;
+
+        $this->duration = 0.0;
 
         $asWarning = $this->type === TestResult::WARN
              || $this->type === TestResult::RISKY
              || $this->type === TestResult::SKIPPED
+             || $this->type === TestResult::DEPRECATED
+             || $this->type === TestResult::NOTICE
              || $this->type === TestResult::INCOMPLETE;
 
         if ($throwable instanceof Throwable && $asWarning) {
-            $this->warning = trim((string) preg_replace("/\r|\n/", ' ', $throwable->getMessage()));
+            $this->warning = trim((string) preg_replace("/\r|\n/", ' ', $throwable->message()));
         }
+    }
+
+    /**
+     * Sets the telemetry information.
+     */
+    public function setDuration(/*float */$duration)/*: void*/
+    {
+        $duration = backport_type_check('float', $duration);
+
+        $this->duration = $duration;
     }
 
     /**
      * Creates a new test from the given test case.
      */
-    public static function fromTestCase(TestCase $testCase, /*string */$type, /*Throwable */$throwable = null)/*: self*/
+    public static function fromTestCase(Test $test, /*string */$type, /*Throwable */$throwable = null)/*: self*/
     {
         $type = backport_type_check('string', $type);
+        backport_type_throwable($throwable, null);
 
-        $testCaseName = State::getPrintableTestCaseName($testCase);
+        if (! $test instanceof TestMethod) {
+            throw new ShouldNotHappen();
+        }
 
-        $description = self::makeDescription($testCase);
+        $testCaseClassName = $test->className();
+        if (is_subclass_of($testCaseClassName, HasPrintableTestCaseName::class)) {
+            $testCaseName = $testCaseClassName::getPrintableTestCaseName();
+        } else {
+            $testCaseName = $testCaseClassName;
+        }
+
+        $description = self::makeDescription($test);
 
         $icon = self::makeIcon($type);
 
+        $compactIcon = self::makeCompactIcon($type);
+
         $color = self::makeColor($type);
 
-        return new self($testCaseName, $description, $type, $icon, $color, $throwable);
+        $compactColor = self::makeCompactColor($type);
+
+        return new self($test->id(), $testCaseName, $description, $type, $icon, $compactIcon, $color, $compactColor, $throwable);
+    }
+
+    /**
+     * Creates a new test from the given test case.
+     */
+    public static function fromBeforeFirstTestMethodErrored(BeforeFirstTestMethodErrored $event)/*: self*/
+    {
+        $eventTestClassName = $event->testClassName();
+        if (is_subclass_of($eventTestClassName, HasPrintableTestCaseName::class)) {
+            $testCaseName = $eventTestClassName::getPrintableTestCaseName();
+        } else {
+            $testCaseName = $eventTestClassName;
+        }
+
+        $description = '';
+
+        $icon = self::makeIcon(self::FAIL);
+
+        $compactIcon = self::makeCompactIcon(self::FAIL);
+
+        $color = self::makeColor(self::FAIL);
+
+        $compactColor = self::makeCompactColor(self::FAIL);
+
+        return new self($testCaseName, $testCaseName, $description, self::FAIL, $icon, $compactIcon, $color, $compactColor, $event->throwable());
     }
 
     /**
      * Get the test case description.
      */
-    public static function makeDescription(TestCase $testCase)/*: string*/
+    public static function makeDescription(TestMethod $test)/*: string*/
     {
-        $name = $testCase->getName(false);
-
-        if ($testCase instanceof HasPrintableTestCaseName) {
-            return $name;
+        $testCaseClassName = $test->className();
+        if (is_subclass_of($testCaseClassName, HasPrintableTestCaseName::class)) {
+            return $testCaseClassName::getLatestPrintableTestCaseMethodName();
         }
+
+        $name = $test->name();
 
         // First, lets replace underscore by spaces.
         $name = str_replace('_', ' ', $name);
@@ -148,15 +245,6 @@ final class TestResult
         // Lower case everything
         $name = mb_strtolower($name);
 
-        // Add the dataset name if it has one
-        if ($dataName = $testCase->dataName()) {
-            if (is_int($dataName)) {
-                $name .= sprintf(' with data set #%d', $dataName);
-            } else {
-                $name .= sprintf(' with data set "%s"', $dataName);
-            }
-        }
-
         return $name;
     }
 
@@ -172,16 +260,72 @@ final class TestResult
                 return '⨯';
             case self::SKIPPED:
                 return '-';
+            case self::DEPRECATED:
+            case self::WARN:
             case self::RISKY:
+            case self::NOTICE:
                 return '!';
             case self::INCOMPLETE:
                 return '…';
-            case self::WARN:
-                return '!';
+            case self::TODO:
+                return '↓';
             case self::RUNS:
                 return '•';
             default:
                 return '✓';
+        }
+    }
+
+    /**
+     * Get the test case compact icon.
+     */
+    public static function makeCompactIcon(/*string */$type)/*: string*/
+    {
+        $type = backport_type_check('string', $type);
+
+        switch ($type) {
+            case self::FAIL:
+                return '⨯';
+            case self::SKIPPED:
+                return 's';
+            case self::DEPRECATED:
+            case self::NOTICE:
+            case self::WARN:
+            case self::RISKY:
+                return '!';
+            case self::INCOMPLETE:
+                return 'i';
+            case self::TODO:
+                return 't';
+            case self::RUNS:
+                return '•';
+            default:
+                return '.';
+        }
+    }
+
+    /**
+     * Get the test case compact color.
+     */
+    public static function makeCompactColor(/*string */$type)/*: string*/
+    {
+        $type = backport_type_check('string', $type);
+
+        switch ($type) {
+            case self::FAIL:
+                return 'red';
+            case self::DEPRECATED:
+            case self::NOTICE:
+            case self::SKIPPED:
+            case self::INCOMPLETE:
+            case self::RISKY:
+            case self::WARN:
+            case self::RUNS:
+                return 'yellow';
+            case self::TODO:
+                return 'cyan';
+            default:
+                return 'gray';
         }
     }
 
@@ -193,8 +337,12 @@ final class TestResult
         $type = backport_type_check('string', $type);
 
         switch ($type) {
+            case self::TODO:
+                return 'cyan';
             case self::FAIL:
                 return 'red';
+            case self::DEPRECATED:
+            case self::NOTICE:
             case self::SKIPPED:
             case self::INCOMPLETE:
             case self::RISKY:
