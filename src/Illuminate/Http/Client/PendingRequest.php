@@ -9,7 +9,7 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\UriTemplate\UriTemplate;
+use GuzzleHttp\UriTemplate;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Client\Events\ConnectionFailed;
 use Illuminate\Http\Client\Events\RequestSending;
@@ -919,7 +919,7 @@ class PendingRequest
     {
         $url = backport_type_check('string', $url);
 
-        return UriTemplate::expand($url, $this->urlParameters);
+        return (new UriTemplate)->expand($url, $this->urlParameters);
     }
 
     /**
