@@ -62,6 +62,21 @@ class CodeSnippet
         }
     }
 
+    public function getAsString(/*string */$fileName)/*: string*/
+    {
+        $fileName = backport_type_check('string', $fileName);
+
+        $snippet = $this->get($fileName);
+
+        $snippetStrings = array_map(function (/*string */$line, /*string */$number) {
+            $line = backport_type_check('string', $line);
+            $number = backport_type_check('string', $number);
+            return "{$number} {$line}";
+        }, $snippet, array_keys($snippet));
+
+        return implode(PHP_EOL, $snippetStrings);
+    }
+
     protected function getBounds(/*int */$totalNumberOfLineInFile)/*: array*/
     {
         $totalNumberOfLineInFile = backport_type_check('int', $totalNumberOfLineInFile);

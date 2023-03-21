@@ -67,7 +67,7 @@ class Backtrace
     {
         $applicationPath = backport_type_check('string', $applicationPath);
 
-        $this->applicationPath = $applicationPath;
+        $this->applicationPath = rtrim($applicationPath, '/');
 
         return $this;
     }

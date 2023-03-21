@@ -59,6 +59,16 @@ class Frame
             ->get($this->file);
     }
 
+    public function getSnippetAsString(/*int */$lineCount)/*: string*/
+    {
+        $lineCount = backport_type_check('int', $lineCount);
+
+        return (new CodeSnippet())
+            ->surroundingLine($this->lineNumber)
+            ->snippetLineCount($lineCount)
+            ->getAsString($this->file);
+    }
+
     public function getSnippetProperties(/*int */$lineCount)/*: array*/
     {
         $lineCount = backport_type_check('int', $lineCount);
