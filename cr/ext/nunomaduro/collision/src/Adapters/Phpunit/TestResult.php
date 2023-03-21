@@ -114,6 +114,11 @@ final class TestResult
     public /*string */$warning = '';
 
     /**
+     * @var string
+     */
+    public /*string */$warningSource = '';
+
+    /**
      * Creates a new TestResult instance.
      */
     private function __construct(/*string */$id, /*string */$testCaseName, /*string */$description, /*string */$type, /*string */$icon, /*string */$compactIcon, /*string */$color, /*string */$compactColor, /*Throwable */$throwable = null)
@@ -147,7 +152,21 @@ final class TestResult
              || $this->type === TestResult::INCOMPLETE;
 
         if ($throwable instanceof Throwable && $asWarning) {
-            $this->warning = trim((string) preg_replace("/\r|\n/", ' ', $throwable->message()));
+            if (in_array($this->type, [TestResult::DEPRECATED, TestResult::NOTICE])) {
+                foreach (explode("\n", $throwable->stackTrace()) as $line) {
+                    if (strpos($line, 'vendor/nunomaduro/collision') === false) {
+                        $this->warningSource = str_replace(getcwd().'/', '', $line);
+
+                        break;
+                    }
+                }
+            }
+
+            $this->warning .= trim((string) preg_replace("/\r|\n/", ' ', $throwable->message()));
+
+            // pest specific
+            $this->warning = str_replace('__pest_evaluable_', '', $this->warning);
+            $this->warning = str_replace('This test depends on "P\\', 'This test depends on "', $this->warning);
         }
     }
 

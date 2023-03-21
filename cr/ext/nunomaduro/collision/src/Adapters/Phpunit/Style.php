@@ -286,9 +286,6 @@ HTML;
         foreach ($slowTests as $testResult) {
             $seconds = number_format($testResult->duration / 1000, 2, '.', '');
 
-            // If duration is more than 25% of the total time elapsed, set the color as red
-            // If duration is more than 10% of the total time elapsed, set the color as yellow
-            // Otherwise, set the color as default
             $color = ($testResult->duration / 1000) > $timeElapsed * 0.25 ? 'red' : ($testResult->duration > $timeElapsed * 0.1 ? 'yellow' : 'gray');
 
             renderUsing($this->output);
@@ -454,7 +451,6 @@ HTML;
             $seconds = $seconds !== '0.00' ? sprintf('<span class="text-gray mr-2">%ss</span>', $seconds) : '';
         }
 
-        // Pest specific
         if (isset($_SERVER['REBUILD_SNAPSHOTS']) || (isset($_SERVER['COLLISION_IGNORE_DURATION']) && $_SERVER['COLLISION_IGNORE_DURATION'] === 'true')) {
             $seconds = '';
         }
@@ -463,6 +459,10 @@ HTML;
 
         if ($warning !== '') {
             $warning = sprintf('<span class="ml-1 text-yellow">%s</span>', $warning);
+
+            if (! empty($result->warningSource)) {
+                $warning .= ' // '.$result->warningSource;
+            }
         }
 
         $description = preg_replace('/`([^`]+)`/', '<span class="text-white">$1</span>', $result->description);
