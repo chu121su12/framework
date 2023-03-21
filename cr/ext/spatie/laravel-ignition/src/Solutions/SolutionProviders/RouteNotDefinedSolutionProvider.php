@@ -30,7 +30,7 @@ class RouteNotDefinedSolutionProvider implements HasSolutionsForThrowable
 
         preg_match(self::REGEX, $throwable->getMessage(), $matches);
 
-        $missingRoute = isset($matches[1]) ? $matches[1] : null;
+        $missingRoute = isset($matches[1]) ? $matches[1] : '';
 
         $suggestedRoute = $this->findRelatedRoute($missingRoute);
 

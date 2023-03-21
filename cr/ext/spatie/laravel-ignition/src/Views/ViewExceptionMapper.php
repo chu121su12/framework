@@ -147,7 +147,7 @@ class ViewExceptionMapper
         foreach ($lastCompiled as $lastCompiledPath) {
             $compiledPath = $this->compilerEngine->getCompiler()->getCompiledPath($lastCompiledPath);
 
-            $knownPaths[isset($compiledPath) ? $compiledPath : $lastCompiledPath] = $lastCompiledPath;
+            $knownPaths[realpath(isset($compiledPath) ? $compiledPath : $lastCompiledPath)] = realpath($lastCompiledPath);
         }
 
         return $knownPaths;

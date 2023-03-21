@@ -19,7 +19,7 @@ class QueryRecorder
     public function __construct(
         Application $app,
         /*bool */$reportBindings = true,
-        /*?int */$maxQueries = null
+        /*?int */$maxQueries = 200
     ) {
         $reportBindings = backport_type_check('bool', $reportBindings);
         $maxQueries = backport_type_check('?int', $maxQueries);
