@@ -14,7 +14,6 @@ use Spatie\FlareClient\FlareMiddleware\FlareMiddleware;
 use Spatie\FlareClient\Report;
 use Spatie\Ignition\Config\IgnitionConfig;
 use Spatie\Ignition\Contracts\HasSolutionsForThrowable;
-use Spatie\Ignition\Contracts\ProvidesSolution;
 use Spatie\Ignition\Contracts\SolutionProviderRepository as SolutionProviderRepositoryContract;
 use Spatie\Ignition\ErrorPage\ErrorPageViewModel;
 use Spatie\Ignition\ErrorPage\Renderer;
@@ -49,6 +48,10 @@ class Ignition
 
     /** @var ArrayObject<int, callable(Throwable): mixed> */
     protected /*ArrayObject */$documentationLinkResolvers;
+
+    protected /*string */$customHtmlHead = '';
+
+    protected /*string */$customHtmlBody = '';
 
     public static function make()/*: self*/
     {
@@ -162,7 +165,7 @@ class Ignition
     }
 
     /**
-     * @param array<int, ProvidesSolution|class-string<ProvidesSolution>> $solutionProviders
+     * @param array<int, HasSolutionsForThrowable|class-string<HasSolutionsForThrowable>> $solutionProviders
      *
      * @return $this
      */
@@ -327,10 +330,36 @@ class Ignition
             $this->ignitionConfig,
             $report,
             $this->solutionProviderRepository->getSolutionsForThrowable($throwable),
-            $this->solutionTransformerClass
+            $this->solutionTransformerClass,
+            $this->customHtmlHead,
+            $this->customHtmlBody
         );
 
         (new Renderer())->render(['viewModel' => $viewModel]);
+    }
+
+    /**
+     * Add custom HTML which will be added to the head tag of the error page.
+     */
+    public function addCustomHtmlToHead(/*string */$html)/*: self*/
+    {
+        $html = backport_type_check('string', $html);
+
+        $this->customHtmlHead .= $html;
+
+        return $this;
+    }
+
+    /**
+     * Add custom HTML which will be added to the body tag of the error page.
+     */
+    public function addCustomHtmlToBody(/*string */$html)/*: self*/
+    {
+        $html = backport_type_check('string', $html);
+
+        $this->customHtmlBody .= $html;
+
+        return $this;
     }
 
     protected function setUpFlare()/*: self*/
