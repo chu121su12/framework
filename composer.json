@@ -121,7 +121,7 @@
         "spatie/ignition": "^1.4.5",
         "spatie/laravel-ignition": "^2.0.0",
         "symfony/deprecation-contracts": "^3.2.1",
-        "symfony/error-handler": "^5.4.9",
+        "symfony/error-handler": "^5.4.21",
         "symfony/mime": "^5.4.10",
         "symfony/polyfill": "^1.26.0",
         "symfony/polyfill-apcu": "^1.26.0",
