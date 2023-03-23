@@ -118,7 +118,7 @@ class TestCommand extends Command
         ),
             null,
             // Envs ...
-            $parallel ? $this->paratestEnvironmentVariables() : $this->phpunitEnvironmentVariables(),
+            $parallel ? $this->paratestEnvironmentVariables() : $this->phpunitEnvironmentVariables()
         ))->setTimeout(null);
 
         try {
@@ -285,7 +285,7 @@ class TestCommand extends Command
 
         $paraTestOptions = Options::fromConsoleInput(
             $input,
-            $basePath,
+            $basePath
         );
 
         if (! $paraTestOptions->configuration->hasCoverageCacheDirectory()) {
