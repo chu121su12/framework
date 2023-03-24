@@ -28,3 +28,11 @@ if (\PHP_VERSION_ID < 80000) {
 if (\PHP_VERSION_ID < 80100) {
     require __DIR__.'/Php81/bootstrap.php';
 }
+
+if (\PHP_VERSION_ID < 80200) {
+    require __DIR__.'/Php82/bootstrap.php';
+}
+
+if (\PHP_VERSION_ID < 80300) {
+    require __DIR__.'/Php83/bootstrap.php';
+}

@@ -20,7 +20,7 @@ namespace Symfony\Polyfill\Php80;
  */
 final class Php80
 {
-    public static function fdiv($dividend, $divisor)
+    public static function fdiv(/*float */$dividend, /*float */$divisor)/*: float*/
     {
         $dividend = backport_type_check('float', $dividend);
 
@@ -29,7 +29,7 @@ final class Php80
         return @($dividend / $divisor);
     }
 
-    public static function get_debug_type($value)
+    public static function get_debug_type($value)/*: string*/
     {
         switch (true) {
             case null === $value: return 'null';
@@ -61,7 +61,7 @@ final class Php80
         return (get_parent_class($class) ?: key(class_implements($class)) ?: 'class').'@anonymous';
     }
 
-    public static function get_resource_id($res)
+    public static function get_resource_id($res)/*: int*/
     {
         if (!\is_resource($res) && null === @get_resource_type($res)) {
             throw new \TypeError(sprintf('Argument 1 passed to get_resource_id() must be of the type resource, %s given', get_debug_type($res)));
@@ -70,7 +70,7 @@ final class Php80
         return (int) $res;
     }
 
-    public static function preg_last_error_msg()
+    public static function preg_last_error_msg()/*: string*/
     {
         switch (preg_last_error()) {
             case \PREG_INTERNAL_ERROR:
@@ -92,7 +92,7 @@ final class Php80
         }
     }
 
-    public static function str_contains($haystack, $needle)
+    public static function str_contains(/*string */$haystack, /*string */$needle)/*: bool*/
     {
         $haystack = backport_type_check('string', $haystack);
 
@@ -101,7 +101,7 @@ final class Php80
         return '' === $needle || false !== strpos($haystack, $needle);
     }
 
-    public static function str_starts_with($haystack, $needle)
+    public static function str_starts_with(/*string */$haystack, /*string */$needle)/*: bool*/
     {
         $haystack = backport_type_check('string', $haystack);
 
@@ -110,7 +110,7 @@ final class Php80
         return 0 === strncmp($haystack, $needle, \strlen($needle));
     }
 
-    public static function str_ends_with($haystack, $needle)
+    public static function str_ends_with(/*string */$haystack, /*string */$needle)/*: bool*/
     {
         $haystack = backport_type_check('string', $haystack);
 

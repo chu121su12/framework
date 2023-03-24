@@ -1,3 +1,19 @@
+# 1.28.0
+
+  * Add `CURLStringFile` class introduced in PHP 8.1 (but only if PHP >= 7.4 is used)
+
+# 1.27.0
+
+  * Add PHP 8.3 polyfill for `json_validate()`
+  * Add polyfill for PHP 8.2's `Random` interfaces, exceptions and `Secure` engine
+  * Fix `IntlDateFormatter::formatObject()` signature
+
+# 1.26.0
+
+  * Add PHP 8.2 polyfill with SensitiveParameter, SensitiveParameterValue and AllowDynamicProperties
+  * Fix QQQQQ date format
+  * Fix passing null to `preg_split()`, throwing a deprecation on PHP 8.1
+
 # 1.25.0
 
   * Add `PhpToken` to the PHP 8.0 polyfill when the tokenizer extension is enabled
@@ -18,7 +34,7 @@
 # 1.23.1
 
   * Allow null in str_*() functions
-  * fixed `grapheme_str(r)ipos()`
+  * Fix `grapheme_str(r)ipos()`
 
 # 1.23.0
 

@@ -36,6 +36,7 @@ Polyfills are provided for:
 - a `Binary` utility class to be used when compatibility with
   `mbstring.func_overload` is required;
 - the `spl_object_id` and `stream_isatty` functions introduced in PHP 7.2;
+- the `mb_ord`, `mb_chr` and `mb_scrub` functions introduced in PHP 7.2 from the `mbstring` extension
 - the `sapi_windows_vt100_support` function (Windows only) introduced in PHP 7.2;
 - the `PHP_FLOAT_*` constant introduced in PHP 7.2;
 - the `PHP_OS_FAMILY` constant introduced in PHP 7.2;
@@ -58,8 +59,17 @@ Polyfills are provided for:
 - the `Stringable` interface introduced in PHP 8.0;
 - the `PhpToken` class introduced in PHP 8.0 when the tokenizer extension is enabled;
 - the `array_is_list` function introduced in PHP 8.1;
+- the `enum_exists` function introduced in PHP 8.1;
 - the `MYSQLI_REFRESH_REPLICA` constant introduced in PHP 8.1;
 - the `ReturnTypeWillChange` attribute introduced in PHP 8.1;
+- the `CURLStringFile` class introduced in PHP 8.1 (but only if PHP >= 7.4 is used);
+- the `AllowDynamicProperties` attribute introduced in PHP 8.2;
+- the `SensitiveParameter` attribute introduced in PHP 8.2;
+- the `SensitiveParameterValue` class introduced in PHP 8.2;
+- the `Random\Engine` interface introduced in PHP 8.2;
+- the `Random\CryptoSafeEngine` interface introduced in PHP 8.2;
+- the `Random\Engine\Secure` class introduced in PHP 8.2 (check [arokettu/random-polyfill](https://packagist.org/packages/arokettu/random-polyfill) for more engines);
+- the `json_validate` function introduced in PHP 8.3;
 
 It is strongly recommended to upgrade your PHP version and/or install the missing
 extensions whenever possible. This polyfill should be used only when there is no
@@ -90,6 +100,8 @@ should **not** `require` the `symfony/polyfill` package, but the standalone ones
 - `symfony/polyfill-php74` for using the PHP 7.4 functions,
 - `symfony/polyfill-php80` for using the PHP 8.0 functions,
 - `symfony/polyfill-php81` for using the PHP 8.1 functions,
+- `symfony/polyfill-php82` for using the PHP 8.2 functions,
+- `symfony/polyfill-php83` for using the PHP 8.3 functions,
 - `symfony/polyfill-iconv` for using the iconv functions,
 - `symfony/polyfill-intl-grapheme` for using the `grapheme_*` functions,
 - `symfony/polyfill-intl-idn` for using the `idn_to_ascii` and `idn_to_utf8` functions,
