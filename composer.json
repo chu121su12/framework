@@ -146,7 +146,7 @@
         "symfony/polyfill-util": "^1.28.0",
         "symfony/polyfill-uuid": "^1.28.0",
         "symfony/polyfill-xml": "^1.28.0",
-        "symfony/routing": "^5.4.8",
+        "symfony/routing": "^5.4.21",
         "symfony/uid": "^5.4.11",
         "voku/portable-ascii": "^2.0.1",
 

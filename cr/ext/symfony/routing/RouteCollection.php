@@ -89,7 +89,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
     /**
      * @param int $priority
      */
-    public function add($name, Route $route/*, $priority = 0*/)
+    public function add($name, Route $route/* , $priority = 0 */)
     {
         $name = backport_type_check('string', $name);
 
