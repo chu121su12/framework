@@ -138,14 +138,15 @@ HTML;
             : number_format($totalCoverage->asFloat(), 1, '.', '');
 
         renderUsing($output);
-        render(<<<HTML
-            <div class="mx-2">
-                <hr class="text-gray" />
-                <div class="w-full text-right">
-                    <span class="ml-1 font-bold">Total: {$totalCoverageAsString} %</span>
-                </div>
-            </div>
-        HTML);
+        $renderBody1 = <<<HTML
+    <div class="mx-2">
+        <hr class="text-gray" />
+        <div class="w-full text-right">
+            <span class="ml-1 font-bold">Total: {$totalCoverageAsString} %</span>
+        </div>
+    </div>
+HTML;
+        render($renderBody1);
 
         return $totalCoverage->asFloat();
     }

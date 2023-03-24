@@ -110,7 +110,7 @@ final class Style
                 $state->getTestCaseTitleColor(),
                 $state->getTestCaseTitle(),
                 $state->testCaseName,
-                $state->todosCount(),
+                $state->todosCount()
             ));
             $state->headerPrinted = true;
         }
@@ -366,10 +366,9 @@ HTML;
             '/vendor\/sulu\/sulu\/src\/Sulu\/Bundle\/TestBundle\/Testing/',
             '/vendor\/webmozart\/assert/',
 
-            $this->ignorePestPipes(...),
-            $this->ignorePestExtends(...),
-            $this->ignorePestInterceptors(...),
-
+            function (...$args) { return $this->ignorePestPipes(...$args); },
+            function (...$args) { return $this->ignorePestExtends(...$args); },
+            function (...$args) { return $this->ignorePestInterceptors(...$args); },
         ]);
 
         /** @var \Throwable $throwable */

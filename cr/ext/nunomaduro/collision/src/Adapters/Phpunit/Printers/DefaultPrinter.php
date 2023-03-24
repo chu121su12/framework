@@ -154,7 +154,7 @@ final class DefaultPrinter
      */
     public function testFinished(Finished $event)/*: void*/
     {
-        $duration = (hrtime(true) - $this->testStartedAt) / 1_000_000;
+        $duration = (hrtime(true) - $this->testStartedAt) / 1000000;
 
         $test = $event->test();
 

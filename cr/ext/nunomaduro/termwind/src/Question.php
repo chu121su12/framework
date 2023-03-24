@@ -90,7 +90,7 @@ final class Question
         return $this->helper->ask(
             self::getStreamableInput(),
             Termwind::getRenderer(),
-            $question,
+            $question
         );
     }
 }
