@@ -15,6 +15,8 @@ class ExceptionContext
      */
     public static function get(/*Throwable */$exception)
     {
+        $exception = backport_type_throwable($exception);
+
         $evalContext = static::getEvalContext($exception);
 
         return isset($evalContext) ? $evalContext :
@@ -29,6 +31,8 @@ class ExceptionContext
      */
     protected static function getEvalContext(/*Throwable */$exception)
     {
+        $exception = backport_type_throwable($exception);
+
         if (Str::contains($exception->getFile(), "eval()'d code")) {
             return [
                 $exception->getLine() => "eval()'d code",
@@ -44,6 +48,8 @@ class ExceptionContext
      */
     protected static function getFileContext(/*Throwable */$exception)
     {
+        $exception = backport_type_throwable($exception);
+
         return collect(explode("\n", file_get_contents($exception->getFile())))
             ->slice($exception->getLine() - 10, 20)
             ->mapWithKeys(function ($value, $key) {

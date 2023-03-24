@@ -45,7 +45,7 @@ class GateWatcher extends Watcher
      * @param  array  $arguments
      * @return bool
      */
-    public function recordGateCheck($user = null, $ability, $result, $arguments)
+    public function recordGateCheck($user, $ability, $result, $arguments)
     {
         if (! Telescope::isRecording() || $this->shouldIgnore($ability)) {
             return;

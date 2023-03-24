@@ -2,15 +2,29 @@
 
 namespace Laravel\Telescope\Watchers;
 
-use Exception;
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\Arr;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
+use Psr\Log\LogLevel;
 use Throwable;
 
 class LogWatcher extends Watcher
 {
+    /**
+     * The available log level priorities.
+     */
+    /*private */const PRIORITIES = [
+        LogLevel::DEBUG => 100,
+        LogLevel::INFO => 200,
+        LogLevel::NOTICE => 250,
+        LogLevel::WARNING => 300,
+        LogLevel::ERROR => 400,
+        LogLevel::CRITICAL => 500,
+        LogLevel::ALERT => 550,
+        LogLevel::EMERGENCY => 600,
+    ];
+
     /**
      * Register the watcher.
      *
@@ -62,11 +76,25 @@ class LogWatcher extends Watcher
      */
     private function shouldIgnore($event)
     {
-        return isset($event->context['exception']) &&
+        if (isset($event->context['exception']) &&
             (
                 $event->context['exception'] instanceof \Exception
                 || $event->context['exception'] instanceof \Error
                 || $event->context['exception'] instanceof Throwable
-            );
+            )
+        ) {
+            return true;
+        }
+
+        $telescopeLogLevelKey = isset($this->options['level']) ? $this->options['level'] : 'debug';
+        $priorities = static::PRIORITIES;
+
+        $minimumTelescopeLogLevel = isset($priorities[$telescopeLogLevelKey])
+                ? $priorities[$telescopeLogLevelKey] : $priorities[LogLevel::DEBUG];
+
+        $eventLogLevel = isset($priorities[$event->level])
+                ? $priorities[$event->level] : $priorities[LogLevel::DEBUG];
+
+        return $eventLogLevel < $minimumTelescopeLogLevel;
     }
 }

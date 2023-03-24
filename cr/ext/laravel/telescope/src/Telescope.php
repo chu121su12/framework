@@ -257,7 +257,15 @@ class Telescope
             app(EntriesRepository::class)->loadMonitoredTags();
         }
 
-        static::$shouldRecord = ! cache('telescope:pause-recording');
+        $recordingPaused = false;
+
+        try {
+            $recordingPaused = cache('telescope:pause-recording');
+        } catch (Exception $_exception) {
+            //
+        }
+
+        static::$shouldRecord = ! $recordingPaused;
     }
 
     /**

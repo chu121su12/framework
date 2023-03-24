@@ -49,6 +49,11 @@ class JobWatcher extends Watcher
             return;
         }
 
+        // Logging this job can cause extensive memory usage...
+        if (get_class($payload['data']['command']) === 'Laravel\Scout\Jobs\MakeSearchable') {
+            return;
+        }
+
         $content = array_merge([
             'status' => 'pending',
         ], $this->defaultJobData($connection, $queue, $payload, $this->data($payload)));
@@ -187,7 +192,15 @@ class JobWatcher extends Watcher
      */
     protected function updateBatch($payload)
     {
+        $wasRecordingEnabled = Telescope::$shouldRecord;
+
+        Telescope::$shouldRecord = false;
+
         $command = $this->getCommand($payload['data']);
+
+        if ($wasRecordingEnabled) {
+            Telescope::$shouldRecord = true;
+        }
 
         $properties = ExtractProperties::from(
             $command
