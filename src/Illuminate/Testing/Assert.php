@@ -6,13 +6,14 @@ use ArrayAccess;
 use Illuminate\Testing\Constraints\ArraySubset;
 use Illuminate\Testing\Exceptions\InvalidArgumentException;
 use PHPUnit\Framework\Assert as PHPUnit;
+use PHPUnit\Framework\PhpUnit8Assert;
 
 /**
  * @internal This class is not meant to be used or overwritten outside the framework itself.
  */
 abstract class Assert extends PHPUnit
 {
-    use \PHPUnit\Framework\PhpUnit8Assert;
+    use PhpUnit8Assert;
 
     /**
      * Asserts that an array has a specified subset.
