@@ -13,7 +13,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceResponse;
-use Illuminate\Support\Facades\Response as ResponseFactory;
+use Illuminate\Support\Facades\Response as ResponseFacade;
 
 class Response implements Responsable
 {
@@ -118,7 +118,7 @@ class Response implements Responsable
             return new JsonResponse($page, 200, ['X-Inertia' => 'true']);
         }
 
-        return ResponseFactory::view($this->rootView, $this->viewData + ['page' => $page]);
+        return ResponseFacade::view($this->rootView, $this->viewData + ['page' => $page]);
     }
 
     /**
