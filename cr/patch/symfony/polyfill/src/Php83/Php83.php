@@ -20,8 +20,14 @@ final class Php83
 {
     private const JSON_MAX_DEPTH = 0x7FFFFFFF; // see https://www.php.net/manual/en/function.json-decode.php
 
-    public static function json_validate(string $json, int $depth = 512, int $flags = 0): bool
+    public static function json_validate(/*string */$json, /*int */$depth = 512, /*int */$flags = 0)/*: bool*/
     {
+        $json = backport_type_check('string', $json);
+
+        $depth = backport_type_check('int', $depth);
+
+        $flags = backport_type_check('int', $flags);
+
         if (0 !== $flags && \defined('JSON_INVALID_UTF8_IGNORE') && \JSON_INVALID_UTF8_IGNORE !== $flags) {
             throw new \ValueError('json_validate(): Argument #3 ($flags) must be a valid flag (allowed flags: JSON_INVALID_UTF8_IGNORE)');
         }

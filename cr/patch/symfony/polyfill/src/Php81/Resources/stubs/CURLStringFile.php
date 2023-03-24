@@ -17,14 +17,22 @@ if (\PHP_VERSION_ID >= 70400 && extension_loaded('curl')) {
     {
         private $data;
 
-        public function __construct(string $data, string $postname, string $mime = 'application/octet-stream')
+        public function __construct(/*string */$data, /*string */$postname, /*string */$mime = 'application/octet-stream')
         {
+            $data = backport_type_check('string', $data);
+
+            $postname = backport_type_check('string', $postname);
+
+            $mime = backport_type_check('string', $mime);
+
             $this->data = $data;
             parent::__construct('data://application/octet-stream;base64,'.base64_encode($data), $mime, $postname);
         }
 
-        public function __set(string $name, $value): void
+        public function __set(/*string */$name, $value)/*: void*/
         {
+            $name = backport_type_check('string', $name);
+
             if ('data' !== $name) {
                 $this->$name = $value;
 
@@ -38,13 +46,17 @@ if (\PHP_VERSION_ID >= 70400 && extension_loaded('curl')) {
             $this->name = 'data://application/octet-stream;base64,'.base64_encode($value);
         }
 
-        public function __isset(string $name): bool
+        public function __isset(/*string */$name)/*: bool*/
         {
+            $name = backport_type_check('string', $name);
+
             return isset($this->$name);
         }
 
-        public function &__get(string $name)
+        public function &__get(/*string */$name)
         {
+            $name = backport_type_check('string', $name);
+
             return $this->$name;
         }
     }

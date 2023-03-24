@@ -16,8 +16,10 @@ namespace Symfony\Polyfill\Php82;
  */
 trait NoDynamicProperties
 {
-    public function __set(string $name, $value): void
+    public function __set(/*string */$name, $value)/*: void*/
     {
+        $name = backport_type_check('string', $name);
+
         throw new \Error('Cannot create dynamic property '.self::class.'::$'.$name);
     }
 }

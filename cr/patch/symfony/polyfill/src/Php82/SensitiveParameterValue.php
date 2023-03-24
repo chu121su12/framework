@@ -30,17 +30,17 @@ class SensitiveParameterValue
         return $this->value;
     }
 
-    public function __debugInfo(): array
+    public function __debugInfo()/*: array*/
     {
         return [];
     }
 
-    public function __sleep(): array
+    public function __sleep()/*: array*/
     {
         throw new \Exception("Serialization of 'SensitiveParameterValue' is not allowed");
     }
 
-    public function __wakeup(): void
+    public function __wakeup()/*: void*/
     {
         throw new \Exception("Unserialization of 'SensitiveParameterValue' is not allowed");
     }

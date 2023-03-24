@@ -16,5 +16,10 @@ if (\PHP_VERSION_ID >= 80300) {
 }
 
 if (!function_exists('json_validate')) {
-    function json_validate(string $json, int $depth = 512, int $flags = 0): bool { return p\Php83::json_validate($json, $depth, $flags); }
+    function json_validate(/*string */$json, /*int */$depth = 512, /*int */$flags = 0)/*: bool*/ {
+        $json = backport_type_check('string', $json);
+        $depth = backport_type_check('int', $depth);
+        $flags = backport_type_check('int', $flags);
+        return p\Php83::json_validate($json, $depth, $flags);
+    }
 }

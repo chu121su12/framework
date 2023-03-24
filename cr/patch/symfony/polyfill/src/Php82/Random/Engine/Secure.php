@@ -24,7 +24,7 @@ class Secure
 {
     use NoDynamicProperties;
 
-    public function generate(): string
+    public function generate()/*: string*/
     {
         try {
             return random_bytes(\PHP_INT_SIZE);
@@ -33,12 +33,12 @@ class Secure
         }
     }
 
-    public function __sleep(): array
+    public function __sleep()/*: array*/
     {
         throw new \Exception("Serialization of 'Random\Engine\Secure' is not allowed");
     }
 
-    public function __wakeup(): void
+    public function __wakeup()/*: void*/
     {
         throw new \Exception("Unserialization of 'Random\Engine\Secure' is not allowed");
     }
