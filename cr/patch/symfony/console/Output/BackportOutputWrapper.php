@@ -26,7 +26,7 @@ class BackportOutputWrapper implements OutputInterface
 
     public static function wrap(OutputInterface $impl)
     {
-        return new static($impl);
+        return $impl instanceof static ? $impl : new static($impl);
     }
 
     public function setFormatter(OutputFormatterInterface $formatter)
