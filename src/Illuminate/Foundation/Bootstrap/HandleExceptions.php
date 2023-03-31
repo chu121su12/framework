@@ -8,6 +8,7 @@ use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Log\LogManager;
 use Monolog\Handler\NullHandler;
+use Symfony\Component\Console\Output\BackportOutputWrapper;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\ErrorHandler\Error\FatalError;
 use Throwable;
@@ -206,7 +207,7 @@ class HandleExceptions
     {
         backport_type_throwable($e);
 
-        $this->getExceptionHandler()->renderForConsole(new ConsoleOutput, $e);
+        $this->getExceptionHandler()->renderForConsole(BackportOutputWrapper::wrap(new ConsoleOutput), $e);
     }
 
     /**

@@ -10,6 +10,7 @@ use NunoMaduro\Collision\Contracts\RenderlessTrace;
 use NunoMaduro\Collision\Contracts\SolutionsRepository;
 use NunoMaduro\Collision\Exceptions\TestException;
 use NunoMaduro\Collision\SolutionsRepositories\NullSolutionsRepository;
+use Symfony\Component\Console\Output\BackportOutputWrapper;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
@@ -95,7 +96,7 @@ final class Writer
         Highlighter $highlighter = null
     ) {
         $this->solutionsRepository = $solutionsRepository ?: new NullSolutionsRepository();
-        $this->output = $output ?: new ConsoleOutput();
+        $this->output = BackportOutputWrapper::wrap($output ?: new ConsoleOutput());
         $this->argumentFormatter = $argumentFormatter ?: new ArgumentFormatter();
         $this->highlighter = $highlighter ?: new Highlighter();
     }
@@ -181,6 +182,7 @@ final class Writer
     public function setOutput(OutputInterface $output)/*: self*/
     {
         $this->output = $output;
+        $this->output = BackportOutputWrapper::wrap($this->output);
 
         return $this;
     }

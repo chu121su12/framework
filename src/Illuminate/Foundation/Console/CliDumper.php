@@ -4,6 +4,7 @@ namespace Illuminate\Foundation\Console;
 
 use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Foundation\Concerns\ResolvesDumpSource;
+use Symfony\Component\Console\Output\BackportOutputWrapper;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\VarDumper\Caster\ReflectionCaster;
 use Symfony\Component\VarDumper\Cloner\Data;
@@ -72,7 +73,7 @@ class CliDumper extends BaseCliDumper
         // $cloner = tap(new VarCloner())->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
         $cloner = tap(new VarCloner())->addCasters(SymfonyHelper::varDumperUnsetClosureFileInfoReflectionCaster());
 
-        $dumper = new static(new ConsoleOutput(), $basePath, $compiledViewPath);
+        $dumper = new static(BackportOutputWrapper::wrap(new ConsoleOutput()), $basePath, $compiledViewPath);
 
         VarDumper::setHandler(function ($value) use ($dumper, $cloner) { return $dumper->dumpWithSource($cloner->cloneVar($value)); });
     }
