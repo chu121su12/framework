@@ -11,13 +11,16 @@ use InvalidArgumentException;
 
 class AsEncryptedCollection_castUsing_class implements CastsAttributes 
         {
-            public function __construct(protected array $arguments)
+            protected /*array */$arguments;
+
+            public function __construct(/*protected */array $arguments)
             {
+                $this->arguments = $arguments;
             }
 
-            public function get($model, $key, $value, $attributes)
+            public function get(Model $model, $key, $value, array $attributes)
             {
-                $collectionClass = $this->arguments[0] ?? Collection::class;
+                $collectionClass = isset($this->arguments[0]) ? $this->arguments[0] : Collection::class;
 
                 if (! is_a($collectionClass, Collection::class, true)) {
                     throw new InvalidArgumentException('The provided class must extend ['.Collection::class.'].');

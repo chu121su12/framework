@@ -196,7 +196,7 @@ class HandleExceptions
         if (static::$app->runningInConsole()) {
             $this->renderForConsole($e);
 
-            if ($exceptionHandlerFailed ?? false) {
+            if (isset($exceptionHandlerFailed) ? $exceptionHandlerFailed : false) {
                 exit(1);
             }
         } else {

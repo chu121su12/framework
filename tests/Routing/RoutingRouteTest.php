@@ -1895,14 +1895,19 @@ class RoutingRouteTest extends TestCase
         $router->dispatch(Request::create('foo', 'GET'))->getContent();
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testImplicitBindingsWithOptionalParameterUsingEnumIsAlwaysCastedToEnum()
     {
-        include_once 'Enums.php';
+        if (PHP_VERSION_ID >= 80100) {
+            include_once 'Enums.php';
+        }
 
         $router = $this->getRouter();
         $router->get('foo/{bar?}', [
             'middleware' => SubstituteBindings::class,
-            'uses' => function (?\Illuminate\Tests\Routing\CategoryBackedEnum $bar = null) {
+            'uses' => function (/*?*/\Illuminate\Tests\Routing\CategoryBackedEnum $bar = null) {
                 $this->assertInstanceOf(CategoryBackedEnum::class, $bar);
             },
         ]);

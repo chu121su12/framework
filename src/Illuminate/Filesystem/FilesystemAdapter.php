@@ -354,7 +354,7 @@ class FilesystemAdapter implements CloudFilesystemContract
     {
         $content = $this->get($path);
 
-        return is_null($content) ? null : json_decode($content, true, 512, $flags);
+        return is_null($content) ? null : backport_json_decode($content, true, 512, $flags);
     }
 
     /**

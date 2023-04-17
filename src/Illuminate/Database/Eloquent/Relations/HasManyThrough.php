@@ -88,15 +88,15 @@ class HasManyThrough extends Relation
      */
     public function one()
     {
-        return HasOneThrough::noConstraints(fn () => new HasOneThrough(
+        return HasOneThrough::noConstraints(function () { return new HasOneThrough(
             $this->getQuery(),
             $this->farParent,
             $this->throughParent,
             $this->getFirstKeyName(),
             $this->secondKey,
             $this->getLocalKeyName(),
-            $this->getSecondLocalKeyName(),
-        ));
+            $this->getSecondLocalKeyName()
+        ); });
     }
 
     /**

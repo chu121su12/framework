@@ -1016,7 +1016,7 @@ class PendingRequest
         $laravelData = $this->parseRequestData($method, $url, $options);
 
         $onStats = function ($transferStats) {
-            if (($callback = ($this->options['on_stats'] ?? false)) instanceof Closure) {
+            if (($callback = (isset($this->options['on_stats']) ? $this->options['on_stats'] : false)) instanceof Closure) {
                 $transferStats = $callback($transferStats) ?: $transferStats;
             }
 

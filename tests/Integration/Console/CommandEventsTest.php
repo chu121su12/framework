@@ -31,7 +31,7 @@ class CommandEventsTest extends TestCase
      */
     protected $files;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $this->afterApplicationCreated(function () {
             $this->files = new Filesystem;
@@ -55,7 +55,7 @@ class CommandEventsTest extends TestCase
     {
         $this->app[ConsoleKernel::class]->registerCommand(new CommandEventsTestCommand);
         $this->app[Dispatcher::class]->listen(function (CommandStarting $event) {
-            array_map(fn ($e) => $this->files->append($this->logfile, $e.PHP_EOL), [
+            array_map(function ($e) { return $this->files->append($this->logfile, $e.PHP_EOL); }, [
                 'CommandStarting',
                 $event->input->getArgument('firstname'),
                 $event->input->getArgument('lastname'),
@@ -64,7 +64,7 @@ class CommandEventsTest extends TestCase
         });
 
         Event::listen(function (CommandFinished $event) {
-            array_map(fn ($e) => $this->files->append($this->logfile, $e.PHP_EOL), [
+            array_map(function ($e) { return $this->files->append($this->logfile, $e.PHP_EOL); }, [
                 'CommandFinished',
                 $event->input->getArgument('firstname'),
                 $event->input->getArgument('lastname'),
@@ -76,7 +76,7 @@ class CommandEventsTest extends TestCase
 
         $this->assertLogged(
             'CommandStarting', 'taylor', 'otwell', 'coding',
-            'CommandFinished', 'taylor', 'otwell', 'coding',
+            'CommandFinished', 'taylor', 'otwell', 'coding'
         );
     }
 
@@ -98,13 +98,13 @@ class CommandEventsTest extends TestCase
     public function testCommandEventsReceiveParsedInputFromBackground()
     {
         $laravel = Testbench::create(
-            basePath: static::applicationBasePath(),
-            resolvingCallback: function ($app) {
+            /*basePath: */static::applicationBasePath(),
+            /*resolvingCallback: */function ($app) {
                 $files = new Filesystem;
-                $log = fn ($msg) => $files->append($this->logfile, $msg.PHP_EOL);
+                $log = function ($msg) use ($files) { return $files->append($this->logfile, $msg.PHP_EOL); };
 
                 $app['events']->listen(function (CommandStarting $event) use ($log) {
-                    array_map(fn ($msg) => $log($msg), [
+                    array_map(function ($msg) use ($log) { return $log($msg); }, [
                         'CommandStarting',
                         $event->input->getArgument('firstname'),
                         $event->input->getArgument('lastname'),
@@ -113,14 +113,14 @@ class CommandEventsTest extends TestCase
                 });
 
                 $app['events']->listen(function (CommandFinished $event) use ($log) {
-                    array_map(fn ($msg) => $log($msg), [
+                    array_map(function ($msg) use ($log) { return $log($msg); }, [
                         'CommandFinished',
                         $event->input->getArgument('firstname'),
                         $event->input->getArgument('lastname'),
                         $event->input->getOption('occupation'),
                     ]);
                 });
-            },
+            }
         );
 
         tap($laravel[ConsoleKernel::class], function ($kernel) {
@@ -136,7 +136,7 @@ class CommandEventsTest extends TestCase
 
         $this->assertLogged(
             'CommandStarting', 'taylor', 'otwell', 'coding',
-            'CommandFinished', 'taylor', 'otwell', 'coding',
+            'CommandFinished', 'taylor', 'otwell', 'coding'
         );
 
         $laravel->terminate();

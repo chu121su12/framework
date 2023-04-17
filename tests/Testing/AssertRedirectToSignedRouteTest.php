@@ -37,7 +37,7 @@ class AssertRedirectToSignedRouteTest extends TestCase
         $this->urlGenerator = $this->app->make(UrlGenerator::class);
     }
 
-    protected function defineEnvironment($app): void
+    protected function defineEnvironment($app)/*: void*/
     {
         $app['config']->set(['app.key' => 'AckfSECXIvnK5r28GVIWUAxmbBSjTsmF']);
     }

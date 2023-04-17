@@ -26,7 +26,7 @@ class MySqlGrammar extends Grammar
         $columnValue = (string) $this->getValue($where['column']);
 
         if ($this->isJsonSelector($columnValue)) {
-            [$field, $path] = $this->wrapJsonFieldAndPath($columnValue);
+            list($field, $path) = $this->wrapJsonFieldAndPath($columnValue);
 
             return '(json_extract('.$field.$path.') is null OR json_type(json_extract('.$field.$path.')) = \'NULL\')';
         }
@@ -46,7 +46,7 @@ class MySqlGrammar extends Grammar
         $columnValue = (string) $this->getValue($where['column']);
 
         if ($this->isJsonSelector($columnValue)) {
-            [$field, $path] = $this->wrapJsonFieldAndPath($columnValue);
+            list($field, $path) = $this->wrapJsonFieldAndPath($columnValue);
 
             return '(json_extract('.$field.$path.') is not null AND json_type(json_extract('.$field.$path.')) != \'NULL\')';
         }

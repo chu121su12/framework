@@ -138,7 +138,13 @@ class FoundationHelpersTest extends TestCase
 
     public function testFakeUsesLocale()
     {
-        mt_srand(12345, MT_RAND_PHP);
+        if (\version_compare(\PHP_VERSION, '7.1.0', '>=')) {
+            $mt_srand = function ($x) { mt_srand($x, MT_RAND_PHP); };
+        } else {
+            $mt_srand = function ($x) { mt_srand($x); };
+        }
+
+        $mt_srand(12345);
         app()->instance('config', new ConfigRepository([]));
 
         // Should fallback to en_US
@@ -153,7 +159,7 @@ class FoundationHelpersTest extends TestCase
         ]);
 
         app()->instance('config', new ConfigRepository(['app' => ['faker_locale' => 'en_AU']]));
-        mt_srand(4, MT_RAND_PHP);
+        $mt_srand(4);
 
         // Should fallback to en_US
         $this->assertSame('Australian Capital Territory', fake()->state());

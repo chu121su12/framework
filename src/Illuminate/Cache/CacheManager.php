@@ -58,7 +58,11 @@ class CacheManager implements FactoryContract
     {
         $name = $name ?: $this->getDefaultDriver();
 
-        return $this->stores[$name] ??= $this->resolve($name);
+        if (! isset($this->stores[$name])) {
+            $this->stores[$name] = $this->resolve($name);
+        }
+
+        return $this->stores[$name];
     }
 
     /**

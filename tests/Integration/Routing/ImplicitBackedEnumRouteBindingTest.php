@@ -14,7 +14,7 @@ if (PHP_VERSION_ID >= 80100) {
  */
 class ImplicitBackedEnumRouteBindingTest extends TestCase
 {
-    protected function defineEnvironment($app): void
+    protected function defineEnvironment($app)/*: void*/
     {
         $app['config']->set(['app.key' => 'AckfSECXIvnK5r28GVIWUAxmbBSjTsmF']);
     }

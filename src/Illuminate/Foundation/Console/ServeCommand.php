@@ -264,7 +264,7 @@ class ServeCommand extends Command
                     return;
                 }
 
-                [$startDate, $file] = $this->requestsPool[$requestPort];
+                list($startDate, $file) = $this->requestsPool[$requestPort];
 
                 $formattedStartedAt = $startDate->format('Y-m-d H:i:s');
 

@@ -2286,7 +2286,7 @@ class HttpClientTest extends TestCase
         });
     }
 
-    public function testTheTransferStatsAreCustomizable(): void
+    public function testTheTransferStatsAreCustomizable()/*: void*/
     {
         $onStatsFunctionCalled = false;
 
@@ -2304,7 +2304,7 @@ class HttpClientTest extends TestCase
         $this->assertTrue($onStatsFunctionCalled);
     }
 
-    public function testTheTransferStatsAreCustomizableOnFake(): void
+    public function testTheTransferStatsAreCustomizableOnFake()/*: void*/
     {
         $onStatsFunctionCalled = false;
 

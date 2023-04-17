@@ -83,7 +83,7 @@ trait HasTeams
         return $this->belongsToMany(Jetstream::teamModel(), Jetstream::membershipModel())
                         ->withPivot('role')
                         ->withTimestamps()
-                        ->as('membership');
+                        ->as_('membership');
     }
 
     /**

@@ -71,7 +71,7 @@ class Filesystem
      */
     public function json($path, $flags = 0, $lock = false)
     {
-        return json_decode($this->get($path, $lock), true, 512, $flags);
+        return backport_json_decode($this->get($path, $lock), true, 512, $flags);
     }
 
     /**

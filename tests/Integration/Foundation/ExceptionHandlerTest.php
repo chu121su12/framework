@@ -128,18 +128,20 @@ class ExceptionHandlerTest extends TestCase
         $basePath = static::applicationBasePath();
         $providers = json_encode($providers, true);
 
-        $process = new PhpProcess(<<<EOF
+        $fileContent = <<<EOF
 <?php
 
 require 'vendor/autoload.php';
 
-\$laravel = Orchestra\Testbench\Foundation\Application::create(basePath: '$basePath', options: ['extra' => ['providers' => $providers]]);
+\$laravel = Orchestra\Testbench\Foundation\Application::create(/*basePath: */'$basePath', null, /*options: */['extra' => ['providers' => $providers]]);
 \$laravel->singleton('Illuminate\Contracts\Debug\ExceptionHandler', 'Illuminate\Foundation\Exceptions\Handler');
 
 \$kernel = \$laravel[Illuminate\Contracts\Console\Kernel::class];
 
 return \$kernel->call('throw-exception-command');
-EOF, __DIR__.'/../../../', ['APP_RUNNING_IN_CONSOLE' => true]);
+EOF;
+
+        $process = new PhpProcess($fileContent, __DIR__.'/../../../', ['APP_RUNNING_IN_CONSOLE' => true]);
 
         $process->run();
 

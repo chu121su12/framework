@@ -38,9 +38,12 @@ class ImplicitRouteBindingTest extends TestCase
         $this->assertSame('fruits', $route->parameter('category')->value);
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function test_it_can_resolve_the_implicit_backed_enum_route_bindings_for_the_given_route_with_optional_parameter()
     {
-        $action = ['uses' => function (?CategoryBackedEnum $category = null) {
+        $action = ['uses' => function (/*?*/CategoryBackedEnum $category = null) {
             return $category->value;
         }];
 

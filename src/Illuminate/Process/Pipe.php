@@ -50,8 +50,10 @@ class Pipe
      * @param  string  $key
      * @return \Illuminate\Process\PendingProcess
      */
-    public function as(string $key)
+    public function as_(/*string */$key)
     {
+        $key = backport_type_check('key', $key);
+
         return tap($this->factory->newPendingProcess(), function ($pendingProcess) use ($key) {
             $this->pendingProcesses[$key] = $pendingProcess;
         });
@@ -63,8 +65,10 @@ class Pipe
      * @param  callable|null  $output
      * @return \Illuminate\Contracts\Process\ProcessResult
      */
-    public function run(?callable $output = null)
+    public function run(/*?*/callable $output = null)
     {
+        $output = backport_type_check('?callable', $output);
+
         call_user_func($this->callback, $this);
 
         return collect($this->pendingProcesses)
@@ -79,10 +83,13 @@ class Pipe
 
                     return $pendingProcess->when(
                         $previousProcessResult,
-                        fn () => $pendingProcess->input($previousProcessResult->output())
-                    )->run(output: $output ? function ($type, $buffer) use ($key, $output) {
-                        $output($type, $buffer, $key);
-                    } : null);
+                        function () use ($pendingProcess, $previousProcessResult) { return $pendingProcess->input($previousProcessResult->output()); }
+                    )->run(
+                        $command = null,
+                        /*output: */$output ? function ($type, $buffer) use ($key, $output) {
+                            $output($type, $buffer, $key);
+                        } : null
+                    );
                 });
     }
 

@@ -327,12 +327,9 @@ abstract class Grammar extends BaseGrammar
 
         // Doctrine v3
         // $table = $schema->introspectTable($tableName);
-        $table = $schema->listTableDetails($table);
+        $table = $schema->listTableDetails($tableName);
 
-        // Doctrine v3
-        // return new TableDiff(tableName: $tableName, fromTable: $table);
-
-        return new Table(
+        return new TableDiff(
             $tableName,
             $addedColumns = array(),
             $changedColumns = array(),

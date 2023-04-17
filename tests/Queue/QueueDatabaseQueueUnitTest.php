@@ -59,7 +59,7 @@ class QueueDatabaseQueueUnitTest extends TestCase
 
         return [
             [$uuid, new MyTestJob, 'MyTestJob', 'CallQueuedHandler'],
-            [$uuid, fn () => 0, 'Closure', 'CallQueuedHandler'],
+            [$uuid, function () { return 0; }, 'Closure', 'CallQueuedHandler'],
             [$uuid, 'foo', 'foo', 'foo'],
         ];
     }

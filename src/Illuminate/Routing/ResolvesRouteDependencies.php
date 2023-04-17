@@ -78,7 +78,7 @@ trait ResolvesRouteDependencies
         // the list of parameters. If it is we will just skip it as it is probably a model
         // binding and we do not want to mess with those; otherwise, we resolve it here.
         if ($className && ! $this->alreadyInParameters($className, $parameters)) {
-            $isEnum = (new ReflectionClass($className))->isEnum();
+            $isEnum = method_exists(ReflectionClass::class, 'isEnum') && (new ReflectionClass($className))->isEnum();
 
             return $parameter->isDefaultValueAvailable()
                 ? ($isEnum ? $parameter->getDefaultValue() : null)
@@ -97,7 +97,9 @@ trait ResolvesRouteDependencies
      */
     protected function alreadyInParameters($class, array $parameters)
     {
-        return ! is_null(Arr::first($parameters, fn ($value) => $value instanceof $class));
+        return ! is_null(Arr::first($parameters, function ($value) use ($class) {
+            return $value instanceof $class;
+        }));
     }
 
     /**

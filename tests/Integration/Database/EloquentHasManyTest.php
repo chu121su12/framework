@@ -58,17 +58,17 @@ class EloquentHasManyTestUser extends Model
     protected $guarded = [];
     public $timestamps = false;
 
-    public function logins(): HasMany
+    public function logins()/*: HasMany*/
     {
         return $this->hasMany(EloquentHasManyTestLogin::class);
     }
 
-    public function latestLogin(): HasOne
+    public function latestLogin()/*: HasOne*/
     {
         return $this->logins()->one()->latestOfMany('login_time');
     }
 
-    public function oldestLogin(): HasOne
+    public function oldestLogin()/*: HasOne*/
     {
         return $this->logins()->one()->oldestOfMany('login_time');
     }

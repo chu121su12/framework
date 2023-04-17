@@ -36,7 +36,7 @@ abstract class Team extends Model
         return $this->belongsToMany(Jetstream::userModel(), Jetstream::membershipModel())
                         ->withPivot('role')
                         ->withTimestamps()
-                        ->as('membership');
+                        ->as_('membership');
     }
 
     /**

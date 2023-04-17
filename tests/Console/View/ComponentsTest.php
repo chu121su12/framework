@@ -6,7 +6,6 @@ use Illuminate\Console\OutputStyle;
 use Illuminate\Console\View\Components;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Output\BackportBufferedOutput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
@@ -100,7 +99,7 @@ class ComponentsTest extends TestCase
 
     public function testTask()
     {
-        $output = new BackportBufferedOutput();
+        $output = new BufferedOutput();
 
         with(new Components\Task($output))->render('My task', function () { return true; });
         $result = $output->fetch();
