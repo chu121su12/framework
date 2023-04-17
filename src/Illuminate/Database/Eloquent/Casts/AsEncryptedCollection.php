@@ -7,13 +7,24 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
+use InvalidArgumentException;
 
 class AsEncryptedCollection_castUsing_class implements CastsAttributes 
         {
-            public function get(Model $model, $key, $value, array $attributes)
+            public function __construct(protected array $arguments)
             {
+            }
+
+            public function get($model, $key, $value, $attributes)
+            {
+                $collectionClass = $this->arguments[0] ?? Collection::class;
+
+                if (! is_a($collectionClass, Collection::class, true)) {
+                    throw new InvalidArgumentException('The provided class must extend ['.Collection::class.'].');
+                }
+
                 if (isset($attributes[$key])) {
-                    return new Collection(backport_json_decode(Crypt::decryptString($attributes[$key]), true));
+                    return new $collectionClass(Json::decode(Crypt::decryptString($attributes[$key])));
                 }
 
                 return null;
@@ -22,7 +33,7 @@ class AsEncryptedCollection_castUsing_class implements CastsAttributes
             public function set(Model $model, $key, $value, array $attributes)
             {
                 if (! is_null($value)) {
-                    return [$key => Crypt::encryptString(json_encode($value))];
+                    return [$key => Crypt::encryptString(Json::encode($value))];
                 }
 
                 return null;
@@ -39,6 +50,6 @@ class AsEncryptedCollection implements Castable
      */
     public static function castUsing(array $arguments)
     {
-        return new AsEncryptedCollection_castUsing_class;
+        return new AsEncryptedCollection_castUsing_class($arguments);
     }
 }

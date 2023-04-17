@@ -14,14 +14,14 @@ class AsArrayObject_castUsing_class implements CastsAttributes
                     return;
                 }
 
-                $data = backport_json_decode($attributes[$key], true);
+                $data = Json::decode($attributes[$key]);
 
                 return is_array($data) ? new ArrayObject($data) : null;
             }
 
             public function set(Model $model, $key, $value, array $attributes)
             {
-                return [$key => json_encode($value)];
+                return [$key => Json::encode($value)];
             }
 
             public function serialize(Model $model, /*string */$key, $value, /*array */$attributes)

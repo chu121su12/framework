@@ -26,7 +26,7 @@ class {{ class }} extends Command
      *
      * @return void
      */
-    public function handle()/*: void*/
+    public function handle()
     {
         // return Command::SUCCESS;
         // return SymfonyHelper::CONSOLE_SUCCESS;

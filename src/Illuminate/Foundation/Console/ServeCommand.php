@@ -259,9 +259,12 @@ class ServeCommand extends Command
                 $this->requestsPool[$requestPort][1] = trim(explode('[200]: GET', $line)[1]);
             } elseif (str($line)->contains(' Closing')) {
                 $requestPort = $this->getRequestPortFromLine($line);
-                $request = $this->requestsPool[$requestPort];
 
-                list($startDate, $file) = $request;
+                if (empty($this->requestsPool[$requestPort])) {
+                    return;
+                }
+
+                [$startDate, $file] = $this->requestsPool[$requestPort];
 
                 $formattedStartedAt = $startDate->format('Y-m-d H:i:s');
 

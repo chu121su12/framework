@@ -185,13 +185,20 @@ class HandleExceptions
 
         try {
             $this->getExceptionHandler()->report($e);
-        } catch (Exception $e) {
-        } catch (Throwable $e) {
-            //
+        } catch (Exception $_e) {
+        } catch (Throwable $_e) {
+        }
+
+        if (isset($_e)) {
+            $exceptionHandlerFailed = true;
         }
 
         if (static::$app->runningInConsole()) {
             $this->renderForConsole($e);
+
+            if ($exceptionHandlerFailed ?? false) {
+                exit(1);
+            }
         } else {
             $this->renderHttpResponse($e);
         }

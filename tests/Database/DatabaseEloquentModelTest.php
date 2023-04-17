@@ -315,7 +315,7 @@ class DatabaseEloquentModelTest extends TestCase
     {
         $model = new EloquentModelCastingStub;
         $model->setRawAttributes([
-            'asEnumCollectionAttribute' => json_encode(['draft', 'pending']),
+            'asEnumCollectionAttribute' => '["draft", "pending"]',
         ]);
         $model->syncOriginal();
 
@@ -336,7 +336,7 @@ class DatabaseEloquentModelTest extends TestCase
     {
         $model = new EloquentModelCastingStub;
         $model->setRawAttributes([
-            'asEnumArrayObjectAttribute' => json_encode(['draft', 'pending']),
+            'asEnumArrayObjectAttribute' => '["draft", "pending"]',
         ]);
         $model->syncOriginal();
 

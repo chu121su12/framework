@@ -6,6 +6,7 @@ use Carbon\CarbonImmutable;
 use Closure;
 use DateTimeInterface;
 use Illuminate\Database\Connection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\PostgresConnection;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Str;
@@ -154,7 +155,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
             return [
                 'pending_jobs' => $batch->pending_jobs - 1,
                 'failed_jobs' => $batch->failed_jobs,
-                'failed_job_ids' => json_encode(array_values(array_diff(backport_json_decode($batch->failed_job_ids, true), [$jobId]))),
+                'failed_job_ids' => json_encode(array_values(array_diff((array) backport_json_decode($batch->failed_job_ids, true), [$jobId]))),
             ];
         });
 
@@ -181,7 +182,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
             return [
                 'pending_jobs' => $batch->pending_jobs,
                 'failed_jobs' => $batch->failed_jobs + 1,
-                'failed_job_ids' => json_encode(array_values(array_unique(array_merge(backport_json_decode($batch->failed_job_ids, true), [$jobId])))),
+                'failed_job_ids' => json_encode(array_values(array_unique(array_merge((array) backport_json_decode($batch->failed_job_ids, true), [$jobId])))),
             ];
         });
 
@@ -367,7 +368,11 @@ class DatabaseBatchRepository implements PrunableBatchRepository
             $serialized = base64_decode($serialized);
         }
 
-        return backport_unserialize($serialized);
+        try {
+            return backport_unserialize($serialized);
+        } catch (ModelNotFoundException $e) {
+            return [];
+        }
     }
 
     /**

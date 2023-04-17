@@ -936,9 +936,10 @@ class Str
      * @param  string|iterable<string>  $search
      * @param  string|iterable<string>  $replace
      * @param  string|iterable<string>  $subject
+     * @param  bool  $caseSensitive
      * @return string
      */
-    public static function replace($search, $replace, $subject)
+    public static function replace($search, $replace, $subject, $caseSensitive = true)
     {
         if ($search instanceof Traversable) {
             $search = collect($search)->all();
@@ -952,7 +953,9 @@ class Str
             $subject = collect($subject)->all();
         }
 
-        return str_replace($search, $replace, $subject);
+        return $caseSensitive
+                ? str_replace($search, $replace, $subject)
+                : str_ireplace($search, $replace, $subject);
     }
 
     /**
@@ -1169,7 +1172,7 @@ class Str
      */
     public static function squish($value)
     {
-        return preg_replace('~(\s|\x{3164})+~u', ' ', preg_replace('~^[\s\x{FEFF}]+|[\s\x{FEFF}]+$~u', '', $value));
+        return preg_replace('~(\s|\x{3164}|\x{1160})+~u', ' ', preg_replace('~^[\s\x{FEFF}]+|[\s\x{FEFF}]+$~u', '', $value));
     }
 
     /**

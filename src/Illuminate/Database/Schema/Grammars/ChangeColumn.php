@@ -3,7 +3,6 @@
 namespace Illuminate\Database\Schema\Grammars;
 
 use Doctrine\DBAL\Schema\AbstractSchemaManager as SchemaManager;
-use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Type;
 use Illuminate\Database\Connection;
@@ -67,7 +66,7 @@ class ChangeColumn
         $current = $schema->listTableDetails($grammar->getTablePrefix().$blueprint->getTable());
 
         // Doctrine v3
-        // return (new Comparator)->compareTables(
+        // return $schema->createComparator()->compareTables(
         //     $current, static::getTableWithColumnChanges($blueprint, $current)
         // );
         return (new Comparator)->diffTable(

@@ -333,6 +333,10 @@ abstract class Component
             'view',
             'withName',
             'withAttributes',
+            'flushCache',
+            'forgetFactory',
+            'forgetComponentsResolver',
+            'resolveComponentsUsing',
         ], $this->except);
     }
 

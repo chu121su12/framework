@@ -6,23 +6,34 @@ use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use InvalidArgumentException;
 
 class AsCollection_castUsing_class implements CastsAttributes 
         {
+            public function __construct(protected array $arguments)
+            {
+            }
+
             public function get(Model $model, $key, $value, array $attributes)
             {
                 if (! isset($attributes[$key])) {
                     return;
                 }
 
-                $data = backport_json_decode($attributes[$key], true);
+                $data = Json::decode($attributes[$key]);
 
-                return is_array($data) ? new Collection($data) : null;
+                $collectionClass = $this->arguments[0] ?? Collection::class;
+
+                if (! is_a($collectionClass, Collection::class, true)) {
+                    throw new InvalidArgumentException('The provided class must extend ['.Collection::class.'].');
+                }
+
+                return is_array($data) ? new $collectionClass($data) : null;
             }
 
             public function set(Model $model, $key, $value, array $attributes)
             {
-                return [$key => json_encode($value)];
+                return [$key => Json::encode($value)];
             }
         }
 
@@ -36,6 +47,6 @@ class AsCollection implements Castable
      */
     public static function castUsing(array $arguments)
     {
-        return new AsCollection_castUsing_class;
+        return new AsCollection_castUsing_class($arguments);
     }
 }

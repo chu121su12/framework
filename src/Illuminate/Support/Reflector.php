@@ -160,11 +160,21 @@ class Reflector
             return false;
         }
 
-        if (! ($parameterType = $parameter->getType())) {
+        $parameterType = $parameter->getType();
+
+        if (! $parameterType) {
             return false;
         }
 
-        $backedEnumClass = backport_reflection_type_cast_string($parameterType);
+        if (! $parameterType instanceof ReflectionNamedType) {
+            return false;
+        }
+
+        $backedEnumClass = $parameterType->getName();
+
+        if (is_null($backedEnumClass)) {
+            return false;
+        }
 
         if (enum_exists($backedEnumClass)) {
             $reflectionBackedEnum = new ReflectionEnum($backedEnumClass);

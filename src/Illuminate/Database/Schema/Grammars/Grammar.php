@@ -323,13 +323,25 @@ abstract class Grammar extends BaseGrammar
      */
     public function getDoctrineTableDiff(Blueprint $blueprint, SchemaManager $schema)
     {
-        $table = $this->getTablePrefix().$blueprint->getTable();
+        $tableName = $this->getTablePrefix().$blueprint->getTable();
 
-        return tap(new TableDiff($table), function ($tableDiff) use ($schema, $table) {
-            // Doctrine v3
-            // $tableDiff->fromTable = $schema->introspectTable($table);
-            $tableDiff->fromTable = $schema->listTableDetails($table);
-        });
+        // Doctrine v3
+        // $table = $schema->introspectTable($tableName);
+        $table = $schema->listTableDetails($table);
+
+        // Doctrine v3
+        // return new TableDiff(tableName: $tableName, fromTable: $table);
+
+        return new Table(
+            $tableName,
+            $addedColumns = array(),
+            $changedColumns = array(),
+            $removedColumns = array(),
+            $addedIndexes = array(),
+            $changedIndexes = array(),
+            $removedIndexes = array(),
+            $fromTable = $table
+        );
     }
 
     /**
