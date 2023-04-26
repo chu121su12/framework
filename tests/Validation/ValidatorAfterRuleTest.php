@@ -14,7 +14,9 @@ class ValidatorAfterRuleTest extends TestCase
         $validator = new Validator(new Translator(new ArrayLoader, 'en'), [], []);
 
         $validator->after([
-            fn ($validator) => $validator->errors()->add('closure', 'true'),
+            function ($validator) {
+                return $validator->errors()->add('closure', 'true');
+            },
             new InvokableAfterRule,
             new AfterMethodRule,
         ])->messages()->messages();

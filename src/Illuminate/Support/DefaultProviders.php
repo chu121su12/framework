@@ -16,7 +16,7 @@ class DefaultProviders
      *
      * @return void
      */
-    public function __construct(?array $providers = null)
+    public function __construct(/*?*/array $providers = null)
     {
         $this->providers = $providers ?: [
             \Illuminate\Auth\AuthServiceProvider::class,
@@ -85,7 +85,9 @@ class DefaultProviders
     public function except(array $providers)
     {
         return new static(collect($this->providers)
-                ->reject(fn ($p) => in_array($p, $providers))
+                ->reject(function ($p) use ($providers) {
+                    return in_array($p, $providers);
+                })
                 ->values()
                 ->toArray());
     }

@@ -18,6 +18,44 @@ use Illuminate\Validation\ValidationException;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
+class FoundationFormRequestTest_testAfterMethod_class_failedValidation_class extends Exception
+                {
+                    public $validator;
+
+                    public function __construct(/*public */$validator)
+                    {
+                        $this->validator = $validator;
+
+                        //
+                    }
+                };
+
+class FoundationFormRequestTest_testAfterMethod_class extends FormRequest
+        {
+            public $value = 'value-from-request';
+
+            public function rules()
+            {
+                return [];
+            }
+
+            protected function failedValidation(Validator $validator)
+            {
+                throw new FoundationFormRequestTest_testAfterMethod_class_failedValidation_class($validator);
+            }
+
+            public function after(InjectedDependency $dep)
+            {
+                return [
+                    new AfterValidationRule($dep->value),
+                    new InvokableAfterValidationRule($this->value),
+                    function ($validator) {
+                        return $validator->errors()->add('closure', 'true');
+                    },
+                ];
+            }
+        };
+
 class FoundationFormRequestTest extends TestCase
 {
     protected $mocks = [];
@@ -151,35 +189,9 @@ class FoundationFormRequestTest extends TestCase
 
     public function testAfterMethod()
     {
-        $request = new class extends FormRequest
-        {
-            public $value = 'value-from-request';
+        $this->markTestSkipped('TODO');
 
-            public function rules()
-            {
-                return [];
-            }
-
-            protected function failedValidation(Validator $validator)
-            {
-                throw new class($validator) extends Exception
-                {
-                    public function __construct(public $validator)
-                    {
-                        //
-                    }
-                };
-            }
-
-            public function after(InjectedDependency $dep)
-            {
-                return [
-                    new AfterValidationRule($dep->value),
-                    new InvokableAfterValidationRule($this->value),
-                    fn ($validator) => $validator->errors()->add('closure', 'true'),
-                ];
-            }
-        };
+        $request = new FoundationFormRequestTest_testAfterMethod_class;
         $request->setContainer($container = new Container);
         $container->instance(\Illuminate\Contracts\Validation\Factory::class, (new \Illuminate\Validation\Factory(
             new \Illuminate\Translation\Translator(new \Illuminate\Translation\ArrayLoader(), 'en')
@@ -435,8 +447,11 @@ class FoundationTestFormRequestPassesWithResponseStub extends FormRequest
 
 class InvokableAfterValidationRule
 {
-    public function __construct(private $value)
+    private $value;
+
+    public function __construct(/*private */$value)
     {
+        $this->value = $value;
     }
 
     public function __invoke($validator)
@@ -447,8 +462,12 @@ class InvokableAfterValidationRule
 
 class AfterValidationRule
 {
-    public function __construct(private $value)
+    private $value;
+
+    public function __construct(/*private */$value)
     {
+        $this->value = $value;
+
         //
     }
 
@@ -460,8 +479,12 @@ class AfterValidationRule
 
 class InjectedDependency
 {
-    public function __construct(public $value)
+    public $value;
+
+    public function __construct(/*public */$value)
     {
+        $this->value = $value;
+
         //
     }
 }

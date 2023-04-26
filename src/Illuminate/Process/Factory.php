@@ -295,13 +295,20 @@ class Factory
      * @param  callable|array  $callback
      * @return \Illuminate\Process\Pipe
      */
-    public function pipe(callable|array $callback, ?callable $output = null)
+    public function pipe(/*callable|array */$callback, /*?*/callable $output = null)
     {
+        $callback = backport_type_check('callable|array', $callback);
+        $output = backport_type_check('?callable', $output);
+
         return is_array($callback)
-            ? (new Pipe($this, fn ($pipe) => collect($callback)->each(
-                fn ($command) => $pipe->command($command)
-            )))->run(output: $output)
-            : (new Pipe($this, $callback))->run(output: $output);
+            ? (new Pipe($this, function ($pipe) use ($callback) {
+                return collect($callback)->each(
+                    function ($command) use ($pipe) {
+                        return $pipe->command($command);
+                    }
+                );
+            }))->run(/*output: */$output)
+            : (new Pipe($this, $callback))->run(/*output: */$output);
     }
 
     /**

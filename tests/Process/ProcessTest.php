@@ -561,7 +561,7 @@ class ProcessTest extends TestCase
 
         $factory = new Factory;
         $factory->fake([
-            'cat *' => $factory->result(exitCode: 1),
+            'cat *' => $factory->result('', '', /*exitCode: */1),
         ]);
 
         $pipe = $factory->pipe([
