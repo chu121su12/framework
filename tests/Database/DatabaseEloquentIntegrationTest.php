@@ -2347,6 +2347,7 @@ class EloquentTestFriendPivot extends Pivot
 {
     protected $table = 'friends';
     protected $guarded = [];
+    public $timestamps = false;
 
     public function user()
     {

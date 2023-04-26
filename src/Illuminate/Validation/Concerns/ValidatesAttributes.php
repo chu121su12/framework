@@ -587,11 +587,11 @@ trait ValidatesAttributes
      */
     public function validateDecimal($attribute, $value, $parameters)
     {
+        $this->requireParameterCount(1, $parameters, 'decimal');
+
         if (! $this->validateNumeric($attribute, $value)) {
             return false;
         }
-
-        $this->requireParameterCount(1, $parameters, 'decimal');
 
         $matches = [];
 
@@ -1420,7 +1420,7 @@ trait ValidatesAttributes
      */
     public function validateMaxDigits($attribute, $value, $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'max');
+        $this->requireParameterCount(1, $parameters, 'max_digits');
 
         $length = strlen((string) $value);
 
@@ -1522,7 +1522,7 @@ trait ValidatesAttributes
      */
     public function validateMinDigits($attribute, $value, $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'min');
+        $this->requireParameterCount(1, $parameters, 'min_digits');
 
         $length = strlen((string) $value);
 
@@ -1613,7 +1613,7 @@ trait ValidatesAttributes
      */
     public function validateMissingWithAll($attribute, $value, $parameters)
     {
-        $this->requireParameterCount(1, $parameters, 'missing_with');
+        $this->requireParameterCount(1, $parameters, 'missing_with_all');
 
         if (Arr::has($this->data, $parameters)) {
             return $this->validateMissing($attribute, $value, $parameters);

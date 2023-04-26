@@ -385,11 +385,23 @@ class Validator implements ValidatorContract
     /**
      * Add an after validation callback.
      *
-     * @param  callable|string  $callback
+     * @param  callable|array|string  $callback
      * @return $this
      */
     public function after($callback)
     {
+        if (is_array($callback) && ! is_callable($callback)) {
+            foreach ($callback as $rule) {
+                $afterCallable = function (...$args) use ($rule) {
+                    return $rule->after(...$args);
+                };
+
+                $this->after(method_exists($rule, 'after') ? $afterCallable : $rule);
+            }
+
+            return $this;
+        }
+
         $this->after[] = function () use ($callback) {
             return $callback($this);
         };
@@ -1094,6 +1106,18 @@ class Validator implements ValidatorContract
     protected function getValue($attribute)
     {
         return Arr::get($this->data, $attribute);
+    }
+
+    /**
+     * Set the value of a given attribute.
+     *
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @return void
+     */
+    public function setValue($attribute, $value)
+    {
+        Arr::set($this->data, $attribute, $value);
     }
 
     /**
