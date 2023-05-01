@@ -267,19 +267,8 @@
         },
         "laravel": {
             "providers": [
-                "Inertia\\ServiceProvider",
-                "Laravel\\Breeze\\BreezeServiceProvider",
-                "Laravel\\Jetstream\\JetstreamServiceProvider",
-
                 "Carbon\\Laravel\\ServiceProvider",
-                "Laravel\\Fortify\\FortifyServiceProvider",
-                "Laravel\\Octane\\OctaneServiceProvider",
-                "Laravel\\Sanctum\\SanctumServiceProvider",
-                "Laravel\\Telescope\\TelescopeServiceProvider",
-                "Laravel\\Tinker\\TinkerServiceProvider",
-                "NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider",
-                "Spatie\\LaravelIgnition\\IgnitionServiceProvider",
-                "Termwind\\Laravel\\TermwindServiceProvider"
+                "Laravel\\Octane\\OctaneServiceProvider"
             ],
             "aliases": {
                 "Flare": "Spatie\\LaravelIgnition\\Facades\\Flare",
