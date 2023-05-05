@@ -13,6 +13,7 @@ use Illuminate\Mail\Transport\MailgunTransport;
 use Illuminate\Mail\Transport\SesTransport;
 use Illuminate\Mail\Transport\SesV2Transport;
 use Illuminate\Support\Arr;
+use Illuminate\Support\ConfigurationUrlParser;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Postmark\ThrowExceptionOnFailurePlugin;
@@ -471,9 +472,17 @@ class MailManager implements FactoryContract
         // Here we will check if the "driver" key exists and if it does we will use
         // the entire mail configuration file as the "driver" config in order to
         // provide "BC" for any Laravel <= 6.x style mail configuration files.
-        return $this->app['config']['mail.driver']
+        $config = $this->app['config']['mail.driver']
             ? $this->app['config']['mail']
             : $this->app['config']["mail.mailers.{$name}"];
+
+        if (isset($config['url'])) {
+            $config = (new ConfigurationUrlParser)->parseConfiguration($config);
+            $config['transport'] = $config['driver'];
+            unset($config['driver']);
+        }
+
+        return $config;
     }
 
     /**
