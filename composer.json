@@ -23,7 +23,6 @@
         "filp/whoops": "^2.14.3",
         "ircmaxell/password-compat": "~1.0",
         "jenssegers/agent": "^2.6",
-        "laminas/laminas-diactoros": "^1.8",
         "league/commonmark": "^0.18.5",
         "league/commonmark-ext-table": "^0.9.0",
         "monolog/monolog": "^1.25",
@@ -267,8 +266,7 @@
         },
         "laravel": {
             "providers": [
-                "Carbon\\Laravel\\ServiceProvider",
-                "Laravel\\Octane\\OctaneServiceProvider"
+                "Carbon\\Laravel\\ServiceProvider"
             ],
             "aliases": {
                 "Flare": "Spatie\\LaravelIgnition\\Facades\\Flare",
