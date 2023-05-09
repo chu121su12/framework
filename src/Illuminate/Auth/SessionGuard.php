@@ -962,7 +962,18 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      */
     public function getRequest()
     {
-        return $this->request ?: Request::createFromGlobals();
+        if ($this->request) {
+            return $this->request;
+        }
+
+        if (version_compare(PHP_VERSION, '8.1', '>=')) {
+            foreach ($_FILES as $key => $value) {
+                unset($value['full_path']);
+                $_FILES[$key] = $value;
+            }
+        }
+
+        return Request::createFromGlobals();
     }
 
     /**
