@@ -4,6 +4,7 @@ namespace Illuminate\Http;
 
 use ArrayAccess;
 use Closure;
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Session\SymfonySessionDecorator;
 use Illuminate\Support\Arr;
@@ -65,12 +66,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     {
         static::enableHttpMethodParameterOverride();
 
-        if (version_compare(PHP_VERSION, '8.1', '>=')) {
-            foreach ($_FILES as $key => $value) {
-                unset($value['full_path']);
-                $_FILES[$key] = $value;
-            }
-        }
+        SymfonyHelper::normalizeRequestPreCreateFromGlobals();
 
         return static::createFromBase(SymfonyRequest::createFromGlobals());
     }
@@ -903,12 +899,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
 
     public static function createFromGlobals()
     {
-        if (version_compare(PHP_VERSION, '8.1', '>=')) {
-            foreach ($_FILES as $key => $value) {
-                unset($value['full_path']);
-                $_FILES[$key] = $value;
-            }
-        }
+        SymfonyHelper::normalizeRequestPreCreateFromGlobals();
 
         return parent::createFromGlobals();
     }

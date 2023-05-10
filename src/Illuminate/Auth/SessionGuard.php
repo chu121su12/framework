@@ -2,6 +2,7 @@
 
 namespace Illuminate\Auth;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Auth\Events\Attempting;
 use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Auth\Events\CurrentDeviceLogout;
@@ -966,12 +967,7 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
             return $this->request;
         }
 
-        if (version_compare(PHP_VERSION, '8.1', '>=')) {
-            foreach ($_FILES as $key => $value) {
-                unset($value['full_path']);
-                $_FILES[$key] = $value;
-            }
-        }
+        SymfonyHelper::normalizeRequestPreCreateFromGlobals();
 
         return Request::createFromGlobals();
     }

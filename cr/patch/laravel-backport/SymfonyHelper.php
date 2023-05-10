@@ -343,4 +343,14 @@ class SymfonyHelper
             return $a;
         }];
     }
+
+    public static function normalizeRequestPreCreateFromGlobals()
+    {
+        if (version_compare(PHP_VERSION, '8.1', '>=')) {
+            foreach ($_FILES as $key => $value) {
+                unset($value['full_path']);
+                $_FILES[$key] = $value;
+            }
+        }
+    }
 }
