@@ -148,5 +148,4 @@ class Uuid7
             substr($base16Uuid, 20, 12)
         );
     }
-
 }

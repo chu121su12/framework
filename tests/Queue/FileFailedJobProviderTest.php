@@ -13,7 +13,7 @@ class FileFailedJobProviderTest extends TestCase
 
     protected $provider;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $this->path = @tempnam('tmp', 'file_failed_job_provider_test');
         $this->provider = new FileFailedJobProvider($this->path);
@@ -21,7 +21,7 @@ class FileFailedJobProviderTest extends TestCase
 
     public function testCanLogFailedJobs()
     {
-        [$uuid, $exception] = $this->logFailedJob();
+        list($uuid, $exception) = $this->logFailedJob();
 
         $failedJobs = $this->provider->all();
 
@@ -40,8 +40,8 @@ class FileFailedJobProviderTest extends TestCase
 
     public function testCanRetrieveAllFailedJobs()
     {
-        [$uuidOne, $exceptionOne] = $this->logFailedJob();
-        [$uuidTwo, $exceptionTwo] = $this->logFailedJob();
+        list($uuidOne, $exceptionOne) = $this->logFailedJob();
+        list($uuidTwo, $exceptionTwo) = $this->logFailedJob();
 
         $failedJobs = $this->provider->all();
 
@@ -69,7 +69,7 @@ class FileFailedJobProviderTest extends TestCase
 
     public function testCanFindFailedJobs()
     {
-        [$uuid, $exception] = $this->logFailedJob();
+        list($uuid, $exception) = $this->logFailedJob();
 
         $failedJob = $this->provider->find($uuid);
 
@@ -95,7 +95,7 @@ class FileFailedJobProviderTest extends TestCase
 
     public function testCanForgetFailedJobs()
     {
-        [$uuid] = $this->logFailedJob();
+        list($uuid) = $this->logFailedJob();
 
         $this->provider->forget($uuid);
 

@@ -61,6 +61,6 @@ trait FileHelpers
      */
     public function dimensions()
     {
-        return @getimagesize($this->getRealPath());
+        return @backport_getimagesize($this->getRealPath());
     }
 }

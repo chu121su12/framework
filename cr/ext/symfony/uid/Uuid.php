@@ -160,4 +160,25 @@ class Uuid extends AbstractUid
 
         return substr_replace($uuid, '-', 23, 0);
     }
+
+    public function getDateTime()
+    {
+        switch ($version = (int) base_convert(substr($this->uid, 14, 1), 16, 10)) {
+            case 2:
+                return BinaryUtil::hexToDateTime(
+                    '0'.substr($this->uid, 15, 3).substr($this->uid, 9, 4).substr($this->uid, 0, 8)
+                );
+
+            case 7:
+                $time = substr_replace(base_convert(sprintf(
+                    '%011s%04s',
+                    substr($this->uid, 0, 8),
+                    substr($this->uid, 9, 4)
+                ), 16, 10), '.', -3, 0);
+
+                return \Carbon\CarbonImmutable::createFromFormat('U.u', "{$time}000");
+        }
+
+        throw new \Exception('Invalid UUID');
+    }
 }

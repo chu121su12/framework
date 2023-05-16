@@ -18,6 +18,10 @@ class PrecognitionCallableDispatcher extends CallableDispatcher
     {
         $this->resolveParameters($route, $callable);
 
-        abort(204, headers: ['Precognition-Success' => 'true']);
+        abort(
+            204,
+            /*$message = '',*/
+            /*headers: */['Precognition-Success' => 'true']
+        );
     }
 }

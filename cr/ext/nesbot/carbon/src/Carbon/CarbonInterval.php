@@ -413,7 +413,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         parent::__construct($spec);
 
         if ($microseconds !== null) {
-            if (\version_compare(\PHP_VERSION, '7.1.0', '>=') || property_exists($years, 'f')) {
+            if (\version_compare(\PHP_VERSION, '7.1.0', '>=') || property_exists($this, 'f')) {
                 $this->f = $microseconds / Carbon::MICROSECONDS_PER_SECOND;
             }
         }
@@ -641,7 +641,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
     {
         $date = new static(0);
         $date->copyProperties($this);
-        if (\version_compare(\PHP_VERSION, '7.1.0', '>=') || property_exists($date, 'f')) {
+        if (\version_compare(\PHP_VERSION, '7.1.0', '>=') || property_exists($this, 'f')) {
             $date->f = $this->f;
         }
         $date->step = $this->step;
@@ -2016,7 +2016,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
             list($value, $unit) = [$unit, $value];
         }
 
-        return $this->add_($unit, -(float) $value);
+        return $this->add($unit, -(float) $value);
     }
 
     /**
@@ -2029,7 +2029,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
      */
     public function subtract($unit, $value = 1)
     {
-        return $this->sub_($unit, $value);
+        return $this->sub($unit, $value);
     }
 
     /**
@@ -2056,7 +2056,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         $seconds = 0,
         $microseconds = 0
     )/*: self */{
-        return $this->add_("
+        return $this->add("
             $years years $months months $weeks weeks $days days
             $hours hours $minutes minutes $seconds seconds $microseconds microseconds
         ");
@@ -2086,7 +2086,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         $seconds = 0,
         $microseconds = 0
     )/*: self */{
-        return $this->sub_("
+        return $this->sub("
             $years years $months months $weeks weeks $days days
             $hours hours $minutes minutes $seconds seconds $microseconds microseconds
         ");

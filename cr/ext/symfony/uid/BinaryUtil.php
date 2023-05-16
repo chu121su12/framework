@@ -150,7 +150,8 @@ class BinaryUtil
             $time = '-' === $time[0] ? '-'.str_pad(substr($time, 1), 8, '0', \STR_PAD_LEFT) : str_pad($time, 8, '0', \STR_PAD_LEFT);
         }
 
-        return \DateTimeImmutable::createFromFormat('U.u?', substr_replace($time, '.', -7, 0));
+        // return \DateTimeImmutable::createFromFormat('U.u?', substr_replace($time, '.', -7, 0));
+        return \Carbon\CarbonImmutable::createFromFormat('U.u?', substr_replace($time, '.', -7, 0));
     }
 
     /**

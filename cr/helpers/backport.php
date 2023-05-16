@@ -1,6 +1,8 @@
 <?php
 
 use desktopd\SHA3\Sponge as SHA3;
+use Illuminate\Support\Str;
+
 use Laravel\SerializableClosure\SerializableClosure;
 use Opis\Closure\SerializableClosure as OpisSerializableClosure;
 
@@ -598,5 +600,21 @@ if (! \function_exists('backport_is_numeric')) {
         }
 
         return \is_numeric(\rtrim($value));
+    }
+}
+
+if (! \function_exists('backport_getimagesize')) {
+    function backport_getimagesize($filePath)
+    {
+        if (Str::endsWith($filePath, '.svg')) {
+            if (!($xml = @simplexml_load_string(file_get_contents($filePath)))) {
+                return false;
+            }
+
+            $xmlAttributes = $xml->attributes();
+            return [(int) $xmlAttributes->width, (int) $xmlAttributes->height];
+        }
+
+        return @getimagesize($filePath);
     }
 }

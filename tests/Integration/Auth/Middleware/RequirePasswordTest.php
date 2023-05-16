@@ -20,7 +20,7 @@ class RequirePasswordTest extends TestCase
         $signature = (string) RequirePassword::using('route.name', 100);
         $this->assertSame('Illuminate\Auth\Middleware\RequirePassword:route.name,100', $signature);
 
-        $signature = (string) RequirePassword::using(passwordTimeoutSeconds: 100);
+        $signature = (string) RequirePassword::using(/*$redirectToRoute = */null, /*passwordTimeoutSeconds: */100);
         $this->assertSame('Illuminate\Auth\Middleware\RequirePassword:,100', $signature);
     }
 

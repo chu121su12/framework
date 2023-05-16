@@ -12,7 +12,7 @@ class EloquentModelHashedCastingTest extends DatabaseTestCase
 {
     protected $hasher;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -47,8 +47,14 @@ class EloquentModelHashedCastingTest extends DatabaseTestCase
 
     public function testNotHashedIfAlreadyHashed()
     {
+        $hashedPassword = '$argon2i$v=19$m=65536,t=4,p=1$RHFPR1Zjc1p5cUVXTVJEcg$ooJoZb7NOa3r35WeeDRvnFwBTfaqlbbo1WcdJP5nPp8';
+
+        $this->hasher->expects('make')
+            ->with($hashedPassword)
+            ->andReturn($hashedPassword);
+
         $subject = HashedCast::create([
-            'password' => $hashedPassword = '$argon2i$v=19$m=65536,t=4,p=1$RHFPR1Zjc1p5cUVXTVJEcg$ooJoZb7NOa3r35WeeDRvnFwBTfaqlbbo1WcdJP5nPp8',
+            'password' => $hashedPassword,
         ]);
 
         $this->assertSame($hashedPassword, $subject->password);

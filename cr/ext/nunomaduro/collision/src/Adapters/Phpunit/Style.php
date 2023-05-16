@@ -366,9 +366,9 @@ HTML;
             '/vendor\/sulu\/sulu\/src\/Sulu\/Bundle\/TestBundle\/Testing/',
             '/vendor\/webmozart\/assert/',
 
-            function (...$args) { return $this->ignorePestPipes(...$args); },
-            function (...$args) { return $this->ignorePestExtends(...$args); },
-            function (...$args) { return $this->ignorePestInterceptors(...$args); },
+            backport_closure_from_callable([$this, 'ignorePestPipes']),
+            backport_closure_from_callable([$this, 'ignorePestExtends']),
+            backport_closure_from_callable([$this, 'ignorePestInterceptors']),
         ]);
 
         /** @var \Throwable $throwable */

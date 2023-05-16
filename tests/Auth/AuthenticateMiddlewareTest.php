@@ -57,7 +57,7 @@ class AuthenticateMiddlewareTest extends TestCase
         $signature = (string) AuthenticateWithBasicAuth::using('guard', 'field');
         $this->assertSame('Illuminate\Auth\Middleware\AuthenticateWithBasicAuth:guard,field', $signature);
 
-        $signature = (string) AuthenticateWithBasicAuth::using(field: 'field');
+        $signature = (string) AuthenticateWithBasicAuth::using(/*$guard = */null, /*field: */'field');
         $this->assertSame('Illuminate\Auth\Middleware\AuthenticateWithBasicAuth:,field', $signature);
     }
 

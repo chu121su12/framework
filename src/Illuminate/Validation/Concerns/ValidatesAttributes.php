@@ -559,7 +559,7 @@ trait ValidatesAttributes
                 if ($date && $date->format($format) == $value) {
                     return true;
                 }
-            } catch (ValueError) {
+            } catch (ValueError $_e) {
                 return false;
             }
         }
@@ -691,7 +691,7 @@ trait ValidatesAttributes
 
         $dimensions = method_exists($value, 'dimensions')
                 ? $value->dimensions()
-                : $this->getimagesize($value->getRealPath());
+                : backport_getimagesize($value->getRealPath());
 
         if (! $dimensions) {
             return false;
@@ -2495,19 +2495,5 @@ trait ValidatesAttributes
     protected function trim($value)
     {
         return is_string($value) ? trim($value) : $value;
-    }
-
-    protected function getimagesize($filePath)
-    {
-        if (Str::endsWith($filePath, '.svg')) {
-            if (!($xml = @simplexml_load_string(file_get_contents($filePath)))) {
-                return false;
-            }
-
-            $xmlAttributes = $xml->attributes();
-            return [(int) $xmlAttributes->width, (int) $xmlAttributes->height];
-        }
-
-        return @getimagesize($filePath);
     }
 }

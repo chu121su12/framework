@@ -682,7 +682,7 @@ class Container implements ArrayAccess, ContainerContract
     {
         if (PHP_VERSION_ID >= 80200) {
             if (is_callable($callback) &&
-                ! with($reflector = new ReflectionFunction(function (...$args) use ($callback) { return $callback(...$args); }))->isAnonymous()) {
+                ! with($reflector = new ReflectionFunction(backport_closure_from_callable($callback)))->isAnonymous()) {
                 $getClosureScopeClass = $reflector->getClosureScopeClass();
                 return isset($getClosureScopeClass) && isset($getClosureScopeClass->name) ? $getClosureScopeClass->name : false;
             }

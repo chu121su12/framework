@@ -189,8 +189,6 @@ class FoundationFormRequestTest extends TestCase
 
     public function testAfterMethod()
     {
-        $this->markTestSkipped('TODO');
-
         $request = new FoundationFormRequestTest_testAfterMethod_class;
         $request->setContainer($container = new Container);
         $container->instance(\Illuminate\Contracts\Validation\Factory::class, (new \Illuminate\Validation\Factory(

@@ -2,7 +2,7 @@
 
 namespace Illuminate\Support;
 
-use Carbon\Carbon;
+use Carbon\Carbon as BaseCarbon;
 use Carbon\CarbonInterval;
 use DateInterval;
 use PHPUnit\Framework\Assert as PHPUnit;
@@ -74,7 +74,7 @@ class Sleep
      * @param  \DateInterval|int|float  $duration
      * @return static
      */
-    public static function for($duration)
+    public static function for_($duration)
     {
         return new static($duration);
     }
@@ -88,10 +88,10 @@ class Sleep
     public static function until($timestamp)
     {
         if (is_int($timestamp)) {
-            $timestamp = Carbon::createFromTimestamp($timestamp);
+            $timestamp = BaseCarbon::createFromTimestamp($timestamp);
         }
 
-        return new static(Carbon::now()->diff($timestamp));
+        return new static(BaseCarbon::now()->diff($timestamp));
     }
 
     /**
@@ -210,7 +210,7 @@ class Sleep
      * @param  int|float  $duration
      * @return $this
      */
-    public function and($duration)
+    public function and_($duration)
     {
         $this->pending = $duration;
 
@@ -331,7 +331,7 @@ class Sleep
 
         collect($sequence)
             ->zip(static::$sequence)
-            ->eachSpread(function (?Sleep $expected, CarbonInterval $actual) {
+            ->eachSpread(function (/*?*/Sleep $expected, CarbonInterval $actual) {
                 if ($expected === null) {
                     return;
                 }

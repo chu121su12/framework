@@ -39,7 +39,10 @@ class Pool
     public function __construct(Factory $factory = null)
     {
         $this->factory = $factory ?: new Factory();
-        $this->handler = Utils::chooseHandler();
+
+        $this->handler = method_exists(Utils::class, 'chooseHandler')
+            ? Utils::chooseHandler()
+            : \GuzzleHttp\choose_handler();
     }
 
     /**

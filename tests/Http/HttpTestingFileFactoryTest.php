@@ -121,8 +121,12 @@ class HttpTestingFileFactoryTest extends TestCase
     }
 
     /** @dataProvider generateImageDataProvider */
-    public function testCallingCreateWithoutGDLoadedThrowsAnException(string $fileExtension, string $driver)
+    public function testCallingCreateWithoutGDLoadedThrowsAnException(/*string */$fileExtension, /*string */$driver)
     {
+        $fileExtension = backport_type_check('string', $fileExtension);
+
+        $driver = backport_type_check('string', $driver);
+
         if ($this->isGDSupported($driver)) {
             $this->markTestSkipped("Requires no {$driver}");
         }
@@ -131,7 +135,7 @@ class HttpTestingFileFactoryTest extends TestCase
         (new FileFactory)->image("test.{$fileExtension}");
     }
 
-    public static function generateImageDataProvider(): array
+    public static function generateImageDataProvider()/*: array*/
     {
         return [
             'jpeg' => ['jpeg', 'JPEG Support'],

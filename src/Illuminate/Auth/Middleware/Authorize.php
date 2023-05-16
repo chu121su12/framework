@@ -35,7 +35,7 @@ class Authorize
      */
     public static function using($ability, ...$models)
     {
-        return static::class.':'.implode(',', [$ability, ...$models]);
+        return static::class.':'.implode(',', array_merge([$ability], $models));
     }
 
     /**

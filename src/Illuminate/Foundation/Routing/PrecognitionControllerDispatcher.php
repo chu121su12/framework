@@ -22,7 +22,11 @@ class PrecognitionControllerDispatcher extends ControllerDispatcher
 
         $this->resolveParameters($route, $controller, $method);
 
-        abort(204, headers: ['Precognition-Success' => 'true']);
+        abort(
+            204,
+            /*$message = '',*/
+            /*headers: */['Precognition-Success' => 'true']
+        );
     }
 
     /**

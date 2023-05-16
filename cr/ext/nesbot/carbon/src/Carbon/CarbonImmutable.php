@@ -513,6 +513,7 @@ class CarbonImmutable extends DateTimeImmutable implements CarbonInterface, Patc
         __clone as dateTraitClone;
     }
     use Patch\DateTrait;
+    use Patch\DateTimeImmutableCreateFromInterfacePolyfill;
 
     public function __clone()
     {

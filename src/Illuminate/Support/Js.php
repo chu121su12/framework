@@ -33,7 +33,7 @@ class Js implements Htmlable
         return JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
     }
 
-    protected function jsonEncoded73($string)
+    protected static function jsonEncoded73($string)
     {
         if (\version_compare(\PHP_VERSION, '7.3', '>=')) {
             return $string;
@@ -120,7 +120,7 @@ class Js implements Htmlable
     public static function encode($data, $flags = 0, $depth = 512)
     {
         if ($data instanceof Jsonable) {
-            return $this->jsonEncoded73($data->toJson($flags | static::requiredFlags()));
+            return static::jsonEncoded73($data->toJson($flags | static::requiredFlags()));
         }
 
         if ($data instanceof Arrayable && ! ($data instanceof JsonSerializable)) {

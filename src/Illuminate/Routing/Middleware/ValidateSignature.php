@@ -27,7 +27,7 @@ class ValidateSignature
     {
         $ignore = Arr::wrap($ignore);
 
-        return static::class.':'.implode(',', empty($ignore) ? ['relative'] : ['relative',  ...$ignore]);
+        return static::class.':'.implode(',', empty($ignore) ? ['relative'] : array_merge(['relative'], $ignore));
     }
 
     /**
@@ -57,7 +57,7 @@ class ValidateSignature
      */
     public function handle($request, Closure $next, ...$args)
     {
-        [$relative, $ignore] = $this->parseArguments($args);
+        list($relative, $ignore) = $this->parseArguments($args);
 
         if ($request->hasValidSignatureWhileIgnoring($ignore, ! $relative)) {
             return $next($request);

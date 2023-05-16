@@ -308,6 +308,9 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertTrue($model->isDirty('asEncryptedArrayObjectAttribute'));
     }
 
+    /**
+     * @requires PHP >= 8.1
+     */
     public function testDirtyOnEnumCollectionObject()
     {
         $model = new EloquentModelCastingStub;
@@ -326,6 +329,9 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertTrue($model->isDirty('asEnumCollectionAttribute'));
     }
 
+    /**
+     * @requires PHP >= 8.1
+     */
     public function testDirtyOnEnumArrayObject()
     {
         $model = new EloquentModelCastingStub;
@@ -344,6 +350,9 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertTrue($model->isDirty('asEnumArrayObjectAttribute'));
     }
 
+    /**
+     * @requires PHP >= 8.1
+     */
     public function testHasCastsOnEnumAttribute()
     {
         $model = new EloquentModelEnumCastingStub();

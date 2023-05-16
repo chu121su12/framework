@@ -990,7 +990,7 @@ class Builder implements BuilderContract
         $orders = ! empty($this->query->unionOrders) ? $this->query->unionOrders : $this->query->orders;
 
         return collect($orders)
-            ->filter(fn ($order) => Arr::has($order, 'direction'))
+            ->filter(function ($order) { return Arr::has($order, 'direction'); })
             ->values();
     }
 

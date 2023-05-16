@@ -1335,7 +1335,15 @@ trait HasAttributes
      */
     protected function castAttributeAsHashedString($key, $value)
     {
-        return $value !== null && password_get_info($value)['algo'] === null ? Hash::make($value) : $value;
+        if ($value !== null) {
+            $info = password_get_info($value);
+
+            if ($info['algo'] === null || (version_compare(PHP_VERSION, '8.2.0', '<') && $info['algoName'] === 'unknown' && $info['algo'] === 0 && $info['options'] === [])) {
+                return Hash::make($value);
+            }
+        }
+
+        return $value;
     }
 
     /**

@@ -392,11 +392,7 @@ class Validator implements ValidatorContract
     {
         if (is_array($callback) && ! is_callable($callback)) {
             foreach ($callback as $rule) {
-                $afterCallable = function (...$args) use ($rule) {
-                    return $rule->after(...$args);
-                };
-
-                $this->after(method_exists($rule, 'after') ? $afterCallable : $rule);
+                $this->after(method_exists($rule, 'after') ? backport_closure_from_callable([$rule, 'after']) : $rule);
             }
 
             return $this;

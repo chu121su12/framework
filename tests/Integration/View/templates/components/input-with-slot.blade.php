@@ -3,5 +3,5 @@
 ])
 
 <div>
-    <input type="text" {{ $input->attributes->class('input') }} />
+    <input type="text" {{ $input->attributes->class_('input') }} />
 </div>

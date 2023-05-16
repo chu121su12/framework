@@ -35,12 +35,12 @@ class ValidationImageFileRuleTest extends TestCase
         $this->fails(
             File::image()->dimensions(Rule::dimensions()->width(100)->height(100)),
             new UploadedFileWithCustomImageSizeMethod(stream_get_meta_data($tmpFile = tmpfile())['uri'], 'foo.png'),
-            ['validation.dimensions'],
+            ['validation.dimensions']
         );
 
         $this->passes(
             File::image()->dimensions(Rule::dimensions()->width(200)->height(200)),
-            new UploadedFileWithCustomImageSizeMethod(stream_get_meta_data($tmpFile = tmpfile())['uri'], 'foo.png'),
+            new UploadedFileWithCustomImageSizeMethod(stream_get_meta_data($tmpFile = tmpfile())['uri'], 'foo.png')
         );
     }
 
@@ -101,12 +101,12 @@ class ValidationImageFileRuleTest extends TestCase
 
 class UploadedFileWithCustomImageSizeMethod extends UploadedFile
 {
-    public function isValid(): bool
+    public function isValid()/*: bool*/
     {
         return true;
     }
 
-    public function guessExtension(): string
+    public function guessExtension()/*: string*/
     {
         return 'png';
     }

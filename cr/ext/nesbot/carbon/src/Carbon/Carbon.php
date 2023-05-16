@@ -511,6 +511,7 @@ class Carbon extends DateTime implements CarbonInterface, Patch\CarbonInterface
 {
     use Date;
     use Patch\DateTrait;
+    use Patch\DateTimeCreateFromInterfacePolyfill;
 
     /**
      * Returns true if the current class/instance is mutable.

@@ -37,7 +37,7 @@ class FileFailedJobProvider implements FailedJobProviderInterface, PrunableFaile
      * @param  \Closure|null  $lockProviderResolver
      * @return void
      */
-    public function __construct($path, $limit = 100, ?Closure $lockProviderResolver = null)
+    public function __construct($path, $limit = 100, /*?*/Closure $lockProviderResolver = null)
     {
         $this->path = $path;
         $this->limit = $limit;
@@ -56,7 +56,7 @@ class FileFailedJobProvider implements FailedJobProviderInterface, PrunableFaile
     public function log($connection, $queue, $payload, $exception)
     {
         return $this->lock(function () use ($connection, $queue, $payload, $exception) {
-            $id = json_decode($payload, true)['uuid'];
+            $id = backport_json_decode($payload, true)['uuid'];
 
             $jobs = $this->read();
 
@@ -97,7 +97,7 @@ class FileFailedJobProvider implements FailedJobProviderInterface, PrunableFaile
     public function find($id)
     {
         return collect($this->read())
-            ->first(fn ($job) => $job->id === $id);
+            ->first(function ($job) use ($id) { return $job->id === $id; });
     }
 
     /**
@@ -110,7 +110,7 @@ class FileFailedJobProvider implements FailedJobProviderInterface, PrunableFaile
     {
         return $this->lock(function () use ($id) {
             $this->write($pruned = collect($jobs = $this->read())
-                ->reject(fn ($job) => $job->id === $id)
+                ->reject(function ($job) use ($id) { return $job->id === $id; })
                 ->values()
                 ->all());
 
@@ -160,7 +160,9 @@ class FileFailedJobProvider implements FailedJobProviderInterface, PrunableFaile
             return $callback();
         }
 
-        return ($this->lockProviderResolver)()
+        $lockProviderResolver = $this->lockProviderResolver;
+
+        return $lockProviderResolver()
             ->lock('laravel-failed-jobs', 5)
             ->block(10, function () use ($callback) {
                 return $callback();
@@ -184,7 +186,7 @@ class FileFailedJobProvider implements FailedJobProviderInterface, PrunableFaile
             return [];
         }
 
-        $content = json_decode($content);
+        $content = backport_json_decode($content);
 
         return is_array($content) ? $content : [];
     }

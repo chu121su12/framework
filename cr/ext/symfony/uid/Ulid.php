@@ -146,7 +146,8 @@ class Ulid extends AbstractUid
             $time = str_pad($time, 4, '0', \STR_PAD_LEFT);
         }
 
-        return \DateTimeImmutable::createFromFormat('U.u', substr_replace($time, '.', -3, 0));
+        // return \DateTimeImmutable::createFromFormat('U.u', substr_replace($time, '.', -3, 0));
+        return \Carbon\CarbonImmutable::createFromFormat('U.u', substr_replace($time, '.', -3, 0));
     }
 
     public static function generate(\DateTimeInterface $time = null)/*: string*/

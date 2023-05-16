@@ -120,10 +120,10 @@ class ThrottleRequestsTest extends TestCase
         $signature = (string) ThrottleRequests::with(25, 2, 'foo');
         $this->assertSame('Illuminate\Routing\Middleware\ThrottleRequests:25,2,foo', $signature);
 
-        $signature = (string) ThrottleRequests::with(maxAttempts: 25, decayMinutes: 2, prefix: 'foo');
+        $signature = (string) ThrottleRequests::with(/*maxAttempts: */25, /*decayMinutes: */2, /*prefix: */'foo');
         $this->assertSame('Illuminate\Routing\Middleware\ThrottleRequests:25,2,foo', $signature);
 
-        $signature = (string) ThrottleRequests::with(prefix: 'foo');
+        $signature = (string) ThrottleRequests::with(/*$maxAttempts = */60, /*$decayMinutes = */1, /*prefix: */'foo');
         $this->assertSame('Illuminate\Routing\Middleware\ThrottleRequests:60,1,foo', $signature);
     }
 }

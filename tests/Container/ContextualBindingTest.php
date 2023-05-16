@@ -500,7 +500,7 @@ class ContextualBindingTest extends TestCase
         if (PHP_VERSION_ID >= 80200) {
             // first class callable syntax...
             $valueResolvedUsingFirstClassSyntax = $container->call(
-                function (...$args) use ($object) { return $object->method(...$args); }
+                backport_closure_from_callable([$object, 'method'])
             );
             $this->assertInstanceOf(ContainerContextImplementationStub::class, $valueResolvedUsingFirstClassSyntax);
         }

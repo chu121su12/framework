@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\NullOutput;
 
 class PruneBatchesCommandTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
     }

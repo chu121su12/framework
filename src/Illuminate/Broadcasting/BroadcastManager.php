@@ -300,7 +300,7 @@ class BroadcastManager implements FactoryContract
                     'timeout' => 30,
                 ],
                 isset($config['client_options']) ? $config['client_options'] : []
-            ),
+            )
         );
 
         $pusher = new Pusher(

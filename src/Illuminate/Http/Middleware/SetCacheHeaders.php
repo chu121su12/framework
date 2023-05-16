@@ -22,9 +22,9 @@ class SetCacheHeaders
         }
 
         return collect($options)
-            ->map(fn ($value, $key) => is_int($key) ? $value : "{$key}={$value}")
-            ->map(fn ($value) => Str::finish($value, ';'))
-            ->pipe(fn ($options) => rtrim(static::class.':'.$options->implode(''), ';'));
+            ->map(function ($value, $key) { return is_int($key) ? $value : "{$key}={$value}"; })
+            ->map(function ($value) { return Str::finish($value, ';'); })
+            ->pipe(function ($options) { return rtrim(static::class.':'.$options->implode(''), ';'); });
     }
 
     /**
