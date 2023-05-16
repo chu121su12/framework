@@ -88,6 +88,6 @@ class Timebox
     {
         $microseconds = backport_type_check('int', $microseconds);
 
-        usleep($microseconds);
+        Sleep::usleep($microseconds);
     }
 }

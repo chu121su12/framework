@@ -2,6 +2,7 @@
 
 namespace Illuminate\Cache;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\LazyCollection;
 
 class RedisTagSet extends TagSet
@@ -20,7 +21,7 @@ class RedisTagSet extends TagSet
 
         $ttl = backport_type_check('int', $ttl);
 
-        $ttl = $ttl > 0 ? now()->addSeconds($ttl)->getTimestamp() : -1;
+        $ttl = $ttl > 0 ? Carbon::now()->addSeconds($ttl)->getTimestamp() : -1;
 
         foreach ($this->tagIds() as $tagKey) {
             if ($updateWhen) {
@@ -76,7 +77,7 @@ class RedisTagSet extends TagSet
     {
         $this->store->connection()->pipeline(function ($pipe) {
             foreach ($this->tagIds() as $tagKey) {
-                $pipe->zremrangebyscore($this->store->getPrefix().$tagKey, 0, now()->getTimestamp());
+                $pipe->zremrangebyscore($this->store->getPrefix().$tagKey, 0, Carbon::now()->getTimestamp());
             }
         });
     }

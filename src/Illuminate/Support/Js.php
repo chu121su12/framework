@@ -98,7 +98,7 @@ class Js implements Htmlable
             $data = $data->value;
         }
 
-        $json = $this->jsonEncode($data, $flags, $depth);
+        $json = static::encode($data, $flags, $depth);
 
         if (is_string($data)) {
             return "'".substr($json, 1, -1)."'";
@@ -117,7 +117,7 @@ class Js implements Htmlable
      *
      * @throws \JsonException
      */
-    protected function jsonEncode($data, $flags = 0, $depth = 512)
+    public static function encode($data, $flags = 0, $depth = 512)
     {
         if ($data instanceof Jsonable) {
             return $this->jsonEncoded73($data->toJson($flags | static::requiredFlags()));

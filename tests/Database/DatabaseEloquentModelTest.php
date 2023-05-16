@@ -308,9 +308,6 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertTrue($model->isDirty('asEncryptedArrayObjectAttribute'));
     }
 
-    /**
-     * @requires PHP >= 8.1
-     */
     public function testDirtyOnEnumCollectionObject()
     {
         $model = new EloquentModelCastingStub;
@@ -329,9 +326,6 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertTrue($model->isDirty('asEnumCollectionAttribute'));
     }
 
-    /**
-     * @requires PHP >= 8.1
-     */
     public function testDirtyOnEnumArrayObject()
     {
         $model = new EloquentModelCastingStub;
@@ -348,6 +342,12 @@ class DatabaseEloquentModelTest extends TestCase
 
         $model->asEnumArrayObjectAttribute = ['draft', 'done'];
         $this->assertTrue($model->isDirty('asEnumArrayObjectAttribute'));
+    }
+
+    public function testHasCastsOnEnumAttribute()
+    {
+        $model = new EloquentModelEnumCastingStub();
+        $this->assertTrue($model->hasCast('enumAttribute', StringStatus::class));
     }
 
     public function testCleanAttributes()
@@ -3052,6 +3052,11 @@ class EloquentModelCastingStub extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
+}
+
+class EloquentModelEnumCastingStub extends Model
+{
+    protected $casts = ['enumAttribute' => StringStatus::class];
 }
 
 class EloquentModelDynamicHiddenStub extends Model

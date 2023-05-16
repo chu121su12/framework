@@ -63,6 +63,20 @@ class Command extends SymfonyCommand
     protected $hidden = false;
 
     /**
+     * Indicates whether only one instance of the command can run at any given time.
+     *
+     * @var bool
+     */
+    protected $isolated = false;
+
+    /**
+     * The default exit code for isolated commands.
+     *
+     * @var int
+     */
+    protected $isolatedExitCode = SymfonyHelper::CONSOLE_SUCCESS;
+
+    /**
      * The console command name aliases.
      *
      * @var array
@@ -141,7 +155,7 @@ class Command extends SymfonyCommand
             null,
             InputOption::VALUE_OPTIONAL,
             'Do not run the command if another instance of the command is already running',
-            false
+            $this->isolated
         ));
     }
 
@@ -186,7 +200,7 @@ class Command extends SymfonyCommand
 
             return (int) (backport_is_numeric($this->option('isolated'))
                         ? $this->option('isolated')
-                        : SymfonyHelper::CONSOLE_SUCCESS /*self::SUCCESS */);
+                        : $this->isolatedExitCode);
         }
 
         $method = method_exists($this, 'handle') ? 'handle' : '__invoke';

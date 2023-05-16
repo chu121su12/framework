@@ -334,7 +334,7 @@ class Migrator
             return [];
         }
 
-        return tap($this->resetMigrations($migrations, $paths, $pretend), function () {
+        return tap($this->resetMigrations($migrations, Arr::wrap($paths), $pretend), function () {
             if ($this->output) {
                 $this->output->writeln('');
             }
@@ -442,6 +442,7 @@ class Migrator
             }
 
             $this->write(TwoColumnDetail::class, $name);
+
             $this->write(BulletList::class, collect($this->getQueries($migration, $method))->map(function ($query) {
                 return $query['query'];
             }));
