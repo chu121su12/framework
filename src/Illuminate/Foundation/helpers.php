@@ -622,7 +622,7 @@ if (! function_exists('precognitive')) {
         if (request()->isPrecognitive()) {
             abort(
                 204,
-                /*$message = '',*/
+                /*$message = */'',
                 /*headers: */['Precognition-Success' => 'true']
             );
         }

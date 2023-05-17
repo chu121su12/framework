@@ -16,7 +16,7 @@ class Precognition
             if ($validator->messages()->isEmpty() && $request->headers->has('Precognition-Validate-Only')) {
                 abort(
                     204,
-                    /*$message = '',*/
+                    /*$message = */'',
                     /*headers: */['Precognition-Success' => 'true']
                 );
             }

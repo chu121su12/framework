@@ -24,7 +24,7 @@ class PrecognitionControllerDispatcher extends ControllerDispatcher
 
         abort(
             204,
-            /*$message = '',*/
+            /*$message = */'',
             /*headers: */['Precognition-Success' => 'true']
         );
     }

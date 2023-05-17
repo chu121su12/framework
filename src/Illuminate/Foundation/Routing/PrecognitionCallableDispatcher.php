@@ -20,7 +20,7 @@ class PrecognitionCallableDispatcher extends CallableDispatcher
 
         abort(
             204,
-            /*$message = '',*/
+            /*$message = */'',
             /*headers: */['Precognition-Success' => 'true']
         );
     }
