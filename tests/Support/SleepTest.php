@@ -13,11 +13,6 @@ class SleepTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
 
-    protected function setUp()/*: void*/
-    {
-        $this->markTestSkipped('TODO: fix');
-    }
-
     protected function tearDown()/*: void*/
     {
         parent::tearDown();

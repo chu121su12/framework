@@ -5,7 +5,7 @@ namespace Illuminate\Support;
 use Carbon\Carbon as BaseCarbon;
 use Carbon\CarbonInterval;
 use DateInterval;
-use PHPUnit\Framework\Assert as PHPUnit;
+use Illuminate\Testing\Assert as PHPUnit;
 use RuntimeException;
 
 class Sleep

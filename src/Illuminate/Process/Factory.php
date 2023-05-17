@@ -5,7 +5,7 @@ namespace Illuminate\Process;
 use Closure;
 use Illuminate\Contracts\Process\ProcessResult as ProcessResultContract;
 use Illuminate\Support\Traits\Macroable;
-use PHPUnit\Framework\Assert as PHPUnit;
+use Illuminate\Testing\Assert as PHPUnit;
 
 class Factory
 {
