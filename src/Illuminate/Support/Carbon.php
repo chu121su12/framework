@@ -5,12 +5,14 @@ namespace Illuminate\Support;
 use Carbon\Carbon as BaseCarbon;
 use Carbon\CarbonImmutable as BaseCarbonImmutable;
 use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Dumpable;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Uid\Uuid;
 
 class Carbon extends BaseCarbon
 {
-    use Conditionable;
+    use Conditionable, Dumpable;
 
     /**
      * {@inheritdoc}
@@ -32,28 +34,5 @@ class Carbon extends BaseCarbon
         return Ulid::isValid($id)
             ? static::createFromInterface(Ulid::fromString($id)->getDateTime())
             : static::createFromInterface(Uuid::fromString($id)->getDateTime());
-    }
-
-    /**
-     * Dump the instance and end the script.
-     *
-     * @param  mixed  ...$args
-     * @return never
-     */
-    public function dd(...$args)
-    {
-        dd($this, ...$args);
-    }
-
-    /**
-     * Dump the instance.
-     *
-     * @return $this
-     */
-    public function dump()
-    {
-        dump($this);
-
-        return $this;
     }
 }
