@@ -3903,7 +3903,7 @@ class Builder implements BuilderContract
         dump(
             $this->toSql(),
             $this->getBindings(),
-            ...$args,
+            ...$args
         );
 
         return $this;

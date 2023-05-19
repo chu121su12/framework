@@ -422,7 +422,7 @@ class SleepTest extends TestCase
         Sleep::fake();
 
         Sleep::macro('forSomeConfiguredAmountOfTime', static function () {
-            return Sleep::for(3)->seconds();
+            return Sleep::for_(3)->seconds();
         });
 
         Sleep::macro('useSomeOtherAmountOfTime', function () {
@@ -432,7 +432,7 @@ class SleepTest extends TestCase
 
         Sleep::macro('andSomeMoreGranularControl', function () {
             /** @var Sleep $this */
-            return $this->and(567)->microseconds();
+            return $this->and_(567)->microseconds();
         });
 
         // A static macro can be referenced
@@ -456,7 +456,7 @@ class SleepTest extends TestCase
             return $this->duration($duration);
         });
 
-        $sleep = Sleep::for(1)->second();
+        $sleep = Sleep::for_(1)->second();
         $this->assertSame($sleep->duration->totalMicroseconds, 1000000);
 
         $sleep->setDuration(2)->second();
@@ -471,36 +471,36 @@ class SleepTest extends TestCase
         Sleep::fake();
 
         // Control test
-        Sleep::assertSlept(fn () => true, 0);
-        Sleep::for(1)->second();
-        Sleep::assertSlept(fn () => true, 1);
+        Sleep::assertSlept(function () { return true; }, 0);
+        Sleep::for_(1)->second();
+        Sleep::assertSlept(function () { return true; }, 1);
         Sleep::fake();
-        Sleep::assertSlept(fn () => true, 0);
+        Sleep::assertSlept(function () { return true; }, 0);
 
         // Reset
         Sleep::fake();
 
         // Will not sleep if `when()` yields `false`
-        Sleep::for(1)->second()->when(false);
-        Sleep::for(1)->second()->when(fn () => false);
+        Sleep::for_(1)->second()->when(false);
+        Sleep::for_(1)->second()->when(function () { return false; });
 
         // Will not sleep if `unless()` yields `true`
-        Sleep::for(1)->second()->unless(true);
-        Sleep::for(1)->second()->unless(fn () => true);
+        Sleep::for_(1)->second()->unless(true);
+        Sleep::for_(1)->second()->unless(function () { return true; });
 
         // Finish 'do not sleep' tests - assert no sleeping occurred
-        Sleep::assertSlept(fn () => true, 0);
+        Sleep::assertSlept(function () { return true; }, 0);
 
         // Will sleep if `when()` yields `true`
-        Sleep::for(1)->second()->when(true);
-        Sleep::assertSlept(fn () => true, 1);
-        Sleep::for(1)->second()->when(fn () => true);
-        Sleep::assertSlept(fn () => true, 2);
+        Sleep::for_(1)->second()->when(true);
+        Sleep::assertSlept(function () { return true; }, 1);
+        Sleep::for_(1)->second()->when(function () { return true; });
+        Sleep::assertSlept(function () { return true; }, 2);
 
         // Will sleep if `unless()` yields `false`
-        Sleep::for(1)->second()->unless(false);
-        Sleep::assertSlept(fn () => true, 3);
-        Sleep::for(1)->second()->unless(fn () => false);
-        Sleep::assertSlept(fn () => true, 4);
+        Sleep::for_(1)->second()->unless(false);
+        Sleep::assertSlept(function () { return true; }, 3);
+        Sleep::for_(1)->second()->unless(function () { return false; });
+        Sleep::assertSlept(function () { return true; }, 4);
     }
 }
