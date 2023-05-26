@@ -86,14 +86,15 @@ class Authorize
     {
         if ($this->isClassName($model)) {
             return trim($model);
-        } else {
-            $modelRoute = $request->route($model, null);
-            if (isset($modelRoute)) {
-                return $modelRoute;
-            }
-
-            return ((preg_match("/^['\"](.*)['\"]$/", trim($model), $matches)) ? $matches[1] : null);
         }
+
+        $modelRoute = $request->route($model, null);
+
+        if (isset($modelRoute)) {
+            return $modelRoute;
+        }
+
+        return ((preg_match("/^['\"](.*)['\"]$/", trim($model), $matches)) ? $matches[1] : null);
     }
 
     /**

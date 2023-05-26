@@ -70,6 +70,6 @@ class UniqueLock
                     ? $job->uniqueId()
                     : (isset($job->uniqueId) ? $job->uniqueId : '');
 
-        return 'laravel_unique_job:'.get_class($job).$uniqueId;
+        return 'laravel_unique_job:'.get_class($job).':'.$uniqueId;
     }
 }
