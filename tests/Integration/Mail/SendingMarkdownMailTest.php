@@ -52,14 +52,15 @@ class SendingMarkdownMailTest extends TestCase
         $email = app('mailer')->getSymfonyTransport()->messages()[0]->getOriginalMessage()->toString();
 
         $cid = explode(' cid:', str($email)->explode("\r\n")
-            ->filter(fn ($line) => str_contains($line, 'Embed content: cid:'))
+            ->filter(function ($line) { return str_contains($line, 'Embed content: cid:'); })
             ->first())[1];
 
-        $this->assertStringContainsString(<<<EOT
-        Content-Type: application/x-php; name=$cid\r
-        Content-Transfer-Encoding: base64\r
-        Content-Disposition: inline; name=$cid; filename=$cid\r
-        EOT, $email);
+        $expected = <<<EOT
+Content-Type: application/x-php; name=$cid\r
+Content-Transfer-Encoding: base64\r
+Content-Disposition: inline; name=$cid; filename=$cid\r
+EOT;
+        $this->assertStringContainsString($expected, $email);
     }
 
     public function testEmbedData()
@@ -72,11 +73,13 @@ class SendingMarkdownMailTest extends TestCase
 
         $email = app('mailer')->getSymfonyTransport()->messages()[0]->getOriginalMessage()->toString();
 
-        $this->assertStringContainsString(<<<EOT
-        Content-Type: image/png; name=foo.jpg\r
-        Content-Transfer-Encoding: base64\r
-        Content-Disposition: inline; name=foo.jpg; filename=foo.jpg\r
-        EOT, $email);
+        $expected = <<<EOT
+Content-Type: image/png; name=foo.jpg\r
+Content-Transfer-Encoding: base64\r
+Content-Disposition: inline; name=foo.jpg; filename=foo.jpg\r
+EOT;
+
+        $this->assertStringContainsString($expected, $email);
     }
 
     public function testMessageAsPublicPropertyMayBeDefinedAsViewData()
@@ -123,14 +126,22 @@ class BasicMailable extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'My basic title',
+            /*Address|string */$from = null,
+            $to = [],
+            $cc = [],
+            $bcc = [],
+            $replyTo = [],
+            /*subject: */'My basic title'
         );
     }
 
     public function content()
     {
         return new Content(
-            markdown: 'basic',
+            /*string */$view = null,
+            /*string */$html = null,
+            /*string */$text = null,
+            /*markdown: */'basic'
         );
     }
 }
@@ -142,14 +153,22 @@ class BasicMailableWithTheme extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'My basic title',
+            /*Address|string */$from = null,
+            $to = [],
+            $cc = [],
+            $bcc = [],
+            $replyTo = [],
+            /*subject: */'My basic title'
         );
     }
 
     public function content()
     {
         return new Content(
-            markdown: 'basic',
+            /*string */$view = null,
+            /*string */$html = null,
+            /*string */$text = null,
+            /*markdown: */'basic'
         );
     }
 }
@@ -161,14 +180,22 @@ class BasicMailableWithTextView extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'My basic title',
+            /*Address|string */$from = null,
+            $to = [],
+            $cc = [],
+            $bcc = [],
+            $replyTo = [],
+            /*subject: */'My basic title'
         );
     }
 
     public function content()
     {
         return new Content(
-            markdown: 'basic',
+            /*string */$view = null,
+            /*string */$html = null,
+            /*string */$text = null,
+            /*markdown: */'basic'
         );
     }
 }
@@ -178,14 +205,22 @@ class EmbedMailable extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'My basic title',
+            /*Address|string */$from = null,
+            $to = [],
+            $cc = [],
+            $bcc = [],
+            $replyTo = [],
+            /*subject: */'My basic title'
         );
     }
 
     public function content()
     {
         return new Content(
-            markdown: 'embed',
+            /*string */$view = null,
+            /*string */$html = null,
+            /*string */$text = null,
+            /*markdown: */'embed'
         );
     }
 }
@@ -195,14 +230,22 @@ class EmbedDataMailable extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'My basic title',
+            /*Address|string */$from = null,
+            $to = [],
+            $cc = [],
+            $bcc = [],
+            $replyTo = [],
+            /*subject: */'My basic title'
         );
     }
 
     public function content()
     {
         return new Content(
-            markdown: 'embed-data',
+            /*string */$view = null,
+            /*string */$html = null,
+            /*string */$text = null,
+            /*markdown: */'embed-data'
         );
     }
 }
@@ -214,14 +257,22 @@ class MessageAsPublicPropertyMailable extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'My basic title',
+            /*Address|string */$from = null,
+            $to = [],
+            $cc = [],
+            $bcc = [],
+            $replyTo = [],
+            /*subject: */'My basic title'
         );
     }
 
     public function content()
     {
         return new Content(
-            markdown: 'message',
+            /*string */$view = null,
+            /*string */$html = null,
+            /*string */$text = null,
+            /*markdown: */'message'
         );
     }
 }
@@ -231,15 +282,23 @@ class MessageAsWithNamedParameterMailable extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'My basic title',
+            /*Address|string */$from = null,
+            $to = [],
+            $cc = [],
+            $bcc = [],
+            $replyTo = [],
+            /*subject: */'My basic title'
         );
     }
 
     public function content()
     {
         return new Content(
-            markdown: 'message',
-            with: [
+            /*string */$view = null,
+            /*string */$html = null,
+            /*string */$text = null,
+            /*markdown: */'basic',
+            /*with: */[
                 'message' => 'My message',
             ]
         );
