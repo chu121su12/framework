@@ -11,14 +11,14 @@ class Psr6RedisTest extends TestCase
 {
     use InteractsWithRedis;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
         $this->setUpRedis();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 
@@ -28,7 +28,7 @@ class Psr6RedisTest extends TestCase
     /**
      * @dataProvider redisClientDataProvider
      */
-    public function testTransactionIsNotOpenedWhenSerializationFails($redisClient): void
+    public function testTransactionIsNotOpenedWhenSerializationFails($redisClient)/*: void*/
     {
         $this->app['config']['cache.default'] = 'redis';
         $this->app['config']['database.redis.client'] = $redisClient;
@@ -48,7 +48,7 @@ class Psr6RedisTest extends TestCase
     /**
      * @return array
      */
-    public static function redisClientDataProvider(): array
+    public static function redisClientDataProvider()/*: array*/
     {
         return [
             ['predis'],

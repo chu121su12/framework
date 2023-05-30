@@ -2300,8 +2300,8 @@ trait ValidatesAttributes
     public function validateTimezone($attribute, $value, $parameters = [])
     {
         return in_array($value, timezone_identifiers_list(
-            constant(DateTimeZone::class.'::'.Str::upper($parameters[0] ?? 'ALL')),
-            isset($parameters[1]) ? Str::upper($parameters[1]) : null,
+            constant(DateTimeZone::class.'::'.Str::upper(isset($parameters[0]) ? $parameters[0] : 'ALL')),
+            isset($parameters[1]) ? Str::upper($parameters[1]) : null
         ), true);
     }
 

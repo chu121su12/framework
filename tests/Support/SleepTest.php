@@ -517,12 +517,12 @@ class SleepTest extends TestCase
             $countB += $duration->totalMilliseconds;
         });
 
-        Sleep::for(1)->millisecond();
-        Sleep::for(2)->millisecond();
+        Sleep::for_(1)->millisecond();
+        Sleep::for_(2)->millisecond();
 
         Sleep::assertSequence([
-            Sleep::for(1)->millisecond(),
-            Sleep::for(2)->millisecond(),
+            Sleep::for_(1)->millisecond(),
+            Sleep::for_(2)->millisecond(),
         ]);
 
         $this->assertSame(3, $countA);
@@ -535,7 +535,7 @@ class SleepTest extends TestCase
             throw new Exception('Should not run without faking.');
         });
 
-        Sleep::for(1)->millisecond();
+        Sleep::for_(1)->millisecond();
 
         $this->assertTrue(true);
     }

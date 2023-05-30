@@ -15,12 +15,12 @@ class HasherTest extends TestCase
 {
     public $hashManager;
 
-    public function setUp(): void
+    public function setUp()/*: void*/
     {
         parent::setUp();
 
         $container = Container::setInstance(new Container);
-        $container->singleton('config', fn () => new Config());
+        $container->singleton('config', function () { return new Config(); });
 
         $this->hashManager = new HashManager($container);
     }

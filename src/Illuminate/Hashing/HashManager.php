@@ -102,7 +102,20 @@ class HashManager extends Manager implements Hasher
      */
     public function isHashed($value)
     {
-        return password_get_info($value)['algo'] !== null;
+        $info = password_get_info($value);
+
+        if ($info['algo'] === null) {
+            return false;
+        }
+
+        if (version_compare(PHP_VERSION, '8.2.0', '<')
+            && $info['algoName'] === 'unknown'
+            && $info['algo'] === 0
+            && $info['options'] === []) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

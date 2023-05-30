@@ -1028,7 +1028,9 @@ class Builder implements BuilderContract
      */
     public function forceCreateQuietly(array $attributes = [])
     {
-        return Model::withoutEvents(fn () => $this->forceCreate($attributes));
+        return Model::withoutEvents(function () use ($attributes) {
+            return $this->forceCreate($attributes);
+        });
     }
 
     /**
