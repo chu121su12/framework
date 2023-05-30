@@ -480,6 +480,7 @@ abstract class Factory
             ->map($evaluateRelations = function ($attribute) {
                 if ($attribute instanceof self) {
                     $tmpAttribute = $this->getRandomRecycledModel($attribute->modelName());
+                    $tmpAttribute = isset($tmpAttribute) ? $tmpAttribute->getKey() : null;
                     if (isset($tmpAttribute)) {
                         $attribute = $tmpAttribute;
                     } else {

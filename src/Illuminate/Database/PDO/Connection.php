@@ -131,7 +131,7 @@ class Connection implements ServerInfoAwareConnection
     /**
      * Begin a new database transaction.
      *
-     * @return void
+     * @return bool
      */
     public function beginTransaction()
     {
@@ -141,7 +141,7 @@ class Connection implements ServerInfoAwareConnection
     /**
      * Commit a database transaction.
      *
-     * @return void
+     * @return bool
      */
     public function commit()
     {
@@ -151,7 +151,7 @@ class Connection implements ServerInfoAwareConnection
     /**
      * Rollback a database transaction.
      *
-     * @return void
+     * @return bool
      */
     public function rollBack()
     {

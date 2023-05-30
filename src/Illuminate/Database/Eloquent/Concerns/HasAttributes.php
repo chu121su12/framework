@@ -1335,15 +1335,7 @@ trait HasAttributes
      */
     protected function castAttributeAsHashedString($key, $value)
     {
-        if ($value !== null) {
-            $info = password_get_info($value);
-
-            if ($info['algo'] === null || (version_compare(PHP_VERSION, '8.2.0', '<') && $info['algoName'] === 'unknown' && $info['algo'] === 0 && $info['options'] === [])) {
-                return Hash::make($value);
-            }
-        }
-
-        return $value;
+        return $value !== null && ! Hash::isHashed($value) ? Hash::make($value) : $value;
     }
 
     /**
@@ -2107,11 +2099,11 @@ trait HasAttributes
         } elseif ($this->hasCast($key, static::$primitiveCastTypes)) {
             return $this->castAttribute($key, $attribute) ===
                 $this->castAttribute($key, $original);
-        } elseif ($this->isClassCastable($key) && in_array($this->getCasts()[$key], [AsArrayObject::class, AsCollection::class])) {
+        } elseif ($this->isClassCastable($key) && Str::startsWith($this->getCasts()[$key], [AsArrayObject::class, AsCollection::class])) {
             return $this->fromJson($attribute) === $this->fromJson($original);
         } elseif ($this->isClassCastable($key) && Str::startsWith($this->getCasts()[$key], [AsEnumArrayObject::class, AsEnumCollection::class])) {
             return $this->fromJson($attribute) === $this->fromJson($original);
-        } elseif ($this->isClassCastable($key) && $original !== null && in_array($this->getCasts()[$key], [AsEncryptedArrayObject::class, AsEncryptedCollection::class])) {
+        } elseif ($this->isClassCastable($key) && $original !== null && Str::startsWith($this->getCasts()[$key], [AsEncryptedArrayObject::class, AsEncryptedCollection::class])) {
             return $this->fromEncryptedString($attribute) === $this->fromEncryptedString($original);
         }
 

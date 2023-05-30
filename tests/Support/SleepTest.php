@@ -3,6 +3,7 @@
 namespace Illuminate\Tests\Support;
 
 use Carbon\CarbonInterval;
+use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Sleep;
 use PHPUnit\Framework\AssertionFailedError;
@@ -502,5 +503,40 @@ class SleepTest extends TestCase
         Sleep::assertSlept(function () { return true; }, 3);
         Sleep::for_(1)->second()->unless(function () { return false; });
         Sleep::assertSlept(function () { return true; }, 4);
+    }
+
+    public function testItCanRegisterCallbacksToRunInTests()
+    {
+        $countA = 0;
+        $countB = 0;
+        Sleep::fake();
+        Sleep::whenFakingSleep(function ($duration) use (&$countA) {
+            $countA += $duration->totalMilliseconds;
+        });
+        Sleep::whenFakingSleep(function ($duration) use (&$countB) {
+            $countB += $duration->totalMilliseconds;
+        });
+
+        Sleep::for(1)->millisecond();
+        Sleep::for(2)->millisecond();
+
+        Sleep::assertSequence([
+            Sleep::for(1)->millisecond(),
+            Sleep::for(2)->millisecond(),
+        ]);
+
+        $this->assertSame(3, $countA);
+        $this->assertSame(3, $countB);
+    }
+
+    public function testItDoesntRunCallbacksWhenNotFaking()
+    {
+        Sleep::whenFakingSleep(function () {
+            throw new Exception('Should not run without faking.');
+        });
+
+        Sleep::for(1)->millisecond();
+
+        $this->assertTrue(true);
     }
 }
