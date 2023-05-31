@@ -2214,7 +2214,9 @@ class RoutingRouteTest extends TestCase
 
     protected function getRouter($container = null)
     {
-        $container ??= new Container;
+        if (! isset($container)) {
+            $container = new Container;
+        }
 
         $router = new Router($container->make(Dispatcher::class), $container);
 

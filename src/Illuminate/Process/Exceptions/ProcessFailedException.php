@@ -26,7 +26,7 @@ class ProcessFailedException extends RuntimeException
 
         $error = sprintf('The command "%s" failed.'."\n\nExit Code: %s",
             $result->command(),
-            $result->exitCode(),
+            $result->exitCode()
         );
 
         if (! empty($result->output())) {

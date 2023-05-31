@@ -427,18 +427,22 @@ class ProcessTest extends TestCase
     public function testFakeProcessesCanThrowWithoutOutput()
     {
         $this->expectException(ProcessFailedException::class);
-        $this->expectExceptionMessage(<<<'EOT'
-            The command "exit 1;" failed.
 
-            Exit Code: 1
-            EOT
-        );
+        $expected = <<<'EOT'
+The command "exit 1;" failed.
+
+Exit Code: 1
+EOT;
+
+        $this->expectExceptionMessage($expected);
 
         $factory = new Factory;
-        $factory->fake(fn () => $factory->result(exitCode: 1));
+        $factory->fake(function () use ($factory) {
+            return $factory->result('', '', /*exitCode: */1);
+        });
         $result = $factory->path(__DIR__)->run('exit 1;');
 
-        $result->throw();
+        $result->throw_();
     }
 
     public function testRealProcessesCanThrowWithoutOutput()
@@ -448,38 +452,44 @@ class ProcessTest extends TestCase
         }
 
         $this->expectException(ProcessFailedException::class);
-        $this->expectExceptionMessage(<<<'EOT'
-            The command "exit 1;" failed.
 
-            Exit Code: 1
-            EOT
-        );
+        $expected = <<<'EOT'
+The command "exit 1;" failed.
+
+Exit Code: 1
+EOT;
+
+        $this->expectExceptionMessage($expected);
 
         $factory = new Factory;
         $result = $factory->path(__DIR__)->run('exit 1;');
 
-        $result->throw();
+        $result->throw_();
     }
 
     public function testFakeProcessesCanThrowWithErrorOutput()
     {
         $this->expectException(ProcessFailedException::class);
-        $this->expectExceptionMessage(<<<'EOT'
-            The command "echo "Hello World" >&2; exit 1;" failed.
 
-            Exit Code: 1
+        $expected = <<<'EOT'
+The command "echo "Hello World" >&2; exit 1;" failed.
 
-            Error Output:
-            ================
-            Hello World
-            EOT
-        );
+Exit Code: 1
+
+Error Output:
+================
+Hello World
+EOT;
+
+        $this->expectExceptionMessage($expected);
 
         $factory = new Factory;
-        $factory->fake(fn () => $factory->result(errorOutput: 'Hello World', exitCode: 1));
+        $factory->fake(function () use ($factory) {
+            return $factory->result('', /*errorOutput: */'Hello World', /*exitCode: */1);
+        });
         $result = $factory->path(__DIR__)->run('echo "Hello World" >&2; exit 1;');
 
-        $result->throw();
+        $result->throw_();
     }
 
     public function testRealProcessesCanThrowWithErrorOutput()
@@ -489,16 +499,18 @@ class ProcessTest extends TestCase
         }
 
         $this->expectException(ProcessFailedException::class);
-        $this->expectExceptionMessage(<<<'EOT'
-            The command "echo "Hello World" >&2; exit 1;" failed.
 
-            Exit Code: 1
+        $expected = <<<'EOT'
+The command "echo "Hello World" >&2; exit 1;" failed.
 
-            Error Output:
-            ================
-            Hello World
-            EOT
-        );
+Exit Code: 1
+
+Error Output:
+================
+Hello World
+EOT;
+
+        $this->expectExceptionMessage($expected);
 
         $factory = new Factory;
         $result = $factory->path(__DIR__)->run('echo "Hello World" >&2; exit 1;');
@@ -509,22 +521,26 @@ class ProcessTest extends TestCase
     public function testFakeProcessesCanThrowWithOutput()
     {
         $this->expectException(ProcessFailedException::class);
-        $this->expectExceptionMessage(<<<'EOT'
-            The command "echo "Hello World" >&1; exit 1;" failed.
 
-            Exit Code: 1
+        $expected = <<<'EOT'
+The command "echo "Hello World" >&1; exit 1;" failed.
 
-            Output:
-            ================
-            Hello World
-            EOT
-        );
+Exit Code: 1
+
+Output:
+================
+Hello World
+EOT;
+
+        $this->expectExceptionMessage($expected);
 
         $factory = new Factory;
-        $factory->fake(fn () => $factory->result(output: 'Hello World', exitCode: 1));
+        $factory->fake(function () use ($factory) {
+            return $factory->result(/*output: */'Hello World', '', /*exitCode: */1);
+        });
         $result = $factory->path(__DIR__)->run('echo "Hello World" >&1; exit 1;');
 
-        $result->throw();
+        $result->throw_();
     }
 
     public function testRealProcessesCanThrowWithOutput()
@@ -534,21 +550,23 @@ class ProcessTest extends TestCase
         }
 
         $this->expectException(ProcessFailedException::class);
-        $this->expectExceptionMessage(<<<'EOT'
-            The command "echo "Hello World" >&1; exit 1;" failed.
 
-            Exit Code: 1
+        $expected = <<<'EOT'
+The command "echo "Hello World" >&1; exit 1;" failed.
 
-            Output:
-            ================
-            Hello World
-            EOT
-        );
+Exit Code: 1
+
+Output:
+================
+Hello World
+EOT;
+
+        $this->expectExceptionMessage($expected);
 
         $factory = new Factory;
         $result = $factory->path(__DIR__)->run('echo "Hello World" >&1; exit 1;');
 
-        $result->throw();
+        $result->throw_();
     }
 
     public function testRealProcessesCanTimeout()
@@ -565,7 +583,7 @@ class ProcessTest extends TestCase
         $factory = new Factory;
         $result = $factory->timeout(1)->path(__DIR__)->run('sleep 2; exit 1;');
 
-        $result->throw();
+        $result->throw_();
     }
 
     public function testRealProcessesCanThrowIfTrue()

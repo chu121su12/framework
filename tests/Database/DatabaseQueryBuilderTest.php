@@ -29,6 +29,22 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
 
+class DatabaseQueryBuilderTest_testHavingExpression_class implements ConditionExpression
+            {
+                public function getValue(\Illuminate\Database\Grammar $grammar)
+                {
+                    return '1 = 1';
+                }
+            }
+
+class DatabaseQueryBuilderTest_testWhereExpression_class implements ConditionExpression
+            {
+                public function getValue(\Illuminate\Database\Grammar $grammar)
+                {
+                    return '1 = 1';
+                }
+            }
+
 class DatabaseQueryBuilderTest extends TestCase
 {
     protected $called;
@@ -1838,13 +1854,7 @@ class DatabaseQueryBuilderTest extends TestCase
     {
         $builder = $this->getBuilder();
         $builder->select('*')->from('users')->having(
-            new class() implements ConditionExpression
-            {
-                public function getValue(\Illuminate\Database\Grammar $grammar)
-                {
-                    return '1 = 1';
-                }
-            }
+            new DatabaseQueryBuilderTest_testHavingExpression_class
         );
         $this->assertSame('select * from "users" having 1 = 1', $builder->toSql());
         $this->assertSame([], $builder->getBindings());
@@ -5120,13 +5130,7 @@ SQL;
     {
         $builder = $this->getBuilder();
         $builder->select('*')->from('orders')->where(
-            new class() implements ConditionExpression
-            {
-                public function getValue(\Illuminate\Database\Grammar $grammar)
-                {
-                    return '1 = 1';
-                }
-            }
+            new DatabaseQueryBuilderTest_testWhereExpression_class
         );
         $this->assertSame('select * from "orders" where 1 = 1', $builder->toSql());
         $this->assertSame([], $builder->getBindings());
