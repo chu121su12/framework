@@ -264,7 +264,10 @@ class WorkCommand extends Command
         $runTime = (microtime(true) - $startTime) * 1000;
 
         return $runTime > 1000
-            ? CarbonInterval::milliseconds($runTime)->cascade()->forHumans(short: true)
+            ? CarbonInterval::milliseconds($runTime)->cascade()->forHumans(
+                /*$syntax = */null,
+                /*short: */true
+            )
             : number_format($runTime, 2).'ms';
     }
 
