@@ -348,7 +348,7 @@ class Kernel implements KernelContract
             $command = str_replace(
                 [DIRECTORY_SEPARATOR, ucfirst(basename($this->app->path())).'\\'],
                 ['\\', $namespace],
-                ucfirst(Str::replaceLast('.php', '', $class)),
+                ucfirst(Str::replaceLast('.php', '', $class))
             );
 
             if (is_subclass_of($command, Command::class) &&
