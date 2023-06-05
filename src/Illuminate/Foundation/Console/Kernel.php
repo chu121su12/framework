@@ -74,6 +74,13 @@ class Kernel implements KernelContract
     protected $commandPaths = [];
 
     /**
+     * The paths where Artisan "routes" should be automatically discovered.
+     *
+     * @var array
+     */
+    protected $commandRoutePaths = [];
+
+    /**
      * Indicates if the Closure commands have been loaded.
      *
      * @var bool
@@ -473,8 +480,10 @@ class Kernel implements KernelContract
             $this->load($path);
         }
 
-        if (file_exists($this->app->basePath('routes/console.php'))) {
-            require $this->app->basePath('routes/console.php');
+        foreach ($this->commandRoutePaths as $path) {
+            if (file_exists($path)) {
+                require $path;
+            }
         }
     }
 
@@ -565,6 +574,19 @@ class Kernel implements KernelContract
     public function setCommandPaths(array $paths)
     {
         $this->commandPaths = $paths;
+
+        return $this;
+    }
+
+    /**
+     * Set the paths that should have their Artisan "routes" automatically discovered.
+     *
+     * @param  array  $paths
+     * @return $this
+     */
+    public function setCommandRoutePaths(array $paths)
+    {
+        $this->commandRoutePaths = $paths;
 
         return $this;
     }
