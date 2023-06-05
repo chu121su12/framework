@@ -67,6 +67,13 @@ class Kernel implements KernelContract
     protected $commands = [];
 
     /**
+     * The paths where Artisan commands should be automatically discovered.
+     *
+     * @var array
+     */
+    protected $commandPaths = [];
+
+    /**
      * Indicates if the Closure commands have been loaded.
      *
      * @var bool
@@ -443,17 +450,31 @@ class Kernel implements KernelContract
         if (! $this->commandsLoaded) {
             $this->commands();
 
-            if ($this->shouldDiscoverCommands() &&
-                ! in_array($defaultCommandPath = $this->defaultCommandPath(), $this->loadedPaths)) {
-                $this->load($defaultCommandPath);
-            }
-
-            if ($this->shouldDiscoverCommands() &&
-                file_exists($this->app->basePath('routes/console.php'))) {
-                require $this->app->basePath('routes/console.php');
+            if ($this->shouldDiscoverCommands()) {
+                $this->discoverCommands();
             }
 
             $this->commandsLoaded = true;
+        }
+    }
+
+    /**
+     * Discover the commands that should be automatically loaded.
+     *
+     * @return void
+     */
+    protected function discoverCommands()
+    {
+        if (! in_array($defaultCommandPath = $this->defaultCommandPath(), $this->loadedPaths)) {
+            $this->load($defaultCommandPath);
+        }
+
+        foreach ($this->commandPaths as $path) {
+            $this->load($path);
+        }
+
+        if (file_exists($this->app->basePath('routes/console.php'))) {
+            require $this->app->basePath('routes/console.php');
         }
     }
 
@@ -531,6 +552,19 @@ class Kernel implements KernelContract
     public function setCommands(array $commands)
     {
         $this->commands = $commands;
+
+        return $this;
+    }
+
+    /**
+     * Set the paths that should have their Artisan commands automatically discovered.
+     *
+     * @param  array  $paths
+     * @return $this
+     */
+    public function setCommandPaths(array $paths)
+    {
+        $this->commandPaths = $paths;
 
         return $this;
     }
