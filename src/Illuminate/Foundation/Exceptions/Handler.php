@@ -215,8 +215,10 @@ class Handler implements ExceptionHandlerContract
      * @param  string  $class
      * @return $this
      */
-    public function dontReport(string $class)
+    public function dontReport(/*string */$class)
     {
+        $class = backport_type_check('string', $class);
+
         return $this->ignore($class);
     }
 

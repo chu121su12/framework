@@ -12,11 +12,14 @@ use Illuminate\Support\Facades\Route;
 
 class ApplicationBuilder
 {
+    protected $app;
+
     /**
      * Create a new application builder instance.
      */
-    public function __construct(protected Application $app)
+    public function __construct(/*protected */Application $app)
     {
+        $this->app = $app;
     }
 
     /**
@@ -28,12 +31,12 @@ class ApplicationBuilder
     {
         $this->app->singleton(
             \Illuminate\Contracts\Http\Kernel::class,
-            \Illuminate\Foundation\Http\Kernel::class,
+            \Illuminate\Foundation\Http\Kernel::class
         );
 
         $this->app->singleton(
             \Illuminate\Contracts\Console\Kernel::class,
-            \Illuminate\Foundation\Console\Kernel::class,
+            \Illuminate\Foundation\Console\Kernel::class
         );
 
         return $this;
@@ -81,12 +84,16 @@ class ApplicationBuilder
      * @param  callable|null  $then
      * @return $this
      */
-    public function withRouting(?Closure $callback = null,
-        ?string $web = null,
-        ?string $api = null,
-        string $apiPrefix = 'api',
-        ?callable $then = null)
+    public function withRouting(/*?*/Closure $callback = null,
+        /*?string */$web = null,
+        /*?string */$api = null,
+        /*string */$apiPrefix = 'api',
+        /*?*/callable $then = null)
     {
+        $web = backport_type_check('?string', $web);
+        $api = backport_type_check('?string', $api);
+        $apiPrefix = backport_type_check('string', $apiPrefix);
+
         if (is_null($callback) && (is_string($web) || is_string($api))) {
             $callback = function () use ($web, $api, $apiPrefix, $then) {
                 if (is_string($api)) {
@@ -146,7 +153,7 @@ class ApplicationBuilder
 
         $this->app->afterResolving(
             \Illuminate\Contracts\Debug\ExceptionHandler::class,
-            $afterResolving ?: fn ($handler) => $handler
+            $afterResolving ?: function ($handler) { return $handler; }
         );
 
         return $this;

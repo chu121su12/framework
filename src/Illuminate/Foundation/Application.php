@@ -214,9 +214,11 @@ class Application extends Container implements ApplicationContract, CachesConfig
      * @param  string|null  $baseDirectory
      * @return \Illuminate\Foundation\ApplicationBuilder
      */
-    public static function configure(string $baseDirectory = null)
+    public static function configure(/*string */$baseDirectory = null)
     {
-        $baseDirectory = $ENV['APP_BASE_PATH'] ?? ($baseDirectory ?: dirname(dirname(
+        $baseDirectory = backport_type_check($baseDirectory);
+
+        $baseDirectory = isset($ENV['APP_BASE_PATH']) ? $ENV['APP_BASE_PATH'] : ($baseDirectory ?: dirname(dirname(
             debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0]['file']
         )));
 

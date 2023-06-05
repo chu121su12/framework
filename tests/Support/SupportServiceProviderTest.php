@@ -110,19 +110,19 @@ class SupportServiceProviderTest extends TestCase
     {
         copy(
             __DIR__.'/Fixtures/service-provider-configuration-file.php',
-            $workingPath = __DIR__.'/Fixtures/working-service-provider-configuration-file.php',
+            $workingPath = __DIR__.'/Fixtures/working-service-provider-configuration-file.php'
         );
 
-        ServiceProvider::addToConfiguration('SomeProvider', path: $workingPath);
-        ServiceProvider::addToConfiguration('AnotherProvider', path: $workingPath);
+        ServiceProvider::addToConfiguration('SomeProvider', /*path: */$workingPath);
+        ServiceProvider::addToConfiguration('AnotherProvider', /*path: */$workingPath);
 
         $content = file_get_contents($workingPath);
 
         $this->assertTrue(str_contains($content, 'SomeProvider::class'));
         $this->assertTrue(str_contains($content, 'AnotherProvider::class'));
 
-        ServiceProvider::addToConfigurationAfter('SomeProvider', 'ThirdProvider', path: $workingPath);
-        ServiceProvider::addToConfigurationAfter('MissingProvider', 'FourthProvider', path: $workingPath);
+        ServiceProvider::addToConfigurationAfter('SomeProvider', 'ThirdProvider', /*path: */$workingPath);
+        ServiceProvider::addToConfigurationAfter('MissingProvider', 'FourthProvider', /*path: */$workingPath);
 
         $content = file_get_contents($workingPath);
 
