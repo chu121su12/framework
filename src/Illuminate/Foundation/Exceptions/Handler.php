@@ -210,6 +210,19 @@ class Handler implements ExceptionHandlerContract
     /**
      * Indicate that the given exception type should not be reported.
      *
+     * Alias of "ignore".
+     *
+     * @param  string  $class
+     * @return $this
+     */
+    public function dontReport(string $class)
+    {
+        return $this->ignore($class);
+    }
+
+    /**
+     * Indicate that the given exception type should not be reported.
+     *
      * @param  string  $class
      * @return $this
      */
@@ -218,6 +231,21 @@ class Handler implements ExceptionHandlerContract
         $class = backport_type_check('string', $class);
 
         $this->dontReport[] = $class;
+
+        return $this;
+    }
+
+    /**
+     * Indicate that the given attributes should never be flashed to the session on validation errors.
+     *
+     * @param  array|string  $attributes
+     * @return $this
+     */
+    public function dontFlash($attributes)
+    {
+        $this->dontFlash = array_values(array_unique(
+            array_merge($this->dontFlash, Arr::wrap($attributes))
+        ));
 
         return $this;
     }
