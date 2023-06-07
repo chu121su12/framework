@@ -150,8 +150,10 @@ class Middleware
      * @param  array|string  $middleware
      * @return $this
      */
-    public function remove(array|string $middleware)
+    public function remove(/*array|string */$middleware)
     {
+        $middleware = backport_type_check('array|string', $middleware);
+
         $this->removals = array_merge(
             $this->removals,
             Arr::wrap($middleware)
@@ -167,8 +169,11 @@ class Middleware
      * @param  string  $replace
      * @return $this
      */
-    public function replace(string $search, string $replace)
+    public function replace(/*string */$search, /*string */$replace)
     {
+        $search = backport_type_check('string', $search);
+        $replace = backport_type_check('string', $replace);
+
         $this->replacements[$search] = $replace;
 
         return $this;
@@ -221,11 +226,14 @@ class Middleware
      * @param  array|string  $middleware
      * @return $this
      */
-    public function removeFromGroup(string $group, array|string $middleware)
+    public function removeFromGroup(/*string */$group, /*array|string */$middleware)
     {
+        $group = backport_type_check('string', $group);
+        $middleware = backport_type_check('array|string', $middleware);
+
         $this->groupRemovals[$group] = array_merge(
             Arr::wrap($middleware),
-            $this->groupRemovals[$group] ?? []
+            isset($this->groupRemovals[$group]) ? $this->groupRemovals[$group] : []
         );
 
         return $this;
@@ -239,8 +247,12 @@ class Middleware
      * @param  string  $replace
      * @return $this
      */
-    public function replaceInGroup(string $group, string $search, string $replace)
+    public function replaceInGroup(/*string */$group, /*string */$search, /*string */$replace)
     {
+        $group = backport_type_check('string', $group);
+        $search = backport_type_check('string', $search);
+        $replace = backport_type_check('string', $replace);
+
         $this->groupReplacements[$group][$search] = $replace;
 
         return $this;
@@ -324,13 +336,13 @@ class Middleware
 
         foreach ($this->groupRemovals as $group => $removals) {
             $middleware[$group] = array_values(array_filter(
-                array_diff($middleware[$group] ?? [], $removals)
+                array_diff(isset($middleware[$group]) ? $middleware[$group] : [], $removals)
             ));
         }
 
         foreach ($this->groupPrepends as $group => $prepends) {
             $middleware[$group] = array_values(array_filter(
-                array_unique(array_merge($prepends, $middleware[$group] ?? []))
+                array_unique(array_merge($prepends, isset($middleware[$group]) ? $middleware[$group] : []))
             ));
         }
 

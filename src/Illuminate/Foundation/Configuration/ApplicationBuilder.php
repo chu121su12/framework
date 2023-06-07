@@ -63,8 +63,10 @@ class ApplicationBuilder
      * @param  string  $channels
      * @return $this
      */
-    public function withBroadcasting(string $channels)
+    public function withBroadcasting(/*string */$channels)
     {
+        $channels = backport_type_check('string', $channels);
+
         $this->app->booted(function () use ($channels) {
             Broadcast::routes();
 
@@ -86,14 +88,20 @@ class ApplicationBuilder
      * @param  callable|null  $then
      * @return $this
      */
-    public function withRouting(?Closure $using = null,
-        ?string $web = null,
-        ?string $api = null,
-        ?string $commands = null,
-        ?string $channels = null,
-        string $apiPrefix = 'api',
-        ?callable $then = null)
+    public function withRouting(/*?*/Closure $using = null,
+        /*?string */$web = null,
+        /*?string */$api = null,
+        /*?string */$commands = null,
+        /*?string */$channels = null,
+        /*string */$apiPrefix = 'api',
+        /*?*/callable $then = null)
     {
+        $web = backport_type_check('?string', $web);
+        $api = backport_type_check('?string', $api);
+        $commands = backport_type_check('?string', $commands);
+        $channels = backport_type_check('?string', $channels);
+        $apiPrefix = backport_type_check('string', $apiPrefix);
+
         if (is_null($using) && (is_string($web) || is_string($api))) {
             $using = function () use ($web, $api, $apiPrefix, $then) {
                 if (is_string($api)) {
@@ -159,8 +167,8 @@ class ApplicationBuilder
         }
 
         $this->app->afterResolving(ConsoleKernel::class, function ($kernel) use ($commands) {
-            [$commands, $paths] = collect($commands)->partition(fn ($command) => class_exists($command));
-            [$routes, $paths] = $paths->partition(fn ($path) => is_file($path));
+            list($commands, $paths) = collect($commands)->partition(function ($command) { return class_exists($command); });
+            list($routes, $paths) = $paths->partition(function ($path) { return is_file($path); });
 
             $kernel->addCommands($commands->all());
             $kernel->addCommandPaths($paths->all());
@@ -189,18 +197,22 @@ class ApplicationBuilder
      * @param  callable|null  $using
      * @return $this
      */
-    public function withExceptions(?callable $using = null)
+    public function withExceptions(/*?*/callable $using = null)
     {
+        $using = backport_type_check('?callable', $using);
+
         $this->app->singleton(
             \Illuminate\Contracts\Debug\ExceptionHandler::class,
             \Illuminate\Foundation\Exceptions\Handler::class
         );
 
-        $using ??= fn () => true;
+        if (! isset($using)) {
+            $using = function () { return true; };
+        }
 
         $this->app->afterResolving(
             \Illuminate\Foundation\Exceptions\Handler::class,
-            fn ($handler) => $using(new Exceptions($handler)),
+            function ($handler) use ($using) { return $using(new Exceptions($handler)); }
         );
 
         return $this;

@@ -7,14 +7,17 @@ use Illuminate\Foundation\Exceptions\Handler;
 
 class Exceptions
 {
+    public $handler;
+
     /**
      * Create a new exception handling configuration instance.
      *
      * @param  \Illuminate\Foundation\Exceptions\Handler  $handler
      * @return void
      */
-    public function __construct(public Handler $handler)
+    public function __construct(/*public */Handler $handler)
     {
+        $this->handler = $handler;
     }
 
     /**
@@ -90,8 +93,10 @@ class Exceptions
      * @param  string  $class
      * @return $this
      */
-    public function dontReport(string $class)
+    public function dontReport(/*string */$class)
     {
+        $class = backport_type_check('string', $class);
+
         $this->handler->dontReport($class);
 
         return $this;
