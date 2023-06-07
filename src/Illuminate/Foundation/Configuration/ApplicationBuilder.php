@@ -3,6 +3,7 @@
 namespace Illuminate\Foundation\Configuration;
 
 use Closure;
+use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as AppEventServiceProvider;
@@ -59,14 +60,15 @@ class ApplicationBuilder
     /**
      * Register the braodcasting services for the application.
      *
+     * @param  string  $channels
      * @return $this
      */
-    public function withBroadcasting()
+    public function withBroadcasting(string $channels)
     {
-        $this->app->booted(function () {
+        $this->app->booted(function () use ($channels) {
             Broadcast::routes();
 
-            if (file_exists($channels = $this->app->basePath('routes/channels.php'))) {
+            if (file_exists($channels)) {
                 require $channels;
             }
         });
@@ -77,25 +79,23 @@ class ApplicationBuilder
     /**
      * Register the routing services for the application.
      *
-     * @param  \Closure|null  $callback
+     * @param  \Closure|null  $using
      * @param  string|null  $web
      * @param  string|null  $api
      * @param  string|null  $apiPrefix
      * @param  callable|null  $then
      * @return $this
      */
-    public function withRouting(/*?*/Closure $callback = null,
-        /*?string */$web = null,
-        /*?string */$api = null,
-        /*string */$apiPrefix = 'api',
-        /*?*/callable $then = null)
+    public function withRouting(?Closure $using = null,
+        ?string $web = null,
+        ?string $api = null,
+        ?string $commands = null,
+        ?string $channels = null,
+        string $apiPrefix = 'api',
+        ?callable $then = null)
     {
-        $web = backport_type_check('?string', $web);
-        $api = backport_type_check('?string', $api);
-        $apiPrefix = backport_type_check('string', $apiPrefix);
-
-        if (is_null($callback) && (is_string($web) || is_string($api))) {
-            $callback = function () use ($web, $api, $apiPrefix, $then) {
+        if (is_null($using) && (is_string($web) || is_string($api))) {
+            $using = function () use ($web, $api, $apiPrefix, $then) {
                 if (is_string($api)) {
                     Route::middleware('api')->prefix($apiPrefix)->group($api);
                 }
@@ -110,11 +110,19 @@ class ApplicationBuilder
             };
         }
 
-        AppRouteServiceProvider::loadRoutesUsing($callback);
+        AppRouteServiceProvider::loadRoutesUsing($using);
 
         $this->app->booting(function () {
             $this->app->register(AppRouteServiceProvider::class);
         });
+
+        if (! is_null($commands)) {
+            $this->withCommands([$commands]);
+        }
+
+        if (! is_null($channels)) {
+            $this->withBroadcasting($channels);
+        }
 
         return $this;
     }
@@ -139,24 +147,97 @@ class ApplicationBuilder
     }
 
     /**
-     * Register the standard exception handler for the application.
+     * Register additional Artisan commands with the application.
      *
-     * @param  callable|null  $afterResolving
+     * @param  array  $commands
      * @return $this
      */
-    public function withExceptionHandling($afterResolving = null)
+    public function withCommands(array $commands = [])
+    {
+        if (empty($commands)) {
+            $commands = [$this->app->path('Console/Commands')];
+        }
+
+        $this->app->afterResolving(ConsoleKernel::class, function ($kernel) use ($commands) {
+            [$commands, $paths] = collect($commands)->partition(fn ($command) => class_exists($command));
+            [$routes, $paths] = $paths->partition(fn ($path) => is_file($path));
+
+            $kernel->addCommands($commands->all());
+            $kernel->addCommandPaths($paths->all());
+            $kernel->addCommandRoutePaths($routes->all());
+        });
+
+        return $this;
+    }
+
+    /**
+     * Register additional Artisan route paths.
+     *
+     * @param  array  $paths
+     * @return $this
+     */
+    protected function withCommandRouting(array $paths)
+    {
+        $this->app->afterResolving(ConsoleKernel::class, function ($kernel) use ($paths) {
+            $kernel->setCommandRoutePaths($paths);
+        });
+    }
+
+    /**
+     * Register and configure the application's exception handler.
+     *
+     * @param  callable|null  $using
+     * @return $this
+     */
+    public function withExceptions(?callable $using = null)
     {
         $this->app->singleton(
             \Illuminate\Contracts\Debug\ExceptionHandler::class,
             \Illuminate\Foundation\Exceptions\Handler::class
         );
 
+        $using ??= fn () => true;
+
         $this->app->afterResolving(
-            \Illuminate\Contracts\Debug\ExceptionHandler::class,
-            $afterResolving ?: function ($handler) { return $handler; }
+            \Illuminate\Foundation\Exceptions\Handler::class,
+            fn ($handler) => $using(new Exceptions($handler)),
         );
 
         return $this;
+    }
+
+    /**
+     * Register an array of container bindings to be bound when the application is booting.
+     *
+     * @param  array  $bindings
+     * @return $this
+     */
+    public function withBindings(array $bindings)
+    {
+        return $this->booting(function ($app) use ($bindings) {
+            foreach ($bindings as $abstract => $concrete) {
+                $app->bind($abstract, $concrete);
+            }
+        });
+    }
+
+    /**
+     * Register an array of singleton container bindings to be bound when the application is booting.
+     *
+     * @param  array  $singletons
+     * @return $this
+     */
+    public function withSingletons(array $singletons)
+    {
+        return $this->booting(function ($app) use ($singletons) {
+            foreach ($singletons as $abstract => $concrete) {
+                if (is_string($abstract)) {
+                    $app->singleton($abstract, $concrete);
+                } else {
+                    $app->singleton($concrete);
+                }
+            }
+        });
     }
 
     /**
@@ -165,7 +246,7 @@ class ApplicationBuilder
      * @param  callable  $callback
      * @return $this
      */
-    public function booting($callback)
+    public function booting(callable $callback)
     {
         $this->app->booting($callback);
 
@@ -178,7 +259,7 @@ class ApplicationBuilder
      * @param  callable  $callback
      * @return $this
      */
-    public function booted($callback)
+    public function booted(callable $callback)
     {
         $this->app->booted($callback);
 

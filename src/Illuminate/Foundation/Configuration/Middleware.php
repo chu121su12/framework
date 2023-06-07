@@ -21,6 +21,20 @@ class Middleware
     protected $appends = [];
 
     /**
+     * The middleware that should be removed from the global middleware stack.
+     *
+     * @var array
+     */
+    protected $removals = [];
+
+    /**
+     * The middleware that should be replaced in the global middleware stack.
+     *
+     * @var array
+     */
+    protected $replacements = [];
+
+    /**
      * The middleware that should be prepended to the specified groups.
      *
      * @var array
@@ -33,6 +47,20 @@ class Middleware
      * @var array
      */
     protected $groupAppends = [];
+
+    /**
+     * The middleware that should be removed from the specified groups.
+     *
+     * @var array
+     */
+    protected $groupRemovals = [];
+
+    /**
+     * The middleware that should be replaced in the specified groups.
+     *
+     * @var array
+     */
+    protected $groupReplacements = [];
 
     /**
      * Indicates if the "trust hosts" middleware is enabled.
@@ -117,6 +145,36 @@ class Middleware
     }
 
     /**
+     * Remove middleware from the application's global middleware stack.
+     *
+     * @param  array|string  $middleware
+     * @return $this
+     */
+    public function remove(array|string $middleware)
+    {
+        $this->removals = array_merge(
+            $this->removals,
+            Arr::wrap($middleware)
+        );
+
+        return $this;
+    }
+
+    /**
+     * Specify a middleware that should be replaced with another middleware.
+     *
+     * @param  string  $search
+     * @param  string  $replace
+     * @return $this
+     */
+    public function replace(string $search, string $replace)
+    {
+        $this->replacements[$search] = $replace;
+
+        return $this;
+    }
+
+    /**
      * Prepend the given middleware to the specified group.
      *
      * @param  string  $group
@@ -157,6 +215,38 @@ class Middleware
     }
 
     /**
+     * Remove the given middleware from the specified group.
+     *
+     * @param  string  $group
+     * @param  array|string  $middleware
+     * @return $this
+     */
+    public function removeFromGroup(string $group, array|string $middleware)
+    {
+        $this->groupRemovals[$group] = array_merge(
+            Arr::wrap($middleware),
+            $this->groupRemovals[$group] ?? []
+        );
+
+        return $this;
+    }
+
+    /**
+     * Replace the given middleware in the specified group with another middleware.
+     *
+     * @param  string  $group
+     * @param  string  $search
+     * @param  string  $replace
+     * @return $this
+     */
+    public function replaceInGroup(string $group, string $search, string $replace)
+    {
+        $this->groupReplacements[$group][$search] = $replace;
+
+        return $this;
+    }
+
+    /**
      * Register additional middleware aliases.
      *
      * @param  array  $aliases
@@ -186,8 +276,17 @@ class Middleware
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         ]));
 
+        $middleware = array_map(function ($middleware) {
+            return isset($this->replacements[$middleware])
+                ? $this->replacements[$middleware]
+                : $middleware;
+        }, $middleware);
+
         return array_values(array_filter(
-            array_unique(array_merge($this->prepends, $middleware, $this->appends))
+            array_diff(
+                array_unique(array_merge($this->prepends, $middleware, $this->appends)),
+                $this->removals
+            )
         ));
     }
 
@@ -215,9 +314,23 @@ class Middleware
             ])),
         ];
 
+        foreach ($middleware as $group => $groupedMiddleware) {
+            foreach ($groupedMiddleware as $index => $groupMiddleware) {
+                if (isset($this->groupReplacements[$group][$groupMiddleware])) {
+                    $middleware[$group][$index] = $this->groupReplacements[$group][$groupMiddleware];
+                }
+            }
+        }
+
+        foreach ($this->groupRemovals as $group => $removals) {
+            $middleware[$group] = array_values(array_filter(
+                array_diff($middleware[$group] ?? [], $removals)
+            ));
+        }
+
         foreach ($this->groupPrepends as $group => $prepends) {
             $middleware[$group] = array_values(array_filter(
-                array_unique(array_merge($prepends, isset($middleware[$group]) ? $middleware[$group] : []))
+                array_unique(array_merge($prepends, $middleware[$group] ?? []))
             ));
         }
 

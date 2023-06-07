@@ -19,6 +19,9 @@ use Illuminate\Contracts\Console\Kernel as ConsoleKernelContract;
  * @method static void bootstrap()
  * @method static void bootstrapWithoutBootingProviders()
  * @method static void setArtisan(\Illuminate\Console\Application|null $artisan)
+ * @method static \Illuminate\Foundation\Console\Kernel addCommands(array $commands)
+ * @method static \Illuminate\Foundation\Console\Kernel addCommandPaths(array $paths)
+ * @method static \Illuminate\Foundation\Console\Kernel addCommandRoutePaths(array $paths)
  *
  * @see \Illuminate\Foundation\Console\Kernel
  */

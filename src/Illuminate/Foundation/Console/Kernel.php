@@ -67,6 +67,20 @@ class Kernel implements KernelContract
     protected $commands = [];
 
     /**
+     * The paths where Artisan commands should be automatically discovered.
+     *
+     * @var array
+     */
+    protected $commandPaths = [];
+
+    /**
+     * The paths where Artisan "routes" should be automatically discovered.
+     *
+     * @var array
+     */
+    protected $commandRoutePaths = [];
+
+    /**
      * Indicates if the Closure commands have been loaded.
      *
      * @var bool
@@ -451,17 +465,29 @@ class Kernel implements KernelContract
         if (! $this->commandsLoaded) {
             $this->commands();
 
-            if ($this->shouldDiscoverCommands() &&
-                ! in_array($defaultCommandPath = $this->defaultCommandPath(), $this->loadedPaths)) {
-                $this->load($defaultCommandPath);
-            }
-
-            if ($this->shouldDiscoverCommands() &&
-                file_exists($this->app->basePath('routes/console.php'))) {
-                require $this->app->basePath('routes/console.php');
+            if ($this->shouldDiscoverCommands()) {
+                $this->discoverCommands();
             }
 
             $this->commandsLoaded = true;
+        }
+    }
+
+    /**
+     * Discover the commands that should be automatically loaded.
+     *
+     * @return void
+     */
+    protected function discoverCommands()
+    {
+        foreach ($this->commandPaths as $path) {
+            $this->load($path);
+        }
+
+        foreach ($this->commandRoutePaths as $path) {
+            if (file_exists($path)) {
+                require $path;
+            }
         }
     }
 
@@ -477,16 +503,6 @@ class Kernel implements KernelContract
                 return $bootstrapper === \Illuminate\Foundation\Bootstrap\BootProviders::class;
             })->all()
         );
-    }
-
-    /**
-     * Get the default command path for the kernel.
-     *
-     * @return string
-     */
-    protected function defaultCommandPath()
-    {
-        return $this->app->path('Console');
     }
 
     /**
@@ -528,6 +544,45 @@ class Kernel implements KernelContract
     public function setArtisan($artisan)
     {
         $this->artisan = $artisan;
+    }
+
+    /**
+     * Set the Artisan commands provided by the application.
+     *
+     * @param  array  $commands
+     * @return $this
+     */
+    public function addCommands(array $commands)
+    {
+        $this->commands = array_values(array_unique(array_merge($this->commands, $commands)));
+
+        return $this;
+    }
+
+    /**
+     * Set the paths that should have their Artisan commands automatically discovered.
+     *
+     * @param  array  $paths
+     * @return $this
+     */
+    public function addCommandPaths(array $paths)
+    {
+        $this->commandPaths = array_values(array_unique(array_merge($this->commandPaths, $paths)));
+
+        return $this;
+    }
+
+    /**
+     * Set the paths that should have their Artisan "routes" automatically discovered.
+     *
+     * @param  array  $paths
+     * @return $this
+     */
+    public function addCommandRoutePaths(array $paths)
+    {
+        $this->commandRoutePaths = array_values(array_unique(array_merge($this->commandRoutePaths, $paths)));
+
+        return $this;
     }
 
     /**

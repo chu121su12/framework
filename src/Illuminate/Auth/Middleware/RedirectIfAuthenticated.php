@@ -18,6 +18,8 @@ class RedirectIfAuthenticated
     {
         $guards = backport_array_type_check('string', $guards);
 
+        $guards = empty($guards) ? [null] : $guards;
+
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 return redirect($this->redirectTo($request));
