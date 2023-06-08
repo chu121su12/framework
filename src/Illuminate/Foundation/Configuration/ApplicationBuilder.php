@@ -145,8 +145,8 @@ class ApplicationBuilder
     {
         $this->app->afterResolving(HttpKernel::class, function ($kernel) use ($callback) {
             $middleware = (new Middleware)
-                ->auth(redirectTo: fn () => route('login'))
-                ->guest(redirectTo: fn () => route('dashboard'));
+                ->auth(/*redirectTo: */function () { return route('login'); })
+                ->guest(/*redirectTo: */function () { return route('dashboard'); });
 
             $callback($middleware);
 

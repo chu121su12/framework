@@ -226,8 +226,10 @@ class Middleware
      * @param  array  $middleware
      * @return $this
      */
-    public function group(string $group, array $middleware)
+    public function group(/*string */$group, array $middleware)
     {
+        $group = backport_type_check('string', $group);
+
         $this->groups[$group] = $middleware;
 
         return $this;
@@ -322,8 +324,12 @@ class Middleware
      * @param  array  $replace
      * @return $this
      */
-    public function web(array|string $append = [], array|string $prepend = [], array|string $remove = [], array $replace = [])
+    public function web(/*array|string */$append = [], /*array|string */$prepend = [], /*array|string */$remove = [], array $replace = [])
     {
+        $append = backport_type_check('array|string', $append);
+        $prepend = backport_type_check('array|string', $prepend);
+        $remove = backport_type_check('array|string', $remove);
+
         return $this->modifyGroup('web', $append, $prepend, $remove, $replace);
     }
 
@@ -337,8 +343,12 @@ class Middleware
      * @param  array  $replace
      * @return $this
      */
-    public function api(array|string $append = [], array|string $prepend = [], array|string $remove = [], array $replace = [])
+    public function api(/*array|string */$append = [], /*array|string */$prepend = [], /*array|string */$remove = [], array $replace = [])
     {
+        $append = backport_type_check('array|string', $append);
+        $prepend = backport_type_check('array|string', $prepend);
+        $remove = backport_type_check('array|string', $remove);
+
         return $this->modifyGroup('api', $append, $prepend, $remove, $replace);
     }
 
@@ -352,8 +362,14 @@ class Middleware
      * @param  array  $replace
      * @return $this
      */
-    protected function modifyGroup(string $group, array|string $append, array|string $prepend, array|string $remove, array $replace)
+    protected function modifyGroup(/*string */$group, /*array|string */$append = [], /*array|string */$prepend = [], /*array|string */$remove = [], array $replace = [])
     {
+        $group = backport_type_check('string', $group);
+        $append = backport_type_check('array|string', $append);
+        $append = backport_type_check('array|string', $append);
+        $prepend = backport_type_check('array|string', $prepend);
+        $remove = backport_type_check('array|string', $remove);
+
         if (! empty($append)) {
             $this->appendToGroup($group, $append);
         }
