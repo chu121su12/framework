@@ -1169,7 +1169,6 @@ class DatabaseEloquentModelTest extends TestCase
 
         $class = new ReflectionClass($model);
         $method = $class->getMethod('getArrayableRelations');
-        $method->setAccessible(true);
 
         $model->setRelation('foo', ['bar']);
         $model->setRelation('bam', ['boom']);

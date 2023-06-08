@@ -499,7 +499,6 @@ class DatabaseEloquentFactoryTest extends TestCase
 
         $class = new ReflectionClass($factory);
         $prop = $class->getProperty('count');
-        $prop->setAccessible(true);
         $value = $prop->getValue($factory);
 
         $this->assertSame(3, $value);
