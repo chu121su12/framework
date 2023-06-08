@@ -2,10 +2,21 @@
 
 namespace Illuminate\Foundation\Configuration;
 
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
+use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Arr;
 
 class Middleware
 {
+    /**
+     * The user defined global middleware stack.
+     *
+     * @var array
+     */
+    protected $global;
+
     /**
      * The middleware that should be prepended to the global middleware stack.
      *
@@ -33,6 +44,13 @@ class Middleware
      * @var array
      */
     protected $replacements = [];
+
+    /**
+     * The user defined middleware groups.
+     *
+     * @var array
+     */
+    protected $groups = [];
 
     /**
      * The middleware that should be prepended to the specified groups.
@@ -74,7 +92,7 @@ class Middleware
      *
      * @var bool
      */
-    protected $ensureFrontendRequestsAreStateful = false;
+    protected $statefulApi = false;
 
     /**
      * Indicates the API middleware group's rate limiter.
@@ -84,19 +102,28 @@ class Middleware
     protected $apiLimiter;
 
     /**
+     * Indicates if Redis throttling should be applied.
+     *
+     * @var array
+     */
+    protected $throttleWithRedis = false;
+
+    /**
      * The default middleware aliases.
      *
      * @var array
      */
     protected $aliases = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'guest' => \Illuminate\Auth\Middleware\RedirectIfAuthenticated::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+        'subscribed' => \Spark\Http\Middleware\VerifyBillableIsSubscribed::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
@@ -175,6 +202,33 @@ class Middleware
         $replace = backport_type_check('string', $replace);
 
         $this->replacements[$search] = $replace;
+
+        return $this;
+    }
+
+    /**
+     * Define the global middleware for the application.
+     *
+     * @param  array  $middleware
+     * @return $this
+     */
+    public function use(array $middleware)
+    {
+        $this->global = $middleware;
+
+        return $this;
+    }
+
+    /**
+     * Define a middleware group.
+     *
+     * @param  string  $group
+     * @param  array  $middleware
+     * @return $this
+     */
+    public function group(string $group, array $middleware)
+    {
+        $this->groups[$group] = $middleware;
 
         return $this;
     }
@@ -259,12 +313,75 @@ class Middleware
     }
 
     /**
+     * Modify the middleware in the "web" group.
+     *
+     * @param  string  $group
+     * @param  array|string  $append
+     * @param  array|string  $prepend
+     * @param  array|string  $remove
+     * @param  array  $replace
+     * @return $this
+     */
+    public function web(array|string $append = [], array|string $prepend = [], array|string $remove = [], array $replace = [])
+    {
+        return $this->modifyGroup('web', $append, $prepend, $remove, $replace);
+    }
+
+    /**
+     * Modify the middleware in the "api" group.
+     *
+     * @param  string  $group
+     * @param  array|string  $append
+     * @param  array|string  $prepend
+     * @param  array|string  $remove
+     * @param  array  $replace
+     * @return $this
+     */
+    public function api(array|string $append = [], array|string $prepend = [], array|string $remove = [], array $replace = [])
+    {
+        return $this->modifyGroup('api', $append, $prepend, $remove, $replace);
+    }
+
+    /**
+     * Modify the middleware in the given group.
+     *
+     * @param  string  $group
+     * @param  array|string  $append
+     * @param  array|string  $prepend
+     * @param  array|string  $remove
+     * @param  array  $replace
+     * @return $this
+     */
+    protected function modifyGroup(string $group, array|string $append, array|string $prepend, array|string $remove, array $replace)
+    {
+        if (! empty($append)) {
+            $this->appendToGroup($group, $append);
+        }
+
+        if (! empty($prepend)) {
+            $this->prependToGroup($group, $prepend);
+        }
+
+        if (! empty($remove)) {
+            $this->removeFromGroup($group, $remove);
+        }
+
+        if (! empty($replace)) {
+            foreach ($replace as $search => $replace) {
+                $this->replaceInGroup($group, $search, $replace);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Register additional middleware aliases.
      *
      * @param  array  $aliases
      * @return $this
      */
-    public function withAliases(array $aliases)
+    public function alias(array $aliases)
     {
         $this->customAliases = $aliases;
 
@@ -278,7 +395,7 @@ class Middleware
      */
     public function getGlobalMiddleware()
     {
-        $middleware = array_values(array_filter([
+        $middleware = $this->global ?: array_values(array_filter([
             $this->trustHosts ? \Illuminate\Http\Middleware\TrustHosts::class : null,
             \Illuminate\Http\Middleware\TrustProxies::class,
             \Illuminate\Http\Middleware\HandleCors::class,
@@ -320,11 +437,13 @@ class Middleware
             ],
 
             'api' => array_values(array_filter([
-                $this->ensureFrontendRequestsAreStateful ? \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class : null,
-                $this->apiLimiter ? \Illuminate\Routing\Middleware\ThrottleRequests::class.':'.$this->apiLimiter : null,
+                $this->statefulApi ? \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class : null,
+                $this->apiLimiter ? 'throttle:'.$this->apiLimiter : null,
                 \Illuminate\Routing\Middleware\SubstituteBindings::class,
             ])),
         ];
+
+        $middleware = array_merge($middleware, $this->groups);
 
         foreach ($middleware as $group => $groupedMiddleware) {
             foreach ($groupedMiddleware as $index => $groupMiddleware) {
@@ -356,11 +475,39 @@ class Middleware
     }
 
     /**
+     * Configure the behavior of the authentication middleware.
+     *
+     * @param  callable  $redirectTo
+     * @return $this
+     */
+    public function auth(callable $redirectTo)
+    {
+        Authenticate::redirectUsing($redirectTo);
+        AuthenticateSession::redirectUsing($redirectTo);
+        AuthenticationException::redirectUsing($redirectTo);
+
+        return $this;
+    }
+
+    /**
+     * Configure the behavior of the "guest" middleware.
+     *
+     * @param  callable  $redirectTo
+     * @return $this
+     */
+    public function guest(callable $redirectTo)
+    {
+        RedirectIfAuthenticated::redirectUsing($redirectTo);
+
+        return $this;
+    }
+
+    /**
      * Indicate that the trusted host middleware should be enabled.
      *
      * @return $this
      */
-    public function ensureHostsAreTrusted()
+    public function withTrustedHosts()
     {
         $this->trustHosts = true;
 
@@ -372,9 +519,9 @@ class Middleware
      *
      * @return $this
      */
-    public function ensureFrontendRequestsAreStateful()
+    public function withStatefulApi()
     {
-        $this->ensureFrontendRequestsAreStateful = true;
+        $this->statefulApi = true;
 
         return $this;
     }
@@ -383,11 +530,28 @@ class Middleware
      * Indicate that the API middleware group's throttling middleware should be enabled.
      *
      * @param  string  $limiter
+     * @param  bool  $redis
      * @return $this
      */
-    public function ensureApiIsThrottled($limiter = 'api')
+    public function withThrottledApi($limiter = 'api', $redis = false)
     {
         $this->apiLimiter = $limiter;
+
+        if ($redis) {
+            $this->throttleWithRedis();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Indicate that Laravel's throttling middleware should use Redis.
+     *
+     * @return $this
+     */
+    public function throttleWithRedis()
+    {
+        $this->throttleWithRedis = true;
 
         return $this;
     }
@@ -399,6 +563,31 @@ class Middleware
      */
     public function getMiddlewareAliases()
     {
-        return array_merge($this->aliases, $this->customAliases);
+        return array_merge($this->defaultAliases(), $this->customAliases);
+    }
+
+    /**
+     * Get the default middleware aliases.
+     *
+     * @return array
+     */
+    protected function defaultAliases()
+    {
+        return [
+            'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+            'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+            'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
+            'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+            'can' => \Illuminate\Auth\Middleware\Authorize::class,
+            'guest' => \Illuminate\Auth\Middleware\RedirectIfAuthenticated::class,
+            'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+            'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
+            'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+            'subscribed' => \Spark\Http\Middleware\VerifyBillableIsSubscribed::class,
+            'throttle' => $this->throttleWithRedis
+                ? \Illuminate\Routing\Middleware\ThrottleRequestsWithRedis::class
+                : \Illuminate\Routing\Middleware\ThrottleRequests::class,
+            'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        ];
     }
 }

@@ -144,7 +144,11 @@ class ApplicationBuilder
     public function withMiddleware(callable $callback)
     {
         $this->app->afterResolving(HttpKernel::class, function ($kernel) use ($callback) {
-            $callback($middleware = new Middleware);
+            $middleware = (new Middleware)
+                ->auth(redirectTo: fn () => route('login'))
+                ->guest(redirectTo: fn () => route('dashboard'));
+
+            $callback($middleware);
 
             $kernel->setGlobalMiddleware($middleware->getGlobalMiddleware());
             $kernel->setMiddlewareGroups($middleware->getMiddlewareGroups());
