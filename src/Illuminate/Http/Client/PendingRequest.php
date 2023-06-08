@@ -408,7 +408,7 @@ class PendingRequest
      */
     public function replaceHeaders(array $headers)
     {
-        $this->options['headers'] = array_merge($this->options['headers'] ?? [], $headers);
+        $this->options['headers'] = array_merge(isset($this->options['headers']) ? $this->options['headers'] : [], $headers);
 
         return $this;
     }
