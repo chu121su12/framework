@@ -356,6 +356,10 @@ class Kernel implements KernelContract
             return;
         }
 
+        $this->loadedPaths = array_values(
+            array_unique(array_merge($this->loadedPaths, $paths))
+        );
+
         $namespace = $this->app->getNamespace();
 
         foreach ((new Finder)->in($paths)->files() as $command) {
