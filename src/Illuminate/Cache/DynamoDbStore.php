@@ -544,7 +544,7 @@ class DynamoDbStore implements LockProvider, Store
      */
     public function setPrefix($prefix)
     {
-        $this->prefix = ! empty($prefix) ? $prefix.':' : '';
+        $this->prefix = $prefix;
     }
 
     /**
