@@ -47,14 +47,10 @@ class MessageSent
             ->whereInstanceOf(Swift_Attachment::class)
             ->isNotEmpty();
 
-        return $hasAttachments ? [
-            'sent' => base64_encode(backport_serialize($this->sent)),
-            'data' => base64_encode(backport_serialize($this->data)),
-            'hasAttachments' => true,
-        ] : [
+        return [
             'sent' => $this->sent,
-            'data' => $this->data,
-            'hasAttachments' => false,
+            'data' => $hasAttachments ? base64_encode(backport_serialize($this->data)) : $this->data,
+            'hasAttachments' => $hasAttachments,
         ];
     }
 
@@ -66,13 +62,11 @@ class MessageSent
      */
     public function __unserialize(array $data)
     {
-        if (isset($data['hasAttachments']) && $data['hasAttachments'] === true) {
-            $this->sent = backport_unserialize(base64_decode($data['sent']));
-            $this->data = backport_unserialize(base64_decode($data['data']));
-        } else {
-            $this->sent = $data['sent'];
-            $this->data = $data['data'];
-        }
+        $this->sent = $data['sent'];
+
+        $this->data = ((isset($data['hasAttachments']) ? $data['hasAttachments'] : false) === true)
+            ? backport_unserialize(base64_decode($data['data']))
+            : $data['data'];
     }
 
     /**

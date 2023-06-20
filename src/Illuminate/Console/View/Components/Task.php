@@ -3,6 +3,7 @@
 namespace Illuminate\Console\View\Components;
 
 use CR\LaravelBackport\SymfonyHelper;
+use Illuminate\Support\InteractsWithTime;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
@@ -10,6 +11,8 @@ use function Termwind\terminal;
 
 class Task extends Component
 {
+    use InteractsWithTime;
+
     /**
      * Renders the component using the given arguments.
      *
@@ -42,7 +45,7 @@ class Task extends Component
         //     throw $e;
         } finally {
             $runTime = $task
-                ? (' '.number_format((microtime(true) - $startTime) * 1000).'ms')
+                ? (' '.$this->runTimeForHumans($startTime))
                 : '';
 
 
