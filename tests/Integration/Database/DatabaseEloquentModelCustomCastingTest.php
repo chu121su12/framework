@@ -612,16 +612,19 @@ class DateObjectCaster implements CastsAttributes
 
 class DateTimezoneCasterWithObjectCaching implements CastsAttributes
 {
-    public function __construct(private string $timezone = 'UTC')
+    private $timezone;
+
+    public function __construct(/*private string */$timezone = 'UTC')
     {
+        $this->timezone = $timezone;
     }
 
-    public function get($model, $key, $value, $attributes)
+    public function get(Model $model, $key, $value, array $attributes)
     {
         return Carbon::parse($value, $this->timezone);
     }
 
-    public function set($model, $key, $value, $attributes)
+    public function set(Model $model, $key, $value, array $attributes)
     {
         return $value->timezone($this->timezone)->format('Y-m-d');
     }
@@ -629,5 +632,5 @@ class DateTimezoneCasterWithObjectCaching implements CastsAttributes
 
 class DateTimezoneCasterWithoutObjectCaching extends DateTimezoneCasterWithObjectCaching
 {
-    public bool $withoutObjectCaching = true;
+    public /*bool */$withoutObjectCaching = true;
 }

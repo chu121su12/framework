@@ -75,7 +75,7 @@ class TestDatabasesTest extends TestCase
         $instance = new TestDatabasesTest_switchToDatabase_class;
 
         $method = new ReflectionMethod($instance, 'switchToDatabase');
-        $method->invoke($instance, $database);
+        tap($method)->setAccessible(true)->invoke($instance, $database);
     }
 
     public static function databaseUrls()

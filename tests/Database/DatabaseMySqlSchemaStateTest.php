@@ -24,13 +24,13 @@ class DatabaseMySqlSchemaStateTest extends TestCase
 
         // test connectionString
         $method = new ReflectionMethod(get_class($schemaState), 'connectionString');
-        $connString = $method->invoke($schemaState);
+        $connString = tap($method)->setAccessible(true)->invoke($schemaState);
 
         self::assertEquals($expectedConnectionString, $connString);
 
         // test baseVariables
         $method = new ReflectionMethod(get_class($schemaState), 'baseVariables');
-        $variables = $method->invoke($schemaState, $dbConfig);
+        $variables = tap($method)->setAccessible(true)->invoke($schemaState, $dbConfig);
 
         self::assertEquals($expectedVariables, $variables);
     }

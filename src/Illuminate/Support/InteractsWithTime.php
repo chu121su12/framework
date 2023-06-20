@@ -72,12 +72,17 @@ trait InteractsWithTime
      */
     protected function runTimeForHumans($startTime, $endTime = null)
     {
-        $endTime ??= microtime(true);
+        if (! isset($endTime)) {
+            $endTime = microtime(true);
+        }
 
         $runTime = ($endTime - $startTime) * 1000;
 
         return $runTime > 1000
-            ? CarbonInterval::milliseconds($runTime)->cascade()->forHumans(short: true)
+            ? CarbonInterval::milliseconds($runTime)->cascade()->forHumans(
+                /*$syntax = */null,
+                /*short: */true
+            )
             : number_format($runTime, 2).'ms';
     }
 }

@@ -271,7 +271,7 @@ class EloquentModelEnumCastingTest extends DatabaseTestCase
         $this->assertEquals(StringStatus::done, $model2->string_status);
     }
 
-    public function testAttributeCastToAnEnumCanNotBeSetToAnotherEnum(): void
+    public function testAttributeCastToAnEnumCanNotBeSetToAnotherEnum()/*: void*/
     {
         $model = new EloquentModelEnumCastingTestModel;
 
@@ -283,7 +283,7 @@ class EloquentModelEnumCastingTest extends DatabaseTestCase
         $model->string_status = ArrayableStatus::pending;
     }
 
-    public function testAttributeCastToAnEnumCanNotBeSetToAValueNotDefinedOnTheEnum(): void
+    public function testAttributeCastToAnEnumCanNotBeSetToAValueNotDefinedOnTheEnum()/*: void*/
     {
         $model = new EloquentModelEnumCastingTestModel;
 
@@ -295,7 +295,7 @@ class EloquentModelEnumCastingTest extends DatabaseTestCase
         $model->string_status = 'unexpected_value';
     }
 
-    public function testAnAttributeWithoutACastCanBeSetToAnEnum(): void
+    public function testAnAttributeWithoutACastCanBeSetToAnEnum()/*: void*/
     {
         $model = new EloquentModelEnumCastingTestModel;
 

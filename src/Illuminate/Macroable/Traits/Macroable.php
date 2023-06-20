@@ -45,6 +45,10 @@ trait Macroable
 
         foreach ($methods as $method) {
             if ($replace || ! static::hasMacro($method->name)) {
+                if (! $method->isPublic()) {
+                    $method->setAccessible(true);
+                }
+
                 static::macro($method->name, $method->invoke($mixin));
             }
         }

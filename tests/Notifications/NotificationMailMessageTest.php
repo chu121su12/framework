@@ -23,7 +23,13 @@ class NotificationMailMessageTest_testItAttachesFilesViaAttachableContractFromDa
             }
         }
 
-
+class NotificationMailMessageTest_testItAttachesManyFiles_class implements Attachable
+        {
+            public function toMailAttachment()
+            {
+                return Attachment::fromData(function () { return 'bar'; }, 'foo.jpg')->withMime('image/png');
+            }
+        }
 
 class NotificationMailMessageTest extends TestCase
 {
@@ -324,13 +330,7 @@ class NotificationMailMessageTest extends TestCase
     public function testItAttachesManyFiles()
     {
         $mailMessage = new MailMessage();
-        $attachable = new class() implements Attachable
-        {
-            public function toMailAttachment()
-            {
-                return Attachment::fromData(fn () => 'bar', 'foo.jpg')->withMime('image/png');
-            }
-        };
+        $attachable = new NotificationMailMessageTest_testItAttachesManyFiles_class;
 
         $mailMessage->attachMany([
             $attachable,

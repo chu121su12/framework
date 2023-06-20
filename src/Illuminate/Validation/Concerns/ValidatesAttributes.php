@@ -145,7 +145,7 @@ trait ValidatesAttributes
      */
     protected function getDnsRecords($hostname, $type)
     {
-        return dns_get_record($hostname, $type);
+        return @dns_get_record($hostname, $type);
     }
 
     /**

@@ -123,10 +123,10 @@ trait DatabaseTruncation
         if (property_exists($this, 'exceptTables')) {
             $migrationsTable = $this->app['config']->get('database.migrations');
 
-            if (array_is_list($this->exceptTables ?? [])) {
+            if (array_is_list(isset($this->exceptTables) ? $this->exceptTables : [])) {
                 return array_merge(
-                    $this->exceptTables ?? [],
-                    [$migrationsTable],
+                    isset($this->exceptTables) ? $this->exceptTables : [],
+                    [$migrationsTable]
                 );
             }
 

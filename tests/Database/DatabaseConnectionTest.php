@@ -442,6 +442,7 @@ class DatabaseConnectionTest extends TestCase
     public function testRunMethodRetriesOnFailure()
     {
         $method = (new ReflectionClass(Connection::class))->getMethod('run');
+        $method->setAccessible(true);
 
         $pdo = $this->createMock(DatabaseConnectionTestMockPDO::class);
         $mock = $this->getMockConnection(['tryAgainIfCausedByLostConnection'], $pdo);
@@ -462,6 +463,7 @@ class DatabaseConnectionTest extends TestCase
         $this->expectExceptionMessage('(Connection: conn, SQL: ) (Connection: , SQL: )');
 
         $method = (new ReflectionClass(Connection::class))->getMethod('run');
+        $method->setAccessible(true);
 
         $pdo = $this->getMockBuilder(DatabaseConnectionTestMockPDO::class)->onlyMethods(['beginTransaction'])->getMock();
         $mock = $this->getMockConnection(['tryAgainIfCausedByLostConnection'], $pdo);

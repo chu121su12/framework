@@ -324,8 +324,10 @@ class ThrottleRequests
      * @param  bool  $shouldHashKeys
      * @return void
      */
-    public static function shouldHashKeys(bool $shouldHashKeys = true)
+    public static function shouldHashKeys(/*bool */$shouldHashKeys = true)
     {
+        $shouldHashKeys = backport_type_check('bool', $shouldHashKeys);
+
         self::$shouldHashKeys = $shouldHashKeys;
     }
 }

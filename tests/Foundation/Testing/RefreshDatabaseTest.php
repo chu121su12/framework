@@ -38,6 +38,8 @@ class RefreshDatabaseTest extends TestCase
             $methodName
         );
 
+        $migrateFreshUsingReflection->setAccessible(true);
+
         return $migrateFreshUsingReflection;
     }
 

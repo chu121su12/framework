@@ -63,7 +63,7 @@ class SentMessage
 
         return [
             'hasAttachments' => $hasAttachments,
-            'sentMessage' => $hasAttachments ? base64_encode(serialize($this->sentMessage)) : $this->sentMessage,
+            'sentMessage' => $hasAttachments ? base64_encode(backport_serialize($this->sentMessage)) : $this->sentMessage,
         ];
     }
 
@@ -75,8 +75,8 @@ class SentMessage
      */
     public function __unserialize(array $data)
     {
-        $hasAttachments = ($data['hasAttachments'] ?? false) === true;
+        $hasAttachments = (isset($data['hasAttachments']) ? $data['hasAttachments'] : false) === true;
 
-        $this->sentMessage = $hasAttachments ? unserialize(base64_decode($data['sentMessage'])) : $data['sentMessage'];
+        $this->sentMessage = $hasAttachments ? backport_unserialize(base64_decode($data['sentMessage'])) : $data['sentMessage'];
     }
 }

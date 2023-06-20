@@ -31,6 +31,7 @@ class MailableAlternativeSyntaxTest extends TestCase
 
         $reflection = new ReflectionClass($mailable);
         $method = $reflection->getMethod('prepareMailableForDelivery');
+        $method->setAccessible(true);
         $method->invoke($mailable);
 
         $this->assertEquals('test-view', $mailable->view);

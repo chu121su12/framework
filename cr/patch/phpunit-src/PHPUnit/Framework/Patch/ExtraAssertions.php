@@ -6,6 +6,8 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit_Framework_Constraint;
 use PHPUnit_Framework_ExpectationFailedException;
+use SebastianBergmann\Comparator\ComparisonFailure;
+use SebastianBergmann\Comparator\Factory as ComparatorFactory;
 
 trait ExtraAssertions
 {
@@ -34,5 +36,34 @@ trait ExtraAssertions
             preg_replace('/\r\n/', "\n", trim($actual)),
             $message
         );
+    }
+
+    public static function assertEqualsCanonicalizing($expected, $actual, $message = '')
+    {
+        try {
+            if ($expected === $actual) {
+                return;
+            }
+
+            $comparatorFactory = ComparatorFactory::getInstance();
+
+            $comparator = $comparatorFactory->getComparatorFor(
+                $expected,
+                $actual
+            );
+
+            $comparator->assertEquals(
+                $expected,
+                $actual,
+                0.0,
+                true,
+                false
+            );
+        } catch (ComparisonFailure $f) {
+            throw new ExpectationFailedException(
+                \trim($message . "\n" . $f->getMessage()),
+                $f
+            );
+        }
     }
 }

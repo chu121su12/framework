@@ -78,6 +78,7 @@ class JobDispatchingTest extends TestCase
     {
         // get initial terminatingCallbacks
         $terminatingCallbacksReflectionProperty = (new \ReflectionObject($this->app))->getProperty('terminatingCallbacks');
+        $terminatingCallbacksReflectionProperty->setAccessible(true);
         $startTerminatingCallbacks = $terminatingCallbacksReflectionProperty->getValue($this->app);
 
         UniqueJob::dispatchAfterResponse('test');

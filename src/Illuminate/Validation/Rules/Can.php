@@ -46,7 +46,7 @@ class Can implements Rule
 
         $model = array_shift($arguments);
 
-        return Gate::allows($this->ability, array_filter([$model, ...$arguments, $value]));
+        return Gate::allows($this->ability, array_filter(\array_merge([$model], $arguments, [$value])));
     }
 
     /**

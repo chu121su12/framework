@@ -85,6 +85,10 @@ trait SerializesModels
                 continue;
             }
 
+            if (! $property->isPublic()) {
+                $property->setAccessible(true);
+            }
+
             $property->setValue(
                 $this, $this->getRestoredPropertyValue($values[$name])
             );
@@ -99,6 +103,10 @@ trait SerializesModels
      */
     protected function getPropertyValue(ReflectionProperty $property)
     {
+        if (! $property->isPublic()) {
+            $property->setAccessible(true);
+        }
+
         return $property->getValue($this);
     }
 }

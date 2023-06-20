@@ -124,6 +124,7 @@ EOF;
 
         $reflection = new ReflectionClass($dumper);
         $method = $reflection->getMethod('isCompiledViewFile');
+        $method->setAccessible(true);
         $isCompiledViewFile = $method->invoke($dumper, $file);
 
         $this->assertFalse($isCompiledViewFile);
@@ -142,6 +143,7 @@ EOF;
 
         $reflection = new ReflectionClass($dumper);
         $method = $reflection->getMethod('isCompiledViewFile');
+        $method->setAccessible(true);
         $isCompiledViewFile = $method->invoke($dumper, $file);
 
         $this->assertTrue($isCompiledViewFile);
@@ -161,6 +163,7 @@ EOF;
 
         $reflection = new ReflectionClass($dumper);
         $method = $reflection->getMethod('getOriginalFileForCompiledView');
+        $method->setAccessible(true);
 
         $this->assertSame($original, $method->invoke($dumper, $compiled));
     }
@@ -179,6 +182,7 @@ EOF;
 
         $reflection = new ReflectionClass($dumper);
         $method = $reflection->getMethod('getOriginalFileForCompiledView');
+        $method->setAccessible(true);
 
         $this->assertSame($original, $method->invoke($dumper, $compiled));
     }

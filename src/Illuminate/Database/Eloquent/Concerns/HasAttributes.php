@@ -817,7 +817,7 @@ trait HasAttributes
     {
         $caster = $this->resolveCasterClass($key);
 
-        $objectCachingDisabled = $caster->withoutObjectCaching ?? false;
+        $objectCachingDisabled = isset($caster->withoutObjectCaching) ? $caster->withoutObjectCaching : false;
 
         if (isset($this->classCastCache[$key]) && ! $objectCachingDisabled) {
             return $this->classCastCache[$key];
@@ -1162,7 +1162,7 @@ trait HasAttributes
 
         if ($caster instanceof CastsInboundAttributes ||
             ! is_object($value) ||
-            ($caster->withoutObjectCaching ?? false)) {
+            (isset($caster->withoutObjectCaching) ? $caster->withoutObjectCaching : false)) {
             unset($this->classCastCache[$key]);
         } else {
             $this->classCastCache[$key] = $value;
@@ -2291,6 +2291,10 @@ trait HasAttributes
 
             if ($returnType instanceof ReflectionNamedType &&
                 $returnType->getName() === Attribute::class) {
+                if (! $method->isPublic()) {
+                    $method->setAccessible(true);
+                }
+
                 if (is_callable($method->invoke($instance)->get)) {
                     return true;
                 }

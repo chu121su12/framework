@@ -1112,7 +1112,9 @@ class AuthAccessGateTest extends TestCase
 
     public function testCanSetDenialResponseInConstructor()
     {
-        $gate = new Gate(container: new Container, userResolver: function () {
+        $gate = new Gate(
+            /*container: */new Container,
+            /*userResolver: */function () {
             //
         });
 
@@ -1133,7 +1135,9 @@ class AuthAccessGateTest extends TestCase
 
     public function testCanSetDenialResponse()
     {
-        $gate = new Gate(container: new Container, userResolver: function () {
+        $gate = new Gate(
+            /*container: */new Container,
+            /*userResolver: */function () {
             //
         });
 

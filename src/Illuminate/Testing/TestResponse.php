@@ -1657,6 +1657,10 @@ EOF;
     {
         $property = new ReflectionProperty($exception, 'message');
 
+        if (! $property->isPublic()) {
+            $property->setAccessible(true);
+        }
+
         $property->setValue(
             $exception,
             $exception->getMessage().PHP_EOL.PHP_EOL.$message.PHP_EOL

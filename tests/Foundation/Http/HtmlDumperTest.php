@@ -122,6 +122,7 @@ class HtmlDumperTest extends TestCase
 
         $reflection = new ReflectionClass($dumper);
         $method = $reflection->getMethod('isCompiledViewFile');
+        $method->setAccessible(true);
         $isCompiledViewFile = $method->invoke($dumper, $file);
 
         $this->assertFalse($isCompiledViewFile);
@@ -138,6 +139,7 @@ class HtmlDumperTest extends TestCase
 
         $reflection = new ReflectionClass($dumper);
         $method = $reflection->getMethod('isCompiledViewFile');
+        $method->setAccessible(true);
         $isCompiledViewFile = $method->invoke($dumper, $file);
 
         $this->assertTrue($isCompiledViewFile);
@@ -155,6 +157,7 @@ class HtmlDumperTest extends TestCase
 
         $reflection = new ReflectionClass($dumper);
         $method = $reflection->getMethod('getOriginalFileForCompiledView');
+        $method->setAccessible(true);
 
         $this->assertSame($original, $method->invoke($dumper, $compiled));
     }
@@ -171,6 +174,7 @@ class HtmlDumperTest extends TestCase
 
         $reflection = new ReflectionClass($dumper);
         $method = $reflection->getMethod('getOriginalFileForCompiledView');
+        $method->setAccessible(true);
 
         $this->assertSame($original, $method->invoke($dumper, $compiled));
     }

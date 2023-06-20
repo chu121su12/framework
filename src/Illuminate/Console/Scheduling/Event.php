@@ -626,15 +626,19 @@ class Event
      */
     protected function getHttpClient(Container $container)
     {
-        return match (true) {
-            $container->bound(HttpClientInterface::class) => $container->make(HttpClientInterface::class),
-            $container->bound(HttpClient::class) => $container->make(HttpClient::class),
-            default => new HttpClient([
+        switch (true) {
+            case $container->bound(HttpClientInterface::class):
+                return $container->make(HttpClientInterface::class);
+
+            case $container->bound(HttpClient::class):
+                return $container->make(HttpClient::class);
+
+            default: return new HttpClient([
                 'connect_timeout' => 10,
                 'crypto_method' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
                 'timeout' => 30,
-            ]),
-        };
+            ]);
+        }
     }
 
     /**

@@ -6,6 +6,7 @@ use Illuminate\Console\OutputStyle;
 use Illuminate\Console\QuestionHelper;
 use ReflectionClass;
 use Symfony\Component\Console\Helper\SymfonyQuestionHelper;
+use Symfony\Component\Console\Output\BackportOutputWrapper;
 
 use function Termwind\render;
 use function Termwind\renderUsing;
@@ -34,6 +35,7 @@ abstract class Component
      */
     public function __construct($output)
     {
+        // $this->output = BackportOutputWrapper::wrap($output);
         $this->output = $output;
     }
 

@@ -20,7 +20,7 @@ class ValidationRuleCanTest extends TestCase
     protected $user;
     protected $router;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -45,7 +45,7 @@ class ValidationRuleCanTest extends TestCase
         (new ValidationServiceProvider($this->container))->register();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         Container::setInstance(null);
 

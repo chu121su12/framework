@@ -14,7 +14,7 @@ use Orchestra\Testbench\TestCase;
 
 class SentMessageMailTest extends TestCase
 {
-    public function setUp(): void
+    public function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -60,12 +60,12 @@ class SentMessageUser extends Model
 
 class SentMessageMailNotification extends Notification
 {
-    public function via(): array
+    public function via()/*: array*/
     {
         return ['mail'];
     }
 
-    public function toMail(object $notifiable): MailMessage
+    public function toMail(/*object */$notifiable)/*: MailMessage*/
     {
         return (new MailMessage)
             ->line('Example notification with attachment.')

@@ -342,6 +342,7 @@ class SupportStrTest extends TestCase
     {
         $reflection = new ReflectionClass(Str::class);
         $property = $reflection->getProperty('snakeCache');
+        $property->setAccessible(true);
 
         Str::flushCache();
         $this->assertEmpty($property->getValue());

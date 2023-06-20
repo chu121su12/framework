@@ -1987,6 +1987,10 @@ class Builder implements BuilderContract
 
         foreach ($methods as $method) {
             if ($replace || ! static::hasGlobalMacro($method->name)) {
+                if (! $method->isPublic()) {
+                    $method->setAccessible(true);
+                }
+
                 static::macro($method->name, $method->invoke($mixin));
             }
         }

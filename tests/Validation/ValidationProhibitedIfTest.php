@@ -37,7 +37,7 @@ class ValidationProhibitedIfTest extends TestCase
     {
         new ProhibitedIf(false);
         new ProhibitedIf(true);
-        new ProhibitedIf(fn () => true);
+        new ProhibitedIf(function () { return true; });
 
         foreach ([1, 1.1, 'phpinfo', new stdClass] as $condition) {
             try {

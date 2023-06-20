@@ -86,12 +86,20 @@ class BackportOutputWrapper implements OutputInterface
 
     public function write($messages, $newline = false, $options = self::OUTPUT_NORMAL)
     {
-        $messages = (array) $messages;
-
-        foreach ($messages as $key => $message) {
-            $messages[$key] = SymfonyHelper::consoleOutputMessage($message, false);
+        if (\is_array($messages)) {
+            foreach ($messages as $key => $message) {
+                $messages[$key] = SymfonyHelper::consoleOutputMessage($message, false);
+            }
+        }
+        else {
+            $messages = SymfonyHelper::consoleOutputMessage($messages, false);
         }
 
         $this->implementation->write($messages, $newline, $options);
+    }
+
+    public function __call($method, $parameters)
+    {
+        return $this->implementation->{$method}(...$parameters);
     }
 }

@@ -267,9 +267,11 @@ class ValidationForEachTest extends TestCase
                 ],
             ],
             [
-                'foo.*' => Rule::forEach(fn (mixed $value, string $attribute) => [
-                    'bar' => Rule::when(true, ['accepted'], ['declined']),
-                ]),
+                'foo.*' => Rule::forEach_(function (/*mixed */$value, /*string */$attribute) {
+                    return [
+                        'bar' => Rule::when(true, ['accepted'], ['declined']),
+                    ];
+                }),
             ]
         );
 
@@ -289,9 +291,11 @@ class ValidationForEachTest extends TestCase
                 ],
             ],
             [
-                'foo.*.bar' => Rule::forEach(fn (mixed $value, string $attribute) => [
-                    Rule::when(true, ['accepted'], ['declined']),
-                ]),
+                'foo.*.bar' => Rule::forEach_(function (/*mixed */$value, /*string */$attribute) {
+                    return [
+                        Rule::when(true, ['accepted'], ['declined']),
+                    ];
+                }),
             ]);
 
         $this->assertEquals([
@@ -310,8 +314,9 @@ class ValidationForEachTest extends TestCase
                 ],
             ],
             [
-                'foo.*.bar' => Rule::forEach(fn (mixed $value, string $attribute) => Rule::when(true, ['accepted'], ['declined']),
-                ),
+                'foo.*.bar' => Rule::forEach_(function (/*mixed */$value, /*string */$attribute) {
+                    return Rule::when(true, ['accepted'], ['declined']);
+                }),
             ]);
 
         $this->assertEquals([

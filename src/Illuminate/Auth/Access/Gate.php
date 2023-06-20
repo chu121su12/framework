@@ -413,7 +413,7 @@ class Gate implements GateContract
 
             return $result
                 ? Response::allow()
-                : ($this->defaultDenialResponse ?? Response::deny());
+                : (isset($this->defaultDenialResponse) ? $this->defaultDenialResponse : Response::deny());
         } catch (AuthorizationException $e) {
             return $e->toResponse();
         }
