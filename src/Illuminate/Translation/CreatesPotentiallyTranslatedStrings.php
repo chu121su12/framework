@@ -2,22 +2,7 @@
 
 namespace Illuminate\Translation;
 
-trait CreatesPotentiallyTranslatedStrings
-{
-    /**
-     * Create a pending potentially translated string.
-     *
-     * @param  string  $attribute
-     * @param  string|null  $message
-     * @return \Illuminate\Translation\PotentiallyTranslatedString
-     */
-    protected function pendingPotentiallyTranslatedString($attribute, $message)
-    {
-        $destructor = $message === null
-            ? fn ($message) => $this->messages[] = $message
-            : fn ($message) => $this->messages[$attribute] = $message;
-
-        return new class($message ?? $attribute, $this->validator->getTranslator(), $destructor) extends PotentiallyTranslatedString
+class CreatesPotentiallyTranslatedStrings_pendingPotentiallyTranslatedString_class extends PotentiallyTranslatedString
         {
             /**
              * The callback to call when the object destructs.
@@ -47,8 +32,29 @@ trait CreatesPotentiallyTranslatedStrings
              */
             public function __destruct()
             {
-                ($this->destructor)($this->toString());
+                $destructor = $this->destructor;
+
+                $destructor($this->toString());
             }
-        };
+        }
+
+trait CreatesPotentiallyTranslatedStrings
+{
+    /**
+     * Create a pending potentially translated string.
+     *
+     * @param  string  $attribute
+     * @param  string|null  $message
+     * @return \Illuminate\Translation\PotentiallyTranslatedString
+     */
+    protected function pendingPotentiallyTranslatedString($attribute, $message)
+    {
+        $destructor = $message === null
+            ? function ($message) { return $this->messages[] = $message; }
+            : function ($message) use ($attribute) { return $this->messages[$attribute] = $message; };
+
+        return new CreatesPotentiallyTranslatedStrings_pendingPotentiallyTranslatedString_class(
+            isset($message) ? $message : $attribute, $this->validator->getTranslator(), $destructor
+        );
     }
 }
