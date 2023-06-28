@@ -386,7 +386,9 @@ class PendingProcess
                 0,
                 /*output: */$result
             ))->withCommand($command);
-        } elseif ($result instanceof ProcessResult) {
+        }
+
+        if ($result instanceof ProcessResult) {
             return $result;
         } elseif ($result instanceof FakeProcessResult) {
             return $result->withCommand($command);
