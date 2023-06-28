@@ -105,10 +105,17 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
 
         $line = $this->get($key, [], $locale, $fallback);
 
+        $loadedLine = isset($this->loaded['*'])
+                && isset($this->loaded['*']['*'])
+                && isset($this->loaded['*']['*'][$locale])
+                && isset($this->loaded['*']['*'][$locale][$key])
+                    ? $this->loaded['*']['*'][$locale][$key]
+                    : null;
+
         // For JSON translations, the loaded files will contain the correct line.
         // Otherwise, we must assume we are handling typical translation file
         // and check if the returned line is not the same as the given key.
-        if (! is_null($this->loaded['*']['*'][$locale][$key] ?? null)) {
+        if (! is_null($loadedLine)) {
             return true;
         }
 

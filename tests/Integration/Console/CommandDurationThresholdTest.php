@@ -184,7 +184,7 @@ class CommandDurationThresholdTest extends TestCase
         Config::set('app.timezone', 'UTC');
         $startedAt = null;
         $kernel = $this->app[Kernel::class];
-        $kernel->command('foo', fn () => null);
+        $kernel->command('foo', function () { return null; });
         $kernel->whenCommandLifecycleIsLongerThan(0, function ($started) use (&$startedAt) {
             $startedAt = $started;
         });

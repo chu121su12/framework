@@ -302,8 +302,10 @@ class Handler implements ExceptionHandlerContract
      *
      * @throws \Throwable
      */
-    protected function reportThrowable(Throwable $e): void
+    protected function reportThrowable(/*Throwable */$e)/*: void*/
     {
+        backport_type_throwable($e);
+
         if (Reflector::isCallable($reportCallable = [$e, 'report']) &&
             $this->container->call($reportCallable) !== false) {
             return;

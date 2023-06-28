@@ -76,7 +76,7 @@ class RequestDurationThresholdTest extends TestCase
     public function testUsesTheConfiguredDateTimezone()
     {
         Config::set('app.timezone', 'UTC');
-        Route::get('test-route', fn () => 'ok');
+        Route::get('test-route', function () { return 'ok'; });
         $kernel = $this->app[Kernel::class];
         $startedAt = null;
         $kernel->whenRequestLifecycleIsLongerThan(CarbonInterval::seconds(1), function ($started) use (&$startedAt) {

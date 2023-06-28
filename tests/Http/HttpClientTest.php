@@ -2469,7 +2469,9 @@ class HttpClientTest extends TestCase
 
             Carbon::setTestNow(now()->addSeconds(6 * count($requests)));
 
-            return $this->factory::response('expected content');
+            $factory = $this->factory;
+
+            return $factory::response('expected content');
         });
 
         $this->factory->globalMiddleware(Middleware::mapRequest(function ($request) {
