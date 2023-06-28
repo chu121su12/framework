@@ -51,8 +51,10 @@ class ApplicationBuilder
      * @param  bool  $withBootstrapProviders
      * @return $this
      */
-    public function withProviders(array $providers = [], bool $withBootstrapProviders = true)
+    public function withProviders(array $providers = [], /*bool */$withBootstrapProviders = true)
     {
+        $withBootstrapProviders = backport_type_check('bool', $withBootstrapProviders);
+
         RegisterProviders::merge(
             $providers,
             $withBootstrapProviders

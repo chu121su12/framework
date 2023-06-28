@@ -454,7 +454,7 @@ abstract class ServiceProvider
      */
     public static function addProviderToBootstrapFile(/*string */$provider, /*?string */$path = null)
     {
-        $path ??= app()->getBootstrapProvidersPath();
+        $path = isset($path) ? $path : app()->getBootstrapProvidersPath();
 
         if (! file_exists($path)) {
             return false;
@@ -465,7 +465,7 @@ abstract class ServiceProvider
             ->unique()
             ->sort()
             ->values()
-            ->map(fn ($p) => '    '.$p.'::class,')
+            ->map(function ($p) { return '    '.$p.'::class,'; })
             ->implode(PHP_EOL);
 
         $content = '<?php
