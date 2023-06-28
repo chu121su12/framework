@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Bootstrap\RegisterProviders;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as AppEventServiceProvider;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as AppRouteServiceProvider;
 use Illuminate\Support\Facades\Broadcast;
@@ -38,6 +39,25 @@ class ApplicationBuilder
         $this->app->singleton(
             \Illuminate\Contracts\Console\Kernel::class,
             \Illuminate\Foundation\Console\Kernel::class
+        );
+
+        return $this;
+    }
+
+    /**
+     * Register additional service providers.
+     *
+     * @param  array  $providers
+     * @param  bool  $withBootstrapProviders
+     * @return $this
+     */
+    public function withProviders(array $providers = [], bool $withBootstrapProviders = true)
+    {
+        RegisterProviders::merge(
+            $providers,
+            $withBootstrapProviders
+                ? $this->app->getBootstrapProvidersPath()
+                : null
         );
 
         return $this;
@@ -104,11 +124,11 @@ class ApplicationBuilder
 
         if (is_null($using) && (is_string($web) || is_string($api))) {
             $using = function () use ($web, $api, $apiPrefix, $then) {
-                if (is_string($api)) {
+                if (is_string($api) && realpath($api) !== false) {
                     Route::middleware('api')->prefix($apiPrefix)->group($api);
                 }
 
-                if (is_string($web)) {
+                if (is_string($web) && realpath($web) !== false) {
                     Route::middleware('web')->group($web);
                 }
 
@@ -124,11 +144,11 @@ class ApplicationBuilder
             $this->app->register(AppRouteServiceProvider::class);
         });
 
-        if (! is_null($commands)) {
+        if (is_string($commands) && realpath($commands) !== false) {
             $this->withCommands([$commands]);
         }
 
-        if (! is_null($channels)) {
+        if (is_string($channels) && realpath($channels) !== false) {
             $this->withBroadcasting($channels);
         }
 
@@ -230,7 +250,7 @@ class ApplicationBuilder
      */
     public function withBindings(array $bindings)
     {
-        return $this->booting(function ($app) use ($bindings) {
+        return $this->registered(function ($app) use ($bindings) {
             foreach ($bindings as $abstract => $concrete) {
                 $app->bind($abstract, $concrete);
             }
@@ -245,7 +265,7 @@ class ApplicationBuilder
      */
     public function withSingletons(array $singletons)
     {
-        return $this->booting(function ($app) use ($singletons) {
+        return $this->registered(function ($app) use ($singletons) {
             foreach ($singletons as $abstract => $concrete) {
                 if (is_string($abstract)) {
                     $app->singleton($abstract, $concrete);

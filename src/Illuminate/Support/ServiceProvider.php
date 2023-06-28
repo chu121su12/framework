@@ -446,57 +446,36 @@ abstract class ServiceProvider
     }
 
     /**
-     * Add the given service provider to the application's configuration file.
+     * Add the given provider to the application's provider bootstrap file.
+     *
+     * @param  string  $provider
+     * @param  string  $path
+     * @return bool
      */
-    public static function addToConfiguration(/*string */$provider, /*?string */$path = null)/*: bool*/
+    public static function addProviderToBootstrapFile(/*string */$provider, /*?string */$path = null)
     {
-        $provider = backport_type_check('string', $provider);
-        $path = backport_type_check('?string', $path);
+        $path ??= app()->getBootstrapProvidersPath();
 
-        $path = $path ?: config_path('app.php');
-
-        if (! Str::contains($appConfig = file_get_contents($path), '// Added Service Providers (Do not remove this line)...')) {
+        if (! file_exists($path)) {
             return false;
         }
 
-        if (! Str::contains($appConfig, $provider.'::class')) {
-            file_put_contents($path, str_replace(
-                '// Added Service Providers (Do not remove this line)...',
-                '// Added Service Providers (Do not remove this line)...'.PHP_EOL.'        '.$provider.'::class,',
-                $appConfig
-            ));
+        $providers = collect(require $path)
+            ->merge([$provider])
+            ->unique()
+            ->sort()
+            ->values()
+            ->map(fn ($p) => '    '.$p.'::class,')
+            ->implode(PHP_EOL);
 
-            return true;
-        }
+        $content = '<?php
 
-        return false;
-    }
+return [
+'.$providers.'
+];';
 
-    /**
-     * Add the given service provider to the application's configuration file after another provider.
-     */
-    public static function addToConfigurationAfter(/*string */$after, /*string */$provider, /*?string */$path = null)/*: bool*/
-    {
-        $after = backport_type_check('string', $after);
-        $provider = backport_type_check('string', $provider);
-        $path = backport_type_check('?string', $path);
+        file_put_contents($path, $content);
 
-        $path = $path ?: config_path('app.php');
-
-        if (! Str::contains($appConfig = file_get_contents($path), $after.'::class')) {
-            return false;
-        }
-
-        if (! Str::contains($appConfig, $provider.'::class')) {
-            file_put_contents($path, str_replace(
-                $after.'::class,',
-                $after.'::class,'.PHP_EOL.'        '.$provider.'::class,',
-                $appConfig
-            ));
-
-            return true;
-        }
-
-        return false;
+        return true;
     }
 }
