@@ -15,12 +15,14 @@ use Laravel\Folio\Folio;
 
 class ApplicationBuilder
 {
+    protected $app;
+
     /**
      * The Folio / page middleware that have been defined by the user.
      *
      * @var array
      */
-    protected array $pageMiddleware = [];
+    protected /*array */$pageMiddleware = [];
 
     /**
      * Create a new application builder instance.
@@ -179,23 +181,6 @@ class ApplicationBuilder
         $apiPrefix = backport_type_check('string', $apiPrefix);
         $then = backport_type_check('?callable', $then);
 
-        if (is_null($using) && (is_string($web) || is_string($api))) {
-            $using = function () use ($web, $api, $apiPrefix, $then) {
-                if (is_string($api) && realpath($api) !== false) {
-                    Route::middleware('api')->prefix($apiPrefix)->group($api);
-                }
-
-                if (is_string($web) && realpath($web) !== false) {
-                    Route::middleware('web')->group($web);
-                }
-
-                if (is_callable($then)) {
-                    $then();
-                }
-            };
-        }
-
-
         return function () use ($web, $api, $pages, $apiPrefix, $then) {
             if (is_string($api) && realpath($api) !== false) {
                 Route::middleware('api')->prefix($apiPrefix)->group($api);
@@ -208,7 +193,7 @@ class ApplicationBuilder
             if (is_string($pages) &&
                 realpath($pages) !== false &&
                 class_exists(Folio::class)) {
-                Folio::route($pages, middleware: $this->pageMiddleware);
+                Folio::route($pages, /*middleware: */$this->pageMiddleware);
             }
 
             if (is_callable($then)) {

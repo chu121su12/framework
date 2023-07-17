@@ -43,7 +43,7 @@ class BroadcastingInstallCommand extends Command
             (new Filesystem)->replaceInFile(
                 '// channels: ',
                 'channels: ',
-                $this->laravel->bootstrapPath('app.php'),
+                $this->laravel->bootstrapPath('app.php')
             );
         }
 

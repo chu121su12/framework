@@ -47,7 +47,7 @@ class ApiInstallCommand extends Command
             (new Filesystem)->replaceInFile(
                 '// api: ',
                 'api: ',
-                $this->laravel->bootstrapPath('app.php'),
+                $this->laravel->bootstrapPath('app.php')
             );
         }
 
