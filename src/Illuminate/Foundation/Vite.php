@@ -683,7 +683,7 @@ HTML;
      * @param  string  $buildDirectory
      * @return array
      *
-     * @throws \Exception
+     * @throws \Illuminate\Foundation\ViteManifestNotFoundException
      */
     protected function manifest($buildDirectory)
     {
@@ -691,7 +691,7 @@ HTML;
 
         if (! isset(static::$manifests[$path])) {
             if (! is_file($path)) {
-                throw new Exception("Vite manifest not found at: {$path}");
+                throw new ViteManifestNotFoundException("Vite manifest not found at: $path");
             }
 
             static::$manifests[$path] = json_decode(file_get_contents($path), true);

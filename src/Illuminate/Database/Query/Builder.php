@@ -2646,6 +2646,18 @@ class Builder implements BuilderContract
     }
 
     /**
+     * Get the raw SQL representation of the query with embedded bindings.
+     *
+     * @return string
+     */
+    public function toRawSql()
+    {
+        return $this->grammar->substituteBindingsIntoRawSql(
+            $this->toSql(), $this->connection->prepareBindings($this->getBindings())
+        );
+    }
+
+    /**
      * Execute a query for a single record by ID.
      *
      * @param  int|string  $id
@@ -3924,6 +3936,38 @@ class Builder implements BuilderContract
         );
 
         return $this;
+    }
+
+    /**
+     * Dump the raw current SQL with embedded bindings.
+     *
+     * @return $this
+     */
+    public function dumpRawSql()
+    {
+        dump($this->toRawSql());
+
+        return $this;
+    }
+
+    /**
+     * Die and dump the current SQL and bindings.
+     *
+     * @return never
+     */
+    public function dd()
+    {
+        dd($this->toSql(), $this->getBindings());
+    }
+
+    /**
+     * Die and dump the current SQL with embedded bindings.
+     *
+     * @return never
+     */
+    public function ddRawSql()
+    {
+        dd($this->toRawSql());
     }
 
     /**

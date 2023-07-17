@@ -10,8 +10,9 @@ use Illuminate\Support\Traits\Dumpable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
 use JsonSerializable;
+use Stringable as BaseStringable;
 
-class Stringable implements JsonSerializable, ArrayAccess
+class Stringable implements JsonSerializable, ArrayAccess, BaseStringable
 {
     use Conditionable, Dumpable, Macroable, Tappable;
 
@@ -330,6 +331,16 @@ class Stringable implements JsonSerializable, ArrayAccess
     public function isJson()
     {
         return Str::isJson($this->value);
+    }
+
+    /**
+     * Determine if a given value is a valid URL.
+     *
+     * @return bool
+     */
+    public function isUrl()
+    {
+        return Str::isUrl($this->value);
     }
 
     /**

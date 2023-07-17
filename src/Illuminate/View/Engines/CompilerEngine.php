@@ -3,8 +3,10 @@
 namespace Illuminate\View\Engines;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\View\Compilers\CompilerInterface;
 use Illuminate\View\ViewException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class CompilerEngine extends PhpEngine
@@ -100,7 +102,9 @@ class CompilerEngine extends PhpEngine
      */
     protected function handleViewException(/*Throwable */$e, $obLevel)
     {
-        backport_type_throwable($e);
+        if ($e instanceof HttpException || $e instanceof HttpResponseException) {
+            parent::handleViewException($e, $obLevel);
+        }
 
         $e = new ViewException($this->getMessage($e), 0, 1, $e->getFile(), $e->getLine(), $e);
 

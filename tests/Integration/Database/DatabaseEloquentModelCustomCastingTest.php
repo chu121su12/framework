@@ -198,6 +198,14 @@ class DatabaseEloquentModelCustomCastingTest extends DatabaseTestCase
         $model->decrement('price', '333.333');
 
         $this->assertSame((new Decimal('320.988'))->getValue(), $model->price->getValue());
+
+        $model->increment('price', new Decimal('100.001'));
+
+        $this->assertSame((new Decimal('420.989'))->getValue(), $model->price->getValue());
+
+        $model->decrement('price', new Decimal('200.002'));
+
+        $this->assertSame((new Decimal('220.987'))->getValue(), $model->price->getValue());
     }
 
     public function testSerializableCasts()
@@ -462,12 +470,12 @@ class DecimalCaster implements CastsAttributes, DeviatesCastableAttributes, Seri
 
     public function increment($model, $key, $value, array $attributes)
     {
-        return new Decimal($attributes[$key] + $value);
+        return new Decimal($attributes[$key] + ($value instanceof Decimal ? (string) $value : $value));
     }
 
     public function decrement($model, $key, $value, array $attributes)
     {
-        return new Decimal($attributes[$key] - $value);
+        return new Decimal($attributes[$key] - ($value instanceof Decimal ? (string) $value : $value));
     }
 
     public function serialize(Model $model, $key, $value, array $attributes)

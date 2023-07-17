@@ -86,4 +86,15 @@ class AsEnumArrayObject implements Castable
     {
         return new AsEnumArrayObject_castUsing_class($arguments);
     }
+
+    /**
+     * Specify the Enum for the cast.
+     *
+     * @param  class-string  $class
+     * @return string
+     */
+    public static function of($class)
+    {
+        return static::class.':'.$class;
+    }
 }

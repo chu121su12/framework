@@ -4,9 +4,14 @@ namespace Illuminate\Mail\Transport;
 
 use Illuminate\Mail\SentMessage;
 use Illuminate\Support\Collection;
+use Stringable;
 use Swift_Mime_Message as RawMessage;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\Transport\TransportInterface;
+use Symfony\Component\Mime\RawMessage;
 
-class ArrayTransport extends Transport
+class ArrayTransport implements Stringable, TransportInterface
 {
     /**
      * The collection of Symfony Messages.

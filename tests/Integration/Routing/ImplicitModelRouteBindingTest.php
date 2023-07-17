@@ -109,6 +109,8 @@ PHP;
             'id' => $user->id,
             'name' => $user->name,
         ]);
+
+        $this->assertTrue($user->is($response->baseRequest->route('user')));
     }
 
     public function testSoftDeletedModelsAreNotRetrieved()
@@ -146,6 +148,8 @@ PHP;
             'id' => $user->id,
             'name' => $user->name,
         ]);
+
+        $this->assertTrue($user->is($response->baseRequest->route('user')));
     }
 
     public function testEnforceScopingImplicitRouteBindings()

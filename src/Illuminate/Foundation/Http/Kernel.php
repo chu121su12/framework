@@ -219,6 +219,10 @@ class Kernel implements KernelContract
 
         $this->app->terminate();
 
+        if ($this->requestStartedAt === null) {
+            return;
+        }
+
         $appTimezone = $this->app['config']->get('app.timezone');
 
         $this->requestStartedAt->setTimezone(isset($appTimezone) ? $appTimezone : 'UTC');

@@ -4,10 +4,15 @@ namespace Illuminate\Mail\Transport;
 
 use Illuminate\Mail\SentMessage;
 use Psr\Log\LoggerInterface;
+use Stringable;
 use Swift_Mime_Message as RawMessage;
 use Swift_Mime_SimpleMimeEntity;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\Transport\TransportInterface;
+// use Symfony\Component\Mime\RawMessage;
 
-class LogTransport extends Transport
+class LogTransport implements Stringable, TransportInterface
 {
     /**
      * The Logger instance.

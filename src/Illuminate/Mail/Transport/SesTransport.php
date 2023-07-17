@@ -6,8 +6,16 @@ use Aws\SesV2\SesV2Client;
 use Illuminate\Mail\SentMessage;
 use Swift_Mime_SimpleMessage as SwiftMimeSimpleMessage;
 use Swift_Mime_Message as Swift_Mime_SimpleMessage;
+use Aws\Exception\AwsException;
+use Aws\Ses\SesClient;
+use Exception;
+use Stringable;
+use Symfony\Component\Mailer\Header\MetadataHeader;
+// use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\Transport\AbstractTransport;
+use Symfony\Component\Mime\Message;
 
-class SesTransport extends Transport
+class SesTransport extends AbstractTransport implements Stringable
 {
     /**
      * The Amazon SES instance.

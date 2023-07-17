@@ -82,4 +82,15 @@ class AsEnumCollection implements Castable
     {
         return new AsEnumCollection_castUsing_class($arguments);
     }
+
+    /**
+     * Specify the Enum for the cast.
+     *
+     * @param  class-string  $class
+     * @return string
+     */
+    public static function of($class)
+    {
+        return static::class.':'.$class;
+    }
 }

@@ -52,4 +52,15 @@ class AsCollection implements Castable
     {
         return new AsCollection_castUsing_class($arguments);
     }
+
+    /**
+     * Specify the collection for the cast.
+     *
+     * @param  class-string  $class
+     * @return string
+     */
+    public static function using($class)
+    {
+        return static::class.':'.$class;
+    }
 }
