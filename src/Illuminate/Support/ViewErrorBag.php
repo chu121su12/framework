@@ -4,12 +4,12 @@ namespace Illuminate\Support;
 
 use Countable;
 use Illuminate\Contracts\Support\MessageBag as MessageBagContract;
-use Stringable;
+use Stringable as BaseStringable;
 
 /**
  * @mixin \Illuminate\Contracts\Support\MessageBag
  */
-class ViewErrorBag implements Countable, Stringable
+class ViewErrorBag implements Countable, BaseStringable
 {
     /**
      * The array of the view error bags.

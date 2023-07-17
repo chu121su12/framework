@@ -46,7 +46,7 @@ class CacheCommandMutexTest extends TestCase
         $this->command = new CacheCommandMutexTest_setUp_class;
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
         parent::tearDown();
@@ -136,13 +136,13 @@ class CacheCommandMutexTest extends TestCase
     /**
      * @return void
      */
-    private function mockUsingCacheStore(): void
+    private function mockUsingCacheStore()/*: void*/
     {
         $this->cacheFactory->expects('store')->once()->andReturn($this->cacheRepository);
         $this->cacheRepository->expects('getStore')->andReturn(null);
     }
 
-    private function mockUsingLockProvider(): m\MockInterface
+    private function mockUsingLockProvider()/*: m\MockInterface*/
     {
         $lock = m::mock(LockProvider::class);
         $this->cacheFactory->expects('store')->once()->andReturn($this->cacheRepository);
@@ -151,8 +151,10 @@ class CacheCommandMutexTest extends TestCase
         return $lock;
     }
 
-    private function acquireLockExpectations(MockInterface $lock, bool $acquiresSuccessfully): void
+    private function acquireLockExpectations(MockInterface $lock, /*bool */$acquiresSuccessfully)/*: void*/
     {
+        $acquiresSuccessfully = backport_type_check('bool', $acquiresSuccessfully);
+
         $lock->expects('lock')
             ->once()
             ->with(m::type('string'), m::type('int'))

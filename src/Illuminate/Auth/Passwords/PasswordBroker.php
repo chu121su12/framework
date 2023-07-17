@@ -63,7 +63,9 @@ class PasswordBroker implements PasswordBrokerContract
         $token = $this->tokens->create($user);
 
         if ($callback) {
-            return $callback($user, $token) ?? static::RESET_LINK_SENT;
+            $result = $callback($user, $token);
+
+            return isset($result) ? $result : static::RESET_LINK_SENT;
         }
 
         // Once we have the reset token, we are ready to send the message out to this

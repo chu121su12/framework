@@ -401,15 +401,19 @@ class EuroCaster implements CastsAttributes
         return $value instanceof Euro ? $value->value : $value;
     }
 
-    public function increment($model, $key, $value, $attributes)
+    public function increment($model, $key, /*string */$value, $attributes)
     {
+        $value = backport_type_check('string', $value);
+
         $model->$key = new Euro((string) BigNumber::of($model->$key->value)->plus($value->value)->toScale(2));
 
         return $model->$key;
     }
 
-    public function decrement($model, $key, $value, $attributes)
+    public function decrement($model, $key, /*string */$value, $attributes)
     {
+        $value = backport_type_check('string', $value);
+
         $model->$key = new Euro((string) BigNumber::of($model->$key->value)->subtract($value->value)->toScale(2));
 
         return $model->$key;

@@ -257,7 +257,8 @@ class Event
     public function shouldRepeatNow()
     {
         return $this->isRepeatable()
-            && $this->lastChecked?->diffInSeconds() >= $this->repeatSeconds;
+            && isset($this->lastChecked)
+            && $this->lastChecked->diffInSeconds() >= $this->repeatSeconds;
     }
 
     /**

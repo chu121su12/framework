@@ -15,7 +15,8 @@ use Symfony\Component\Mailer\Header\MetadataHeader;
 use Symfony\Component\Mailer\Transport\AbstractTransport;
 use Symfony\Component\Mime\Message;
 
-class SesTransport extends AbstractTransport implements Stringable
+// class SesTransport extends AbstractTransport implements Stringable
+class SesTransport extends Transport implements Stringable
 {
     /**
      * The Amazon SES instance.

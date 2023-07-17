@@ -65,7 +65,9 @@ class ScheduleListCommand extends Command
 
         $repeatExpressionSpacing = $this->getRepeatExpressionSpacing($events);
 
-        $timezone = new DateTimeZone($this->option('timezone') ?? config('app.timezone'));
+        $timezoneOption = $this->option('timezone');
+
+        $timezone = new DateTimeZone(isset($timezoneOption) ? $timezoneOption : config('app.timezone'));
 
         $events = $this->sortEvents($events, $timezone);
 
@@ -86,9 +88,9 @@ class ScheduleListCommand extends Command
      */
     private function getCronExpressionSpacing($events)
     {
-        $rows = $events->map(fn ($event) => array_map('mb_strlen', preg_split("/\s+/", $event->expression)));
+        $rows = $events->map(function ($event) { return array_map('mb_strlen', preg_split("/\s+/", $event->expression)); });
 
-        return collect($rows[0] ?? [])->keys()->map(fn ($key) => $rows->max($key))->all();
+        return collect(isset($rows[0]) ? $rows[0] : [])->keys()->map(function ($key) use ($rows) { return $rows->max($key); })->all();
     }
 
     /**
@@ -99,7 +101,7 @@ class ScheduleListCommand extends Command
      */
     private function getRepeatExpressionSpacing($events)
     {
-        return $events->map(fn ($event) => mb_strlen($this->getRepeatExpression($event)))->max();
+        return $events->map(function ($event) { return mb_strlen($this->getRepeatExpression($event)); })->max();
     }
 
     /**
@@ -119,9 +121,9 @@ class ScheduleListCommand extends Command
 
         $repeatExpression = str_pad($this->getRepeatExpression($event), $repeatExpressionSpacing);
 
-        $command = $event->command ?? '';
+        $command = isset($event->command) ? $event->command : '';
 
-        $description = $event->description ?? '';
+        $description = isset($event->description) ? $event->description : '';
 
         if (! $this->output->isVerbose()) {
             $command = str_replace([Application::phpBinary(), Application::artisanBinary()], [
@@ -222,8 +224,13 @@ class ScheduleListCommand extends Command
         }
 
         $previousDueDate = Carbon::instance(
-            (new CronExpression($event->expression))
-                ->getPreviousRunDate(Carbon::now()->setTimezone($event->timezone), allowCurrentDate: true)
+            /*(new CronExpression($event->expression))*/
+            CronExpression::factory($event->expression)
+                ->getPreviousRunDate(
+                    Carbon::now()->setTimezone($event->timezone),
+                    /*$nth = */0,
+                    /*allowCurrentDate: */true
+                )
                 ->setTimezone($timezone)
         );
 

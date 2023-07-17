@@ -190,7 +190,7 @@ trait HasAttributes
     protected function initializeHasAttributes()
     {
         $this->casts = $this->ensureCastsAreStringValues(
-            array_merge($this->casts, $this->casts()),
+            array_merge($this->casts, $this->casts())
         );
     }
 
@@ -758,17 +758,21 @@ trait HasAttributes
     protected function ensureCastsAreStringValues($casts)
     {
         foreach ($casts as $attribute => $cast) {
-            $casts[$attribute] = match (true) {
-                is_array($cast) => value(function () use ($cast) {
-                    if (count($cast) === 1) {
-                        return $cast[0];
-                    }
+            switch (true) {
+                case is_array($cast):
+                    $casts[$attribute] = value(function () use ($cast) {
+                        if (count($cast) === 1) {
+                            return $cast[0];
+                        }
 
-                    [$cast, $arguments] = [array_shift($cast), $cast];
+                        list($cast, $arguments) = [array_shift($cast), $cast];
 
-                    return $cast.':'.implode(',', $arguments);
-                }),
-                default => $cast,
+                        return $cast.':'.implode(',', $arguments);
+                    });
+                    break;
+
+                default:
+                    $casts[$attribute] = $cast;
             };
         }
 

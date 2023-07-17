@@ -7,9 +7,9 @@ use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\MessageBag as MessageBagContract;
 use Illuminate\Contracts\Support\MessageProvider;
 use JsonSerializable;
-use Stringable;
+use Stringable as BaseStringable;
 
-class MessageBag implements Jsonable, JsonSerializable, MessageBagContract, MessageProvider, Stringable
+class MessageBag implements Jsonable, JsonSerializable, MessageBagContract, MessageProvider, BaseStringable
 {
     /**
      * All of the registered messages.

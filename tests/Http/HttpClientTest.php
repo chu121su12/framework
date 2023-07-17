@@ -780,7 +780,7 @@ class HttpClientTest extends TestCase
         $this->factory->fake();
 
         $this->factory->withQueryParameters(
-            ['foo' => ['bar', 'baz']],
+            ['foo' => ['bar', 'baz']]
         )->get('https://laravel.com');
 
         $this->factory->assertSent(function (Request $request) {
@@ -1824,7 +1824,7 @@ class HttpClientTest extends TestCase
         });
 
         $pendingRequest = $this->factory->withMiddleware(
-            Middleware::mapRequest(fn (RequestInterface $request) => $request->withHeader('X-Test-Header', 'Test'))
+            Middleware::mapRequest(function (RequestInterface $request) { return $request->withHeader('X-Test-Header', 'Test'); })
         );
 
         $pendingRequest->post('https://laravel.example', ['laravel' => 'framework']);
@@ -2583,7 +2583,10 @@ class HttpClientTest extends TestCase
         $this->factory->post('http://laravel.com');
 
         $this->assertSame(['Laravel Framework/1.0'], $requests[0]->header('User-Agent'));
-        $this->assertSame(['GuzzleHttp/7'], $requests[1]->header('User-Agent'));
+        $this->assertContains($requests[1]->header('User-Agent')[0], [
+            'GuzzleHttp/6.5.5 curl/7.81.0 PHP/5.6.40-66+ubuntu22.04.1+deb.sury.org+1',
+            'GuzzleHttp/7',
+        ]);
     }
 
     public function testItCanAddResponseMiddleware()

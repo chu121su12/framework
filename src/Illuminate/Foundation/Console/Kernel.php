@@ -390,8 +390,10 @@ class Kernel implements KernelContract
      * @param  string  $namespace
      * @return string
      */
-    protected function commandClassFromFile(SplFileInfo $file, string $namespace): string
+    protected function commandClassFromFile(SplFileInfo $file, /*string */$namespace)/*: string*/
     {
+        $namespace = backport_type_check('string', $namespace);
+
         return $namespace.str_replace(
             ['/', '.php'],
             ['\\', ''],
@@ -547,7 +549,10 @@ class Kernel implements KernelContract
 
             if ($this->symfonyDispatcher instanceof EventDispatcher) {
                 $this->artisan->setDispatcher($this->symfonyDispatcher);
-                $this->artisan->setSignalsToDispatchEvent();
+
+                if (\method_exists($this->artisan, 'setSignalsToDispatchEvent')) {
+                    $this->artisan->setSignalsToDispatchEvent();
+                }
             }
         }
 

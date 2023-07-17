@@ -308,7 +308,13 @@ class Schedule
      */
     public function serverShouldRun(Event $event, DateTimeInterface $time)
     {
-        return $this->mutexCache[$event->mutexName()] ??= $this->schedulingMutex->create($event, $time);
+        $mutexName = $event->mutexName();
+
+        if (! $this->mutexCache[$mutexName]) {
+            $this->mutexCache[$mutexName] = $this->schedulingMutex->create($event, $time);
+        }
+
+        return $this->mutexCache[$mutexName];
     }
 
     /**

@@ -102,6 +102,8 @@ class CompilerEngine extends PhpEngine
      */
     protected function handleViewException(/*Throwable */$e, $obLevel)
     {
+        backport_type_throwable($e);
+
         if ($e instanceof HttpException || $e instanceof HttpResponseException) {
             parent::handleViewException($e, $obLevel);
         }

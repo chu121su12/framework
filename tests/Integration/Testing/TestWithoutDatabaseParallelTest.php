@@ -33,7 +33,7 @@ class TestWithoutDatabaseParallelTest extends TestCase
             unset(
                 $_SERVER['LARAVEL_PARALLEL_TESTING'],
                 $_SERVER['LARAVEL_PARALLEL_TESTING_WITHOUT_DATABASES'],
-                $_SERVER['TEST_TOKEN'],
+                $_SERVER['TEST_TOKEN']
             );
         });
     }

@@ -7,11 +7,12 @@ use Illuminate\Support\Collection;
 use Stringable;
 use Swift_Mime_Message as RawMessage;
 use Symfony\Component\Mailer\Envelope;
-use Symfony\Component\Mailer\SentMessage;
+// use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\TransportInterface;
-use Symfony\Component\Mime\RawMessage;
+// use Symfony\Component\Mime\RawMessage;
 
-class ArrayTransport implements Stringable, TransportInterface
+// class ArrayTransport implements Stringable, TransportInterface
+class ArrayTransport extends Transport implements Stringable
 {
     /**
      * The collection of Symfony Messages.

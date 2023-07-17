@@ -313,4 +313,74 @@ class Application extends SymfonyApplication implements ApplicationContract
     {
         return $this->laravel;
     }
+
+    // override
+    protected function doRunCommand_($command, $input, $output)
+    {
+        // $this->trySignals($command, $input, $output);
+
+        return parent::doRunCommand($command, $input, $output);
+    }
+
+    protected function trySignals($command, $input, $output)
+    {
+        $commandSignals = $command instanceof SignalableCommandInterface ? $command->getSubscribedSignals() : [];
+        if ($commandSignals || $this->dispatcher && $this->signalsToDispatchEvent) {
+            if (!$this->signalRegistry) {
+                throw new RuntimeException('Unable to subscribe to signal events. Make sure that the "pcntl" extension is installed and that "pcntl_*" functions are not disabled by your php.ini\'s "disable_functions" directive.');
+            }
+
+            if (Terminal::hasSttyAvailable()) {
+                $sttyMode = shell_exec('stty -g');
+
+                foreach ([\SIGINT, \SIGTERM] as $signal) {
+                    $this->signalRegistry->register($signal, static function () use ($sttyMode) { return shell_exec('stty '.$sttyMode); });
+                }
+            }
+
+            if ($this->dispatcher) {
+                // We register application signals, so that we can dispatch the event
+                foreach ($this->signalsToDispatchEvent as $signal) {
+                    $event = new ConsoleSignalEvent($command, $input, $output, $signal);
+
+                    $this->signalRegistry->register($signal, function ($signal) use ($event, $command, $commandSignals) {
+                        $this->dispatcher->dispatch($event, ConsoleEvents::SIGNAL);
+                        $exitCode = $event->getExitCode();
+
+                        // If the command is signalable, we call the handleSignal() method
+                        if (\in_array($signal, $commandSignals, true)) {
+                            $exitCode = $command->handleSignal($signal, $exitCode);
+                            // BC layer for Symfony <= 5
+                            if (null === $exitCode) {
+                                trigger_deprecation('symfony/console', '6.3', 'Not returning an exit code from "%s::handleSignal()" is deprecated, return "false" to keep the command running or "0" to exit successfully.', get_debug_type($command));
+                                $exitCode = 0;
+                            }
+                        }
+
+                        if (false !== $exitCode) {
+                            exit($exitCode);
+                        }
+                    });
+                }
+
+                // then we register command signals, but not if already handled after the dispatcher
+                $commandSignals = array_diff($commandSignals, $this->signalsToDispatchEvent);
+            }
+
+            foreach ($commandSignals as $signal) {
+                $this->signalRegistry->register($signal, function (/*int */$signal) use ($command)/*: void*/ {
+                    $exitCode = $command->handleSignal($signal);
+                    // BC layer for Symfony <= 5
+                    if (null === $exitCode) {
+                        trigger_deprecation('symfony/console', '6.3', 'Not returning an exit code from "%s::handleSignal()" is deprecated, return "false" to keep the command running or "0" to exit successfully.', get_debug_type($command));
+                        $exitCode = 0;
+                    }
+
+                    if (false !== $exitCode) {
+                        exit($exitCode);
+                    }
+                });
+            }
+        }
+    }
 }

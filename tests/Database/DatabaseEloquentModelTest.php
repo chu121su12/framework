@@ -2413,6 +2413,9 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertNan($model->floatAttribute);
     }
 
+    /**
+     * @requires PHP >= 8.1
+     */
     public function testModelAttributeCastingWithArrays()
     {
         $model = new EloquentModelCastingStub;
@@ -3277,7 +3280,7 @@ class EloquentModelCastingStub extends Model
         'duplicatedAttribute' => 'string',
     ];
 
-    protected function casts(): array
+    protected function casts()/*: array*/
     {
         return [
             'intAttribute' => 'int',

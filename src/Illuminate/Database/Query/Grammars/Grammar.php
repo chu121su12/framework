@@ -1366,7 +1366,7 @@ class Grammar extends BaseGrammar
      */
     public function substituteBindingsIntoRawSql($sql, $bindings)
     {
-        $bindings = array_map(fn ($value) => $this->escape($value), $bindings);
+        $bindings = array_map(function ($value) { return $this->escape($value); }, $bindings);
 
         $query = '';
 
@@ -1374,7 +1374,7 @@ class Grammar extends BaseGrammar
 
         for ($i = 0; $i < strlen($sql); $i++) {
             $char = $sql[$i];
-            $nextChar = $sql[$i + 1] ?? null;
+            $nextChar = isset($sql[$i + 1]) ? $sql[$i + 1] : null;
 
             // Single quotes can be escaped as '' according to the SQL standard while
             // MySQL uses \'. Postgres has operators like ?| that must get encoded
@@ -1386,7 +1386,8 @@ class Grammar extends BaseGrammar
                 $query .= $char;
                 $isStringLiteral = ! $isStringLiteral;
             } elseif ($char === '?' && ! $isStringLiteral) { // Substitutable binding...
-                $query .= array_shift($bindings) ?? '?';
+                $shifted = array_shift($bindings);
+                $query .= isset($shifted) ? $shifted : '?';
             } else { // Normal character...
                 $query .= $char;
             }

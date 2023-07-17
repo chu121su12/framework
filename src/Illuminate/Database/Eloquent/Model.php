@@ -977,7 +977,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
         }
 
         if ($this->isClassDeviable($column)) {
-            $amount = (clone $this)->setAttribute($column, $amount)->getAttributeFromArray($column);
+            $amount = with(clone $this)->setAttribute($column, $amount)->getAttributeFromArray($column);
         }
 
         return tap($this->setKeysForSaveQuery($this->newQueryWithoutScopes())->{$method}($column, $amount, $extra), function () use ($column) {

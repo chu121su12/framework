@@ -77,6 +77,13 @@ class FoundationServiceProvider extends AggregateServiceProvider
         $this->registerMaintenanceModeManager();
     }
 
+    private function registerConsoleSchedule()
+    {
+        $this->app->singleton(Schedule::class, function ($app) {
+            return $app->make(ConsoleKernel::class)->resolveConsoleSchedule();
+        });
+    }
+
     /**
      * Register a var dumper (with source) to debug variables.
      *

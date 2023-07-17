@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabasePostgresQueryGrammarTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
@@ -23,7 +23,7 @@ class DatabasePostgresQueryGrammarTest extends TestCase
 
         $query = $grammar->substituteBindingsIntoRawSql(
             'select * from "users" where \'{}\' ?? \'Hello\\\'\\\'World?\' AND "email" = ?',
-            ['foo'],
+            ['foo']
         );
 
         $this->assertSame('select * from "users" where \'{}\' ? \'Hello\\\'\\\'World?\' AND "email" = \'foo\'', $query);

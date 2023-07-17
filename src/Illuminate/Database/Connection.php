@@ -1597,13 +1597,13 @@ class Connection implements ConnectionInterface
      */
     public function getRawQueryLog()
     {
-        return array_map(fn (array $log) => [
+        return array_map(function (array $log) { return [
             'raw_query' => $this->queryGrammar->substituteBindingsIntoRawSql(
                 $log['query'],
                 $this->prepareBindings($log['bindings'])
             ),
             'time' => $log['time'],
-        ], $this->getQueryLog());
+        ]; }, $this->getQueryLog());
     }
 
     /**

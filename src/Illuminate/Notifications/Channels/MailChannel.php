@@ -111,9 +111,9 @@ class MailChannel
      */
     protected function buildMarkdownHtml($message)
     {
-        return fn ($data) => $this->markdownRenderer($message)->render(
-            $message->markdown, array_merge($data, $message->data()),
-        );
+        return function ($data) use ($message) { return $this->markdownRenderer($message)->render(
+            $message->markdown, array_merge($data, $message->data())
+        ); };
     }
 
     /**
@@ -124,9 +124,9 @@ class MailChannel
      */
     protected function buildMarkdownText($message)
     {
-        return fn ($data) => $this->markdownRenderer($message)->renderText(
-            $message->markdown, array_merge($data, $message->data()),
-        );
+        return function ($data) use ($message) { return $this->markdownRenderer($message)->renderText(
+            $message->markdown, array_merge($data, $message->data())
+        ); };
     }
 
     /**
@@ -139,7 +139,7 @@ class MailChannel
     {
         $config = Container::getInstance()->get(ConfigRepository::class);
 
-        $theme = $message->theme ?? $config->get('mail.markdown.theme', 'default');
+        $theme = isset($message->theme) ? $message->theme : $config->get('mail.markdown.theme', 'default');
 
         return $this->markdown->theme($theme);
     }
