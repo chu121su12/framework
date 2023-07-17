@@ -77,13 +77,6 @@ class FoundationServiceProvider extends AggregateServiceProvider
         $this->registerMaintenanceModeManager();
     }
 
-    private function registerConsoleSchedule()
-    {
-        $this->app->singleton(Schedule::class, function ($app) {
-            return $app->make(ConsoleKernel::class)->resolveConsoleSchedule();
-        });
-    }
-
     /**
      * Register the console schedule implementation.
      *
