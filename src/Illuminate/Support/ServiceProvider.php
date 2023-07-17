@@ -478,4 +478,60 @@ return [
 
         return true;
     }
+
+    /**
+     * Add the given service provider to the application's configuration file.
+     */
+    public static function addToConfiguration(/*string */$provider, /*?string */$path = null)/*: bool*/
+    {
+        $provider = backport_type_check('string', $provider);
+        $path = backport_type_check('?string', $path);
+
+        $path = $path ?: config_path('app.php');
+
+        if (! Str::contains($appConfig = file_get_contents($path), '// Added Service Providers (Do not remove this line)...')) {
+            return false;
+        }
+
+        if (! Str::contains($appConfig, $provider.'::class')) {
+            file_put_contents($path, str_replace(
+                '// Added Service Providers (Do not remove this line)...',
+                '// Added Service Providers (Do not remove this line)...'.PHP_EOL.'        '.$provider.'::class,',
+                $appConfig
+            ));
+
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Add the given service provider to the application's configuration file after another provider.
+     */
+    public static function addToConfigurationAfter(/*string */$after, /*string */$provider, /*?string */$path = null)/*: bool*/
+    {
+        $after = backport_type_check('string', $after);
+        $provider = backport_type_check('string', $provider);
+        $path = backport_type_check('?string', $path);
+
+        $path = $path ?: config_path('app.php');
+
+        if (! Str::contains($appConfig = file_get_contents($path), $after.'::class')) {
+            return false;
+        }
+
+        if (! Str::contains($appConfig, $provider.'::class')) {
+            file_put_contents($path, str_replace(
+                $after.'::class,',
+                $after.'::class,'.PHP_EOL.'        '.$provider.'::class,',
+                $appConfig
+            ));
+
+            return true;
+        }
+
+        return false;
+    }
 }
