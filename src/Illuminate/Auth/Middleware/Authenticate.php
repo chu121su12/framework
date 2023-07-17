@@ -44,7 +44,7 @@ class Authenticate implements AuthenticatesRequests
      */
     public static function using($guard, ...$others)
     {
-        return static::class.':'.implode(',', array_merge([$guard], $others));
+        return static::class.':'.implode(',', \array_merge([$guard], $others));
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Illuminate\View\Engines;
 
+use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\View\Compilers\CompilerInterface;
@@ -104,7 +105,9 @@ class CompilerEngine extends PhpEngine
     {
         backport_type_throwable($e);
 
-        if ($e instanceof HttpException || $e instanceof HttpResponseException) {
+        if ($e instanceof HttpException ||
+            $e instanceof HttpResponseException ||
+            $e instanceof RecordsNotFoundException) {
             parent::handleViewException($e, $obLevel);
         }
 

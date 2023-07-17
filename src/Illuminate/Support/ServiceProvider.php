@@ -454,7 +454,9 @@ abstract class ServiceProvider
      */
     public static function addProviderToBootstrapFile(/*string */$provider, /*?string */$path = null)
     {
-        $path = isset($path) ? $path : app()->getBootstrapProvidersPath();
+        if (! isset($path)) {
+            $path = app()->getBootstrapProvidersPath();
+        }
 
         if (! file_exists($path)) {
             return false;
@@ -479,9 +481,7 @@ return [
         return true;
     }
 
-    /**
-     * Add the given service provider to the application's configuration file.
-     */
+    // backport
     public static function addToConfiguration(/*string */$provider, /*?string */$path = null)/*: bool*/
     {
         $provider = backport_type_check('string', $provider);
@@ -507,9 +507,6 @@ return [
         return false;
     }
 
-    /**
-     * Add the given service provider to the application's configuration file after another provider.
-     */
     public static function addToConfigurationAfter(/*string */$after, /*string */$provider, /*?string */$path = null)/*: bool*/
     {
         $after = backport_type_check('string', $after);

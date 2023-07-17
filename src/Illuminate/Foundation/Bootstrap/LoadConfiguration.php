@@ -62,9 +62,9 @@ class LoadConfiguration
     {
         $files = $this->getConfigurationFiles($app);
 
-        if (! isset($files['app'])) {
-            throw new Exception('Unable to load the "app" configuration file.');
-        }
+        // if (! isset($files['app'])) {
+        //     throw new Exception('Unable to load the "app" configuration file.');
+        // }
 
         $base = $this->getBaseConfiguration();
 
@@ -75,6 +75,10 @@ class LoadConfiguration
         foreach ($base as $name => $config) {
             $repository->set($name, $config);
         }
+
+        $repository->set($name, $config);
+
+        return $base;
     }
 
     /**

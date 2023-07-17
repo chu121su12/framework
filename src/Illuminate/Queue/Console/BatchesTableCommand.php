@@ -8,7 +8,7 @@ use Illuminate\Support\Composer;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'queue:batches-table')]
+#[AsCommand(name: 'make:queue-batches-table')]
 class BatchesTableCommand extends Command
 {
     /**
@@ -16,7 +16,14 @@ class BatchesTableCommand extends Command
      *
      * @var string
      */
-    protected $name = 'queue:batches-table';
+    protected $name = 'make:queue-batches-table';
+
+    /**
+     * The console command name aliases.
+     *
+     * @var array
+     */
+    protected $aliases = ['queue:batches-table'];
 
     /**
      * The console command description.
