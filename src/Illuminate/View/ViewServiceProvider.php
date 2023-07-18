@@ -81,7 +81,9 @@ class ViewServiceProvider extends ServiceProvider
     public function registerViewFinder()
     {
         $this->app->bind('view.finder', function ($app) {
-            return new FileViewFinder($app['files'], $app['config']['view.paths']);
+            $viewPaths = $app['config']['view.paths'];
+
+            return new FileViewFinder($app['files'], isset($viewPaths) ? $viewPaths : []);
         });
     }
 
