@@ -75,10 +75,6 @@ class LoadConfiguration
         foreach ($base as $name => $config) {
             $repository->set($name, $config);
         }
-
-        $repository->set($name, $config);
-
-        return $base;
     }
 
     /**
