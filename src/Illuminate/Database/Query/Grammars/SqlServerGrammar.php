@@ -24,7 +24,7 @@ class SqlServerGrammar extends Grammar
      *
      * @var string[]
      */
-    protected $selectComponents_ = [
+    protected $selectComponents = [
         'aggregate',
         'columns',
         'from',
@@ -47,33 +47,12 @@ class SqlServerGrammar extends Grammar
      */
     public function compileSelect(Builder $query)
     {
-        // // An order by clause is required for SQL Server offset to function...
-        // if ($query->offset && empty($query->orders)) {
-        //     $query->orders[] = ['sql' => '(SELECT 0)'];
-        // }
-
-        // return parent::compileSelect($query);
-
-        if (! $query->offset) {
-            return parent::compileSelect($query);
+        // An order by clause is required for SQL Server offset to function...
+        if (($query->offset || $query->limit) && empty($query->orders)) {
+            $query->orders[] = ['sql' => '(SELECT 0)'];
         }
 
-        if (is_null($query->columns)) {
-            $query->columns = ['*'];
-        }
-
-        $components = $this->compileComponents($query);
-
-        if (! empty($components['orders'])) {
-            return parent::compileSelect($query)." offset {$query->offset} rows fetch next {$query->limit} rows only";
-        }
-
-        // If an offset is present on the query, we will need to wrap the query in
-        // a big "ANSI" offset syntax block. This is very nasty compared to the
-        // other database systems but is necessary for implementing features.
-        return $this->compileAnsiOffset(
-            $query, $components
-        );
+        return parent::compileSelect($query);
     }
 
     /**
@@ -285,38 +264,6 @@ class SqlServerGrammar extends Grammar
         $parameter = $this->parameter($having['value']);
 
         return '('.$column.' '.$having['operator'].' '.$parameter.') != 0';
-    }
-
-    /**
-     * Move the order bindings to be after the "select" statement to account for an order by subquery.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @return array
-     */
-    protected function sortBindingsForSubqueryOrderBy($query)
-    {
-        return Arr::sort($query->bindings, function ($bindings, $key) {
-            return array_search($key, ['select', 'order', 'from', 'join', 'where', 'groupBy', 'having', 'union', 'unionOrder']);
-        });
-    }
-
-    /**
-     * Compile the limit / offset row constraint for a query.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @return string
-     */
-    protected function compileRowConstraint($query)
-    {
-        $start = (int) $query->offset + 1;
-
-        if ($query->limit > 0) {
-            $finish = (int) $query->offset + (int) $query->limit;
-
-            return "between {$start} and {$finish}";
-        }
-
-        return ">= {$start}";
     }
 
     /**
