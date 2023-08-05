@@ -335,7 +335,14 @@ class Ignition
             $this->customHtmlBody
         );
 
-        (new Renderer())->render(['viewModel' => $viewModel]);
+        (new Renderer())->render(['viewModel' => $viewModel], self::viewPath('errorPage'));
+    }
+
+    public static function viewPath(/*string */$viewName)/*: string*/
+    {
+        $viewName = backport_type_check('string', $viewName);
+
+        return __DIR__ . "/../resources/views/{$viewName}.php";
     }
 
     /**

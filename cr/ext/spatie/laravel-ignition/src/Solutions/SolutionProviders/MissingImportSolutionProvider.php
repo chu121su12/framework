@@ -17,7 +17,7 @@ class MissingImportSolutionProvider implements HasSolutionsForThrowable
     {
         backport_type_throwable($throwable);
 
-        $pattern = '/Class \'([^\s]+)\' not found/m';
+        $pattern = '/Class \"([^\s]+)\" not found/m';
 
         if (! preg_match($pattern, $throwable->getMessage(), $matches)) {
             return false;

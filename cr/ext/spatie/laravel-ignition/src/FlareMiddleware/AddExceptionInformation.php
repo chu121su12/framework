@@ -2,14 +2,14 @@
 
 namespace Spatie\LaravelIgnition\FlareMiddleware;
 
-use Closure;
 use Illuminate\Database\QueryException;
+use Spatie\FlareClient\Contracts\ProvidesFlareContext;
 use Spatie\FlareClient\FlareMiddleware\FlareMiddleware;
 use Spatie\FlareClient\Report;
 
 class AddExceptionInformation implements FlareMiddleware
 {
-    public function handle(Report $report, Closure $next)
+    public function handle(Report $report, $next)
     {
         $throwable = $report->getThrowable();
 
@@ -34,6 +34,11 @@ class AddExceptionInformation implements FlareMiddleware
             return;
         }
 
+        if ($throwable instanceof ProvidesFlareContext) {
+            // ProvidesFlareContext writes directly to context groups and is handled in the flare-client-php package.
+            return;
+        }
+
         if (! method_exists($throwable, 'context')) {
             return;
         }
@@ -44,8 +49,10 @@ class AddExceptionInformation implements FlareMiddleware
             return;
         }
 
+        $exceptionContextGroup = [];
         foreach ($context as $key => $value) {
-            $report->context($key, $value);
+            $exceptionContextGroup[$key] = $value;
         }
+        $report->group('exception', $exceptionContextGroup);
     }
 }

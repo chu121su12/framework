@@ -3,12 +3,21 @@
 namespace Spatie\Backtrace;
 
 use Closure;
+use Spatie\Backtrace\Arguments\ArgumentReducers;
+use Spatie\Backtrace\Arguments\ReduceArgumentsAction;
+use Spatie\Backtrace\Arguments\Reducers\ArgumentReducer;
 use Throwable;
 
 class Backtrace
 {
     /** @var bool */
     protected $withArguments = false;
+
+    /** @var bool */
+    protected $reduceArguments = false;
+
+    /** @var array<class-string<ArgumentReducer>|ArgumentReducer>|ArgumentReducers|null */
+    protected $argumentReducers = null;
 
     /** @var bool */
     protected $withObject = false;
@@ -49,9 +58,26 @@ class Backtrace
         return $this;
     }
 
-    public function withArguments()/*: self*/
-    {
-        $this->withArguments = true;
+    public function withArguments(
+        /*bool */$withArguments = true
+    )/*: self*/ {
+        $withArguments = backport_type_check('bool', $withArguments);
+
+        $this->withArguments = $withArguments;
+
+        return $this;
+    }
+
+    /**
+     * @param array<class-string<ArgumentReducer>|ArgumentReducer>|ArgumentReducers|null $argumentReducers
+     *
+     * @return $this
+     */
+    public function reduceArguments(
+        $argumentReducers = null
+    )/*: self*/ {
+        $this->reduceArguments = true;
+        $this->argumentReducers = $argumentReducers;
 
         return $this;
     }
@@ -150,18 +176,33 @@ class Backtrace
     {
         $currentFile = $this->throwable ? $this->throwable->getFile() : '';
         $currentLine = $this->throwable ? $this->throwable->getLine() : 0;
+        $arguments = $this->withArguments ? [] : null;
 
         $frames = [];
+
+        $reduceArgumentsAction = new ReduceArgumentsAction($this->resolveArgumentReducers());
 
         foreach ($rawFrames as $rawFrame) {
             $frames[] = new Frame(
                 $currentFile,
                 $currentLine,
-                isset($rawFrame['args']) ? $rawFrame['args'] : null,
+                $arguments,
                 isset($rawFrame['function']) ? $rawFrame['function'] : null,
                 isset($rawFrame['class']) ? $rawFrame['class'] : null,
                 $this->isApplicationFrame($currentFile)
             );
+
+            $arguments = $this->withArguments
+                ? (isset($rawFrame['args']) ? $rawFrame['args'] : null)
+                : null;
+
+            if ($this->reduceArguments) {
+                $arguments = $reduceArgumentsAction->execute(
+                    isset($rawFrame['function']) ? $rawFrame['function'] : null,
+                    isset($rawFrame['class']) ? $rawFrame['class'] : null,
+                    $arguments
+                );
+            }
 
             $currentFile = isset($rawFrame['file']) ? $rawFrame['file'] : 'unknown';
             $currentLine = isset($rawFrame['line']) ? $rawFrame['line'] : 0;
@@ -194,7 +235,7 @@ class Backtrace
             $relativeFile = array_reverse(explode(isset($this->applicationPath) ? $this->applicationPath : '', $frameFilename, 2))[0];
         }
 
-        if (strpos($relativeFile, DIRECTORY_SEPARATOR . 'vendor') === 0) {
+        if (strpos($relativeFile, DIRECTORY_SEPARATOR.'vendor') === 0) {
             return false;
         }
 
@@ -227,5 +268,18 @@ class Backtrace
         }
 
         return $frames;
+    }
+
+    protected function resolveArgumentReducers()/*: ArgumentReducers*/
+    {
+        if ($this->argumentReducers === null) {
+            return ArgumentReducers::default_();
+        }
+
+        if ($this->argumentReducers instanceof ArgumentReducers) {
+            return $this->argumentReducers;
+        }
+
+        return ArgumentReducers::create($this->argumentReducers);
     }
 }
