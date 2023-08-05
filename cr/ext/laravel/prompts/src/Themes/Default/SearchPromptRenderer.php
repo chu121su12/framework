@@ -61,8 +61,10 @@ class SearchPromptRenderer extends Renderer
     /**
      * Render the value with the cursor and a search icon.
      */
-    protected function valueWithCursorAndSearchIcon(SearchPrompt $prompt, int $maxWidth)/*: string*/
+    protected function valueWithCursorAndSearchIcon(SearchPrompt $prompt, /*int */$maxWidth)/*: string*/
     {
+        $maxWidth = backport_type_check('int', $maxWidth);
+
         return preg_replace(
             '/\s$/',
             $this->cyan('…'),

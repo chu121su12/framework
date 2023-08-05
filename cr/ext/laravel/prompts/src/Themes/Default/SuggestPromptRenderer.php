@@ -54,8 +54,10 @@ class SuggestPromptRenderer extends Renderer
     /**
      * Render the value with the cursor and an arrow.
      */
-    protected function valueWithCursorAndArrow(SuggestPrompt $prompt, int $maxWidth)/*: string*/
+    protected function valueWithCursorAndArrow(SuggestPrompt $prompt, /*int */$maxWidth)/*: string*/
     {
+        $maxWidth = backport_type_check('int', $maxWidth);
+
         if ($prompt->highlighted !== null || $prompt->value() !== '' || count($prompt->matches()) === 0) {
             return $prompt->valueWithCursor($maxWidth);
         }

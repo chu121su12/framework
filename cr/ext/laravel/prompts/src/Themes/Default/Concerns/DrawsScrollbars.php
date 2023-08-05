@@ -12,8 +12,16 @@ trait DrawsScrollbars
      * @param  \Illuminate\Support\Collection<int, string>  $lines
      * @return  \Illuminate\Support\Collection<int, string>
      */
-    protected function scroll(Collection $lines, ?int $focused, int $height, int $width, string $color = 'cyan')/*: Collection*/
+    protected function scroll(Collection $lines, /*?int */$focused = null, /*int */$height, /*int */$width, /*string */$color = 'cyan')/*: Collection*/
     {
+        $color = backport_type_check('string', $color);
+
+        $width = backport_type_check('int', $width);
+
+        $height = backport_type_check('int', $height);
+
+        $focused = backport_type_check('?int', $focused);
+
         if ($lines->count() <= $height) {
             return $lines;
         }
@@ -34,8 +42,12 @@ trait DrawsScrollbars
      * @param  \Illuminate\Support\Collection<int, string>  $lines
      * @return  \Illuminate\Support\Collection<int, string>
      */
-    protected function visible(Collection $lines, ?int $focused, int $height)/*: Collection*/
+    protected function visible(Collection $lines, /*?int */$focused = null, /*int */$height)/*: Collection*/
     {
+        $height = backport_type_check('int', $height);
+
+        $focused = backport_type_check('?int', $focused);
+
         if ($lines->count() <= $height) {
             return $lines;
         }
@@ -52,8 +64,14 @@ trait DrawsScrollbars
      *
      * @param  \Illuminate\Support\Collection<int, string>  $visible
      */
-    protected function scrollPosition(Collection $visible, ?int $focused, int $height, int $total)/*: int*/
+    protected function scrollPosition(Collection $visible, /*?int */$focused = null, /*int */$height, /*int */$total)/*: int*/
     {
+        $total = backport_type_check('int', $total);
+
+        $height = backport_type_check('int', $height);
+
+        $focused = backport_type_check('?int', $focused);
+
         if ($focused < $height) {
             return 0;
         }

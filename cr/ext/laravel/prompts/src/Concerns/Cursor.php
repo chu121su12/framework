@@ -42,8 +42,12 @@ trait Cursor
     /**
      * Move the cursor.
      */
-    public function moveCursor(int $x, int $y = 0)/*: void*/
+    public function moveCursor(/*int */$x, /*int */$y = 0)/*: void*/
     {
+        $y = backport_type_check('int', $y);
+
+        $x = backport_type_check('int', $x);
+
         $sequence = '';
 
         if ($x < 0) {

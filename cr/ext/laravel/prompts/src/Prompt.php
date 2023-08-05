@@ -144,8 +144,10 @@ abstract class Prompt
     /**
      * Write output directly, bypassing newline capture.
      */
-    protected static function writeDirectly(string $message)/*: void*/
+    protected static function writeDirectly(/*string */$message)/*: void*/
     {
+        $message = backport_type_check('string', $message);
+
         match (true) {
             method_exists(static::output(), 'writeDirectly') => static::output()->writeDirectly($message),
             method_exists(static::output(), 'getOutput') => static::output()->getOutput()->write($message),
@@ -241,8 +243,12 @@ abstract class Prompt
      *
      * @return array<int>
      */
-    private function diffLines(string $a, string $b)/*: array*/
+    private function diffLines(/*string */$a, /*string */$b)/*: array*/
     {
+        $b = backport_type_check('string', $b);
+
+        $a = backport_type_check('string', $a);
+
         if ($a === $b) {
             return [];
         }
@@ -263,8 +269,10 @@ abstract class Prompt
     /**
      * Handle a key press and determine whether to continue.
      */
-    private function handleKeyPress(string $key)/*: bool*/
+    private function handleKeyPress(/*string */$key)/*: bool*/
     {
+        $key = backport_type_check('string', $key);
+
         if ($this->state === 'error') {
             $this->state = 'active';
         }
@@ -291,8 +299,10 @@ abstract class Prompt
     /**
      * Validate the input.
      */
-    private function validate(mixed $value)/*: void*/
+    private function validate(/*mixed */$value)/*: void*/
     {
+        $value = backport_type_check('mixed', $value);
+
         $this->validated = true;
 
         if (($this->required ?? false) && ($value === '' || $value === [] || $value === false)) {

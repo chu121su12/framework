@@ -31,8 +31,10 @@ class PasswordPrompt extends Prompt
     /**
      * Get the masked value with a virtual cursor.
      */
-    public function maskedWithCursor(int $maxWidth)/*: string*/
+    public function maskedWithCursor(/*int */$maxWidth)/*: string*/
     {
+        $maxWidth = backport_type_check('int', $maxWidth);
+
         if ($this->value() === '') {
             return $this->dim($this->addCursor($this->placeholder, 0, $maxWidth));
         }

@@ -87,8 +87,10 @@ class MultiSelectPrompt extends Prompt
     /**
      * Check whether the value is currently highlighted.
      */
-    public function isHighlighted(string $value)/*: bool*/
+    public function isHighlighted(/*string */$value)/*: bool*/
     {
+        $value = backport_type_check('string', $value);
+
         if (array_is_list($this->options)) {
             return $this->options[$this->highlighted] === $value;
         }
@@ -99,8 +101,10 @@ class MultiSelectPrompt extends Prompt
     /**
      * Check whether the value is currently selected.
      */
-    public function isSelected(string $value)/*: bool*/
+    public function isSelected(/*string */$value)/*: bool*/
     {
+        $value = backport_type_check('string', $value);
+
         return in_array($value, $this->values);
     }
 

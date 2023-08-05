@@ -31,8 +31,12 @@ trait TypedValue
     /**
      * Track the value as the user types.
      */
-    protected function trackTypedValue(string $default = '', bool $submit = true)/*: void*/
+    protected function trackTypedValue(/*string */$default = '', /*bool */$submit = true)/*: void*/
     {
+        $submit = backport_type_check('bool', $submit);
+
+        $default = backport_type_check('string', $default);
+
         $this->typedValue = $default;
 
         if ($this->typedValue) {
@@ -83,8 +87,14 @@ trait TypedValue
     /**
      * Add a virtual cursor to the value and truncate if necessary.
      */
-    protected function addCursor(string $value, int $cursorPosition, int $maxWidth)/*: string*/
+    protected function addCursor(/*string */$value, /*int */$cursorPosition, /*int */$maxWidth)/*: string*/
     {
+        $maxWidth = backport_type_check('int', $maxWidth);
+
+        $cursorPosition = backport_type_check('int', $cursorPosition);
+
+        $value = backport_type_check('string', $value);
+
         $offset = $cursorPosition - $maxWidth + ($cursorPosition < mb_strlen($value) ? 2 : 1);
         $offset = $offset > 0 ? $offset + 1 : 0;
         $offsetCursorPosition = $cursorPosition - $offset;

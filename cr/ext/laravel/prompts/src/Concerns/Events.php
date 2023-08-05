@@ -16,16 +16,20 @@ trait Events
     /**
      * Register an event listener.
      */
-    public function on(string $event, Closure $callback)/*: void*/
+    public function on(/*string */$event, Closure $callback)/*: void*/
     {
+        $event = backport_type_check('string', $event);
+
         $this->listeners[$event][] = $callback;
     }
 
     /**
      * Emit an event.
      */
-    public function emit(string $event, mixed ...$data)/*: void*/
+    public function emit(/*string */$event, mixed ...$data)/*: void*/
     {
+        $event = backport_type_check('string', $event);
+
         foreach ($this->listeners[$event] ?? [] as $listener) {
             $listener(...$data);
         }

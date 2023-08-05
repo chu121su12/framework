@@ -53,8 +53,10 @@ trait Themes
      *
      * @throws \InvalidArgumentException
      */
-    public static function theme(string $name = null)/*: string*/
+    public static function theme(/*string */$name = null)/*: string*/
     {
+        $name = backport_type_check('string', $name);
+
         if ($name === null) {
             return static::$theme;
         }
@@ -71,8 +73,10 @@ trait Themes
      *
      * @param  array<class-string<\Laravel\Prompts\Prompt>, class-string<object&callable>>  $renderers
      */
-    public static function addTheme(string $name, array $renderers)/*: void*/
+    public static function addTheme(/*string */$name, array $renderers)/*: void*/
     {
+        $name = backport_type_check('string', $name);
+
         if ($name === 'default') {
             throw new InvalidArgumentException('The default theme cannot be overridden.');
         }

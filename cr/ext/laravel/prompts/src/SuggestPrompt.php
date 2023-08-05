@@ -62,8 +62,10 @@ class SuggestPrompt extends Prompt
     /**
      * Get the entered value with a virtual cursor.
      */
-    public function valueWithCursor(int $maxWidth)/*: string*/
+    public function valueWithCursor(/*int */$maxWidth)/*: string*/
     {
+        $maxWidth = backport_type_check('int', $maxWidth);
+
         if ($this->highlighted !== null) {
             return $this->value() === ''
                 ? $this->dim($this->truncate($this->placeholder, $maxWidth))
@@ -142,8 +144,12 @@ class SuggestPrompt extends Prompt
     /**
      * Truncate a value with an ellipsis if it exceeds the given length.
      */
-    protected function truncate(string $value, int $length)/*: string*/
+    protected function truncate(/*string */$value, /*int */$length)/*: string*/
     {
+        $length = backport_type_check('int', $length);
+
+        $value = backport_type_check('string', $value);
+
         if ($length <= 0) {
             throw new InvalidArgumentException("Length [{$length}] must be greater than zero.");
         }

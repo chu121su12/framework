@@ -21,8 +21,10 @@ trait Fallback
     /**
      * Enable the fallback implementation.
      */
-    public static function fallbackWhen(bool $condition)/*: void*/
+    public static function fallbackWhen(/*bool */$condition)/*: void*/
     {
+        $condition = backport_type_check('bool', $condition);
+
         static::$shouldFallback = $condition || static::$shouldFallback;
     }
 

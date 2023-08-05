@@ -34,8 +34,10 @@ class Terminal
     /**
      * Set the TTY mode.
      */
-    public function setTty(string $mode)/*: void*/
+    public function setTty(/*string */$mode)/*: void*/
     {
+        $mode = backport_type_check('string', $mode);
+
         $this->initialTtyMode ??= (shell_exec('stty -g') ?: null);
 
         shell_exec("stty $mode");

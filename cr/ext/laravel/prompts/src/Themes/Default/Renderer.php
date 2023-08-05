@@ -27,8 +27,10 @@ abstract class Renderer
     /**
      * Render a line of output.
      */
-    protected function line(string $message)/*: self*/
+    protected function line(/*string */$message)/*: self*/
     {
+        $message = backport_type_check('string', $message);
+
         $this->output .= $message.PHP_EOL;
 
         return $this;
@@ -37,8 +39,10 @@ abstract class Renderer
     /**
      * Render a new line.
      */
-    protected function newLine(int $count = 1)/*: self*/
+    protected function newLine(/*int */$count = 1)/*: self*/
     {
+        $count = backport_type_check('int', $count);
+
         $this->output .= str_repeat(PHP_EOL, $count);
 
         return $this;
@@ -47,24 +51,32 @@ abstract class Renderer
     /**
      * Render a warning message.
      */
-    protected function warning(string $message)/*: self*/
+    protected function warning(/*string */$message)/*: self*/
     {
+        $message = backport_type_check('string', $message);
+
         return $this->line($this->yellow("  ⚠ {$message}"));
     }
 
     /**
      * Render an error message.
      */
-    protected function error(string $message)/*: self*/
+    protected function error(/*string */$message)/*: self*/
     {
+        $message = backport_type_check('string', $message);
+
         return $this->line($this->red("  ⚠ {$message}"));
     }
 
     /**
      * Truncate a value with an ellipsis if it exceeds the given length.
      */
-    protected function truncate(string $value, int $length)/*: string*/
+    protected function truncate(/*string */$value, /*int */$length)/*: string*/
     {
+        $length = backport_type_check('int', $length);
+
+        $value = backport_type_check('string', $value);
+
         if ($length <= 0) {
             throw new InvalidArgumentException("Length [{$length}] must be greater than zero.");
         }
