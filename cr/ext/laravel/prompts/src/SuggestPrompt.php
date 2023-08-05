@@ -13,21 +13,21 @@ class SuggestPrompt extends Prompt
     /**
      * The index of the highlighted option.
      */
-    public ?int $highlighted = null;
+    public /*?int */$highlighted = null;
 
     /**
      * The options for the suggest prompt.
      *
      * @var array<string>|Closure(string): array<string>
      */
-    public array|Closure $options;
+    public /*array|Closure */$options;
 
     /**
      * The cache of matches.
      *
      * @var array<string>|null
      */
-    protected ?array $matches = null;
+    protected /*?array */$matches = null;
 
     /**
      * Create a new SuggestPrompt instance.
@@ -41,20 +41,27 @@ class SuggestPrompt extends Prompt
         public string $default = '',
         public int $scroll = 5,
         public bool|string $required = false,
-        public ?Closure $validate = null,
+        public ?Closure $validate = null
     ) {
         $this->options = $options instanceof Collection ? $options->all() : $options;
 
-        $this->on('key', fn ($key) => match ($key) {
-            Key::UP, Key::SHIFT_TAB => $this->highlightPrevious(),
-            Key::DOWN, Key::TAB => $this->highlightNext(),
-            Key::ENTER => $this->selectHighlighted(),
-            Key::LEFT, Key::RIGHT => $this->highlighted = null,
-            default => (function () {
+        $this->on('key', function ($key) { switch ($key) {
+            case Key::UP:
+            case Key::SHIFT_TAB: return $this->highlightPrevious();
+
+            case Key::DOWN:
+            case Key::TAB: return $this->highlightNext();
+
+            case Key::ENTER: return $this->selectHighlighted();
+
+            case Key::LEFT:
+            case Key::RIGHT: return $this->highlighted = null;
+
+            default: return value(function () {
                 $this->highlighted = null;
                 $this->matches = null;
-            })(),
-        });
+            });
+        } });
 
         $this->trackTypedValue($default);
     }
@@ -62,8 +69,10 @@ class SuggestPrompt extends Prompt
     /**
      * Get the entered value with a virtual cursor.
      */
-    public function valueWithCursor(int $maxWidth): string
+    public function valueWithCursor(/*int */$maxWidth)/*: string*/
     {
+        $maxWidth = backport_type_check('int', $maxWidth);
+
         if ($this->highlighted !== null) {
             return $this->value() === ''
                 ? $this->dim($this->truncate($this->placeholder, $maxWidth))
@@ -82,7 +91,7 @@ class SuggestPrompt extends Prompt
      *
      * @return array<string>
      */
-    public function matches(): array
+    public function matches()/*: array*/
     {
         if (is_array($this->matches)) {
             return $this->matches;
@@ -100,7 +109,7 @@ class SuggestPrompt extends Prompt
     /**
      * Highlight the previous entry, or wrap around to the last entry.
      */
-    protected function highlightPrevious(): void
+    protected function highlightPrevious()/*: void*/
     {
         if ($this->matches() === []) {
             $this->highlighted = null;
@@ -116,7 +125,7 @@ class SuggestPrompt extends Prompt
     /**
      * Highlight the next entry, or wrap around to the first entry.
      */
-    protected function highlightNext(): void
+    protected function highlightNext()/*: void*/
     {
         if ($this->matches() === []) {
             $this->highlighted = null;
@@ -130,7 +139,7 @@ class SuggestPrompt extends Prompt
     /**
      * Select the highlighted entry.
      */
-    protected function selectHighlighted(): void
+    protected function selectHighlighted()/*: void*/
     {
         if ($this->highlighted === null) {
             return;
@@ -142,8 +151,12 @@ class SuggestPrompt extends Prompt
     /**
      * Truncate a value with an ellipsis if it exceeds the given length.
      */
-    protected function truncate(string $value, int $length): string
+    protected function truncate(/*string */$value, /*int */$length)/*: string*/
     {
+        $length = backport_type_check('int', $length);
+
+        $value = backport_type_check('string', $value);
+
         if ($length <= 0) {
             throw new InvalidArgumentException("Length [{$length}] must be greater than zero.");
         }

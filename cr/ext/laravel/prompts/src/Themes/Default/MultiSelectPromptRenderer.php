@@ -12,7 +12,7 @@ class MultiSelectPromptRenderer extends Renderer
     /**
      * Render the multiselect prompt.
      */
-    public function __invoke(MultiSelectPrompt $prompt): string
+    public function __invoke(MultiSelectPrompt $prompt)/*: string*/
     {
         return match ($prompt->state) {
             'submit' => $this
@@ -25,7 +25,7 @@ class MultiSelectPromptRenderer extends Renderer
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->renderOptions($prompt),
-                    color: 'red',
+                    color: 'red'
                 )
                 ->error('Cancelled.'),
 
@@ -33,14 +33,14 @@ class MultiSelectPromptRenderer extends Renderer
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->renderOptions($prompt),
-                    color: 'yellow',
+                    color: 'yellow'
                 )
                 ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5)),
 
             default => $this
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
-                    $this->renderOptions($prompt),
+                    $this->renderOptions($prompt)
                 )
                 ->newLine(), // Space for errors
         };
@@ -49,12 +49,12 @@ class MultiSelectPromptRenderer extends Renderer
     /**
      * Render the options.
      */
-    protected function renderOptions(MultiSelectPrompt $prompt): string
+    protected function renderOptions(MultiSelectPrompt $prompt)/*: string*/
     {
         return $this->scroll(
             collect($prompt->options)
                 ->values()
-                ->map(fn ($label) => $this->truncate($this->format($label), $prompt->terminal()->cols() - 12))
+                ->map(function ($label) use ($prompt) { return $this->truncate($this->format($label), $prompt->terminal()->cols() - 12); })
                 ->map(function ($label, $index) use ($prompt) {
                     $active = $index === $prompt->highlighted;
                     if (array_is_list($prompt->options)) {
@@ -90,14 +90,14 @@ class MultiSelectPromptRenderer extends Renderer
     /**
      * Render the selected options.
      */
-    protected function renderSelectedOptions(MultiSelectPrompt $prompt): string
+    protected function renderSelectedOptions(MultiSelectPrompt $prompt)/*: string*/
     {
         if (count($prompt->labels()) === 0) {
             return $this->gray('None');
         }
 
         return implode("\n", array_map(
-            fn ($label) => $this->truncate($this->format($label), $prompt->terminal()->cols() - 6),
+            function ($label) { return $this->truncate($this->format($label), $prompt->terminal()->cols() - 6); },
             $prompt->labels()
         ));
     }

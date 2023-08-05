@@ -9,12 +9,12 @@ class ConsoleOutput extends SymfonyConsoleOutput
     /**
      * How many new lines were written by the last output.
      */
-    protected int $newLinesWritten = 1;
+    protected /*int */$newLinesWritten = 1;
 
     /**
      * How many new lines were written by the last output.
      */
-    public function newLinesWritten(): int
+    public function newLinesWritten()/*: int*/
     {
         return $this->newLinesWritten;
     }
@@ -22,8 +22,12 @@ class ConsoleOutput extends SymfonyConsoleOutput
     /**
      * Write the output and capture the number of trailing new lines.
      */
-    protected function doWrite(string $message, bool $newline): void
+    protected function doWrite(/*string */$message, /*bool */$newline)/*: void*/
     {
+        $newline = backport_type_check('bool', $newline);
+
+        $message = backport_type_check('string', $message);
+
         parent::doWrite($message, $newline);
 
         if ($newline) {
@@ -42,8 +46,10 @@ class ConsoleOutput extends SymfonyConsoleOutput
     /**
      * Write output directly, bypassing newline capture.
      */
-    public function writeDirectly(string $message): void
+    public function writeDirectly(/*string */$message)/*: void*/
     {
+        $message = backport_type_check('string', $message);
+
         parent::doWrite($message, false);
     }
 }

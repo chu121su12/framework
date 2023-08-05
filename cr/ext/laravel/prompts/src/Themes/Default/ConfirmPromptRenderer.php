@@ -11,7 +11,7 @@ class ConfirmPromptRenderer extends Renderer
     /**
      * Render the confirm prompt.
      */
-    public function __invoke(ConfirmPrompt $prompt): string
+    public function __invoke(ConfirmPrompt $prompt)/*: string*/
     {
         return match ($prompt->state) {
             'submit' => $this
@@ -32,14 +32,14 @@ class ConfirmPromptRenderer extends Renderer
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->renderOptions($prompt),
-                    color: 'yellow',
+                    color: 'yellow'
                 )
                 ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5)),
 
             default => $this
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
-                    $this->renderOptions($prompt),
+                    $this->renderOptions($prompt)
                 )
                 ->newLine(), // Space for errors
         };
@@ -48,7 +48,7 @@ class ConfirmPromptRenderer extends Renderer
     /**
      * Render the confirm prompt options.
      */
-    protected function renderOptions(ConfirmPrompt $prompt): string
+    protected function renderOptions(ConfirmPrompt $prompt)/*: string*/
     {
         $length = (int) floor(($prompt->terminal()->cols() - 14) / 2);
         $yes = $this->truncate($prompt->yes, $length);

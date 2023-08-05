@@ -16,7 +16,7 @@ class TextPrompt extends Prompt
         public string $placeholder = '',
         public string $default = '',
         public bool|string $required = false,
-        public ?Closure $validate = null,
+        public ?Closure $validate = null
     ) {
         $this->trackTypedValue($default);
     }
@@ -24,8 +24,10 @@ class TextPrompt extends Prompt
     /**
      * Get the entered value with a virtual cursor.
      */
-    public function valueWithCursor(int $maxWidth): string
+    public function valueWithCursor(/*int */$maxWidth)/*: string*/
     {
+        $maxWidth = backport_type_check('int', $maxWidth);
+
         if ($this->value() === '') {
             return $this->dim($this->addCursor($this->placeholder, 0, $maxWidth));
         }

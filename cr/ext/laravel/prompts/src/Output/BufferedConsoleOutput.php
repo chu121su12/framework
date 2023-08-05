@@ -7,12 +7,12 @@ class BufferedConsoleOutput extends ConsoleOutput
     /**
      * The output buffer.
      */
-    protected string $buffer = '';
+    protected /*string */$buffer = '';
 
     /**
      * Empties the buffer and returns its content.
      */
-    public function fetch(): string
+    public function fetch()/*: string*/
     {
         $content = $this->buffer;
         $this->buffer = '';
@@ -23,7 +23,7 @@ class BufferedConsoleOutput extends ConsoleOutput
     /**
      * Return the content of the buffer.
      */
-    public function content(): string
+    public function content()/*: string*/
     {
         return $this->buffer;
     }
@@ -31,8 +31,12 @@ class BufferedConsoleOutput extends ConsoleOutput
     /**
      * Write to the output buffer.
      */
-    protected function doWrite(string $message, bool $newline): void
+    protected function doWrite(/*string */$message, /*bool */$newline)/*: void*/
     {
+        $newline = backport_type_check('bool', $newline);
+
+        $message = backport_type_check('string', $message);
+
         $this->buffer .= $message;
 
         if ($newline) {

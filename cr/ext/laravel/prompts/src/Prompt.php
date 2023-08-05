@@ -20,57 +20,57 @@ abstract class Prompt
     /**
      * The current state of the prompt.
      */
-    public string $state = 'initial';
+    public /*string */$state = 'initial';
 
     /**
      * The error message from the validator.
      */
-    public string $error = '';
+    public /*string */$error = '';
 
     /**
      * The previously rendered frame.
      */
-    protected string $prevFrame = '';
+    protected /*string */$prevFrame = '';
 
     /**
      * How many new lines were written by the last output.
      */
-    protected int $newLinesWritten = 1;
+    protected /*int */$newLinesWritten = 1;
 
     /**
      * Whether user input is required.
      */
-    public bool|string $required;
+    public /*bool|string */$required;
 
     /**
      * The validator callback.
      */
-    protected ?Closure $validate;
+    protected /*?Closure */$validate;
 
     /**
      * Indicates if the prompt has been validated.
      */
-    protected bool $validated = false;
+    protected /*bool */$validated = false;
 
     /**
      * The output instance.
      */
-    protected static OutputInterface $output;
+    protected /*static */OutputInterface $output;
 
     /**
      * The terminal instance.
      */
-    protected static Terminal $terminal;
+    protected /*static */Terminal $terminal;
 
     /**
      * Get the value of the prompt.
      */
-    abstract public function value(): mixed;
+    abstract public function value()/*: mixed*/;
 
     /**
      * Render the prompt and listen for input.
      */
-    public function prompt(): mixed
+    public function prompt()/*: mixed*/
     {
         $this->capturePreviousNewLines();
 
@@ -110,7 +110,7 @@ abstract class Prompt
     /**
      * How many new lines were written by the last output.
      */
-    public function newLinesWritten(): int
+    public function newLinesWritten()/*: int*/
     {
         return $this->newLinesWritten;
     }
@@ -118,7 +118,7 @@ abstract class Prompt
     /**
      * Capture the number of new lines written by the last output.
      */
-    protected function capturePreviousNewLines(): void
+    protected function capturePreviousNewLines()/*: void*/
     {
         $this->newLinesWritten = method_exists(static::output(), 'newLinesWritten')
             ? static::output()->newLinesWritten()
@@ -128,7 +128,7 @@ abstract class Prompt
     /**
      * Set the output instance.
      */
-    public static function setOutput(OutputInterface $output): void
+    public static function setOutput(OutputInterface $output)/*: void*/
     {
         self::$output = $output;
     }
@@ -136,16 +136,22 @@ abstract class Prompt
     /**
      * Get the current output instance.
      */
-    protected static function output(): OutputInterface
+    protected static function output()/*: OutputInterface*/
     {
-        return self::$output ??= new ConsoleOutput();
+        if (! isset(self::$output)) {
+            self::$output = new ConsoleOutput();
+        }
+
+        return self::$output;
     }
 
     /**
      * Write output directly, bypassing newline capture.
      */
-    protected static function writeDirectly(string $message): void
+    protected static function writeDirectly(/*string */$message)/*: void*/
     {
+        $message = backport_type_check('string', $message);
+
         match (true) {
             method_exists(static::output(), 'writeDirectly') => static::output()->writeDirectly($message),
             method_exists(static::output(), 'getOutput') => static::output()->getOutput()->write($message),
@@ -156,15 +162,19 @@ abstract class Prompt
     /**
      * Get the terminal instance.
      */
-    public static function terminal(): Terminal
+    public static function terminal()/*: Terminal*/
     {
-        return static::$terminal ??= new Terminal();
+        if (! isset(static::$terminal)) {
+            static::$terminal = new Terminal();
+        }
+
+        return static::$terminal;
     }
 
     /**
      * Render the prompt.
      */
-    protected function render(): void
+    protected function render()/*: void*/
     {
         $frame = $this->renderTheme();
 
@@ -217,7 +227,7 @@ abstract class Prompt
     /**
      * Submit the prompt.
      */
-    protected function submit(): void
+    protected function submit()/*: void*/
     {
         $this->validate($this->value());
 
@@ -229,7 +239,7 @@ abstract class Prompt
     /**
      * Reset the cursor position to the beginning of the previous frame.
      */
-    private function resetCursorPosition(): void
+    private function resetCursorPosition()/*: void*/
     {
         $lines = count(explode(PHP_EOL, $this->prevFrame)) - 1;
 
@@ -241,8 +251,12 @@ abstract class Prompt
      *
      * @return array<int>
      */
-    private function diffLines(string $a, string $b): array
+    private function diffLines(/*string */$a, /*string */$b)/*: array*/
     {
+        $b = backport_type_check('string', $b);
+
+        $a = backport_type_check('string', $a);
+
         if ($a === $b) {
             return [];
         }
@@ -263,8 +277,10 @@ abstract class Prompt
     /**
      * Handle a key press and determine whether to continue.
      */
-    private function handleKeyPress(string $key): bool
+    private function handleKeyPress(/*string */$key)/*: bool*/
     {
+        $key = backport_type_check('string', $key);
+
         if ($this->state === 'error') {
             $this->state = 'active';
         }
@@ -291,11 +307,13 @@ abstract class Prompt
     /**
      * Validate the input.
      */
-    private function validate(mixed $value): void
+    private function validate(/*mixed */$value)/*: void*/
     {
+        $value = backport_type_check('mixed', $value);
+
         $this->validated = true;
 
-        if (($this->required ?? false) && ($value === '' || $value === [] || $value === false)) {
+        if ((isset($this->required) ? $this->required : false) && ($value === '' || $value === [] || $value === false)) {
             $this->state = 'error';
             $this->error = is_string($this->required) ? $this->required : 'Required.';
 
@@ -321,7 +339,7 @@ abstract class Prompt
     /**
      * Check whether the environment can support the prompt.
      */
-    private function checkEnvironment(): void
+    private function checkEnvironment()/*: void*/
     {
         if (PHP_OS_FAMILY === 'Windows') {
             throw new RuntimeException('Prompts is not currently supported on Windows. Please use WSL or configure a fallback.');

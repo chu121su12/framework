@@ -27,14 +27,14 @@ trait Themes
     /**
      * The name of the active theme.
      */
-    protected static string $theme = 'default';
+    protected /*static */string $theme = 'default';
 
     /**
      * The available themes.
      *
      * @var array<string, array<class-string<\Laravel\Prompts\Prompt>, class-string<object&callable>>>
      */
-    protected static array $themes = [
+    protected /*static */array $themes = [
         'default' => [
             TextPrompt::class => TextPromptRenderer::class,
             PasswordPrompt::class => PasswordPromptRenderer::class,
@@ -53,8 +53,10 @@ trait Themes
      *
      * @throws \InvalidArgumentException
      */
-    public static function theme(string $name = null): string
+    public static function theme(/*string */$name = null)/*: string*/
     {
+        $name = backport_type_check('string', $name);
+
         if ($name === null) {
             return static::$theme;
         }
@@ -71,8 +73,10 @@ trait Themes
      *
      * @param  array<class-string<\Laravel\Prompts\Prompt>, class-string<object&callable>>  $renderers
      */
-    public static function addTheme(string $name, array $renderers): void
+    public static function addTheme(/*string */$name, array $renderers)/*: void*/
     {
+        $name = backport_type_check('string', $name);
+
         if ($name === 'default') {
             throw new InvalidArgumentException('The default theme cannot be overridden.');
         }
@@ -83,17 +87,21 @@ trait Themes
     /**
      * Get the renderer for the current prompt.
      */
-    protected function getRenderer(): callable
+    protected function getRenderer()/*: callable*/
     {
         $class = get_class($this);
 
-        return new (static::$themes[static::$theme][$class] ?? static::$themes['default'][$class])($this);
+        $classCallable = isset(static::$themes[static::$theme]) && isset(static::$themes[static::$theme][$class]) ? static::$themes[static::$theme][$class] : static::$themes['default'][$class];
+
+        $className = $classCallable($this);
+
+        return new $className;
     }
 
     /**
      * Render the prompt using the active theme.
      */
-    protected function renderTheme(): string
+    protected function renderTheme()/*: string*/
     {
         $renderer = $this->getRenderer();
 

@@ -12,7 +12,7 @@ class SelectPromptRenderer extends Renderer
     /**
      * Render the select prompt.
      */
-    public function __invoke(SelectPrompt $prompt): string
+    public function __invoke(SelectPrompt $prompt)/*: string*/
     {
         $maxWidth = $prompt->terminal()->cols() - 6;
 
@@ -20,14 +20,14 @@ class SelectPromptRenderer extends Renderer
             'submit' => $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
-                    $this->truncate($this->format($prompt->label()), $maxWidth),
+                    $this->truncate($this->format($prompt->label()), $maxWidth)
                 ),
 
             'cancel' => $this
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->renderOptions($prompt),
-                    color: 'red',
+                    color: 'red'
                 )
                 ->error('Cancelled.'),
 
@@ -35,14 +35,14 @@ class SelectPromptRenderer extends Renderer
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->renderOptions($prompt),
-                    color: 'yellow',
+                    color: 'yellow'
                 )
                 ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5)),
 
             default => $this
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
-                    $this->renderOptions($prompt),
+                    $this->renderOptions($prompt)
                 )
                 ->newLine(), // Space for errors
         };
@@ -51,12 +51,12 @@ class SelectPromptRenderer extends Renderer
     /**
      * Render the options.
      */
-    protected function renderOptions(SelectPrompt $prompt): string
+    protected function renderOptions(SelectPrompt $prompt)/*: string*/
     {
         return $this->scroll(
             collect($prompt->options)
                 ->values()
-                ->map(fn ($label) => $this->truncate($this->format($label), $prompt->terminal()->cols() - 12))
+                ->map(function ($label) use ($prompt) { return $this->truncate($this->format($label), $prompt->terminal()->cols() - 12); })
                 ->map(function ($label, $i) use ($prompt) {
                     if ($prompt->state === 'cancel') {
                         return $this->dim($prompt->highlighted === $i

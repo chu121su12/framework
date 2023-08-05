@@ -7,12 +7,12 @@ trait Cursor
     /**
      * Indicates if the cursor has been hidden.
      */
-    protected static bool $cursorHidden = false;
+    protected /*static */bool $cursorHidden = false;
 
     /**
      * Hide the cursor.
      */
-    public function hideCursor(): void
+    public function hideCursor()/*: void*/
     {
         static::writeDirectly("\e[?25l");
 
@@ -22,7 +22,7 @@ trait Cursor
     /**
      * Show the cursor.
      */
-    public function showCursor(): void
+    public function showCursor()/*: void*/
     {
         static::writeDirectly("\e[?25h");
 
@@ -32,7 +32,7 @@ trait Cursor
     /**
      * Restore the cursor if it was hidden.
      */
-    public function restoreCursor(): void
+    public function restoreCursor()/*: void*/
     {
         if (static::$cursorHidden) {
             $this->showCursor();
@@ -42,8 +42,12 @@ trait Cursor
     /**
      * Move the cursor.
      */
-    public function moveCursor(int $x, int $y = 0): void
+    public function moveCursor(/*int */$x, /*int */$y = 0)/*: void*/
     {
+        $y = backport_type_check('int', $y);
+
+        $x = backport_type_check('int', $x);
+
         $sequence = '';
 
         if ($x < 0) {

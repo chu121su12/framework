@@ -10,17 +10,17 @@ class Spinner extends Prompt
     /**
      * How long to wait between rendering each frame.
      */
-    public int $interval = 100;
+    public /*int */$interval = 100;
 
     /**
      * The number of times the spinner has been rendered.
      */
-    public int $count = 0;
+    public /*int */$count = 0;
 
     /**
      * Whether the spinner can only be rendered once.
      */
-    public bool $static = false;
+    public /*bool */$static = false;
 
     /**
      * Create a new Spinner instance.
@@ -38,7 +38,7 @@ class Spinner extends Prompt
      * @param  \Closure(): TReturn  $callback
      * @return TReturn
      */
-    public function spin(Closure $callback): mixed
+    public function spin(Closure $callback)/*: mixed*/
     {
         $this->capturePreviousNewLines();
 
@@ -80,7 +80,12 @@ class Spinner extends Prompt
 
                 return $result;
             }
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (\Throwable $e) {
+        }
+
+        if (isset($e)) {
             $this->showCursor();
             pcntl_async_signals($originalAsync);
             pcntl_signal(SIGINT, SIG_DFL);
@@ -97,7 +102,7 @@ class Spinner extends Prompt
      * @param  \Closure(): TReturn  $callback
      * @return TReturn
      */
-    protected function renderStatically(Closure $callback): mixed
+    protected function renderStatically(Closure $callback)/*: mixed*/
     {
         $this->static = true;
 
@@ -111,7 +116,7 @@ class Spinner extends Prompt
      *
      * @throws \RuntimeException
      */
-    public function prompt(): never
+    public function prompt()/*: never*/
     {
         throw new RuntimeException('Spinner cannot be prompted.');
     }
@@ -119,7 +124,7 @@ class Spinner extends Prompt
     /**
      * Get the current value of the prompt.
      */
-    public function value(): bool
+    public function value()/*: bool*/
     {
         return true;
     }

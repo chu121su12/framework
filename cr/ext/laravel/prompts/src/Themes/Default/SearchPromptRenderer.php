@@ -12,7 +12,7 @@ class SearchPromptRenderer extends Renderer
     /**
      * Render the suggest prompt.
      */
-    public function __invoke(SearchPrompt $prompt): string
+    public function __invoke(SearchPrompt $prompt)/*: string*/
     {
         $maxWidth = $prompt->terminal()->cols() - 6;
 
@@ -20,14 +20,14 @@ class SearchPromptRenderer extends Renderer
             'submit' => $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
-                    $this->truncate($prompt->label(), $maxWidth),
+                    $this->truncate($prompt->label(), $maxWidth)
                 ),
 
             'cancel' => $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->strikethrough($this->dim($this->truncate($prompt->searchValue() ?: $prompt->placeholder, $maxWidth))),
-                    color: 'red',
+                    color: 'red'
                 )
                 ->error('Cancelled'),
 
@@ -36,7 +36,7 @@ class SearchPromptRenderer extends Renderer
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $prompt->valueWithCursor($maxWidth),
                     $this->renderOptions($prompt),
-                    color: 'yellow',
+                    color: 'yellow'
                 )
                 ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5)),
 
@@ -44,14 +44,14 @@ class SearchPromptRenderer extends Renderer
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->valueWithCursorAndSearchIcon($prompt, $maxWidth),
-                    $this->renderOptions($prompt),
+                    $this->renderOptions($prompt)
                 ),
 
             default => $this
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $prompt->valueWithCursor($maxWidth),
-                    $this->renderOptions($prompt),
+                    $this->renderOptions($prompt)
                 )
                 ->spaceForDropdown($prompt)
                 ->newLine(), // Space for errors
@@ -61,8 +61,10 @@ class SearchPromptRenderer extends Renderer
     /**
      * Render the value with the cursor and a search icon.
      */
-    protected function valueWithCursorAndSearchIcon(SearchPrompt $prompt, int $maxWidth): string
+    protected function valueWithCursorAndSearchIcon(SearchPrompt $prompt, /*int */$maxWidth)/*: string*/
     {
+        $maxWidth = backport_type_check('int', $maxWidth);
+
         return preg_replace(
             '/\s$/',
             $this->cyan('…'),
@@ -73,7 +75,7 @@ class SearchPromptRenderer extends Renderer
     /**
      * Render a spacer to prevent jumping when the suggestions are displayed.
      */
-    protected function spaceForDropdown(SearchPrompt $prompt): self
+    protected function spaceForDropdown(SearchPrompt $prompt)/*: self*/
     {
         if ($prompt->searchValue() !== '') {
             return $this;
@@ -81,7 +83,7 @@ class SearchPromptRenderer extends Renderer
 
         $this->newLine(max(
             0,
-            min($prompt->scroll, $prompt->terminal()->lines() - 7) - count($prompt->matches()),
+            min($prompt->scroll, $prompt->terminal()->lines() - 7) - count($prompt->matches())
         ));
 
         if ($prompt->matches() === []) {
@@ -94,7 +96,7 @@ class SearchPromptRenderer extends Renderer
     /**
      * Render the options.
      */
-    protected function renderOptions(SearchPrompt $prompt): string
+    protected function renderOptions(SearchPrompt $prompt)/*: string*/
     {
         if ($prompt->searchValue() !== '' && empty($prompt->matches())) {
             return $this->gray('  '.($prompt->state === 'searching' ? 'Searching...' : 'No results.'));
@@ -103,11 +105,11 @@ class SearchPromptRenderer extends Renderer
         return $this->scroll(
             collect($prompt->matches())
                 ->values()
-                ->map(fn ($label) => $this->truncate($label, $prompt->terminal()->cols() - 10))
-                ->map(fn ($label, $i) => $prompt->highlighted === $i
+                ->map(function ($label) use ($prompt) { return $this->truncate($label, $prompt->terminal()->cols() - 10); })
+                ->map(function ($label, $i) use ($prompt) { return $prompt->highlighted === $i
                     ? "{$this->cyan('›')} {$label}  "
-                    : "  {$this->dim($label)}  "
-                ),
+                    : "  {$this->dim($label)}  ";
+                }),
             $prompt->highlighted,
             min($prompt->scroll, $prompt->terminal()->lines() - 7),
             min($this->longest($prompt->matches(), padding: 4), $prompt->terminal()->cols() - 6)

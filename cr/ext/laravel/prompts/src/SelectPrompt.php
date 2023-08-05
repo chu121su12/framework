@@ -10,14 +10,14 @@ class SelectPrompt extends Prompt
     /**
      * The index of the highlighted option.
      */
-    public int $highlighted = 0;
+    public /*int */$highlighted = 0;
 
     /**
      * The options for the select prompt.
      *
      * @var array<int|string, string>
      */
-    public array $options;
+    public /*array */$options;
 
     /**
      * Create a new SelectPrompt instance.
@@ -29,7 +29,7 @@ class SelectPrompt extends Prompt
         array|Collection $options,
         public int|string|null $default = null,
         public int $scroll = 5,
-        public ?Closure $validate = null,
+        public ?Closure $validate = null
     ) {
         $this->options = $options instanceof Collection ? $options->all() : $options;
 
@@ -41,21 +41,31 @@ class SelectPrompt extends Prompt
             }
         }
 
-        $this->on('key', fn ($key) => match ($key) {
-            Key::UP, Key::LEFT, Key::SHIFT_TAB, 'k', 'h' => $this->highlightPrevious(),
-            Key::DOWN, Key::RIGHT, Key::TAB, 'j', 'l' => $this->highlightNext(),
-            Key::ENTER => $this->submit(),
-            default => null,
-        });
+        $this->on('key', function ($key) { switch ($key) {
+            case Key::UP:
+            case Key::LEFT:
+            case Key::SHIFT_TAB:
+            case 'k':
+            case 'h': return $this->highlightPrevious();
+
+            case Key::DOWN:
+            case Key::RIGHT:
+            case Key::TAB:
+            case 'j':
+            case 'l': return $this->highlightNext();
+
+            case Key::ENTER: return $this->submit();
+            default: return null;
+        } });
     }
 
     /**
      * Get the selected value.
      */
-    public function value(): int|string|null
+    public function value()/*: int|string|null*/
     {
         if (array_is_list($this->options)) {
-            return $this->options[$this->highlighted] ?? null;
+            return isset($this->options[$this->highlighted]) ? $this->options[$this->highlighted] : null;
         } else {
             return array_keys($this->options)[$this->highlighted];
         }
@@ -64,19 +74,21 @@ class SelectPrompt extends Prompt
     /**
      * Get the selected label.
      */
-    public function label(): ?string
+    public function label()/*: ?string*/
     {
         if (array_is_list($this->options)) {
-            return $this->options[$this->highlighted] ?? null;
+            return isset($this->options[$this->highlighted]) ? $this->options[$this->highlighted] : null;
         } else {
-            return $this->options[array_keys($this->options)[$this->highlighted]] ?? null;
+            $optionKey = array_keys($this->options)[$this->highlighted];
+
+            return isset($this->options[$optionKey]) ? $this->options[$optionKey] : null;
         }
     }
 
     /**
      * Highlight the previous entry, or wrap around to the last entry.
      */
-    protected function highlightPrevious(): void
+    protected function highlightPrevious()/*: void*/
     {
         $this->highlighted = $this->highlighted === 0 ? count($this->options) - 1 : $this->highlighted - 1;
     }
@@ -84,7 +96,7 @@ class SelectPrompt extends Prompt
     /**
      * Highlight the next entry, or wrap around to the first entry.
      */
-    protected function highlightNext(): void
+    protected function highlightNext()/*: void*/
     {
         $this->highlighted = $this->highlighted === count($this->options) - 1 ? 0 : $this->highlighted + 1;
     }
