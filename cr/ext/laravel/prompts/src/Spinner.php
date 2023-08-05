@@ -38,7 +38,7 @@ class Spinner extends Prompt
      * @param  \Closure(): TReturn  $callback
      * @return TReturn
      */
-    public function spin(Closure $callback): mixed
+    public function spin(Closure $callback)/*: mixed*/
     {
         $this->capturePreviousNewLines();
 
@@ -97,7 +97,7 @@ class Spinner extends Prompt
      * @param  \Closure(): TReturn  $callback
      * @return TReturn
      */
-    protected function renderStatically(Closure $callback): mixed
+    protected function renderStatically(Closure $callback)/*: mixed*/
     {
         $this->static = true;
 
@@ -111,7 +111,7 @@ class Spinner extends Prompt
      *
      * @throws \RuntimeException
      */
-    public function prompt(): never
+    public function prompt()/*: never*/
     {
         throw new RuntimeException('Spinner cannot be prompted.');
     }
@@ -119,7 +119,7 @@ class Spinner extends Prompt
     /**
      * Get the current value of the prompt.
      */
-    public function value(): bool
+    public function value()/*: bool*/
     {
         return true;
     }

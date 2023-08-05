@@ -23,7 +23,7 @@ class PasswordPrompt extends Prompt
     /**
      * Get a masked version of the entered value.
      */
-    public function masked(): string
+    public function masked()/*: string*/
     {
         return str_repeat('•', mb_strlen($this->value()));
     }
@@ -31,7 +31,7 @@ class PasswordPrompt extends Prompt
     /**
      * Get the masked value with a virtual cursor.
      */
-    public function maskedWithCursor(int $maxWidth): string
+    public function maskedWithCursor(int $maxWidth)/*: string*/
     {
         if ($this->value() === '') {
             return $this->dim($this->addCursor($this->placeholder, 0, $maxWidth));

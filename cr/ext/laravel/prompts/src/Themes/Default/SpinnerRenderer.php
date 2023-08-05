@@ -26,7 +26,7 @@ class SpinnerRenderer extends Renderer
     /**
      * Render the spinner.
      */
-    public function __invoke(Spinner $spinner): string
+    public function __invoke(Spinner $spinner)/*: string*/
     {
         if ($spinner->static) {
             return $this->line(" {$this->cyan($this->staticFrame)} {$spinner->message}");

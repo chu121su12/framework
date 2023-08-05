@@ -36,7 +36,7 @@ class ConfirmPrompt extends Prompt
     /**
      * Get the value of the prompt.
      */
-    public function value(): bool
+    public function value()/*: bool*/
     {
         return $this->confirmed;
     }
@@ -44,7 +44,7 @@ class ConfirmPrompt extends Prompt
     /**
      * Get the label of the selected option.
      */
-    public function label(): string
+    public function label()/*: string*/
     {
         return $this->confirmed ? $this->yes : $this->no;
     }

@@ -12,7 +12,7 @@ class MultiSelectPromptRenderer extends Renderer
     /**
      * Render the multiselect prompt.
      */
-    public function __invoke(MultiSelectPrompt $prompt): string
+    public function __invoke(MultiSelectPrompt $prompt)/*: string*/
     {
         return match ($prompt->state) {
             'submit' => $this
@@ -49,7 +49,7 @@ class MultiSelectPromptRenderer extends Renderer
     /**
      * Render the options.
      */
-    protected function renderOptions(MultiSelectPrompt $prompt): string
+    protected function renderOptions(MultiSelectPrompt $prompt)/*: string*/
     {
         return $this->scroll(
             collect($prompt->options)
@@ -90,7 +90,7 @@ class MultiSelectPromptRenderer extends Renderer
     /**
      * Render the selected options.
      */
-    protected function renderSelectedOptions(MultiSelectPrompt $prompt): string
+    protected function renderSelectedOptions(MultiSelectPrompt $prompt)/*: string*/
     {
         if (count($prompt->labels()) === 0) {
             return $this->gray('None');

@@ -9,7 +9,7 @@ class NoteRenderer extends Renderer
     /**
      * Render the note.
      */
-    public function __invoke(Note $note): string
+    public function __invoke(Note $note)/*: string*/
     {
         $lines = collect(explode(PHP_EOL, $note->message));
 

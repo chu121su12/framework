@@ -24,7 +24,7 @@ class Terminal
     /**
      * Read a line from the terminal.
      */
-    public function read(): string
+    public function read()/*: string*/
     {
         $input = fread(STDIN, 1024);
 
@@ -34,7 +34,7 @@ class Terminal
     /**
      * Set the TTY mode.
      */
-    public function setTty(string $mode): void
+    public function setTty(string $mode)/*: void*/
     {
         $this->initialTtyMode ??= (shell_exec('stty -g') ?: null);
 
@@ -44,7 +44,7 @@ class Terminal
     /**
      * Restore the initial TTY mode.
      */
-    public function restoreTty(): void
+    public function restoreTty()/*: void*/
     {
         if ($this->initialTtyMode) {
             shell_exec("stty {$this->initialTtyMode}");
@@ -56,7 +56,7 @@ class Terminal
     /**
      * Get the number of columns in the terminal.
      */
-    public function cols(): int
+    public function cols()/*: int*/
     {
         return $this->cols ??= (new SymfonyTerminal())->getWidth();
     }
@@ -64,7 +64,7 @@ class Terminal
     /**
      * Get the number of lines in the terminal.
      */
-    public function lines(): int
+    public function lines()/*: int*/
     {
         return $this->lines ??= (new SymfonyTerminal())->getHeight();
     }
@@ -72,7 +72,7 @@ class Terminal
     /**
      * Exit the interactive session.
      */
-    public function exit(): void
+    public function exit()/*: void*/
     {
         exit(1);
     }

@@ -12,7 +12,7 @@ class SearchPromptRenderer extends Renderer
     /**
      * Render the suggest prompt.
      */
-    public function __invoke(SearchPrompt $prompt): string
+    public function __invoke(SearchPrompt $prompt)/*: string*/
     {
         $maxWidth = $prompt->terminal()->cols() - 6;
 
@@ -61,7 +61,7 @@ class SearchPromptRenderer extends Renderer
     /**
      * Render the value with the cursor and a search icon.
      */
-    protected function valueWithCursorAndSearchIcon(SearchPrompt $prompt, int $maxWidth): string
+    protected function valueWithCursorAndSearchIcon(SearchPrompt $prompt, int $maxWidth)/*: string*/
     {
         return preg_replace(
             '/\s$/',
@@ -73,7 +73,7 @@ class SearchPromptRenderer extends Renderer
     /**
      * Render a spacer to prevent jumping when the suggestions are displayed.
      */
-    protected function spaceForDropdown(SearchPrompt $prompt): self
+    protected function spaceForDropdown(SearchPrompt $prompt)/*: self*/
     {
         if ($prompt->searchValue() !== '') {
             return $this;
@@ -94,7 +94,7 @@ class SearchPromptRenderer extends Renderer
     /**
      * Render the options.
      */
-    protected function renderOptions(SearchPrompt $prompt): string
+    protected function renderOptions(SearchPrompt $prompt)/*: string*/
     {
         if ($prompt->searchValue() !== '' && empty($prompt->matches())) {
             return $this->gray('  '.($prompt->state === 'searching' ? 'Searching...' : 'No results.'));

@@ -65,7 +65,7 @@ class MultiSelectPrompt extends Prompt
      *
      * @return array<int|string>
      */
-    public function value(): array
+    public function value()/*: array*/
     {
         return array_values($this->values);
     }
@@ -75,7 +75,7 @@ class MultiSelectPrompt extends Prompt
      *
      * @return array<string>
      */
-    public function labels(): array
+    public function labels()/*: array*/
     {
         if (array_is_list($this->options)) {
             return array_values(array_intersect_key($this->options, $this->values));
@@ -87,7 +87,7 @@ class MultiSelectPrompt extends Prompt
     /**
      * Check whether the value is currently highlighted.
      */
-    public function isHighlighted(string $value): bool
+    public function isHighlighted(string $value)/*: bool*/
     {
         if (array_is_list($this->options)) {
             return $this->options[$this->highlighted] === $value;
@@ -99,7 +99,7 @@ class MultiSelectPrompt extends Prompt
     /**
      * Check whether the value is currently selected.
      */
-    public function isSelected(string $value): bool
+    public function isSelected(string $value)/*: bool*/
     {
         return in_array($value, $this->values);
     }
@@ -107,7 +107,7 @@ class MultiSelectPrompt extends Prompt
     /**
      * Highlight the previous entry, or wrap around to the last entry.
      */
-    protected function highlightPrevious(): void
+    protected function highlightPrevious()/*: void*/
     {
         $this->highlighted = $this->highlighted === 0 ? count($this->options) - 1 : $this->highlighted - 1;
     }
@@ -115,7 +115,7 @@ class MultiSelectPrompt extends Prompt
     /**
      * Highlight the next entry, or wrap around to the first entry.
      */
-    protected function highlightNext(): void
+    protected function highlightNext()/*: void*/
     {
         $this->highlighted = $this->highlighted === count($this->options) - 1 ? 0 : $this->highlighted + 1;
     }
@@ -123,7 +123,7 @@ class MultiSelectPrompt extends Prompt
     /**
      * Toggle the highlighted entry.
      */
-    protected function toggleHighlighted(): void
+    protected function toggleHighlighted()/*: void*/
     {
         $value = array_is_list($this->options)
             ? $this->options[$this->highlighted]

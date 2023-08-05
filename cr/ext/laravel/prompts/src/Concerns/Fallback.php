@@ -21,7 +21,7 @@ trait Fallback
     /**
      * Enable the fallback implementation.
      */
-    public static function fallbackWhen(bool $condition): void
+    public static function fallbackWhen(bool $condition)/*: void*/
     {
         static::$shouldFallback = $condition || static::$shouldFallback;
     }
@@ -29,7 +29,7 @@ trait Fallback
     /**
      * Whether the prompt should fallback to a custom implementation.
      */
-    public static function shouldFallback(): bool
+    public static function shouldFallback()/*: bool*/
     {
         return static::$shouldFallback && isset(static::$fallbacks[static::class]);
     }
@@ -39,7 +39,7 @@ trait Fallback
      *
      * @param  Closure($this): mixed  $fallback
      */
-    public static function fallbackUsing(Closure $fallback): void
+    public static function fallbackUsing(Closure $fallback)/*: void*/
     {
         static::$fallbacks[static::class] = $fallback;
     }
@@ -47,7 +47,7 @@ trait Fallback
     /**
      * Call the registered fallback implementation.
      */
-    public function fallback(): mixed
+    public function fallback()/*: mixed*/
     {
         $fallback = static::$fallbacks[static::class];
 

@@ -52,7 +52,7 @@ class SelectPrompt extends Prompt
     /**
      * Get the selected value.
      */
-    public function value(): int|string|null
+    public function value()/*: int|string|null*/
     {
         if (array_is_list($this->options)) {
             return $this->options[$this->highlighted] ?? null;
@@ -64,7 +64,7 @@ class SelectPrompt extends Prompt
     /**
      * Get the selected label.
      */
-    public function label(): ?string
+    public function label()/*: ?string*/
     {
         if (array_is_list($this->options)) {
             return $this->options[$this->highlighted] ?? null;
@@ -76,7 +76,7 @@ class SelectPrompt extends Prompt
     /**
      * Highlight the previous entry, or wrap around to the last entry.
      */
-    protected function highlightPrevious(): void
+    protected function highlightPrevious()/*: void*/
     {
         $this->highlighted = $this->highlighted === 0 ? count($this->options) - 1 : $this->highlighted - 1;
     }
@@ -84,7 +84,7 @@ class SelectPrompt extends Prompt
     /**
      * Highlight the next entry, or wrap around to the first entry.
      */
-    protected function highlightNext(): void
+    protected function highlightNext()/*: void*/
     {
         $this->highlighted = $this->highlighted === count($this->options) - 1 ? 0 : $this->highlighted + 1;
     }

@@ -11,7 +11,7 @@ class TextPromptRenderer extends Renderer
     /**
      * Render the text prompt.
      */
-    public function __invoke(TextPrompt $prompt): string
+    public function __invoke(TextPrompt $prompt)/*: string*/
     {
         $maxWidth = $prompt->terminal()->cols() - 6;
 

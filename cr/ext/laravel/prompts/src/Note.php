@@ -15,7 +15,7 @@ class Note extends Prompt
     /**
      * Display the note.
      */
-    public function display(): void
+    public function display()/*: void*/
     {
         $this->prompt();
     }
@@ -23,7 +23,7 @@ class Note extends Prompt
     /**
      * Display the note.
      */
-    public function prompt(): bool
+    public function prompt()/*: bool*/
     {
         $this->capturePreviousNewLines();
 
@@ -37,7 +37,7 @@ class Note extends Prompt
     /**
      * Get the value of the prompt.
      */
-    public function value(): bool
+    public function value()/*: bool*/
     {
         return true;
     }

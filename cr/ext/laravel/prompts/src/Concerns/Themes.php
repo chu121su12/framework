@@ -53,7 +53,7 @@ trait Themes
      *
      * @throws \InvalidArgumentException
      */
-    public static function theme(string $name = null): string
+    public static function theme(string $name = null)/*: string*/
     {
         if ($name === null) {
             return static::$theme;
@@ -71,7 +71,7 @@ trait Themes
      *
      * @param  array<class-string<\Laravel\Prompts\Prompt>, class-string<object&callable>>  $renderers
      */
-    public static function addTheme(string $name, array $renderers): void
+    public static function addTheme(string $name, array $renderers)/*: void*/
     {
         if ($name === 'default') {
             throw new InvalidArgumentException('The default theme cannot be overridden.');
@@ -83,7 +83,7 @@ trait Themes
     /**
      * Get the renderer for the current prompt.
      */
-    protected function getRenderer(): callable
+    protected function getRenderer()/*: callable*/
     {
         $class = get_class($this);
 
@@ -93,7 +93,7 @@ trait Themes
     /**
      * Render the prompt using the active theme.
      */
-    protected function renderTheme(): string
+    protected function renderTheme()/*: string*/
     {
         $renderer = $this->getRenderer();
 

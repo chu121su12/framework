@@ -16,7 +16,7 @@ trait DrawsBoxes
         string $body,
         string $footer = '',
         string $color = 'gray',
-    ): self {
+    )/*: self */{
         $this->minWidth = min($this->minWidth, Prompt::terminal()->cols() - 6);
 
         $bodyLines = collect(explode(PHP_EOL, $body));
@@ -55,7 +55,7 @@ trait DrawsBoxes
      *
      * @param  array<string>  $lines
      */
-    protected function longest(array $lines, int $padding = 0): int
+    protected function longest(array $lines, int $padding = 0)/*: int*/
     {
         return max(
             $this->minWidth,
@@ -68,7 +68,7 @@ trait DrawsBoxes
     /**
      * Pad text ignoring ANSI escape sequences.
      */
-    protected function pad(string $text, int $length): string
+    protected function pad(string $text, int $length)/*: string*/
     {
         $rightPadding = str_repeat(' ', max(0, $length - mb_strlen($this->stripEscapeSequences($text))));
 
@@ -78,7 +78,7 @@ trait DrawsBoxes
     /**
      * Strip ANSI escape sequences from the given text.
      */
-    protected function stripEscapeSequences(string $text): string
+    protected function stripEscapeSequences(string $text)/*: string*/
     {
         return preg_replace("/\e[^m]*m/", '', $text);
     }

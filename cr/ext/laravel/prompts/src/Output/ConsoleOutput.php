@@ -14,7 +14,7 @@ class ConsoleOutput extends SymfonyConsoleOutput
     /**
      * How many new lines were written by the last output.
      */
-    public function newLinesWritten(): int
+    public function newLinesWritten()/*: int*/
     {
         return $this->newLinesWritten;
     }
@@ -22,7 +22,7 @@ class ConsoleOutput extends SymfonyConsoleOutput
     /**
      * Write the output and capture the number of trailing new lines.
      */
-    protected function doWrite(string $message, bool $newline): void
+    protected function doWrite(string $message, bool $newline)/*: void*/
     {
         parent::doWrite($message, $newline);
 
@@ -42,7 +42,7 @@ class ConsoleOutput extends SymfonyConsoleOutput
     /**
      * Write output directly, bypassing newline capture.
      */
-    public function writeDirectly(string $message): void
+    public function writeDirectly(string $message)/*: void*/
     {
         parent::doWrite($message, false);
     }

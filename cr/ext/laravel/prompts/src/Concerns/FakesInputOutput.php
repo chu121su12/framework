@@ -14,7 +14,7 @@ trait FakesInputOutput
      *
      * @param  array<string>  $keys
      */
-    public static function fake(array $keys = []): void
+    public static function fake(array $keys = [])/*: void*/
     {
         $mock = \Mockery::mock(Terminal::class);
 
@@ -37,7 +37,7 @@ trait FakesInputOutput
     /**
      * Assert that the output contains the given string.
      */
-    public static function assertOutputContains(string $string): void
+    public static function assertOutputContains(string $string)/*: void*/
     {
         if (! static::output() instanceof BufferedConsoleOutput) {
             throw new RuntimeException('Prompt must be faked before asserting output.');

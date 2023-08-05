@@ -12,7 +12,7 @@ class SelectPromptRenderer extends Renderer
     /**
      * Render the select prompt.
      */
-    public function __invoke(SelectPrompt $prompt): string
+    public function __invoke(SelectPrompt $prompt)/*: string*/
     {
         $maxWidth = $prompt->terminal()->cols() - 6;
 
@@ -51,7 +51,7 @@ class SelectPromptRenderer extends Renderer
     /**
      * Render the options.
      */
-    protected function renderOptions(SelectPrompt $prompt): string
+    protected function renderOptions(SelectPrompt $prompt)/*: string*/
     {
         return $this->scroll(
             collect($prompt->options)

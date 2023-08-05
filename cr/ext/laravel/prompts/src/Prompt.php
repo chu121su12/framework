@@ -65,12 +65,12 @@ abstract class Prompt
     /**
      * Get the value of the prompt.
      */
-    abstract public function value(): mixed;
+    abstract public function value()/*: mixed*/;
 
     /**
      * Render the prompt and listen for input.
      */
-    public function prompt(): mixed
+    public function prompt()/*: mixed*/
     {
         $this->capturePreviousNewLines();
 
@@ -110,7 +110,7 @@ abstract class Prompt
     /**
      * How many new lines were written by the last output.
      */
-    public function newLinesWritten(): int
+    public function newLinesWritten()/*: int*/
     {
         return $this->newLinesWritten;
     }
@@ -118,7 +118,7 @@ abstract class Prompt
     /**
      * Capture the number of new lines written by the last output.
      */
-    protected function capturePreviousNewLines(): void
+    protected function capturePreviousNewLines()/*: void*/
     {
         $this->newLinesWritten = method_exists(static::output(), 'newLinesWritten')
             ? static::output()->newLinesWritten()
@@ -128,7 +128,7 @@ abstract class Prompt
     /**
      * Set the output instance.
      */
-    public static function setOutput(OutputInterface $output): void
+    public static function setOutput(OutputInterface $output)/*: void*/
     {
         self::$output = $output;
     }
@@ -136,7 +136,7 @@ abstract class Prompt
     /**
      * Get the current output instance.
      */
-    protected static function output(): OutputInterface
+    protected static function output()/*: OutputInterface*/
     {
         return self::$output ??= new ConsoleOutput();
     }
@@ -144,7 +144,7 @@ abstract class Prompt
     /**
      * Write output directly, bypassing newline capture.
      */
-    protected static function writeDirectly(string $message): void
+    protected static function writeDirectly(string $message)/*: void*/
     {
         match (true) {
             method_exists(static::output(), 'writeDirectly') => static::output()->writeDirectly($message),
@@ -156,7 +156,7 @@ abstract class Prompt
     /**
      * Get the terminal instance.
      */
-    public static function terminal(): Terminal
+    public static function terminal()/*: Terminal*/
     {
         return static::$terminal ??= new Terminal();
     }
@@ -164,7 +164,7 @@ abstract class Prompt
     /**
      * Render the prompt.
      */
-    protected function render(): void
+    protected function render()/*: void*/
     {
         $frame = $this->renderTheme();
 
@@ -217,7 +217,7 @@ abstract class Prompt
     /**
      * Submit the prompt.
      */
-    protected function submit(): void
+    protected function submit()/*: void*/
     {
         $this->validate($this->value());
 
@@ -229,7 +229,7 @@ abstract class Prompt
     /**
      * Reset the cursor position to the beginning of the previous frame.
      */
-    private function resetCursorPosition(): void
+    private function resetCursorPosition()/*: void*/
     {
         $lines = count(explode(PHP_EOL, $this->prevFrame)) - 1;
 
@@ -241,7 +241,7 @@ abstract class Prompt
      *
      * @return array<int>
      */
-    private function diffLines(string $a, string $b): array
+    private function diffLines(string $a, string $b)/*: array*/
     {
         if ($a === $b) {
             return [];
@@ -263,7 +263,7 @@ abstract class Prompt
     /**
      * Handle a key press and determine whether to continue.
      */
-    private function handleKeyPress(string $key): bool
+    private function handleKeyPress(string $key)/*: bool*/
     {
         if ($this->state === 'error') {
             $this->state = 'active';
@@ -291,7 +291,7 @@ abstract class Prompt
     /**
      * Validate the input.
      */
-    private function validate(mixed $value): void
+    private function validate(mixed $value)/*: void*/
     {
         $this->validated = true;
 
@@ -321,7 +321,7 @@ abstract class Prompt
     /**
      * Check whether the environment can support the prompt.
      */
-    private function checkEnvironment(): void
+    private function checkEnvironment()/*: void*/
     {
         if (PHP_OS_FAMILY === 'Windows') {
             throw new RuntimeException('Prompts is not currently supported on Windows. Please use WSL or configure a fallback.');

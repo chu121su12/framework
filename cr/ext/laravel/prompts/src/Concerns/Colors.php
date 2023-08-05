@@ -7,7 +7,7 @@ trait Colors
     /**
      * Reset all colors and styles.
      */
-    public function reset(string $text): string
+    public function reset(string $text)/*: string*/
     {
         return "\e[0m{$text}\e[0m";
     }
@@ -15,7 +15,7 @@ trait Colors
     /**
      * Make the text bold.
      */
-    public function bold(string $text): string
+    public function bold(string $text)/*: string*/
     {
         return "\e[1m{$text}\e[22m";
     }
@@ -23,7 +23,7 @@ trait Colors
     /**
      * Make the text dim.
      */
-    public function dim(string $text): string
+    public function dim(string $text)/*: string*/
     {
         return "\e[2m{$text}\e[22m";
     }
@@ -31,7 +31,7 @@ trait Colors
     /**
      * Make the text italic.
      */
-    public function italic(string $text): string
+    public function italic(string $text)/*: string*/
     {
         return "\e[3m{$text}\e[23m";
     }
@@ -39,7 +39,7 @@ trait Colors
     /**
      * Underline the text.
      */
-    public function underline(string $text): string
+    public function underline(string $text)/*: string*/
     {
         return "\e[4m{$text}\e[24m";
     }
@@ -47,7 +47,7 @@ trait Colors
     /**
      * Invert the text and background colors.
      */
-    public function inverse(string $text): string
+    public function inverse(string $text)/*: string*/
     {
         return "\e[7m{$text}\e[27m";
     }
@@ -55,7 +55,7 @@ trait Colors
     /**
      * Hide the text.
      */
-    public function hidden(string $text): string
+    public function hidden(string $text)/*: string*/
     {
         return "\e[8m{$text}\e[28m";
     }
@@ -63,7 +63,7 @@ trait Colors
     /**
      * Strike through the text.
      */
-    public function strikethrough(string $text): string
+    public function strikethrough(string $text)/*: string*/
     {
         return "\e[9m{$text}\e[29m";
     }
@@ -71,7 +71,7 @@ trait Colors
     /**
      * Set the text color to black.
      */
-    public function black(string $text): string
+    public function black(string $text)/*: string*/
     {
         return "\e[30m{$text}\e[39m";
     }
@@ -79,7 +79,7 @@ trait Colors
     /**
      * Set the text color to red.
      */
-    public function red(string $text): string
+    public function red(string $text)/*: string*/
     {
         return "\e[31m{$text}\e[39m";
     }
@@ -87,7 +87,7 @@ trait Colors
     /**
      * Set the text color to green.
      */
-    public function green(string $text): string
+    public function green(string $text)/*: string*/
     {
         return "\e[32m{$text}\e[39m";
     }
@@ -95,7 +95,7 @@ trait Colors
     /**
      * Set the text color to yellow.
      */
-    public function yellow(string $text): string
+    public function yellow(string $text)/*: string*/
     {
         return "\e[33m{$text}\e[39m";
     }
@@ -103,7 +103,7 @@ trait Colors
     /**
      * Set the text color to blue.
      */
-    public function blue(string $text): string
+    public function blue(string $text)/*: string*/
     {
         return "\e[34m{$text}\e[39m";
     }
@@ -111,7 +111,7 @@ trait Colors
     /**
      * Set the text color to magenta.
      */
-    public function magenta(string $text): string
+    public function magenta(string $text)/*: string*/
     {
         return "\e[35m{$text}\e[39m";
     }
@@ -119,7 +119,7 @@ trait Colors
     /**
      * Set the text color to cyan.
      */
-    public function cyan(string $text): string
+    public function cyan(string $text)/*: string*/
     {
         return "\e[36m{$text}\e[39m";
     }
@@ -127,7 +127,7 @@ trait Colors
     /**
      * Set the text color to white.
      */
-    public function white(string $text): string
+    public function white(string $text)/*: string*/
     {
         return "\e[37m{$text}\e[39m";
     }
@@ -135,7 +135,7 @@ trait Colors
     /**
      * Set the text background to black.
      */
-    public function bgBlack(string $text): string
+    public function bgBlack(string $text)/*: string*/
     {
         return "\e[40m{$text}\e[49m";
     }
@@ -143,7 +143,7 @@ trait Colors
     /**
      * Set the text background to red.
      */
-    public function bgRed(string $text): string
+    public function bgRed(string $text)/*: string*/
     {
         return "\e[41m{$text}\e[49m";
     }
@@ -151,7 +151,7 @@ trait Colors
     /**
      * Set the text background to green.
      */
-    public function bgGreen(string $text): string
+    public function bgGreen(string $text)/*: string*/
     {
         return "\e[42m{$text}\e[49m";
     }
@@ -159,7 +159,7 @@ trait Colors
     /**
      * Set the text background to yellow.
      */
-    public function bgYellow(string $text): string
+    public function bgYellow(string $text)/*: string*/
     {
         return "\e[43m{$text}\e[49m";
     }
@@ -167,7 +167,7 @@ trait Colors
     /**
      * Set the text background to blue.
      */
-    public function bgBlue(string $text): string
+    public function bgBlue(string $text)/*: string*/
     {
         return "\e[44m{$text}\e[49m";
     }
@@ -175,7 +175,7 @@ trait Colors
     /**
      * Set the text background to magenta.
      */
-    public function bgMagenta(string $text): string
+    public function bgMagenta(string $text)/*: string*/
     {
         return "\e[45m{$text}\e[49m";
     }
@@ -183,7 +183,7 @@ trait Colors
     /**
      * Set the text background to cyan.
      */
-    public function bgCyan(string $text): string
+    public function bgCyan(string $text)/*: string*/
     {
         return "\e[46m{$text}\e[49m";
     }
@@ -191,7 +191,7 @@ trait Colors
     /**
      * Set the text background to white.
      */
-    public function bgWhite(string $text): string
+    public function bgWhite(string $text)/*: string*/
     {
         return "\e[47m{$text}\e[49m";
     }
@@ -199,7 +199,7 @@ trait Colors
     /**
      * Set the text color to gray.
      */
-    public function gray(string $text): string
+    public function gray(string $text)/*: string*/
     {
         return "\e[90m{$text}\e[39m";
     }
@@ -207,7 +207,7 @@ trait Colors
     /**
      * Format a string using Symfony-style tags.
      */
-    public function format(string $text): string
+    public function format(string $text)/*: string*/
     {
         return preg_replace_callback(
             '/<fg=(\w+)>(.*?)<\/>/',

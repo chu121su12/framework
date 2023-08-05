@@ -24,7 +24,7 @@ class TextPrompt extends Prompt
     /**
      * Get the entered value with a virtual cursor.
      */
-    public function valueWithCursor(int $maxWidth): string
+    public function valueWithCursor(int $maxWidth)/*: string*/
     {
         if ($this->value() === '') {
             return $this->dim($this->addCursor($this->placeholder, 0, $maxWidth));

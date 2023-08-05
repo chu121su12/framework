@@ -12,7 +12,7 @@ class SuggestPromptRenderer extends Renderer
     /**
      * Render the suggest prompt.
      */
-    public function __invoke(SuggestPrompt $prompt): string
+    public function __invoke(SuggestPrompt $prompt)/*: string*/
     {
         $maxWidth = $prompt->terminal()->cols() - 6;
 
@@ -54,7 +54,7 @@ class SuggestPromptRenderer extends Renderer
     /**
      * Render the value with the cursor and an arrow.
      */
-    protected function valueWithCursorAndArrow(SuggestPrompt $prompt, int $maxWidth): string
+    protected function valueWithCursorAndArrow(SuggestPrompt $prompt, int $maxWidth)/*: string*/
     {
         if ($prompt->highlighted !== null || $prompt->value() !== '' || count($prompt->matches()) === 0) {
             return $prompt->valueWithCursor($maxWidth);
@@ -70,7 +70,7 @@ class SuggestPromptRenderer extends Renderer
     /**
      * Render a spacer to prevent jumping when the suggestions are displayed.
      */
-    protected function spaceForDropdown(SuggestPrompt $prompt): self
+    protected function spaceForDropdown(SuggestPrompt $prompt)/*: self*/
     {
         if ($prompt->value() === '' && $prompt->highlighted === null) {
             $this->newLine(min(
@@ -86,7 +86,7 @@ class SuggestPromptRenderer extends Renderer
     /**
      * Render the options.
      */
-    protected function renderOptions(SuggestPrompt $prompt): string
+    protected function renderOptions(SuggestPrompt $prompt)/*: string*/
     {
         if (empty($prompt->matches()) || ($prompt->value() === '' && $prompt->highlighted === null)) {
             return '';

@@ -11,7 +11,7 @@ class PasswordPromptRenderer extends Renderer
     /**
      * Render the password prompt.
      */
-    public function __invoke(PasswordPrompt $prompt): string
+    public function __invoke(PasswordPrompt $prompt)/*: string*/
     {
         $maxWidth = $prompt->terminal()->cols() - 6;
 
