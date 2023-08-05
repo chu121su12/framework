@@ -45,16 +45,23 @@ class SuggestPrompt extends Prompt
     ) {
         $this->options = $options instanceof Collection ? $options->all() : $options;
 
-        $this->on('key', fn ($key) => match ($key) {
-            Key::UP, Key::SHIFT_TAB => $this->highlightPrevious(),
-            Key::DOWN, Key::TAB => $this->highlightNext(),
-            Key::ENTER => $this->selectHighlighted(),
-            Key::LEFT, Key::RIGHT => $this->highlighted = null,
-            default => (function () {
+        $this->on('key', function ($key) { switch ($key) {
+            case Key::UP:
+            case Key::SHIFT_TAB: return $this->highlightPrevious();
+
+            case Key::DOWN:
+            case Key::TAB: return $this->highlightNext();
+
+            case Key::ENTER: return $this->selectHighlighted();
+
+            case Key::LEFT:
+            case Key::RIGHT: return $this->highlighted = null;
+
+            default: return value(function () {
                 $this->highlighted = null;
                 $this->matches = null;
-            })(),
-        });
+            });
+        } });
 
         $this->trackTypedValue($default);
     }

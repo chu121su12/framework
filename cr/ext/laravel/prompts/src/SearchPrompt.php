@@ -35,12 +35,21 @@ class SearchPrompt extends Prompt
     ) {
         $this->trackTypedValue(submit: false);
 
-        $this->on('key', fn ($key) => match ($key) {
-            Key::UP, Key::SHIFT_TAB => $this->highlightPrevious(),
-            Key::DOWN, Key::TAB => $this->highlightNext(),
-            Key::ENTER => $this->highlighted !== null ? $this->submit() : $this->search(),
-            Key::LEFT, Key::RIGHT => $this->highlighted = null,
-            default => $this->search(),
+        $this->on('key', function ($key) {
+            case Key::UP:
+            case Key::SHIFT_TAB: return $this->highlightPrevious();
+
+            case Key::DOWN:
+            case Key::TAB: return $this->highlightNext();
+
+            case Key::ENTER: return $this->highlighted !== null
+                ? $this->submit()
+                : $this->search();
+
+            case Key::LEFT:
+            case Key::RIGHT: return $this->highlighted = null;
+
+            default: return $this->search();
         });
     }
 

@@ -96,11 +96,11 @@ class SuggestPromptRenderer extends Renderer
 
         return $this->scroll(
             collect($prompt->matches())
-                ->map(fn ($label) => $this->truncate($label, $prompt->terminal()->cols() - 10))
-                ->map(fn ($label, $i) => $prompt->highlighted === $i
+                ->map(function ($label) use ($prompt) { return $this->truncate($label, $prompt->terminal()->cols() - 10); })
+                ->map(function ($label, $i) use ($prompt) { return $prompt->highlighted === $i
                     ? "{$this->cyan('›')} {$label}  "
-                    : "  {$this->dim($label)}  "
-                ),
+                    : "  {$this->dim($label)}  ";
+                }),
             $prompt->highlighted,
             min($prompt->scroll, $prompt->terminal()->lines() - 7),
             min($this->longest($prompt->matches(), padding: 4), $prompt->terminal()->cols() - 6),

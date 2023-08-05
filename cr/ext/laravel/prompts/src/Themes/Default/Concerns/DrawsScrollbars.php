@@ -29,10 +29,13 @@ trait DrawsScrollbars
         $visible = $this->visible($lines, $focused, $height);
 
         return $visible
-            ->map(fn ($line) => $this->pad($line, $width))
-            ->map(fn ($line, $index) => match (true) {
-                $index === $this->scrollPosition($visible, $focused, $height, $lines->count()) => preg_replace('/.$/', $this->{$color}('┃'), $line),
-                default => preg_replace('/.$/', $this->gray('│'), $line),
+            ->map(function ($line) use ($width) { return $this->pad($line, $width); })
+            ->map(function ($line, $index) { 
+                if ($index === $this->scrollPosition($visible, $focused, $height, $lines->count())) {
+                    return preg_replace('/.$/', $this->{$color}('┃'), $line);
+                }
+
+                return preg_replace('/.$/', $this->gray('│'), $line);
             });
     }
 

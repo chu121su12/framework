@@ -64,7 +64,7 @@ trait DrawsBoxes
         return max(
             $this->minWidth,
             collect($lines)
-                ->map(fn ($line) => mb_strlen($this->stripEscapeSequences($line)) + $padding)
+                ->map(function ($line) use ($padding) { return mb_strlen($this->stripEscapeSequences($line)) + $padding; })
                 ->max()
         );
     }

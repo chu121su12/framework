@@ -41,12 +41,22 @@ class SelectPrompt extends Prompt
             }
         }
 
-        $this->on('key', fn ($key) => match ($key) {
-            Key::UP, Key::LEFT, Key::SHIFT_TAB, 'k', 'h' => $this->highlightPrevious(),
-            Key::DOWN, Key::RIGHT, Key::TAB, 'j', 'l' => $this->highlightNext(),
-            Key::ENTER => $this->submit(),
-            default => null,
-        });
+        $this->on('key', function ($key) { switch ($key) {
+            case Key::UP:
+            case Key::LEFT:
+            case Key::SHIFT_TAB:
+            case 'k':
+            case 'h': return $this->highlightPrevious();
+
+            case Key::DOWN:
+            case Key::RIGHT:
+            case Key::TAB:
+            case 'j':
+            case 'l': return $this->highlightNext();
+
+            case Key::ENTER: return $this->submit();
+            default: return null;
+        } });
     }
 
     /**

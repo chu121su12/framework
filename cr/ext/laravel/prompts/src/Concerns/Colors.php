@@ -263,9 +263,9 @@ trait Colors
 
         return preg_replace_callback(
             '/<fg=(\w+)>(.*?)<\/>/',
-            fn ($matches) => method_exists($this, $matches[1])
+            function ($matches) { return method_exists($this, $matches[1])
                 ? $this->{$matches[1]}($matches[2])
-                : $matches[2],
+                : $matches[2]; },
             $text
         );
     }
