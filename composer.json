@@ -106,7 +106,7 @@
         "laravel/telescope": "^4.15.2",
         "laravel/tinker": "^2.8.1",
         "league/flysystem": "^1.0.70",
-        "nesbot/carbon": "^2.67.0",
+        "nesbot/carbon": "^2.69.0",
         "nunomaduro/collision": "^7.2.0",
         "nunomaduro/termwind": "^1.15.1",
         "spatie/backtrace": "^1.4.0",
@@ -143,6 +143,7 @@
         "symfony/uid": "^5.4.21",
         "voku/portable-ascii": "^2.0.1",
 
+        "psr/clock-implementation": "1.0",
         "psr/container-implementation": "1.0|2.0",
         "psr/simple-cache-implementation": "1.0|2.0|3.0"
     },
@@ -212,6 +213,7 @@
             "Termwind\\": "cr/ext/nunomaduro/termwind/src/",
             "voku\\": "cr/ext/voku/portable-ascii/src/voku/",
 
+            "Psr\\Clock\\": "cr/ext/psr/clock/src/",
             "Illuminate\\Support\\": [
                 "src/Illuminate/Macroable/",
                 "src/Illuminate/Collections/",
