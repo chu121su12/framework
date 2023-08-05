@@ -21,7 +21,7 @@ class Question2 extends Question
             throw new LogicException('A hidden question cannot use the autocompleter.');
         }
 
-        $this->hidden = (bool) $hidden;
+        parent::setHidden((bool) $hidden);
 
         return $this;
     }
@@ -62,7 +62,7 @@ class Question2 extends Question
 
     public function setAutocompleterCallback(callable $callback = null)/*: self*/
     {
-        if ($this->hidden && null !== $callback) {
+        if ($this->isHidden() && null !== $callback) {
             throw new LogicException('A hidden question cannot use the autocompleter.');
         }
 

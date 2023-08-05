@@ -5641,11 +5641,19 @@ class SupportCollectionTest extends TestCase
     public function testEnsureForInheritance($collection)
     {
         $data = $collection::make([new \Error, new \Error]);
-        $data->ensure(\Throwable::class);
+        if (interface_exists('Throwable')) {
+            $data->ensure(\Throwable::class);
+        } else {
+            $data->ensure(\Exception::class);
+        }
 
         $data = $collection::make([new \Error, new \Error, new $collection]);
         $this->expectException(UnexpectedValueException::class);
-        $data->ensure(\Throwable::class);
+        if (interface_exists('Throwable')) {
+            $data->ensure(\Throwable::class);
+        } else {
+            $data->ensure(\Exception::class);
+        }
     }
 
     /**
