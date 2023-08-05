@@ -8,6 +8,7 @@ use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Contracts\Validation\ValidatorAwareRule;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
@@ -132,13 +133,13 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
     /**
      * Indicate that the uploaded file should be exactly a certain size in kilobytes.
      *
-     * @param  int  $kilobytes
+     * @param  string|int  $size
      * @return $this
      */
-    public function size($kilobytes)
+    public function size($size)
     {
-        $this->minimumFileSize = $kilobytes;
-        $this->maximumFileSize = $kilobytes;
+        $this->minimumFileSize = $this->toKilobytes($size);
+        $this->maximumFileSize = $this->minimumFileSize;
 
         return $this;
     }
@@ -146,14 +147,14 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
     /**
      * Indicate that the uploaded file should be between a minimum and maximum size in kilobytes.
      *
-     * @param  int  $minKilobytes
-     * @param  int  $maxKilobytes
+     * @param  string|int  $minSize
+     * @param  string|int  $maxSize
      * @return $this
      */
-    public function between($minKilobytes, $maxKilobytes)
+    public function between($minSize, $maxSize)
     {
-        $this->minimumFileSize = $minKilobytes;
-        $this->maximumFileSize = $maxKilobytes;
+        $this->minimumFileSize = $this->toKilobytes($minSize);
+        $this->maximumFileSize = $this->toKilobytes($maxSize);
 
         return $this;
     }
@@ -161,12 +162,12 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
     /**
      * Indicate that the uploaded file should be no less than the given number of kilobytes.
      *
-     * @param  int  $kilobytes
+     * @param  string|int  $size
      * @return $this
      */
-    public function min($kilobytes)
+    public function min($size)
     {
-        $this->minimumFileSize = $kilobytes;
+        $this->minimumFileSize = $this->toKilobytes($size);
 
         return $this;
     }
@@ -174,14 +175,37 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
     /**
      * Indicate that the uploaded file should be no more than the given number of kilobytes.
      *
-     * @param  int  $kilobytes
+     * @param  string|int  $size
      * @return $this
      */
-    public function max($kilobytes)
+    public function max($size)
     {
-        $this->maximumFileSize = $kilobytes;
+        $this->maximumFileSize = $this->toKilobytes($size);
 
         return $this;
+    }
+
+    /**
+     * Convert a potentially human-friendly file size to kilobytes.
+     *
+     * @param  string|int  $size
+     * @return mixed
+     */
+    protected function toKilobytes($size)
+    {
+        if (! is_string($size)) {
+            return $size;
+        }
+
+        $value = floatval($size);
+
+        return round(match (true) {
+            Str::endsWith($size, 'kb') => $value * 1,
+            Str::endsWith($size, 'mb') => $value * 1000,
+            Str::endsWith($size, 'gb') => $value * 1000000,
+            Str::endsWith($size, 'tb') => $value * 1000000000,
+            default => throw new InvalidArgumentException('Invalid file size suffix.'),
+        });
     }
 
     /**

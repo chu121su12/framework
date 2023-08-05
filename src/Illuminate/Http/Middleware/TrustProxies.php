@@ -96,6 +96,11 @@ class TrustProxies
      */
     protected function getTrustedHeaderNames()
     {
+        if (is_int($this->headers)) {
+            return $this->headers;
+        }
+
+        #@TODO: bc
         switch ($this->headers) {
             case 'HEADER_X_FORWARDED_AWS_ELB': case Request::HEADER_X_FORWARDED_AWS_ELB: return Request::HEADER_X_FORWARDED_AWS_ELB;
             case 'HEADER_FORWARDED': case Request::HEADER_FORWARDED: return Request::HEADER_FORWARDED;

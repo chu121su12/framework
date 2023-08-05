@@ -18,6 +18,8 @@ use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Throwable;
 
+use function Laravel\Prompts\suggest;
+
 #[AsCommand(name: 'docs')]
 class DocsCommand extends Command
 {
@@ -182,7 +184,7 @@ class DocsCommand extends Command
 
         return $this->didNotRequestPage()
             ? $this->askForPage()
-            : $this->guessPage();
+            : $this->guessPage($this->argument('page'));
     }
 
     /**
@@ -245,22 +247,21 @@ class DocsCommand extends Command
      */
     protected function askForPageViaAutocomplete()
     {
-        $choice = $this->components->choice(
-            'Which page would you like to open?',
-            $this->pages()->mapWithKeys(function ($option) {
-                return [
+        #@TODO: bc
+        $choice = suggest(
+            label: 'Which page would you like to open?',
+            options: fn ($value) => $this->pages()
+                ->mapWithKeys(fn ($option) => [
                     Str::lower($option['title']) => $option['title'],
-                ];
-            })->all(),
-            'installation',
-            3
+                ])
+                ->filter(fn ($title) => str_contains(Str::lower($title), Str::lower($value)))
+                ->all(),
+            placeholder: 'E.g. Collections'
         );
 
         return $this->pages()->filter(
-            function ($page) use ($choice) {
-                return $page['title'] === $choice || Str::lower($page['title']) === $choice;
-            }
-        )->keys()->first() ?: null;
+            fn ($page) => $page['title'] === $choice || Str::lower($page['title']) === $choice
+        )->keys()->first() ?: $this->guessPage($choice);
     }
 
     /**
@@ -268,13 +269,13 @@ class DocsCommand extends Command
      *
      * @return string|null
      */
-    protected function guessPage()
+    protected function guessPage($search)
     {
         $firstGuess = $this->pages()
-            ->filter(function ($page) {
+            ->filter(function ($page) use ($search) {
                 return str_starts_with(
                     Str::slug($page['title'], ' '),
-                    Str::slug($this->argument('page'), ' ')
+                    Str::slug($search, ' ')
                 );
             })->keys()->first();
 
@@ -282,19 +283,21 @@ class DocsCommand extends Command
             return $firstGuess;
         }
 
-        return $this->pages()->map(function ($page) {
+        return $this->pages()->map(function ($page) use ($search) {
                 return similar_text(
                     Str::slug($page['title'], ' '),
-                    Str::slug($this->argument('page'), ' ')
+                    Str::slug($search, ' ')
                 );
             })
-            ->filter(function ($score) { return $score >= min(3, Str::length($this->argument('page'))); })
+            ->filter(function ($score) use ($search) {
+                return $score >= min(3, Str::length($search));
+            })
             ->sortDesc()
             ->keys()
-            ->sortByDesc(function ($slug) {
+            ->sortByDesc(function ($slug) use ($search) {
                 return Str::contains(
                     Str::slug($this->pages()[$slug]['title'], ' '),
-                    Str::slug($this->argument('page'), ' ')
+                    Str::slug($search, ' ')
                 ) ? 1 : 0;
             })
             ->first();

@@ -22,7 +22,6 @@ class CommandTest_testCallingClassCommandResolveCommandViaApplicationResolution_
             }
         }
 
-
 class CommandTest_testGettingCommandArgumentsAndOptionsByClass_class extends Command 
         {
             public function handle()
@@ -114,6 +113,7 @@ class CommandTest extends TestCase
 
             $command->call(Command::class);
         });
+        $application->shouldReceive('runningUnitTests')->andReturn(true);
 
         $command->run($input, $output);
     }

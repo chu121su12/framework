@@ -10,6 +10,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function Laravel\Prompts\multiselect;
+
 #[AsCommand(name: 'make:model')]
 class ModelMakeCommand extends GeneratorCommand
 {
@@ -238,24 +240,14 @@ class ModelMakeCommand extends GeneratorCommand
             return;
         }
 
-        collect($this->components->choice('Would you like any of the following?', [
-            'none',
-            'all',
-            'factory',
-            'form requests',
-            'migration',
-            'policy',
-            'resource controller',
-            'seed',
-        ], /*default: */0, null, /*multiple: */true))
-        ->reject('none')
-        ->map(function ($option) {
-            switch ($option) {
-                case 'resource controller': return 'resource';
-                case 'form requests': return 'requests';
-                default: return $option;
-            }
-        })
-        ->each(function ($option) use ($input) { return $input->setOption($option, true); });
+        #@TODO: bc
+        collect(multiselect('Would you like any of the following?', [
+            'seed' => 'Database Seeder',
+            'factory' => 'Factory',
+            'requests' => 'Form Requests',
+            'migration' => 'Migration',
+            'policy' => 'Policy',
+            'resource' => 'Resource Controller',
+        ]))->each(fn ($option) => $input->setOption($option, true));
     }
 }

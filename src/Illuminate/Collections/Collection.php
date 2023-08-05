@@ -374,6 +374,10 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      */
     public function except($keys)
     {
+        if (is_null($keys)) {
+            return new static($this->items);
+        }
+
         if ($keys instanceof Enumerable) {
             $keys = $keys->all();
         } elseif (! is_array($keys)) {
@@ -518,7 +522,11 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
                     case is_bool($groupKey):
                         $groupKey = (int) $groupKey;
                         break;
-                    
+
+                    case $groupKey instanceof \BackedEnum:
+                        $groupKey = $groupKey->value;
+                        break;
+
                     case is_string($groupKey)
                         || $groupKey instanceof \Stringable
                         || is_object($groupKey) && method_exists($groupKey, '__toString'):

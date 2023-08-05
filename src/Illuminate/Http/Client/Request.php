@@ -193,7 +193,9 @@ class Request implements ArrayAccess
     protected function json()
     {
         if (! $this->data) {
-            $this->data = backport_json_decode($this->body(), true);
+            $data = backport_json_decode($this->body(), true);
+
+            $this->data = isset($data) ? $data : [];
         }
 
         return $this->data;

@@ -2,39 +2,34 @@
 
 namespace Illuminate\Tests\Console\Fixtures;
 
-use BadMethodCallException;
 use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Laravel\Prompts\Prompt;
+use Laravel\Prompts\TextPrompt;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class FakeCommandWithInputPrompting extends Command implements PromptsForMissingInput
 {
-    use \Illuminate\Console\Concerns\PromptsForMissingInput {
-        askPersistently as traitAskPersistently;
-    }
-
     protected $signature = 'fake-command-for-testing {name : An argument}';
 
-    private $expectToRequestInput;
+    public $prompted = false;
 
-    public function __construct(/*private */$expectToRequestInput = true)
+    protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $this->expectToRequestInput = $expectToRequestInput;
+        Prompt::fallbackWhen(true);
+        TextPrompt::fallbackUsing(function () {
+            $this->prompted = true;
 
-        parent::__construct();
+            return 'foo';
+        });
+
+        parent::interact($input, $output);
     }
 
     public function handle()/*: int*/
     {
         return SymfonyHelper::CONSOLE_SUCCESS;
-    }
-
-    private function askPersistently($question)
-    {
-        if (! $this->expectToRequestInput) {
-            throw new BadMethodCallException('No prompts for input were expected, but a question was asked.');
-        }
-
-        return $this->traitAskPersistently($question);
     }
 }
