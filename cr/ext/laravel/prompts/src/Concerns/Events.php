@@ -26,9 +26,11 @@ trait Events
     /**
      * Emit an event.
      */
-    public function emit(/*string */$event, mixed ...$data)/*: void*/
+    public function emit(/*string */$event, /*mixed */...$data)/*: void*/
     {
         $event = backport_type_check('string', $event);
+
+        $data = backport_array_type_check('mixed', $data);
 
         foreach (isset($this->listeners[$event]) ? $this->listeners[$event] : [] as $listener) {
             $listener(...$data);

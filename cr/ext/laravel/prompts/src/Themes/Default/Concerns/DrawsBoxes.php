@@ -13,11 +13,14 @@ trait DrawsBoxes
      */
     protected function box(
         /*string */$title,
-        string $body,
-        string $footer = '',
-        string $color = 'gray'
+        /*string */$body,
+        /*string */$footer = '',
+        /*string */$color = 'gray'
     )/*: self */{
         $title = backport_type_check('string', $title);
+        $body = backport_type_check('string', $body);
+        $footer = backport_type_check('string', $footer);
+        $color = backport_type_check('string', $color);
 
         $this->minWidth = min($this->minWidth, Prompt::terminal()->cols() - 6);
 

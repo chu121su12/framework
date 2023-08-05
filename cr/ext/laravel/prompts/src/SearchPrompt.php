@@ -147,7 +147,9 @@ class SearchPrompt extends Prompt
      */
     public function label()/*: ?string*/
     {
-        return $this->matches[array_keys($this->matches)[$this->highlighted]] ?? null;
+        $matchKey = array_keys($this->matches)[$this->highlighted];
+
+        return isset($this->matches[$matchKey]) ? $this->matches[$matchKey] : null;
     }
 
     /**

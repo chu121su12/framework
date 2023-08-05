@@ -138,7 +138,11 @@ abstract class Prompt
      */
     protected static function output()/*: OutputInterface*/
     {
-        return isset(self::$output) ? self::$output := new ConsoleOutput();
+        if (! isset(self::$output)) {
+            self::$output = new ConsoleOutput();
+        }
+
+        return self::$output;
     }
 
     /**
@@ -160,7 +164,11 @@ abstract class Prompt
      */
     public static function terminal()/*: Terminal*/
     {
-        return static::isset($terminal) ? $terminal := new Terminal();
+        if (! isset(static::$terminal)) {
+            static::$terminal = new Terminal();
+        }
+
+        return static::$terminal;
     }
 
     /**

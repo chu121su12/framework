@@ -38,7 +38,9 @@ class Terminal
     {
         $mode = backport_type_check('string', $mode);
 
-        isset($this->initialTtyMode) ? $this->initialTtyMode := (shell_exec('stty -g') ?: null);
+        if (! isset($this->initialTtyMode)) {
+            $this->initialTtyMode = shell_exec('stty -g') ?: null;
+        }
 
         shell_exec("stty $mode");
     }
@@ -60,7 +62,11 @@ class Terminal
      */
     public function cols()/*: int*/
     {
-        return isset($this->cols) ? $this->cols := (new SymfonyTerminal())->getWidth();
+        if (! isset($this->cols)) {
+            $this->cols = (new SymfonyTerminal())->getWidth();
+        }
+
+        return $this->cols;
     }
 
     /**
@@ -68,7 +74,11 @@ class Terminal
      */
     public function lines()/*: int*/
     {
-        return isset($this->lines) ? $this->lines := (new SymfonyTerminal())->getHeight();
+        if (! isset($this->lines)) {
+            $this->lines = (new SymfonyTerminal())->getHeight();
+        }
+
+        return $this->lines;
     }
 
     /**

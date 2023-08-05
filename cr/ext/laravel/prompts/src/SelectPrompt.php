@@ -79,7 +79,9 @@ class SelectPrompt extends Prompt
         if (array_is_list($this->options)) {
             return isset($this->options[$this->highlighted]) ? $this->options[$this->highlighted] : null;
         } else {
-            return $this->options[array_keys($this->options)[$this->highlighted]] ?? null;
+            $optionKey = array_keys($this->options)[$this->highlighted];
+
+            return isset($this->options[$optionKey]) ? $this->options[$optionKey] : null;
         }
     }
 
