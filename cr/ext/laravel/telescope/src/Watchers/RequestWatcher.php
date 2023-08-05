@@ -101,7 +101,7 @@ class RequestWatcher extends Watcher
     protected function headers($headers)
     {
         $headers = collect($headers)
-            ->map(fn ($header) => implode(', ', $header))
+            ->map(function ($header) { return implode(', ', $header); })
             ->all();
 
         return $this->hideParameters($headers,

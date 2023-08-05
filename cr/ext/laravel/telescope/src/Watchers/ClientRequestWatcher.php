@@ -137,7 +137,7 @@ class ClientRequestWatcher extends Watcher
         })->toArray();
 
         $headerValues = collect($headers)
-            ->map(fn ($header) => implode(', ', $header))
+            ->map(function ($header) { return implode(', ', $header); })
             ->all();
 
         $headers = array_combine($headerNames, $headerValues);

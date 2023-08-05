@@ -130,7 +130,9 @@ class JobWatcher extends Watcher
                 'status' => 'failed',
                 'exception' => [
                     'message' => $event->exception->getMessage(),
-                    'trace' => collect($event->exception->getTrace())->map(fn ($trace) => Arr::except($trace, ['args']))->all(),
+                    'trace' => collect($event->exception->getTrace())->map(
+                        function ($trace) { return Arr::except($trace, ['args']); }
+                    )->all(),
                     'line' => $event->exception->getLine(),
                     'line_preview' => ExceptionContext::get($event->exception),
                 ],
