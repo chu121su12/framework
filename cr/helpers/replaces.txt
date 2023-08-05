@@ -134,15 +134,15 @@ $1/*$2*/$3
 
    1     2   3                             4   5                                    6    7     8    9
 \n( {4})( *)(.*?function[^\(]+.*?[\(,]\s*)(\?)(string|int|float|bool|mixed)(\s+)(&?\$)(\w+)(\s*[^\{]+?\{)
-\n$1$2$3/*$4$5$6*/$7$8 = null$9\n$1$2$1\$$8 = cast_to_$5(\$$8, null);\n
+\n$1$2$3/*$4$5$6*/$7$8 = null$9\n$1$2$1\$$8 = backport_type_check('$4$5', \$$8);\n
 
    1     2   3                             4                                    5    6     7    8
 \n( {4})( *)(.*?function[^\(]+.*?[\(,]\s*)(string|int|float|bool|mixed)(\s+)(&?\$)(\w+)(\s*=\s*null\b[^\{]+?\{)
-\n$1$2$3/*$4$5*/$6$7$8\n$1$2$1\$$7 = cast_to_$4(\$$7, null);\n
+\n$1$2$3/*$4$5*/$6$7$8\n$1$2$1\$$7 = backport_type_check('$4', \$$7);\n
 
    1     2   3                             4                                    5    6     7    8
 \n( {4})( *)(.*?function[^\(]+.*?[\(,]\s*)(string|int|float|bool|mixed)(\s+)(&?\$)(\w+)(\s*[^\{]+?\{)
-\n$1$2$3/*$4$5*/$6$7$8\n$1$2$1\$$7 = cast_to_$4(\$$7);\n
+\n$1$2$3/*$4$5*/$6$7$8\n$1$2$1\$$7 = backport_type_check('$4', \$$7);\n
 
  1                          2   3                 4
 (function[^\(]+.*?[\(,]\s*)(\?)(\\?\w+\s+&?\$\w+)(,|\))
@@ -202,11 +202,11 @@ $1_(
 
 ->\s*(?:for|eval|finally|try|empty|catch|class|if|use|include)\b\(
 
-\bfn\b(.*?)=>
-function$1{\nreturn
-
 \n    (public|protected|private) +((?!(?:\$|static func|func))\S+\s+)
 \n    $1 /*$2*/
+
+\bfn\b(.*?)=>
+function$1{\nreturn
 
 
 
