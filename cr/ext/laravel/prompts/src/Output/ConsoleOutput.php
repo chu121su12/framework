@@ -9,7 +9,7 @@ class ConsoleOutput extends SymfonyConsoleOutput
     /**
      * How many new lines were written by the last output.
      */
-    protected int $newLinesWritten = 1;
+    protected /*int */$newLinesWritten = 1;
 
     /**
      * How many new lines were written by the last output.

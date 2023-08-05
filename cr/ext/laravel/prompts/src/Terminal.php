@@ -9,17 +9,17 @@ class Terminal
     /**
      * The initial TTY mode.
      */
-    protected ?string $initialTtyMode;
+    protected /*?string */$initialTtyMode;
 
     /**
      * The number of columns in the terminal.
      */
-    protected int $cols;
+    protected /*int */$cols;
 
     /**
      * The number of lines in the terminal.
      */
-    protected int $lines;
+    protected /*int */$lines;
 
     /**
      * Read a line from the terminal.

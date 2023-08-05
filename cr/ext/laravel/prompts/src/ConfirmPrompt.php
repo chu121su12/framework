@@ -9,7 +9,7 @@ class ConfirmPrompt extends Prompt
     /**
      * Whether the prompt has been confirmed.
      */
-    public bool $confirmed;
+    public /*bool */$confirmed;
 
     /**
      * Create a new ConfirmPrompt instance.
@@ -20,7 +20,7 @@ class ConfirmPrompt extends Prompt
         public string $yes = 'Yes',
         public string $no = 'No',
         public bool|string $required = false,
-        public ?Closure $validate = null,
+        public ?Closure $validate = null
     ) {
         $this->confirmed = $default;
 

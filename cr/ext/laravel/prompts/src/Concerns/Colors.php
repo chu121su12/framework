@@ -266,7 +266,7 @@ trait Colors
             fn ($matches) => method_exists($this, $matches[1])
                 ? $this->{$matches[1]}($matches[2])
                 : $matches[2],
-            $text,
+            $text
         );
     }
 }

@@ -20,14 +20,14 @@ class SearchPromptRenderer extends Renderer
             'submit' => $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
-                    $this->truncate($prompt->label(), $maxWidth),
+                    $this->truncate($prompt->label(), $maxWidth)
                 ),
 
             'cancel' => $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->strikethrough($this->dim($this->truncate($prompt->searchValue() ?: $prompt->placeholder, $maxWidth))),
-                    color: 'red',
+                    color: 'red'
                 )
                 ->error('Cancelled'),
 
@@ -36,7 +36,7 @@ class SearchPromptRenderer extends Renderer
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $prompt->valueWithCursor($maxWidth),
                     $this->renderOptions($prompt),
-                    color: 'yellow',
+                    color: 'yellow'
                 )
                 ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5)),
 
@@ -44,14 +44,14 @@ class SearchPromptRenderer extends Renderer
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->valueWithCursorAndSearchIcon($prompt, $maxWidth),
-                    $this->renderOptions($prompt),
+                    $this->renderOptions($prompt)
                 ),
 
             default => $this
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $prompt->valueWithCursor($maxWidth),
-                    $this->renderOptions($prompt),
+                    $this->renderOptions($prompt)
                 )
                 ->spaceForDropdown($prompt)
                 ->newLine(), // Space for errors
@@ -83,7 +83,7 @@ class SearchPromptRenderer extends Renderer
 
         $this->newLine(max(
             0,
-            min($prompt->scroll, $prompt->terminal()->lines() - 7) - count($prompt->matches()),
+            min($prompt->scroll, $prompt->terminal()->lines() - 7) - count($prompt->matches())
         ));
 
         if ($prompt->matches() === []) {

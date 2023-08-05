@@ -10,14 +10,14 @@ class SelectPrompt extends Prompt
     /**
      * The index of the highlighted option.
      */
-    public int $highlighted = 0;
+    public /*int */$highlighted = 0;
 
     /**
      * The options for the select prompt.
      *
      * @var array<int|string, string>
      */
-    public array $options;
+    public /*array */$options;
 
     /**
      * Create a new SelectPrompt instance.
@@ -29,7 +29,7 @@ class SelectPrompt extends Prompt
         array|Collection $options,
         public int|string|null $default = null,
         public int $scroll = 5,
-        public ?Closure $validate = null,
+        public ?Closure $validate = null
     ) {
         $this->options = $options instanceof Collection ? $options->all() : $options;
 

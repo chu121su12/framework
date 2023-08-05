@@ -13,21 +13,21 @@ class SuggestPrompt extends Prompt
     /**
      * The index of the highlighted option.
      */
-    public ?int $highlighted = null;
+    public /*?int */$highlighted = null;
 
     /**
      * The options for the suggest prompt.
      *
      * @var array<string>|Closure(string): array<string>
      */
-    public array|Closure $options;
+    public /*array|Closure */$options;
 
     /**
      * The cache of matches.
      *
      * @var array<string>|null
      */
-    protected ?array $matches = null;
+    protected /*?array */$matches = null;
 
     /**
      * Create a new SuggestPrompt instance.
@@ -41,7 +41,7 @@ class SuggestPrompt extends Prompt
         public string $default = '',
         public int $scroll = 5,
         public bool|string $required = false,
-        public ?Closure $validate = null,
+        public ?Closure $validate = null
     ) {
         $this->options = $options instanceof Collection ? $options->all() : $options;
 

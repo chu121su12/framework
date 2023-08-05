@@ -14,7 +14,7 @@ abstract class Renderer
     /**
      * The output to be rendered.
      */
-    protected string $output = '';
+    protected /*string */$output = '';
 
     /**
      * Create a new renderer instance.

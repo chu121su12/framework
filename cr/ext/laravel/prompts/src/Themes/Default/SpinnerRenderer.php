@@ -11,17 +11,17 @@ class SpinnerRenderer extends Renderer
      *
      * @var array<string>
      */
-    protected array $frames = ['⠂', '⠒', '⠐', '⠰', '⠠', '⠤', '⠄', '⠆'];
+    protected /*array */$frames = ['⠂', '⠒', '⠐', '⠰', '⠠', '⠤', '⠄', '⠆'];
 
     /**
      * The frame to render when the spinner is static.
      */
-    protected string $staticFrame = '⠶';
+    protected /*string */$staticFrame = '⠶';
 
     /**
      * The interval between frames.
      */
-    protected int $interval = 75;
+    protected /*int */$interval = 75;
 
     /**
      * Render the spinner.

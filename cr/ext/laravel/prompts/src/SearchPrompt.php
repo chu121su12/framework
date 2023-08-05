@@ -12,14 +12,14 @@ class SearchPrompt extends Prompt
     /**
      * The index of the highlighted option.
      */
-    public ?int $highlighted = null;
+    public /*?int */$highlighted = null;
 
     /**
      * The cached matches.
      *
      * @var array<int|string, string>|null
      */
-    protected ?array $matches = null;
+    protected /*?array */$matches = null;
 
     /**
      * Create a new SuggestPrompt instance.
@@ -31,7 +31,7 @@ class SearchPrompt extends Prompt
         public Closure $options,
         public string $placeholder = '',
         public int $scroll = 5,
-        public ?Closure $validate = null,
+        public ?Closure $validate = null
     ) {
         $this->trackTypedValue(submit: false);
 

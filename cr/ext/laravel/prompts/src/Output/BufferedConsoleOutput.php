@@ -7,7 +7,7 @@ class BufferedConsoleOutput extends ConsoleOutput
     /**
      * The output buffer.
      */
-    protected string $buffer = '';
+    protected /*string */$buffer = '';
 
     /**
      * Empties the buffer and returns its content.

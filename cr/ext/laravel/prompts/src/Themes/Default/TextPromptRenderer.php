@@ -19,14 +19,14 @@ class TextPromptRenderer extends Renderer
             'submit' => $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
-                    $this->truncate($prompt->value(), $maxWidth),
+                    $this->truncate($prompt->value(), $maxWidth)
                 ),
 
             'cancel' => $this
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->strikethrough($this->dim($this->truncate($prompt->value() ?: $prompt->placeholder, $maxWidth))),
-                    color: 'red',
+                    color: 'red'
                 )
                 ->error('Cancelled.'),
 
@@ -34,14 +34,14 @@ class TextPromptRenderer extends Renderer
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $prompt->valueWithCursor($maxWidth),
-                    color: 'yellow',
+                    color: 'yellow'
                 )
                 ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5)),
 
             default => $this
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
-                    $prompt->valueWithCursor($maxWidth),
+                    $prompt->valueWithCursor($maxWidth)
                 )
                 ->newLine(), // Space for errors
         };

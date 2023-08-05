@@ -9,19 +9,19 @@ trait TypedValue
     /**
      * The value that has been typed.
      */
-    protected string $typedValue = '';
+    protected /*string */$typedValue = '';
 
     /**
      * The position of the virtual cursor.
      */
-    protected int $cursorPosition = 0;
+    protected /*int */$cursorPosition = 0;
 
     /**
      * Keys to ignore
      *
      * @var array<string>
      */
-    protected array $ignore = [
+    protected /*array */$ignore = [
         Key::ENTER,
         Key::TAB,
         Key::CTRL_C,

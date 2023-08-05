@@ -10,17 +10,17 @@ class Spinner extends Prompt
     /**
      * How long to wait between rendering each frame.
      */
-    public int $interval = 100;
+    public /*int */$interval = 100;
 
     /**
      * The number of times the spinner has been rendered.
      */
-    public int $count = 0;
+    public /*int */$count = 0;
 
     /**
      * Whether the spinner can only be rendered once.
      */
-    public bool $static = false;
+    public /*bool */$static = false;
 
     /**
      * Create a new Spinner instance.

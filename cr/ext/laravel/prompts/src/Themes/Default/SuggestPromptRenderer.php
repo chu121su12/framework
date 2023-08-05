@@ -20,14 +20,14 @@ class SuggestPromptRenderer extends Renderer
             'submit' => $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
-                    $this->truncate($prompt->value(), $maxWidth),
+                    $this->truncate($prompt->value(), $maxWidth)
                 ),
 
             'cancel' => $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->strikethrough($this->dim($this->truncate($prompt->value() ?: $prompt->placeholder, $maxWidth))),
-                    color: 'red',
+                    color: 'red'
                 )
                 ->error('Cancelled'),
 
@@ -36,7 +36,7 @@ class SuggestPromptRenderer extends Renderer
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->valueWithCursorAndArrow($prompt, $maxWidth),
                     $this->renderOptions($prompt),
-                    color: 'yellow',
+                    color: 'yellow'
                 )
                 ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5)),
 
@@ -44,7 +44,7 @@ class SuggestPromptRenderer extends Renderer
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->valueWithCursorAndArrow($prompt, $maxWidth),
-                    $this->renderOptions($prompt),
+                    $this->renderOptions($prompt)
                 )
                 ->spaceForDropdown($prompt)
                 ->newLine(), // Space for errors

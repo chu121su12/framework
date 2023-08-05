@@ -20,14 +20,14 @@ class SelectPromptRenderer extends Renderer
             'submit' => $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
-                    $this->truncate($this->format($prompt->label()), $maxWidth),
+                    $this->truncate($this->format($prompt->label()), $maxWidth)
                 ),
 
             'cancel' => $this
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->renderOptions($prompt),
-                    color: 'red',
+                    color: 'red'
                 )
                 ->error('Cancelled.'),
 
@@ -35,14 +35,14 @@ class SelectPromptRenderer extends Renderer
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->renderOptions($prompt),
-                    color: 'yellow',
+                    color: 'yellow'
                 )
                 ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5)),
 
             default => $this
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
-                    $this->renderOptions($prompt),
+                    $this->renderOptions($prompt)
                 )
                 ->newLine(), // Space for errors
         };

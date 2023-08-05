@@ -6,7 +6,7 @@ use Laravel\Prompts\Prompt;
 
 trait DrawsBoxes
 {
-    protected int $minWidth = 60;
+    protected /*int */$minWidth = 60;
 
     /**
      * Draw a box.
@@ -15,7 +15,7 @@ trait DrawsBoxes
         /*string */$title,
         string $body,
         string $footer = '',
-        string $color = 'gray',
+        string $color = 'gray'
     )/*: self */{
         $title = backport_type_check('string', $title);
 

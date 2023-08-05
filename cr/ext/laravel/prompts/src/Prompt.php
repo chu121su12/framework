@@ -20,47 +20,47 @@ abstract class Prompt
     /**
      * The current state of the prompt.
      */
-    public string $state = 'initial';
+    public /*string */$state = 'initial';
 
     /**
      * The error message from the validator.
      */
-    public string $error = '';
+    public /*string */$error = '';
 
     /**
      * The previously rendered frame.
      */
-    protected string $prevFrame = '';
+    protected /*string */$prevFrame = '';
 
     /**
      * How many new lines were written by the last output.
      */
-    protected int $newLinesWritten = 1;
+    protected /*int */$newLinesWritten = 1;
 
     /**
      * Whether user input is required.
      */
-    public bool|string $required;
+    public /*bool|string */$required;
 
     /**
      * The validator callback.
      */
-    protected ?Closure $validate;
+    protected /*?Closure */$validate;
 
     /**
      * Indicates if the prompt has been validated.
      */
-    protected bool $validated = false;
+    protected /*bool */$validated = false;
 
     /**
      * The output instance.
      */
-    protected static OutputInterface $output;
+    protected /*static */OutputInterface $output;
 
     /**
      * The terminal instance.
      */
-    protected static Terminal $terminal;
+    protected /*static */Terminal $terminal;
 
     /**
      * Get the value of the prompt.

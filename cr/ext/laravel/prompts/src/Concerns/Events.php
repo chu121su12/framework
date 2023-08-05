@@ -11,7 +11,7 @@ trait Events
      *
      * @var array<string, array<int, Closure>>
      */
-    protected array $listeners = [];
+    protected /*array */$listeners = [];
 
     /**
      * Register an event listener.

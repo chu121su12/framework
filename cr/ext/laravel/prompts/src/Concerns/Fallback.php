@@ -9,14 +9,14 @@ trait Fallback
     /**
      * Whether to fallback to a custom implementation
      */
-    protected static bool $shouldFallback = false;
+    protected /*static */bool $shouldFallback = false;
 
     /**
      * The fallback implementations.
      *
      * @var array<class-string, Closure($this): mixed>
      */
-    protected static array $fallbacks = [];
+    protected /*static */array $fallbacks = [];
 
     /**
      * Enable the fallback implementation.
