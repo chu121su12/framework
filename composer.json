@@ -99,6 +99,7 @@
         "brick/math": "^0.11.0",
         "fruitcake/php-cors": "^1.2.0",
         "laravel/serializable-closure": "^1.3.1",
+        "laravel/prompts": "^0.1.3",
         "laravel/telescope": "^4.15.2",
         "laravel/tinker": "^2.8.1",
         "league/flysystem": "^1.0.70",
@@ -155,6 +156,7 @@
             "cr/helpers/casts.php",
             "cr/helpers/helpers.php",
 
+            "cr/ext/laravel/prompts/src/helpers.php",
             "cr/ext/nunomaduro/termwind/src/Functions.php",
             "cr/ext/spatie/flare-client-php/src/helpers.php",
             "cr/ext/symfony/deprecation-contracts/function.php",
@@ -189,6 +191,7 @@
             "Fruitcake\\Cors\\": "cr/ext/fruitcake/php-cors/src/",
             "Illuminate\\": "src/Illuminate/",
             "Laravel\\SerializableClosure\\": "cr/ext/laravel/serializable-closure/src/",
+            "Laravel\\Prompts\\": "cr/ext/laravel/prompts/src/",
             "Laravel\\Telescope\\": "cr/ext/laravel/telescope/src/",
             "Laravel\\Telescope\\Database\\Factories\\": "cr/ext/laravel/telescope/database/factories/",
             "Laravel\\Tinker\\": "cr/ext/laravel/tinker/src/",
