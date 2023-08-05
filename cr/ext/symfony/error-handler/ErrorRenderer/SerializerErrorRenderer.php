@@ -57,7 +57,7 @@ class SerializerErrorRenderer implements ErrorRendererInterface
     {
         backport_type_throwable($exception);
 
-        $headers = [];
+        $headers = ['Vary' => 'Accept'];
         $debug = \is_bool($this->debug) ? $this->debug : call_user_func($this->debug, $exception);
         if ($debug) {
             $headers['X-Debug-Exception'] = rawurlencode($exception->getMessage());
@@ -69,19 +69,17 @@ class SerializerErrorRenderer implements ErrorRendererInterface
         try {
             $format = \is_string($this->format) ? $this->format : call_user_func($this->format, $flattenException);
             $requestMimeTypeFormat = Request::getMimeTypes($format);
-            $headers = [
-                'Content-Type' => isset($requestMimeTypeFormat[0]) ? $requestMimeTypeFormat[0] : $format,
-                'Vary' => 'Accept',
-            ];
+            $headers['Content-Type'] = isset($requestMimeTypeFormat[0]) ? $requestMimeTypeFormat[0] : $format;
 
-            return $flattenException->setAsString($this->serializer->serialize($flattenException, $format, [
+            $flattenException->setAsString($this->serializer->serialize($flattenException, $format, [
                 'exception' => $exception,
                 'debug' => $debug,
-            ]))
-            ->setHeaders($flattenException->getHeaders() + $headers);
+            ]));
         } catch (NotEncodableValueException $e) {
-            return $this->fallbackErrorRenderer->render($exception);
+            $flattenException = $this->fallbackErrorRenderer->render($exception);
         }
+
+        return $flattenException->setHeaders($flattenException->getHeaders() + $headers);
     }
 
     public static function getPreferredFormat(RequestStack $requestStack)/*: \Closure*/
