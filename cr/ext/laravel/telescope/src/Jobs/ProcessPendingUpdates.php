@@ -51,9 +51,9 @@ class ProcessPendingUpdates implements ShouldQueue
         $this->attempt++;
 
         $repository->update($this->pendingUpdates)->whenNotEmpty(
-            fn ($pendingUpdates) => static::dispatchIf(
+            function ($pendingUpdates) { return static::dispatchIf(
                 $this->attempt < 3, $pendingUpdates, $this->attempt
-            )->delay(now()->addSeconds(10)),
+            )->delay(now()->addSeconds(10)); }
         );
     }
 }
