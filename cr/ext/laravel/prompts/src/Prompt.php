@@ -138,7 +138,7 @@ abstract class Prompt
      */
     protected static function output()/*: OutputInterface*/
     {
-        return self::$output ??= new ConsoleOutput();
+        return isset(self::$output) ? self::$output := new ConsoleOutput();
     }
 
     /**
@@ -160,7 +160,7 @@ abstract class Prompt
      */
     public static function terminal()/*: Terminal*/
     {
-        return static::$terminal ??= new Terminal();
+        return static::isset($terminal) ? $terminal := new Terminal();
     }
 
     /**
@@ -305,7 +305,7 @@ abstract class Prompt
 
         $this->validated = true;
 
-        if (($this->required ?? false) && ($value === '' || $value === [] || $value === false)) {
+        if ((isset($this->required) ? $this->required : false) && ($value === '' || $value === [] || $value === false)) {
             $this->state = 'error';
             $this->error = is_string($this->required) ? $this->required : 'Required.';
 

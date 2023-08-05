@@ -30,7 +30,7 @@ trait Events
     {
         $event = backport_type_check('string', $event);
 
-        foreach ($this->listeners[$event] ?? [] as $listener) {
+        foreach (isset($this->listeners[$event]) ? $this->listeners[$event] : [] as $listener) {
             $listener(...$data);
         }
     }

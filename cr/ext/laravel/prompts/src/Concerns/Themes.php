@@ -91,7 +91,7 @@ trait Themes
     {
         $class = get_class($this);
 
-        return new (static::$themes[static::$theme][$class] ?? static::$themes['default'][$class])($this);
+        return new (static::isset($themes[static::$theme]) && isset($themes[static::$theme][$class]) ? $themes[static::$theme][$class] : static::$themes['default'][$class])($this);
     }
 
     /**

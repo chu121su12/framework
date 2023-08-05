@@ -55,7 +55,7 @@ class SelectPrompt extends Prompt
     public function value()/*: int|string|null*/
     {
         if (array_is_list($this->options)) {
-            return $this->options[$this->highlighted] ?? null;
+            return isset($this->options[$this->highlighted]) ? $this->options[$this->highlighted] : null;
         } else {
             return array_keys($this->options)[$this->highlighted];
         }
@@ -67,7 +67,7 @@ class SelectPrompt extends Prompt
     public function label()/*: ?string*/
     {
         if (array_is_list($this->options)) {
-            return $this->options[$this->highlighted] ?? null;
+            return isset($this->options[$this->highlighted]) ? $this->options[$this->highlighted] : null;
         } else {
             return $this->options[array_keys($this->options)[$this->highlighted]] ?? null;
         }

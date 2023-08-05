@@ -80,7 +80,12 @@ class Spinner extends Prompt
 
                 return $result;
             }
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (\Throwable $e) {
+        }
+
+        if (isset($e)) {
             $this->showCursor();
             pcntl_async_signals($originalAsync);
             pcntl_signal(SIGINT, SIG_DFL);
