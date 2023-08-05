@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravel\Prompts\Themes\Default;
+namespace Laravel\Prompts\Themes\Default_;
 
 use Laravel\Prompts\TextPrompt;
 
@@ -15,35 +15,35 @@ class TextPromptRenderer extends Renderer
     {
         $maxWidth = $prompt->terminal()->cols() - 6;
 
-        return match ($prompt->state) {
-            'submit' => $this
+        switch ($prompt->state) {
+            case 'submit': return $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->truncate($prompt->value(), $maxWidth)
-                ),
+                );
 
-            'cancel' => $this
+            case 'cancel': return $this
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->strikethrough($this->dim($this->truncate($prompt->value() ?: $prompt->placeholder, $maxWidth))),
                     color: 'red'
                 )
-                ->error('Cancelled.'),
+                ->error('Cancelled.');
 
-            'error' => $this
+            case 'error': return $this
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $prompt->valueWithCursor($maxWidth),
                     color: 'yellow'
                 )
-                ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5)),
+                ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5));
 
-            default => $this
+            default: return $this
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $prompt->valueWithCursor($maxWidth)
                 )
-                ->newLine(), // Space for errors
-        };
+                ->newLine(); // Space for errors
+        }
     }
 }

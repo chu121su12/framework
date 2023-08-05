@@ -128,7 +128,6 @@ class TestMakeCommand extends GeneratorCommand
             return;
         }
 
-        #@TODO: bc
         $type = select('Which type of test would you like?', [
             'feature' => 'Feature (PHPUnit)',
             'unit' => 'Unit (PHPUnit)',
@@ -136,11 +135,22 @@ class TestMakeCommand extends GeneratorCommand
             'pest-unit' => 'Unit (Pest)',
         ]);
 
-        match ($type) {
-            'feature' => null,
-            'unit' => $input->setOption('unit', true),
-            'pest-feature' => $input->setOption('pest', true),
-            'pest-unit' => tap($input)->setOption('pest', true)->setOption('unit', true),
+        switch ($type) {
+            case 'feature':
+                break;
+
+            case 'unit':
+                $input->setOption('unit', true);
+                break;
+
+            case 'pest-feature':
+                $input->setOption('pest', true);
+                break;
+
+            case 'pest-unit':
+                tap($input)->setOption('pest', true)->setOption('unit', true);
+                break;
+
         };
     }
 }

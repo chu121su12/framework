@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravel\Prompts\Themes\Default;
+namespace Laravel\Prompts\Themes\Default_;
 
 use Laravel\Prompts\SelectPrompt;
 
@@ -16,36 +16,36 @@ class SelectPromptRenderer extends Renderer
     {
         $maxWidth = $prompt->terminal()->cols() - 6;
 
-        return match ($prompt->state) {
-            'submit' => $this
+        switch ($prompt->state) {
+            case 'submit': return $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->truncate($this->format($prompt->label()), $maxWidth)
-                ),
+                );
 
-            'cancel' => $this
+            case 'cancel': return $this
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->renderOptions($prompt),
                     color: 'red'
                 )
-                ->error('Cancelled.'),
+                ->error('Cancelled.');
 
-            'error' => $this
+            case 'error': return $this
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->renderOptions($prompt),
                     color: 'yellow'
                 )
-                ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5)),
+                ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5));
 
-            default => $this
+            default: return $this
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->renderOptions($prompt)
                 )
-                ->newLine(), // Space for errors
-        };
+                ->newLine(); // Space for errors
+        }
     }
 
     /**
@@ -56,7 +56,9 @@ class SelectPromptRenderer extends Renderer
         return $this->scroll(
             collect($prompt->options)
                 ->values()
-                ->map(function ($label) use ($prompt) { return $this->truncate($this->format($label), $prompt->terminal()->cols() - 12); })
+                ->map(function ($label) use ($prompt) {
+                    return $this->truncate($this->format($label), $prompt->terminal()->cols() - 12);
+                })
                 ->map(function ($label, $i) use ($prompt) {
                     if ($prompt->state === 'cancel') {
                         return $this->dim($prompt->highlighted === $i

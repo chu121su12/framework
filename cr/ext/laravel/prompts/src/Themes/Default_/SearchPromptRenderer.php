@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravel\Prompts\Themes\Default;
+namespace Laravel\Prompts\Themes\Default_;
 
 use Laravel\Prompts\SearchPrompt;
 
@@ -16,46 +16,46 @@ class SearchPromptRenderer extends Renderer
     {
         $maxWidth = $prompt->terminal()->cols() - 6;
 
-        return match ($prompt->state) {
-            'submit' => $this
+        switch ($prompt->state) {
+            case 'submit': return $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->truncate($prompt->label(), $maxWidth)
-                ),
+                );
 
-            'cancel' => $this
+            case 'cancel': return $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->strikethrough($this->dim($this->truncate($prompt->searchValue() ?: $prompt->placeholder, $maxWidth))),
                     color: 'red'
                 )
-                ->error('Cancelled'),
+                ->error('Cancelled');
 
-            'error' => $this
+            case 'error': return $this
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $prompt->valueWithCursor($maxWidth),
                     $this->renderOptions($prompt),
                     color: 'yellow'
                 )
-                ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5)),
+                ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5));
 
-            'searching' => $this
+            case 'searching': return $this
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->valueWithCursorAndSearchIcon($prompt, $maxWidth),
                     $this->renderOptions($prompt)
-                ),
+                );
 
-            default => $this
+            default: return $this
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $prompt->valueWithCursor($maxWidth),
                     $this->renderOptions($prompt)
                 )
                 ->spaceForDropdown($prompt)
-                ->newLine(), // Space for errors
-        };
+                ->newLine(); // Space for errors
+        }
     }
 
     /**
@@ -68,7 +68,7 @@ class SearchPromptRenderer extends Renderer
         return preg_replace(
             '/\s$/',
             $this->cyan('…'),
-            $this->pad($prompt->valueWithCursor($maxWidth - 1).'  ', min($this->longest($prompt->matches(), padding: 2), $maxWidth))
+            $this->pad($prompt->valueWithCursor($maxWidth - 1).'  ', min($this->longest($prompt->matches(), /*padding: */2), $maxWidth))
         );
     }
 
@@ -112,7 +112,7 @@ class SearchPromptRenderer extends Renderer
                 }),
             $prompt->highlighted,
             min($prompt->scroll, $prompt->terminal()->lines() - 7),
-            min($this->longest($prompt->matches(), padding: 4), $prompt->terminal()->cols() - 6)
+            min($this->longest($prompt->matches(), /*padding: */4), $prompt->terminal()->cols() - 6)
         )->implode(PHP_EOL);
     }
 }

@@ -6,6 +6,9 @@ use Illuminate\Contracts\Database\Events\MigrationEvent as MigrationEventContrac
 
 class DatabaseRefreshed implements MigrationEventContract
 {
+    public /*?string */$database;
+    public /*bool */$seeding;
+
     /**
      * Create a new event instance.
      *
@@ -14,9 +17,12 @@ class DatabaseRefreshed implements MigrationEventContract
      * @return void
      */
     public function __construct(
-        public ?string $database = null,
-        public bool $seeding = false
+        /*public ?string */$database = null,
+        /*public bool */$seeding = false
     ) {
+        $database = backport_type_check('?string', $database);
+        $seeding = backport_type_check('bool', $seeding);
+
         //
     }
 }

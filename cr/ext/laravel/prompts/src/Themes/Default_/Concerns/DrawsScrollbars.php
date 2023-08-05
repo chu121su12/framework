@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravel\Prompts\Themes\Default\Concerns;
+namespace Laravel\Prompts\Themes\Default_\Concerns;
 
 use Illuminate\Support\Collection;
 

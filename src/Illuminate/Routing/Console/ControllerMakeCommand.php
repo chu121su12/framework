@@ -143,7 +143,11 @@ class ControllerMakeCommand extends GeneratorCommand
         $parentModelClass = $this->parseModel($this->option('parent'));
 
         if (! class_exists($parentModelClass) &&
-            confirm("A {$parentModelClass} model does not exist. Do you want to generate it?", default: true)) {
+            confirm(
+                "A {$parentModelClass} model does not exist. Do you want to generate it?",
+                /*default: */true
+            )
+        ) {
             $this->call('make:model', ['name' => $parentModelClass]);
         }
 
@@ -170,7 +174,10 @@ class ControllerMakeCommand extends GeneratorCommand
     {
         $modelClass = $this->parseModel($this->option('model'));
 
-        if (! class_exists($modelClass) && confirm("A {$modelClass} model does not exist. Do you want to generate it?", default: true)) {
+        if (! class_exists($modelClass) && confirm(
+            "A {$modelClass} model does not exist. Do you want to generate it?",
+            /*default: */true
+        )) {
             $this->call('make:model', ['name' => $modelClass]);
         }
 
@@ -306,7 +313,6 @@ class ControllerMakeCommand extends GeneratorCommand
             return;
         }
 
-        #@TODO: bc
         $type = select('Which type of controller would you like?', [
             'empty' => 'Empty',
             'resource' => 'Resource',

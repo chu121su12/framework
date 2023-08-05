@@ -2,7 +2,7 @@
 
 namespace Illuminate\Console\View\Components;
 
-use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Question\Question2 as Question;
 
 class AskWithCompletion extends Component
 {

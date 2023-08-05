@@ -8,15 +8,25 @@ class PasswordPrompt extends Prompt
 {
     use Concerns\TypedValue;
 
+    public /*string */$label;
+    public /*string */$placeholder;
+    public /*bool|string */$required;
+    public /*?Closure */$validate;
+
     /**
      * Create a new PasswordPrompt instance.
      */
     public function __construct(
-        public string $label,
-        public string $placeholder = '',
-        public bool|string $required = false,
-        public ?Closure $validate = null
+        /*public string */$label,
+        /*public string */$placeholder = '',
+        /*public bool|string */$required = false,
+        /*public *//*?*/Closure $validate = null
     ) {
+        $this->label = backport_type_check('string', $label);
+        $this->placeholder = backport_type_check('string', $placeholder);
+        $this->required = backport_type_check('bool|string', $required);
+        $this->validate = $validate;
+
         $this->trackTypedValue();
     }
 

@@ -55,12 +55,12 @@ abstract class Prompt
     /**
      * The output instance.
      */
-    protected /*static */OutputInterface $output;
+    protected static /*OutputInterface */$output;
 
     /**
      * The terminal instance.
      */
-    protected /*static */Terminal $terminal;
+    protected static /*Terminal */$terminal;
 
     /**
      * Get the value of the prompt.
@@ -152,10 +152,17 @@ abstract class Prompt
     {
         $message = backport_type_check('string', $message);
 
-        match (true) {
-            method_exists(static::output(), 'writeDirectly') => static::output()->writeDirectly($message),
-            method_exists(static::output(), 'getOutput') => static::output()->getOutput()->write($message),
-            default => static::output()->write($message),
+        switch (true) {
+            case method_exists(static::output(), 'writeDirectly'):
+                static::output()->writeDirectly($message);
+                break;
+
+            case method_exists(static::output(), 'getOutput'):
+                static::output()->getOutput()->write($message);
+                break;
+
+            default:
+                static::output()->write($message);
         };
     }
 
@@ -324,7 +331,7 @@ abstract class Prompt
             return;
         }
 
-        $error = ($this->validate)($value);
+        $error = call_user_func($this->validate, $value);
 
         if (! is_string($error) && ! is_null($error)) {
             throw new \RuntimeException('The validator must return a string or null.');

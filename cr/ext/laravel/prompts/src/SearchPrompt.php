@@ -21,21 +21,33 @@ class SearchPrompt extends Prompt
      */
     protected /*?array */$matches = null;
 
+    public /*string */$label;
+    public /*Closure */$options;
+    public /*string */$placeholder;
+    public /*int */$scroll;
+    public /*?Closure */$validate;
+
     /**
      * Create a new SuggestPrompt instance.
      *
      * @param  Closure(string): array<int|string, string>  $options
      */
     public function __construct(
-        public string $label,
-        public Closure $options,
-        public string $placeholder = '',
-        public int $scroll = 5,
-        public ?Closure $validate = null
+        /*public string */$label,
+        /*public */Closure $options,
+        /*public string */$placeholder = '',
+        /*public int */$scroll = 5,
+        /*public *//*?*/Closure $validate = null
     ) {
-        $this->trackTypedValue(submit: false);
+        $this->label = backport_type_check('string', $label);
+        $this->placeholder = backport_type_check('string', $placeholder);
+        $this->scroll = backport_type_check('int', $scroll);
+        $this->options = $options;
+        $this->validate = $validate;
 
-        $this->on('key', function ($key) {
+        $this->trackTypedValue(/*$default = */'', /*submit: */false);
+
+        $this->on('key', function ($key) { switch ($key) {
             case Key::UP:
             case Key::SHIFT_TAB: return $this->highlightPrevious();
 
@@ -50,7 +62,7 @@ class SearchPrompt extends Prompt
             case Key::RIGHT: return $this->highlighted = null;
 
             default: return $this->search();
-        });
+        } });
     }
 
     protected function search()/*: void*/
@@ -93,7 +105,7 @@ class SearchPrompt extends Prompt
             return $this->matches;
         }
 
-        return $this->matches = ($this->options)($this->typedValue);
+        return $this->matches = call_user_func($this->options, $this->typedValue);
     }
 
     /**

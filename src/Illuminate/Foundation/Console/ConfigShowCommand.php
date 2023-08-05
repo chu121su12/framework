@@ -2,6 +2,7 @@
 
 namespace Illuminate\Foundation\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -37,14 +38,14 @@ class ConfigShowCommand extends Command
         if (! $data) {
             $this->components->error("Configuration file `{$config}` does not exist.");
 
-            return Command::FAILURE;
+            return SymfonyHelper::CONSOLE_FAILURE;
         }
 
         $this->newLine();
         $this->render($config, $data);
         $this->newLine();
 
-        return Command::SUCCESS;
+        return SymfonyHelper::CONSOLE_SUCCESS;
     }
 
     /**
@@ -83,7 +84,7 @@ class ConfigShowCommand extends Command
     {
         $this->components->twoColumnDetail(
             "<fg=green;options=bold>{$title}</>",
-            $subtitle,
+            $subtitle
         );
     }
 
@@ -96,11 +97,13 @@ class ConfigShowCommand extends Command
     protected function formatKey($key)
     {
         return preg_replace_callback(
-            '/(.*)\.(.*)$/', fn ($matches) => sprintf(
-                '<fg=gray>%s ⇁</> %s',
-                str_replace('.', ' ⇁ ', $matches[1]),
-                $matches[2]
-            ), $key
+            '/(.*)\.(.*)$/', function ($matches) {
+                return sprintf(
+                    '<fg=gray>%s ⇁</> %s',
+                    str_replace('.', ' ⇁ ', $matches[1]),
+                    $matches[2]
+                );
+            }, $key
         );
     }
 
@@ -112,14 +115,14 @@ class ConfigShowCommand extends Command
      */
     protected function formatValue($value)
     {
-        return match (true) {
-            is_bool($value) => sprintf('<fg=#ef8414;options=bold>%s</>', $value ? 'true' : 'false'),
-            is_null($value) => '<fg=#ef8414;options=bold>null</>',
-            is_numeric($value) => "<fg=#ef8414;options=bold>{$value}</>",
-            is_array($value) => '[]',
-            is_object($value) => get_class($value),
-            is_string($value) => $value,
-            default => print_r($value, true),
-        };
+        switch (true) {
+            case is_bool($value): return sprintf('<fg=#ef8414;options=bold>%s</>', $value ? 'true' : 'false');
+            case is_null($value): return '<fg=#ef8414;options=bold>null</>';
+            case is_numeric($value): return "<fg=#ef8414;options=bold>{$value}</>";
+            case is_array($value): return '[]';
+            case is_object($value): return get_class($value);
+            case is_string($value): return $value;
+            default: return print_r($value, true);
+        }
     }
 }

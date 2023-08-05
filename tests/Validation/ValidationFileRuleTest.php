@@ -208,13 +208,13 @@ class ValidationFileRuleTest extends TestCase
     public function testMinWithHumanReadableSize()
     {
         $this->fails(
-            File::default()->min('1024kb'),
+            File::default_()->min('1024kb'),
             UploadedFile::fake()->create('foo.txt', 1023),
             ['validation.min.file']
         );
 
         $this->passes(
-            File::default()->min('1024kb'),
+            File::default_()->min('1024kb'),
             [
                 UploadedFile::fake()->create('foo.txt', 1024),
                 UploadedFile::fake()->create('foo.txt', 1025),
@@ -244,13 +244,13 @@ class ValidationFileRuleTest extends TestCase
     public function testMaxWithHumanReadableSize()
     {
         $this->fails(
-            File::default()->max('1024kb'),
+            File::default_()->max('1024kb'),
             UploadedFile::fake()->create('foo.txt', 1025),
             ['validation.max.file']
         );
 
         $this->passes(
-            File::default()->max('1024kb'),
+            File::default_()->max('1024kb'),
             [
                 UploadedFile::fake()->create('foo.txt', 1024),
                 UploadedFile::fake()->create('foo.txt', 1023),
@@ -262,13 +262,13 @@ class ValidationFileRuleTest extends TestCase
     public function testMaxWithHumanReadableSizeAndMultipleValue()
     {
         $this->fails(
-            File::default()->max('1mb'),
+            File::default_()->max('1mb'),
             UploadedFile::fake()->create('foo.txt', 1025),
             ['validation.max.file']
         );
 
         $this->passes(
-            File::default()->max('1mb'),
+            File::default_()->max('1mb'),
             [
                 UploadedFile::fake()->create('foo.txt', 1000),
                 UploadedFile::fake()->create('foo.txt', 999),

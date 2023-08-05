@@ -136,7 +136,7 @@ class ListenerMakeCommand extends GeneratorCommand
 
         $event = suggest(
             'What event should be listened for? (Optional)',
-            $this->possibleEvents(),
+            $this->possibleEvents()
         );
 
         if ($event) {

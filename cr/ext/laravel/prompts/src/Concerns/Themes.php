@@ -12,29 +12,29 @@ use Laravel\Prompts\SelectPrompt;
 use Laravel\Prompts\Spinner;
 use Laravel\Prompts\SuggestPrompt;
 use Laravel\Prompts\TextPrompt;
-use Laravel\Prompts\Themes\Default\ConfirmPromptRenderer;
-use Laravel\Prompts\Themes\Default\MultiSelectPromptRenderer;
-use Laravel\Prompts\Themes\Default\NoteRenderer;
-use Laravel\Prompts\Themes\Default\PasswordPromptRenderer;
-use Laravel\Prompts\Themes\Default\SearchPromptRenderer;
-use Laravel\Prompts\Themes\Default\SelectPromptRenderer;
-use Laravel\Prompts\Themes\Default\SpinnerRenderer;
-use Laravel\Prompts\Themes\Default\SuggestPromptRenderer;
-use Laravel\Prompts\Themes\Default\TextPromptRenderer;
+use Laravel\Prompts\Themes\Default_\ConfirmPromptRenderer;
+use Laravel\Prompts\Themes\Default_\MultiSelectPromptRenderer;
+use Laravel\Prompts\Themes\Default_\NoteRenderer;
+use Laravel\Prompts\Themes\Default_\PasswordPromptRenderer;
+use Laravel\Prompts\Themes\Default_\SearchPromptRenderer;
+use Laravel\Prompts\Themes\Default_\SelectPromptRenderer;
+use Laravel\Prompts\Themes\Default_\SpinnerRenderer;
+use Laravel\Prompts\Themes\Default_\SuggestPromptRenderer;
+use Laravel\Prompts\Themes\Default_\TextPromptRenderer;
 
 trait Themes
 {
     /**
      * The name of the active theme.
      */
-    protected /*static */string $theme = 'default';
+    protected static /*string */$theme = 'default';
 
     /**
      * The available themes.
      *
      * @var array<string, array<class-string<\Laravel\Prompts\Prompt>, class-string<object&callable>>>
      */
-    protected /*static */array $themes = [
+    protected static /*array */$themes = [
         'default' => [
             TextPrompt::class => TextPromptRenderer::class,
             PasswordPrompt::class => PasswordPromptRenderer::class,

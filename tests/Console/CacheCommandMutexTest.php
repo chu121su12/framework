@@ -14,7 +14,18 @@ use PHPUnit\Framework\TestCase;
 class CacheCommandMutexTest_setUp_class extends Command
         {
             protected $name = 'command-name';
-        };
+        }
+
+class CacheCommandMutexTest_testCommandMutexNameWithIsolatedMutexNameMethod_class extends Command
+        {
+            protected $name = 'command-name';
+
+            public function isolatableId()
+            {
+                return 'isolated';
+            }
+        }
+
 
 class CacheCommandMutexTest extends TestCase
 {
@@ -187,15 +198,7 @@ class CacheCommandMutexTest extends TestCase
 
     public function testCommandMutexNameWithIsolatedMutexNameMethod()
     {
-        $command = new class extends Command
-        {
-            protected $name = 'command-name';
-
-            public function isolatableId()
-            {
-                return 'isolated';
-            }
-        };
+        $command = new CacheCommandMutexTest_testCommandMutexNameWithIsolatedMutexNameMethod_class;
 
         $this->mockUsingCacheStore();
 
