@@ -29,20 +29,35 @@ class SuggestPrompt extends Prompt
      */
     protected /*?array */$matches = null;
 
+    public /*string */$label;
+    public /*string */$placeholder;
+    public /*string */$default;
+    public /*int */$scroll;
+    public /*bool|string */$required;
+    public /*?Closure */$validate;
+
     /**
      * Create a new SuggestPrompt instance.
      *
      * @param  array<string>|Collection<int, string>|Closure(string): array<string>  $options
      */
     public function __construct(
-        public string $label,
-        array|Collection|Closure $options,
-        public string $placeholder = '',
-        public string $default = '',
-        public int $scroll = 5,
-        public bool|string $required = false,
-        public ?Closure $validate = null
+        /*public string */$label,
+        /*array|Collection|Closure */$options,
+        /*public string */$placeholder = '',
+        /*public string */$default = '',
+        /*public int */$scroll = 5,
+        /*public bool|string */$required = false,
+        /*public *//*?*/Closure $validate = null
     ) {
+        $this->label = backport_type_check('string', $label);
+        $this->placeholder = backport_type_check('string', $placeholder);
+        $this->default = backport_type_check('string', $default);
+        $this->scroll = backport_type_check('int', $scroll);
+        $this->required = backport_type_check('bool|string', $required);
+        $this->validate = $validate;
+        $options = backport_type_check(['array', Collection::class, Closure::class], $options);
+
         $this->options = $options instanceof Collection ? $options->all() : $options;
 
         $this->on('key', function ($key) { switch ($key) {

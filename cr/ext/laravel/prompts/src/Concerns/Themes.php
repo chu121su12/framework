@@ -27,14 +27,14 @@ trait Themes
     /**
      * The name of the active theme.
      */
-    protected /*static */string $theme = 'default';
+    protected static /*string */$theme = 'default';
 
     /**
      * The available themes.
      *
      * @var array<string, array<class-string<\Laravel\Prompts\Prompt>, class-string<object&callable>>>
      */
-    protected /*static */array $themes = [
+    protected static /*array */$themes = [
         'default' => [
             TextPrompt::class => TextPromptRenderer::class,
             PasswordPrompt::class => PasswordPromptRenderer::class,

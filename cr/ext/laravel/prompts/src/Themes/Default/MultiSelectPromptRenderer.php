@@ -14,36 +14,36 @@ class MultiSelectPromptRenderer extends Renderer
      */
     public function __invoke(MultiSelectPrompt $prompt)/*: string*/
     {
-        return match ($prompt->state) {
-            'submit' => $this
+        switch ($prompt->state) {
+            case 'submit': return $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->renderSelectedOptions($prompt)
-                ),
+                );
 
-            'cancel' => $this
+            case 'cancel': return $this
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->renderOptions($prompt),
                     color: 'red'
                 )
-                ->error('Cancelled.'),
+                ->error('Cancelled.');
 
-            'error' => $this
+            case 'error': return $this
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->renderOptions($prompt),
                     color: 'yellow'
                 )
-                ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5)),
+                ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5));
 
-            default => $this
+            default: return $this
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->renderOptions($prompt)
                 )
-                ->newLine(), // Space for errors
-        };
+                ->newLine(); // Space for errors
+        }
     }
 
     /**
@@ -54,7 +54,9 @@ class MultiSelectPromptRenderer extends Renderer
         return $this->scroll(
             collect($prompt->options)
                 ->values()
-                ->map(function ($label) use ($prompt) { return $this->truncate($this->format($label), $prompt->terminal()->cols() - 12); })
+                ->map(function ($label) use ($prompt) {
+                    return $this->truncate($this->format($label), $prompt->terminal()->cols() - 12);
+                })
                 ->map(function ($label, $index) use ($prompt) {
                     $active = $index === $prompt->highlighted;
                     if (array_is_list($prompt->options)) {
@@ -65,24 +67,36 @@ class MultiSelectPromptRenderer extends Renderer
                     $selected = in_array($value, $prompt->value());
 
                     if ($prompt->state === 'cancel') {
-                        return $this->dim(match (true) {
-                            $active && $selected => "› ◼ {$this->strikethrough($label)}  ",
-                            $active => "› ◻ {$this->strikethrough($label)}  ",
-                            $selected => "  ◼ {$this->strikethrough($label)}  ",
-                            default => "  ◻ {$this->strikethrough($label)}  ",
-                        });
+                        switch (true) {
+                            case $active && $selected:
+                                $dim = "› ◼ {$this->strikethrough($label)}  ";
+                                break;
+
+                            case $active:
+                                $dim = "› ◻ {$this->strikethrough($label)}  ";
+                                break;
+
+                            case $selected:
+                                $dim = "  ◼ {$this->strikethrough($label)}  ";
+                                break;
+
+                            default:
+                                $dim = "  ◻ {$this->strikethrough($label)}  ";
+                        }
+
+                        return $this->dim($dim);
                     }
 
-                    return match (true) {
-                        $active && $selected => "{$this->cyan('› ◼')} {$label}  ",
-                        $active => "{$this->cyan('›')} ◻ {$label}  ",
-                        $selected => "  {$this->cyan('◼')} {$this->dim($label)}  ",
-                        default => "  {$this->dim('◻')} {$this->dim($label)}  ",
-                    };
+                    switch (true) {
+                        case $active && $selected: return "{$this->cyan('› ◼')} {$label}  ";
+                        case $active: return "{$this->cyan('›')} ◻ {$label}  ";
+                        case $selected: return "  {$this->cyan('◼')} {$this->dim($label)}  ";
+                        default: return "  {$this->dim('◻')} {$this->dim($label)}  ";
+                    }
                 }),
             $prompt->highlighted,
             min($prompt->scroll, $prompt->terminal()->lines() - 5),
-            min($this->longest($prompt->options, padding: 6), $prompt->terminal()->cols() - 6),
+            min($this->longest($prompt->options, /*padding: */6), $prompt->terminal()->cols() - 6),
             $prompt->state === 'cancel' ? 'dim' : 'cyan'
         )->implode(PHP_EOL);
     }

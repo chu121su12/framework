@@ -16,39 +16,39 @@ class SuggestPromptRenderer extends Renderer
     {
         $maxWidth = $prompt->terminal()->cols() - 6;
 
-        return match ($prompt->state) {
-            'submit' => $this
+        switch ($prompt->state) {
+            case 'submit': return $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->truncate($prompt->value(), $maxWidth)
-                ),
+                );
 
-            'cancel' => $this
+            case 'cancel': return $this
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->strikethrough($this->dim($this->truncate($prompt->value() ?: $prompt->placeholder, $maxWidth))),
                     color: 'red'
                 )
-                ->error('Cancelled'),
+                ->error('Cancelled');
 
-            'error' => $this
+            case 'error': return $this
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->valueWithCursorAndArrow($prompt, $maxWidth),
                     $this->renderOptions($prompt),
                     color: 'yellow'
                 )
-                ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5)),
+                ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5));
 
-            default => $this
+            default: return $this
                 ->box(
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->valueWithCursorAndArrow($prompt, $maxWidth),
                     $this->renderOptions($prompt)
                 )
                 ->spaceForDropdown($prompt)
-                ->newLine(), // Space for errors
-        };
+                ->newLine(); // Space for errors
+        }
     }
 
     /**
@@ -65,7 +65,7 @@ class SuggestPromptRenderer extends Renderer
         return preg_replace(
             '/\s$/',
             $this->cyan('⌄'),
-            $this->pad($prompt->valueWithCursor($maxWidth - 1).'  ', min($this->longest($prompt->matches(), padding: 2), $maxWidth))
+            $this->pad($prompt->valueWithCursor($maxWidth - 1).'  ', min($this->longest($prompt->matches(), /*padding: */2), $maxWidth))
         );
     }
 
@@ -96,14 +96,16 @@ class SuggestPromptRenderer extends Renderer
 
         return $this->scroll(
             collect($prompt->matches())
-                ->map(function ($label) use ($prompt) { return $this->truncate($label, $prompt->terminal()->cols() - 10); })
+                ->map(function ($label) use ($prompt) {
+                    return $this->truncate($label, $prompt->terminal()->cols() - 10);
+                })
                 ->map(function ($label, $i) use ($prompt) { return $prompt->highlighted === $i
                     ? "{$this->cyan('›')} {$label}  "
                     : "  {$this->dim($label)}  ";
                 }),
             $prompt->highlighted,
             min($prompt->scroll, $prompt->terminal()->lines() - 7),
-            min($this->longest($prompt->matches(), padding: 4), $prompt->terminal()->cols() - 6),
+            min($this->longest($prompt->matches(), /*padding: */4), $prompt->terminal()->cols() - 6),
             $prompt->state === 'cancel' ? 'dim' : 'cyan'
         )->implode(PHP_EOL);
     }

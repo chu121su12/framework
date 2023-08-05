@@ -22,11 +22,15 @@ class Spinner extends Prompt
      */
     public /*bool */$static = false;
 
+    public /*string */$message;
+
     /**
      * Create a new Spinner instance.
      */
-    public function __construct(public string $message = '')
+    public function __construct(/*public string */$message = '')
     {
+        $this->message = backport_type_check('string', $message);
+
         //
     }
 

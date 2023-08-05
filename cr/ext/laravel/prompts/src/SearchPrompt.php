@@ -21,19 +21,31 @@ class SearchPrompt extends Prompt
      */
     protected /*?array */$matches = null;
 
+    public /*string */$label;
+    public /*Closure */$options;
+    public /*string */$placeholder;
+    public /*int */$scroll;
+    public /*?Closure */$validate;
+
     /**
      * Create a new SuggestPrompt instance.
      *
      * @param  Closure(string): array<int|string, string>  $options
      */
     public function __construct(
-        public string $label,
-        public Closure $options,
-        public string $placeholder = '',
-        public int $scroll = 5,
-        public ?Closure $validate = null
+        /*public string */$label,
+        /*public */Closure $options,
+        /*public string */$placeholder = '',
+        /*public int */$scroll = 5,
+        /*public *//*?*/Closure $validate = null
     ) {
-        $this->trackTypedValue(submit: false);
+        $this->label = backport_type_check('string', $label);
+        $this->placeholder = backport_type_check('string', $placeholder);
+        $this->scroll = backport_type_check('int', $scroll);
+        $this->options = $options;
+        $this->validate = $validate;
+
+        $this->trackTypedValue(/*$default = */'', /*submit: */false);
 
         $this->on('key', function ($key) {
             case Key::UP:

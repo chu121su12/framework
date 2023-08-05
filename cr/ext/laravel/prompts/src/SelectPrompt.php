@@ -19,18 +19,29 @@ class SelectPrompt extends Prompt
      */
     public /*array */$options;
 
+    public /*string */$label;
+    public /*int|string|null */$default;
+    public /*int */$scroll;
+    public /*?Closure */$validate;
+
     /**
      * Create a new SelectPrompt instance.
      *
      * @param  array<int|string, string>|Collection<int|string, string>  $options
      */
     public function __construct(
-        public string $label,
-        array|Collection $options,
-        public int|string|null $default = null,
-        public int $scroll = 5,
-        public ?Closure $validate = null
+        /*public string */$label,
+        /*array|Collection */$options,
+        /*public int|string|null */$default = null,
+        /*public int */$scroll = 5,
+        /*public *//*?*/Closure $validate = null
     ) {
+        /*public string */$this->label = backport_type_check('string', $label);
+        /*public int|string|null */$this->default = backport_type_check('int|string|null', $default);
+        /*public int */$this->scroll = backport_type_check('int', $scroll);
+        $this->validate = $validate;
+        $options = backport_type_check(['array', Collection::class], $options);
+
         $this->options = $options instanceof Collection ? $options->all() : $options;
 
         if ($this->default) {

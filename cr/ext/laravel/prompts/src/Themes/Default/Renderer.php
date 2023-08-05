@@ -16,11 +16,15 @@ abstract class Renderer
      */
     protected /*string */$output = '';
 
+    protected /*Prompt */$prompt;
+
     /**
      * Create a new renderer instance.
      */
-    public function __construct(protected Prompt $prompt)
+    public function __construct(/*protected */Prompt $prompt)
     {
+        $this->prompt = $prompt;
+
         $this->checkTerminalSize($prompt);
     }
 

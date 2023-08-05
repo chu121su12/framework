@@ -7,7 +7,7 @@ trait Cursor
     /**
      * Indicates if the cursor has been hidden.
      */
-    protected /*static */bool $cursorHidden = false;
+    protected static /*bool */$cursorHidden = false;
 
     /**
      * Hide the cursor.

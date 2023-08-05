@@ -33,6 +33,11 @@ class MultiSelectPrompt extends Prompt
      */
     protected /*array */$values = [];
 
+    public /*string */$label;
+    public /*int */$scroll;
+    public /*bool|string */$required;
+    public /*?Closure */$validate;
+
     /**
      * Create a new SelectPrompt instance.
      *
@@ -40,13 +45,20 @@ class MultiSelectPrompt extends Prompt
      * @param  array<int|string>|Collection<int, int|string>  $default
      */
     public function __construct(
-        public string $label,
-        array|Collection $options,
-        array|Collection $default = [],
-        public int $scroll = 5,
-        public bool|string $required = false,
-        public ?Closure $validate = null
+        /*public string */$label,
+        /*array|Collection */$options,
+        /*array|Collection */$default = [],
+        /*public int */$scroll = 5,
+        /*public bool|string */$required = false,
+        /*public *//*?*/Closure $validate = null
     ) {
+        $this->label = backport_type_check('string', $label);
+        $this->scroll = backport_type_check('int', $scroll);
+        $this->required = backport_type_check('bool|string', $required);
+        $this->validate = $validate;
+        $options = backport_type_check(['array', Collection::class], $options);
+        $default = backport_type_check(['array', Collection::class], $default);
+
         $this->options = $options instanceof Collection ? $options->all() : $options;
         $this->default = $default instanceof Collection ? $default->all() : $default;
         $this->values = $this->default;
