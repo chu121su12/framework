@@ -15,8 +15,10 @@ class ReducedArgument implements ReducedArgumentContract
      */
     public function __construct(
         $value,
-        string $originalType
+        /*string */$originalType
     ) {
+        $originalType = backport_type_check('string', $originalType);
+
         $this->originalType = $originalType;
         $this->value = $value;
     }

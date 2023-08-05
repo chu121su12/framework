@@ -23,7 +23,7 @@ class ArgumentReducers
     /**
      * @param array<ArgumentReducer|class-string<ArgumentReducer>> $argumentReducers
      */
-    public static function create(array $argumentReducers): self
+    public static function create(array $argumentReducers)/*: self*/
     {
         return new self(array_map(
             function ($argumentReducer) {
@@ -34,12 +34,12 @@ class ArgumentReducers
         ));
     }
 
-    public static function default(array $extra = []): self
+    public static function default_(array $extra = [])/*: self*/
     {
         return new self(static::defaultReducers($extra));
     }
 
-    public static function minimal(array $extra = []): self
+    public static function minimal(array $extra = [])/*: self*/
     {
         return new self(static::minimalReducers($extra));
     }
@@ -52,7 +52,7 @@ class ArgumentReducers
         $this->argumentReducers = $argumentReducers;
     }
 
-    protected static function defaultReducers(array $extra = []): array
+    protected static function defaultReducers(array $extra = [])/*: array*/
     {
         return array_merge($extra, [
             new BaseTypeArgumentReducer(),
@@ -68,7 +68,7 @@ class ArgumentReducers
         ]);
     }
 
-    protected static function minimalReducers(array $extra = []): array
+    protected static function minimalReducers(array $extra = [])/*: array*/
     {
         return array_merge($extra, [
             new BaseTypeArgumentReducer(),

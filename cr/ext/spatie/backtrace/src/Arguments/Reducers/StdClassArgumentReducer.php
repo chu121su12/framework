@@ -8,7 +8,7 @@ use stdClass;
 
 class StdClassArgumentReducer extends ArrayArgumentReducer
 {
-    public function execute($argument): ReducedArgumentContract
+    public function execute($argument)/*: ReducedArgumentContract*/
     {
         if (! $argument instanceof stdClass) {
             return UnReducedArgument::create();

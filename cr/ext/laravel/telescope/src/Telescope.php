@@ -681,7 +681,7 @@ class Telescope
                     $updateResult->whenNotEmpty(
                         function ($pendingUpdates) { return rescue(
                             function () { return ProcessPendingUpdates::dispatch(
-                                $pendingUpdates,
+                                $pendingUpdates
                             )->delay(now()->addSeconds(10)); }
                         ); }
                     );

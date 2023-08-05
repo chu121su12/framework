@@ -4,19 +4,21 @@ namespace Spatie\Ignition\Solutions\OpenAi;
 
 class OpenAiSolutionResponse
 {
-    protected string $rawText;
+    protected /*string */$rawText;
 
-    public function __construct(string $rawText)
+    public function __construct(/*string */$rawText)
     {
+        $rawText = backport_type_check('string', $rawText);
+
         $this->rawText = trim($rawText);
     }
 
-    public function description(): string
+    public function description()/*: string*/
     {
         return $this->between('FIX', 'ENDFIX', $this->rawText);
     }
 
-    public function links(): array
+    public function links()/*: array*/
     {
         $textLinks = $this->between('LINKS', 'ENDLINKS', $this->rawText);
 
@@ -36,8 +38,12 @@ class OpenAiSolutionResponse
         return $links;
     }
 
-    protected function between(string $start, string $end, string $text): string
+    protected function between(/*string */$start, /*string */$end, /*string */$text)/*: string*/
     {
+        $start = backport_type_check('string', $start);
+        $end = backport_type_check('string', $end);
+        $text = backport_type_check('string', $text);
+
         $startPosition = strpos($text, $start);
         if ($startPosition === false) {
             return "";

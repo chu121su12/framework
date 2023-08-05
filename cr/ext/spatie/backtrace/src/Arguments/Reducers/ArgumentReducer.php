@@ -9,5 +9,5 @@ interface ArgumentReducer
     /**
      * @param mixed $argument
      */
-    public function execute($argument): ReducedArgumentContract;
+    public function execute($argument)/*: ReducedArgumentContract*/;
 }

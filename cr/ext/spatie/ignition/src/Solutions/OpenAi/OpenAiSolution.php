@@ -13,41 +13,56 @@ use Throwable;
 
 class OpenAiSolution implements Solution
 {
-    public bool $aiGenerated = true;
+    public /*bool */$aiGenerated = true;
 
-    protected string $prompt;
+    protected /*string */$prompt;
 
-    protected OpenAiSolutionResponse $openAiSolutionResponse;
+    protected /*OpenAiSolutionResponse */$openAiSolutionResponse;
+
+    protected /*Throwable           */$throwable;
+    protected /*string              */$openAiKey;
+    protected /*CacheInterface|null */$cache;
+    protected /*int|null            */$cacheTtlInSeconds;
+    protected /*string|null         */$applicationType;
+    protected /*string|null         */$applicationPath;
 
     public function __construct(
-        protected Throwable           $throwable,
-        protected string              $openAiKey,
-        protected CacheInterface|null $cache = null,
-        protected int|null            $cacheTtlInSeconds = 60,
-        protected string|null         $applicationType = null,
-        protected string|null         $applicationPath = null,
+        protected /*Throwable           */$throwable,
+        protected /*string              */$openAiKey,
+        protected /*CacheInterface|null */$cache = null,
+        protected /*int|null            */$cacheTtlInSeconds = 60,
+        protected /*string|null         */$applicationType = null,
+        protected /*string|null         */$applicationPath = null
     ) {
+        backport_type_throwable($throwable);
+        $this->throwable = $throwable;
+        $this->openAiKey = backport_type_check('string', $openAiKey);
+        $this->cache = backport_type_check([CacheInterface::class, 'null'], $cache);
+        $this->cacheTtlInSeconds = backport_type_check('int|null', $cacheTtlInSeconds);
+        $this->applicationType = backport_type_check('string|null', $applicationType);
+        $this->applicationPath = backport_type_check('string|null', $applicationPath);
+
         $this->prompt = $this->generatePrompt();
 
         $this->openAiSolutionResponse = $this->getAiSolution();
     }
 
-    public function getSolutionTitle(): string
+    public function getSolutionTitle()/*: string*/
     {
         return 'AI Generated Solution';
     }
 
-    public function getSolutionDescription(): string
+    public function getSolutionDescription()/*: string*/
     {
         return $this->openAiSolutionResponse->description();
     }
 
-    public function getDocumentationLinks(): array
+    public function getDocumentationLinks()/*: array*/
     {
         return $this->openAiSolutionResponse->links();
     }
 
-    public function getAiSolution(): ?OpenAiSolutionResponse
+    public function getAiSolution()/*: ?OpenAiSolutionResponse*/
     {
         $solution = $this->cache->get($this->getCacheKey());
 
@@ -69,39 +84,41 @@ class OpenAiSolution implements Solution
         return new OpenAiSolutionResponse($solutionText);
     }
 
-    protected function getCacheKey(): string
+    protected function getCacheKey()/*: string*/
     {
         $hash = sha1($this->prompt);
 
         return "ignition-solution-{$hash}";
     }
 
-    protected function generatePrompt(): string
+    protected function generatePrompt()/*: string*/
     {
         $viewPath = Ignition::viewPath('aiPrompt');
 
         $viewModel = new OpenAiPromptViewModel(
-            file: $this->throwable->getFile(),
-            exceptionMessage: $this->throwable->getMessage(),
-            exceptionClass: get_class($this->throwable),
-            snippet: $this->getApplicationFrame($this->throwable)->getSnippetAsString(15),
-            line: $this->throwable->getLine(),
-            applicationType: $this->applicationType,
+            /*file: */$this->throwable->getFile(),
+            /*exceptionMessage: */$this->throwable->getMessage(),
+            /*exceptionClass: */get_class($this->throwable),
+            /*snippet: */$this->getApplicationFrame($this->throwable)->getSnippetAsString(15),
+            /*line: */$this->throwable->getLine(),
+            /*applicationType: */$this->applicationType
         );
 
         return (new Renderer())->renderAsString(
             ['viewModel' => $viewModel],
-            $viewPath,
+            $viewPath
         );
     }
 
-    protected function getModel(): string
+    protected function getModel()/*: string*/
     {
         return 'gpt-3.5-turbo';
     }
 
-    protected function getApplicationFrame(Throwable $throwable): ?Frame
+    protected function getApplicationFrame(/*Throwable */$throwable)/*: ?Frame*/
     {
+        backport_type_throwable($throwable);
+
         $backtrace = Backtrace::createForThrowable($throwable);
 
         if ($this->applicationPath) {
@@ -110,6 +127,8 @@ class OpenAiSolution implements Solution
 
         $frames = $backtrace->frames();
 
-        return $frames[$backtrace->firstApplicationFrameIndex()] ?? null;
+        $firstApplicationFrameIndex = $backtrace->firstApplicationFrameIndex();
+
+        return isset($frames[$firstApplicationFrameIndex]) ? $frames[$firstApplicationFrameIndex] : null;
     }
 }

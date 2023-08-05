@@ -9,7 +9,7 @@ use Stringable;
 
 class StringableArgumentReducer implements ArgumentReducer
 {
-    public function execute($argument): ReducedArgumentContract
+    public function execute($argument)/*: ReducedArgumentContract*/
     {
         if (! $argument instanceof Stringable) {
             return UnReducedArgument::create();
@@ -17,7 +17,7 @@ class StringableArgumentReducer implements ArgumentReducer
 
         return new ReducedArgument(
             (string) $argument,
-            get_class($argument),
+            get_class($argument)
         );
     }
 }

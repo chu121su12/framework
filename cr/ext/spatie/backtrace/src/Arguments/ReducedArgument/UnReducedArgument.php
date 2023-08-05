@@ -11,7 +11,7 @@ class UnReducedArgument implements ReducedArgumentContract
     {
     }
 
-    public static function create(): self
+    public static function create()/*: self*/
     {
         if (self::$instance !== null) {
             return self::$instance;

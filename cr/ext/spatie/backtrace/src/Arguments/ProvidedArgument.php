@@ -35,37 +35,47 @@ class ProvidedArgument
     /** @var string|null */
     public $originalType = null;
 
-    public static function fromReflectionParameter(ReflectionParameter $parameter): self
+    public static function fromReflectionParameter(ReflectionParameter $parameter)/*: self*/
     {
         return new self(
             $parameter->getName(),
             $parameter->isPassedByReference(),
             $parameter->isVariadic(),
             $parameter->isDefaultValueAvailable(),
-            $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null,
+            $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null
         );
     }
 
     public static function fromNonReflectableParameter(
-        int $index
-    ): self {
+        /*int */$index
+    )/*: self*/ {
+        $index = backport_type_check('int', $index);
+
         return new self(
             "arg{$index}",
-            false,
+            false
         );
     }
 
     public function __construct(
-        string $name,
-        bool $passedByReference = false,
-        bool $isVariadic = false,
-        bool $hasDefaultValue = false,
+        /*string */$name,
+        /*bool */$passedByReference = false,
+        /*bool */$isVariadic = false,
+        /*bool */$hasDefaultValue = false,
         $defaultValue = null,
-        bool $defaultValueUsed = false,
-        bool $truncated = false,
+        /*bool */$defaultValueUsed = false,
+        /*bool */$truncated = false,
         $reducedValue = null,
-        ?string $originalType = null
+        /*?string */$originalType = null
     ) {
+        $name = backport_type_check('string', $name);
+        $passedByReference = backport_type_check('bool', $passedByReference);
+        $isVariadic = backport_type_check('bool', $isVariadic);
+        $hasDefaultValue = backport_type_check('bool', $hasDefaultValue);
+        $defaultValueUsed = backport_type_check('bool', $defaultValueUsed);
+        $truncated = backport_type_check('bool', $truncated);
+        $originalType = backport_type_check('?string', $originalType);
+
         $this->originalType = $originalType;
         $this->reducedValue = $reducedValue;
         $this->truncated = $truncated;
@@ -83,7 +93,7 @@ class ProvidedArgument
 
     public function setReducedArgument(
         ReducedArgument $reducedArgument
-    ): self {
+    )/*: self*/ {
         $this->reducedValue = $reducedArgument->value;
         $this->originalType = $reducedArgument->originalType;
 
@@ -94,7 +104,7 @@ class ProvidedArgument
         return $this;
     }
 
-    public function defaultValueUsed(): self
+    public function defaultValueUsed()/*: self*/
     {
         $this->defaultValueUsed = true;
         $this->originalType = get_debug_type($this->defaultValue);
@@ -102,7 +112,7 @@ class ProvidedArgument
         return $this;
     }
 
-    public function toArray(): array
+    public function toArray()/*: array*/
     {
         return [
             'name' => $this->name,

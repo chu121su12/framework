@@ -9,7 +9,7 @@ use UnitEnum;
 
 class EnumArgumentReducer implements ArgumentReducer
 {
-    public function execute($argument): ReducedArgumentContract
+    public function execute($argument)/*: ReducedArgumentContract*/
     {
         if (! $argument instanceof UnitEnum) {
             return UnReducedArgument::create();
@@ -17,7 +17,7 @@ class EnumArgumentReducer implements ArgumentReducer
 
         return new ReducedArgument(
             get_class($argument).'::'.$argument->name,
-            get_class($argument),
+            get_class($argument)
         );
     }
 }

@@ -9,7 +9,7 @@ use Spatie\Backtrace\Arguments\ReducedArgument\UnReducedArgument;
 
 class DateTimeArgumentReducer implements ArgumentReducer
 {
-    public function execute($argument): ReducedArgumentContract
+    public function execute($argument)/*: ReducedArgumentContract*/
     {
         if (! $argument instanceof DateTimeInterface) {
             return UnReducedArgument::create();
@@ -17,7 +17,7 @@ class DateTimeArgumentReducer implements ArgumentReducer
 
         return new ReducedArgument(
             $argument->format('d M Y H:i:s e'),
-            get_class($argument),
+            get_class($argument)
         );
     }
 }

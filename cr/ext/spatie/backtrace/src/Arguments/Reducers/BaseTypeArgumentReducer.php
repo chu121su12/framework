@@ -8,7 +8,7 @@ use Spatie\Backtrace\Arguments\ReducedArgument\UnReducedArgument;
 
 class BaseTypeArgumentReducer implements ArgumentReducer
 {
-    public function execute($argument): ReducedArgumentContract
+    public function execute($argument)/*: ReducedArgumentContract*/
     {
         if (is_int($argument)
             || is_float($argument)

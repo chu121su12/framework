@@ -8,7 +8,7 @@ use Spatie\Backtrace\Arguments\ReducedArgument\UnReducedArgument;
 
 class MinimalArrayArgumentReducer implements ArgumentReducer
 {
-    public function execute($argument): ReducedArgumentContract
+    public function execute($argument)/*: ReducedArgumentContract*/
     {
         if(! is_array($argument)) {
             return UnReducedArgument::create();

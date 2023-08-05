@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SymphonyRequestArgumentReducer implements ArgumentReducer
 {
-    public function execute($argument): ReducedArgumentContract
+    public function execute($argument)/*: ReducedArgumentContract*/
     {
         if(! $argument instanceof Request) {
             return UnReducedArgument::create();
@@ -17,7 +17,7 @@ class SymphonyRequestArgumentReducer implements ArgumentReducer
 
         return new ReducedArgument(
             "{$argument->getMethod()} {$argument->getUri()}",
-            get_class($argument),
+            get_class($argument)
         );
     }
 }

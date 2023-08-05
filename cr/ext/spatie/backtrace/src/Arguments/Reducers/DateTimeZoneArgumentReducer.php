@@ -9,7 +9,7 @@ use Spatie\Backtrace\Arguments\ReducedArgument\UnReducedArgument;
 
 class DateTimeZoneArgumentReducer implements ArgumentReducer
 {
-    public function execute($argument): ReducedArgumentContract
+    public function execute($argument)/*: ReducedArgumentContract*/
     {
         if (! $argument instanceof DateTimeZone) {
             return UnReducedArgument::create();
@@ -17,7 +17,7 @@ class DateTimeZoneArgumentReducer implements ArgumentReducer
 
         return new ReducedArgument(
             $argument->getName(),
-            get_class($argument),
+            get_class($argument)
         );
     }
 }

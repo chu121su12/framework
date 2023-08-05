@@ -15,8 +15,10 @@ class ReduceArgumentPayloadAction
         $this->argumentReducers = $argumentReducers;
     }
 
-    public function reduce($argument, bool $includeObjectType = false): ReducedArgument
+    public function reduce($argument, /*bool */$includeObjectType = false): ReducedArgument
     {
+        $includeObjectType = backport_type_check('bool', $includeObjectType);
+
         foreach ($this->argumentReducers->argumentReducers as $reducer) {
             $reduced = $reducer->execute($argument);
 
@@ -28,17 +30,17 @@ class ReduceArgumentPayloadAction
         if (gettype($argument) === 'object' && $includeObjectType) {
             return new ReducedArgument(
                 'object ('.get_class($argument).')',
-                get_debug_type($argument),
+                get_debug_type($argument)
             );
         }
 
         if (gettype($argument) === 'object') {
-            return new ReducedArgument('object', get_debug_type($argument), );
+            return new ReducedArgument('object', get_debug_type($argument));
         }
 
         return new ReducedArgument(
             $argument,
-            get_debug_type($argument),
+            get_debug_type($argument)
         );
     }
 }

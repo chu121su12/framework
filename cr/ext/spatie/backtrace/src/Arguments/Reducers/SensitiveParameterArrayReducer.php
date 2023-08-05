@@ -9,7 +9,7 @@ use Spatie\Backtrace\Arguments\ReducedArgument\UnReducedArgument;
 
 class SensitiveParameterArrayReducer implements ArgumentReducer
 {
-    public function execute($argument): ReducedArgumentContract
+    public function execute($argument)/*: ReducedArgumentContract*/
     {
         if (! $argument instanceof SensitiveParameterValue) {
             return UnReducedArgument::create();

@@ -25,10 +25,13 @@ class ReduceArgumentsAction
     }
 
     public function execute(
-        ?string $class,
-        ?string $method,
-        ?array $frameArguments
-    ): ?array {
+        /*?string */$class,
+        /*?string */$method,
+        /*?*/array $frameArguments = null
+    )/*: ?array*/ {
+        $class = backport_type_check('?string', $class);
+        $method = backport_type_check('?string', $method);
+
         try {
             if ($frameArguments === null) {
                 return null;
@@ -52,7 +55,7 @@ class ReduceArgumentsAction
                 function ($argument) {
                     return $this->reduceArgumentPayloadAction->reduce($argument);
                 },
-                $frameArguments,
+                $frameArguments
             );
 
             $argumentsCount = count($arguments);
@@ -81,6 +84,10 @@ class ReduceArgumentsAction
             }
 
             return $parameters;
+        } catch (\Exception $e) {
+            return null;
+        } catch (\ErrorException $e) {
+            return null;
         } catch (Throwable $e) {
             return null;
         }
@@ -88,9 +95,12 @@ class ReduceArgumentsAction
 
     /** @return null|Array<\Spatie\Backtrace\Arguments\ProvidedArgument> */
     protected function getParameters(
-        ?string $class,
-        ?string $method
-    ): ?array {
+        /*?string */$class,
+        /*?string */$method
+    )/*: ?array*/ {
+        $class = backport_type_check('?string', $class);
+        $method = backport_type_check('?string', $method);
+
         try {
             $reflection = $class !== null
                 ? new ReflectionMethod($class, $method)
@@ -103,15 +113,17 @@ class ReduceArgumentsAction
             function (ReflectionParameter $reflectionParameter) {
                 return ProvidedArgument::fromReflectionParameter($reflectionParameter);
             },
-            $reflection->getParameters(),
+            $reflection->getParameters()
         );
     }
 
     protected function moreArgumentsProvidedThanParameters(
         array $arguments,
         array $parameters,
-        bool $hasVariadicParameter
-    ): bool {
+        /*bool */$hasVariadicParameter
+    )/*: bool*/ {
+        $hasVariadicParameter = backport_type_check('bool', $hasVariadicParameter);
+
         return count($arguments) > count($parameters) && ! $hasVariadicParameter;
     }
 }

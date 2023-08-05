@@ -22,7 +22,7 @@ class ArrayArgumentReducer implements ReducedArgumentContract
         $this->reduceArgumentPayloadAction = new ReduceArgumentPayloadAction(ArgumentReducers::minimal());
     }
 
-    public function execute($argument): ReducedArgumentContract
+    public function execute($argument)/*: ReducedArgumentContract*/
     {
         if (! is_array($argument)) {
             return UnReducedArgument::create();
@@ -31,8 +31,10 @@ class ArrayArgumentReducer implements ReducedArgumentContract
         return $this->reduceArgument($argument, 'array');
     }
 
-    protected function reduceArgument(array $argument, string $originalType): ReducedArgumentContract
+    protected function reduceArgument(array $argument, /*string */$originalType)/*: ReducedArgumentContract*/
     {
+        $originalType = backport_type_check('string', $originalType);
+
         foreach ($argument as $key => $value) {
             $argument[$key] = $this->reduceArgumentPayloadAction->reduce(
                 $value,
