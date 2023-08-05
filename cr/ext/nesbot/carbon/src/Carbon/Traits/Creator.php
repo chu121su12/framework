@@ -126,7 +126,7 @@ trait Creator
             $safeTz = static::safeCreateDateTimeZone($tz);
 
             if ($safeTz) {
-                return ($date instanceof DateTimeImmutable ? $date : clone $date)->setTimezone($safeTz);
+                return with($date instanceof DateTimeImmutable ? $date : clone $date)->setTimezone($safeTz);
             }
 
             return $date;

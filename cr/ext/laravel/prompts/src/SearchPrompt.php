@@ -47,7 +47,7 @@ class SearchPrompt extends Prompt
 
         $this->trackTypedValue(/*$default = */'', /*submit: */false);
 
-        $this->on('key', function ($key) {
+        $this->on('key', function ($key) { switch ($key) {
             case Key::UP:
             case Key::SHIFT_TAB: return $this->highlightPrevious();
 
@@ -62,7 +62,7 @@ class SearchPrompt extends Prompt
             case Key::RIGHT: return $this->highlighted = null;
 
             default: return $this->search();
-        });
+        } });
     }
 
     protected function search()/*: void*/
@@ -105,7 +105,7 @@ class SearchPrompt extends Prompt
             return $this->matches;
         }
 
-        return $this->matches = ($this->options)($this->typedValue);
+        return $this->matches = call_user_func($this->options, $this->typedValue);
     }
 
     /**

@@ -1,4 +1,3 @@
-        {
 <?php
 
 namespace Illuminate\Tests\Console;
@@ -18,6 +17,7 @@ class CacheCommandMutexTest_setUp_class extends Command
         }
 
 class CacheCommandMutexTest_testCommandMutexNameWithIsolatedMutexNameMethod_class extends Command
+        {
             protected $name = 'command-name';
 
             public function isolatableId()

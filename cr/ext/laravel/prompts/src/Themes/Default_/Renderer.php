@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravel\Prompts\Themes\Default;
+namespace Laravel\Prompts\Themes\Default_;
 
 use InvalidArgumentException;
 use Laravel\Prompts\Concerns\Colors;

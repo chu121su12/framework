@@ -27,7 +27,11 @@ trait ConfiguresPrompts
         Prompt::fallbackWhen(! $input->isInteractive() || windows_os() || $this->laravel->runningUnitTests());
 
         TextPrompt::fallbackUsing(function (TextPrompt $prompt) { return $this->promptUntilValid(
-            function () use ($prompt) { return $this->components->ask($prompt->label, $prompt->default ?: null) ?? ''; },
+            function () use ($prompt) {
+                $result = $this->components->ask($prompt->label, $prompt->default ?: null);
+
+                return isset($result) ? $result : '';
+            },
             $prompt->required,
             $prompt->validate
         ); });
@@ -92,7 +96,7 @@ trait ConfiguresPrompts
             function () use ($prompt) {
                 $query = $this->components->ask($prompt->label);
 
-                $options = ($prompt->options)($query);
+                $options = call_user_func($prompt->options, $query);
 
                 return $this->components->choice($prompt->label, $options);
             },

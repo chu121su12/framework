@@ -84,7 +84,7 @@ class ConfigShowCommand extends Command
     {
         $this->components->twoColumnDetail(
             "<fg=green;options=bold>{$title}</>",
-            $subtitle,
+            $subtitle
         );
     }
 

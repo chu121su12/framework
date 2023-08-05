@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravel\Prompts\Themes\Default;
+namespace Laravel\Prompts\Themes\Default_;
 
 use Laravel\Prompts\SearchPrompt;
 
