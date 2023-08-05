@@ -37,12 +37,16 @@ use PHPUnit\Event\Test\PhpWarningTriggered;
 use PHPUnit\Event\Test\PhpWarningTriggeredSubscriber;
 use PHPUnit\Event\Test\PreparationStarted;
 use PHPUnit\Event\Test\PreparationStartedSubscriber;
+use PHPUnit\Event\Test\PrintedUnexpectedOutput;
+use PHPUnit\Event\Test\PrintedUnexpectedOutputSubscriber;
 use PHPUnit\Event\Test\Skipped;
 use PHPUnit\Event\Test\SkippedSubscriber;
 use PHPUnit\Event\Test\WarningTriggered;
 use PHPUnit\Event\Test\WarningTriggeredSubscriber;
 use PHPUnit\Event\TestRunner\Configured;
 use PHPUnit\Event\TestRunner\ConfiguredSubscriber;
+use PHPUnit\Event\TestRunner\DeprecationTriggered as TestRunnerDeprecationTriggered;
+use PHPUnit\Event\TestRunner\DeprecationTriggeredSubscriber as TestRunnerDeprecationTriggeredSubscriber;
 use PHPUnit\Event\TestRunner\ExecutionFinished;
 use PHPUnit\Event\TestRunner\ExecutionFinishedSubscriber;
 use PHPUnit\Event\TestRunner\ExecutionStarted;
@@ -54,13 +58,22 @@ use PHPUnit\Runner\Version;
 if (class_exists(Version::class) && (int) Version::series() >= 10) {
 
                 // Configured
-class EnsurePrinterIsRegisteredSubscriber_notify_class_11 extends Subscriber implements ConfiguredSubscriber
+class EnsurePrinterIsRegisteredSubscriber_notify_class_1a1 extends Subscriber implements ConfiguredSubscriber
                 {
                     public function notify(Configured $event)/*: void*/
                     {
                         $this->printer()->setDecorated(
                             $event->configuration()->colors()
                         );
+                    }
+                }
+
+                // Test
+class EnsurePrinterIsRegisteredSubscriber_notify_class_1b1 extends Subscriber implements PrintedUnexpectedOutputSubscriber
+                {
+                    public function notify(PrintedUnexpectedOutput $event)/*: void*/
+                    {
+                        $this->printer()->testPrintedUnexpectedOutput($event);
                     }
                 }
 
@@ -119,11 +132,19 @@ class EnsurePrinterIsRegisteredSubscriber_notify_class_61 extends Subscriber imp
                     }
                 }
 
-class EnsurePrinterIsRegisteredSubscriber_notify_class_62 extends Subscriber implements DeprecationTriggeredSubscriber
+class EnsurePrinterIsRegisteredSubscriber_notify_class_62a extends Subscriber implements DeprecationTriggeredSubscriber
                 {
                     public function notify(DeprecationTriggered $event)/*: void*/
                     {
                         $this->printer()->testDeprecationTriggered($event);
+                    }
+                }
+
+class EnsurePrinterIsRegisteredSubscriber_notify_class_62b extends Subscriber implements TestRunnerDeprecationTriggeredSubscriber
+                {
+                    public function notify(TestRunnerDeprecationTriggered $event)/*: void*/
+                    {
+                        $this->printer()->testRunnerDeprecationTriggered($event);
                     }
                 }
 
@@ -252,7 +273,10 @@ if (class_exists(Version::class) && (int) Version::series() >= 10) {
 
             $subscribers = [
                 // Configured
-                new EnsurePrinterIsRegisteredSubscriber_notify_class_11($printer),
+                new EnsurePrinterIsRegisteredSubscriber_notify_class_1a1($printer),
+
+                // Test
+                new EnsurePrinterIsRegisteredSubscriber_notify_class_1b1($printer),
 
                 // Test Runner
                 new EnsurePrinterIsRegisteredSubscriber_notify_class_21($printer),
@@ -273,7 +297,9 @@ if (class_exists(Version::class) && (int) Version::series() >= 10) {
 
                 new EnsurePrinterIsRegisteredSubscriber_notify_class_61($printer),
 
-                new EnsurePrinterIsRegisteredSubscriber_notify_class_62($printer),
+                new EnsurePrinterIsRegisteredSubscriber_notify_class_62a($printer),
+
+                new EnsurePrinterIsRegisteredSubscriber_notify_class_62b($printer),
 
                 new EnsurePrinterIsRegisteredSubscriber_notify_class_63($printer),
 
@@ -299,11 +325,7 @@ if (class_exists(Version::class) && (int) Version::series() >= 10) {
                 new EnsurePrinterIsRegisteredSubscriber_notify_class_77($printer),
             ];
 
-            if (method_exists(Facade::class, 'instance')) { // @phpstan-ignore-line
-                Facade::instance()->registerSubscribers(...$subscribers);
-            } else {
-                Facade::registerSubscribers(...$subscribers);
-            }
+            Facade::instance()->registerSubscribers(...$subscribers);
         }
 
         /**
@@ -317,11 +339,7 @@ if (class_exists(Version::class) && (int) Version::series() >= 10) {
             if ($shouldRegister) {
                 self::$registered = true;
 
-                if (method_exists(Facade::class, 'instance')) { // @phpstan-ignore-line
-                    Facade::instance()->registerSubscriber(new self());
-                } else {
-                    Facade::registerSubscriber(new self());
-                }
+                Facade::instance()->registerSubscriber(new self());
             }
         }
     }
