@@ -53,7 +53,7 @@ class OutputStyle extends SymfonyStyle implements NewLineAware
     /**
      * {@inheritdoc}
      */
-    public function askQuestion(Question $question): mixed
+    public function askQuestion(Question $question)/*: mixed*/
     {
         try {
             return parent::askQuestion($question);

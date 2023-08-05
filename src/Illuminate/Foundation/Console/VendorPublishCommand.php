@@ -117,7 +117,8 @@ class VendorPublishCommand extends Command
         $choice = select(
             "Which provider or tag's files would you like to publish?",
             $choices = $this->publishableChoices(),
-            scroll: 15,
+            /*$default = */null,
+            /*scroll: */15
         );
 
         if ($choice == $choices[0] || is_null($choice)) {

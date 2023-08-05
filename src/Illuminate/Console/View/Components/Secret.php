@@ -19,6 +19,8 @@ class Secret extends Component
 
         $question->setHidden(true)->setHiddenFallback($fallback);
 
-        return $this->usingQuestionHelper(fn () => $this->output->askQuestion($question));
+        return $this->usingQuestionHelper(function () use ($question) {
+            return $this->output->askQuestion($question);
+        });
     }
 }

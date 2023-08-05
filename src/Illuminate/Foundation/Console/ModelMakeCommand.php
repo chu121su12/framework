@@ -240,7 +240,6 @@ class ModelMakeCommand extends GeneratorCommand
             return;
         }
 
-        #@TODO: bc
         collect(multiselect('Would you like any of the following?', [
             'seed' => 'Database Seeder',
             'factory' => 'Factory',
@@ -248,6 +247,6 @@ class ModelMakeCommand extends GeneratorCommand
             'migration' => 'Migration',
             'policy' => 'Policy',
             'resource' => 'Resource Controller',
-        ]))->each(fn ($option) => $input->setOption($option, true));
+        ]))->each(function ($option) use ($input) { return $input->setOption($option, true); });
     }
 }

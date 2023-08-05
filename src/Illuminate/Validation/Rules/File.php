@@ -199,13 +199,13 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
 
         $value = floatval($size);
 
-        return round(match (true) {
-            Str::endsWith($size, 'kb') => $value * 1,
-            Str::endsWith($size, 'mb') => $value * 1000,
-            Str::endsWith($size, 'gb') => $value * 1000000,
-            Str::endsWith($size, 'tb') => $value * 1000000000,
-            default => throw new InvalidArgumentException('Invalid file size suffix.'),
-        });
+        switch (true) {
+            case Str::endsWith($size, 'kb'): return round($value * 1);
+            case Str::endsWith($size, 'mb'): return round($value * 1000);
+            case Str::endsWith($size, 'gb'): return round($value * 1000000);
+            case Str::endsWith($size, 'tb'): return round($value * 1000000000);
+            default: throw new InvalidArgumentException('Invalid file size suffix.');
+        }
     }
 
     /**

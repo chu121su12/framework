@@ -1567,7 +1567,16 @@ class HttpRequestTest extends TestCase
             return;
         }
 
-        $base = SymfonyRequest::create('/', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: '{"hello":"world"}');
+
+        $base = SymfonyRequest::create(
+            '/',
+            'POST',
+            /*$parameters = */[],
+            /*$cookies = */[],
+            /*$files = */[],
+            /*server: */['CONTENT_TYPE' => 'application/json'], 
+            /*content: */'{"hello":"world"}'
+        );
 
         $request = Request::createFromBase($base);
 
@@ -1581,7 +1590,16 @@ class HttpRequestTest extends TestCase
             return;
         }
 
-        $base = SymfonyRequest::create('/', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: '{"first":"Taylor","last":"Otwell"}');
+        $base = SymfonyRequest::create(
+            '/',
+            'POST',
+            /*$parameters = */[],
+            /*$cookies = */[],
+            /*$files = */[],
+            /*server: */['CONTENT_TYPE' => 'application/json'], 
+            /*content: */'{"first":"Taylor","last":"Otwell"}'
+        );
+
         $request = Request::createFromBase($base);
 
         $request->merge([
@@ -1597,7 +1615,16 @@ class HttpRequestTest extends TestCase
             return;
         }
 
-        $base = SymfonyRequest::create('/', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: '{"framework":{"name":"Laravel"}}');
+        $base = SymfonyRequest::create(
+            '/',
+            'POST',
+            /*$parameters = */[],
+            /*$cookies = */[],
+            /*$files = */[],
+            /*server: */['CONTENT_TYPE' => 'application/json'],
+            /*content: */'{"framework":{"name":"Laravel"}}'
+        );
+
         $request = Request::createFromBase($base);
 
         $value = $request->get('framework');

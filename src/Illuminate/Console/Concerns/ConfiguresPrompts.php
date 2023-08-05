@@ -26,55 +26,69 @@ trait ConfiguresPrompts
 
         Prompt::fallbackWhen(! $input->isInteractive() || windows_os() || $this->laravel->runningUnitTests());
 
-        TextPrompt::fallbackUsing(fn (TextPrompt $prompt) => $this->promptUntilValid(
-            fn () => $this->components->ask($prompt->label, $prompt->default ?: null) ?? '',
+        TextPrompt::fallbackUsing(function (TextPrompt $prompt) { return $this->promptUntilValid(
+            function () use ($prompt) { return $this->components->ask($prompt->label, $prompt->default ?: null) ?? ''; },
             $prompt->required,
             $prompt->validate
-        ));
+        ); });
 
-        PasswordPrompt::fallbackUsing(fn (PasswordPrompt $prompt) => $this->promptUntilValid(
-            fn () => $this->components->secret($prompt->label) ?? '',
+        PasswordPrompt::fallbackUsing(function (PasswordPrompt $prompt) { return $this->promptUntilValid(
+            function () use ($prompt) {
+                $result = $this->components->secret($prompt->label);
+
+                return isset($result) ? $result : '';
+            },
             $prompt->required,
             $prompt->validate
-        ));
+        ); });
 
-        ConfirmPrompt::fallbackUsing(fn (ConfirmPrompt $prompt) => $this->promptUntilValid(
-            fn () => $this->components->confirm($prompt->label, $prompt->default),
+        ConfirmPrompt::fallbackUsing(function (ConfirmPrompt $prompt) { return $this->promptUntilValid(
+            function () use ($prompt) { return $this->components->confirm($prompt->label, $prompt->default); },
             $prompt->required,
             $prompt->validate
-        ));
+        ); });
 
-        SelectPrompt::fallbackUsing(fn (SelectPrompt $prompt) => $this->promptUntilValid(
-            fn () => $this->components->choice($prompt->label, $prompt->options, $prompt->default),
+        SelectPrompt::fallbackUsing(function (SelectPrompt $prompt) { return $this->promptUntilValid(
+            function () use ($prompt) { return $this->components->choice($prompt->label, $prompt->options, $prompt->default); },
             false,
             $prompt->validate
-        ));
+        ); });
 
         MultiSelectPrompt::fallbackUsing(function (MultiSelectPrompt $prompt) {
             if ($prompt->default !== []) {
                 return $this->promptUntilValid(
-                    fn () => $this->components->choice($prompt->label, $prompt->options, implode(',', $prompt->default), multiple: true),
+                    function () use ($prompt) { return $this->components->choice(
+                        $prompt->label, $prompt->options, implode(',', $prompt->default), /*$attempts = */null, /*multiple: */true
+                    ); },
                     $prompt->required,
                     $prompt->validate
                 );
             }
 
             return $this->promptUntilValid(
-                fn () => collect($this->components->choice($prompt->label, ['' => 'None', ...$prompt->options], 'None', multiple: true))
-                    ->reject('')
-                    ->all(),
+                function () use ($prompt) {
+                    return collect($this->components->choice(
+                        $prompt->label, \array_merge(['' => 'None'], $prompt->options), 'None', /*$attempts = */null, /*multiple: */true
+                    ))
+                        ->reject('')
+                        ->all();
+                },
                 $prompt->required,
                 $prompt->validate
             );
         });
 
-        SuggestPrompt::fallbackUsing(fn (SuggestPrompt $prompt) => $this->promptUntilValid(
-            fn () => $this->components->askWithCompletion($prompt->label, $prompt->options, $prompt->default ?: null) ?? '',
+        SuggestPrompt::fallbackUsing(function (SuggestPrompt $prompt) { return $this->promptUntilValid(
+            function () use ($prompt) {
+                $result = $this->components->askWithCompletion($prompt->label, $prompt->options, $prompt->default ?: null);
+
+                return isset($result) ? $result : '';
+            },
             $prompt->required,
             $prompt->validate
-        ));
+        ); });
 
-        SearchPrompt::fallbackUsing(fn (SearchPrompt $prompt) => $this->promptUntilValid(
+        SearchPrompt::fallbackUsing(function (SearchPrompt $prompt) { return $this->promptUntilValid(
             function () use ($prompt) {
                 $query = $this->components->ask($prompt->label);
 
@@ -84,7 +98,7 @@ trait ConfiguresPrompts
             },
             false,
             $prompt->validate
-        ));
+        ); });
     }
 
     /**

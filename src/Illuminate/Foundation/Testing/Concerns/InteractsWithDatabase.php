@@ -303,7 +303,15 @@ trait InteractsWithDatabase
      */
     protected function getDeletedAtColumn($table, $defaultColumnName = 'deleted_at')
     {
-        return $this->newModelFor($table)?->getDeletedAtColumn() ?: $defaultColumnName;
+        $newModel = $this->newModelFor($table);
+
+        $deletedAt = null;
+
+        if (isset($newModel)) {
+            $deletedAt = $newModel->getDeletedAtColumn();
+        }
+
+        return $deletedAt ?: $defaultColumnName;
     }
 
     /**

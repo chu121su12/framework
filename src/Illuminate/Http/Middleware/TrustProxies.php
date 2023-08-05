@@ -100,16 +100,37 @@ class TrustProxies
             return $this->headers;
         }
 
-        #@TODO: bc
         switch ($this->headers) {
-            case 'HEADER_X_FORWARDED_AWS_ELB': case Request::HEADER_X_FORWARDED_AWS_ELB: return Request::HEADER_X_FORWARDED_AWS_ELB;
-            case 'HEADER_FORWARDED': case Request::HEADER_FORWARDED: return Request::HEADER_FORWARDED;
-            case 'HEADER_X_FORWARDED_FOR': case Request::HEADER_X_FORWARDED_FOR: return Request::HEADER_X_FORWARDED_FOR;
-            case 'HEADER_X_FORWARDED_HOST': case Request::HEADER_X_FORWARDED_HOST: return Request::HEADER_X_FORWARDED_HOST;
-            case 'HEADER_X_FORWARDED_PORT': case Request::HEADER_X_FORWARDED_PORT: return Request::HEADER_X_FORWARDED_PORT;
-            case 'HEADER_X_FORWARDED_PROTO': case Request::HEADER_X_FORWARDED_PROTO: return Request::HEADER_X_FORWARDED_PROTO;
-            case 'HEADER_X_FORWARDED_PREFIX': case Request::HEADER_X_FORWARDED_PREFIX: return Request::HEADER_X_FORWARDED_PREFIX;
-            default: return Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_X_FORWARDED_PREFIX | Request::HEADER_X_FORWARDED_AWS_ELB;
+            case 'HEADER_X_FORWARDED_AWS_ELB':
+            case Request::HEADER_X_FORWARDED_AWS_ELB:
+                return Request::HEADER_X_FORWARDED_AWS_ELB;
+
+            case 'HEADER_FORWARDED':
+            case Request::HEADER_FORWARDED:
+                return Request::HEADER_FORWARDED;
+
+            case 'HEADER_X_FORWARDED_FOR':
+            case Request::HEADER_X_FORWARDED_FOR:
+                return Request::HEADER_X_FORWARDED_FOR;
+
+            case 'HEADER_X_FORWARDED_HOST':
+            case Request::HEADER_X_FORWARDED_HOST:
+                return Request::HEADER_X_FORWARDED_HOST;
+
+            case 'HEADER_X_FORWARDED_PORT':
+            case Request::HEADER_X_FORWARDED_PORT:
+                return Request::HEADER_X_FORWARDED_PORT;
+
+            case 'HEADER_X_FORWARDED_PROTO':
+            case Request::HEADER_X_FORWARDED_PROTO:
+                return Request::HEADER_X_FORWARDED_PROTO;
+
+            case 'HEADER_X_FORWARDED_PREFIX':
+            case Request::HEADER_X_FORWARDED_PREFIX:
+                return Request::HEADER_X_FORWARDED_PREFIX;
+
+            default:
+                return Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_X_FORWARDED_PREFIX | Request::HEADER_X_FORWARDED_AWS_ELB;
         }
     }
 

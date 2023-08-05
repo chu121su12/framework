@@ -247,21 +247,22 @@ class DocsCommand extends Command
      */
     protected function askForPageViaAutocomplete()
     {
-        #@TODO: bc
         $choice = suggest(
-            label: 'Which page would you like to open?',
-            options: fn ($value) => $this->pages()
-                ->mapWithKeys(fn ($option) => [
-                    Str::lower($option['title']) => $option['title'],
-                ])
-                ->filter(fn ($title) => str_contains(Str::lower($title), Str::lower($value)))
-                ->all(),
-            placeholder: 'E.g. Collections'
+            /*label: */'Which page would you like to open?',
+            /*options: */function ($value) { return $this->pages()
+                ->mapWithKeys(function ($option) { 
+                    return [Str::lower($option['title']) => $option['title']];
+                })
+                ->filter(function ($title) {
+                    return str_contains(Str::lower($title), Str::lower($value));
+                })
+                ->all(); },
+            /*placeholder: */'E.g. Collections'
         );
 
-        return $this->pages()->filter(
-            fn ($page) => $page['title'] === $choice || Str::lower($page['title']) === $choice
-        )->keys()->first() ?: $this->guessPage($choice);
+        return $this->pages()->filter(function ($page) use ($choice) {
+            return $page['title'] === $choice || Str::lower($page['title']) === $choice;
+        })->keys()->first() ?: $this->guessPage($choice);
     }
 
     /**

@@ -8,11 +8,11 @@ use Orchestra\Testbench\TestCase;
 
 class HttpClientTest extends TestCase
 {
-    public function testGlobalMiddlewarePersistsAfterFacadeFlush(): void
+    public function testGlobalMiddlewarePersistsAfterFacadeFlush()/*: void*/
     {
-        Http::macro('getGlobalMiddleware', fn () => $this->globalMiddleware);
-        Http::globalRequestMiddleware(fn ($request) => $request->withHeader('User-Agent', 'Example Application/1.0'));
-        Http::globalRequestMiddleware(fn ($request) => $request->withHeader('User-Agent', 'Example Application/1.0'));
+        Http::macro('getGlobalMiddleware', function () { return $this->globalMiddleware; });
+        Http::globalRequestMiddleware(function ($request) { return $request->withHeader('User-Agent', 'Example Application/1.0'); });
+        Http::globalRequestMiddleware(function ($request) { return $request->withHeader('User-Agent', 'Example Application/1.0'); });
 
         $this->assertCount(2, Http::getGlobalMiddleware());
 

@@ -40,8 +40,10 @@ trait PromptsForMissingInput
             ->filter(function ($argument) use ($input) { return $argument->isRequired() && is_null($input->getArgument($argument->getName())); })
             ->filter(function ($argument) { return $argument->getName() !== 'command'; })
             ->each(function ($argument) use ($input) {
-                #@TODO: bc
-                $label = $this->promptForMissingArgumentsUsing()[$argument->getName()] ??
+                $prompts = $this->promptForMissingArgumentsUsing();
+                $argumentName = $argument->getName();
+
+                $label = isset($prompts[$argumentName]) ? $prompts[$argumentName] :
                     'What is '.lcfirst($argument->getDescription() ?: ('the '.$argument->getName())).'?';
 
                 if ($label instanceof Closure) {
@@ -49,13 +51,17 @@ trait PromptsForMissingInput
                 }
 
                 if (is_array($label)) {
-                    [$label, $placeholder] = $label;
+                    list($label, $placeholder) = $label;
                 }
 
                 $input->setArgument($argument->getName(), text(
-                    label: $label,
-                    placeholder: $placeholder ?? '',
-                    validate: fn ($value) => empty($value) ? "The {$argument->getName()} is required." : null,
+                    /*label: */$label,
+                    /*placeholder: */isset($placeholder) ? $placeholder : '',
+                    /*$default = */'',
+                    /*$required = */false,
+                    /*validate: */function ($value) use ($argument) {
+                        return empty($value) ? "The {$argument->getName()} is required." : null;
+                    }
                 ));
             })
             ->isNotEmpty();

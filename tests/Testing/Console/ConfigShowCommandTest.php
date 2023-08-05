@@ -7,7 +7,7 @@ use Orchestra\Testbench\TestCase;
 
 class ConfigShowCommandTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

@@ -204,8 +204,8 @@ class ServeCommand extends Command
     {
         if (preg_match('/(\[.*\]):?([0-9]+)?/', $this->input->getOption('host'), $matches) !== false) {
             return [
-                $matches[1] ?? $this->input->getOption('host'),
-                $matches[2] ?? null,
+                isset($matches[1]) ? $matches[1] : $this->input->getOption('host'),
+                isset($matches[2]) ? $matches[2] : null,
             ];
         }
 
