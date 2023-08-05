@@ -237,13 +237,15 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
     }
 
     /**
-     * Store the given entry updates.
+     * Store the given entry updates and return the failed updates.
      *
      * @param  \Illuminate\Support\Collection|\Laravel\Telescope\EntryUpdate[]  $updates
-     * @return void
+     * @return \Illuminate\Support\Collection|null
      */
     public function update(Collection $updates)
     {
+        $failedUpdates = [];
+
         foreach ($updates as $update) {
             $entry = $this->table('telescope_entries')
                             ->where('uuid', $update->uuid)
@@ -251,6 +253,8 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
                             ->first();
 
             if (! $entry) {
+                $failedUpdates[] = $update;
+
                 continue;
             }
 
@@ -265,6 +269,8 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
 
             $this->updateTags($update);
         }
+
+        return collect($failedUpdates);
     }
 
     /**

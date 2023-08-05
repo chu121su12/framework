@@ -7,12 +7,13 @@ use Exception;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Testing\Fakes\EventFake;
 use Laravel\Telescope\Contracts\EntriesRepository;
 use Laravel\Telescope\Contracts\TerminableRepository;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
+use Laravel\Telescope\Jobs\ProcessPendingUpdates;
 use Throwable;
 
 class Telescope
@@ -282,7 +283,7 @@ class Telescope
      * Execute the given callback without recording Telescope entries.
      *
      * @param  callable  $callback
-     * @return void
+     * @return mixed
      */
     public static function withoutRecording($callback)
     {
@@ -291,7 +292,7 @@ class Telescope
         static::$shouldRecord = false;
 
         try {
-            call_user_func($callback);
+            return call_user_func($callback);
         } finally {
             static::$shouldRecord = $shouldRecord;
         }
@@ -581,10 +582,6 @@ class Telescope
      */
     public static function catch_($e, $tags = [])
     {
-        if ($e instanceof Throwable && ! $e instanceof Exception) {
-            $e = new FatalThrowableError($e);
-        }
-
         event(new MessageLogged('error', $e->getMessage(), [
             'exception' => $e,
             'telescope' => $tags,
@@ -677,7 +674,14 @@ class Telescope
                 $batchId = Str::orderedUuid()->toString();
 
                 $storage->store(static::collectEntries($batchId));
-                $storage->update(static::collectUpdates($batchId));
+
+                $updateResult = $storage->update(static::collectUpdates($batchId)) ?: Collection::make();
+
+                if (! isset($_ENV['VAPOR_SSM_PATH'])) {
+                    $updateResult->whenNotEmpty(fn ($pendingUpdates) => rescue(fn () => ProcessPendingUpdates::dispatch(
+                        $pendingUpdates,
+                    )->delay(now()->addSeconds(10))));
+                }
 
                 if ($storage instanceof TerminableRepository) {
                     $storage->terminate();
@@ -738,10 +742,10 @@ class Telescope
      */
     public static function hideRequestHeaders(array $headers)
     {
-        static::$hiddenRequestHeaders = array_merge(
+        static::$hiddenRequestHeaders = array_values(array_unique(array_merge(
             static::$hiddenRequestHeaders,
             $headers
-        );
+        )));
 
         return new static;
     }
@@ -770,10 +774,10 @@ class Telescope
      */
     public static function hideResponseParameters(array $attributes)
     {
-        static::$hiddenResponseParameters = array_merge(
+        static::$hiddenResponseParameters = array_values(array_unique(array_merge(
             static::$hiddenResponseParameters,
             $attributes
-        );
+        )));
 
         return new static;
     }
