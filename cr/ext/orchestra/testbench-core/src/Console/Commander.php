@@ -6,32 +6,46 @@ use Dotenv\Dotenv;
 use Dotenv\Loader\Loader;
 use Dotenv\Parser\Parser;
 use Dotenv\Store\StringStore;
+use Illuminate\Console\Concerns\InteractsWithSignals;
+use Illuminate\Console\Signals;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application as LaravelApplication;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Env;
 use Orchestra\Testbench\Foundation\Application;
+use Orchestra\Testbench\Foundation\Bootstrap\LoadMigrationsFromArray;
+use Orchestra\Testbench\Foundation\Config;
+use Orchestra\Testbench\Foundation\Console\Concerns\CopyTestbenchFiles;
 use Orchestra\Testbench\Foundation\TestbenchServiceProvider;
+use function Orchestra\Testbench\transform_relative_path;
+use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\SignalRegistry\SignalRegistry;
 use Throwable;
 
 class Commander
 {
+    use CopyTestbenchFiles,
+        InteractsWithSignals;
+
     /**
      * Application instance.
      *
-     * @var \Illuminate\Foundation\Application
+     * @var \Illuminate\Foundation\Application|null
      */
     protected $app;
 
     /**
      * List of configurations.
      *
-     * @var array{laravel: string|null, env: array, providers: array, dont-discover: array}
+     * @var \Orchestra\Testbench\Foundation\Config
      */
-    protected $config = [];
+    protected $config;
 
     /**
      * Working path.
@@ -41,17 +55,128 @@ class Commander
     protected $workingPath;
 
     /**
+     * The environment file name.
+     *
+     * @var string
+     */
+    protected $environmentFile = '.env';
+
+    /**
      * Construct a new Commander.
      *
-     * @param  array{laravel: string|null, env: array, providers: array, dont-discover: array}  $config
+     * @param  array|\Orchestra\Testbench\Foundation\Config  $config
      * @param  string  $workingPath
      */
-    public function __construct(array $config, /*string */$workingPath)
+    public function __construct($config, /*string */$workingPath)
     {
         $workingPath = backport_type_check('string', $workingPath);
 
-        $this->config = $config;
+        $this->config = $config instanceof Config ? $config : new Config($config);
         $this->workingPath = $workingPath;
+    }
+
+    /**
+     * Handle the command.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        $input = new ArgvInput();
+        $output = new ConsoleOutput();
+
+        try {
+            $laravel = $this->laravel();
+            $kernel = $laravel->make(ConsoleKernel::class);
+
+            $this->prepareCommandSignals();
+
+            $status = $kernel->handle($input, $output);
+
+            $kernel->terminate($input, $status);
+        } catch (\Exception $error) {
+        } catch (\Error $error) {
+        } catch (\Throwable $error) {
+        }
+
+        if (isset($error)) {
+            $status = $this->handleException($output, $error);
+        }
+
+        $this->handleTerminatingConsole();
+
+        exit($status);
+    }
+
+    /**
+     * Create Laravel application.
+     *
+     * @return \Illuminate\Foundation\Application
+     */
+    public function laravel()
+    {
+        if (! $this->app instanceof LaravelApplication) {
+            $laravelBasePath = $this->getBasePath();
+
+            tap(Application::createVendorSymlink($laravelBasePath, $this->workingPath.'/vendor'), function ($app) use ($laravelBasePath) {
+                $filesystem = new Filesystem();
+
+                $this->copyTestbenchConfigurationFile($app, $filesystem, $this->workingPath);
+
+                if (! file_exists("{$laravelBasePath}/.env")) {
+                    $this->copyTestbenchDotEnvFile($app, $filesystem, $this->workingPath);
+                }
+            });
+
+            $hasEnvironmentFile = file_exists("{$laravelBasePath}/.env");
+
+            $options = array_filter([
+                'load_environment_variables' => $hasEnvironmentFile,
+                'extra' => $this->config->getExtraAttributes(),
+            ]);
+
+            $this->app = Application::create(
+                /*basePath: */$this->getBasePath(),
+                /*resolvingCallback: */function ($app) {
+                    (new LoadMigrationsFromArray(isset($this->config['migrations']) ? $this->config['migrations'] : []))->bootstrap($app);
+
+                    \call_user_func($this->resolveApplicationCallback(), $app);
+                },
+                /*options: */$options,
+            );
+        }
+
+        return $this->app;
+    }
+
+    /**
+     * Resolve application implementation.
+     *
+     * @return \Closure(\Illuminate\Foundation\Application): void
+     */
+    protected function resolveApplicationCallback()
+    {
+        return function ($app) {
+            $app->register(TestbenchServiceProvider::class);
+        };
+    }
+
+    /**
+     * Get base path.
+     *
+     * @return string
+     */
+    protected function getBasePath()
+    {
+        $path = isset($this->config['laravel']) ? $this->config['laravel'] : null;
+
+        if (! \is_null($path)) {
+            return tap(transform_relative_path($path, $this->workingPath), static function ($path) {
+                $_ENV['APP_BASE_PATH'] = $path;
+            });
+        }
+
+        return static::applicationBasePath();
     }
 
     /**
@@ -65,171 +190,48 @@ class Commander
     }
 
     /**
-     * Handle the command.
-     *
-     * @return void
-     */
-    public function handle()
-    {
-        $laravel = $this->laravel();
-
-        $kernel = $laravel->make(ConsoleKernel::class);
-
-        $input = new ArgvInput();
-        $output = new ConsoleOutput();
-
-        try {
-            $status = $kernel->handle($input, $output);
-        } catch (\Exception $error) {
-        } catch (\Error $error) {
-        } catch (\Throwable $error) {
-        }
-
-        if (isset($error)) {
-            $status = $this->handleException($output, $error);
-        }
-
-        $kernel->terminate($input, $status);
-
-        exit($status);
-    }
-
-    /**
-     * Create Laravel application.
-     *
-     * @return \Illuminate\Foundation\Application
-     */
-    public function laravel()
-    {
-        if (! $this->app instanceof LaravelApplication) {
-            $this->createSymlinkToVendorPath();
-
-            $this->app = Application::create($this->getBasePath(), $this->resolveApplicationCallback(), [
-                'extra' => [
-                    'providers' => isset($this->config['providers']) ? $this->config['providers'] : [],
-                    'dont-discover' => isset($this->config['dont-discover']) ? $this->config['dont-discover'] : [],
-                ],
-            ]);
-        }
-
-        return $this->app;
-    }
-
-    /**
-     * Resolve application implementation.
-     *
-     * @return \Closure
-     */
-    protected function resolveApplicationCallback()
-    {
-        return function ($app) {
-            $this->createDotenv()->load();
-
-            $app->register(TestbenchServiceProvider::class);
-        };
-    }
-
-    /**
-     * Create a Dotenv instance.
-     */
-    protected function createDotenv()/*: Dotenv*/
-    {
-        $laravelBasePath = $this->getBasePath();
-
-        if (file_exists($laravelBasePath.'/.env')) {
-            return Dotenv::create(
-                Env::getRepository(), $laravelBasePath.'/', '.env'
-            );
-        }
-
-        return (new Dotenv(
-            new Loader(),
-            Env::getRepository(),
-            new StringStore(implode("\n", isset($this->config['env']) ? $this->config['env'] : []))
-        ));
-    }
-
-    /**
-     * Get base path.
-     *
-     * @return string
-     */
-    protected function getBasePath()
-    {
-        $laravelBasePath = isset($this->config['laravel']) ? $this->config['laravel'] : null;
-
-        if (! \is_null($laravelBasePath)) {
-            return tap(str_replace('./', $this->workingPath.'/', $laravelBasePath), static function ($path) {
-                $_ENV['APP_BASE_PATH'] = $path;
-            });
-        }
-
-        return static::applicationBasePath();
-    }
-
-    /**
-     * Create symlink on vendor path.
-     *
-     * @deprecated Use `Orchestra\Testbench\Foundation\Application::createVendorSymlink()` insteads
-     */
-    protected function createSymlinkToVendorPath()/*: void*/
-    {
-        Application::createVendorSymlink(
-            $this->getBasePath(),
-            $this->workingPath.'/vendor'
-        );
-    }
-
-    /**
-     * Resolve application Console Kernel implementation.
-     *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return void
-     */
-    protected function resolveApplicationConsoleKernel($app)
-    {
-        $kernel = 'Orchestra\Testbench\Console\Kernel';
-
-        if (file_exists($app->basePath('app/Console/Kernel.php')) && class_exists('App\Console\Kernel')) {
-            $kernel = 'App\Console\Kernel';
-        }
-
-        $app->singleton('Illuminate\Contracts\Console\Kernel', $kernel);
-    }
-
-    /**
-     * Resolve application HTTP Kernel implementation.
-     *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return void
-     */
-    protected function resolveApplicationHttpKernel($app)
-    {
-        $kernel = 'Orchestra\Testbench\Http\Kernel';
-
-        if (file_exists($app->basePath('app/Http/Kernel.php')) && class_exists('App\Http\Kernel')) {
-            $kernel = 'App\Http\Kernel';
-        }
-
-        $app->singleton('Illuminate\Contracts\Http\Kernel', $kernel);
-    }
-
-    /**
      * Render an exception to the console.
      *
      * @param  \Symfony\Component\Console\Output\OutputInterface  $output
      * @param  \Throwable  $error
      * @return int
      */
-    protected function handleException(OutputInterface $output, Throwable $error)
+    protected function handleException(OutputInterface $output, /*Throwable */$error)
     {
-        $laravel = $this->laravel();
+        backport_type_throwable($error);
 
-        tap($laravel->make(ExceptionHandler::class), static function ($handler) use ($error, $output) {
-            $handler->report($error);
-            $handler->renderForConsole($output, $error);
-        });
+        if ($this->app instanceof LaravelApplication) {
+            tap($this->app->make(ExceptionHandler::class), static function ($handler) use ($error, $output) {
+                $handler->report($error);
+                $handler->renderForConsole($output, $error);
+            });
+        } else {
+            (new ConsoleApplication)->renderThrowable($error, $output);
+        }
 
         return 1;
+    }
+
+    /**
+     * Prepare command signals.
+     *
+     * @return void
+     */
+    protected function prepareCommandSignals()/*: void*/
+    {
+        Signals::resolveAvailabilityUsing(function () {
+            return \extension_loaded('pcntl');
+        });
+
+        Signals::whenAvailable(function () {
+            if (! isset($this->signals)) {
+                $this->signals = new Signals(new SignalRegistry());
+            }
+
+            Collection::make(Arr::wrap([SIGINT]))
+                ->each(function ($signal) {
+                    return $this->signals->register($signal, fn () => $this->handleTerminatingConsole());
+                });
+        });
     }
 }

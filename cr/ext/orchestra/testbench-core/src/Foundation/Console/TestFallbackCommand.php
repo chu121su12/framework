@@ -4,6 +4,7 @@ namespace Orchestra\Testbench\Foundation\Console;
 
 use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
+use function Orchestra\Testbench\phpunit_version_compare;
 use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessSignaledException;
 use Symfony\Component\Process\Process;
@@ -17,11 +18,16 @@ class TestFallbackCommand extends Command
      */
     protected $signature = 'package:test
         {--without-tty : Disable output to TTY}
+        {--compact : Indicates whether the compact printer should be used}
+        {--configuration= : Read configuration from XML file}
         {--coverage : Indicates whether the coverage information should be collected}
         {--min= : Indicates the minimum threshold enforcement for coverage}
-        {--parallel : Indicates if the tests should run in parallel}
+        {--p|parallel : Indicates if the tests should run in parallel}
+        {--profile : Lists top 10 slowest tests}
         {--recreate-databases : Indicates if the test databases should be re-created}
         {--drop-databases : Indicates if the test databases should be dropped}
+        {--without-databases : Indicates if database configuration should be performed}
+        {--c|--custom-argument : Add custom env variables}
     ';
 
     /**
@@ -68,7 +74,9 @@ class TestFallbackCommand extends Command
      */
     protected function installCollisionDependencies()
     {
-        $command = $this->findComposer().' require "nunomaduro/collision:^6.2" --dev';
+        $version = phpunit_version_compare('10', '>=') ? '7.4' : '6.4';
+
+        $command = sprintf('%s require "nunomaduro/collision:^%s" --dev', $this->findComposer(), $version);
 
         $process = SymfonyHelper::processFromShellCommandline($command, null, null, null, null);
 
@@ -98,6 +106,7 @@ class TestFallbackCommand extends Command
      */
     protected function findComposer()
     {
+        /** @phpstan-ignore-next-line */
         $composerPath = TESTBENCH_WORKING_PATH.'/composer.phar';
 
         if (file_exists($composerPath)) {

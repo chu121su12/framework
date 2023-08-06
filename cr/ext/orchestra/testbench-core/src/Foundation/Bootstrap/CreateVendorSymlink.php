@@ -6,6 +6,9 @@ use ErrorException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 
+/**
+ * @internal
+ */
 final class CreateVendorSymlink
 {
     /**
@@ -43,17 +46,17 @@ final class CreateVendorSymlink
             ! $filesystem->isFile("{$appVendorPath}/autoload.php") ||
             $filesystem->hash("{$appVendorPath}/autoload.php") !== $filesystem->hash("{$this->workingPath}/autoload.php")
         ) {
-            if ($filesystem->exists($app->basePath('bootstrap/cache/packages.php'))) {
-                $filesystem->delete($app->basePath('bootstrap/cache/packages.php'));
+            if ($filesystem->exists($app->bootstrapPath('cache/packages.php'))) {
+                $filesystem->delete($app->bootstrapPath('cache/packages.php'));
             }
 
-            if (\is_link($appVendorPath)) {
+            if (is_link($appVendorPath)) {
                 $filesystem->delete($appVendorPath);
             }
 
             try {
                 $filesystem->link($this->workingPath, $appVendorPath);
-            } catch (ErrorException $e) {
+            } catch (ErrorException $_e) {
                 //
             }
         }

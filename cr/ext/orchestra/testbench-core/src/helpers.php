@@ -2,24 +2,30 @@
 
 namespace Orchestra\Testbench;
 
+use Closure;
+use Illuminate\Contracts\Foundation\Application as ApplicationContract;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Illuminate\Testing\PendingCommand;
-use Orchestra\Testbench\Foundation\Application;
+use PHPUnit\Runner\Version;
+use RuntimeException;
 
 /**
  * Create Laravel application instance.
  *
  * @param  string|null  $basePath
- * @param  (callable(\Illuminate\Foundation\Application):void)|null  $resolvingCallback
- * @param  array  $options
+ * @param  (callable(\Illuminate\Foundation\Application):(void))|null  $resolvingCallback
+ * @param  array{extra?: array{providers?: array, dont-discover?: array, env?: array}, load_environment_variables?: bool, enabled_package_discoveries?: bool}  $options
  * @return \Orchestra\Testbench\Foundation\Application
  */
-function container(/*?string */$basePath = null, /*?callable */$resolvingCallback = null, array $options = [])
+function container(/*?string */$basePath = null, /*?*/callable $resolvingCallback = null, array $options = [])/*: Foundation\Application*/
 {
     $basePath = backport_type_check('?string', $basePath);
 
     $resolvingCallback = backport_type_check('?callable', $resolvingCallback);
 
-    return (new Application($basePath, $resolvingCallback))->configure($options);
+    return (new Foundation\Application($basePath, $resolvingCallback))->configure($options);
 }
 
 /**
@@ -28,15 +34,131 @@ function container(/*?string */$basePath = null, /*?callable */$resolvingCallbac
  * @param  \Orchestra\Testbench\Contracts\TestCase  $testbench
  * @param  string  $command
  * @param  array<string, mixed>  $parameters
- * @return \Illuminate\Testing\PendingCommand|int
+ * @return int
  */
-function artisan(Contracts\TestCase $testbench, /*string */$command, array $parameters = [])
+function artisan(Contracts\TestCase $testbench, /*string */$command, array $parameters = [])/*: int*/
 {
     $command = backport_type_check('string', $command);
 
-    return tap($testbench->artisan($command, $parameters), function ($artisan) {
-        if ($artisan instanceof PendingCommand) {
-            $artisan->run();
-        }
-    });
+    $command = $testbench->artisan($command, $parameters);
+
+    return $command instanceof PendingCommand ? $command->run() : $command;
+}
+
+/**
+ * Register after resolving callback.
+ *
+ * @param  \Illuminate\Contracts\Foundation\Application  $app
+ * @param  string  $name
+ * @param  \Closure|null  $callback
+ * @return void
+ */
+function after_resolving(ApplicationContract $app, /*string */$name, /*?*/Closure $callback = null)/*: void*/
+{
+    $name = backport_type_check('string', $name);
+
+    $app->afterResolving($name, $callback);
+
+    if ($app->resolved($name)) {
+        value($callback, $app->make($name), $app);
+    }
+}
+
+/**
+ * Get default environment variables.
+ *
+ * @return array<int, string>
+ *
+ * @deprecated
+ */
+function default_environment_variables()/*: array*/
+{
+    return [];
+}
+
+/**
+ * Get default environment variables.
+ *
+ * @param  iterable<string, mixed>  $variables
+ * @return array<int, string>
+ */
+function parse_environment_variables($variables)/*: array*/
+{
+    return Collection::make($variables)
+        ->transform(function ($value, $key) {
+            if (\is_bool($value) || \in_array($value, ['true', 'false'])) {
+                $value = \in_array($value, [true, 'true']) ? '(true)' : '(false)';
+            } elseif (\is_null($value) || \in_array($value, ['null'])) {
+                $value = '(null)';
+            } else {
+                $value = $key === 'APP_DEBUG' ? sprintf('(%s)', Str::of($value)->ltrim('(')->rtrim(')')) : "'{$value}'";
+            }
+
+            return "{$key}={$value}";
+        })->values()->all();
+}
+
+/**
+ * Transform relative path.
+ *
+ * @param  string  $path
+ * @param  string  $workingPath
+ * @return string
+ */
+function transform_relative_path(/*string */$path, /*string */$workingPath)/*: string*/
+{
+    $path = backport_type_check('string', $path);
+
+    $workingPath = backport_type_check('string', $workingPath);
+
+    return Str::startsWith($path, './')
+        ? str_replace('./', rtrim($workingPath, '/').'/', $path)
+        : $path;
+}
+
+/**
+ * Laravel version compare.
+ *
+ * @param  string  $version
+ * @param  string|null  $operator
+ * @return int|bool
+ */
+function laravel_version_compare(/*string */$version, /*?string */$operator = null)
+{
+    $version = backport_type_check('string', $version);
+
+    $operator = backport_type_check('?string', $operator);
+
+    /** @phpstan-ignore-next-line */
+    $laravel = Application::VERSION === '10.x-dev' ? '10.0.0' : Application::VERSION;
+
+    if (\is_null($operator)) {
+        return version_compare($laravel, $version);
+    }
+
+    return version_compare($laravel, $version, $operator);
+}
+
+/**
+ * PHPUnit version compare.
+ *
+ * @param  string  $version
+ * @param  string|null  $operator
+ * @return int|bool
+ */
+function phpunit_version_compare(/*string */$version, /*?string */$operator = null)
+{
+    $version = backport_type_check('string', $version);
+
+    $operator = backport_type_check('?string', $operator);
+
+    if (! class_exists(Version::class)) {
+        throw new RuntimeException('Unable to verify PHPUnit version');
+    }
+
+    if (\is_null($operator)) {
+        return version_compare(Version::id(), $version);
+    }
+
+    return version_compare(Version::id(), $version, $operator);
 }

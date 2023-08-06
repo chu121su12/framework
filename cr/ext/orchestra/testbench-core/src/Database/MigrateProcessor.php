@@ -2,7 +2,6 @@
 
 namespace Orchestra\Testbench\Database;
 
-use Illuminate\Database\Migrations\Migrator;
 use function Orchestra\Testbench\artisan;
 use Orchestra\Testbench\Contracts\TestCase;
 
@@ -18,7 +17,7 @@ class MigrateProcessor
     /**
      * The migrator options.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $options = [];
 
@@ -26,7 +25,7 @@ class MigrateProcessor
      * Construct a new schema migrator.
      *
      * @param  \Orchestra\Testbench\Contracts\TestCase  $testbench
-     * @param  array  $options
+     * @param  array<string, mixed>  $options
      */
     public function __construct(TestCase $testbench, array $options = [])
     {

@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\Facades\RateLimiter;
+use Orchestra\Testbench\Bootstrap\LoadEnvironmentVariables;
 use Orchestra\Testbench\Foundation\PackageManifest;
+use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
 /**
  * @property bool|null $enablesPackageDiscoveries
@@ -65,6 +67,8 @@ trait CreatesApplication
     /**
      * Resolve application bindings.
      *
+     * @internal
+     *
      * @param  \Illuminate\Foundation\Application  $app
      * @return void
      */
@@ -99,6 +103,8 @@ trait CreatesApplication
 
     /**
      * Resolve application aliases.
+     *
+     * @internal
      *
      * @param  \Illuminate\Foundation\Application  $app
      * @return array<string, class-string>
@@ -164,6 +170,8 @@ trait CreatesApplication
     /**
      * Resolve application aliases.
      *
+     * @internal
+     *
      * @param  \Illuminate\Foundation\Application  $app
      * @return array<int, class-string>
      */
@@ -216,6 +224,7 @@ trait CreatesApplication
         $this->resolveApplicationBindings($app);
         $this->resolveApplicationExceptionHandler($app);
         $this->resolveApplicationCore($app);
+        $this->resolveApplicationEnvironmentVariables($app);
         $this->resolveApplicationConfiguration($app);
         $this->resolveApplicationHttpKernel($app);
         $this->resolveApplicationConsoleKernel($app);
@@ -242,6 +251,19 @@ trait CreatesApplication
     }
 
     /**
+     * Resolve application core environment variables implementation.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return void
+     */
+    protected function resolveApplicationEnvironmentVariables($app)
+    {
+        if (property_exists($this, 'loadEnvironmentVariables') && $this->loadEnvironmentVariables === true) {
+            $app->make(LoadEnvironmentVariables::class)->bootstrap($app);
+        }
+    }
+
+    /**
      * Resolve application core configuration implementation.
      *
      * @param  \Illuminate\Foundation\Application  $app
@@ -249,11 +271,8 @@ trait CreatesApplication
      */
     protected function resolveApplicationConfiguration($app)
     {
-        if (property_exists($this, 'loadEnvironmentVariables') && $this->loadEnvironmentVariables === true) {
-            $app->make('Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables')->bootstrap($app);
-        }
-
         $app->make('Illuminate\Foundation\Bootstrap\LoadConfiguration')->bootstrap($app);
+        $app->make('Orchestra\Testbench\Bootstrap\ConfigureRay')->bootstrap($app);
 
         tap($this->getApplicationTimezone($app), static function ($timezone) {
             ! \is_null($timezone) && date_default_timezone_set($timezone);
@@ -318,7 +337,12 @@ trait CreatesApplication
      */
     protected function resolveApplicationBootstrappers($app)
     {
-        $app->make('Illuminate\Foundation\Bootstrap\HandleExceptions')->bootstrap($app);
+        if ($this instanceof PHPUnitTestCase) {
+            $app->make('Orchestra\Testbench\Bootstrap\HandleExceptions', ['testbench' => $this])->bootstrap($app);
+        } else {
+            $app->make('Illuminate\Foundation\Bootstrap\HandleExceptions')->bootstrap($app);
+        }
+
         $app->make('Illuminate\Foundation\Bootstrap\RegisterFacades')->bootstrap($app);
         $app->make('Illuminate\Foundation\Bootstrap\SetRequestForConsole')->bootstrap($app);
         $app->make('Illuminate\Foundation\Bootstrap\RegisterProviders')->bootstrap($app);
@@ -370,6 +394,8 @@ trait CreatesApplication
     /**
      * Reset artisan commands for the application.
      *
+     * @internal
+     *
      * @param  \Illuminate\Foundation\Application  $app
      * @return void
      */
@@ -381,22 +407,4 @@ trait CreatesApplication
     /**
      * Define environment setup.
      *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return void
-     */
-    protected function defineEnvironment($app)
-    {
-        // Define environment.
-    }
-
-    /**
-     * Define environment setup.
-     *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return void
-     */
-    protected function getEnvironmentSetUp($app)
-    {
-        // Define your environment setup.
-    }
-}
+     * @pa

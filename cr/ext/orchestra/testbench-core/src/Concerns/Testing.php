@@ -9,11 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bootstrap\HandleExceptions;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\WithoutEvents;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Queue\Queue;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\ParallelTesting;
 use Illuminate\View\Component;
 use Mockery;
@@ -33,7 +35,7 @@ trait Testing
     /**
      * The Illuminate application instance.
      *
-     * @var \Illuminate\Foundation\Application
+     * @var \Illuminate\Foundation\Application|null
      */
     protected $app;
 
@@ -61,7 +63,7 @@ trait Testing
     /**
      * The exception thrown while running an application destruction callback.
      *
-     * @var \Throwable
+     * @var \Throwable|null
      */
     protected $callbackException;
 
@@ -75,6 +77,8 @@ trait Testing
     /**
      * Setup the test environment.
      *
+     * @internal
+     *
      * @return void
      */
     final protected function setUpTheTestEnvironment()/*: void*/
@@ -84,6 +88,9 @@ trait Testing
 
             $this->setUpParallelTestingCallbacks();
         }
+
+        /** @var \Illuminate\Foundation\Application $app */
+        $app = $this->app;
 
         foreach ($this->afterApplicationRefreshedCallbacks as $callback) {
             \call_user_func($callback);
@@ -95,7 +102,7 @@ trait Testing
             \call_user_func($callback);
         }
 
-        Model::setEventDispatcher($this->app['events']);
+        Model::setEventDispatcher($app['events']);
 
         $this->setUpApplicationRoutes();
 
@@ -104,6 +111,8 @@ trait Testing
 
     /**
      * Clean up the testing environment before the next test.
+     *
+     * @internal
      *
      * @return void
      */
@@ -114,7 +123,9 @@ trait Testing
 
             $this->tearDownParallelTestingCallbacks();
 
-            $this->app->flush();
+            if (isset($this->app)) {
+                $this->app->flush();
+            }
 
             $this->app = null;
         }
@@ -169,6 +180,8 @@ trait Testing
     /**
      * Boot the testing helper traits.
      *
+     * @internal
+     *
      * @param  array<class-string, class-string>  $uses
      * @return array<class-string, class-string>
      */
@@ -176,31 +189,75 @@ trait Testing
     {
         $this->setUpDatabaseRequirements(function () use ($uses) {
             if (isset($uses[RefreshDatabase::class])) {
+                /** @phpstan-ignore-next-line */
                 $this->refreshDatabase();
             }
 
             if (isset($uses[DatabaseMigrations::class])) {
+                /** @phpstan-ignore-next-line */
                 $this->runDatabaseMigrations();
+            }
+
+            if (isset($uses[DatabaseTruncation::class])) {
+                /** @phpstan-ignore-next-line */
+                $this->truncateDatabaseTables();
             }
         });
 
         if (isset($uses[DatabaseTransactions::class])) {
+            /** @phpstan-ignore-next-line */
             $this->beginDatabaseTransaction();
         }
 
         if (isset($uses[WithoutMiddleware::class])) {
+            /** @phpstan-ignore-next-line */
             $this->disableMiddlewareForAllTests();
         }
 
         if (isset($uses[WithoutEvents::class])) {
+            /** @phpstan-ignore-next-line */
             $this->disableEventsForAllTests();
         }
 
         if (isset($uses[WithFaker::class])) {
+            /** @phpstan-ignore-next-line */
             $this->setUpFaker();
         }
 
+        Collection::make($uses)
+            ->reject(function ($use) {
+                /** @var class-string $use */
+                return $this->setUpTheTestEnvironmentTraitToBeIgnored($use);
+            })->transform(function ($use) {
+                /** @var class-string $use */
+                return class_basename($use);
+            })->each(function ($traitBaseName) {
+                /** @var string $traitBaseName */
+                if (method_exists($this, $method = 'setUp'.$traitBaseName)) {
+                    $this->{$method}();
+                }
+
+                if (method_exists($this, $method = 'tearDown'.$traitBaseName)) {
+                    $this->beforeApplicationDestroyed(function () use ($method) {
+                        $this->{$method}();
+                    });
+                }
+            });
+
         return $uses;
+    }
+
+    /**
+     * Determine trait should be ignored from being autoloaded.
+     *
+     * @param  class-string  $use
+     * @return bool
+     */
+    protected function setUpTheTestEnvironmentTraitToBeIgnored(/*string */$use)/*: bool*/
+    {
+        $use = backport_type_check('string', $use);
+
+        return false;
     }
 
     /**
@@ -209,6 +266,7 @@ trait Testing
     protected function setUpParallelTestingCallbacks()/*: void*/
     {
         if (class_exists(ParallelTesting::class) && $this instanceof TestCase) {
+            /** @phpstan-ignore-next-line */
             ParallelTesting::callSetUpTestCaseCallbacks($this);
         }
     }
@@ -219,6 +277,7 @@ trait Testing
     protected function tearDownParallelTestingCallbacks()/*: void*/
     {
         if (class_exists(ParallelTesting::class) && $this instanceof TestCase) {
+            /** @phpstan-ignore-next-line */
             ParallelTesting::callTearDownTestCaseCallbacks($this);
         }
     }

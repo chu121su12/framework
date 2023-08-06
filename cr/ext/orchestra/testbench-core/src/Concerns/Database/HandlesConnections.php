@@ -7,6 +7,9 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
+/**
+ * @internal
+ */
 trait HandlesConnections
 {
     /**
@@ -20,7 +23,6 @@ trait HandlesConnections
 
         $keyword = Str::upper($keyword);
 
-        $configurations = [];
         $options = [
             'url' => 'URL',
             'host' => 'HOST',
@@ -30,18 +32,24 @@ trait HandlesConnections
             'password' => 'PASSWORD',
         ];
 
-        foreach ($options as $key => $value) {
-            $collection = Collection::make(
-                Arr::wrap($value)
-            )->transform(static function ($value) use ($keyword) {
-                return env("{$keyword}_{$value}");
-            })->first(static function ($value) {
-                return ! \is_null($value);
-            });
+        $config->set(
+            Collection::make($options)
+                ->mapWithKeys(function ($value, $key) use ($driver, $keyword, $config) {
+                    $name = "database.connections.{$driver}.{$key}";
 
-            $configurations["database.connections.{$driver}.{$key}"] = isset($collection) ? $collection : $config->get("database.connections.{$driver}.{$key}");
-        }
+                    /** @var mixed $configuration */
+                    $configuration = Collection::make(Arr::wrap($value))
+                        ->transform(function ($value) use ($keyword) { return env("{$keyword}_{$value}"); })
+                        ->first(function ($value) { return ! \is_null($value); });
 
-        $config->set($configurations);
+                    if (! isset($configuration)) {
+                        $configuration = $config->get($name);
+                    }
+
+                    return [
+                        "{$name}" => $configuration,
+                    ];
+                })->all()
+        );
     }
 }

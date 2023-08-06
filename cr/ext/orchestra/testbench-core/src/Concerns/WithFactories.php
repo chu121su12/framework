@@ -4,6 +4,7 @@ namespace Orchestra\Testbench\Concerns;
 
 use Exception;
 use Illuminate\Database\Eloquent\Factory as ModelFactory;
+use Orchestra\Testbench\Exceptions\ApplicationNotAvailableException;
 
 trait WithFactories
 {
@@ -18,6 +19,10 @@ trait WithFactories
     protected function withFactories(/*string */$path)
     {
         $path = backport_type_check('string', $path);
+
+        if (\is_null($this->app)) {
+            throw ApplicationNotAvailableException::make(__METHOD__);
+        }
 
         return $this->loadFactoriesUsing($this->app, $path);
     }
@@ -37,7 +42,7 @@ trait WithFactories
 
         if (! class_exists(ModelFactory::class)) {
             $requirement = <<<'requirement'
-Missing `laravel/legacy-factories` in composer.json. Please refer to <https://github.com/orchestral/testbench/blob/6.x/README.md#using-legacy-factories>
+Missing `laravel/legacy-factories` in composer.json. Please refer to <https://packages.tools/testbench/troubleshooting.html#class-illuminate-database-eloquent-factory-not-found>
 requirement;
 
             throw new Exception($requirement);

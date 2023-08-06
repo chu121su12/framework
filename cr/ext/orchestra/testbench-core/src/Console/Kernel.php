@@ -36,6 +36,8 @@ final class Kernel extends ConsoleKernel
      */
     protected function reportException(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         throw $e;
     }
 }

@@ -4,6 +4,7 @@ namespace Orchestra\Testbench\Concerns;
 
 use InvalidArgumentException;
 use Orchestra\Testbench\Database\MigrateProcessor;
+use Orchestra\Testbench\Exceptions\ApplicationNotAvailableException;
 
 trait WithLoadMigrationsFrom
 {
@@ -15,7 +16,7 @@ trait WithLoadMigrationsFrom
      *
      * @throws \InvalidArgumentException
      */
-    protected function loadMigrationsFrom($paths)/*: void*/
+    protected function loadMigrationsFrom($paths): void
     {
         $this->loadMigrationsWithoutRollbackFrom($paths);
 
@@ -32,6 +33,10 @@ trait WithLoadMigrationsFrom
      */
     protected function loadMigrationsWithoutRollbackFrom($paths)/*: void*/
     {
+        if (\is_null($this->app)) {
+            throw ApplicationNotAvailableException::make(__METHOD__);
+        }
+
         $migrator = new MigrateProcessor($this, $this->resolvePackageMigrationsOptions($paths));
         $migrator->up();
 
