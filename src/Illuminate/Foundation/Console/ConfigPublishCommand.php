@@ -10,13 +10,6 @@ use Symfony\Component\Finder\Finder;
 class ConfigPublishCommand extends Command
 {
     /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'config:publish';
-
-    /**
      * The name and signature of the console command.
      *
      * @var string

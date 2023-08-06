@@ -15,14 +15,14 @@ use Laravel\Folio\Folio;
 
 class ApplicationBuilder
 {
-    protected $app;
-
     /**
      * The Folio / page middleware that have been defined by the user.
      *
      * @var array
      */
     protected /*array */$pageMiddleware = [];
+
+    protected /*Application */$app;
 
     /**
      * Create a new application builder instance.

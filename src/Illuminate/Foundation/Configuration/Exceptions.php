@@ -7,7 +7,7 @@ use Illuminate\Foundation\Exceptions\Handler;
 
 class Exceptions
 {
-    public $handler;
+    public /*Handler */$handler;
 
     /**
      * Create a new exception handling configuration instance.

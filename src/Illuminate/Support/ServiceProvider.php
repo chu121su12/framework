@@ -507,6 +507,7 @@ return [
         return false;
     }
 
+    // backport
     public static function addToConfigurationAfter(/*string */$after, /*string */$provider, /*?string */$path = null)/*: bool*/
     {
         $after = backport_type_check('string', $after);
