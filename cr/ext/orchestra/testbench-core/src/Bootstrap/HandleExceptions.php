@@ -67,9 +67,9 @@ final class HandleExceptions extends \Illuminate\Foundation\Bootstrap\HandleExce
             $options = $config->get('logging.deprecations');
 
             if (\is_array($options)) {
-                $driver = $options['channel'] ?? 'null';
+                $driver = isset($options['channel']) ? $options['channel'] : 'null';
             } else {
-                $driver = $options ?? 'null';
+                $driver = isset($options) ? $options : 'null';
             }
 
             if ($driver === 'single') {

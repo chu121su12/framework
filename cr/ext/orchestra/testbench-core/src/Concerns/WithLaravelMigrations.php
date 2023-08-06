@@ -13,7 +13,7 @@ trait WithLaravelMigrations
      * @param  string|array<string, mixed>  $database
      * @return void
      */
-    protected function loadLaravelMigrations($database = []): void
+    protected function loadLaravelMigrations($database = [])/*: void*/
     {
         $this->loadLaravelMigrationsWithoutRollback($database);
 
@@ -51,7 +51,7 @@ trait WithLaravelMigrations
      * @param  string|array<string, mixed>  $database
      * @return void
      */
-    protected function runLaravelMigrations($database = []): void
+    protected function runLaravelMigrations($database = [])/*: void*/
     {
         $this->runLaravelMigrationsWithoutRollback($database);
 

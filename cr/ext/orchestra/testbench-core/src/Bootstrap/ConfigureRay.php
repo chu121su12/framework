@@ -19,7 +19,7 @@ final class ConfigureRay
      * @param  TLaravel  $app
      * @return void
      */
-    public function bootstrap(Application $app): void
+    public function bootstrap(Application $app)/*: void*/
     {
         after_resolving($app, Settings::class, function ($settings, $app) {
             /** @var \Spatie\Ray\Settings\Settings $settings */

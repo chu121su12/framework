@@ -17,7 +17,7 @@ final class EnsuresDefaultConfiguration
      * @param  \Illuminate\Contracts\Foundation\Application  $app
      * @return void
      */
-    public function bootstrap(Application $app): void
+    public function bootstrap(Application $app)/*: void*/
     {
         if (! $this->includesDefaultConfigurations($app)) {
             return;
@@ -32,7 +32,7 @@ final class EnsuresDefaultConfiguration
                 'APP_DEBUG' => ['app.debug' => true],
                 'DB_CONNECTION' => \defined('TESTBENCH_DUSK') ? ['database.default' => 'testing'] : null,
             ])->filter()
-                ->reject(fn ($config, $key) => ! \is_null(Env::get($key)))
+                ->reject(function ($config, $key) { return ! \is_null(Env::get($key)); })
                 ->values()
                 ->all(),
         ]);
@@ -44,7 +44,7 @@ final class EnsuresDefaultConfiguration
      * @param  \Illuminate\Contracts\Foundation\Application  $app
      * @return bool
      */
-    protected function includesDefaultConfigurations($app): bool
+    protected function includesDefaultConfigurations($app)/*: bool*/
     {
         return Env::get('TESTBENCH_WITHOUT_DEFAULT_VARIABLES') !== true;
     }

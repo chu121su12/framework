@@ -7,8 +7,13 @@ use function Orchestra\Testbench\phpunit_version_compare;
 if (phpunit_version_compare('10', '>=')) {
     class PHPUnitErrorException extends \PHPUnit\Framework\Exception
     {
-        public function __construct(string $message, int $code, string $file, int $line, ?\Exception $previous = null)
+        public function __construct(/*string */$message, /*int */$code, /*string */$file, /*int */$line, /*?*/\Exception $previous = null)
         {
+            $message = backport_type_check('string', $message);
+            $code = backport_type_check('int', $code);
+            $file = backport_type_check('string', $file);
+            $line = backport_type_check('int', $line);
+
             parent::__construct($message, $code, $previous);
 
             $this->file = $file;
@@ -20,7 +25,7 @@ if (phpunit_version_compare('10', '>=')) {
          *
          * @return array
          */
-        public function getPHPUnitExceptionTrace(): array
+        public function getPHPUnitExceptionTrace()/*: array*/
         {
             return $this->serializableTrace;
         }
@@ -33,7 +38,7 @@ if (phpunit_version_compare('10', '>=')) {
          *
          * @return array
          */
-        public function getPHPUnitExceptionTrace(): array
+        public function getPHPUnitExceptionTrace()/*: array*/
         {
             return $this->getTrace();
         }

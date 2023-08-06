@@ -407,4 +407,22 @@ trait CreatesApplication
     /**
      * Define environment setup.
      *
-     * @pa
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return void
+     */
+    protected function defineEnvironment($app)
+    {
+        // Define environment.
+    }
+
+    /**
+     * Define environment setup.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return void
+     */
+    protected function getEnvironmentSetUp($app)
+    {
+        // Define your environment setup.
+    }
+}

@@ -33,7 +33,7 @@ final class LoadMigrationsFromArray
      * @param  \Illuminate\Contracts\Foundation\Application  $app
      * @return void
      */
-    public function bootstrap(Application $app): void
+    public function bootstrap(Application $app)/*: void*/
     {
         if ($this->migrations === false) {
             return;
@@ -43,9 +43,9 @@ final class LoadMigrationsFromArray
             \is_array($this->migrations) ? $this->migrations : []
         )->when(
             $this->includesDefaultMigrations($app),
-            fn ($migrations) => $migrations->push($app->basePath('migrations'))
-        )->filter(fn ($migration) => \is_string($migration))
-            ->transform(fn ($migration) => transform_relative_path($migration, $app->basePath()))
+            function ($migrations) use ($app) { return $migrations->push($app->basePath('migrations')); }
+        )->filter(function ($migration) { return \is_string($migration); })
+            ->transform(function ($migration) use ($app) { return transform_relative_path($migration, $app->basePath()); })
             ->all();
 
         after_resolving($app, 'migrator', function ($migrator) use ($paths) {
@@ -61,7 +61,7 @@ final class LoadMigrationsFromArray
      * @param  \Illuminate\Contracts\Foundation\Application  $app
      * @return bool
      */
-    protected function includesDefaultMigrations($app): bool
+    protected function includesDefaultMigrations($app)/*: bool*/
     {
         return is_dir($app->basePath('migrations'))
             && Env::get('TESTBENCH_WITHOUT_DEFAULT_MIGRATIONS') !== true;

@@ -2,6 +2,7 @@
 
 namespace Orchestra\Testbench\Foundation\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
@@ -49,7 +50,7 @@ class DevToolCommand extends Command
 
         $this->call('package:create-sqlite-db', ['--force' => true]);
 
-        return Command::SUCCESS;
+        return SymfonyHelper::COMMAND_SUCCESS;
     }
 
     /**
@@ -59,8 +60,10 @@ class DevToolCommand extends Command
      * @param  string  $workingPath
      * @return void
      */
-    protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
+    protected function copyTestbenchConfigurationFile(Filesystem $filesystem, /*string */$workingPath)/*: void*/
     {
+        $workingPath = backport_type_check('string', $workingPath);
+
         $from = (string) realpath(__DIR__.'/stubs/testbench.yaml');
         $to = "{$workingPath}/testbench.yaml";
 
@@ -83,8 +86,10 @@ class DevToolCommand extends Command
      * @param  string  $workingPath
      * @return void
      */
-    protected function copyTestbenchDotEnvFile(Filesystem $filesystem, string $workingPath): void
+    protected function copyTestbenchDotEnvFile(Filesystem $filesystem, /*string */$workingPath)/*: void*/
     {
+        $workingPath = backport_type_check('string', $workingPath);
+
         $from = $this->laravel->basePath('.env.example');
 
         if (! $filesystem->exists($from)) {
@@ -95,7 +100,7 @@ class DevToolCommand extends Command
             $this->environmentFile,
             "{$this->environmentFile}.example",
             "{$this->environmentFile}.dist",
-        ])->filter(fn ($file) => ! $filesystem->exists("{$workingPath}/{$file}"))
+        ])->filter(function ($file) use ($workingPath) { return ! $filesystem->exists("{$workingPath}/{$file}"); })
             ->values()
             ->prepend('Skip exporting .env')
             ->all();
@@ -110,7 +115,7 @@ class DevToolCommand extends Command
 
         $choice = $this->components->choice(
             "Export '.env' file as?",
-            $choices,
+            $choices
         );
 
         if ($choice === 'Skip exporting .env') {

@@ -56,13 +56,11 @@ if (!class_exists(LazyTranslator::class, false)) {
         {
             $field = backport_type_check('string', $field);
 
-            $function = function (/*string */$field) {
+            return backport_function_call_able(function (/*string */$field) {
                 $field = backport_type_check('string', $field);
 
                 return $this->$field;
-            };
-
-            return $function->call($instance, $field);
+            })->call($instance, $field);
         }
     }
 }

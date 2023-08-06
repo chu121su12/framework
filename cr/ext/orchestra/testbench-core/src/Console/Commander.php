@@ -3,8 +3,6 @@
 namespace Orchestra\Testbench\Console;
 
 use Dotenv\Dotenv;
-use Dotenv\Loader\Loader;
-use Dotenv\Parser\Parser;
 use Dotenv\Store\StringStore;
 use Illuminate\Console\Concerns\InteractsWithSignals;
 use Illuminate\Console\Signals;
@@ -142,7 +140,7 @@ class Commander
 
                     \call_user_func($this->resolveApplicationCallback(), $app);
                 },
-                /*options: */$options,
+                /*options: */$options
             );
         }
 

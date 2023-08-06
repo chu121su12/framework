@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use function Orchestra\Testbench\phpunit_version_compare;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Metadata\Annotation\Parser\Registry as PHPUnit10Registry;
+// use PHPUnit\Runner\Version;
 use PHPUnit\Util\Annotation\Registry as PHPUnit9Registry;
 use ReflectionClass;
 
@@ -25,10 +26,15 @@ trait HandlesAnnotations
     {
         $instance = new ReflectionClass($this);
 
-        if (! $this instanceof TestCase || $instance->isAnonymous()) {
+        if (! $this instanceof TestCase || (method_exists($instance, 'isAnonymous') && $instance->isAnonymous())) {
             return new Collection();
         }
 
+        if (! class_exists(PHPUnit9Registry::class)) {
+            return new Collection();
+        }
+
+        // class_exists(Version::class) && version_compare(Version::id(), '10', '>=')
         list($registry, $methodName) = phpunit_version_compare('10', '>=')
             ? [PHPUnit10Registry::getInstance(), $this->name()] /** @phpstan-ignore-line */
             : [PHPUnit9Registry::getInstance(), $this->getName(false)]; /** @phpstan-ignore-line */
@@ -81,15 +87,18 @@ trait HandlesAnnotations
      */
     public static function clearParsedTestMethodAnnotations()/*: void*/
     {
+        if (! class_exists(PHPUnit9Registry::class)) {
+            return;
+        }
+
         $registry = phpunit_version_compare('10', '>=')
             ? PHPUnit10Registry::getInstance() /** @phpstan-ignore-line */
             : PHPUnit9Registry::getInstance(); /** @phpstan-ignore-line */
 
         // Clear properties values from Registry class.
-        $function = function () {
+        backport_function_call_able(function () {
             $this->classDocBlocks = [];
             $this->methodDocBlocks = [];
-        };
-        $function->call($registry);
+        })->call($registry);
     }
 }

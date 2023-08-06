@@ -18,14 +18,16 @@ trait CopyTestbenchFiles
      * @param  string  $workingPath
      * @return void
      */
-    protected function copyTestbenchConfigurationFile(Application $app, Filesystem $filesystem, string $workingPath): void
+    protected function copyTestbenchConfigurationFile(Application $app, Filesystem $filesystem, /*string */$workingPath)/*: void*/
     {
+        $workingPath = backport_type_check('string', $workingPath);
+
         $configurationFile = Collection::make([
             'testbench.yaml',
             'testbench.yaml.example',
             'testbench.yaml.dist',
-        ])->map(fn ($file) => "{$workingPath}/{$file}")
-            ->filter(fn ($file) => $filesystem->exists($file))
+        ])->map(function ($file) use ($workingPath) { return "{$workingPath}/{$file}"; })
+            ->filter(function ($file) use ($filesystem) { return $filesystem->exists($file); })
             ->first();
 
         $testbenchFile = $app->basePath('testbench.yaml');
@@ -59,15 +61,17 @@ trait CopyTestbenchFiles
      * @param  string  $workingPath
      * @return void
      */
-    protected function copyTestbenchDotEnvFile(Application $app, Filesystem $filesystem, string $workingPath): void
+    protected function copyTestbenchDotEnvFile(Application $app, Filesystem $filesystem, /*string */$workingPath)/*: void*/
     {
+        $workingPath = backport_type_check('string', $workingPath);
+
         $configurationFile = Collection::make([
             $this->environmentFile,
             "{$this->environmentFile}.example",
             "{$this->environmentFile}.dist",
-        ])->map(fn ($file) => "{$workingPath}/{$file}")
+        ])->map(function ($file) use ($workingPath) { return "{$workingPath}/{$file}"; })
             ->push($app->basePath('.env.example'))
-            ->filter(fn ($file) => $filesystem->exists($file))
+            ->filter(function ($file) use ($filesystem) { return $filesystem->exists($file); })
             ->first();
 
         $environmentFile = $app->basePath('.env');

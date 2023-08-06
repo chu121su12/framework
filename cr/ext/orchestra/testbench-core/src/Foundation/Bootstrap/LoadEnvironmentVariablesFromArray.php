@@ -2,7 +2,7 @@
 
 namespace Orchestra\Testbench\Foundation\Bootstrap;
 
-use Dotenv\Parser\Parser;
+use Dotenv\Dotenv;
 use Dotenv\Store\StringStore;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Collection;
@@ -36,12 +36,11 @@ final class LoadEnvironmentVariablesFromArray
      * @param  \Illuminate\Contracts\Foundation\Application  $app
      * @return void
      */
-    public function bootstrap(Application $app): void
+    public function bootstrap(Application $app)/*: void*/
     {
         $store = new StringStore(implode(PHP_EOL, $this->environmentVariables));
-        $parser = new Parser();
 
-        Collection::make($parser->parse($store->read()))
+        Collection::make(Dotenv::parse($store->read()))
             ->filter(function ($entry) {
                 /** @var \Dotenv\Parser\Entry $entry */
                 return $entry->getValue()->isDefined();

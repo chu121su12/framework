@@ -22,10 +22,11 @@ class DeprecatedException extends PHPUnitErrorException
      *
      * @return string
      */
-    public function __toString(): string
+    #[\ReturnTypeWillChange]
+    public function __toString()/*: string*/
     {
         $traces = collect($this->getPHPUnitExceptionTrace())
-            ->transform(function (array $trace): ?string {
+            ->transform(function (array $trace)/*: ?string*/ {
                 if ((isset($trace['class']) && \in_array($trace['class'], $this->testbenchExceptionHandlers()))
                     || ! isset($trace['file'])
                     || ! isset($trace['line'])) {

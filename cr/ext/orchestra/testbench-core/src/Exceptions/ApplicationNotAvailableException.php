@@ -12,8 +12,10 @@ class ApplicationNotAvailableException extends RuntimeException
      * @param  string  $method
      * @return static
      */
-    public static function make(string $method)
+    public static function make(/*string */$method)
     {
+        $method = backport_type_check('string', $method);
+
         return new static("Application is not available to run [{$method}]");
     }
 }

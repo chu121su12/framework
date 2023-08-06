@@ -19,7 +19,7 @@ trait HandleTerminatingConsole
      * @param  callable(\Illuminate\Filesystem\Filesystem):void  $callback
      * @return void
      */
-    protected function beforeTerminating(callable $callback): void
+    protected function beforeTerminating(callable $callback)/*: void*/
     {
         array_unshift($this->beforeTerminatingCallbacks, $callback);
     }
@@ -29,7 +29,7 @@ trait HandleTerminatingConsole
      *
      * @return void
      */
-    protected function handleTerminatingConsole(): void
+    protected function handleTerminatingConsole()/*: void*/
     {
         Collection::make($this->beforeTerminatingCallbacks)
             ->each(function ($callback) {

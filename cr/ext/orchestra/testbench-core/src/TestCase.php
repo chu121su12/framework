@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use PHPUnit\Framework\TestCase as PHPUnit;
 use PHPUnit\Util\Annotation\Registry;
 
-abstract class TestCase extends PHPUnit\TestCase implements Contracts\TestCase
+abstract class TestCase extends PHPUnit implements Contracts\TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert,
         \PHPUnit\Framework\PhpUnit8Expect;

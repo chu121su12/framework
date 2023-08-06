@@ -12,10 +12,12 @@ if (phpunit_version_compare('10.1', '>=')) {
         /**
          * {@inheritdoc}
          */
-        protected function transformException(Throwable $error): Throwable
+        protected function transformException(/*Throwable */$error)/*: Throwable*/
         {
+            backport_type_throwable($error);
+
             /** @var \Illuminate\Testing\TestResponse|null $response */
-            $response = static::$latestResponse ?? null;
+            $response = isset(static::$latestResponse) ? static::$latestResponse : null;
 
             if (! \is_null($response)) {
                 $response->transformNotSuccessfulException($error);
@@ -30,7 +32,7 @@ if (phpunit_version_compare('10.1', '>=')) {
         /**
          * {@inheritdoc}
          */
-        protected function runTest(): mixed
+        protected function runTest()/*: mixed*/
         {
             $result = null;
 
@@ -41,7 +43,12 @@ if (phpunit_version_compare('10.1', '>=')) {
                 $result = parent::runTest();
             } catch (DeprecatedException $error) {
                 throw $error;
+            } catch (\Exception $error) {
+            } catch (\ErrorException $error) {
             } catch (Throwable $error) {
+            }
+
+            if (isset($error)) {
                 if (! \is_null($response)) {
                     $response->transformNotSuccessfulException($error);
                 }

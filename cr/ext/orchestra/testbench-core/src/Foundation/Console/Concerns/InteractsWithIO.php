@@ -13,10 +13,15 @@ trait InteractsWithIO
      * @param  string|null  $workingPath
      * @return void
      */
-    protected function status(string $from, string $to, string $type, ?string $workingPath = null): void
+    protected function status(/*string */$from, /*string */$to, /*string */$type, /*?string */$workingPath = null)/*: void*/
     {
+        $from = backport_type_check('string', $from);
+        $to = backport_type_check('string', $to);
+        $type = backport_type_check('string', $type);
+        $workingPath = backport_type_check('?string', $workingPath);
+
         /** @phpstan-ignore-next-line */
-        $workingPath = $workingPath ?? TESTBENCH_WORKING_PATH;
+        $workingPath = isset($workingPath) ? $workingPath : TESTBENCH_WORKING_PATH;
 
         $from = str_replace($workingPath.'/', '', (string) realpath($from));
 
@@ -26,7 +31,7 @@ trait InteractsWithIO
             'Copying %s [%s] to [%s]',
             $type,
             $from,
-            $to,
+            $to
         ));
     }
 }

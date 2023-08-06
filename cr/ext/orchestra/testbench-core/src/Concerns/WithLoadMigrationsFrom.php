@@ -16,7 +16,7 @@ trait WithLoadMigrationsFrom
      *
      * @throws \InvalidArgumentException
      */
-    protected function loadMigrationsFrom($paths): void
+    protected function loadMigrationsFrom($paths)/*: void*/
     {
         $this->loadMigrationsWithoutRollbackFrom($paths);
 

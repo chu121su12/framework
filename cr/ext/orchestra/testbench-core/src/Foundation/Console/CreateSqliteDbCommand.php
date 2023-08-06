@@ -2,6 +2,7 @@
 
 namespace Orchestra\Testbench\Foundation\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -53,6 +54,6 @@ class CreateSqliteDbCommand extends Command
             );
         }
 
-        return Command::SUCCESS;
+        return SymfonyHelper::COMMAND_SUCCESS;
     }
 }
