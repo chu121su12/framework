@@ -3,12 +3,52 @@
 namespace Orchestra\Testbench\Concerns;
 
 use Illuminate\Support\Collection;
+use function Orchestra\Testbench\phpunit_version_compare;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Runner\Version;
+use PHPUnit\Metadata\Annotation\Parser\Registry as PHPUnit10Registry;
+// use PHPUnit\Runner\Version;
+use PHPUnit\Util\Annotation\Registry as PHPUnit9Registry;
 use ReflectionClass;
 
+/**
+ * @internal
+ */
 trait HandlesAnnotations
 {
+    /**
+     * Resolve PHPUnit method annotations.
+     *
+     * @phpunit-overrides
+     *
+     * @return \Illuminate\Support\Collection<string, mixed>
+     */
+    protected function resolvePhpUnitAnnotations()/*: Collection*/
+    {
+        $instance = new ReflectionClass($this);
+
+        if (! $this instanceof TestCase || (method_exists($instance, 'isAnonymous') && $instance->isAnonymous())) {
+            return new Collection();
+        }
+
+        if (! class_exists(PHPUnit9Registry::class)) {
+            return new Collection();
+        }
+
+        // class_exists(Version::class) && version_compare(Version::id(), '10', '>=')
+        list($registry, $methodName) = phpunit_version_compare('10', '>=')
+            ? [PHPUnit10Registry::getInstance(), $this->name()] /** @phpstan-ignore-line */
+            : [PHPUnit9Registry::getInstance(), $this->getName(false)]; /** @phpstan-ignore-line */
+
+        /** @var array<string, mixed> $annotations */
+        $annotations = rescue(
+            function () use ($registry, $instance, $methodName) { return $registry->forMethod($instance->getName(), $methodName)->symbolAnnotations(); },
+            [],
+            false
+        );
+
+        return Collection::make($annotations);
+    }
+
     /**
      * Parse test method annotations.
      *
@@ -19,46 +59,46 @@ trait HandlesAnnotations
     {
         $name = backport_type_check('string', $name);
 
-        $instance = new ReflectionClass($this);
+        $this->resolvePhpUnitAnnotations()
+            ->filter(function ($actions, /*string */$key) use ($name) {
+                $key = backport_type_check('string', $key);
 
-        if (! $this instanceof TestCase || (method_exists($instance, 'isAnonymous') && $instance->isAnonymous())) {
-            return;
-        }
-
-        if (!class_exists('PHPUnit\Util\Annotation\Registry')) {
-            $annotations = [];
-
-            Collection::make($annotations)->each(function ($actions) use ($name, $app) {
-                Collection::make(isset($actions[$name]) ? $actions[$name] : [])
+                return $key === $name && ! empty($actions);
+            })
+            ->each(function (array $actions) use ($app) {
+                Collection::make($actions)
                     ->filter(function ($method) {
-                        return ! \is_null($method) && method_exists($this, $method);
-                    })->each(function ($method) use ($app) {
+                        return \is_string($method) && method_exists($this, $method);
+                    })
+                    ->each(function (string $method) use ($app) {
                         $this->{$method}($app);
                     });
             });
+    }
 
+    /**
+     * Clear parsed test method annotations.
+     *
+     * @phpunit-overrides
+     *
+     * @afterClass
+     *
+     * @return void
+     */
+    public static function clearParsedTestMethodAnnotations()/*: void*/
+    {
+        if (! class_exists(PHPUnit9Registry::class)) {
             return;
         }
 
-        if (class_exists(Version::class) && version_compare(Version::id(), '10', '>=')) {
-            $registry = \PHPUnit\Metadata\Annotation\Parser\Registry::getInstance();
-        } else {
-            $registry = \PHPUnit\Util\Annotation\Registry::getInstance();
-        }
+        $registry = phpunit_version_compare('10', '>=')
+            ? PHPUnit10Registry::getInstance() /** @phpstan-ignore-line */
+            : PHPUnit9Registry::getInstance(); /** @phpstan-ignore-line */
 
-        Collection::make(
-            rescue(function () use ($registry) {
-                return $registry->forMethod(static::class, $this->getName(false))->symbolAnnotations();
-            }, [], false)
-        )->filter(static function ($actions, $key) use ($name) {
-            return $key === $name;
-        })->each(function ($actions) use ($app) {
-            Collection::make(isset($actions) ? $actions : [])
-                ->filter(function ($method) {
-                    return ! \is_null($method) && method_exists($this, $method);
-                })->each(function ($method) use ($app) {
-                    $this->{$method}($app);
-                });
-        });
+        // Clear properties values from Registry class.
+        backport_function_call_able(function () {
+            $this->classDocBlocks = [];
+            $this->methodDocBlocks = [];
+        })->call($registry);
     }
 }

@@ -4,8 +4,12 @@ namespace Orchestra\Testbench\Foundation;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\PackageManifest as IlluminatePackageManifest;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
+/**
+ * @internal
+ */
 class PackageManifest extends IlluminatePackageManifest
 {
     /**
@@ -18,9 +22,10 @@ class PackageManifest extends IlluminatePackageManifest
     /**
      * List of required packages.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $requiredPackages = [
+        'laravel/dusk',
         'spatie/laravel-ray',
     ];
 
@@ -30,7 +35,7 @@ class PackageManifest extends IlluminatePackageManifest
      * @param  \Illuminate\Filesystem\Filesystem  $files
      * @param  string  $basePath
      * @param  string  $manifestPath
-     * @param  object|null  $testbench
+     * @param  \Orchestra\Testbench\Contracts\TestCase|object|null  $testbench
      */
     public function __construct(Filesystem $files, $basePath, $manifestPath, $testbench = null)
     {
@@ -48,6 +53,7 @@ class PackageManifest extends IlluminatePackageManifest
      */
     public static function swap($app, $testbench = null)
     {
+        /** @var \Illuminate\Foundation\PackageManifest $base */
         $base = $app->make(IlluminatePackageManifest::class);
 
         $app->instance(
@@ -77,7 +83,7 @@ class PackageManifest extends IlluminatePackageManifest
      */
     public function requires(...$packages)
     {
-        $this->requiredPackages = array_merge($this->requiredPackages, $packages);
+        $this->requiredPackages = array_merge($this->requiredPackages, Arr::wrap($packages));
 
         return $this;
     }
@@ -132,17 +138,28 @@ class PackageManifest extends IlluminatePackageManifest
      */
     protected function providersFromRoot()
     {
-        if (! \defined('TESTBENCH_WORKING_PATH') || ! is_file(TESTBENCH_WORKING_PATH.'/composer.json')) {
-            return [];
+        $package = $this->providersFromTestbench();
+
+        return \is_array($package) ? [
+            $this->format($package['name']) => isset($package['extra']) && isset($package['extra']['laravel']) ? $package['extra']['laravel'] : [],
+        ] : [];
+    }
+
+    /**
+     * Get testbench root composer file.
+     *
+     * @return array{name: string, extra?: array{laravel?: array}}|null
+     */
+    protected function providersFromTestbench()
+    {
+        if (\defined('TESTBENCH_WORKING_PATH') && is_file(TESTBENCH_WORKING_PATH.'/composer.json')) {
+            /** @var array{name: string, extra?: array{laravel?: array}} $composer */
+            $composer = $this->files->json(TESTBENCH_WORKING_PATH.'/composer.json');
+
+            return $composer;
         }
 
-        $package = transform(file_get_contents(TESTBENCH_WORKING_PATH.'/composer.json'), function ($json) {
-            return backport_json_decode($json, true);
-        });
-
-        return [
-            $this->format($package['name']) => isset($package['extra']) && isset($package['extra']['laravel']) ? $package['extra']['laravel'] : [],
-        ];
+        return null;
     }
 
     /**

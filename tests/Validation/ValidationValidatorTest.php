@@ -5737,11 +5737,20 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator($trans, ['x' => '17:44'], ['x' => 'After:17:44:00']);
         $this->assertTrue($v->fails());
 
-        $v = new Validator($trans, ['x' => '0001-01-01T00:00'], ['x' => 'before:1970-01-01']);
+        $v = new Validator($trans, ['x' => '0001-01-01T00:00'], ['x' => 'before:1970-01-02']);
         $this->assertTrue($v->passes());
 
         $v = new Validator($trans, ['x' => '0001-01-01T00:00'], ['x' => 'after:1970-01-01']);
         $this->assertTrue($v->fails());
+    }
+
+    public function testBeforeUnixEpoch()
+    {
+        date_default_timezone_set('UTC');
+        $trans = $this->getIlluminateArrayTranslator();
+
+        $v = new Validator($trans, ['x' => '0001-01-01T00:00'], ['x' => 'before:1970-01-01']);
+        $this->assertTrue($v->passes());
     }
 
     public function testBeforeAndAfterWithFormat()

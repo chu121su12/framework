@@ -3,6 +3,7 @@
 namespace Orchestra\Testbench\Foundation\Console;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Env;
 use Illuminate\Support\Str;
 use NunoMaduro\Collision\Adapters\Laravel\Commands\TestCommand as Command;
 
@@ -15,11 +16,16 @@ class TestCommand extends Command
      */
     protected $signature = 'package:test
         {--without-tty : Disable output to TTY}
+        {--compact : Indicates whether the compact printer should be used}
+        {--configuration= : Read configuration from XML file}
         {--coverage : Indicates whether the coverage information should be collected}
         {--min= : Indicates the minimum threshold enforcement for coverage}
-        {--parallel : Indicates if the tests should run in parallel}
+        {--p|parallel : Indicates if the tests should run in parallel}
+        {--profile : Lists top 10 slowest tests}
         {--recreate-databases : Indicates if the test databases should be re-created}
         {--drop-databases : Indicates if the test databases should be dropped}
+        {--without-databases : Indicates if database configuration should be performed}
+        {--c|--custom-argument : Add custom env variables}
     ';
 
     /**
@@ -44,6 +50,24 @@ class TestCommand extends Command
     }
 
     /**
+     * Get the PHPUnit configuration file path.
+     *
+     * @return string
+     */
+    public function phpUnitConfigurationFile()
+    {
+        $configuration = $this->option('configuration');
+        $configurationFile = str_replace('./', '', isset($configuration) ? $configuration : 'phpunit.xml');
+
+        return Collection::make([
+            TESTBENCH_WORKING_PATH.'/'.$configurationFile,
+            TESTBENCH_WORKING_PATH.'/'.$configurationFile.'.dist',
+        ])->filter(function ($path) {
+            return file_exists($path);
+        })->first() ?? './';
+    }
+
+    /**
      * Get the array of arguments for running PHPUnit.
      *
      * @param  array  $options
@@ -51,15 +75,13 @@ class TestCommand extends Command
      */
     protected function phpunitArguments($options)
     {
-        $options = Collection::make($options)
-            ->merge(['--printer=NunoMaduro\\Collision\\Adapters\\Phpunit\\Printer'])
-            ->reject(static function ($option) {
-                return Str::startsWith($option, '--env=')
-                    || $option == '--coverage'
-                    || Str::startsWith($option, '--min');
-            })->values()->all();
+        $file = $this->phpUnitConfigurationFile();
 
-        return array_merge($this->commonArguments(), ['--configuration=./'], $options);
+        return Collection::make(parent::phpunitArguments($options))
+            ->reject(function ($option) {
+                return Str::startsWith($option, ['--configuration=']);
+            })->merge(["--configuration={$file}"])
+            ->all();
     }
 
     /**
@@ -70,20 +92,56 @@ class TestCommand extends Command
      */
     protected function paratestArguments($options)
     {
-        $options = Collection::make($options)
-            ->reject(static function ($option) {
-                return Str::startsWith($option, '--env=')
-                    || $option == '--coverage'
-                    || Str::startsWith($option, '--min')
-                    || Str::startsWith($option, '-p')
-                    || Str::startsWith($option, '--parallel')
-                    || Str::startsWith($option, '--recreate-databases')
-                    || Str::startsWith($option, '--drop-databases');
-            })->values()->all();
+        $file = $this->phpUnitConfigurationFile();
 
+        return Collection::make(parent::paratestArguments($options))
+            ->reject(function (/*string */$option) {
+                $option = backport_type_check('string', $option);
+                return Str::startsWith($option, ['--configuration=', '--runner=']);
+            })->merge([
+                "--configuration={$file}",
+                "--runner=\Orchestra\Testbench\Foundation\ParallelRunner",
+            ])
+            ->all();
+    }
+
+    /**
+     * Get the array of environment variables for running PHPUnit.
+     *
+     * @return array
+     */
+    protected function phpunitEnvironmentVariables()
+    {
         return array_merge([
-            '--configuration=./',
-            "--runner=\Orchestra\Testbench\Foundation\ParallelRunner",
-        ], $options);
+            'APP_KEY' => Env::get('APP_KEY'),
+            'APP_DEBUG' => Env::get('APP_DEBUG'),
+            'TESTBENCH_PACKAGE_TESTER' => '(true)',
+        ], parent::phpunitEnvironmentVariables());
+    }
+
+    /**
+     * Get the array of environment variables for running Paratest.
+     *
+     * @return array
+     */
+    protected function paratestEnvironmentVariables()
+    {
+        return array_merge([
+            'APP_KEY' => Env::get('APP_KEY'),
+            'APP_DEBUG' => Env::get('APP_DEBUG'),
+            'TESTBENCH_PACKAGE_TESTER' => '(true)',
+            'TESTBENCH_WORKING_PATH' => TESTBENCH_WORKING_PATH,
+            'APP_BASE_PATH' => $this->laravel->basePath(),
+        ], parent::paratestEnvironmentVariables());
+    }
+
+    /**
+     * Get the configuration file.
+     *
+     * @return string
+     */
+    protected function getConfigurationFile()
+    {
+        return $this->phpUnitConfigurationFile();
     }
 }

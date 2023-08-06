@@ -3,6 +3,7 @@
 namespace Orchestra\Testbench;
 
 use Illuminate\Foundation\Testing;
+use Illuminate\Support\Str;
 use PHPUnit\Framework\TestCase as PHPUnit;
 use PHPUnit\Util\Annotation\Registry;
 
@@ -11,12 +12,12 @@ abstract class TestCase extends PHPUnit implements Contracts\TestCase
     use \PHPUnit\Framework\PhpUnit8Assert,
         \PHPUnit\Framework\PhpUnit8Expect;
 
-    use Concerns\HandlesTestFailures,
-        Concerns\Testing,
+    use Concerns\Testing,
         Testing\Concerns\InteractsWithAuthentication,
         Testing\Concerns\InteractsWithConsole,
         Testing\Concerns\InteractsWithContainer,
         Testing\Concerns\InteractsWithDatabase,
+        Testing\Concerns\InteractsWithDeprecationHandling,
         Testing\Concerns\InteractsWithExceptionHandling,
         Testing\Concerns\InteractsWithSession,
         Testing\Concerns\InteractsWithTime,
@@ -72,9 +73,48 @@ abstract class TestCase extends PHPUnit implements Contracts\TestCase
      */
     protected function setUpTraits()
     {
+        /** @var array<class-string, class-string> $uses */
         $uses = array_flip(class_uses_recursive(static::class));
 
         return $this->setUpTheTestEnvironmentTraits($uses);
+    }
+
+    /**
+     * Determine trait should be ignored from being autoloaded.
+     *
+     * @param  class-string  $use
+     * @return bool
+     */
+    protected function setUpTheTestEnvironmentTraitToBeIgnored(/*string */$use)/*: bool*/
+    {
+        $use = backport_type_check('string', $use);
+
+        return Str::startsWith($use, [
+            Testing\RefreshDatabase::class,
+            Testing\DatabaseMigrations::class,
+            Testing\DatabaseTransactions::class,
+            Testing\WithoutMiddleware::class,
+            Testing\WithoutEvents::class,
+            Testing\WithFaker::class,
+            Testing\Concerns\InteractsWithAuthentication::class,
+            Testing\Concerns\InteractsWithConsole::class,
+            Testing\Concerns\InteractsWithContainer::class,
+            Testing\Concerns\InteractsWithDatabase::class,
+            Testing\Concerns\InteractsWithDeprecationHandling::class,
+            Testing\Concerns\InteractsWithExceptionHandling::class,
+            Testing\Concerns\InteractsWithSession::class,
+            Testing\Concerns\InteractsWithTime::class,
+            Testing\Concerns\MakesHttpRequests::class,
+            Concerns\CreatesApplication::class,
+            Concerns\Database\HandlesConnections::class,
+            Concerns\HandlesAnnotations::class,
+            Concerns\HandlesDatabases::class,
+            Concerns\HandlesRoutes::class,
+            Concerns\Testing::class,
+            Concerns\WithFactories::class,
+            Concerns\WithLaravelMigrations::class,
+            Concerns\WithLoadMigrationsFrom::class,
+        ]);
     }
 
     /**
@@ -95,14 +135,5 @@ abstract class TestCase extends PHPUnit implements Contracts\TestCase
     public static function tearDownAfterClass()/*: void*/
     {
         static::$latestResponse = null;
-
-        if (! class_exists(Registry::class)) {
-            return;
-        }
-
-        backport_function_call_able(function () {
-            $this->classDocBlocks = [];
-            $this->methodDocBlocks = [];
-        })->call(Registry::getInstance());
     }
 }
