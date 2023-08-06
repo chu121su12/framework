@@ -5,7 +5,6 @@ namespace Illuminate\Tests\Testing\Console;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Console\RouteListCommand;
-use Illuminate\Foundation\Testing\Concerns\InteractsWithDeprecationHandlingNoProperty as InteractsWithDeprecationHandling;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Facade;
@@ -13,8 +12,6 @@ use Orchestra\Testbench\TestCase;
 
 class RouteListCommandTest extends TestCase
 {
-    use InteractsWithDeprecationHandling;
-
     /**
      * @var \Illuminate\Contracts\Routing\Registrar
      */
