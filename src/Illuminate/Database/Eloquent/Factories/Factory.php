@@ -237,12 +237,16 @@ abstract class Factory
     /**
      * Create a collection of models and persist them to the database.
      *
-     * @param  iterable<int, array<string, mixed>>  $records
+     * @param  int|iterable<int, array<string, mixed>>  $records
      * @return \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Database\Eloquent\Model|TModel>
      */
-    public function createMany(/*iterable */$records)
+    public function createMany(/*int|iterable */$records)
     {
-        $records = backport_type_check('iterable', $records);
+        $records = backport_type_check('int|iterable', $records);
+
+        if (is_numeric($records)) {
+            $records = array_fill(0, $records, []);
+        }
 
         return new EloquentCollection(
             collect($records)->map(function ($record) {
@@ -254,12 +258,12 @@ abstract class Factory
     /**
      * Create a collection of models and persist them to the database without dispatching any model events.
      *
-     * @param  iterable<int, array<string, mixed>>  $records
+     * @param  int|iterable<int, array<string, mixed>>  $records
      * @return \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Database\Eloquent\Model|TModel>
      */
-    public function createManyQuietly(/*iterable */$records)
+    public function createManyQuietly(/*int|iterable */$records)
     {
-        $records = backport_type_check('iterable', $records);
+        $records = backport_type_check('int|iterable', $records);
 
         return Model::withoutEvents(function () use ($records) {
             return $this->createMany($records);

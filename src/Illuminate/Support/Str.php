@@ -1053,7 +1053,7 @@ class Str
      * Remove any occurrence of the given string in the subject.
      *
      * @param  string|iterable<string>  $search
-     * @param  string  $subject
+     * @param  string|iterable<string>  $subject
      * @param  bool  $caseSensitive
      * @return string
      */
@@ -1364,6 +1364,20 @@ class Str
     public static function wordCount($string, $characters = null)
     {
         return str_word_count($string, 0, $characters);
+    }
+
+    /**
+     * Wrap a string to a given number of characters.
+     *
+     * @param  string  $string
+     * @param  int  $characters
+     * @param  string  $break
+     * @param  bool  $cutLongWords
+     * @return string
+     */
+    public static function wordWrap($string, $characters = 75, $break = "\n", $cutLongWords = false)
+    {
+        return wordwrap($string, $characters, $break, $cutLongWords);
     }
 
     /**
