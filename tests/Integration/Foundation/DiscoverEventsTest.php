@@ -15,7 +15,7 @@ use SplFileInfo;
 
 class DiscoverEventsTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         DiscoverEvents::$guessClassNamesUsingCallback = null;
 

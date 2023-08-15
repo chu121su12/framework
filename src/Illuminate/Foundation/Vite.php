@@ -676,7 +676,9 @@ HTML;
      */
     public function content($asset, $buildDirectory = null)
     {
-        $buildDirectory ??= $this->buildDirectory;
+        if (! isset($buildDirectory)) {
+            $buildDirectory = $this->buildDirectory;
+        }
 
         $chunk = $this->chunk($this->manifest($buildDirectory), $asset);
 

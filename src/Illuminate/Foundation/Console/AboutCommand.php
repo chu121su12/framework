@@ -147,9 +147,11 @@ class AboutCommand extends Command
     {
         $output = $data->flatMap(function ($data, $section) {
             return [
-                (string) Str::of($section)->snake() => $data->mapWithKeys(fn ($item, $key) => [
-                    $this->toSearchKeyword($item[0]) => value($item[1]),
-                ]),
+                (string) Str::of($section)->snake() => $data->mapWithKeys(function ($item, $key) {
+                    return [
+                        $this->toSearchKeyword($item[0]) => value($item[1]),
+                    ];
+                }),
             ];
         });
 
@@ -275,9 +277,11 @@ class AboutCommand extends Command
      */
     protected function sections()
     {
-        return collect(explode(',', $this->option('only') ?? ''))
+        $only = $this->option('only');
+
+        return collect(explode(',', isset($only) ? $only : ''))
             ->filter()
-            ->map(fn ($only) => $this->toSearchKeyword($only))
+            ->map(function ($only) { return $this->toSearchKeyword($only); })
             ->all();
     }
 
@@ -287,8 +291,10 @@ class AboutCommand extends Command
      * @param  string  $value
      * @return string
      */
-    protected function toSearchKeyword(string $value)
+    protected function toSearchKeyword(/*string */$value)
     {
+        $value = backport_type_check('string', $value);
+
         return (string) Str::of($value)->lower()->snake();
     }
 }

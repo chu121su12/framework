@@ -1311,7 +1311,11 @@ class FoundationViteTest extends TestCase
         $path = public_path('build/assets');
 
         if (! file_exists($path)) {
-            mkdir($path, recursive: true);
+            mkdir(
+                $path,
+                /*$permissions = */0777,
+                /*recursive: */true
+            );
         }
 
         file_put_contents($path.'/'.$asset, $content);

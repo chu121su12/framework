@@ -131,13 +131,17 @@ class UserWithIntTimestampsViaCasts extends Model
 
 class UnixTimeStampToCarbon implements CastsAttributes
 {
-    public function get($model, string $key, $value, array $attributes)
+    public function get($model, /*string */$key, $value, array $attributes)
     {
+        $key = backport_type_check('string', $key);
+
         return Carbon::parse($value);
     }
 
-    public function set($model, string $key, $value, array $attributes)
+    public function set($model, /*string */$key, $value, array $attributes)
     {
+        $key = backport_type_check('string', $key);
+
         return Carbon::parse($value)->timestamp;
     }
 }
@@ -148,19 +152,19 @@ class UserWithIntTimestampsViaAttribute extends Model
 
     protected $fillable = ['email'];
 
-    protected function updatedAt(): Attribute
+    protected function updatedAt()/*: Attribute*/
     {
         return Attribute::make(
-            get: fn ($value) => Carbon::parse($value),
-            set: fn ($value) => Carbon::parse($value)->timestamp,
+            /*get: */function ($value) { return Carbon::parse($value); },
+            /*set: */function ($value) { return Carbon::parse($value)->timestamp; },
         );
     }
 
-    protected function createdAt(): Attribute
+    protected function createdAt()/*: Attribute*/
     {
         return Attribute::make(
-            get: fn ($value) => Carbon::parse($value),
-            set: fn ($value) => Carbon::parse($value)->timestamp,
+            /*get: */function ($value) { return Carbon::parse($value); },
+            /*set: */function ($value) { return Carbon::parse($value)->timestamp; },
         );
     }
 }

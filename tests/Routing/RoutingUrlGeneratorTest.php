@@ -919,7 +919,7 @@ class RoutingUrlGeneratorTest extends TestCase
             Request::create('http://www.foo.com/')
         );
 
-        $url->resolveMissingNamedRoutesUsing(fn ($name, $parameters, $absolute) => 'test-url');
+        $url->resolveMissingNamedRoutesUsing(function ($name, $parameters, $absolute) { return 'test-url'; });
 
         $this->assertSame('test-url', $url->route('foo'));
     }

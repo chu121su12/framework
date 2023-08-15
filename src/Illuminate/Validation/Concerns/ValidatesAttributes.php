@@ -2489,7 +2489,7 @@ trait ValidatesAttributes
     {
         $stringValue = (string) $value;
 
-        if (! is_numeric($value) || ! Str::contains($stringValue, 'e', ignoreCase: true)) {
+        if (! is_numeric($value) || ! Str::contains($stringValue, 'e', /*ignoreCase: */true)) {
             return $value;
         }
 
@@ -2497,9 +2497,11 @@ trait ValidatesAttributes
             ? Str::after($stringValue, 'e')
             : Str::after($stringValue, 'E'));
 
-        $withinRange = (
-            $this->ensureExponentWithinAllowedRangeUsing ?? fn ($scale) => $scale <= 1000 && $scale >= -1000
-        )($scale, $attribute, $value);
+        $ensureExponentWithinAllowedRangeUsing = isset($this->ensureExponentWithinAllowedRangeUsing)
+            ? $this->ensureExponentWithinAllowedRangeUsing
+            : function ($scale) { $scale <= 1000 && $scale >= -1000; };
+
+        $withinRange = $ensureExponentWithinAllowedRangeUsing($scale, $attribute, $value);
 
         if (! $withinRange) {
             throw new MathException('Scientific notation exponent outside of allowed range.');

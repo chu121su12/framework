@@ -18,6 +18,8 @@ class Parser
      */
     public static function parse(string $expression)
     {
+        $expression = backport_type_check('string', $expression);
+
         $name = static::name($expression);
 
         if (preg_match_all('/\{\s*(.*?)\s*\}/', $expression, $matches) && count($matches[1])) {
@@ -35,8 +37,10 @@ class Parser
      *
      * @throws \InvalidArgumentException
      */
-    protected static function name(string $expression)
+    protected static function name(/*string */$expression)
     {
+        $expression = backport_type_check('string', $expression);
+
         if (! preg_match('/[^\s]+/', $expression, $matches)) {
             throw new InvalidArgumentException('Unable to determine command name from signature.');
         }
@@ -73,8 +77,10 @@ class Parser
      * @param  string  $token
      * @return \Symfony\Component\Console\Input\InputArgument
      */
-    protected static function parseArgument(string $token)
+    protected static function parseArgument(/*string */$token)
     {
+        $token = backport_type_check('string', $token);
+
         list($token, $description) = static::extractDescription($token);
 
         switch (true) {
@@ -99,8 +105,10 @@ class Parser
      * @param  string  $token
      * @return \Symfony\Component\Console\Input\InputOption
      */
-    protected static function parseOption(string $token)
+    protected static function parseOption(/*string */$token)
     {
+        $token = backport_type_check('string', $token);
+
         list($token, $description) = static::extractDescription($token);
 
         $matches = preg_split('/\s*\|\s*/', $token, 2);
@@ -132,8 +140,10 @@ class Parser
      * @param  string  $token
      * @return array
      */
-    protected static function extractDescription(string $token)
+    protected static function extractDescription(/*string */$token)
     {
+        $token = backport_type_check('string', $token);
+
         $parts = preg_split('/\s+:\s+/', trim($token), 2);
 
         return count($parts) === 2 ? $parts : [$token, ''];

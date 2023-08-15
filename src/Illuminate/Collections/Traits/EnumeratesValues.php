@@ -479,8 +479,10 @@ trait EnumeratesValues
      * @param  int  $precision
      * @return float|null
      */
-    public function percentage(callable $callback, int $precision = 2)
+    public function percentage(callable $callback, /*int */$precision = 2)
     {
+        $precision = backport_type_check('int', $precision);
+
         if ($this->isEmpty()) {
             return null;
         }
