@@ -128,7 +128,7 @@ class DatabaseEloquentFactoryTest extends TestCase
         $this->assertInstanceOf(Collection::class, $users);
         $this->assertCount(2, $users);
 
-        $users = FactoryTestUserFactory::new()->createMany(2);
+        $users = FactoryTestUserFactory::new_()->createMany(2);
         $this->assertInstanceOf(Collection::class, $users);
         $this->assertCount(2, $users);
 

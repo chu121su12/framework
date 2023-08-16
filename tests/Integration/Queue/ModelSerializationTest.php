@@ -531,7 +531,7 @@ class ModelSerializationWithoutRelations
     use SerializesModels;
 
     #[WithoutRelations]
-    public User $user;
+    public /*User */$user;
 
     public function __construct(User $user)
     {

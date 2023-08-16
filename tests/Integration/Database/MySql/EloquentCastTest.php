@@ -131,14 +131,14 @@ class UserWithIntTimestampsViaCasts extends Model
 
 class UnixTimeStampToCarbon implements CastsAttributes
 {
-    public function get($model, /*string */$key, $value, array $attributes)
+    public function get(Model $model, /*string */$key, $value, array $attributes)
     {
         $key = backport_type_check('string', $key);
 
         return Carbon::parse($value);
     }
 
-    public function set($model, /*string */$key, $value, array $attributes)
+    public function set(Model $model, /*string */$key, $value, array $attributes)
     {
         $key = backport_type_check('string', $key);
 
@@ -156,7 +156,7 @@ class UserWithIntTimestampsViaAttribute extends Model
     {
         return Attribute::make(
             /*get: */function ($value) { return Carbon::parse($value); },
-            /*set: */function ($value) { return Carbon::parse($value)->timestamp; },
+            /*set: */function ($value) { return Carbon::parse($value)->timestamp; }
         );
     }
 
@@ -164,7 +164,7 @@ class UserWithIntTimestampsViaAttribute extends Model
     {
         return Attribute::make(
             /*get: */function ($value) { return Carbon::parse($value); },
-            /*set: */function ($value) { return Carbon::parse($value)->timestamp; },
+            /*set: */function ($value) { return Carbon::parse($value)->timestamp; }
         );
     }
 }

@@ -51,10 +51,17 @@ trait SerializesModels
                 $name = "\0*\0{$name}";
             }
 
+            if (method_exists($property, 'getAttributes')) {
+
             $values[$name] = $this->getSerializedPropertyValue(
                 $value,
                 empty($property->getAttributes(WithoutRelations::class))
             );
+
+            } else {
+                $values[$name] = $this->getSerializedPropertyValue($value);
+            }
+
         }
 
         return $values;

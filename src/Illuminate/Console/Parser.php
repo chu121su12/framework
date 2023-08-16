@@ -16,7 +16,7 @@ class Parser
      *
      * @throws \InvalidArgumentException
      */
-    public static function parse(string $expression)
+    public static function parse(/*string */$expression)
     {
         $expression = backport_type_check('string', $expression);
 
