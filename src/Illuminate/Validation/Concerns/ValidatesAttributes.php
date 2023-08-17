@@ -2499,7 +2499,7 @@ trait ValidatesAttributes
 
         $ensureExponentWithinAllowedRangeUsing = isset($this->ensureExponentWithinAllowedRangeUsing)
             ? $this->ensureExponentWithinAllowedRangeUsing
-            : function ($scale) { $scale <= 1000 && $scale >= -1000; };
+            : function ($scale) { return $scale <= 1000 && $scale >= -1000; };
 
         $withinRange = $ensureExponentWithinAllowedRangeUsing($scale, $attribute, $value);
 
