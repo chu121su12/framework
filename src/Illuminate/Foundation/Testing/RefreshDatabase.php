@@ -86,7 +86,9 @@ trait RefreshDatabase
             $connection = $database->connection($name);
 
             if ($this->usingInMemoryDatabase()) {
-                RefreshDatabaseState::$inMemoryConnections[$name] ??= $connection->getPdo();
+                if (! isset(RefreshDatabaseState::$inMemoryConnections[$name])) {
+                    RefreshDatabaseState::$inMemoryConnections[$name] = $connection->getPdo();
+                }
             }
 
             $dispatcher = $connection->getEventDispatcher();
