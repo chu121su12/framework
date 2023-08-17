@@ -246,7 +246,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-merge": "master"
+            "dev-merge": "11-dev"
         },
         "laravel": {
             "providers": [
