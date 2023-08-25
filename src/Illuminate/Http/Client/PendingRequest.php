@@ -991,11 +991,11 @@ class PendingRequest
         $url = backport_type_check('string', $url);
 
         if (class_exists(UriTemplateV6::class)) {
-            return (new UriTemplate)->expand($url, $this->urlParameters);
+            return (new UriTemplateV6)->expand($url, $this->urlParameters);
         }
 
         if (class_exists(UriTemplateV7::class)) {
-            return UriTemplate::expand($url, $this->urlParameters);
+            return UriTemplateV7::expand($url, $this->urlParameters);
         }
 
         throw new \RuntimeException('Cannot find UriTemplate class');
