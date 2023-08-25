@@ -219,7 +219,7 @@ class Middleware
      * @param  array  $middleware
      * @return $this
      */
-    public function use(array $middleware)
+    public function use_(array $middleware)
     {
         $this->global = $middleware;
 
