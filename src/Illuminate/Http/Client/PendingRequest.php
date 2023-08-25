@@ -11,7 +11,8 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
-use GuzzleHttp\UriTemplate;
+use GuzzleHttp\UriTemplate as UriTemplateV6;
+use GuzzleHttp\UriTemplate\UriTemplate as UriTemplateV7;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Client\Events\ConnectionFailed;
 use Illuminate\Http\Client\Events\RequestSending;
@@ -989,7 +990,15 @@ class PendingRequest
     {
         $url = backport_type_check('string', $url);
 
-        return (new UriTemplate)->expand($url, $this->urlParameters);
+        if (class_exists(UriTemplateV6::class)) {
+            return (new UriTemplate)->expand($url, $this->urlParameters);
+        }
+
+        if (class_exists(UriTemplateV7::class)) {
+            return UriTemplate::expand($url, $this->urlParameters);
+        }
+
+        throw new \RuntimeException('Cannot find UriTemplate class');
     }
 
     /**
