@@ -1,3 +1,5 @@
+auth.json
+
 /.phpunit.cache
 /vendor
 # composer.phar
