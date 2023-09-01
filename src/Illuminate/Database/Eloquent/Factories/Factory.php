@@ -237,10 +237,10 @@ abstract class Factory
     /**
      * Create a collection of models and persist them to the database.
      *
-     * @param  int|iterable<int, array<string, mixed>>  $records
+     * @param  int|null|iterable<int, array<string, mixed>>  $records
      * @return \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Database\Eloquent\Model|TModel>
      */
-    public function createMany(/*int|iterable */$records)
+    public function createMany(/*int|iterable|null */$records = null)
     {
         $records = backport_type_check('int|iterable', $records);
 
@@ -258,10 +258,10 @@ abstract class Factory
     /**
      * Create a collection of models and persist them to the database without dispatching any model events.
      *
-     * @param  int|iterable<int, array<string, mixed>>  $records
+     * @param  int|null|iterable<int, array<string, mixed>>  $records
      * @return \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Database\Eloquent\Model|TModel>
      */
-    public function createManyQuietly(/*int|iterable */$records)
+    public function createManyQuietly(/*int|iterable|null */$records = null)
     {
         $records = backport_type_check('int|iterable', $records);
 

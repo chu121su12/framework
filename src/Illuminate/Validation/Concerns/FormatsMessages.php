@@ -446,6 +446,10 @@ trait FormatsMessages
             return $this->customValues[$attribute][$value];
         }
 
+        if (is_array($value)) {
+            return 'array';
+        }
+
         $key = "validation.values.{$attribute}.{$value}";
 
         if (($line = $this->translator->get($key)) !== $key) {

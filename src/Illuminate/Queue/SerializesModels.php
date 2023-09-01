@@ -19,9 +19,13 @@ trait SerializesModels
     {
         $values = [];
 
-        $properties = (new ReflectionClass($this))->getProperties();
+        $reflectionClass = new ReflectionClass($this);
 
-        $class = get_class($this);
+        [$class, $properties, $classLevelWithoutRelations] = [
+            get_class($this),
+            $reflectionClass->getProperties(),
+            ! empty($reflectionClass->getAttributes(WithoutRelations::class)),
+        ];
 
         foreach ($properties as $property) {
             if ($property->isStatic()) {
@@ -55,7 +59,8 @@ trait SerializesModels
 
             $values[$name] = $this->getSerializedPropertyValue(
                 $value,
-                empty($property->getAttributes(WithoutRelations::class))
+                ! $classLevelWithoutRelations &&
+                    empty($property->getAttributes(WithoutRelations::class))
             );
 
             } else {

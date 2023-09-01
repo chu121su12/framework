@@ -1652,6 +1652,29 @@ class ValidationValidatorTest extends TestCase
         $this->assertSame('The baz field is required when foo is empty.', $v->messages()->first('baz'));
     }
 
+    public function testRequiredIfArrayToStringConversationErrorException()
+    {
+        $trans = $this->getIlluminateArrayTranslator();
+        $v = new Validator($trans, [
+            'is_customer' => 1,
+            'fullname' => null,
+        ], [
+            'is_customer' => 'required|boolean',
+            'fullname' => 'required_if:is_customer,true',
+        ]);
+        $this->assertTrue($v->fails());
+
+        $trans = $this->getIlluminateArrayTranslator();
+        $v = new Validator($trans, [
+            'is_customer' => ['test'],
+            'fullname' => null,
+        ], [
+            'is_customer' => 'required|boolean',
+            'fullname' => 'required_if:is_customer,true',
+        ]);
+        $this->assertTrue($v->fails());
+    }
+
     public function testRequiredUnless()
     {
         $trans = $this->getIlluminateArrayTranslator();
@@ -8282,6 +8305,39 @@ class ValidationValidatorTest extends TestCase
         $this->assertTrue($passes, isset($message) ? $message : '');
 
         $this->assertSame($expectedValidatedData, $validator->validated());
+    }
+
+    public function testExcludeBeforeADependentRule()
+    {
+        $validator = new Validator(
+            $this->getIlluminateArrayTranslator(),
+            [
+                'profile_id' => null,
+                'type'       => 'denied',
+            ],
+            [
+                'type'       => ['required', 'string', 'exclude'],
+                'profile_id' => ['nullable', 'required_if:type,profile', 'integer'],
+            ],
+        );
+
+        $this->assertTrue($validator->passes());
+        $this->assertSame(['profile_id' => null], $validator->validated());
+
+        $validator = new Validator(
+            $this->getIlluminateArrayTranslator(),
+            [
+                'profile_id' => null,
+                'type'       => 'profile',
+            ],
+            [
+                'type'       => ['required', 'string', 'exclude'],
+                'profile_id' => ['nullable', 'required_if:type,profile', 'integer'],
+            ],
+        );
+
+        $this->assertFalse($validator->passes());
+        $this->assertSame(['profile_id' => ['validation.required_if']], $validator->getMessageBag()->getMessages());
     }
 
     public function testExcludingArrays()

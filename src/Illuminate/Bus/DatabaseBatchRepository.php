@@ -370,7 +370,7 @@ class DatabaseBatchRepository implements PrunableBatchRepository
 
         try {
             return backport_unserialize($serialized);
-        } catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $_e) {
             return [];
         }
     }
