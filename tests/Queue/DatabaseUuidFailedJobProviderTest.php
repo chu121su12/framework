@@ -84,12 +84,12 @@ class DatabaseUuidFailedJobProviderTest extends TestCase
 
         $provider->log('database', 'queue-1', json_encode(['uuid' => (string) Str::uuid()]), new RuntimeException());
         $provider->log('database', 'queue-2', json_encode(['uuid' => (string) Str::uuid()]), new RuntimeException());
-        $this->assertSame(1, $provider->count(queue: 'queue-1'));
-        $this->assertSame(1, $provider->count(queue: 'queue-2'));
+        $this->assertSame(1, $provider->count(null, /*queue: */'queue-1'));
+        $this->assertSame(1, $provider->count(null, /*queue: */'queue-2'));
 
         $provider->log('database', 'queue-1', json_encode(['uuid' => (string) Str::uuid()]), new RuntimeException());
-        $this->assertSame(2, $provider->count(queue: 'queue-1'));
-        $this->assertSame(1, $provider->count(queue: 'queue-2'));
+        $this->assertSame(2, $provider->count(null, /*queue: */'queue-1'));
+        $this->assertSame(1, $provider->count(null, /*queue: */'queue-2'));
     }
 
     public function testJobsCanBeCountedByQueueAndConnection()

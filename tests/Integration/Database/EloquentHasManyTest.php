@@ -134,7 +134,7 @@ class EloquentHasManyTestUser extends Model
         return $this->logins()->one()->oldestOfMany('login_time');
     }
 
-    public function posts(): HasMany
+    public function posts()/*: HasMany*/
     {
         return $this->hasMany(EloquentHasManyTestPost::class);
     }

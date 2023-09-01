@@ -140,8 +140,12 @@ class DatabaseFailedJobProvider implements CountableFailedJobProvider, FailedJob
     public function count($connection = null, $queue = null)
     {
         return $this->getTable()
-            ->when($connection, fn ($builder) => $builder->whereConnection($connection))
-            ->when($queue, fn ($builder) => $builder->whereQueue($queue))
+            ->when($connection, function ($builder) use ($connection) {
+                return $builder->whereConnection($connection);
+            })
+            ->when($queue, function ($builder) use ($queue) {
+                return $builder->whereQueue($queue);
+            })
             ->count();
     }
 

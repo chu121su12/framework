@@ -535,7 +535,7 @@ class FilesystemAdapter implements CloudFilesystemContract
      */
     public function getVisibility($path)
     {
-        if ($this->driver->getVisibility($path) == Visibility::VISIBILITY_PUBLIC) {
+        if ($this->driver->getVisibility($path) == Visibility::PUBLIC_) {
             return FilesystemContract::VISIBILITY_PUBLIC;
         }
 
@@ -1109,11 +1109,9 @@ class FilesystemAdapter implements CloudFilesystemContract
         }
 
         switch ($visibility) {
-            // case FilesystemContract::VISIBILITY_PUBLIC: return Visibility::PUBLIC;
-            case FilesystemContract::VISIBILITY_PUBLIC: return Visibility::VISIBILITY_PUBLIC;
+            case FilesystemContract::VISIBILITY_PUBLIC: return Visibility::PUBLIC_;
 
-            // case FilesystemContract::VISIBILITY_PRIVATE: return Visibility::PRIVATE;
-            case FilesystemContract::VISIBILITY_PRIVATE: return Visibility::VISIBILITY_PRIVATE;
+            case FilesystemContract::VISIBILITY_PRIVATE: return Visibility::PRIVATE_;
         }
 
         throw new InvalidArgumentException("Unknown visibility: {$visibility}.");

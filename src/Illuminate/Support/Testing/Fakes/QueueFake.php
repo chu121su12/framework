@@ -48,7 +48,7 @@ class QueueFake extends QueueManager implements Fake, Queue
      *
      * @var bool
      */
-    protected bool $serializeAndRestore = false;
+    protected /*bool */$serializeAndRestore = false;
 
     /**
      * Create a new fake queue instance.
@@ -516,8 +516,10 @@ class QueueFake extends QueueManager implements Fake, Queue
      * @param  bool  $serializeAndRestore
      * @return $this
      */
-    public function serializeAndRestore(bool $serializeAndRestore = true)
+    public function serializeAndRestore(/*bool */$serializeAndRestore = true)
     {
+        $serializeAndRestore = backport_type_check('bool', $serializeAndRestore);
+
         $this->serializeAndRestore = $serializeAndRestore;
 
         return $this;

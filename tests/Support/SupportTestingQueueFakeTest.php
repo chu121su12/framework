@@ -381,7 +381,7 @@ class SupportTestingQueueFakeTest extends TestCase
     {
         // confirm that the default behavior is maintained
         $this->fake->push(new JobWithSerialization('hello'));
-        $this->fake->assertPushed(JobWithSerialization::class, fn ($job) => $job->value === 'hello');
+        $this->fake->assertPushed(JobWithSerialization::class, function ($job) { return $job->value === 'hello'; });
 
         $job = new JobWithSerialization('hello');
 
@@ -391,7 +391,7 @@ class SupportTestingQueueFakeTest extends TestCase
 
         $fake->assertPushed(
             JobWithSerialization::class,
-            fn ($job) => $job->value === 'hello-serialized-unserialized'
+            function ($job) { return $job->value === 'hello-serialized-unserialized'; }
         );
     }
 }
@@ -449,16 +449,21 @@ class JobWithSerialization
 {
     use Queueable;
 
-    public function __construct(public $value)
+    public $value;
+
+    public function __construct(/*public */$value)
     {
+        $this->value = $value;
     }
 
-    public function __serialize(): array
+    #[\ReturnTypeWillChange]
+    public function __serialize()/*: array*/
     {
         return ['value' => $this->value.'-serialized'];
     }
 
-    public function __unserialize(array $data): void
+    #[\ReturnTypeWillChange]
+    public function __unserialize(/*array */$data)/*: void*/
     {
         $this->value = $data['value'].'-unserialized';
     }

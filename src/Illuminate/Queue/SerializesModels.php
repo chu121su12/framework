@@ -21,10 +21,12 @@ trait SerializesModels
 
         $reflectionClass = new ReflectionClass($this);
 
-        [$class, $properties, $classLevelWithoutRelations] = [
+        list($class, $properties, $classLevelWithoutRelations) = [
             get_class($this),
             $reflectionClass->getProperties(),
-            ! empty($reflectionClass->getAttributes(WithoutRelations::class)),
+            method_exists($reflectionClass, 'getAttributes')
+                ? ! empty($reflectionClass->getAttributes(WithoutRelations::class))
+                : false,
         ];
 
         foreach ($properties as $property) {

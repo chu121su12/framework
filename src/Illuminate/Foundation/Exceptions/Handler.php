@@ -319,7 +319,7 @@ class Handler implements ExceptionHandlerContract
 
         try {
             $logger = $this->container->make(LoggerInterface::class);
-        } catch (Exception) {
+        } catch (Exception $_e) {
             throw $e;
         }
 

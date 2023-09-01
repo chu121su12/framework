@@ -15,6 +15,11 @@ use Orchestra\Testbench\Http\Middleware\PreventRequestsDuringMaintenance as Test
 use Orchestra\Testbench\TestCase;
 use Symfony\Component\HttpFoundation\Cookie;
 
+class MaintenanceModeTest_testMaintenanceModeCanBeBypassedOnExcludedUrls_class extends PreventRequestsDuringMaintenance
+        {
+            protected $except = ['/test'];
+        }
+
 class MaintenanceModeTest extends TestCase
 {
     protected function setUp()/*: void*/
@@ -123,16 +128,15 @@ class MaintenanceModeTest extends TestCase
 
     public function testMaintenanceModeCanBeBypassedOnExcludedUrls()
     {
-        $this->app->instance(PreventRequestsDuringMaintenance::class, new class($this->app) extends PreventRequestsDuringMaintenance
-        {
-            protected $except = ['/test'];
-        });
+        $this->app->instance(PreventRequestsDuringMaintenance::class,
+            new MaintenanceModeTest_testMaintenanceModeCanBeBypassedOnExcludedUrls_class($this->app)
+        );
 
         file_put_contents(storage_path('framework/down'), json_encode([
             'retry' => 60,
         ]));
 
-        Route::get('/test', fn () => 'Hello World')->middleware(PreventRequestsDuringMaintenance::class);
+        Route::get('/test', function () { return 'Hello World'; })->middleware(PreventRequestsDuringMaintenance::class);
 
         $response = $this->get('/test');
 

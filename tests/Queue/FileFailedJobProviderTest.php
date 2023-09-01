@@ -168,12 +168,12 @@ class FileFailedJobProviderTest extends TestCase
     {
         $this->logFailedJob('database', 'queue-1');
         $this->logFailedJob('database', 'queue-2');
-        $this->assertSame(1, $this->provider->count(queue: 'queue-1'));
-        $this->assertSame(1, $this->provider->count(queue: 'queue-2'));
+        $this->assertSame(1, $this->provider->count(null, /*queue: */'queue-1'));
+        $this->assertSame(1, $this->provider->count(null, /*queue: */'queue-2'));
 
         $this->logFailedJob('database', 'queue-1');
-        $this->assertSame(2, $this->provider->count(queue: 'queue-1'));
-        $this->assertSame(1, $this->provider->count(queue: 'queue-2'));
+        $this->assertSame(2, $this->provider->count(null, /*queue: */'queue-1'));
+        $this->assertSame(1, $this->provider->count(null, /*queue: */'queue-2'));
     }
 
     public function testJobsCanBeCountedByQueueAndConnection()

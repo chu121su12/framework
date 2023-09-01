@@ -28,7 +28,7 @@ class ConvertEmptyStringsToNullTest extends TestCase
     public function testSkipConvertsEmptyStringsToNull()
     {
         $middleware = new ConvertEmptyStringsToNull;
-        ConvertEmptyStringsToNull::skipWhen(fn ($request) => '' === $request->baz);
+        ConvertEmptyStringsToNull::skipWhen(function ($request) { return '' === $request->baz; });
         $symfonyRequest = new SymfonyRequest([
             'foo' => 'bar',
             'baz' => '',

@@ -295,8 +295,12 @@ class Str
      * @param  string  $encoding
      * @return string
      */
-    public static function convertCase(string $string, int $mode = MB_CASE_FOLD, ?string $encoding = 'UTF-8')
+    public static function convertCase(/*string */$string, /*int */$mode = MB_CASE_FOLD, /*?string */$encoding = 'UTF-8')
     {
+        $string = backport_type_check('string', $string);
+        $mode = backport_type_check('int', $mode);
+        $encoding = backport_type_check('?string', $encoding);
+
         return mb_convert_case($string, $mode, $encoding);
     }
 

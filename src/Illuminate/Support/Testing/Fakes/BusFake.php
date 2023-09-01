@@ -76,7 +76,7 @@ class BusFake implements Fake, QueueingDispatcher
      *
      * @var bool
      */
-    protected bool $serializeAndRestore = false;
+    protected /*bool */$serializeAndRestore = false;
 
     /**
      * Create a new bus fake instance.
@@ -785,8 +785,10 @@ class BusFake implements Fake, QueueingDispatcher
      * @param  bool  $serializeAndRestore
      * @return $this
      */
-    public function serializeAndRestore(bool $serializeAndRestore = true)
+    public function serializeAndRestore(/*bool */$serializeAndRestore = true)
     {
+        $serializeAndRestore = backport_type_check('bool', $serializeAndRestore);
+
         $this->serializeAndRestore = $serializeAndRestore;
 
         return $this;

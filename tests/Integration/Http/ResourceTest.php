@@ -198,6 +198,20 @@ class ResourceTest_testNestedMerges_class
             }
         }
 
+class ResourceTest_testMergeValuesMayFallbackToDefaults_class
+        {
+            use ConditionallyLoadsAttributes;
+
+            public function work()
+            {
+                return $this->filter([
+                    $this->mergeUnless(false, ['Taylor', 'Mohamed'], ['First', 'Second']),
+                    $this->mergeWhen(false, ['Adam', 'Matt'], ['Abigail', 'Lydia']),
+                    'Jeffrey',
+                ]);
+            }
+        }
+
 class ResourceTest extends TestCase
 {
     public function testResourcesMayBeConvertedToJson()
@@ -1640,19 +1654,7 @@ class ResourceTest extends TestCase
 
     public function testMergeValuesMayFallbackToDefaults()
     {
-        $filter = new class
-        {
-            use ConditionallyLoadsAttributes;
-
-            public function work()
-            {
-                return $this->filter([
-                    $this->mergeUnless(false, ['Taylor', 'Mohamed'], ['First', 'Second']),
-                    $this->mergeWhen(false, ['Adam', 'Matt'], ['Abigail', 'Lydia']),
-                    'Jeffrey',
-                ]);
-            }
-        };
+        $filter = new ResourceTest_testMergeValuesMayFallbackToDefaults_class;
 
         $results = $filter->work();
 

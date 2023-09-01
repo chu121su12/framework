@@ -671,24 +671,27 @@ class SupportTestingBusFakeTest extends TestCase
         $this->assertSame(0, $batch->pendingJobs);
     }
 
+    /**
+     * @dataProvider serializeAndRestoreCommandMethodsDataProvider
+     */
     #[DataProvider('serializeAndRestoreCommandMethodsDataProvider')]
     public function testCanSerializeAndRestoreCommands($commandFunctionName, $assertionFunctionName)
     {
-        $serializingBusFake = (clone $this->fake)->serializeAndRestore();
+        $serializingBusFake = with(clone $this->fake)->serializeAndRestore();
 
         // without setting the serialization, the job should return the value passed in
         $this->fake->{$commandFunctionName}(new BusFakeJobWithSerialization('hello'));
-        $this->fake->{$assertionFunctionName}(BusFakeJobWithSerialization::class, fn ($command) => $command->value === 'hello');
+        $this->fake->{$assertionFunctionName}(BusFakeJobWithSerialization::class, function ($command) { return $command->value === 'hello'; });
 
         // when enabling the serializeAndRestore property, job has value modified
         $serializingBusFake->{$commandFunctionName}(new BusFakeJobWithSerialization('hello'));
         $serializingBusFake->{$assertionFunctionName}(
             BusFakeJobWithSerialization::class,
-            fn ($command) => $command->value === 'hello-serialized-unserialized'
+            function ($command) { return $command->value === 'hello-serialized-unserialized'; }
         );
     }
 
-    public static function serializeAndRestoreCommandMethodsDataProvider(): array
+    public static function serializeAndRestoreCommandMethodsDataProvider()/*: array*/
     {
         return [
             'dispatch' => ['dispatch', 'assertDispatched'],
@@ -700,7 +703,7 @@ class SupportTestingBusFakeTest extends TestCase
 
     public function testCanSerializeAndRestoreCommandsInBatch()
     {
-        $serializingBusFake = (clone $this->fake)->serializeAndRestore();
+        $serializingBusFake = with(clone $this->fake)->serializeAndRestore();
 
         // without setting the serialization, the batch should return the value passed in
         $this->fake->batch([
@@ -750,16 +753,21 @@ class BusFakeJobWithSerialization
 {
     use Queueable;
 
-    public function __construct(public $value)
+    public $value;
+
+    public function __construct(/*public */$value)
     {
+        $this->value = $value;
     }
 
-    public function __serialize(): array
+    #[\ReturnTypeWillChange]
+    public function __serialize()/*: array*/
     {
         return ['value' => $this->value.'-serialized'];
     }
 
-    public function __unserialize(array $data): void
+    #[\ReturnTypeWillChange]
+    public function __unserialize(/*array */$data)/*: void*/
     {
         $this->value = $data['value'].'-unserialized';
     }

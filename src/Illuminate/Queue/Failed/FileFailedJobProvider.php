@@ -214,12 +214,14 @@ class FileFailedJobProvider implements CountableFailedJobProvider, FailedJobProv
      */
     public function count($connection = null, $queue = null)
     {
-        if (($connection ?? $queue) === null) {
+        if ((isset($connection) ? $connection : $queue) === null) {
             return count($this->read());
         }
 
         return collect($this->read())
-            ->filter(fn ($job) => $job->connection === ($connection ?? $job->connection) && $job->queue === ($queue ?? $job->queue))
+            ->filter(function ($job) use ($connection, $queue) {
+                return $job->connection === (isset($connection) ? $connection : $job->connection) && $job->queue === (isset($queue) ? $queue : $job->queue);
+            })
             ->count();
     }
 }

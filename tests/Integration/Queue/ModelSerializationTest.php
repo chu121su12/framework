@@ -564,8 +564,13 @@ class ModelSerializationAttributeTargetsClassTestClass
 {
     use SerializesModels;
 
-    public function __construct(public User $user, public DataValueObject $value)
+    public $user;
+    public $value;
+
+    public function __construct(/*public */User $user, /*public */DataValueObject $value)
     {
+        $this->user = $user;
+        $this->value = $value;
     }
 }
 
@@ -595,7 +600,10 @@ class CollectionSerializationTestClass
 
 class DataValueObject
 {
-    public function __construct(public $value = 1)
+    public $value;
+
+    public function __construct(/*public */$value = 1)
     {
+        $this->value = $value;
     }
 }

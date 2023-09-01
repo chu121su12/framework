@@ -44,7 +44,7 @@ class Benchmark
      * @param  (callable(): TReturn)  $callback
      * @return array{0: TReturn, 1: float}
      */
-    public static function value(callable $callback): array
+    public static function value(callable $callback)/*: array*/
     {
         gc_collect_cycles();
 

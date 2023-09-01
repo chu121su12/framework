@@ -15,6 +15,8 @@ use PHPUnit\Framework\TestCase;
 
 class QueueDatabaseQueueIntegrationTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     /**
      * @var \Illuminate\Queue\DatabaseQueue
      */

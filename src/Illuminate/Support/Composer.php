@@ -50,8 +50,8 @@ class Composer
     {
         $composer = json_decode(file_get_contents($this->findComposerFile()), true);
 
-        return array_key_exists($package, $composer['require'] ?? [])
-            || array_key_exists($package, $composer['require-dev'] ?? []);
+        return array_key_exists($package, isset($composer['require']) ? $composer['require'] : [])
+            || array_key_exists($package, isset($composer['require-dev']) ? $composer['require-dev'] : []);
     }
 
     /**
@@ -62,13 +62,16 @@ class Composer
      * @param  \Closure|\Symfony\Component\Console\Output\OutputInterface|null  $output
      * @return bool
      */
-    public function requirePackages(array $packages, bool $dev = false, Closure|OutputInterface $output = null)
+    public function requirePackages(array $packages, /*bool */$dev = false, /*Closure|OutputInterface */$output = null)
     {
-        $command = collect([
-            ...$this->findComposer(),
-            'require',
-            ...$packages,
-        ])
+        $dev = backport_type_check('bool', $dev);
+        $output = backport_type_check([Closure::class, OutputInterface::class], $output);
+
+        $command = collect(array_merge(...[
+            $this->findComposer(),
+            ['require'],
+            $packages,
+        ]))
         ->when($dev, function ($command) {
             $command->push('--dev');
         })->all();
@@ -90,13 +93,16 @@ class Composer
      * @param  \Closure|\Symfony\Component\Console\Output\OutputInterface|null  $output
      * @return bool
      */
-    public function removePackages(array $packages, bool $dev = false, Closure|OutputInterface $output = null)
+    public function removePackages(array $packages, /*bool */$dev = false, /*Closure|OutputInterface */$output = null)
     {
-        $command = collect([
-            ...$this->findComposer(),
-            'remove',
-            ...$packages,
-        ])
+        $dev = backport_type_check('bool', $dev);
+        $output = backport_type_check([Closure::class, OutputInterface::class], $output);
+
+        $command = collect(array_merge(...[
+            $this->findComposer(),
+            ['remove'],
+            $packages,
+        ]))
         ->when($dev, function ($command) {
             $command->push('--dev');
         })->all();
@@ -122,7 +128,7 @@ class Composer
     {
         $composerFile = $this->findComposerFile();
 
-        $composer = json_decode(file_get_contents($composerFile), true, 512, JSON_THROW_ON_ERROR);
+        $composer = backport_json_decode(file_get_contents($composerFile), true, 512, 0, true);
 
         file_put_contents(
             $composerFile,

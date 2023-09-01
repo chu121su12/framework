@@ -8318,7 +8318,7 @@ class ValidationValidatorTest extends TestCase
             [
                 'type'       => ['required', 'string', 'exclude'],
                 'profile_id' => ['nullable', 'required_if:type,profile', 'integer'],
-            ],
+            ]
         );
 
         $this->assertTrue($validator->passes());
@@ -8333,7 +8333,7 @@ class ValidationValidatorTest extends TestCase
             [
                 'type'       => ['required', 'string', 'exclude'],
                 'profile_id' => ['nullable', 'required_if:type,profile', 'integer'],
-            ],
+            ]
         );
 
         $this->assertFalse($validator->passes());

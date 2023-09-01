@@ -582,8 +582,10 @@ class Builder implements BuilderContract
     public function createOrFirst(array $attributes = [], array $values = [])
     {
         try {
-            return $this->withSavepointIfNeeded(fn () => $this->create(array_merge($attributes, $values)));
-        } catch (UniqueConstraintViolationException) {
+            return $this->withSavepointIfNeeded(function () use ($attributes, $values) {
+                return $this->create(array_merge($attributes, $values));
+            });
+        } catch (UniqueConstraintViolationException $_e) {
             return $this->useWritePdo()->where($attributes)->first();
         }
     }
@@ -1169,9 +1171,11 @@ class Builder implements BuilderContract
                 || $this->model->hasAttributeSetMutator($column)
                 || $this->model->hasCast($column)
             ) {
-                $timestamp = $this->model->newInstance()
+                $newInstance = $this->model->newInstance()
                     ->forceFill([$column => $timestamp])
-                    ->getAttributes()[$column] ?? $timestamp;
+                    ->getAttributes();
+
+                $timestamp = isset($newInstance[$column]) ? $newInstance[$column] : $timestamp;
             }
 
             $values = array_merge([$column => $timestamp], $values);
@@ -1729,8 +1733,9 @@ class Builder implements BuilderContract
      *
      * @param  \Closure(): TModelValue  $scope
      * @return TModelValue
+
      */
-    public function withSavepointIfNeeded(Closure $scope): mixed
+    public function withSavepointIfNeeded(Closure $scope)/*: mixed*/
     {
         return $this->getQuery()->getConnection()->transactionLevel() > 0
             ? $this->getQuery()->getConnection()->transaction($scope)
