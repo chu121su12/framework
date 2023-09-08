@@ -585,8 +585,14 @@ class Builder implements BuilderContract
             return $this->withSavepointIfNeeded(function () use ($attributes, $values) {
                 return $this->create(array_merge($attributes, $values));
             });
-        } catch (UniqueConstraintViolationException $_e) {
-            return $this->useWritePdo()->where($attributes)->first() ?? throw $e;
+        } catch (UniqueConstraintViolationException $e) {
+            $first = $this->useWritePdo()->where($attributes)->first();
+
+            if (! isset($first)) {
+                throw $e;
+            }
+
+            return $first;
         }
     }
 

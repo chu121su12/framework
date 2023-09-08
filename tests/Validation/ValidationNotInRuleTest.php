@@ -6,7 +6,9 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\NotIn;
 use PHPUnit\Framework\TestCase;
 
-include_once 'Enums.php';
+if (PHP_VERSION_ID >= 80100) {
+    include_once 'Enums.php';
+}
 
 class ValidationNotInRuleTest extends TestCase
 {
@@ -27,7 +29,13 @@ class ValidationNotInRuleTest extends TestCase
         $rule = Rule::notIn('1', '2', '3', '4');
 
         $this->assertSame('not_in:"1","2","3","4"', (string) $rule);
+    }
 
+    /**
+     * @requires PHP 8.1
+     */
+    public function testItCorrectlyFormatsAStringVersionOfTheEnumRule()
+    {
         $rule = Rule::notIn([StringStatus::done]);
 
         $this->assertSame('not_in:"done"', (string) $rule);

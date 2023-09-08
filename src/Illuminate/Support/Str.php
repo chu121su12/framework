@@ -1618,19 +1618,21 @@ class Str
     {
         $next = 0;
 
-        $whenMissing ??= function () use (&$next) {
-            $factoryCache = static::$ulidFactory;
+        if (! isset($whenMissing)) {
+            $whenMissing = function () use (&$next) {
+                $factoryCache = static::$ulidFactory;
 
-            static::$ulidFactory = null;
+                static::$ulidFactory = null;
 
-            $ulid = static::ulid();
+                $ulid = static::ulid();
 
-            static::$ulidFactory = $factoryCache;
+                static::$ulidFactory = $factoryCache;
 
-            $next++;
+                $next++;
 
-            return $ulid;
-        };
+                return $ulid;
+            };
+        }
 
         static::createUlidsUsing(function () use (&$next, $sequence, $whenMissing) {
             if (array_key_exists($next, $sequence)) {
@@ -1651,7 +1653,7 @@ class Str
     {
         $ulid = Str::ulid();
 
-        Str::createUlidsUsing(fn () => $ulid);
+        Str::createUlidsUsing(function () use ($ulid) { return $ulid; });
 
         if ($callback !== null) {
             try {

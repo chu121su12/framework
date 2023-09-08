@@ -79,7 +79,7 @@ class Env
      */
     public static function get($key, $default = null)
     {
-        return self::getOption($key)->getOrCall(fn () => value($default));
+        return self::getOption($key)->getOrCall(function () use ($default) { return value($default); });
     }
 
     /**

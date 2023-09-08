@@ -152,6 +152,30 @@ class MailMailableTest_testHasAttachmentWithEnvelopeAttachments_class_3 implemen
             }
         }
 
+class MailMailableTest_testMailableAttributesInBuild_class extends Mailable
+        {
+            public function build()
+            {
+                $this
+                    ->to('hello@laravel.com')
+                    ->replyTo('taylor@laravel.com')
+                    ->cc('cc@laravel.com', 'Taylor Otwell')
+                    ->bcc('bcc@laravel.com', 'Taylor Otwell')
+                    ->tag('test-tag')
+                    ->metadata('origin', 'test-suite')
+                    ->metadata('user_id', 1)
+                    ->subject('test subject');
+            }
+        }
+
+class MailMailableTest__render__class
+        {
+            public function render()
+            {
+                //
+            }
+        }
+
 class MailMailableTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -161,13 +185,7 @@ class MailMailableTest extends TestCase
 
     public function testMailableSetsRecipientsCorrectly()
     {
-        Container::getInstance()->instance('mailer', new class
-        {
-            public function render()
-            {
-                //
-            }
-        });
+        Container::getInstance()->instance('mailer', new MailMailableTest__render__class);
 
         $mailable = new WelcomeMailableStub;
         $mailable->to('taylor@laravel.com');
@@ -251,13 +269,7 @@ class MailMailableTest extends TestCase
 
     public function testMailableSetsCcRecipientsCorrectly()
     {
-        Container::getInstance()->instance('mailer', new class
-        {
-            public function render()
-            {
-                //
-            }
-        });
+        Container::getInstance()->instance('mailer', new MailMailableTest__render__class);
 
         $mailable = new WelcomeMailableStub;
         $mailable->cc('taylor@laravel.com');
@@ -348,13 +360,7 @@ class MailMailableTest extends TestCase
 
     public function testMailableSetsBccRecipientsCorrectly()
     {
-        Container::getInstance()->instance('mailer', new class
-        {
-            public function render()
-            {
-                //
-            }
-        });
+        Container::getInstance()->instance('mailer', new MailMailableTest__render__class);
 
         $mailable = new WelcomeMailableStub;
         $mailable->bcc('taylor@laravel.com');
@@ -445,13 +451,7 @@ class MailMailableTest extends TestCase
 
     public function testMailableSetsReplyToCorrectly()
     {
-        Container::getInstance()->instance('mailer', new class
-        {
-            public function render()
-            {
-                //
-            }
-        });
+        Container::getInstance()->instance('mailer', new MailMailableTest__render__class);
 
         $mailable = new WelcomeMailableStub;
         $mailable->replyTo('taylor@laravel.com');
@@ -531,13 +531,7 @@ class MailMailableTest extends TestCase
 
     public function testMailableSetsFromCorrectly()
     {
-        Container::getInstance()->instance('mailer', new class
-        {
-            public function render()
-            {
-                //
-            }
-        });
+        Container::getInstance()->instance('mailer', new MailMailableTest__render__class);
 
         $mailable = new WelcomeMailableStub;
         $mailable->from('taylor@laravel.com');
@@ -770,13 +764,7 @@ class MailMailableTest extends TestCase
     {
         $this->markTestSkipped('Wait for mail port.');
 
-        Container::getInstance()->instance('mailer', new class
-        {
-            public function render()
-            {
-                //
-            }
-        });
+        Container::getInstance()->instance('mailer', new MailMailableTest__render__class);
 
         $view = m::mock(Factory::class);
 
@@ -813,13 +801,7 @@ class MailMailableTest extends TestCase
     {
         $this->markTestSkipped('Wait for mail port.');
 
-        Container::getInstance()->instance('mailer', new class
-        {
-            public function render()
-            {
-                //
-            }
-        });
+        Container::getInstance()->instance('mailer', new MailMailableTest__render__class);
 
         $view = m::mock(Factory::class);
 
@@ -1201,29 +1183,9 @@ class MailMailableTest extends TestCase
 
     public function testMailableAttributesInBuild()
     {
-        Container::getInstance()->instance('mailer', new class
-        {
-            public function render()
-            {
-                //
-            }
-        });
+        Container::getInstance()->instance('mailer', new MailMailableTest__render__class);
 
-        $mailable = new class() extends Mailable
-        {
-            public function build()
-            {
-                $this
-                    ->to('hello@laravel.com')
-                    ->replyTo('taylor@laravel.com')
-                    ->cc('cc@laravel.com', 'Taylor Otwell')
-                    ->bcc('bcc@laravel.com', 'Taylor Otwell')
-                    ->tag('test-tag')
-                    ->metadata('origin', 'test-suite')
-                    ->metadata('user_id', 1)
-                    ->subject('test subject');
-            }
-        };
+        $mailable = new MailMailableTest_testMailableAttributesInBuild_class;
 
         $mailable->assertTo('hello@laravel.com');
         $mailable->assertHasReplyTo('taylor@laravel.com');

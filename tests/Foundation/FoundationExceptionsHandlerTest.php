@@ -447,11 +447,24 @@ class FoundationExceptionsHandlerTest extends TestCase
     public function testItReportsDuplicateExceptions()
     {
         $reported = [];
-        $this->handler->reportable(function (\Throwable $e) use (&$reported) {
-            $reported[] = $e;
-
-            return false;
-        });
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $this->handler->reportable(function (\Exception $e) use (&$reported) {
+                backport_type_throwable($e);
+    
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+        else {
+            $this->handler->reportable(function (\Throwable $e) use (&$reported) {
+                backport_type_throwable($e);
+    
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
 
         $this->handler->report($one = new RuntimeException('foo'));
         $this->handler->report($one);
@@ -464,11 +477,24 @@ class FoundationExceptionsHandlerTest extends TestCase
     {
         $reported = [];
         $e = new RuntimeException('foo');
-        $this->handler->reportable(function (\Throwable $e) use (&$reported) {
-            $reported[] = $e;
-
-            return false;
-        });
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $this->handler->reportable(function (\Exception $e) use (&$reported) {
+                backport_type_throwable($e);
+    
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+        else {
+            $this->handler->reportable(function (\Throwable $e) use (&$reported) {
+                backport_type_throwable($e);
+    
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
 
         $this->handler->dontReportDuplicates();
         $this->handler->report($one = new RuntimeException('foo'));

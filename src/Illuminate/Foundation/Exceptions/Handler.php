@@ -152,7 +152,7 @@ class Handler implements ExceptionHandlerContract
     {
         $this->container = $container;
 
-        $this->reportedExceptionMap = new WeakMap;
+        $this->reportedExceptionMap = [];
 
         $this->register();
     }
@@ -323,7 +323,7 @@ class Handler implements ExceptionHandlerContract
     {
         backport_type_throwable($e);
 
-        $this->reportedExceptionMap[$e] = true;
+        $this->reportedExceptionMap[spl_object_id($e)] = true;
 
         if (Reflector::isCallable($reportCallable = [$e, 'report']) &&
             $this->container->call($reportCallable) !== false) {
@@ -376,7 +376,9 @@ class Handler implements ExceptionHandlerContract
     {
         backport_type_throwable($e);
 
-        if ($this->deduplicateReporting && ($this->reportedExceptionMap[$e] ?? false)) {
+        $eid = spl_object_id($e);
+
+        if ($this->deduplicateReporting && isset($this->reportedExceptionMap[$eid]) && $this->reportedExceptionMap[$eid]) {
             return true;
         }
 

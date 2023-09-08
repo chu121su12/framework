@@ -332,6 +332,9 @@ class ModelSerializationTest extends TestCase
         }
     }
 
+    /**
+     * @requires PHP 8.0
+     */
     public function test_it_respects_without_relations_attribute()
     {
         $user = User::create([
@@ -345,6 +348,9 @@ class ModelSerializationTest extends TestCase
         );
     }
 
+    /**
+     * @requires PHP 8.0
+     */
     public function test_it_respects_without_relations_attribute_applied_to_class()
     {
         $user = User::create([

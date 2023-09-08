@@ -41,10 +41,10 @@ class NotIn implements Stringable
     public function __toString()
     {
         $values = array_map(function ($value) {
-            $value = match (true) {
-                $value instanceof BackedEnum => $value->value,
-                $value instanceof UnitEnum => $value->name,
-                default => $value,
+            switch (true) {
+                case $value instanceof BackedEnum: $value = $value->value; break;
+                case $value instanceof UnitEnum: $value = $value->name; break;
+                default: $value = $value; break;
             };
 
             return '"'.str_replace('"', '""', $value).'"';

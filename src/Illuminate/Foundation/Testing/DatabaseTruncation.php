@@ -93,8 +93,8 @@ trait DatabaseTruncation
                 function ($tables) { return $tables->intersect($this->tablesToTruncate); },
                 function ($tables) { return $tables->diff($this->exceptTables($name)); }
             )
-            ->filter(fn ($table) => $connection->table($this->withoutTablePrefix($connection, $table))->exists())
-            ->each(fn ($table) => $connection->table($this->withoutTablePrefix($connection, $table))->truncate());
+            ->filter(function ($table) use ($connection) { return $connection->table($this->withoutTablePrefix($connection, $table))->exists(); })
+            ->each(function ($table) use ($connection) { return $connection->table($this->withoutTablePrefix($connection, $table))->truncate(); });
 
         $connection->setEventDispatcher($dispatcher);
     }
@@ -106,8 +106,10 @@ trait DatabaseTruncation
      * @param  string  $table
      * @return string
      */
-    protected function withoutTablePrefix(ConnectionInterface $connection, string $table)
+    protected function withoutTablePrefix(ConnectionInterface $connection, /*string */$table)
     {
+        $table = backport_type_check('string', $table);
+
         $prefix = $connection->getTablePrefix();
 
         return strpos($table, $prefix) === 0

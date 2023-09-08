@@ -657,13 +657,25 @@ class BelongsToMany extends Relation
         }
 
         try {
-            return tap($this->related->where($attributes)->first() ?? throw $e, function ($instance) use ($joining, $touch) {
+            $first = $this->related->where($attributes)->first();
+
+            if (! isset($first)) {
+                throw $e;
+            }
+
+            return tap($first, function ($instance) use ($joining, $touch) {
                 $this->getQuery()->withSavepointIfNeeded(function () use ($instance, $joining, $touch) {
                     return $this->attach($instance, $joining, $touch);
                 });
             });
         } catch (UniqueConstraintViolationException $e) {
-            return with(clone $this)->useWritePdo()->where($attributes)->first() ?? throw $e;
+            $first = with(clone $this)->useWritePdo()->where($attributes)->first();
+
+            if (! isset($first)) {
+                throw $e;
+            }
+
+            return $first;
         }
     }
 

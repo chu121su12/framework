@@ -1035,14 +1035,14 @@ class SupportHelpersTest extends TestCase
         $this->assertSame('From $_SERVER', env('foo'));
     }
 
-    public function testRequiredEnvVariableThrowsAnExceptionWhenNotFound(): void
+    public function testRequiredEnvVariableThrowsAnExceptionWhenNotFound()/*: void*/
     {
         $this->expectExceptionObject(new RuntimeException('[required-does-not-exist] has no value'));
 
         Env::getOrFail('required-does-not-exist');
     }
 
-    public function testRequiredEnvReturnsValue(): void
+    public function testRequiredEnvReturnsValue()/*: void*/
     {
         $_SERVER['required-exists'] = 'some-value';
         $this->assertSame('some-value', Env::getOrFail('required-exists'));

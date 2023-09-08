@@ -256,7 +256,13 @@ abstract class HasOneOrMany extends Relation
                 return $this->create(array_merge($attributes, $values));
             });
         } catch (UniqueConstraintViolationException $e) {
-            return $this->useWritePdo()->where($attributes)->first() ?? throw $e;
+            $first = $this->useWritePdo()->where($attributes)->first();
+
+            if (! isset($first)) {
+                throw $e;
+            }
+
+            return $first;
         }
     }
 

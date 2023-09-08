@@ -194,7 +194,7 @@ class MakesHttpRequestsTest extends TestCase
         $this->assertSame('true', $this->defaultHeaders['Precognition']);
 
         $this->app->make(Registrar::class)
-            ->get('test-route', fn () => 'ok')->middleware(HandlePrecognitiveRequests::class);
+            ->get('test-route', function () { return 'ok'; })->middleware(HandlePrecognitiveRequests::class);
         $this->get('test-route')
             ->assertStatus(204)
             ->assertHeader('Precognition', 'true')
