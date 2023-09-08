@@ -249,6 +249,7 @@ abstract class GeneratorCommand extends Command implements PromptsForMissingInpu
 
         return collect((new Finder)->files()->depth(0)->in($modelPath))
             ->map(function ($file) { return $file->getBasename('.php'); })
+            ->sort()
             ->values()
             ->all();
     }
@@ -268,6 +269,7 @@ abstract class GeneratorCommand extends Command implements PromptsForMissingInpu
 
         return collect((new Finder)->files()->depth(0)->in($eventPath))
             ->map(function ($file) { return $file->getBasename('.php'); })
+            ->sort()
             ->values()
             ->all();
     }

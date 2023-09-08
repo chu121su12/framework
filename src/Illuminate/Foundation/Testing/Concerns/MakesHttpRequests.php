@@ -335,6 +335,16 @@ trait MakesHttpRequests
     }
 
     /**
+     * Set the Precognition header to "true".
+     *
+     * @return $this
+     */
+    public function withPrecognition()
+    {
+        return $this->withHeader('Precognition', 'true');
+    }
+
+    /**
      * Visit the given URI with a GET request.
      *
      * @param  string  $uri

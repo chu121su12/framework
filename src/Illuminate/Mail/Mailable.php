@@ -1222,6 +1222,8 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertFrom($address, $name = null)
     {
+        $this->renderForAssertions();
+
         $recipient = $this->formatAssertionRecipient($address, $name);
 
         PHPUnit::assertTrue(
@@ -1241,6 +1243,8 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertTo($address, $name = null)
     {
+        $this->renderForAssertions();
+
         $recipient = $this->formatAssertionRecipient($address, $name);
 
         PHPUnit::assertTrue(
@@ -1272,6 +1276,8 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertHasCc($address, $name = null)
     {
+        $this->renderForAssertions();
+
         $recipient = $this->formatAssertionRecipient($address, $name);
 
         PHPUnit::assertTrue(
@@ -1291,6 +1297,8 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertHasBcc($address, $name = null)
     {
+        $this->renderForAssertions();
+
         $recipient = $this->formatAssertionRecipient($address, $name);
 
         PHPUnit::assertTrue(
@@ -1310,6 +1318,8 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertHasReplyTo($address, $name = null)
     {
+        $this->renderForAssertions();
+
         $replyTo = $this->formatAssertionRecipient($address, $name);
 
         PHPUnit::assertTrue(
@@ -1561,6 +1571,8 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertHasTag($tag)
     {
+        $this->renderForAssertions();
+
         PHPUnit::assertTrue(
             $this->hasTag($tag),
             "Did not see expected tag [{$tag}] in email tags."
@@ -1578,6 +1590,8 @@ class Mailable implements MailableContract, Renderable
      */
     public function assertHasMetadata($key, $value)
     {
+        $this->renderForAssertions();
+
         PHPUnit::assertTrue(
             $this->hasMetadata($key, $value),
             "Did not see expected key [{$key}] and value [{$value}] in email metadata."
