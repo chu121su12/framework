@@ -310,7 +310,7 @@ class Schedule
     {
         $mutexName = $event->mutexName();
 
-        if (! $this->mutexCache[$mutexName]) {
+        if (! isset($this->mutexCache[$mutexName])) {
             $this->mutexCache[$mutexName] = $this->schedulingMutex->create($event, $time);
         }
 

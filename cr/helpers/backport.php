@@ -618,3 +618,18 @@ if (! \function_exists('backport_getimagesize')) {
         return @getimagesize($filePath);
     }
 }
+
+if (! \function_exists('at_backport_class_parents')) {
+    function at_backport_class_parents($class)
+    {
+        try {
+            return @class_parents($class);
+        } catch (\ErrorException $e) {
+            if (preg_match('/^class_parents\(\): Class \w+(\\\w+)* does not exist and could not be loaded$/', $e->getMessage())) {
+                return false;
+            }
+
+            throw $e;
+        }
+    }
+}

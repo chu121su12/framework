@@ -2589,11 +2589,10 @@ class HttpClientTest extends TestCase
         $this->factory->post('http://laravel.com');
 
         $this->assertSame(['Laravel Framework/1.0'], $requests[0]->header('User-Agent'));
-        $this->assertContains($requests[1]->header('User-Agent')[0], [
-            'GuzzleHttp/6.5.5 curl/7.59.0 PHP/5.6.40',
-            'GuzzleHttp/6.5.5 curl/7.81.0 PHP/5.6.40-66+ubuntu22.04.1+deb.sury.org+1',
+        $this->assertTrue(Str::contains($requests[1]->header('User-Agent')[0], [
+            'GuzzleHttp/6.5.5 curl/',
             'GuzzleHttp/7',
-        ]);
+        ]));
     }
 
     public function testItCanAddResponseMiddleware()

@@ -106,7 +106,7 @@ class SortedMiddleware extends Collection
             }
         }
 
-        $parents = @class_parents($stripped);
+        $parents = at_backport_class_parents($stripped);
 
         if ($parents !== false) {
             foreach ($parents as $parent) {
