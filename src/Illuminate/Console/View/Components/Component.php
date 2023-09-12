@@ -35,8 +35,8 @@ abstract class Component
      */
     public function __construct($output)
     {
-        // $this->output = BackportOutputWrapper::wrap($output);
-        $this->output = $output;
+        $this->output = BackportOutputWrapper::wrap($output);
+        // $this->output = $output;
     }
 
     /**
