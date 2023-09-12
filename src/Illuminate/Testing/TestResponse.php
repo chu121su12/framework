@@ -840,7 +840,7 @@ class TestResponse implements ArrayAccess
 
         $errorMessage = $jsonErrors
                 ? 'Response has the following JSON validation errors:'.
-                        PHP_EOL.PHP_EOL.json_encode($jsonErrors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL
+                        PHP_EOL.PHP_EOL.backport_json_encode($jsonErrors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL
                 : 'Response does not have JSON validation errors.';
 
         foreach ($errors as $key => $value) {
@@ -888,7 +888,7 @@ class TestResponse implements ArrayAccess
 
         $errorMessage = $jsonErrors
             ? 'Response has the following JSON validation errors:'.
-            PHP_EOL.PHP_EOL.json_encode($jsonErrors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL
+            PHP_EOL.PHP_EOL.backport_json_encode($jsonErrors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL
             : 'Response does not have JSON validation errors.';
 
         PHPUnit::assertArrayHasKey(
@@ -928,7 +928,7 @@ class TestResponse implements ArrayAccess
         if (is_null($keys) && count($errors) > 0) {
             PHPUnit::fail(
                 'Response has unexpected validation errors: '.PHP_EOL.PHP_EOL.
-                json_encode($errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+                backport_json_encode($errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
             );
         }
 
@@ -952,7 +952,7 @@ class TestResponse implements ArrayAccess
     {
         $data = $this->json($key);
 
-        $encodedData = json_encode($data);
+        $encodedData = backport_json_encode($data);
 
         PHPUnit::assertTrue(
             is_array($data)
@@ -973,7 +973,7 @@ class TestResponse implements ArrayAccess
     {
         $data = $this->json($key);
 
-        $encodedData = json_encode($data);
+        $encodedData = backport_json_encode($data);
 
         PHPUnit::assertTrue(
             is_array($data)
@@ -1180,7 +1180,7 @@ class TestResponse implements ArrayAccess
         if (is_null($keys) && count($errors) > 0) {
             PHPUnit::fail(
                 'Response has unexpected validation errors: '.PHP_EOL.PHP_EOL.
-                json_encode($errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+                backport_json_encode($errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
             );
         }
 
@@ -1216,7 +1216,7 @@ class TestResponse implements ArrayAccess
 
         $errorMessage = $sessionErrors
                 ? 'Response has the following validation errors in the session:'.
-                        PHP_EOL.PHP_EOL.json_encode($sessionErrors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL
+                        PHP_EOL.PHP_EOL.backport_json_encode($sessionErrors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL
                 : 'Response does not have validation errors in the session.';
 
         foreach (Arr::wrap($errors) as $key => $value) {
@@ -1672,7 +1672,7 @@ EOF;
     protected function appendErrorsToException($errors, $exception, $json = false)
     {
         $errors = $json
-            ? json_encode($errors, JSON_PRETTY_PRINT)
+            ? backport_json_encode($errors, JSON_PRETTY_PRINT)
             : implode(PHP_EOL, Arr::flatten($errors));
 
         // JSON error messages may already contain the errors, so we shouldn't duplicate them...

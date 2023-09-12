@@ -147,10 +147,10 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
             try {
             $table->insert($chunked->map(function ($entry) {
                 if (version_compare(PHP_VERSION, '7.2', '<')) {
-                    $entry->content = json_encode($entry->content);
+                    $entry->content = backport_json_encode($entry->content);
                 } else {
 
-                $entry->content = json_encode($entry->content, JSON_INVALID_UTF8_SUBSTITUTE);
+                $entry->content = backport_json_encode($entry->content, JSON_INVALID_UTF8_SUBSTITUTE);
 
                 }
 
@@ -189,7 +189,7 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
 
                 return array_merge($exception->toArray(), [
                     'family_hash' => $exception->familyHash(),
-                    'content' => json_encode(array_merge(
+                    'content' => backport_json_encode(array_merge(
                         $exception->content, ['occurrences' => $occurrences + 1]
                     )),
                 ]);
@@ -258,7 +258,7 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
                 continue;
             }
 
-            $content = json_encode(array_merge(
+            $content = backport_json_encode(array_merge(
                 backport_json_decode(isset($entry->content) ? $entry->content : (isset($entry['content']) ? $entry['content'] : []), true) ?: [], $update->changes
             ));
 

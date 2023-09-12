@@ -104,7 +104,7 @@ class Cursor implements Arrayable
      */
     public function encode()
     {
-        return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(json_encode($this->toArray())));
+        return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(backport_json_encode($this->toArray())));
     }
 
     /**

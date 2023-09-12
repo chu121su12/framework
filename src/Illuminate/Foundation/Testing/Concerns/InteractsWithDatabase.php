@@ -234,7 +234,7 @@ trait InteractsWithDatabase
         if ($value instanceof Jsonable) {
             $value = $value->toJson();
         } elseif (is_array($value) || is_object($value)) {
-            $value = json_encode($value);
+            $value = backport_json_encode($value);
         }
 
         $value = DB::connection()->getPdo()->quote($value);

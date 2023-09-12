@@ -207,7 +207,7 @@ class Client
                 break;
         }
 
-        $body = json_decode(curl_exec($curlHandle), true);
+        $body = backport_json_decode(curl_exec($curlHandle), true);
         $headers = curl_getinfo($curlHandle);
         $error = curl_error($curlHandle);
 
@@ -216,7 +216,7 @@ class Client
 
     protected function attachRequestPayload(&$curlHandle, array $data)
     {
-        $encoded = json_encode($data);
+        $encoded = backport_json_encode($data);
 
         $this->lastRequest['body'] = $encoded;
         curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $encoded);

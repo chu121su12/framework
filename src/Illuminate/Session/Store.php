@@ -170,7 +170,7 @@ class Store implements Session
         $this->prepareErrorBagForSerialization();
 
         $this->handler->write($this->getId(), $this->prepareForStorage(
-            $this->serialization === 'json' ? json_encode($this->attributes) : backport_serialize($this->attributes)
+            $this->serialization === 'json' ? backport_json_encode($this->attributes) : backport_serialize($this->attributes)
         ));
 
         $this->started = false;

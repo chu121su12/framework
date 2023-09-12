@@ -182,7 +182,7 @@ class SqlServerGrammar extends Grammar
      */
     public function prepareBindingForJsonContains($binding)
     {
-        return is_bool($binding) ? json_encode($binding) : $binding;
+        return is_bool($binding) ? backport_json_encode($binding) : $binding;
     }
 
     /**

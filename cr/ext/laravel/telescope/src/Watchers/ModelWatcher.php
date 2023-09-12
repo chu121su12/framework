@@ -87,7 +87,7 @@ class ModelWatcher extends Watcher
             $entry = $this->hydrationEntries[$modelClass];
 
             if (is_string($this->hydrationEntries[$modelClass]->content)) {
-                $entry->content = json_decode($entry->content, true);
+                $entry->content = backport_json_decode($entry->content, true);
             }
 
             $entry->content['count']++;

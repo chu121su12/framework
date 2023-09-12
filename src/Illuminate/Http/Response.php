@@ -106,10 +106,10 @@ class Response extends SymfonyResponse
         if ($content instanceof Jsonable) {
             return $content->toJson();
         } elseif ($content instanceof Arrayable) {
-            return json_encode($content->toArray());
+            return backport_json_encode($content->toArray());
         }
 
-        return json_encode($content);
+        return backport_json_encode($content);
     }
 
     protected function patchShouldBeJson($content)

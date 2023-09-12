@@ -168,6 +168,6 @@ class CursorPaginator extends AbstractCursorPaginator implements Arrayable, Arra
      */
     public function toJson($options = 0)
     {
-        return json_encode($this->jsonSerialize(), $options);
+        return backport_json_encode($this->jsonSerialize(), $options);
     }
 }

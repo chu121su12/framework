@@ -152,7 +152,7 @@ class RetryCommand extends Command
             $payload['attempts'] = 0;
         }
 
-        return json_encode($payload);
+        return backport_json_encode($payload);
     }
 
     /**
@@ -168,7 +168,7 @@ class RetryCommand extends Command
         $payload = backport_json_decode($payload, true);
 
         if (! isset($payload['data']['command'])) {
-            return json_encode($payload);
+            return backport_json_encode($payload);
         }
 
         if (str_starts_with($payload['data']['command'], 'O:')) {
@@ -189,6 +189,6 @@ class RetryCommand extends Command
                                         : $retryUntil;
         }
 
-        return json_encode($payload);
+        return backport_json_encode($payload);
     }
 }

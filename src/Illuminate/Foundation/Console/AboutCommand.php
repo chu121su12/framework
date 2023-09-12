@@ -155,7 +155,7 @@ class AboutCommand extends Command
             ];
         });
 
-        $this->output->writeln(strip_tags(json_encode($output)));
+        $this->output->writeln(strip_tags(backport_json_encode($output)));
     }
 
     /**

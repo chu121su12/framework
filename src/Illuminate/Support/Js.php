@@ -45,7 +45,7 @@ class Js implements Htmlable, BaseStringable
         }
 
         $jsonErrorMsg = json_last_error_msg();
-        json_encode(''); // reset error
+        backport_json_encode(''); // reset error
         throw new \JsonException($jsonErrorMsg);
     }
 

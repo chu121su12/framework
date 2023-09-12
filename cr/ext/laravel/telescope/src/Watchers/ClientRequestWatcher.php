@@ -205,7 +205,7 @@ class ClientRequestWatcher extends Watcher
                     'size' => $filesize ? ($filesize / 1000).'KB' : null,
                     'headers' => isset($data['headers']) ? $data['headers'] : [],
                 ];
-            } elseif (json_encode($data['contents']) === false) {
+            } elseif (backport_json_encode($data['contents']) === false) {
                 $value = [
                     'name' => isset($data['filename']) ? $data['filename'] : null,
                     'size' => (strlen($data['contents']) / 1000).'KB',

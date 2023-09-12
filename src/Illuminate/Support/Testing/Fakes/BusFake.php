@@ -802,7 +802,7 @@ class BusFake implements Fake, QueueingDispatcher
      */
     protected function serializeAndRestoreCommand($command)
     {
-        return unserialize(serialize($command));
+        return backport_unserialize(backport_serialize($command));
     }
 
     /**

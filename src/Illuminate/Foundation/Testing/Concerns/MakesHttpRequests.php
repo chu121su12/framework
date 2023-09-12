@@ -553,7 +553,7 @@ trait MakesHttpRequests
     {
         $files = $this->extractFilesFromDataArray($data);
 
-        $content = json_encode($data, $options);
+        $content = backport_json_encode($data, $options);
 
         $headers = array_merge([
             'CONTENT_LENGTH' => mb_strlen($content, '8bit'),

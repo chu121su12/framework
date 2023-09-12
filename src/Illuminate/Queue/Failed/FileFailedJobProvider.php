@@ -201,7 +201,7 @@ class FileFailedJobProvider implements CountableFailedJobProvider, FailedJobProv
     {
         file_put_contents(
             $this->path,
-            json_encode($jobs, JSON_PRETTY_PRINT)
+            backport_json_encode($jobs, JSON_PRETTY_PRINT)
         );
     }
 

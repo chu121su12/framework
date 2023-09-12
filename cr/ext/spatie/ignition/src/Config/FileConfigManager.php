@@ -91,7 +91,7 @@ class FileConfigManager implements ConfigManager
         }
 
         $content = (string)file_get_contents($this->file);
-        $contentDecoded = json_decode($content, true);
+        $contentDecoded = backport_json_decode($content, true);
         $settings = isset($contentDecoded) ? $contentDecoded : [];
 
         return $settings;
@@ -140,7 +140,7 @@ class FileConfigManager implements ConfigManager
     protected function saveToFile(array $options)/*: bool*/
     {
         try {
-            $content = json_encode($options, JSON_THROW_ON_ERROR);
+            $content = backport_json_encode($options, JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
         } catch (\Error $e) {
         } catch (Throwable $e) {

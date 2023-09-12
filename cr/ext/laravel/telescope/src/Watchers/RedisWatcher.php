@@ -61,7 +61,7 @@ class RedisWatcher extends Watcher
             if (is_array($parameter)) {
                 return collect($parameter)->map(function ($value, $key) {
                     if (is_array($value)) {
-                        return json_encode($value);
+                        return backport_json_encode($value);
                     }
 
                     return is_int($key) ? $value : "{$key} {$value}";

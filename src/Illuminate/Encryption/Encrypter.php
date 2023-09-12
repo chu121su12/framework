@@ -126,7 +126,7 @@ class Encrypter implements EncrypterContract, StringEncrypter
             ? '' // For AEAD-algorithms, the tag / MAC is returned by openssl_encrypt...
             : $this->hash($iv, $value);
 
-        $json = json_encode(compact('iv', 'value', 'mac', 'tag'), JSON_UNESCAPED_SLASHES);
+        $json = backport_json_encode(compact('iv', 'value', 'mac', 'tag'), JSON_UNESCAPED_SLASHES);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new EncryptException('Could not encrypt the data.');

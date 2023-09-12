@@ -84,7 +84,7 @@ class Signed implements Serializable
         }
 
         /** @var \Laravel\SerializableClosure\Contracts\Serializable $serializable */
-        $serializable = unserialize($signature['serializable']);
+        $serializable = backport_unserialize($signature['serializable']);
 
         $this->closure = $serializable->getClosure();
     }

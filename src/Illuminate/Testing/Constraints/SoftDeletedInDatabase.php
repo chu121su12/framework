@@ -98,7 +98,7 @@ class SoftDeletedInDatabase extends Constraint
             return 'The table is empty';
         }
 
-        $description = 'Found: '.json_encode($results, JSON_PRETTY_PRINT);
+        $description = 'Found: '.backport_json_encode($results, JSON_PRETTY_PRINT);
 
         if ($query->count() > $this->show) {
             $description .= sprintf(' and %s others', $query->count() - $this->show);
@@ -114,6 +114,6 @@ class SoftDeletedInDatabase extends Constraint
      */
     public function toString()/*: string*/
     {
-        return json_encode($this->data);
+        return backport_json_encode($this->data);
     }
 }

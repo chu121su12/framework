@@ -102,7 +102,7 @@ class JobRecorder
         }
 
         try {
-            return json_decode($this->job->getReservedJob(), true, 512, JSON_THROW_ON_ERROR);
+            return backport_json_decode($this->job->getReservedJob(), true, 512, JSON_THROW_ON_ERROR);
         } catch (Exception $e) {
             return $this->job->payload();
         }

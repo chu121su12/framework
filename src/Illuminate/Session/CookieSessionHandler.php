@@ -102,7 +102,7 @@ class CookieSessionHandler implements SessionHandlerInterface
     #[\ReturnTypeWillChange]
     public function write($sessionId, $data)/*: bool*/
     {
-        $this->cookie->queue($sessionId, json_encode([
+        $this->cookie->queue($sessionId, backport_json_encode([
             'data' => $data,
             'expires' => $this->availableAt($this->minutes * 60),
         ]), $this->expireOnClose ? 0 : $this->minutes);

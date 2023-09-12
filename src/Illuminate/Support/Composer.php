@@ -48,7 +48,7 @@ class Composer
      */
     protected function hasPackage($package)
     {
-        $composer = json_decode(file_get_contents($this->findComposerFile()), true);
+        $composer = backport_json_decode(file_get_contents($this->findComposerFile()), true);
 
         return array_key_exists($package, isset($composer['require']) ? $composer['require'] : [])
             || array_key_exists($package, isset($composer['require-dev']) ? $composer['require-dev'] : []);
@@ -132,7 +132,7 @@ class Composer
 
         file_put_contents(
             $composerFile,
-            json_encode(
+            backport_json_encode(
                 call_user_func($callback, $composer),
                 JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
             )

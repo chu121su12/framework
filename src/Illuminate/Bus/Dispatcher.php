@@ -112,7 +112,7 @@ class Dispatcher implements QueueingDispatcher
         if (in_array(InteractsWithQueue::class, $uses) &&
             in_array(Queueable::class, $uses) &&
             ! $command->job) {
-            $command->setJob(new SyncJob($this->container, json_encode([]), 'sync', 'sync'));
+            $command->setJob(new SyncJob($this->container, backport_json_encode([]), 'sync', 'sync'));
         }
 
         if ($handler || $handler = $this->getCommandHandler($command)) {

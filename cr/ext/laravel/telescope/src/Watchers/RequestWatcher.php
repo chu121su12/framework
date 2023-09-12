@@ -240,10 +240,10 @@ class RequestWatcher extends Watcher
             } elseif (is_object($value)) {
                 return [
                     'class' => get_class($value),
-                    'properties' => backport_json_decode(json_encode($value), true),
+                    'properties' => backport_json_decode(backport_json_encode($value), true),
                 ];
             } else {
-                return backport_json_decode(json_encode($value), true);
+                return backport_json_decode(backport_json_encode($value), true);
             }
         })->toArray();
     }

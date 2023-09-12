@@ -533,7 +533,7 @@ class QueueFake extends QueueManager implements Fake, Queue
      */
     protected function serializeAndRestoreJob($job)
     {
-        return unserialize(serialize($job));
+        return backport_unserialize(backport_serialize($job));
     }
 
     /**

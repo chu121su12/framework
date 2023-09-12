@@ -511,7 +511,7 @@ class PostgresGrammar extends Grammar
     {
         $values = collect($values)->map(function ($value, $column) {
             return is_array($value) || ($this->isJsonSelector($column) && ! $this->isExpression($value))
-                ? json_encode($value)
+                ? backport_json_encode($value)
                 : $value;
         })->all();
 
@@ -553,7 +553,7 @@ class PostgresGrammar extends Grammar
     {
         $values = collect($values)->map(function ($value, $column) {
             return is_array($value) || ($this->isJsonSelector($column) && ! $this->isExpression($value))
-                ? json_encode($value)
+                ? backport_json_encode($value)
                 : $value;
         })->all();
 

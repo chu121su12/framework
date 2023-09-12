@@ -139,7 +139,7 @@ class Factory
     public static function response($body = null, $status = 200, $headers = [])
     {
         if (is_array($body)) {
-            $body = json_encode($body);
+            $body = backport_json_encode($body);
 
             $headers['Content-Type'] = 'application/json';
         }

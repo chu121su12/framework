@@ -720,7 +720,7 @@ HTML;
                 throw new ViteManifestNotFoundException("Vite manifest not found at: $path");
             }
 
-            static::$manifests[$path] = json_decode(file_get_contents($path), true);
+            static::$manifests[$path] = backport_json_decode(file_get_contents($path), true);
         }
 
         return static::$manifests[$path];

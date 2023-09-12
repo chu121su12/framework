@@ -92,7 +92,7 @@ class AblyBroadcaster extends Broadcaster
 
         return [
             'auth' => $this->getPublicToken().':'.$signature,
-            'channel_data' => json_encode($userData),
+            'channel_data' => backport_json_encode($userData),
         ];
     }
 
@@ -108,7 +108,7 @@ class AblyBroadcaster extends Broadcaster
     {
         return hash_hmac(
             'sha256',
-            sprintf('%s:%s%s', $socketId, $channelName, $userData ? ':'.json_encode($userData) : ''),
+            sprintf('%s:%s%s', $socketId, $channelName, $userData ? ':'.backport_json_encode($userData) : ''),
             $this->getPrivateToken()
         );
     }

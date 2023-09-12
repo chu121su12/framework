@@ -128,7 +128,7 @@ class ShowCommand extends DatabaseInspectionCommand
      */
     protected function displayJson(array $data)
     {
-        $this->output->writeln(json_encode($data));
+        $this->output->writeln(backport_json_encode($data));
     }
 
     /**

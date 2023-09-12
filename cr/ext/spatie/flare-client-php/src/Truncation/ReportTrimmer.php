@@ -38,7 +38,7 @@ class ReportTrimmer
      */
     public function needsToBeTrimmed(array $payload)/*: bool*/
     {
-        return strlen((string)json_encode($payload)) > self::getMaxPayloadSize();
+        return strlen((string)backport_json_encode($payload)) > self::getMaxPayloadSize();
     }
 
     public static function getMaxPayloadSize()/*: int*/

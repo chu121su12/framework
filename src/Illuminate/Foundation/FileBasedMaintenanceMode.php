@@ -16,7 +16,7 @@ class FileBasedMaintenanceMode implements MaintenanceModeContract
     {
         file_put_contents(
             $this->path(),
-            json_encode($payload, JSON_PRETTY_PRINT)
+            backport_json_encode($payload, JSON_PRETTY_PRINT)
         );
     }
 

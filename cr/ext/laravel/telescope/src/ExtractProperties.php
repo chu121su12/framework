@@ -31,11 +31,11 @@ class ExtractProperties
                     return [
                         $property->getName() => [
                             'class' => get_class($value),
-                            'properties' => backport_json_decode(json_encode($value), true),
+                            'properties' => backport_json_decode(backport_json_encode($value), true),
                         ],
                     ];
                 } else {
-                    return [$property->getName() => backport_json_decode(json_encode($value), true)];
+                    return [$property->getName() => backport_json_decode(backport_json_encode($value), true)];
                 }
             })->toArray();
     }

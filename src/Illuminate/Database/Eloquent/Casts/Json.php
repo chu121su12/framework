@@ -25,7 +25,7 @@ class Json
     {
         $value = backport_type_check('mixed', $value);
 
-        return isset(static::$encoder) ? call_user_func(static::$encoder, $value) : json_encode($value);
+        return isset(static::$encoder) ? call_user_func(static::$encoder, $value) : backport_json_encode($value);
     }
 
     /**

@@ -84,7 +84,7 @@ class RedisBroadcaster extends Broadcaster
     public function validAuthenticationResponse($request, $result)
     {
         if (is_bool($result)) {
-            return json_encode($result);
+            return backport_json_encode($result);
         }
 
         $channelName = $this->normalizeChannelName($request->channel_name);
@@ -95,7 +95,7 @@ class RedisBroadcaster extends Broadcaster
                         ? $user->getAuthIdentifierForBroadcasting()
                         : $user->getAuthIdentifier();
 
-        return json_encode(['channel_data' => [
+        return backport_json_encode(['channel_data' => [
             'user_id' => $broadcastIdentifier,
             'user_info' => $result,
         ]]);
@@ -119,7 +119,7 @@ class RedisBroadcaster extends Broadcaster
 
         $connection = $this->redis->connection($this->connection);
 
-        $payload = json_encode([
+        $payload = backport_json_encode([
             'event' => $event,
             'data' => $payload,
             'socket' => Arr::pull($payload, 'socket'),

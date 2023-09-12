@@ -1340,7 +1340,7 @@ class Mailable implements MailableContract, Renderable
     private function formatAssertionRecipient($address, $name = null)
     {
         if (! is_string($address)) {
-            $address = json_encode($address);
+            $address = backport_json_encode($address);
         }
 
         if (filled($name)) {

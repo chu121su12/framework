@@ -172,6 +172,6 @@ class Paginator extends AbstractPaginator implements Arrayable, ArrayAccess, Cou
      */
     public function toJson($options = 0)
     {
-        return json_encode($this->jsonSerialize(), $options);
+        return backport_json_encode($this->jsonSerialize(), $options);
     }
 }

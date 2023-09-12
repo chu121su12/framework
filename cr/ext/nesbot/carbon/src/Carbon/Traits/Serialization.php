@@ -244,7 +244,7 @@ trait Serialization
                 $date = $data['dumpDateProperties']['date'];
                 $timezone = $data['dumpDateProperties']['timezone'];
 
-                $this->__construct($date, unserialize($timezone));
+                $this->__construct($date, backport_unserialize($timezone));
             } catch (\Exception $ignoredException) {
                 throw $exception;
             } catch (\Error $ignoredException) {

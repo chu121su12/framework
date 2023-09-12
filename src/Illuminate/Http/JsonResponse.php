@@ -79,7 +79,7 @@ class JsonResponse extends BaseJsonResponse
         $this->original = $data;
 
         // Ensure json_last_error() is cleared...
-        json_decode('[]');
+        backport_json_decode('[]');
 
         if ($data instanceof Jsonable) {
             $this->data = $data->toJson($this->encodingOptions);

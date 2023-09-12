@@ -118,7 +118,7 @@ class ErrorPageViewModel
 
         $jsonOptions = JSON_PARTIAL_OUTPUT_ON_ERROR | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
 
-        return (string) json_encode($data, $jsonOptions);
+        return (string) backport_json_encode($data, $jsonOptions);
     }
 
     public function getAssetContents(/*string */$asset)/*: string*/
