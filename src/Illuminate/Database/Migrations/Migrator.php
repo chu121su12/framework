@@ -20,6 +20,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use ReflectionClass;
+use Symfony\Component\Console\Output\BackportOutputWrapper;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Migrator
@@ -749,7 +750,7 @@ class Migrator
      */
     public function setOutput(OutputInterface $output)
     {
-        $this->output = $output;
+        $this->output = BackportOutputWrapper::wrap($output);
 
         return $this;
     }
