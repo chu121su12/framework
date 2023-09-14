@@ -461,6 +461,10 @@ class Str
             return false;
         }
 
+        if (function_exists('json_validate')) {
+            return json_validate($value, 512);
+        }
+
         try {
             backport_json_decode($value, true, 512, 0, true);
         } catch (JsonException $e) {
