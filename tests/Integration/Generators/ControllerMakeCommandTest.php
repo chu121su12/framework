@@ -106,8 +106,8 @@ class ControllerMakeCommandTest extends TestCase
             'class FooController extends Controller',
             'public function index()',
             'public function store(Request $request)',
-            'public function update(Request $request, string $id)',
-            'public function destroy(string $id)',
+            'public function update(Request $request, /*string */$id)',
+            'public function destroy(/*string */$id)',
         ], 'app/Http/Controllers/FooController.php');
 
         $this->assertFileNotContains([

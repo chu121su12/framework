@@ -18,7 +18,7 @@ namespace Symfony\Polyfill\Php83;
  */
 final class Php83
 {
-    private const JSON_MAX_DEPTH = 0x7FFFFFFF; // see https://www.php.net/manual/en/function.json-decode.php
+    /*private */const JSON_MAX_DEPTH = 0x7FFFFFFF; // see https://www.php.net/manual/en/function.json-decode.php
 
     public static function json_validate(/*string */$json, /*int */$depth = 512, /*int */$flags = 0)/*: bool*/
     {

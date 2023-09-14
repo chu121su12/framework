@@ -255,6 +255,9 @@ class Mailer implements MailerContract, MailQueueContract
 
         $data['message'] = $this->createMessage();
 
+        return $this->renderView($view ?: $plain, $data);
+
+        // TODO: fix error
         return $this->replaceEmbeddedAttachments(
             $this->renderView($view ?: $plain, $data),
             $data['message']->getSymfonyMessage()->getAttachments()
@@ -268,8 +271,10 @@ class Mailer implements MailerContract, MailQueueContract
      * @param  array  $attachments
      * @return string
      */
-    protected function replaceEmbeddedAttachments(string $renderedView, array $attachments)
+    protected function replaceEmbeddedAttachments(/*string */$renderedView, array $attachments)
     {
+        $renderedView = backport_type_check('string', $renderedView);
+
         if (preg_match_all('/<img.+?src=[\'"]cid:([^\'"]+)[\'"].*?>/i', $renderedView, $matches)) {
             foreach (array_unique($matches[1]) as $image) {
                 foreach ($attachments as $attachment) {

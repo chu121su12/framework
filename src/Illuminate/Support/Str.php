@@ -467,7 +467,7 @@ class Str
 
         try {
             backport_json_decode($value, true, 512, 0, true);
-        } catch (JsonException $e) {
+        } catch (JsonException $_e) {
             return false;
         }
 

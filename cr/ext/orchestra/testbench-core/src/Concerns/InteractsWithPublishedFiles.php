@@ -135,7 +135,7 @@ trait InteractsWithPublishedFiles
     /**
      * Assert filename not exists.
      */
-    protected function assertFilenameNotExists(string $file)/*: void*/
+    protected function assertFilenameNotExists(/*string */$file)/*: void*/
     {
         $file = backport_type_check('string', $file);
 
@@ -160,7 +160,7 @@ trait InteractsWithPublishedFiles
     /**
      * Removes generated migration files.
      */
-    protected function getMigrationFile(string $filename)/*: string*/
+    protected function getMigrationFile(/*string */$filename)/*: string*/
     {
         $filename = backport_type_check('string', $filename);
 

@@ -178,11 +178,13 @@ class HttpClientTest extends TestCase
         $this->assertFalse($response->found());
     }
 
-    public function testNotModifiedRequest(): void
+    public function testNotModifiedRequest()/*: void*/
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'vapor.laravel.com' => $this->factory::response('', HttpResponse::HTTP_NOT_MODIFIED),
-            'forge.laravel.com' => $this->factory::response('', HttpResponse::HTTP_OK),
+            'vapor.laravel.com' => $factory::response('', HttpResponse::HTTP_NOT_MODIFIED),
+            'forge.laravel.com' => $factory::response('', HttpResponse::HTTP_OK),
         ]);
 
         $response = $this->factory->post('https://vapor.laravel.com');
@@ -2627,10 +2629,12 @@ class HttpClientTest extends TestCase
         $this->assertSame('', $responses[1]->header('X-Foo'));
     }
 
-    public function testItReturnsResponse(): void
+    public function testItReturnsResponse()/*: void*/
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            '*' => $this->factory::response('expected content'),
+            '*' => $factory::response('expected content'),
         ]);
 
         $response = $this->factory->get('http://laravel.com');
@@ -2639,7 +2643,7 @@ class HttpClientTest extends TestCase
         $this->assertSame('expected content', $response->body());
     }
 
-    public function testItCanReturnCustomResponseClass(): void
+    public function testItCanReturnCustomResponseClass()/*: void*/
     {
         $factory = new CustomFactory;
 
@@ -2670,17 +2674,19 @@ class HttpClientTest extends TestCase
     }
 }
 
-class CustomFactory extends Factory
-{
-    protected function newPendingRequest()
-    {
-        return new class extends PendingRequest
+class CustomFactory_newPendingRequest_class extends PendingRequest
         {
             protected function newResponse($response)
             {
                 return new TestResponse($response);
             }
-        };
+        }
+
+class CustomFactory extends Factory
+{
+    protected function newPendingRequest()
+    {
+        return new CustomFactory_newPendingRequest_class;
     }
 }
 

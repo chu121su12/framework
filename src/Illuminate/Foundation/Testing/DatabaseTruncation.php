@@ -166,7 +166,7 @@ trait DatabaseTruncation
      *
      * @return void
      */
-    protected function beforeTruncatingDatabase(): void
+    protected function beforeTruncatingDatabase()/*: void*/
     {
         //
     }
@@ -176,7 +176,7 @@ trait DatabaseTruncation
      *
      * @return void
      */
-    protected function afterTruncatingDatabase(): void
+    protected function afterTruncatingDatabase()/*: void*/
     {
         //
     }

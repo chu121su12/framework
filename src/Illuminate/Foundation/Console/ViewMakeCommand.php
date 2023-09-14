@@ -51,7 +51,7 @@ class ViewMakeCommand extends GeneratorCommand
         return str_replace(
             '{{ quote }}',
             Inspiring::quotes()->random(),
-            $contents,
+            $contents
         );
     }
 
@@ -64,7 +64,7 @@ class ViewMakeCommand extends GeneratorCommand
     protected function getPath($name)
     {
         return $this->viewPath(
-            $this->getNameInput().'.'.$this->option('extension'),
+            $this->getNameInput().'.'.$this->option('extension')
         );
     }
 
@@ -90,7 +90,7 @@ class ViewMakeCommand extends GeneratorCommand
     protected function getStub()
     {
         return $this->resolveStubPath(
-            '/stubs/view.stub',
+            '/stubs/view.stub'
         );
     }
 
@@ -128,7 +128,7 @@ class ViewMakeCommand extends GeneratorCommand
      *
      * @param  string  $path
      */
-    protected function handleTestCreation($path): bool
+    protected function handleTestCreation($path)/*: bool*/
     {
         if (! $this->option('test') && ! $this->option('pest')) {
             return false;
@@ -137,7 +137,7 @@ class ViewMakeCommand extends GeneratorCommand
         $contents = preg_replace(
             ['/\{{ namespace \}}/', '/\{{ class \}}/', '/\{{ name \}}/'],
             [$this->testNamespace(), $this->testClassName(), $this->testViewName()],
-            File::get($this->getTestStub()),
+            File::get($this->getTestStub())
         );
 
         File::ensureDirectoryExists(dirname($this->getTestPath()), 0755, true);
@@ -183,12 +183,12 @@ class ViewMakeCommand extends GeneratorCommand
             Str::of($name)
                 ->replace('/', ' ')
                 ->explode(' ')
-                ->map(fn ($part) => Str::of($part)->ucfirst())
+                ->map(function ($part) { return Str::of($part)->ucfirst(); })
                 ->implode('\\')
         )
             ->replace(['-', '_'], ' ')
             ->explode(' ')
-            ->map(fn ($part) => Str::of($part)->ucfirst())
+            ->map(function ($part) { return Str::of($part)->ucfirst(); })
             ->implode('');
 
         return 'Tests\\Feature\\View\\'.$namespacedName;

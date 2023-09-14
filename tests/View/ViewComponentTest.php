@@ -7,22 +7,7 @@ use Illuminate\View\ComponentAttributeBag;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 
-class ViewComponentTest extends TestCase
-{
-    public function testDataExposure()
-    {
-        $component = new TestViewComponent;
-
-        $variables = $component->data();
-
-        $this->assertEquals(10, $variables['votes']);
-        $this->assertSame('world', $variables['hello']());
-        $this->assertSame('taylor', $variables['hello']('taylor'));
-    }
-
-    public function testIgnoredMethodsAreNotExposedToViewData()
-    {
-        $component = new class extends Component
+class ViewComponentTest_testIgnoredMethodsAreNotExposedToViewData_class extends Component
         {
             protected $except = ['goodbye'];
 
@@ -40,7 +25,24 @@ class ViewComponentTest extends TestCase
             {
                 return 'goodbye';
             }
-        };
+        }
+
+class ViewComponentTest extends TestCase
+{
+    public function testDataExposure()
+    {
+        $component = new TestViewComponent;
+
+        $variables = $component->data();
+
+        $this->assertEquals(10, $variables['votes']);
+        $this->assertSame('world', $variables['hello']());
+        $this->assertSame('taylor', $variables['hello']('taylor'));
+    }
+
+    public function testIgnoredMethodsAreNotExposedToViewData()
+    {
+        $component = new ViewComponentTest_testIgnoredMethodsAreNotExposedToViewData_class;
 
         $data = $component->data();
 
