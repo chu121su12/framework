@@ -26,9 +26,10 @@ class SymfonyHelper
     ];
 
     const CONSOLE_STYLE_REPLACEMENTS = [
-        '/<fg=gray>/' => '<fg=black>',
         '/<fg=#6C7280>/' => '<fg=cyan>',
+        '/<fg=#ef8414;/' => '<fg=yellow;',
         '/<fg=bright-blue>/' => '<fg=blue>',
+        '/<fg=gray>/' => '<fg=black>',
     ];
 
     const DISPOSITION_ATTACHMENT = 'attachment';

@@ -32,16 +32,16 @@ class ConfigShowCommandTest extends TestCase
 
         $this->artisan(ConfigShowCommand::class, ['config' => 'test'])
             ->assertSuccessful()
-            ->expectsOutput('  test .......................................................  ')
-            ->expectsOutput('  string ................................................ Test  ')
-            ->expectsOutput('  int ...................................................... 1  ')
-            ->expectsOutput('  float .................................................. 1.2  ')
-            ->expectsOutput('  boolean ............................................... true  ')
-            ->expectsOutput('  null .................................................. null  ')
-            ->expectsOutput('  array ⇁ 0 .. Illuminate\Foundation\Console\ConfigShowCommand  ')
-            ->expectsOutput('  empty_array ............................................. []  ')
-            ->expectsOutput('  assoc_array ⇁ foo ...................................... bar  ')
-            ->expectsOutput('  class ............................................. stdClass  ');
+            ->expectsOutput('  test ................................................................  ')
+            ->expectsOutput('  string ................................................................ Test  ')
+            ->expectsOutput('  int ................................................................ 1  ')
+            ->expectsOutput('  float ................................................................ 1.2  ')
+            ->expectsOutput('  boolean ................................................................ true  ')
+            ->expectsOutput('  null ................................................................ null  ')
+            ->expectsOutput('  array ⇁ 0 ................................................................ Illuminate\Foundation\Console\ConfigShowCommand  ')
+            ->expectsOutput('  empty_array ................................................................ []  ')
+            ->expectsOutput('  assoc_array ⇁ foo ................................................................ bar  ')
+            ->expectsOutput('  class ................................................................ stdClass  ');
     }
 
     public function testDisplayNestedConfigItems()
@@ -54,8 +54,8 @@ class ConfigShowCommandTest extends TestCase
 
         $this->artisan(ConfigShowCommand::class, ['config' => 'test.nested'])
             ->assertSuccessful()
-            ->expectsOutput('  test.nested ................................................  ')
-            ->expectsOutput('  foo .................................................... bar  ');
+            ->expectsOutput('  test.nested ................................................................  ')
+            ->expectsOutput('  foo ................................................................ bar  ');
     }
 
     public function testDisplaySingleValue()
@@ -64,7 +64,7 @@ class ConfigShowCommandTest extends TestCase
 
         $this->artisan(ConfigShowCommand::class, ['config' => 'foo'])
             ->assertSuccessful()
-            ->expectsOutput('  foo .................................................... bar  ');
+            ->expectsOutput('  foo ................................................................ bar  ');
     }
 
     public function testDisplayErrorIfConfigDoesNotExist()

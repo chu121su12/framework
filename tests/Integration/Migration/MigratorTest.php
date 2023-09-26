@@ -34,7 +34,7 @@ class MigratorTest extends TestCase
         $this->expectTask('2015_10_04_000000_modify_people_table', 'DONE');
         $this->expectTask('2016_10_04_000000_modify_people_table', 'DONE');
 
-        $this->output->shouldReceive('writeln')->once();
+        $this->output->shouldReceive('write')->once();
 
         $this->subject->run([__DIR__.'/fixtures']);
 
@@ -72,7 +72,7 @@ class MigratorTest extends TestCase
         $this->expectTask('2015_10_04_000000_modify_people_table', 'DONE');
         $this->expectTask('2014_10_12_000000_create_people_table', 'DONE');
 
-        $this->output->shouldReceive('writeln')->once();
+        $this->output->shouldReceive('write')->once();
 
         $this->subject->rollback([__DIR__.'/fixtures']);
 
@@ -95,7 +95,7 @@ class MigratorTest extends TestCase
         $this->expectTwoColumnDetail('2016_10_04_000000_modify_people_table');
         $this->expectBulletList(['alter table "people" add column "last_name" varchar']);
 
-        $this->output->shouldReceive('writeln')->once();
+        $this->output->shouldReceive('write')->once();
 
         $this->subject->run([__DIR__.'/fixtures'], ['pretend' => true]);
 
@@ -104,14 +104,14 @@ class MigratorTest extends TestCase
 
     protected function expectInfo($message)/*: void*/
     {
-        $this->output->shouldReceive('writeln')->once()->with(m::on(
+        $this->output->shouldReceive('write')->once()->with(m::on(
             function ($argument) use ($message) { return str($argument)->contains($message); }
-        ), m::any());
+        ), m::any(), m::any());
     }
 
     protected function expectTwoColumnDetail($first, $second = null)
     {
-        $this->output->shouldReceive('writeln')->with(m::on(function ($argument) use ($first, $second) {
+        $this->output->shouldReceive('write')->with(m::on(function ($argument) use ($first, $second) {
             $result = str($argument)->contains($first);
 
             if ($result && $second) {
@@ -119,12 +119,12 @@ class MigratorTest extends TestCase
             }
 
             return $result;
-        }), m::any());
+        }), m::any(), m::any());
     }
 
     protected function expectBulletList($elements)/*: void*/
     {
-        $this->output->shouldReceive('writeln')->once()->with(m::on(function ($argument) use ($elements) {
+        $this->output->shouldReceive('write')->once()->with(m::on(function ($argument) use ($elements) {
             foreach ($elements as $element) {
                 if (! str($argument)->contains("⇂ $element")) {
                     return false;
@@ -132,14 +132,19 @@ class MigratorTest extends TestCase
             }
 
             return true;
-        }), m::any());
+        }), m::any(), m::any());
     }
 
     protected function expectTask($description, $result)/*: void*/
     {
         // Ignore dots...
         $this->output->shouldReceive('write')->with(m::on(
-            function ($argument) { return str($argument)->contains(['<fg=gray></>', '<fg=gray>.</>']); }
+            function ($argument) { return str($argument)->contains([
+                '<fg=gray></>',
+                '<fg=gray>.</>',
+                '<fg=black></>',
+                '<fg=black>.</>',
+            ]); }
         ), m::any(), m::any());
 
         // Ignore duration...
@@ -151,8 +156,8 @@ class MigratorTest extends TestCase
             function ($argument) use ($description) { return str($argument)->contains($description); }
         ), m::any(), m::any());
 
-        $this->output->shouldReceive('writeln')->once()->with(m::on(
+        $this->output->shouldReceive('write')->once()->with(m::on(
             function ($argument) use ($result) { return str($argument)->contains($result); }
-        ), m::any());
+        ), m::any(), m::any());
     }
 }
