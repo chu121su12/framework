@@ -253,7 +253,7 @@ class DocsCommand extends Command
                 ->mapWithKeys(function ($option) { 
                     return [Str::lower($option['title']) => $option['title']];
                 })
-                ->filter(function ($title) {
+                ->filter(function ($title) use ($value) {
                     return str_contains(Str::lower($title), Str::lower($value));
                 })
                 ->all(); },

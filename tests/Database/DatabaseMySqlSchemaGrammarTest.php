@@ -628,7 +628,13 @@ class DatabaseMySqlSchemaGrammarTest extends TestCase
 
         $this->assertCount(1, $statements);
         $this->assertSame('alter table `users` add `foo` varchar(100) null default CURRENT TIMESTAMP', $statements[0]);
+    }
 
+    /**
+     * @requires PHP >= 8.1
+     */
+    public function testAddingString2()
+    {
         $blueprint = new Blueprint('users');
         $blueprint->string('foo', 100)->nullable()->default(Foo::BAR);
         $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());

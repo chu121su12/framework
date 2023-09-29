@@ -65,7 +65,11 @@ trait ConfiguresPrompts
             if ($prompt->default !== []) {
                 return $this->promptUntilValid(
                     function () use ($prompt) { return $this->components->choice(
-                        $prompt->label, $prompt->options, implode(',', $prompt->default), /*$attempts = */null, /*multiple: */true
+                        $prompt->label,
+                        $prompt->options,
+                        implode(',', $prompt->default),
+                        /*$attempts = */null,
+                        /*multiple: */true
                     ); },
                     $prompt->required,
                     $prompt->validate
@@ -75,7 +79,11 @@ trait ConfiguresPrompts
             return $this->promptUntilValid(
                 function () use ($prompt) {
                     return collect($this->components->choice(
-                        $prompt->label, \array_merge(['' => 'None'], $prompt->options), 'None', /*$attempts = */null, /*multiple: */true
+                        $prompt->label,
+                        \array_merge(['' => 'None'], $prompt->options),
+                        'None',
+                        /*$attempts = */null,
+                        /*multiple: */true
                     ))
                         ->reject('')
                         ->all();

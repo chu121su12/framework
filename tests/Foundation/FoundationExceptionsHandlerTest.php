@@ -598,11 +598,24 @@ class FoundationExceptionsHandlerTest extends TestCase
     public function testItDoesNotThrottleExceptionsByDefault()
     {
         $reported = [];
-        $this->handler->reportable(function (\Throwable $e) use (&$reported) {
-            $reported[] = $e;
-
-            return false;
-        });
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $this->handler->reportable(function (\Exception $e) use (&$reported) {
+                backport_type_throwable($e);
+    
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+        else {
+            $this->handler->reportable(function (\Throwable $e) use (&$reported) {
+                backport_type_throwable($e);
+    
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
 
         for ($i = 0; $i < 100; $i++) {
             $this->handler->report(new RuntimeException("Exception {$i}"));
@@ -700,11 +713,20 @@ class FoundationExceptionsHandlerTest extends TestCase
     {
         $handler = new FoundationExceptionsHandlerTest_testItRescuesExceptionsWhileThrottlingAndReports_class($this->container);
         $reported = [];
-        $handler->reportable(function (\Throwable $e) use (&$reported) {
-            $reported[] = $e;
-
-            return false;
-        });
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $handler->reportable(function (\Exception $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+        else {
+            $handler->reportable(function (\Throwable $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
 
         $handler->report(new Exception('Something in the app went wrong.'));
 

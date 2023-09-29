@@ -20,7 +20,8 @@ class ValidationMacroTest extends TestCase
 
     public function testMacroArguments()
     {
-        Rule::macro('maxLength', function (int $length) {
+        Rule::macro('maxLength', function (/*int */$length) {
+            $length = backport_type_check('int', $length);
             return "max:{$length}";
         });
 

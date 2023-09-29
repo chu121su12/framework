@@ -17,7 +17,7 @@ class ListenerMakeCommandTest extends TestCase
         $this->assertFileContains([
             'namespace App\Listeners;',
             'class FooListener',
-            'public function handle(object $event)',
+            'public function handle(/*object */$event)',
         ], 'app/Listeners/FooListener.php');
 
         $this->assertFileNotContains([
@@ -61,7 +61,7 @@ class ListenerMakeCommandTest extends TestCase
             'use Illuminate\Contracts\Queue\ShouldQueue;',
             'use Illuminate\Queue\InteractsWithQueue;',
             'class FooListener implements ShouldQueue',
-            'public function handle(object $event)',
+            'public function handle(/*object */$event)',
         ], 'app/Listeners/FooListener.php');
     }
 

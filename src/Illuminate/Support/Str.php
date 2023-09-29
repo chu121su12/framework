@@ -899,7 +899,11 @@ class Str
      */
     public static function position($haystack, $needle, $offset = 0, $encoding = null)
     {
-        return mb_strpos($haystack, (string) $needle, $offset, $encoding);
+        if ($offset < 0 && \version_compare(\PHP_VERSION, '7.1.0', '<')) {
+            throw new \RuntimeException('mb_strpos does not accept negative offset prior to php 7.1.0');
+        }
+
+        return mb_strpos($haystack, (string) $needle, $offset, isset($encoding) ? $encoding : \mb_internal_encoding());
     }
 
     /**

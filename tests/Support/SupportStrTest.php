@@ -845,13 +845,23 @@ class SupportStrTest extends TestCase
         $this->assertSame(0, Str::position('Hello, World!', 'Hello'));
         $this->assertSame(7, Str::position('Hello, World!', 'World!'));
         $this->assertSame(10, Str::position('This is a tEsT string.', 'tEsT', 0, 'UTF-8'));
-        $this->assertSame(7, Str::position('Hello, World!', 'W', -6));
-        $this->assertSame(18, Str::position('Äpfel, Birnen und Kirschen', 'Kirschen', -10, 'UTF-8'));
+        // $this->assertSame(7, Str::position('Hello, World!', 'W', -6));
+        // $this->assertSame(18, Str::position('Äpfel, Birnen und Kirschen', 'Kirschen', -10, 'UTF-8'));
         $this->assertSame(9, Str::position('@%€/=!"][$', '$', 0, 'UTF-8'));
         $this->assertFalse(Str::position('Hello, World!', 'w', 0, 'UTF-8'));
         $this->assertFalse(Str::position('Hello, World!', 'X', 0, 'UTF-8'));
         $this->assertFalse(Str::position('', 'test'));
         $this->assertFalse(Str::position('Hello, World!', 'X'));
+    }
+
+    public function testPositionNegativeOffset()
+    {
+        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
+            $this->expectException(\RuntimeException::class);
+        }
+
+        $this->assertSame(7, Str::position('Hello, World!', 'W', -6));
+        $this->assertSame(18, Str::position('Äpfel, Birnen und Kirschen', 'Kirschen', -10, 'UTF-8'));
     }
 
     public function testSubstrReplace()

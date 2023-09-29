@@ -6,7 +6,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Stringable;
-use PHPUnit\Framework\TestCase;
+use Orchestra\Testbench\TestCase;
 
 class SupportStringableTest extends TestCase
 {
@@ -1032,13 +1032,23 @@ class SupportStringableTest extends TestCase
         $this->assertSame(0, $this->stringable('Hello, World!')->position('Hello'));
         $this->assertSame(7, $this->stringable('Hello, World!')->position('World!'));
         $this->assertSame(10, $this->stringable('This is a tEsT string.')->position('tEsT', 0, 'UTF-8'));
-        $this->assertSame(7, $this->stringable('Hello, World!')->position('W', -6));
-        $this->assertSame(18, $this->stringable('Äpfel, Birnen und Kirschen')->position('Kirschen', -10, 'UTF-8'));
+        // $this->assertSame(7, $this->stringable('Hello, World!')->position('W', -6));
+        // $this->assertSame(18, $this->stringable('Äpfel, Birnen und Kirschen')->position('Kirschen', -10, 'UTF-8'));
         $this->assertSame(9, $this->stringable('@%€/=!"][$')->position('$', 0, 'UTF-8'));
         $this->assertFalse($this->stringable('Hello, World!')->position('w', 0, 'UTF-8'));
         $this->assertFalse($this->stringable('Hello, World!')->position('X', 0, 'UTF-8'));
         $this->assertFalse($this->stringable('')->position('test'));
         $this->assertFalse($this->stringable('Hello, World!')->position('X'));
+    }
+
+    public function testPositionNegativeOffset()
+    {
+        if (\version_compare(\PHP_VERSION, '7.1.0', '<')) {
+            $this->expectException(\RuntimeException::class);
+        }
+
+        $this->assertSame(7, $this->stringable('Hello, World!')->position('W', -6));
+        $this->assertSame(18, $this->stringable('Äpfel, Birnen und Kirschen')->position('Kirschen', -10, 'UTF-8'));
     }
 
     public function testSubstrReplace()
