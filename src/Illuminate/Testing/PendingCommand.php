@@ -445,7 +445,7 @@ class PendingCommand
             $mock->shouldReceive('doWrite')
                  ->atLeast()
                  ->times(0)
-                 ->withArgs(function ($output) use($text) { return str_contains($output, $text); })
+                 ->withArgs(function ($output) use ($text) { return str_contains($output, $text); })
                  ->andReturnUsing(function () use ($text) {
                      $this->test->unexpectedOutputSubstrings[$text] = true;
                  });

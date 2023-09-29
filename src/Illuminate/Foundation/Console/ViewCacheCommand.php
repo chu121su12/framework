@@ -83,12 +83,16 @@ class ViewCacheCommand extends Command
             ->map(function ($extension) { return "*.{$extension}"; })
             ->all();
 
+        $finder = Finder::create()
+            ->in($paths)
+            ->exclude('vendor');
+
+        foreach ($extensions as $extension) {
+            $finder = $finder->name($extension);
+        }
+
         return collect(
-            Finder::create()
-                ->in($paths)
-                ->exclude('vendor')
-                ->name($extensions)
-                ->files()
+            $finder->files()
         );
     }
 

@@ -28,7 +28,7 @@ class SendingMailableNotificationsTest extends TestCase
 
     protected function setUp()/*: void*/
     {
-        $this->markTestSkipped('TODO: fix mail support');
+        $this->markTestSkipped('@TODO: fix mailer');
 
         parent::setUp();
 
