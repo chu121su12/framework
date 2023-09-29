@@ -27,10 +27,9 @@ class EloquentTransactionWithAfterCommitUsingDatabaseTransactionsTest extends Te
 
         parent::setUp();
 
-        // TODO: fix
-        // if ($this->usesSqliteInMemoryDatabaseConnection()) {
+        if ($this->usesSqliteInMemoryDatabaseConnection()) {
             $this->markTestSkipped('Test cannot be used with in-memory SQLite connection.');
-        // }
+        }
     }
 
     protected function getEnvironmentSetUp($app)
