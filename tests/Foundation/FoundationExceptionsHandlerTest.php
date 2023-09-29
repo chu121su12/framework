@@ -2,7 +2,13 @@
 
 namespace Illuminate\Tests\Foundation;
 
+use Closure;
 use Exception;
+use Illuminate\Cache\ArrayStore;
+use Illuminate\Cache\NullStore;
+use Illuminate\Cache\RateLimiter;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Cache\Repository;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
@@ -15,6 +21,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Routing\ResponseFactory;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Lottery;
 use Illuminate\Support\MessageBag;
 use Illuminate\Testing\Assert;
 use Illuminate\Validation\ValidationException;
@@ -55,6 +63,89 @@ class FoundationExceptionsHandlerTest_testItReturnsNullIfNoErrorViewExists exten
             public function getErrorView($e)
             {
                 return $this->getHttpExceptionView($e);
+            }
+        }
+
+class FoundationExceptionsHandlerTest_testItDoesNotThrottleExceptionsWhenNullReturned_class extends Handler
+        {
+            protected function throttle($e)
+            {
+                //
+            }
+        }
+
+        class FoundationExceptionsHandlerTest_testItDoesNotThrottleExceptionsWhenUnlimitedLimit_class extends Handler
+        {
+            protected function throttle($e)
+            {
+                return Limit::none();
+            }
+        }
+
+class FoundationExceptionsHandlerTest_testItCanSampleExceptionsByClass_class extends Handler
+        {
+            protected function throttle($e)
+            {
+                switch (true) {
+                    case $e instanceof RuntimeException: return Lottery::odds(2, 10);
+                    default: return parent::throttle($e);
+                }
+            }
+        }
+
+class FoundationExceptionsHandlerTest_testItRescuesExceptionsWhileThrottlingAndReports_class extends Handler
+        {
+            protected function throttle($e)
+            {
+                throw new RuntimeException('Something went wrong in the throttle method.');
+            }
+        }
+
+class FoundationExceptionsHandlerTest_testItRescuesExceptionsIfThereIsAnIssueResolvingTheRateLimiter_class extends Handler
+        {
+            protected function throttle($e)
+            {
+                return Limit::perDay(1);
+            }
+        }
+
+class FoundationExceptionsHandlerTest_testItRescuesExceptionsIfThereIsAnIssueWithTheRateLimiter_class_1 extends Handler
+        {
+            protected function throttle($e)
+            {
+                return Limit::perDay(1);
+            }
+        }
+
+class FoundationExceptionsHandlerTest_testItRescuesExceptionsIfThereIsAnIssueWithTheRateLimiter_class_2 extends RateLimiter
+        {
+            public $attempted = false;
+
+            public function attempt($key, $maxAttempts, Closure $callback, $decaySeconds = 60)
+            {
+                $this->attempted = true;
+
+                throw new Exception('Unable to connect to Redis.');
+            }
+        }
+
+class FoundationExceptionsHandlerTest_testItCanRateLimitExceptions_class_1 extends Handler
+        {
+            protected function throttle($e)
+            {
+                return Limit::perMinute(7);
+            }
+        }
+
+class FoundationExceptionsHandlerTest_testItCanRateLimitExceptions_class_2 extends RateLimiter
+        {
+            public $attempted = 0;
+
+            public function attempt($key, $maxAttempts, Closure $callback, $decaySeconds = 60)
+            {
+                $this->attempted++;
+
+                return parent::attempt(...func_get_args());
             }
         }
 
@@ -290,17 +381,17 @@ class FoundationExceptionsHandlerTest extends TestCase
             $redirector = m::mock(Redirector::class);
 
             $redirector->shouldReceive('to')->once()
-                ->andReturn($responser = m::mock(RedirectResponse::class));
+                ->andReturn($responder = m::mock(RedirectResponse::class));
 
-            $responser->shouldReceive('withInput')->once()->with(m::on(
+            $responder->shouldReceive('withInput')->once()->with(m::on(
                 function ($argument) use (&$argumentActual) {
                     $argumentActual = $argument;
 
                     return true;
-                }))->andReturn($responser);
+                }))->andReturn($responder);
 
-            $responser->shouldReceive('withErrors')->once()
-                ->andReturn($responser);
+            $responder->shouldReceive('withErrors')->once()
+                ->andReturn($responder);
 
             return $redirector;
         });
@@ -308,8 +399,8 @@ class FoundationExceptionsHandlerTest extends TestCase
         $file = m::mock(UploadedFile::class);
         $file->shouldReceive('getPathname')->andReturn('photo.jpg');
         $file->shouldReceive('getClientOriginalName')->andReturn('photo.jpg');
-        $file->shouldReceive('getClientMimeType')->andReturn(null);
-        $file->shouldReceive('getError')->andReturn(null);
+        $file->shouldReceive('getClientMimeType')->andReturn('application/octet-stream');
+        $file->shouldReceive('getError')->andReturn(\UPLOAD_ERR_NO_FILE);
 
         $request = Request::create('/', 'POST', $argumentExpected, [], ['photo' => $file]);
 
@@ -502,6 +593,229 @@ class FoundationExceptionsHandlerTest extends TestCase
         $this->handler->report($two = new RuntimeException('foo'));
 
         $this->assertSame($reported, [$one, $two]);
+    }
+
+    public function testItDoesNotThrottleExceptionsByDefault()
+    {
+        $reported = [];
+        $this->handler->reportable(function (\Throwable $e) use (&$reported) {
+            $reported[] = $e;
+
+            return false;
+        });
+
+        for ($i = 0; $i < 100; $i++) {
+            $this->handler->report(new RuntimeException("Exception {$i}"));
+        }
+
+        $this->assertCount(100, $reported);
+    }
+
+    public function testItDoesNotThrottleExceptionsWhenNullReturned()
+    {
+        $handler = new FoundationExceptionsHandlerTest_testItDoesNotThrottleExceptionsWhenNullReturned_class($this->container);
+        $reported = [];
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $handler->reportable(function (\Exception $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+        else {
+            $handler->reportable(function (\Throwable $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+
+        for ($i = 0; $i < 100; $i++) {
+            $handler->report(new RuntimeException("Exception {$i}"));
+        }
+
+        $this->assertCount(100, $reported);
+    }
+
+    public function testItDoesNotThrottleExceptionsWhenUnlimitedLimit()
+    {
+        $handler = new FoundationExceptionsHandlerTest_testItDoesNotThrottleExceptionsWhenUnlimitedLimit_class($this->container);
+        $reported = [];
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $handler->reportable(function (\Exception $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+        else {
+            $handler->reportable(function (\Throwable $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+
+        for ($i = 0; $i < 100; $i++) {
+            $handler->report(new RuntimeException("Exception {$i}"));
+        }
+
+        $this->assertCount(100, $reported);
+    }
+
+    public function testItCanSampleExceptionsByClass()
+    {
+        $handler = new FoundationExceptionsHandlerTest_testItCanSampleExceptionsByClass_class($this->container);
+        Lottery::forceResultWithSequence([
+            true, false, false, false, false,
+            true, false, false, false, false,
+        ]);
+        $reported = [];
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $handler->reportable(function (\Exception $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+        else {
+            $handler->reportable(function (\Throwable $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+
+        for ($i = 0; $i < 10; $i++) {
+            $handler->report(new Exception("Exception {$i}"));
+            $handler->report(new RuntimeException("RuntimeException {$i}"));
+        }
+
+        list($runtimeExceptions, $baseExceptions) = collect($reported)->partition(function ($e) { return $e instanceof RuntimeException; });
+        $this->assertCount(10, $baseExceptions);
+        $this->assertCount(2, $runtimeExceptions);
+    }
+
+    public function testItRescuesExceptionsWhileThrottlingAndReports()
+    {
+        $handler = new FoundationExceptionsHandlerTest_testItRescuesExceptionsWhileThrottlingAndReports_class($this->container);
+        $reported = [];
+        $handler->reportable(function (\Throwable $e) use (&$reported) {
+            $reported[] = $e;
+
+            return false;
+        });
+
+        $handler->report(new Exception('Something in the app went wrong.'));
+
+        $this->assertCount(1, $reported);
+        $this->assertSame('Something in the app went wrong.', $reported[0]->getMessage());
+    }
+
+    public function testItRescuesExceptionsIfThereIsAnIssueResolvingTheRateLimiter()
+    {
+        $handler = new FoundationExceptionsHandlerTest_testItRescuesExceptionsIfThereIsAnIssueResolvingTheRateLimiter_class($this->container);
+        $reported = [];
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $handler->reportable(function (\Exception $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+        else {
+            $handler->reportable(function (\Throwable $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+
+        $resolved = false;
+        $this->container->bind(RateLimiter::class, function () use (&$resolved) {
+            $resolved = true;
+
+            throw new Exception('Error resolving rate limiter.');
+        });
+
+        $handler->report(new Exception('Something in the app went wrong.'));
+
+        $this->assertTrue($resolved);
+        $this->assertCount(1, $reported);
+        $this->assertSame('Something in the app went wrong.', $reported[0]->getMessage());
+    }
+
+    public function testItRescuesExceptionsIfThereIsAnIssueWithTheRateLimiter()
+    {
+        $handler = new FoundationExceptionsHandlerTest_testItRescuesExceptionsIfThereIsAnIssueWithTheRateLimiter_class_1($this->container);
+        $reported = [];
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $handler->reportable(function (\Exception $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+        else {
+            $handler->reportable(function (\Throwable $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+
+        $this->container->instance(RateLimiter::class,
+            $limiter = new FoundationExceptionsHandlerTest_testItRescuesExceptionsIfThereIsAnIssueWithTheRateLimiter_class_2(new Repository(new NullStore))
+        );
+
+        $handler->report(new Exception('Something in the app went wrong.'));
+
+        $this->assertTrue($limiter->attempted);
+        $this->assertCount(1, $reported);
+        $this->assertSame('Something in the app went wrong.', $reported[0]->getMessage());
+    }
+
+    public function testItCanRateLimitExceptions()
+    {
+        $handler = new FoundationExceptionsHandlerTest_testItCanRateLimitExceptions_class_1($this->container);
+        $reported = [];
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $handler->reportable(function (\Exception $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+        else {
+            $handler->reportable(function (\Throwable $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+
+        $this->container->instance(RateLimiter::class,
+            $limiter = new FoundationExceptionsHandlerTest_testItCanRateLimitExceptions_class_2(new Repository(new ArrayStore))
+        );
+        Carbon::setTestNow(Carbon::now()->startOfDay());
+
+        for ($i = 0; $i < 100; $i++) {
+            $handler->report(new Exception('Something in the app went wrong.'));
+        }
+
+        $this->assertSame(100, $limiter->attempted);
+        $this->assertCount(7, $reported);
+        $this->assertSame('Something in the app went wrong.', $reported[0]->getMessage());
+
+        Carbon::setTestNow(Carbon::now()->addMinute());
+
+        for ($i = 0; $i < 100; $i++) {
+            $handler->report(new Exception('Something in the app went wrong.'));
+        }
+
+        $this->assertSame(200, $limiter->attempted);
+        $this->assertCount(14, $reported);
+        $this->assertSame('Something in the app went wrong.', $reported[0]->getMessage());
     }
 }
 

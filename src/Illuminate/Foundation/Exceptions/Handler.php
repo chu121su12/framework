@@ -7,6 +7,9 @@ use CR\LaravelBackport\SymfonyHelper;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Cache\RateLimiter;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Cache\RateLimiting\Unlimited;
 use Illuminate\Console\View\Components\BulletList;
 use Illuminate\Console\View\Components\Error;
 use Illuminate\Contracts\Container\Container;
@@ -25,6 +28,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Lottery;
 use Illuminate\Support\Reflector;
 use Illuminate\Support\Traits\ReflectsClosures;
 use Illuminate\Support\ViewErrorBag;
@@ -99,6 +103,13 @@ class Handler implements ExceptionHandlerContract
     protected $exceptionMap = [];
 
     /**
+     * Indicates that throttled keys should be hashed.
+     *
+     * @var bool
+     */
+    protected $hashThrottleKeys = true;
+
+    /**
      * A list of the internal exception types that should not be reported.
      *
      * @var array<int, class-string<\Throwable>>
@@ -129,11 +140,11 @@ class Handler implements ExceptionHandlerContract
     ];
 
     /**
-     * Indicates that exception reporting should be deduplicated.
+     * Indicates that an exception instance should only be reported once.
      *
      * @var bool
      */
-    protected $deduplicateReporting = false;
+    protected $withoutDuplicates = false;
 
     /**
      * The already reported exception map.
@@ -378,15 +389,45 @@ class Handler implements ExceptionHandlerContract
 
         $eid = spl_object_id($e);
 
-        if ($this->deduplicateReporting && isset($this->reportedExceptionMap[$eid]) && $this->reportedExceptionMap[$eid]) {
+        if ($this->withoutDuplicates && isset($this->reportedExceptionMap[$eid]) && $this->reportedExceptionMap[$eid]) {
             return true;
         }
 
         $dontReport = array_merge($this->dontReport, $this->internalDontReport);
 
-        return ! is_null(Arr::first($dontReport, function ($type) use ($e) {
-            return $e instanceof $type;
-        }));
+        if (! is_null(Arr::first($dontReport, function ($type) use ($e) { return $e instanceof $type; }))) {
+            return true;
+        }
+
+        return rescue(function () use ($e) { return with($this->throttle($e), function ($throttle) use ($e) {
+            if ($throttle instanceof Unlimited || $throttle === null) {
+                return false;
+            }
+
+            if ($throttle instanceof Lottery) {
+                return ! $throttle($e);
+            }
+
+            return ! $this->container->make(RateLimiter::class)->attempt(
+                with($throttle->key ?: 'illuminate:foundation:exceptions:'.backport_get_class($e), function ($key) { return $this->hashThrottleKeys ? md5($key) : $key; }),
+                $throttle->maxAttempts,
+                function () { return true; },
+                $throttle->decayMinutes
+            );
+        }); }, /*rescue: */false, /*report: */false);
+    }
+
+    /**
+     * Throttle the given exception.
+     *
+     * @param  \Throwable  $e
+     * @return \Illuminate\Support\Lottery|\Illuminate\Cache\RateLimiting\Limit|null
+     */
+    protected function throttle(/*Throwable */$e)
+    {
+        backport_type_throwable($e);
+
+        return Limit::none();
     }
 
     /**
@@ -395,7 +436,7 @@ class Handler implements ExceptionHandlerContract
      * @param  string  $exception
      * @return $this
      */
-    public function stopIgnoring(string $exception)
+    public function stopIgnoring(/*string */$exception)
     {
         $exception = backport_type_check('string', $exception);
 
@@ -958,7 +999,7 @@ class Handler implements ExceptionHandlerContract
      */
     public function dontReportDuplicates()
     {
-        $this->deduplicateReporting = true;
+        $this->withoutDuplicates = true;
 
         return $this;
     }

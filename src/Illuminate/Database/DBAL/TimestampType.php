@@ -5,6 +5,7 @@ namespace Illuminate\Database\DBAL;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MariaDb1027Platform;
+use Doctrine\DBAL\Platforms\MariaDb1052Platform;
 use Doctrine\DBAL\Platforms\MariaDBPlatform;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 use Doctrine\DBAL\Platforms\MySQL80Platform;
@@ -33,6 +34,7 @@ class TimestampTypeBase extends Type/* implements PhpDateTimeMappingType*/
             // case MySQL80Platform::class:
             // case MariaDBPlatform::class:
             // case MariaDb1027Platform::class:
+            // case MariaDb1052Platform::class:
                 return $this->getMySqlPlatformSQLDeclaration($column);
 
             case PostgreSQLPlatform::class:

@@ -633,3 +633,10 @@ if (! \function_exists('at_backport_class_parents')) {
         }
     }
 }
+
+if (! \function_exists('backport_get_class')) {
+    function backport_get_class($class)
+    {
+        return \is_object($class) ? get_class($class) : $class;
+    }
+}

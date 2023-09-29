@@ -394,6 +394,19 @@ class SupportTestingQueueFakeTest extends TestCase
             function ($job) { return $job->value === 'hello-serialized-unserialized'; }
         );
     }
+
+    public function testItCanFakePushedJobsWithClassAndPayload()
+    {
+        $fake = new QueueFake(new Application, ['JobStub']);
+
+        $this->assertTrue($fake->shouldFakeJob('JobStub'));
+
+        $fake->push('JobStub', ['job' => 'payload']);
+
+        $fake->assertPushed('JobStub');
+        $fake->assertPushed('JobStub', 1);
+        $fake->assertPushed('JobStub', function ($job, $queue, $payload) { return $payload === ['job' => 'payload']; });
+    }
 }
 
 class JobStub

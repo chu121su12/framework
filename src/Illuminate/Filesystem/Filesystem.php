@@ -754,6 +754,8 @@ class Filesystem
             }
         }
 
+        unset($items);
+
         if (! $preserve) {
             @rmdir($directory);
         }

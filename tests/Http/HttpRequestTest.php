@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 if (PHP_VERSION_ID >= 80100) {
-    include 'Enums.php';
+    include_once 'Enums.php';
 }
 
 class HttpRequestTest extends TestCase

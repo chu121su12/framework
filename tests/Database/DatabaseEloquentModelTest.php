@@ -46,7 +46,7 @@ use ReflectionClass;
 use stdClass;
 
 if (PHP_VERSION_ID >= 80100) {
-    include 'Enums.php';
+    include_once 'Enums.php';
 }
 
 class DatabaseEloquentModelTest extends TestCase

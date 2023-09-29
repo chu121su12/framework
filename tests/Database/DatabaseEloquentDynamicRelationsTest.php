@@ -56,7 +56,7 @@ class DatabaseEloquentDynamicRelationsTest extends TestCase
 
     public function testInheritedDynamicRelationsOverride()
     {
-        // Inherited Dynamic Relations can be overriden
+        // Inherited Dynamic Relations can be overridden
         DynamicRelationModel::resolveRelationUsing('dynamicRelConflict', function ($m) { return $m->hasOne(Related::class); });
         $model = new DynamicRelationModel;
         $model4 = new DynamicRelationModel4;

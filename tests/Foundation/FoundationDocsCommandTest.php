@@ -298,7 +298,7 @@ Working directory: expected-working-directory');
             ->assertSuccessful();
     }
 
-    public function testGuessedMatchesThatDirectlyContainTheGivenStringRankHigerThanArbitraryMatches()
+    public function testGuessedMatchesThatDirectlyContainTheGivenStringRankHigherThanArbitraryMatches()
     {
         $this->artisan('docs ora')
             ->expectsOutputToContain('Opening the docs to: https://laravel.com/docs/8.x/filesystem')

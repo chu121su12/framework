@@ -622,7 +622,7 @@ class BelongsToMany extends Relation
     {
         if (is_null($instance = with(clone $this)->where($attributes)->first())) {
             if (is_null($instance = $this->related->where($attributes)->first())) {
-                $instance = $this->createOrFirst($attributes, $values, $joining, $touch);
+                $instance = $this->create(array_merge($attributes, $values), $joining, $touch);
             } else {
                 try {
                     $this->getQuery()->withSavepointIfNeeded(function () use ($instance, $joining, $touch) {
@@ -690,13 +690,19 @@ class BelongsToMany extends Relation
      */
     public function updateOrCreate(array $attributes, array $values = [], array $joining = [], $touch = true)
     {
-        return tap($this->firstOrCreate($attributes, $values, $joining, $touch), function ($instance) use ($values) {
-            if (! $instance->wasRecentlyCreated) {
-                $instance->fill($values);
-
-                $instance->save(['touch' => false]);
+        if (is_null($instance = with(clone $this)->where($attributes)->first())) {
+            if (is_null($instance = $this->related->where($attributes)->first())) {
+                return $this->create(array_merge($attributes, $values), $joining, $touch);
+            } else {
+                $this->attach($instance, $joining, $touch);
             }
-        });
+        }
+
+        $instance->fill($values);
+
+        $instance->save(['touch' => false]);
+
+        return $instance;
     }
 
     /**

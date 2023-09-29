@@ -5,7 +5,7 @@ namespace Illuminate\Tests\Database;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
-class EloquentRelationAndAtrributeModelStub extends Model
+class EloquentRelationAndAttributeModelStub extends Model
 {
     protected $table = 'one_more_table';
 

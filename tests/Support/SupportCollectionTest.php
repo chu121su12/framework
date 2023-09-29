@@ -4755,7 +4755,7 @@ class SupportCollectionTest extends TestCase
     /**
      * @dataProvider collectionClassProvider
      */
-    public function testSplitCollectionWithADivisableCount($collection)
+    public function testSplitCollectionWithADivisibleCount($collection)
     {
         $data = new $collection(['a', 'b', 'c', 'd']);
         $split = $data->split(2);

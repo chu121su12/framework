@@ -135,6 +135,10 @@ class ChangeColumn
     {
         $options = ['type' => static::getDoctrineColumnType($fluent['type'])];
 
+        if (! in_array($fluent['type'], ['smallint', 'integer', 'bigint'])) {
+            $options['autoincrement'] = false;
+        }
+
         if (in_array($fluent['type'], ['tinyText', 'text', 'mediumText', 'longText'])) {
             $options['length'] = static::calculateDoctrineTextLength($fluent['type']);
         }

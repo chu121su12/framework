@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_1_Class 
         {
@@ -20,6 +19,26 @@ class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_1_Clas
 
 class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_2_Class 
         {
+            public function __toString()
+            {
+                return '3';
+            }
+        }
+
+class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_class_1 extends Model
+        {
+            protected $attributes = ['id' => 1];
+        }
+
+class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_class_2 extends Model
+        {
+            protected $attributes = ['id' => 2];
+        }
+
+class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_class_3 extends Model
+        {
+            protected $attributes = ['id' => 3];
+
             public function __toString()
             {
                 return '3';
@@ -121,12 +140,13 @@ class DatabaseEloquentBelongsToTest extends TestCase
     public function testModelsAreProperlyMatchedToParents()
     {
         $relation = $this->getRelation();
-        $result1 = m::mock(stdClass::class);
-        $result1->shouldReceive('getAttribute')->with('id')->andReturn(1);
-        $result2 = m::mock(stdClass::class);
-        $result2->shouldReceive('getAttribute')->with('id')->andReturn(2);
-        $result3 = m::mock(stdClass::class);
-        $result3->shouldReceive('getAttribute')->with('id')->andReturn(new DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_1_Class);
+
+        $result1 = new DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_class_1;
+
+        $result2 = new DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_class_2;
+
+        $result3 = new DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_class_3;
+
         $model1 = new EloquentBelongsToModelStub;
         $model1->foreign_key = 1;
         $model2 = new EloquentBelongsToModelStub;

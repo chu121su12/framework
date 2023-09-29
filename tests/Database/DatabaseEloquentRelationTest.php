@@ -276,7 +276,7 @@ class DatabaseEloquentRelationTest extends TestCase
     {
         require_once __DIR__.'/stubs/EloquentRelationAndAtrributeModelStub.php';
 
-        $model = new EloquentRelationAndAtrributeModelStub;
+        $model = new EloquentRelationAndAttributeModelStub;
 
         $this->assertTrue($model->isRelation('parent'));
         $this->assertFalse($model->isRelation('field'));

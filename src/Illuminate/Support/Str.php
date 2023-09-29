@@ -889,6 +889,20 @@ class Str
     }
 
     /**
+     * Find the multi-byte safe position of the first occurrence of a given substring in a string.
+     *
+     * @param  string  $haystack
+     * @param  string  $needle
+     * @param  int  $offset
+     * @param  string|null  $encoding
+     * @return int|false
+     */
+    public static function position($haystack, $needle, $offset = 0, $encoding = null)
+    {
+        return mb_strpos($haystack, (string) $needle, $offset, $encoding);
+    }
+
+    /**
      * Generate a more truly "random" alpha-numeric string.
      *
      * @param  int  $length
@@ -1406,6 +1420,24 @@ class Str
     public static function swap(array $map, $subject)
     {
         return strtr($subject, $map);
+    }
+
+    /**
+     * Take the first or last {$limit} characters of a string.
+     *
+     * @param  string  $string
+     * @param  int  $limit
+     * @return string
+     */
+    public static function take($string, /*int */$limit)/*: string*/
+    {
+        $limit = backport_type_check('int', $limit);
+
+        if ($limit < 0) {
+            return static::substr($string, $limit);
+        }
+
+        return static::substr($string, 0, $limit);
     }
 
     /**
