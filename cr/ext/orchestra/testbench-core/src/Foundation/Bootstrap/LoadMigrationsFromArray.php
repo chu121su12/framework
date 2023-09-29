@@ -2,29 +2,44 @@
 
 namespace Orchestra\Testbench\Foundation\Bootstrap;
 
+use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
+use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Events\DatabaseRefreshed;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Env;
+use Orchestra\Testbench\Foundation\Env;
+
 use function Orchestra\Testbench\after_resolving;
 use function Orchestra\Testbench\transform_relative_path;
+use function Orchestra\Testbench\workbench;
 
 final class LoadMigrationsFromArray
 {
     /**
      * The migrations.
      *
-     * @var bool|array<int, string>
+     * @var string|array<int, string>|bool
      */
     public $migrations;
 
     /**
+     * The seeders.
+     *
+     * @var class-string|array<int, class-string>|bool
+     */
+    public $seeders;
+
+    /**
      * Construct a new Create Vendor Symlink bootstrapper.
      *
-     * @param  bool|array<int, string>  $migrations
+     * @param  string|array<int, string>|bool  $migrations
+     * @param  class-string|array<int, class-string>|bool  $seeders
      */
-    public function __construct($migrations)
+    public function __construct($migrations = [], $seeders = false)
     {
         $this->migrations = $migrations;
+        $this->seeders = $seeders;
     }
 
     /**
@@ -35,21 +50,62 @@ final class LoadMigrationsFromArray
      */
     public function bootstrap(Application $app)/*: void*/
     {
-        if ($this->migrations === false) {
-            return;
+        if ($this->seeders !== false) {
+            $this->bootstrapSeeders($app);
         }
 
-        $paths = Collection::make(
-            \is_array($this->migrations) ? $this->migrations : []
-        )->when(
-            $this->includesDefaultMigrations($app),
-            function ($migrations) use ($app) { return $migrations->push($app->basePath('migrations')); }
-        )->filter(function ($migration) { return \is_string($migration); })
-            ->transform(function ($migration) use ($app) { return transform_relative_path($migration, $app->basePath()); })
-            ->all();
+        if ($this->migrations !== false) {
+            $this->bootstrapMigrations($app);
+        }
+    }
 
-        after_resolving($app, 'migrator', function ($migrator) use ($paths) {
+    /**
+     * Bootstrap seeders.
+     *
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @return void
+     */
+    protected function bootstrapSeeders(Application $app)/*: void*/
+    {
+        $app->make(EventDispatcher::class)
+            ->listen(DatabaseRefreshed::class, function (DatabaseRefreshed $event) use ($app) {
+                if (\is_bool($this->seeders) && $this->seeders === false) {
+                    return;
+                }
+
+                Collection::make(Arr::wrap($this->seeders))
+                    ->flatten()
+                    ->filter(static function ($seederClass) {
+                        return ! \is_null($seederClass) && class_exists($seederClass);
+                    })->each(static function ($seederClass) use ($app) {
+                        $app->make(ConsoleKernel::class)->call('db:seed', [
+                            '--class' => $seederClass,
+                        ]);
+                    });
+            });
+    }
+
+    /**
+     * Bootstrap migrations.
+     *
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @return void
+     */
+    protected function bootstrapMigrations(Application $app)/*: void*/
+    {
+        $paths = Collection::make(
+            ! \is_bool($this->migrations) ? Arr::wrap($this->migrations) : []
+        )->when($this->includesDefaultMigrations($app), static function ($migrations) use ($app) {
+            return $migrations->push($app->basePath('migrations'));
+        })->filter(static function ($migration) {
+            return \is_string($migration);
+        })->transform(static function ($migration) use ($app) {
+            return transform_relative_path($migration, $app->basePath());
+        })->all();
+
+        after_resolving($app, 'migrator', static function ($migrator) use ($paths) {
             foreach ((array) $paths as $path) {
+                /** @var \Illuminate\Database\Migrations\Migrator $migrator */
                 $migrator->path($path);
             }
         });
@@ -64,6 +120,9 @@ final class LoadMigrationsFromArray
     protected function includesDefaultMigrations($app)/*: bool*/
     {
         return is_dir($app->basePath('migrations'))
-            && Env::get('TESTBENCH_WITHOUT_DEFAULT_MIGRATIONS') !== true;
+            && (
+                workbench()['install'] === true
+                && Env::get('TESTBENCH_WITHOUT_DEFAULT_MIGRATIONS') !== true
+            );
     }
 }

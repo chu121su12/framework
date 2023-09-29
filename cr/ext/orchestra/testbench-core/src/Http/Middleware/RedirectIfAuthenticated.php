@@ -16,6 +16,8 @@ class RedirectIfAuthenticated
      */
     public function handle(Request $request, Closure $next, /*string */...$guards)
     {
+        $guards = backport_array_type_check('string', $guards);
+
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {

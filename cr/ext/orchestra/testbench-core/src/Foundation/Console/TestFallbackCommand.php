@@ -2,12 +2,12 @@
 
 namespace Orchestra\Testbench\Foundation\Console;
 
-use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
-use function Orchestra\Testbench\phpunit_version_compare;
 use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessSignaledException;
 use Symfony\Component\Process\Process;
+
+use function Orchestra\Testbench\phpunit_version_compare;
 
 class TestFallbackCommand extends Command
 {
@@ -74,7 +74,13 @@ class TestFallbackCommand extends Command
      */
     protected function installCollisionDependencies()
     {
-        $version = phpunit_version_compare('10', '>=') ? '7.4' : '6.4';
+        $version = '6.4';
+
+        if (phpunit_version_compare('10.3', '>=')) {
+            $version = '7.8';
+        } elseif (phpunit_version_compare('10', '>=')) {
+            $version = '7.4';
+        }
 
         $command = sprintf('%s require "nunomaduro/collision:^%s" --dev', $this->findComposer(), $version);
 

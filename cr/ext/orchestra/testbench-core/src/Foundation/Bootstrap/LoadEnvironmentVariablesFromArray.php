@@ -6,7 +6,7 @@ use Dotenv\Dotenv;
 use Dotenv\Store\StringStore;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Env;
+use Orchestra\Testbench\Foundation\Env;
 
 /**
  * @internal
@@ -41,10 +41,10 @@ final class LoadEnvironmentVariablesFromArray
         $store = new StringStore(implode(PHP_EOL, $this->environmentVariables));
 
         Collection::make(Dotenv::parse($store->read()))
-            ->filter(function ($entry) {
+            ->filter(static function ($entry) {
                 /** @var \Dotenv\Parser\Entry $entry */
                 return $entry->getValue()->isDefined();
-            })->each(function ($entry) {
+            })->each(static function ($entry) {
                 /** @var \Dotenv\Parser\Entry $entry */
                 Env::getRepository()->set($entry->getName(), $entry->getValue()->get()->getChars());
             });

@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'package:drop-sqlite-db')]
+#[AsCommand(name: 'package:drop-sqlite-db', description: 'Drop sqlite database file')]
 class DropSqliteDbCommand extends Command
 {
     /**
@@ -27,32 +27,20 @@ class DropSqliteDbCommand extends Command
     /**
      * Execute the console command.
      *
+     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
      * @return int
      */
-    public function handle()
+    public function handle(Filesystem $filesystem)
     {
-        $filesystem = new Filesystem();
-
         $workingPath = $this->laravel->basePath();
         $databasePath = $this->laravel->databasePath();
 
-        $from = realpath(__DIR__.'/stubs/database.sqlite.example');
-        $to = "{$databasePath}/database.sqlite";
+        (new Actions\DeleteFiles(
+            /*filesystem: */$filesystem,
+            /*components: */$this->components,
+            /*workingPath: */$workingPath
+        ))->handle(["{$databasePath}/database.sqlite"]);
 
-        if (! $filesystem->exists($to)) {
-            $this->components->twoColumnDetail(
-                sprintf('File [%s] does not exists', str_replace($workingPath.'/', '', $to)),
-                '<fg=yellow;options=bold>SKIPPED</>'
-            );
-        } else {
-            $filesystem->delete($to);
-
-            $this->components->twoColumnDetail(
-                sprintf('File [%s] has been deleted', str_replace($workingPath.'/', '', $to)),
-                '<fg=green;options=bold>DONE</>'
-            );
-        }
-
-        return SymfonyHelper::COMMAND_SUCCESS;
+        return SymfonyHelper::CONSOLE_SUCCESS;
     }
 }

@@ -4,12 +4,17 @@ namespace Orchestra\Testbench\Foundation;
 
 use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Env;
 use Orchestra\Testbench\Concerns\CreatesApplication;
 
 /**
- * @phpstan-type TExtraConfig array{env?: array, bootstrappers?: array, providers?: array, dont-discover?: array}
- * @phpstan-type TConfig array{extra?: TExtraConfig, load_environment_variables?: bool, enabled_package_discoveries?: bool}
+ * @phpstan-import-type TExtraConfig from \Orchestra\Testbench\Foundation\Config
+ * @phpstan-import-type TOptionalExtraConfig from \Orchestra\Testbench\Foundation\Config
+ *
+ * @phpstan-type TConfig array{
+ *   extra?: TOptionalExtraConfig,
+ *   load_environment_variables?: bool,
+ *   enabled_package_discoveries?: bool
+ * }
  */
 class Application
 {
@@ -75,6 +80,8 @@ class Application
      * @param  string|null  $basePath
      * @param  string  $workingVendorPath
      * @return \Illuminate\Foundation\Application
+     *
+     * @codeCoverageIgnore
      */
     public static function createVendorSymlink(/*?string */$basePath, /*string */$workingVendorPath)/*: void*/
     {
@@ -130,9 +137,10 @@ class Application
             Arr::set($options, 'extra.dont-discover', []);
         }
 
-        $this->config = Arr::only(
-            isset($options['extra']) ? $options['extra'] : [], array_keys($this->config)
-        );
+        /** @var TExtraConfig $config */
+        $config = Arr::only(isset($options['extra']) ? $options['extra'] : [], array_keys($this->config));
+
+        $this->config = $config;
 
         return $this;
     }
@@ -166,7 +174,11 @@ class Application
      */
     protected function getPackageBootstrappers($app)
     {
-        return isset($this->config['bootstrappers']) ? $this->config['bootstrappers'] : [];
+        if (\is_null($bootstrappers = (isset($this->config['bootstrappers']) ? $this->config['bootstrappers'] : null))) {
+            return [];
+        }
+
+        return Arr::wrap($bootstrappers);
     }
 
     /**
@@ -203,7 +215,7 @@ class Application
     {
         Env::disablePutenv();
 
-        $app->terminating(function () {
+        $app->terminating(static function () {
             Env::enablePutenv();
         });
 

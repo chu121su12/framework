@@ -3,8 +3,9 @@
 namespace Orchestra\Testbench\PHPUnit;
 
 use Orchestra\Testbench\Exceptions\DeprecatedException;
-use function Orchestra\Testbench\phpunit_version_compare;
 use Throwable;
+
+use function Orchestra\Testbench\phpunit_version_compare;
 
 if (phpunit_version_compare('10.1', '>=')) {
     class TestCase extends \PHPUnit\Framework\TestCase
@@ -37,7 +38,7 @@ if (phpunit_version_compare('10.1', '>=')) {
             $result = null;
 
             /** @var \Illuminate\Testing\TestResponse|null $response */
-            $response = static::$latestResponse ?? null;
+            $response = isset(static::$latestResponse) ? static::$latestResponse : null;
 
             try {
                 $result = parent::runTest();

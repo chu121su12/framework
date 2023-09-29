@@ -2,91 +2,44 @@
 
 namespace Orchestra\Testbench\Concerns;
 
-use Orchestra\Testbench\Database\MigrateProcessor;
-use Orchestra\Testbench\Exceptions\ApplicationNotAvailableException;
+use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+use function Orchestra\Testbench\after_resolving;
 
 trait WithLaravelMigrations
 {
-    /**
-     * Migrate Laravel's default migrations.
-     *
-     * @param  string|array<string, mixed>  $database
-     * @return void
-     */
-    protected function loadLaravelMigrations($database = [])/*: void*/
-    {
-        $this->loadLaravelMigrationsWithoutRollback($database);
-
-        $this->beforeApplicationDestroyed(function () use ($database) {
-            $options = $this->resolveLaravelMigrationsOptions($database);
-            $options['--path'] = 'migrations';
-
-            (new MigrateProcessor($this, $options))->rollback();
-        });
-    }
+    use InteractsWithWorkbench;
 
     /**
-     * Migrate Laravel's default migrations without rollback.
+     * Bootstrap with laravel migrations.
      *
-     * @param  string|array<string, mixed>  $database
      * @return void
      */
-    protected function loadLaravelMigrationsWithoutRollback($database = [])/*: void*/
+    protected function setUpWithLaravelMigrations()/*: void*/
     {
-        if (\is_null($this->app)) {
-            throw ApplicationNotAvailableException::make(__METHOD__);
+        if (isset(static::$cachedConfigurationForWorkbench)) {
+            $attributes = static::$cachedConfigurationForWorkbench->getWorkbenchAttributes();
+
+            /** @var bool $loadLaravelMigrations */
+            $loadLaravelMigrations = isset($attributes['install']) ? $attributes['install'] : false;
+        }
+        else {
+            $loadLaravelMigrations = false;
         }
 
-        $options = $this->resolveLaravelMigrationsOptions($database);
-        $options['--path'] = 'migrations';
+        if (! ($loadLaravelMigrations && static::usesTestingConcern(WithWorkbench::class))) {
+            if (! is_dir($this->app->basePath('migrations'))) {
+                return;
+            }
 
-        (new MigrateProcessor($this, $options))->up();
-
-        $this->resetApplicationArtisanCommands($this->app);
-    }
-
-    /**
-     * Migrate all Laravel's migrations.
-     *
-     * @param  string|array<string, mixed>  $database
-     * @return void
-     */
-    protected function runLaravelMigrations($database = [])/*: void*/
-    {
-        $this->runLaravelMigrationsWithoutRollback($database);
-
-        $this->beforeApplicationDestroyed(function () use ($database) {
-            (new MigrateProcessor($this, $this->resolveLaravelMigrationsOptions($database)))->rollback();
-        });
-    }
-
-    /**
-     * Migrate all Laravel's migrations without rollback.
-     *
-     * @param  string|array<string, mixed>  $database
-     * @return void
-     */
-    protected function runLaravelMigrationsWithoutRollback($database = [])/*: void*/
-    {
-        if (\is_null($this->app)) {
-            throw ApplicationNotAvailableException::make(__METHOD__);
+            if (! static::usesTestingConcern(LazilyRefreshDatabase::class) && ! static::usesTestingConcern(RefreshDatabase::class)) {
+                $this->loadLaravelMigrations();
+            } else {
+                after_resolving($this->app, 'migrator', static function ($migrator, $app) {
+                    $migrator->path($app->basePath('migrations'));
+                });
+            }
         }
-
-        (new MigrateProcessor($this, $this->resolveLaravelMigrationsOptions($database)))->up();
-
-        $this->resetApplicationArtisanCommands($this->app);
-    }
-
-    /**
-     * Resolve Laravel Migrations Artisan command options.
-     *
-     * @param  string|array<string, mixed>  $database
-     * @return array
-     */
-    protected function resolveLaravelMigrationsOptions($database = [])/*: array*/
-    {
-        $options = \is_array($database) ? $database : ['--database' => $database];
-
-        return $options;
     }
 }

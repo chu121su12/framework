@@ -8,6 +8,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Testing\PendingCommand;
+use Orchestra\Testbench\Foundation\Config;
 use PHPUnit\Runner\Version;
 use RuntimeException;
 
@@ -17,13 +18,29 @@ use RuntimeException;
  * @param  string|null  $basePath
  * @param  (callable(\Illuminate\Foundation\Application):(void))|null  $resolvingCallback
  * @param  array{extra?: array{providers?: array, dont-discover?: array, env?: array}, load_environment_variables?: bool, enabled_package_discoveries?: bool}  $options
+ * @param  \Orchestra\Testbench\Foundation\Config|null  $config
  * @return \Orchestra\Testbench\Foundation\Application
  */
-function container(/*?string */$basePath = null, /*?*/callable $resolvingCallback = null, array $options = [])/*: Foundation\Application*/
-{
+function container(
+    /*?string */$basePath = null,
+    /*?callable */$resolvingCallback = null,
+    /*array */$options = [],
+    /*?*/Config $config = null
+)/*: Foundation\Application*/ {
     $basePath = backport_type_check('?string', $basePath);
-
     $resolvingCallback = backport_type_check('?callable', $resolvingCallback);
+    $options = backport_type_check('array', $options);
+
+    if ($config instanceof Config) {
+        $hasEnvironmentFile = ! \is_null($config['laravel'])
+            ? file_exists($config['laravel'].'/.env')
+            : (! \is_null($basePath) && file_exists("{$basePath}/.env"));
+
+        return (new Foundation\Application(isset($config['laravel']) ? $config['laravel'] : $basePath, $resolvingCallback))->configure(array_merge($options, [
+            'load_environment_variables' => $hasEnvironmentFile,
+            'extra' => $config->getExtraAttributes(),
+        ]));
+    }
 
     return (new Foundation\Application($basePath, $resolvingCallback))->configure($options);
 }
@@ -50,7 +67,7 @@ function artisan(Contracts\TestCase $testbench, /*string */$command, array $para
  *
  * @param  \Illuminate\Contracts\Foundation\Application  $app
  * @param  string  $name
- * @param  \Closure|null  $callback
+ * @param  (\Closure(object, \Illuminate\Contracts\Foundation\Application):(mixed))|null  $callback
  * @return void
  */
 function after_resolving(ApplicationContract $app, /*string */$name, /*?*/Closure $callback = null)/*: void*/
@@ -70,6 +87,8 @@ function after_resolving(ApplicationContract $app, /*string */$name, /*?*/Closur
  * @return array<int, string>
  *
  * @deprecated
+ *
+ * @codeCoverageIgnore
  */
 function default_environment_variables()/*: array*/
 {
@@ -85,7 +104,7 @@ function default_environment_variables()/*: array*/
 function parse_environment_variables($variables)/*: array*/
 {
     return Collection::make($variables)
-        ->transform(function ($value, $key) {
+        ->transform(static function ($value, $key) {
             if (\is_bool($value) || \in_array($value, ['true', 'false'])) {
                 $value = \in_array($value, [true, 'true']) ? '(true)' : '(false)';
             } elseif (\is_null($value) || \in_array($value, ['null'])) {
@@ -112,8 +131,61 @@ function transform_relative_path(/*string */$path, /*string */$workingPath)/*: s
     $workingPath = backport_type_check('string', $workingPath);
 
     return Str::startsWith($path, './')
-        ? str_replace('./', rtrim($workingPath, '/').'/', $path)
+        ? str_replace('./', rtrim($workingPath, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR, $path)
         : $path;
+}
+
+/**
+ * Get the path to the package folder.
+ *
+ * @param  string  $path
+ * @return string
+ */
+function package_path(/*string */$path = '')/*: string*/
+{
+    $path = backport_type_check('string', $path);
+
+    $workingPath = \defined('TESTBENCH_WORKING_PATH')
+        ? TESTBENCH_WORKING_PATH
+        : getcwd();
+
+    if (Str::startsWith($path, './')) {
+        return transform_relative_path($path, $workingPath);
+    }
+
+    $path != '' ? DIRECTORY_SEPARATOR.ltrim($path, DIRECTORY_SEPARATOR) : '';
+
+    return $workingPath.DIRECTORY_SEPARATOR.$path;
+}
+
+/**
+ * Get the workbench configuration.
+ *
+ * @return array<string, mixed>
+ */
+function workbench()/*: array*/
+{
+    /** @var \Orchestra\Testbench\Contracts\Config $config */
+    $config = app()->bound(Contracts\Config::class)
+        ? app()->make(Contracts\Config::class)
+        : new Foundation\Config();
+
+    return $config->getWorkbenchAttributes();
+}
+
+/**
+ * Get the path to the workbench folder.
+ *
+ * @param  string  $path
+ * @return string
+ */
+function workbench_path(/*string */$path = '')/*: string*/
+{
+    $path = backport_type_check('string', $path);
+
+    $path != '' ? DIRECTORY_SEPARATOR.ltrim($path, DIRECTORY_SEPARATOR) : '';
+
+    return package_path('workbench'.DIRECTORY_SEPARATOR.$path);
 }
 
 /**
@@ -152,13 +224,19 @@ function phpunit_version_compare(/*string */$version, /*?string */$operator = nu
 
     $operator = backport_type_check('?string', $operator);
 
-    if (! class_exists(Version::class)) {
+    if (\class_exists('PHPUnit_Runner_Version')) {
+        $phpunitVersion = \PHPUnit_Runner_Version::id();
+    }
+    elseif (\class_exists(Version::class)) {
+        $phpunitVersion = Version::id();
+    }
+    else {
         throw new RuntimeException('Unable to verify PHPUnit version');
     }
 
     if (\is_null($operator)) {
-        return version_compare(Version::id(), $version);
+        return version_compare($phpunitVersion, $version);
     }
 
-    return version_compare(Version::id(), $version, $operator);
+    return version_compare($phpunitVersion, $version, $operator);
 }

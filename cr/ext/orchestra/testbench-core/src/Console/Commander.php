@@ -2,8 +2,6 @@
 
 namespace Orchestra\Testbench\Console;
 
-use Dotenv\Dotenv;
-use Dotenv\Store\StringStore;
 use Illuminate\Console\Concerns\InteractsWithSignals;
 use Illuminate\Console\Signals;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
@@ -12,13 +10,12 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Env;
 use Orchestra\Testbench\Foundation\Application;
 use Orchestra\Testbench\Foundation\Bootstrap\LoadMigrationsFromArray;
+use Orchestra\Testbench\Foundation\Bootstrap\StartWorkbench;
 use Orchestra\Testbench\Foundation\Config;
 use Orchestra\Testbench\Foundation\Console\Concerns\CopyTestbenchFiles;
 use Orchestra\Testbench\Foundation\TestbenchServiceProvider;
-use function Orchestra\Testbench\transform_relative_path;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -26,10 +23,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\SignalRegistry\SignalRegistry;
 use Throwable;
 
+use function Orchestra\Testbench\transform_relative_path;
+
 class Commander
 {
-    use CopyTestbenchFiles,
-        InteractsWithSignals;
+    use CopyTestbenchFiles;
+    use InteractsWithSignals;
 
     /**
      * Application instance.
@@ -136,7 +135,12 @@ class Commander
             $this->app = Application::create(
                 /*basePath: */$this->getBasePath(),
                 /*resolvingCallback: */function ($app) {
-                    (new LoadMigrationsFromArray(isset($this->config['migrations']) ? $this->config['migrations'] : []))->bootstrap($app);
+                    (new StartWorkbench($this->config))->bootstrap($app);
+
+                    (new LoadMigrationsFromArray(
+                        isset($this->config['migrations']) ? $this->config['migrations'] : [],
+                        isset($this->config['seeders']) ? $this->config['seeders'] : false,
+                    ))->bootstrap($app);
 
                     \call_user_func($this->resolveApplicationCallback(), $app);
                 },
@@ -154,7 +158,7 @@ class Commander
      */
     protected function resolveApplicationCallback()
     {
-        return function ($app) {
+        return static function ($app) {
             $app->register(TestbenchServiceProvider::class);
         };
     }
@@ -217,7 +221,7 @@ class Commander
      */
     protected function prepareCommandSignals()/*: void*/
     {
-        Signals::resolveAvailabilityUsing(function () {
+        Signals::resolveAvailabilityUsing(static function () {
             return \extension_loaded('pcntl');
         });
 
@@ -227,9 +231,9 @@ class Commander
             }
 
             Collection::make(Arr::wrap([SIGINT]))
-                ->each(function ($signal) {
-                    return $this->signals->register($signal, fn () => $this->handleTerminatingConsole());
-                });
+                ->each(
+                    function ($signal) { return $this->signals->register($signal, function () { return $this->handleTerminatingConsole(); }); }
+                );
         });
     }
 }

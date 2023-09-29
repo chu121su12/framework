@@ -31,6 +31,11 @@ trait HandlesDatabases
             $this->defineDatabaseMigrationsAfterDatabaseRefreshed();
         });
 
+        if (static::usesTestingConcern(WithLaravelMigrations::class)) {
+            /** @phpstan-ignore-next-line */
+            $this->setUpWithLaravelMigrations();
+        }
+
         $this->defineDatabaseMigrations();
 
         if (method_exists($this, 'parseTestMethodAnnotations')) {
@@ -44,6 +49,32 @@ trait HandlesDatabases
         $this->beforeApplicationDestroyed(function () {
             $this->destroyDatabaseMigrations();
         });
+    }
+
+    /**
+     * Determine if using in-memory SQLite database connection
+     *
+     * @param  string|null  $connection
+     * @return bool
+     */
+    protected function usesSqliteInMemoryDatabaseConnection(/*?string */$connection = null)/*: bool*/
+    {
+        $connection = backport_type_check('?string', $connection);
+
+        if (\is_null($app = $this->app)) {
+            throw ApplicationNotAvailableException::make(__METHOD__);
+        }
+
+        /** @var \Illuminate\Contracts\Config\Repository $config */
+        $config = $app->make('config');
+
+        /** @var string $connection */
+        $connection = ! \is_null($connection) ? $connection : $config->get('database.default');
+
+        /** @var array{driver: string, database: string}|null $database */
+        $database = $config->get("database.connections.{$connection}");
+
+        return ! \is_null($database) && $database['driver'] === 'sqlite' && $database['database'] == ':memory:';
     }
 
     /**

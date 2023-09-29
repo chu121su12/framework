@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Env;
 use Orchestra\Testbench\Foundation\Application;
+use Orchestra\Testbench\Foundation\Bootstrap\StartWorkbench;
 use Orchestra\Testbench\Foundation\Config;
 
 /**
@@ -16,14 +18,25 @@ $createApp = function (/*string */$workingPath) {
         defined('TESTBENCH_WORKING_PATH') ? TESTBENCH_WORKING_PATH : $workingPath
     );
 
-    $hasEnvironmentFile = file_exists("{$workingPath}/.env");
+    $hasEnvironmentFile = ! is_null($config['laravel'])
+        ? file_exists($config['laravel'].'/.env')
+        : file_exists("{$workingPath}/.env");
 
     return Application::create(
         /*basePath: */$config['laravel'],
-        /*$resolvingCallback = */null,
-        /*options: */['load_environment_variables' => $hasEnvironmentFile, 'extra' => $config->getExtraAttributes()]
+        /*resolvingCallback: */function ($app) use ($config) {
+            (new StartWorkbench($config))->bootstrap($app);
+        },
+        /*options: */[
+            'load_environment_variables' => $hasEnvironmentFile,
+            'extra' => $config->getExtraAttributes(),
+        ]
     );
 };
+
+if (! defined('TESTBENCH_WORKING_PATH') && ! is_null(Env::get('TESTBENCH_WORKING_PATH'))) {
+    define('TESTBENCH_WORKING_PATH', Env::get('TESTBENCH_WORKING_PATH'));
+}
 
 $app = $createApp(realpath(__DIR__.'/../'));
 

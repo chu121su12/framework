@@ -4,29 +4,90 @@ namespace Orchestra\Testbench\Foundation;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Fluent;
-use function Orchestra\Testbench\parse_environment_variables;
-use function Orchestra\Testbench\transform_relative_path;
+use Illuminate\Support\LazyCollection;
+use Orchestra\Testbench\Contracts\Config as ConfigContract;
 use Symfony\Component\Yaml\Yaml;
 
+use function Orchestra\Testbench\parse_environment_variables;
+use function Orchestra\Testbench\transform_relative_path;
+
 /**
+ * @phpstan-type TExtraConfig array{
+ *   env: array,
+ *   providers: array<int, class-string>,
+ *   dont-discover: array<int, string>,
+ *   bootstrappers: class-string|array<int, class-string>|null
+ * }
+ * @phpstan-type TOptionalExtraConfig array{
+ *   env?: array,
+ *   providers?: array<int, class-string>,
+ *   dont-discover?: array<int, string>,
+ *   bootstrappers?: class-string|array<int, class-string>|null
+ * }
+ * @phpstan-type TPurgeConfig array{
+ *   directories: array<int, string>,
+ *   files: array<int, string>
+ * }
+ * @phpstan-type TOptionalPurgeConfig array{
+ *   directories?: array<int, string>,
+ *   files?: array<int, string>
+ * }
+ * @phpstan-type TWorkbenchConfig array{
+ *   start: string,
+ *   user: string|int|null,
+ *   guard: string|null,
+ *   install: bool,
+ *   welcome: bool|null,
+ *   sync: array<int, array{from: string, to: string}>,
+ *   build: array<int, string>,
+ *   assets: array<int, string>,
+ *   discovers: TWorkbenchDiscoversConfig
+ * }
+ * @phpstan-type TOptionalWorkbenchConfig array{
+ *   start?: string,
+ *   user?: string|int|null,
+ *   guard?: string|null,
+ *   install?: bool,
+ *   welcome?: bool|null,
+ *   sync?: array<int, array{from: string, to: string}>,
+ *   build?: array<int, string>,
+ *   assets?: array<int, string>,
+ *   discovers?: TWorkbenchOptionalDiscoversConfig
+ * }
+ * @phpstan-type TWorkbenchDiscoversConfig array{
+ *   web: bool,
+ *   api: bool,
+ *   commands: bool
+ * }
+ * @phpstan-type TWorkbenchOptionalDiscoversConfig array{
+ *   web?: bool,
+ *   api?: bool,
+ *   commands?: bool
+ * }
  * @phpstan-type TConfig array{
  *   laravel: string|null,
  *   env: array,
- *   providers: array,
- *   dont-discover: array,
- *   migrations: array|bool,
- *   bootstrappers: array
+ *   providers: array<int, class-string>,
+ *   dont-discover: array<int, string>,
+ *   bootstrappers: class-string|array<int, class-string>|null,
+ *   migrations: string|array<int, string>|bool,
+ *   seeders: class-string|array<int, class-string>|bool,
+ *   purge: TOptionalPurgeConfig,
+ *   workbench: TOptionalWorkbenchConfig
  * }
  * @phpstan-type TOptionalConfig array{
  *   laravel?: string|null,
  *   env?: array,
- *   providers?: array,
- *   dont-discover?: array,
- *   migrations?: array|bool,
- *   bootstrappers?: array
+ *   providers?: array<int, class-string>,
+ *   dont-discover?: array<int, string>,
+ *   bootstrappers?: class-string|array<int, class-string>|null,
+ *   migrations?: string|array<int, string>|bool,
+ *   seeders?: class-string|array<int, class-string>|bool,
+ *   purge?: TOptionalPurgeConfig|null,
+ *   workbench?: TOptionalWorkbenchConfig|null
  * }
  */
-class Config extends Fluent
+class Config extends Fluent implements ConfigContract
 {
     /**
      * All of the attributes set on the fluent instance.
@@ -41,8 +102,66 @@ class Config extends Fluent
         'providers' => [],
         'dont-discover' => [],
         'migrations' => [],
+        'seeders' => false,
         'bootstrappers' => [],
+        'purge' => [],
+        'workbench' => [],
     ];
+
+    /**
+     * The Workbench default configuration.
+     *
+     * @var array<string, array<int, string>>
+     *
+     * @phpstan-var TPurgeConfig
+     */
+    protected $purgeConfig = [
+        'directories' => [],
+        'files' => [],
+    ];
+
+    /**
+     * The Workbench default configuration.
+     *
+     * @var array<string, mixed>
+     *
+     * @phpstan-var TWorkbenchConfig
+     */
+    protected $workbenchConfig = [
+        'start' => '/',
+        'user' => null,
+        'guard' => null,
+        'install' => true,
+        'welcome' => null,
+        'sync' => [],
+        'build' => [],
+        'assets' => [],
+        'discovers' => [
+            'web' => false,
+            'api' => false,
+            'commands' => false,
+        ],
+    ];
+
+    /**
+     * The Workbench discovers default configuration.
+     *
+     * @var array<string, mixed>
+     *
+     * @phpstan-var TWorkbenchDiscoversConfig
+     */
+    protected $workbenchDiscoversConfig = [
+        'web' => false,
+        'api' => false,
+        'commands' => false,
+    ];
+
+    /**
+     * The cached configuration used during tests.
+     *
+     * @var static|null
+     */
+    protected static $cachedConfiguration;
 
     /**
      * Load configuration from Yaml file.
@@ -58,20 +177,26 @@ class Config extends Fluent
 
         $filename = backport_type_check('?string', $filename);
 
-        if (! isset($filename)) {
-            $filename = 'testbench.yaml';
-        }
+        $filename = isset($filename) ? $filename : 'testbench.yaml';
         $config = $defaults;
 
-        if (file_exists("{$workingPath}/{$filename}")) {
+        $filename = LazyCollection::make(static function () use ($filename) {
+            yield $filename;
+            yield "{$filename}.example";
+            yield "{$filename}.dist";
+        })->filter(static function ($file) use ($workingPath) {
+            return file_exists($workingPath.DIRECTORY_SEPARATOR.$file);
+        })->first();
+
+        if (! \is_null($filename)) {
             /**
              * @var array<string, mixed> $config
              *
              * @phpstan-var TOptionalConfig $config
              */
-            $config = Yaml::parseFile("{$workingPath}/{$filename}");
+            $config = Yaml::parseFile($workingPath.DIRECTORY_SEPARATOR.$filename);
 
-            $config['laravel'] = transform(Arr::get($config, 'laravel'), function ($path) use ($workingPath) {
+            $config['laravel'] = transform(Arr::get($config, 'laravel'), static function ($path) use ($workingPath) {
                 return transform_relative_path($path, $workingPath);
             });
 
@@ -81,6 +206,29 @@ class Config extends Fluent
         }
 
         return new static($config);
+    }
+
+    /**
+     * Load (and cache) configuration from Yaml file.
+     *
+     * @param  string  $workingPath
+     * @param  string|null  $filename
+     * @param  array<string, mixed>  $defaults
+     * @return static
+     *
+     * @codeCoverageIgnore
+     */
+    public static function cacheFromYaml(/*string */$workingPath, /*?string */$filename = 'testbench.yaml', array $defaults = [])
+    {
+        $workingPath = backport_type_check('string', $workingPath);
+
+        $filename = backport_type_check('?string', $filename);
+
+        if (! isset(static::$cachedConfiguration)) {
+            static::$cachedConfiguration = static::loadFromYaml($workingPath, $filename, $defaults);
+        }
+
+        return static::$cachedConfiguration;
     }
 
     /**
@@ -99,7 +247,9 @@ class Config extends Fluent
     /**
      * Get extra attributes.
      *
-     * @return array{env: array, bootstrappers: array, providers: array, dont-discover: array}
+     * @return array<string, mixed>
+     *
+     * @phpstan-return TExtraConfig
      */
     public function getExtraAttributes()/*: array*/
     {
@@ -109,5 +259,43 @@ class Config extends Fluent
             'providers' => Arr::get($this->attributes, 'providers', []),
             'dont-discover' => Arr::get($this->attributes, 'dont-discover', []),
         ];
+    }
+
+    /**
+     * Get purge attributes.
+     *
+     * @return array<string, mixed>
+     *
+     * @phpstan-return TPurgeConfig
+     */
+    public function getPurgeAttributes()/*: array*/
+    {
+        return array_merge(
+            $this->purgeConfig,
+            $this->attributes['purge']
+        );
+    }
+
+    /**
+     * Get workbench attributes.
+     *
+     * @return array<string, mixed>
+     *
+     * @phpstan-return TWorkbenchConfig
+     */
+    public function getWorkbenchAttributes()/*: array*/
+    {
+        $config = array_merge(
+            $this->workbenchConfig,
+            $this->attributes['workbench']
+        );
+
+        $config['discovers'] = array_merge(
+            $this->workbenchDiscoversConfig,
+            Arr::get($this->attributes, 'workbench.discovers', [])
+        );
+
+        /** @var TWorkbenchConfig $config */
+        return $config;
     }
 }

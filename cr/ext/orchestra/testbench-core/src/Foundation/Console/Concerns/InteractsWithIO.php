@@ -2,6 +2,9 @@
 
 namespace Orchestra\Testbench\Foundation\Console\Concerns;
 
+/**
+ * @deprecated
+ */
 trait InteractsWithIO
 {
     /**
@@ -13,7 +16,7 @@ trait InteractsWithIO
      * @param  string|null  $workingPath
      * @return void
      */
-    protected function status(/*string */$from, /*string */$to, /*string */$type, /*?string */$workingPath = null)/*: void*/
+    protected function copyTaskCompleted(/*string */$from, /*string */$to, /*string */$type, /*?string */$workingPath = null)/*: void*/
     {
         $from = backport_type_check('string', $from);
         $to = backport_type_check('string', $to);

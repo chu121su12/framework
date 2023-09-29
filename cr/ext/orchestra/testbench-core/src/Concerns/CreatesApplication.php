@@ -18,6 +18,8 @@ use PHPUnit\Framework\TestCase as PHPUnitTestCase;
  */
 trait CreatesApplication
 {
+    use InteractsWithWorkbench;
+
     /**
      * Get Application's base path.
      *
@@ -25,7 +27,9 @@ trait CreatesApplication
      */
     public static function applicationBasePath()
     {
-        return isset($_ENV['APP_BASE_PATH']) ? $_ENV['APP_BASE_PATH'] : realpath(__DIR__.'/../../laravel');
+        $basePath = static::applicationBasePathUsingWorkbench();
+
+        return isset($basePath) ? $basePath : (string) realpath(__DIR__.'/../../laravel');
     }
 
     /**
@@ -35,11 +39,9 @@ trait CreatesApplication
      */
     public function ignorePackageDiscoveriesFrom()
     {
-        if (property_exists($this, 'enablesPackageDiscoveries') && $this->enablesPackageDiscoveries === true) {
-            return [];
-        }
+        $ignoring = $this->ignorePackageDiscoveriesFromUsingWorkbench();
 
-        return ['*'];
+        return isset($ignoring) ? $ignoring : ['*'];
     }
 
     /**
@@ -142,7 +144,9 @@ trait CreatesApplication
      */
     protected function getPackageBootstrappers($app)
     {
-        return [];
+        $bootstraper = $this->getPackageBootstrappersUsingWorkbench($app);
+
+        return isset($bootstraper) ? $bootstraper : [];
     }
 
     /**
@@ -181,9 +185,9 @@ trait CreatesApplication
         $overrides = $this->overrideApplicationProviders($app);
 
         if (! empty($overrides)) {
-            $providers->transform(
-                function ($provider) use ($overrides) { return isset($overrides[$provider]) ? $overrides[$provider] : $provider; }
-            );
+            $providers->transform(static function ($provider) use ($overrides) {
+                return isset($overrides[$provider]) ? $overrides[$provider] : $provider;
+            });
         }
 
         return $providers->merge($this->getPackageProviders($app))->all();
@@ -197,7 +201,9 @@ trait CreatesApplication
      */
     protected function getPackageProviders($app)
     {
-        return [];
+        $provider = $this->getPackageProvidersUsingWorkbench($app);
+
+        return isset($provider) ? $provider : [];
     }
 
     /**
@@ -278,8 +284,18 @@ trait CreatesApplication
             ! \is_null($timezone) && date_default_timezone_set($timezone);
         });
 
-        $app['config']['app.aliases'] = $this->resolveApplicationAliases($app);
-        $app['config']['app.providers'] = $this->resolveApplicationProviders($app);
+        tap($app['config'], function ($config) use ($app) {
+            if (! $app->bound('env')) {
+                $app->detectEnvironment(static function () use ($config) {
+                    return $config->get('app.env', 'workbench');
+                });
+            }
+
+            $config->set([
+                'app.aliases' => $this->resolveApplicationAliases($app),
+                'app.providers' => $this->resolveApplicationProviders($app),
+            ]);
+        });
     }
 
     /**
@@ -293,7 +309,11 @@ trait CreatesApplication
         Facade::clearResolvedInstances();
         Facade::setFacadeApplication($app);
 
-        $app->detectEnvironment(function () { return 'testing'; });
+        if ($this->isRunningTestCase()) {
+            $app->detectEnvironment(static function () {
+                return 'testing';
+            });
+        }
     }
 
     /**
@@ -337,7 +357,7 @@ trait CreatesApplication
      */
     protected function resolveApplicationBootstrappers($app)
     {
-        if ($this instanceof PHPUnitTestCase) {
+        if ($this->isRunningTestCase()) {
             $app->make('Orchestra\Testbench\Bootstrap\HandleExceptions', ['testbench' => $this])->bootstrap($app);
         } else {
             $app->make('Illuminate\Foundation\Bootstrap\HandleExceptions')->bootstrap($app);
@@ -363,6 +383,11 @@ trait CreatesApplication
 
         $app->make('Illuminate\Foundation\Bootstrap\BootProviders')->bootstrap($app);
 
+        if ($this->isRunningTestCase() && static::usesTestingConcern(HandlesRoutes::class)) {
+            /** @phpstan-ignore-next-line */
+            $this->setUpApplicationRoutes($app);
+        }
+
         foreach ($this->getPackageBootstrappers($app) as $bootstrap) {
             $app->make($bootstrap)->bootstrap($app);
         }
@@ -386,7 +411,7 @@ trait CreatesApplication
      */
     protected function resolveApplicationRateLimiting($app)
     {
-        RateLimiter::for_('api', function (Request $request) {
+        RateLimiter::for_('api', static function (Request $request) {
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
     }

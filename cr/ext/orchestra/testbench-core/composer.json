@@ -17,7 +17,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Orchestra\\Testbench\\" : "src/"
+            "Orchestra\\Testbench\\": "src/"
         },
         "files": [
             "src/helpers.php"
@@ -25,7 +25,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Orchestra\\Testbench\\Tests\\": "tests/"
+            "Orchestra\\Testbench\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\": "workbench/database/"
         }
     },
     "bin": [
@@ -37,7 +39,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.21",
-        "laravel/framework": "^10.13.5",
+        "laravel/framework": "^10.23",
         "laravel/pint": "^1.6",
         "mockery/mockery": "^1.5.1",
         "phpstan/phpstan": "^1.10.7",
@@ -50,7 +52,7 @@
     "suggest": {
         "brianium/paratest": "Allow using parallel tresting (^6.4 || ^7.1.4).",
         "fakerphp/faker": "Allow using Faker for testing (^1.21).",
-        "laravel/framework": "Required for testing (^10.13.5).",
+        "laravel/framework": "Required for testing (^10.23).",
         "mockery/mockery": "Allow using Mockery for testing (^1.5.1).",
         "nunomaduro/collision": "Allow using Laravel style tests output and parallel testing (^6.4 || ^7.4).",
         "orchestra/testbench-browser-kit": "Allow using legacy Laravel BrowserKit for testing (^8.0).",
@@ -60,16 +62,25 @@
         "vlucas/phpdotenv": "Required for CLI Commander (^5.4.1)."
     },
     "scripts": {
-        "post-autoload-dump": "@composer run prepare",
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php testbench package:purge-skeleton --ansi",
         "prepare": "@php testbench package:discover --ansi",
         "ci": [
             "@composer audit",
-            "@composer run prepare",
+            "@prepare",
+            "@lint",
+            "@test"
+        ],
+        "lint": [
             "@php vendor/bin/pint",
             "@php vendor/bin/phpstan analyse"
         ],
-        "test": "@php vendor/bin/phpunit -c ./ --color",
-        "test:phpunit9": "@php vendor/bin/phpunit -c ./phpunit9.xml --color"
+        "test": [
+            "@php vendor/bin/phpunit --no-coverage --no-configuration --dont-report-useless-tests --bootstrap vendor/autoload.php --exclude-group phpunit-configuration --color tests"
+        ]
     },
     "config": {
         "sort-packages": true

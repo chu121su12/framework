@@ -15,8 +15,8 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\WithoutEvents;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Queue\Queue;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\ParallelTesting;
+use Illuminate\Support\LazyCollection;
 use Illuminate\View\Component;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -24,13 +24,12 @@ use Throwable;
 
 trait Testing
 {
-    use CreatesApplication,
-        HandlesAnnotations,
-        HandlesDatabases,
-        HandlesRoutes,
-        WithFactories,
-        WithLaravelMigrations,
-        WithLoadMigrationsFrom;
+    use CreatesApplication;
+    use HandlesAnnotations;
+    use HandlesDatabases;
+    use HandlesRoutes;
+    use InteractsWithMigrations;
+    use WithFactories;
 
     /**
      * The Illuminate application instance.
@@ -103,8 +102,6 @@ trait Testing
         }
 
         Model::setEventDispatcher($app['events']);
-
-        $this->setUpApplicationRoutes();
 
         $this->setUpHasRun = true;
     }
@@ -187,6 +184,11 @@ trait Testing
      */
     final protected function setUpTheTestEnvironmentTraits(array $uses)/*: array*/
     {
+        if (isset($uses[WithWorkbench::class])) {
+            /** @phpstan-ignore-next-line */
+            $this->setUpWithWorkbench();
+        }
+
         $this->setUpDatabaseRequirements(function () use ($uses) {
             if (isset($uses[RefreshDatabase::class])) {
                 /** @phpstan-ignore-next-line */
@@ -224,11 +226,15 @@ trait Testing
             $this->setUpFaker();
         }
 
-        Collection::make($uses)
+        LazyCollection::make(static function () use ($uses) {
+            foreach ($uses as $use) {
+                yield $use;
+            }
+        })
             ->reject(function ($use) {
                 /** @var class-string $use */
                 return $this->setUpTheTestEnvironmentTraitToBeIgnored($use);
-            })->transform(function ($use) {
+            })->map(static function ($use) {
                 /** @var class-string $use */
                 return class_basename($use);
             })->each(function ($traitBaseName) {

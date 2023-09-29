@@ -34,13 +34,16 @@ trait HandlesConnections
 
         $config->set(
             Collection::make($options)
-                ->mapWithKeys(function ($value, $key) use ($driver, $keyword, $config) {
+                ->mapWithKeys(static function ($value, $key) use ($driver, $keyword, $config) {
                     $name = "database.connections.{$driver}.{$key}";
 
                     /** @var mixed $configuration */
                     $configuration = Collection::make(Arr::wrap($value))
-                        ->transform(function ($value) use ($keyword) { return env("{$keyword}_{$value}"); })
-                        ->first(function ($value) { return ! \is_null($value); });
+                        ->transform(static function ($value) use ($keyword) {
+                            return env("{$keyword}_{$value}");
+                        })->first(static function ($value) {
+                            return ! \is_null($value);
+                        });
 
                     if (! isset($configuration)) {
                         $configuration = $config->get($name);

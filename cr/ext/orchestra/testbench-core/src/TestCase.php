@@ -3,25 +3,22 @@
 namespace Orchestra\Testbench;
 
 use Illuminate\Foundation\Testing;
-use Illuminate\Support\Str;
-use PHPUnit\Framework\TestCase as PHPUnit;
-use PHPUnit\Util\Annotation\Registry;
 
-abstract class TestCase extends PHPUnit implements Contracts\TestCase
+abstract class TestCase extends PHPUnit\TestCase implements Contracts\TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert,
         \PHPUnit\Framework\PhpUnit8Expect;
 
-    use Concerns\Testing,
-        Testing\Concerns\InteractsWithAuthentication,
-        Testing\Concerns\InteractsWithConsole,
-        Testing\Concerns\InteractsWithContainer,
-        Testing\Concerns\InteractsWithDatabase,
-        Testing\Concerns\InteractsWithDeprecationHandling,
-        Testing\Concerns\InteractsWithExceptionHandling,
-        Testing\Concerns\InteractsWithSession,
-        Testing\Concerns\InteractsWithTime,
-        Testing\Concerns\MakesHttpRequests;
+    use Concerns\Testing;
+    use Testing\Concerns\InteractsWithAuthentication;
+    use Testing\Concerns\InteractsWithConsole;
+    use Testing\Concerns\InteractsWithContainer;
+    use Testing\Concerns\InteractsWithDatabase;
+    use Testing\Concerns\InteractsWithDeprecationHandling;
+    use Testing\Concerns\InteractsWithExceptionHandling;
+    use Testing\Concerns\InteractsWithSession;
+    use Testing\Concerns\InteractsWithTime;
+    use Testing\Concerns\MakesHttpRequests;
 
     /**
      * The base URL to use while testing the application.
@@ -73,10 +70,7 @@ abstract class TestCase extends PHPUnit implements Contracts\TestCase
      */
     protected function setUpTraits()
     {
-        /** @var array<class-string, class-string> $uses */
-        $uses = array_flip(class_uses_recursive(static::class));
-
-        return $this->setUpTheTestEnvironmentTraits($uses);
+        return $this->setUpTheTestEnvironmentTraits(static::cachedUsesForTestCase());
     }
 
     /**
@@ -87,9 +81,7 @@ abstract class TestCase extends PHPUnit implements Contracts\TestCase
      */
     protected function setUpTheTestEnvironmentTraitToBeIgnored(/*string */$use)/*: bool*/
     {
-        $use = backport_type_check('string', $use);
-
-        return Str::startsWith($use, [
+        return \in_array($use, [
             Testing\RefreshDatabase::class,
             Testing\DatabaseMigrations::class,
             Testing\DatabaseTransactions::class,
@@ -110,10 +102,12 @@ abstract class TestCase extends PHPUnit implements Contracts\TestCase
             Concerns\HandlesAnnotations::class,
             Concerns\HandlesDatabases::class,
             Concerns\HandlesRoutes::class,
+            Concerns\InteractsWithMigrations::class,
+            Concerns\InteractsWithPHPUnit::class,
+            Concerns\InteractsWithWorkbench::class,
             Concerns\Testing::class,
             Concerns\WithFactories::class,
-            Concerns\WithLaravelMigrations::class,
-            Concerns\WithLoadMigrationsFrom::class,
+            Concerns\WithWorkbench::class,
         ]);
     }
 
@@ -128,12 +122,30 @@ abstract class TestCase extends PHPUnit implements Contracts\TestCase
     }
 
     /**
+     * Prepare the testing environment before the running the test case.
+     *
+     * @return void
+     *
+     * @codeCoverageIgnore
+     */
+    public static function setUpBeforeClass()/*: void*/
+    {
+        static::setupBeforeClassUsingPHPUnit();
+        static::setupBeforeClassUsingWorkbench();
+    }
+
+    /**
      * Clean up the testing environment before the next test case.
      *
      * @return void
+     *
+     * @codeCoverageIgnore
      */
     public static function tearDownAfterClass()/*: void*/
     {
         static::$latestResponse = null;
+
+        static::teardownAfterClassUsingWorkbench();
+        static::teardownAfterClassUsingPHPUnit();
     }
 }
