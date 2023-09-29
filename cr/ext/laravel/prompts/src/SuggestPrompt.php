@@ -4,16 +4,22 @@ namespace Laravel\Prompts;
 
 use Closure;
 use Illuminate\Support\Collection;
-use InvalidArgumentException;
 
 class SuggestPrompt extends Prompt
 {
+    use Concerns\ReducesScrollingToFitTerminal;
+    use Concerns\Truncation;
     use Concerns\TypedValue;
 
     /**
      * The index of the highlighted option.
      */
     public /*?int */$highlighted = null;
+
+    /**
+     * The index of the first visible option.
+     */
+    public /*int */$firstVisible = 0;
 
     /**
      * The options for the suggest prompt.
@@ -35,6 +41,7 @@ class SuggestPrompt extends Prompt
     public /*int */$scroll;
     public /*bool|string */$required;
     public /*?Closure */$validate;
+    public /*string */$hint;
 
     /**
      * Create a new SuggestPrompt instance.
@@ -48,33 +55,51 @@ class SuggestPrompt extends Prompt
         /*public string */$default = '',
         /*public int */$scroll = 5,
         /*public bool|string */$required = false,
-        /*public *//*?*/Closure $validate = null
+        /*public *//*?*/Closure $validate = null,
+        /*public string */$hint
+
     ) {
         $this->label = backport_type_check('string', $label);
         $this->placeholder = backport_type_check('string', $placeholder);
         $this->default = backport_type_check('string', $default);
         $this->scroll = backport_type_check('int', $scroll);
         $this->required = backport_type_check('bool|string', $required);
+        $this->hint = backport_type_check('string', $hint);
         $this->validate = $validate;
         $options = backport_type_check(['array', Collection::class, Closure::class], $options);
 
         $this->options = $options instanceof Collection ? $options->all() : $options;
 
+        $this->reduceScrollingToFitTerminal();
+
         $this->on('key', function ($key) { switch ($key) {
             case Key::UP:
-            case Key::SHIFT_TAB: return $this->highlightPrevious();
+            case Key::UP_ARROW:
+            case Key::SHIFT_TAB:
+            case Key::CTRL_P: return $this->highlightPrevious();
 
             case Key::DOWN:
-            case Key::TAB: return $this->highlightNext();
+            case Key::DOWN_ARROW:
+            case Key::TAB:
+            case Key::CTRL_N: return $this->highlightNext();
 
             case Key::ENTER: return $this->selectHighlighted();
 
             case Key::LEFT:
-            case Key::RIGHT: return $this->highlighted = null;
+            case Key::LEFT_ARROW:
+            case Key::RIGHT:
+            case Key::RIGHT_ARROW:
+            case Key::CTRL_B:
+            case Key::CTRL_F:
+            case Key::HOME:
+            case Key::END:
+            case Key::CTRL_A:
+            case Key::CTRL_E: return $this->highlighted = null;
 
             default: return value(function () {
                 $this->highlighted = null;
                 $this->matches = null;
+                $this->firstVisible = 0;
             });
         } });
 
@@ -122,6 +147,21 @@ class SuggestPrompt extends Prompt
     }
 
     /**
+     * The current visible matches.
+     *
+     * @return array<string>
+     */
+    public function visible()/*: array*/
+    {
+        return array_slice(
+            $this->matches(),
+            $this->firstVisible,
+            $this->scroll,
+            /*preserve_keys: */true
+        );
+    }
+
+    /**
      * Highlight the previous entry, or wrap around to the last entry.
      */
     protected function highlightPrevious()/*: void*/
@@ -134,6 +174,12 @@ class SuggestPrompt extends Prompt
             $this->highlighted = null;
         } else {
             $this->highlighted = $this->highlighted - 1;
+        }
+
+        if ($this->highlighted < $this->firstVisible) {
+            $this->firstVisible--;
+        } elseif ($this->highlighted === count($this->matches()) - 1) {
+            $this->firstVisible = count($this->matches()) - min($this->scroll, count($this->matches()));
         }
     }
 
@@ -149,6 +195,12 @@ class SuggestPrompt extends Prompt
         } else {
             $this->highlighted = $this->highlighted === count($this->matches()) - 1 ? null : $this->highlighted + 1;
         }
+
+        if ($this->highlighted > $this->firstVisible + $this->scroll - 1) {
+            $this->firstVisible++;
+        } elseif ($this->highlighted === 0 || $this->highlighted === null) {
+            $this->firstVisible = 0;
+        }
     }
 
     /**
@@ -161,21 +213,5 @@ class SuggestPrompt extends Prompt
         }
 
         $this->typedValue = $this->matches()[$this->highlighted];
-    }
-
-    /**
-     * Truncate a value with an ellipsis if it exceeds the given length.
-     */
-    protected function truncate(/*string */$value, /*int */$length)/*: string*/
-    {
-        $length = backport_type_check('int', $length);
-
-        $value = backport_type_check('string', $value);
-
-        if ($length <= 0) {
-            throw new InvalidArgumentException("Length [{$length}] must be greater than zero.");
-        }
-
-        return mb_strlen($value) <= $length ? $value : (mb_substr($value, 0, $length - 1).'…');
     }
 }

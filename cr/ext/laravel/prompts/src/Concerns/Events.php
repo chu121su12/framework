@@ -36,4 +36,12 @@ trait Events
             $listener(...$data);
         }
     }
+
+    /**
+     * Clean the event listeners.
+     */
+    public function clearListeners()/*: void*/
+    {
+        $this->listeners = [];
+    }
 }

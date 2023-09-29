@@ -12,6 +12,7 @@ class PasswordPrompt extends Prompt
     public /*string */$placeholder;
     public /*bool|string */$required;
     public /*?Closure */$validate;
+    public /*string */$hint;
 
     /**
      * Create a new PasswordPrompt instance.
@@ -20,11 +21,13 @@ class PasswordPrompt extends Prompt
         /*public string */$label,
         /*public string */$placeholder = '',
         /*public bool|string */$required = false,
-        /*public *//*?*/Closure $validate = null
+        /*public *//*?*/Closure $validate = null,
+        /*public string */$hint
     ) {
         $this->label = backport_type_check('string', $label);
         $this->placeholder = backport_type_check('string', $placeholder);
         $this->required = backport_type_check('bool|string', $required);
+        $this->hint = backport_type_check('bool|string', $hint);
         $this->validate = $validate;
 
         $this->trackTypedValue();

@@ -24,7 +24,8 @@ class ConfirmPromptRenderer extends Renderer
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->renderOptions($prompt),
-                    color: 'red'
+                    /*$footer = */'',
+                    /*color: */'red'
                 )
                 ->error('Cancelled.');
 
@@ -32,7 +33,8 @@ class ConfirmPromptRenderer extends Renderer
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->renderOptions($prompt),
-                    color: 'yellow'
+                    /*$footer = */'',
+                    /*color: */'yellow'
                 )
                 ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5));
 
@@ -41,7 +43,11 @@ class ConfirmPromptRenderer extends Renderer
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->renderOptions($prompt)
                 )
-                ->newLine(); // Space for errors
+                ->when(
+                    $prompt->hint,
+                    function () use ($prompt) { return $this->hint($prompt->hint); },
+                    function () { return $this->newLine(); } // Space for errors
+                );
         }
     }
 

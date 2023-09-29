@@ -3,8 +3,9 @@
 namespace Laravel\Prompts\Themes\Default_;
 
 use Laravel\Prompts\SuggestPrompt;
+use Laravel\Prompts\Themes\Contracts\Scrolling;
 
-class SuggestPromptRenderer extends Renderer
+class SuggestPromptRenderer extends Renderer implements Scrolling
 {
     use Concerns\DrawsBoxes;
     use Concerns\DrawsScrollbars;
@@ -27,7 +28,8 @@ class SuggestPromptRenderer extends Renderer
                 ->box(
                     $this->dim($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $this->strikethrough($this->dim($this->truncate($prompt->value() ?: $prompt->placeholder, $maxWidth))),
-                    color: 'red'
+                    /*$footer = */'',
+                    /*color: */'red'
                 )
                 ->error('Cancelled');
 
@@ -36,7 +38,8 @@ class SuggestPromptRenderer extends Renderer
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->valueWithCursorAndArrow($prompt, $maxWidth),
                     $this->renderOptions($prompt),
-                    color: 'yellow'
+                    /*$footer = */'',
+                    /*color: */'yellow'
                 )
                 ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5));
 
@@ -46,8 +49,12 @@ class SuggestPromptRenderer extends Renderer
                     $this->valueWithCursorAndArrow($prompt, $maxWidth),
                     $this->renderOptions($prompt)
                 )
-                ->spaceForDropdown($prompt)
-                ->newLine(); // Space for errors
+                ->when(
+                    $prompt->hint,
+                    function () use ($prompt) { return $this->hint($prompt->hint); },
+                    function () { return $this->newLine(); } // Space for errors
+                )
+                ->spaceForDropdown($prompt);
         }
     }
 
@@ -94,19 +101,26 @@ class SuggestPromptRenderer extends Renderer
             return '';
         }
 
-        return $this->scroll(
-            collect($prompt->matches())
-                ->map(function ($label) use ($prompt) {
-                    return $this->truncate($label, $prompt->terminal()->cols() - 10);
-                })
-                ->map(function ($label, $i) use ($prompt) { return $prompt->highlighted === $i
+        return $this->scrollbar(
+            collect($prompt->visible())
+                ->map(function ($label) use ($prompt) { return $this->truncate($label, $prompt->terminal()->cols() - 10); })
+                ->map(function ($label, $key) use ($prompt) { return $prompt->highlighted === $key
                     ? "{$this->cyan('›')} {$label}  "
-                    : "  {$this->dim($label)}  ";
-                }),
-            $prompt->highlighted,
-            min($prompt->scroll, $prompt->terminal()->lines() - 7),
+                    : "  {$this->dim($label)}  "
+                ; }),
+            $prompt->firstVisible,
+            $prompt->scroll,
+            count($prompt->matches()),
             min($this->longest($prompt->matches(), /*padding: */4), $prompt->terminal()->cols() - 6),
             $prompt->state === 'cancel' ? 'dim' : 'cyan'
         )->implode(PHP_EOL);
+    }
+
+    /**
+     * The number of lines to reserve outside of the scrollable area.
+     */
+    public function reservedLines()/*: int*/
+    {
+        return 7;
     }
 }

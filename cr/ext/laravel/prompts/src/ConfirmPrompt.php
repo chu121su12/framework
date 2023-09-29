@@ -17,6 +17,7 @@ class ConfirmPrompt extends Prompt
     public /*string */$no;
     public /*bool|string */$required;
     public /*?Closure */$validate;
+    public /*string */$hint;
 
     /**
      * Create a new ConfirmPrompt instance.
@@ -27,7 +28,8 @@ class ConfirmPrompt extends Prompt
         /*public string */$yes = 'Yes',
         /*public string */$no = 'No',
         /*public bool|string */$required = false,
-        /*public *//*?*/Closure $validate = null
+        /*public *//*?*/Closure $validate = null,
+        /*public *//*string */$hint = ''
     ) {
         $this->label = backport_type_check('string', $label);
         $this->default = backport_type_check('bool', $default);
@@ -35,6 +37,7 @@ class ConfirmPrompt extends Prompt
         $this->no = backport_type_check('string', $no);
         $this->required = backport_type_check('bool|string', $required);
         $this->validate = $validate;
+        $this->hint = backport_type_check('string', $hint);
 
         $this->confirmed = $default;
 
@@ -44,9 +47,17 @@ class ConfirmPrompt extends Prompt
 
             case Key::TAB:
             case Key::UP:
+            case Key::UP_ARROW:
             case Key::DOWN:
+            case Key::DOWN_ARROW:
             case Key::LEFT:
+            case Key::LEFT_ARROW:
             case Key::RIGHT:
+            case Key::RIGHT_ARROW:
+            case Key::CTRL_P:
+            case Key::CTRL_F:
+            case Key::CTRL_N:
+            case Key::CTRL_B:
             case 'h':
             case 'j':
             case 'k':

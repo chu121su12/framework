@@ -26,7 +26,8 @@ class TextPromptRenderer extends Renderer
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $this->strikethrough($this->dim($this->truncate($prompt->value() ?: $prompt->placeholder, $maxWidth))),
-                    color: 'red'
+                    /*$footer = */'',
+                    /*color: */'red'
                 )
                 ->error('Cancelled.');
 
@@ -34,7 +35,8 @@ class TextPromptRenderer extends Renderer
                 ->box(
                     $this->truncate($prompt->label, $prompt->terminal()->cols() - 6),
                     $prompt->valueWithCursor($maxWidth),
-                    color: 'yellow'
+                    /*$footer = */'',
+                    /*color: */'yellow'
                 )
                 ->warning($this->truncate($prompt->error, $prompt->terminal()->cols() - 5));
 
@@ -43,7 +45,11 @@ class TextPromptRenderer extends Renderer
                     $this->cyan($this->truncate($prompt->label, $prompt->terminal()->cols() - 6)),
                     $prompt->valueWithCursor($maxWidth)
                 )
-                ->newLine(); // Space for errors
+                ->when(
+                    $prompt->hint,
+                    function () use ($prompt) { return $this->hint($prompt->hint); },
+                    function () { return $this->newLine(); } // Space for errors
+                );
         }
     }
 }

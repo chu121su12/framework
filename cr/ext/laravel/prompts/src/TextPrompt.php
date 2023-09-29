@@ -13,6 +13,7 @@ class TextPrompt extends Prompt
     public /*string */$default;
     public /*bool|string */$required;
     public /*?Closure */$validate;
+    public /*string */$hint;
 
     /**
      * Create a new TextPrompt instance.
@@ -22,12 +23,14 @@ class TextPrompt extends Prompt
         /*public string */$placeholder = '',
         /*public string */$default = '',
         /*public bool|string */$required = false,
-        /*public *//*?*/Closure $validate = null
+        /*public *//*?*/Closure $validate = null,
+        /*public string */$hint
     ) {
         $this->label = backport_type_check('string', $label);
         $this->placeholder = backport_type_check('string', $placeholder);
         $this->default = backport_type_check('string', $default);
         $this->required = backport_type_check('bool|string', $required);
+        $this->hint = backport_type_check('string', $hint);
         $this->validate = $validate;
 
         $this->trackTypedValue($default);

@@ -4,22 +4,28 @@ namespace Laravel\Prompts\Concerns;
 
 use InvalidArgumentException;
 use Laravel\Prompts\ConfirmPrompt;
+use Laravel\Prompts\MultiSearchPrompt;
 use Laravel\Prompts\MultiSelectPrompt;
 use Laravel\Prompts\Note;
 use Laravel\Prompts\PasswordPrompt;
+use Laravel\Prompts\Progress;
 use Laravel\Prompts\SearchPrompt;
 use Laravel\Prompts\SelectPrompt;
 use Laravel\Prompts\Spinner;
 use Laravel\Prompts\SuggestPrompt;
+use Laravel\Prompts\Table;
 use Laravel\Prompts\TextPrompt;
 use Laravel\Prompts\Themes\Default_\ConfirmPromptRenderer;
+use Laravel\Prompts\Themes\Default_\MultiSearchPromptRenderer;
 use Laravel\Prompts\Themes\Default_\MultiSelectPromptRenderer;
 use Laravel\Prompts\Themes\Default_\NoteRenderer;
 use Laravel\Prompts\Themes\Default_\PasswordPromptRenderer;
+use Laravel\Prompts\Themes\Default_\ProgressRenderer;
 use Laravel\Prompts\Themes\Default_\SearchPromptRenderer;
 use Laravel\Prompts\Themes\Default_\SelectPromptRenderer;
 use Laravel\Prompts\Themes\Default_\SpinnerRenderer;
 use Laravel\Prompts\Themes\Default_\SuggestPromptRenderer;
+use Laravel\Prompts\Themes\Default_\TableRenderer;
 use Laravel\Prompts\Themes\Default_\TextPromptRenderer;
 
 trait Themes
@@ -42,9 +48,12 @@ trait Themes
             MultiSelectPrompt::class => MultiSelectPromptRenderer::class,
             ConfirmPrompt::class => ConfirmPromptRenderer::class,
             SearchPrompt::class => SearchPromptRenderer::class,
+            MultiSearchPrompt::class => MultiSearchPromptRenderer::class,
             SuggestPrompt::class => SuggestPromptRenderer::class,
             Spinner::class => SpinnerRenderer::class,
             Note::class => NoteRenderer::class,
+            Table::class => TableRenderer::class,
+            Progress::class => ProgressRenderer::class,
         ],
     ];
 

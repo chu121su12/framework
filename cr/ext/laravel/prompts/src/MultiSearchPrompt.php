@@ -3,9 +3,8 @@
 namespace Laravel\Prompts;
 
 use Closure;
-use InvalidArgumentException;
 
-class SearchPrompt extends Prompt
+class MultiSearchPrompt extends Prompt
 {
     use Concerns\ReducesScrollingToFitTerminal;
     use Concerns\Truncation;
@@ -28,69 +27,67 @@ class SearchPrompt extends Prompt
      */
     protected /*?array */$matches = null;
 
+    /**
+     * The selected values.
+     *
+     * @var array<int|string, string>
+     */
+    public /*array */$values = [];
+
     public /*string */$label;
     public /*Closure */$options;
     public /*string */$placeholder;
     public /*int */$scroll;
+    public /*bool|string */$required;
     public /*?Closure */$validate;
     public /*string */$hint;
-    public /*bool|string */$required;
 
     /**
-     * Create a new SearchPrompt instance.
+     * Create a new MultiSearchPrompt instance.
      *
      * @param  Closure(string): array<int|string, string>  $options
      */
     public function __construct(
-        /*public string */$label,
+        /*public *//*string */$label,
         /*public */Closure $options,
-        /*public string */$placeholder = '',
-        /*public int */$scroll = 5,
+        /*public *//*string */$placeholder = '',
+        /*public *//*int */$scroll = 5,
+        /*public *//*bool|string */$required = false,
         /*public *//*?*/Closure $validate = null,
-        /*public string */$hint = '',
-        /*public bool|string */$required = ''
+        /*public *//*string */$hint = ''
     ) {
         $this->label = backport_type_check('string', $label);
         $this->placeholder = backport_type_check('string', $placeholder);
         $this->scroll = backport_type_check('int', $scroll);
-        $this->hint = backport_type_check('string', $hint);
         $this->required = backport_type_check('bool|string', $required);
+        $this->hint = backport_type_check('string', $hint);
         $this->options = $options;
         $this->validate = $validate;
 
-        if ($this->required === false) {
-            throw new InvalidArgumentException('Argument [required] must be true or a string.');
-        }
-
-        $this->trackTypedValue(/*$default = */'', /*submit: */false);
+        $this->trackTypedValue(
+            /*$default = */'',
+            /*submit: */false,
+            /*ignore: */function ($key) { return $key === Key::SPACE && $this->highlighted !== null; }
+        );
 
         $this->reduceScrollingToFitTerminal();
 
         $this->on('key', function ($key) { switch ($key) {
             case Key::UP:
             case Key::UP_ARROW:
-            case Key::SHIFT_TAB: 
-            case Key::CTRL_P: return $this->highlightPrevious();
+            case Key::SHIFT_TAB: return $this->highlightPrevious();
 
             case Key::DOWN:
             case Key::DOWN_ARROW:
-            case Key::TAB: 
-            case Key::CTRL_N: return $this->highlightNext();
+            case Key::TAB: return $this->highlightNext();
 
-            case Key::ENTER: return $this->highlighted !== null
-                ? $this->submit()
-                : $this->search();
+            case Key::SPACE: return $this->highlighted !== null ? $this->toggleHighlighted() : null;
+            case Key::ENTER: return $this->submit();
 
             case Key::LEFT:
             case Key::LEFT_ARROW:
             case Key::RIGHT:
-            case Key::RIGHT_ARROW:
-            case Key::CTRL_B:
-            case Key::CTRL_F:
-            case Key::HOME:
-            case Key::END:
-            case Key::CTRL_A:
-            case Key::CTRL_E: return $this->highlighted = null;
+            case Key::RIGHT_ARROW: return $this->highlighted = null;
 
             default: return $this->search();
         } });
@@ -140,22 +137,26 @@ class SearchPrompt extends Prompt
             return $this->matches;
         }
 
+        if (strlen($this->typedValue) === 0) {
+            $matches = call_user_func($this->options, $this->typedValue);
+
+            return $this->matches = \array_merge(
+                array_diff($this->values, $matches),
+                $matches
+            );
+        }
+
         return $this->matches = call_user_func($this->options, $this->typedValue);
     }
 
     /**
-     * The currently visible matches.
+     * The currently visible matches
      *
      * @return array<string>
      */
     public function visible()/*: array*/
     {
-        return array_slice(
-            $this->matches(),
-            $this->firstVisible,
-            $this->scroll,
-            /*preserve_keys: */true
-        );
+        return array_slice($this->matches(), $this->firstVisible, $this->scroll, /*preserve_keys: */true);
     }
 
     /**
@@ -201,6 +202,26 @@ class SearchPrompt extends Prompt
     }
 
     /**
+     * Toggle the highlighted entry.
+     */
+    protected function toggleHighlighted()/*: void*/
+    {
+        if (array_is_list($this->matches)) {
+            $label = $this->matches[$this->highlighted];
+            $key = $label;
+        } else {
+            $key = array_keys($this->matches)[$this->highlighted];
+            $label = $this->matches[$key];
+        }
+
+        if (array_key_exists($key, $this->values)) {
+            unset($this->values[$key]);
+        } else {
+            $this->values[$key] = $label;
+        }
+    }
+
+    /**
      * Get the current search query.
      */
     public function searchValue()/*: string*/
@@ -210,25 +231,21 @@ class SearchPrompt extends Prompt
 
     /**
      * Get the selected value.
+     *
+     * @return array<int|string>
      */
-    public function value()/*: int|string|null*/
+    public function value()/*: array*/
     {
-        if ($this->matches === null || $this->highlighted === null) {
-            return null;
-        }
-
-        return array_is_list($this->matches)
-            ? $this->matches[$this->highlighted]
-            : array_keys($this->matches)[$this->highlighted];
+        return array_keys($this->values);
     }
 
     /**
-     * Get the selected label.
+     * Get the selected labels.
+     *
+     * @return array<string>
      */
-    public function label()/*: ?string*/
+    public function labels()/*: array*/
     {
-        $matchKey = array_keys($this->matches)[$this->highlighted];
-
-        return isset($this->matches[$matchKey]) ? $this->matches[$matchKey] : null;
+        return array_values($this->values);
     }
 }

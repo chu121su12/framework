@@ -22,6 +22,11 @@ class Spinner extends Prompt
      */
     public /*bool */$static = false;
 
+    /**
+     * The process ID after forking.
+     */
+    public /*int */$pid;
+
     public /*string */$message;
 
     /**
@@ -47,24 +52,22 @@ class Spinner extends Prompt
         $this->capturePreviousNewLines();
 
         if (! function_exists('pcntl_fork')) {
-            $this->renderStatically($callback);
+            return $this->renderStatically($callback);
         }
-
-        $this->hideCursor();
 
         $originalAsync = pcntl_async_signals(true);
 
         pcntl_signal(SIGINT, function () {
-            $this->showCursor();
-            exit();
+            return exit();
         });
 
         try {
+            $this->hideCursor();
             $this->render();
 
-            $pid = pcntl_fork();
+            $this->pid = pcntl_fork();
 
-            if ($pid === 0) {
+            if ($this->pid === 0) {
                 while (true) { // @phpstan-ignore-line
                     $this->render();
 
@@ -74,13 +77,8 @@ class Spinner extends Prompt
                 }
             } else {
                 $result = $callback();
-                posix_kill($pid, SIGHUP);
-                $lines = explode(PHP_EOL, $this->prevFrame);
-                $this->moveCursor(-999, -count($lines) + 1);
-                $this->eraseDown();
-                $this->showCursor();
-                pcntl_async_signals($originalAsync);
-                pcntl_signal(SIGINT, SIG_DFL);
+
+                $this->resetTerminal($originalAsync);
 
                 return $result;
             }
@@ -90,12 +88,23 @@ class Spinner extends Prompt
         }
 
         if (isset($e)) {
-            $this->showCursor();
-            pcntl_async_signals($originalAsync);
-            pcntl_signal(SIGINT, SIG_DFL);
+            $this->resetTerminal($originalAsync);
 
             throw $e;
         }
+    }
+
+    /**
+     * Reset the terminal.
+     */
+    protected function resetTerminal(/*bool */$originalAsync)/*: void*/
+    {
+        $originalAsync = backport_type_check('string', $originalAsync);
+
+        pcntl_async_signals($originalAsync);
+        pcntl_signal(SIGINT, SIG_DFL);
+
+        $this->eraseRenderedLines();
     }
 
     /**
@@ -110,9 +119,16 @@ class Spinner extends Prompt
     {
         $this->static = true;
 
-        $this->render();
+        try {
+            $this->hideCursor();
+            $this->render();
 
-        return $callback();
+            $result = $callback();
+        } finally {
+            $this->eraseRenderedLines();
+        }
+
+        return $result;
     }
 
     /**
@@ -131,5 +147,27 @@ class Spinner extends Prompt
     public function value()/*: bool*/
     {
         return true;
+    }
+
+    /**
+     * Clear the lines rendered by the spinner.
+     */
+    protected function eraseRenderedLines()/*: void*/
+    {
+        $lines = explode(PHP_EOL, $this->prevFrame);
+        $this->moveCursor(-999, -count($lines) + 1);
+        $this->eraseDown();
+    }
+
+    /**
+     * Clean up after the spinner.
+     */
+    public function __destruct()
+    {
+        if (! empty($this->pid)) {
+            posix_kill($this->pid, SIGHUP);
+        }
+
+        parent::__destruct();
     }
 }

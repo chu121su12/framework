@@ -7,10 +7,17 @@ use Illuminate\Support\Collection;
 
 class MultiSelectPrompt extends Prompt
 {
+    use Concerns\ReducesScrollingToFitTerminal;
+
     /**
      * The index of the highlighted option.
      */
     public /*int */$highlighted = 0;
+
+    /**
+     * The index of the first visible option.
+     */
+    public /*int */$firstVisible = 0;
 
     /**
      * The options for the multi-select prompt.
@@ -37,9 +44,10 @@ class MultiSelectPrompt extends Prompt
     public /*int */$scroll;
     public /*bool|string */$required;
     public /*?Closure */$validate;
+    public /*string */$hint;
 
     /**
-     * Create a new SelectPrompt instance.
+     * Create a new MultiSelectPrompt instance.
      *
      * @param  array<int|string, string>|Collection<int|string, string>  $options
      * @param  array<int|string>|Collection<int, int|string>  $default
@@ -50,12 +58,14 @@ class MultiSelectPrompt extends Prompt
         /*array|Collection */$default = [],
         /*public int */$scroll = 5,
         /*public bool|string */$required = false,
-        /*public *//*?*/Closure $validate = null
+        /*public *//*?*/Closure $validate = null,
+        /*public string */$hint
     ) {
         $this->label = backport_type_check('string', $label);
         $this->scroll = backport_type_check('int', $scroll);
         $this->required = backport_type_check('bool|string', $required);
         $this->validate = $validate;
+        $this->hint = backport_type_check('string', $hint);
         $options = backport_type_check(['array', Collection::class], $options);
         $default = backport_type_check(['array', Collection::class], $default);
 
@@ -63,16 +73,27 @@ class MultiSelectPrompt extends Prompt
         $this->default = $default instanceof Collection ? $default->all() : $default;
         $this->values = $this->default;
 
+        $this->reduceScrollingToFitTerminal();
+
         $this->on('key', function ($key) { switch ($key) {
             case Key::UP:
+            case Key::UP_ARROW:
             case Key::LEFT:
+            case Key::LEFT_ARROW:
             case Key::SHIFT_TAB:
+            case Key::CTRL_P:
+            case Key::CTRL_B:
+
             case 'k':
             case 'h': return $this->highlightPrevious();
 
             case Key::DOWN:
+            case Key::DOWN_ARROW:
             case Key::RIGHT:
+            case Key::RIGHT_ARROW:
             case Key::TAB:
+            case Key::CTRL_N:
+            case Key::CTRL_F:
             case 'j':
             case 'l': return $this->highlightNext();
 
@@ -100,10 +121,25 @@ class MultiSelectPrompt extends Prompt
     public function labels()/*: array*/
     {
         if (array_is_list($this->options)) {
-            return array_values(array_intersect_key($this->options, $this->values));
+            return array_map(function ($value) { return (string) $value; }, $this->values);
         }
 
         return array_values(array_intersect_key($this->options, array_flip($this->values)));
+    }
+
+    /**
+     * The currently visible options.
+     *
+     * @return array<int|string, string>
+     */
+    public function visible()/*: array*/
+    {
+        return array_slice(
+            $this->options,
+            $this->firstVisible,
+            $this->scroll,
+            /*preserve_keys: */true
+        );
     }
 
     /**
@@ -136,6 +172,12 @@ class MultiSelectPrompt extends Prompt
     protected function highlightPrevious()/*: void*/
     {
         $this->highlighted = $this->highlighted === 0 ? count($this->options) - 1 : $this->highlighted - 1;
+
+        if ($this->highlighted < $this->firstVisible) {
+            $this->firstVisible--;
+        } elseif ($this->highlighted === count($this->options) - 1) {
+            $this->firstVisible = count($this->options) - min($this->scroll, count($this->options));
+        }
     }
 
     /**
@@ -144,6 +186,12 @@ class MultiSelectPrompt extends Prompt
     protected function highlightNext()/*: void*/
     {
         $this->highlighted = $this->highlighted === count($this->options) - 1 ? 0 : $this->highlighted + 1;
+
+        if ($this->highlighted > $this->firstVisible + $this->scroll - 1) {
+            $this->firstVisible++;
+        } elseif ($this->highlighted === 0) {
+            $this->firstVisible = 0;
+        }
     }
 
     /**
@@ -156,7 +204,7 @@ class MultiSelectPrompt extends Prompt
             : array_keys($this->options)[$this->highlighted];
 
         if (in_array($value, $this->values)) {
-            $this->values = array_filter($this->values, function ($v) { return $v !== $value; });
+            $this->values = array_filter($this->values, function ($v) use ($value) { return $v !== $value; });
         } else {
             $this->values[] = $value;
         }

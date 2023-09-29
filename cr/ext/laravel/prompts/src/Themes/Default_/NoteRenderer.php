@@ -42,6 +42,11 @@ class NoteRenderer extends Renderer
 
                 return $this;
 
+            case 'info':
+                $lines->each(function ($line) { return $this->line($this->green(" {$line}")); });
+
+                return $this;
+
             default:
                 $lines->each(function ($line) { return $this->line(" {$line}"); });
 
