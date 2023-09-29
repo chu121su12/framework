@@ -98,13 +98,13 @@ trait Themes
      */
     protected function getRenderer()/*: callable*/
     {
-        $class = get_class($this);
+        $staticClass = get_class($this);
 
-        $classCallable = isset(static::$themes[static::$theme]) && isset(static::$themes[static::$theme][$class]) ? static::$themes[static::$theme][$class] : static::$themes['default'][$class];
+        $className = isset(static::$themes[static::$theme]) && isset(static::$themes[static::$theme][$staticClass])
+            ? static::$themes[static::$theme][$staticClass]
+            : static::$themes['default'][$staticClass];
 
-        $className = $classCallable($this);
-
-        return new $className;
+        return new $className($this);
     }
 
     /**

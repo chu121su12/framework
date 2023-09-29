@@ -94,7 +94,7 @@ abstract class Renderer
      *
      * @return $this
      */
-    protected function when(/*mixed */$value, callable $callback, callable $default = null): self
+    protected function when(/*mixed */$value, callable $callback, callable $default = null)/*: self*/
     {
         $value = backport_type_check('mixed', $value);
 
