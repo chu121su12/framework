@@ -14,8 +14,6 @@ class SubMinuteSchedulingTest extends TestCase
 
     protected function setUp()/*: void*/
     {
-        $this->markTestSkipped('TODO: fix sub minute');
-
         parent::setUp();
 
         $this->schedule = $this->app->make(Schedule::class);

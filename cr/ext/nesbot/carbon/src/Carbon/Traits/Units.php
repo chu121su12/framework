@@ -178,7 +178,18 @@ trait Units
      */
     public function rawAdd(DateInterval $interval)
     {
-        return parent::add($interval);
+        return $this->addInterval_($interval);
+    }
+
+    public function addInterval_(DateInterval $interval)
+    {
+        $updated = parent::add($interval);
+
+        if (\version_compare(\PHP_VERSION, '7.0.0', '>=') || ! $interval->f) {
+            return $updated;
+        }
+
+        return $updated->addUnit('microsecond', $interval->f * 1000000);
     }
 
     /**
@@ -206,10 +217,10 @@ trait Units
         // @codeCoverageIgnoreStart
         if (
             $unit instanceof DateInterval &&
-            version_compare(PHP_VERSION, '8.1.0-dev', '>=') &&
+            (version_compare(PHP_VERSION, '7.0.0', '<') || version_compare(PHP_VERSION, '8.1.0-dev', '>=')) &&
             ($unit->f < 0 || $unit->f >= 1)
         ) {
-            $unit = clone $unit;
+            $unit = CarbonInterval::make($unit);
             $seconds = floor($unit->f);
             $unit->f -= $seconds;
             $unit->s += (int) $seconds;
@@ -225,7 +236,7 @@ trait Units
         }
 
         if ($unit instanceof DateInterval) {
-            return parent::add($unit);
+            return $this->addInterval_($unit);
         }
 
         if (backport_is_numeric($unit)) {
@@ -363,7 +374,18 @@ trait Units
      */
     public function rawSub(DateInterval $interval)
     {
-        return parent::sub($interval);
+        return $this->subInterval_($interval);
+    }
+
+    public function subInterval_(DateInterval $interval)
+    {
+        $updated = parent::sub($interval);
+
+        if (\version_compare(\PHP_VERSION, '7.0.0', '>=') || ! $interval->f) {
+            return $updated;
+        }
+
+        return $updated->subUnit('microsecond', $interval->f * 1000000);
     }
 
     /**
@@ -386,6 +408,21 @@ trait Units
             $unit = CarbonInterval::make($unit);
         }
 
+        // Can be removed if https://bugs.php.net/bug.php?id=81106
+        // is fixed
+        // @codeCoverageIgnoreStart
+        if (
+            $unit instanceof DateInterval &&
+            (version_compare(PHP_VERSION, '7.0.0', '<') || version_compare(PHP_VERSION, '8.1.0-dev', '>=')) &&
+            ($unit->f < 0 || $unit->f >= 1)
+        ) {
+            $unit = CarbonInterval::make($unit);
+            $seconds = floor($unit->f);
+            $unit->f += $seconds;
+            $unit->s -= (int) $seconds;
+        }
+        // @codeCoverageIgnoreEnd
+
         if ($unit instanceof CarbonConverterInterface) {
             return $this->resolveCarbon($unit->convertDate($this, true));
         }
@@ -395,7 +432,7 @@ trait Units
         }
 
         if ($unit instanceof DateInterval) {
-            return parent::sub($unit);
+            return $this->subInterval_($unit);
         }
 
         if (backport_is_numeric($unit)) {

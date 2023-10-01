@@ -543,6 +543,8 @@ trait Date
     use Timestamp;
     use Units;
     use Week;
+    use \Carbon\Patch\DateTimeTrait;
+    use \Carbon\Patch\DateTrait;
     use \Carbon\Patch\SetState;
     use \Carbon\Patch\StaticTranslator;
 

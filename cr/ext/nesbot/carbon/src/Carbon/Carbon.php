@@ -510,7 +510,6 @@ use DateTimeZone;
 class Carbon extends DateTime implements CarbonInterface, Patch\CarbonInterface
 {
     use Date;
-    use Patch\DateTrait;
     use Patch\DateTimeCreateFromInterfacePolyfill;
 
     /**

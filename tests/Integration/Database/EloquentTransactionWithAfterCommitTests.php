@@ -4,12 +4,12 @@ namespace Illuminate\Tests\Integration\Database;
 
 use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Support\Facades\DB;
-use Orchestra\Testbench\Concerns\WithLaravelMigrations;
+use Orchestra\Testbench\Concerns\WithLaravelMigrationsPhp5;
 use Orchestra\Testbench\Factories\UserFactory;
 
 trait EloquentTransactionWithAfterCommitTests
 {
-    use WithLaravelMigrations;
+    use WithLaravelMigrationsPhp5;
 
     protected function setUpEloquentTransactionWithAfterCommitTests()/*: void*/
     {
