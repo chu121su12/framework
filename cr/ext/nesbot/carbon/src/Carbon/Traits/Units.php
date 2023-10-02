@@ -185,11 +185,11 @@ trait Units
     {
         $updated = parent::add($interval);
 
-        if (\version_compare(\PHP_VERSION, '7.0.0', '>=') || ! $interval->f) {
+        if (\version_compare(\PHP_VERSION, '7.0.0', '>=') || ! \property_exists($interval, 'f')) {
             return $updated;
         }
 
-        return $updated->addUnit('microsecond', $interval->f * 1000000);
+        return $updated->addUnit('microsecond', CarbonInterval::make($interval)->f * 1000000);
     }
 
     /**
@@ -211,21 +211,6 @@ trait Units
         if (\is_string($unit) && \func_num_args() === 1) {
             $unit = CarbonInterval::make($unit);
         }
-
-        // Can be removed if https://bugs.php.net/bug.php?id=81106
-        // is fixed
-        // @codeCoverageIgnoreStart
-        if (
-            $unit instanceof DateInterval &&
-            (version_compare(PHP_VERSION, '7.0.0', '<') || version_compare(PHP_VERSION, '8.1.0-dev', '>=')) &&
-            ($unit->f < 0 || $unit->f >= 1)
-        ) {
-            $unit = CarbonInterval::make($unit);
-            $seconds = floor($unit->f);
-            $unit->f -= $seconds;
-            $unit->s += (int) $seconds;
-        }
-        // @codeCoverageIgnoreEnd
 
         if ($unit instanceof CarbonConverterInterface) {
             return $this->resolveCarbon($unit->convertDate($this, false));
@@ -381,11 +366,11 @@ trait Units
     {
         $updated = parent::sub($interval);
 
-        if (\version_compare(\PHP_VERSION, '7.0.0', '>=') || ! $interval->f) {
+        if (\version_compare(\PHP_VERSION, '7.0.0', '>=') || ! \property_exists($interval, 'f')) {
             return $updated;
         }
 
-        return $updated->subUnit('microsecond', $interval->f * 1000000);
+        return $updated->subUnit('microsecond', CarbonInterval::make($interval)->f * 1000000);
     }
 
     /**
@@ -407,21 +392,6 @@ trait Units
         if (\is_string($unit) && \func_num_args() === 1) {
             $unit = CarbonInterval::make($unit);
         }
-
-        // Can be removed if https://bugs.php.net/bug.php?id=81106
-        // is fixed
-        // @codeCoverageIgnoreStart
-        if (
-            $unit instanceof DateInterval &&
-            (version_compare(PHP_VERSION, '7.0.0', '<') || version_compare(PHP_VERSION, '8.1.0-dev', '>=')) &&
-            ($unit->f < 0 || $unit->f >= 1)
-        ) {
-            $unit = CarbonInterval::make($unit);
-            $seconds = floor($unit->f);
-            $unit->f += $seconds;
-            $unit->s -= (int) $seconds;
-        }
-        // @codeCoverageIgnoreEnd
 
         if ($unit instanceof CarbonConverterInterface) {
             return $this->resolveCarbon($unit->convertDate($this, true));

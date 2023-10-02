@@ -15,4 +15,10 @@ trait DateTimeTrait
     {
         return $this->sub_(...func_get_args());
     }
+
+    #[\ReturnTypeWillChange]
+    public function setTime($hour, $minute, $second = null, $microseconds = null)
+    {
+        return $this->setTime_(...func_get_args());
+    }
 }

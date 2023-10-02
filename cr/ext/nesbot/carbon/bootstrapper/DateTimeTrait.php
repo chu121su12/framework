@@ -13,4 +13,9 @@ trait DateTimeTrait
     {
         return $this->sub_(...$arguments);
     }
+
+    public function setTime($hour, $minute, $second = null)
+    {
+        return $this->setTime_(...func_get_args());
+    }
 }

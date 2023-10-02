@@ -2468,7 +2468,7 @@ class HttpClientTest extends TestCase
 
     public function testTheTransferStatsAreCustomizable()/*: void*/
     {
-        $this->assertHasActiveNetworkConnection('example.com', 443);
+        $this->skipWithInactiveSocketConnection($this, 'example.com');
 
         $onStatsFunctionCalled = false;
 
@@ -2655,22 +2655,6 @@ class HttpClientTest extends TestCase
 
         $this->assertInstanceOf(TestResponse::class, $response);
         $this->assertSame('expected content', $response->body());
-    }
-
-    protected function assertHasActiveNetworkConnection($host, $port = 80)
-    {
-        try {
-            if ($connection = @fsockopen($host, $port)) {
-                fclose($connection);
-
-                return;
-            }
-        } catch (\Exception $e) {
-        } catch (\Error $e) {
-        } catch (\Throwable $e) {
-        }
-
-        $this->markTestSkipped('Network connection may not be available.');
     }
 }
 

@@ -27,6 +27,8 @@ class ValidationPasswordRuleTest_testPassesWithCustomRules_class implements Rule
 
 class ValidationPasswordRuleTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     public function testString()
     {
         $this->fails(Password::min(3), [['foo' => 'bar'], ['foo']], [
@@ -321,6 +323,8 @@ class ValidationPasswordRuleTest extends TestCase
 
     protected function assertValidationRules($rule, $values, $result, $messages)
     {
+        $this->skipWithInactiveSocketConnection($this, 'api.pwnedpasswords.com');
+        
         foreach ($values as $value) {
             $v = new Validator(
                 resolve('translator'),

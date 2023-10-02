@@ -4,6 +4,7 @@ namespace PHPUnit\Framework\Patch;
 
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_Constraint;
 use PHPUnit_Framework_ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
@@ -65,5 +66,23 @@ trait ExtraAssertions
                 $f
             );
         }
+    }
+
+    public static function skipWithInactiveSocketConnection(TestCase $phpunitInstance, $host, $port = 443, $timeout = 1)
+    {
+        try {
+            $errorCode = null;
+            $errorMessage = null;
+            if ($connection = @fsockopen($host, $port, $errorCode, $errorMessage, $timeout)) {
+                fclose($connection);
+
+                return;
+            }
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
+        }
+
+        $phpunitInstance->markTestSkipped('Network connection may not be available.');
     }
 }

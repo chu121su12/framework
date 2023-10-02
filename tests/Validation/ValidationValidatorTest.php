@@ -4454,8 +4454,7 @@ class ValidationValidatorTest extends TestCase
      */
     public function testValidateActiveUrl($data, $outcome)
     {
-        $this->assertHasActiveNetworkConnection('google.com');
-
+        $this->skipWithInactiveSocketConnection($this, 'google.com', 80);
         $trans = $this->getIlluminateArrayTranslator();
         $v = m::mock(
             new Validator($trans, $data, ['x' => 'active_url']),
@@ -8931,22 +8930,6 @@ class ValidationValidatorTest extends TestCase
         return new Translator(
             new ArrayLoader, 'en'
         );
-    }
-
-    protected function assertHasActiveNetworkConnection($host, $port = 80)
-    {
-        try {
-            if ($connection = @fsockopen($host, $port)) {
-                fclose($connection);
-
-                return;
-            }
-        } catch (\Exception $e) {
-        } catch (\Error $e) {
-        } catch (\Throwable $e) {
-        }
-
-        $this->markTestSkipped('Network connection may not be available.');
     }
 }
 

@@ -1585,7 +1585,7 @@ trait Date
             $ms = (int) $microseconds;
             $f = (int) $this->format('u');
 
-            if ($ms === $f) {
+            if ($ms === $f || func_num_args() < 4) {
                 return parent::setTime((int) $hour, (int) $minute, (int) $second);
             }
 
