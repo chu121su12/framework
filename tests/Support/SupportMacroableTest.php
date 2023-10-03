@@ -121,43 +121,51 @@ class SupportMacroableTest extends TestCase
 
     public function testMacroWithArguments()
     {
-        $this->macroable::macro('concatenate', function ($arg1, $arg2) {
+        $macroable = $this->macroable;
+
+        $macroable::macro('concatenate', function ($arg1, $arg2) {
             return $arg1.' '.$arg2;
         });
 
-        $result = $this->macroable::concatenate('Hello', 'World');
+        $result = $macroable::concatenate('Hello', 'World');
         $this->assertSame('Hello World', $result);
     }
 
     public function testMacroWithDefaultArguments()
     {
-        $this->macroable::macro('greet', function ($name = 'Guest') {
+        $macroable = $this->macroable;
+
+        $macroable::macro('greet', function ($name = 'Guest') {
             return 'Hello, '.$name;
         });
 
-        $this->assertSame('Hello, Guest', $this->macroable::greet());
-        $this->assertSame('Hello, Saleh', $this->macroable::greet('Saleh'));
+        $this->assertSame('Hello, Guest', $macroable::greet());
+        $this->assertSame('Hello, Saleh', $macroable::greet('Saleh'));
     }
 
     public function testCallingUndefinedMacroThrowsException()
     {
+        $macroable = $this->macroable;
+
         $this->expectException(BadMethodCallException::class);
 
-        $this->macroable::nonExistentMacro();
+        $macroable::nonExistentMacro();
     }
 
     public function testMethodConflictDoesNotThrowException()
     {
-        $this->macroable::macro('existingMethod', function () {
+        $macroable = $this->macroable;
+
+        $macroable::macro('existingMethod', function () {
             return 'oldMethod';
         });
 
         // Replacing existing macro.
-        $this->macroable::macro('existingMethod', function () {
+        $macroable::macro('existingMethod', function () {
             return 'newMethod';
         });
 
-        $this->assertSame('newMethod', $this->macroable::existingMethod());
+        $this->assertSame('newMethod', $macroable::existingMethod());
     }
 }
 

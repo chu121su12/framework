@@ -24,7 +24,7 @@ class CacheArrayStoreTest extends TestCase
         $this->assertSame('bar', $store->get('foo'));
     }
 
-    public function testCacheTtl(): void
+    public function testCacheTtl()/*: void*/
     {
         $store = new ArrayStore();
 

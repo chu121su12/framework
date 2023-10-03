@@ -149,6 +149,26 @@ class FoundationExceptionsHandlerTest_testItCanRateLimitExceptions_class_2 exten
             }
         }
 
+class FoundationExceptionsHandlerTest_testRateLimitExpiresOnBoundary_class_1 extends Handler
+        {
+            protected function throttle($e)
+            {
+                return Limit::perMinute(1);
+            }
+        }
+
+class FoundationExceptionsHandlerTest_testRateLimitExpiresOnBoundary_class_2 extends RateLimiter
+        {
+            public $attempted = 0;
+
+            public function attempt($key, $maxAttempts, Closure $callback, $decaySeconds = 60)
+            {
+                $this->attempted++;
+
+                return parent::attempt(...func_get_args());
+            }
+        }
+
 class FoundationExceptionsHandlerTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -842,30 +862,23 @@ class FoundationExceptionsHandlerTest extends TestCase
 
     public function testRateLimitExpiresOnBoundary()
     {
-        $handler = new class($this->container) extends Handler
-        {
-            protected function throttle($e)
-            {
-                return Limit::perMinute(1);
-            }
-        };
+        $handler = new FoundationExceptionsHandlerTest_testRateLimitExpiresOnBoundary_class_1($this->container);
         $reported = [];
-        $handler->reportable(function (\Throwable $e) use (&$reported) {
-            $reported[] = $e;
-
-            return false;
-        });
-        $this->container->instance(RateLimiter::class, $limiter = new class(new Repository(new ArrayStore)) extends RateLimiter
-        {
-            public $attempted = 0;
-
-            public function attempt($key, $maxAttempts, Closure $callback, $decaySeconds = 60)
-            {
-                $this->attempted++;
-
-                return parent::attempt(...func_get_args());
-            }
-        });
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $handler->reportable(function (\Exception $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+        else {
+            $handler->reportable(function (\Throwable $e) use (&$reported) {
+                $reported[] = $e;
+    
+                return false;
+            });
+        }
+        $this->container->instance(RateLimiter::class, $limiter = new FoundationExceptionsHandlerTest_testRateLimitExpiresOnBoundary_class_2(new Repository(new ArrayStore)));
 
         Carbon::setTestNow('2000-01-01 00:00:00.000');
         $handler->report(new Exception('Something in the app went wrong 1.'));

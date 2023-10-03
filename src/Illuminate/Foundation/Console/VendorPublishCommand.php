@@ -121,16 +121,17 @@ class VendorPublishCommand extends Command
             ? select(
                 "Which provider or tag's files would you like to publish?",
                 $choices,
-                scroll: 15,
+                /*$default = */null,
+                /*scroll: */15
             )
             : search(
-                label: "Which provider or tag's files would you like to publish?",
-                placeholder: 'Search...',
-                options: fn ($search) => array_filter(
+                /*label: */"Which provider or tag's files would you like to publish?",
+                /*options: */function ($search) use ($choices) { return array_filter(
                     $choices,
-                    fn ($choice) => str_contains(strtolower($choice), strtolower($search))
-                ),
-                scroll: 15,
+                    function ($choice) use ($search) { return str_contains(strtolower($choice), strtolower($search)); }
+                ); },
+                /*placeholder: */'Search...',
+                /*scroll: */15
             );
 
         if ($choice == $choices[0] || is_null($choice)) {

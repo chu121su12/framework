@@ -26,7 +26,7 @@ class RedisStoreTest extends TestCase
         $this->tearDownRedis();
     }
 
-    public function testCacheTtl(): void
+    public function testCacheTtl()/*: void*/
     {
         $store = Cache::store('redis');
         $store->clear();
@@ -38,7 +38,7 @@ class RedisStoreTest extends TestCase
         $store->put('hello', 'world', 1);
         $putAt = microtime(true);
 
-        Sleep::for(600)->milliseconds();
+        Sleep::for_(600)->milliseconds();
         $this->assertTrue((microtime(true) - $putAt) < 1);
         $this->assertSame('world', $store->get('hello'));
 

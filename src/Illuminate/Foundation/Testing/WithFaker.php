@@ -53,6 +53,6 @@ trait WithFaker
             }
         }
 
-        return Factory::create($locale ?? Factory::DEFAULT_LOCALE);
+        return Factory::create(isset($locale) ? $locale : Factory::DEFAULT_LOCALE);
     }
 }

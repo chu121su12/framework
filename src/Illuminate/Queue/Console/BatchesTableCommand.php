@@ -36,7 +36,7 @@ class BatchesTableCommand extends MigrationGeneratorCommand
      */
     protected function migrationTableName()
     {
-        return $this->laravel['config']['queue.batching.table'] ?? 'job_batches';
+        return isset($this->laravel['config']) && isset($this->laravel['config']['queue.batching.table']) ? $this->laravel['config']['queue.batching.table'] : 'job_batches';
     }
 
     /**
