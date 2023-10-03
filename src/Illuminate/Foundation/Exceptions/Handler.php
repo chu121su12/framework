@@ -412,7 +412,7 @@ class Handler implements ExceptionHandlerContract
                 with($throttle->key ?: 'illuminate:foundation:exceptions:'.backport_get_class($e), function ($key) { return $this->hashThrottleKeys ? md5($key) : $key; }),
                 $throttle->maxAttempts,
                 function () { return true; },
-                $throttle->decayMinutes
+                60 * $throttle->decayMinutes
             );
         }); }, /*rescue: */false, /*report: */false);
     }
