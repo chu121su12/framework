@@ -5,7 +5,7 @@ namespace Illuminate\Session\Console;
 use Illuminate\Console\MigrationGeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'session:table')]
+#[AsCommand(name: 'make:session-table')]
 class SessionTableCommand extends MigrationGeneratorCommand
 {
     /**

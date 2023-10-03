@@ -5,7 +5,7 @@ namespace Illuminate\Queue\Console;
 use Illuminate\Console\MigrationGeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'queue:failed-table')]
+#[AsCommand(name: 'make:queue-failed-table')]
 class FailedTableCommand extends MigrationGeneratorCommand
 {
     /**

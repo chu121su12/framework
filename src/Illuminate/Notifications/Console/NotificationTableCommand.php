@@ -5,7 +5,7 @@ namespace Illuminate\Notifications\Console;
 use Illuminate\Console\MigrationGeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'notifications:table')]
+#[AsCommand(name: 'make:notifications-table')]
 class NotificationTableCommand extends MigrationGeneratorCommand
 {
     /**

@@ -5,7 +5,7 @@ namespace Illuminate\Queue\Console;
 use Illuminate\Console\MigrationGeneratorCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'queue:batches-table')]
+#[AsCommand(name: 'make:queue-batches-table')]
 class BatchesTableCommand extends MigrationGeneratorCommand
 {
     /**
