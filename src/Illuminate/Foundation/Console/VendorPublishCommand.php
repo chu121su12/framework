@@ -126,10 +126,10 @@ class VendorPublishCommand extends Command
             )
             : search(
                 /*label: */"Which provider or tag's files would you like to publish?",
-                /*options: */function ($search) use ($choices) { return array_filter(
+                /*options: */function ($search) use ($choices) { return array_values(array_filter(
                     $choices,
                     function ($choice) use ($search) { return str_contains(strtolower($choice), strtolower($search)); }
-                ); },
+                )); },
                 /*placeholder: */'Search...',
                 /*scroll: */15
             );
