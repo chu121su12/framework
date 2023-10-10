@@ -57,7 +57,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'asset_url' => env('ASSET_URL'),
+    // 'asset_url' => env('ASSET_URL'),
+    'asset_url' => env('ASSET_URL', '/'),
 
     /*
     |--------------------------------------------------------------------------
@@ -122,7 +123,10 @@ return [
     |
     */
 
-    'key' => env('APP_KEY'),
+    // 'key' => env('APP_KEY'),
+    'key' => (env('APP_ENV', 'production') ?: 'production' === 'local')
+        ? env('APP_KEY', 'base64://////////////////////////////////////////8=')
+        : env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
 
@@ -155,11 +159,18 @@ return [
     |
     */
 
-    'providers' => ServiceProvider::defaultProviders()->merge([
+    'providers' => ServiceProvider::defaultProviders()->merge(
+        (env('APP_ENV', 'production') ?: 'production' === 'production')
+        ? []
+        : \array_values(\array_filter([
+            \class_exists(Laravel\Tinker\TinkerServiceProvider::class) ? Laravel\Tinker\TinkerServiceProvider::class : false,
+            \class_exists(Laravel\Telescope\TelescopeServiceProvider::class) ? Laravel\Telescope\TelescopeServiceProvider::class : false,
+        ]))
+    )->merge([
         // Package Service Providers...
     ])->merge([
         // Application Service Providers...
-        // App\Providers\AppServiceProvider::class,
+        App\Providers\AppServiceProvider::class,
     ])->merge([
         // Added Service Providers (Do not remove this line)...
     ])->toArray(),
