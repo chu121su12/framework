@@ -555,9 +555,11 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      */
     public function getSession()/*: SessionInterface*/
     {
-        return $this->hasSession()
-                    ? $this->session
-                    : throw new SessionNotFoundException;
+        if ($this->hasSession()) {
+            return $this->session;
+        }
+
+        throw new SessionNotFoundException;
     }
 
     /**

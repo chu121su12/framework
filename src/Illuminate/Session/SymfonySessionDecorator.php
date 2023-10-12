@@ -15,7 +15,7 @@ class SymfonySessionDecorator implements SessionInterface
      *
      * @var \Illuminate\Contracts\Session\Session
      */
-    public readonly Session $store;
+    public /*readonly Session */$store;
 
     /**
      * Create a new session decorator.
@@ -46,6 +46,8 @@ class SymfonySessionDecorator implements SessionInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function setId(/*string */$id)/*: void*/
     {
@@ -64,6 +66,8 @@ class SymfonySessionDecorator implements SessionInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function setName(/*string */$name)/*: void*/
     {
@@ -100,8 +104,10 @@ class SymfonySessionDecorator implements SessionInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
-    public function save(): void
+    public function save()/*: void*/
     {
         $this->store->save();
     }
@@ -130,6 +136,8 @@ class SymfonySessionDecorator implements SessionInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function set(/*string */$name, /*mixed */$value)/*: void*/
     {
@@ -150,8 +158,10 @@ class SymfonySessionDecorator implements SessionInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
-    public function replace(array $attributes): void
+    public function replace(array $attributes)/*: void*/
     {
         $this->store->replace($attributes);
     }
@@ -168,8 +178,10 @@ class SymfonySessionDecorator implements SessionInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
-    public function clear(): void
+    public function clear()/*: void*/
     {
         $this->store->flush();
     }
@@ -184,8 +196,10 @@ class SymfonySessionDecorator implements SessionInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
-    public function registerBag(SessionBagInterface $bag): void
+    public function registerBag(SessionBagInterface $bag)/*: void*/
     {
         throw new BadMethodCallException('Method not implemented by Laravel.');
     }

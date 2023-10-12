@@ -208,7 +208,7 @@ class Application extends SymfonyApplication implements ApplicationContract
      * @param  \Symfony\Component\Console\Command\Command  $command
      * @return \Symfony\Component\Console\Command\Command|null
      */
-    public function add(SymfonyCommand $command): ?SymfonyCommand
+    public function add(SymfonyCommand $command)/*: ?SymfonyCommand*/
     {
         if ($command instanceof Command) {
             $command->setLaravel($this->laravel);
