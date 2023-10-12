@@ -124,7 +124,7 @@ return [
     */
 
     // 'key' => env('APP_KEY'),
-    'key' => (env('APP_ENV', 'production') ?: 'production' === 'local')
+    'key' => ((env('APP_ENV', 'production') ?: 'production') === 'local')
         ? env('APP_KEY', 'base64://////////////////////////////////////////8=')
         : env('APP_KEY'),
 
@@ -160,7 +160,7 @@ return [
     */
 
     'providers' => ServiceProvider::defaultProviders()->merge(
-        (env('APP_ENV', 'production') ?: 'production' === 'production')
+        ((env('APP_ENV', 'production') ?: 'production') === 'production')
         ? []
         : \array_values(\array_filter([
             \class_exists(Laravel\Tinker\TinkerServiceProvider::class) ? Laravel\Tinker\TinkerServiceProvider::class : false,
