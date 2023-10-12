@@ -547,7 +547,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     {
         // $skipIfUninitialized = backport_type_check('bool', $skipIfUninitialized);
 
-        return ! is_null($this->session);
+        return $this->session instanceof SymfonySessionDecorator;
     }
 
     /**
@@ -555,11 +555,9 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      */
     public function getSession()/*: SessionInterface*/
     {
-        if ($this->hasSession()) {
-            return new SymfonySessionDecorator($this->session());
-        }
-
-        throw new SessionNotFoundException;
+        return $this->hasSession()
+                    ? $this->session
+                    : throw new SessionNotFoundException;
     }
 
     /**
@@ -575,7 +573,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
             throw new RuntimeException('Session store not set on request.');
         }
 
-        return $this->session;
+        return $this->session->store;
     }
 
     /**
@@ -586,7 +584,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      */
     public function setLaravelSession($session)
     {
-        $this->session = $session;
+        $this->session = new SymfonySessionDecorator($session);
     }
 
     /**

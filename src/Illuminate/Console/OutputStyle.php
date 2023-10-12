@@ -65,7 +65,7 @@ class OutputStyle extends SymfonyStyle implements NewLineAware
     /**
      * {@inheritdoc}
      */
-    public function write(/*string|iterable */$messages, /*bool */$newline = false, /*int */$options = 0)
+    public function write(/*string|iterable */$messages, /*bool */$newline = false, /*int */$options = 0)/*: void*/
     {
         $messages = backport_type_check('compound_iterable_string', $messages);
 
@@ -85,10 +85,8 @@ class OutputStyle extends SymfonyStyle implements NewLineAware
 
     /**
      * {@inheritdoc}
-     *
-     * @return void
      */
-    public function writeln(/*string|iterable */$messages, /*int */$type = self::OUTPUT_NORMAL)
+    public function writeln(/*string|iterable */$messages, /*int */$type = self::OUTPUT_NORMAL)/*: void*/
     {
         $messages = backport_type_check('compound_iterable_string', $messages);
 
@@ -105,10 +103,8 @@ class OutputStyle extends SymfonyStyle implements NewLineAware
 
     /**
      * {@inheritdoc}
-     *
-     * @return void
      */
-    public function newLine(/*int */$count = 1)
+    public function newLine(/*int */$count = 1)/*: void*/
     {
         $count = backport_type_check('int', $count);
 

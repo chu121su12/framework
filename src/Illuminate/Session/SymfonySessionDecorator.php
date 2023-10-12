@@ -13,9 +13,9 @@ class SymfonySessionDecorator implements SessionInterface
     /**
      * The underlying Laravel session store.
      *
-     * @var \Illuminate\Session\Store
+     * @var \Illuminate\Contracts\Session\Session
      */
-    protected $store;
+    public readonly Session $store;
 
     /**
      * Create a new session decorator.
@@ -46,10 +46,8 @@ class SymfonySessionDecorator implements SessionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return void
      */
-    public function setId(/*string */$id)
+    public function setId(/*string */$id)/*: void*/
     {
         $id = backport_type_check('string', $id);
 
@@ -66,10 +64,8 @@ class SymfonySessionDecorator implements SessionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return void
      */
-    public function setName(/*string */$name)
+    public function setName(/*string */$name)/*: void*/
     {
         $name = backport_type_check('string', $name);
 
@@ -104,10 +100,8 @@ class SymfonySessionDecorator implements SessionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return void
      */
-    public function save()
+    public function save(): void
     {
         $this->store->save();
     }
@@ -136,10 +130,8 @@ class SymfonySessionDecorator implements SessionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return void
      */
-    public function set(/*string */$name, /*mixed */$value)
+    public function set(/*string */$name, /*mixed */$value)/*: void*/
     {
         $value = backport_type_check('mixed', $value);
 
@@ -158,10 +150,8 @@ class SymfonySessionDecorator implements SessionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return void
      */
-    public function replace(array $attributes)
+    public function replace(array $attributes): void
     {
         $this->store->replace($attributes);
     }
@@ -178,10 +168,8 @@ class SymfonySessionDecorator implements SessionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return void
      */
-    public function clear()
+    public function clear(): void
     {
         $this->store->flush();
     }
@@ -196,10 +184,8 @@ class SymfonySessionDecorator implements SessionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return void
      */
-    public function registerBag(SessionBagInterface $bag)
+    public function registerBag(SessionBagInterface $bag): void
     {
         throw new BadMethodCallException('Method not implemented by Laravel.');
     }
