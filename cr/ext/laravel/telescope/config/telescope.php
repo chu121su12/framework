@@ -47,7 +47,7 @@ return [
     'storage' => [
         'database' => [
             // 'connection' => env('DB_CONNECTION', 'mysql'),
-            'connection' => env('DB_CONNECTION', 'app-telescope'),
+            'connection' => env('TELESCOPE_CONNECTION', 'app-telescope'),
             'chunk' => 1000,
         ],
     ],
@@ -63,8 +63,11 @@ return [
     |
     */
 
-    // 'enabled' => env('TELESCOPE_ENABLED', true),
-    'enabled' => env('TELESCOPE_ENABLED', isset(config('database.connections')[env('DB_CONNECTION', 'app-telescope')])),
+    // 'enabled' => env('TELESCOPE_ENABLED', false),
+    'enabled' => env(
+        'TELESCOPE_ENABLED',
+        config('app.debug') && isset(config('database.connections')[env('TELESCOPE_CONNECTION', 'app-telescope')])
+    ),
 
     /*
     |--------------------------------------------------------------------------
