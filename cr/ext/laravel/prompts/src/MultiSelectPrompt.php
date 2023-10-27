@@ -7,17 +7,7 @@ use Illuminate\Support\Collection;
 
 class MultiSelectPrompt extends Prompt
 {
-    use Concerns\ReducesScrollingToFitTerminal;
-
-    /**
-     * The index of the highlighted option.
-     */
-    public /*int */$highlighted = 0;
-
-    /**
-     * The index of the first visible option.
-     */
-    public /*int */$firstVisible = 0;
+    use Concerns\Scrolling;
 
     /**
      * The options for the multi-select prompt.
@@ -73,7 +63,7 @@ class MultiSelectPrompt extends Prompt
         $this->default = $default instanceof Collection ? $default->all() : $default;
         $this->values = $this->default;
 
-        $this->reduceScrollingToFitTerminal();
+        $this->initializeScrolling(0);
 
         $this->on('key', function ($key) { switch ($key) {
             case Key::UP:
@@ -85,7 +75,7 @@ class MultiSelectPrompt extends Prompt
             case Key::CTRL_B:
 
             case 'k':
-            case 'h': return $this->highlightPrevious();
+            case 'h': return $this->highlightPrevious(count($this->options));
 
             case Key::DOWN:
             case Key::DOWN_ARROW:
@@ -95,7 +85,10 @@ class MultiSelectPrompt extends Prompt
             case Key::CTRL_N:
             case Key::CTRL_F:
             case 'j':
-            case 'l': return $this->highlightNext();
+            case 'l': return $this->highlightNext(count($this->options));
+
+            case Key::oneOf([Key::HOME, Key::CTRL_A], $key): return $this->highlight(0);
+            case Key::oneOf([Key::END, Key::CTRL_E], $key): return $this->highlight(count($this->options) - 1);
 
             case Key::SPACE: return $this->toggleHighlighted();
             case Key::ENTER: return $this->submit();
@@ -164,34 +157,6 @@ class MultiSelectPrompt extends Prompt
         $value = backport_type_check('string', $value);
 
         return in_array($value, $this->values);
-    }
-
-    /**
-     * Highlight the previous entry, or wrap around to the last entry.
-     */
-    protected function highlightPrevious()/*: void*/
-    {
-        $this->highlighted = $this->highlighted === 0 ? count($this->options) - 1 : $this->highlighted - 1;
-
-        if ($this->highlighted < $this->firstVisible) {
-            $this->firstVisible--;
-        } elseif ($this->highlighted === count($this->options) - 1) {
-            $this->firstVisible = count($this->options) - min($this->scroll, count($this->options));
-        }
-    }
-
-    /**
-     * Highlight the next entry, or wrap around to the first entry.
-     */
-    protected function highlightNext()/*: void*/
-    {
-        $this->highlighted = $this->highlighted === count($this->options) - 1 ? 0 : $this->highlighted + 1;
-
-        if ($this->highlighted > $this->firstVisible + $this->scroll - 1) {
-            $this->firstVisible++;
-        } elseif ($this->highlighted === 0) {
-            $this->firstVisible = 0;
-        }
     }
 
     /**

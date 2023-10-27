@@ -6,19 +6,9 @@ use Closure;
 
 class MultiSearchPrompt extends Prompt
 {
-    use Concerns\ReducesScrollingToFitTerminal;
+    use Concerns\Scrolling;
     use Concerns\Truncation;
     use Concerns\TypedValue;
-
-    /**
-     * The index of the highlighted option.
-     */
-    public /*?int */$highlighted = null;
-
-    /**
-     * The index of the first visible option.
-     */
-    public /*int */$firstVisible = 0;
 
     /**
      * The cached matches.
@@ -67,19 +57,25 @@ class MultiSearchPrompt extends Prompt
         $this->trackTypedValue(
             /*$default = */'',
             /*submit: */false,
-            /*ignore: */function ($key) { return $key === Key::SPACE && $this->highlighted !== null; }
+            /*ignore: */function ($key) {
+                return Key::oneOf([Key::SPACE, Key::HOME, Key::END, Key::CTRL_A, Key::CTRL_E], $key) && $this->highlighted !== null;
+            }
         );
 
-        $this->reduceScrollingToFitTerminal();
+        $this->initializeScrolling(null);
 
         $this->on('key', function ($key) { switch ($key) {
             case Key::UP:
             case Key::UP_ARROW:
-            case Key::SHIFT_TAB: return $this->highlightPrevious();
+            case Key::SHIFT_TAB: return $this->highlightPrevious(count($this->matches), true);
 
             case Key::DOWN:
             case Key::DOWN_ARROW:
-            case Key::TAB: return $this->highlightNext();
+            case Key::TAB: return $this->highlightNext(count($this->matches), true);
+
+            case Key::oneOf([Key::HOME, Key::CTRL_A], $key): return $this->highlighted !== null ? $this->highlight(0) : null;
+
+            case Key::oneOf([Key::END, Key::CTRL_E], $key): return $this->highlighted !== null ? $this->highlight(count($this->matches()) - 1) : null;
 
             case Key::SPACE: return $this->highlighted !== null ? $this->toggleHighlighted() : null;
             case Key::ENTER: return $this->submit();
@@ -157,48 +153,6 @@ class MultiSearchPrompt extends Prompt
     public function visible()/*: array*/
     {
         return array_slice($this->matches(), $this->firstVisible, $this->scroll, /*preserve_keys: */true);
-    }
-
-    /**
-     * Highlight the previous entry, or wrap around to the last entry.
-     */
-    protected function highlightPrevious()/*: void*/
-    {
-        if ($this->matches === []) {
-            $this->highlighted = null;
-        } elseif ($this->highlighted === null) {
-            $this->highlighted = count($this->matches) - 1;
-        } elseif ($this->highlighted === 0) {
-            $this->highlighted = null;
-        } else {
-            $this->highlighted = $this->highlighted - 1;
-        }
-
-        if ($this->highlighted < $this->firstVisible) {
-            $this->firstVisible--;
-        } elseif ($this->highlighted === count($this->matches) - 1) {
-            $this->firstVisible = count($this->matches) - min($this->scroll, count($this->matches));
-        }
-    }
-
-    /**
-     * Highlight the next entry, or wrap around to the first entry.
-     */
-    protected function highlightNext()/*: void*/
-    {
-        if ($this->matches === []) {
-            $this->highlighted = null;
-        } elseif ($this->highlighted === null) {
-            $this->highlighted = 0;
-        } else {
-            $this->highlighted = $this->highlighted === count($this->matches) - 1 ? null : $this->highlighted + 1;
-        }
-
-        if ($this->highlighted > $this->firstVisible + $this->scroll - 1) {
-            $this->firstVisible++;
-        } elseif ($this->highlighted === 0 || $this->highlighted === null) {
-            $this->firstVisible = 0;
-        }
     }
 
     /**

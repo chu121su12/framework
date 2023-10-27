@@ -75,18 +75,18 @@ abstract class Prompt
     public function prompt()/*: mixed*/
     {
         try {
+            $this->capturePreviousNewLines();
+
+            if (static::shouldFallback()) {
+                return $this->fallback();
+            }
+
             if (! isset(static::$interactive)) {
                 static::$interactive = stream_isatty(STDIN);
             }
 
             if (! static::$interactive) {
                 return $this->default_();
-            }
-
-            $this->capturePreviousNewLines();
-
-            if (static::shouldFallback()) {
-                return $this->fallback();
             }
 
             $this->checkEnvironment();

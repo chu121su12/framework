@@ -46,11 +46,11 @@ trait TypedValue
                         $this->cursorPosition = min(mb_strlen($this->typedValue), $this->cursorPosition + 1);
                         break;
 
-                    case Key::HOME: case Key::CTRL_A:
+                    case Key::oneOf([Key::HOME, Key::CTRL_A], $key):
                         $this->cursorPosition = 0;
                         break;
 
-                    case Key::END: case Key::CTRL_E:
+                    case Key::oneOf([Key::END, Key::CTRL_E], $key):
                         $this->cursorPosition = mb_strlen($this->typedValue);
                         break;
 
