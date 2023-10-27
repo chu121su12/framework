@@ -3436,11 +3436,11 @@ class ValidationValidatorTest extends TestCase
     }
 
     /**
+     * @dataProvider multipleOfDataProvider
+     *
      * @param  mixed  $input
      * @param  mixed  $allowed
      * @param  bool  $passes
-     *
-     * @dataProvider multipleOfDataProvider
      */
     #[DataProvider('multipleOfDataProvider')]
     public function testValidateMultipleOf($input, $allowed, $passes)

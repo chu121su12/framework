@@ -11,9 +11,7 @@ use ReflectionMethod;
 
 class DatabaseMySqlSchemaStateTest extends TestCase
 {
-    /**
-     * @dataProvider provider
-     */
+    /** @dataProvider provider */
     #[DataProvider('provider')]
     public function testConnectionString(/*string */$expectedConnectionString, array $expectedVariables, array $dbConfig)/*: void*/
     {

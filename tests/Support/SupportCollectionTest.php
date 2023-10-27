@@ -3172,7 +3172,6 @@ class SupportCollectionTest extends TestCase
 
     /**
      * @requires PHP 8
-     *
      * @dataProvider collectionClassProvider
      */
     #[DataProvider('collectionClassProvider')]
@@ -4486,8 +4485,8 @@ class SupportCollectionTest extends TestCase
     }
 
     /**
-     * @dataProvider collectionClassProvider
      * @requires PHP 8.1
+     * @dataProvider collectionClassProvider
      */
     #[DataProvider('collectionClassProvider')]
     public function testCollectionFromEnum($collection)
@@ -4497,8 +4496,8 @@ class SupportCollectionTest extends TestCase
     }
 
     /**
-     * @dataProvider collectionClassProvider
      * @requires PHP 8.1
+     * @dataProvider collectionClassProvider
      */
     #[DataProvider('collectionClassProvider')]
     public function testCollectionFromBackedEnum($collection)

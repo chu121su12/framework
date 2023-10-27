@@ -671,9 +671,7 @@ class SupportTestingBusFakeTest extends TestCase
         $this->assertSame(0, $batch->pendingJobs);
     }
 
-    /**
-     * @dataProvider serializeAndRestoreCommandMethodsDataProvider
-     */
+    /** @dataProvider serializeAndRestoreCommandMethodsDataProvider */
     #[DataProvider('serializeAndRestoreCommandMethodsDataProvider')]
     public function testCanSerializeAndRestoreCommands($commandFunctionName, $assertionFunctionName)
     {

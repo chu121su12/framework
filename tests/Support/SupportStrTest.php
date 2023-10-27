@@ -1094,9 +1094,7 @@ class SupportStrTest extends TestCase
         $this->assertSame('', Str::repeat('', 5));
     }
 
-    /**
-     * @dataProvider specialCharacterProvider
-     */
+    /** @dataProvider specialCharacterProvider */
     #[DataProvider('specialCharacterProvider')]
     public function testTransliterate(/*string */$value, /*string */$expected)/*: void*/
     {
@@ -1127,9 +1125,7 @@ class SupportStrTest extends TestCase
         $this->assertSame('Hello', Str::transliterate('🎂', 'Hello'));
     }
 
-    /**
-     * @dataProvider specialCharacterProvider
-     */
+    /** @dataProvider specialCharacterProvider */
     #[DataProvider('specialCharacterProvider')]
     public function testTransliterateStrict(/*string */$value, /*string */$expected)/*: void*/
     {

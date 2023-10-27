@@ -26,9 +26,7 @@ class Psr6RedisTest extends TestCase
         $this->tearDownRedis();
     }
 
-    /**
-     * @dataProvider redisClientDataProvider
-     */
+    /** @dataProvider redisClientDataProvider */
     #[DataProvider('redisClientDataProvider')]
     public function testTransactionIsNotOpenedWhenSerializationFails($redisClient)/*: void*/
     {
