@@ -45,7 +45,7 @@ abstract class Element
     final public function __construct(
         OutputInterface $output,
         /*array|string */$content,
-        Styles/*|null */$styles = null
+        Styles $styles = null
     ) {
         $content = backport_type_check('array|string', $content);
 

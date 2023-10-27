@@ -36,7 +36,7 @@ final class Node
     public function getChildNodes()/*: Generator*/
     {
         foreach ($this->node->childNodes ?: [] as $node) {
-            yield new static($node);
+            yield new self($node);
         }
     }
 
@@ -107,15 +107,16 @@ final class Node
     /**
      * Gets the previous sibling from the node.
      */
-    public function getPreviousSibling()/*: static|null*/
+    public function getPreviousSibling()/*: ?static*/
     {
         $node = $this->node;
 
         while ($node = $node->previousSibling) {
-            $node = new static($node);
+            $node = new self($node);
 
             if ($node->isEmpty()) {
                 $node = $node->node;
+
                 continue;
             }
 
@@ -126,21 +127,22 @@ final class Node
             $node = $node->node;
         }
 
-        return is_null($node) ? null : new static($node);
+        return is_null($node) ? null : new self($node);
     }
 
     /**
      * Gets the next sibling from the node.
      */
-    public function getNextSibling()/*: static|null*/
+    public function getNextSibling()/*: ?static*/
     {
         $node = $this->node;
 
         while ($node = $node->nextSibling) {
-            $node = new static($node);
+            $node = new self($node);
 
             if ($node->isEmpty()) {
                 $node = $node->node;
+
                 continue;
             }
 
@@ -151,7 +153,7 @@ final class Node
             $node = $node->node;
         }
 
-        return is_null($node) ? null : new static($node);
+        return is_null($node) ? null : new self($node);
     }
 
     /**

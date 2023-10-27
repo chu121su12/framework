@@ -105,7 +105,7 @@
         "league/flysystem": "^1.0.70",
         "nesbot/carbon": "^2.69.0",
         "nunomaduro/collision": "^7.8.0",
-        "nunomaduro/termwind": "^1.15.1",
+        "nunomaduro/termwind": "^2.0",
         "spatie/backtrace": "^1.5.3",
         "spatie/flare-client-php": "^1.4.2",
         "spatie/ignition": "^1.9.0",

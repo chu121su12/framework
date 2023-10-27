@@ -18,12 +18,12 @@ final class Termwind
     /**
      * The implementation of the output.
      */
-    private static /*OutputInterface|null */$renderer;
+    private static /*?OutputInterface */$renderer;
 
     /**
      * Sets the renderer implementation.
      */
-    public static function renderUsing(OutputInterface/*|null */$renderer = null)/*: void*/
+    public static function renderUsing(/*?*/OutputInterface $renderer = null)/*: void*/
     {
         self::$renderer = isset($renderer) ? $renderer : new ConsoleOutput();
     }
@@ -331,7 +331,7 @@ final class Termwind
      * @param  array<int, string|Element>|string  $elements
      * @return array<int, string|Element>
      */
-    private static function prepareElements($elements, /*string */$styles = '', Closure/*|null */$callback = null)/*: array*/
+    private static function prepareElements($elements, /*string */$styles = '', Closure $callback = null)/*: array*/
     {
         $styles = backport_type_check('string', $styles);
 

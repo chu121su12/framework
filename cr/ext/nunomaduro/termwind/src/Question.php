@@ -20,7 +20,7 @@ final class Question
     /**
      * The streamable input to receive the input from the user.
      */
-    private static /*StreamableInputInterface|null */$streamableInput;
+    private static /*?StreamableInputInterface */$streamableInput;
 
     /**
      * An instance of Symfony's question helper.
@@ -35,7 +35,7 @@ final class Question
     /**
      * Sets the streamable input implementation.
      */
-    public static function setStreamableInput(StreamableInputInterface/*|null */$streamableInput = null)/*: void*/
+    public static function setStreamableInput(/*?*/StreamableInputInterface $streamableInput = null)/*: void*/
     {
         self::$streamableInput = isset($streamableInput) ? $streamableInput : new ArgvInput();
     }
