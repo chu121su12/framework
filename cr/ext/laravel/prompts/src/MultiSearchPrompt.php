@@ -27,7 +27,7 @@ class MultiSearchPrompt extends Prompt
     public /*string */$label;
     public /*Closure */$options;
     public /*string */$placeholder;
-    public /*int */$scroll;
+    // public /*int */$scroll;
     public /*bool|string */$required;
     public /*?Closure */$validate;
     public /*string */$hint;

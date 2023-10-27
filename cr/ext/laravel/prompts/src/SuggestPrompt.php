@@ -28,7 +28,7 @@ class SuggestPrompt extends Prompt
     public /*string */$label;
     public /*string */$placeholder;
     public /*string */$default;
-    public /*int */$scroll;
+    // public /*int */$scroll;
     public /*bool|string */$required;
     public /*?Closure */$validate;
     public /*string */$hint;

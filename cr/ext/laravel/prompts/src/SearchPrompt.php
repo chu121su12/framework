@@ -21,7 +21,7 @@ class SearchPrompt extends Prompt
     public /*string */$label;
     public /*Closure */$options;
     public /*string */$placeholder;
-    public /*int */$scroll;
+    // public /*int */$scroll;
     public /*?Closure */$validate;
     public /*string */$hint;
     public /*bool|string */$required;

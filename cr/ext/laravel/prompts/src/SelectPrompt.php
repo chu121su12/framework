@@ -19,7 +19,7 @@ class SelectPrompt extends Prompt
 
     public /*string */$label;
     public /*int|string|null */$default;
-    public /*int */$scroll;
+    // public /*int */$scroll;
     public /*?Closure */$validate;
     public /*string */$hint;
     public /*bool|string */$required;

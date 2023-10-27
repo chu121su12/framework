@@ -31,7 +31,7 @@ class MultiSelectPrompt extends Prompt
     protected /*array */$values = [];
 
     public /*string */$label;
-    public /*int */$scroll;
+    // public /*int */$scroll;
     public /*bool|string */$required;
     public /*?Closure */$validate;
     public /*string */$hint;
