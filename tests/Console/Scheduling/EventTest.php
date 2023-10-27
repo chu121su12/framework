@@ -18,6 +18,7 @@ class EventTest extends TestCase
         parent::tearDown();
     }
 
+    /** @requires OS Linux|Darwin */
     #[RequiresOperatingSystem('Linux|Darwin')]
     public function testBuildCommandUsingUnix()
     {
@@ -26,6 +27,7 @@ class EventTest extends TestCase
         $this->assertSame("php -i > '/dev/null' 2>&1", $event->buildCommand());
     }
 
+    /** @requires OS Windows */
     #[RequiresOperatingSystem('Windows')]
     public function testBuildCommandUsingWindows()
     {
@@ -34,6 +36,7 @@ class EventTest extends TestCase
         $this->assertSame('php -i > "NUL" 2>&1', $event->buildCommand());
     }
 
+    /** @requires OS Linux|Darwin */
     #[RequiresOperatingSystem('Linux|Darwin')]
     public function testBuildCommandInBackgroundUsingUnix()
     {
@@ -45,6 +48,7 @@ class EventTest extends TestCase
         $this->assertSame("(php -i > '/dev/null' 2>&1 ; '".PHP_BINARY."' 'artisan' schedule:finish {$scheduleId} \"$?\") > '/dev/null' 2>&1 &", $event->buildCommand());
     }
 
+    /** @requires OS Windows */
     #[RequiresOperatingSystem('Windows')]
     public function testBuildCommandInBackgroundUsingWindows()
     {

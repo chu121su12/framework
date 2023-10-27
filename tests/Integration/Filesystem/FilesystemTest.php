@@ -8,6 +8,7 @@ use Orchestra\Testbench\TestCase;
 use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
 use Symfony\Component\Process\Process;
 
+/** @requires OS Linux|Darwin */
 #[RequiresOperatingSystem('Linux|Darwin')]
 class FilesystemTest extends TestCase
 {

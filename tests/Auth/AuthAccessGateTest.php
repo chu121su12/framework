@@ -556,6 +556,7 @@ class AuthAccessGateTest extends TestCase
         $this->assertSame(3, $counter);
     }
 
+    /** @dataProvider notCallableDataProvider */
     #[DataProvider('notCallableDataProvider')]
     public function testDefineSecondParameterShouldBeStringOrCallable($callback)
     {
@@ -1035,6 +1036,8 @@ class AuthAccessGateTest extends TestCase
     }
 
     /**
+     * @dataProvider hasAbilitiesTestDataProvider
+     *
      * @param  array  $abilitiesToSet
      * @param  array|string  $abilitiesToCheck
      * @param  bool  $expectedHasValue

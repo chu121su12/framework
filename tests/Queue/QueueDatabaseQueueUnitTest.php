@@ -22,6 +22,7 @@ class QueueDatabaseQueueUnitTest extends TestCase
         m::close();
     }
 
+    /** @dataProvider pushJobsDataProvider */
     #[DataProvider('pushJobsDataProvider')]
     public function testPushProperlyPushesJobOntoDatabase($uuid, $job, $displayNameStartsWith, $jobStartsWith)
     {

@@ -4,7 +4,7 @@ namespace Illuminate\Tests\Integration\Database;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Auth\User;
+use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\DB;
@@ -49,7 +49,9 @@ trait EloquentTransactionWithAfterCommitTests
     {
         User::observe($observer = EloquentTransactionWithAfterCommitTestsUserObserverUsingDispatchSync::resetting());
 
-        $user1 = DB::transaction(fn () => User::create(UserFactory::new()->raw()));
+        $user1 = DB::transaction(function () {
+            return User::create(UserFactory::new_()->raw());
+        });
 
         $this->assertTrue($user1->exists);
         $this->assertEquals(1, $observer::$calledTimes, 'Failed to assert the observer was called once.');
@@ -136,12 +138,16 @@ class EloquentTransactionWithAfterCommitTestsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable;
 
-    public function __construct(public string $email)
+    public $email;
+
+    public function __construct(/*public *//*string */$email)
     {
+        $this->email = backport_type_check('string', $email);
+
         // ...
     }
 
-    public function handle(): void
+    public function handle()/*: void*/
     {
         DB::transaction(function () {
             DB::table('password_reset_tokens')->insert([

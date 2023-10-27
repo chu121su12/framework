@@ -154,6 +154,7 @@ class ViewFileViewFinderTest extends TestCase
         ];
     }
 
+    /** @dataProvider pathsProvider */
     #[DataProvider('pathsProvider')]
     public function testNormalizedPaths($originalPath, $exceptedPath)
     {

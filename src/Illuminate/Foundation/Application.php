@@ -766,7 +766,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
         }
 
         return in_array(
-            $_SERVER['argv'][1] ?? null,
+            isset($_SERVER['argv']) && isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : null,
             is_array($commands[0]) ? $commands[0] : $commands
         );
     }

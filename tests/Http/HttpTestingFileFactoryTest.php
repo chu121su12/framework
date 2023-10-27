@@ -8,6 +8,8 @@ use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 
 /**
+ * @requires extension gd
+ *
  * @link https://www.php.net/manual/en/function.gd-info.php
  */
 #[RequiresPhpExtension('gd')]

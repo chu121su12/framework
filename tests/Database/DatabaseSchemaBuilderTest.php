@@ -82,7 +82,8 @@ class DatabaseSchemaBuilderTest extends TestCase
         $connection->shouldReceive('getDoctrineColumn')->once()->with('prefix_users', 'id')->andReturn($column);
         $connection->shouldReceive('usingNativeSchemaOperations')->once()->andReturn(false);
         $column->shouldReceive('getType')->once()->andReturn($type);
-        $type->shouldReceive('lookupName')->once()->andReturn('integer');
+        // $type->shouldReceive('lookupName')->once()->andReturn('integer');
+        $type->shouldReceive('getName')->once()->andReturn('integer');
 
         $this->assertSame('integer', $builder->getColumnType('users', 'id'));
     }

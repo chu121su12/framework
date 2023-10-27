@@ -95,6 +95,7 @@ tag info
         $this->assertEquals($expected, $this->compiler->compileString($string));
     }
 
+    /** @dataProvider invalidForeachStatementsDataProvider */
     #[DataProvider('invalidForeachStatementsDataProvider')]
     public function testForeachStatementsThrowHumanizedMessageWhenInvalidStatement($initialStatement)
     {

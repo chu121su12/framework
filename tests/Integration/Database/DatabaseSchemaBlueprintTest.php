@@ -14,7 +14,7 @@ use Orchestra\Testbench\TestCase;
 
 class DatabaseSchemaBlueprintTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $this->beforeApplicationDestroyed(function () {
             Schema::useNativeSchemaOperationsIfPossible(false);

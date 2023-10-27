@@ -590,6 +590,7 @@ class RoutingUrlGeneratorTest extends TestCase
         ];
     }
 
+    /** @dataProvider providerRouteParameters */
     #[DataProvider('providerRouteParameters')]
     public function testUrlGenerationForControllersRequiresPassingOfRequiredParameters($parameters)
     {
@@ -642,6 +643,7 @@ class RoutingUrlGeneratorTest extends TestCase
         ];
     }
 
+    /** @dataProvider provideParametersAndExpectedMeaningfulExceptionMessages */
     #[DataProvider('provideParametersAndExpectedMeaningfulExceptionMessages')]
     public function testUrlGenerationThrowsExceptionForMissingParametersWithMeaningfulMessage($parameters, $expectedMeaningfulExceptionMessage)
     {

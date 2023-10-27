@@ -104,7 +104,7 @@ class Connection implements ConnectionContract
      *
      * @throws \Doctrine\DBAL\Driver\PDO\Exception
      */
-    public function lastInsertId($name = null): string|int
+    public function lastInsertId($name = null)/*: string|int*/
     {
         try {
             if ($name === null) {
@@ -133,7 +133,7 @@ class Connection implements ConnectionContract
      *
      * @return void
      */
-    public function beginTransaction(): void
+    public function beginTransaction()/*: void*/
     {
         $this->connection->beginTransaction();
     }
@@ -143,7 +143,7 @@ class Connection implements ConnectionContract
      *
      * @return void
      */
-    public function commit(): void
+    public function commit()/*: void*/
     {
         $this->connection->commit();
     }
@@ -153,7 +153,7 @@ class Connection implements ConnectionContract
      *
      * @return void
      */
-    public function rollBack(): void
+    public function rollBack()/*: void*/
     {
         $this->connection->rollBack();
     }
@@ -165,7 +165,7 @@ class Connection implements ConnectionContract
      * @param  string  $type
      * @return string
      */
-    public function quote($input, $type = ParameterType::STRING): string
+    public function quote($input, $type = ParameterType::STRING)/*: string*/
     {
         return $this->connection->quote($input, $type);
     }
@@ -175,7 +175,7 @@ class Connection implements ConnectionContract
      *
      * @return string
      */
-    public function getServerVersion(): string
+    public function getServerVersion()/*: string*/
     {
         return $this->connection->getAttribute(PDO::ATTR_SERVER_VERSION);
     }

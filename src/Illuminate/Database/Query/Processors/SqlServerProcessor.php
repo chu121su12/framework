@@ -81,11 +81,33 @@ class SqlServerProcessor extends Processor
         return array_map(function ($result) {
             $result = (object) $result;
 
-            $type = match ($typeName = $result->type_name) {
-                'binary', 'varbinary', 'char', 'varchar', 'nchar', 'nvarchar' => $result->length == -1 ? $typeName.'(max)' : $typeName."($result->length)",
-                'decimal', 'numeric' => $typeName."($result->precision,$result->places)",
-                'float', 'datetime2', 'datetimeoffset', 'time' => $typeName."($result->precision)",
-                default => $typeName,
+            switch ($typeName = $result->type_name) {
+                case 'binary':
+                case 'varbinary':
+                case 'char':
+                case 'varchar':
+                case 'nchar':
+                case 'nvarchar':
+                    $type = $result->length == -1 ? $typeName.'(max)' : $typeName."($result->length)";
+
+                    break;
+
+                case 'decimal':
+                case 'numeric':
+                    $type = $typeName."($result->precision,$result->places)";
+
+                    break;
+
+                case 'float':
+                case 'datetime2':
+                case 'datetimeoffset':
+                case 'time':
+                    $type = $typeName."($result->precision)";
+
+                    break;
+
+                default:
+                    $type = $typeName;
             };
 
             return [

@@ -425,7 +425,7 @@ class QueryBuilderTest extends DatabaseTestCase
         $this->assertSame([
             '2017-11-12 13:14:15',
             '2018-01-02 03:04:05',
-        ], $results->keys()->map(fn ($v) => substr($v, 0, 19))->toArray());
+        ], $results->keys()->map(function ($v) { return substr($v, 0, 19); })->toArray());
         $this->assertSame([
             'Foo Post',
             'Bar Post',

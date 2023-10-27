@@ -81,6 +81,7 @@ empty
         $this->assertEquals($expected, $this->compiler->compileString($string));
     }
 
+    /** @dataProvider invalidForelseStatementsDataProvider */
     #[DataProvider('invalidForelseStatementsDataProvider')]
     public function testForelseStatementsThrowHumanizedMessageWhenInvalidStatement($initialStatement)
     {

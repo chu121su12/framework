@@ -23,7 +23,7 @@ class DatabaseMigrationsTest extends TestCase
         $this->traitObject->setUp();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         $this->traitObject->tearDown();
 
@@ -122,7 +122,9 @@ class DatabaseMigrationsTestMockClass
         RefreshDatabaseState::$migrated = false;
 
         $this->callBeforeApplicationDestroyedCallbacks();
-        $this->app?->flush();
+        if (isset($this->app)) {
+            $this->app->flush();
+        }
     }
 
     protected function setUpTraits()
@@ -130,15 +132,17 @@ class DatabaseMigrationsTestMockClass
         return [];
     }
 
-    protected function setUpTheTestEnvironmentTraitToBeIgnored(string $use): bool
+    protected function setUpTheTestEnvironmentTraitToBeIgnored(/*string */$use)/*: bool*/
     {
+        $use = backport_type_check('string', $use);
+
         return true;
     }
 
     protected function refreshApplication()
     {
         return Testbench::create(
-            basePath: package_path('vendor/orchestra/testbench-core/laravel')
+            /*basePath: */package_path('vendor/orchestra/testbench-core/laravel')
         );
     }
 }

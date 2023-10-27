@@ -9,6 +9,10 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
+/**
+ * @requires extension pdo_sqlsrv
+ * @requires OS Linux|Darwin
+ */
 #[RequiresOperatingSystem('Linux|Darwin')]
 #[RequiresPhpExtension('pdo_sqlsrv')]
 class DatabaseSqlServerConnectionTest extends SqlServerTestCase
@@ -27,6 +31,7 @@ class DatabaseSqlServerConnectionTest extends SqlServerTestCase
         Schema::drop('json_table');
     }
 
+    /** @dataProvider jsonContainsKeyDataProvider */
     #[DataProvider('jsonContainsKeyDataProvider')]
     public function testWhereJsonContainsKey($count, $column)
     {

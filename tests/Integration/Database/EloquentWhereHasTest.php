@@ -50,6 +50,8 @@ class EloquentWhereHasTest extends DatabaseTestCase
 
     /**
      * Check that the 'whereRelation' callback function works.
+     *
+     * @dataProvider dataProviderWhereRelationCallback
      */
     #[DataProvider('dataProviderWhereRelationCallback')]
     public function testWhereRelationCallback($callbackEloquent, $callbackQuery)
@@ -69,6 +71,8 @@ class EloquentWhereHasTest extends DatabaseTestCase
 
     /**
      * Check that the 'orWhereRelation' callback function works.
+     *
+     * @dataProvider dataProviderWhereRelationCallback
      */
     #[DataProvider('dataProviderWhereRelationCallback')]
     public function testOrWhereRelationCallback($callbackEloquent, $callbackQuery)

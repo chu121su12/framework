@@ -315,6 +315,7 @@ class BroadcasterTest extends TestCase
         $this->assertNull($this->broadcaster->resolveAuthenticatedUser(new Request(['socket_id' => '1234.1234'])));
     }
 
+    /** @dataProvider channelNameMatchPatternProvider */
     #[DataProvider('channelNameMatchPatternProvider')]
     public function testChannelNameMatchPattern($channel, $pattern, $shouldMatch)
     {

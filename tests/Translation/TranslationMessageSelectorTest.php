@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class TranslationMessageSelectorTest extends TestCase
 {
+    /** @dataProvider chooseTestData */
     #[DataProvider('chooseTestData')]
     public function testChoose($expected, $id, $number)
     {

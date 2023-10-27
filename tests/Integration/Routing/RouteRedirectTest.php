@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class RouteRedirectTest extends TestCase
 {
+    /** @dataProvider routeRedirectDataSets */
     #[DataProvider('routeRedirectDataSets')]
     public function testRouteRedirect($redirectFrom, $redirectTo, $requestUri, $redirectUri)
     {

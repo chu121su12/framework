@@ -240,6 +240,7 @@ class EncrypterTest extends TestCase
         ];
     }
 
+    /** @dataProvider provideTamperedData */
     #[DataProvider('provideTamperedData')]
     public function testTamperedPayloadWillGetRejected($payload)
     {

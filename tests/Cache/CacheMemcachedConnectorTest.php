@@ -49,6 +49,7 @@ class CacheMemcachedConnectorTest extends TestCase
         $this->assertSame($result, $memcached);
     }
 
+    /** @requires extension memcached */
     #[RequiresPhpExtension('memcached')]
     public function testServersAreAddedCorrectlyWithValidOptions()
     {
@@ -70,6 +71,7 @@ class CacheMemcachedConnectorTest extends TestCase
         $this->assertSame($result, $memcached);
     }
 
+    /** @requires extension memcached */
     #[RequiresPhpExtension('memcached')]
     public function testServersAreAddedCorrectlyWithSaslCredentials()
     {

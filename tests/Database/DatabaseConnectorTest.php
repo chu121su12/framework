@@ -29,6 +29,7 @@ class DatabaseConnectorTest extends TestCase
         $this->assertEquals([0 => 'baz', 1 => 'bar', 2 => 'boom'], $connector->getOptions(['options' => [0 => 'baz', 2 => 'boom']]));
     }
 
+    /** @dataProvider mySqlConnectProvider */
     #[DataProvider('mySqlConnectProvider')]
     public function testMySqlConnectCallsCreateConnectionWithProperArguments($dsn, $config)
     {
@@ -90,6 +91,8 @@ class DatabaseConnectorTest extends TestCase
     }
 
     /**
+     * @dataProvider provideSearchPaths
+     *
      * @param  string  $searchPath
      * @param  string  $expectedSql
      */
@@ -316,6 +319,7 @@ class DatabaseConnectorTest extends TestCase
         $this->assertSame($result, $connection);
     }
 
+    /** @requires extension odbc */
     #[RequiresPhpExtension('odbc')]
     public function testSqlServerConnectCallsCreateConnectionWithPreferredODBC()
     {

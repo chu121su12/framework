@@ -49,6 +49,7 @@ class CommandEventsTest extends TestCase
         parent::setUp();
     }
 
+    /** @dataProvider foregroundCommandEventsProvider */
     #[DataProvider('foregroundCommandEventsProvider')]
     public function testCommandEventsReceiveParsedInput($callback)
     {

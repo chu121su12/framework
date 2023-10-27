@@ -143,6 +143,7 @@ class PhpRedisCacheLockTest extends TestCase
         $this->assertNull($store->lockConnection()->get($store->getPrefix().'foo'));
     }
 
+    /** @requires extension lzf */
     #[RequiresPhpExtension('lzf')]
     public function testRedisLockCanBeAcquiredAndReleasedWithLzfCompression()
     {
@@ -170,6 +171,7 @@ class PhpRedisCacheLockTest extends TestCase
         $this->assertNull($store->lockConnection()->get($store->getPrefix().'foo'));
     }
 
+    /** @requires extension zstd */
     #[RequiresPhpExtension('zstd')]
     public function testRedisLockCanBeAcquiredAndReleasedWithZstdCompression()
     {
@@ -216,6 +218,7 @@ class PhpRedisCacheLockTest extends TestCase
         $this->assertNull($store->lockConnection()->get($store->getPrefix().'foo'));
     }
 
+    /** @requires extension lz4 */
     #[RequiresPhpExtension('lz4')]
     public function testRedisLockCanBeAcquiredAndReleasedWithLz4Compression()
     {
@@ -262,6 +265,7 @@ class PhpRedisCacheLockTest extends TestCase
         $this->assertNull($store->lockConnection()->get($store->getPrefix().'foo'));
     }
 
+    /** @requires extension lzf */
     #[RequiresPhpExtension('lzf')]
     public function testRedisLockCanBeAcquiredAndReleasedWithSerializationAndCompression()
     {

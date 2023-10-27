@@ -117,9 +117,9 @@ class BcryptHasher extends AbstractHasher implements HasherContract
      */
     protected function isUsingValidOptions($hashedValue)
     {
-        ['options' => $options] = $this->info($hashedValue);
+        $options = $this->info($hashedValue)['options'];
 
-        if (! is_int($options['cost'] ?? null)) {
+        if (! is_int(isset($options['cost']) ? $options['cost'] : null)) {
             return false;
         }
 

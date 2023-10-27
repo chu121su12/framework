@@ -16,18 +16,18 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentHasManyCreateOrFirstTest extends TestCase
 {
-    public function setUp(): void
+    public function setUp()/*: void*/
     {
         Carbon::setTestNow('2023-01-01 00:00:00');
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         Carbon::setTestNow();
         Mockery::close();
     }
 
-    public function testCreateOrFirstMethodCreatesNewRecord(): void
+    public function testCreateOrFirstMethodCreatesNewRecord()/*: void*/
     {
         $model = new HasManyCreateOrFirstTestParentModel();
         $model->id = 123;
@@ -37,7 +37,7 @@ class DatabaseEloquentHasManyCreateOrFirstTest extends TestCase
 
         $model->getConnection()->expects('insert')->with(
             'insert into "child_table" ("attr", "val", "parent_id", "updated_at", "created_at") values (?, ?, ?, ?, ?)',
-            ['foo', 'bar', 123, '2023-01-01 00:00:00', '2023-01-01 00:00:00'],
+            ['foo', 'bar', 123, '2023-01-01 00:00:00', '2023-01-01 00:00:00']
         )->andReturnTrue();
 
         $result = $model->children()->createOrFirst(['attr' => 'foo'], ['val' => 'bar']);
@@ -52,7 +52,7 @@ class DatabaseEloquentHasManyCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testCreateOrFirstMethodRetrievesExistingRecord(): void
+    public function testCreateOrFirstMethodRetrievesExistingRecord()/*: void*/
     {
         $model = new HasManyCreateOrFirstTestParentModel();
         $model->id = 123;
@@ -92,7 +92,7 @@ class DatabaseEloquentHasManyCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testFirstOrCreateMethodCreatesNewRecord(): void
+    public function testFirstOrCreateMethodCreatesNewRecord()/*: void*/
     {
         $model = new HasManyCreateOrFirstTestParentModel();
         $model->id = 123;
@@ -107,7 +107,7 @@ class DatabaseEloquentHasManyCreateOrFirstTest extends TestCase
 
         $model->getConnection()->expects('insert')->with(
             'insert into "child_table" ("attr", "val", "parent_id", "updated_at", "created_at") values (?, ?, ?, ?, ?)',
-            ['foo', 'bar', 123, '2023-01-01 00:00:00', '2023-01-01 00:00:00'],
+            ['foo', 'bar', 123, '2023-01-01 00:00:00', '2023-01-01 00:00:00']
         )->andReturnTrue();
 
         $result = $model->children()->firstOrCreate(['attr' => 'foo'], ['val' => 'bar']);
@@ -122,7 +122,7 @@ class DatabaseEloquentHasManyCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testFirstOrCreateMethodRetrievesExistingRecord(): void
+    public function testFirstOrCreateMethodRetrievesExistingRecord()/*: void*/
     {
         $model = new HasManyCreateOrFirstTestParentModel();
         $model->id = 123;
@@ -154,7 +154,7 @@ class DatabaseEloquentHasManyCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testFirstOrCreateMethodRetrievesRecordCreatedJustNow(): void
+    public function testFirstOrCreateMethodRetrievesRecordCreatedJustNow()/*: void*/
     {
         $model = new HasManyCreateOrFirstTestParentModel();
         $model->id = 123;
@@ -199,7 +199,7 @@ class DatabaseEloquentHasManyCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testUpdateOrCreateMethodCreatesNewRecord(): void
+    public function testUpdateOrCreateMethodCreatesNewRecord()/*: void*/
     {
         $model = new HasManyCreateOrFirstTestParentModel();
         $model->id = 123;
@@ -214,7 +214,7 @@ class DatabaseEloquentHasManyCreateOrFirstTest extends TestCase
 
         $model->getConnection()->expects('insert')->with(
             'insert into "child_table" ("attr", "val", "parent_id", "updated_at", "created_at") values (?, ?, ?, ?, ?)',
-            ['foo', 'bar', 123, '2023-01-01 00:00:00', '2023-01-01 00:00:00'],
+            ['foo', 'bar', 123, '2023-01-01 00:00:00', '2023-01-01 00:00:00']
         )->andReturnTrue();
 
         $result = $model->children()->updateOrCreate(['attr' => 'foo'], ['val' => 'bar']);
@@ -229,7 +229,7 @@ class DatabaseEloquentHasManyCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testUpdateOrCreateMethodUpdatesExistingRecord(): void
+    public function testUpdateOrCreateMethodUpdatesExistingRecord()/*: void*/
     {
         $model = new HasManyCreateOrFirstTestParentModel();
         $model->id = 123;
@@ -251,7 +251,7 @@ class DatabaseEloquentHasManyCreateOrFirstTest extends TestCase
 
         $model->getConnection()->expects('update')->with(
             'update "child_table" set "val" = ?, "updated_at" = ? where "id" = ?',
-            ['baz', '2023-01-01 00:00:00', 456],
+            ['baz', '2023-01-01 00:00:00', 456]
         )->andReturn(1);
 
         $result = $model->children()->updateOrCreate(['attr' => 'foo'], ['val' => 'baz']);
@@ -266,7 +266,7 @@ class DatabaseEloquentHasManyCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testUpdateOrCreateMethodUpdatesRecordCreatedJustNow(): void
+    public function testUpdateOrCreateMethodUpdatesRecordCreatedJustNow()/*: void*/
     {
         $model = new HasManyCreateOrFirstTestParentModel();
         $model->id = 123;
@@ -301,7 +301,7 @@ class DatabaseEloquentHasManyCreateOrFirstTest extends TestCase
 
         $model->getConnection()->expects('update')->with(
             'update "child_table" set "val" = ?, "updated_at" = ? where "id" = ?',
-            ['baz', '2023-01-01 00:00:00', 456],
+            ['baz', '2023-01-01 00:00:00', 456]
         )->andReturn(1);
 
         $result = $model->children()->updateOrCreate(['attr' => 'foo'], ['val' => 'baz']);
@@ -316,8 +316,10 @@ class DatabaseEloquentHasManyCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    protected function mockConnectionForModel(Model $model, string $database, array $lastInsertIds = []): void
+    protected function mockConnectionForModel(Model $model, /*string */$database, array $lastInsertIds = [])/*: void*/
     {
+        $database = backport_type_check('string', $database);
+
         $grammarClass = 'Illuminate\Database\Query\Grammars\\'.$database.'Grammar';
         $processorClass = 'Illuminate\Database\Query\Processors\\'.$database.'Processor';
         $grammar = new $grammarClass;
@@ -348,7 +350,7 @@ class HasManyCreateOrFirstTestParentModel extends Model
     protected $table = 'parent_table';
     protected $guarded = [];
 
-    public function children(): HasMany
+    public function children()/*: HasMany*/
     {
         return $this->hasMany(HasManyCreateOrFirstTestChildModel::class, 'parent_id');
     }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1)*/;
 
 namespace Illuminate\Tests\Database;
 
@@ -18,18 +18,18 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
 {
-    public function setUp(): void
+    public function setUp()/*: void*/
     {
         Carbon::setTestNow('2023-01-01 00:00:00');
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         Carbon::setTestNow();
         Mockery::close();
     }
 
-    public function testCreateOrFirstMethodCreatesNewRecord(): void
+    public function testCreateOrFirstMethodCreatesNewRecord()/*: void*/
     {
         $parent = new HasManyThroughCreateOrFirstTestParentModel();
         $parent->id = 123;
@@ -38,7 +38,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
         $parent->getConnection()->shouldReceive('getName')->andReturn('sqlite');
         $parent->getConnection()->expects('insert')->with(
             'insert into "child" ("attr", "val", "updated_at", "created_at") values (?, ?, ?, ?)',
-            ['foo', 'bar', '2023-01-01 00:00:00', '2023-01-01 00:00:00'],
+            ['foo', 'bar', '2023-01-01 00:00:00', '2023-01-01 00:00:00']
         )->andReturnTrue();
 
         $result = $parent->children()->createOrFirst(['attr' => 'foo'], ['val' => 'bar']);
@@ -52,7 +52,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testCreateOrFirstMethodRetrievesExistingRecord(): void
+    public function testCreateOrFirstMethodRetrievesExistingRecord()/*: void*/
     {
         $parent = new HasManyThroughCreateOrFirstTestParentModel();
         $parent->id = 123;
@@ -73,7 +73,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
             ->with(
                 'select "child".*, "pivot"."parent_id" as "laravel_through_key" from "child" inner join "pivot" on "pivot"."id" = "child"."pivot_id" where "pivot"."parent_id" = ? and ("attr" = ?) limit 1',
                 [123, 'foo'],
-                true,
+                true
             )
             ->andReturn([[
                 'id' => 789,
@@ -98,7 +98,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testFirstOrCreateMethodCreatesNewRecord(): void
+    public function testFirstOrCreateMethodCreatesNewRecord()/*: void*/
     {
         $parent = new HasManyThroughCreateOrFirstTestParentModel();
         $parent->id = 123;
@@ -111,13 +111,13 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
             ->with(
                 'select "child".*, "pivot"."parent_id" as "laravel_through_key" from "child" inner join "pivot" on "pivot"."id" = "child"."pivot_id" where "pivot"."parent_id" = ? and ("attr" = ?) limit 1',
                 [123, 'foo'],
-                true,
+                true
             )
             ->andReturn([]);
 
         $parent->getConnection()->expects('insert')->with(
             'insert into "child" ("attr", "val", "updated_at", "created_at") values (?, ?, ?, ?)',
-            ['foo', 'bar', '2023-01-01 00:00:00', '2023-01-01 00:00:00'],
+            ['foo', 'bar', '2023-01-01 00:00:00', '2023-01-01 00:00:00']
         )->andReturnTrue();
 
         $result = $parent->children()->firstOrCreate(['attr' => 'foo'], ['val' => 'bar']);
@@ -131,7 +131,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testFirstOrCreateMethodRetrievesExistingRecord(): void
+    public function testFirstOrCreateMethodRetrievesExistingRecord()/*: void*/
     {
         $parent = new HasManyThroughCreateOrFirstTestParentModel();
         $parent->id = 123;
@@ -144,7 +144,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
             ->with(
                 'select "child".*, "pivot"."parent_id" as "laravel_through_key" from "child" inner join "pivot" on "pivot"."id" = "child"."pivot_id" where "pivot"."parent_id" = ? and ("attr" = ?) limit 1',
                 [123, 'foo'],
-                true,
+                true
             )
             ->andReturn([[
                 'id' => 789,
@@ -169,7 +169,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testFirstOrCreateMethodRetrievesRecordCreatedJustNow(): void
+    public function testFirstOrCreateMethodRetrievesRecordCreatedJustNow()/*: void*/
     {
         $parent = new HasManyThroughCreateOrFirstTestParentModel();
         $parent->id = 123;
@@ -182,7 +182,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
             ->with(
                 'select "child".*, "pivot"."parent_id" as "laravel_through_key" from "child" inner join "pivot" on "pivot"."id" = "child"."pivot_id" where "pivot"."parent_id" = ? and ("attr" = ?) limit 1',
                 [123, 'foo'],
-                true,
+                true
             )
             ->andReturn([]);
 
@@ -199,7 +199,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
             ->with(
                 'select "child".*, "pivot"."parent_id" as "laravel_through_key" from "child" inner join "pivot" on "pivot"."id" = "child"."pivot_id" where "pivot"."parent_id" = ? and ("attr" = ? and "val" = ?) limit 1',
                 [123, 'foo', 'bar'],
-                true,
+                true
             )
             ->andReturn([[
                 'id' => 789,
@@ -224,7 +224,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testUpdateOrCreateMethodCreatesNewRecord(): void
+    public function testUpdateOrCreateMethodCreatesNewRecord()/*: void*/
     {
         $parent = new HasManyThroughCreateOrFirstTestParentModel();
         $parent->id = 123;
@@ -237,7 +237,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
             ->with(
                 'select "child".*, "pivot"."parent_id" as "laravel_through_key" from "child" inner join "pivot" on "pivot"."id" = "child"."pivot_id" where "pivot"."parent_id" = ? and ("attr" = ?) limit 1',
                 [123, 'foo'],
-                true,
+                true
             )
             ->andReturn([]);
 
@@ -245,7 +245,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
             ->expects('insert')
             ->with(
                 'insert into "child" ("attr", "val", "updated_at", "created_at") values (?, ?, ?, ?)',
-                ['foo', 'baz', '2023-01-01 00:00:00', '2023-01-01 00:00:00'],
+                ['foo', 'baz', '2023-01-01 00:00:00', '2023-01-01 00:00:00']
             )
             ->andReturnTrue();
 
@@ -260,7 +260,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testUpdateOrCreateMethodUpdatesExistingRecord(): void
+    public function testUpdateOrCreateMethodUpdatesExistingRecord()/*: void*/
     {
         $parent = new HasManyThroughCreateOrFirstTestParentModel();
         $parent->id = 123;
@@ -273,7 +273,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
             ->with(
                 'select "child".*, "pivot"."parent_id" as "laravel_through_key" from "child" inner join "pivot" on "pivot"."id" = "child"."pivot_id" where "pivot"."parent_id" = ? and ("attr" = ?) limit 1',
                 [123, 'foo'],
-                true,
+                true
             )
             ->andReturn([[
                 'id' => 789,
@@ -289,7 +289,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
             ->expects('update')
             ->with(
                 'update "child" set "val" = ?, "updated_at" = ? where "id" = ?',
-                ['baz', '2023-01-01 00:00:00', 789],
+                ['baz', '2023-01-01 00:00:00', 789]
             )
             ->andReturn(1);
 
@@ -306,7 +306,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testUpdateOrCreateMethodUpdatesRecordCreatedJustNow(): void
+    public function testUpdateOrCreateMethodUpdatesRecordCreatedJustNow()/*: void*/
     {
         $parent = new HasManyThroughCreateOrFirstTestParentModel();
         $parent->id = 123;
@@ -319,7 +319,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
             ->with(
                 'select "child".*, "pivot"."parent_id" as "laravel_through_key" from "child" inner join "pivot" on "pivot"."id" = "child"."pivot_id" where "pivot"."parent_id" = ? and ("attr" = ?) limit 1',
                 [123, 'foo'],
-                true,
+                true
             )
             ->andReturn([]);
 
@@ -336,7 +336,7 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
             ->with(
                 'select "child".*, "pivot"."parent_id" as "laravel_through_key" from "child" inner join "pivot" on "pivot"."id" = "child"."pivot_id" where "pivot"."parent_id" = ? and ("attr" = ? and "val" = ?) limit 1',
                 [123, 'foo', 'bar'],
-                true,
+                true
             )
             ->andReturn([[
                 'id' => 789,
@@ -361,8 +361,10 @@ class DatabaseEloquentHasManyThroughCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    protected function mockConnectionForModel(Model $model, string $database, array $lastInsertIds = []): void
+    protected function mockConnectionForModel(Model $model, /*string */$database, array $lastInsertIds = [])/*: void*/
     {
+        $database = backport_type_check('string', $database);
+
         $grammarClass = 'Illuminate\Database\Query\Grammars\\'.$database.'Grammar';
         $processorClass = 'Illuminate\Database\Query\Processors\\'.$database.'Processor';
         $grammar = new $grammarClass;
@@ -413,13 +415,13 @@ class HasManyThroughCreateOrFirstTestParentModel extends Model
     protected $table = 'parent';
     protected $guarded = [];
 
-    public function children(): HasManyThrough
+    public function children()/*: HasManyThrough*/
     {
         return $this->hasManyThrough(
             HasManyThroughCreateOrFirstTestChildModel::class,
             HasManyThroughCreateOrFirstTestPivotModel::class,
             'parent_id',
-            'pivot_id',
+            'pivot_id'
         );
     }
 }

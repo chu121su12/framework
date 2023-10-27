@@ -15,6 +15,10 @@ if (\PHP_VERSION_ID >= 80000) {
     return require __DIR__.'/bootstrap80.php';
 }
 
+if (!defined('MB_CASE_FOLD')) {
+    define('MB_CASE_FOLD', p\Mbstring::MB_CASE_FOLD);
+}
+
 if (!function_exists('mb_convert_encoding')) {
     function mb_convert_encoding($string, $to_encoding, $from_encoding = null) { return p\Mbstring::mb_convert_encoding($string, $to_encoding, $from_encoding); }
 }

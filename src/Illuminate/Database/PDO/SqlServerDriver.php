@@ -13,7 +13,7 @@ class SqlServerDriver extends AbstractSQLServerDriver
      * @param  mixed[]  $params
      * @return \Illuminate\Database\PDO\SqlServerConnection
      */
-    public function connect(array $params): ConnectionContract
+    public function connect(array $params)/*: ConnectionContract*/
     {
         return new SqlServerConnection(
             new Connection($params['pdo'])

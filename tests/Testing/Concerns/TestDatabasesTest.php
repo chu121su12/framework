@@ -52,6 +52,7 @@ class TestDatabasesTest extends TestCase
         $this->switchToDatabase('my_database_test_1');
     }
 
+    /** @dataProvider databaseUrls */
     #[DataProvider('databaseUrls')]
     public function testSwitchToDatabaseWithUrl($testDatabase, $url, $testUrl)
     {

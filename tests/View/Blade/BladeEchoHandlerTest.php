@@ -50,6 +50,7 @@ class BladeEchoHandlerTest extends AbstractBladeTestCase
         );
     }
 
+    /** @dataProvider handlerLogicDataProvider */
     #[DataProvider('handlerLogicDataProvider')]
     public function testHandlerLogicWorksCorrectly($blade)
     {
@@ -79,6 +80,7 @@ class BladeEchoHandlerTest extends AbstractBladeTestCase
         ];
     }
 
+    /** @dataProvider nonStringableDataProvider */
     #[DataProvider('nonStringableDataProvider')]
     public function testHandlerWorksWithNonStringables($blade, $expectedOutput)
     {

@@ -10,28 +10,7 @@ use Illuminate\Routing\Router;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
-class RouteListCommandTest extends TestCase
-{
-    protected Application $app;
-
-    protected function tearDown(): void
-    {
-        m::close();
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->app = new Application(
-            $laravel = new \Illuminate\Foundation\Application(__DIR__),
-            m::mock(Dispatcher::class, ['dispatch' => null, 'fire' => null]),
-            'testing',
-        );
-
-        $router = new Router(m::mock('Illuminate\Events\Dispatcher'));
-
-        $kernel = new class($laravel, $router) extends Kernel
+class RouteListCommandTest_setUp_class extends Kernel
         {
             protected $middlewareGroups = [
                 'web' => ['Middleware 1', 'Middleware 2', 'Middleware 5'],
@@ -44,7 +23,32 @@ class RouteListCommandTest extends TestCase
                 'Middleware 2',
                 'Middleware 3',
             ];
-        };
+        }
+
+class RouteListCommandTest extends TestCase
+{
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
+    protected /*Application */$app;
+
+    protected function tearDown()/*: void*/
+    {
+        m::close();
+    }
+
+    protected function setUp()/*: void*/
+    {
+        parent::setUp();
+
+        $this->app = new Application(
+            $laravel = new \Illuminate\Foundation\Application(__DIR__),
+            m::mock(Dispatcher::class, ['dispatch' => null, 'fire' => null]),
+            'testing'
+        );
+
+        $router = new Router(m::mock('Illuminate\Events\Dispatcher'));
+
+        $kernel = new RouteListCommandTest_setUp_class($laravel, $router);
 
         $kernel->prependToMiddlewarePriority('Middleware 5');
 

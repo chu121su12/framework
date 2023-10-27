@@ -18,6 +18,7 @@ class ParallelTestingTest extends TestCase
         $_SERVER['LARAVEL_PARALLEL_TESTING'] = 1;
     }
 
+    /** @dataProvider callbacks */
     #[DataProvider('callbacks')]
     public function testCallbacks($callback)
     {

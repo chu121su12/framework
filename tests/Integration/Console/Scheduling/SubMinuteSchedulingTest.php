@@ -46,6 +46,7 @@ class SubMinuteSchedulingTest extends TestCase
         Sleep::assertNeverSlept();
     }
 
+    /** @dataProvider frequencyProvider */
     #[DataProvider('frequencyProvider')]
     public function test_it_runs_sub_minute_callbacks($frequency, $expectedRuns)
     {

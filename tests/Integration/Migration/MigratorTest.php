@@ -129,7 +129,7 @@ class MigratorTest extends TestCase
             $this->assertTrue([] === $tablesEmpty);
 
             // Returns an array with two tables because we ignore pretend mode.
-            $tablesList = DB::withoutPretending(function (): array {
+            $tablesList = DB::withoutPretending(function ()/*: array*/ {
                 return DB::select("SELECT name FROM sqlite_master WHERE type='table'");
             });
 
@@ -147,7 +147,7 @@ class MigratorTest extends TestCase
 
                 $this->assertTrue([] === $columnsEmpty);
 
-                $columnsList = DB::withoutPretending(function () use ($table): array {
+                $columnsList = DB::withoutPretending(function () use ($table)/*: array*/ {
                     return DB::select("PRAGMA table_info($table->name)");
                 });
 
@@ -159,7 +159,7 @@ class MigratorTest extends TestCase
                 // count is still two.
                 DB::statement("ALTER TABLE $table->name ADD COLUMN column_3 varchar(255) DEFAULT 'default_value' NOT NULL");
 
-                $columnsList = DB::withoutPretending(function () use ($table): array {
+                $columnsList = DB::withoutPretending(function () use ($table)/*: array*/ {
                     return DB::select("PRAGMA table_info($table->name)");
                 });
 
@@ -177,7 +177,7 @@ class MigratorTest extends TestCase
         $this->expectInfo('Running migrations.');
         $this->expectTask('2014_10_12_000000_create_people_is_dynamic_table', 'DONE');
 
-        $this->output->shouldReceive('writeln')->once();
+        $this->output->shouldReceive('write')->once();
 
         $this->subject->run([__DIR__.'/pretending/2014_10_12_000000_create_people_is_dynamic_table.php'], ['pretend' => false]);
 
@@ -195,7 +195,7 @@ class MigratorTest extends TestCase
             'insert into "blogs" ("id", "name") values (2, \'John Doe Blog\')',
         ]);
 
-        $this->output->shouldReceive('writeln')->once();
+        $this->output->shouldReceive('write')->once();
 
         $this->subject->run([__DIR__.'/pretending/2023_10_17_000000_dynamic_content_is_shown.php'], ['pretend' => true]);
 
@@ -210,7 +210,7 @@ class MigratorTest extends TestCase
         $this->expectInfo('Running migrations.');
         $this->expectTask('2014_10_12_000000_create_people_non_dynamic_table', 'DONE');
 
-        $this->output->shouldReceive('writeln')->once();
+        $this->output->shouldReceive('write')->once();
 
         $this->subject->run([__DIR__.'/pretending/2014_10_12_000000_create_people_non_dynamic_table.php'], ['pretend' => false]);
 
@@ -226,7 +226,7 @@ class MigratorTest extends TestCase
             'select * from "people"',
         ]);
 
-        $this->output->shouldReceive('writeln')->once();
+        $this->output->shouldReceive('write')->once();
 
         $this->subject->run([__DIR__.'/pretending/2023_10_17_000000_dynamic_content_not_shown.php'], ['pretend' => true]);
 
@@ -235,7 +235,7 @@ class MigratorTest extends TestCase
         Schema::dropIfExists('people');
     }
 
-    protected function expectInfo($message): void
+    protected function expectInfo($message)/*: void*/
     {
         $this->output->shouldReceive('write')->once()->with(m::on(
             function ($argument) use ($message) { return str($argument)->contains($message); }

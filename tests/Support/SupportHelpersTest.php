@@ -1068,6 +1068,7 @@ class SupportHelpersTest extends TestCase
         ];
     }
 
+    /** @dataProvider providesPregReplaceArrayData */
     #[DataProvider('providesPregReplaceArrayData')]
     public function testPregReplaceArray($pattern, $replacements, $subject, $expectedOutput)
     {

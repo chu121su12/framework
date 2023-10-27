@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class RouteUriTest extends TestCase
 {
+    /** @dataProvider uriProvider */
     #[DataProvider('uriProvider')]
     public function testRouteUrisAreProperlyParsed($uri, $expectedParsedUri, $expectedBindingFields)
     {

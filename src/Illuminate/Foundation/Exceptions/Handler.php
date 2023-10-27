@@ -856,8 +856,15 @@ class Handler implements ExceptionHandlerContract
                     'errors' => new ViewErrorBag,
                     'exception' => $e,
                 ], $e->getStatusCode(), $e->getHeaders());
+            } catch (\Exception $t) {
+            } catch (\ErrorException $t) {
             } catch (Throwable $t) {
-                config('app.debug') && throw $t;
+            }
+
+            if (isset($t)) {
+                if (config('app.debug')) {
+                    throw $t;
+                }
 
                 $this->report($t);
             }

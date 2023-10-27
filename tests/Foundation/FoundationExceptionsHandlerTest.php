@@ -169,6 +169,19 @@ class FoundationExceptionsHandlerTest_testRateLimitExpiresOnBoundary_class_2 ext
             }
         }
 
+
+class FoundationExceptionsHandlerTest_executeScenarioWhereErrorViewThrowsWhileRenderingAndDebugIs_class extends Handler
+        {
+            protected function registerErrorViewPaths()
+            {
+            }
+
+            public function getErrorView($e)
+            {
+                return $this->renderHttpException($e);
+            }
+        }
+
 class FoundationExceptionsHandlerTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -520,17 +533,7 @@ class FoundationExceptionsHandlerTest extends TestCase
 
         $this->config->shouldReceive('get')->with('app.debug', null)->andReturn($debug);
 
-        $handler = new class($this->container) extends Handler
-        {
-            protected function registerErrorViewPaths()
-            {
-            }
-
-            public function getErrorView($e)
-            {
-                return $this->renderHttpException($e);
-            }
-        };
+        $handler = new FoundationExceptionsHandlerTest_executeScenarioWhereErrorViewThrowsWhileRenderingAndDebugIs_class($this->container);
 
         $this->assertInstanceOf(SymfonyResponse::class, $handler->getErrorView(new HttpException(404)));
     }

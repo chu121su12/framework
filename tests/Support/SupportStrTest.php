@@ -290,12 +290,14 @@ class SupportStrTest extends TestCase
         $this->assertSame('foo', Str::afterLast('----foo', '---'));
     }
 
+    /** @dataProvider strContainsProvider */
     #[DataProvider('strContainsProvider')]
     public function testStrContains($haystack, $needles, $expected, $ignoreCase = false)
     {
         $this->assertEquals($expected, Str::contains($haystack, $needles, $ignoreCase));
     }
 
+    /** @dataProvider strContainsAllProvider */
     #[DataProvider('strContainsAllProvider')]
     public function testStrContainsAll($haystack, $needles, $expected, $ignoreCase = false)
     {
@@ -435,12 +437,14 @@ class SupportStrTest extends TestCase
         $this->assertFalse(Str::isUrl('invalid url'));
     }
 
+    /** @dataProvider validUuidList */
     #[DataProvider('validUuidList')]
     public function testIsUuidWithValidUuid($uuid)
     {
         $this->assertTrue(Str::isUuid($uuid));
     }
 
+    /** @dataProvider invalidUuidList */
     #[DataProvider('invalidUuidList')]
     public function testIsUuidWithInvalidUuid($uuid)
     {
@@ -1348,7 +1352,13 @@ class SupportStrTest extends TestCase
         $this->assertTrue(strlen(Str::password()) === 32);
 
         $this->assertStringNotContainsString(' ', Str::password());
-        $this->assertStringContainsString(' ', Str::password(spaces: true));
+        $this->assertStringContainsString(' ', Str::password(
+            /*$length = */32, 
+            /*$letters = */true, 
+            /*$numbers = */true, 
+            /*$symbols = */true, 
+            /*spaces: */true
+        ));
 
         $this->assertTrue(
             Str::of(Str::password())->contains(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])

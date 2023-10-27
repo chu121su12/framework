@@ -11,7 +11,7 @@ use ReflectionClass;
 
 class DatabaseQueryGrammarTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
@@ -22,6 +22,7 @@ class DatabaseQueryGrammarTest extends TestCase
         $grammar = new Grammar;
         $reflection = new ReflectionClass($grammar);
         $method = $reflection->getMethod('whereRaw');
+        $method->setAccessible(true);
         $expressionArray = ['sql' => new Expression('select * from "users"')];
 
         $rawQuery = $method->invoke($grammar, $builder, $expressionArray);
@@ -35,6 +36,7 @@ class DatabaseQueryGrammarTest extends TestCase
         $grammar = new Grammar;
         $reflection = new ReflectionClass($grammar);
         $method = $reflection->getMethod('whereRaw');
+        $method->setAccessible(true);
         $stringArray = ['sql' => 'select * from "users"'];
 
         $rawQuery = $method->invoke($grammar, $builder, $stringArray);

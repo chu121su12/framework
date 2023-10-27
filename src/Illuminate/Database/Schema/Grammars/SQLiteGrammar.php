@@ -349,20 +349,32 @@ class SQLiteGrammar extends Grammar
 
             $platform = $connection->getDoctrineConnection()->getDatabasePlatform();
 
+            // return (array) $platform->getAlterTableSQL(
+            //     new TableDiff(
+            //         $tableDiff->getOldTable(),
+            //         $tableDiff->getAddedColumns(),
+            //         $tableDiff->getModifiedColumns(),
+            //         $droppedColumns,
+            //         $tableDiff->getRenamedColumns(),
+            //         $tableDiff->getAddedIndexes(),
+            //         $tableDiff->getModifiedIndexes(),
+            //         $tableDiff->getDroppedIndexes(),
+            //         $tableDiff->getRenamedIndexes(),
+            //         $tableDiff->getAddedForeignKeys(),
+            //         $tableDiff->getModifiedColumns(),
+            //         $tableDiff->getDroppedForeignKeys()
+            //     )
+            // );
             return (array) $platform->getAlterTableSQL(
                 new TableDiff(
-                    $tableDiff->getOldTable(),
-                    $tableDiff->getAddedColumns(),
-                    $tableDiff->getModifiedColumns(),
+                    $tableDiff->name,
+                    $tableDiff->addedColumns,
+                    $tableDiff->changedColumns,
                     $droppedColumns,
-                    $tableDiff->getRenamedColumns(),
-                    $tableDiff->getAddedIndexes(),
-                    $tableDiff->getModifiedIndexes(),
-                    $tableDiff->getDroppedIndexes(),
-                    $tableDiff->getRenamedIndexes(),
-                    $tableDiff->getAddedForeignKeys(),
-                    $tableDiff->getModifiedColumns(),
-                    $tableDiff->getDroppedForeignKeys(),
+                    $tableDiff->addedIndexes,
+                    $tableDiff->changedIndexes,
+                    $tableDiff->removedIndexes,
+                    $tableDiff->fromTable
                 )
             );
         }

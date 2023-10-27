@@ -124,6 +124,7 @@ class ExceptionHandlerTest extends TestCase
             ]);
     }
 
+    /** @dataProvider exitCodesProvider */
     #[DataProvider('exitCodesProvider')]
     public function testItReturnsNonZeroExitCodesForUncaughtExceptions($providers, $successful)
     {
@@ -161,14 +162,26 @@ EOF;
         Config::set('view.paths', [__DIR__.'/Fixtures/MalformedErrorViews']);
         Config::set('app.debug', false);
         $reported = [];
-        $this->app[ExceptionHandler::class]->reportable(function (Throwable $e) use (&$reported) {
-            $reported[] = $e;
-        });
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $this->app[ExceptionHandler::class]->reportable(function (\Exception $e) use (&$reported) {
+                $reported[] = $e;
+            });
+        }
+        else {
+            $this->app[ExceptionHandler::class]->reportable(function (Throwable $e) use (&$reported) {
+                $reported[] = $e;
+            });
+        }
 
         try {
             $response = $this->get('foo');
-        } catch (Throwable) {
-            $response ??= null;
+        } catch (\Exception $_e) {
+        } catch (\ErrorException $_e) {
+        } catch (Throwable $_e) {
+        }
+
+        if (isset($_e)) {
+            $response = isset($response) ? $response : null;
         }
 
         $this->assertCount(1, $reported);
@@ -182,14 +195,26 @@ EOF;
         Config::set('view.paths', [__DIR__.'/Fixtures/MalformedErrorViews']);
         Config::set('app.debug', true);
         $reported = [];
-        $this->app[ExceptionHandler::class]->reportable(function (Throwable $e) use (&$reported) {
-            $reported[] = $e;
-        });
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            $this->app[ExceptionHandler::class]->reportable(function (\Exception $e) use (&$reported) {
+                $reported[] = $e;
+            });
+        }
+        else {
+            $this->app[ExceptionHandler::class]->reportable(function (Throwable $e) use (&$reported) {
+                $reported[] = $e;
+            });
+        }
 
         try {
             $response = $this->get('foo');
-        } catch (Throwable) {
-            $response ??= null;
+        } catch (\Exception $_e) {
+        } catch (\ErrorException $_e) {
+        } catch (Throwable $_e) {
+        }
+
+        if (isset($_e)) {
+            $response = isset($response) ? $response : null;
         }
 
         $this->assertCount(1, $reported);

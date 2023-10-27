@@ -103,6 +103,7 @@ class HasherTest extends TestCase
         $this->assertTrue($this->hashManager->isHashed($value));
     }
 
+    /** @depends testBasicBcryptHashing */
     #[Depends('testBasicBcryptHashing')]
     public function testBasicBcryptVerification()
     {
@@ -113,6 +114,7 @@ class HasherTest extends TestCase
         (new BcryptHasher(['verify' => true]))->check('password', $argonHashed);
     }
 
+    /** @depends testBasicArgon2iHashing */
     #[Depends('testBasicArgon2iHashing')]
     public function testBasicArgon2iVerification()
     {
@@ -123,6 +125,7 @@ class HasherTest extends TestCase
         (new ArgonHasher(['verify' => true]))->check('password', $bcryptHashed);
     }
 
+    /** @depends testBasicArgon2idHashing */
     #[Depends('testBasicArgon2idHashing')]
     public function testBasicArgon2idVerification()
     {

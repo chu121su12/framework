@@ -99,6 +99,7 @@ class FilesystemManagerTest extends TestCase
         }
     }
 
+    /** @requires OS Linux|Darwin */
     #[RequiresOperatingSystem('Linux|Darwin')]
     public function testCanBuildScopedDisksWithVisibility()
     {

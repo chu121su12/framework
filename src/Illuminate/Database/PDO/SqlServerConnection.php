@@ -76,7 +76,7 @@ class SqlServerConnection implements ConnectionContract
      * @param  string|null  $name
      * @return string|int
      */
-    public function lastInsertId($name = null): string|int
+    public function lastInsertId($name = null)/*: string|int*/
     {
         if ($name === null) {
             return $this->connection->lastInsertId($name);
@@ -92,7 +92,7 @@ class SqlServerConnection implements ConnectionContract
      *
      * @return void
      */
-    public function beginTransaction(): void
+    public function beginTransaction()/*: void*/
     {
         $this->connection->beginTransaction();
     }
@@ -102,7 +102,7 @@ class SqlServerConnection implements ConnectionContract
      *
      * @return void
      */
-    public function commit(): void
+    public function commit()/*: void*/
     {
         $this->connection->commit();
     }
@@ -112,7 +112,7 @@ class SqlServerConnection implements ConnectionContract
      *
      * @return void
      */
-    public function rollBack(): void
+    public function rollBack()/*: void*/
     {
         $this->connection->rollBack();
     }
@@ -124,7 +124,7 @@ class SqlServerConnection implements ConnectionContract
      * @param  int  $type
      * @return string
      */
-    public function quote($value, $type = ParameterType::STRING): string
+    public function quote($value, $type = ParameterType::STRING)/*: string*/
     {
         $val = $this->connection->quote($value, $type);
 
@@ -141,7 +141,7 @@ class SqlServerConnection implements ConnectionContract
      *
      * @return string
      */
-    public function getServerVersion(): string
+    public function getServerVersion()/*: string*/
     {
         return $this->connection->getServerVersion();
     }

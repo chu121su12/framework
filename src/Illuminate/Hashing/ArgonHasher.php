@@ -147,12 +147,12 @@ class ArgonHasher extends AbstractHasher implements HasherContract
      */
     protected function isUsingValidOptions($hashedValue)
     {
-        ['options' => $options] = $this->info($hashedValue);
+        $options = $this->info($hashedValue)['options'];
 
         if (
-            ! is_int($options['memory_cost'] ?? null) ||
-            ! is_int($options['time_cost'] ?? null) ||
-            ! is_int($options['threads'] ?? null)
+            ! is_int(isset($options['memory_cost']) ? $options['memory_cost'] : null) ||
+            ! is_int(isset($options['time_cost']) ? $options['time_cost'] : null) ||
+            ! is_int(isset($options['threads']) ? $options['threads'] : null)
         ) {
             return false;
         }

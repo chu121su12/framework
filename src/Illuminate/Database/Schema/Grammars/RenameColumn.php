@@ -62,19 +62,29 @@ class RenameColumn
      */
     protected static function setRenamedColumns(TableDiff $tableDiff, Fluent $command, Column $column)
     {
+        // return new TableDiff(
+        //     $tableDiff->getOldTable(),
+        //     $tableDiff->getAddedColumns(),
+        //     $tableDiff->getModifiedColumns(),
+        //     $tableDiff->getDroppedColumns(),
+        //     [$command->from => new Column($command->to, $column->getType(), self::getWritableColumnOptions($column))],
+        //     $tableDiff->getAddedIndexes(),
+        //     $tableDiff->getModifiedIndexes(),
+        //     $tableDiff->getDroppedIndexes(),
+        //     $tableDiff->getRenamedIndexes(),
+        //     $tableDiff->getAddedForeignKeys(),
+        //     $tableDiff->getModifiedColumns(),
+        //     $tableDiff->getDroppedForeignKeys(),
+        // );
         return new TableDiff(
-            $tableDiff->getOldTable(),
-            $tableDiff->getAddedColumns(),
-            $tableDiff->getModifiedColumns(),
-            $tableDiff->getDroppedColumns(),
-            [$command->from => new Column($command->to, $column->getType(), self::getWritableColumnOptions($column))],
-            $tableDiff->getAddedIndexes(),
-            $tableDiff->getModifiedIndexes(),
-            $tableDiff->getDroppedIndexes(),
-            $tableDiff->getRenamedIndexes(),
-            $tableDiff->getAddedForeignKeys(),
-            $tableDiff->getModifiedColumns(),
-            $tableDiff->getDroppedForeignKeys(),
+            $tableDiff->name,
+            \array_merge($tableDiff->addedColumns, [new Column($command->to, $column->getType(), self::getWritableColumnOptions($column))]),
+            $tableDiff->changedColumns,
+            \array_merge($tableDiff->removedColumns, [new Column($command->from, $column->getType())]),
+            $tableDiff->addedIndexes,
+            $tableDiff->changedIndexes,
+            $tableDiff->removedIndexes,
+            $tableDiff->fromTable
         );
     }
 

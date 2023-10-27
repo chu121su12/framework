@@ -1901,6 +1901,7 @@ class ValidationValidatorTest extends TestCase
         $this->assertFalse($v->messages()->has('foo.1.email'));
     }
 
+    /** @dataProvider prohibitedRulesData */
     #[DataProvider('prohibitedRulesData')]
     public function testProhibitedRulesAreConsistent($rules, $data, $result)
     {
@@ -3438,6 +3439,8 @@ class ValidationValidatorTest extends TestCase
      * @param  mixed  $input
      * @param  mixed  $allowed
      * @param  bool  $passes
+     *
+     * @dataProvider multipleOfDataProvider
      */
     #[DataProvider('multipleOfDataProvider')]
     public function testValidateMultipleOf($input, $allowed, $passes)
@@ -4166,6 +4169,7 @@ class ValidationValidatorTest extends TestCase
         $this->assertFalse($v->passes());
     }
 
+    /** @dataProvider validUrls */
     #[DataProvider('validUrls')]
     public function testValidateUrlWithValidUrls($validUrl)
     {
@@ -4174,6 +4178,7 @@ class ValidationValidatorTest extends TestCase
         $this->assertTrue($v->passes());
     }
 
+    /** @dataProvider invalidUrls */
     #[DataProvider('invalidUrls')]
     public function testValidateUrlWithInvalidUrls($invalidUrl)
     {
@@ -4446,6 +4451,7 @@ class ValidationValidatorTest extends TestCase
         ];
     }
 
+    /** @dataProvider activeUrlDataProvider */
     #[DataProvider('activeUrlDataProvider')]
     public function testValidateActiveUrl($data, $outcome)
     {
@@ -4756,6 +4762,7 @@ class ValidationValidatorTest extends TestCase
         $this->assertTrue($v->passes());
     }
 
+    /** @requires extension fileinfo */
     #[RequiresPhpExtension('fileinfo')]
     public function testValidateFile()
     {
@@ -7826,6 +7833,7 @@ class ValidationValidatorTest extends TestCase
         $this->assertFalse($v->passes());
     }
 
+    /** @dataProvider validUuidList */
     #[DataProvider('validUuidList')]
     public function testValidateWithValidUuid($uuid)
     {
@@ -7834,6 +7842,7 @@ class ValidationValidatorTest extends TestCase
         $this->assertTrue($v->passes());
     }
 
+    /** @dataProvider invalidUuidList */
     #[DataProvider('invalidUuidList')]
     public function testValidateWithInvalidUuid($uuid)
     {
@@ -8112,6 +8121,7 @@ class ValidationValidatorTest extends TestCase
         ];
     }
 
+    /** @dataProvider providesPassingExcludeIfData */
     #[DataProvider('providesPassingExcludeIfData')]
     public function testExcludeIf($rules, $data, $expectedValidatedData)
     {
@@ -8225,6 +8235,7 @@ class ValidationValidatorTest extends TestCase
         ];
     }
 
+    /** @dataProvider providesFailingExcludeIfData */
     #[DataProvider('providesFailingExcludeIfData')]
     public function testExcludeIfWhenValidationFails($rules, $data, $expectedMessages)
     {
@@ -8265,6 +8276,7 @@ class ValidationValidatorTest extends TestCase
         ];
     }
 
+    /** @dataProvider providesPassingExcludeData */
     #[DataProvider('providesPassingExcludeData')]
     public function testExclude($rules, $data, $expectedValidatedData)
     {
@@ -8833,6 +8845,7 @@ class ValidationValidatorTest extends TestCase
         ], $validator->messages()->keys());
     }
 
+    /** @dataProvider outsideRangeExponents */
     #[DataProvider('outsideRangeExponents')]
     public function testItLimitsLengthOfScientificNotationExponent($value)
     {
@@ -8857,6 +8870,7 @@ class ValidationValidatorTest extends TestCase
         ];
     }
 
+    /** @dataProvider withinRangeExponents */
     #[DataProvider('withinRangeExponents')]
     public function testItAllowsScientificNotationWithinRange($value, $rule)
     {

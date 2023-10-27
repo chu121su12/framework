@@ -9,6 +9,7 @@ use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 
 class MailManagerTest extends TestCase
 {
+    /** @dataProvider emptyTransportConfigDataProvider */
     #[DataProvider('emptyTransportConfigDataProvider')]
     public function testEmptyTransportConfig($transport)
     {

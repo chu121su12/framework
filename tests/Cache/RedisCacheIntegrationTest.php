@@ -25,6 +25,8 @@ class RedisCacheIntegrationTest extends TestCase
     }
 
     /**
+     * @dataProvider redisDriverProvider
+     *
      * @param  string  $driver
      */
     #[DataProvider('redisDriverProvider')]
@@ -40,6 +42,8 @@ class RedisCacheIntegrationTest extends TestCase
     /**
      * Breaking change.
      *
+     * @dataProvider redisDriverProvider
+     *
      * @param  string  $driver
      */
     #[DataProvider('redisDriverProvider')]
@@ -54,6 +58,8 @@ class RedisCacheIntegrationTest extends TestCase
 
     /**
      * Breaking change.
+     *
+     * @dataProvider redisDriverProvider
      *
      * @param  string  $driver
      */

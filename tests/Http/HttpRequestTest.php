@@ -83,6 +83,7 @@ class HttpRequestTest extends TestCase
         $this->assertSame('foo bar', $request->decodedPath());
     }
 
+    /** @dataProvider segmentProvider */
     #[DataProvider('segmentProvider')]
     public function testSegmentMethod($path, $segment, $expected)
     {
@@ -100,6 +101,7 @@ class HttpRequestTest extends TestCase
         ];
     }
 
+    /** @dataProvider segmentsProvider */
     #[DataProvider('segmentsProvider')]
     public function testSegmentsMethod($path, $expected)
     {
@@ -1070,6 +1072,7 @@ class HttpRequestTest extends TestCase
         ];
     }
 
+    /** @dataProvider getPrefersCases */
     #[DataProvider('getPrefersCases')]
     public function testPrefersMethod($accept, $prefers, $expected)
     {

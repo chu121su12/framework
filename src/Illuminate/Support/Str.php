@@ -12,6 +12,7 @@ use Ramsey\Uuid\Generator\CombGenerator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactory;
 use Symfony\Component\Uid\Ulid;
+use Symfony\Polyfill\Mbstring\Mbstring;
 use Throwable;
 use Traversable;
 use voku\helper\ASCII;
@@ -303,13 +304,13 @@ class Str
      * @param  string|null  $encoding
      * @return string
      */
-    public static function convertCase(/*string */$string, /*int */$mode = MB_CASE_FOLD, /*?string */$encoding = 'UTF-8')
+    public static function convertCase(/*string */$string, /*int */$mode = Mbstring::MB_CASE_FOLD, /*?string */$encoding = 'UTF-8')
     {
         $string = backport_type_check('string', $string);
         $mode = backport_type_check('int', $mode);
         $encoding = backport_type_check('?string', $encoding);
 
-        return mb_convert_case($string, $mode, $encoding);
+        return Mbstring::mb_convert_case($string, $mode, $encoding);
     }
 
     /**
@@ -889,9 +890,11 @@ class Str
 
         $length = $length - $password->count();
 
-        return $password->merge($options->pipe(
-            fn ($c) => Collection::times($length, fn () => $c[random_int(0, $c->count() - 1)])
-        ))->shuffle()->implode('');
+        return $password->merge($options->pipe(function ($c) use ($length) {
+            return Collection::times($length, function () use ($c) {
+                return $c[random_int(0, $c->count() - 1)];
+            });
+        }))->shuffle()->implode('');
     }
 
     /**
@@ -1046,9 +1049,18 @@ class Str
      */
     private static function toStringOr($value, $fallback)
     {
+        $restore = backport_convert_error_to_error_exception();
+
         try {
             return (string) $value;
+        } catch (\Exception $e) {
+        } catch (\ErrorException $e) {
         } catch (Throwable $e) {
+        } finally {
+            $restore();
+        }
+
+        if (isset($e)) {
             return $fallback;
         }
     }

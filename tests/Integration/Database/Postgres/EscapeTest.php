@@ -6,6 +6,10 @@ use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use RuntimeException;
 
+/**
+ * @requires extension pdo_pgsql
+ * @requires OS Linux|Darwin
+ */
 #[RequiresOperatingSystem('Linux|Darwin')]
 #[RequiresPhpExtension('pdo_pgsql')]
 class EscapeTest extends PostgresTestCase

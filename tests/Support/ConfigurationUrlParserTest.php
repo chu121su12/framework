@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class ConfigurationUrlParserTest extends TestCase
 {
+    /** @dataProvider databaseUrls */
     #[DataProvider('databaseUrls')]
     public function testDatabaseUrlsAreParsed($config, $expectedOutput)
     {

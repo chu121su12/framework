@@ -13,6 +13,7 @@ use stdClass;
 
 class HttpJsonResponseTest extends TestCase
 {
+    /** @dataProvider setAndRetrieveDataProvider */
     #[DataProvider('setAndRetrieveDataProvider')]
     public function testSetAndRetrieveData($data)
     {
@@ -66,6 +67,7 @@ class HttpJsonResponseTest extends TestCase
         $this->assertSame(404, $response->getStatusCode());
     }
 
+    /** @dataProvider jsonErrorDataProvider */
     #[DataProvider('jsonErrorDataProvider')]
     public function testInvalidArgumentExceptionOnJsonError($data)
     {
@@ -74,6 +76,7 @@ class HttpJsonResponseTest extends TestCase
         new JsonResponse(['data' => $data]);
     }
 
+    /** @dataProvider jsonErrorDataProvider */
     #[DataProvider('jsonErrorDataProvider')]
     public function testGracefullyHandledSomeJsonErrorsWithPartialOutputOnError($data)
     {

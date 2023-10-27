@@ -63,6 +63,7 @@ class CommandSchedulingTest extends TestCase
         parent::tearDown();
     }
 
+    /** @dataProvider executionProvider */
     #[DataProvider('executionProvider')]
     public function testExecutionOrder($background, $expected)
     {

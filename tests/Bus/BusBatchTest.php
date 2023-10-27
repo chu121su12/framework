@@ -412,6 +412,7 @@ class BusBatchTest extends TestCase
         $builder->shouldHaveReceived('first');
     }
 
+    /** @dataProvider serializedOptions */
     #[DataProvider('serializedOptions')]
     public function test_options_unserialize_on_postgres($serialize, $options)
     {

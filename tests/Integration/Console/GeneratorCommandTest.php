@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class GeneratorCommandTest extends TestCase
 {
+    /** @dataProvider reservedNamesDataProvider */
     #[DataProvider('reservedNamesDataProvider')]
     public function testItCannotGenerateClassUsingReservedName($given)
     {

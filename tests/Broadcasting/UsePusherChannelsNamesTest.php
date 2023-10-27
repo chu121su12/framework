@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class UsePusherChannelsNamesTest extends TestCase
 {
+    /** @dataProvider channelsProvider */
     #[DataProvider('channelsProvider')]
     public function testChannelNameNormalization($requestChannelName, $normalizedName)
     {
@@ -30,6 +31,7 @@ class UsePusherChannelsNamesTest extends TestCase
         );
     }
 
+    /** @dataProvider channelsProvider */
     #[DataProvider('channelsProvider')]
     public function testIsGuardedChannel($requestChannelName, $_, $guarded)
     {

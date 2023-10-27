@@ -454,7 +454,7 @@ abstract class GeneratorCommand extends Command implements PromptsForMissingInpu
         return in_array(
             strtolower($name),
             collect($this->reservedNames)
-                ->transform(fn ($name) => strtolower($name))
+                ->transform(function ($name) { return strtolower($name); })
                 ->all()
         );
     }

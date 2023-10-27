@@ -13,3 +13,6 @@ if (! \function_exists('phpunit_major_version')) {
         }
     }
 }
+
+// rm -rf ./vendor/orchestra/testbench-core/laravel/bootstrap/cache
+// mkdir -p ./vendor/orchestra/testbench-core/laravel/bootstrap/cache

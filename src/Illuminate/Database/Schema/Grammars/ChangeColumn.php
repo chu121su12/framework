@@ -134,21 +134,22 @@ class ChangeColumn
     protected static function getDoctrineColumnChangeOptions(Fluent $fluent)
     {
         $options = ['Type' => static::getDoctrineColumnType($fluent['type'])];
+        $options['type'] = $options['Type'];
 
         if (! in_array($fluent['type'], ['smallint', 'integer', 'bigint'])) {
-            $options['Autoincrement'] = false;
+            $options['Autoincrement'] = $options['autoincrement'] = false;
         }
 
         if (in_array($fluent['type'], ['tinyText', 'text', 'mediumText', 'longText'])) {
-            $options['Length'] = static::calculateDoctrineTextLength($fluent['type']);
+            $options['Length'] = $options['length'] = static::calculateDoctrineTextLength($fluent['type']);
         }
 
         if ($fluent['type'] === 'char') {
-            $options['Fixed'] = true;
+            $options['Fixed'] = $options['fixed'] = true;
         }
 
         if (static::doesntNeedCharacterOptions($fluent['type'])) {
-            $options['PlatformOptions'] = [
+            $options['PlatformOptions'] = $options['customSchemaOptions'] = [
                 'collation' => '',
                 'charset' => '',
             ];

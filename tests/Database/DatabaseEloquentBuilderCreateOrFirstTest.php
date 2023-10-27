@@ -15,18 +15,18 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentBuilderCreateOrFirstTest extends TestCase
 {
-    public function setUp(): void
+    public function setUp()/*: void*/
     {
         Carbon::setTestNow('2023-01-01 00:00:00');
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         Carbon::setTestNow();
         Mockery::close();
     }
 
-    public function testCreateOrFirstMethodCreatesNewRecord(): void
+    public function testCreateOrFirstMethodCreatesNewRecord()/*: void*/
     {
         $model = new EloquentBuilderCreateOrFirstTestModel();
         $this->mockConnectionForModel($model, 'SQLite', [123]);
@@ -35,7 +35,7 @@ class DatabaseEloquentBuilderCreateOrFirstTest extends TestCase
 
         $model->getConnection()->expects('insert')->with(
             'insert into "table" ("attr", "val", "updated_at", "created_at") values (?, ?, ?, ?)',
-            ['foo', 'bar', '2023-01-01 00:00:00', '2023-01-01 00:00:00'],
+            ['foo', 'bar', '2023-01-01 00:00:00', '2023-01-01 00:00:00']
         )->andReturnTrue();
 
         $result = $model->newQuery()->createOrFirst(['attr' => 'foo'], ['val' => 'bar']);
@@ -49,7 +49,7 @@ class DatabaseEloquentBuilderCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testCreateOrFirstMethodRetrievesExistingRecord(): void
+    public function testCreateOrFirstMethodRetrievesExistingRecord()/*: void*/
     {
         $model = new EloquentBuilderCreateOrFirstTestModel();
         $this->mockConnectionForModel($model, 'SQLite');
@@ -86,7 +86,7 @@ class DatabaseEloquentBuilderCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testFirstOrCreateMethodRetrievesExistingRecord(): void
+    public function testFirstOrCreateMethodRetrievesExistingRecord()/*: void*/
     {
         $model = new EloquentBuilderCreateOrFirstTestModel();
         $this->mockConnectionForModel($model, 'SQLite');
@@ -115,7 +115,7 @@ class DatabaseEloquentBuilderCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testFirstOrCreateMethodCreatesNewRecord(): void
+    public function testFirstOrCreateMethodCreatesNewRecord()/*: void*/
     {
         $model = new EloquentBuilderCreateOrFirstTestModel();
         $this->mockConnectionForModel($model, 'SQLite', [123]);
@@ -129,7 +129,7 @@ class DatabaseEloquentBuilderCreateOrFirstTest extends TestCase
 
         $model->getConnection()->expects('insert')->with(
             'insert into "table" ("attr", "val", "updated_at", "created_at") values (?, ?, ?, ?)',
-            ['foo', 'bar', '2023-01-01 00:00:00', '2023-01-01 00:00:00'],
+            ['foo', 'bar', '2023-01-01 00:00:00', '2023-01-01 00:00:00']
         )->andReturnTrue();
 
         $result = $model->newQuery()->firstOrCreate(['attr' => 'foo'], ['val' => 'bar']);
@@ -143,7 +143,7 @@ class DatabaseEloquentBuilderCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testFirstOrCreateMethodRetrievesRecordCreatedJustNow(): void
+    public function testFirstOrCreateMethodRetrievesRecordCreatedJustNow()/*: void*/
     {
         $model = new EloquentBuilderCreateOrFirstTestModel();
         $this->mockConnectionForModel($model, 'SQLite');
@@ -185,7 +185,7 @@ class DatabaseEloquentBuilderCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testUpdateOrCreateMethodUpdatesExistingRecord(): void
+    public function testUpdateOrCreateMethodUpdatesExistingRecord()/*: void*/
     {
         $model = new EloquentBuilderCreateOrFirstTestModel();
         $this->mockConnectionForModel($model, 'SQLite');
@@ -207,7 +207,7 @@ class DatabaseEloquentBuilderCreateOrFirstTest extends TestCase
             ->expects('update')
             ->with(
                 'update "table" set "val" = ?, "updated_at" = ? where "id" = ?',
-                ['baz', '2023-01-01 00:00:00', 123],
+                ['baz', '2023-01-01 00:00:00', 123]
             )
             ->andReturn(1);
 
@@ -222,7 +222,7 @@ class DatabaseEloquentBuilderCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testUpdateOrCreateMethodCreatesNewRecord(): void
+    public function testUpdateOrCreateMethodCreatesNewRecord()/*: void*/
     {
         $model = new EloquentBuilderCreateOrFirstTestModel();
         $this->mockConnectionForModel($model, 'SQLite', [123]);
@@ -236,7 +236,7 @@ class DatabaseEloquentBuilderCreateOrFirstTest extends TestCase
 
         $model->getConnection()->expects('insert')->with(
             'insert into "table" ("attr", "val", "updated_at", "created_at") values (?, ?, ?, ?)',
-            ['foo', 'bar', '2023-01-01 00:00:00', '2023-01-01 00:00:00'],
+            ['foo', 'bar', '2023-01-01 00:00:00', '2023-01-01 00:00:00']
         )->andReturnTrue();
 
         $result = $model->newQuery()->updateOrCreate(['attr' => 'foo'], ['val' => 'bar']);
@@ -250,7 +250,7 @@ class DatabaseEloquentBuilderCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    public function testUpdateOrCreateMethodUpdatesRecordCreatedJustNow(): void
+    public function testUpdateOrCreateMethodUpdatesRecordCreatedJustNow()/*: void*/
     {
         $model = new EloquentBuilderCreateOrFirstTestModel();
         $this->mockConnectionForModel($model, 'SQLite');
@@ -285,7 +285,7 @@ class DatabaseEloquentBuilderCreateOrFirstTest extends TestCase
             ->expects('update')
             ->with(
                 'update "table" set "val" = ?, "updated_at" = ? where "id" = ?',
-                ['baz', '2023-01-01 00:00:00', 123],
+                ['baz', '2023-01-01 00:00:00', 123]
             )
             ->andReturn(1);
 
@@ -300,8 +300,10 @@ class DatabaseEloquentBuilderCreateOrFirstTest extends TestCase
         ], $result->toArray());
     }
 
-    protected function mockConnectionForModel(Model $model, string $database, array $lastInsertIds = []): void
+    protected function mockConnectionForModel(Model $model, /*string */$database, array $lastInsertIds = [])/*: void*/
     {
+        $database = backport_type_check('string', $database);
+
         $grammarClass = 'Illuminate\Database\Query\Grammars\\'.$database.'Grammar';
         $processorClass = 'Illuminate\Database\Query\Processors\\'.$database.'Processor';
         $grammar = new $grammarClass;

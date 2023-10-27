@@ -123,6 +123,8 @@ class ViewBladeCompilerTest extends TestCase
     }
 
     /**
+     * @dataProvider appendViewPathDataProvider
+     *
      * @param  string  $content
      * @param  string  $compiled
      */

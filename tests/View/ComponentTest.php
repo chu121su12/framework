@@ -31,6 +31,23 @@ class ComponentTest_testResolveDependenciesWithoutContainer_class extends Compon
             }
         }
 
+class ComponentTest_testRenderingStringClosureFromComponent_class extends Component
+        {
+            protected $title;
+
+            public function __construct($title = 'World')
+            {
+                $this->title = $title;
+            }
+
+            public function render()
+            {
+                return function (array $data) {
+                    return "<p>Hello {$this->title}</p>";
+                };
+            }
+        }
+
 class ComponentTest extends TestCase
 {
     protected $viewFactory;
@@ -94,22 +111,7 @@ class ComponentTest extends TestCase
         $this->viewFactory->shouldReceive('exists')->once()->andReturn(false);
         $this->viewFactory->shouldReceive('addNamespace')->once()->with('__components', '/tmp');
 
-        $component = new class() extends Component
-        {
-            protected $title;
-
-            public function __construct($title = 'World')
-            {
-                $this->title = $title;
-            }
-
-            public function render()
-            {
-                return function (array $data) {
-                    return "<p>Hello {$this->title}</p>";
-                };
-            }
-        };
+        $component = new ComponentTest_testRenderingStringClosureFromComponent_class();
 
         $closure = $component->resolveView();
 

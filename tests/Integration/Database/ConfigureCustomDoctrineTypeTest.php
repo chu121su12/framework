@@ -87,7 +87,7 @@ class ConfigureCustomDoctrineTypeTest extends DatabaseTestCase
 
 class PostgresXmlType extends Type
 {
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)/*: string*/
     {
         return 'xml';
     }
@@ -100,7 +100,7 @@ class PostgresXmlType extends Type
 
 class MySQLBitType extends Type
 {
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)/*: string*/
     {
         return 'bit';
     }

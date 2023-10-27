@@ -18,6 +18,7 @@ class FilesystemTest extends TestCase
 {
     private static $tempDir;
 
+    /** @beforeClass */
     #[BeforeClass]
     public static function setUpTempDir()
     {
@@ -29,6 +30,7 @@ class FilesystemTest extends TestCase
         }
     }
 
+    /** @afterClass */
     #[AfterClass]
     public static function tearDownTempDir()
     {
@@ -101,6 +103,7 @@ class FilesystemTest extends TestCase
         $this->assertStringEqualsFile($tempFile, 'Hello Taylor');
     }
 
+    /** @requires OS Linux|Darwin */
     #[RequiresOperatingSystem('Linux|Darwin')]
     public function testReplaceWhenUnixSymlinkExists()
     {
@@ -430,6 +433,7 @@ class FilesystemTest extends TestCase
         $this->assertEquals($size, $files->size(self::$tempDir.'/foo.txt'));
     }
 
+    /** @requires extension fileinfo */
     #[RequiresPhpExtension('fileinfo')]
     public function testMimeTypeOutputsMimeType()
     {
@@ -527,6 +531,10 @@ class FilesystemTest extends TestCase
         $this->assertFileExists(self::$tempDir.'/created');
     }
 
+    /**
+     * @requires extension pcntl
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|Darwin')]
     #[RequiresPhpExtension('pcntl')]
     public function testSharedGet()

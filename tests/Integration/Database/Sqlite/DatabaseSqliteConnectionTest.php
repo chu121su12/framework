@@ -42,6 +42,7 @@ class DatabaseSqliteConnectionTest extends DatabaseTestCase
         Schema::drop('json_table');
     }
 
+    /** @dataProvider jsonContainsKeyDataProvider */
     #[DataProvider('jsonContainsKeyDataProvider')]
     public function testWhereJsonContainsKey($count, $column)
     {
