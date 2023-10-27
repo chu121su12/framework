@@ -5,6 +5,7 @@ namespace Illuminate\Tests\Integration\Cache;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithRedis;
 use Illuminate\Support\Facades\Cache;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use Redis;
 
 class PhpRedisCacheLockTest extends TestCase
@@ -142,9 +143,7 @@ class PhpRedisCacheLockTest extends TestCase
         $this->assertNull($store->lockConnection()->get($store->getPrefix().'foo'));
     }
 
-    /**
-     * @requires extension lzf
-     */
+    #[RequiresPhpExtension('lzf')]
     public function testRedisLockCanBeAcquiredAndReleasedWithLzfCompression()
     {
         if (! defined('Redis::COMPRESSION_LZF')) {
@@ -171,9 +170,7 @@ class PhpRedisCacheLockTest extends TestCase
         $this->assertNull($store->lockConnection()->get($store->getPrefix().'foo'));
     }
 
-    /**
-     * @requires extension zstd
-     */
+    #[RequiresPhpExtension('zstd')]
     public function testRedisLockCanBeAcquiredAndReleasedWithZstdCompression()
     {
         if (! defined('Redis::COMPRESSION_ZSTD')) {
@@ -219,9 +216,7 @@ class PhpRedisCacheLockTest extends TestCase
         $this->assertNull($store->lockConnection()->get($store->getPrefix().'foo'));
     }
 
-    /**
-     * @requires extension lz4
-     */
+    #[RequiresPhpExtension('lz4')]
     public function testRedisLockCanBeAcquiredAndReleasedWithLz4Compression()
     {
         if (! defined('Redis::COMPRESSION_LZ4')) {
@@ -267,9 +262,7 @@ class PhpRedisCacheLockTest extends TestCase
         $this->assertNull($store->lockConnection()->get($store->getPrefix().'foo'));
     }
 
-    /**
-     * @requires extension Lzf
-     */
+    #[RequiresPhpExtension('lzf')]
     public function testRedisLockCanBeAcquiredAndReleasedWithSerializationAndCompression()
     {
         if (! defined('Redis::COMPRESSION_LZF')) {

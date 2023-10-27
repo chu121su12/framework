@@ -4,6 +4,7 @@ namespace Illuminate\Tests\Encryption;
 
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Encryption\Encrypter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -239,9 +240,7 @@ class EncrypterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideTamperedData
-     */
+    #[DataProvider('provideTamperedData')]
     public function testTamperedPayloadWillGetRejected($payload)
     {
         $this->expectException(DecryptException::class);

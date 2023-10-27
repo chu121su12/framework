@@ -328,7 +328,7 @@ class RedisStore extends TaggableStore implements LockProvider
         })->map(function (/*string */$tagKey) use ($prefix) {
             $tagKey = backport_type_check('string', $tagKey);
 
-            return Str::match('/^'.preg_quote($prefix).'tag:(.*):entries$/', $tagKey);
+            return Str::match('/^'.preg_quote($prefix, '/').'tag:(.*):entries$/', $tagKey);
         });
     }
 

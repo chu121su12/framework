@@ -12,13 +12,6 @@ class DatabaseTransactionsManager
     protected $transactions;
 
     /**
-     * The database transaction that should be ignored by callbacks.
-     *
-     * @var \Illuminate\Database\DatabaseTransactionRecord|null
-     */
-    protected $callbacksShouldIgnore;
-
-    /**
      * Create a new database transactions manager instance.
      *
      * @return void
@@ -52,13 +45,8 @@ class DatabaseTransactionsManager
     public function rollback($connection, $level)
     {
         $this->transactions = $this->transactions->reject(function ($transaction) use ($connection, $level) {
-            return $transaction->connection == $connection &&
-                   $transaction->level > $level;
+            return $transaction->connection == $connection && $transaction->level > $level;
         })->values();
-
-        if ($this->transactions->isEmpty()) {
-            $this->callbacksShouldIgnore = null;
-        }
     }
 
     /**
@@ -78,10 +66,6 @@ class DatabaseTransactionsManager
         $this->transactions = $forOtherConnections->values();
 
         $forThisConnection->map->executeCallbacks();
-
-        if ($this->transactions->isEmpty()) {
-            $this->callbacksShouldIgnore = null;
-        }
     }
 
     /**
@@ -97,19 +81,6 @@ class DatabaseTransactionsManager
         }
 
         $callback();
-    }
-
-    /**
-     * Specify that callbacks should ignore the given transaction when determining if they should be executed.
-     *
-     * @param  \Illuminate\Database\DatabaseTransactionRecord  $transaction
-     * @return $this
-     */
-    public function callbacksShouldIgnore(DatabaseTransactionRecord $transaction)
-    {
-        $this->callbacksShouldIgnore = $transaction;
-
-        return $this;
     }
 
     /**
@@ -130,7 +101,7 @@ class DatabaseTransactionsManager
      */
     public function afterCommitCallbacksShouldBeExecuted($level)
     {
-        return $level === 1;
+        return $level === 0;
     }
 
     /**

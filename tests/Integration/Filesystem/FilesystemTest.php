@@ -5,11 +5,10 @@ namespace Illuminate\Tests\Integration\Filesystem;
 use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Support\Facades\File;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
 use Symfony\Component\Process\Process;
 
-/**
- * @requires OS Linux|Darwin
- */
+#[RequiresOperatingSystem('Linux|Darwin')]
 class FilesystemTest extends TestCase
 {
     protected $stubFile;

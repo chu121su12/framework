@@ -110,6 +110,23 @@ class MailSesTransportTest extends TestCase
         (new SesTransport($client))->send($message);
     }
 
+    public function testSendError()
+    {
+        $message = new Email();
+        $message->subject('Foo subject');
+        $message->text('Bar body');
+        $message->sender('myself@example.com');
+        $message->to('me@example.com');
+
+        $client = m::mock(SesClient::class);
+        $client->shouldReceive('sendRawEmail')->once()
+            ->andThrow(new AwsException('Email address is not verified.', new Command('sendRawEmail')));
+
+        $this->expectException(TransportException::class);
+
+        (new SesTransport($client))->send($message);
+    }
+
     public function testSesLocalConfiguration()
     {
         $container = new Container;

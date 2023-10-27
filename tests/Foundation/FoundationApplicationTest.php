@@ -508,7 +508,6 @@ class FoundationApplicationTest extends TestCase
         );
     }
 
-    /** @test */
     public function testMacroable()/*: void*/
     {
         $app = new Application;
@@ -525,7 +524,6 @@ class FoundationApplicationTest extends TestCase
         $this->assertFalse($app->foo());
     }
 
-    /** @test */
     public function testUseConfigPath()/*: void*/
     {
         $app = new Application;

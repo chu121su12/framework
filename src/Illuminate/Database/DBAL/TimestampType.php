@@ -2,12 +2,11 @@
 
 namespace Illuminate\Database\DBAL;
 
-use Doctrine\DBAL\Exception as DBALException;
+use Doctrine\DBAL\Exception as NotSupported;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Platforms\MariaDb1027Platform;
-use Doctrine\DBAL\Platforms\MariaDb1052Platform;
+use Doctrine\DBAL\Platforms\Exception\NotSupported;
+use Doctrine\DBAL\Platforms\MariaDB1052Platform;
 use Doctrine\DBAL\Platforms\MariaDBPlatform;
-use Doctrine\DBAL\Platforms\MySQL57Platform;
 use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
@@ -24,7 +23,7 @@ class TimestampTypeBase extends Type/* implements PhpDateTimeMappingType*/
     /**
      * {@inheritdoc}
      *
-     * @throws DBALException
+     * @throws \Doctrine\DBAL\Platforms\Exception\NotSupported
      */
     public function getSQLDeclaration(array $column, AbstractPlatform $platform)/*: string*/
     {
@@ -61,7 +60,7 @@ class TimestampTypeBase extends Type/* implements PhpDateTimeMappingType*/
             case 'sqlite3': return $this->getSQLitePlatformSQLDeclaration($column);
         }
 
-        throw new DBALException('Invalid platform: '.substr(strrchr(get_class($platform), '\\'), 1));
+        throw new NotSupported('Invalid platform: '.substr(strrchr(get_class($platform), '\\'), 1));
     }
 
     /**

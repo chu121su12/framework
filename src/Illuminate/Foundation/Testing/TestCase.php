@@ -162,26 +162,17 @@ abstract class TestCase extends BaseTestCase
     /**
      * {@inheritdoc}
      */
-    protected function runTest()/*: mixed*/
+    protected function transformException(/*Throwable */$error)/*: Throwable*/
     {
-        $result = null;
+        $error = backport_type_throwable($error);
 
-        try {
-            $result = parent::runTest();
-        } catch (\Exception $e) {
-        } catch (\ErrorException $e) {
-        } catch (Throwable $e) {
+        $response = isset(static::$latestResponse) ? static::$latestResponse : null;
+
+        if (! is_null($response)) {
+            $response->transformNotSuccessfulException($error);
         }
 
-        if (isset($e)) {
-            if (! is_null(static::$latestResponse)) {
-                static::$latestResponse->transformNotSuccessfulException($e);
-            }
-
-            throw $e;
-        }
-
-        return $result;
+        return $error;
     }
 
     /**

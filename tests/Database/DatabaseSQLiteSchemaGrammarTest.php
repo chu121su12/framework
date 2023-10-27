@@ -168,7 +168,7 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
         });
 
         $manager = $db->getConnection()->getDoctrineSchemaManager();
-        $details = $manager->listTableDetails('prefix_users');
+        $details = $manager->introspectTable('prefix_users');
         $this->assertTrue($details->hasIndex('index1'));
         $this->assertFalse($details->hasIndex('index2'));
 
@@ -176,7 +176,7 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
             $table->renameIndex('index1', 'index2');
         });
 
-        $details = $manager->listTableDetails('prefix_users');
+        $details = $manager->introspectTable('prefix_users');
         $this->assertFalse($details->hasIndex('index1'));
         $this->assertTrue($details->hasIndex('index2'));
 

@@ -17,6 +17,7 @@ use League\Flysystem\Patch\UnableToReadFile;
 use League\Flysystem\Patch\UnableToRetrieveMetadata;
 use League\Flysystem\Patch\UnableToWriteFile;
 use Mockery as m;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -436,9 +437,7 @@ class FilesystemAdapterTest extends TestCase
         $this->assertSame('normal file content', $filesystemAdapter->read($storagePath));
     }
 
-    /**
-     * @requires extension ftp
-     */
+    #[RequiresPhpExtension('ftp')]
     public function testCreateFtpDriver()
     {
         if (! defined('FTP_BINARY')) {

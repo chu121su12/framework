@@ -8,8 +8,8 @@ use Swift_Mime_SimpleMessage as SwiftMimeSimpleMessage;
 use Swift_Mime_Message as Swift_Mime_SimpleMessage;
 use Aws\Exception\AwsException;
 use Aws\Ses\SesClient;
-use Exception;
 use Stringable;
+use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mailer\Header\MetadataHeader;
 // use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\AbstractTransport;
@@ -111,7 +111,7 @@ class SesTransport extends Transport implements Stringable
             $awsErrorMessage = $e->getAwsErrorMessage();
             $reason = isset($awsErrorMessage) ? $awsErrorMessage : $e->getMessage();
 
-            throw new Exception(
+            throw new TransportException(
                 sprintf('Request to AWS SES API failed. Reason: %s.', $reason),
                 is_int($e->getCode()) ? $e->getCode() : 0,
                 $e

@@ -7,6 +7,10 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Testing\Assert;
 use Mockery as m;
+use PHPUnit\Framework\Attributes\AfterClass;
+use PHPUnit\Framework\Attributes\BeforeClass;
+use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 
@@ -14,9 +18,7 @@ class FilesystemTest extends TestCase
 {
     private static $tempDir;
 
-    /**
-     * @beforeClass
-     */
+    #[BeforeClass]
     public static function setUpTempDir()
     {
         self::$tempDir = sys_get_temp_dir().'/tmp';
@@ -27,9 +29,7 @@ class FilesystemTest extends TestCase
         }
     }
 
-    /**
-     * @afterClass
-     */
+    #[AfterClass]
     public static function tearDownTempDir()
     {
         $files = new Filesystem;
@@ -101,9 +101,7 @@ class FilesystemTest extends TestCase
         $this->assertStringEqualsFile($tempFile, 'Hello Taylor');
     }
 
-    /**
-     * @requires OS Linux|Darwin
-     */
+    #[RequiresOperatingSystem('Linux|Darwin')]
     public function testReplaceWhenUnixSymlinkExists()
     {
         $tempFile = self::$tempDir.'/file.txt';
@@ -432,9 +430,7 @@ class FilesystemTest extends TestCase
         $this->assertEquals($size, $files->size(self::$tempDir.'/foo.txt'));
     }
 
-    /**
-     * @requires extension fileinfo
-     */
+    #[RequiresPhpExtension('fileinfo')]
     public function testMimeTypeOutputsMimeType()
     {
         file_put_contents(self::$tempDir.'/foo.txt', 'foo');
@@ -531,10 +527,8 @@ class FilesystemTest extends TestCase
         $this->assertFileExists(self::$tempDir.'/created');
     }
 
-    /**
-     * @requires extension pcntl
-     * @requires OS Linux|Darwin
-     */
+    #[RequiresOperatingSystem('Linux|Darwin')]
+    #[RequiresPhpExtension('pcntl')]
     public function testSharedGet()
     {
         $this->markTestSkipped('Hangs the machine');

@@ -1753,6 +1753,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
             $this->getKeyName(),
             $this->getCreatedAtColumn(),
             $this->getUpdatedAtColumn(),
+            ...$this->uniqueIds(),
         ]));
 
         $attributes = Arr::except(
