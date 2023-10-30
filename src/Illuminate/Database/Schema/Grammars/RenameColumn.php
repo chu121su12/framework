@@ -76,16 +76,11 @@ class RenameColumn
         //     $tableDiff->getModifiedColumns(),
         //     $tableDiff->getDroppedForeignKeys(),
         // );
-        return new TableDiff(
-            $tableDiff->name,
-            \array_merge($tableDiff->addedColumns, [new Column($command->to, $column->getType(), self::getWritableColumnOptions($column))]),
-            $tableDiff->changedColumns,
-            \array_merge($tableDiff->removedColumns, [new Column($command->from, $column->getType())]),
-            $tableDiff->addedIndexes,
-            $tableDiff->changedIndexes,
-            $tableDiff->removedIndexes,
-            $tableDiff->fromTable
-        );
+        $tableDiff->renamedColumns = [
+            $command->from => new Column($command->to, $column->getType(), self::getWritableColumnOptions($column)),
+        ];
+
+        return $tableDiff;
     }
 
     /**

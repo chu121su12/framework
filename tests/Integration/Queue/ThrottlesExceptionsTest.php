@@ -14,6 +14,48 @@ use Mockery as m;
 use Orchestra\Testbench\TestCase;
 use RuntimeException;
 
+class ThrottlesExceptionsTest_testItCanLimitPerMinute_class
+        {
+            public $released = false;
+
+            public $handled = false;
+
+            public function release()
+            {
+                $this->released = true;
+
+                return $this;
+            }
+        }
+        
+class ThrottlesExceptionsTest_testItCanLimitPerSecond_class
+        {
+            public $released = false;
+
+            public $handled = false;
+
+            public function release()
+            {
+                $this->released = true;
+
+                return $this;
+            }
+        }
+
+class ThrottlesExceptionsTest_testLimitingWithDefaultValues_class
+        {
+            public $released = false;
+
+            public $handled = false;
+
+            public function release()
+            {
+                $this->released = true;
+
+                return $this;
+            }
+        }
+
 class ThrottlesExceptionsTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -110,19 +152,7 @@ class ThrottlesExceptionsTest extends TestCase
 
     public function testItCanLimitPerMinute()
     {
-        $jobFactory = fn () => new class
-        {
-            public $released = false;
-
-            public $handled = false;
-
-            public function release()
-            {
-                $this->released = true;
-
-                return $this;
-            }
-        };
+        $jobFactory = function () { return new ThrottlesExceptionsTest_testItCanLimitPerMinute_class; };
         $next = function ($job) {
             $job->handled = true;
 
@@ -164,19 +194,7 @@ class ThrottlesExceptionsTest extends TestCase
 
     public function testItCanLimitPerSecond()
     {
-        $jobFactory = fn () => new class
-        {
-            public $released = false;
-
-            public $handled = false;
-
-            public function release()
-            {
-                $this->released = true;
-
-                return $this;
-            }
-        };
+        $jobFactory = function () { return new ThrottlesExceptionsTest_testItCanLimitPerSecond_class; };
         $next = function ($job) {
             $job->handled = true;
 
@@ -218,19 +236,7 @@ class ThrottlesExceptionsTest extends TestCase
 
     public function testLimitingWithDefaultValues()
     {
-        $jobFactory = fn () => new class
-        {
-            public $released = false;
-
-            public $handled = false;
-
-            public function release()
-            {
-                $this->released = true;
-
-                return $this;
-            }
-        };
+        $jobFactory = function () { return new ThrottlesExceptionsTest_testLimitingWithDefaultValues_class; };
         $next = function ($job) {
             $job->handled = true;
 

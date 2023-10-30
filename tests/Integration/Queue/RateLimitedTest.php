@@ -18,6 +18,26 @@ use Illuminate\Support\Carbon;
 use Mockery as m;
 use Orchestra\Testbench\TestCase;
 
+class RateLimitedTest_testItCanLimitPerMinute_class
+        {
+            public $released = false;
+
+            public function release()
+            {
+                $this->released = true;
+            }
+        }
+
+class RateLimitedTest_testItCanLimitPerSecond_class
+        {
+            public $released = false;
+
+            public function release()
+            {
+                $this->released = true;
+            }
+        }
+
 class RateLimitedTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -200,17 +220,9 @@ class RateLimitedTest extends TestCase
     public function testItCanLimitPerMinute()
     {
         Container::getInstance()->instance(RateLimiter::class, $limiter = new RateLimiter(new Repository(new ArrayStore)));
-        $limiter->for('test', fn () => Limit::perMinute(3));
-        $jobFactory = fn () => new class
-        {
-            public $released = false;
-
-            public function release()
-            {
-                $this->released = true;
-            }
-        };
-        $next = fn ($job) => $job;
+        $limiter->for_('test', function () { return Limit::perMinute(3); });
+        $jobFactory = function () { return new RateLimitedTest_testItCanLimitPerMinute_class; };
+        $next = function ($job) { return $job; };
 
         $middleware = new RateLimited('test');
 
@@ -244,17 +256,9 @@ class RateLimitedTest extends TestCase
     public function testItCanLimitPerSecond()
     {
         Container::getInstance()->instance(RateLimiter::class, $limiter = new RateLimiter(new Repository(new ArrayStore)));
-        $limiter->for('test', fn () => Limit::perSecond(3));
-        $jobFactory = fn () => new class
-        {
-            public $released = false;
-
-            public function release()
-            {
-                $this->released = true;
-            }
-        };
-        $next = fn ($job) => $job;
+        $limiter->for_('test', function () { return Limit::perSecond(3); });
+        $jobFactory = function () { return new RateLimitedTest_testItCanLimitPerSecond_class; };
+        $next = function ($job) { return $job; };
 
         $middleware = new RateLimited('test');
 

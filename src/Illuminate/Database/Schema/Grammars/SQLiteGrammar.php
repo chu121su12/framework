@@ -365,18 +365,7 @@ class SQLiteGrammar extends Grammar
             //         $tableDiff->getDroppedForeignKeys()
             //     )
             // );
-            return (array) $platform->getAlterTableSQL(
-                new TableDiff(
-                    $tableDiff->name,
-                    $tableDiff->addedColumns,
-                    $tableDiff->changedColumns,
-                    $droppedColumns,
-                    $tableDiff->addedIndexes,
-                    $tableDiff->changedIndexes,
-                    $tableDiff->removedIndexes,
-                    $tableDiff->fromTable
-                )
-            );
+            return (array) $schema->getDatabasePlatform()->getAlterTableSQL($tableDiff);
         }
     }
 

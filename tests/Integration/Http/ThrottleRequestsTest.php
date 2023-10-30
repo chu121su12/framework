@@ -132,28 +132,30 @@ class ThrottleRequestsTest extends TestCase
     {
         return [
             [ThrottleRequests::using('test')],
-            [ThrottleRequests::with(maxAttempts: 3, decayMinutes: 1)],
+            [ThrottleRequests::with(/*maxAttempts: */3, /*decayMinutes: */1)],
             ['throttle:3,1'],
         ];
     }
 
     /** @dataProvider perMinuteThrottlingDataSet */
-    public function testItCanThrottlePerMinute(string $middleware)
+    public function testItCanThrottlePerMinute(/*string */$middleware)
     {
+        $middleware = backport_type_check('string', $middleware);
+
         $rateLimiter = Container::getInstance()->make(RateLimiter::class);
-        $rateLimiter->for('test', fn () => Limit::perMinute(3));
-        Route::get('/', fn () => 'ok')->middleware($middleware);
+        $rateLimiter->for_('test', function () { return Limit::perMinute(3); });
+        Route::get('/', function () { return 'ok'; })->middleware($middleware);
 
         Carbon::setTestNow('2000-01-01 00:00:00.000');
 
         // Make 3 requests, each a second apart, that should all be successful.
 
         for ($i = 0; $i < 3; $i++) {
-            match ($i) {
-                0 => $this->assertSame('2000-01-01 00:00:00.000', now()->toDateTimeString('m')),
-                1 => $this->assertSame('2000-01-01 00:00:01.000', now()->toDateTimeString('m')),
-                2 => $this->assertSame('2000-01-01 00:00:02.000', now()->toDateTimeString('m')),
-            };
+            switch ((string) $i) {
+                case '0': $this->assertSame('2000-01-01 00:00:00.000', now()->toDateTimeString('m')); break;
+                case '1': $this->assertSame('2000-01-01 00:00:01.000', now()->toDateTimeString('m')); break;
+                case '2': $this->assertSame('2000-01-01 00:00:02.000', now()->toDateTimeString('m')); break;
+            }
 
             $response = $this->get('/');
             $response->assertOk();
@@ -199,19 +201,19 @@ class ThrottleRequestsTest extends TestCase
     public function testItCanThrottlePerSecond()
     {
         $rateLimiter = Container::getInstance()->make(RateLimiter::class);
-        $rateLimiter->for('test', fn () => Limit::perSecond(3));
-        Route::get('/', fn () => 'ok')->middleware(ThrottleRequests::using('test'));
+        $rateLimiter->for_('test', function () { return Limit::perSecond(3); });
+        Route::get('/', function () { return 'ok'; })->middleware(ThrottleRequests::using('test'));
 
         Carbon::setTestNow('2000-01-01 00:00:00.000');
 
         // Make 3 requests, each a 100ms apart, that should all be successful.
 
         for ($i = 0; $i < 3; $i++) {
-            match ($i) {
-                0 => $this->assertSame('2000-01-01 00:00:00.000', now()->toDateTimeString('m')),
-                1 => $this->assertSame('2000-01-01 00:00:00.100', now()->toDateTimeString('m')),
-                2 => $this->assertSame('2000-01-01 00:00:00.200', now()->toDateTimeString('m')),
-            };
+            switch ((string) $i) {
+                case '0': $this->assertSame('2000-01-01 00:00:00.000', now()->toDateTimeString('m')); break;
+                case '1': $this->assertSame('2000-01-01 00:00:00.100', now()->toDateTimeString('m')); break;
+                case '2': $this->assertSame('2000-01-01 00:00:00.200', now()->toDateTimeString('m')); break;
+            }
 
             $response = $this->get('/');
             $response->assertOk();
