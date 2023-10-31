@@ -255,6 +255,10 @@ class DatabaseEloquentIntegrationTest extends TestCase
 
     public function testPaginatedModelCollectionRetrieval()
     {
+        Paginator::currentPathResolver(function () {
+            return '';
+        });
+
         EloquentTestUser::create(['id' => 1, 'email' => 'taylorotwell@gmail.com']);
         EloquentTestUser::create(['id' => 2, 'email' => 'abigailotwell@gmail.com']);
         EloquentTestUser::create(['id' => 3, 'email' => 'foo@gmail.com']);
@@ -284,6 +288,10 @@ class DatabaseEloquentIntegrationTest extends TestCase
 
     public function testPaginatedModelCollectionRetrievalUsingCallablePerPage()
     {
+        Paginator::currentPathResolver(function () {
+            return '';
+        });
+
         EloquentTestUser::create(['id' => 1, 'email' => 'taylorotwell@gmail.com']);
         EloquentTestUser::create(['id' => 2, 'email' => 'abigailotwell@gmail.com']);
         EloquentTestUser::create(['id' => 3, 'email' => 'foo@gmail.com']);
@@ -347,6 +355,10 @@ class DatabaseEloquentIntegrationTest extends TestCase
 
     public function testPaginatedModelCollectionRetrievalWhenNoElements()
     {
+        Paginator::currentPathResolver(function () {
+            return '';
+        });
+
         Paginator::currentPageResolver(function () {
             return 1;
         });
@@ -365,6 +377,10 @@ class DatabaseEloquentIntegrationTest extends TestCase
 
     public function testPaginatedModelCollectionRetrievalWhenNoElementsAndDefaultPerPage()
     {
+        Paginator::currentPathResolver(function () {
+            return '';
+        });
+
         $models = EloquentTestUser::oldest('id')->paginate();
 
         $this->assertCount(0, $models);

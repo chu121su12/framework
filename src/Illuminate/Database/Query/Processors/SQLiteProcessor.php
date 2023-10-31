@@ -27,7 +27,11 @@ class SQLiteProcessor extends Processor
      */
     public function processColumns($results)
     {
-        $hasPrimaryKey = array_sum(array_column($results, 'primary')) === 1;
+        $arrayResults = array_map(function ($result) {
+            return (array) $result;
+        }, $results);
+
+        $hasPrimaryKey = array_sum(array_column($arrayResults, 'primary')) === 1;
 
         return array_map(function ($result) use ($hasPrimaryKey) {
             $result = (object) $result;

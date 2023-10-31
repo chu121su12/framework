@@ -255,7 +255,7 @@ class Dispatcher implements DispatcherContract
             $payload[0] instanceof ShouldDispatchAfterCommit &&
             ! is_null($transactions = $this->resolveTransactionManager())) {
             $transactions->addCallback(
-                fn () => $this->invokeListeners($event, $payload, $halt)
+                function () use ($event, $payload, $halt) { return $this->invokeListeners($event, $payload, $halt); }
             );
 
             return null;

@@ -10,7 +10,7 @@ use Orchestra\Testbench\TestCase;
 
 class ShouldDispatchAfterCommitEventTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         TransactionUnawareTestEvent::$ran = false;
         ShouldDispatchAfterCommitTestEvent::$ran = false;
@@ -38,7 +38,7 @@ class ShouldDispatchAfterCommitEventTest extends TestCase
 
                 throw new \Exception;
             });
-        } catch (\Exception) {
+        } catch (\Exception $_e) {
         }
 
         $this->assertFalse(ShouldDispatchAfterCommitTestEvent::$ran);
@@ -71,7 +71,7 @@ class ShouldDispatchAfterCommitEventTest extends TestCase
                     Event::dispatch(new ShouldDispatchAfterCommitTestEvent);
                     throw new \Exception;
                 });
-            } catch (\Exception) {
+            } catch (\Exception $_e) {
             }
 
             // This event should be dispatched, as the parent transaction does not fail.
@@ -149,7 +149,7 @@ class AnotherShouldDispatchAfterCommitTestEvent implements ShouldDispatchAfterCo
 
 class ShouldDispatchAfterCommitListener
 {
-    public function handle(object $event)
+    public function handle(/*object */$event)
     {
         $event::$ran = true;
     }
@@ -157,7 +157,7 @@ class ShouldDispatchAfterCommitListener
 
 class AnotherShouldDispatchAfterCommitListener
 {
-    public function handle(object $event)
+    public function handle(/*object */$event)
     {
         $event::$ran = true;
     }

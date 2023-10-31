@@ -120,7 +120,7 @@ class ComponentTest extends TestCase
         $this->viewFactory->shouldReceive('make')->with($viewPath, [], [])->andReturn('<p>Hello World</p>');
 
         $this->assertInstanceOf(Closure::class, $closure);
-        $this->assertSame('__components::9cc08f5001b343c093ee1a396da820dc', $viewPath);
+        $this->assertSame('__components::db2052b850558ce20acaae2c991199391a93f341', $viewPath);
 
         $hash = str_replace('__components::', '', $viewPath);
         $this->assertSame('<p>Hello World</p>', file_get_contents("/tmp/{$hash}.blade.php"));

@@ -339,15 +339,23 @@ class SQLiteGrammar extends Grammar
                 $blueprint, $schema = $connection->getDoctrineSchemaManager()
             );
 
-            $droppedColumns = [];
-
             foreach ($command->columns as $name) {
-                $droppedColumns[$name] = $connection->getDoctrineColumn(
+                $tableDiff->removedColumns[$name] = $connection->getDoctrineColumn(
                     $this->getTablePrefix().$blueprint->getTable(), $name
                 );
             }
 
-            $platform = $connection->getDoctrineConnection()->getDatabasePlatform();
+            return (array) $schema->getDatabasePlatform()->getAlterTableSQL($tableDiff);
+
+            // $droppedColumns = [];
+
+            // foreach ($command->columns as $name) {
+            //     $droppedColumns[$name] = $connection->getDoctrineColumn(
+            //         $this->getTablePrefix().$blueprint->getTable(), $name
+            //     );
+            // }
+
+            // $platform = $connection->getDoctrineConnection()->getDatabasePlatform();
 
             // return (array) $platform->getAlterTableSQL(
             //     new TableDiff(
@@ -365,7 +373,6 @@ class SQLiteGrammar extends Grammar
             //         $tableDiff->getDroppedForeignKeys()
             //     )
             // );
-            return (array) $schema->getDatabasePlatform()->getAlterTableSQL($tableDiff);
         }
     }
 

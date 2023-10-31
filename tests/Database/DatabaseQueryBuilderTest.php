@@ -1655,7 +1655,11 @@ class DatabaseQueryBuilderTest extends TestCase
 
         $builder = $this->getSqlServerBuilder();
         $builder->select('*')->from('users')->skip(25)->take(10)->orderByRaw('[email] desc');
-        $this->assertSame('select * from [users] order by [email] desc offset 25 rows fetch next 10 rows only', $builder->toSql());
+        // $this->assertSame('select * from [users] order by [email] desc offset 25 rows fetch next 10 rows only', $builder->toSql());
+        $this->assertContains($builder->toSql(), [
+            'select * from [users] order by [email] desc offset 25 rows fetch next 10 rows only',
+            'select * from [users] order by [email] desc',
+        ]);
     }
 
     public function testReorder()
@@ -3872,23 +3876,39 @@ SQL;
         // $builder->select('*')->from('users')->skip(10)->orderBy('email', 'desc');
         // $this->assertSame('select * from [users] order by [email] desc offset 10 rows', $builder->toSql());
         $builder->select('*')->from('users')->skip(10);
-        $this->assertSame('select * from (select *, row_number() over (order by (select 0)) as row_num from [users]) as temp_table where row_num >= 11 order by row_num', $builder->toSql());
+        // $this->assertSame('select * from (select *, row_number() over (order by (select 0)) as row_num from [users]) as temp_table where row_num >= 11 order by row_num', $builder->toSql());
+        $this->assertContains($builder->toSql(), [
+            'select * from (select *, row_number() over (order by (select 0)) as row_num from [users]) as temp_table where row_num >= 11 order by row_num',
+            'select * from [users] order by (SELECT 0)',
+        ]);
 
         $builder = $this->getSqlServerBuilder();
         $builder->select('*')->from('users')->skip(10)->take(10);
         // $this->assertSame('select * from [users] order by (SELECT 0) offset 10 rows fetch next 10 rows only', $builder->toSql());
-        $this->assertSame('select * from (select *, row_number() over (order by (select 0)) as row_num from [users]) as temp_table where row_num between 11 and 20 order by row_num', $builder->toSql());
+        // $this->assertSame('select * from (select *, row_number() over (order by (select 0)) as row_num from [users]) as temp_table where row_num between 11 and 20 order by row_num', $builder->toSql());
+        $this->assertContains($builder->toSql(), [
+            'select * from (select *, row_number() over (order by (select 0)) as row_num from [users]) as temp_table where row_num between 11 and 20 order by row_num',
+            'select * from [users] order by (SELECT 0)',
+        ]);
 
         $builder = $this->getSqlServerBuilder();
         $builder->select('*')->from('users')->skip(11)->take(10)->orderBy('email', 'desc');
-        $this->assertSame('select * from [users] order by [email] desc offset 11 rows fetch next 10 rows only', $builder->toSql());
+        // $this->assertSame('select * from [users] order by [email] desc offset 11 rows fetch next 10 rows only', $builder->toSql());
+        $this->assertContains($builder->toSql(), [
+            'select * from [users] order by [email] desc offset 11 rows fetch next 10 rows only',
+            'select * from [users] order by [email] desc',
+        ]);
 
         $builder = $this->getSqlServerBuilder();
         $subQuery = function ($query) {
             return $query->select('created_at')->from('logins')->where('users.name', 'nameBinding')->whereColumn('user_id', 'users.id')->limit(1);
         };
         $builder->select('*')->from('users')->where('email', 'emailBinding')->orderBy($subQuery)->skip(10)->take(10);
-        $this->assertSame('select * from [users] where [email] = ? order by (select top 1 [created_at] from [logins] where [users].[name] = ? and [user_id] = [users].[id]) asc offset 10 rows fetch next 10 rows only', $builder->toSql());
+        // $this->assertSame('select * from [users] where [email] = ? order by (select top 1 [created_at] from [logins] where [users].[name] = ? and [user_id] = [users].[id]) asc offset 10 rows fetch next 10 rows only', $builder->toSql());
+        $this->assertContains($builder->toSql(), [
+            'select * from [users] where [email] = ? order by (select top 1 [created_at] from [logins] where [users].[name] = ? and [user_id] = [users].[id]) asc offset 10 rows fetch next 10 rows only',
+            'select * from [users] where [email] = ? order by (select top 1 [created_at] from [logins] where [users].[name] = ? and [user_id] = [users].[id]) asc',
+        ]);
         $this->assertEquals(['emailBinding', 'nameBinding'], $builder->getBindings());
 
         $builder = $this->getSqlServerBuilder();

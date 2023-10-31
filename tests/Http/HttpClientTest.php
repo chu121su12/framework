@@ -2276,7 +2276,7 @@ class HttpClientTest extends TestCase
         $exception = null;
 
         try {
-            $this->factory->get('http://foo.com/api/500')->throwUnlessStatus(fn ($status) => $status === 500);
+            $this->factory->get('http://foo.com/api/500')->throwUnlessStatus(function ($status) { return $status === 500; });
         } catch (RequestException $e) {
             $exception = $e;
         }

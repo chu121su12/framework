@@ -310,6 +310,10 @@ class Str
         $mode = backport_type_check('int', $mode);
         $encoding = backport_type_check('?string', $encoding);
 
+        if ($mode === -1) {
+            throw new \ValueError;
+        }
+
         return Mbstring::mb_convert_case($string, $mode, $encoding);
     }
 

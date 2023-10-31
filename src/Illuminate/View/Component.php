@@ -193,6 +193,7 @@ abstract class Component
             $directory = Container::getInstance()['config']->get('view.compiled')
         );
 
+        // was hash('xxh128', $contents)
         if (! is_file($viewFile = $directory.'/'.hash('sha1', $contents).'.blade.php')) {
             if (! is_dir($directory)) {
                 mkdir($directory, 0755, true);

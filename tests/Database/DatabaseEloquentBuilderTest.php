@@ -27,6 +27,15 @@ class DatabaseEloquentBuilderTest_testWhereKeyMethodWithModel_class extends Mode
             protected $attributes = ['id' => 1];
         }
 
+class DatabaseEloquentBuilderTest_testPassthruArrayElementsMustAllBeLowercase_class extends Builder
+        {
+            // expose protected member for test
+            public function getPassthru()/*: array*/
+            {
+                return $this->passthru;
+            }
+        }
+
 class DatabaseEloquentBuilderTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
@@ -2266,14 +2275,7 @@ class DatabaseEloquentBuilderTest extends TestCase
 
     public function testPassthruArrayElementsMustAllBeLowercase()
     {
-        $builder = new class(m::mock(BaseBuilder::class)) extends Builder
-        {
-            // expose protected member for test
-            public function getPassthru(): array
-            {
-                return $this->passthru;
-            }
-        };
+        $builder = new DatabaseEloquentBuilderTest_testPassthruArrayElementsMustAllBeLowercase_class(m::mock(BaseBuilder::class));
 
         $passthru = $builder->getPassthru();
 

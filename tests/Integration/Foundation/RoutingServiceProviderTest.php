@@ -4,15 +4,23 @@ namespace Illuminate\Tests\Integration\Foundation;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Orchestra\Testbench\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RoutingServiceProviderTest extends TestCase
 {
+    protected function setUp()/*: void*/
+    {
+        if (! class_exists(Psr17Factory::class)) {
+            $this->markTestSkipped('Need Psr17 from ' . Psr17Factory::class);
+        }
+
+        parent::setUp();
+    }
+
     public function testItIncludesMergedDataInServerRequestInterfaceInstancesUsingGetRequests()
     {
-        $this->markTestSkipped('@TODO: BUGFIX');
-
         Route::get('test-route', function (ServerRequestInterface $request) {
             return $request->getParsedBody();
         })->middleware(MergeDataMiddleware::class);
@@ -30,8 +38,6 @@ class RoutingServiceProviderTest extends TestCase
 
     public function testItWorksNormallyWithoutMergeDataMiddlewareWithEmptyRequests()
     {
-        $this->markTestSkipped('@TODO: BUGFIX');
-
         Route::get('test-route', function (ServerRequestInterface $request) {
             return $request->getParsedBody();
         });
