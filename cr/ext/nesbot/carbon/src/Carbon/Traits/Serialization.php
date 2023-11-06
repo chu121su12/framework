@@ -146,7 +146,7 @@ trait Serialization
     public function __serialize_()/*: array*/
     {
         // @codeCoverageIgnoreStart
-        if (isset($this->timezone_type)) {
+        if (isset($this->timezone_type, $this->timezone, $this->date)) {
             return [
                 'date' => isset($this->date) ? $this->date : null,
                 'timezone_type' => $this->timezone_type,
