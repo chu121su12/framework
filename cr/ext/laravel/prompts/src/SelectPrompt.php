@@ -137,4 +137,14 @@ class SelectPrompt extends Prompt
             /*preserve_keys: */true
         );
     }
+
+    /**
+     * Determine whether the given value is invalid when the prompt is required.
+     */
+    protected function isInvalidWhenRequired(/*mixed */$value)/*: bool*/
+    {
+        $value = backport_type_check('mixed', $value);
+
+        return $value === null;
+    }
 }
