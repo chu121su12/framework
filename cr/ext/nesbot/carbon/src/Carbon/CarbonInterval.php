@@ -462,19 +462,19 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
                         throw new InvalidArgumentException("Invalid duration: $spec");
                     }
 
-                    $years = (float) ($match['year'] ?? 0);
+                    $years = (float) (isset($match['year']) ? $match['year'] : 0);
                     $this->assertSafeForInteger('year', $years);
-                    $months = (float) ($match['month'] ?? 0);
+                    $months = (float) (isset($match['month']) ? $match['month'] : 0);
                     $this->assertSafeForInteger('month', $months);
-                    $weeks = (float) ($match['week'] ?? 0);
+                    $weeks = (float) (isset($match['week']) ? $match['week'] : 0);
                     $this->assertSafeForInteger('week', $weeks);
-                    $days = (float) ($match['day'] ?? 0);
+                    $days = (float) (isset($match['day']) ? $match['day'] : 0);
                     $this->assertSafeForInteger('day', $days);
-                    $hours = (float) ($match['hour'] ?? 0);
+                    $hours = (float) (isset($match['hour']) ? $match['hour'] : 0);
                     $this->assertSafeForInteger('hour', $hours);
-                    $minutes = (float) ($match['minute'] ?? 0);
+                    $minutes = (float) (isset($match['minute']) ? $match['minute'] : 0);
                     $this->assertSafeForInteger('minute', $minutes);
-                    $seconds = (float) ($match['second'] ?? 0);
+                    $seconds = (float) (isset($match['second']) ? $match['second'] : 0);
                     $this->assertSafeForInteger('second', $seconds);
                 }
 
