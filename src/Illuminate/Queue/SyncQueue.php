@@ -38,7 +38,7 @@ class SyncQueue extends Queue implements QueueContract
         if ($this->shouldDispatchAfterCommit($job) &&
             $this->container->bound('db.transactions')) {
             return $this->container->make('db.transactions')->addCallback(
-                fn () => $this->executeJob($job, $data, $queue)
+                function () use ($job, $data, $queue) { return $this->executeJob($job, $data, $queue); }
             );
         }
 
