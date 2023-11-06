@@ -643,6 +643,11 @@ class ReflectionClosure extends ReflectionFunction
                     break;
                 case 'anonymous':
                     switch ($token[0]) {
+                        case T_NAME_QUALIFIED:
+                            list($id_start, $id_start_ci, $id_name) = $this->parseNameQualified($token[1]);
+                            $state = 'id_name';
+                            $lastState = 'anonymous';
+                            break 2;
                         case T_NS_SEPARATOR:
                         case T_STRING:
                             $id_start = $token[1];
