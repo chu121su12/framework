@@ -165,6 +165,7 @@ class Dispatcher implements QueueingDispatcher
     public function chain($jobs)
     {
         $jobs = Collection::wrap($jobs);
+        $jobs = ChainedBatch::prepareNestedBatches($jobs);
 
         return new PendingChain($jobs->shift(), $jobs->toArray());
     }

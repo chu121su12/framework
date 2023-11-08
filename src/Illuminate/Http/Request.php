@@ -301,9 +301,11 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     {
         $httpXMoz = $this->server->get('HTTP_X_MOZ');
         $purpose = $this->headers->get('Purpose');
+        $secPurpose = $this->headers->get('Sec-Purpose');
 
         return strcasecmp(isset($httpXMoz) ? $httpXMoz : '', 'prefetch') === 0 ||
-               strcasecmp(isset($purpose) ? $purpose : '', 'prefetch') === 0;
+               strcasecmp(isset($purpose) ? $purpose : '', 'prefetch') === 0 ||
+               strcasecmp(isset($secPurpose) ? $secPurpose : '', 'prefetch') === 0;
     }
 
     /**
