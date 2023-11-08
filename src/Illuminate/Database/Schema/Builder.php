@@ -236,7 +236,7 @@ class Builder
         $table = backport_type_check('string', $table);
 
         if (! $this->hasColumn($table, $column)) {
-            $this->table($table, function (Blueprint $table) { return $callback($table); });
+            $this->table($table, function (Blueprint $table) use ($callback) { return $callback($table); });
         }
     }
 
@@ -251,9 +251,11 @@ class Builder
     public function getColumnType($table, $column, $fullDefinition = false)
     {
         if (! $this->connection->usingNativeSchemaOperations()) {
-            $type = $this->connection->getDoctrineColumn($table, $column)->getType();
+            // $type = $this->connection->getDoctrineColumn($table, $column)->getType();
 
-            return $type::lookupName($type);
+            // return $type::lookupName($type);
+
+            return $this->connection->getDoctrineColumn($table, $column)->getType()->getName();
         }
 
         $columns = $this->getColumns($table);

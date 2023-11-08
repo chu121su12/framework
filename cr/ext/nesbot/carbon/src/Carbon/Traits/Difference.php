@@ -141,7 +141,7 @@ trait Difference
 
         if (! property_exists($diffResult, 'f')) {
             $f = $other->format('u') - $this->format('u');
-            $diffResult->f = $absolute ? abs($f) : $f;
+            $diffResult->f = ($absolute ? abs($f) : $f) / Carbon::MICROSECONDS_PER_SECOND;
         }
 
         return $diffResult;

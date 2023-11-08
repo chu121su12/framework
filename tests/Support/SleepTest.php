@@ -239,7 +239,7 @@ class SleepTest extends TestCase
         Sleep::until(strval(now()->addMinute()->timestamp));
 
         Sleep::assertSequence([
-            Sleep::for(60)->seconds(),
+            Sleep::for_(60)->seconds(),
         ]);
     }
 
@@ -251,9 +251,9 @@ class SleepTest extends TestCase
         Sleep::until('946684899.123');
 
         Sleep::assertSequence([
-            Sleep::for(1)->minute()
-                ->and(39)->seconds()
-                ->and(123)->milliseconds(),
+            Sleep::for_(1)->minute()
+                ->and_(39)->seconds()
+                ->and_(123)->milliseconds(),
         ]);
     }
 

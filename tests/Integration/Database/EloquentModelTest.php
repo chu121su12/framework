@@ -8,6 +8,13 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
+class EloquentModelTest_testInsertRecordWithReservedWordFieldName_class extends Model
+        {
+            protected $table = 'actions';
+            protected $guarded = ['id'];
+            public $timestamps = false;
+        }
+
 class EloquentModelTest extends DatabaseTestCase
 {
     protected function defineDatabaseMigrationsAfterDatabaseRefreshed()
@@ -105,12 +112,7 @@ class EloquentModelTest extends DatabaseTestCase
             $table->boolean('analyze');
         });
 
-        $model = new class extends Model
-        {
-            protected $table = 'actions';
-            protected $guarded = ['id'];
-            public $timestamps = false;
-        };
+        $model = new EloquentModelTest_testInsertRecordWithReservedWordFieldName_class;
 
         $model->newInstance()->create([
             'label' => 'test',

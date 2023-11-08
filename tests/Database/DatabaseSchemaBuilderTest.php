@@ -78,8 +78,9 @@ class DatabaseSchemaBuilderTest extends TestCase
         $grammar = m::mock(Grammar::class);
         $connection->shouldReceive('getSchemaGrammar')->once()->andReturn($grammar);
         $builder = new Builder($connection);
-        $connection->shouldReceive('getTablePrefix')->once()->andReturn('prefix_');
-        $connection->shouldReceive('getDoctrineColumn')->once()->with('prefix_users', 'id')->andReturn($column);
+        // $connection->shouldReceive('getTablePrefix')->once()->andReturn('prefix_');
+        // $connection->shouldReceive('getDoctrineColumn')->once()->with('prefix_users', 'id')->andReturn($column);
+        $connection->shouldReceive('getDoctrineColumn')->once()->with('users', 'id')->andReturn($column);
         $connection->shouldReceive('usingNativeSchemaOperations')->once()->andReturn(false);
         $column->shouldReceive('getType')->once()->andReturn($type);
         // $type->shouldReceive('lookupName')->once()->andReturn('integer');

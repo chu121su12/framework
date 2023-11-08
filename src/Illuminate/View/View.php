@@ -97,7 +97,7 @@ class View implements ArrayAccess, Htmlable, Stringable, ViewContract
      * @param  array|null  $fragments
      * @return string
      */
-    public function fragments(?array $fragments = null)
+    public function fragments(/*?*/array $fragments = null)
     {
         return is_null($fragments)
             ? $this->allFragments()
@@ -127,7 +127,7 @@ class View implements ArrayAccess, Htmlable, Stringable, ViewContract
      * @param  array|null  $fragments
      * @return string
      */
-    public function fragmentsIf($boolean, ?array $fragments = null)
+    public function fragmentsIf($boolean, /*?*/array $fragments = null)
     {
         if (value($boolean)) {
             return $this->fragments($fragments);
@@ -143,7 +143,9 @@ class View implements ArrayAccess, Htmlable, Stringable, ViewContract
      */
     protected function allFragments()
     {
-        return collect($this->render(fn () => $this->factory->getFragments()))->implode('');
+        return collect($this->render(function () {
+            return $this->factory->getFragments();
+        }))->implode('');
     }
 
     /**

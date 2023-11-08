@@ -3,7 +3,7 @@
 namespace Illuminate\Bus;
 
 use Illuminate\Container\Container;
-use Illuminate\Contracts\Bus\Dispatcher;
+use Illuminate\Contracts\Bus\Dispatcher as DispatcherContract;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -19,21 +19,21 @@ class ChainedBatch implements ShouldQueue
      *
      * @var \Illuminate\Support\Collection
      */
-    public Collection $jobs;
+    public /*Collection */$jobs;
 
     /**
      * The name of the batch.
      *
      * @var string
      */
-    public string $name;
+    public /*string */$name;
 
     /**
      * The batch options.
      *
      * @var array
      */
-    public array $options;
+    public /*array */$options;
 
     /**
      * Create a new chained batch instance.
@@ -55,13 +55,15 @@ class ChainedBatch implements ShouldQueue
      * @param  \Illuminate\Support\Collection  $jobs
      * @return \Illuminate\Support\Collection
      */
-    public static function prepareNestedBatches(Collection $jobs): Collection
+    public static function prepareNestedBatches(Collection $jobs)/*: Collection*/
     {
-        return $jobs->map(fn ($job) => match (true) {
-            is_array($job) => static::prepareNestedBatches(collect($job))->all(),
-            $job instanceof Collection => static::prepareNestedBatches($job),
-            $job instanceof PendingBatch => new ChainedBatch($job),
-            default => $job,
+        return $jobs->map(function ($job) {
+            switch (true) {
+                case is_array($job): return static::prepareNestedBatches(collect($job))->all();
+                case $job instanceof Collection: return static::prepareNestedBatches($job);
+                case $job instanceof PendingBatch: return new ChainedBatch($job);
+                default: return $job;
+            }
         });
     }
 
@@ -87,8 +89,10 @@ class ChainedBatch implements ShouldQueue
 
         $this->dispatchRemainderOfChainAfterBatch($batch);
 
-        foreach ($this->chainCatchCallbacks ?? [] as $callback) {
-            $batch->catch(function (Batch $batch, ?Throwable $exception) use ($callback) {
+        foreach (isset($this->chainCatchCallbacks) ? $this->chainCatchCallbacks : [] as $callback) {
+            $batch->catch_(function (Batch $batch, /*?Throwable */$exception) use ($callback) {
+                backport_type_throwable($exception, null);
+
                 if (! $batch->allowsFailures()) {
                     $callback($exception);
                 }
@@ -118,9 +122,9 @@ class ChainedBatch implements ShouldQueue
             $next->chainQueue = $this->chainQueue;
             $next->chainCatchCallbacks = $this->chainCatchCallbacks;
 
-            $batch->finally(function (Batch $batch) use ($next) {
+            $batch->finally_(function (Batch $batch) use ($next) {
                 if (! $batch->cancelled()) {
-                    Container::getInstance()->make(Dispatcher::class)->dispatch($next);
+                    Container::getInstance()->make(DispatcherContract::class)->dispatch($next);
                 }
             });
 

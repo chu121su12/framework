@@ -908,7 +908,7 @@ class HttpClientTest extends TestCase
         $this->factory->fake();
 
         $this->factory->withQueryParameters(
-            ['foo' => ['bar', Str::of('baz')]],
+            ['foo' => ['bar', Str::of('baz')]]
         )->get('https://laravel.com');
 
         $this->factory->assertSent(function (Request $request) {

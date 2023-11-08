@@ -1160,10 +1160,10 @@ class PendingRequest
     protected function normalizeRequestOptions(array $options)
     {
         foreach ($options as $key => $value) {
-            $options[$key] = match (true) {
-                is_array($value) => $this->normalizeRequestOptions($value),
-                $value instanceof Stringable => $value->toString(),
-                default => $value,
+            switch (true) {
+                case is_array($value): $options[$key] = $this->normalizeRequestOptions($value); break;
+                case $value instanceof Stringable: $options[$key] = $value->toString(); break;
+                default: $options[$key] = $value;
             };
         }
 
