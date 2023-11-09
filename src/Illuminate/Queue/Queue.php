@@ -103,7 +103,13 @@ abstract class Queue
             $job = CallQueuedClosure::create($job);
         }
 
-        $payload = backport_json_encode($value = $this->createPayloadArray($job, $queue, $data), \JSON_UNESCAPED_UNICODE);
+        try {
+            $payload = backport_json_encode($value = $this->createPayloadArray($job, $queue, $data), \JSON_UNESCAPED_UNICODE);
+        } catch (\Exception $e) {
+            throw new InvalidPayloadException(
+                'Unable to serialize payload.', null
+            );
+        }
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new InvalidPayloadException(

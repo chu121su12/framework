@@ -1059,6 +1059,8 @@ class PendingRequest
      */
     protected function makePromise(/*string */$method, /*string */$url, array $options = [], /*int */$attempt = 1)
     {
+        $attempt = backport_type_check('int', $attempt);
+
         $url = backport_type_check('string', $url);
 
         $method = backport_type_check('string', $method);
@@ -1079,7 +1081,13 @@ class PendingRequest
 
                 return $e instanceof RequestException && $e->hasResponse() ? $this->populateResponse($this->newResponse($e->getResponse())) : $e;
             })
-            ->then(function (Response|ConnectionException|TransferException $response) use ($method, $url, $options, $attempt) {
+            ->then(function (/*Response|ConnectionException|TransferException */$response) use ($method, $url, $options, $attempt) {
+                $response = backport_type_check([
+                    Response::class,
+                    ConnectionException::class,
+                    TransferException::class,
+                ], $response);
+
                 return $this->handlePromiseResponse($response, $method, $url, $options, $attempt);
             });
     }
@@ -1094,8 +1102,14 @@ class PendingRequest
      * @param  int  $attempt
      * @return mixed
      */
-    protected function handlePromiseResponse(Response|ConnectionException|TransferException $response, $method, $url, $options, $attempt)
+    protected function handlePromiseResponse(/*Response|ConnectionException|TransferException */$response, $method, $url, $options, $attempt)
     {
+        $response = backport_type_check([
+            Response::class,
+            ConnectionException::class,
+            TransferException::class,
+        ], $response);
+    
         if ($response instanceof Response && $response->successful()) {
             return $response;
         }
@@ -1124,7 +1138,7 @@ class PendingRequest
             $this->throwCallback &&
             ($this->throwIfCallback === null || call_user_func($this->throwIfCallback, $response))) {
             try {
-                $response->throw($this->throwCallback);
+                $response->throw_($this->throwCallback);
             } catch (Exception $exception) {
                 return $exception;
             }

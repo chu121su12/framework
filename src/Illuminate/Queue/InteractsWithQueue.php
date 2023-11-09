@@ -53,7 +53,7 @@ trait InteractsWithQueue
             $exception = new ManuallyFailedException($exception);
         }
 
-        if ($exception instanceof Throwable || $exception instanceof \Exception || is_null($exception)) {
+        if ((\interface_exists(Throwable::class) && $exception instanceof Throwable) || $exception instanceof \Exception || $exception instanceof \ErrorException || is_null($exception)) {
             if ($this->job) {
                 return $this->job->fail($exception);
             }
