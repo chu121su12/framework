@@ -353,9 +353,11 @@ class Handler implements ExceptionHandlerContract
             throw $e;
         }
 
-        $level = Arr::first($this->levels, function ($level, $type) use ($e) {
-            return $e instanceof $type;
-        }, LogLevel::ERROR);
+        $level = Arr::first(
+            $this->levels, function ($level, $type) use ($e) {
+                return $e instanceof $type;
+            }, LogLevel::ERROR
+        );
 
         $context = $this->buildExceptionContext($e);
 
