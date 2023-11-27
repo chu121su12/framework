@@ -47,6 +47,7 @@ class Response extends SymfonyResponse
      *
      * @throws \InvalidArgumentException
      */
+    #[\Override]
     public function setContent(/*mixed */$content)/*: static*/
     {
         $content = backport_type_check('mixed', $content);

@@ -30,6 +30,7 @@ class BufferedConsoleOutput extends ConsoleOutput
      *
      * @return void
      */
+    #[\Override]
     protected function doWrite(/*string */$message, /*bool */$newline)/*: void*/
     {
         $newline = backport_type_check('bool', $newline);

@@ -37,6 +37,7 @@ class JsonResponse extends BaseJsonResponse
      *
      * @return static
      */
+    #[\Override]
     public static function fromJsonString(/*?string */$data = null, /*int */$status = 200, /*array */$headers = [])/*: static*/
     {
         $status = backport_type_check('int', $status);
@@ -74,6 +75,7 @@ class JsonResponse extends BaseJsonResponse
      *
      * @return static
      */
+    #[\Override]
     public function setData($data = [])/*: static*/
     {
         $this->original = $data;
@@ -123,6 +125,7 @@ class JsonResponse extends BaseJsonResponse
      *
      * @return static
      */
+    #[\Override]
     public function setEncodingOptions($options)/*: static*/
     {
         $this->encodingOptions = (int) $options;

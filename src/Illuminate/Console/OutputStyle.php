@@ -53,6 +53,7 @@ class OutputStyle extends SymfonyStyle implements NewLineAware
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function askQuestion(Question $question)/*: mixed*/
     {
         try {
@@ -65,6 +66,7 @@ class OutputStyle extends SymfonyStyle implements NewLineAware
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function write(/*string|iterable */$messages, /*bool */$newline = false, /*int */$options = 0)/*: void*/
     {
         $messages = backport_type_check('compound_iterable_string', $messages);
@@ -88,6 +90,7 @@ class OutputStyle extends SymfonyStyle implements NewLineAware
      *
      * @return void
      */
+    #[\Override]
     public function writeln(/*string|iterable */$messages, /*int */$type = self::OUTPUT_NORMAL)/*: void*/
     {
         $messages = backport_type_check('compound_iterable_string', $messages);
@@ -108,6 +111,7 @@ class OutputStyle extends SymfonyStyle implements NewLineAware
      *
      * @return void
      */
+    #[\Override]
     public function newLine(/*int */$count = 1)/*: void*/
     {
         $count = backport_type_check('int', $count);
