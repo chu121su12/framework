@@ -24,7 +24,6 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use RuntimeException;
-use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -1177,7 +1176,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
         $kernel = $this->make(ConsoleKernelContract::class);
 
         $status = $kernel->handle(
-            $input ?: new ArgvInput,
+            $input,
             new ConsoleOutput
         );
 
