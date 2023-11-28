@@ -40,7 +40,7 @@ class DatabaseTransactionRecord
      * @param  \Illuminate\Database\DatabaseTransactionRecord|null  $parent
      * @return void
      */
-    public function __construct($connection, $level, ?DatabaseTransactionRecord $parent = null)
+    public function __construct($connection, $level, /*?*/DatabaseTransactionRecord $parent = null)
     {
         $this->connection = $connection;
         $this->level = $level;

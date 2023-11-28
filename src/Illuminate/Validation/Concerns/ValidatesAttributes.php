@@ -1781,7 +1781,7 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(2, $parameters, 'present_if');
 
-        [$values, $other] = $this->parseDependentRuleParameters($parameters);
+        list($values, $other) = $this->parseDependentRuleParameters($parameters);
 
         if (in_array($other, $values, is_bool($other) || is_null($other))) {
             return $this->validatePresent($attribute, $value);
@@ -1802,7 +1802,7 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(2, $parameters, 'present_unless');
 
-        [$values, $other] = $this->parseDependentRuleParameters($parameters);
+        list($values, $other) = $this->parseDependentRuleParameters($parameters);
 
         if (! in_array($other, $values, is_bool($other) || is_null($other))) {
             return $this->validatePresent($attribute, $value);

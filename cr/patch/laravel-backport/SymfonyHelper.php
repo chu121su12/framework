@@ -179,9 +179,9 @@ class SymfonyHelper
         return static::newProcess($command, $cwd, $env, $input, $timeout);
     }
 
-    public static function consoleApplicationRenderThrowable($e, $output)
+    public static function consoleApplicationRenderThrowable($console, $e, $output)
     {
-        $console = new ConsoleApplication;
+        $console = $console ?: new ConsoleApplication;
 
         if (method_exists($console, 'renderThrowable')) {
 

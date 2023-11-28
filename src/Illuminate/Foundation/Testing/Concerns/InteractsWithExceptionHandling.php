@@ -96,7 +96,7 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
             {
                 backport_type_throwable($e);
 
-                SymfonyHelper::consoleApplicationRenderThrowable($e, $output);
+                SymfonyHelper::consoleApplicationRenderThrowable(null, $e, $output);
             }
         }
 

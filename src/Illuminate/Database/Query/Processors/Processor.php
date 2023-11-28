@@ -49,11 +49,11 @@ class Processor
 
             return [
                 'name' => $result->name,
-                'schema' => $result->schema ?? null, // PostgreSQL and SQL Server
+                'schema' => isset($result->schema) ? $result->schema : null, // PostgreSQL and SQL Server
                 'size' => isset($result->size) ? (int) $result->size : null,
-                'comment' => $result->comment ?? null, // MySQL and PostgreSQL
-                'collation' => $result->collation ?? null, // MySQL only
-                'engine' => $result->engine ?? null, // MySQL only
+                'comment' => isset($result->comment) ? $result->comment : null, // MySQL and PostgreSQL
+                'collation' => isset($result->collation) ? $result->collation : null, // MySQL only
+                'engine' => isset($result->engine) ? $result->engine : null, // MySQL only
             ];
         }, $results);
     }
@@ -71,7 +71,7 @@ class Processor
 
             return [
                 'name' => $result->name,
-                'schema' => $result->schema ?? null, // PostgreSQL and SQL Server
+                'schema' => isset($result->schema) ? $result->schema : null, // PostgreSQL and SQL Server
                 'definition' => $result->definition,
             ];
         }, $results);

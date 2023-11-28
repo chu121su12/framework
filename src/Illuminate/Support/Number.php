@@ -26,11 +26,19 @@ class Number
      * @param  string|null  $locale
      * @return string|false
      */
-    public static function format(int|float $number, ?int $precision = null, ?int $maxPrecision = null, ?string $locale = null)
+    public static function format(/*int|float */$number, /*?int */$precision = null, /*?int */$maxPrecision = null, /*?string */$locale = null)
     {
+        $locale = backport_type_check('?string', $locale);
+
+        $maxPrecision = backport_type_check('?int', $maxPrecision);
+
+        $precision = backport_type_check('?int', $precision);
+
+        $number = backport_type_check('int|float', $number);
+
         static::ensureIntlExtensionIsInstalled();
 
-        $formatter = new NumberFormatter($locale ?? static::$locale, NumberFormatter::DECIMAL);
+        $formatter = new NumberFormatter(isset($locale) ? $locale : static::$locale, NumberFormatter::DECIMAL);
 
         if (! is_null($maxPrecision)) {
             $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $maxPrecision);
@@ -48,11 +56,15 @@ class Number
      * @param  string|null  $locale
      * @return string
      */
-    public static function spell(int|float $number, ?string $locale = null)
+    public static function spell(/*int|float */$number, /*?string */$locale = null)
     {
+        $locale = backport_type_check('?string', $locale);
+
+        $number = backport_type_check('int|float', $number);
+
         static::ensureIntlExtensionIsInstalled();
 
-        $formatter = new NumberFormatter($locale ?? static::$locale, NumberFormatter::SPELLOUT);
+        $formatter = new NumberFormatter(isset($locale) ? $locale : static::$locale, NumberFormatter::SPELLOUT);
 
         return $formatter->format($number);
     }
@@ -64,11 +76,15 @@ class Number
      * @param  string|null  $locale
      * @return string
      */
-    public static function ordinal(int|float $number, ?string $locale = null)
+    public static function ordinal(/*int|float */$number, /*?string */$locale = null)
     {
+        $locale = backport_type_check('?string', $locale);
+
+        $number = backport_type_check('int|float', $number);
+
         static::ensureIntlExtensionIsInstalled();
 
-        $formatter = new NumberFormatter($locale ?? static::$locale, NumberFormatter::ORDINAL);
+        $formatter = new NumberFormatter(isset($locale) ? $locale : static::$locale, NumberFormatter::ORDINAL);
 
         return $formatter->format($number);
     }
@@ -82,11 +98,19 @@ class Number
      * @param  string|null  $locale
      * @return string|false
      */
-    public static function percentage(int|float $number, int $precision = 0, ?int $maxPrecision = null, ?string $locale = null)
+    public static function percentage(/*int|float */$number, /*int */$precision = 0, /*?int */$maxPrecision = null, /*?string */$locale = null)
     {
+        $precision = backport_type_check('int', $precision);
+
+        $locale = backport_type_check('?string', $locale);
+
+        $maxPrecision = backport_type_check('?int', $maxPrecision);
+
+        $number = backport_type_check('int|float', $number);
+
         static::ensureIntlExtensionIsInstalled();
 
-        $formatter = new NumberFormatter($locale ?? static::$locale, NumberFormatter::PERCENT);
+        $formatter = new NumberFormatter(isset($locale) ? $locale : static::$locale, NumberFormatter::PERCENT);
 
         if (! is_null($maxPrecision)) {
             $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $maxPrecision);
@@ -105,11 +129,17 @@ class Number
      * @param  string|null  $locale
      * @return string|false
      */
-    public static function currency(int|float $number, string $in = 'USD', ?string $locale = null)
+    public static function currency(/*int|float */$number, /*string */$in = 'USD', /*?string */$locale = null)
     {
+        $in = backport_type_check('string', $in);
+
+        $locale = backport_type_check('?string', $locale);
+
+        $number = backport_type_check('int|float', $number);
+
         static::ensureIntlExtensionIsInstalled();
 
-        $formatter = new NumberFormatter($locale ?? static::$locale, NumberFormatter::CURRENCY);
+        $formatter = new NumberFormatter(isset($locale) ? $locale : static::$locale, NumberFormatter::CURRENCY);
 
         return $formatter->formatCurrency($number, $in);
     }
@@ -122,8 +152,14 @@ class Number
      * @param  int|null  $maxPrecision
      * @return string
      */
-    public static function fileSize(int|float $bytes, int $precision = 0, ?int $maxPrecision = null)
+    public static function fileSize(/*int|float */$bytes, /*int */$precision = 0, /*?int */$maxPrecision = null)
     {
+        $precision = backport_type_check('int', $precision);
+
+        $maxPrecision = backport_type_check('?int', $maxPrecision);
+
+        $bytes = backport_type_check('int|float', $bytes);
+
         $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
         for ($i = 0; ($bytes / 1024) > 0.9 && ($i < count($units) - 1); $i++) {
@@ -141,8 +177,14 @@ class Number
      * @param  int|null  $maxPrecision
      * @return string
      */
-    public static function forHumans(int|float $number, int $precision = 0, ?int $maxPrecision = null)
+    public static function forHumans(/*int|float */$number, /*int */$precision = 0, /*?int */$maxPrecision = null)
     {
+        $precision = backport_type_check('int', $precision);
+
+        $maxPrecision = backport_type_check('?int', $maxPrecision);
+
+        $number = backport_type_check('int|float', $number);
+
         $units = [
             3 => 'thousand',
             6 => 'million',
@@ -164,7 +206,7 @@ class Number
         $displayExponent = $numberExponent - ($numberExponent % 3);
         $number /= pow(10, $displayExponent);
 
-        return trim(sprintf('%s %s', static::format($number, $precision, $maxPrecision), $units[$displayExponent] ?? ''));
+        return trim(sprintf('%s %s', static::format($number, $precision, $maxPrecision), isset($units[$displayExponent]) ? $units[$displayExponent] : ''));
     }
 
     /**
@@ -174,13 +216,15 @@ class Number
      * @param  callable  $callback
      * @return mixed
      */
-    public static function withLocale(string $locale, callable $callback)
+    public static function withLocale(/*string */$locale, callable $callback)
     {
+        $locale = backport_type_check('string', $locale);
+
         $previousLocale = static::$locale;
 
         static::useLocale($locale);
 
-        return tap($callback(), fn () => static::useLocale($previousLocale));
+        return tap($callback(), function () use ($previousLocale) { return static::useLocale($previousLocale); });
     }
 
     /**
@@ -189,8 +233,10 @@ class Number
      * @param  string  $locale
      * @return void
      */
-    public static function useLocale(string $locale)
+    public static function useLocale(/*string */$locale)
     {
+        $locale = backport_type_check('string', $locale);
+
         static::$locale = $locale;
     }
 

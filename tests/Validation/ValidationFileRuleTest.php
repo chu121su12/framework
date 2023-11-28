@@ -137,46 +137,46 @@ class ValidationFileRuleTest extends TestCase
     public function testSingleExtension()
     {
         $this->fails(
-            File::default()->extensions('png'),
+            File::default_()->extensions('png'),
             UploadedFile::fake()->createWithContent('foo', file_get_contents(__DIR__.'/fixtures/image.png')),
             ['validation.extensions']
         );
 
         $this->fails(
-            File::default()->extensions('png'),
+            File::default_()->extensions('png'),
             UploadedFile::fake()->createWithContent('foo.jpg', file_get_contents(__DIR__.'/fixtures/image.png')),
             ['validation.extensions']
         );
 
         $this->fails(
-            File::default()->extensions('jpeg'),
+            File::default_()->extensions('jpeg'),
             UploadedFile::fake()->createWithContent('foo.jpg', file_get_contents(__DIR__.'/fixtures/image.png')),
             ['validation.extensions']
         );
 
         $this->passes(
-            File::default()->extensions('png'),
-            UploadedFile::fake()->createWithContent('foo.png', file_get_contents(__DIR__.'/fixtures/image.png')),
+            File::default_()->extensions('png'),
+            UploadedFile::fake()->createWithContent('foo.png', file_get_contents(__DIR__.'/fixtures/image.png'))
         );
     }
 
     public function testMultipleExtensions()
     {
         $this->fails(
-            File::default()->extensions(['png', 'jpeg', 'jpg']),
+            File::default_()->extensions(['png', 'jpeg', 'jpg']),
             UploadedFile::fake()->createWithContent('foo', file_get_contents(__DIR__.'/fixtures/image.png')),
             ['validation.extensions']
         );
 
         $this->fails(
-            File::default()->extensions(['png', 'jpeg']),
+            File::default_()->extensions(['png', 'jpeg']),
             UploadedFile::fake()->createWithContent('foo.jpg', file_get_contents(__DIR__.'/fixtures/image.png')),
             ['validation.extensions']
         );
 
         $this->passes(
-            File::default()->extensions(['png', 'jpeg', 'jpg']),
-            UploadedFile::fake()->createWithContent('foo.png', file_get_contents(__DIR__.'/fixtures/image.png')),
+            File::default_()->extensions(['png', 'jpeg', 'jpg']),
+            UploadedFile::fake()->createWithContent('foo.png', file_get_contents(__DIR__.'/fixtures/image.png'))
         );
     }
 

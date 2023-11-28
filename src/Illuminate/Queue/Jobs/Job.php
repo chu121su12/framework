@@ -191,7 +191,8 @@ abstract class Job
             return;
         }
 
-        $commandName = $this->payload()['data']['commandName'] ?? false;
+        $payload = $this->payload();
+        $commandName = isset($payload) && isset($payload['data']) && isset($payload['data']['commandName']) ? $payload['data']['commandName'] : false;
 
         // If the exception is due to a job timing out, we need to rollback the current
         // database transaction so that the failed job count can be incremented with
@@ -204,7 +205,12 @@ abstract class Job
             if (method_exists($batchRepository, 'rollBack')) {
                 try {
                     $batchRepository->rollBack();
+                } catch (\Execption $e) {
+                } catch (\ErrorException $e) {
                 } catch (Throwable $e) {
+                }
+
+                if (isset($e)) {
                     // ...
                 }
             }

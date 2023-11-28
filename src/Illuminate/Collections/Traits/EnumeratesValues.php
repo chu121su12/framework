@@ -1031,7 +1031,7 @@ trait EnumeratesValues
         }
 
         if ($items instanceof WeakMap) {
-            throw new InvalidArgumentException('Collections can not be created using instances of WeakMap.'),
+            throw new InvalidArgumentException('Collections can not be created using instances of WeakMap.');
         }
 
         if ($items instanceof Enumerable) {

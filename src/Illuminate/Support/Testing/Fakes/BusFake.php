@@ -339,7 +339,7 @@ class BusFake implements Fake, QueueingDispatcher
 
             $command = ChainedBatch::class;
 
-            $callback = fn ($job) => $instance($job->toPendingBatch());
+            $callback = function ($job) use ($instance) { return $instance($job->toPendingBatch()); };
         } elseif (! is_string($command)) {
             $instance = $command;
 
@@ -415,7 +415,7 @@ class BusFake implements Fake, QueueingDispatcher
 
                 foreach ($job->chained as $index => $serializedChainedJob) {
                     if ($chain[$index] instanceof ChainedBatchTruthTest) {
-                        $chainedBatch = unserialize($serializedChainedJob);
+                        $chainedBatch = backport_unserialize($serializedChainedJob);
 
                         if (! $chainedBatch instanceof ChainedBatch ||
                             ! $chain[$index]($chainedBatch->toPendingBatch())) {
@@ -425,7 +425,7 @@ class BusFake implements Fake, QueueingDispatcher
                         if ($chain[$index] != get_class(unserialize($serializedChainedJob))) {
                             return false;
                         }
-                    } elseif (serialize($chain[$index]) != $serializedChainedJob) {
+                    } elseif (backport_serialize($chain[$index]) != $serializedChainedJob) {
                         return false;
                     }
                 }

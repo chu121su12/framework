@@ -23,6 +23,11 @@ class UniqueJobTest extends TestCase
 {
     use DatabaseMigrations;
 
+    protected function attributeBpWithMigration()
+    {
+        return ['queue'];
+    }
+
     public function testUniqueJobsAreNotDispatched()
     {
         Bus::fake();

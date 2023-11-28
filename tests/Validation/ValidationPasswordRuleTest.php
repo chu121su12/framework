@@ -302,7 +302,7 @@ class ValidationPasswordRuleTest extends TestCase
             resolve('translator'),
             ['my_password' => '1234'],
             $rules,
-            $messages,
+            $messages
         );
 
         $this->assertFalse($v->passes());

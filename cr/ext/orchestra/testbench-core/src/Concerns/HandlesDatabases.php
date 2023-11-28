@@ -43,7 +43,9 @@ trait HandlesDatabases
         }
 
         if (static::usesTestingConcern(HandlesAttributes::class)) {
-            $this->parseTestMethodAttributes($app, WithMigration::class, static function (WithMigration $attribute) use ($app) {
+            $hasMigration = false;
+            $this->parseTestMethodAttributes($app, WithMigration::class, static function (WithMigration $attribute) use ($app, &$hasMigration) {
+                $hasMigration = true;
                 after_resolving($app, 'migrator', static function ($migrator) use ($attribute) {
                     /** @var \Illuminate\Database\Migrations\Migrator $migrator */
                     Collection::make($attribute->types)
@@ -54,6 +56,19 @@ trait HandlesDatabases
                         });
                 });
             });
+
+            if (! $hasMigration && \method_exists($this, 'attributeBpWithMigration')) {
+                $types = $this->attributeBpWithMigration();
+                after_resolving($app, 'migrator', static function ($migrator) use ($types) {
+                    /** @var \Illuminate\Database\Migrations\Migrator $migrator */
+                    Collection::make($types)
+                        ->transform(static function ($type) {
+                            return laravel_migration_path($type !== 'laravel' ? $type : null);
+                        })->each(static function ($migration) use ($migrator) {
+                            $migrator->path($migration);
+                        });
+                });
+            }
         }
 
         $this->defineDatabaseMigrations();

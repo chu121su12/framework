@@ -2808,6 +2808,11 @@ class SupportCollectionTest extends TestCase
         $this->assertEquals(['foo' => 'bar'], $data->all());
     }
 
+    /**
+     * @requires PHP 8
+     *
+     * @dataProvider collectionClassProvider
+     */
     #[DataProvider('collectionClassProvider')]
     public function testConstructMethodFromWeakMap($collection)
     {
@@ -5381,14 +5386,15 @@ class SupportCollectionTest extends TestCase
     #[DataProvider('collectionClassProvider')]
     public function testEnsureForMultipleTypes($collection)
     {
-        $data = $collection::make([new \Error, 123]);
-        $data->ensure([\Throwable::class, 'int']);
+        $data = $collection::make([new \RuntimeException(), 123]);
+        $data->ensure([\Exception::class, 'int']);
 
-        $data = $collection::make([new \Error, new \Error, new $collection]);
+        $data = $collection::make([new \RuntimeException(), new \RuntimeException(), new $collection]);
         $this->expectException(UnexpectedValueException::class);
-        $data->ensure([\Throwable::class, 'int']);
+        $data->ensure([\Exception::class, 'int']);
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testPercentageWithFlatCollection($collection)
     {

@@ -51,7 +51,7 @@ class DatabaseTransactionsManager
             $newTransaction = new DatabaseTransactionRecord(
                 $connection,
                 $level,
-                $this->currentTransaction[$connection] ?? null
+                isset($this->currentTransaction[$connection]) ? $this->currentTransaction[$connection] : null
             )
         );
 
@@ -83,11 +83,11 @@ class DatabaseTransactionsManager
         // shouldn't be any pending transactions, but going to clear them here anyways just
         // in case. This method could be refactored to receive a level in the future too.
         $this->pendingTransactions = $this->pendingTransactions->reject(
-            fn ($transaction) => $transaction->connection === $connection
+            function ($transaction) use ($connection) { return $transaction->connection === $connection; }
         )->values();
 
-        [$forThisConnection, $forOtherConnections] = $this->committedTransactions->partition(
-            fn ($transaction) => $transaction->connection == $connection
+        list($forThisConnection, $forOtherConnections) = $this->committedTransactions->partition(
+            function ($transaction) use ($connection) { return $transaction->connection == $connection; }
         );
 
         $this->committedTransactions = $forOtherConnections->values();
@@ -108,14 +108,18 @@ class DatabaseTransactionsManager
     {
         $this->committedTransactions = $this->committedTransactions->merge(
             $this->pendingTransactions->filter(
-                fn ($transaction) => $transaction->connection === $connection &&
-                                     $transaction->level >= $levelBeingCommitted
+                function ($transaction) use ($connection, $levelBeingCommitted) {
+                    return $transaction->connection === $connection &&
+                        $transaction->level >= $levelBeingCommitted;
+                }
             )
         );
 
         $this->pendingTransactions = $this->pendingTransactions->reject(
-            fn ($transaction) => $transaction->connection === $connection &&
-                                 $transaction->level >= $levelBeingCommitted
+            function ($transaction) use ($connection, $levelBeingCommitted) {
+                return $transaction->connection === $connection &&
+                    $transaction->level >= $levelBeingCommitted;
+            }
         );
     }
 
@@ -132,8 +136,10 @@ class DatabaseTransactionsManager
             $this->removeAllTransactionsForConnection($connection);
         } else {
             $this->pendingTransactions = $this->pendingTransactions->reject(
-                fn ($transaction) => $transaction->connection == $connection &&
-                                     $transaction->level > $newTransactionLevel
+                function ($transaction) use ($connection, $newTransactionLevel) {
+                    return $transaction->connection == $connection &&
+                        $transaction->level > $newTransactionLevel;
+                }
             )->values();
 
             if ($this->currentTransaction) {
@@ -160,11 +166,11 @@ class DatabaseTransactionsManager
         $this->currentTransaction[$connection] = null;
 
         $this->pendingTransactions = $this->pendingTransactions->reject(
-            fn ($transaction) => $transaction->connection == $connection
+            function ($transaction) use ($connection) { return $transaction->connection == $connection; }
         )->values();
 
         $this->committedTransactions = $this->committedTransactions->reject(
-            fn ($transaction) => $transaction->connection == $connection
+            function ($transaction) use ($connection) { return $transaction->connection == $connection; }
         )->values();
     }
 
@@ -176,16 +182,18 @@ class DatabaseTransactionsManager
      */
     protected function removeCommittedTransactionsThatAreChildrenOf(DatabaseTransactionRecord $transaction)
     {
-        [$removedTransactions, $this->committedTransactions] = $this->committedTransactions->partition(
-            fn ($committed) => $committed->connection == $transaction->connection &&
-                               $committed->parent === $transaction
+        list($removedTransactions, $this->committedTransactions) = $this->committedTransactions->partition(
+            function ($committed) use ($transaction) {
+                return $committed->connection == $transaction->connection &&
+                    $committed->parent === $transaction;
+            }
         );
 
         // There may be multiple deeply nested transactions that have already committed that we
         // also need to remove. We will recurse down the children of all removed transaction
         // instances until there are no more deeply nested child transactions for removal.
         $removedTransactions->each(
-            fn ($transaction) => $this->removeCommittedTransactionsThatAreChildrenOf($transaction)
+            function ($transaction) { return $this->removeCommittedTransactionsThatAreChildrenOf($transaction); }
         );
     }
 

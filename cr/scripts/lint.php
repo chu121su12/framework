@@ -30,7 +30,7 @@ foreach (['cr', 'src', 'tests'] as $dir) {
         $shell = sprintf('%s -l %s', PHP_BINARY, escapeshellarg($fileinfo->getRealPath()));
         $output = shell_exec($shell);
         if (! preg_match('/^No syntax errors detected in/', $output)) {
-            echo $output;
+            echo "  {$output}";
         }
     }
 }

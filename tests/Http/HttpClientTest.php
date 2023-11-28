@@ -2951,7 +2951,7 @@ class HttpClientTest extends TestCase
 
     public function testItCanGetTheGlobalMiddleware()
     {
-        $this->factory->globalMiddleware($middleware = fn () => null);
+        $this->factory->globalMiddleware($middleware = function () { return null; });
 
         $this->assertEquals([$middleware], $this->factory->getGlobalMiddleware());
     }

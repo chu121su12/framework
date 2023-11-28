@@ -16,6 +16,11 @@ class WorkCommandTest extends TestCase
 {
     use DatabaseMigrations;
 
+    protected function attributeBpWithMigration()
+    {
+        return ['queue'];
+    }
+
     protected function tearDown()/*: void*/
     {
         parent::tearDown();

@@ -165,7 +165,7 @@ class ShouldDispatchAfterCommitEventTest extends TestCase
             //
         }
 
-        DB::transaction(fn () => true);
+        DB::transaction(function () { return true; });
 
         // Should not have ran because parent transaction failed...
         $this->assertFalse(ShouldDispatchAfterCommitTestEvent::$ran);
@@ -223,7 +223,7 @@ class ShouldDispatchAfterCommitEventTest extends TestCase
 
         DB::transaction(function () { // lv 1
             DB::transaction(function () { // lv 2
-                DB::transaction(fn () => Event::dispatch(new ShouldDispatchAfterCommitTestEvent()));
+                DB::transaction(function () { return Event::dispatch(new ShouldDispatchAfterCommitTestEvent()); });
                 // lv 2
             });
 
@@ -250,7 +250,7 @@ class ShouldDispatchAfterCommitEventTest extends TestCase
                 DB::transaction(function () {
                     DB::transaction(function () {
                         DB::transaction(function () {
-                            DB::transaction(fn () => Event::dispatch(new ShouldDispatchAfterCommitTestEvent()));
+                            DB::transaction(function () { return Event::dispatch(new ShouldDispatchAfterCommitTestEvent()); });
                         });
                     });
 

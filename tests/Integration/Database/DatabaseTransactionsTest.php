@@ -20,17 +20,17 @@ class DatabaseTransactionsTest extends DatabaseTestCase
 
     public function testTransactionCallbacks()
     {
-        [$firstObject, $secondObject, $thirdObject] = [
+        list($firstObject, $secondObject, $thirdObject) = [
             new TestObjectForTransactions(),
             new TestObjectForTransactions(),
             new TestObjectForTransactions(),
         ];
 
         DB::transaction(function () use ($secondObject, $firstObject) {
-            DB::afterCommit(fn () => $firstObject->handle());
+            DB::afterCommit(function () use ($firstObject) { return $firstObject->handle(); });
 
             DB::transaction(function () use ($secondObject) {
-                DB::afterCommit(fn () => $secondObject->handle());
+                DB::afterCommit(function () use ($secondObject) { return $secondObject->handle(); });
             });
         });
 
@@ -43,7 +43,7 @@ class DatabaseTransactionsTest extends DatabaseTestCase
 
     public function testTransactionCallbacksDoNotInterfereWithOneAnother()
     {
-        [$firstObject, $secondObject, $thirdObject] = [
+        list($firstObject, $secondObject, $thirdObject) = [
             new TestObjectForTransactions(),
             new TestObjectForTransactions(),
             new TestObjectForTransactions(),
@@ -54,17 +54,17 @@ class DatabaseTransactionsTest extends DatabaseTestCase
         // Since they are not the same, the latter one failing should not affect the first one.
         DB::transaction(function () use ($thirdObject, $secondObject, $firstObject) { // Adds a transaction @ level 1
             DB::transaction(function () use ($firstObject) { // Adds a transaction @ level 2
-                DB::afterCommit(fn () => $firstObject->handle()); // Adds a callback to be executed after transaction level 2 is committed
+                DB::afterCommit(function () use ($firstObject) { return $firstObject->handle(); }); // Adds a callback to be executed after transaction level 2 is committed
             });
 
-            DB::afterCommit(fn () => $secondObject->handle()); // Adds a callback to be executed after transaction 1 @ lvl 1
+            DB::afterCommit(function () use ($secondObject) { return $secondObject->handle(); }); // Adds a callback to be executed after transaction 1 @ lvl 1
 
             try {
                 DB::transaction(function () use ($thirdObject) { // Adds a transaction 3 @ level 2
-                    DB::afterCommit(fn () => $thirdObject->handle());
+                    DB::afterCommit(function () use ($thirdObject) { return $thirdObject->handle(); });
                     throw new \Exception(); // This should only affect callback 3, not 1, even though both share the same transaction level.
                 });
-            } catch (\Exception) {
+            } catch (\Exception $_e) {
             }
         });
 
@@ -77,7 +77,7 @@ class DatabaseTransactionsTest extends DatabaseTestCase
 
     public function testTransactionsDoNotAffectDifferentConnections()
     {
-        [$firstObject, $secondObject, $thirdObject] = [
+        list($firstObject, $secondObject, $thirdObject) = [
             new TestObjectForTransactions(),
             new TestObjectForTransactions(),
             new TestObjectForTransactions(),
@@ -85,18 +85,18 @@ class DatabaseTransactionsTest extends DatabaseTestCase
 
         DB::transaction(function () use ($secondObject, $firstObject, $thirdObject) {
             DB::transaction(function () use ($secondObject) {
-                DB::afterCommit(fn () => $secondObject->handle());
+                DB::afterCommit(function () use ($secondObject) { return $secondObject->handle(); });
             });
 
-            DB::afterCommit(fn () => $firstObject->handle());
+            DB::afterCommit(function () use ($firstObject) { return $firstObject->handle(); });
 
             try {
                 DB::connection('second_connection')->transaction(function () use ($thirdObject) {
-                    DB::afterCommit(fn () => $thirdObject->handle());
+                    DB::afterCommit(function () use ($thirdObject) { return $thirdObject->handle(); });
 
                     throw new \Exception;
                 });
-            } catch (\Exception) {
+            } catch (\Exception $_e) {
                 //
             }
         });

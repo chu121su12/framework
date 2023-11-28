@@ -9,6 +9,11 @@ use Orchestra\Testbench\Attributes\WithMigration;
 #[WithMigration('cache')]
 class DatabaseLockTest extends DatabaseTestCase
 {
+    protected function attributeBpWithMigration()
+    {
+        return ['cache'];
+    }
+
     public function testLockCanHaveASeparateConnection()
     {
         $this->app['config']->set('cache.stores.database.lock_connection', 'test');

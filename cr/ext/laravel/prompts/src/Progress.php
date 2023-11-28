@@ -93,7 +93,12 @@ class Progress extends Prompt
                     $this->advance();
                 }
             }
+        } catch (\Exception $e) {
+        } catch (\ErrorException $e) {
         } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             $this->state = 'error';
             $this->render();
             $this->restoreCursor();

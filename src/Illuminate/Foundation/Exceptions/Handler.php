@@ -1040,7 +1040,7 @@ class Handler implements ExceptionHandlerContract
             return;
         }
 
-        SymfonyHelper::consoleApplicationRenderThrowable($e, $output);
+        SymfonyHelper::consoleApplicationRenderThrowable(null, $e, $output);
     }
 
     /**

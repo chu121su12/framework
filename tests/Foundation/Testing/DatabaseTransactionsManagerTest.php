@@ -14,7 +14,7 @@ class DatabaseTransactionsManagerTest extends TestCase
 
         $manager->begin('foo', 1);
 
-        $manager->addCallback(fn () => $testObject->handle());
+        $manager->addCallback(function () use ($testObject) { return $testObject->handle(); });
 
         $this->assertTrue($testObject->ran);
         $this->assertEquals(1, $testObject->runs);
@@ -38,7 +38,7 @@ class DatabaseTransactionsManagerTest extends TestCase
         $manager->begin('foo', 1);
         $manager->begin('foo', 2);
 
-        $manager->addCallback(fn () => $testObject->handle());
+        $manager->addCallback(function () use ($testObject) { return $testObject->handle(); });
 
         $this->assertFalse($testObject->ran);
 

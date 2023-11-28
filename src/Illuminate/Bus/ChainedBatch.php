@@ -86,7 +86,7 @@ class ChainedBatch implements ShouldQueue
      */
     public function toPendingBatch()
     {
-        $batch = Container::getInstance()->make(Dispatcher::class)->batch($this->jobs);
+        $batch = Container::getInstance()->make(DispatcherContract::class)->batch($this->jobs);
 
         $batch->name = $this->name;
         $batch->options = $this->options;
@@ -98,8 +98,6 @@ class ChainedBatch implements ShouldQueue
         if ($this->connection) {
             $batch->onConnection($this->connection);
         }
-
-        $this->dispatchRemainderOfChainAfterBatch($batch);
 
         foreach (isset($this->chainCatchCallbacks) ? $this->chainCatchCallbacks : [] as $callback) {
             $batch->catch_(function (Batch $batch, /*?Throwable */$exception) use ($callback) {

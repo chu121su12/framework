@@ -139,7 +139,14 @@ class RoutingServiceProviderTest extends TestCase
             return gzdecode((string) $request->getBody());
         });
 
-        $response = $this->call('POST', 'test-route', content: file_get_contents(__DIR__.'/Fixtures/laravel.txt.gz'));
+        $response = $this->call(
+            'POST',
+            'test-route',
+            /*$parameters = */[],
+            /*$cookies = */[],
+            /*$files = */[],
+            /*$server = */[],
+            /*content: */file_get_contents(__DIR__.'/Fixtures/laravel.txt.gz'));
 
         $response->assertOk();
         $response->assertContent("Laravel\n");

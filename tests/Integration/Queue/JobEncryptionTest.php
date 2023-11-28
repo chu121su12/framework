@@ -20,6 +20,11 @@ class JobEncryptionTest extends DatabaseTestCase
 {
     use DatabaseMigrations;
 
+    protected function attributeBpWithMigration()
+    {
+        return ['queue'];
+    }
+
     protected function getEnvironmentSetUp($app)
     {
         parent::getEnvironmentSetUp($app);

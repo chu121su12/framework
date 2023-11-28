@@ -1889,7 +1889,7 @@ class RoutingRouteTest extends TestCase
     {
         $router = $this->getRouter();
         $router->as('foo.')
-            ->missing(fn () => new RedirectResponse('/', 302))
+            ->missing(function () { return new RedirectResponse('/', 302); })
             ->group(function () use ($router) {
                 $router->get('foo/{bar}', [
                     'middleware' => SubstituteBindings::class,

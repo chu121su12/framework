@@ -10,6 +10,11 @@ use Orchestra\Testbench\Attributes\WithMigration;
 #[WithMigration('cache')]
 class DatabaseCacheStoreTest extends DatabaseTestCase
 {
+    protected function attributeBpWithMigration()
+    {
+        return ['cache'];
+    }
+
     public function testValueCanStoreNewCache()
     {
         $store = $this->getStore();
@@ -178,13 +183,17 @@ class DatabaseCacheStoreTest extends DatabaseTestCase
         return config('cache.stores.database.table');
     }
 
-    protected function withCachePrefix(string $key)
+    protected function withCachePrefix(/*string */$key)
     {
+        $key = backport_type_check('string', $key);
+
         return config('cache.prefix').$key;
     }
 
-    protected function insertToCacheTable(string $key, $value, $ttl = 60)
+    protected function insertToCacheTable(/*string */$key, $value, $ttl = 60)
     {
+        $key = backport_type_check('string', $key);
+
         DB::table($this->getCacheTableName())
             ->insert(
                 [
