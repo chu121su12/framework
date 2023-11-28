@@ -31,6 +31,10 @@ use PHPUnit\Event\Test\PhpDeprecationTriggered;
 use PHPUnit\Event\Test\PhpDeprecationTriggeredSubscriber;
 use PHPUnit\Event\Test\PhpNoticeTriggered;
 use PHPUnit\Event\Test\PhpNoticeTriggeredSubscriber;
+use PHPUnit\Event\Test\PhpunitDeprecationTriggered;
+use PHPUnit\Event\Test\PhpunitDeprecationTriggeredSubscriber;
+use PHPUnit\Event\Test\PhpunitErrorTriggered;
+use PHPUnit\Event\Test\PhpunitErrorTriggeredSubscriber;
 use PHPUnit\Event\Test\PhpunitWarningTriggered;
 use PHPUnit\Event\Test\PhpunitWarningTriggeredSubscriber;
 use PHPUnit\Event\Test\PhpWarningTriggered;
@@ -164,6 +168,14 @@ class EnsurePrinterIsRegisteredSubscriber_notify_class_64 extends Subscriber imp
                     }
                 }
 
+class EnsurePrinterIsRegisteredSubscriber_notify_class_64a extends Subscriber implements PhpunitDeprecationTriggeredSubscriber
+                {
+                    public function notify(PhpunitDeprecationTriggered $event)/*: void*/
+                    {
+                        $this->printer()->testPhpunitDeprecationTriggered($event);
+                    }
+                }
+
 class EnsurePrinterIsRegisteredSubscriber_notify_class_65 extends Subscriber implements PhpNoticeTriggeredSubscriber
                 {
                     public function notify(PhpNoticeTriggered $event)/*: void*/
@@ -185,6 +197,14 @@ class EnsurePrinterIsRegisteredSubscriber_notify_class_67 extends Subscriber imp
                     public function notify(PhpunitWarningTriggered $event)/*: void*/
                     {
                         $this->printer()->testPhpunitWarningTriggered($event);
+                    }
+                }
+
+class EnsurePrinterIsRegisteredSubscriber_notify_class_68 extends Subscriber implements PhpunitErrorTriggeredSubscriber
+                {
+                    public function notify(PhpunitErrorTriggered $event)/*: void*/
+                    {
+                        $this->printer()->testPhpunitErrorTriggered($event);
                     }
                 }
 
@@ -305,11 +325,15 @@ if (class_exists(Version::class) && (int) Version::series() >= 10) {
 
                 new EnsurePrinterIsRegisteredSubscriber_notify_class_64($printer),
 
+                new EnsurePrinterIsRegisteredSubscriber_notify_class_64a($printer),
+
                 new EnsurePrinterIsRegisteredSubscriber_notify_class_65($printer),
 
                 new EnsurePrinterIsRegisteredSubscriber_notify_class_66($printer),
 
                 new EnsurePrinterIsRegisteredSubscriber_notify_class_67($printer),
+
+                new EnsurePrinterIsRegisteredSubscriber_notify_class_68($printer),
 
                 // Test > Outcome ...
 

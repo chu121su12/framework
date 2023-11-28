@@ -25,7 +25,7 @@ final class State
      *
      * @var string|null
      */
-    public /*string|null */$testCaseName;
+    public /*?string */$testCaseName;
 
     /**
      * The current test case tests.
