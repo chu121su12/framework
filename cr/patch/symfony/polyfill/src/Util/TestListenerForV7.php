@@ -36,60 +36,82 @@ class TestListenerForV7 extends TestSuite implements TestListenerInterface
         $this->trait = new TestListenerTrait();
     }
 
-    public function startTestSuite(TestSuite $suite): void
+    public function startTestSuite(TestSuite $suite)/*: void*/
     {
         $this->trait->startTestSuite($suite);
     }
 
-    public function addError(Test $test, \Throwable $t, float $time): void
+    public function addError(Test $test, /*\Throwable */$t, /*float */$time)/*: void*/
     {
+        backport_type_throwable($t);
+
+        $time = backport_type_check('float', $time);
+
         $this->trait->addError($test, $t, $time);
     }
 
-    public function addWarning(Test $test, Warning $e, float $time): void
+    public function addWarning(Test $test, Warning $e, /*float */$time)/*: void*/
     {
+        $time = backport_type_check('float', $time);
+
     }
 
-    public function addFailure(Test $test, AssertionFailedError $e, float $time): void
+    public function addFailure(Test $test, AssertionFailedError $e, /*float */$time)/*: void*/
     {
+        $time = backport_type_check('float', $time);
+
         $this->trait->addError($test, $e, $time);
     }
 
-    public function addIncompleteTest(Test $test, \Throwable $t, float $time): void
+    public function addIncompleteTest(Test $test, /*\Throwable */$t, /*float */$time)/*: void*/
+    {
+        backport_type_throwable($t);
+
+        $time = backport_type_check('float', $time);
+
+    }
+
+    public function addRiskyTest(Test $test, /*\Throwable */$t, /*float */$time)/*: void*/
+    {
+        backport_type_throwable($t);
+
+        $time = backport_type_check('float', $time);
+
+    }
+
+    public function addSkippedTest(Test $test, /*\Throwable */$t, /*float */$time)/*: void*/
+    {
+        backport_type_throwable($t);
+
+        $time = backport_type_check('float', $time);
+
+    }
+
+    public function endTestSuite(TestSuite $suite)/*: void*/
     {
     }
 
-    public function addRiskyTest(Test $test, \Throwable $t, float $time): void
+    public function startTest(Test $test)/*: void*/
     {
     }
 
-    public function addSkippedTest(Test $test, \Throwable $t, float $time): void
+    public function endTest(Test $test, /*float */$time)/*: void*/
     {
+        $time = backport_type_check('float', $time);
+
     }
 
-    public function endTestSuite(TestSuite $suite): void
-    {
-    }
-
-    public function startTest(Test $test): void
-    {
-    }
-
-    public function endTest(Test $test, float $time): void
-    {
-    }
-
-    public static function warning($message): WarningTestCase
+    public static function warning($message)/*: WarningTestCase*/
     {
         return new WarningTestCase($message);
     }
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         TestListenerTrait::$enabledPolyfills = $this->suite->getName();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         TestListenerTrait::$enabledPolyfills = false;
     }

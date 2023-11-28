@@ -64,14 +64,6 @@ abstract class Transformer
 
         $value = backport_type_check('string', $value);
 
-        $length = backport_type_check('int', $length);
-
-        $matched = backport_type_check('string', $matched);
-
-        $length = backport_type_check('int', $length);
-
-        $length = backport_type_check('int', $length);
-
         return str_pad($value, $length, '0', \STR_PAD_LEFT);
     }
 }

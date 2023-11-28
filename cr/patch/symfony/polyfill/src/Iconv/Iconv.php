@@ -380,7 +380,7 @@ final class Iconv
 
         preg_match_all('/./us', $fieldValue, $chars);
 
-        $chars = isset($chars[0]) ? $chars[0] : array();
+        $chars = isset($chars[0]) ? $chars[0] : [];
 
         $lineBreak = (int) $pref['line-length'];
         $lineStart = "=?{$pref['output-charset']}?{$scheme}?";

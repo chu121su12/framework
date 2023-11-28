@@ -136,6 +136,22 @@ if (!function_exists('mb_str_split')) {
     function mb_str_split($string, $length = 1, $encoding = null) { return p\Mbstring::mb_str_split($string, $length, $encoding); }
 }
 
+if (!function_exists('mb_str_pad')) {
+    function mb_str_pad(/*string */$string, /*int */$length, /*string */$pad_string = ' ', /*int */$pad_type = STR_PAD_RIGHT, /*?string */$encoding = null)/*: string */{
+        $encoding = backport_type_check('?string', $encoding);
+
+        $pad_type = backport_type_check('int', $pad_type);
+
+        $pad_string = backport_type_check('string', $pad_string);
+
+        $length = backport_type_check('int', $length);
+
+        $string = backport_type_check('string', $string);
+
+        return p\Mbstring::mb_str_pad($string, $length, $pad_string, $pad_type, $encoding);
+    }
+}
+
 if (extension_loaded('mbstring')) {
     return;
 }
