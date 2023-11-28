@@ -52,12 +52,17 @@ trait ManagesTransactions
                     $this->getPdo()->commit();
                 }
 
-                $this->transactions = max(0, $this->transactions - 1);
+                list($levelBeingCommitted, $this->transactions) = [
+                    $this->transactions,
+                    max(0, $this->transactions - 1),
+                ];
 
-                if ($this->afterCommitCallbacksShouldBeExecuted()) {
-                    if (isset($this->transactionsManager)) {
-                        $this->transactionsManager->commit($this->getName());
-                    }
+                if (isset($this->transactionsManager)) {
+                    $this->transactionsManager->commit(
+                        $this->getName(),
+                        $levelBeingCommitted,
+                        $this->transactions
+                    );
                 }
             } catch (\Exception $e) {
             } catch (\Error $e) {
@@ -219,27 +224,18 @@ trait ManagesTransactions
             $this->getPdo()->commit();
         }
 
-        $this->transactions = max(0, $this->transactions - 1);
+        list($levelBeingCommitted, $this->transactions) = [
+            $this->transactions,
+            max(0, $this->transactions - 1),
+        ];
 
-        if ($this->afterCommitCallbacksShouldBeExecuted()) {
-            if (isset($this->transactionsManager)) {
-                $this->transactionsManager->commit($this->getName());
-            }
+        if (isset($this->transactionsManager)) {
+            $this->transactionsManager->commit(
+                $this->getName(), $levelBeingCommitted, $this->transactions
+            );
         }
 
         $this->fireConnectionEvent('committed');
-    }
-
-    /**
-     * Determine if after commit callbacks should be executed.
-     *
-     * @return bool
-     */
-    protected function afterCommitCallbacksShouldBeExecuted()
-    {
-        if (isset($this->transactionsManager)) {
-            return $this->transactionsManager->afterCommitCallbacksShouldBeExecuted($this->transactions) || $this->transactions == 0;
-        }
     }
 
     /**

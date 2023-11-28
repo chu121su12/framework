@@ -26,6 +26,13 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
     protected $allowedMimetypes = [];
 
     /**
+     * The extensions that the given file should match.
+     *
+     * @var array
+     */
+    protected $allowedExtensions = [];
+
+    /**
      * The minimum size in kilobytes that the file can be.
      *
      * @var null|int
@@ -128,6 +135,19 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
     public static function types($mimetypes)
     {
         return tap(new static(), function ($file) use ($mimetypes) { return $file->allowedMimetypes = (array) $mimetypes; });
+    }
+
+    /**
+     * Limit the uploaded file to the given file extensions.
+     *
+     * @param  string|array<int, string>  $extensions
+     * @return $this
+     */
+    public function extensions($extensions)
+    {
+        $this->allowedExtensions = (array) $extensions;
+
+        return $this;
     }
 
     /**
@@ -257,12 +277,29 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
 
         $rules = array_merge($rules, $this->buildMimetypes());
 
+        if (! empty($this->allowedExtensions)) {
+            $rules[] = 'extensions:'.implode(',', array_map('strtolower', $this->allowedExtensions));
+        }
+
         switch (true) {
-            case is_null($this->minimumFileSize) && is_null($this->maximumFileSize): $rules[] = null; break;
-            case is_null($this->maximumFileSize): $rules[] = "min:{$this->minimumFileSize}"; break;
-            case is_null($this->minimumFileSize): $rules[] = "max:{$this->maximumFileSize}"; break;
-            case $this->minimumFileSize !== $this->maximumFileSize: $rules[] = "between:{$this->minimumFileSize},{$this->maximumFileSize}"; break;
-            default: $rules[] = "size:{$this->minimumFileSize}"; break;
+            case is_null($this->minimumFileSize) && is_null($this->maximumFileSize):
+                $rules[] = null;
+                break;
+
+            case is_null($this->maximumFileSize):
+                $rules[] = "min:{$this->minimumFileSize}";
+                break;
+
+            case is_null($this->minimumFileSize):
+                $rules[] = "max:{$this->maximumFileSize}";
+                break;
+
+            case $this->minimumFileSize !== $this->maximumFileSize:
+                $rules[] = "between:{$this->minimumFileSize},{$this->maximumFileSize}";
+                break;
+
+            default:
+                $rules[] = "size:{$this->minimumFileSize}";
         };
 
         return array_merge(array_filter($rules), $this->customRules);

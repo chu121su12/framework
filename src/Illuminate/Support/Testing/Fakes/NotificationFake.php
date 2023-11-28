@@ -317,10 +317,10 @@ class NotificationFake implements Fake, NotificationDispatcher, NotificationFact
                         return $notification->shouldSend($notifiable, $channel) !== false;
                     }
                 );
+            }
 
-                if (empty($notifiableChannels)) {
-                    continue;
-                }
+            if (empty($notifiableChannels)) {
+                continue;
             }
 
             if (isset($notification->locale)) {
