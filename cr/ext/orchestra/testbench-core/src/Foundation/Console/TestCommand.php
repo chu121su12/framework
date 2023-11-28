@@ -3,10 +3,10 @@
 namespace Orchestra\Testbench\Foundation\Console;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use NunoMaduro\Collision\Adapters\Laravel\Commands\TestCommand as Command;
 use Orchestra\Testbench\Foundation\Env;
 
+use function Orchestra\Testbench\defined_environment_variables;
 use function Orchestra\Testbench\package_path;
 
 class TestCommand extends Command
@@ -96,7 +96,7 @@ class TestCommand extends Command
 
         return Collection::make(parent::phpunitArguments($options))
             ->reject(static function ($option) {
-                return Str::startsWith($option, ['--configuration=']);
+                return str_starts_with($option, '--configuration=');
             })->merge(["--configuration={$file}"])
             ->all();
     }
@@ -113,7 +113,8 @@ class TestCommand extends Command
 
         return Collection::make(parent::paratestArguments($options))
             ->reject(static function (string $option) {
-                return Str::startsWith($option, ['--configuration=', '--runner=']);
+                return str_starts_with($option, '--configuration=')
+                    || str_starts_with($option, '--runner=');
             })->merge([
                 "--configuration={$file}",
                 "--runner=\Orchestra\Testbench\Foundation\ParallelRunner",
@@ -127,14 +128,14 @@ class TestCommand extends Command
      */
     protected function phpunitEnvironmentVariables()
     {
-        return array_merge([
-            'APP_KEY' => Env::forward('APP_KEY'),
-            'APP_DEBUG' => Env::forward('APP_DEBUG'),
-            'APP_ENV' => 'testing',
-            'TESTBENCH_PACKAGE_TESTER' => '(true)',
-            'TESTBENCH_WORKING_PATH' => TESTBENCH_WORKING_PATH,
-            'TESTBENCH_APP_BASE_PATH' => $this->laravel->basePath(),
-        ], parent::phpunitEnvironmentVariables());
+        return Collection::make(defined_environment_variables())
+            ->merge([
+                'APP_ENV' => 'testing',
+                'TESTBENCH_PACKAGE_TESTER' => '(true)',
+                'TESTBENCH_WORKING_PATH' => TESTBENCH_WORKING_PATH,
+                'TESTBENCH_APP_BASE_PATH' => $this->laravel->basePath(),
+            ])->merge(parent::phpunitEnvironmentVariables())
+            ->all();
     }
 
     /**
@@ -144,14 +145,14 @@ class TestCommand extends Command
      */
     protected function paratestEnvironmentVariables()
     {
-        return array_merge([
-            'APP_KEY' => Env::forward('APP_KEY'),
-            'APP_DEBUG' => Env::forward('APP_DEBUG'),
-            'APP_ENV' => 'testing',
-            'TESTBENCH_PACKAGE_TESTER' => '(true)',
-            'TESTBENCH_WORKING_PATH' => TESTBENCH_WORKING_PATH,
-            'TESTBENCH_APP_BASE_PATH' => $this->laravel->basePath(),
-        ], parent::paratestEnvironmentVariables());
+        return Collection::make(defined_environment_variables())
+            ->merge([
+                'APP_ENV' => 'testing',
+                'TESTBENCH_PACKAGE_TESTER' => '(true)',
+                'TESTBENCH_WORKING_PATH' => TESTBENCH_WORKING_PATH,
+                'TESTBENCH_APP_BASE_PATH' => $this->laravel->basePath(),
+            ])->merge(parent::paratestEnvironmentVariables())
+            ->all();
     }
 
     /**

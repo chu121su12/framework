@@ -12,7 +12,7 @@ class GeneratesFile extends Action
     public /*bool */$force;
 
     /**
-     * Construct a new generate file instance.
+     * Construct a new action instance.
      *
      * @param  \Illuminate\Filesystem\Filesystem  $filesystem
      * @param  \Illuminate\Console\View\Components\Factory|null  $components

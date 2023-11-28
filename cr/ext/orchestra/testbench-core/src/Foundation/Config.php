@@ -12,6 +12,8 @@ use function Orchestra\Testbench\parse_environment_variables;
 use function Orchestra\Testbench\transform_relative_path;
 
 /**
+ * @api
+ *
  * @phpstan-type TExtraConfig array{
  *   env: array,
  *   providers: array<int, class-string>,
@@ -55,14 +57,18 @@ use function Orchestra\Testbench\transform_relative_path;
  *   discovers?: TWorkbenchOptionalDiscoversConfig
  * }
  * @phpstan-type TWorkbenchDiscoversConfig array{
+ *   config: bool,
  *   web: bool,
  *   api: bool,
- *   commands: bool
+ *   commands: bool,
+ *   views: bool
  * }
  * @phpstan-type TWorkbenchOptionalDiscoversConfig array{
+ *   config?: bool,
  *   web?: bool,
  *   api?: bool,
- *   commands?: bool
+ *   commands?: bool,
+ *   views?: bool
  * }
  * @phpstan-type TConfig array{
  *   laravel: string|null,
@@ -115,7 +121,7 @@ class Config extends Fluent implements ConfigContract
      *
      * @phpstan-var TPurgeConfig
      */
-    protected $purgeConfig = [
+    protected /*array */$purgeConfig = [
         'directories' => [],
         'files' => [],
     ];
@@ -127,7 +133,7 @@ class Config extends Fluent implements ConfigContract
      *
      * @phpstan-var TWorkbenchConfig
      */
-    protected $workbenchConfig = [
+    protected /*array */$workbenchConfig = [
         'start' => '/',
         'user' => null,
         'guard' => null,
@@ -137,9 +143,11 @@ class Config extends Fluent implements ConfigContract
         'build' => [],
         'assets' => [],
         'discovers' => [
+            'config' => false,
             'web' => false,
             'api' => false,
             'commands' => false,
+            'views' => false,
         ],
     ];
 
@@ -150,10 +158,12 @@ class Config extends Fluent implements ConfigContract
      *
      * @phpstan-var TWorkbenchDiscoversConfig
      */
-    protected $workbenchDiscoversConfig = [
+    protected /*array */$workbenchDiscoversConfig = [
+        'config' => false,
         'web' => false,
         'api' => false,
         'commands' => false,
+        'views' => false,
     ];
 
     /**
@@ -297,5 +307,17 @@ class Config extends Fluent implements ConfigContract
 
         /** @var TWorkbenchConfig $config */
         return $config;
+    }
+
+    /**
+     * Get workbench discovers attributes.
+     *
+     * @return array<string, mixed>
+     *
+     * @phpstan-return TWorkbenchDiscoversConfig
+     */
+    public function getWorkbenchDiscoversAttributes()/*: array*/
+    {
+        return Arr::get($this->getWorkbenchAttributes(), 'discovers');
     }
 }

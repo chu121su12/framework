@@ -13,7 +13,7 @@ class DeleteFiles extends Action
     public /*?ComponentsFactory */$components;
 
     /**
-     * Construct a new delete files instance.
+     * Construct a new action instance.
      *
      * @param  \Illuminate\Filesystem\Filesystem  $filesystem
      * @param  \Illuminate\Console\View\Components\Factory  $components
@@ -42,8 +42,9 @@ class DeleteFiles extends Action
         $files = backport_type_check('iterable', $files);
 
         LazyCollection::make($files)
-            ->reject(function ($file) { return Str::endsWith($file, ['.gitkeep', '.gitignore']); })
-            ->each(function ($file) {
+            ->reject(static function ($file) {
+                return str_ends_with($file, '.gitkeep') || str_ends_with($file, '.gitignore');
+            })->each(function ($file) {
                 if ($this->filesystem->exists($file)) {
                     $this->filesystem->delete($file);
 

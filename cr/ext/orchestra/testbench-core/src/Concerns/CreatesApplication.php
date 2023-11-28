@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\Facades\RateLimiter;
+use Orchestra\Testbench\Attributes\DefineEnvironment;
 use Orchestra\Testbench\Bootstrap\LoadEnvironmentVariables;
 use Orchestra\Testbench\Foundation\PackageManifest;
-use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
 /**
  * @property bool|null $enablesPackageDiscoveries
@@ -249,7 +249,9 @@ trait CreatesApplication
         return tap(new Application($this->getBasePath()), function ($app) {
             $app->bind(
                 'Illuminate\Foundation\Bootstrap\LoadConfiguration',
-                'Orchestra\Testbench\Bootstrap\LoadConfiguration'
+                static::usesTestingConcern() && ! static::usesTestingConcern(WithWorkbench::class)
+                    ? 'Orchestra\Testbench\Bootstrap\LoadConfiguration'
+                    : 'Orchestra\Testbench\Bootstrap\LoadConfigurationWithWorkbench'
             );
 
             PackageManifest::swap($app, $this);
@@ -324,7 +326,7 @@ trait CreatesApplication
      */
     protected function resolveApplicationConsoleKernel($app)
     {
-        $app->singleton('Illuminate\Contracts\Console\Kernel', 'Orchestra\Testbench\Console\Kernel');
+        $app->singleton('Illuminate\Contracts\Console\Kernel', $this->applicationConsoleKernelUsingWorkbench($app));
     }
 
     /**
@@ -335,7 +337,7 @@ trait CreatesApplication
      */
     protected function resolveApplicationHttpKernel($app)
     {
-        $app->singleton('Illuminate\Contracts\Http\Kernel', 'Orchestra\Testbench\Http\Kernel');
+        $app->singleton('Illuminate\Contracts\Http\Kernel', $this->applicationHttpKernelUsingWorkbench($app));
     }
 
     /**
@@ -346,7 +348,7 @@ trait CreatesApplication
      */
     protected function resolveApplicationExceptionHandler($app)
     {
-        $app->singleton('Illuminate\Contracts\Debug\ExceptionHandler', 'Orchestra\Testbench\Exceptions\Handler');
+        $app->singleton('Illuminate\Contracts\Debug\ExceptionHandler', $this->applicationExceptionHandlerUsingWorkbench($app));
     }
 
     /**
@@ -371,15 +373,27 @@ trait CreatesApplication
             $app->register('Illuminate\Database\Eloquent\LegacyFactoryServiceProvider');
         }
 
-        if (method_exists($this, 'parseTestMethodAnnotations')) {
+        if (static::usesTestingConcern(HandlesAnnotations::class)) {
+            /** @phpstan-ignore-next-line */
             $this->parseTestMethodAnnotations($app, 'environment-setup');
+            /** @phpstan-ignore-next-line */
             $this->parseTestMethodAnnotations($app, 'define-env');
+        }
+
+        if (static::usesTestingConcern(HandlesAttributes::class)) {
+            /** @phpstan-ignore-next-line */
+            $this->parseTestMethodAttributes($app, DefineEnvironment::class);
         }
 
         $this->defineEnvironment($app);
         $this->getEnvironmentSetUp($app);
 
         $this->resolveApplicationRateLimiting($app);
+
+        if (static::usesTestingConcern(WithWorkbench::class)) {
+            /** @phpstan-ignore-next-line */
+            $this->bootDiscoverRoutesForWorkbench($app);
+        }
 
         $app->make('Illuminate\Foundation\Bootstrap\BootProviders')->bootstrap($app);
 
@@ -394,13 +408,24 @@ trait CreatesApplication
 
         $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
 
+        $this->refreshApplicationRouteNameLookups($app);
+    }
+
+    /**
+     * Refresh route name lookup for the application.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return void
+     */
+    final protected function refreshApplicationRouteNameLookups($app)
+    {
         $refreshNameLookups = static function ($app) {
             $app['router']->getRoutes()->refreshNameLookups();
         };
 
         $refreshNameLookups($app);
 
-        $app->resolving('url', function ($url, $app) use ($refreshNameLookups) { return $refreshNameLookups($app); });
+        $app->resolving('url', function () use ($refreshNameLookups, $app) { return $refreshNameLookups($app); });
     }
 
     /**

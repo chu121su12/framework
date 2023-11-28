@@ -12,7 +12,7 @@ class EnsureDirectoryExists extends Action
     public /*?ComponentsFactory */$components;
 
     /**
-     * Construct a new ensure directory exists instance.
+     * Construct a new action instance.
      *
      * @param  \Illuminate\Filesystem\Filesystem  $filesystem
      * @param  \Illuminate\Console\View\Components\Factory|null  $components

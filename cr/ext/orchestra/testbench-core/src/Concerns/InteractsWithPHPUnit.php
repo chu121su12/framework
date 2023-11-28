@@ -3,6 +3,7 @@
 namespace Orchestra\Testbench\Concerns;
 
 use Illuminate\Support\Collection;
+use Orchestra\Testbench\PHPUnit\AttributeParser;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use PHPUnit\Metadata\Annotation\Parser\Registry as PHPUnit10Registry;
 use PHPUnit\Util\Annotation\Registry as PHPUnit9Registry;
@@ -18,6 +19,20 @@ trait InteractsWithPHPUnit
      * @var array<class-string, class-string>|null
      */
     protected static $cachedTestCaseUses;
+
+    /**
+     * The cached class attributes for test case.
+     *
+     * @var array<string, array<int, array{key: class-string, instance: object}>>
+     */
+    protected static $cachedTestCaseClassAttributes = [];
+
+    /**
+     * The cached method attributes for test case.
+     *
+     * @var array<string, array<int, array{key: class-string, instance: object}>>
+     */
+    protected static $cachedTestCaseMethodAttributes = [];
 
     /**
      * Determine if the trait is used within testing.
@@ -44,13 +59,17 @@ trait InteractsWithPHPUnit
 
         $instance = new ReflectionClass($this);
 
-        if (! $this instanceof PHPUnitTestCase || (method_exists($instance, 'isAnonymous') && $instance->isAnonymous())) {
+        if (! $this instanceof PHPUnitTestCase || ! method_exists($instance, 'isAnonymous') && $instance->isAnonymous()) {
+            return new Collection();
+        }
+
+        if (! (class_exists('PHPUnit\Metadata\Annotation\Parser\Registry') || class_exists('PHPUnit\Util\Annotation\Registry'))) {
             return new Collection();
         }
 
         list($registry, $methodName) = phpunit_version_compare('10', '>=')
-            ? [PHPUnit10Registry::getInstance(), $this->name()] /** @phpstan-ignore-line */
-            : [PHPUnit9Registry::getInstance(), $this->getName(false)]; /** @phpstan-ignore-line */
+            ? [\PHPUnit\Metadata\Annotation\Parser\Registry::getInstance(), $this->name()] /** @phpstan-ignore-line */
+            : [\PHPUnit\Util\Annotation\Registry::getInstance(), $this->getName(false)]; /** @phpstan-ignore-line */
 
         /** @var array<string, mixed> $annotations */
         $annotations = rescue(
@@ -60,6 +79,53 @@ trait InteractsWithPHPUnit
         );
 
         return Collection::make($annotations);
+    }
+
+    /**
+     * Resolve PHPUnit method attributes.
+     *
+     * @phpunit-overrides
+     *
+     * @return \Illuminate\Support\Collection<class-string, array<int, object>>
+     */
+    protected function resolvePhpUnitAttributes()/*: Collection*/
+    {
+        $instance = new ReflectionClass($this);
+
+        if (! $this instanceof PHPUnitTestCase || ! method_exists($instance, 'isAnonymous') || $instance->isAnonymous()) {
+            return new Collection();
+        }
+
+        $className = $instance->getName();
+        $methodName = phpunit_version_compare('10', '>=')
+            ? $this->name() /** @phpstan-ignore-line */
+            : $this->getName(false); /** @phpstan-ignore-line */
+        if (! isset(static::$cachedTestCaseClassAttributes[$className])) {
+            static::$cachedTestCaseClassAttributes[$className] = rescue(static function () use ($className) {
+                return AttributeParser::forClass($className);
+            }, [], false);
+        }
+
+        if (! isset(static::$cachedTestCaseMethodAttributes["{$className}:{$methodName}"])) {
+            static::$cachedTestCaseMethodAttributes["{$className}:{$methodName}"] = rescue(static function () use ($className, $methodName) {
+                return AttributeParser::forMethod($className, $methodName);
+            }, [], false);
+        }
+
+        $attributes = Collection::make(array_merge(
+            static::$cachedTestCaseClassAttributes[$className],
+            static::$cachedTestCaseMethodAttributes["{$className}:{$methodName}"]
+        ))->groupBy('key')
+            ->map(static function ($attributes) {
+                /** @var \Illuminate\Support\Collection<int, array{key: class-string, instance: object}> $attributes */
+                return $attributes->map(static function ($attribute) {
+                    /** @var array{key: class-string, instance: object} $attribute */
+                    return $attribute['instance'];
+                });
+            });
+
+        /** @var \Illuminate\Support\Collection<class-string, array<int, object>> $attributes */
+        return $attributes;
     }
 
     /**
@@ -114,6 +180,8 @@ trait InteractsWithPHPUnit
     public static function teardownAfterClassUsingPHPUnit()/*: void*/
     {
         static::$cachedTestCaseUses = null;
+        static::$cachedTestCaseClassAttributes = [];
+        static::$cachedTestCaseMethodAttributes = [];
 
         foreach ([
             \PHPUnit\Util\Annotation\Registry::class,

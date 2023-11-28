@@ -2,6 +2,7 @@
 
 namespace Orchestra\Testbench\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Concerns\InteractsWithSignals;
 use Illuminate\Console\Signals;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
@@ -12,10 +13,10 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Application;
 use Orchestra\Testbench\Foundation\Bootstrap\LoadMigrationsFromArray;
-use Orchestra\Testbench\Foundation\Bootstrap\StartWorkbench;
 use Orchestra\Testbench\Foundation\Config;
 use Orchestra\Testbench\Foundation\Console\Concerns\CopyTestbenchFiles;
 use Orchestra\Testbench\Foundation\TestbenchServiceProvider;
+use Orchestra\Testbench\Workbench\Workbench;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -101,6 +102,7 @@ class Commander
         }
 
         $this->handleTerminatingConsole();
+        Workbench::flush();
 
         exit($status);
     }
@@ -135,7 +137,8 @@ class Commander
             $this->app = Application::create(
                 /*basePath: */$this->getBasePath(),
                 /*resolvingCallback: */function ($app) {
-                    (new StartWorkbench($this->config))->bootstrap($app);
+                    Workbench::startWithProviders($app, $this->config);
+                    Workbench::discoverRoutes($app, $this->config);
 
                     (new LoadMigrationsFromArray(
                         isset($this->config['migrations']) ? $this->config['migrations'] : [],
@@ -208,7 +211,7 @@ class Commander
                 $handler->renderForConsole($output, $error);
             });
         } else {
-            (new ConsoleApplication)->renderThrowable($error, $output);
+            SymfonyHelper::consoleApplicationRenderThrowable(new ConsoleApplication, $error, $output);
         }
 
         return 1;

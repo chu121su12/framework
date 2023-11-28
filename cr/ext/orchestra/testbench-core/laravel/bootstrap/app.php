@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Env;
 use Orchestra\Testbench\Foundation\Application;
-use Orchestra\Testbench\Foundation\Bootstrap\StartWorkbench;
 use Orchestra\Testbench\Foundation\Config;
+use Orchestra\Testbench\Workbench\Workbench;
 
 /**
  * Create Laravel application.
@@ -11,7 +11,7 @@ use Orchestra\Testbench\Foundation\Config;
  * @param  string  $workingPath
  * @return \Illuminate\Foundation\Application
  */
-$createApp = function (/*string */$workingPath) {
+$createApp = static function (/*string */$workingPath) {
     $workingPath = backport_type_check('string', $workingPath);
 
     $config = Config::loadFromYaml(
@@ -24,13 +24,11 @@ $createApp = function (/*string */$workingPath) {
 
     return Application::create(
         /*basePath: */$config['laravel'],
-        /*resolvingCallback: */function ($app) use ($config) {
-            (new StartWorkbench($config))->bootstrap($app);
+        /*resolvingCallback: */static function ($app) use ($config) {
+            Workbench::startWithProviders($app, $config);
+            Workbench::discoverRoutes($app, $config);
         },
-        /*options: */[
-            'load_environment_variables' => $hasEnvironmentFile,
-            'extra' => $config->getExtraAttributes(),
-        ]
+        /*options: */['load_environment_variables' => $hasEnvironmentFile, 'extra' => $config->getExtraAttributes()]
     );
 };
 
@@ -46,7 +44,7 @@ unset($createApp);
 $router = $app->make('router');
 
 collect(glob(__DIR__.'/../routes/testbench-*.php'))
-    ->each(function ($routeFile) use ($app, $router) {
+    ->each(static function ($routeFile) use ($app, $router) {
         require $routeFile;
     });
 

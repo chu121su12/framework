@@ -3,19 +3,11 @@
 namespace Orchestra\Testbench\Concerns;
 
 use Illuminate\Support\Arr;
-use Orchestra\Testbench\Foundation\Config;
-use Orchestra\Testbench\Foundation\Env;
+use Orchestra\Testbench\Workbench\Workbench;
 
 trait InteractsWithWorkbench
 {
     use InteractsWithPHPUnit;
-
-    /**
-     * The cached test case configuration.
-     *
-     * @var \Orchestra\Testbench\Contracts\Config|null
-     */
-    protected static $cachedConfigurationForWorkbench;
 
     /**
      * Get Application's base path.
@@ -42,19 +34,20 @@ trait InteractsWithWorkbench
             return $this->enablesPackageDiscoveries === false ? ['*'] : [];
         }
 
-        if (static::usesTestingConcern(WithWorkbench::class)) {
-            if (isset(static::$cachedConfigurationForWorkbench)) {
-                $attributes = static::$cachedConfigurationForWorkbench->getExtraAttributes();
-
-                if (isset($attributes['dont-discover'])) {
-                    return $attributes['dont-discover'];
-                }
-            }
-
-            return [];
+        if (!static::usesTestingConcern(WithWorkbench::class)) {
+            return null;
         }
 
-        return null;
+        $cachedConfigurationForWorkbench = static::cachedConfigurationForWorkbench();
+
+        if (isset($cachedConfigurationForWorkbench)) {
+            $extraAttributes = $cachedConfigurationForWorkbench->getExtraAttributes();
+            if (isset($extraAttributes) && isset($extraAttributes['dont-discover'])) {
+                return $extraAttributes['dont-discover'];
+            }
+        }
+
+        return [];
     }
 
     /**
@@ -65,12 +58,13 @@ trait InteractsWithWorkbench
      */
     protected function getPackageBootstrappersUsingWorkbench($app)
     {
-        $attributes = isset(static::$cachedConfigurationForWorkbench)
-            ? static::$cachedConfigurationForWorkbench->getExtraAttributes()
-            : [];
+        $cachedConfigurationForWorkbench = static::cachedConfigurationForWorkbench();
 
-        if (empty($bootstrappers = (isset($attributes['bootstrappers']) ? $attributes['bootstrappers'] : null))) {
-            return null;
+        if (isset($cachedConfigurationForWorkbench)) {
+            $extraAttributes = $cachedConfigurationForWorkbench->getExtraAttributes();
+            if (empty(isset($extraAttributes) && isset($extraAttributes['bootstrappers']) ? $extraAttributes['bootstrappers'] : null)) {
+                return null;
+            }
         }
 
         return static::usesTestingConcern(WithWorkbench::class)
@@ -86,17 +80,66 @@ trait InteractsWithWorkbench
      */
     protected function getPackageProvidersUsingWorkbench($app)
     {
-        $attributes = isset(static::$cachedConfigurationForWorkbench)
-            ? static::$cachedConfigurationForWorkbench->getExtraAttributes()
-            : [];
+        $cachedConfigurationForWorkbench = static::cachedConfigurationForWorkbench();
 
-        if (empty($providers = (isset($attributes['providers']) ? $attributes['providers'] : null))) {
-            return null;
+        if (isset($cachedConfigurationForWorkbench)) {
+            $extraAttributes = $cachedConfigurationForWorkbench->getExtraAttributes();
+            if (empty(isset($extraAttributes) && isset($extraAttributes['providers']) ? $extraAttributes['providers'] : null)) {
+                return null;
+            }
         }
 
         return static::usesTestingConcern(WithWorkbench::class)
             ? Arr::wrap($providers)
             : [];
+    }
+
+    /**
+     * Resolve application Console Kernel implementation.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return string
+     */
+    protected function applicationConsoleKernelUsingWorkbench($app)/*: string*/
+    {
+        if (static::usesTestingConcern(WithWorkbench::class)) {
+            $kernel = Workbench::applicationConsoleKernel();
+            return isset($kernel) ? $kernel : 'Orchestra\Testbench\Console\Kernel';
+        }
+
+        return 'Orchestra\Testbench\Console\Kernel';
+    }
+
+    /**
+     * Get application HTTP Kernel implementation using Workbench.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return string
+     */
+    protected function applicationHttpKernelUsingWorkbench($app)/*: string*/
+    {
+        if (static::usesTestingConcern(WithWorkbench::class)) {
+            $kernel = Workbench::applicationHttpKernel();
+            return isset($kernel) ? $kernel : 'Orchestra\Testbench\Http\Kernel';
+        }
+
+        return 'Orchestra\Testbench\Http\Kernel';
+    }
+
+    /**
+     * Get application HTTP exception handler using Workbench.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return string
+     */
+    protected function applicationExceptionHandlerUsingWorkbench($app)/*: string*/
+    {
+        if (static::usesTestingConcern(WithWorkbench::class)) {
+            $kernel = Workbench::applicationExceptionHandler();
+            return isset($kernel) ? $kernel : 'Orchestra\Testbench\Exceptions\Handler';
+        }
+
+        return 'Orchestra\Testbench\Exceptions\Handler';
     }
 
     /**
@@ -106,25 +149,7 @@ trait InteractsWithWorkbench
      */
     public static function cachedConfigurationForWorkbench()
     {
-        if (! isset(static::$cachedConfigurationForWorkbench)) {
-            switch (true) {
-                case \defined('TESTBENCH_WORKING_PATH'):
-                    $cachedConfigurationForWorkbench = TESTBENCH_WORKING_PATH;
-                    break;
-
-                case ! \is_null(Env::get('TESTBENCH_WORKING_PATH')):
-                    $cachedConfigurationForWorkbench = Env::get('TESTBENCH_WORKING_PATH');
-                    break;
-
-                default:
-                    $cachedConfigurationForWorkbench = getcwd();
-                    break;
-            }
-
-            static::$cachedConfigurationForWorkbench = Config::cacheFromYaml($cachedConfigurationForWorkbench);
-        }
-
-        return static::$cachedConfigurationForWorkbench;
+        return Workbench::configuration();
     }
 
     /**
@@ -156,8 +181,6 @@ trait InteractsWithWorkbench
      */
     public static function teardownAfterClassUsingWorkbench()/*: void*/
     {
-        static::$cachedConfigurationForWorkbench = null;
-
         unset($_ENV['TESTBENCH_APP_BASE_PATH']);
     }
 }

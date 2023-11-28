@@ -3,7 +3,6 @@
 namespace Orchestra\Testbench\Concerns;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 trait InteractsWithPublishedFiles
 {
@@ -248,7 +247,7 @@ trait InteractsWithPublishedFiles
                 ->flatten()
                 ->filter(function ($file) { return $this->app['files']->exists($file); })
                 ->reject(static function ($file) {
-                    return Str::endsWith($file, ['.gitkeep', '.gitignore']);
+                    return str_ends_with($file, '.gitkeep') || str_ends_with($file, '.gitignore');
                 })->all()
         );
     }
@@ -279,7 +278,7 @@ trait InteractsWithPublishedFiles
         $this->app['files']->delete(
             Collection::make($this->app['files']->files($this->app->databasePath('migrations')))
                 ->filter(static function ($file) {
-                    return Str::endsWith($file, '.php');
+                    return str_ends_with($file, '.php');
                 })->all()
         );
     }

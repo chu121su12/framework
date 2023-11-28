@@ -3,14 +3,20 @@
 namespace Orchestra\Testbench;
 
 use Closure;
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Collection;
+use Illuminate\Support\ProcessUtils;
 use Illuminate\Support\Str;
 use Illuminate\Testing\PendingCommand;
+use InvalidArgumentException;
 use Orchestra\Testbench\Foundation\Config;
+use Orchestra\Testbench\Foundation\Env;
 use PHPUnit\Runner\Version;
 use RuntimeException;
+use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Process\Process;
 
 /**
  * Create Laravel application instance.
@@ -23,26 +29,15 @@ use RuntimeException;
  */
 function container(
     /*?string */$basePath = null,
-    /*?callable */$resolvingCallback = null,
-    /*array */$options = [],
+    /*?*/callable $resolvingCallback = null,
+    array $options = [],
     /*?*/Config $config = null
 )/*: Foundation\Application*/ {
-    $basePath = backport_type_check('?string', $basePath);
-    $resolvingCallback = backport_type_check('?callable', $resolvingCallback);
-    $options = backport_type_check('array', $options);
-
     if ($config instanceof Config) {
-        $hasEnvironmentFile = ! \is_null($config['laravel'])
-            ? file_exists($config['laravel'].'/.env')
-            : (! \is_null($basePath) && file_exists("{$basePath}/.env"));
-
-        return (new Foundation\Application(isset($config['laravel']) ? $config['laravel'] : $basePath, $resolvingCallback))->configure(array_merge($options, [
-            'load_environment_variables' => $hasEnvironmentFile,
-            'extra' => $config->getExtraAttributes(),
-        ]));
+        return Foundation\Application::makeFromConfig($config, $resolvingCallback, $options);
     }
 
-    return (new Foundation\Application($basePath, $resolvingCallback))->configure($options);
+    return Foundation\Application::make($basePath, $resolvingCallback, $options);
 }
 
 /**
@@ -60,6 +55,37 @@ function artisan(Contracts\TestCase $testbench, /*string */$command, array $para
     $command = $testbench->artisan($command, $parameters);
 
     return $command instanceof PendingCommand ? $command->run() : $command;
+}
+
+/**
+ * Run remote action using Testbench CLI.
+ *
+ * @param  string  $command
+ * @param  array  $env
+ * @return \Symfony\Component\Process\Process
+ */
+function remote(/*string */$command, array $env = [])/*: Process*/
+{
+    $command = backport_type_check('string', $command);
+
+    $phpBinary = transform(
+        \defined('PHP_BINARY') ? PHP_BINARY : (new PhpExecutableFinder())->find(),
+        static function ($phpBinary) {
+            return ProcessUtils::escapeArgument((string) $phpBinary);
+        }
+    );
+
+    $binary = \defined('TESTBENCH_DUSK') ? 'testbench-dusk' : 'testbench';
+
+    $commander = realpath(__DIR__.'/../vendor/autoload.php') !== false
+        ? $binary
+        : ProcessUtils::escapeArgument((string) package_path("vendor/bin/{$binary}"));
+
+    return SymfonyHelper::processFromShellCommandline(
+        /*command: */implode(' ', [$phpBinary, $commander, $command]),
+        /*cwd: */package_path(),
+        /*env: */array_merge(defined_environment_variables(), $env)
+    );
 }
 
 /**
@@ -93,6 +119,22 @@ function after_resolving(ApplicationContract $app, /*string */$name, /*?*/Closur
 function default_environment_variables()/*: array*/
 {
     return [];
+}
+
+/**
+ * Get defined environment variables.
+ *
+ * @return array<string, mixed>
+ */
+function defined_environment_variables()/*: array*/
+{
+    return Collection::make(array_merge($_SERVER, $_ENV))
+        ->keys()
+        ->mapWithKeys(static function (/*string */$key) {
+            $key = backport_type_check('string', $key);
+            return [$key => Env::forward($key)];
+        })->put('TESTBENCH_WORKING_PATH', package_path())
+        ->all();
 }
 
 /**
@@ -130,7 +172,7 @@ function transform_relative_path(/*string */$path, /*string */$workingPath)/*: s
 
     $workingPath = backport_type_check('string', $workingPath);
 
-    return Str::startsWith($path, './')
+    return str_starts_with($path, './')
         ? str_replace('./', rtrim($workingPath, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR, $path)
         : $path;
 }
@@ -149,13 +191,13 @@ function package_path(/*string */$path = '')/*: string*/
         ? TESTBENCH_WORKING_PATH
         : getcwd();
 
-    if (Str::startsWith($path, './')) {
+    if (str_starts_with($path, './')) {
         return transform_relative_path($path, $workingPath);
     }
 
-    $path != '' ? DIRECTORY_SEPARATOR.ltrim($path, DIRECTORY_SEPARATOR) : '';
+    $path = $path != '' ? ltrim($path, DIRECTORY_SEPARATOR) : '';
 
-    return $workingPath.DIRECTORY_SEPARATOR.$path;
+    return rtrim($workingPath, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$path;
 }
 
 /**
@@ -174,6 +216,29 @@ function workbench()/*: array*/
 }
 
 /**
+ * Get the migration path by type.
+ *
+ * @param  ?string  $type
+ * @return string
+ *
+ * @throws \InvalidArgumentException
+ */
+function laravel_migration_path(/*?string */$type = null)/*: string*/
+{
+    $type = backport_type_check('?string', $type);
+
+    $path = realpath(
+        \is_null($type) ? base_path('migrations') : base_path("migrations/{$type}")
+    );
+
+    if ($path === false) {
+        throw new InvalidArgumentException(sprintf('Unable to resolve migration path for type [%s]', isset($type) ? $type : 'laravel'));
+    }
+
+    return $path;
+}
+
+/**
  * Get the path to the workbench folder.
  *
  * @param  string  $path
@@ -183,7 +248,7 @@ function workbench_path(/*string */$path = '')/*: string*/
 {
     $path = backport_type_check('string', $path);
 
-    $path != '' ? DIRECTORY_SEPARATOR.ltrim($path, DIRECTORY_SEPARATOR) : '';
+    $path = $path != '' ? ltrim($path, DIRECTORY_SEPARATOR) : '';
 
     return package_path('workbench'.DIRECTORY_SEPARATOR.$path);
 }

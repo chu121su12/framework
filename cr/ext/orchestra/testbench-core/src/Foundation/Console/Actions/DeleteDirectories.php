@@ -12,7 +12,7 @@ class DeleteDirectories extends Action
     public /*?ComponentsFactory */$components;
 
     /**
-     * Construct a new delete directories instance.
+     * Construct a new action instance.
      *
      * @param  \Illuminate\Filesystem\Filesystem  $filesystem
      * @param  \Illuminate\Console\View\Components\Factory  $components
