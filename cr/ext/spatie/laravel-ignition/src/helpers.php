@@ -1,4 +1,4 @@
- <?php
+<?php
 
 use Spatie\LaravelIgnition\Renderers\ErrorPageRenderer;
 
