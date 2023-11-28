@@ -74,7 +74,7 @@ class PurgeSkeletonCommand extends Command
                 ->map(function ($file) { return $this->laravel->basePath($file); })
                 ->map(static function ($file) use ($filesystem) {
                     return str_contains($file, '*')
-                        ? [...$filesystem->glob($file)]
+                        ? \array_merge([], $filesystem->glob($file))
                         : $file;
                 })->flatten()
                 ->reject(function ($file) { return str_contains($file, '*'); })

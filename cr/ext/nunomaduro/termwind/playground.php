@@ -4,7 +4,7 @@ require_once __DIR__.'/vendor/autoload.php';
 
 use function Termwind\render;
 
-render(<<<'HTML'
+$html = <<<'HTML'
     <div class="ml-2">
         <pre>
   ─                   ─        ─    ─
@@ -19,4 +19,6 @@ render(<<<'HTML'
             Create portable PHP CLI applications w/ PHP Micro
         </em>
     </div>
-HTML);
+HTML;
+
+render($html);

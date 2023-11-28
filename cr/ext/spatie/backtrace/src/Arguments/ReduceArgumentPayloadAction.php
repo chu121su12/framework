@@ -15,7 +15,7 @@ class ReduceArgumentPayloadAction
         $this->argumentReducers = $argumentReducers;
     }
 
-    public function reduce($argument, /*bool */$includeObjectType = false): ReducedArgument
+    public function reduce($argument, /*bool */$includeObjectType = false)/*: ReducedArgument*/
     {
         $includeObjectType = backport_type_check('bool', $includeObjectType);
 

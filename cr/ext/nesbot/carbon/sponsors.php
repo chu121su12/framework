@@ -13,7 +13,7 @@ use Carbon\CarbonImmutable;
 
 require_once __DIR__.'/vendor/autoload.php';
 
-function getOpenCollectiveSponsors(): string
+function getOpenCollectiveSponsors()/*: string*/
 {
     $members = json_decode(file_get_contents('https://opencollective.com/carbon/members/all.json'), true);
     $sixMonthsAgo = CarbonImmutable::parse('now - 6 months')->format('Y-m-d h:i');

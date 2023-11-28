@@ -70,14 +70,18 @@ class TestCommand extends Command
      */
     public function phpUnitConfigurationFile()
     {
-        $configurationFile = str_replace('./', '', $this->option('configuration') ?? 'phpunit.xml');
+        $configurationOption = $this->option('configuration');
 
-        return Collection::make([
+        $configurationFile = str_replace('./', '', isset($configurationOption) ? $configurationOption : 'phpunit.xml');
+
+        $firstConfigurationPath = Collection::make([
             package_path('/'.$configurationFile),
             package_path('/'.$configurationFile.'.dist'),
         ])->filter(static function ($path) {
             return file_exists($path);
-        })->first() ?? './';
+        })->first();
+
+        return isset($firstConfigurationPath) ? $firstConfigurationPath : './';
     }
 
     /**

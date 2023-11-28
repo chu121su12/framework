@@ -105,7 +105,7 @@ class Progress extends Prompt
         if ($this->hint !== '') {
             // Just pause for one moment to show the final hint
             // so it doesn't look like it was skipped
-            usleep(250_000);
+            usleep(250 * 1000);
         }
 
         $this->finish();

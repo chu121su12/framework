@@ -7,7 +7,7 @@ use Monolog\Handler\AbstractProcessingHandler;
 
 class ThrowExceptionLogHandler extends AbstractProcessingHandler
 {
-    protected function write(array $record): void
+    protected function write(array $record)/*: void*/
     {
         throw new Exception('Thrown inside ThrowExceptionLogHandler');
     }

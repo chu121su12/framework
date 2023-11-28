@@ -78,7 +78,7 @@ class MultiSearchPromptRenderer extends Renderer implements Scrolling
         return preg_replace(
             '/\s$/',
             $this->cyan('…'),
-            $this->pad($prompt->valueWithCursor($maxWidth - 1).'  ', min($this->longest($prompt->matches(), padding: 2), $maxWidth))
+            $this->pad($prompt->valueWithCursor($maxWidth - 1).'  ', min($this->longest($prompt->matches(), /*padding: */2), $maxWidth))
         );
     }
 

@@ -139,7 +139,7 @@ class Commander
 
                     (new LoadMigrationsFromArray(
                         isset($this->config['migrations']) ? $this->config['migrations'] : [],
-                        isset($this->config['seeders']) ? $this->config['seeders'] : false,
+                        isset($this->config['seeders']) ? $this->config['seeders'] : false
                     ))->bootstrap($app);
 
                     \call_user_func($this->resolveApplicationCallback(), $app);

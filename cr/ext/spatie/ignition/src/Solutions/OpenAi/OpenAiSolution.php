@@ -27,12 +27,12 @@ class OpenAiSolution implements Solution
     protected /*string|null         */$applicationPath;
 
     public function __construct(
-        protected /*Throwable           */$throwable,
-        protected /*string              */$openAiKey,
-        protected /*CacheInterface|null */$cache = null,
-        protected /*int|null            */$cacheTtlInSeconds = 60,
-        protected /*string|null         */$applicationType = null,
-        protected /*string|null         */$applicationPath = null
+        /*protected *//*Throwable           */$throwable,
+        /*protected *//*string              */$openAiKey,
+        /*protected *//*CacheInterface|null */$cache = null,
+        /*protected *//*int|null            */$cacheTtlInSeconds = 60,
+        /*protected *//*string|null         */$applicationType = null,
+        /*protected *//*string|null         */$applicationPath = null
     ) {
         backport_type_throwable($throwable);
         $this->throwable = $throwable;

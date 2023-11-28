@@ -33,7 +33,7 @@ final class TestException
         //
     }
 
-    public function getThrowable(): Throwable
+    public function getThrowable()/*: Throwable*/
     {
         return $this->throwable;
     }

@@ -27,7 +27,9 @@ class OpenAiSolutionProvider implements HasSolutionsForThrowable
         $this->applicationType = backport_type_check('string|null', $applicationType);
         $this->applicationPath = backport_type_check('string|null', $applicationPath);
 
-        $this->cache ??= new DummyCache();
+        if (!isset($this->cache)) {
+            $this->cache = new DummyCache();
+        }
     }
 
     public function canSolve(/*Throwable */$throwable)/*: bool*/
