@@ -55,7 +55,7 @@ class TestEloquentModelWithAttributeCast extends Model
     {
         return new Attribute(
             function ($value) {
-                return backport_json_decode($value, true);
+                return json_decode($value, true);
             },
             function ($value) {
                 return json_encode($value);

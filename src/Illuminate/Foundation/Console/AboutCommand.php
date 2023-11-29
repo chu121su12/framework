@@ -2,6 +2,7 @@
 
 namespace Illuminate\Foundation\Console;
 
+use Closure;
 use Illuminate\Console\Command;
 use Illuminate\Support\Composer;
 use Illuminate\Support\Str;
@@ -132,7 +133,7 @@ class AboutCommand extends Command
                 ->each(function ($detail) {
                     list($label, $value) = $detail;
 
-                    $this->components->twoColumnDetail($label, value($value));
+                    $this->components->twoColumnDetail($label, value($value, false));
                 });
         });
     }
@@ -149,7 +150,7 @@ class AboutCommand extends Command
             return [
                 (string) Str::of($section)->snake() => $data->mapWithKeys(function ($item, $key) {
                     return [
-                        $this->toSearchKeyword($item[0]) => value($item[1]),
+                        $this->toSearchKeyword($item[0]) => value($item[1], true),
                     ];
                 }),
             ];
@@ -165,44 +166,48 @@ class AboutCommand extends Command
      */
     protected function gatherApplicationInformation()
     {
-        static::addToSection('Environment', function () {
-            $composerVersion = $this->composer->getVersion();
+        $formatEnabledStatus = function ($value) { return $value ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF'; };
+        $formatCachedStatus = function ($value) { return $value ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>'; };
 
-            return [
-                'Application Name' => config('app.name'),
-                'Laravel Version' => $this->laravel->version(),
-                'PHP Version' => phpversion(),
-                'Composer Version' => isset($composerVersion) ? $composerVersion : '<fg=yellow;options=bold>-</>',
-                'Environment' => $this->laravel->environment(),
-                'Debug Mode' => config('app.debug') ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF',
-                'URL' => Str::of(config('app.url'))->replace(['http://', 'https://'], ''),
-                'Maintenance Mode' => $this->laravel->isDownForMaintenance() ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF',
-            ];
-        });
-
-        static::addToSection('Cache', function () { return [
-            'Config' => $this->laravel->configurationIsCached() ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
-            'Events' => $this->laravel->eventsAreCached() ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
-            'Routes' => $this->laravel->routesAreCached() ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
-            'Views' => $this->hasPhpFiles($this->laravel->storagePath('framework/views')) ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>',
+        static::addToSection('Environment', function () use ($formatEnabledStatus) { return [
+            'Application Name' => config('app.name'),
+            'Laravel Version' => $this->laravel->version(),
+            'PHP Version' => phpversion(),
+            'Composer Version' => $this->composer->getVersion() ?? '<fg=yellow;options=bold>-</>',
+            'Environment' => $this->laravel->environment(),
+            'Debug Mode' => static::format(config('app.debug'), /*console: */$formatEnabledStatus),
+            'URL' => Str::of(config('app.url'))->replace(['http://', 'https://'], ''),
+            'Maintenance Mode' => static::format($this->laravel->isDownForMaintenance(), /*console: */$formatEnabledStatus),
         ]; });
 
-        $logChannel = config('logging.default');
+        static::addToSection('Cache', function () use ($formatCachedStatus) { return [
+            'Config' => static::format($this->laravel->configurationIsCached(), /*console: */$formatCachedStatus),
+            'Events' => static::format($this->laravel->eventsAreCached(), /*console: */$formatCachedStatus),
+            'Routes' => static::format($this->laravel->routesAreCached(), /*console: */$formatCachedStatus),
+            'Views' => static::format($this->hasPhpFiles($this->laravel->storagePath('framework/views')), /*console: */$formatCachedStatus),
+        ]; });
 
-        if (config('logging.channels.'.$logChannel.'.driver') === 'stack') {
-            $secondary = collect(config('logging.channels.'.$logChannel.'.channels'))
-                ->implode(', ');
-
-            $logs = '<fg=yellow;options=bold>'.$logChannel.'</> <fg=gray;options=bold>/</> '.$secondary;
-        } else {
-            $logs = $logChannel;
-        }
-
-        static::addToSection('Drivers', function () use ($logs) { return array_filter([
+        static::addToSection('Drivers', function () { return array_filter([
             'Broadcasting' => config('broadcasting.default'),
             'Cache' => config('cache.default'),
             'Database' => config('database.default'),
-            'Logs' => $logs,
+            'Logs' => function ($json) {
+                $logChannel = config('logging.default');
+
+                if (config('logging.channels.'.$logChannel.'.driver') === 'stack') {
+                    $secondary = collect(config('logging.channels.'.$logChannel.'.channels'));
+
+                    return value(static::format(
+                        /*value: */$logChannel,
+                        /*console: */function ($value) use ($secondary) { return '<fg=yellow;options=bold>'.$value.'</> <fg=gray;options=bold>/</> '.$secondary->implode(', '); },
+                        /*json: */function () use ($secondary) { return $secondary->all(); }
+                    ), $json);
+                } else {
+                    $logs = $logChannel;
+                }
+
+                return $logs;
+            },
             'Mail' => config('mail.default'),
             'Octane' => config('octane.server'),
             'Queue' => config('queue.default'),
@@ -283,6 +288,27 @@ class AboutCommand extends Command
             ->filter()
             ->map(function ($only) { return $this->toSearchKeyword($only); })
             ->all();
+    }
+
+    /**
+     * Materialize a function that formats a given value for CLI or JSON output.
+     *
+     * @param  mixed  $value
+     * @param  (\Closure():(mixed))|null  $console
+     * @param  (\Closure():(mixed))|null  $json
+     * @return \Closure(bool):mixed
+     */
+    public static function format($value, Closure $console = null, Closure $json = null)
+    {
+        return function ($isJson) use ($value, $console, $json) {
+            if ($isJson === true && $json instanceof Closure) {
+                return value($json, $value);
+            } elseif ($isJson === false && $console instanceof Closure) {
+                return value($console, $value);
+            }
+
+            return value($value);
+        };
     }
 
     /**

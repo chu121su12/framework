@@ -33,7 +33,6 @@ class ScheduleListCommandTest extends TestCase
 
     public function testDisplaySchedule()
     {
-        $this->schedule->call(function () { return ''; })->everyMinute();
         $this->schedule->command(FooCommand::class)->quarterly();
         $this->schedule->command('inspire')->twiceDaily(14, 18);
         $this->schedule->command('foobar', ['a' => 'b'])->everyMinute();

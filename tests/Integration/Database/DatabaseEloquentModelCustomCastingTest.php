@@ -47,7 +47,7 @@ class ValueObject_castUsing_class implements CastsAttributes, SerializesCastable
 
 class DatabaseEloquentModelCustomCastingTest extends DatabaseTestCase
 {
-    protected function defineDatabaseMigrationsAfterDatabaseRefreshed()
+    protected function afterRefreshingDatabase()
     {
         Schema::create('test_eloquent_model_with_custom_casts', function (Blueprint $table) {
             $table->increments('id');

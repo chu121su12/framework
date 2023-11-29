@@ -14,7 +14,7 @@ class InteractsWithContainerTest extends TestCase
         $instance = $this->withoutVite();
 
         $vite = app(Vite::class);
-        $this->assertSame('', $vite(['resources/js/app.js']));
+        $this->assertSame('', $vite(['resources/js/app.js'])->toHtml());
         $this->assertSame($this, $instance);
     }
 
