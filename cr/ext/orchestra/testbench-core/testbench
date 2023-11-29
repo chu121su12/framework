@@ -1,10 +1,19 @@
-#!/usr/bin/env php
+#!/usr/bin/env php5.6
 <?php
 
 define('TESTBENCH_CORE', true);
 define('TESTBENCH_WORKING_PATH', $workingPath = getcwd());
 
-require isset($_composer_autoload_path) ? $_composer_autoload_path : __DIR__.'/vendor/autoload.php';
+foreach ([
+    isset($_composer_autoload_path) ? $_composer_autoload_path : null,
+    __DIR__.'/vendor/autoload.php',
+    __DIR__.'/../autoload.php',
+] as $_autoload_path) {
+    if ($_autoload_path && file_exists($_autoload_path)) {
+        require $_autoload_path;
+        break;
+    }
+}
 
 $config = Orchestra\Testbench\Foundation\Config::loadFromYaml(
     /*workingPath: */$workingPath,

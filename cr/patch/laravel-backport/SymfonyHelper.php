@@ -166,10 +166,10 @@ class SymfonyHelper
         $timeout = backport_type_check('?float', $timeout);
 
         if (windows_os()) {
-            return new Process($command, $cwd, null, $input, $timeout);
+            return (new Process($command, $cwd, null, $input, $timeout))->inheritEnvironmentVariables();
         }
 
-        return new Process($command, $cwd, $env, $input, $timeout);
+        return (new Process($command, $cwd, $env, $input, $timeout))->inheritEnvironmentVariables();
     }
 
     public static function processFromShellCommandline($command, $cwd = null, array $env = null, $input = null, $timeout = 60)

@@ -222,7 +222,7 @@ class Composer
      */
     protected function getProcess(array $command, array $env = [])
     {
-        return (new Process($command, $this->workingPath, $env))->setTimeout(null);
+        return (new Process($command, $this->workingPath, $env))->inheritEnvironmentVariables()->setTimeout(null);
     }
 
     /**

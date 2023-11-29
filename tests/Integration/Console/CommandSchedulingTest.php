@@ -93,6 +93,7 @@ class CommandSchedulingTest extends TestCase
         if ($background) {
             // Since our command is running in a separate process, we need to wait
             // until it has finished executing before running our assertions.
+            // Note: on slower machine this test may fail
             $this->waitForLogMessages(...$expected);
         }
 

@@ -173,7 +173,7 @@ class AboutCommand extends Command
             'Application Name' => config('app.name'),
             'Laravel Version' => $this->laravel->version(),
             'PHP Version' => phpversion(),
-            'Composer Version' => $this->composer->getVersion() ?? '<fg=yellow;options=bold>-</>',
+            'Composer Version' => $this->composer->getVersion() !== null ? $this->composer->getVersion() : '<fg=yellow;options=bold>-</>',
             'Environment' => $this->laravel->environment(),
             'Debug Mode' => static::format(config('app.debug'), /*console: */$formatEnabledStatus),
             'URL' => Str::of(config('app.url'))->replace(['http://', 'https://'], ''),
@@ -243,7 +243,7 @@ class AboutCommand extends Command
     {
         $section = backport_type_check('string', $section);
 
-        $path = backport_type_check('?string', $path);
+        $value = backport_type_check('?string', $value);
 
         static::$customDataResolvers[] = function () use ($section, $data, $value) {
             return static::addToSection($section, $data, $value);

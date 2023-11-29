@@ -58,12 +58,16 @@ class Signals
             $this->setHandlers($handlers);
         });
 
-        $this->registry->register($signal, $callback);
+        if (\function_exists('pcntl_signal_get_handler')) {
+            $this->registry->register($signal, $callback);
+        }
 
         with($this->getHandlers(), function ($handlers) use ($signal) {
-            $lastHandlerInserted = array_pop($handlers[$signal]);
+            $lastHandlerInserted = $handlers[$signal] ? array_pop($handlers[$signal]) : null;
 
-            array_unshift($handlers[$signal], $lastHandlerInserted);
+            if ($lastHandlerInserted) {
+                array_unshift($handlers[$signal], $lastHandlerInserted);
+            }
 
             $this->setHandlers($handlers);
         });
@@ -76,7 +80,7 @@ class Signals
      */
     protected function initializeSignal($signal)
     {
-        return is_callable($existingHandler = pcntl_signal_get_handler($signal))
+        return \function_exists('pcntl_signal_get_handler') && is_callable($existingHandler = pcntl_signal_get_handler($signal))
             ? [$existingHandler]
             : null;
     }

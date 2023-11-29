@@ -48,7 +48,7 @@ class DbCommand extends Command
             array_merge([$this->getCommand($connection)], $this->commandArguments($connection)),
             null,
             $this->commandEnvironment($connection)
-        ))->setTimeout(null)->setTty(true)->mustRun(function ($type, $buffer) {
+        ))->inheritEnvironmentVariables()->setTimeout(null)->setTty(true)->mustRun(function ($type, $buffer) {
             $this->output->write($buffer);
         });
 

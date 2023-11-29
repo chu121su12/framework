@@ -28,6 +28,7 @@ trait InteractsWithComposerPackages
         );
 
         return ! (new Process($command, $this->laravel->basePath(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
+            ->inheritEnvironmentVariables()
             ->setTimeout(null)
             ->run(function ($type, $output) {
                 $this->output->write($output);

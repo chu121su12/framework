@@ -6,9 +6,12 @@ use Exception;
 use Illuminate\Foundation\Application;
 use Illuminate\Redis\RedisManager;
 use Illuminate\Support\Env;
+use PHPUnit\Framework\Patch\ExtraAssertions;
 
 trait InteractsWithRedis
 {
+    use ExtraAssertions;
+
     /**
      * Indicate connection failed if redis is not available.
      *
@@ -41,6 +44,8 @@ trait InteractsWithRedis
         $app = isset($this->app) ? $this->app : new Application;
         $host = Env::get('REDIS_HOST', '127.0.0.1');
         $port = Env::get('REDIS_PORT', 6379);
+
+        $this->skipWithInactiveSocketConnection($this, $host, $port);
 
         foreach (static::redisDriverProvider() as $driver) {
             $this->redis[$driver[0]] = new RedisManager($app, $driver[0], [

@@ -119,7 +119,7 @@ class TestCommand extends Command
             null,
             // Envs ...
             $parallel ? $this->paratestEnvironmentVariables() : $this->phpunitEnvironmentVariables()
-        ))->setTimeout(null);
+        ))->inheritEnvironmentVariables()->setTimeout(null);
 
         try {
             $process->setTty(! $this->option('without-tty'));

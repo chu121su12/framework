@@ -314,7 +314,7 @@ class PendingProcess
         $command = isset($command) ? $command : $this->command;
 
         $process = is_iterable($command)
-                ? new Process($command, null, $this->environment)
+                ? (new Process($command, null, $this->environment))->inheritEnvironmentVariables()
                 : SymfonyHelper::processFromShellCommandline((string) $command, null, $this->environment);
 
         $process->setWorkingDirectory((string) (isset($this->path) ? $this->path : getcwd()));

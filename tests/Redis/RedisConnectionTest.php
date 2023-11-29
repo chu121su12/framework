@@ -595,9 +595,14 @@ class RedisConnectionTest extends TestCase
             $this->markTestSkipped('PhpRedis does not support persistent connections with PHP_ZTS enabled.');
         }
 
+        $connections = $this->connections();
+        if (! isset($connections['persistent'])) {
+            $this->markTestSkipped('Missing persistent attribute.');
+        }
+
         $this->assertSame(
             'laravel',
-            $this->connections()['persistent']->getPersistentID()
+            $connections['persistent']->getPersistentID()
         );
     }
 

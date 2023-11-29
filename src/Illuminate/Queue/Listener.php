@@ -118,13 +118,13 @@ class Listener
             $command = $this->addEnvironment($command, $options);
         }
 
-        return new Process(
+        return (new Process(
             $command,
             $this->commandPath,
             null,
             null,
             $options->timeout
-        );
+        ))->inheritEnvironmentVariables();
     }
 
     /**

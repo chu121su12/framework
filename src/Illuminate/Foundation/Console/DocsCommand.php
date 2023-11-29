@@ -604,11 +604,11 @@ class DocsCommand extends Command
             throw new \ErrorException('require(): Filename cannot be empty');
         }
 
-        $process = new Process([
+        $process = (new Process([
             (new PhpExecutableFinder)->find(false),
             '-l',
             $path,
-        ]);
+        ]))->inheritEnvironmentVariables();
 
         $output = '';
 

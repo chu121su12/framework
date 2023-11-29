@@ -53,6 +53,10 @@ class CacheMemcachedConnectorTest extends TestCase
     #[RequiresPhpExtension('memcached')]
     public function testServersAreAddedCorrectlyWithValidOptions()
     {
+        if (! class_exists(Memcached::class)) {
+            $this->markTestSkipped('cache');
+        }
+
         $validOptions = [
             Memcached::OPT_NO_BLOCK => true,
             Memcached::OPT_CONNECT_TIMEOUT => 2000,
@@ -75,6 +79,10 @@ class CacheMemcachedConnectorTest extends TestCase
     #[RequiresPhpExtension('memcached')]
     public function testServersAreAddedCorrectlyWithSaslCredentials()
     {
+        if (! class_exists(Memcached::class)) {
+            $this->markTestSkipped('cache');
+        }
+
         $saslCredentials = ['foo', 'bar'];
 
         $memcached = $this->memcachedMockWithAddServer();

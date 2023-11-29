@@ -34,6 +34,10 @@ class Number
 
         $precision = backport_type_check('?int', $precision);
 
+        if (\is_nan($number)) {
+            return 'NaN';
+        }
+
         $number = backport_type_check('int|float', $number);
 
         static::ensureIntlExtensionIsInstalled();

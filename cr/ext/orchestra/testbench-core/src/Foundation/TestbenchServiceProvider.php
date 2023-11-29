@@ -19,11 +19,21 @@ class TestbenchServiceProvider extends ServiceProvider
         $workingPath = \defined('TESTBENCH_WORKING_PATH') ? TESTBENCH_WORKING_PATH : null;
 
         AboutCommand::add('Testbench', function () use ($workingPath) { return array_filter([
-            'Core Version' => InstalledVersions::getPrettyVersion('orchestra/testbench-core'),
+            'Core Version' => $this->getOwnVersion(),
             'Dusk Version' => InstalledVersions::isInstalled('orchestra/testbench-dusk') ? InstalledVersions::getPrettyVersion('orchestra/testbench-dusk') : null,
             'Skeleton Path' => str_replace($workingPath, '', $this->app->basePath()),
             'Version' => InstalledVersions::isInstalled('orchestra/testbench') ? InstalledVersions::getPrettyVersion('orchestra/testbench') : null,
         ]); });
+    }
+
+    protected function getOwnVersion()
+    {
+        try {
+            return InstalledVersions::getPrettyVersion('orchestra/testbench-core');
+        }
+        catch (\OutOfBoundsException $_e) {
+            return \file_get_contents(__DIR__.'/../../version.text');
+        }
     }
 
     /**

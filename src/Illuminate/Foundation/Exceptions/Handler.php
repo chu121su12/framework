@@ -625,7 +625,7 @@ class Handler implements ExceptionHandlerContract
                     return isset(Response::$statusTexts[$status]) ? Response::$statusTexts[$status] : 'Whoops, looks like something went wrong.';
                 }),
                 $e
-            ),
+            );
             case $e instanceof AuthorizationException && ! $e->hasStatus(): return new AccessDeniedHttpException($e->getMessage(), $e);
             case $e instanceof TokenMismatchException: return new HttpException(419, $e->getMessage(), $e);
             case $e instanceof SuspiciousOperationException: return new NotFoundHttpException('Bad hostname provided.', $e);

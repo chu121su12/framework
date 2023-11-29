@@ -1,4 +1,7 @@
 
+basic install:
+apt install --no-install-recommends php-cli php-gd php-gmp php-json php-mbstring php-sqlite3 php-xml
+
 uncomment block:
 - to pass tests
 

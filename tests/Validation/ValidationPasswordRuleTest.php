@@ -125,6 +125,8 @@ class ValidationPasswordRuleTest extends TestCase
      */
     public function testUncompromised()
     {
+        $this->skipWithInactiveSocketConnection($this, 'api.pwnedpasswords.com');
+
         $this->fails(Password::min(2)->uncompromised(), [
             '123456',
             'password',

@@ -12,6 +12,7 @@ class AboutCommandTest extends TestCase
      * @param  \Closure(bool):mixed  $format
      * @param  mixed  $expected
      */
+    /** @dataProvider cliDataProvider */
     #[DataProvider('cliDataProvider')]
     public function testItCanFormatForCliInterface($format, $expected)
     {
@@ -20,14 +21,15 @@ class AboutCommandTest extends TestCase
 
     public static function cliDataProvider()
     {
-        yield [AboutCommand::format(true, console: fn ($value) => $value === true ? 'YES' : 'NO'), 'YES'];
-        yield [AboutCommand::format(false, console: fn ($value) => $value === true ? 'YES' : 'NO'), 'NO'];
+        yield [AboutCommand::format(true, /*console: */function ($value) { return $value === true ? 'YES' : 'NO'; }), 'YES'];
+        yield [AboutCommand::format(false, /*console: */function ($value) { return $value === true ? 'YES' : 'NO'; }), 'NO'];
     }
 
     /**
      * @param  \Closure(bool):mixed  $format
      * @param  mixed  $expected
      */
+    /** @dataProvider jsonDataProvider */
     #[DataProvider('jsonDataProvider')]
     public function testItCanFormatForJsonInterface($format, $expected)
     {
@@ -36,7 +38,7 @@ class AboutCommandTest extends TestCase
 
     public static function jsonDataProvider()
     {
-        yield [AboutCommand::format(true, json: fn ($value) => $value === true ? 'YES' : 'NO'), 'YES'];
-        yield [AboutCommand::format(false, json: fn ($value) => $value === true ? 'YES' : 'NO'), 'NO'];
+        yield [AboutCommand::format(true, /*Closure $console = */null, /*json: */function ($value) { return $value === true ? 'YES' : 'NO'; }), 'YES'];
+        yield [AboutCommand::format(false, /*Closure $console = */null, /*json: */function ($value) { return $value === true ? 'YES' : 'NO'; }), 'NO'];
     }
 }

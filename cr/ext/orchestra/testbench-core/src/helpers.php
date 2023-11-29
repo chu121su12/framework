@@ -79,7 +79,19 @@ function remote(/*string */$command, array $env = [])/*: Process*/
 
     $commander = realpath(__DIR__.'/../vendor/autoload.php') !== false
         ? $binary
-        : ProcessUtils::escapeArgument((string) package_path("vendor/bin/{$binary}"));
+        : ProcessUtils::escapeArgument(call_user_func(function () use ($binary) {
+            foreach ([
+                "vendor/bin/{$binary}",
+                "cr/ext/orchestra/testbench-core/{$binary}",
+            ] as $path) {
+                $binaryPath = (string) package_path($path);
+                if (file_exists($binaryPath)) {
+                    return $binaryPath;
+                }
+            }
+
+            throw new RuntimeException('Unable to find testbench binary');
+        }));
 
     return SymfonyHelper::processFromShellCommandline(
         /*command: */implode(' ', [$phpBinary, $commander, $command]),
