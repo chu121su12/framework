@@ -57,12 +57,8 @@ class ConfigPublishCommand extends Command
      * @param  string  $destination
      * @return void
      */
-    protected function publish(/*string */$name, /*string */$file, /*string */$destination)
+    protected function publish(string $name, string $file, string $destination)
     {
-        $name = backport_type_check('string', $name);
-        $file = backport_type_check('string', $file);
-        $destination = backport_type_check('string', $destination);
-
         if (file_exists($destination) && ! $this->option('force')) {
             $this->components->error("The '{$name}' configuration file already exists.");
 

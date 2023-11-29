@@ -9,59 +9,6 @@ use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\HtmlString;
 use Mockery;
 
-class InteractsWithContainer_withoutVite_class
-        {
-            public function __invoke()
-            {
-                return '';
-            }
-
-            public function __call($name, $arguments)
-            {
-                return '';
-            }
-
-            public function __toString()
-            {
-                return '';
-            }
-
-            public function useIntegrityKey()
-            {
-                return $this;
-            }
-
-            public function useBuildDirectory()
-            {
-                return $this;
-            }
-
-            public function useHotFile()
-            {
-                return $this;
-            }
-
-            public function withEntryPoints()
-            {
-                return $this;
-            }
-
-            public function useScriptTagAttributes()
-            {
-                return $this;
-            }
-
-            public function useStyleTagAttributes()
-            {
-                return $this;
-            }
-
-            public function preloadedAssets()
-            {
-                return [];
-            }
-        }
-
 trait InteractsWithContainer
 {
     /**
@@ -166,7 +113,78 @@ trait InteractsWithContainer
 
         Facade::clearResolvedInstance(Vite::class);
 
-        $this->swap(Vite::class, new InteractsWithContainer_withoutVite_class);
+        $this->swap(Vite::class, new class extends Vite
+        {
+            public function __invoke($entrypoints, $buildDirectory = null)
+            {
+                return new HtmlString('');
+            }
+
+            public function __call($method, $parameters)
+            {
+                return '';
+            }
+
+            public function __toString()
+            {
+                return '';
+            }
+
+            public function useIntegrityKey($key)
+            {
+                return $this;
+            }
+
+            public function useBuildDirectory($path)
+            {
+                return $this;
+            }
+
+            public function useHotFile($path)
+            {
+                return $this;
+            }
+
+            public function withEntryPoints($entryPoints)
+            {
+                return $this;
+            }
+
+            public function useScriptTagAttributes($attributes)
+            {
+                return $this;
+            }
+
+            public function useStyleTagAttributes($attributes)
+            {
+                return $this;
+            }
+
+            public function usePreloadTagAttributes($attributes)
+            {
+                return $this;
+            }
+
+            public function preloadedAssets()
+            {
+                return [];
+            }
+
+            public function reactRefresh()
+            {
+                return '';
+            }
+
+            public function content($asset, $buildDirectory = null)
+            {
+                return '';
+            }
+
+            public function asset($asset, $buildDirectory = null)
+            {
+                return '';
+            }
+        });
 
         return $this;
     }

@@ -9,10 +9,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
-/**
- * @requires extension pdo_mysql
- * @requires OS Linux|Darwin
- */
 #[RequiresOperatingSystem('Linux|Darwin')]
 #[RequiresPhpExtension('pdo_mysql')]
 class DatabaseMySqlConnectionTest extends MySqlTestCase
@@ -22,16 +18,7 @@ class DatabaseMySqlConnectionTest extends MySqlTestCase
     const JSON_COL = 'json_col';
     const FLOAT_VAL = 0.2;
 
-    protected function setUp()/*: void*/
-    {
-        parent::setUp();
-
-        if (!$this->supportsJson()) {
-            $this->markTestSkipped('This database does not support JSON type.');
-        }
-    }
-
-    protected function defineDatabaseMigrationsAfterDatabaseRefreshed()
+    protected function afterRefreshingDatabase()
     {
         if (! Schema::hasTable(self::TABLE)) {
             Schema::create(self::TABLE, function (Blueprint $table) {
@@ -46,7 +33,6 @@ class DatabaseMySqlConnectionTest extends MySqlTestCase
         Schema::drop(self::TABLE);
     }
 
-    /** @dataProvider floatComparisonsDataProvider */
     #[DataProvider('floatComparisonsDataProvider')]
     public function testJsonFloatComparison($value, $operator, $shouldMatch)
     {
@@ -81,7 +67,6 @@ class DatabaseMySqlConnectionTest extends MySqlTestCase
         $this->assertEquals(self::FLOAT_VAL, DB::table(self::TABLE)->value(self::FLOAT_COL));
     }
 
-    /** @dataProvider jsonWhereNullDataProvider */
     #[DataProvider('jsonWhereNullDataProvider')]
     public function testJsonWhereNull($expected, $key, array $value = ['value' => 123])
     {
@@ -90,7 +75,6 @@ class DatabaseMySqlConnectionTest extends MySqlTestCase
         $this->assertSame($expected, DB::table(self::TABLE)->whereNull(self::JSON_COL.'->'.$key)->exists());
     }
 
-    /** @dataProvider jsonWhereNullDataProvider */
     #[DataProvider('jsonWhereNullDataProvider')]
     public function testJsonWhereNotNull($expected, $key, array $value = ['value' => 123])
     {
@@ -133,7 +117,6 @@ class DatabaseMySqlConnectionTest extends MySqlTestCase
         $this->assertSame(1, $updatedCount);
     }
 
-    /** @dataProvider jsonContainsKeyDataProvider */
     #[DataProvider('jsonContainsKeyDataProvider')]
     public function testWhereJsonContainsKey($count, $column)
     {

@@ -67,13 +67,13 @@ class ApiInstallCommand extends Command
             (new Filesystem)->replaceInFile(
                 '// api: ',
                 'api: ',
-                $appBootstrapPath
+                $appBootstrapPath,
             );
         } elseif (str_contains($content, 'web: __DIR__.\'/../routes/web.php\',')) {
             (new Filesystem)->replaceInFile(
                 'web: __DIR__.\'/../routes/web.php\',',
                 'web: __DIR__.\'/../routes/web.php\','.PHP_EOL.'        api: __DIR__.\'/../routes/api.php\',',
-                $appBootstrapPath
+                $appBootstrapPath,
             );
         } else {
             $this->components->warn('Unable to automatically add API route definition to bootstrap file. API route file should be registered manually.');

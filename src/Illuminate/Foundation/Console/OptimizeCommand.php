@@ -32,11 +32,11 @@ class OptimizeCommand extends Command
         $this->components->info('Caching framework bootstrap, configuration, and metadata.');
 
         collect([
-            'config' => function () { return $this->callSilent('config:cache') == 0; },
-            'events' => function () { return $this->callSilent('event:cache') == 0; },
-            'routes' => function () { return $this->callSilent('route:cache') == 0; },
-            'views' => function () { return $this->callSilent('view:cache') == 0; },
-        ])->each(function ($task, $description) { return $this->components->task($description, $task); });
+            'config' => fn () => $this->callSilent('config:cache') == 0,
+            'events' => fn () => $this->callSilent('event:cache') == 0,
+            'routes' => fn () => $this->callSilent('route:cache') == 0,
+            'views' => fn () => $this->callSilent('view:cache') == 0,
+        ])->each(fn ($task, $description) => $this->components->task($description, $task));
 
         $this->newLine();
     }
