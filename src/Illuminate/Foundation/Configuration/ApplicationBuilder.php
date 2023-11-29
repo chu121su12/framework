@@ -20,13 +20,16 @@ class ApplicationBuilder
      *
      * @var array
      */
-    protected array $pageMiddleware = [];
+    protected /*array */$pageMiddleware = [];
+
+    protected /*Application */$app;
 
     /**
      * Create a new application builder instance.
      */
-    public function __construct(protected Application $app)
+    public function __construct(/*protected */Application $app)
     {
+        $this->app = $app;
     }
 
     /**
@@ -38,12 +41,12 @@ class ApplicationBuilder
     {
         $this->app->singleton(
             \Illuminate\Contracts\Http\Kernel::class,
-            \Illuminate\Foundation\Http\Kernel::class,
+            \Illuminate\Foundation\Http\Kernel::class
         );
 
         $this->app->singleton(
             \Illuminate\Contracts\Console\Kernel::class,
-            \Illuminate\Foundation\Console\Kernel::class,
+            \Illuminate\Foundation\Console\Kernel::class
         );
 
         return $this;
@@ -56,8 +59,10 @@ class ApplicationBuilder
      * @param  bool  $withBootstrapProviders
      * @return $this
      */
-    public function withProviders(array $providers = [], bool $withBootstrapProviders = true)
+    public function withProviders(array $providers = [], /*bool */$withBootstrapProviders = true)
     {
+        $withBootstrapProviders = backport_type_check('bool', $withBootstrapProviders);
+
         RegisterProviders::merge(
             $providers,
             $withBootstrapProviders
@@ -88,8 +93,10 @@ class ApplicationBuilder
      * @param  string  $channels
      * @return $this
      */
-    public function withBroadcasting(string $channels)
+    public function withBroadcasting(/*string */$channels)
     {
+        $channels = backport_type_check('string', $channels);
+
         $this->app->booted(function () use ($channels) {
             Broadcast::routes();
 
@@ -114,15 +121,23 @@ class ApplicationBuilder
      * @param  callable|null  $then
      * @return $this
      */
-    public function withRouting(?Closure $using = null,
-        ?string $web = null,
-        ?string $api = null,
-        ?string $commands = null,
-        ?string $channels = null,
-        ?string $pages = null,
-        string $apiPrefix = 'api',
-        ?callable $then = null)
+    public function withRouting(/*?*/Closure $using = null,
+        /*?string */$web = null,
+        /*?string */$api = null,
+        /*?string */$commands = null,
+        /*?string */$channels = null,
+        /*?string */$pages = null,
+        /*string */$apiPrefix = 'api',
+        /*?*/callable $then = null)
     {
+        $web = backport_type_check('?string', $web);
+        $api = backport_type_check('?string', $api);
+        $commands = backport_type_check('?string', $commands);
+        $channels = backport_type_check('?string', $channels);
+        $pages = backport_type_check('?string', $pages);
+        $apiPrefix = backport_type_check('string', $apiPrefix);
+        $then = backport_type_check('?callable', $then);
+
         if (is_null($using) && (is_string($web) || is_string($api))) {
             $using = $this->buildRoutingCallback($web, $api, $pages, $apiPrefix, $then);
         }
@@ -154,12 +169,18 @@ class ApplicationBuilder
      * @param  callable|null  $then
      * @return \Closure
      */
-    protected function buildRoutingCallback(?string $web,
-        ?string $api,
-        ?string $pages,
-        string $apiPrefix,
-        ?callable $then)
+    protected function buildRoutingCallback(/*?string */$web = null,
+        /*?string */$api = null,
+        /*?string */$pages = null,
+        /*string */$apiPrefix = 'api',
+        /*?*/callable $then = null)
     {
+        $web = backport_type_check('?string', $web);
+        $api = backport_type_check('?string', $api);
+        $pages = backport_type_check('?string', $pages);
+        $apiPrefix = backport_type_check('string', $apiPrefix);
+        $then = backport_type_check('?callable', $then);
+
         return function () use ($web, $api, $pages, $apiPrefix, $then) {
             if (is_string($api) && realpath($api) !== false) {
                 Route::middleware('api')->prefix($apiPrefix)->group($api);
@@ -172,7 +193,7 @@ class ApplicationBuilder
             if (is_string($pages) &&
                 realpath($pages) !== false &&
                 class_exists(Folio::class)) {
-                Folio::route($pages, middleware: $this->pageMiddleware);
+                Folio::route($pages, /*middleware: */$this->pageMiddleware);
             }
 
             if (is_callable($then)) {
@@ -191,8 +212,8 @@ class ApplicationBuilder
     {
         $this->app->afterResolving(HttpKernel::class, function ($kernel) use ($callback) {
             $middleware = (new Middleware)
-                ->auth(redirectTo: fn () => route('login'))
-                ->guest(redirectTo: fn () => route('dashboard'));
+                ->auth(/*redirectTo: */function () { return route('login'); })
+                ->guest(/*redirectTo: */function () { return route('dashboard'); });
 
             $callback($middleware);
 
@@ -218,8 +239,8 @@ class ApplicationBuilder
         }
 
         $this->app->afterResolving(ConsoleKernel::class, function ($kernel) use ($commands) {
-            [$commands, $paths] = collect($commands)->partition(fn ($command) => class_exists($command));
-            [$routes, $paths] = $paths->partition(fn ($path) => is_file($path));
+            list($commands, $paths) = collect($commands)->partition(function ($command) { return class_exists($command); });
+            list($routes, $paths) = $paths->partition(function ($path) { return is_file($path); });
 
             $kernel->addCommands($commands->all());
             $kernel->addCommandPaths($paths->all());
@@ -248,18 +269,22 @@ class ApplicationBuilder
      * @param  callable|null  $using
      * @return $this
      */
-    public function withExceptions(?callable $using = null)
+    public function withExceptions(/*?*/callable $using = null)
     {
+        $using = backport_type_check('?callable', $using);
+
         $this->app->singleton(
             \Illuminate\Contracts\Debug\ExceptionHandler::class,
             \Illuminate\Foundation\Exceptions\Handler::class
         );
 
-        $using ??= fn () => true;
+        if (! isset($using)) {
+            $using = function () { return true; };
+        }
 
         $this->app->afterResolving(
             \Illuminate\Foundation\Exceptions\Handler::class,
-            fn ($handler) => $using(new Exceptions($handler)),
+            function ($handler) use ($using) { return $using(new Exceptions($handler)); }
         );
 
         return $this;

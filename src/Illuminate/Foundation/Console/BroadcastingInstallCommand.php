@@ -77,13 +77,13 @@ class BroadcastingInstallCommand extends Command
             (new Filesystem)->replaceInFile(
                 '// channels: ',
                 'channels: ',
-                $appBootstrapPath,
+                $appBootstrapPath
             );
         } elseif (str_contains($content, 'commands: __DIR__.\'/../routes/console.php\',')) {
             (new Filesystem)->replaceInFile(
                 'commands: __DIR__.\'/../routes/console.php\',',
                 'commands: __DIR__.\'/../routes/console.php\','.PHP_EOL.'        channels: __DIR__.\'/../routes/channels.php\',',
-                $appBootstrapPath,
+                $appBootstrapPath
             );
         } else {
             $this->components->warn('Unable to automatically add channel route definition to bootstrap file. Channel route file should be registered manually.');

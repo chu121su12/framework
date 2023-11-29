@@ -13,7 +13,8 @@ class InteractsWithContainerTest extends TestCase
     {
         $instance = $this->withoutVite();
 
-        $this->assertSame('', app(Vite::class)(['resources/js/app.js'])->toHtml());
+        $vite = app(Vite::class);
+        $this->assertSame('', $vite(['resources/js/app.js'])->toHtml());
         $this->assertSame($this, $instance);
     }
 
@@ -45,7 +46,7 @@ class InteractsWithContainerTest extends TestCase
         $this->assertSame($this, $instance);
     }
 
-    public function testWithoutViteReturnsEmptyArrayForPreloadedAssets(): void
+    public function testWithoutViteReturnsEmptyArrayForPreloadedAssets()/*: void*/
     {
         $instance = $this->withoutVite();
 

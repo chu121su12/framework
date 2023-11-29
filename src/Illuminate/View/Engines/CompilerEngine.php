@@ -101,8 +101,10 @@ class CompilerEngine extends PhpEngine
      *
      * @throws \Throwable
      */
-    protected function handleViewException(Throwable $e, $obLevel)
+    protected function handleViewException(/*Throwable */$e, $obLevel)
     {
+        backport_type_throwable($e);
+
         if ($e instanceof HttpException ||
             $e instanceof HttpResponseException ||
             $e instanceof RecordsNotFoundException) {
@@ -120,8 +122,10 @@ class CompilerEngine extends PhpEngine
      * @param  \Throwable  $e
      * @return string
      */
-    protected function getMessage(Throwable $e)
+    protected function getMessage(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return $e->getMessage().' (View: '.realpath(last($this->lastCompiled)).')';
     }
 

@@ -59,8 +59,8 @@ class RegisterProviders
             array_merge(
                 $app->make('config')->get('app.providers'),
                 static::$merge,
-                array_values($packageProviders ?? []),
-            ),
+                array_values(isset($packageProviders) ? $packageProviders : [])
+            )
         );
     }
 
@@ -71,8 +71,10 @@ class RegisterProviders
      * @param  string|null  $bootstrapProviderPath
      * @return void
      */
-    public static function merge(array $providers, ?string $bootstrapProviderPath = null)
+    public static function merge(array $providers, /*?string */$bootstrapProviderPath = null)
     {
+        $bootstrapProviderPath = backport_type_check('?string', $bootstrapProviderPath);
+
         static::$bootstrapProviderPath = $bootstrapProviderPath;
 
         static::$merge = array_values(array_filter(array_unique(

@@ -21,8 +21,10 @@ class RedirectIfAuthenticated
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string ...$guards): Response
+    public function handle(Request $request, Closure $next, /*string */...$guards)/*: Response*/
     {
+        $guards = backport_array_type_check('string', $guards);
+
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
@@ -37,7 +39,7 @@ class RedirectIfAuthenticated
     /**
      * Get the path the user should be redirected to when they are authenticated.
      */
-    protected function redirectTo(Request $request): ?string
+    protected function redirectTo(Request $request)/*: ?string*/
     {
         return static::$redirectToCallback
             ? call_user_func(static::$redirectToCallback, $request)

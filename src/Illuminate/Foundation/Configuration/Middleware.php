@@ -148,8 +148,10 @@ class Middleware
      * @param  array|string  $middleware
      * @return $this
      */
-    public function prepend(array|string $middleware)
+    public function prepend(/*array|string */$middleware)
     {
+        $middleware = backport_type_check('array|string', $middleware);
+
         $this->prepends = array_merge(
             Arr::wrap($middleware),
             $this->prepends
@@ -164,8 +166,10 @@ class Middleware
      * @param  array|string  $middleware
      * @return $this
      */
-    public function append(array|string $middleware)
+    public function append(/*array|string */$middleware)
     {
+        $middleware = backport_type_check('array|string', $middleware);
+
         $this->appends = array_merge(
             $this->appends,
             Arr::wrap($middleware)
@@ -180,8 +184,10 @@ class Middleware
      * @param  array|string  $middleware
      * @return $this
      */
-    public function remove(array|string $middleware)
+    public function remove(/*array|string */$middleware)
     {
+        $middleware = backport_type_check('array|string', $middleware);
+
         $this->removals = array_merge(
             $this->removals,
             Arr::wrap($middleware)
@@ -197,8 +203,11 @@ class Middleware
      * @param  string  $replace
      * @return $this
      */
-    public function replace(string $search, string $replace)
+    public function replace(/*string */$search, /*string */$replace)
     {
+        $search = backport_type_check('string', $search);
+        $replace = backport_type_check('string', $replace);
+
         $this->replacements[$search] = $replace;
 
         return $this;
@@ -210,7 +219,7 @@ class Middleware
      * @param  array  $middleware
      * @return $this
      */
-    public function use(array $middleware)
+    public function use_(array $middleware)
     {
         $this->global = $middleware;
 
@@ -224,8 +233,10 @@ class Middleware
      * @param  array  $middleware
      * @return $this
      */
-    public function group(string $group, array $middleware)
+    public function group(/*string */$group, array $middleware)
     {
+        $group = backport_type_check('string', $group);
+
         $this->groups[$group] = $middleware;
 
         return $this;
@@ -238,11 +249,14 @@ class Middleware
      * @param  array|string  $middleware
      * @return $this
      */
-    public function prependToGroup(string $group, array|string $middleware)
+    public function prependToGroup(/*string */$group, /*array|string */$middleware)
     {
+        $group = backport_type_check('string', $group);
+        $middleware = backport_type_check('array|string', $middleware);
+
         $this->groupPrepends[$group] = array_merge(
             Arr::wrap($middleware),
-            $this->groupPrepends[$group] ?? []
+            isset($this->groupPrepends[$group]) ? $this->groupPrepends[$group] : []
         );
 
         return $this;
@@ -255,11 +269,14 @@ class Middleware
      * @param  array|string  $middleware
      * @return $this
      */
-    public function appendToGroup(string $group, array|string $middleware)
+    public function appendToGroup(/*string */$group, /*array|string */$middleware)
     {
+        $group = backport_type_check('string', $group);
+        $middleware = backport_type_check('array|string', $middleware);
+
         $this->groupAppends[$group] = array_merge(
             Arr::wrap($middleware),
-            $this->groupAppends[$group] ?? []
+            isset($this->groupAppends[$group]) ? $this->groupAppends[$group] : []
         );
 
         return $this;
@@ -272,11 +289,14 @@ class Middleware
      * @param  array|string  $middleware
      * @return $this
      */
-    public function removeFromGroup(string $group, array|string $middleware)
+    public function removeFromGroup(/*string */$group, /*array|string */$middleware)
     {
+        $group = backport_type_check('string', $group);
+        $middleware = backport_type_check('array|string', $middleware);
+
         $this->groupRemovals[$group] = array_merge(
             Arr::wrap($middleware),
-            $this->groupRemovals[$group] ?? []
+            isset($this->groupRemovals[$group]) ? $this->groupRemovals[$group] : []
         );
 
         return $this;
@@ -290,8 +310,12 @@ class Middleware
      * @param  string  $replace
      * @return $this
      */
-    public function replaceInGroup(string $group, string $search, string $replace)
+    public function replaceInGroup(/*string */$group, /*string */$search, /*string */$replace)
     {
+        $group = backport_type_check('string', $group);
+        $search = backport_type_check('string', $search);
+        $replace = backport_type_check('string', $replace);
+
         $this->groupReplacements[$group][$search] = $replace;
 
         return $this;
@@ -307,8 +331,12 @@ class Middleware
      * @param  array  $replace
      * @return $this
      */
-    public function web(array|string $append = [], array|string $prepend = [], array|string $remove = [], array $replace = [])
+    public function web(/*array|string */$append = [], /*array|string */$prepend = [], /*array|string */$remove = [], array $replace = [])
     {
+        $append = backport_type_check('array|string', $append);
+        $prepend = backport_type_check('array|string', $prepend);
+        $remove = backport_type_check('array|string', $remove);
+
         return $this->modifyGroup('web', $append, $prepend, $remove, $replace);
     }
 
@@ -322,8 +350,12 @@ class Middleware
      * @param  array  $replace
      * @return $this
      */
-    public function api(array|string $append = [], array|string $prepend = [], array|string $remove = [], array $replace = [])
+    public function api(/*array|string */$append = [], /*array|string */$prepend = [], /*array|string */$remove = [], array $replace = [])
     {
+        $append = backport_type_check('array|string', $append);
+        $prepend = backport_type_check('array|string', $prepend);
+        $remove = backport_type_check('array|string', $remove);
+
         return $this->modifyGroup('api', $append, $prepend, $remove, $replace);
     }
 
@@ -337,8 +369,14 @@ class Middleware
      * @param  array  $replace
      * @return $this
      */
-    protected function modifyGroup(string $group, array|string $append, array|string $prepend, array|string $remove, array $replace)
+    protected function modifyGroup(/*string */$group, /*array|string */$append = [], /*array|string */$prepend = [], /*array|string */$remove = [], array $replace = [])
     {
+        $group = backport_type_check('string', $group);
+        $append = backport_type_check('array|string', $append);
+        $append = backport_type_check('array|string', $append);
+        $prepend = backport_type_check('array|string', $prepend);
+        $remove = backport_type_check('array|string', $remove);
+
         if (! empty($append)) {
             $this->appendToGroup($group, $append);
         }
@@ -453,19 +491,19 @@ class Middleware
 
         foreach ($this->groupRemovals as $group => $removals) {
             $middleware[$group] = array_values(array_filter(
-                array_diff($middleware[$group] ?? [], $removals)
+                array_diff(isset($middleware[$group]) ? $middleware[$group] : [], $removals)
             ));
         }
 
         foreach ($this->groupPrepends as $group => $prepends) {
             $middleware[$group] = array_values(array_filter(
-                array_unique(array_merge($prepends, $middleware[$group] ?? []))
+                array_unique(array_merge($prepends, isset($middleware[$group]) ? $middleware[$group] : []))
             ));
         }
 
         foreach ($this->groupAppends as $group => $appends) {
             $middleware[$group] = array_values(array_filter(
-                array_unique(array_merge($middleware[$group] ?? [], $appends))
+                array_unique(array_merge(isset($middleware[$group]) ? $middleware[$group] : [], $appends))
             ));
         }
 

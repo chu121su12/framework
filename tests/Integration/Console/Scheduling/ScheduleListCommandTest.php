@@ -14,12 +14,12 @@ class ScheduleListCommandTest extends TestCase
 {
     public $schedule;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
         Carbon::setTestNow(now()->startOfYear());
-        ScheduleListCommand::resolveTerminalWidthUsing(fn () => 80);
+        ScheduleListCommand::resolveTerminalWidthUsing(function () { return 80; });
 
         $this->schedule = $this->app->make(Schedule::class);
     }
@@ -45,7 +45,7 @@ class ScheduleListCommandTest extends TestCase
         $this->schedule->call(FooCall::class)->everyMinute();
         $this->schedule->call([FooCall::class, 'fooFunction'])->everyMinute();
 
-        $this->schedule->call(fn () => '')->everyMinute();
+        $this->schedule->call(function () { return ''; })->everyMinute();
         $closureLineNumber = __LINE__ - 1;
         $closureFilePath = __FILE__;
 
@@ -79,7 +79,7 @@ class ScheduleListCommandTest extends TestCase
         $this->schedule->call(FooCall::class)->everyMinute();
         $this->schedule->call([FooCall::class, 'fooFunction'])->everyMinute();
 
-        $this->schedule->call(fn () => '')->everyMinute();
+        $this->schedule->call(function () { return ''; })->everyMinute();
         $closureLineNumber = __LINE__ - 1;
         $closureFilePath = __FILE__;
 
@@ -154,7 +154,7 @@ class ScheduleListCommandTest extends TestCase
             ->expectsOutput('  * */3 * * * 1s   php artisan six ............... Next Due: 1 second from now');
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 
@@ -184,11 +184,11 @@ class FooParamJob
 
 class FooCall
 {
-    public function __invoke(): void
+    public function __invoke()/*: void*/
     {
     }
 
-    public function fooFunction(): void
+    public function fooFunction()/*: void*/
     {
     }
 }

@@ -220,9 +220,11 @@ class Application extends Container implements ApplicationContract, CachesConfig
      * @param  string|null  $baseDirectory
      * @return \Illuminate\Foundation\ApplicationBuilder
      */
-    public static function configure(string $baseDirectory = null)
+    public static function configure(/*string */$baseDirectory = null)
     {
-        $baseDirectory = $ENV['APP_BASE_PATH'] ?? ($baseDirectory ?: dirname(dirname(
+        $baseDirectory = backport_type_check('string', $baseDirectory);
+
+        $baseDirectory = isset($ENV['APP_BASE_PATH']) ? $ENV['APP_BASE_PATH'] : ($baseDirectory ?: dirname(dirname(
             debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0]['file']
         )));
 
@@ -256,9 +258,11 @@ class Application extends Container implements ApplicationContract, CachesConfig
         $this->instance(Container::class, $this);
         $this->singleton(Mix::class);
 
-        $this->singleton(PackageManifest::class, fn () => new PackageManifest(
-            new Filesystem, $this->basePath(), $this->getCachedPackagesPath()
-        ));
+        $this->singleton(PackageManifest::class, function () {
+            return new PackageManifest(
+                new Filesystem, $this->basePath(), $this->getCachedPackagesPath()
+            );
+        });
     }
 
     /**
@@ -728,7 +732,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
      */
     public function detectEnvironment(Closure $callback)
     {
-        $args = $_SERVER['argv'] ?? null;
+        $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
 
         return $this['env'] = (new EnvironmentDetector)->detect($callback, $args);
     }
@@ -741,7 +745,8 @@ class Application extends Container implements ApplicationContract, CachesConfig
     public function runningInConsole()
     {
         if ($this->isRunningInConsole === null) {
-            $this->isRunningInConsole = Env::get('APP_RUNNING_IN_CONSOLE') ?? (\PHP_SAPI === 'cli' || \PHP_SAPI === 'phpdbg');
+            $isRunningInConsole = Env::get('APP_RUNNING_IN_CONSOLE');
+            $this->isRunningInConsole = isset($isRunningInConsole) ? $isRunningInConsole : (\PHP_SAPI === 'cli' || \PHP_SAPI === 'phpdbg');
         }
 
         return $this->isRunningInConsole;
@@ -760,7 +765,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
         }
 
         return in_array(
-            $_SERVER['argv'][1] ?? null,
+            isset($_SERVER['argv']) && isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : null,
             is_array($commands[0]) ? $commands[0] : $commands
         );
     }
@@ -804,7 +809,9 @@ class Application extends Container implements ApplicationContract, CachesConfig
     public function registerConfiguredProviders()
     {
         $providers = Collection::make($this->make('config')->get('app.providers'))
-                        ->partition(fn ($provider) => str_starts_with($provider, 'Illuminate\\'));
+                        ->partition(function ($provider) {
+                            return str_starts_with($provider, 'Illuminate\\');
+                        });
 
         $providers->splice(1, 0, [$this->make(PackageManifest::class)->providers()]);
 
@@ -873,7 +880,9 @@ class Application extends Container implements ApplicationContract, CachesConfig
      */
     public function getProvider($provider)
     {
-        return array_values($this->getProviders($provider))[0] ?? null;
+        $providerValues = array_values($this->getProviders($provider));
+
+        return isset($providerValues[0]) ? $providerValues[0] : null;
     }
 
     /**
@@ -886,7 +895,9 @@ class Application extends Container implements ApplicationContract, CachesConfig
     {
         $name = is_string($provider) ? $provider : get_class($provider);
 
-        return Arr::where($this->serviceProviders, fn ($value) => $value instanceof $name);
+        return Arr::where($this->serviceProviders, function ($value) use ($name) {
+            return $value instanceof $name;
+        });
     }
 
     /**
@@ -1130,8 +1141,12 @@ class Application extends Container implements ApplicationContract, CachesConfig
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handle(SymfonyRequest $request, int $type = self::MAIN_REQUEST, bool $catch = true): SymfonyResponse
+    public function handle(SymfonyRequest $request, /*int */$type = /*self::MAIN_REQUEST*/self::MASTER_REQUEST, /*bool */$catch = true)/*: SymfonyResponse*/
     {
+        $catch = backport_type_check('bool', $catch);
+
+        $type = backport_type_check('int', $type);
+
         return $this[HttpKernelContract::class]->handle(Request::createFromBase($request));
     }
 
@@ -1377,8 +1392,10 @@ class Application extends Container implements ApplicationContract, CachesConfig
      * @param  string  $provider
      * @return bool
      */
-    public function providerIsLoaded(string $provider)
+    public function providerIsLoaded(/*string */$provider)
     {
+        $provider = backport_type_check('string', $provider);
+
         return isset($this->loadedProviders[$provider]);
     }
 
@@ -1597,7 +1614,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
             return $this->namespace;
         }
 
-        $composer = json_decode(file_get_contents($this->basePath('composer.json')), true);
+        $composer = backport_json_decode(file_get_contents($this->basePath('composer.json')), true);
 
         foreach ((array) data_get($composer, 'autoload.psr-4') as $namespace => $path) {
             foreach ((array) $path as $pathChoice) {

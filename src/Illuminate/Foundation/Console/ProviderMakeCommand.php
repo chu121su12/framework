@@ -48,7 +48,7 @@ class ProviderMakeCommand extends GeneratorCommand
 
         ServiceProvider::addProviderToBootstrapFile(
             $this->qualifyClass($this->getNameInput()),
-            $this->laravel->getBootstrapProvidersPath(),
+            $this->laravel->getBootstrapProvidersPath()
         );
 
         return $result;

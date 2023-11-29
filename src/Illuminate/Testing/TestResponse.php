@@ -182,7 +182,7 @@ class TestResponse implements ArrayAccess
     {
         PHPUnit::assertTrue(
             $this->isRedirect(),
-            $this->statusMessageWithDetails('201, 301, 302, 303, 307, 308', $this->getStatusCode()),
+            $this->statusMessageWithDetails('201, 301, 302, 303, 307, 308', $this->getStatusCode())
         );
 
         if (! is_null($uri)) {
@@ -202,7 +202,7 @@ class TestResponse implements ArrayAccess
     {
         PHPUnit::assertTrue(
             $this->isRedirect(),
-            $this->statusMessageWithDetails('201, 301, 302, 303, 307, 308', $this->getStatusCode()),
+            $this->statusMessageWithDetails('201, 301, 302, 303, 307, 308', $this->getStatusCode())
         );
 
         PHPUnit::assertTrue(
@@ -225,7 +225,7 @@ class TestResponse implements ArrayAccess
 
         PHPUnit::assertTrue(
             $this->isRedirect(),
-            $this->statusMessageWithDetails('201, 301, 302, 303, 307, 308', $this->getStatusCode()),
+            $this->statusMessageWithDetails('201, 301, 302, 303, 307, 308', $this->getStatusCode())
         );
 
         $this->assertLocation($uri);
@@ -248,7 +248,7 @@ class TestResponse implements ArrayAccess
 
         PHPUnit::assertTrue(
             $this->isRedirect(),
-            $this->statusMessageWithDetails('201, 301, 302, 303, 307, 308', $this->getStatusCode()),
+            $this->statusMessageWithDetails('201, 301, 302, 303, 307, 308', $this->getStatusCode())
         );
 
         $request = Request::create($this->headers->get('Location'));
@@ -783,8 +783,10 @@ class TestResponse implements ArrayAccess
      * @param  string  $path
      * @return $this
      */
-    public function assertJsonMissingPath(string $path)
+    public function assertJsonMissingPath(/*string */$path)
     {
+        $path = backport_type_check('string', $path);
+
         $this->decodeResponseJson()->assertMissingPath($path);
 
         return $this;
@@ -811,8 +813,10 @@ class TestResponse implements ArrayAccess
      * @param  string|null  $key
      * @return $this
      */
-    public function assertJsonCount(int $count, $key = null)
+    public function assertJsonCount(/*int */$count, $key = null)
     {
+        $count = backport_type_check('int', $count);
+
         $this->decodeResponseJson()->assertCount($count, $key);
 
         return $this;
@@ -831,11 +835,13 @@ class TestResponse implements ArrayAccess
 
         PHPUnit::assertNotEmpty($errors, 'No validation errors were provided.');
 
-        $jsonErrors = Arr::get($this->json(), $responseKey) ?? [];
+        $jsonResponseValue = Arr::get($this->json(), $responseKey);
+
+        $jsonErrors = isset($jsonResponseValue) ? $jsonResponseValue : [];
 
         $errorMessage = $jsonErrors
                 ? 'Response has the following JSON validation errors:'.
-                        PHP_EOL.PHP_EOL.json_encode($jsonErrors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL
+                        PHP_EOL.PHP_EOL.backport_json_encode($jsonErrors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL
                 : 'Response does not have JSON validation errors.';
 
         foreach ($errors as $key => $value) {
@@ -878,11 +884,12 @@ class TestResponse implements ArrayAccess
      */
     public function assertJsonValidationErrorFor($key, $responseKey = 'errors')
     {
-        $jsonErrors = Arr::get($this->json(), $responseKey) ?? [];
+        $jsonErrors = Arr::get($this->json(), $responseKey);
+        $jsonErrors = isset($jsonErrors) ? $jsonErrors : [];
 
         $errorMessage = $jsonErrors
             ? 'Response has the following JSON validation errors:'.
-            PHP_EOL.PHP_EOL.json_encode($jsonErrors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL
+            PHP_EOL.PHP_EOL.backport_json_encode($jsonErrors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL
             : 'Response does not have JSON validation errors.';
 
         PHPUnit::assertArrayHasKey(
@@ -922,7 +929,7 @@ class TestResponse implements ArrayAccess
         if (is_null($keys) && count($errors) > 0) {
             PHPUnit::fail(
                 'Response has unexpected validation errors: '.PHP_EOL.PHP_EOL.
-                json_encode($errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+                backport_json_encode($errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
             );
         }
 
@@ -946,7 +953,7 @@ class TestResponse implements ArrayAccess
     {
         $data = $this->json($key);
 
-        $encodedData = json_encode($data);
+        $encodedData = backport_json_encode($data);
 
         PHPUnit::assertTrue(
             is_array($data)
@@ -967,7 +974,7 @@ class TestResponse implements ArrayAccess
     {
         $data = $this->json($key);
 
-        $encodedData = json_encode($data);
+        $encodedData = backport_json_encode($data);
 
         PHPUnit::assertTrue(
             is_array($data)
@@ -1066,7 +1073,7 @@ class TestResponse implements ArrayAccess
             PHPUnit::assertInstanceOf(EloquentCollection::class, $actual);
             PHPUnit::assertSameSize($value, $actual);
 
-            $value->each(fn ($item, $index) => PHPUnit::assertTrue($actual->get($index)->is($item)));
+            $value->each(function ($item, $index) use ($actual) { return PHPUnit::assertTrue($actual->get($index)->is($item)); });
         } else {
             PHPUnit::assertEquals($value, Arr::get($this->original->gatherData(), $key));
         }
@@ -1174,7 +1181,7 @@ class TestResponse implements ArrayAccess
         if (is_null($keys) && count($errors) > 0) {
             PHPUnit::fail(
                 'Response has unexpected validation errors: '.PHP_EOL.PHP_EOL.
-                json_encode($errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+                backport_json_encode($errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
             );
         }
 
@@ -1210,7 +1217,7 @@ class TestResponse implements ArrayAccess
 
         $errorMessage = $sessionErrors
                 ? 'Response has the following validation errors in the session:'.
-                        PHP_EOL.PHP_EOL.json_encode($sessionErrors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL
+                        PHP_EOL.PHP_EOL.backport_json_encode($sessionErrors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL
                 : 'Response does not have validation errors in the session.';
 
         foreach (Arr::wrap($errors) as $key => $value) {
@@ -1394,10 +1401,7 @@ class TestResponse implements ArrayAccess
     {
         $hasErrors = $this->session()->has('errors');
 
-        PHPUnit::assertFalse(
-            $hasErrors,
-            'Session has unexpected errors: '.PHP_EOL.PHP_EOL.
-            json_encode((function () use ($hasErrors) {
+        $fn = function () use ($hasErrors) {
                 $errors = [];
 
                 $sessionErrors = $this->session()->get('errors');
@@ -1411,7 +1415,12 @@ class TestResponse implements ArrayAccess
                 }
 
                 return $errors;
-            })(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+            };
+
+        PHPUnit::assertFalse(
+            $hasErrors,
+            'Session has unexpected errors: '.PHP_EOL.PHP_EOL.
+            backport_json_encode($fn(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE, 512, true)
         );
 
         return $this;
@@ -1503,7 +1512,7 @@ class TestResponse implements ArrayAccess
     {
         $content = $this->getContent();
 
-        $json = json_decode($content);
+        $json = backport_json_decode($content);
 
         if (json_last_error() === JSON_ERROR_NONE) {
             $content = $json;
@@ -1564,7 +1573,9 @@ class TestResponse implements ArrayAccess
             PHPUnit::fail('The response is not a streamed response.');
         }
 
-        ob_start(function (string $buffer): string {
+        ob_start(function (/*string */$buffer)/*: string*/ {
+            $buffer = backport_type_check('string', $buffer);
+
             $this->streamedContent .= $buffer;
 
             return '';
@@ -1639,14 +1650,14 @@ class TestResponse implements ArrayAccess
         $exceptionToAppend = (string) $exceptionToAppend;
 
         $message = <<<"EOF"
-            The following exception occurred during the last request:
+The following exception occurred during the last request:
 
-            $exceptionToAppend
+$exceptionToAppend
 
-            ----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 
-            $exceptionMessage
-            EOF;
+$exceptionMessage
+EOF;
 
         return $this->appendMessageToException($message, $exception);
     }
@@ -1662,7 +1673,7 @@ class TestResponse implements ArrayAccess
     protected function appendErrorsToException($errors, $exception, $json = false)
     {
         $errors = $json
-            ? json_encode($errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+            ? backport_json_encode($errors, JSON_PRETTY_PRINT)
             : implode(PHP_EOL, Arr::flatten($errors));
 
         // JSON error messages may already contain the errors, so we shouldn't duplicate them...
@@ -1671,10 +1682,10 @@ class TestResponse implements ArrayAccess
         }
 
         $message = <<<"EOF"
-            The following errors occurred during the last request:
+The following errors occurred during the last request:
 
-            $errors
-            EOF;
+$errors
+EOF;
 
         return $this->appendMessageToException($message, $exception);
     }
@@ -1689,6 +1700,10 @@ class TestResponse implements ArrayAccess
     protected function appendMessageToException($message, $exception)
     {
         $property = new ReflectionProperty($exception, 'message');
+
+        if (! $property->isPublic()) {
+            $property->setAccessible(true);
+        }
 
         $property->setValue(
             $exception,
@@ -1726,7 +1741,8 @@ class TestResponse implements ArrayAccess
      * @param  string  $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($offset)/*: bool*/
     {
         return $this->responseHasView()
                     ? isset($this->original->gatherData()[$offset])
@@ -1739,7 +1755,8 @@ class TestResponse implements ArrayAccess
      * @param  string  $offset
      * @return mixed
      */
-    public function offsetGet($offset): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($offset)/*: mixed*/
     {
         return $this->responseHasView()
                     ? $this->viewData($offset)
@@ -1755,7 +1772,8 @@ class TestResponse implements ArrayAccess
      *
      * @throws \LogicException
      */
-    public function offsetSet($offset, $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($offset, $value)/*: void*/
     {
         throw new LogicException('Response data may not be mutated using array access.');
     }
@@ -1768,7 +1786,8 @@ class TestResponse implements ArrayAccess
      *
      * @throws \LogicException
      */
-    public function offsetUnset($offset): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($offset)/*: void*/
     {
         throw new LogicException('Response data may not be mutated using array access.');
     }
