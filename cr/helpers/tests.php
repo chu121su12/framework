@@ -13,5 +13,25 @@ if (! \function_exists('phpunit_major_version')) {
     }
 }
 
+if (! \function_exists('phpunit_skip_with_inactive_socket_connection')) {
+    function phpunit_skip_with_inactive_socket_connection(\PHPUnit\Framework\TestCase $phpunitInstance, $host, $port = 443, $timeout = 1)
+    {
+        try {
+            $errorCode = null;
+            $errorMessage = null;
+            if ($connection = @fsockopen($host, $port, $errorCode, $errorMessage, $timeout)) {
+                fclose($connection);
+
+                return;
+            }
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (\Throwable $e) {
+        }
+
+        $phpunitInstance->markTestSkipped('Network connection may not be available.');
+    }
+}
+
 // rm -rf ./vendor/orchestra/testbench-core/laravel/bootstrap/cache
 // mkdir -p ./vendor/orchestra/testbench-core/laravel/bootstrap/cache

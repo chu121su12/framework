@@ -17,10 +17,12 @@ class AboutCommandTest extends TestCase
             Assert::assertArraySubset([
                 'application_name' => 'Laravel',
                 'php_version' => PHP_VERSION,
-                // 'environment' => 'testing',
+                'environment' => 'testing',
                 'debug_mode' => true,
                 'url' => 'localhost',
                 'maintenance_mode' => false,
+
+                'debug_mode' => false,
             ], $output['environment']);
 
             Assert::assertArraySubset([
@@ -37,6 +39,11 @@ class AboutCommandTest extends TestCase
                 'mail' => 'smtp',
                 'queue' => 'database',
                 'session' => 'file',
+
+                'broadcasting' => 'null',
+                'cache' => 'array',
+                'queue' => 'sync',
+                'session' => 'array',
             ], $output['drivers']);
         });
     }

@@ -26,7 +26,7 @@ final class SignalRegistry
     {
         $signal = backport_type_check('int', $signal);
 
-        if (!isset($this->signalHandlers[$signal])) {
+        if (!isset($this->signalHandlers[$signal]) && \function_exists('pcntl_signal_get_handler')) {
             $previousCallback = pcntl_signal_get_handler($signal);
 
             if (\is_callable($previousCallback)) {

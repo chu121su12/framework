@@ -58,9 +58,7 @@ class Signals
             $this->setHandlers($handlers);
         });
 
-        if (\function_exists('pcntl_signal_get_handler')) {
-            $this->registry->register($signal, $callback);
-        }
+        $this->registry->register($signal, $callback);
 
         with($this->getHandlers(), function ($handlers) use ($signal) {
             $lastHandlerInserted = $handlers[$signal] ? array_pop($handlers[$signal]) : null;

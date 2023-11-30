@@ -74,14 +74,13 @@ if (! function_exists('data_get')) {
                 return in_array('*', $key) ? Arr::collapse($result) : $result;
             }
 
-            $segment = match ($segment) {
-                '\*' => '*',
-                '\{first}' => '{first}',
-                '{first}' => array_key_first($target),
-                '\{last}' => '{last}',
-                '{last}' => array_key_last($target),
-                default => $segment,
-            };
+            switch ((string) $segment) {
+                case '\*': $segment = '*'; break;
+                case '\{first}': $segment = '{first}'; break;
+                case '{first}': $segment = array_key_first($target); break;
+                case '\{last}': $segment = '{last}'; break;
+                case '{last}': $segment = array_key_last($target); break;
+            }
 
             if (Arr::accessible($target) && Arr::exists($target, $segment)) {
                 $target = $target[$segment];

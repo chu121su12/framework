@@ -597,7 +597,7 @@ class RedisConnectionTest extends TestCase
 
         $connections = $this->connections();
         if (! isset($connections['persistent'])) {
-            $this->markTestSkipped('Missing persistent attribute.');
+            $this->markTestSkipped('Connections missing persistent key.');
         }
 
         $this->assertSame(

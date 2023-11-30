@@ -70,19 +70,6 @@ trait ExtraAssertions
 
     public static function skipWithInactiveSocketConnection(TestCase $phpunitInstance, $host, $port = 443, $timeout = 1)
     {
-        try {
-            $errorCode = null;
-            $errorMessage = null;
-            if ($connection = @fsockopen($host, $port, $errorCode, $errorMessage, $timeout)) {
-                fclose($connection);
-
-                return;
-            }
-        } catch (\Exception $e) {
-        } catch (\Error $e) {
-        } catch (\Throwable $e) {
-        }
-
-        $phpunitInstance->markTestSkipped('Network connection may not be available.');
+        phpunit_skip_with_inactive_socket_connection($phpunitInstance, $host, $port, $timeout);
     }
 }

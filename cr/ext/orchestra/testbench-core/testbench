@@ -8,6 +8,7 @@ foreach ([
     isset($_composer_autoload_path) ? $_composer_autoload_path : null,
     __DIR__.'/vendor/autoload.php',
     __DIR__.'/../autoload.php',
+    __DIR__.'/../../../../vendor/autoload.php',
 ] as $_autoload_path) {
     if ($_autoload_path && file_exists($_autoload_path)) {
         require $_autoload_path;
