@@ -202,17 +202,15 @@ abstract class Job
             in_array(Batchable::class, class_uses_recursive($commandName))) {
             $batchRepository = $this->resolve(BatchRepository::class);
 
-            if (method_exists($batchRepository, 'rollBack')) {
-                try {
-                    $batchRepository->rollBack();
-                } catch (\Execption $e) {
-                } catch (\ErrorException $e) {
-                } catch (Throwable $e) {
-                }
+            try {
+                $batchRepository->rollBack();
+            } catch (\Execption $e) {
+            } catch (\ErrorException $e) {
+            } catch (Throwable $e) {
+            }
 
-                if (isset($e)) {
-                    // ...
-                }
+            if (isset($e)) {
+                // ...
             }
         }
 
