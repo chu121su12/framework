@@ -77,9 +77,9 @@ if (! function_exists('data_get')) {
             switch ((string) $segment) {
                 case '\*': $segment = '*'; break;
                 case '\{first}': $segment = '{first}'; break;
-                case '{first}': $segment = array_key_first($target); break;
+                case '{first}': $segment = array_key_first(is_array($target) ? $target : collect($target)->all()); break;
                 case '\{last}': $segment = '{last}'; break;
-                case '{last}': $segment = array_key_last($target); break;
+                case '{last}': $segment = array_key_last(is_array($target) ? $target : collect($target)->all()); break;
             }
 
             if (Arr::accessible($target) && Arr::exists($target, $segment)) {
