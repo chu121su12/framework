@@ -37,7 +37,16 @@ class SQLiteBuilder extends Builder
      */
     public function getTables()
     {
-        $withSize = $this->connection->scalar($this->grammar->compileDbstatExists());
+        try {
+            $withSize = $this->connection->scalar($this->grammar->compileDbstatExists());
+        } catch (\Illuminate\Database\QueryException $e) {
+            if (\preg_match('/\bno such table:\s+pragma_compile_options\b/', $e->getMessage())) {
+                $withSize = false;
+            }
+            else {
+                throw $e;
+            }
+        }
 
         return $this->connection->getPostProcessor()->processTables(
             $this->connection->selectFromWriteConnection($this->grammar->compileTables($withSize))

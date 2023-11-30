@@ -103,7 +103,9 @@ class FilesystemTest extends TestCase
         $this->assertStringEqualsFile($tempFile, 'Hello Taylor');
     }
 
-    /** @requires OS Linux|Darwin */
+    /**
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|Darwin')]
     public function testReplaceWhenUnixSymlinkExists()
     {
@@ -433,7 +435,9 @@ class FilesystemTest extends TestCase
         $this->assertEquals($size, $files->size(self::$tempDir.'/foo.txt'));
     }
 
-    /** @requires extension fileinfo */
+    /**
+     * @requires extension fileinfo
+     */
     #[RequiresPhpExtension('fileinfo')]
     public function testMimeTypeOutputsMimeType()
     {

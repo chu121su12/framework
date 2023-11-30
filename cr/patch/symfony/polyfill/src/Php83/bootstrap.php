@@ -70,7 +70,7 @@ if (!function_exists('ldap_exop_sync') && function_exists('ldap_exop')) {
 }
 
 if (!function_exists('ldap_connect_wallet') && function_exists('ldap_connect')) {
-    function ldap_connect_wallet(/*?string */$uri = null, /*string */$wallet, /*string */$password, /*int */$auth_mode = \GSLC_SSL_NO_AUTH) {
+    function ldap_connect_wallet(/*?string */$uri/* = null*/, /*string */$wallet, /*string */$password, /*int */$auth_mode = \GSLC_SSL_NO_AUTH) {
         $auth_mode = backport_type_check('int', $auth_mode);
 
         $password = backport_type_check('string', $password);

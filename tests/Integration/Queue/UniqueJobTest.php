@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Bus;
 use Orchestra\Testbench\Attributes\WithMigration;
 use Orchestra\Testbench\TestCase;
 
-/** @requires extension pdo_sqlite */
+/**
+ * @requires extension pdo_sqlite
+ */
 #[WithMigration]
 #[WithMigration('queue')]
 class UniqueJobTest extends TestCase

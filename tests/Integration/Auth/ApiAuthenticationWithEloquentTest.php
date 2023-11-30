@@ -9,7 +9,9 @@ use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
-/** @requires extension pdo_mysql */
+/**
+ * @requires extension pdo_mysql
+ */
 #[RequiresPhpExtension('pdo_mysql')]
 class ApiAuthenticationWithEloquentTest extends TestCase
 {

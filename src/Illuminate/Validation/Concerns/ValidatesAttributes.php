@@ -256,7 +256,24 @@ trait ValidatesAttributes
             $date = $this->getDateTimestamp($this->getValue($parameters[0]));
         }
 
-        return $this->compare($this->getDateTimestamp($value), $date, $operator);
+        $timestamp = $this->getDateTimestamp($value);
+
+        if ($timestamp === false || $date === false) {
+            if (is_null($date = $this->getDateSortableStringified($parameters[0]))) {
+                $date = $this->getDateSortableStringified($this->getValue($parameters[0]));
+            }
+
+            return $this->compare($this->getDateSortableStringified($value), $date, $operator);
+        }
+
+        return $this->compare($timestamp, $date, $operator);
+    }
+
+    private function getDateSortableStringified($value)
+    {
+        $date = is_null($value) ? null : $this->getDateTime($value);
+
+        return $date ? $date->format('YmdHisu') : null;
     }
 
     /**
@@ -2421,10 +2438,26 @@ trait ValidatesAttributes
      */
     public function validateTimezone($attribute, $value, $parameters = [])
     {
+        $parameter0 = Str::upper(isset($parameters[0]) ? $parameters[0] : 'ALL');
+
+        if ($value === 'Europe/Kyiv' && ! $this->isValidTimezoneId($value)) {
+            $value = 'Europe/Kiev';
+        }
+        elseif ($value === 'Europe/Kiev' && $this->isValidTimezoneId($value) && $parameter0 !== 'ALL_WITH_BC') {
+            $value = 'Europe/Kyiv';
+        }
+
         return in_array($value, timezone_identifiers_list(
-            constant(DateTimeZone::class.'::'.Str::upper(isset($parameters[0]) ? $parameters[0] : 'ALL')),
+            constant(DateTimeZone::class.'::'.$parameter0),
             isset($parameters[1]) ? Str::upper($parameters[1]) : null
         ), true);
+    }
+
+    protected function isValidTimezoneId($timezoneId)
+    {
+        $tz = @timezone_open($timezoneId);
+
+        return $tz !== false;
     }
 
     /**

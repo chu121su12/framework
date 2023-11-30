@@ -437,7 +437,9 @@ class FilesystemAdapterTest extends TestCase
         $this->assertSame('normal file content', $filesystemAdapter->read($storagePath));
     }
 
-    /** @requires extension ftp */
+    /**
+     * @requires extension ftp
+     */
     #[RequiresPhpExtension('ftp')]
     public function testCreateFtpDriver()
     {

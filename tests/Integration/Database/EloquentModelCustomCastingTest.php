@@ -67,7 +67,9 @@ class EloquentModelCustomCastingTest extends TestCase
         $this->schema()->drop('members');
     }
 
-    /** @requires extension gmp */
+    /**
+     * @requires extension gmp
+     */
     #[RequiresPhpExtension('gmp')]
     public function testSavingCastedAttributesToDatabase()
     {
@@ -105,7 +107,9 @@ class EloquentModelCustomCastingTest extends TestCase
         $this->assertInstanceOf(GMP::class, $model->amount);
     }
 
-    /** @requires extension gmp */
+    /**
+     * @requires extension gmp
+     */
     #[RequiresPhpExtension('gmp')]
     public function testInvalidArgumentExceptionOnInvalidValue()
     {
@@ -125,7 +129,9 @@ class EloquentModelCustomCastingTest extends TestCase
         $this->assertSame('address_line_two_value', $model->address->lineTwo);
     }
 
-    /** @requires extension gmp */
+    /**
+     * @requires extension gmp
+     */
     #[RequiresPhpExtension('gmp')]
     public function testInvalidArgumentExceptionOnNull()
     {
@@ -145,7 +151,9 @@ class EloquentModelCustomCastingTest extends TestCase
         $this->assertSame('address_line_two_value', $model->address->lineTwo);
     }
 
-    /** @requires extension gmp */
+    /**
+     * @requires extension gmp
+     */
     #[RequiresPhpExtension('gmp')]
     public function testModelsWithCustomCastsCanBeConvertedToArrays()
     {

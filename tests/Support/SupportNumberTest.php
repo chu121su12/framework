@@ -62,6 +62,9 @@ class SupportNumberTest extends TestCase
         Number::useLocale('en');
     }
 
+    /**
+     * @requires extension intl
+     */
     public function testSpellout()
     {
         $this->assertSame('ten', Number::spell(10));
@@ -75,6 +78,9 @@ class SupportNumberTest extends TestCase
         $this->assertSame('trois', Number::spell(3, 'fr'));
     }
 
+    /**
+     * @requires extension intl
+     */
     public function testOrdinal()
     {
         $this->assertSame('1st', Number::ordinal(1));
@@ -136,6 +142,9 @@ class SupportNumberTest extends TestCase
         $this->assertSame('1 234,56 $US', Number::currency(1234.56, 'USD', 'fr'));
     }
 
+    /**
+     * @requires extension intl
+     */
     public function testBytesToHuman()
     {
         $this->assertSame('0 B', Number::fileSize(0));
@@ -155,6 +164,9 @@ class SupportNumberTest extends TestCase
         $this->assertSame('1,024 YB', Number::fileSize(1024 ** 9));
     }
 
+    /**
+     * @requires extension intl
+     */
     public function testToHuman()
     {
         $this->assertSame('1', Number::forHumans(1));

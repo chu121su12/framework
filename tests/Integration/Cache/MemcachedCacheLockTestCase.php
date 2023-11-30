@@ -6,7 +6,9 @@ use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Cache;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
-/** @requires extension memcached */
+/**
+ * @requires extension memcached
+ */
 #[RequiresPhpExtension('memcached')]
 class MemcachedCacheLockTestCase extends MemcachedIntegrationTestCase
 {

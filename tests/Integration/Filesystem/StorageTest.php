@@ -9,7 +9,9 @@ use Orchestra\Testbench\TestCase;
 use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
 use Symfony\Component\Process\Process;
 
-/** @requires OS Linux|Darwin */
+/**
+ * @requires OS Linux|Darwin
+ */
 #[RequiresOperatingSystem('Linux|Darwin')]
 class StorageTest extends TestCase
 {

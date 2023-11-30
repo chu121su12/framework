@@ -1227,8 +1227,11 @@ class SupportTestClassThree extends SupportTestClassTwo
 
 trait SupportTestTraitArrayAccess
 {
-    public function __construct(protected array $items = [])
+    protected /*array */$items;
+
+    public function __construct(/*protected */array $items = [])
     {
+        $this->items = $items;
     }
 
     #[\ReturnTypeWillChange]
@@ -1258,8 +1261,9 @@ trait SupportTestTraitArrayAccess
 
 trait SupportTestTraitArrayIterable
 {
-    public function __construct(protected array $items = [])
+    public function __construct(/*protected */array $items = [])
     {
+        $this->items = $items;
     }
 
     #[\ReturnTypeWillChange]
@@ -1276,6 +1280,8 @@ class SupportTestArrayAccess implements ArrayAccess
 
 class SupportTestArrayIterable implements IteratorAggregate
 {
+    protected /*array */$items;
+
     use SupportTestTraitArrayIterable;
 }
 

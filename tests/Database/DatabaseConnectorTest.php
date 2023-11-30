@@ -319,7 +319,9 @@ class DatabaseConnectorTest extends TestCase
         $this->assertSame($result, $connection);
     }
 
-    /** @requires extension odbc */
+    /**
+     * @requires extension odbc
+     */
     #[RequiresPhpExtension('odbc')]
     public function testSqlServerConnectCallsCreateConnectionWithPreferredODBC()
     {

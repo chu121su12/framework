@@ -8,12 +8,12 @@ use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\DB;
-use Orchestra\Testbench\Concerns\WithLaravelMigrations;
+use Orchestra\Testbench\Concerns\WithLaravelMigrationsForTestCase;
 use Orchestra\Testbench\Factories\UserFactory;
 
 trait EloquentTransactionWithAfterCommitTests
 {
-    use WithLaravelMigrations;
+    use WithLaravelMigrationsForTestCase;
 
     protected function setUpEloquentTransactionWithAfterCommitTests()/*: void*/
     {

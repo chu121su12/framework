@@ -5113,7 +5113,9 @@ class ValidationValidatorTest extends TestCase
         $this->assertTrue($v->passes());
     }
 
-    /** @requires extension fileinfo */
+    /**
+     * @requires extension fileinfo
+     */
     #[RequiresPhpExtension('fileinfo')]
     public function testValidateFile()
     {
