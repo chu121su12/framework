@@ -2440,11 +2440,13 @@ trait ValidatesAttributes
     {
         $parameter0 = Str::upper(isset($parameters[0]) ? $parameters[0] : 'ALL');
 
-        if ($value === 'Europe/Kyiv' && ! $this->isValidTimezoneId($value)) {
-            $value = 'Europe/Kiev';
-        }
-        elseif ($value === 'Europe/Kiev' && $this->isValidTimezoneId($value) && $parameter0 !== 'ALL_WITH_BC') {
-            $value = 'Europe/Kyiv';
+        if (windows_os() && version_compare(PHP_VERSION, '7.0', '<')) {
+            if ($value === 'Europe/Kyiv' && ! $this->isValidTimezoneId($value)) {
+                $value = 'Europe/Kiev';
+            }
+            elseif ($value === 'Europe/Kiev' && $this->isValidTimezoneId($value) && $parameter0 !== 'ALL_WITH_BC') {
+                $value = 'Europe/Kyiv';
+            }
         }
 
         return in_array($value, timezone_identifiers_list(
