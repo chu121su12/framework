@@ -10,6 +10,7 @@ use Illuminate\Session\SessionManager;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Cookie6;
 use Symfony\Component\HttpFoundation\Response;
 
 class StartSession
@@ -220,10 +221,17 @@ class StartSession
     protected function addCookieToResponse(Response $response, Session $session)
     {
         if ($this->sessionIsPersistent($config = $this->manager->getSessionConfig())) {
-            $response->headers->setCookie(new Cookie(
-                $session->getName(), $session->getId(), $this->getCookieExpirationDate(),
-                $config['path'], $config['domain'], isset($config['secure']) ? $config['secure'] : false,
-                isset($config['http_only']) ? $config['http_only'] : true, false, isset($config['same_site']) ? $config['same_site'] : null
+            $response->headers->setCookie(new Cookie6(
+                $session->getName(),
+                $session->getId(),
+                $this->getCookieExpirationDate(),
+                $config['path'],
+                $config['domain'],
+                isset($config['secure']) ? $config['secure'] : false,
+                isset($config['http_only']) ? $config['http_only'] : true,
+                false,
+                isset($config['same_site']) ? $config['same_site'] : null,
+                isset($config['partitioned']) ? $config['partitioned'] : false
             ));
         }
     }
