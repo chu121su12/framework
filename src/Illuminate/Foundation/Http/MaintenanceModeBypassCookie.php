@@ -4,6 +4,7 @@ namespace Illuminate\Foundation\Http;
 
 use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Cookie6;
 
 class MaintenanceModeBypassCookie
 {
@@ -19,7 +20,7 @@ class MaintenanceModeBypassCookie
 
         $expiresAt = Carbon::now()->addHours(12);
 
-        return new Cookie('laravel_maintenance', base64_encode(backport_json_encode([
+        return new Cookie6('laravel_maintenance', base64_encode(backport_json_encode([
             'expires_at' => $expiresAt->getTimestamp(),
             'mac' => hash_hmac('sha256', $expiresAt->getTimestamp(), $key),
         ])), $expiresAt, config('session.path'), config('session.domain'));

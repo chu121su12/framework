@@ -27,6 +27,7 @@ use LogicException;
 use PHPUnit\Framework\ExpectationFailedException;
 use ReflectionProperty;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Cookie6;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
@@ -500,7 +501,7 @@ class TestResponse implements ArrayAccess
                     app('encrypter')->decrypt($cookie->getValue(), $unserialize)
                 );
 
-                return new Cookie(
+                return new Cookie6(
                     $cookie->getName(),
                     $decryptedValue,
                     $cookie->getExpiresTime(),
@@ -509,7 +510,8 @@ class TestResponse implements ArrayAccess
                     $cookie->isSecure(),
                     $cookie->isHttpOnly(),
                     $cookie->isRaw(),
-                    $cookie->getSameSite()
+                    $cookie->getSameSite(),
+                    \method_exists($cookie, 'isPartitioned') ? $cookie->isPartitioned() : false
                 );
             }
         }

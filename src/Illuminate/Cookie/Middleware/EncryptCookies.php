@@ -8,6 +8,7 @@ use Illuminate\Contracts\Encryption\Encrypter as EncrypterContract;
 use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Cookie6;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -207,10 +208,17 @@ class EncryptCookies
      */
     protected function duplicate(Cookie $cookie, $value)
     {
-        return new Cookie(
-            $cookie->getName(), $value, $cookie->getExpiresTime(),
-            $cookie->getPath(), $cookie->getDomain(), $cookie->isSecure(),
-            $cookie->isHttpOnly(), $cookie->isRaw(), $cookie->getSameSite()
+        return new Cookie6(
+            $cookie->getName(),
+            $value,
+            $cookie->getExpiresTime(),
+            $cookie->getPath(),
+            $cookie->getDomain(),
+            $cookie->isSecure(),
+            $cookie->isHttpOnly(),
+            $cookie->isRaw(),
+            $cookie->getSameSite(),
+            \method_exists($cookie, 'isPartitioned') ? $cookie->isPartitioned() : false
         );
     }
 

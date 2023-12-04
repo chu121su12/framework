@@ -13,6 +13,7 @@ use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\InteractsWithTime;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Cookie6;
 
 class VerifyCsrfToken
 {
@@ -210,7 +211,7 @@ class VerifyCsrfToken
      */
     protected function newCookie($request, $config)
     {
-        return new Cookie(
+        return new Cookie6(
             'XSRF-TOKEN',
             $request->session()->token(),
             $this->availableAt(60 * $config['lifetime']),
@@ -219,7 +220,8 @@ class VerifyCsrfToken
             $config['secure'],
             false,
             false,
-            isset($config['same_site']) ? $config['same_site'] : null
+            isset($config['same_site']) ? $config['same_site'] : null,
+            isset($config['partitioned']) ? $config['partitioned'] : false
         );
     }
 

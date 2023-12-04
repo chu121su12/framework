@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\InteractsWithTime;
 use Illuminate\Support\Traits\Macroable;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Cookie6;
 
 class CookieJar implements JarContract
 {
@@ -67,7 +68,7 @@ class CookieJar implements JarContract
 
         $time = ($minutes == 0) ? 0 : $this->availableAt($minutes * 60);
 
-        return new Cookie($name, $value, $time, $path, $domain, $secure, $httpOnly, $raw, $sameSite);
+        return new Cookie6($name, $value, $time, $path, $domain, $secure, $httpOnly, $raw, $sameSite);
     }
 
     /**

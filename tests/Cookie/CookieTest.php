@@ -6,6 +6,7 @@ use Illuminate\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Cookie6;
 
 class CookieTest extends TestCase
 {
@@ -179,7 +180,7 @@ class CookieTest extends TestCase
         $cookieJar = $this->getCreator();
         $cookieJar->queue('foo', 'bar', 0, '/path');
         $this->assertEquals(
-            ['foo' => ['/path' => new Cookie('foo', 'bar', 0, '/path', null, false, true, false, 'lax')]],
+            ['foo' => ['/path' => new Cookie6('foo', 'bar', 0, '/path', null, false, true, false, 'lax', false)]],
             // updated cookie signature:
             // ['foo' => ['/path' => new Cookie('foo', 'bar', 0, '/path')]],
             $this->getQueuedPropertyValue($cookieJar)
