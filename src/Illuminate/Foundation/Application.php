@@ -1614,6 +1614,10 @@ class Application extends Container implements ApplicationContract, CachesConfig
             return $this->namespace;
         }
 
+        if (! \file_exists($this->basePath('composer.json'))) {
+            return 'App\\';
+        }
+
         $composer = backport_json_decode(file_get_contents($this->basePath('composer.json')), true);
 
         foreach ((array) data_get($composer, 'autoload.psr-4') as $namespace => $path) {
