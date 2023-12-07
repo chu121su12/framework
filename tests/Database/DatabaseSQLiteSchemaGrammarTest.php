@@ -181,7 +181,7 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
 
         $this->assertNotContains('index1', array_column($indexes, 'name'));
         $this->assertTrue(collect($indexes)->contains(
-            fn ($index) => $index['name'] === 'index2' && $index['columns'] === ['name', 'email']
+            function ($index) { return $index['name'] === 'index2' && $index['columns'] === ['name', 'email']; }
         ));
     }
 

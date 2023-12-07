@@ -3,6 +3,7 @@
 namespace Illuminate\Validation\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Contracts\Validation\ValidatorAwareRule;
 use TypeError;
 
@@ -79,7 +80,7 @@ class Enum implements Rule, ValidatorAwareRule
      * @param  \Illuminate\Validation\Validator  $validator
      * @return $this
      */
-    public function setValidator($validator)
+    public function setValidator(Validator $validator)
     {
         $this->validator = $validator;
 

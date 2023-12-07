@@ -78,7 +78,7 @@ class SQLiteProcessor extends Processor
         }, $results);
 
         if ($primaryCount > 1) {
-            $indexes = array_filter($indexes, fn ($index) => $index['name'] !== 'primary');
+            $indexes = array_filter($indexes, function ($index) { return $index['name'] !== 'primary'; });
         }
 
         return $indexes;

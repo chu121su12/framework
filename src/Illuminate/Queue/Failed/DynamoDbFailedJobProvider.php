@@ -87,7 +87,7 @@ class DynamoDbFailedJobProvider implements FailedJobProviderInterface
     public function ids($queue = null)
     {
         return collect($this->all())
-            ->when(! is_null($queue), fn ($collect) => $collect->where('queue', $queue))
+            ->when(! is_null($queue), function ($collect) use ($queue) { return $collect->where('queue', $queue); })
             ->pluck('id')
             ->all();
     }

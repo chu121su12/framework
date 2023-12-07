@@ -181,9 +181,15 @@ class Number
      * @param  int|null  $maxPrecision
      * @return string
      */
-    public static function abbreviate(int|float $number, int $precision = 0, ?int $maxPrecision = null)
+    public static function abbreviate(/*int|float */$number, /*int */$precision = 0, /*?int */$maxPrecision = null)
     {
-        return static::forHumans($number, $precision, $maxPrecision, abbreviate: true);
+        $precision = backport_type_check('int', $precision);
+
+        $maxPrecision = backport_type_check('?int', $maxPrecision);
+
+        $number = backport_type_check('int|float', $number);
+
+        return static::forHumans($number, $precision, $maxPrecision, /*abbreviate: */true);
     }
 
     /**
@@ -194,8 +200,16 @@ class Number
      * @param  int|null  $maxPrecision
      * @return string
      */
-    public static function forHumans(int|float $number, int $precision = 0, ?int $maxPrecision = null, bool $abbreviate = false)
+    public static function forHumans(/*int|float */$number, /*int */$precision = 0, /*?int */$maxPrecision = null, /*bool */$abbreviate = false)
     {
+        $precision = backport_type_check('int', $precision);
+
+        $abbreviate = backport_type_check('bool', $abbreviate);
+
+        $maxPrecision = backport_type_check('?int', $maxPrecision);
+
+        $number = backport_type_check('int|float', $number);
+
         return static::summarize($number, $precision, $maxPrecision, $abbreviate ? [
             3 => 'K',
             6 => 'M',
@@ -220,8 +234,14 @@ class Number
      * @param  array  $units
      * @return string
      */
-    protected static function summarize(int|float $number, int $precision = 0, ?int $maxPrecision = null, array $units = [])
+    protected static function summarize(/*int|float */$number, /*int */$precision = 0, /*?int */$maxPrecision = null, array $units = [])
     {
+        $precision = backport_type_check('int', $precision);
+
+        $maxPrecision = backport_type_check('?int', $maxPrecision);
+
+        $number = backport_type_check('int|float', $number);
+
         if (empty($units)) {
             $units = [
                 3 => 'K',
@@ -245,7 +265,7 @@ class Number
         $displayExponent = $numberExponent - ($numberExponent % 3);
         $number /= pow(10, $displayExponent);
 
-        return trim(sprintf('%s%s', static::format($number, $precision, $maxPrecision), $units[$displayExponent] ?? ''));
+        return trim(sprintf('%s%s', static::format($number, $precision, $maxPrecision), isset($units[$displayExponent]) ? $units[$displayExponent] : ''));
     }
 
     /**

@@ -226,10 +226,10 @@ class SchemaBuilderTest extends DatabaseTestCase
 
         $this->assertCount(2, $indexes);
         $this->assertTrue(collect($indexes)->contains(
-            fn ($index) => $index['columns'] === ['id'] && $index['primary']
+            function ($index) { return $index['columns'] === ['id'] && $index['primary']; }
         ));
         $this->assertTrue(collect($indexes)->contains(
-            fn ($index) => $index['name'] === 'foo_baz_bar_unique' && $index['columns'] === ['baz', 'bar'] && $index['unique']
+            function ($index) { return $index['name'] === 'foo_baz_bar_unique' && $index['columns'] === ['baz', 'bar'] && $index['unique']; }
         ));
     }
 
@@ -247,10 +247,10 @@ class SchemaBuilderTest extends DatabaseTestCase
 
         $this->assertCount(2, $indexes);
         $this->assertTrue(collect($indexes)->contains(
-            fn ($index) => $index['columns'] === ['baz', 'key'] && $index['primary']
+            function ($index) { return $index['columns'] === ['baz', 'key'] && $index['primary']; }
         ));
         $this->assertTrue(collect($indexes)->contains(
-            fn ($index) => $index['name'] === 'foo_bar_unique' && $index['columns'] === ['bar'] && $index['unique']
+            function ($index) { return $index['name'] === 'foo_bar_unique' && $index['columns'] === ['bar'] && $index['unique']; }
         ));
     }
 
@@ -271,7 +271,7 @@ class SchemaBuilderTest extends DatabaseTestCase
         $indexes = Schema::getIndexes('articles');
 
         $this->assertCount(2, $indexes);
-        $this->assertTrue(collect($indexes)->contains(fn ($index) => $index['columns'] === ['id'] && $index['primary']));
+        $this->assertTrue(collect($indexes)->contains(function ($index) { return $index['columns'] === ['id'] && $index['primary']; }));
         $this->assertTrue(collect($indexes)->contains('name', 'articles_body_title_fulltext'));
     }
 }

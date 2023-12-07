@@ -770,9 +770,11 @@ class BladeComponentTagCompilerTest extends AbstractBladeTestCase
         $profileComponent->shouldReceive('data')->once()->andReturn([]);
         $profileComponent->shouldReceive('withAttributes')->with(['attributes' => new ComponentAttributeBag(['other' => 'ok'])])->once();
 
-        Component::resolveComponentsUsing(fn ($component) => match ($component) {
-            TestContainerComponent::class => $containerComponent,
-            TestProfileComponent::class => $profileComponent,
+        Component::resolveComponentsUsing(function ($component) use ($containerComponent, $profileComponent) {
+            switch ($component) {
+                case TestContainerComponent::class: return $containerComponent;
+                case TestProfileComponent::class: return $profileComponent;
+            }
         });
 
         $__env = m::mock(\Illuminate\View\Factory::class);

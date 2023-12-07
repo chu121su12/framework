@@ -212,7 +212,7 @@ class PostgresBuilder extends Builder
      */
     public function getIndexes($table)
     {
-        [, $schema, $table] = $this->parseSchemaAndTable($table);
+        list($_connection, $schema, $table) = $this->parseSchemaAndTable($table);
 
         $table = $this->connection->getTablePrefix().$table;
 

@@ -962,10 +962,12 @@ class Router implements BindingRegistrar, RegistrarContract
      */
     public function substituteImplicitBindings($route)
     {
-        $default = fn () => ImplicitRouteBinding::resolveForRoute($this->container, $route);
+        $default = function () use ($route) {
+            return ImplicitRouteBinding::resolveForRoute($this->container, $route);
+        };
 
         return call_user_func(
-            $this->implicitBindingCallback ?? $default, $this->container, $route, $default
+            isset($this->implicitBindingCallback) ? $this->implicitBindingCallback : $default, $this->container, $route, $default
         );
     }
 

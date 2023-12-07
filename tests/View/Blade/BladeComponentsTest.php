@@ -18,9 +18,10 @@ class BladeComponentsTest extends AbstractBladeTestCase
 
     public function testClassComponentsAreCompiled()
     {
-        $this->assertSame('<?php if (isset($component)) { $__componentOriginal2dda3d2f2f9b76bd400bf03f0b84e87f = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal2dda3d2f2f9b76bd400bf03f0b84e87f = $attributes; } ?>
-<?php $component = Illuminate\Tests\View\Blade\ComponentStub::class::resolve(["foo" => "bar"] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+        $this->assertSame('<?php if (isset($component)) { $__componentOriginal32877a641c21ac6579f6376333c8770674a6058f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal32877a641c21ac6579f6376333c8770674a6058f = $attributes; } ?>
+<?php $component = Illuminate\Tests\View\Blade\ComponentStub::class; ?>
+<?php $component = $component::resolve(["foo" => "bar"] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName(\'test\'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>', $this->compiler->compileString('@component(\'Illuminate\Tests\View\Blade\ComponentStub::class\', \'test\', ["foo" => "bar"])'));
@@ -39,13 +40,13 @@ class BladeComponentsTest extends AbstractBladeTestCase
 
         $this->assertSameStringDifferentLineEndings('<?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginal79aef92e83454121ab6e5f64077e7d8a)): ?>
-<?php $attributes = $__attributesOriginal79aef92e83454121ab6e5f64077e7d8a; ?>
-<?php unset($__attributesOriginal79aef92e83454121ab6e5f64077e7d8a); ?>
+<?php if (isset($__attributesOriginal0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33)): ?>
+<?php $attributes = $__attributesOriginal0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33; ?>
+<?php unset($__attributesOriginal0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginal79aef92e83454121ab6e5f64077e7d8a)): ?>
-<?php $component = $__componentOriginal79aef92e83454121ab6e5f64077e7d8a; ?>
-<?php unset($__componentOriginal79aef92e83454121ab6e5f64077e7d8a); ?>
+<?php if (isset($__componentOriginal0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33)): ?>
+<?php $component = $__componentOriginal0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33; ?>
+<?php unset($__componentOriginal0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33); ?>
 <?php endif; ?>', $this->compiler->compileString('@endcomponentClass'));
     }
 

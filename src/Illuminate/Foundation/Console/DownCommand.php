@@ -158,10 +158,10 @@ class DownCommand extends Command
      */
     protected function getSecret()
     {
-        return match (true) {
-            ! is_null($this->option('secret')) => $this->option('secret'),
-            $this->option('with-secret') => Str::random(),
-            default => null,
-        };
+        switch (true) {
+            case ! is_null($this->option('secret')): return $this->option('secret');
+            case $this->option('with-secret'): return Str::random();
+            default: return null;
+        }
     }
 }

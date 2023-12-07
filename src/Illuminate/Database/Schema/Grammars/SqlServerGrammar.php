@@ -185,7 +185,7 @@ class SqlServerGrammar extends Grammar
             .'join sys.columns as col on idxcol.object_id = col.object_id and idxcol.column_id = col.column_id '
             .'where tbl.name = %s and scm.name = SCHEMA_NAME() '
             .'group by idx.name, idx.type_desc, idx.is_unique, idx.is_primary_key',
-            $this->quoteString($table),
+            $this->quoteString($table)
         );
     }
 
