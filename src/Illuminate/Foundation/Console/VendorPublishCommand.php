@@ -315,7 +315,7 @@ class VendorPublishCommand extends Command
             ) {
                 $path = $this->ensureMigrationNameIsUpToDate($from, $path);
 
-                $manager->write('to://'.$path, $manager->read('from://'.$path));
+                $manager->put('to://'.$path, $manager->read('from://'.$path));
             }
         }
     }
@@ -353,7 +353,7 @@ class VendorPublishCommand extends Command
                 return preg_replace(
                     '/\d{4}_(\d{2})_(\d{2})_(\d{6})_/',
                     $this->publishedAt->format('Y_m_d_His').'_',
-                    $to,
+                    $to
                 );
             }
         }
