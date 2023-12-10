@@ -167,8 +167,10 @@ class DatabaseUserProvider implements UserProvider
      * @param  bool  $force
      * @return void
      */
-    public function rehashPasswordIfRequired(UserContract $user, array $credentials, bool $force = false)
+    public function rehashPasswordIfRequired(UserContract $user, array $credentials, /*bool */$force = false)
     {
+        $force = backport_type_check('bool', $force);
+
         if (! $this->hasher->needsRehash($user->getAuthPassword()) && ! $force) {
             return;
         }

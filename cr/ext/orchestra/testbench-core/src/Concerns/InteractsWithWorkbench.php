@@ -58,11 +58,12 @@ trait InteractsWithWorkbench
      */
     protected function getPackageBootstrappersUsingWorkbench($app)
     {
+        $bootstrappers = null;
         $cachedConfigurationForWorkbench = static::cachedConfigurationForWorkbench();
 
         if (isset($cachedConfigurationForWorkbench)) {
             $extraAttributes = $cachedConfigurationForWorkbench->getExtraAttributes();
-            if (empty(isset($extraAttributes) && isset($extraAttributes['bootstrappers']) ? $extraAttributes['bootstrappers'] : null)) {
+            if (empty(isset($extraAttributes) && ($bootstrappers = isset($extraAttributes['bootstrappers']) ? $extraAttributes['bootstrappers'] : null))) {
                 return null;
             }
         }

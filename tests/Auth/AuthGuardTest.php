@@ -189,7 +189,7 @@ class AuthGuardTest extends TestCase
 
     public function testAttemptRehashesPasswordWhenRequired()
     {
-        [$session, $provider, $request, $cookie, $timebox] = $this->getMocks();
+        list($session, $provider, $request, $cookie, $timebox) = $this->getMocks();
         $guard = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['login'])->setConstructorArgs(['default', $provider, $session, $request, $timebox])->getMock();
         $guard->setDispatcher($events = m::mock(Dispatcher::class));
         $timebox->shouldReceive('call')->once()->andReturnUsing(function ($callback, $microseconds) use ($timebox) {
@@ -207,7 +207,7 @@ class AuthGuardTest extends TestCase
 
     public function testAttemptDoesntRehashPasswordWhenDisabled()
     {
-        [$session, $provider, $request, $cookie, $timebox] = $this->getMocks();
+        list($session, $provider, $request, $cookie, $timebox) = $this->getMocks();
         $guard = $this->getMockBuilder(SessionGuard::class)->onlyMethods(['login'])
             ->setConstructorArgs(['default', $provider, $session, $request, $timebox, $rehashOnLogin = false])
             ->getMock();

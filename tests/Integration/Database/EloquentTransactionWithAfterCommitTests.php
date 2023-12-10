@@ -15,6 +15,11 @@ trait EloquentTransactionWithAfterCommitTests
 {
     use WithLaravelMigrationsForTestCase;
 
+    protected function attributeBpWithMigration()
+    {
+        return ['laravel'];
+    }
+
     protected function setUpEloquentTransactionWithAfterCommitTests()/*: void*/
     {
         AuthUser::unguard();

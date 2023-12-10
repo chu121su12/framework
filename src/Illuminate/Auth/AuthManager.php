@@ -130,7 +130,9 @@ class AuthManager implements FactoryContract
             $name,
             $provider,
             $this->app['session.store'],
-            rehashOnLogin: $this->app['config']->get('hashing.rehash_on_login', true),
+            /*Request $request = */null,
+            /*Timebox $timebox = */null,
+            /*rehashOnLogin: */$this->app['config']->get('hashing.rehash_on_login', true)
         );
 
         // When using the remember me functionality of the authentication services we

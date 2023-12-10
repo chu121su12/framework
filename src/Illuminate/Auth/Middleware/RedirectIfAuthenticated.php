@@ -50,7 +50,7 @@ class RedirectIfAuthenticated
     /**
      * Get the default URI the user should be redirected to when they are authenticated.
      */
-    protected function defaultRedirectUri(): string
+    protected function defaultRedirectUri()/*: string*/
     {
         foreach (['dashboard', 'home'] as $uri) {
             if (Route::has($uri)) {

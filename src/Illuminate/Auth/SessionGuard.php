@@ -134,8 +134,10 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
                                 Session $session,
                                 Request $request = null,
                                 Timebox $timebox = null,
-                                bool $rehashOnLogin = true)
+                                /*bool */$rehashOnLogin = true)
     {
+        $rehashOnLogin = backport_type_check('bool', $rehashOnLogin);
+
         $this->name = $name;
         $this->session = $session;
         $this->request = $request;
@@ -724,7 +726,7 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
         }
 
         $this->provider->rehashPasswordIfRequired(
-            $user, ['password' => $password], force: true
+            $user, ['password' => $password], /*force: */true
         );
     }
 

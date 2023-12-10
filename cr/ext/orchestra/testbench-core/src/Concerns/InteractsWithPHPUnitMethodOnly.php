@@ -11,7 +11,7 @@ use ReflectionClass;
 
 use function Orchestra\Testbench\phpunit_version_compare;
 
-trait InteractsWithPHPUnitMemberOnly
+trait InteractsWithPHPUnitMethodOnly
 {
     /**
      * Determine if the trait is used within testing.

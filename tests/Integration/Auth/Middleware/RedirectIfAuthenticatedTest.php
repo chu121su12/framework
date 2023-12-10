@@ -11,7 +11,7 @@ use Orchestra\Testbench\TestCase;
 
 class RedirectIfAuthenticatedTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -24,14 +24,14 @@ class RedirectIfAuthenticatedTest extends TestCase
             return response('Login Form');
         })->middleware(RedirectIfAuthenticated::class);
 
-        UserFactory::new()->create();
+        UserFactory::new_()->create();
 
         $user = AuthenticationTestUser::first();
         $this->router->get('/login', function () {
             return response('Login Form');
         })->middleware(RedirectIfAuthenticated::class);
 
-        UserFactory::new()->create();
+        UserFactory::new_()->create();
 
         $this->user = AuthenticationTestUser::first();
     }
