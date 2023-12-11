@@ -53,7 +53,7 @@ class AuthenticateSession implements AuthenticatesSessions
 
             $passwordHash = isset($recallerCookies[2]) ? $recallerCookies[2] : null;
 
-            if (! $passwordHash || $passwordHash != $request->user()->getAuthPassword()) {
+            if (! $passwordHash || ! hash_equals($request->user()->getAuthPassword(), $passwordHash)) {
                 $this->logout($request);
             }
         }
@@ -62,7 +62,7 @@ class AuthenticateSession implements AuthenticatesSessions
             $this->storePasswordHashInSession($request);
         }
 
-        if ($request->session()->get('password_hash_'.$this->auth->getDefaultDriver()) !== $request->user()->getAuthPassword()) {
+        if (! hash_equals($request->session()->get('password_hash_'.$this->auth->getDefaultDriver()), $request->user()->getAuthPassword())) {
             $this->logout($request);
         }
 
