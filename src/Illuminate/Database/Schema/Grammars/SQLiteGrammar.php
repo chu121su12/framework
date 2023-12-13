@@ -709,7 +709,7 @@ class SQLiteGrammar extends Grammar
      */
     protected function typeDouble(Fluent $column)
     {
-        return 'float';
+        return 'double';
     }
 
     /**

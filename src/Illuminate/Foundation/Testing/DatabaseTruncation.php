@@ -142,9 +142,11 @@ trait DatabaseTruncation
     {
         $connectionName = backport_type_check('?string', $connectionName);
 
-        if (property_exists($this, 'exceptTables')) {
-            $migrationsTable = $this->app['config']->get('database.migrations');
+        $migrations = $this->app['config']->get('database.migrations');
 
+        $migrationsTable = is_array($migrations) ? ($migrations['table'] ?? null) : $migrations;
+
+        if (property_exists($this, 'exceptTables')) {
             if (array_is_list(isset($this->exceptTables) ? $this->exceptTables : [])) {
                 return array_merge(
                     isset($this->exceptTables) ? $this->exceptTables : [],
@@ -158,7 +160,7 @@ trait DatabaseTruncation
             );
         }
 
-        return [$this->app['config']->get('database.migrations')];
+        return [$migrationsTable];
     }
 
     /**
