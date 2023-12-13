@@ -134,28 +134,28 @@ class SupportServiceProviderTest extends TestCase
     {
         $serviceProvider = new ServiceProviderForTestingOne($this->app);
 
-        (fn () => $this->publishesMigrations(['source/tagged/four' => 'destination/tagged/four'], 'tag_four'))
+        backport_function_call_able(function () { return $this->publishesMigrations(['source/tagged/four' => 'destination/tagged/four'], 'tag_four'); })
             ->call($serviceProvider);
 
         $this->assertContains('source/tagged/four', ServiceProvider::publishableMigrationPaths());
 
         $this->app->config->set('database.migrations.update_date_on_publish', false);
 
-        (fn () => $this->publishesMigrations(['source/tagged/five' => 'destination/tagged/five'], 'tag_four'))
+        backport_function_call_able(function () { return $this->publishesMigrations(['source/tagged/five' => 'destination/tagged/five'], 'tag_four'); })
             ->call($serviceProvider);
 
         $this->assertNotContains('source/tagged/five', ServiceProvider::publishableMigrationPaths());
 
         $this->app->config->set('database.migrations', 'migrations');
 
-        (fn () => $this->publishesMigrations(['source/tagged/five' => 'destination/tagged/five'], 'tag_four'))
+        backport_function_call_able(function () { return $this->publishesMigrations(['source/tagged/five' => 'destination/tagged/five'], 'tag_four'); })
             ->call($serviceProvider);
 
         $this->assertNotContains('source/tagged/five', ServiceProvider::publishableMigrationPaths());
 
         $this->app->config->set('database.migrations', null);
 
-        (fn () => $this->publishesMigrations(['source/tagged/five' => 'destination/tagged/five'], 'tag_four'))
+        backport_function_call_able(function () { return $this->publishesMigrations(['source/tagged/five' => 'destination/tagged/five'], 'tag_four'); })
             ->call($serviceProvider);
 
         $this->assertNotContains('source/tagged/five', ServiceProvider::publishableMigrationPaths());

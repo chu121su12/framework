@@ -25,5 +25,5 @@ trait InteractsWithPHPUnit
      */
     protected static $cachedTestCaseMethodAttributes = [];
 
-    use InteractsWithPHPUnitMemberOnly;
+    use InteractsWithPHPUnitMethodOnly;
 }

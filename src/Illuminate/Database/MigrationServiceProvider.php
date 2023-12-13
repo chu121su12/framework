@@ -61,7 +61,7 @@ class MigrationServiceProvider extends ServiceProvider implements DeferrableProv
         $this->app->singleton('migration.repository', function ($app) {
             $migrations = $app['config']['database.migrations'];
 
-            $table = is_array($migrations) ? ($migrations['table'] ?? null) : $migrations;
+            $table = is_array($migrations) ? (isset($migrations['table']) ? $migrations['table'] : null) : $migrations;
 
             return new DatabaseMigrationRepository($app['db'], $table);
         });

@@ -144,7 +144,7 @@ trait DatabaseTruncation
 
         $migrations = $this->app['config']->get('database.migrations');
 
-        $migrationsTable = is_array($migrations) ? ($migrations['table'] ?? null) : $migrations;
+        $migrationsTable = is_array($migrations) ? (isset($migrations['table']) ? $migrations['table'] : null) : $migrations;
 
         if (property_exists($this, 'exceptTables')) {
             if (array_is_list(isset($this->exceptTables) ? $this->exceptTables : [])) {

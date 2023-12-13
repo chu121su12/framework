@@ -71,7 +71,7 @@ class DumpCommand extends Command
     {
         $migrations = Config::get('database.migrations', 'migrations');
 
-        $migrationTable = is_array($migrations) ? ($migrations['table'] ?? 'migrations') : $migrations;
+        $migrationTable = is_array($migrations) ? (isset($migrations['table']) ? $migrations['table'] : 'migrations') : $migrations;
 
         return $connection->getSchemaState()
                 ->withMigrationTable($connection->getTablePrefix().$migrationTable)
