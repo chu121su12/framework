@@ -22,7 +22,7 @@ class MakesHttpRequestsTest extends TestCase
     {
         $router = $this->app->make(Registrar::class);
 
-        $router->get('previous/url', fn () => 'ok')->name('previous-url');
+        $router->get('previous/url', function () { return 'ok'; })->name('previous-url');
 
         $this->fromRoute('previous-url');
 

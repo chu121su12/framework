@@ -341,8 +341,10 @@ trait MakesHttpRequests
      * @param  mixed  $parameters
      * @return $this
      */
-    public function fromRoute(string $name, $parameters = [])
+    public function fromRoute(/*string */$name, $parameters = [])
     {
+        $name = backport_type_check('string', $name);
+
         return $this->from($this->app['url']->route($name, $parameters));
     }
 
