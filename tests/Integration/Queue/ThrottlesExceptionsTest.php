@@ -58,13 +58,6 @@ class ThrottlesExceptionsTest_testLimitingWithDefaultValues_class
 
 class ThrottlesExceptionsTest extends TestCase
 {
-    protected function tearDown()/*: void*/
-    {
-        parent::tearDown();
-
-        m::close();
-    }
-
     public function testCircuitIsOpenedForJobErrors()
     {
         $this->assertJobWasReleasedImmediately(CircuitBreakerTestJob::class);

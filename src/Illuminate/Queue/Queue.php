@@ -113,7 +113,7 @@ abstract class Queue
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new InvalidPayloadException(
-                'Unable to JSON encode payload. Error code: '.json_last_error(), $value
+                'Unable to JSON encode payload. Error ('.json_last_error().'): '.json_last_error_msg(), $value
             );
         }
 

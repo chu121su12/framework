@@ -14,13 +14,6 @@ use Orchestra\Testbench\TestCase;
 
 class SkipIfBatchCancelledTest extends TestCase
 {
-    protected function tearDown()/*: void*/
-    {
-        parent::tearDown();
-
-        m::close();
-    }
-
     public function testJobsAreSkippedOnceBatchIsCancelled()
     {
         list($beforeCancelled) = (new SkipCancelledBatchableTestJob())->withFakeBatch();

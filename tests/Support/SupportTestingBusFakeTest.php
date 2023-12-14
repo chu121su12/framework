@@ -536,6 +536,16 @@ class SupportTestingBusFakeTest extends TestCase
             ChainedJobStub::class,
         ]);
 
+        $this->fake->chain([
+            new ChainedJobStub(123),
+            new ChainedJobStub(456),
+        ])->dispatch();
+
+        $this->fake->assertChained([
+            fn (ChainedJobStub $job) => $job->id === 123,
+            fn (ChainedJobStub $job) => $job->id === 456,
+        ]);
+
         Container::setInstance(null);
     }
 
@@ -780,6 +790,13 @@ class BusJobStub
 class ChainedJobStub
 {
     use Queueable;
+
+    public $id;
+
+    public function __construct($id = null)
+    {
+        $this->id = $id;
+    }
 }
 
 class OtherBusJobStub

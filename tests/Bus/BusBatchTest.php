@@ -71,6 +71,7 @@ class BusBatchTest extends TestCase
         $this->createSchema();
 
         $_SERVER['__finally.count'] = 0;
+        $_SERVER['__progress.count'] = 0;
         $_SERVER['__then.count'] = 0;
         $_SERVER['__catch.count'] = 0;
     }
@@ -103,7 +104,7 @@ class BusBatchTest extends TestCase
      */
     protected function tearDown()/*: void*/
     {
-        unset($_SERVER['__finally.batch'], $_SERVER['__then.batch'], $_SERVER['__catch.batch'], $_SERVER['__catch.exception']);
+        unset($_SERVER['__finally.batch'], $_SERVER['__progress.batch'], $_SERVER['__then.batch'], $_SERVER['__catch.batch'], $_SERVER['__catch.exception']);
 
         $this->schema()->drop('job_batches');
 
@@ -211,12 +212,14 @@ class BusBatchTest extends TestCase
         $batch->recordSuccessfulJob('test-id');
 
         $this->assertInstanceOf(Batch::class, $_SERVER['__finally.batch']);
+        $this->assertInstanceOf(Batch::class, $_SERVER['__progress.batch']);
         $this->assertInstanceOf(Batch::class, $_SERVER['__then.batch']);
 
         $batch = $batch->fresh();
         $this->assertEquals(0, $batch->pendingJobs);
         $this->assertTrue($batch->finished());
         $this->assertEquals(1, $_SERVER['__finally.count']);
+        $this->assertEquals(2, $_SERVER['__progress.count']);
         $this->assertEquals(1, $_SERVER['__then.count']);
     }
 
@@ -251,6 +254,7 @@ class BusBatchTest extends TestCase
         $this->assertTrue($batch->finished());
         $this->assertTrue($batch->cancelled());
         $this->assertEquals(1, $_SERVER['__finally.count']);
+        $this->assertEquals(0, $_SERVER['__progress.count']);
         $this->assertEquals(1, $_SERVER['__catch.count']);
         $this->assertSame('Something went wrong.', $_SERVER['__catch.exception']->getMessage());
     }
@@ -286,6 +290,7 @@ class BusBatchTest extends TestCase
         $this->assertFalse($batch->finished());
         $this->assertFalse($batch->cancelled());
         $this->assertEquals(1, $_SERVER['__catch.count']);
+        $this->assertEquals(2, $_SERVER['__progress.count']);
         $this->assertSame('Something went wrong.', $_SERVER['__catch.exception']->getMessage());
     }
 
@@ -324,6 +329,11 @@ class BusBatchTest extends TestCase
         $this->assertFalse($batch->finished());
         $batch->finishedAt = now();
         $this->assertTrue($batch->finished());
+
+        $batch->options['progress'] = [];
+        $this->assertFalse($batch->hasProgressCallbacks());
+        $batch->options['progress'] = [1];
+        $this->assertTrue($batch->hasProgressCallbacks());
 
         $batch->options['then'] = [];
         $this->assertFalse($batch->hasThenCallbacks());
@@ -460,6 +470,10 @@ class BusBatchTest extends TestCase
         $repository = new DatabaseBatchRepository(new BatchFactory($queue), DB::connection(), 'job_batches');
 
         $pendingBatch = (new PendingBatch(new Container, collect()))
+                            ->progress(function (Batch $batch) {
+                                $_SERVER['__progress.batch'] = $batch;
+                                $_SERVER['__progress.count']++;
+                            })
                             ->then(function (Batch $batch) {
                                 $_SERVER['__then.batch'] = $batch;
                                 $_SERVER['__then.count']++;

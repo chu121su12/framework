@@ -2,6 +2,7 @@
 
 namespace Illuminate\Database\Schema;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\File;
 
 class SQLiteBuilder extends Builder
@@ -37,15 +38,12 @@ class SQLiteBuilder extends Builder
      */
     public function getTables()
     {
+        $withSize = false;
+
         try {
             $withSize = $this->connection->scalar($this->grammar->compileDbstatExists());
-        } catch (\Illuminate\Database\QueryException $e) {
-            if (\preg_match('/\bno such table:\s+pragma_compile_options\b/', $e->getMessage())) {
-                $withSize = false;
-            }
-            else {
-                throw $e;
-            }
+        } catch (QueryException $e) {
+            //
         }
 
         return $this->connection->getPostProcessor()->processTables(

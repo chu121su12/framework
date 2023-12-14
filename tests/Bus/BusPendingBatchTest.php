@@ -43,7 +43,9 @@ class BusPendingBatchTest extends TestCase
 
         $pendingBatch = new PendingBatch($container, new Collection([$job]));
 
-        $pendingBatch = $pendingBatch->then(function () {
+        $pendingBatch = $pendingBatch->progress(function () {
+            //
+        })->then(function () {
             //
         })->catch_(function () {
             //
@@ -51,6 +53,7 @@ class BusPendingBatchTest extends TestCase
 
         $this->assertSame('test-connection', $pendingBatch->connection());
         $this->assertSame('test-queue', $pendingBatch->queue());
+        $this->assertCount(1, $pendingBatch->progressCallbacks());
         $this->assertCount(1, $pendingBatch->thenCallbacks());
         $this->assertCount(1, $pendingBatch->catchCallbacks());
         $this->assertArrayHasKey('extra-option', $pendingBatch->options);
