@@ -12,6 +12,7 @@ use Pheanstalk\Contract\JobIdInterface;
 use Pheanstalk\Contract\PheanstalkManagerInterface;
 use Pheanstalk\Contract\PheanstalkPublisherInterface;
 use Pheanstalk\Contract\PheanstalkSubscriberInterface;
+use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -72,6 +73,16 @@ class QueueBeanstalkdJobTest extends TestCase
 
     protected function getJob()
     {
+        if (\class_exists(Job::class)) {
+            return new BeanstalkdJob(
+                m::mock(Container::class),
+                m::mock(Pheanstalk::class),
+                m::mock(Job::class),
+                'connection-name',
+                'default'
+            );
+        }
+
         return new BeanstalkdJob(
             m::mock(Container::class),
             m::mock(implode(',', [PheanstalkManagerInterface::class, PheanstalkPublisherInterface::class, PheanstalkSubscriberInterface::class])),

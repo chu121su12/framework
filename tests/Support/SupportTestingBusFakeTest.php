@@ -542,8 +542,8 @@ class SupportTestingBusFakeTest extends TestCase
         ])->dispatch();
 
         $this->fake->assertChained([
-            fn (ChainedJobStub $job) => $job->id === 123,
-            fn (ChainedJobStub $job) => $job->id === 456,
+            function (ChainedJobStub $job) { return $job->id === 123; },
+            function (ChainedJobStub $job) { return $job->id === 456; },
         ]);
 
         Container::setInstance(null);

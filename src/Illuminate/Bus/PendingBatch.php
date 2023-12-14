@@ -96,7 +96,7 @@ class PendingBatch
      */
     public function progressCallbacks()
     {
-        return $this->options['progress'] ?? [];
+        return isset($this->options['progress']) ? $this->options['progress'] : [];
     }
 
     /**

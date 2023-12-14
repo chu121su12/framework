@@ -5,6 +5,7 @@ namespace Illuminate\Queue\Jobs;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Queue\Job as JobContract;
 use Pheanstalk\Contract\JobIdInterface;
+use Pheanstalk\Job as PheanstalkJob;
 use Pheanstalk\Pheanstalk;
 
 class BeanstalkdJob extends Job implements JobContract
@@ -33,8 +34,13 @@ class BeanstalkdJob extends Job implements JobContract
      * @param  string  $queue
      * @return void
      */
-    public function __construct(Container $container, $pheanstalk, JobIdInterface $job, $connectionName, $queue)
+    public function __construct(Container $container, $pheanstalk, $job, $connectionName, $queue)
     {
+        $job = backport_type_check([
+            PheanstalkJob::class,
+            JobIdInterface::class,
+        ], $job);
+
         $this->job = $job;
         $this->queue = $queue;
         $this->container = $container;

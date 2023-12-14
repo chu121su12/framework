@@ -21,16 +21,16 @@ use Orchestra\Testbench\Attributes\WithMigration;
 #[WithMigration('queue')]
 class UniqueJobTest extends QueueTestCase
 {
+    protected function attributeBpWithMigration()
+    {
+        return ['queue', 'cache'];
+    }
+
     protected function defineEnvironment($app)
     {
         parent::defineEnvironment($app);
 
         $app['config']->set('cache.default', 'database');
-    }
-
-    protected function attributeBpWithMigration()
-    {
-        return ['queue'];
     }
 
     public function testUniqueJobsAreNotDispatched()
@@ -72,7 +72,7 @@ class UniqueJobTest extends QueueTestCase
         $this->expectException(Exception::class);
 
         try {
-            dispatchSync($job = new UniqueTestFailJob);
+            dispatch_sync($job = new UniqueTestFailJob);
         } finally {
             $this->assertTrue($job::$handled);
             $this->assertTrue($this->app->get(Cache::class)->lock($this->getLockKey($job), 10)->get());

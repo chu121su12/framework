@@ -210,11 +210,11 @@ class SchemaBuilderTest extends DatabaseTestCase
         $types = Schema::getTypes();
 
         $this->assertCount(11, $types);
-        $this->assertTrue(collect($types)->contains(fn ($type) => $type['name'] === 'pseudo_foo' && $type['type'] === 'pseudo' && ! $type['implicit']));
-        $this->assertTrue(collect($types)->contains(fn ($type) => $type['name'] === 'comp_foo' && $type['type'] === 'composite' && ! $type['implicit']));
-        $this->assertTrue(collect($types)->contains(fn ($type) => $type['name'] === 'enum_foo' && $type['type'] === 'enum' && ! $type['implicit']));
-        $this->assertTrue(collect($types)->contains(fn ($type) => $type['name'] === 'range_foo' && $type['type'] === 'range' && ! $type['implicit']));
-        $this->assertTrue(collect($types)->contains(fn ($type) => $type['name'] === 'domain_foo' && $type['type'] === 'domain' && ! $type['implicit']));
+        $this->assertTrue(collect($types)->contains(function ($type) { return $type['name'] === 'pseudo_foo' && $type['type'] === 'pseudo' && ! $type['implicit']; }));
+        $this->assertTrue(collect($types)->contains(function ($type) { return $type['name'] === 'comp_foo' && $type['type'] === 'composite' && ! $type['implicit']; }));
+        $this->assertTrue(collect($types)->contains(function ($type) { return $type['name'] === 'enum_foo' && $type['type'] === 'enum' && ! $type['implicit']; }));
+        $this->assertTrue(collect($types)->contains(function ($type) { return $type['name'] === 'range_foo' && $type['type'] === 'range' && ! $type['implicit']; }));
+        $this->assertTrue(collect($types)->contains(function ($type) { return $type['name'] === 'domain_foo' && $type['type'] === 'domain' && ! $type['implicit']; }));
 
         Schema::dropAllTypes();
         $types = Schema::getTypes();
@@ -316,9 +316,9 @@ class SchemaBuilderTest extends DatabaseTestCase
 
         $this->assertCount(1, $foreignKeys);
         $this->assertTrue(collect($foreignKeys)->contains(
-            fn ($foreign) => $foreign['columns'] === ['user_id']
+            function ($foreign) { return $foreign['columns'] === ['user_id']
                 && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['id']
-                && $foreign['on_update'] === 'cascade' && $foreign['on_delete'] === 'set null'
+                && $foreign['on_update'] === 'cascade' && $foreign['on_delete'] === 'set null'; }
         ));
     }
 
@@ -343,9 +343,9 @@ class SchemaBuilderTest extends DatabaseTestCase
 
         $this->assertCount(1, $foreignKeys);
         $this->assertTrue(collect($foreignKeys)->contains(
-            fn ($foreign) => $foreign['columns'] === ['d', 'c']
+            function ($foreign) { return $foreign['columns'] === ['d', 'c']
                 && $foreign['foreign_table'] === 'parent'
-                && $foreign['foreign_columns'] === ['b', 'a']
+                && $foreign['foreign_columns'] === ['b', 'a']; }
         ));
     }
 }

@@ -15,12 +15,20 @@ use Orchestra\Testbench\Attributes\RequiresEnv;
 use Orchestra\Testbench\TestCase;
 use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
 
+/**
+ * @requires OS Linux|Darwin
+ * @requires ENV DYNAMODB_ENDPOINT
+ */
 #[RequiresOperatingSystem('Linux|Darwin')]
 #[RequiresEnv('DYNAMODB_ENDPOINT')]
 class DynamoBatchTest extends TestCase
 {
-    public function setUp(): void
+    public function setUp()/*: void*/
     {
+        if (!Env::get('DYNAMODB_ENDPOINT')) {
+            $this->markTestSkipped('Requires DYNAMODB_ENDPOINT environment');
+        }
+
         $this->afterApplicationCreated(function () {
             BatchRunRecorder::reset();
             app(DynamoBatchRepository::class)->createAwsDynamoTable();
@@ -149,10 +157,12 @@ class BatchJob implements ShouldQueue
 
     public static $results = [];
 
-    public string $id;
+    public /*string */$id;
 
-    public function __construct(string $id)
+    public function __construct(/*string */$id)
     {
+        $id = backport_type_check('string', $id);
+
         $this->id = $id;
     }
 
@@ -177,13 +187,17 @@ class BatchRunRecorder
 
     public static $failures = [];
 
-    public static function record(string $id)
+    public static function record(/*string */$id)
     {
+        $id = backport_type_check('string', $id);
+
         self::$results[] = $id;
     }
 
-    public static function recordFailure(string $message)
+    public static function recordFailure(/*string */$message)
     {
+        $message = backport_type_check('string', $message);
+
         self::$failures[] = $message;
 
         return $message;

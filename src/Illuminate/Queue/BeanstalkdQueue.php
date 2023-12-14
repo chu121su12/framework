@@ -5,6 +5,7 @@ namespace Illuminate\Queue;
 use Illuminate\Contracts\Queue\Queue as QueueContract;
 use Illuminate\Queue\Jobs\BeanstalkdJob;
 use Pheanstalk\Contract\JobIdInterface;
+use Pheanstalk\Job as PheanstalkJob;
 use Pheanstalk\Pheanstalk;
 use Pheanstalk\Values\Job;
 use Pheanstalk\Values\JobId;
@@ -71,6 +72,10 @@ class BeanstalkdQueue extends Queue implements QueueContract
      */
     public function size($queue = null)
     {
+        if (! \class_exists(TubeName::class)) {
+            return (int) $this->pheanstalk->statsTube($this->getQueue($queue))->current_jobs_ready;
+        }
+
         return (int) $this->pheanstalk->statsTube(new TubeName($this->getQueue($queue)))->currentJobsReady;
     }
 
@@ -105,6 +110,12 @@ class BeanstalkdQueue extends Queue implements QueueContract
      */
     public function pushRaw($payload, $queue = null, array $options = [])
     {
+        if (! \class_exists(TubeName::class)) {
+            return $this->pheanstalk->useTube($this->getQueue($queue))->put(
+                $payload, Pheanstalk::DEFAULT_PRIORITY, Pheanstalk::DEFAULT_DELAY, $this->timeToRun
+            );
+        }
+
         $this->pheanstalk->useTube(new TubeName($this->getQueue($queue)));
 
         return $this->pheanstalk->put(
@@ -129,6 +140,15 @@ class BeanstalkdQueue extends Queue implements QueueContract
             $queue,
             $delay,
             function ($payload, $queue, $delay) {
+                if (! \class_exists(TubeName::class)) {
+                    return $this->pheanstalk->useTube($this->getQueue($queue))->put(
+                        $payload,
+                        Pheanstalk::DEFAULT_PRIORITY,
+                        $this->secondsUntil($delay),
+                        $this->timeToRun
+                    );
+                }
+
                 $this->pheanstalk->useTube(new TubeName($this->getQueue($queue)));
 
                 return $this->pheanstalk->put(
@@ -168,6 +188,10 @@ class BeanstalkdQueue extends Queue implements QueueContract
      */
     public function pop($queue = null)
     {
+        if (\class_exists(PheanstalkJob::class)) {
+            return $this->pop_($queue);
+        }
+
         $queue = $this->getQueue($queue);
 
         $this->pheanstalk->watch(new TubeName($queue));
@@ -175,6 +199,19 @@ class BeanstalkdQueue extends Queue implements QueueContract
         $job = $this->pheanstalk->reserveWithTimeout($this->blockFor);
 
         if ($job instanceof JobIdInterface) {
+            return new BeanstalkdJob(
+                $this->container, $this->pheanstalk, $job, $this->connectionName, $queue
+            );
+        }
+    }
+
+    private function pop_($queue)
+    {
+        $queue = $this->getQueue($queue);
+
+        $job = $this->pheanstalk->watchOnly($queue)->reserveWithTimeout($this->blockFor);
+
+        if ($job instanceof PheanstalkJob) {
             return new BeanstalkdJob(
                 $this->container, $this->pheanstalk, $job, $this->connectionName, $queue
             );
@@ -190,6 +227,12 @@ class BeanstalkdQueue extends Queue implements QueueContract
      */
     public function deleteMessage($queue, $id)
     {
+        if (! \class_exists(TubeName::class)) {
+            $this->pheanstalk->useTube($this->getQueue($queue))->delete(new PheanstalkJob($id, ''));
+
+            return;
+        }
+
         $this->pheanstalk->useTube(new TubeName($this->getQueue($queue)));
 
         $this->pheanstalk->delete(new Job(new JobId($id), ''));

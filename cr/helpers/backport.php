@@ -454,7 +454,7 @@ if (! \function_exists('backport_type_assert')) {
             case 'string': return \is_string($value);
             case 'stdObject': return \is_object($value);
             case 'true': return $value === true;
-            default: return $value instanceof $type;
+            default: return \class_exists($type) && $value instanceof $type;
         }
     }
 }

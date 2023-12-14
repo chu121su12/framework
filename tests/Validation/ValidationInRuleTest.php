@@ -54,11 +54,11 @@ class ValidationInRuleTest extends TestCase
         $rule = Rule::in('1', '2', '3', '4');
 
         $this->assertSame('in:"1","2","3","4"', (string) $rule);
-    }
 
         $rule = new In('1', '2', '3', '4');
 
         $this->assertSame('in:"1","2","3","4"', (string) $rule);
+    }
 
     /**
      * @requires PHP 8.1

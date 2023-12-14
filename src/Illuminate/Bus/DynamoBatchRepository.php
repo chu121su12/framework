@@ -65,11 +65,16 @@ class DynamoBatchRepository implements BatchRepository
     public function __construct(
         BatchFactory $factory,
         DynamoDbClient $dynamoDbClient,
-        string $applicationName,
-        string $table,
-        ?int $ttl,
-        ?string $ttlAttribute
+        /*string */$applicationName,
+        /*string */$table,
+        /*?int */$ttl,
+        /*?string */$ttlAttribute
     ) {
+        $applicationName = backport_type_check('string', $applicationName);
+        $table = backport_type_check('string', $table);
+        $ttl = backport_type_check('?int', $ttl);
+        $ttlAttribute = backport_type_check('?string', $ttlAttribute);
+
         $this->factory = $factory;
         $this->dynamoDbClient = $dynamoDbClient;
         $this->applicationName = $applicationName;
@@ -105,7 +110,7 @@ class DynamoBatchRepository implements BatchRepository
         ]);
 
         return array_map(
-            fn ($b) => $this->toBatch($this->marshaler->unmarshalItem($b, mapAsObject: true)),
+            function ($b) { return $this->toBatch($this->marshaler->unmarshalItem($b, /*mapAsObject: */true)); },
             $result['Items']
         );
     }
@@ -116,8 +121,10 @@ class DynamoBatchRepository implements BatchRepository
      * @param  string  $batchId
      * @return \Illuminate\Bus\Batch|null
      */
-    public function find(string $batchId)
+    public function find(/*string */$batchId)
     {
+        $batchId = backport_type_check('string', $batchId);
+
         if ($batchId === '') {
             return null;
         }
@@ -146,7 +153,7 @@ class DynamoBatchRepository implements BatchRepository
             }
         }
 
-        $batch = $this->marshaler->unmarshalItem($b['Item'], mapAsObject: true);
+        $batch = $this->marshaler->unmarshalItem($b['Item'], /*mapAsObject: */true);
 
         if ($batch) {
             return $this->toBatch($batch);
@@ -170,7 +177,7 @@ class DynamoBatchRepository implements BatchRepository
             'pending_jobs' => 0,
             'failed_jobs' => 0,
             'failed_job_ids' => [],
-            'options' => $this->serialize($batch->options ?? []),
+            'options' => $this->serialize(isset($batch->options) ? $batch->options : []),
             'created_at' => time(),
             'cancelled_at' => null,
             'finished_at' => null,
@@ -197,8 +204,11 @@ class DynamoBatchRepository implements BatchRepository
      * @param  int  $amount
      * @return void
      */
-    public function incrementTotalJobs(string $batchId, int $amount)
+    public function incrementTotalJobs(/*string */$batchId, /*int */$amount)
     {
+        $batchId = backport_type_check('string', $batchId);
+        $amount = backport_type_check('int', $amount);
+
         $update = 'SET total_jobs = total_jobs + :val, pending_jobs = pending_jobs + :val';
 
         if ($this->ttl) {
@@ -228,8 +238,11 @@ class DynamoBatchRepository implements BatchRepository
      * @param  string  $jobId
      * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
-    public function decrementPendingJobs(string $batchId, string $jobId)
+    public function decrementPendingJobs(/*string */$batchId, /*string */$jobId)
     {
+        $batchId = backport_type_check('string', $batchId);
+        $jobId = backport_type_check('string', $jobId);
+
         $update = 'SET pending_jobs = pending_jobs - :inc';
 
         if ($this->ttl !== null) {
@@ -266,8 +279,11 @@ class DynamoBatchRepository implements BatchRepository
      * @param  string  $jobId
      * @return \Illuminate\Bus\UpdatedBatchJobCounts
      */
-    public function incrementFailedJobs(string $batchId, string $jobId)
+    public function incrementFailedJobs(/*string */$batchId, /*string */$jobId)
     {
+        $batchId = backport_type_check('string', $batchId);
+        $jobId = backport_type_check('string', $jobId);
+
         $update = 'SET failed_jobs = failed_jobs + :inc, failed_job_ids = list_append(failed_job_ids, :jobId)';
 
         if ($this->ttl !== null) {
@@ -304,8 +320,10 @@ class DynamoBatchRepository implements BatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function markAsFinished(string $batchId)
+    public function markAsFinished(/*string */$batchId)
     {
+        $batchId = backport_type_check('string', $batchId);
+
         $update = 'SET finished_at = :timestamp';
 
         if ($this->ttl !== null) {
@@ -333,8 +351,10 @@ class DynamoBatchRepository implements BatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function cancel(string $batchId)
+    public function cancel(/*string */$batchId)
     {
+        $batchId = backport_type_check('string', $batchId);
+
         $update = 'SET cancelled_at = :timestamp, finished_at = :timestamp';
 
         if ($this->ttl !== null) {
@@ -362,8 +382,10 @@ class DynamoBatchRepository implements BatchRepository
      * @param  string  $batchId
      * @return void
      */
-    public function delete(string $batchId)
+    public function delete(/*string */$batchId)
     {
+        $batchId = backport_type_check('string', $batchId);
+
         $this->dynamoDbClient->deleteItem([
             'TableName' => $this->table,
             'Key' => [
@@ -401,6 +423,8 @@ class DynamoBatchRepository implements BatchRepository
      */
     protected function toBatch($batch)
     {
+        $unserialied = $this->unserialize($batch->options);
+
         return $this->factory->make(
             $this,
             $batch->id,
@@ -409,7 +433,7 @@ class DynamoBatchRepository implements BatchRepository
             (int) $batch->pending_jobs,
             (int) $batch->failed_jobs,
             $batch->failed_job_ids,
-            $this->unserialize($batch->options) ?? [],
+            isset($unserialied) ? $unserialied : [],
             CarbonImmutable::createFromTimestamp($batch->created_at),
             $batch->cancelled_at ? CarbonImmutable::createFromTimestamp($batch->cancelled_at) : $batch->cancelled_at,
             $batch->finished_at ? CarbonImmutable::createFromTimestamp($batch->finished_at) : $batch->finished_at
@@ -421,7 +445,7 @@ class DynamoBatchRepository implements BatchRepository
      *
      * @return void
      */
-    public function createAwsDynamoTable(): void
+    public function createAwsDynamoTable()/*: void*/
     {
         $definition = [
             'TableName' => $this->table,
@@ -464,7 +488,7 @@ class DynamoBatchRepository implements BatchRepository
     /**
      * Delete the underlying DynamoDB table.
      */
-    public function deleteAwsDynamoTable(): void
+    public function deleteAwsDynamoTable()/*: void*/
     {
         $this->dynamoDbClient->deleteTable([
             'TableName' => $this->table,
@@ -476,7 +500,7 @@ class DynamoBatchRepository implements BatchRepository
      *
      * @return string|null
      */
-    protected function getExpiryTime(): ?string
+    protected function getExpiryTime()/*: ?string*/
     {
         return is_null($this->ttl) ? null : (string) (time() + $this->ttl);
     }
@@ -486,7 +510,7 @@ class DynamoBatchRepository implements BatchRepository
      *
      * @return array
      */
-    protected function ttlExpressionAttributeName(): array
+    protected function ttlExpressionAttributeName()/*: array*/
     {
         return is_null($this->ttl) ? [] : ["#{$this->ttlAttribute}" => $this->ttlAttribute];
     }
@@ -518,7 +542,7 @@ class DynamoBatchRepository implements BatchRepository
      *
      * @return \Aws\DynamoDb\DynamoDbClient
      */
-    public function getDynamoClient(): DynamoDbClient
+    public function getDynamoClient()/*: DynamoDbClient*/
     {
         return $this->dynamoDbClient;
     }
@@ -528,7 +552,7 @@ class DynamoBatchRepository implements BatchRepository
      *
      * @return string
      */
-    public function getTable(): string
+    public function getTable()/*: string*/
     {
         return $this->table;
     }

@@ -45,7 +45,7 @@ class PostgresBuilder extends Builder
      */
     public function hasTable($table)
     {
-        [$schema, $table] = $this->parseSchemaAndTable($table);
+        list($schema, $table) = $this->parseSchemaAndTable($table);
 
         $table = $this->connection->getTablePrefix().$table;
 
@@ -220,7 +220,7 @@ class PostgresBuilder extends Builder
      */
     public function getColumns($table)
     {
-        [$schema, $table] = $this->parseSchemaAndTable($table);
+        list($schema, $table) = $this->parseSchemaAndTable($table);
 
         $table = $this->connection->getTablePrefix().$table;
 
@@ -239,7 +239,7 @@ class PostgresBuilder extends Builder
      */
     public function getIndexes($table)
     {
-        [$schema, $table] = $this->parseSchemaAndTable($table);
+        list($schema, $table) = $this->parseSchemaAndTable($table);
 
         $table = $this->connection->getTablePrefix().$table;
 
@@ -256,7 +256,7 @@ class PostgresBuilder extends Builder
      */
     public function getForeignKeys($table)
     {
-        [$schema, $table] = $this->parseSchemaAndTable($table);
+        list($schema, $table) = $this->parseSchemaAndTable($table);
 
         $table = $this->connection->getTablePrefix().$table;
 

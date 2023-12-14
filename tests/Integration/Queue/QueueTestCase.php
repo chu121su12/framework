@@ -34,8 +34,10 @@ abstract class QueueTestCase extends TestCase
      * @param  int  $times
      * @return void
      */
-    protected function runQueueWorkerCommand(array $options = [], int $times = 1): void
+    protected function runQueueWorkerCommand(array $options = [], /*int */$times = 1)/*: void*/
     {
+        $times = backport_type_check('int', $times);
+
         if ($this->getQueueDriver() !== 'sync' && $times > 0) {
             $count = 0;
 
@@ -55,7 +57,7 @@ abstract class QueueTestCase extends TestCase
      * @param  array<int, string>  $drivers
      * @return void
      */
-    protected function markTestSkippedWhenUsingQueueDrivers(array $drivers): void
+    protected function markTestSkippedWhenUsingQueueDrivers(array $drivers)/*: void*/
     {
         foreach ($drivers as $driver) {
             if ($this->getQueueDriver() === $driver) {
@@ -69,7 +71,7 @@ abstract class QueueTestCase extends TestCase
      *
      * @return void
      */
-    protected function markTestSkippedWhenUsingSyncQueueDriver(): void
+    protected function markTestSkippedWhenUsingSyncQueueDriver()/*: void*/
     {
         $this->markTestSkippedWhenUsingQueueDrivers(['sync']);
     }
@@ -79,7 +81,7 @@ abstract class QueueTestCase extends TestCase
      *
      * @return string
      */
-    protected function getQueueDriver(): string
+    protected function getQueueDriver()/*: string*/
     {
         return $this->driver;
     }

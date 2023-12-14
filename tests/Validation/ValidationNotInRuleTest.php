@@ -50,11 +50,11 @@ class ValidationNotInRuleTest extends TestCase
         $rule = Rule::notIn('1', '2', '3', '4');
 
         $this->assertSame('not_in:"1","2","3","4"', (string) $rule);
-    }
 
         $rule = new NotIn('1', '2', '3', '4');
 
         $this->assertSame('not_in:"1","2","3","4"', (string) $rule);
+    }
 
     /**
      * @requires PHP 8.1

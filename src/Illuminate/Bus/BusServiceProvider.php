@@ -65,7 +65,7 @@ class BusServiceProvider extends ServiceProvider implements DeferrableProvider
             $dynamoConfig = [
                 'region' => $config['region'],
                 'version' => 'latest',
-                'endpoint' => $config['endpoint'] ?? null,
+                'endpoint' => isset($config['endpoint']) ? $config['endpoint'] : null,
             ];
 
             if (! empty($config['key']) && ! empty($config['secret'])) {
@@ -80,8 +80,8 @@ class BusServiceProvider extends ServiceProvider implements DeferrableProvider
                 new DynamoDbClient($dynamoConfig),
                 $app->config->get('app.name'),
                 $app->config->get('queue.batching.table', 'job_batches'),
-                ttl: $app->config->get('queue.batching.ttl', null),
-                ttlAttribute: $app->config->get('queue.batching.ttl_attribute', 'ttl'),
+                /*ttl: */$app->config->get('queue.batching.ttl', null),
+                /*ttlAttribute: */$app->config->get('queue.batching.ttl_attribute', 'ttl')
             );
         });
     }

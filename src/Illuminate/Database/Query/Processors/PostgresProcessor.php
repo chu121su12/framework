@@ -60,35 +60,35 @@ class PostgresProcessor extends Processor
                 'name' => $result->name,
                 'schema' => $result->schema,
                 'implicit' => (bool) $result->implicit,
-                'type' => match (strtolower($result->type)) {
-                    'b' => 'base',
-                    'c' => 'composite',
-                    'd' => 'domain',
-                    'e' => 'enum',
-                    'p' => 'pseudo',
-                    'r' => 'range',
-                    'm' => 'multirange',
-                    default => null,
-                },
-                'category' => match (strtolower($result->category)) {
-                    'a' => 'array',
-                    'b' => 'boolean',
-                    'c' => 'composite',
-                    'd' => 'date_time',
-                    'e' => 'enum',
-                    'g' => 'geometric',
-                    'i' => 'network_address',
-                    'n' => 'numeric',
-                    'p' => 'pseudo',
-                    'r' => 'range',
-                    's' => 'string',
-                    't' => 'timespan',
-                    'u' => 'user_defined',
-                    'v' => 'bit_string',
-                    'x' => 'unknown',
-                    'z' => 'internal_use',
-                    default => null,
-                },
+                'type' => call_user_func(function () use ($result) { switch (strtolower($result->type)) {
+                    case 'b': return 'base';
+                    case 'c': return 'composite';
+                    case 'd': return 'domain';
+                    case 'e': return 'enum';
+                    case 'p': return 'pseudo';
+                    case 'r': return 'range';
+                    case 'm': return 'multirange';
+                    default: return null;
+                }}),
+                'category' => call_user_func(function () use ($result) { switch (strtolower($result->category)) {
+                    case 'a': return 'array';
+                    case 'b': return 'boolean';
+                    case 'c': return 'composite';
+                    case 'd': return 'date_time';
+                    case 'e': return 'enum';
+                    case 'g': return 'geometric';
+                    case 'i': return 'network_address';
+                    case 'n': return 'numeric';
+                    case 'p': return 'pseudo';
+                    case 'r': return 'range';
+                    case 's': return 'string';
+                    case 't': return 'timespan';
+                    case 'u': return 'user_defined';
+                    case 'v': return 'bit_string';
+                    case 'x': return 'unknown';
+                    case 'z': return 'internal_use';
+                    default: return null;
+                }}),
             ];
         }, $results);
     }
@@ -157,22 +157,22 @@ class PostgresProcessor extends Processor
                 'foreign_schema' => $result->foreign_schema,
                 'foreign_table' => $result->foreign_table,
                 'foreign_columns' => explode(',', $result->foreign_columns),
-                'on_update' => match (strtolower($result->on_update)) {
-                    'a' => 'no action',
-                    'r' => 'restrict',
-                    'c' => 'cascade',
-                    'n' => 'set null',
-                    'd' => 'set default',
-                    default => null,
-                },
-                'on_delete' => match (strtolower($result->on_delete)) {
-                    'a' => 'no action',
-                    'r' => 'restrict',
-                    'c' => 'cascade',
-                    'n' => 'set null',
-                    'd' => 'set default',
-                    default => null,
-                },
+                'on_update' => call_user_func(function () use ($result) { switch (strtolower($result->on_update)) {
+                    case 'a': return 'no action';
+                    case 'r': return 'restrict';
+                    case 'c': return 'cascade';
+                    case 'n': return 'set null';
+                    case 'd': return 'set default';
+                    default: return null;
+                }} ),
+                'on_delete' => call_user_func(function () use ($result) { switch (strtolower($result->on_delete)) {
+                    case 'a': return 'no action';
+                    case 'r': return 'restrict';
+                    case 'c': return 'cascade';
+                    case 'n': return 'set null';
+                    case 'd': return 'set default';
+                    default: return null;
+                }} ),
             ];
         }, $results);
     }
