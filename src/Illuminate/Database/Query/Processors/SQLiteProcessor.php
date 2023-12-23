@@ -40,7 +40,7 @@ class SQLiteProcessor extends Processor
 
             return [
                 'name' => $result->name,
-                'type_name' => strtok($type, '('),
+                'type_name' => strtok($type, '(') ?: '',
                 'type' => $type,
                 'collation' => null,
                 'nullable' => (bool) $result->nullable,

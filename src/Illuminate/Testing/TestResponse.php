@@ -156,7 +156,7 @@ class TestResponse implements ArrayAccess
     {
         $message = $this->statusMessageWithDetails($status, $actual = $this->getStatusCode());
 
-        PHPUnit::assertSame($actual, $status, $message);
+        PHPUnit::assertSame($status, $actual, $message);
 
         return $this;
     }
