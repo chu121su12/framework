@@ -12,11 +12,19 @@ use Throwable;
 
 use function Orchestra\Testbench\remote;
 
+/**
+ * @requires extension pcntl
+ */
 #[RequiresPhpExtension('pcntl')]
 #[WithMigration('laravel', 'queue')]
 class QueueTransactionTest extends DatabaseTestCase
 {
     use DatabaseMigrations;
+
+    protected function attributeBpWithMigration()
+    {
+        return ['laravel', 'queue'];
+    }
 
     protected function defineEnvironment($app)
     {
@@ -43,7 +51,11 @@ class QueueTransactionTest extends DatabaseTestCase
                 'DB_CONNECTION' => config('database.default'),
                 'QUEUE_CONNECTION' => config('queue.default'),
             ])->run();
+        } catch (\Exception $e) {
         } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             $this->assertInstanceOf(ProcessSignaledException::class, $e);
             $this->assertSame('The process has been signaled with signal "9".', $e->getMessage());
         }

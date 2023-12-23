@@ -164,7 +164,7 @@ class SqlServerGrammar extends Grammar
             ."left join sys.extended_properties as prop on obj.object_id = prop.major_id and col.column_id = prop.minor_id and prop.name = 'MS_Description' "
             ."where obj.type in ('U', 'V') and obj.name = %s and scm.name = SCHEMA_NAME() "
             .'order by col.column_id',
-            $this->quoteString($table),
+            $this->quoteString($table)
         );
     }
 

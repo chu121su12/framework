@@ -168,8 +168,8 @@ class AboutCommand extends Command
     {
         self::$data = [];
 
-        $formatEnabledStatus = fn ($value) => $value ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF';
-        $formatCachedStatus = fn ($value) => $value ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>';
+        $formatEnabledStatus = function ($value) { return $value ? '<fg=yellow;options=bold>ENABLED</>' : 'OFF'; };
+        $formatCachedStatus = function ($value) { return $value ? '<fg=green;options=bold>CACHED</>' : '<fg=yellow;options=bold>NOT CACHED</>'; };
 
         static::addToSection('Environment', function () use ($formatEnabledStatus) { return [
             'Application Name' => config('app.name'),

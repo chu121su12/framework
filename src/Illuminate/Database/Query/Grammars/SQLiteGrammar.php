@@ -155,7 +155,7 @@ class SQLiteGrammar extends Grammar
      */
     protected function compileJsonContains($column, $value)
     {
-        [$field, $path] = $this->wrapJsonFieldAndPath($column);
+        list($field, $path) = $this->wrapJsonFieldAndPath($column);
 
         return 'exists (select 1 from json_each('.$field.$path.') where '.$this->wrap('json_each.value').' is '.$value.')';
     }

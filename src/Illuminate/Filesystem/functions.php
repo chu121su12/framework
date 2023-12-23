@@ -10,8 +10,10 @@ if (! function_exists('Illuminate\Filesystem\join_paths')) {
      * @param  string  ...$paths
      * @return string
      */
-    function join_paths($basePath, string ...$paths)
+    function join_paths($basePath, /*string */...$paths)
     {
+        $paths = backport_array_type_check('string', $paths);
+
         foreach ($paths as $index => $path) {
             if (empty($path)) {
                 unset($paths[$index]);

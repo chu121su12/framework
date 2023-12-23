@@ -98,11 +98,21 @@ class FoundationServiceProvider extends AggregateServiceProvider
      */
     public function registerDumper()
     {
-        AbstractCloner::$defaultCasters[ConnectionInterface::class] ??= [StubCaster::class, 'cutInternals'];
-        AbstractCloner::$defaultCasters[Container::class] ??= [StubCaster::class, 'cutInternals'];
-        AbstractCloner::$defaultCasters[Dispatcher::class] ??= [StubCaster::class, 'cutInternals'];
-        AbstractCloner::$defaultCasters[Factory::class] ??= [StubCaster::class, 'cutInternals'];
-        AbstractCloner::$defaultCasters[Grammar::class] ??= [StubCaster::class, 'cutInternals'];
+        if (! isset(AbstractCloner::$defaultCasters[ConnectionInterface::class])) {
+            AbstractCloner::$defaultCasters[ConnectionInterface::class] = [StubCaster::class, 'cutInternals'];
+        }
+        if (! isset(AbstractCloner::$defaultCasters[Container::class])) {
+            AbstractCloner::$defaultCasters[Container::class] = [StubCaster::class, 'cutInternals'];
+        }
+        if (! isset(AbstractCloner::$defaultCasters[Dispatcher::class])) {
+            AbstractCloner::$defaultCasters[Dispatcher::class] = [StubCaster::class, 'cutInternals'];
+        }
+        if (! isset(AbstractCloner::$defaultCasters[Factory::class])) {
+            AbstractCloner::$defaultCasters[Factory::class] = [StubCaster::class, 'cutInternals'];
+        }
+        if (! isset(AbstractCloner::$defaultCasters[Grammar::class])) {
+            AbstractCloner::$defaultCasters[Grammar::class] = [StubCaster::class, 'cutInternals'];
+        }
 
         $basePath = $this->app->basePath();
 

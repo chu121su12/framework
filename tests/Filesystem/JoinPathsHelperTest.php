@@ -10,10 +10,18 @@ use function Illuminate\Filesystem\join_paths;
 
 class JoinPathsHelperTest extends TestCase
 {
+    /**
+     * @requires OS Linux|DAR
+     * @dataProvider unixDataProvider
+     */
     #[RequiresOperatingSystem('Linux|DAR')]
     #[DataProvider('unixDataProvider')]
-    public function testItCanMergePathsForUnix(string $expected, string $given)
+    public function testItCanMergePathsForUnix(/*string */$expected, /*string */$given)
     {
+        $expected = backport_type_check('string', $expected);
+
+        $given = backport_type_check('string', $given);
+
         $this->assertSame($expected, $given);
     }
 
@@ -23,10 +31,18 @@ class JoinPathsHelperTest extends TestCase
         yield ['app/Http/Kernel.php', join_paths('app', '', 'Http', 'Kernel.php')];
     }
 
+    /**
+     * @requires OS Windows
+     * @dataProvider windowsDataProvider
+     */
     #[RequiresOperatingSystem('Windows')]
     #[DataProvider('windowsDataProvider')]
-    public function testItCanMergePathsForWindows(string $expected, string $given)
+    public function testItCanMergePathsForWindows(/*string */$expected, /*string */$given)
     {
+        $expected = backport_type_check('string', $expected);
+
+        $given = backport_type_check('string', $given);
+
         $this->assertSame($expected, $given);
     }
 

@@ -234,13 +234,13 @@ class SchemaBuilderTest extends DatabaseTestCase
 
         $this->assertCount(3, $columns);
         $this->assertTrue(collect($columns)->contains(
-            fn ($column) => $column['name'] === 'id' && $column['auto_increment'] && ! $column['nullable']
+            function ($column) { return $column['name'] === 'id' && $column['auto_increment'] && ! $column['nullable']; }
         ));
         $this->assertTrue(collect($columns)->contains(
-            fn ($column) => $column['name'] === 'bar' && $column['nullable']
+            function ($column) { return $column['name'] === 'bar' && $column['nullable']; }
         ));
         $this->assertTrue(collect($columns)->contains(
-            fn ($column) => $column['name'] === 'baz' && ! $column['nullable'] && str_contains($column['default'], 'test')
+            function ($column) { return $column['name'] === 'baz' && ! $column['nullable'] && str_contains($column['default'], 'test'); }
         ));
     }
 
