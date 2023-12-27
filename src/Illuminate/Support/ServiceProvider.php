@@ -509,7 +509,7 @@ return [
 '.$providers.'
 ];';
 
-        file_put_contents($path, $content);
+        file_put_contents($path, $content.PHP_EOL);
 
         return true;
     }
