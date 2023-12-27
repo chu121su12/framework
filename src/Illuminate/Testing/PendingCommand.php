@@ -304,8 +304,9 @@ class PendingCommand
             }
 
             throw $e;
-        } catch (PromptValidationException) {
-            $exitCode = Command::FAILURE;
+        } catch (PromptValidationException $_e) {
+            // $exitCode = Command::FAILURE;
+            $exitCode = SymfonyHelper::CONSOLE_FAILURE;
         }
 
         if ($this->expectedExitCode !== null) {

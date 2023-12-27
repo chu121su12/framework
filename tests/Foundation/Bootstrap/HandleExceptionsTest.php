@@ -34,7 +34,9 @@ class HandleExceptionsTest extends TestCase
     {
         return tap(new HandleExceptions(), function ($instance) {
             with(new ReflectionClass($instance), function ($reflection) use ($instance) {
-                $reflection->getProperty('app')->setValue($instance, $this->app);
+                $property = tap($reflection->getProperty('app'))->setAccessible(true);
+
+                $property->setValue($instance, $this->app);
             });
         });
     }
@@ -81,18 +83,31 @@ class HandleExceptionsTest extends TestCase
 
         $logger->expects('channel')->with('deprecations')->andReturnSelf();
         $logger->expects('warning')->with(
-            m::on(fn (string $message) => (bool) preg_match(
-                <<<REGEXP
-                #ErrorException: str_contains\(\): Passing null to parameter \#2 \(\\\$needle\) of type string is deprecated in /home/user/laravel/routes/web\.php:17
-                Stack trace:
-                \#0 .*helpers.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions.*
-                \#1 .*HandleExceptions\.php\(.*\): with.*
-                \#2 .*HandleExceptions\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleDeprecation.*
-                \#3 .*HandleExceptionsTest\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleError.*
-                [\s\S]*#i
-                REGEXP,
-                $message
-            ))
+            m::on(function (/*string */$message) {
+                $message = backport_type_check('string', $message);
+
+                $regexp = <<<REGEXP
+#ErrorException: str_contains\(\): Passing null to parameter \#2 \(\\\$needle\) of type string is deprecated in /home/user/laravel/routes/web\.php:17
+Stack trace:
+\#0 .*helpers.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions.*
+\#1 .*HandleExceptions\.php\(.*\): with.*
+\#2 .*HandleExceptions\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleDeprecation.*
+\#3 .*HandleExceptionsTest\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleError.*
+[\s\S]*#i
+REGEXP;
+
+                $regexp2 = <<<REGEXP
+#'ErrorException' with message 'str_contains\(\): Passing null to parameter \#2 \(\\\$needle\) of type string is deprecated' in /home/user/laravel/routes/web\.php:17
+Stack trace:
+\#0 .*helpers.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions.*
+\#1 .*HandleExceptions\.php\(.*\): with.*
+\#2 .*HandleExceptions\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleDeprecation.*
+\#3 .*HandleExceptionsTest\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleError.*
+[\s\S]*#i
+REGEXP;
+
+                return preg_match($regexp, $message) || preg_match($regexp2, $message);
+            })
         );
 
         $this->handleExceptions()->handleError(
@@ -171,18 +186,31 @@ class HandleExceptionsTest extends TestCase
 
         $logger->expects('channel')->with('deprecations')->andReturnSelf();
         $logger->expects('warning')->with(
-            m::on(fn (string $message) => (bool) preg_match(
-                <<<REGEXP
-                #ErrorException: str_contains\(\): Passing null to parameter \#2 \(\\\$needle\) of type string is deprecated in /home/user/laravel/routes/web\.php:17
-                Stack trace:
-                \#0 .*helpers.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions.*
-                \#1 .*HandleExceptions\.php\(.*\): with.*
-                \#2 .*HandleExceptions\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleDeprecation.*
-                \#3 .*HandleExceptionsTest\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleError.*
-                [\s\S]*#i
-                REGEXP,
-                $message
-            ))
+            m::on(function (/*string */$message) {
+                $message = backport_type_check('string', $message);
+
+                $regexp = <<<REGEXP
+#ErrorException: str_contains\(\): Passing null to parameter \#2 \(\\\$needle\) of type string is deprecated in /home/user/laravel/routes/web\.php:17
+Stack trace:
+\#0 .*helpers.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions.*
+\#1 .*HandleExceptions\.php\(.*\): with.*
+\#2 .*HandleExceptions\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleDeprecation.*
+\#3 .*HandleExceptionsTest\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleError.*
+[\s\S]*#i
+REGEXP;
+
+                $regexp2 = <<<REGEXP
+#'ErrorException' with message 'str_contains\(\): Passing null to parameter \#2 \(\\\$needle\) of type string is deprecated' in /home/user/laravel/routes/web\.php:17
+Stack trace:
+\#0 .*helpers.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions.*
+\#1 .*HandleExceptions\.php\(.*\): with.*
+\#2 .*HandleExceptions\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleDeprecation.*
+\#3 .*HandleExceptionsTest\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleError.*
+[\s\S]*#i
+REGEXP;
+
+                return preg_match($regexp, $message) || preg_match($regexp2, $message);
+            })
         );
 
         $this->handleExceptions()->handleError(
@@ -383,11 +411,11 @@ class HandleExceptionsTest extends TestCase
     {
         $instance = $this->handleExceptions();
 
-        $appResolver = fn () => with(new ReflectionClass($instance), function ($reflection) use ($instance) {
-            $property = $reflection->getProperty('app');
+        $appResolver = function () use ($instance) { return with(new ReflectionClass($instance), function ($reflection) use ($instance) {
+            $property = tap($reflection->getProperty('app'))->setAccessible(true);
 
             return $property->getValue($instance);
-        });
+        }); };
 
         $this->assertNotNull($appResolver());
 
@@ -400,11 +428,11 @@ class HandleExceptionsTest extends TestCase
     {
         $instance = $this->handleExceptions();
 
-        $appResolver = fn () => with(new ReflectionClass($instance), function ($reflection) use ($instance) {
-            $property = $reflection->getProperty('app');
+        $appResolver = function () use ($instance) { return with(new ReflectionClass($instance), function ($reflection) use ($instance) {
+            $property = tap($reflection->getProperty('app'))->setAccessible(true);
 
             return $property->getValue($instance);
-        });
+        }); };
 
         $this->assertSame($this->app, $appResolver());
 

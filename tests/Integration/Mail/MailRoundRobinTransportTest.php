@@ -12,6 +12,10 @@ class MailRoundRobinTransportTest extends TestCase
     #[WithConfig('mail.mailers.roundrobin', ['transport' => 'roundrobin', 'mailers' => ['sendmail', 'array']])]
     public function testGetRoundRobinTransportWithConfiguredTransports()
     {
+        if (! class_exists(RoundRobinTransport::class)) {
+            $this->markTestSkipped('RoundRobinTransport unavailable');
+        }
+
         $transport = app('mailer')->getSymfonyTransport();
         $this->assertInstanceOf(RoundRobinTransport::class, $transport);
     }
@@ -21,6 +25,10 @@ class MailRoundRobinTransportTest extends TestCase
     #[WithConfig('mail.sendmail', '/usr/sbin/sendmail -bs')]
     public function testGetRoundRobinTransportWithLaravel6StyleMailConfiguration()
     {
+        if (! class_exists(RoundRobinTransport::class)) {
+            $this->markTestSkipped('RoundRobinTransport unavailable');
+        }
+
         $transport = app('mailer')->getSymfonyTransport();
         $this->assertInstanceOf(RoundRobinTransport::class, $transport);
     }

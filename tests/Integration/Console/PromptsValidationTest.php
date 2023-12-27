@@ -30,6 +30,12 @@ class DummyPromptsValidationCommand extends Command
 
     public function handle()
     {
-        text('Test', validate: fn ($value) => $value == 'foo' ? '' : 'error!');
+        text(
+            'Test',
+            /*$placeholder = */'',
+            /*$default = */'',
+            /*$required = */false,
+            /*validate: */function ($value) { return $value == 'foo' ? '' : 'error!'; }
+        );
     }
 }
