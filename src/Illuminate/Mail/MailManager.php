@@ -397,6 +397,34 @@ class MailManager implements FactoryContract
     }
 
     /**
+     * Create an instance of the Symfony Roundrobin Transport driver.
+     *
+     * @param  array  $config
+     * @return \Symfony\Component\Mailer\Transport\RoundRobinTransport
+     */
+    protected function createRoundrobinTransport(array $config)
+    {
+        $transports = [];
+
+        foreach ($config['mailers'] as $name) {
+            $config = $this->getConfig($name);
+
+            if (is_null($config)) {
+                throw new InvalidArgumentException("Mailer [{$name}] is not defined.");
+            }
+
+            // Now, we will check if the "driver" key exists and if it does we will set
+            // the transport configuration parameter in order to offer compatibility
+            // with any Laravel <= 6.x application style mail configuration files.
+            $transports[] = $this->app['config']['mail.driver']
+                ? $this->createSymfonyTransport(array_merge($config, ['transport' => $name]))
+                : $this->createSymfonyTransport($config);
+        }
+
+        return new RoundRobinTransport($transports);
+    }
+
+    /**
      * Create an instance of the Log Transport driver.
      *
      * @param  array  $config
