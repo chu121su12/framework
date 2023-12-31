@@ -276,8 +276,14 @@ class Number
      * @param  int|float  $max
      * @return int|float
      */
-    public static function clamp(int|float $number, int|float $min, int|float $max)
+    public static function clamp(/*int|float */$number, /*int|float */$min, /*int|float */$max)
     {
+        $max = backport_type_check('int|float', $max);
+
+        $min = backport_type_check('int|float', $min);
+
+        $number = backport_type_check('int|float', $number);
+
         return min(max($number, $min), $max);
     }
 

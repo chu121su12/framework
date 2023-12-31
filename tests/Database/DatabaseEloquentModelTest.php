@@ -52,6 +52,7 @@ use stdClass;
 
 if (PHP_VERSION_ID >= 80100) {
     include_once 'Enums.php';
+    include_once 'CastableBackedEnum.php';
 }
 
 class DatabaseEloquentModelTest extends TestCase
@@ -2726,6 +2727,9 @@ class DatabaseEloquentModelTest extends TestCase
         }
     }
 
+    /**
+     * @requires PHP >= 8.1
+     */
     public function testThrowsWhenAccessingMissingAttributesWhichArePrimitiveCasts()
     {
         $originalMode = Model::preventsAccessingMissingAttributes();
@@ -2739,14 +2743,14 @@ class DatabaseEloquentModelTest extends TestCase
         try {
             try {
                 $this->assertEquals(null, $model->backed_enum);
-            } catch (MissingAttributeException) {
+            } catch (MissingAttributeException $_e) {
                 $exceptionCount++;
             }
 
             foreach ($primitiveCasts as $key => $type) {
                 try {
                     $v = $model->{$key};
-                } catch (MissingAttributeException) {
+                } catch (MissingAttributeException $_e) {
                     $exceptionCount++;
                 }
             }
@@ -2756,6 +2760,45 @@ class DatabaseEloquentModelTest extends TestCase
             $this->assertEquals(1, $model->id);
             $this->assertEquals('ok', $model->this_is_fine);
             $this->assertEquals('ok', $model->this_is_also_fine);
+
+            // Primitive castables, enum castable
+            $expectedExceptionCount = count($primitiveCasts) + 1;
+            $this->assertEquals($expectedExceptionCount, $exceptionCount);
+        } finally {
+            Model::preventAccessingMissingAttributes($originalMode);
+        }
+    }
+
+    public function testThrowsWhenAccessingMissingAttributesWhichArePrimitiveCasts2()
+    {
+        $originalMode = Model::preventsAccessingMissingAttributes();
+        Model::preventAccessingMissingAttributes();
+
+        $model = new EloquentModelWithPrimitiveCasts2(['id' => 1]);
+        $model->exists = true;
+
+        $exceptionCount = 0;
+        $primitiveCasts = EloquentModelWithPrimitiveCasts2::makePrimitiveCastsArray();
+        try {
+            try {
+                $this->assertEquals(null, $model->backed_enum);
+            } catch (MissingAttributeException $_e) {
+                $exceptionCount++;
+            }
+
+            foreach ($primitiveCasts as $key => $type) {
+                try {
+                    $v = $model->{$key};
+                } catch (MissingAttributeException $_e) {
+                    $exceptionCount++;
+                }
+            }
+
+            $this->assertInstanceOf(Address::class, $model->address);
+
+            // $this->assertEquals(1, $model->id);
+            // $this->assertEquals('ok', $model->this_is_fine);
+            // $this->assertEquals('ok', $model->this_is_also_fine);
 
             // Primitive castables, enum castable
             $expectedExceptionCount = count($primitiveCasts) + 1;
@@ -3602,7 +3645,7 @@ class EloquentModelWithPrimitiveCasts extends Model
         'address' => Address::class,
     ];
 
-    public static function makePrimitiveCastsArray(): array
+    public static function makePrimitiveCastsArray()/*: array*/
     {
         $toReturn = [];
 
@@ -3625,24 +3668,52 @@ class EloquentModelWithPrimitiveCasts extends Model
         return 'ok';
     }
 
-    public function thisIsAlsoFine(): Attribute
+    public function thisIsAlsoFine()/*: Attribute*/
     {
-        return Attribute::get(fn () => 'ok');
+        return Attribute::get(function () { return 'ok'; });
     }
 }
 
-enum CastableBackedEnum: string
+class EloquentModelWithPrimitiveCasts2 extends Model
 {
-    case Value1 = 'value1';
+    public $fillable = ['id'];
+
+    public $casts = [
+        'address' => Address::class,
+    ];
+
+    public static function makePrimitiveCastsArray()/*: array*/
+    {
+        $toReturn = [];
+
+        foreach (static::$primitiveCastTypes as $index => $primitiveCastType) {
+            $toReturn['primitive_cast_'.$index] = $primitiveCastType;
+        }
+
+        return $toReturn;
+    }
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->mergeCasts(self::makePrimitiveCastsArray());
+    }
+
+    public function getThisIsFineAttribute($value)
+    {
+        return 'ok';
+    }
+
+    public function thisIsAlsoFine()/*: Attribute*/
+    {
+        return Attribute::get(function () { return 'ok'; });
+    }
 }
 
-class Address implements Castable
-{
-    public static function castUsing(array $arguments): CastsAttributes
-    {
-        return new class implements CastsAttributes
+class Address_castUsing_class implements CastsAttributes
         {
-            public function get(Model $model, string $key, mixed $value, array $attributes): Address
+            public function get(Model $model, /*string */$key, /*mixed */$value, array $attributes)/*: Address*/
             {
                 return new Address(
                     $attributes['address_line_one'],
@@ -3650,13 +3721,19 @@ class Address implements Castable
                 );
             }
 
-            public function set(Model $model, string $key, mixed $value, array $attributes): array
+            public function set(Model $model, /*string */$key, /*mixed */$value, array $attributes)/*: array*/
             {
                 return [
                     'address_line_one' => $value->lineOne,
                     'address_line_two' => $value->lineTwo,
                 ];
             }
-        };
+        }
+
+class Address implements Castable
+{
+    public static function castUsing(array $arguments)/*: CastsAttributes*/
+    {
+        return new Address_castUsing_class;
     }
 }
