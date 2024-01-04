@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class FoundationApplicationBuilderTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
 
@@ -39,6 +39,6 @@ class FoundationApplicationBuilderTest extends TestCase
     {
         $app = Application::configure()->create();
 
-        $this->assertSame(dirname(__DIR__, 2), $app->basePath());
+        $this->assertSame(dirname(dirname(__DIR__)), $app->basePath());
     }
 }

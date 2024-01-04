@@ -227,10 +227,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
     {
         $baseDirectory = backport_type_check('string', $baseDirectory);
 
-        $baseDirectory = match (true) {
-            is_string($baseDirectory) => $baseDirectory,
-            default => static::inferBaseDirectory(),
-        };
+        $baseDirectory = is_string($baseDirectory) ? $baseDirectory : static::inferBaseDirectory();
 
         return (new Configuration\ApplicationBuilder(new static($baseDirectory)))
             ->withKernels()
@@ -245,10 +242,10 @@ class Application extends Container implements ApplicationContract, CachesConfig
      */
     public static function inferBaseDirectory()
     {
-        return match (true) {
-            isset($_ENV['APP_BASE_PATH']) => $_ENV['APP_BASE_PATH'],
-            default => dirname(array_keys(ClassLoader::getRegisteredLoaders())[0]),
-        };
+        switch (true) {
+            case isset($_ENV['APP_BASE_PATH']): return $_ENV['APP_BASE_PATH'];
+            default: return dirname(array_keys(ClassLoader::getRegisteredLoaders())[0]);
+        }
     }
 
     /**
