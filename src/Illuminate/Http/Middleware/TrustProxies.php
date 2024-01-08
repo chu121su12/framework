@@ -157,8 +157,10 @@ class TrustProxies
      * @param  array|string  $proxies
      * @return void
      */
-    public static function at(array|string $proxies)
+    public static function at(/*array|string */$proxies)
     {
+        $proxies = backport_type_check('array|string', $proxies);
+
         static::$alwaysTrust = $proxies;
     }
 

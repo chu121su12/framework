@@ -45,7 +45,7 @@ interface ProcessResult
      * @param  string  $output
      * @return bool
      */
-    public function seeInOutput(string $output);
+    public function seeInOutput(/*string */$output);
 
     /**
      * Get the error output of the process.
@@ -60,7 +60,7 @@ interface ProcessResult
      * @param  string  $output
      * @return bool
      */
-    public function seeInErrorOutput(string $output);
+    public function seeInErrorOutput(/*string */$output);
 
     /**
      * Throw an exception if the process failed.
