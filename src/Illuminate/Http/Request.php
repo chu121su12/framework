@@ -911,4 +911,27 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
 
         return parent::createFromGlobals();
     }
+
+    public function getPort()
+    {
+        if ($this->isFromTrustedProxy() && $host = $this->getTrustedValues(self::HEADER_CLIENT_PORT)) {
+            $host = $host[0];
+        } elseif ($this->isFromTrustedProxy() && $host = $this->getTrustedValues(self::HEADER_CLIENT_HOST)) {
+            $host = $host[0];
+        } elseif (!$host = $this->headers->get('HOST')) {
+            return $this->server->get('SERVER_PORT');
+        }
+
+        if (isset($host[0]) && '[' === $host[0]) {
+            $pos = strpos($host, ':', strrpos($host, ']'));
+        } else {
+            $pos = strrpos($host, ':');
+        }
+
+        if (false !== $pos && $port = substr($host, $pos + 1)) {
+            return (int) $port;
+        }
+
+        return 'https' === $this->getScheme() ? 443 : 80;
+    }
 }
