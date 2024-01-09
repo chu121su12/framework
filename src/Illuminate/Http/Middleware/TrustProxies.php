@@ -171,6 +171,8 @@ class TrustProxies
      */
     protected function proxies()
     {
-        return static::$alwaysTrust ?: $this->proxies;
+        $p = static::$alwaysTrust ?: $this->proxies;
+
+        return $p === null ? '*' : $p;
     }
 }
