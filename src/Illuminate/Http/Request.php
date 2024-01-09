@@ -914,9 +914,9 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
 
     public function getPort()
     {
-        if ($this->isFromTrustedProxy() && $host = $this->getTrustedValues(self::HEADER_CLIENT_PORT)) {
+        if ($this->isFromTrustedProxy() && $host = $this->getTrustedValuesOverride(self::HEADER_CLIENT_PORT)) {
             $host = $host[0];
-        } elseif ($this->isFromTrustedProxy() && $host = $this->getTrustedValues(self::HEADER_CLIENT_HOST)) {
+        } elseif ($this->isFromTrustedProxy() && $host = $this->getTrustedValuesOverride(self::HEADER_CLIENT_HOST)) {
             $host = $host[0];
         } elseif (!$host = $this->headers->get('HOST')) {
             return $this->server->get('SERVER_PORT');
