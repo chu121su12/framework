@@ -178,6 +178,18 @@ class SupportTestingQueueFakeTest extends TestCase
         $this->fake->assertPushed(JobStub::class, 2);
     }
 
+    public function testAssertCount()
+    {
+        $this->fake->push(function () {
+            // Do nothing
+        });
+
+        $this->fake->push($this->job);
+        $this->fake->push($this->job);
+
+        $this->fake->assertCount(3);
+    }
+
     public function testAssertNothingPushed()
     {
         $this->fake->assertNothingPushed();

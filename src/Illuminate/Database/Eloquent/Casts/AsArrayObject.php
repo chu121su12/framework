@@ -16,7 +16,7 @@ class AsArrayObject_castUsing_class implements CastsAttributes
 
                 $data = Json::decode($attributes[$key]);
 
-                return is_array($data) ? new ArrayObject($data) : null;
+                return is_array($data) ? new ArrayObject($data, ArrayObject::ARRAY_AS_PROPS) : null;
             }
 
             public function set(Model $model, $key, $value, array $attributes)
