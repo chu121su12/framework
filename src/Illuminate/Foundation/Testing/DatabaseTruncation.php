@@ -87,11 +87,7 @@ trait DatabaseTruncation
 
         $connection->unsetEventDispatcher();
 
-        if (! isset(static::$allTables[$name])) {
-            static::$allTables[$name] = $connection->getDoctrineSchemaManager()->listTableNames();
-        }
-
-        collect(static::$allTables[$name])
+        collect(static::$allTables[$name] ??= array_column($connection->getSchemaBuilder()->getTables(), 'name'))
             ->when(
                 property_exists($this, 'tablesToTruncate'),
                 function ($tables) { return $tables->intersect($this->tablesToTruncate); },

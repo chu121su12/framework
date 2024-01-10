@@ -2,7 +2,6 @@
 
 namespace Illuminate\Database;
 
-use Doctrine\DBAL\Types\Type;
 use Illuminate\Database\Connectors\ConnectionFactory;
 use Illuminate\Database\Events\ConnectionEstablished;
 use Illuminate\Support\Arr;
@@ -56,13 +55,6 @@ class DatabaseManager implements ConnectionResolverInterface
      * @var callable
      */
     protected $reconnector;
-
-    /**
-     * The custom Doctrine column types.
-     *
-     * @var array<string, array>
-     */
-    protected $doctrineTypes = [];
 
     /**
      * Create a new database manager instance.
@@ -233,8 +225,6 @@ class DatabaseManager implements ConnectionResolverInterface
         // the connection, which will allow us to reconnect from the connections.
         $connection->setReconnector($this->reconnector);
 
-        $this->registerConfiguredDoctrineTypes($connection);
-
         return $connection;
     }
 
@@ -271,55 +261,6 @@ class DatabaseManager implements ConnectionResolverInterface
         }
 
         return $connection;
-    }
-
-    /**
-     * Register custom Doctrine types with the connection.
-     *
-     * @param  \Illuminate\Database\Connection  $connection
-     * @return void
-     */
-    protected function registerConfiguredDoctrineTypes(Connection $connection)/*: void*/
-    {
-        foreach ($this->app['config']->get('database.dbal.types', []) as $name => $class) {
-            $this->registerDoctrineType($class, $name, $name);
-        }
-
-        foreach ($this->doctrineTypes as $name => list($type, $class)) {
-            $connection->registerDoctrineType($class, $name, $type);
-        }
-    }
-
-    /**
-     * Register a custom Doctrine type.
-     *
-     * @param  string  $class
-     * @param  string  $name
-     * @param  string  $type
-     * @return void
-     *
-     * @throws \Doctrine\DBAL\Exception
-     * @throws \RuntimeException
-     */
-    public function registerDoctrineType(/*string */$class, /*string */$name, /*string */$type)/*: void*/
-    {
-        $type = backport_type_check('string', $type);
-
-        $name = backport_type_check('string', $name);
-
-        $class = backport_type_check('string', $class);
-
-        if (! class_exists('Doctrine\DBAL\Connection')) {
-            throw new RuntimeException(
-                'Registering a custom Doctrine type requires Doctrine DBAL (doctrine/dbal).'
-            );
-        }
-
-        if (! Type::hasType($name)) {
-            Type::addType($name, $class);
-        }
-
-        $this->doctrineTypes[$name] = [$type, $class];
     }
 
     /**
