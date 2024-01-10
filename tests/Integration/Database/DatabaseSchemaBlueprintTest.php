@@ -322,10 +322,6 @@ class DatabaseSchemaBlueprintTest extends TestCase
 
     public function testRenameIndexWorks()
     {
-        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
-            // $this->markTestSkipped('Needs fix on Doctrine\DBAL\Schema\Table.');
-        }
-
         DB::connection()->getSchemaBuilder()->create('users', function ($table) {
             $table->string('name');
             $table->string('age');

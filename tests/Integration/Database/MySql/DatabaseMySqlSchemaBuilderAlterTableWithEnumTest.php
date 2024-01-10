@@ -42,10 +42,6 @@ class DatabaseMySqlSchemaBuilderAlterTableWithEnumTest extends MySqlTestCase
 
     public function testChangeColumnOnTableWithEnum()
     {
-        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
-            $this->markTestSkipped('Needs fix on Doctrine\DBAL\Schema\Table.');
-        }
-
         Schema::table('users', function (Blueprint $table) {
             $table->unsignedInteger('age')->change();
         });

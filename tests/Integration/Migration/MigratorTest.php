@@ -59,10 +59,6 @@ class MigratorTest extends TestCase
 
     public function testRollback()
     {
-        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
-            $this->markTestSkipped('Needs fix on Doctrine\DBAL\Schema\Table.');
-        }
-
         $this->getConnection()->statement('CREATE TABLE people(id INT, first_name VARCHAR, last_name VARCHAR);');
         $this->subject->getRepository()->log('2014_10_12_000000_create_people_table', 1);
         $this->subject->getRepository()->log('2015_10_04_000000_modify_people_table', 1);

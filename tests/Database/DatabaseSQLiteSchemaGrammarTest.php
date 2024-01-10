@@ -98,10 +98,6 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
 
     public function testDropColumn()
     {
-        if (\version_compare(\PHP_VERSION, '8.0', '>=')) {
-            $this->markTestSkipped('Needs fix on Doctrine\DBAL\Schema\Table.');
-        }
-
         $db = new Manager;
 
         $db->addConnection([
