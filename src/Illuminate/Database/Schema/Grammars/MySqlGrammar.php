@@ -366,14 +366,16 @@ class MySqlGrammar extends Grammar
 
             $modifiers = $this->addModifiers($column['type'], $blueprint, new ColumnDefinition([
                 'change' => true,
-                'type' => match ($column['type_name']) {
-                    'bigint' => 'bigInteger',
-                    'int' => 'integer',
-                    'mediumint' => 'mediumInteger',
-                    'smallint' => 'smallInteger',
-                    'tinyint' => 'tinyInteger',
-                    default => $column['type_name'],
-                },
+                'type' => value(function () use ($column) {
+                    switch ($column['type_name']) {
+                        case 'bigint': return 'bigInteger';
+                        case 'int': return 'integer';
+                        case 'mediumint': return 'mediumInteger';
+                        case 'smallint': return 'smallInteger';
+                        case 'tinyint': return 'tinyInteger';
+                        default: return $column['type_name'];
+                    }
+                }),
                 'nullable' => $column['nullable'],
                 'default' => $column['default'],
                 'autoIncrement' => $column['auto_increment'],

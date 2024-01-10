@@ -31,40 +31,6 @@ if (! \function_exists('backport_type_throwable')) {
     }
 }
 
-if (! \function_exists('backport_match')) {
-    define('__BACKPORT_MATCH_DEFAULT_CASE__', '__BACKPORT_MATCH_DEFAULT_CASE__');
-
-    function backport_match($matchValue, ...$matchArms)
-    {
-        $matchValue = value($matchValue);
-
-        $hasDefault = false;
-
-        foreach ($matchArms as $arms) {
-            $expression = \array_pop($arms);
-
-            foreach ($arms as $arm) {
-                if ($arm === __BACKPORT_MATCH_DEFAULT_CASE__) {
-                    if ($hasDefault) {
-                        \trigger_error('Fatal error', \E_USER_ERROR);
-                        throw new Exception('Fatal error');
-                    }
-
-                    $hasDefault = true;
-                }
-
-                if ($hasDefault || value($arm) === $matchValue) {
-                    return value($expression);
-                }
-            }
-        }
-
-        throw \class_exists('UnhandledMatchError')
-            ? new UnhandledMatchError
-            : new Exception;
-    }
-}
-
 if (! \function_exists('backport_json_decode')) {
     function backport_json_decode($json, $assoc = false, $depth = 512, $options = 0, $throw = false)
     {
@@ -364,8 +330,8 @@ if (! \function_exists('backport_named_arguments')) {
         $sortedArguments = [];
 
         foreach ($placeholders as $key => $default) {
-            $sortedArguments[$key] = \array_key_exists($key, $arguments) 
-                ? $arguments[$key] 
+            $sortedArguments[$key] = \array_key_exists($key, $arguments)
+                ? $arguments[$key]
                 : $default;
         }
 

@@ -377,8 +377,9 @@ class SchemaBuilderTest extends DatabaseTestCase
 
         $this->assertCount(1, $foreignKeys);
         $this->assertTrue(collect($foreignKeys)->contains(
-            fn ($foreign) => $foreign['columns'] === ['parent_id']
-                && $foreign['foreign_table'] === 'parents' && $foreign['foreign_columns'] === ['id']
+            function ($foreign) { return $foreign['columns'] === ['parent_id']
+                && $foreign['foreign_table'] === 'parents' && $foreign['foreign_columns'] === ['id'];
+            }
         ));
     }
 

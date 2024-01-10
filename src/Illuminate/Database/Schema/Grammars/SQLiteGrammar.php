@@ -297,7 +297,7 @@ class SQLiteGrammar extends Grammar
 
         $columns = collect($schema->getColumns($table))
             ->map(function ($column) use ($blueprint, $changedColumns, &$columnNames, &$autoIncrementColumn) {
-                $column = $changedColumns->first(fn ($col) => $col->name === $column['name'], $column);
+                $column = $changedColumns->first(function ($col) use ($column) { return $col->name === $column['name']; }, $column);
 
                 if ($column instanceof Fluent) {
                     $name = $this->wrap($column);
@@ -324,27 +324,30 @@ class SQLiteGrammar extends Grammar
                 }
             })->all();
 
-        $foreignKeys = collect($schema->getForeignKeys($table))->map(fn ($foreignKey) => new ForeignKeyDefinition([
+        $foreignKeys = collect($schema->getForeignKeys($table))->map(function ($foreignKey) { return new ForeignKeyDefinition([
             'columns' => $foreignKey['columns'],
             'on' => $foreignKey['foreign_table'],
             'references' => $foreignKey['foreign_columns'],
             'onUpdate' => $foreignKey['on_update'],
             'onDelete' => $foreignKey['on_delete'],
-        ]))->all();
+        ]); })->all();
 
-        [$primary, $indexes] = collect($schema->getIndexes($table))->map(fn ($index) => new IndexDefinition([
-            'name' => match (true) {
-                $index['primary'] => 'primary',
-                $index['unique'] => 'unique',
-                default => 'index',
-            },
+        list($primary, $indexes) = collect($schema->getIndexes($table))->map(function ($index) { return new IndexDefinition([
+            'name' => value(function () use ($index) {
+                switch (true) {
+                    case $index['primary']: return 'primary';
+                    case $index['unique']: return 'unique';
+                    default: return 'index';
+                }
+            }),
             'index' => $index['name'],
             'columns' => $index['columns'],
-        ]))->partition(fn ($index) => $index->name === 'primary');
+        ]); })->partition(function ($index) { return $index->name === 'primary'; });
 
-        $indexes = collect($indexes)->reject(fn ($index) => str_starts_with('sqlite_', $index->index))->map(
-            fn ($index) => $this->{'compile'.ucfirst($index->name)}($blueprint, $index)
-        )->all();
+        $indexes = collect($indexes)
+            ->reject(function ($index) { return str_starts_with('sqlite_', $index->index); })
+            ->map(function ($index, $blueprint) { return $this->{'compile'.ucfirst($index->name)}($blueprint, $index); })
+            ->all();
 
         $tempTable = $this->wrap('__temp__'.$this->getTablePrefix().$table);
         $table = $this->wrap($this->getTablePrefix().$table);
@@ -492,7 +495,7 @@ class SQLiteGrammar extends Grammar
 
         $columns = $this->prefixArray('drop column', $this->wrapArray($command->columns));
 
-        return collect($columns)->map(fn ($column) => 'alter table '.$table.' '.$column)->all();
+        return collect($columns)->map(function ($column) use ($table) { return 'alter table '.$table.' '.$column; })->all();
     }
 
     /**
@@ -565,7 +568,7 @@ class SQLiteGrammar extends Grammar
     {
         $indexes = $connection->getSchemaBuilder()->getIndexes($blueprint->getTable());
 
-        $index = Arr::first($indexes, fn ($index) => $index['name'] === $command->from);
+        $index = Arr::first($indexes, function ($index) use ($command) { return $index['name'] === $command->from; });
 
         if (! $index) {
             throw new RuntimeException("Index [{$command->from}] does not exist.");

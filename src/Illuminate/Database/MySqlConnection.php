@@ -53,7 +53,7 @@ class MySqlConnection extends Connection
      *
      * @return string
      */
-    public function getServerVersion(): string
+    public function getServerVersion()/*: string*/
     {
         return str_contains($version = parent::getServerVersion(), 'MariaDB')
             ? Str::between($version, '5.5.5-', '-MariaDB')

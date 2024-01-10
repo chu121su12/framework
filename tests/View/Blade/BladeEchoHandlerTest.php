@@ -109,6 +109,7 @@ class BladeEchoHandlerTest extends AbstractBladeTestCase
         ];
     }
 
+    /** @dataProvider nonStringableDataProvider */
     #[DataProvider('nonStringableDataProvider')]
     public function testHandlerWorksWithNonStringables($blade, $expectedOutput)
     {

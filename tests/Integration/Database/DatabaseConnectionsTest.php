@@ -27,7 +27,7 @@ class DatabaseConnectionsTest extends DatabaseTestCase
 
         $result = $connection->selectOne('SELECT COUNT(*) as total FROM test_1');
 
-        self::assertSame(1, $result->total);
+        self::assertSame(1, (int) $result->total);
     }
 
     public function testThrowExceptionIfConnectionAlreadyExists()

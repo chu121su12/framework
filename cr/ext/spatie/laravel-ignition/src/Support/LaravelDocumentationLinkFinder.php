@@ -29,19 +29,19 @@ class LaravelDocumentationLinkFinder
             return null;
         }
 
-        return backport_match ($type,
-            ['Auth', "https://laravel.com/docs/{$majorVersion}.x/authentication"],
-            ['Broadcasting', "https://laravel.com/docs/{$majorVersion}.x/broadcasting"],
-            ['Container', "https://laravel.com/docs/{$majorVersion}.x/container"],
-            ['Database', "https://laravel.com/docs/{$majorVersion}.x/eloquent"],
-            ['Pagination', "https://laravel.com/docs/{$majorVersion}.x/pagination"],
-            ['Queue', "https://laravel.com/docs/{$majorVersion}.x/queues"],
-            ['Routing', "https://laravel.com/docs/{$majorVersion}.x/routing"],
-            ['Session', "https://laravel.com/docs/{$majorVersion}.x/session"],
-            ['Validation', "https://laravel.com/docs/{$majorVersion}.x/validation"],
-            ['View', "https://laravel.com/docs/{$majorVersion}.x/views"],
-            [__BACKPORT_MATCH_DEFAULT_CASE__, null]
-        );
+        switch ($type) {
+            case 'Auth': return "https://laravel.com/docs/{$majorVersion}.x/authentication";
+            case 'Broadcasting': return "https://laravel.com/docs/{$majorVersion}.x/broadcasting";
+            case 'Container': return "https://laravel.com/docs/{$majorVersion}.x/container";
+            case 'Database': return "https://laravel.com/docs/{$majorVersion}.x/eloquent";
+            case 'Pagination': return "https://laravel.com/docs/{$majorVersion}.x/pagination";
+            case 'Queue': return "https://laravel.com/docs/{$majorVersion}.x/queues";
+            case 'Routing': return "https://laravel.com/docs/{$majorVersion}.x/routing";
+            case 'Session': return "https://laravel.com/docs/{$majorVersion}.x/session";
+            case 'Validation': return "https://laravel.com/docs/{$majorVersion}.x/validation";
+            case 'View': return "https://laravel.com/docs/{$majorVersion}.x/views";
+            default: return null;
+        }
     }
 
     protected function getType(/*?Throwable */$throwable = null)/*: ?string*/

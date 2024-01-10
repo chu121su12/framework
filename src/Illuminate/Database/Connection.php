@@ -1636,7 +1636,7 @@ class Connection implements ConnectionInterface
      *
      * @return string
      */
-    public function getServerVersion(): string
+    public function getServerVersion()/*: string*/
     {
         return $this->getPdo()->getAttribute(PDO::ATTR_SERVER_VERSION);
     }

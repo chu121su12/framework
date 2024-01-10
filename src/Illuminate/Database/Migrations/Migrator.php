@@ -435,7 +435,7 @@ class Migrator
 
         $reflectionClass = new ReflectionClass($migration);
 
-        if ($reflectionClass->isAnonymous()) {
+        if (\method_exists($reflectionClass, 'isAnonymous') && $reflectionClass->isAnonymous()) {
             $name = $this->getMigrationName($reflectionClass->getFileName());
         }
 

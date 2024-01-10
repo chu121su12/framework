@@ -74,7 +74,7 @@ class ShowCommand extends DatabaseInspectionCommand
      */
     protected function tables(ConnectionInterface $connection, Builder $schema)
     {
-        return collect($schema->getTables())->map(fn ($table) => [
+        return collect($schema->getTables())->map(function ($table) use ($connection) { return [
             'table' => $table['name'],
             'schema' => $table['schema'],
             'size' => $table['size'],
@@ -82,7 +82,7 @@ class ShowCommand extends DatabaseInspectionCommand
             'engine' => $table['engine'],
             'collation' => $table['collation'],
             'comment' => $table['comment'],
-        ]);
+        ]; });
     }
 
     /**
@@ -95,12 +95,12 @@ class ShowCommand extends DatabaseInspectionCommand
     protected function views(ConnectionInterface $connection, Builder $schema)
     {
         return collect($schema->getViews())
-            ->reject(fn ($view) => str($view['name'])->startsWith(['pg_catalog', 'information_schema', 'spt_']))
-            ->map(fn ($view) => [
+            ->reject(function ($view) { return str($view['name'])->startsWith(['pg_catalog', 'information_schema', 'spt_']); })
+            ->map(function ($view) use ($connection) { return [
                 'view' => $view['name'],
                 'schema' => $view['schema'],
                 'rows' => $connection->table($view->getName())->count(),
-            ]);
+            ]; });
     }
 
     /**
@@ -113,12 +113,12 @@ class ShowCommand extends DatabaseInspectionCommand
     protected function types(ConnectionInterface $connection, Builder $schema)
     {
         return collect($schema->getTypes())
-            ->map(fn ($type) => [
+            ->map(function ($type) { return [
                 'name' => $type['name'],
                 'schema' => $type['schema'],
                 'type' => $type['type'],
                 'category' => $type['category'],
-            ]);
+            ]; });
     }
 
     /**
@@ -153,8 +153,8 @@ class ShowCommand extends DatabaseInspectionCommand
     {
         $platform = $data['platform'];
         $tables = $data['tables'];
-        $views = $data['views'] ?? null;
-        $types = $data['types'] ?? null;
+        $views = isset($data['views']) ? $data['views'] : null;
+        $types = isset($data['types']) ? $data['types'] : null;
 
         $this->newLine();
 
@@ -211,10 +211,10 @@ class ShowCommand extends DatabaseInspectionCommand
                 '<fg=green;options=bold>Rows</>'
             );
 
-            $views->each(fn ($view) => $this->components->twoColumnDetail(
+            $views->each(function ($view) { return $this->components->twoColumnDetail(
                 ($view['schema'] ? $view['schema'].' <fg=gray;options=bold>/</> ' : '').$view['view'],
                 Number::format($view['rows'])
-            ));
+            ); });
 
             $this->newLine();
         }
@@ -227,10 +227,10 @@ class ShowCommand extends DatabaseInspectionCommand
                 '<fg=green;options=bold>Type</> <fg=gray;options=bold>/</> <fg=green;options=bold>Category</>'
             );
 
-            $types->each(fn ($type) => $this->components->twoColumnDetail(
+            $types->each(function ($type) { return $this->components->twoColumnDetail(
                 ($type['schema'] ? $type['schema'].' <fg=gray;options=bold>/</> ' : '').$type['name'],
                 $type['type'].' <fg=gray;options=bold>/</> '.$type['category']
-            ));
+            ); });
 
             $this->newLine();
         }

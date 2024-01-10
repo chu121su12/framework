@@ -46,7 +46,7 @@ class TableCommand extends DatabaseInspectionCommand
             array_column($tables, 'name')
         );
 
-        $table = Arr::first($tables, fn ($table) => $table['name'] === $tableName);
+        $table = Arr::first($tables, function ($table) use ($tableName) { return $table['name'] === $tableName; });
 
         if (! $table) {
             $this->components->warn("Table [{$table}] doesn't exist.");
@@ -83,14 +83,16 @@ class TableCommand extends DatabaseInspectionCommand
      * @param  string  $table
      * @return \Illuminate\Support\Collection
      */
-    protected function columns(Builder $schema, string $table)
+    protected function columns(Builder $schema, /*string */$table)
     {
-        return collect($schema->getColumns($table))->map(fn ($column) => [
+        $table = backport_type_check('string', $table);
+
+        return collect($schema->getColumns($table))->map(function ($column) { return [
             'column' => $column['name'],
             'attributes' => $this->getAttributesForColumn($column),
             'default' => $column['default'],
             'type' => $column['type'],
-        ]);
+        ]; });
     }
 
     /**
@@ -116,13 +118,15 @@ class TableCommand extends DatabaseInspectionCommand
      * @param  string  $table
      * @return \Illuminate\Support\Collection
      */
-    protected function indexes(Builder $schema, string $table)
+    protected function indexes(Builder $schema, /*string */$table)
     {
-        return collect($schema->getIndexes($table))->map(fn ($index) => [
+        $table = backport_type_check('string', $table);
+
+        return collect($schema->getIndexes($table))->map(function ($index) { return [
             'name' => $index['name'],
             'columns' => collect($index['columns']),
             'attributes' => $this->getAttributesForIndex($index),
-        ]);
+        ]; });
     }
 
     /**
@@ -148,9 +152,11 @@ class TableCommand extends DatabaseInspectionCommand
      * @param  string  $table
      * @return \Illuminate\Support\Collection
      */
-    protected function foreignKeys(Builder $schema, string $table)
+    protected function foreignKeys(Builder $schema, /*string */$table)
     {
-        return collect($schema->getForeignKeys($table))->map(fn ($foreignKey) => [
+        $table = backport_type_check('string', $table);
+
+        return collect($schema->getForeignKeys($table))->map(function ($foreignKey) { return [
             'name' => $foreignKey['name'],
             'columns' => collect($foreignKey['columns']),
             'foreign_schema' => $foreignKey['foreign_schema'],
@@ -158,7 +164,7 @@ class TableCommand extends DatabaseInspectionCommand
             'foreign_columns' => collect($foreignKey['foreign_columns']),
             'on_update' => $foreignKey['on_update'],
             'on_delete' => $foreignKey['on_delete'],
-        ]);
+        ]; });
     }
 
     /**
@@ -238,7 +244,7 @@ class TableCommand extends DatabaseInspectionCommand
             $foreignKeys->each(function ($foreignKey) {
                 $this->components->twoColumnDetail(
                     $foreignKey['name'].' <fg=gray;options=bold>'.$foreignKey['columns']->implode(', ').' references '.$foreignKey['foreign_columns']->implode(', ').' on '.$foreignKey['foreign_table'].'</>',
-                    $foreignKey['on_update'].' / '.$foreignKey['on_delete'],
+                    $foreignKey['on_update'].' / '.$foreignKey['on_delete']
                 );
             });
 

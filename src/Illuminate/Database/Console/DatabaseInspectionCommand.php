@@ -22,14 +22,14 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function getConnectionName(ConnectionInterface $connection, $database)
     {
-        return match (true) {
-            $connection instanceof MySqlConnection && $connection->isMaria() => 'MariaDB',
-            $connection instanceof MySqlConnection => 'MySQL',
-            $connection instanceof PostgresConnection => 'PostgreSQL',
-            $connection instanceof SQLiteConnection => 'SQLite',
-            $connection instanceof SqlServerConnection => 'SQL Server',
-            default => $database,
-        };
+        switch (true) {
+            case $connection instanceof MySqlConnection && $connection->isMaria(): return 'MariaDB';
+            case $connection instanceof MySqlConnection: return 'MySQL';
+            case $connection instanceof PostgresConnection: return 'PostgreSQL';
+            case $connection instanceof SQLiteConnection: return 'SQLite';
+            case $connection instanceof SqlServerConnection: return 'SQL Server';
+            default: return $database;
+        }
     }
 
     /**
@@ -40,12 +40,12 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function getConnectionCount(ConnectionInterface $connection)
     {
-        $result = match (true) {
-            $connection instanceof MySqlConnection => $connection->selectOne('show status where variable_name = "threads_connected"'),
-            $connection instanceof PostgresConnection => $connection->selectOne('select count(*) as "Value" from pg_stat_activity'),
-            $connection instanceof SqlServerConnection => $connection->selectOne('select count(*) Value from sys.dm_exec_sessions where status = ?', ['running']),
-            default => null,
-        };
+        switch (true) {
+            case $connection instanceof MySqlConnection: $result = $connection->selectOne('show status where variable_name = "threads_connected"'); break;
+            case $connection instanceof PostgresConnection: $result = $connection->selectOne('select count(*) as "Value" from pg_stat_activity'); break;
+            case $connection instanceof SqlServerConnection: $result = $connection->selectOne('select count(*) Value from sys.dm_exec_sessions where status = ?', ['running']); break;
+            default: $result = null;
+        }
 
         if (! $result) {
             return null;
@@ -74,8 +74,10 @@ abstract class DatabaseInspectionCommand extends Command
      * @param  string  $table
      * @return string
      */
-    protected function withoutTablePrefix(ConnectionInterface $connection, string $table)
+    protected function withoutTablePrefix(ConnectionInterface $connection, /*string */$table)
     {
+        $table = backport_type_check('string', $table);
+
         $prefix = $connection->getTablePrefix();
 
         return str_starts_with($table, $prefix)

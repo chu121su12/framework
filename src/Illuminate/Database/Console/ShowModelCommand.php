@@ -124,7 +124,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
         $indexes = $schema->getIndexes($table);
 
         return collect($columns)
-            ->map(fn ($column) => [
+            ->map(function ($column) use ($model) { return [
                 'name' => $column['name'],
                 'type' => $column['type'],
                 'increments' => $column['auto_increment'],
@@ -135,7 +135,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
                 'hidden' => $this->attributeIsHidden($column['name'], $model),
                 'appended' => null,
                 'cast' => $this->getCastType($column['name'], $model),
-            ])
+            ]; })
             ->merge($this->getVirtualAttributes($model, $columns));
     }
 
@@ -165,8 +165,8 @@ class ShowModelCommand extends DatabaseInspectionCommand
                     return [];
                 }
             })
-            ->reject(fn ($cast, $name) => collect($columns)->contains('name', $name))
-            ->map(fn ($cast, $name) => [
+            ->reject(function ($cast, $name) use ($columns) { return collect($columns)->contains('name', $name); })
+            ->map(function ($cast, $name) use ($model) { return [
                 'name' => $name,
                 'type' => null,
                 'increments' => false,
@@ -435,13 +435,16 @@ class ShowModelCommand extends DatabaseInspectionCommand
      */
     protected function getColumnDefault($column, $model)
     {
-        $attributeDefault = $model->getAttributes()[$column['name']] ?? null;
+        $modelAttributes = $model->getAttributes();
+        $columnName = $column->getName();
 
-        return match (true) {
-            $attributeDefault instanceof BackedEnum => $attributeDefault->value,
-            $attributeDefault instanceof UnitEnum => $attributeDefault->name,
-            default => $attributeDefault ?? $column['default'],
-        };
+        $attributeDefault = isset($modelAttributes[$columnName]) ? $modelAttributes[$columnName] : null;
+
+        switch (true) {
+            case $attributeDefault instanceof BackedEnum: return $attributeDefault->value;
+            case $attributeDefault instanceof UnitEnum: return $attributeDefault->name;
+            default: return isset($attributeDefault) ? $attributeDefault : $column['default'];
+        }
     }
 
     /**
@@ -474,7 +477,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
     protected function columnIsUnique($column, $indexes)
     {
         return collect($indexes)->contains(
-            fn ($index) => count($index['columns']) === 1 && $index['columns'][0] === $column && $index['unique']
+            function ($index) use ($column) { return count($index['columns']) === 1 && $index['columns'][0] === $column && $index['unique']; }
         );
     }
 
