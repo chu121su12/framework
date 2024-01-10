@@ -115,8 +115,12 @@ class DatabaseManager implements ConnectionResolverInterface
      * @param  bool  $force
      * @return \Illuminate\Database\ConnectionInterface
      */
-    public function connectUsing(string $name, array $config, bool $force = false)
+    public function connectUsing(/*string */$name, array $config, /*bool */$force = false)
     {
+        $force = backport_type_check('bool', $force);
+
+        $name = backport_type_check('string', $name);
+
         if ($force) {
             $this->purge($name);
         }
@@ -131,7 +135,9 @@ class DatabaseManager implements ConnectionResolverInterface
 
         $this->dispatchConnectionEstablishedEvent($connection);
 
-        return tap($connection, fn ($connection) => $this->connections[$name] = $connection);
+        return tap($connection, function ($connection) use ($name) {
+            return $this->connections[$name] = $connection;
+        });
     }
 
     /**

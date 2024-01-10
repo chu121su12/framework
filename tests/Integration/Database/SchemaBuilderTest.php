@@ -400,11 +400,17 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testAddingMacros()
     {
-        Schema::macro('foo', fn () => 'foo');
+        Schema::macro('foo', function () { return 'foo'; });
 
         $this->assertEquals('foo', Schema::foo());
 
-        Schema::macro('hasForeignKeyForColumn', function (string $column, string $table, string $foreignTable) {
+        Schema::macro('hasForeignKeyForColumn', function (/*string */$column, /*string */$table, /*string */$foreignTable) {
+            $foreignTable = backport_type_check('string', $foreignTable);
+
+            $table = backport_type_check('string', $table);
+
+            $column = backport_type_check('string', $column);
+
             return collect(Schema::getForeignKeys($table))
                 ->contains(function (array $foreignKey) use ($column, $foreignTable) {
                     return collect($foreignKey['columns'])->contains($column)

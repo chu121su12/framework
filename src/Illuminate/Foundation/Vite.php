@@ -720,7 +720,11 @@ HTML;
      */
     protected function assetPath($path, $secure = null)
     {
-        return ($this->assetPathResolver ?? asset(...))($path, $secure);
+        $assetPathResolver = isset($this->assetPathResolver) ? $this->assetPathResolver : function (...$args) {
+            return asset(...$args);
+        };
+
+        return $assetPathResolver($path, $secure);
     }
 
     /**

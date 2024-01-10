@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Illuminate\Tests\Integration\Database;
 
@@ -65,7 +65,7 @@ class DatabaseConnectionsTest extends DatabaseTestCase
         $connection = $manager->connectUsing('my-phpunit-connection', [
             'driver' => 'sqlite',
             'database' => ':memory:',
-        ], force: true);
+        ], /*force: */true);
 
         // After purging a connection of a :memory: SQLite database
         // anything that was created before the override will no

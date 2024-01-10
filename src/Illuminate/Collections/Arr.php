@@ -476,7 +476,9 @@ class Arr
      */
     public static function prependKeysWith($array, $prependWith)
     {
-        return static::mapWithKeys($array, fn ($item, $key) => [$prependWith.$key => $item]);
+        return static::mapWithKeys($array, function ($item, $key) use ($prependWith) {
+            return [$prependWith.$key => $item];
+        });
     }
 
     /**

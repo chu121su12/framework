@@ -101,7 +101,9 @@ class BladeEchoHandlerTest extends AbstractBladeTestCase
     public static function handlerWorksWithIterableDataProvider()
     {
         return [
-            ['{{[1,"two",3]}}', function (iterable $arr) {
+            ['{{[1,"two",3]}}', function (/*iterable */$arr) {
+                $arr = backport_type_check('iterable', $arr);
+
                 return implode(', ', $arr);
             }, '1, two, 3'],
         ];

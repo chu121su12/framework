@@ -29,6 +29,13 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
         Concerns\InteractsWithInput,
         Macroable;
 
+    private static $forwardedParamsCopy = [
+        self::HEADER_X_FORWARDED_FOR => 'for',
+        self::HEADER_X_FORWARDED_HOST => 'host',
+        self::HEADER_X_FORWARDED_PROTO => 'proto',
+        self::HEADER_X_FORWARDED_PORT => 'host',
+    ];
+
     /**
      * The decoded JSON content for the request.
      *
@@ -859,11 +866,11 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
             }
         }
 
-        if ((self::getTrustedHeaderSet() & self::HEADER_FORWARDED) && (isset(self::$forwardedParams[$type])) && $this->headers->has(self::$trustedHeaders[self::HEADER_FORWARDED])) {
+        if ((self::getTrustedHeaderSet() & self::HEADER_FORWARDED) && (isset(self::$forwardedParamsCopy[$type])) && $this->headers->has(self::$trustedHeaders[self::HEADER_FORWARDED])) {
             $forwarded = $this->headers->get(self::$trustedHeaders[self::HEADER_FORWARDED]);
             $parts = SymfonyHelper::headerUtilsSplit($forwarded, ',;=');
             $forwardedValues = [];
-            $param = self::FORWARDED_PARAMS[$type];
+            $param = self::$forwardedParamsCopy[$type];
             foreach ($parts as $subParts) {
                 $vCombined = SymfonyHelper::headerUtilsCombine($subParts);
                 if (null === ($v = (isset($vCombined[$param]) ? $vCombined[$param] : null))) {
