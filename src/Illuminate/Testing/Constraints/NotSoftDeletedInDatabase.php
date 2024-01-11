@@ -3,15 +3,14 @@
 namespace Illuminate\Testing\Constraints;
 
 use PHPUnit\Framework\Constraint\Constraint;
-use PHPUnit\Runner\Version;
 
-if (str_starts_with(Version::series(), '10')) {
+if (phpunit_major_version() <= 10) {
     class NotSoftDeletedInDatabase extends Constraint
     {
         use Concerns\NotSoftDeletedInDatabase;
     }
 } else {
-    readonly class NotSoftDeletedInDatabase extends Constraint
+    /*readonly */class NotSoftDeletedInDatabase extends Constraint
     {
         use Concerns\NotSoftDeletedInDatabase;
     }

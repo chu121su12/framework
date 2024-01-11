@@ -12,21 +12,21 @@ trait HasInDatabase
      *
      * @var int
      */
-    protected readonly int $show;
+    protected /*readonly int */$show;
 
     /**
      * The database connection.
      *
      * @var \Illuminate\Database\Connection
      */
-    protected readonly Connection $database;
+    protected /*readonly Connection */$database;
 
     /**
      * The data that will be used to narrow the search in the database table.
      *
      * @var array
      */
-    protected readonly array $data;
+    protected /*readonly array */$data;
 
     /**
      * Create a new constraint instance.
@@ -50,7 +50,7 @@ trait HasInDatabase
      * @param  string  $table
      * @return bool
      */
-    public function matches($table): bool
+    public function matches($table)/*: bool*/
     {
         return $this->database->table($table)->where($this->data)->count() > 0;
     }
@@ -61,7 +61,7 @@ trait HasInDatabase
      * @param  string  $table
      * @return string
      */
-    public function failureDescription($table): string
+    public function failureDescription($table)/*: string*/
     {
         return sprintf(
             "a row in the table [%s] matches the attributes %s.\n\n%s",
@@ -85,7 +85,7 @@ trait HasInDatabase
         )->select(array_keys($this->data))->limit($this->show)->get();
 
         if ($similarResults->isNotEmpty()) {
-            $description = 'Found similar results: '.json_encode($similarResults, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            $description = 'Found similar results: '.backport_json_encode($similarResults, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } else {
             $query = $this->database->table($table);
 
@@ -95,7 +95,7 @@ trait HasInDatabase
                 return 'The table is empty';
             }
 
-            $description = 'Found: '.json_encode($results, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            $description = 'Found: '.backport_json_encode($results, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
 
         if ($query->count() > $this->show) {
@@ -111,12 +111,12 @@ trait HasInDatabase
      * @param  int  $options
      * @return string
      */
-    public function toString($options = 0): string
+    public function toString($options = 0)/*: string*/
     {
         foreach ($this->data as $key => $data) {
             $output[$key] = $data instanceof Expression ? $data->getValue($this->database->getQueryGrammar()) : $data;
         }
 
-        return json_encode($output ?? [], $options);
+        return backport_json_encode(isset($output) ? $output : [], $options);
     }
 }

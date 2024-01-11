@@ -12,21 +12,21 @@ trait CountInDatabase
      *
      * @var \Illuminate\Database\Connection
      */
-    protected readonly Connection $database;
+    protected /*readonly Connection */$database;
 
     /**
      * The expected table entries count that will be checked against the actual count.
      *
      * @var int
      */
-    protected readonly int $expectedCount;
+    protected /*readonly int */$expectedCount;
 
     /**
      * The actual table entries count that will be checked against the expected count.
      *
      * @var int|null
      */
-    protected readonly int|null $actualCount;
+    protected /*readonly int|null */$actualCount;
 
     /**
      * Create a new constraint instance.
@@ -35,8 +35,10 @@ trait CountInDatabase
      * @param  int  $expectedCount
      * @return void
      */
-    public function __construct(Connection $database, int $expectedCount)
+    public function __construct(Connection $database, /*int */$expectedCount)
     {
+        $expectedCount = backport_type_check('int', $expectedCount);
+
         $this->expectedCount = $expectedCount;
 
         $this->database = $database;
@@ -48,7 +50,7 @@ trait CountInDatabase
      * @param  string  $table
      * @return bool
      */
-    public function matches($table): bool
+    public function matches($table)/*: bool*/
     {
         $this->actualCount = $this->database->table($table)->count();
 
@@ -61,7 +63,7 @@ trait CountInDatabase
      * @param  string  $table
      * @return string
      */
-    public function failureDescription($table): string
+    public function failureDescription($table)/*: string*/
     {
         return sprintf(
             "table [%s] matches expected entries count of %s. Entries found: %s.\n",
@@ -75,7 +77,7 @@ trait CountInDatabase
      * @param  int  $options
      * @return string
      */
-    public function toString($options = 0): string
+    public function toString($options = 0)/*: string*/
     {
         return (new ReflectionClass($this))->name;
     }

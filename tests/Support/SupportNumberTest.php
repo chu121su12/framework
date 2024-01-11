@@ -84,16 +84,16 @@ class SupportNumberTest extends TestCase
     {
         $this->needsIntlExtension();
 
-        $this->assertSame('9', Number::spell(9, after: 10));
-        $this->assertSame('10', Number::spell(10, after: 10));
-        $this->assertSame('eleven', Number::spell(11, after: 10));
+        $this->assertSame('9', Number::spell(9, $locale = null, /*after: */10));
+        $this->assertSame('10', Number::spell(10, $locale = null, /*after: */10));
+        $this->assertSame('eleven', Number::spell(11, $locale = null, /*after: */10));
 
-        $this->assertSame('nine', Number::spell(9, until: 10));
-        $this->assertSame('10', Number::spell(10, until: 10));
-        $this->assertSame('11', Number::spell(11, until: 10));
+        $this->assertSame('nine', Number::spell(9, $locale = null, $after = null, /*until: */10));
+        $this->assertSame('10', Number::spell(10, $locale = null, $after = null, /*until: */10));
+        $this->assertSame('11', Number::spell(11, $locale = null, $after = null, /*until: */10));
 
-        $this->assertSame('ten thousand', Number::spell(10000, until: 50000));
-        $this->assertSame('100,000', Number::spell(100000, until: 50000));
+        $this->assertSame('ten thousand', Number::spell(10000, $locale = null, $after = null, /*until: */50000));
+        $this->assertSame('100,000', Number::spell(100000, $locale = null, $after = null, /*until: */50000));
     }
 
     /**

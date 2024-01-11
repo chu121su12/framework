@@ -3,15 +3,14 @@
 namespace Illuminate\Testing\Constraints;
 
 use PHPUnit\Framework\Constraint\Constraint;
-use PHPUnit\Runner\Version;
 
-if (str_starts_with(Version::series(), '10')) {
+if (phpunit_major_version() <= 10) {
     class HasInDatabase extends Constraint
     {
         use Concerns\HasInDatabase;
     }
 } else {
-    readonly class HasInDatabase extends Constraint
+    /*readonly */class HasInDatabase extends Constraint
     {
         use Concerns\HasInDatabase;
     }

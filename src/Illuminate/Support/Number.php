@@ -62,8 +62,12 @@ class Number
      * @param  int|null  $until
      * @return string
      */
-    public static function spell(/*int|float */$number, /*?string */$locale = null, ?int $after = null, ?int $until = null)
+    public static function spell(/*int|float */$number, /*?string */$locale = null, /*?int */$after = null, /*?int */$until = null)
     {
+        $after = backport_type_check('?int', $after);
+
+        $until = backport_type_check('?int', $until);
+
         $locale = backport_type_check('?string', $locale);
 
         $number = backport_type_check('int|float', $number);
@@ -71,11 +75,11 @@ class Number
         static::ensureIntlExtensionIsInstalled();
 
         if (! is_null($after) && $number <= $after) {
-            return static::format($number, locale: $locale);
+            return static::format($number, /*locale: */$locale);
         }
 
         if (! is_null($until) && $number >= $until) {
-            return static::format($number, locale: $locale);
+            return static::format($number, /*locale: */$locale);
         }
 
         $formatter = new NumberFormatter(isset($locale) ? $locale : static::$locale, NumberFormatter::SPELLOUT);

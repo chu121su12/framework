@@ -11,14 +11,14 @@ trait SeeInOrder
      *
      * @var string
      */
-    protected readonly string $content;
+    protected /*readonly string */$content;
 
     /**
      * The last value that failed to pass validation.
      *
      * @var string
      */
-    protected readonly string $failedValue;
+    protected /*readonly string */$failedValue;
 
     /**
      * Create a new constraint instance.
@@ -37,7 +37,7 @@ trait SeeInOrder
      * @param  array  $values
      * @return bool
      */
-    public function matches($values): bool
+    public function matches($values)/*: bool*/
     {
         $position = 0;
 
@@ -66,7 +66,7 @@ trait SeeInOrder
      * @param  array  $values
      * @return string
      */
-    public function failureDescription($values): string
+    public function failureDescription($values)/*: string*/
     {
         return sprintf(
             'Failed asserting that \'%s\' contains "%s" in specified order.',
@@ -80,7 +80,7 @@ trait SeeInOrder
      *
      * @return string
      */
-    public function toString(): string
+    public function toString()/*: string*/
     {
         return (new ReflectionClass($this))->name;
     }

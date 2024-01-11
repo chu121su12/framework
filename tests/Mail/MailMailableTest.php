@@ -176,6 +176,30 @@ class MailMailableTest__render__class
             }
         }
 
+class MailMailableTest_testAssertHasSubject_class_1
+        {
+            public function render()
+            {
+                //
+            }
+        }
+
+class MailMailableTest_testAssertHasSubject_class_2 extends Mailable
+        {
+            public function build()
+            {
+                //
+            }
+        }
+
+class MailMailableTest_testAssertHasSubject_class_3 extends Mailable
+        {
+            public function build()
+            {
+                $this->subject('Foo Subject');
+            }
+        }
+
 class MailMailableTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -1153,21 +1177,9 @@ class MailMailableTest extends TestCase
 
     public function testAssertHasSubject()
     {
-        Container::getInstance()->instance('mailer', new class
-        {
-            public function render()
-            {
-                //
-            }
-        });
+        Container::getInstance()->instance('mailer', new MailMailableTest_testAssertHasSubject_class_1);
 
-        $mailable = new class() extends Mailable
-        {
-            public function build()
-            {
-                //
-            }
-        };
+        $mailable = new MailMailableTest_testAssertHasSubject_class_2;
 
         try {
             $mailable->assertHasSubject('Foo Subject');
@@ -1176,13 +1188,7 @@ class MailMailableTest extends TestCase
             $this->assertSame("Did not see expected text [Foo Subject] in email subject.\nFailed asserting that false is true.", $e->getMessage());
         }
 
-        $mailable = new class() extends Mailable
-        {
-            public function build()
-            {
-                $this->subject('Foo Subject');
-            }
-        };
+        $mailable = new MailMailableTest_testAssertHasSubject_class_3;
 
         $mailable->assertHasSubject('Foo Subject');
     }

@@ -12,28 +12,28 @@ trait NotSoftDeletedInDatabase
      *
      * @var int
      */
-    protected readonly int $show;
+    protected /*readonly int */$show;
 
     /**
      * The database connection.
      *
      * @var \Illuminate\Database\Connection
      */
-    protected readonly Connection $database;
+    protected /*readonly Connection */$database;
 
     /**
      * The data that will be used to narrow the search in the database table.
      *
      * @var array
      */
-    protected readonly array $data;
+    protected /*readonly array */$data;
 
     /**
      * The name of the column that indicates soft deletion has occurred.
      *
      * @var string
      */
-    protected readonly string $deletedAtColumn;
+    protected /*readonly string */$deletedAtColumn;
 
     /**
      * Create a new constraint instance.
@@ -43,7 +43,7 @@ trait NotSoftDeletedInDatabase
      * @param  string  $deletedAtColumn
      * @return void
      */
-    public function __construct(Connection $database, array $data, string $deletedAtColumn)
+    public function __construct(Connection $database, array $data, /*string */$deletedAtColumn)
     {
         $this->database = $database;
 
@@ -60,7 +60,7 @@ trait NotSoftDeletedInDatabase
      * @param  string  $table
      * @return bool
      */
-    public function matches($table): bool
+    public function matches($table)/*: bool*/
     {
         return $this->database->table($table)
                 ->where($this->data)
@@ -74,7 +74,7 @@ trait NotSoftDeletedInDatabase
      * @param  string  $table
      * @return string
      */
-    public function failureDescription($table): string
+    public function failureDescription($table)/*: string*/
     {
         return sprintf(
             "any existing row in the table [%s] matches the attributes %s.\n\n%s",
@@ -98,7 +98,7 @@ trait NotSoftDeletedInDatabase
             return 'The table is empty';
         }
 
-        $description = 'Found: '.json_encode($results, JSON_PRETTY_PRINT);
+        $description = 'Found: '.backport_json_encode($results, JSON_PRETTY_PRINT);
 
         if ($query->count() > $this->show) {
             $description .= sprintf(' and %s others', $query->count() - $this->show);
@@ -112,8 +112,8 @@ trait NotSoftDeletedInDatabase
      *
      * @return string
      */
-    public function toString(): string
+    public function toString()/*: string*/
     {
-        return json_encode($this->data);
+        return backport_json_encode($this->data);
     }
 }
