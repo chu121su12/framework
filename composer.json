@@ -132,6 +132,8 @@
         "symfony/polyfill-php74": "^1.28.0",
         "symfony/polyfill-php80": "^1.28.0",
         "symfony/polyfill-php81": "^1.28.0",
+        "symfony/polyfill-php82": "^1.28.0",
+        "symfony/polyfill-php83": "^1.28.0",
         "symfony/polyfill-util": "^1.28.0",
         "symfony/polyfill-uuid": "^1.28.0",
         "symfony/polyfill-xml": "^1.28.0",
@@ -174,6 +176,10 @@
             "cr/patch/symfony/polyfill/src/Php72/bootstrap.php",
             "cr/patch/symfony/polyfill/src/Php73/bootstrap.php",
             "cr/patch/symfony/polyfill/src/Php74/bootstrap.php",
+            "cr/patch/symfony/polyfill/src/Php80/bootstrap.php",
+            "cr/patch/symfony/polyfill/src/Php81/bootstrap.php",
+            "cr/patch/symfony/polyfill/src/Php82/bootstrap.php",
+            "cr/patch/symfony/polyfill/src/Php83/bootstrap.php",
             "cr/patch/symfony/polyfill/src/Uuid/bootstrap.php",
             "src/Illuminate/Collections/helpers.php",
             "src/Illuminate/Events/functions.php",
@@ -226,7 +232,10 @@
             "cr/patch/symfony/polyfill/src/Intl/Normalizer/Resources/stubs",
             "cr/patch/symfony/polyfill/src/Php70/Resources/stubs",
             "cr/patch/symfony/polyfill/src/Php73/Resources/stubs",
-            "cr/patch/symfony/polyfill/src/Php80/Resources/stubs"
+            "cr/patch/symfony/polyfill/src/Php80/Resources/stubs",
+            "cr/patch/symfony/polyfill/src/Php81/Resources/stubs",
+            "cr/patch/symfony/polyfill/src/Php82/Resources/stubs",
+            "cr/patch/symfony/polyfill/src/Php83/Resources/stubs"
         ]
     },
     "autoload-dev": {

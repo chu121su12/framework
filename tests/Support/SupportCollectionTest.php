@@ -501,7 +501,6 @@ class SupportCollectionTest extends TestCase
     }
 
     /**
-     * @requires PHP 7.1
      * @dataProvider collectionClassProvider
      */
     #[DataProvider('collectionClassProvider')]
