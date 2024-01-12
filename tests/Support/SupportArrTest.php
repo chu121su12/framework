@@ -909,15 +909,28 @@ class SupportArrTest extends TestCase
         $this->assertEquals([1 => 'hAz'], Arr::set($array, 1, 'hAz'));
     }
 
-    /**
-     * @requires PHP 7.1
-     */
-    public function testShuffleWithSeed()
+    public function testShuffle()
     {
-        $this->assertEquals(
-            Arr::shuffle(range(0, 100, 10), 1234),
-            Arr::shuffle(range(0, 100, 10), 1234)
+        $input = ['a', 'b', 'c', 'd', 'e', 'f'];
+
+        $this->assertNotEquals(
+            $input,
+            Arr::shuffle($input)
         );
+
+        $this->assertNotEquals(
+            Arr::shuffle($input),
+            Arr::shuffle($input)
+        );
+    }
+
+    public function testShuffleKeepsSameValues()
+    {
+        $input = ['a', 'b', 'c', 'd', 'e', 'f'];
+        $shuffled = Arr::shuffle($input);
+        sort($shuffled);
+
+        $this->assertEquals($input, $shuffled);
     }
 
     public function testEmptyShuffle()

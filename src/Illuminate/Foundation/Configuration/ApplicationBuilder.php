@@ -197,7 +197,7 @@ class ApplicationBuilder
             }
 
             if (is_callable($then)) {
-                $then();
+                $then($this->app);
             }
         };
     }

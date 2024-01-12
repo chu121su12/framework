@@ -505,18 +505,6 @@ class SupportCollectionTest extends TestCase
      * @dataProvider collectionClassProvider
      */
     #[DataProvider('collectionClassProvider')]
-    public function testCollectionShuffleWithSeed($collection)
-    {
-        $data = new $collection(range(0, 100, 10));
-
-        $firstRandom = $data->shuffle(1234);
-        $secondRandom = $data->shuffle(1234);
-
-        $this->assertEquals($firstRandom, $secondRandom);
-    }
-
-    /** @dataProvider collectionClassProvider */
-    #[DataProvider('collectionClassProvider')]
     public function testSkipMethod($collection)
     {
         $data = new $collection([1, 2, 3, 4, 5, 6]);
