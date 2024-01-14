@@ -23,6 +23,26 @@ class BusPendingBatchTest_test_batch_is_deleted_from_storage_if_exception_thrown
         {
         }
 
+class BusPendingBatchTest_test_batch_is_dispatched_when_dispatchif_is_true_new_class
+        {
+            use Batchable;
+        }
+
+class BusPendingBatchTest_test_batch_is_not_dispatched_when_dispatchif_is_false_class
+        {
+            use Batchable;
+        }
+
+class BusPendingBatchTest_test_batch_is_dispatched_when_dispatchunless_is_false_class
+        {
+            use Batchable;
+        }
+
+class BusPendingBatchTest_test_batch_is_not_dispatched_when_dispatchunless_is_true_class
+        {
+            use Batchable;
+        }
+
 class BusPendingBatchTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -103,10 +123,7 @@ class BusPendingBatchTest extends TestCase
         $eventDispatcher->shouldReceive('dispatch')->once();
         $container->instance(Dispatcher::class, $eventDispatcher);
 
-        $job = new class
-        {
-            use Batchable;
-        };
+        $job = new BusPendingBatchTest_test_batch_is_dispatched_when_dispatchif_is_true_new_class;
 
         $pendingBatch = new PendingBatch($container, new Collection([$job]));
 
@@ -129,10 +146,7 @@ class BusPendingBatchTest extends TestCase
         $eventDispatcher->shouldNotReceive('dispatch');
         $container->instance(Dispatcher::class, $eventDispatcher);
 
-        $job = new class
-        {
-            use Batchable;
-        };
+        $job = new BusPendingBatchTest_test_batch_is_not_dispatched_when_dispatchif_is_false_class;
 
         $pendingBatch = new PendingBatch($container, new Collection([$job]));
 
@@ -152,10 +166,7 @@ class BusPendingBatchTest extends TestCase
         $eventDispatcher->shouldReceive('dispatch')->once();
         $container->instance(Dispatcher::class, $eventDispatcher);
 
-        $job = new class
-        {
-            use Batchable;
-        };
+        $job = new BusPendingBatchTest_test_batch_is_dispatched_when_dispatchunless_is_false_class;
 
         $pendingBatch = new PendingBatch($container, new Collection([$job]));
 
@@ -178,10 +189,7 @@ class BusPendingBatchTest extends TestCase
         $eventDispatcher->shouldNotReceive('dispatch');
         $container->instance(Dispatcher::class, $eventDispatcher);
 
-        $job = new class
-        {
-            use Batchable;
-        };
+        $job = new BusPendingBatchTest_test_batch_is_not_dispatched_when_dispatchunless_is_true_class;
 
         $pendingBatch = new PendingBatch($container, new Collection([$job]));
 
