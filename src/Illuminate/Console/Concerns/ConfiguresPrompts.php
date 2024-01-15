@@ -29,7 +29,9 @@ trait ConfiguresPrompts
 
         Prompt::interactive(($input->isInteractive() && defined('STDIN') && stream_isatty(STDIN)) || $this->laravel->runningUnitTests());
 
-        Prompt::validateUsing(fn (Prompt $prompt) => $this->validatePrompt($prompt->value(), $prompt->validate));
+        Prompt::validateUsing(function (Prompt $prompt) {
+            return $this->validatePrompt($prompt->value(), $prompt->validate);
+        });
 
         Prompt::fallbackWhen(windows_os() || $this->laravel->runningUnitTests());
 
@@ -195,9 +197,9 @@ trait ConfiguresPrompts
     protected function validatePrompt($value, $rules)
     {
         if ($rules instanceof stdClass) {
-            $messages = $rules->messages ?? [];
-            $attributes = $rules->attributes ?? [];
-            $rules = $rules->rules ?? null;
+            $messages = isset($rules->messages) ? $rules->messages : [];
+            $attributes = isset($rules->attributes) ? $rules->attributes : [];
+            $rules = isset($rules->rules) ? $rules->rules : null;
         }
 
         if (! $rules) {
@@ -207,11 +209,11 @@ trait ConfiguresPrompts
         $field = 'answer';
 
         if (is_array($rules) && ! array_is_list($rules)) {
-            [$field, $rules] = [key($rules), current($rules)];
+            list($field, $rules) = [key($rules), current($rules)];
         }
 
         return $this->getPromptValidatorInstance(
-            $field, $value, $rules, $messages ?? [], $attributes ?? []
+            $field, $value, $rules, isset($messages) ? $messages : [], isset($attributes) ? $attributes : []
         )->errors()->first();
     }
 
@@ -231,7 +233,7 @@ trait ConfiguresPrompts
             [$field => $value],
             [$field => $rules],
             empty($messages) ? $this->validationMessages() : $messages,
-            empty($attributes) ? $this->validationAttributes() : $attributes,
+            empty($attributes) ? $this->validationAttributes() : $attributes
         );
     }
 

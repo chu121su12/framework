@@ -220,6 +220,14 @@ abstract class Prompt
     }
 
     /**
+     * Set the custom validation callback.
+     */
+    public static function validateUsing(Closure $callback)/*: void*/
+    {
+        static::$validateUsing = $callback;
+    }
+
+    /**
      * Render the prompt.
      */
     protected function render()/*: void*/

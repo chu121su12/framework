@@ -164,6 +164,18 @@ if (! function_exists('literal')) {
     }
 }
 
+if (! function_exists('literal_')) {
+    /**
+     * Create a new anonymous object using named arguments.
+     *
+     * @return \stdClass
+     */
+    function literal_($argument)
+    {
+        return (object) $argument;
+    }
+}
+
 if (! function_exists('object_get')) {
     /**
      * Get an item from an object using "dot" notation.

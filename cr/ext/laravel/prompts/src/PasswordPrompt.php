@@ -9,7 +9,7 @@ class PasswordPrompt extends Prompt
     public /*string */$label;
     public /*string */$placeholder;
     public /*bool|string */$required;
-    public /*?Closure */$validate;
+    public /*mixed */$validate;
     public /*string */$hint;
 
     /**
@@ -20,12 +20,12 @@ class PasswordPrompt extends Prompt
         /*public string */$placeholder = '',
         /*public bool|string */$required = false,
         /*public mixed */$validate = null,
-        /*public string */$hint
+        /*public string */$hint = ''
     ) {
         $this->label = backport_type_check('string', $label);
         $this->placeholder = backport_type_check('string', $placeholder);
         $this->required = backport_type_check('bool|string', $required);
-        $this->hint = backport_type_check('bool|string', $hint);
+        $this->hint = backport_type_check('string', $hint);
         $this->validate = backport_type_check('mixed', $validate);
 
         $this->trackTypedValue();

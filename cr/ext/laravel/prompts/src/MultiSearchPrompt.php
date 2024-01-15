@@ -29,7 +29,7 @@ class MultiSearchPrompt extends Prompt
     public /*string */$placeholder;
     // public /*int */$scroll;
     public /*bool|string */$required;
-    public /*?Closure */$validate;
+    public /*mixed */$validate;
     public /*string */$hint;
 
     /**

@@ -30,7 +30,7 @@ class SuggestPrompt extends Prompt
     public /*string */$default;
     // public /*int */$scroll;
     public /*bool|string */$required;
-    public /*?Closure */$validate;
+    public /*mixed */$validate;
     public /*string */$hint;
 
     /**
@@ -46,7 +46,7 @@ class SuggestPrompt extends Prompt
         /*public int */$scroll = 5,
         /*public bool|string */$required = false,
         /*public mixed*/$validate = null,
-        /*public string */$hint
+        /*public string */$hint = ''
 
     ) {
         $this->label = backport_type_check('string', $label);

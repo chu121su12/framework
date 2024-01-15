@@ -57,7 +57,13 @@ class DummyPromptsValidationCommand extends Command
 
     public function handle()
     {
-        text('What is your name?', validate: fn ($value) => $value == '' ? 'Required!' : null);
+        text(
+            'What is your name?',
+            /*$placeholder = */'',
+            /*$default = */'',
+            /*$required = */false,
+            /*validate: */function ($value) { return $value == '' ? 'Required!' : null; }
+        );
     }
 }
 
@@ -67,7 +73,13 @@ class DummyPromptsWithLaravelRulesCommand extends Command
 
     public function handle()
     {
-        text('What is your name?', validate: 'required');
+        text(
+            'What is your name?',
+            /*$placeholder = */'',
+            /*$default = */'',
+            /*$required = */false,
+            /*validate: */function ($value) { return 'required'; }
+        );
     }
 }
 
@@ -77,11 +89,17 @@ class DummyPromptsWithLaravelRulesCommandWithInlineMessagesAndAttibutesCommand e
 
     public function handle()
     {
-        text('What is your name?', validate: literal(
-            rules: ['name' => 'required'],
-            messages: ['name.required' => 'Your :attribute is mandatory.'],
-            attributes: ['name' => 'full name'],
-        ));
+        text(
+            'What is your name?',
+            /*$placeholder = */'',
+            /*$default = */'',
+            /*$required = */false,
+            /*validate: */literal_([
+                'rules' => ['name' => 'required'],
+                'messages' => ['name.required' => 'Your :attribute is mandatory.'],
+                'attributes' => ['name' => 'full name'],
+            ])
+        );
     }
 }
 
@@ -91,7 +109,13 @@ class DummyPromptsWithLaravelRulesMessagesAndAttributesCommand extends Command
 
     public function handle()
     {
-        text('What is your name?', validate: ['name' => 'required']);
+        text(
+            'What is your name?',
+            /*$placeholder = */'',
+            /*$default = */'',
+            /*$required = */false,
+            /*validate: */function ($value) { return ['name' => 'required']; }
+        );
     }
 
     protected function validationMessages()

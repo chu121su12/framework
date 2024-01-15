@@ -14,7 +14,7 @@ class ConfirmPrompt extends Prompt
     public /*string */$yes;
     public /*string */$no;
     public /*bool|string */$required;
-    public /*?Closure */$validate;
+    public /*mixed */$validate;
     public /*string */$hint;
 
     /**

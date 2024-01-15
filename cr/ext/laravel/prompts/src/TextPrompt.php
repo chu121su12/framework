@@ -10,7 +10,7 @@ class TextPrompt extends Prompt
     public /*string */$placeholder;
     public /*string */$default;
     public /*bool|string */$required;
-    public /*?Closure */$validate;
+    public /*mixed */$validate;
     public /*string */$hint;
 
     /**
@@ -22,7 +22,7 @@ class TextPrompt extends Prompt
         /*public string */$default = '',
         /*public bool|string */$required = false,
         /*public mixed */$validate = null,
-        /*public string */$hint
+        /*public string */$hint = ''
     ) {
         $this->label = backport_type_check('string', $label);
         $this->placeholder = backport_type_check('string', $placeholder);
