@@ -34,16 +34,16 @@ class SelectPrompt extends Prompt
         /*array|Collection */$options,
         /*public int|string|null */$default = null,
         /*public int */$scroll = 5,
-        /*public *//*?*/Closure $validate = null,
+        /*public mixed */$validate = null,
         /*public string */$hint = '',
         /*public bool|string */$required = ''
     ) {
         $this->label = backport_type_check('string', $label);
         $this->default = backport_type_check('int|string|null', $default);
         $this->scroll = backport_type_check('int', $scroll);
+        $this->validate = backport_type_check('mixed', $validate);
         $this->hint = backport_type_check('string', $hint);
         $this->required = backport_type_check('bool|string', $required);
-        $this->validate = $validate;
         $options = backport_type_check(['array', Collection::class], $options);
 
         if ($this->required === false) {

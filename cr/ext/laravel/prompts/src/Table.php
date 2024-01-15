@@ -30,11 +30,11 @@ class Table extends Prompt
      */
     public function __construct(
         /*array|Collection */$headers = [],
-        /*array|Collection */$rows = null
+        /*array|Collection|null */$rows = null
     )
     {
         $headers = backport_type_check(['array', Collection::class], $headers);
-        $rows = backport_type_check(['array', Collection::class], $rows);
+        $rows = backport_type_check(['array', Collection::class, 'null'], $rows);
 
         if ($rows === null) {
             $rows = $headers;

@@ -46,7 +46,7 @@ class Progress extends Prompt
         $steps = backport_type_check('iterable|int', $steps);
         $hint = backport_type_check('string', $hint);
 
-        switch (true) {
+        switch (true) { // @phpstan-ignore assign.propertyType
             case is_int($this->steps):
                 $this->total = $this->steps;
                 break;

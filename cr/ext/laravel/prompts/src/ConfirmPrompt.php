@@ -2,8 +2,6 @@
 
 namespace Laravel\Prompts;
 
-use Closure;
-
 class ConfirmPrompt extends Prompt
 {
     /**
@@ -28,15 +26,15 @@ class ConfirmPrompt extends Prompt
         /*public string */$yes = 'Yes',
         /*public string */$no = 'No',
         /*public bool|string */$required = false,
-        /*public *//*?*/Closure $validate = null,
-        /*public *//*string */$hint = ''
+        /*public mixed */$validate = null,
+        /*public string */$hint = ''
     ) {
         $this->label = backport_type_check('string', $label);
         $this->default = backport_type_check('bool', $default);
         $this->yes = backport_type_check('string', $yes);
         $this->no = backport_type_check('string', $no);
         $this->required = backport_type_check('bool|string', $required);
-        $this->validate = $validate;
+        $this->validate = backport_type_check('mixed', $validate);;
         $this->hint = backport_type_check('string', $hint);
 
         $this->confirmed = $default;

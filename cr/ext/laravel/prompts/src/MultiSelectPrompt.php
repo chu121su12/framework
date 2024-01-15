@@ -2,7 +2,6 @@
 
 namespace Laravel\Prompts;
 
-use Closure;
 use Illuminate\Support\Collection;
 
 class MultiSelectPrompt extends Prompt
@@ -48,13 +47,13 @@ class MultiSelectPrompt extends Prompt
         /*array|Collection */$default = [],
         /*public int */$scroll = 5,
         /*public bool|string */$required = false,
-        /*public *//*?*/Closure $validate = null,
+        /*public mixed */$validate = null,
         /*public string */$hint
     ) {
         $this->label = backport_type_check('string', $label);
         $this->scroll = backport_type_check('int', $scroll);
         $this->required = backport_type_check('bool|string', $required);
-        $this->validate = $validate;
+        $this->validate = backport_type_check('mixed', $validate);
         $this->hint = backport_type_check('string', $hint);
         $options = backport_type_check(['array', Collection::class], $options);
         $default = backport_type_check(['array', Collection::class], $default);

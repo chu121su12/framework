@@ -2,8 +2,6 @@
 
 namespace Laravel\Prompts;
 
-use Closure;
-
 class TextPrompt extends Prompt
 {
     use Concerns\TypedValue;
@@ -23,15 +21,15 @@ class TextPrompt extends Prompt
         /*public string */$placeholder = '',
         /*public string */$default = '',
         /*public bool|string */$required = false,
-        /*public *//*?*/Closure $validate = null,
+        /*public mixed */$validate = null,
         /*public string */$hint
     ) {
         $this->label = backport_type_check('string', $label);
         $this->placeholder = backport_type_check('string', $placeholder);
         $this->default = backport_type_check('string', $default);
         $this->required = backport_type_check('bool|string', $required);
+        $this->validate = backport_type_check('mixed', $validate);
         $this->hint = backport_type_check('string', $hint);
-        $this->validate = $validate;
 
         $this->trackTypedValue($default);
     }

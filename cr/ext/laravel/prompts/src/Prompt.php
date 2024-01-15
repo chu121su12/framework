@@ -45,14 +45,24 @@ abstract class Prompt
     public /*bool|string */$required;
 
     /**
-     * The validator callback.
+     * The validator callback or rules.
      */
-    protected /*?Closure */$validate;
+    public /*mixed */$validate;
+
+    /**
+     * The cancellation callback.
+     */
+    protected static /*Closure */$cancelUsing;
 
     /**
      * Indicates if the prompt has been validated.
      */
     protected /*bool */$validated = false;
+
+    /**
+     * The custom validation callback.
+     */
+    protected static /*?Closure */$validateUsing;
 
     /**
      * The output instance.
@@ -115,7 +125,11 @@ abstract class Prompt
 
                 if ($continue === false || $key === Key::CTRL_C) {
                     if ($key === Key::CTRL_C) {
-                        static::terminal()->exit_();
+                        if (isset(static::$cancelUsing)) {
+                            return \call_user_func(static::$cancelUsing);
+                        } else {
+                            static::terminal()->exit();
+                        }
                     }
 
                     return $this->value();
@@ -124,6 +138,14 @@ abstract class Prompt
         } finally {
             $this->clearListeners();
         }
+    }
+
+    /**
+     * Register a callback to be invoked when a user cancels a prompt.
+     */
+    public static function cancelUsing(Closure $callback)/*: void*/
+    {
+        static::$cancelUsing = $callback;
     }
 
     /**
@@ -346,14 +368,18 @@ abstract class Prompt
             return;
         }
 
-        if (! isset($this->validate)) {
+        if (! isset($this->validate) && ! isset(static::$validateUsing)) {
             return;
         }
 
-        $error = call_user_func($this->validate, $value);
+        switch (true) {
+            case is_callable($this->validate): $error = \call_user_func($this->validate, $value); break;
+            case isset(static::$validateUsing): $error = \call_user_func(static::$validateUsing, $this); break;
+            default: throw new RuntimeException('The validation logic is missing.');
+        }
 
         if (! is_string($error) && ! is_null($error)) {
-            throw new \RuntimeException('The validator must return a string or null.');
+            throw new RuntimeException('The validator must return a string or null.');
         }
 
         if (is_string($error) && strlen($error) > 0) {

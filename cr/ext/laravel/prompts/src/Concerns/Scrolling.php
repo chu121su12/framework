@@ -24,9 +24,9 @@ trait Scrolling
     /**
      * Initialize scrolling.
      */
-    protected function initializeScrolling(/*int */$highlighted = null)/*: void*/
+    protected function initializeScrolling(/*?int */$highlighted = null)/*: void*/
     {
-        $highlighted = backport_type_check('int', $highlighted);
+        $highlighted = backport_type_check('?int', $highlighted);
 
         $this->highlighted = $highlighted;
 

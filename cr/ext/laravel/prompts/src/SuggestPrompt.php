@@ -45,7 +45,7 @@ class SuggestPrompt extends Prompt
         /*public string */$default = '',
         /*public int */$scroll = 5,
         /*public bool|string */$required = false,
-        /*public *//*?*/Closure $validate = null,
+        /*public mixed*/$validate = null,
         /*public string */$hint
 
     ) {
@@ -54,8 +54,8 @@ class SuggestPrompt extends Prompt
         $this->default = backport_type_check('string', $default);
         $this->scroll = backport_type_check('int', $scroll);
         $this->required = backport_type_check('bool|string', $required);
+        $this->validate = backport_type_check('mixed', $validate);
         $this->hint = backport_type_check('string', $hint);
-        $this->validate = $validate;
         $options = backport_type_check(['array', Collection::class, Closure::class], $options);
 
         $this->options = $options instanceof Collection ? $options->all() : $options;

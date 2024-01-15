@@ -43,7 +43,7 @@ class MultiSearchPrompt extends Prompt
         /*public *//*string */$placeholder = '',
         /*public *//*int */$scroll = 5,
         /*public *//*bool|string */$required = false,
-        /*public *//*?*/Closure $validate = null,
+        /*public *//*mixed */$validate = null,
         /*public *//*string */$hint = ''
     ) {
         $this->label = backport_type_check('string', $label);
@@ -51,8 +51,8 @@ class MultiSearchPrompt extends Prompt
         $this->scroll = backport_type_check('int', $scroll);
         $this->required = backport_type_check('bool|string', $required);
         $this->hint = backport_type_check('string', $hint);
+        $this->validate = backport_type_check('mixed', $validate);
         $this->options = $options;
-        $this->validate = $validate;
 
         $this->trackTypedValue(
             /*$default = */'',

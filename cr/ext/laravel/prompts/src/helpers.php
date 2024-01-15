@@ -13,7 +13,7 @@ function text(
     /*string */$placeholder = '',
     /*string */$default = '',
     /*bool|string */$required = false,
-    Closure $validate = null,
+    /*mixed */$validate = null,
     /*string */$hint = ''
 )/*: string*/
 {
@@ -21,9 +21,10 @@ function text(
     $placeholder = backport_type_check('string', $placeholder);
     $default = backport_type_check('string', $default);
     $required = backport_type_check('bool|string', $required);
+    $validate = backport_type_check('mixed', $validate);
     $hint = backport_type_check('string', $hint);
 
-    return (new TextPrompt($label, $placeholder, $default, $required, $validate, $hint))->prompt();
+    return (new TextPrompt(...func_get_args()))->prompt();
 }
 
 /**
@@ -33,16 +34,17 @@ function password(
     /*string */$label,
     /*string */$placeholder = '',
     /*bool|string */$required = false,
-    Closure $validate = null,
+    /*mixed */$validate = null,
     /*string */$hint = ''
 )/*: string*/
 {
     $label = backport_type_check('string', $label);
     $placeholder = backport_type_check('string', $placeholder);
     $required = backport_type_check('bool|string', $required);
+    $validate = backport_type_check('mixed', $validate);
     $hint = backport_type_check('string', $hint);
 
-    return (new PasswordPrompt($label, $placeholder, $required, $validate, $hint))->prompt();
+    return (new PasswordPrompt(...func_get_args()))->prompt();
 }
 
 /**
@@ -55,7 +57,7 @@ function select(
     /*array|Collection */$options,
     /*int|string */$default = null,
     /*int */$scroll = 5,
-    Closure $validate = null,
+    /*mixed */$validate = null,
     /*string */$hint = '',
     /*bool|string */$required = true
 )/*: int|string*/
@@ -64,10 +66,11 @@ function select(
     $options = backport_type_check(['array', Collection::class], $options);
     $default = backport_type_check('int|string', $default);
     $scroll = backport_type_check('int', $scroll);
+    $validate = backport_type_check('mixed', $validate);
     $hint = backport_type_check('string', $hint);
     $required = backport_type_check('bool|string', $required);
 
-    return (new SelectPrompt($label, $options, $default, $scroll, $validate, $hint, $required))->prompt();
+    return (new SelectPrompt(...func_get_args()))->prompt();
 }
 
 /**
@@ -83,7 +86,7 @@ function multiselect(
     /*array|Collection */$default = [],
     /*int */$scroll = 5,
     /*bool|string */$required = false,
-    Closure $validate = null,
+    /*mixed */$validate = null,
     /*string */$hint = 'Use the space bar to select options.'
 )/*: array*/
 {
@@ -92,9 +95,10 @@ function multiselect(
     $default = backport_type_check(['array', Collection::class], $default);
     $scroll = backport_type_check('int', $scroll);
     $required = backport_type_check('bool|string', $required);
+    $validate = backport_type_check('mixed', $validate);
     $hint = backport_type_check('string', $hint);
 
-    return (new MultiSelectPrompt($label, $options, $default, $scroll, $required, $validate, $hint))->prompt();
+    return (new MultiSelectPrompt(...func_get_args()))->prompt();
 }
 
 /**
@@ -106,7 +110,7 @@ function confirm(
     /*string */$yes = 'Yes',
     /*string */$no = 'No',
     /*bool|string */$required = false,
-    Closure $validate = null,
+    /*mixed */$validate = null,
     /*string */$hint = ''
 )/*: bool*/
 {
@@ -115,9 +119,10 @@ function confirm(
     $yes = backport_type_check('string', $yes);
     $no = backport_type_check('string', $no);
     $required = backport_type_check('bool|string', $required);
+    $validate = backport_type_check('mixed', $validate);
     $hint = backport_type_check('string', $hint);
 
-    return (new ConfirmPrompt($label, $default, $yes, $no, $required, $validate, $hint))->prompt();
+    return (new ConfirmPrompt(...func_get_args()))->prompt();
 }
 
 /**
@@ -132,7 +137,7 @@ function suggest(
     /*string */$default = '',
     /*int */$scroll = 5,
     /*bool|string */$required = false,
-    Closure $validate = null,
+    /*mixed */$validate = null,
     /*string */$hint = ''
 )/*: string*/
 {
@@ -142,9 +147,10 @@ function suggest(
     $default = backport_type_check('string', $default);
     $scroll = backport_type_check('int', $scroll);
     $required = backport_type_check('bool|string', $required);
+    $validate = backport_type_check('mixed', $validate);
     $hint = backport_type_check('string', $hint);
 
-    return (new SuggestPrompt($label, $options, $placeholder, $default, $scroll, $required, $validate, $hint))->prompt();
+    return (new SuggestPrompt(...func_get_args()))->prompt();
 }
 
 /**
@@ -157,7 +163,7 @@ function search(
     Closure $options,
     /*string */$placeholder = '',
     /*int */$scroll = 5,
-    Closure $validate = null,
+    /*mixed */$validate = null,
     /*string */$hint = '',
     /*bool|string */$required = true
 )/*: int|string*/
@@ -165,10 +171,11 @@ function search(
     $label = backport_type_check('string', $label);
     $placeholder = backport_type_check('string', $placeholder);
     $scroll = backport_type_check('int', $scroll);
+    $validate = backport_type_check('mixed', $validate);
     $hint = backport_type_check('string', $hint);
     $required = backport_type_check('bool|string', $required);
 
-    return (new SearchPrompt($label, $options, $placeholder, $scroll, $validate, $hint, $required))->prompt();
+    return (new SearchPrompt(...func_get_args()))->prompt();
 }
 
 /**
@@ -183,7 +190,7 @@ function multisearch(
     /*string */$placeholder = '',
     /*int */$scroll = 5,
     /*bool|string */$required = false,
-    Closure $validate = null,
+    /*mixed */$validate = null,
     /*string */$hint = 'Use the space bar to select options.'
 )/*: array*/
 {
@@ -191,9 +198,10 @@ function multisearch(
     $placeholder = backport_type_check('string', $placeholder);
     $scroll = backport_type_check('int', $scroll);
     $required = backport_type_check('bool|string', $required);
+    $validate = backport_type_check('mixed', $validate);
     $hint = backport_type_check('string', $hint);
 
-    return (new MultiSearchPrompt($label, $options, $placeholder, $scroll, $required, $validate, $hint))->prompt();
+    return (new MultiSearchPrompt(...func_get_args()))->prompt();
 }
 
 /**
@@ -219,11 +227,11 @@ function spin(
  */
 function note(
     /*string */$message,
-    /*string */$type = null
+    /*?string */$type = null
 )/*: void*/
 {
     $message = backport_type_check('string', $message);
-    $type = backport_type_check('string', $type);
+    $type = backport_type_check('?string', $type);
 
     (new Note($message, $type))->display();
 }
@@ -294,10 +302,10 @@ function outro(/*string */$message)/*: void*/
  * @param  array<int, string|array<int, string>>|Collection<int, string|array<int, string>>  $headers
  * @param  array<int, array<int, string>>|Collection<int, array<int, string>>  $rows
  */
-function table(/*array|Collection */$headers = [], /*array|Collection */$rows = null)/*: void*/
+function table(/*array|Collection */$headers = [], /*array|Collection|null */$rows = null)/*: void*/
 {
     $headers = backport_type_check(['array', Collection::class], $headers);
-    $rows = backport_type_check(['array', Collection::class], $rows);
+    $rows = backport_type_check(['array', Collection::class, 'null'], $rows);
 
     (new Table($headers, $rows))->display();
 }
@@ -315,7 +323,7 @@ function table(/*array|Collection */$headers = [], /*array|Collection */$rows = 
 function progress(
     /*string */$label,
     /*iterable|int */$steps,
-    Closure $callback = null,
+    /*?*/Closure $callback = null,
     /*string */$hint = ''
 )/*: array|Progress*/
 {

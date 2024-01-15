@@ -36,17 +36,17 @@ class SearchPrompt extends Prompt
         /*public */Closure $options,
         /*public string */$placeholder = '',
         /*public int */$scroll = 5,
-        /*public *//*?*/Closure $validate = null,
+        /*public mixed */$validate = null,
         /*public string */$hint = '',
         /*public bool|string */$required = ''
     ) {
         $this->label = backport_type_check('string', $label);
         $this->placeholder = backport_type_check('string', $placeholder);
         $this->scroll = backport_type_check('int', $scroll);
+        $this->validate = backport_type_check('mixed', $validate);
         $this->hint = backport_type_check('string', $hint);
         $this->required = backport_type_check('bool|string', $required);
         $this->options = $options;
-        $this->validate = $validate;
 
         if ($this->required === false) {
             throw new InvalidArgumentException('Argument [required] must be true or a string.');
