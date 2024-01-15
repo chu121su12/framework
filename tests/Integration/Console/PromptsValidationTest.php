@@ -78,7 +78,7 @@ class DummyPromptsWithLaravelRulesCommand extends Command
             /*$placeholder = */'',
             /*$default = */'',
             /*$required = */false,
-            /*validate: */function ($value) { return 'required'; }
+            /*validate: */'required'
         );
     }
 }
@@ -114,7 +114,7 @@ class DummyPromptsWithLaravelRulesMessagesAndAttributesCommand extends Command
             /*$placeholder = */'',
             /*$default = */'',
             /*$required = */false,
-            /*validate: */function ($value) { return ['name' => 'required']; }
+            /*validate: */['name' => 'required']
         );
     }
 
