@@ -76,9 +76,9 @@ class EloquentEagerLoadingLimitTest extends DatabaseTestCase
         ]);
     }
 
-    public function testBelongsToMany(): void
+    public function testBelongsToMany()/*: void*/
     {
-        $users = User::with(['roles' => fn ($query) => $query->latest()->limit(2)])
+        $users = User::with(['roles' => function ($query) { return $query->latest()->limit(2); }])
             ->orderBy('id')
             ->get();
 
@@ -88,9 +88,9 @@ class EloquentEagerLoadingLimitTest extends DatabaseTestCase
         $this->assertArrayNotHasKey('@laravel_group := `user_id`', $users[0]->roles[0]);
     }
 
-    public function testBelongsToManyWithOffset(): void
+    public function testBelongsToManyWithOffset()/*: void*/
     {
-        $users = User::with(['roles' => fn ($query) => $query->latest()->limit(2)->offset(1)])
+        $users = User::with(['roles' => function ($query) { return $query->latest()->limit(2)->offset(1); }])
             ->orderBy('id')
             ->get();
 
@@ -98,9 +98,9 @@ class EloquentEagerLoadingLimitTest extends DatabaseTestCase
         $this->assertEquals([5, 4], $users[1]->roles->pluck('id')->all());
     }
 
-    public function testHasMany(): void
+    public function testHasMany()/*: void*/
     {
-        $users = User::with(['posts' => fn ($query) => $query->latest()->limit(2)])
+        $users = User::with(['posts' => function ($query) { return $query->latest()->limit(2); }])
             ->orderBy('id')
             ->get();
 
@@ -110,9 +110,9 @@ class EloquentEagerLoadingLimitTest extends DatabaseTestCase
         $this->assertArrayNotHasKey('@laravel_group := `user_id`', $users[0]->posts[0]);
     }
 
-    public function testHasManyWithOffset(): void
+    public function testHasManyWithOffset()/*: void*/
     {
-        $users = User::with(['posts' => fn ($query) => $query->latest()->limit(2)->offset(1)])
+        $users = User::with(['posts' => function ($query) { return $query->latest()->limit(2)->offset(1); }])
             ->orderBy('id')
             ->get();
 
@@ -120,9 +120,9 @@ class EloquentEagerLoadingLimitTest extends DatabaseTestCase
         $this->assertEquals([5, 4], $users[1]->posts->pluck('id')->all());
     }
 
-    public function testHasManyThrough(): void
+    public function testHasManyThrough()/*: void*/
     {
-        $users = User::with(['comments' => fn ($query) => $query->latest('comments.created_at')->limit(2)])
+        $users = User::with(['comments' => function ($query) { return $query->latest('comments.created_at')->limit(2); }])
             ->orderBy('id')
             ->get();
 
@@ -132,9 +132,9 @@ class EloquentEagerLoadingLimitTest extends DatabaseTestCase
         $this->assertArrayNotHasKey('@laravel_group := `user_id`', $users[0]->comments[0]);
     }
 
-    public function testHasManyThroughWithOffset(): void
+    public function testHasManyThroughWithOffset()/*: void*/
     {
-        $users = User::with(['comments' => fn ($query) => $query->latest('comments.created_at')->limit(2)->offset(1)])
+        $users = User::with(['comments' => function ($query) { return $query->latest('comments.created_at')->limit(2)->offset(1); }])
             ->orderBy('id')
             ->get();
 
@@ -166,17 +166,17 @@ class User extends Model
 
     protected $guarded = [];
 
-    public function comments(): HasManyThrough
+    public function comments()/*: HasManyThrough*/
     {
         return $this->hasManyThrough(Comment::class, Post::class);
     }
 
-    public function posts(): HasMany
+    public function posts()/*: HasMany*/
     {
         return $this->hasMany(Post::class);
     }
 
-    public function roles(): BelongsToMany
+    public function roles()/*: BelongsToMany*/
     {
         return $this->belongsToMany(Role::class);
     }

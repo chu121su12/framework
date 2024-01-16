@@ -962,7 +962,7 @@ class Grammar extends BaseGrammar
 
         $components['columns'] .= $this->compileRowNumber(
             $query->groupLimit['column'],
-            $components['orders'] ?? ''
+            isset($components['orders']) ? $components['orders'] : ''
         );
 
         unset($components['orders']);

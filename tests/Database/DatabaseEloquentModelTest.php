@@ -713,6 +713,7 @@ class DatabaseEloquentModelTest extends TestCase
     public function testEagerLoadingWithColumns()
     {
         $model = new EloquentModelWithoutRelationStub;
+        $this->addMockConnection($model);
         $instance = $model->newInstance()->newQuery()->with('foo:bar,baz', 'hadi');
         $builder = m::mock(Builder::class);
         $builder->shouldReceive('select')->once()->with(['bar', 'baz']);
