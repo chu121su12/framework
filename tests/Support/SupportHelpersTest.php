@@ -1165,11 +1165,12 @@ class SupportHelpersTest extends TestCase
         $this->assertSame('some-value', Env::getOrFail('required-exists'));
     }
 
-    public function testLiteral(): void
+    public function testLiteral()/*: void*/
     {
         $this->assertEquals(1, literal(1));
         $this->assertEquals('taylor', literal('taylor'));
-        $this->assertEquals((object) ['name' => 'Taylor', 'role' => 'Developer'], literal(name: 'Taylor', role: 'Developer'));
+        // $this->assertEquals((object) ['name' => 'Taylor', 'role' => 'Developer'], literal(name: 'Taylor', role: 'Developer'));
+        $this->assertEquals((object) ['name' => 'Taylor', 'role' => 'Developer'], literal(['name' => 'Taylor', 'role' => 'Developer']));
     }
 
     public static function providesPregReplaceArrayData()

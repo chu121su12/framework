@@ -94,7 +94,7 @@ class DummyPromptsWithLaravelRulesCommandWithInlineMessagesAndAttibutesCommand e
             /*$placeholder = */'',
             /*$default = */'',
             /*$required = */false,
-            /*validate: */literal_([
+            /*validate: */literal([
                 'rules' => ['name' => 'required'],
                 'messages' => ['name.required' => 'Your :attribute is mandatory.'],
                 'attributes' => ['name' => 'full name'],

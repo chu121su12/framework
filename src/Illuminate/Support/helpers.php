@@ -161,22 +161,10 @@ if (! function_exists('literal')) {
     function literal(...$arguments)
     {
         if (count($arguments) === 1 && array_is_list($arguments)) {
-            return $arguments[0];
+            return \is_array($arguments[0]) && ! \array_is_list($arguments[0]) ? (object) $arguments[0] : $arguments[0];
         }
 
         return (object) $arguments;
-    }
-}
-
-if (! function_exists('literal_')) {
-    /**
-     * Create a new anonymous object using named arguments.
-     *
-     * @return \stdClass
-     */
-    function literal_($argument)
-    {
-        return (object) $argument;
     }
 }
 
