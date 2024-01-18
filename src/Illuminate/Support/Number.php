@@ -188,12 +188,12 @@ class Number
     }
 
     /**
-     * Convert the number to its human readable equivalent.
+     * Convert the number to its human-readable equivalent.
      *
-     * @param  int  $number
+     * @param  int|float  $number
      * @param  int  $precision
      * @param  int|null  $maxPrecision
-     * @return string
+     * @return bool|string
      */
     public static function abbreviate(/*int|float */$number, /*int */$precision = 0, /*?int */$maxPrecision = null)
     {
@@ -207,12 +207,13 @@ class Number
     }
 
     /**
-     * Convert the number to its human readable equivalent.
+     * Convert the number to its human-readable equivalent.
      *
-     * @param  int  $number
+     * @param  int|float  $number
      * @param  int  $precision
      * @param  int|null  $maxPrecision
-     * @return string
+     * @param  bool  $abbreviate
+     * @return bool|string
      */
     public static function forHumans(/*int|float */$number, /*int */$precision = 0, /*?int */$maxPrecision = null, /*bool */$abbreviate = false)
     {
@@ -240,13 +241,13 @@ class Number
     }
 
     /**
-     * Convert the number to its human readable equivalent.
+     * Convert the number to its human-readable equivalent.
      *
-     * @param  int  $number
+     * @param  int|float  $number
      * @param  int  $precision
      * @param  int|null  $maxPrecision
      * @param  array  $units
-     * @return string
+     * @return string|false
      */
     protected static function summarize(/*int|float */$number, /*int */$precision = 0, /*?int */$maxPrecision = null, array $units = [])
     {
@@ -340,7 +341,9 @@ class Number
     protected static function ensureIntlExtensionIsInstalled()
     {
         if (! extension_loaded('intl')) {
-            throw new RuntimeException('The "intl" PHP extension is required to use this method.');
+            $method = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
+
+            throw new RuntimeException('The "intl" PHP extension is required to use the ['.$method.'] method.');
         }
     }
 }
