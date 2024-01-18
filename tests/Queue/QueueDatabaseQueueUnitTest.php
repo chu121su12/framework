@@ -48,7 +48,7 @@ class QueueDatabaseQueueUnitTest extends TestCase
 
         $queue->push($job, ['data']);
 
-        $container->shouldHaveReceived('bound')->with('events')->once();
+        $container->shouldHaveReceived('bound')->with('events')->twice();
 
         Str::createUuidsNormally();
     }
@@ -89,7 +89,7 @@ class QueueDatabaseQueueUnitTest extends TestCase
 
         $queue->later(10, 'foo', ['data']);
 
-        $container->shouldHaveReceived('bound')->with('events')->once();
+        $container->shouldHaveReceived('bound')->with('events')->twice();
 
         Str::createUuidsNormally();
     }
