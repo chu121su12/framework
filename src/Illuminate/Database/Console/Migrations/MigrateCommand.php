@@ -182,7 +182,10 @@ class MigrateCommand extends BaseCommand implements Isolatable
 
         $this->components->warn('The SQLite database configured for this application does not exist: '.$path);
 
-        if (! confirm('Would you like to create it?', default: true)) {
+        if (! confirm(
+            'Would you like to create it?',
+            /*default: */true
+        )) {
             return false;
         }
 

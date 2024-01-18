@@ -2196,7 +2196,7 @@ trait HasAttributes
             return $this->fromEncryptedString($attribute) === $this->fromEncryptedString($original);
         }
 
-        return is_numeric($attribute) && is_numeric($original)
+        return backport_is_numeric($attribute) && backport_is_numeric($original)
             && strcmp((string) $attribute, (string) $original) === 0;
     }
 
