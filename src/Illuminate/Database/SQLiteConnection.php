@@ -12,6 +12,8 @@ use Illuminate\Filesystem\Filesystem;
 
 class SQLiteConnection extends Connection
 {
+    public $legacySupport;
+
     /**
      * Create a new database connection instance.
      *
@@ -24,6 +26,17 @@ class SQLiteConnection extends Connection
     public function __construct($pdo, $database = '', $tablePrefix = '', array $config = [])
     {
         parent::__construct($pdo, $database, $tablePrefix, $config);
+
+        $this->legacySupport = _check_db_connection_versions($this, function ($driver, $version) {
+            if ($driver === 'sqlite' && version_compare($version, '3.31.0', '<')) {
+                // 24 upsert
+                // 25 drop
+                // 31 generated
+                return "{$driver}-{$version}";
+            }
+
+            return false;
+        });
 
         $enableForeignKeyConstraints = $this->getForeignKeyConstraintsConfigurationValue();
 

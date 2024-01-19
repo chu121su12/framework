@@ -3547,6 +3547,15 @@ class Builder implements BuilderContract
      */
     public function upsert(array $values, $uniqueBy, $update = null)
     {
+        if (_data_get($this->connection, 'legacySupport')) {
+            try {
+                return $this->insert($values);
+            } catch (\Exception $_e) {
+                return $this->where($uniqueBy, $values[$uniqueBy])
+                    ->update(Arr::except($values, [$uniqueBy]));
+            }
+        }
+
         if (empty($values)) {
             return 0;
         } elseif ($update === []) {

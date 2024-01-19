@@ -18,7 +18,7 @@ class BladeComponentsTest extends AbstractBladeTestCase
 
     public function testClassComponentsAreCompiled()
     {
-        $this->assertSame('<?php if (isset($component)) { $__componentOriginal32877a641c21ac6579f6376333c8770674a6058f = $component; } ?>
+        $this->assertSameStringDifferentLineEndings('<?php if (isset($component)) { $__componentOriginal32877a641c21ac6579f6376333c8770674a6058f = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal32877a641c21ac6579f6376333c8770674a6058f = $attributes; } ?>
 <?php $component = Illuminate\Tests\View\Blade\ComponentStub::class; ?>
 <?php $component = $component::resolve(["foo" => "bar"] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>

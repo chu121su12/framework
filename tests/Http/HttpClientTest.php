@@ -2852,6 +2852,7 @@ class HttpClientTest extends TestCase
 
         $stats = $this->factory
             ->withOptions([
+                'verify' => false,
                 'on_stats' => function (TransferStats $stats) use (&$onStatsFunctionCalled) {
                     $onStatsFunctionCalled = true;
                 },

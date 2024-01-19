@@ -53,6 +53,10 @@ class DatabaseSchemaBuilderIntegrationTest extends TestCase
 
     public function testDropColumnWithTablePrefix()
     {
+        if (_data_get($this->db->connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         $this->db->connection()->setTablePrefix('test_');
 
         $this->schemaBuilder()->create('pandemic_table', function (Blueprint $table) {

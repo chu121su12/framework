@@ -24,8 +24,8 @@ class RouteServiceProviderTest extends TestCase
                 AppRouteServiceProvider::class,
             ])
             ->withRouting(
-                using: function () {
-                    Route::get('login', fn () => 'Login')->name('login');
+                /*using: */function () {
+                    Route::get('login', function () { return 'Login'; })->name('login');
                 }
             )
             ->withMiddleware(function (Middleware $middleware) {
@@ -69,7 +69,7 @@ class AppRouteServiceProvider extends RouteServiceProvider
     public function boot()
     {
         $this->routes(function () {
-            Route::get('dashboard', fn () => 'Hello')->name('dashboard');
+            Route::get('dashboard', function () { return 'Hello'; })->name('dashboard');
         });
     }
 }

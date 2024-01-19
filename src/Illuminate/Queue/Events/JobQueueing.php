@@ -53,6 +53,6 @@ class JobQueueing
             throw new RuntimeException('The job payload was not provided when the event was dispatched.');
         }
 
-        return backport_json_decode($this->payload, true, 512, /*flags: */JSON_THROW_ON_ERROR);
+        return backport_json_decode($this->payload, true, 512, 0, true);
     }
 }

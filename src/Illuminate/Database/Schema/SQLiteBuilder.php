@@ -42,7 +42,7 @@ class SQLiteBuilder extends Builder
 
         try {
             $withSize = $this->connection->scalar($this->grammar->compileDbstatExists());
-        } catch (QueryException $e) {
+        } catch (QueryException $_e) {
             //
         }
 
@@ -62,7 +62,7 @@ class SQLiteBuilder extends Builder
         $table = $this->connection->getTablePrefix().$table;
 
         return $this->connection->getPostProcessor()->processColumns(
-            $this->connection->selectFromWriteConnection($this->grammar->compileColumns($table)),
+            $this->getColumnsPragma($table) ?: $this->connection->selectFromWriteConnection($this->grammar->compileColumns($table)),
             $this->connection->scalar($this->grammar->compileSqlCreateStatement($table))
         );
     }
@@ -139,5 +139,39 @@ class SQLiteBuilder extends Builder
     public function refreshDatabaseFile()
     {
         file_put_contents($this->connection->getDatabaseName(), '');
+    }
+
+    protected function getColumnsPragma($table)
+    {
+        if (! _data_get($this->connection, 'legacySupport')) {
+            return null;
+        }
+
+        $table = $this->grammar->wrap(str_replace('.', '__', $table));
+
+        $columns = $this->connection->selectFromWriteConnection('pragma table_info('.$table.')');
+
+        return (new \Illuminate\Support\Collection($columns))
+            ->map(function ($row) {
+                return (object) [
+                    'name' => $row->name,
+                    'type' => $row->type,
+                    'nullable' => ! $row->notnull,
+                    'default' => $row->dflt_value,
+                    'primary' => $row->pk,
+                ];
+            })
+            ->sortBy('cid')
+            ->values()
+            ->all();
+    }
+
+    public function getIndexes($table)
+    {
+        $table = $this->connection->getTablePrefix().$table;
+
+        return $this->connection->getPostProcessor()->processIndexes(
+            $this->connection->selectFromWriteConnection($this->grammar->compileIndexes($table))
+        );
     }
 }

@@ -40,6 +40,9 @@ class SupportNumberTest extends TestCase
         $this->assertSame('NaN', Number::format(NAN));
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     public function testFormatWithDifferentLocale()
     {
         $this->needsIntlExtension();
@@ -106,6 +109,9 @@ class SupportNumberTest extends TestCase
         $this->assertSame('3rd', Number::ordinal(3));
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     public function testToPercent()
     {
         $this->needsIntlExtension();
@@ -147,6 +153,9 @@ class SupportNumberTest extends TestCase
         $this->assertSame('$5.32', Number::currency(5.325));
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     public function testToCurrencyWithDifferentLocale()
     {
         $this->needsIntlExtension();

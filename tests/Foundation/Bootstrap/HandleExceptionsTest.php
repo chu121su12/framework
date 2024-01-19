@@ -98,15 +98,7 @@ Stack trace:
 [\s\S]*#i
 REGEXP;
 
-                $regexp2 = <<<REGEXP
-#'ErrorException' with message 'str_contains\(\): Passing null to parameter \#2 \(\\\$needle\) of type string is deprecated' in /home/user/laravel/routes/web\.php:17
-Stack trace:
-\#0 .*helpers.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions.*
-\#1 .*HandleExceptions\.php\(.*\): with.*
-\#2 .*HandleExceptions\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleDeprecation.*
-\#3 .*HandleExceptionsTest\.php\(.*\): Illuminate\\\\Foundation\\\\Bootstrap\\\\HandleExceptions->handleError.*
-[\s\S]*#i
-REGEXP;
+                $regexp2 = "#'ErrorException' with message 'str_contains\(\): Passing null to parameter \#2 \(\\\$needle\) of type string is deprecated' in /home/user/laravel/routes/web\.php:17[\s\S]*#i";
 
                 return preg_match($regexp, $message) || preg_match($regexp2, $message);
             })

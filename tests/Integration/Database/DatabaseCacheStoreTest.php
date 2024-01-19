@@ -171,7 +171,7 @@ class DatabaseCacheStoreTest extends DatabaseTestCase
         $this->assertDatabaseHas($this->getCacheTableName(), ['key' => $this->withCachePrefix('foo')]);
     }
 
-    public function testResolvingSQLiteConnectionDoesNotThrowExceptions()
+    public function testResolvingSQLiteConnectionDoesNotThrowExceptions() // @TODO check why ok on linux
     {
         $originalConfiguration = config('database');
 

@@ -106,6 +106,10 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
             'prefix' => 'prefix_',
         ]);
 
+        if (_data_get($db->getConnection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         $schema = $db->getConnection()->getSchemaBuilder();
 
         $schema->create('users', function (Blueprint $table) {
@@ -152,6 +156,10 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
             'database' => ':memory:',
             'prefix' => 'prefix_',
         ]);
+
+        if (_data_get($db->getConnection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
 
         $schema = $db->getConnection()->getSchemaBuilder();
 

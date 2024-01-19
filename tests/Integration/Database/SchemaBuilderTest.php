@@ -60,6 +60,10 @@ class SchemaBuilderTest extends DatabaseTestCase
             $this->markTestSkipped('Test requires a SQLite connection.');
         }
 
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         Schema::create('test', function (Blueprint $table) {
             $table->string('test_column');
         });
@@ -151,6 +155,10 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testHasView()
     {
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         DB::statement('create view foo (id) as select 1');
 
         $this->assertTrue(Schema::hasView('foo'));
@@ -158,6 +166,10 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetViews()
     {
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         DB::statement('create view foo (id) as select 1');
         DB::statement('create view bar (name) as select 1');
         DB::statement('create view baz (votes) as select 1');
@@ -196,6 +208,10 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetColumns()
     {
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         Schema::create('foo', function (Blueprint $table) {
             $table->id();
             $table->string('bar')->nullable();
@@ -218,6 +234,10 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetColumnsOnView()
     {
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         DB::statement('create view foo (bar) as select 1');
 
         $columns = Schema::getColumns('foo');
@@ -228,6 +248,10 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetIndexes()
     {
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         Schema::create('foo', function (Blueprint $table) {
             $table->string('bar')->index('my_index');
         });
@@ -245,6 +269,10 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetUniqueIndexes()
     {
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         Schema::create('foo', function (Blueprint $table) {
             $table->id();
             $table->string('bar');
@@ -266,6 +294,10 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetIndexesWithCompositeKeys()
     {
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         Schema::create('foo', function (Blueprint $table) {
             $table->unsignedBigInteger('key');
             $table->string('bar')->unique();
@@ -308,6 +340,10 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetForeignKeys()
     {
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
         });
@@ -328,6 +364,10 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetCompoundForeignKeys()
     {
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         Schema::create('parent', function (Blueprint $table) {
             $table->id();
             $table->integer('a');
@@ -355,6 +395,10 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testAlteringTableWithForeignKeyConstraintsEnabled()
     {
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         Schema::enableForeignKeyConstraints();
 
         Schema::create('parents', function (Blueprint $table) {
@@ -406,6 +450,10 @@ class SchemaBuilderTest extends DatabaseTestCase
             $this->markTestSkipped('Test requires a SQLite connection.');
         }
 
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         Schema::create('test', function (Blueprint $table) {
             $table->integer('price');
         });
@@ -420,6 +468,10 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testAddingMacros()
     {
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         Schema::macro('foo', function () { return 'foo'; });
 
         $this->assertEquals('foo', Schema::foo());

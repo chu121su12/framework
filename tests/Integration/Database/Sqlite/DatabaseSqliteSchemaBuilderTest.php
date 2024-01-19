@@ -42,6 +42,10 @@ class DatabaseSqliteSchemaBuilderTest extends DatabaseTestCase
 
     public function testGetAllTablesAndColumnListing()
     {
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         $tables = Schema::getAllTables();
 
         $this->assertCount(2, $tables);

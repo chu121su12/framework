@@ -54,6 +54,10 @@ class DatabaseSchemaBuilderTest extends TestCase
     {
         $connection = DB::connection('sqlite-with-prefix');
 
+        if (_data_get($connection, 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         Schema::connection('sqlite-with-prefix')->create('table1', function (Blueprint $table) {
             $table->integer('id');
             $table->string('name')->index();
@@ -67,6 +71,10 @@ class DatabaseSchemaBuilderTest extends TestCase
     public function testHasColumnAndIndexWithPrefixIndexEnabled()
     {
         $connection = DB::connection('sqlite-with-indexed-prefix');
+
+        if (_data_get($connection, 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
 
         Schema::connection('sqlite-with-indexed-prefix')->create('table1', function (Blueprint $table) {
             $table->integer('id');

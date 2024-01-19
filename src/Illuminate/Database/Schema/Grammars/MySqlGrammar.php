@@ -1088,7 +1088,7 @@ class MySqlGrammar extends Grammar
         }
 
         return sprintf('%s%s',
-            $subtype ?? 'geometry',
+            isset($subtype) ? $subtype : 'geometry',
             $column->srid ? ' srid '.$column->srid : ''
         );
     }

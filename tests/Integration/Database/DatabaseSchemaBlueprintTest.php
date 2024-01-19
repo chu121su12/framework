@@ -24,6 +24,10 @@ class DatabaseSchemaBlueprintTest extends TestCase
         $app['config']->set([
             'database.default' => 'testing',
         ]);
+
+        if (_data_get(DB::connection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
     }
 
     public function testRenamingAndChangingColumnsWork()

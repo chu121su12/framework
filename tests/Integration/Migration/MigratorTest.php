@@ -26,6 +26,10 @@ class MigratorTest extends TestCase
         $this->subject = $this->app->make('migrator');
         $this->subject->setOutput($this->output);
         $this->subject->getRepository()->createRepository();
+
+        if (_data_get(DB::connection($this->subject->getConnection()), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
     }
 
     public function testMigrate()
@@ -59,6 +63,10 @@ class MigratorTest extends TestCase
 
     public function testRollback()
     {
+        if (_data_get($this->getConnection(), 'legacySupport')) {
+            $this->markTestSkipped('PDO driver no support');
+        }
+
         $this->getConnection()->statement('CREATE TABLE people(id INT, first_name VARCHAR, last_name VARCHAR);');
         $this->subject->getRepository()->log('2014_10_12_000000_create_people_table', 1);
         $this->subject->getRepository()->log('2015_10_04_000000_modify_people_table', 1);

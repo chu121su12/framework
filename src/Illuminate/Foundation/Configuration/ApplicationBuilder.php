@@ -145,7 +145,7 @@ class ApplicationBuilder
         AppRouteServiceProvider::loadRoutesUsing($using);
 
         $this->app->booting(function () {
-            $this->app->register(AppRouteServiceProvider::class, force: true);
+            $this->app->register(AppRouteServiceProvider::class, /*force: */true);
         });
 
         if (is_string($commands) && realpath($commands) !== false) {
