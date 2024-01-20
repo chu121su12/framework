@@ -143,15 +143,14 @@ class SQLiteBuilder extends Builder
 
     protected function getColumnsPragma($table)
     {
-        if (! _data_get($this->connection, 'legacySupport')) {
+        if (! _data_get($this->connection, 'legacyDb')) {
             return null;
         }
 
         $table = $this->grammar->wrap(str_replace('.', '__', $table));
 
-        $columns = $this->connection->selectFromWriteConnection('pragma table_info('.$table.')');
-
-        return (new \Illuminate\Support\Collection($columns))
+        return collect($this->connection->selectFromWriteConnection('pragma table_info('.$table.')'))
+            ->sortBy('cid')
             ->map(function ($row) {
                 return (object) [
                     'name' => $row->name,
@@ -161,17 +160,7 @@ class SQLiteBuilder extends Builder
                     'primary' => $row->pk,
                 ];
             })
-            ->sortBy('cid')
             ->values()
             ->all();
-    }
-
-    public function getIndexes($table)
-    {
-        $table = $this->connection->getTablePrefix().$table;
-
-        return $this->connection->getPostProcessor()->processIndexes(
-            $this->connection->selectFromWriteConnection($this->grammar->compileIndexes($table))
-        );
     }
 }

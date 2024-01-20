@@ -60,7 +60,7 @@ class SchemaBuilderTest extends DatabaseTestCase
             $this->markTestSkipped('Test requires a SQLite connection.');
         }
 
-        if (_data_get(DB::connection(), 'legacySupport')) {
+        if (_data_get(DB::connection(), 'legacyDb')) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -155,7 +155,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testHasView()
     {
-        if (_data_get(DB::connection(), 'legacySupport')) {
+        if (_data_get(DB::connection(), 'legacyDb')) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -166,7 +166,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetViews()
     {
-        if (_data_get(DB::connection(), 'legacySupport')) {
+        if (_data_get(DB::connection(), 'legacyDb')) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -208,10 +208,6 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetColumns()
     {
-        if (_data_get(DB::connection(), 'legacySupport')) {
-            $this->markTestSkipped('PDO driver no support');
-        }
-
         Schema::create('foo', function (Blueprint $table) {
             $table->id();
             $table->string('bar')->nullable();
@@ -234,7 +230,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetColumnsOnView()
     {
-        if (_data_get(DB::connection(), 'legacySupport')) {
+        if (_data_get(DB::connection(), 'legacyDb')) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -248,7 +244,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetIndexes()
     {
-        if (_data_get(DB::connection(), 'legacySupport')) {
+        if (_data_get(DB::connection(), 'legacyDb')) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -269,7 +265,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetUniqueIndexes()
     {
-        if (_data_get(DB::connection(), 'legacySupport')) {
+        if (_data_get(DB::connection(), 'legacyDb')) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -294,7 +290,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetIndexesWithCompositeKeys()
     {
-        if (_data_get(DB::connection(), 'legacySupport')) {
+        if (_data_get(DB::connection(), 'legacyDb')) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -340,7 +336,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetForeignKeys()
     {
-        if (_data_get(DB::connection(), 'legacySupport')) {
+        if (_data_get(DB::connection(), 'legacyDb')) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -364,7 +360,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetCompoundForeignKeys()
     {
-        if (_data_get(DB::connection(), 'legacySupport')) {
+        if (_data_get(DB::connection(), 'legacyDb')) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -395,7 +391,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testAlteringTableWithForeignKeyConstraintsEnabled()
     {
-        if (_data_get(DB::connection(), 'legacySupport')) {
+        if (_data_get(DB::connection(), 'legacyDb')) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -450,7 +446,7 @@ class SchemaBuilderTest extends DatabaseTestCase
             $this->markTestSkipped('Test requires a SQLite connection.');
         }
 
-        if (_data_get(DB::connection(), 'legacySupport')) {
+        if (_data_get(DB::connection(), 'legacyDb')) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -468,7 +464,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testAddingMacros()
     {
-        if (_data_get(DB::connection(), 'legacySupport')) {
+        if (_data_get(DB::connection(), 'legacyDb')) {
             $this->markTestSkipped('PDO driver no support');
         }
 

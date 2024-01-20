@@ -54,7 +54,7 @@ class DatabaseSchemaBuilderTest extends TestCase
     {
         $connection = DB::connection('sqlite-with-prefix');
 
-        if (_data_get($connection, 'legacySupport')) {
+        if (_data_get($connection, 'legacyDb')) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -72,7 +72,7 @@ class DatabaseSchemaBuilderTest extends TestCase
     {
         $connection = DB::connection('sqlite-with-indexed-prefix');
 
-        if (_data_get($connection, 'legacySupport')) {
+        if (_data_get($connection, 'legacyDb')) {
             $this->markTestSkipped('PDO driver no support');
         }
 
