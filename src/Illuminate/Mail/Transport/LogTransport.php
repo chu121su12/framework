@@ -3,6 +3,7 @@
 namespace Illuminate\Mail\Transport;
 
 use Illuminate\Mail\SentMessage;
+use Illuminate\Support\Str;
 use Psr\Log\LoggerInterface;
 use Stringable;
 use Swift_Mime_Message as RawMessage;
@@ -38,17 +39,48 @@ class LogTransport extends Transport implements Stringable
      */
     public function send(RawMessage $message, /*Envelope */&$failedRecipients = null)/*: ?SentMessage*/
     {
-        $this->beforeSendPerformed($message);
+        $string = Str::of($message->toString());
 
-        $this->logger->debug($this->getMimeEntityString($message));
+        if ($string->contains('Content-Type: multipart/')) {
+            $boundary = $string
+                ->after('boundary=')
+                ->before("\r\n")
+                ->prepend('--')
+                ->append("\r\n");
 
-        $this->sendPerformed($message);
+            $string = $string
+                ->explode($boundary)
+                ->map($this->decodeQuotedPrintableContent(...))
+                ->implode($boundary);
+        } elseif ($string->contains('Content-Transfer-Encoding: quoted-printable')) {
+            $string = $this->decodeQuotedPrintableContent($string);
+        }
 
-        $sentMessage = new SentMessage($message);
+        $this->logger->debug((string) $string);
 
         $this->numberOfRecipients($message);
 
         return $sentMessage;
+    }
+
+    /**
+     * Decode the given quoted printable content.
+     *
+     * @param  string  $part
+     * @return string
+     */
+    protected function decodeQuotedPrintableContent(string $part)
+    {
+        if (! str_contains($part, 'Content-Transfer-Encoding: quoted-printable')) {
+            return $part;
+        }
+
+        [$headers, $content] = explode("\r\n\r\n", $part, 2);
+
+        return implode("\r\n\r\n", [
+            $headers,
+            quoted_printable_decode($content),
+        ]);
     }
 
     /**
