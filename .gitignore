@@ -13,3 +13,4 @@ Thumbs.db
 .phpunit.result.cache
 
 /.phpintel
+/vendor*
