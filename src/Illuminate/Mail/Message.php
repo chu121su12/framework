@@ -50,9 +50,18 @@ class Message
      */
     public function from($address, $name = null)
     {
+        if ($this->message instanceof Email) {
+            is_array($address)
+                ? $this->message->setFrom(...$address)
+                : $this->message->setFrom($address, (string) $name);
+        }
+        else {
+
         is_array($address)
-            ? $this->message->setFrom(...$address)
-            : $this->message->setFrom($address, (string) $name);
+            ? $this->message->from(...$address)
+            : $this->message->from(\sprintf('%s <%s>', (string) $name, $address));
+
+        }
 
         return $this;
     }
@@ -97,9 +106,18 @@ class Message
     public function to($address, $name = null, $override = false)
     {
         if ($override) {
+            if ($this->message instanceof Email) {
+                is_array($address)
+                    ? $this->message->setTo(...$address)
+                    : $this->message->setTo($address, (string) $name);
+            }
+            else {
+
             is_array($address)
-                ? $this->message->setTo(...$address)
-                : $this->message->setTo($address, (string) $name);
+                ? $this->message->to(...$address)
+                : $this->message->to(\sprintf('%s <%s>', (string) $name, $address));
+
+            }
 
             return $this;
         }
@@ -219,8 +237,29 @@ class Message
      */
     protected function addAddresses($address, $name, $type)
     {
+        if ($this->message instanceof Email) {
+            if (is_array($address)) {
+                $type = ucfirst($type);
+
+                $addresses = collect($address)->each(function (/*string|array */$address) use ($type) {
+                    // if (is_string($key) && is_string($address)) {
+                    //     return new Address($key, $address);
+                    // }
+
+                    if (is_array($address)) {
+                        $this->message->{"set{$type}"}(isset($address['email']) ? $address['email'] : $address['address'], isset($address['name']) ? $address['name'] : null);
+                    } else {
+                        $this->message->{"set{$type}"}($address);
+                    }
+                });
+            } else {
+                $this->message->{"add{$type}"}($address, (string) $name);
+            }
+        }
+        else {
+
         if (is_array($address)) {
-            $type = ucfirst($type);
+            $type = strtolower($type);
 
             $addresses = collect($address)->each(function (/*string|array */$address) use ($type) {
                 // if (is_string($key) && is_string($address)) {
@@ -228,13 +267,19 @@ class Message
                 // }
 
                 if (is_array($address)) {
-                    $this->message->{"set{$type}"}(isset($address['email']) ? $address['email'] : $address['address'], isset($address['name']) ? $address['name'] : null);
+                    $this->message->{$type}(\sprintf(
+                        '%s <%s>',
+                        (string) (isset($address['name']) ? $address['name'] : null),
+                        isset($address['email']) ? $address['email'] : $address['address']
+                    ));
                 } else {
-                    $this->message->{"set{$type}"}($address);
+                    $this->message->{$type}($address);
                 }
             });
         } else {
-            $this->message->{"add{$type}"}($address, (string) $name);
+            $this->message->{$type}(\sprintf('%s <%s>', (string) $name, $address));
+        }
+
         }
 
         return $this;

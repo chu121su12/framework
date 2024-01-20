@@ -11,14 +11,16 @@ class Once
      *
      * @var static|null
      */
-    protected static ?self $instance = null;
+    protected static /*?self */$instance = null;
 
     /**
      * Indicates if the once instance is enabled.
      *
      * @var bool
      */
-    protected static bool $enabled = true;
+    protected static /*bool */$enabled = true;
+
+    protected $values;
 
     /**
      * Create a new once instance.
@@ -26,8 +28,10 @@ class Once
      * @param  \WeakMap<object, array<string, mixed>>  $values
      * @return void
      */
-    protected function __construct(protected WeakMap $values)
+    protected function __construct(/*protected WeakMap */$values)
     {
+        $this->values = $values;
+
         //
     }
 
@@ -38,7 +42,11 @@ class Once
      */
     public static function instance()
     {
-        return static::$instance ??= new static(new WeakMap);
+        if (! isset(static::$instance)) {
+            static::$instance = new static([]);
+        }
+
+        return static::$instance;
     }
 
     /**
@@ -54,18 +62,19 @@ class Once
         }
 
         $object = $onceable->object ?: $this;
+        $objectId = backport_weakmap_object($object);
 
         $hash = $onceable->hash;
 
-        if (isset($this->values[$object][$hash])) {
-            return $this->values[$object][$hash];
+        if (isset($this->values[$objectId][$hash])) {
+            return $this->values[$objectId][$hash];
         }
 
-        if (! isset($this->values[$object])) {
-            $this->values[$object] = [];
+        if (! isset($this->values[$objectId])) {
+            $this->values[$objectId] = [];
         }
 
-        return $this->values[$object][$hash] = call_user_func($onceable->callable);
+        return $this->values[$objectId][$hash] = call_user_func($onceable->callable);
     }
 
     /**

@@ -1200,4 +1200,10 @@ class ReflectionClosure extends ReflectionFunction
 
         return [$id_start, $id_start_ci, $id_name];
     }
+
+    #[\ReturnTypeWillChange]
+    public function getClosureUsedVariables()
+    {
+        return $this->getUseVariables();
+    }
 }

@@ -50,7 +50,7 @@ class LogTransport extends Transport implements Stringable
 
             $string = $string
                 ->explode($boundary)
-                ->map($this->decodeQuotedPrintableContent(...))
+                ->map(function (...$args) { return $this->decodeQuotedPrintableContent(...$args); })
                 ->implode($boundary);
         } elseif ($string->contains('Content-Transfer-Encoding: quoted-printable')) {
             $string = $this->decodeQuotedPrintableContent($string);
@@ -69,13 +69,15 @@ class LogTransport extends Transport implements Stringable
      * @param  string  $part
      * @return string
      */
-    protected function decodeQuotedPrintableContent(string $part)
+    protected function decodeQuotedPrintableContent(/*string */$part)
     {
+        $part = backport_type_check('string', $part);
+
         if (! str_contains($part, 'Content-Transfer-Encoding: quoted-printable')) {
             return $part;
         }
 
-        [$headers, $content] = explode("\r\n\r\n", $part, 2);
+        list($headers, $content) = explode("\r\n\r\n", $part, 2);
 
         return implode("\r\n\r\n", [
             $headers,

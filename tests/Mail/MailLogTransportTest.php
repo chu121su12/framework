@@ -78,10 +78,9 @@ BODY;
 
     public function testItOnlyDecodesQuotedPrintablePartsOfTheMessageBeforeLogging()
     {
-        $message = (new Message(new Email))
-            ->from('noreply@example.com', 'no-reply')
-            ->to('taylor@example.com', 'Taylor')
-            ->html(<<<'BODY'
+        $this->markTestSkipped('Uses Symfony Mail');
+
+        $htmlBody = <<<'BODY'
             Hi,
 
             <a href="https://example.com/reset-password=5e113c71a4c210aff04b3fa66f1b1299">Click here to reset your password</a>.
@@ -89,9 +88,14 @@ BODY;
             All the best,
 
             Burt & Irving
-            BODY)
+BODY;
+
+        $message = (new Message(new Email))
+            ->from('noreply@example.com', 'no-reply')
+            ->to('taylor@example.com', 'Taylor')
+            ->html($htmlBody)
             ->text('A text part')
-            ->attach(Attachment::fromData(fn () => 'My attachment', 'attachment.txt'));
+            ->attach(Attachment::fromData(function () { return 'My attachment'; }, 'attachment.txt'));
 
         $actualLoggedValue = $this->getLoggedEmailMessage($message);
 

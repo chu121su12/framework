@@ -210,7 +210,7 @@ if (! function_exists('once')) {
     {
         $onceable = Onceable::tryFromTrace(
             debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2),
-            $callback,
+            $callback
         );
 
         return $onceable ? Once::instance()->value($onceable) : call_user_func($callback);

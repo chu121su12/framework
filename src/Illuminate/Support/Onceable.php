@@ -7,6 +7,10 @@ use Laravel\SerializableClosure\Support\ReflectionClosure;
 
 class Onceable
 {
+    public $hash;
+    public $object;
+    public $callable;
+
     /**
      * Create a new onceable instance.
      *
@@ -16,10 +20,14 @@ class Onceable
      * @return void
      */
     public function __construct(
-        public string $hash,
-        public object|null $object,
-        public $callable
+        /*public *//*string */$hash,
+        /*public *//*object|null */$object,
+        /*public */$callable
     ) {
+        $this->hash = backport_type_check('string', $hash);
+        $this->object = backport_type_check('object|null', $object);
+        $this->callable = $callable;
+
         //
     }
 
@@ -46,7 +54,7 @@ class Onceable
      */
     protected static function objectFromTrace(array $trace)
     {
-        return $trace[1]['object'] ?? null;
+        return isset($trace[1]) && isset($trace[1]['object']) ? $trace[1]['object'] : null;
     }
 
     /**
@@ -57,13 +65,16 @@ class Onceable
      */
     protected static function hashFromTrace(array $trace, callable $callable)
     {
-        if (str_contains($trace[0]['file'] ?? '', 'eval()\'d code')) {
+        if (str_contains(isset($trace[0]) && isset($trace[0]['file']) ? $trace[0]['file'] :'', 'eval()\'d code')) {
             return null;
         }
 
         $uses = array_map(
-            fn (mixed $argument) => is_object($argument) ? spl_object_hash($argument) : $argument,
-            $callable instanceof Closure ? (new ReflectionClosure($callable))->getClosureUsedVariables() : [],
+            function (/*mixed */$argument) {
+                $argument = backport_type_check('mixed', $argument);
+                return is_object($argument) ? spl_object_hash($argument) : $argument;
+            },
+            $callable instanceof Closure ? (new ReflectionClosure($callable))->getClosureUsedVariables() : []
         );
 
         return md5(sprintf(
@@ -72,7 +83,7 @@ class Onceable
             isset($trace[1]['class']) ? ($trace[1]['class'].'@') : '',
             $trace[1]['function'],
             $trace[0]['line'],
-            serialize($uses),
+            serialize($uses)
         ));
     }
 }

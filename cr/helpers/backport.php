@@ -606,3 +606,10 @@ if (! \function_exists('backport_get_class')) {
         return \is_object($class) ? get_class($class) : $class;
     }
 }
+
+if (! \function_exists('backport_weakmap_object')) {
+    function backport_weakmap_object($object)
+    {
+        return class_exists(\WeakMap::class) ? $object : \spl_object_id($object);
+    }
+}
