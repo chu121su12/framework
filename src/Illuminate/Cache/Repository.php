@@ -562,7 +562,7 @@ class Repository implements ArrayAccess, CacheContract
      */
     protected function getName()
     {
-        return $this->config['store'] ?? null;
+        return isset($this->config['store']) ? $this->config['store'] : null;
     }
 
     /**
