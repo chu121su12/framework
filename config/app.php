@@ -59,8 +59,7 @@ return [
 
     'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
 
-    // 'asset_url' => env('ASSET_URL'),
-    'asset_url' => env('ASSET_URL', '/'),
+    'asset_url' => env('ASSET_URL'),
 
     /*
     |--------------------------------------------------------------------------
@@ -125,10 +124,7 @@ return [
     |
     */
 
-    // 'key' => env('APP_KEY'),
-    'key' => ((env('APP_ENV', 'production') ?: 'production') === 'local')
-        ? env('APP_KEY', 'base64://////////////////////////////////////////8=')
-        : env('APP_KEY'),
+    'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
 
@@ -146,10 +142,8 @@ return [
     */
 
     'maintenance' => [
-        // 'driver' => env('APP_MAINTENANCE_DRIVER', 'cache'),
-        'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
-        // 'store' => env('APP_MAINTENANCE_STORE', 'database'),
-        'store' => env('APP_MAINTENANCE_STORE', 'file'),
+        'driver' => env('APP_MAINTENANCE_DRIVER', 'cache'),
+        'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
     /*
@@ -163,18 +157,11 @@ return [
     |
     */
 
-    'providers' => ServiceProvider::defaultProviders()->merge(
-        ((env('APP_ENV', 'production') ?: 'production') === 'production')
-        ? []
-        : \array_values(\array_filter([
-            \class_exists(Laravel\Tinker\TinkerServiceProvider::class) ? Laravel\Tinker\TinkerServiceProvider::class : false,
-            \class_exists(Laravel\Telescope\TelescopeServiceProvider::class) ? Laravel\Telescope\TelescopeServiceProvider::class : false,
-        ]))
-    )->merge([
+    'providers' => ServiceProvider::defaultProviders()->merge([
         // Package Service Providers...
     ])->merge([
         // Application Service Providers...
-        App\Providers\AppServiceProvider::class,
+        // App\Providers\AppServiceProvider::class,
     ])->merge([
         // Added Service Providers (Do not remove this line)...
     ])->toArray(),
