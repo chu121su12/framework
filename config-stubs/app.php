@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Facade;
-use Illuminate\Support\ServiceProvider;
-
 return [
 
     /*
@@ -59,8 +56,7 @@ return [
 
     'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
 
-    // 'asset_url' => env('ASSET_URL'),
-    'asset_url' => env('ASSET_URL', '/'),
+    'asset_url' => env('ASSET_URL'),
 
     /*
     |--------------------------------------------------------------------------
@@ -125,10 +121,7 @@ return [
     |
     */
 
-    // 'key' => env('APP_KEY'),
-    'key' => ((env('APP_ENV', 'production') ?: 'production') === 'local')
-        ? env('APP_KEY', 'base64://////////////////////////////////////////8=')
-        : env('APP_KEY'),
+    'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
 
@@ -146,52 +139,8 @@ return [
     */
 
     'maintenance' => [
-        // 'driver' => env('APP_MAINTENANCE_DRIVER', 'cache'),
-        'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
-        // 'store' => env('APP_MAINTENANCE_STORE', 'database'),
-        'store' => env('APP_MAINTENANCE_STORE', 'file'),
+        'driver' => env('APP_MAINTENANCE_DRIVER', 'cache'),
+        'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Autoloaded Service Providers
-    |--------------------------------------------------------------------------
-    |
-    | The service providers listed here will be automatically loaded on any
-    | requests to your application. You may add your own services to the
-    | arrays below to provide additional features to this application.
-    |
-    */
-
-    'providers' => ServiceProvider::defaultProviders()->merge(
-        ((env('APP_ENV', 'production') ?: 'production') === 'production')
-        ? []
-        : \array_values(\array_filter([
-            \class_exists(Laravel\Tinker\TinkerServiceProvider::class) ? Laravel\Tinker\TinkerServiceProvider::class : false,
-            \class_exists(Laravel\Telescope\TelescopeServiceProvider::class) ? Laravel\Telescope\TelescopeServiceProvider::class : false,
-        ]))
-    )->merge([
-        // Package Service Providers...
-    ])->merge([
-        // Application Service Providers...
-        App\Providers\AppServiceProvider::class,
-    ])->merge([
-        // Added Service Providers (Do not remove this line)...
-    ])->toArray(),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Class Aliases
-    |--------------------------------------------------------------------------
-    |
-    | This array of class aliases will be registered when this application
-    | is started. You may add any additional class aliases which should
-    | be loaded to the array. For speed, all aliases are lazy loaded.
-    |
-    */
-
-    'aliases' => Facade::defaultAliases()->merge([
-        // 'Example' => App\Facades\Example::class,
-    ])->toArray(),
 
 ];

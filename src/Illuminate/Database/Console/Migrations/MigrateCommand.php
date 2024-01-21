@@ -212,7 +212,7 @@ class MigrateCommand extends BaseCommand implements Isolatable
 
             if (! confirm(
                 'Would you like to create it?',
-                /*default: */false
+                /*default: */true
             )) {
                 return false;
             }
