@@ -34,14 +34,25 @@ return [
 
     'stores' => [
 
+        'tmp' => [
+            'driver' => 'file',
+            'path' => storage_path('tmp'),
+        ],
+
         'internal' => [
             'driver' => 'file',
             'path' => storage_path('framework/cache/internal'),
         ],
 
-        'tmp' => [
-            'driver' => 'file',
-            'path' => storage_path('tmp'),
+        'runtime' => [
+            'driver' => 'array',
+            'serialize' => false,
+        ],
+
+        'central' => [
+            'driver' => 'redis',
+            'connection' => env('REDIS_CACHE_CONNECTION', 'cache'),
+            'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
         ],
 
         'apc' => [
