@@ -3060,7 +3060,7 @@ class HttpClientTest extends TestCase
         $factory->get('https://laravel.com');
         $this->assertSame(30, $timeout);
         $this->assertSame(['max' => 5, 'protocols' => ['http', 'https'], 'strict' => false, 'referer' => false, 'track_redirects' => false], $allowRedirects);
-        $this->assertNull($headers['X-Foo'] ?? null);
+        $this->assertNull(isset($headers['X-Foo']) ? $headers['X-Foo'] : null);
 
         $factory->globalOptions([
             'timeout' => 5,

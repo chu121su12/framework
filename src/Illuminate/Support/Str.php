@@ -418,7 +418,11 @@ class Str
             $value = static::substr($value, static::length($before));
         }
 
-        if (static::endsWith($value, $after ??= $before)) {
+        if (! isset($after)) {
+            $after = $before;
+        }
+
+        if (static::endsWith($value, $after)) {
             $value = static::substr($value, 0, -static::length($after));
         }
 
