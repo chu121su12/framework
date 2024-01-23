@@ -103,7 +103,7 @@ class SubMinuteSchedulingTest extends TestCase
         Sleep::whenFakingSleep(function ($duration) use ($startedAt) {
             Carbon::setTestNow(now()->add($duration));
 
-            if (now()->diffInSeconds($startedAt) >= 30) {
+            if ($startedAt->diffInSeconds() >= 30) {
                 $this->artisan('schedule:interrupt')
                     ->expectsOutputToContain('Broadcasting schedule interrupt signal.');
             }
@@ -132,11 +132,11 @@ class SubMinuteSchedulingTest extends TestCase
         Sleep::whenFakingSleep(function ($duration) use ($startedAt) {
             Carbon::setTestNow(now()->add($duration));
 
-            if (now()->diffInSeconds($startedAt) >= 30 && ! $this->app->isDownForMaintenance()) {
+            if ($startedAt->diffInSeconds() >= 30 && ! $this->app->isDownForMaintenance()) {
                 $this->artisan('down');
             }
 
-            if (now()->diffInSeconds($startedAt) >= 40 && $this->app->isDownForMaintenance()) {
+            if ($startedAt->diffInSeconds() >= 40 && $this->app->isDownForMaintenance()) {
                 $this->artisan('up');
             }
         });

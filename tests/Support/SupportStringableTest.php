@@ -1187,6 +1187,13 @@ class SupportStringableTest extends TestCase
         $this->assertEquals('"value"', $this->stringable('value')->wrap('"'));
     }
 
+    public function testUnwrap()
+    {
+        $this->assertEquals('value', $this->stringable('"value"')->unwrap('"'));
+        $this->assertEquals('bar', $this->stringable('foo-bar-baz')->unwrap('foo-', '-baz'));
+        $this->assertEquals('some: "json"', $this->stringable('{some: "json"}')->unwrap('{', '}'));
+    }
+
     public function testToHtmlString()
     {
         $this->assertEquals(

@@ -181,7 +181,7 @@ trait RunsInParallel
                 $applicationCreator = new ParallelRunner_createApplication_class;
 
                 return $applicationCreator->createApplication();
-            } elseif (file_exists($path = (Application::inferBaseDirectory().'/bootstrap/app.php'))) {
+            } elseif (file_exists($path = (Application::inferBasePath().'/bootstrap/app.php'))) {
                 $app = require $path;
 
                 $app->make(Kernel::class)->bootstrap();

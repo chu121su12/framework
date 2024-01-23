@@ -220,16 +220,17 @@ class Application extends Container implements ApplicationContract, CachesConfig
     /**
      * Begin configuring a new Laravel application instance.
      *
-     * @param  string|null  $baseDirectory
+     * @param  string|null  $basePath
      * @return \Illuminate\Foundation\Configuration\ApplicationBuilder
      */
-    public static function configure(/*string */$baseDirectory = null)
+    public static function configure(string $basePath = null)
     {
-        $baseDirectory = backport_type_check('string', $baseDirectory);
+        $basePath = match (true) {
+            is_string($basePath) => $basePath,
+            default => static::inferBasePath(),
+        };
 
-        $baseDirectory = is_string($baseDirectory) ? $baseDirectory : static::inferBaseDirectory();
-
-        return (new Configuration\ApplicationBuilder(new static($baseDirectory)))
+        return (new Configuration\ApplicationBuilder(new static($basePath)))
             ->withKernels()
             ->withEvents()
             ->withCommands();
@@ -240,7 +241,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
      *
      * @return string
      */
-    public static function inferBaseDirectory()
+    public static function inferBasePath()
     {
         switch (true) {
             case isset($_ENV['APP_BASE_PATH']): return $_ENV['APP_BASE_PATH'];
