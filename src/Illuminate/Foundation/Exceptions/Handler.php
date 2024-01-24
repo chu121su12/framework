@@ -257,8 +257,10 @@ class Handler implements ExceptionHandlerContract
      * @param  array|string  $exceptions
      * @return $this
      */
-    public function dontReport(array|string $exceptions)
+    public function dontReport(/*array|string */$exceptions)
     {
+        $exceptions = backport_type_check('array|string', $exceptions);
+
         return $this->ignore($exceptions);
     }
 
@@ -268,8 +270,10 @@ class Handler implements ExceptionHandlerContract
      * @param  array|string  $class
      * @return $this
      */
-    public function ignore(array|string $exceptions)
+    public function ignore(/*array|string */$exceptions)
     {
+        $exceptions = backport_type_check('array|string', $exceptions);
+
         $exceptions = Arr::wrap($exceptions);
 
         $this->dontReport = array_values(array_unique(array_merge($this->dontReport, $exceptions)));
@@ -283,8 +287,10 @@ class Handler implements ExceptionHandlerContract
      * @param  array|string  $attributes
      * @return $this
      */
-    public function dontFlash(array|string $attributes)
+    public function dontFlash(/*array|string */$attributes)
     {
+        $attributes = backport_type_check('array|string', $attributes);
+
         $this->dontFlash = array_values(array_unique(
             array_merge($this->dontFlash, Arr::wrap($attributes))
         ));
@@ -472,15 +478,17 @@ class Handler implements ExceptionHandlerContract
      * @param  array|string  $exceptions
      * @return $this
      */
-    public function stopIgnoring(array|string $exceptions)
+    public function stopIgnoring(/*array|string */$exceptions)
     {
+        $exceptions = backport_type_check('array|string', $exceptions);
+
         $exceptions = Arr::wrap($exceptions);
 
         $this->dontReport = collect($this->dontReport)
-                ->reject(fn ($ignored) => in_array($ignored, $exceptions))->values()->all();
+                ->reject(function ($ignored) use ($exceptions) { return in_array($ignored, $exceptions); })->values()->all();
 
         $this->internalDontReport = collect($this->internalDontReport)
-                ->reject(fn ($ignored) => in_array($ignored, $exceptions))->values()->all();
+                ->reject(function ($ignored) use ($exceptions) { return in_array($ignored, $exceptions); })->values()->all();
 
         return $this;
     }
