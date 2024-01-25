@@ -130,7 +130,7 @@ class ApplicationBuilder
         /*?string */$commands = null,
         /*?string */$channels = null,
         /*?string */$pages = null,
-        ?string $health = null,
+        /*?string */$health = null,
         /*string */$apiPrefix = 'api',
         /*?*/callable $then = null)
     {
@@ -177,7 +177,7 @@ class ApplicationBuilder
     protected function buildRoutingCallback(/*?string */$web = null,
         /*?string */$api = null,
         /*?string */$pages = null,
-        ?string $health,
+        /*?string */$health,
         /*string */$apiPrefix = 'api',
         /*?*/callable $then = null)
     {

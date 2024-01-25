@@ -14,6 +14,28 @@ class SQLiteConnection extends Connection
 {
     public $legacyDb;
 
+    protected function initLegacyDb($throw)
+    {
+        try {
+            return $this->legacyDb = _check_db_connection_versions($this, function ($driver, $version) {
+                if ($driver === 'sqlite' && version_compare($version, '3.31.0', '<')) {
+                    // 9 view
+                    // 16 pragma fn
+                    // 24 upsert
+                    // 25 drop
+                    // 31 generated
+                    return "{$driver}-{$version}";
+                }
+
+                return false;
+            });
+        } catch (QueryException $e) {
+            if ($throw) {
+                throw $e;
+            }
+        }
+    }
+
     /**
      * Create a new database connection instance.
      *
@@ -26,6 +48,8 @@ class SQLiteConnection extends Connection
     public function __construct($pdo, $database = '', $tablePrefix = '', array $config = [])
     {
         parent::__construct($pdo, $database, $tablePrefix, $config);
+
+        $didInit = $this->initLegacyDb(false);
 
         $enableForeignKeyConstraints = $this->getForeignKeyConstraintsConfigurationValue();
 
@@ -40,18 +64,9 @@ class SQLiteConnection extends Connection
                 ? $schemaBuilder->enableForeignKeyConstraints()
                 : $schemaBuilder->disableForeignKeyConstraints();
 
-            $this->legacyDb = _check_db_connection_versions($this, function ($driver, $version) {
-                if ($driver === 'sqlite' && version_compare($version, '3.31.0', '<')) {
-                    // 9 view
-                    // 16 pragma fn
-                    // 24 upsert
-                    // 25 drop
-                    // 31 generated
-                    return "{$driver}-{$version}";
-                }
-    
-                return false;
-            });
+            if ($didInit === null) {
+                $this->initLegacyDb(true);
+            }
         } catch (QueryException $e) {
             if (! $e->getPrevious() instanceof SQLiteDatabaseDoesNotExistException) {
                 throw $e;
