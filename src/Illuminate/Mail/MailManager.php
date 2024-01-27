@@ -10,6 +10,7 @@ use Illuminate\Log\LogManager;
 use Illuminate\Mail\Transport\ArrayTransport;
 use Illuminate\Mail\Transport\LogTransport;
 use Illuminate\Mail\Transport\MailgunTransport;
+use Illuminate\Mail\Transport\ResendTransport;
 use Illuminate\Mail\Transport\SesTransport;
 use Illuminate\Mail\Transport\SesV2Transport;
 use Illuminate\Support\Arr;
@@ -19,6 +20,7 @@ use InvalidArgumentException;
 use Postmark\ThrowExceptionOnFailurePlugin;
 use Postmark\Transport as PostmarkTransport;
 use Psr\Log\LoggerInterface;
+use Resend;
 use Swift_DependencyContainer;
 use Swift_FailoverTransport as FailoverTransport;
 use Swift_Mailer;
@@ -305,6 +307,19 @@ class MailManager implements FactoryContract
         }
 
         return Arr::except($config, ['token']);
+    }
+
+    /**
+     * Create an instance of the Resend Transport driver.
+     *
+     * @param  array  $config
+     * @return \Illuminate\Mail\Transport\ResendTransprot
+     */
+    protected function createResendTransport(array $config)
+    {
+        return new ResendTransport(
+            Resend::client($this->app['config']->get('services.resend.key')),
+        );
     }
 
     /**

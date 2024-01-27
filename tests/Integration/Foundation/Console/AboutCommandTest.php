@@ -36,7 +36,7 @@ class AboutCommandTest extends TestCase
                 'cache' => 'database',
                 'database' => 'testing',
                 'logs' => ['single'],
-                'mail' => 'smtp',
+                'mail' => 'log',
                 'queue' => 'database',
                 'session' => 'cookie',
 
