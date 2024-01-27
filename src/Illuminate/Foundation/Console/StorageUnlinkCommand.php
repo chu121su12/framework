@@ -47,7 +47,8 @@ class StorageUnlinkCommand extends Command
      */
     protected function links()
     {
-        return $this->laravel['config']['filesystems.links'] ??
-               [public_path('storage') => storage_path('app/public')];
+        return isset($this->laravel['config']) && isset($this->laravel['config']['filesystems.links'])
+            ? $this->laravel['config']['filesystems.links']
+            : [public_path('storage') => storage_path('app/public')];
     }
 }

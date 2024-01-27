@@ -37,18 +37,22 @@ SOFTWARE.
 */
 class ResendTransport extends AbstractTransport
 {
+    protected /*Client */$resend;
+
     /**
      * Create a new Resend transport instance.
      */
-    public function __construct(protected Client $resend)
+    public function __construct(/*protected */Client $resend)
     {
+        $this->resend = $resend;
+
         parent::__construct();
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function doSend(SentMessage $message): void
+    protected function doSend(SentMessage $message)/*: void*/
     {
         $email = MessageConverter::toEmail($message->getOriginalMessage());
 
@@ -112,7 +116,7 @@ class ResendTransport extends AbstractTransport
     /**
      * Get the recipients without CC or BCC.
      */
-    protected function getRecipients(Email $email, Envelope $envelope): array
+    protected function getRecipients(Email $email, Envelope $envelope)/*: array*/
     {
         return array_filter($envelope->getRecipients(), function (Address $address) use ($email) {
             return in_array($address, array_merge($email->getCc(), $email->getBcc()), true) === false;
@@ -122,7 +126,8 @@ class ResendTransport extends AbstractTransport
     /**
      * Get the string representation of the transport.
      */
-    public function __toString(): string
+    #[\ReturnTypeWillChange]
+    public function __toString()/*: string*/
     {
         return 'resend';
     }

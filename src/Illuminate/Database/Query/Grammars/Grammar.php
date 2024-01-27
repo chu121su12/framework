@@ -1178,8 +1178,10 @@ class Grammar extends BaseGrammar
      *
      * @throws \RuntimeException
      */
-    public function compileInsertOrIgnoreUsing(Builder $query, array $columns, string $sql)
+    public function compileInsertOrIgnoreUsing(Builder $query, array $columns, /*string */$sql)
     {
+        $sql = backport_type_check('string', $sql);
+
         throw new RuntimeException('This database engine does not support inserting while ignoring errors.');
     }
 

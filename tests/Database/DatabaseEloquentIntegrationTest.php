@@ -24,7 +24,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Tests\Integration\Database\Fixtures\Post;
-use Illuminate\Tests\Integration\Database\Fixtures\User;
+use Illuminate\Tests\Integration\Database\Fixtures\User as FixturesUser;
 use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentIntegrationTest extends TestCase
@@ -2125,31 +2125,31 @@ class DatabaseEloquentIntegrationTest extends TestCase
     public function testWhenBaseModelIsIgnoredAllChildModelsAreIgnored()
     {
         $this->assertFalse(Model::isIgnoringTouch());
-        $this->assertFalse(User::isIgnoringTouch());
+        $this->assertFalse(FixturesUser::isIgnoringTouch());
 
         Model::withoutTouching(function () {
             $this->assertTrue(Model::isIgnoringTouch());
-            $this->assertTrue(User::isIgnoringTouch());
+            $this->assertTrue(FixturesUser::isIgnoringTouch());
         });
 
-        $this->assertFalse(User::isIgnoringTouch());
+        $this->assertFalse(FixturesUser::isIgnoringTouch());
         $this->assertFalse(Model::isIgnoringTouch());
     }
 
     public function testChildModelsAreIgnored()
     {
         $this->assertFalse(Model::isIgnoringTouch());
-        $this->assertFalse(User::isIgnoringTouch());
+        $this->assertFalse(FixturesUser::isIgnoringTouch());
         $this->assertFalse(Post::isIgnoringTouch());
 
         User::withoutTouching(function () {
             $this->assertFalse(Model::isIgnoringTouch());
             $this->assertFalse(Post::isIgnoringTouch());
-            $this->assertTrue(User::isIgnoringTouch());
+            $this->assertTrue(FixturesUser::isIgnoringTouch());
         });
 
         $this->assertFalse(Post::isIgnoringTouch());
-        $this->assertFalse(User::isIgnoringTouch());
+        $this->assertFalse(FixturesUser::isIgnoringTouch());
         $this->assertFalse(Model::isIgnoringTouch());
     }
 

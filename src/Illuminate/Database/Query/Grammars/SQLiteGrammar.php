@@ -240,8 +240,10 @@ class SQLiteGrammar extends Grammar
      * @param  string  $sql
      * @return string
      */
-    public function compileInsertOrIgnoreUsing(Builder $query, array $columns, string $sql)
+    public function compileInsertOrIgnoreUsing(Builder $query, array $columns, /*string */$sql)
     {
+        $sql = backport_type_check('string', $sql);
+
         return Str::replaceFirst('insert', 'insert or ignore', $this->compileInsertUsing($query, $columns, $sql));
     }
 

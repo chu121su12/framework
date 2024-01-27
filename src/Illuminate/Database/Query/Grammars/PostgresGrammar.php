@@ -331,8 +331,10 @@ class PostgresGrammar extends Grammar
      * @param  string  $sql
      * @return string
      */
-    public function compileInsertOrIgnoreUsing(Builder $query, array $columns, string $sql)
+    public function compileInsertOrIgnoreUsing(Builder $query, array $columns, /*string */$sql)
     {
+        $sql = backport_type_check('string', $sql);
+
         return $this->compileInsertUsing($query, $columns, $sql).' on conflict do nothing';
     }
 

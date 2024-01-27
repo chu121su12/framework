@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Illuminate\Tests\Database;
 
@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentBelongsToManyWithoutTouchingTest extends TestCase
 {
-    public function testItWillNotTouchRelatedModelsWhenUpdatingChild(): void
+    public function testItWillNotTouchRelatedModelsWhenUpdatingChild()/*: void*/
     {
         /** @var Article $related */
         $related = m::mock(Article::class)->makePartial();
@@ -46,7 +46,7 @@ class User extends Model
     protected $table = 'users';
     protected $fillable = ['id', 'email'];
 
-    public function articles(): BelongsToMany
+    public function articles()/*: BelongsToMany*/
     {
         return $this->belongsToMany(Article::class, 'article_user', 'user_id', 'article_id');
     }
@@ -58,7 +58,7 @@ class Article extends Model
     protected $fillable = ['id', 'title'];
     protected $touches = ['user'];
 
-    public function users(): BelongsToMany
+    public function users()/*: BelongsToMany*/
     {
         return $this->belongsToMany(User::class, 'article_user', 'article_id', 'user_id');
     }

@@ -30,6 +30,8 @@ class SQLiteConnection extends Connection
                 return false;
             });
         } catch (QueryException $e) {
+            $this->legacyDb = true;
+
             if ($throw) {
                 throw $e;
             }
@@ -64,7 +66,7 @@ class SQLiteConnection extends Connection
                 ? $schemaBuilder->enableForeignKeyConstraints()
                 : $schemaBuilder->disableForeignKeyConstraints();
 
-            if ($didInit === null) {
+            if ($didInit === null || $didInit === true) {
                 $this->initLegacyDb(true);
             }
         } catch (QueryException $e) {

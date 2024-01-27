@@ -347,8 +347,10 @@ class Mailable implements MailableContract, Renderable
         }
 
         foreach ((new ReflectionClass($this))->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
-            if ($property->isInitialized($this) && $property->getDeclaringClass()->getName() !== self::class) {
-                $data[$property->getName()] = $property->getValue($this);
+            if ((version_compare(\PHP_VERSION, '7.4', '>=') && $property->isInitialized($this)) || $property->getValue($this) === null) {
+                if ($property->getDeclaringClass()->getName() !== self::class) {
+                    $data[$property->getName()] = $property->getValue($this);
+                }
             }
         }
 

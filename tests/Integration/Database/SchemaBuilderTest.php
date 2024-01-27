@@ -198,12 +198,12 @@ class SchemaBuilderTest extends DatabaseTestCase
         $types = Schema::getTypes();
 
         $this->assertCount(13, $types);
-        $this->assertTrue(collect($types)->contains(fn ($type) => $type['name'] === 'pseudo_foo' && $type['type'] === 'pseudo' && ! $type['implicit']));
-        $this->assertTrue(collect($types)->contains(fn ($type) => $type['name'] === 'comp_foo' && $type['type'] === 'composite' && ! $type['implicit']));
-        $this->assertTrue(collect($types)->contains(fn ($type) => $type['name'] === 'enum_foo' && $type['type'] === 'enum' && ! $type['implicit']));
-        $this->assertTrue(collect($types)->contains(fn ($type) => $type['name'] === 'range_foo' && $type['type'] === 'range' && ! $type['implicit']));
-        $this->assertTrue(collect($types)->contains(fn ($type) => $type['name'] === 'domain_foo' && $type['type'] === 'domain' && ! $type['implicit']));
-        $this->assertTrue(collect($types)->contains(fn ($type) => $type['name'] === 'base_foo' && $type['type'] === 'base' && ! $type['implicit']));
+        $this->assertTrue(collect($types)->contains(function ($type) { return $type['name'] === 'pseudo_foo' && $type['type'] === 'pseudo' && ! $type['implicit']; }));
+        $this->assertTrue(collect($types)->contains(function ($type) { return $type['name'] === 'comp_foo' && $type['type'] === 'composite' && ! $type['implicit']; }));
+        $this->assertTrue(collect($types)->contains(function ($type) { return $type['name'] === 'enum_foo' && $type['type'] === 'enum' && ! $type['implicit']; }));
+        $this->assertTrue(collect($types)->contains(function ($type) { return $type['name'] === 'range_foo' && $type['type'] === 'range' && ! $type['implicit']; }));
+        $this->assertTrue(collect($types)->contains(function ($type) { return $type['name'] === 'domain_foo' && $type['type'] === 'domain' && ! $type['implicit']; }));
+        $this->assertTrue(collect($types)->contains(function ($type) { return $type['name'] === 'base_foo' && $type['type'] === 'base' && ! $type['implicit']; }));
 
         Schema::dropAllTypes();
         $types = Schema::getTypes();

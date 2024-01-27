@@ -3490,7 +3490,7 @@ class Builder implements BuilderContract
     {
         $this->applyBeforeQueryCallbacks();
 
-        [$sql, $bindings] = $this->createSub($query);
+        list($sql, $bindings) = $this->createSub($query);
 
         return $this->connection->affectingStatement(
             $this->grammar->compileInsertOrIgnoreUsing($this, $columns, $sql),

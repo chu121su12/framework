@@ -58,7 +58,7 @@ class SleepTest extends TestCase
 
         $sleep = Sleep::for_(1.5)->minutes();
 
-        $this->assertSame((float) $sleep->duration->totalMicroseconds, 90_000_000.0);
+        $this->assertSame((float) $sleep->duration->totalMicroseconds, 90000000.0);
     }
 
     public function testItCanSpecifyMinute()
@@ -67,7 +67,7 @@ class SleepTest extends TestCase
 
         $sleep = Sleep::for_(1)->minute();
 
-        $this->assertSame((float) $sleep->duration->totalMicroseconds, 60_000_000.0);
+        $this->assertSame((float) $sleep->duration->totalMicroseconds, 60000000.0);
     }
 
     public function testItCanSpecifySeconds()
@@ -76,7 +76,7 @@ class SleepTest extends TestCase
 
         $sleep = Sleep::for_(1.5)->seconds();
 
-        $this->assertSame((float) $sleep->duration->totalMicroseconds, 1_500_000.0);
+        $this->assertSame((float) $sleep->duration->totalMicroseconds, 1500000.0);
     }
 
     public function testItCanSpecifySecond()
@@ -85,7 +85,7 @@ class SleepTest extends TestCase
 
         $sleep = Sleep::for_(1)->second();
 
-        $this->assertSame((float) $sleep->duration->totalMicroseconds, 1_000_000.0);
+        $this->assertSame((float) $sleep->duration->totalMicroseconds, 1000000.0);
     }
 
     public function testItCanSpecifyMilliseconds()
@@ -94,7 +94,7 @@ class SleepTest extends TestCase
 
         $sleep = Sleep::for_(1.5)->milliseconds();
 
-        $this->assertSame((float) $sleep->duration->totalMicroseconds, 1_500.0);
+        $this->assertSame((float) $sleep->duration->totalMicroseconds, 1500.0);
     }
 
     public function testItCanSpecifyMillisecond()
@@ -103,7 +103,7 @@ class SleepTest extends TestCase
 
         $sleep = Sleep::for_(1)->millisecond();
 
-        $this->assertSame((float) $sleep->duration->totalMicroseconds, 1_000.0);
+        $this->assertSame((float) $sleep->duration->totalMicroseconds, 1000.0);
     }
 
     public function testItCanSpecifyMicroseconds()
@@ -141,7 +141,7 @@ class SleepTest extends TestCase
 
         $sleep = Sleep::for_(CarbonInterval::seconds(1)->addMilliseconds(5));
 
-        $this->assertSame((float) $sleep->duration->totalMicroseconds, 1_005_000.0);
+        $this->assertSame((float) $sleep->duration->totalMicroseconds, 1005000.0);
     }
 
     public function testItThrowsForUnknownTimeUnit()
@@ -427,17 +427,17 @@ class SleepTest extends TestCase
 
         Sleep::for_(5)->seconds();
 
-        Sleep::assertSlept(fn (CarbonInterval $duration) => (float) $duration->totalSeconds === 5.0);
+        Sleep::assertSlept(function (CarbonInterval $duration) { return (float) $duration->totalSeconds === 5.0; });
 
         try {
-            Sleep::assertSlept(fn (CarbonInterval $duration) => (float) $duration->totalSeconds === 5.0, 2);
+            Sleep::assertSlept(function (CarbonInterval $duration) { return (float) $duration->totalSeconds === 5.0; }, 2);
             $this->fail();
         } catch (AssertionFailedError $e) {
             $this->assertSame("The expected sleep was found [1] times instead of [2].\nFailed asserting that 1 is identical to 2.", $e->getMessage());
         }
 
         try {
-            Sleep::assertSlept(fn (CarbonInterval $duration) => (float) $duration->totalSeconds === 6.0);
+            Sleep::assertSlept(function (CarbonInterval $duration) { return (float) $duration->totalSeconds === 6.0; });
             $this->fail();
         } catch (AssertionFailedError $e) {
             $this->assertSame("The expected sleep was found [0] times instead of [1].\nFailed asserting that 0 is identical to 1.", $e->getMessage());
@@ -483,7 +483,7 @@ class SleepTest extends TestCase
             return $this->duration($duration);
         });
 
-        $sleep = Sleep::for(1)->second();
+        $sleep = Sleep::for_(1)->second();
         $this->assertSame((float) $sleep->duration->totalMicroseconds, 1000000.0);
 
         $sleep->setDuration(2)->second();

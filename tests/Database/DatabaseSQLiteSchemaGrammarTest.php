@@ -183,7 +183,7 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
 
         $this->assertFalse($schema->hasIndex('users', 'index1'));
         $this->assertTrue(collect($schema->getIndexes('users'))->contains(
-            fn ($index) => $index['name'] === 'index2' && $index['columns'] === ['name', 'email']
+            function ($index) { return $index['name'] === 'index2' && $index['columns'] === ['name', 'email']; }
         ));
     }
 
