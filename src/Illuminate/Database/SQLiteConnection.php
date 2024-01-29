@@ -29,7 +29,7 @@ class SQLiteConnection extends Connection
 
                 return false;
             });
-        } catch (QueryException $e) {
+        } catch (\Exception $e) {
             $this->legacyDb = true;
 
             if ($throw) {
