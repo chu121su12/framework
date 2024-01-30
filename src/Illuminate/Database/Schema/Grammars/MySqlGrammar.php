@@ -329,7 +329,9 @@ class MySqlGrammar extends Grammar
                     }
                 }),
                 'nullable' => $column['nullable'],
-                'default' => $column['default'],
+                'default' => $column['default'] && str_starts_with(strtolower($column['default']), 'current_timestamp')
+                    ? new Expression($column['default'])
+                    : $column['default'],
                 'autoIncrement' => $column['auto_increment'],
                 'collation' => $column['collation'],
                 'comment' => $column['comment'],
@@ -1040,8 +1042,12 @@ class MySqlGrammar extends Grammar
         }
 
         return sprintf('%s%s',
-            isset($subtype) ? $subtype : 'geometry',
-            $column->srid ? ' srid '.$column->srid : ''
+            $subtype ?? 'geometry',
+            match (true) {
+                $column->srid && $this->connection?->isMaria() => ' ref_system_id='.$column->srid,
+                (bool) $column->srid => ' srid '.$column->srid,
+                default => '',
+            }
         );
     }
 
