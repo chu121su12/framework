@@ -1041,13 +1041,15 @@ class MySqlGrammar extends Grammar
             $subtype = null;
         }
 
+        switch (true) {
+            case $column->srid && isset($this->connection) && $this->connection->isMaria(): $srid = ' ref_system_id='.$column->srid; break;
+            case (bool) $column->srid: $srid = ' srid '.$column->srid; break;
+            default: $srid = '';
+        }
+
         return sprintf('%s%s',
-            $subtype ?? 'geometry',
-            match (true) {
-                $column->srid && $this->connection?->isMaria() => ' ref_system_id='.$column->srid,
-                (bool) $column->srid => ' srid '.$column->srid,
-                default => '',
-            }
+            isset($subtype) ? $subtype : 'geometry',
+            $srid
         );
     }
 
