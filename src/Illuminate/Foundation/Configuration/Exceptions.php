@@ -81,8 +81,11 @@ class Exceptions
      * @param  \Psr\Log\LogLevel::*  $level
      * @return $this
      */
-    public function level(string $type, string $level)
+    public function level(/*string */$type, /*string */$level)
     {
+        $type = backport_type_check('string', $type);
+        $level = backport_type_check('string', $level);
+
         $this->handler->level($type, $level);
 
         return $this;
@@ -107,8 +110,10 @@ class Exceptions
      * @param  array|string  $class
      * @return $this
      */
-    public function dontReport(array|string $class)
+    public function dontReport(/*array|string*/ $class)
     {
+        $class = backport_type_check('array|string', $class);
+
         foreach (Arr::wrap($class) as $exceptionClass) {
             $this->handler->dontReport($exceptionClass);
         }
@@ -134,8 +139,10 @@ class Exceptions
      * @param  array|string  $attributes
      * @return $this
      */
-    public function dontFlash(array|string $attributes)
+    public function dontFlash(/*array|string*/ $attributes)
     {
+        $attributes = backport_type_check('array|string', $attributes);
+
         $this->handler->dontFlash($attributes);
 
         return $this;
