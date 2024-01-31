@@ -11,6 +11,7 @@ use Illuminate\Routing\Exceptions\StreamedResponseException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Symfony\Component\HttpFoundation\BinaryFileResponse5 as BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
 
@@ -128,6 +129,20 @@ class ResponseFactory implements FactoryContract
     public function stream($callback, $status = 200, array $headers = [])
     {
         return SymfonyHelper::makeStreamedResponse($callback, $status, $headers);
+    }
+
+    /**
+     * Create a new streamed response instance.
+     *
+     * @param  array  $data
+     * @param  int  $status
+     * @param  array  $headers
+     * @param  int  $encodingOptions
+     * @return \Symfony\Component\HttpFoundation\StreamedJsonResponse
+     */
+    public function streamJson($data, $status = 200, $headers = [], $encodingOptions = JsonResponse::DEFAULT_ENCODING_OPTIONS)
+    {
+        return new StreamedJsonResponse($data, $status, $headers, $encodingOptions);
     }
 
     /**
