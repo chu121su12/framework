@@ -344,7 +344,7 @@ class ValidationFileRuleTest extends TestCase
         );
     }
 
-    public function testItUsesTheCorrectValidationMessageForFile(): void
+    public function testItUsesTheCorrectValidationMessageForFile()/*: void*/
     {
         file_put_contents($path = __DIR__.'/test.json', 'this-is-a-test');
 

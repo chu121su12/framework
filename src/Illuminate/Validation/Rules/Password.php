@@ -313,12 +313,12 @@ class Password implements Rule, DataAwareRule, ValidatorAwareRule
 
         $validator = Validator::make(
             $this->data,
-            [$attribute => [
-                'string',
-                'min:'.$this->min,
-                ...($this->max ? ['max:'.$this->max] : []),
-                ...$this->customRules,
-            ]],
+            [$attribute => array_merge(
+                ['string'],
+                ['min:'.$this->min],
+                ($this->max ? ['max:'.$this->max] : []),
+                $this->customRules
+            )],
             $this->validator->customMessages,
             $this->validator->customAttributes
         )->after(function ($validator) use ($attribute, $value) {

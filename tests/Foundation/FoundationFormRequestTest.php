@@ -524,7 +524,7 @@ class FoundationTestFormRequestWithGetRules extends FormRequest
 {
     public static $useRuleSet = 'a';
 
-    protected function validationRules(): array
+    protected function validationRules()/*: array*/
     {
         if (self::$useRuleSet === 'a') {
             return [

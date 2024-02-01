@@ -226,7 +226,7 @@ class EloquentGlobalScopesArrayTestModel extends Model
     {
         static::addGlobalScopes([
             'active_scope' => new ActiveScope,
-            fn ($query) => $query->orderBy('name'),
+            function ($query) { return $query->orderBy('name'); },
         ]);
 
         parent::boot();

@@ -119,7 +119,7 @@ class FormRequest extends Request implements ValidatesWhenResolved
             $this->validationData(),
             $this->validationRules(),
             $this->messages(),
-            $this->attributes(),
+            $this->attributes()
         )->stopOnFirstFailure($this->stopOnFirstFailure);
 
         if ($this->isPrecognitive()) {

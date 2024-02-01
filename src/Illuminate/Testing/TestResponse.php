@@ -552,7 +552,7 @@ class TestResponse implements ArrayAccess
      */
     public function assertStreamedJsonContent($value)
     {
-        return $this->assertStreamedContent(json_encode($value, JSON_THROW_ON_ERROR));
+        return $this->assertStreamedContent(backport_json_encode($value, 0, 512, true));
     }
 
     /**
