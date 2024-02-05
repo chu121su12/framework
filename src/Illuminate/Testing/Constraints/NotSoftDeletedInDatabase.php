@@ -43,7 +43,7 @@ class NotSoftDeletedInDatabase extends Constraint
      * @param  string  $deletedAtColumn
      * @return void
      */
-    public function __construct(Connection $database, array $data, string $deletedAtColumn)
+    public function __construct(Connection $database, array $data, /*string */$deletedAtColumn)
     {
         $this->database = $database;
         $this->data = $data;
@@ -56,7 +56,7 @@ class NotSoftDeletedInDatabase extends Constraint
      * @param  string  $table
      * @return bool
      */
-    public function matches($table): bool
+    public function matches($table)/*: bool*/
     {
         return $this->database->table($table)
                 ->where($this->data)
@@ -70,7 +70,7 @@ class NotSoftDeletedInDatabase extends Constraint
      * @param  string  $table
      * @return string
      */
-    public function failureDescription($table): string
+    public function failureDescription($table)/*: string*/
     {
         return sprintf(
             "any existing row in the table [%s] matches the attributes %s.\n\n%s",
@@ -94,7 +94,7 @@ class NotSoftDeletedInDatabase extends Constraint
             return 'The table is empty';
         }
 
-        $description = 'Found: '.json_encode($results, JSON_PRETTY_PRINT);
+        $description = 'Found: '.backport_json_encode($results, JSON_PRETTY_PRINT);
 
         if ($query->count() > $this->show) {
             $description .= sprintf(' and %s others', $query->count() - $this->show);
@@ -108,8 +108,8 @@ class NotSoftDeletedInDatabase extends Constraint
      *
      * @return string
      */
-    public function toString(): string
+    public function toString()/*: string*/
     {
-        return json_encode($this->data);
+        return backport_json_encode($this->data);
     }
 }

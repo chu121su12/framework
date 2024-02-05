@@ -528,10 +528,13 @@ class Middleware
      * @param  callable|string  $guests
      * @return $this
      */
-    public function redirectTo(callable|string $guests = null, callable|string $users = null)
+    public function redirectTo(/*callable|string */$guests = null, /*callable|string */$users = null)
     {
-        $guests = is_string($guests) ? fn () => $guests : $guests;
-        $users = is_string($users) ? fn () => $users : $users;
+        $guests = backport_type_check('callable|string', $guests);
+        $users = backport_type_check('callable|string', $users);
+
+        $guests = is_string($guests) ? function () use ($guests) { return $guests; } : $guests;
+        $users = is_string($users) ? function () use ($users) { return $users; } : $users;
 
         if ($guests) {
             Authenticate::redirectUsing($guests);

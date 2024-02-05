@@ -1386,7 +1386,7 @@ trait HasAttributes
      */
     protected static function currentEncrypter()
     {
-        return static::$encrypter ?? Crypt::getFacadeRoot();
+        return isset(static::$encrypter) ? static::$encrypter : Crypt::getFacadeRoot();
     }
 
     /**

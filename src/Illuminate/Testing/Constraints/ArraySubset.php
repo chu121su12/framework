@@ -27,8 +27,12 @@ class ArraySubset extends Constraint
      * @param  bool  $strict
      * @return void
      */
-    public function __construct(iterable $subset, bool $strict = false)
+    public function __construct(/*iterable */$subset, /*bool */$strict = false)
     {
+        $strict = backport_type_check('bool', $strict);
+
+        $subset = backport_type_check('iterable', $subset);
+
         $this->strict = $strict;
         $this->subset = $subset;
     }
@@ -51,8 +55,12 @@ class ArraySubset extends Constraint
      * @throws \PHPUnit\Framework\ExpectationFailedException
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
-    public function evaluate($other, string $description = '', bool $returnResult = false): ?bool
+    public function evaluate($other, /*string */$description = '', /*bool */$returnResult = false)/*: ?bool*/
     {
+        $returnResult = backport_type_check('bool', $returnResult);
+
+        $description = backport_type_check('string', $description);
+
         // type cast $other & $this->subset as an array to allow
         // support in standard array functions.
         $other = $this->toArray($other);
@@ -91,7 +99,7 @@ class ArraySubset extends Constraint
      *
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
-    public function toString(): string
+    public function toString()/*: string*/
     {
         return 'has the subset '.(new Exporter)->export($this->subset);
     }
@@ -107,7 +115,7 @@ class ArraySubset extends Constraint
      *
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
-    protected function failureDescription($other): string
+    protected function failureDescription($other)/*: string*/
     {
         return 'an array '.$this->toString();
     }
@@ -121,8 +129,10 @@ class ArraySubset extends Constraint
      * @param  iterable  $other
      * @return array
      */
-    protected function toArray(iterable $other): array
+    protected function toArray(/*iterable */$other)/*: array*/
     {
+        $other = backport_type_check('iterable', $other);
+
         if (is_array($other)) {
             return $other;
         }

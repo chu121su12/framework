@@ -31,8 +31,8 @@ class EncryptionServiceProvider extends ServiceProvider
 
             return (new Encrypter($this->parseKey($config), $config['cipher']))
                 ->previousKeys(array_map(
-                    fn ($key) => $this->parseKey(['key' => $key]),
-                    $config['previous_keys'] ?? []
+                    function ($key) { return $this->parseKey(['key' => $key]); },
+                    isset($config['previous_keys']) ? $config['previous_keys'] : []
                 ));
         });
     }

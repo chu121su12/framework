@@ -178,15 +178,30 @@ class Encrypter implements EncrypterContract, StringEncrypter
         // we will then unserialize it and return it out to the caller. If we are
         // unable to decrypt this value we will throw out an exception message.
         foreach ($this->getAllKeys() as $key) {
+            if (version_compare(PHP_VERSION, '7.1.0', '<')) {
+                try {
+                    $decrypted = \openssl_decrypt(
+                        $payload['value'], strtolower($this->cipher), $key, 0, $iv
+                    );
+                } catch (\Exception $e) {
+                    if ($e->getMessage() !== 'openssl_decrypt(): Failed to base64 decode the input') {
+                        throw $e;
+                    }
+
+                    throw new DecryptException('The payload is invalid.');
+                }
+
+            } else {
+
             $decrypted = \openssl_decrypt(
-                $payload['value'], strtolower($this->cipher), $key, 0, $iv, $tag ?? ''
+                $payload['value'], strtolower($this->cipher), $key, 0, $iv, isset($tag) ? $tag : ''
             );
+
+            }
 
             if ($decrypted !== false) {
                 break;
             }
-        }
-
         }
 
         if ($decrypted === false) {
@@ -332,7 +347,7 @@ class Encrypter implements EncrypterContract, StringEncrypter
      */
     public function getAllKeys()
     {
-        return [$this->key, ...$this->previousKeys];
+        return \array_merge([$this->key], $this->previousKeys);
     }
 
     /**

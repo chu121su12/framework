@@ -1558,7 +1558,13 @@ class PendingRequest
      */
     protected function dispatchResponseReceivedEvent(Response $response)
     {
-        if (! ($dispatcher = $this->factory?->getDispatcher()) || ! $this->request) {
+        if (isset($this->factory)) {
+            $dispatcher = $this->factory->getDispatcher();
+        } else {
+            $dispatcher = null;
+        }
+
+        if (! $dispatcher || ! $this->request) {
             return;
         }
 
@@ -1573,7 +1579,13 @@ class PendingRequest
      */
     protected function dispatchConnectionFailedEvent(Request $request)
     {
-        if ($dispatcher = $this->factory?->getDispatcher()) {
+        if (isset($this->factory)) {
+            $dispatcher = $this->factory->getDispatcher();
+        } else {
+            $dispatcher = null;
+        }
+
+        if ($dispatcher) {
             $dispatcher->dispatch(new ConnectionFailed($request));
         }
     }

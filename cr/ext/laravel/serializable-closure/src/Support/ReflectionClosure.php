@@ -10,8 +10,17 @@ defined('T_NULLSAFE_OBJECT_OPERATOR') || define('T_NULLSAFE_OBJECT_OPERATOR', -7
 use Closure;
 use ReflectionFunction;
 
+if (\version_compare(PHP_VERSION, '8.0', '<')) {
+    require_once __DIR__.'/../../patch/php5/ReflectionClosureTrait.php';
+}
+else {
+    require_once __DIR__.'/../../patch/php8/ReflectionClosureTrait.php';
+}
+
 class ReflectionClosure extends ReflectionFunction
 {
+    use ReflectionClosureTrait;
+
     protected $code;
     protected $tokens;
     protected $hashedName;
@@ -1201,8 +1210,7 @@ class ReflectionClosure extends ReflectionFunction
         return [$id_start, $id_start_ci, $id_name];
     }
 
-    #[\ReturnTypeWillChange]
-    public function getClosureUsedVariables()
+    public function getClosureUsedVariables_()
     {
         return $this->getUseVariables();
     }
