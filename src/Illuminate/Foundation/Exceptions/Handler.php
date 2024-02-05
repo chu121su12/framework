@@ -170,7 +170,7 @@ class Handler implements ExceptionHandlerContract
     {
         $this->container = $container;
 
-        $this->reportedExceptionMap = [];
+        $this->reportedExceptionMap = \class_exists(WeakMap::class) ? new WeakMap : [];
 
         $this->register();
     }
