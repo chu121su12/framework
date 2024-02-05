@@ -5,6 +5,9 @@ namespace Illuminate\Foundation\Configuration;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
+use Illuminate\Foundation\Http\Middleware\TrimStrings;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Illuminate\Routing\Middleware\ValidateSignature;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Arr;
 
@@ -519,29 +522,65 @@ class Middleware
     }
 
     /**
-     * Configure the behavior of the authentication middleware.
+     * Configure where authenticated users are redirected after authentication.
      *
-     * @param  callable  $redirectTo
+     * @param  callable|string  $users
+     * @param  callable|string  $guests
      * @return $this
      */
-    public function auth(callable $redirectTo)
+    public function redirectTo(callable|string $guests = null, callable|string $users = null)
     {
-        Authenticate::redirectUsing($redirectTo);
-        AuthenticateSession::redirectUsing($redirectTo);
-        AuthenticationException::redirectUsing($redirectTo);
+        $guests = is_string($guests) ? fn () => $guests : $guests;
+        $users = is_string($users) ? fn () => $users : $users;
+
+        if ($guests) {
+            Authenticate::redirectUsing($guests);
+            AuthenticateSession::redirectUsing($guests);
+            AuthenticationException::redirectUsing($guests);
+        }
+
+        if ($users) {
+            RedirectIfAuthenticated::redirectUsing($users);
+        }
 
         return $this;
     }
 
     /**
-     * Configure the behavior of the "guest" middleware.
+     * Configure the CSRF token validation middleware.
      *
-     * @param  callable  $redirectTo
+     * @param  array  $except
      * @return $this
      */
-    public function guest(callable $redirectTo)
+    public function validateCsrfTokens(array $except = [])
     {
-        RedirectIfAuthenticated::redirectUsing($redirectTo);
+        ValidateCsrfToken::except($except);
+
+        return $this;
+    }
+
+    /**
+     * Configure the URL signature validation middleware.
+     *
+     * @param  array  $except
+     * @return $this
+     */
+    public function validateSignatures(array $except = [])
+    {
+        ValidateSignature::except($except);
+
+        return $this;
+    }
+
+    /**
+     * Configure the string trimming middleware.
+     *
+     * @param  array  $except
+     * @return $this
+     */
+    public function trimStrings(array $except = [])
+    {
+        TrimStrings::except($except);
 
         return $this;
     }
@@ -551,7 +590,7 @@ class Middleware
      *
      * @return $this
      */
-    public function withTrustedHosts()
+    public function trustHosts()
     {
         $this->trustHosts = true;
 
@@ -563,7 +602,7 @@ class Middleware
      *
      * @return $this
      */
-    public function withStatefulApi()
+    public function statefulApi()
     {
         $this->statefulApi = true;
 
@@ -577,7 +616,7 @@ class Middleware
      * @param  bool  $redis
      * @return $this
      */
-    public function withThrottledApi($limiter = 'api', $redis = false)
+    public function throttleApi($limiter = 'api', $redis = false)
     {
         $this->apiLimiter = $limiter;
 
@@ -605,7 +644,7 @@ class Middleware
      *
      * @return $this
      */
-    public function withAuthenticatedSessions()
+    public function authenticateSessions()
     {
         $this->authenticatedSessions = true;
 

@@ -114,7 +114,7 @@ class EncryptCookies
 
         return is_array($value)
                     ? $this->validateArray($key, $value)
-                    : CookieValuePrefix::validate($key, $value, $this->encrypter->getKey());
+                    : CookieValuePrefix::validate($key, $value, $this->encrypter->getAllKeys());
     }
 
     /**
