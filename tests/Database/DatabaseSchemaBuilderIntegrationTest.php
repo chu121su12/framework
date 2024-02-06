@@ -87,7 +87,7 @@ class DatabaseSchemaBuilderIntegrationTest extends TestCase
 
     public function testDropColumnWithTablePrefix()
     {
-        if (_data_get($this->db->connection(), 'legacyDb')) {
+        if ($this->connection->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 

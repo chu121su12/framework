@@ -115,7 +115,7 @@ class SQLiteBuilder extends Builder
 
     protected function getColumnsPragma($table)
     {
-        if (! _data_get($this->connection, 'legacyDb')) {
+        if (! $this->connection->isLegacyDb()) {
             return null;
         }
 

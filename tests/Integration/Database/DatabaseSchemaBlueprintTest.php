@@ -25,7 +25,7 @@ class DatabaseSchemaBlueprintTest extends TestCase
             'database.default' => 'testing',
         ]);
 
-        if (_data_get(DB::connection(), 'legacyDb')) {
+        if ($this->connection->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
     }

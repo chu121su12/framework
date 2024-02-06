@@ -3566,7 +3566,7 @@ class Builder implements BuilderContract
      */
     public function upsert(array $values, $uniqueBy, $update = null)
     {
-        if (_data_get($this->connection, 'legacyDb')) {
+        if ($this->connection->isLegacyDb()) {
             try {
                 return $this->insert($values);
             } catch (\Exception $_e) {

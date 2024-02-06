@@ -12,12 +12,7 @@ use Illuminate\Filesystem\Filesystem;
 
 class SQLiteConnection extends Connection
 {
-    public $legacyDb;
-
-    protected function initLegacyDb($throw)
-    {
-        return $this->isLegacyDb($throw);
-    }
+    private $legacyDb;
 
     public function isLegacyDb($throw = false)
     {
@@ -56,8 +51,6 @@ class SQLiteConnection extends Connection
     {
         parent::__construct($pdo, $database, $tablePrefix, $config);
 
-        $didInit = $this->initLegacyDb(false);
-
         $enableForeignKeyConstraints = $this->getForeignKeyConstraintsConfigurationValue();
 
         if ($enableForeignKeyConstraints === null) {
@@ -70,10 +63,6 @@ class SQLiteConnection extends Connection
             $enableForeignKeyConstraints
                 ? $schemaBuilder->enableForeignKeyConstraints()
                 : $schemaBuilder->disableForeignKeyConstraints();
-
-            if ($didInit === null || $didInit === true) {
-                $this->initLegacyDb(true);
-            }
         } catch (QueryException $e) {
             if (! $e->getPrevious() instanceof SQLiteDatabaseDoesNotExistException) {
                 throw $e;

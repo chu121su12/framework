@@ -106,7 +106,7 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
             'prefix' => 'prefix_',
         ]);
 
-        if (_data_get($db->getConnection(), 'legacyDb')) {
+        if ($this->connection->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -157,7 +157,7 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
             'prefix' => 'prefix_',
         ]);
 
-        if (_data_get($db->getConnection(), 'legacyDb')) {
+        if ($this->connection->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 

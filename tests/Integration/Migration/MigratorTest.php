@@ -27,7 +27,7 @@ class MigratorTest extends TestCase
         $this->subject->setOutput($this->output);
         $this->subject->getRepository()->createRepository();
 
-        if (_data_get(DB::connection($this->subject->getConnection()), 'legacyDb')) {
+        if (DB::connection($this->subject->getConnection())->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
     }
@@ -63,7 +63,7 @@ class MigratorTest extends TestCase
 
     public function testRollback()
     {
-        if (_data_get($this->getConnection(), 'legacyDb')) {
+        if ($this->getConnection()->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 
