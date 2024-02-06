@@ -1683,4 +1683,9 @@ class Connection implements ConnectionInterface
     {
         return isset(static::$resolvers[$driver]) ? static::$resolvers[$driver] : null;
     }
+
+    public function isLegacyDb($throw = false)
+    {
+        return false;
+    }
 }

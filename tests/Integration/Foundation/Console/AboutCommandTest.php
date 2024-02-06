@@ -42,6 +42,7 @@ class AboutCommandTest extends TestCase
 
                 'broadcasting' => 'null',
                 'cache' => 'array',
+                'mail' => 'smtp',
                 'queue' => 'sync',
                 'session' => 'array',
             ], $output['drivers']);

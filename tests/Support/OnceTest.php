@@ -160,15 +160,11 @@ class OnceTest extends TestCase
         $first = $instance->rand();
         unset($instance);
         gc_collect_cycles();
+        Once::flush();
         $instance = new MyClass();
         $second = $instance->rand();
 
-        if (class_exists(\WeakMap::class)) {
-            $this->assertNotSame($first, $second);
-        }
-        else {
-            $this->assertSame($first, $second);
-        }
+        $this->assertNotSame($first, $second);
     }
 
     public function testIsNotMemoizedWhenCallableUsesChanges()

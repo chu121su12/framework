@@ -16,6 +16,11 @@ class SQLiteConnection extends Connection
 
     protected function initLegacyDb($throw)
     {
+        return $this->isLegacyDb($throw);
+    }
+
+    public function isLegacyDb($throw = false)
+    {
         try {
             return $this->legacyDb = _check_db_connection_versions($this, function ($driver, $version) {
                 if ($driver === 'sqlite' && version_compare($version, '3.31.0', '<')) {
