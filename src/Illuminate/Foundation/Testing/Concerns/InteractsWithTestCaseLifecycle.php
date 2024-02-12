@@ -71,7 +71,7 @@ trait InteractsWithTestCaseLifecycle
      *
      * @return void
      */
-    protected function setUpTheTestEnvironment(): void
+    protected function setUpTheTestEnvironment()/*: void*/
     {
         Facade::clearResolvedInstances();
 
@@ -99,7 +99,7 @@ trait InteractsWithTestCaseLifecycle
      *
      * @return void
      */
-    protected function tearDownTheTestEnvironment(): void
+    protected function tearDownTheTestEnvironment()/*: void*/
     {
         if ($this->app) {
             $this->callBeforeApplicationDestroyedCallbacks();
@@ -206,7 +206,7 @@ trait InteractsWithTestCaseLifecycle
             }
 
             if (method_exists($this, $method = 'tearDown'.class_basename($trait))) {
-                $this->beforeApplicationDestroyed(fn () => $this->{$method}());
+                $this->beforeApplicationDestroyed(function () use ($method) { return $this->{$method}(); });
             }
         }
 
@@ -227,7 +227,7 @@ trait InteractsWithTestCaseLifecycle
             \PHPUnit\Metadata\Annotation\Parser\Registry::class,
         ] as $class) {
             if (class_exists($class)) {
-                (function () {
+                backport_function_call_able(function () {
                     $this->classDocBlocks = [];
                     $this->methodDocBlocks = [];
                 })->call($class::getInstance());
@@ -271,7 +271,12 @@ trait InteractsWithTestCaseLifecycle
         foreach ($this->beforeApplicationDestroyedCallbacks as $callback) {
             try {
                 $callback();
+            } catch (\Exception $e) {
+            } catch (\Error $e) {
             } catch (Throwable $e) {
+            }
+
+            if (isset($e)) {
                 if (! $this->callbackException) {
                     $this->callbackException = $e;
                 }

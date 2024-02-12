@@ -172,7 +172,7 @@ class SqlServerGrammar extends Grammar
             .'where lt.name = %s and ls.name = %s '
             .'group by fk.name, fs.name, ft.name, fk.update_referential_action_desc, fk.delete_referential_action_desc',
             $this->quoteString($table),
-            $schema ? $this->quoteString($schema) : 'schema_name()',
+            $schema ? $this->quoteString($schema) : 'schema_name()'
         );
     }
 

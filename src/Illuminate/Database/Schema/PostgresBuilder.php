@@ -67,7 +67,7 @@ class PostgresBuilder extends Builder
      */
     public function hasView($view)
     {
-        [$schema, $view] = $this->parseSchemaAndTable($view);
+        list($schema, $view) = $this->parseSchemaAndTable($view);
 
         $view = $this->connection->getTablePrefix().$view;
 

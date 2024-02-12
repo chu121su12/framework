@@ -451,7 +451,7 @@ class MailFake implements Factory, Fake, Mailer, MailQueue
      */
     public function sendNow($mailable, array $data = [], $callback = null)
     {
-        return $this->sendMail($mailable, shouldQueue: false);
+        return $this->sendMail($mailable, /*shouldQueue: */false);
     }
 
     /**

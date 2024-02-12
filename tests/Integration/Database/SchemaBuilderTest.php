@@ -60,7 +60,7 @@ class SchemaBuilderTest extends DatabaseTestCase
             $this->markTestSkipped('Test requires a SQLite connection.');
         }
 
-        if ($this->connection->isLegacyDb()) {
+        if (DB::connection()->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -252,7 +252,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testHasView()
     {
-        if ($this->connection->isLegacyDb()) {
+        if (DB::connection()->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -263,7 +263,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetViews()
     {
-        if ($this->connection->isLegacyDb()) {
+        if (DB::connection()->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -332,7 +332,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetColumnsOnView()
     {
-        if ($this->connection->isLegacyDb()) {
+        if (DB::connection()->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -346,7 +346,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetIndexes()
     {
-        if ($this->connection->isLegacyDb()) {
+        if (DB::connection()->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -371,7 +371,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetUniqueIndexes()
     {
-        if ($this->connection->isLegacyDb()) {
+        if (DB::connection()->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -401,7 +401,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetIndexesWithCompositeKeys()
     {
-        if ($this->connection->isLegacyDb()) {
+        if (DB::connection()->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -467,7 +467,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetForeignKeys()
     {
-        if ($this->connection->isLegacyDb()) {
+        if (DB::connection()->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -491,7 +491,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGetCompoundForeignKeys()
     {
-        if ($this->connection->isLegacyDb()) {
+        if (DB::connection()->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -522,7 +522,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testAlteringTableWithForeignKeyConstraintsEnabled()
     {
-        if ($this->connection->isLegacyDb()) {
+        if (DB::connection()->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -577,7 +577,7 @@ class SchemaBuilderTest extends DatabaseTestCase
             $this->markTestSkipped('Test requires a SQLite connection.');
         }
 
-        if ($this->connection->isLegacyDb()) {
+        if (DB::connection()->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 
@@ -595,7 +595,7 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testAddingMacros()
     {
-        if ($this->connection->isLegacyDb()) {
+        if (DB::connection()->isLegacyDb()) {
             $this->markTestSkipped('PDO driver no support');
         }
 

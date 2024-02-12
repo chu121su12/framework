@@ -3513,15 +3513,15 @@ class Builder implements BuilderContract
                 return ['value' => $value, 'bindings' => $value];
             }
 
-            [$query, $bindings] = $this->parseSub($value);
+            list($query, $bindings) = $this->parseSub($value);
 
-            return ['value' => new Expression("({$query})"), 'bindings' => fn () => $bindings];
+            return ['value' => new Expression("({$query})"), 'bindings' => function () use ($bindings) { return $bindings; }];
         });
 
-        $sql = $this->grammar->compileUpdate($this, $values->map(fn ($value) => $value['value'])->all());
+        $sql = $this->grammar->compileUpdate($this, $values->map(function ($value) { return $value['value']; })->all());
 
         return $this->connection->update($sql, $this->cleanBindings(
-            $this->grammar->prepareBindingsForUpdate($this->bindings, $values->map(fn ($value) => $value['bindings'])->all())
+            $this->grammar->prepareBindingsForUpdate($this->bindings, $values->map(function ($value) { return $value['bindings']; })->all())
         ));
     }
 
@@ -3576,7 +3576,7 @@ class Builder implements BuilderContract
      */
     public function upsert(array $values, $uniqueBy, $update = null)
     {
-        if ($this->connection->isLegacyDb()) {
+        if (\method_exists($this->connection, 'isLegacyDb') && $this->connection->isLegacyDb()) {
             try {
                 return $this->insert($values);
             } catch (\Exception $_e) {

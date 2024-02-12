@@ -527,9 +527,11 @@ class Middleware
      * @param  callable|string  $redirect
      * @return $this
      */
-    public function redirectGuestsTo(callable|string $redirect)
+    public function redirectGuestsTo(/*callable|string */$redirect)
     {
-        return $this->redirectTo(guests: $redirect);
+        $redirect = backport_type_check('callable|string', $redirect);
+
+        return $this->redirectTo(/*guests: */$redirect);
     }
 
     /**

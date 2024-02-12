@@ -1601,7 +1601,7 @@ class Str
      * @param  string  $string
      * @return string
      */
-    public static function toBase64($string): string
+    public static function toBase64($string)/*: string*/
     {
         return base64_encode($string);
     }

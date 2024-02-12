@@ -38,7 +38,7 @@ class SqlServerBuilder extends Builder
      */
     public function hasTable($table)
     {
-        [$schema, $table] = $this->parseSchemaAndTable($table);
+        list($schema, $table) = $this->parseSchemaAndTable($table);
 
         $table = $this->connection->getTablePrefix().$table;
 
@@ -60,7 +60,7 @@ class SqlServerBuilder extends Builder
      */
     public function hasView($view)
     {
-        [$schema, $view] = $this->parseSchemaAndTable($view);
+        list($schema, $view) = $this->parseSchemaAndTable($view);
 
         $view = $this->connection->getTablePrefix().$view;
 
@@ -104,7 +104,7 @@ class SqlServerBuilder extends Builder
      */
     public function getColumns($table)
     {
-        [$schema, $table] = $this->parseSchemaAndTable($table);
+        list($schema, $table) = $this->parseSchemaAndTable($table);
 
         $table = $this->connection->getTablePrefix().$table;
 
@@ -123,7 +123,7 @@ class SqlServerBuilder extends Builder
      */
     public function getIndexes($table)
     {
-        [$schema, $table] = $this->parseSchemaAndTable($table);
+        list($schema, $table) = $this->parseSchemaAndTable($table);
 
         $table = $this->connection->getTablePrefix().$table;
 
@@ -140,7 +140,7 @@ class SqlServerBuilder extends Builder
      */
     public function getForeignKeys($table)
     {
-        [$schema, $table] = $this->parseSchemaAndTable($table);
+        list($schema, $table) = $this->parseSchemaAndTable($table);
 
         $table = $this->connection->getTablePrefix().$table;
 
