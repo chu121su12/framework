@@ -126,31 +126,18 @@ class Middleware
     protected $authenticatedSessions = false;
 
     /**
-     * The default middleware aliases.
-     *
-     * @var array
-     */
-    protected $aliases = [
-        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
-        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
-        'can' => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest' => \Illuminate\Auth\Middleware\RedirectIfAuthenticated::class,
-        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
-        'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
-        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
-        'subscribed' => \Spark\Http\Middleware\VerifyBillableIsSubscribed::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-    ];
-
-    /**
      * The custom middleware aliases.
      *
      * @var array
      */
     protected $customAliases = [];
+
+    /**
+     * The custom middleware priority definition.
+     *
+     * @var array
+     */
+    protected $priority = [];
 
     /**
      * Prepend middleware to the application's global middleware stack.
@@ -435,6 +422,19 @@ class Middleware
     }
 
     /**
+     * Define the middleware priority for the application.
+     *
+     * @param  array  $priority
+     * @return $this
+     */
+    public function priority(array $priority)
+    {
+        $this->priority = $priority;
+
+        return $this;
+    }
+
+    /**
      * Get the global middleware.
      *
      * @return array
@@ -522,10 +522,21 @@ class Middleware
     }
 
     /**
-     * Configure where authenticated users are redirected after authentication.
+     * Configure where guests are redirected by the authentication middleware.
      *
-     * @param  callable|string  $users
+     * @param  callable|string  $redirect
+     * @return $this
+     */
+    public function redirectGuestsTo(callable|string $redirect)
+    {
+        return $this->redirectTo(guests: $redirect);
+    }
+
+    /**
+     * Configure where users are redirected by the authentication and guest middleware.
+     *
      * @param  callable|string  $guests
+     * @param  callable|string  $users
      * @return $this
      */
     public function redirectTo(/*callable|string */$guests = null, /*callable|string */$users = null)
@@ -697,5 +708,15 @@ class Middleware
                 : \Illuminate\Routing\Middleware\ThrottleRequests::class,
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         ];
+    }
+
+    /**
+     * Get the middleware priority for the application.
+     *
+     * @return array
+     */
+    public function getMiddlewarePriority()
+    {
+        return $this->priority;
     }
 }

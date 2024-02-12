@@ -196,6 +196,7 @@ class DbCommand extends Command
             'password' => ['-P', $connection['password']],
             'host' => ['-S', 'tcp:'.$connection['host']
                         .($connection['port'] ? ','.$connection['port'] : ''), ],
+            'trust_server_certificate' => ['-C'],
         ], $connection));
     }
 

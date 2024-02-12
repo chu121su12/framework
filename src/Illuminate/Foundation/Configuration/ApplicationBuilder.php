@@ -142,7 +142,7 @@ class ApplicationBuilder
         $apiPrefix = backport_type_check('string', $apiPrefix);
         $then = backport_type_check('?callable', $then);
 
-        if (is_null($using) && (is_string($web) || is_string($api))) {
+        if (is_null($using) && (is_string($web) || is_string($api) || is_string($pages) || is_string($health)) || is_callable($then)) {
             $using = $this->buildRoutingCallback($web, $api, $pages, $health, $apiPrefix, $then);
         }
 
@@ -219,21 +219,27 @@ class ApplicationBuilder
     /**
      * Register the global middleware, middleware groups, and middleware aliases for the application.
      *
-     * @param  callable  $callback
+     * @param  callable|null  $callback
      * @return $this
      */
-    public function withMiddleware(callable $callback)
+    public function withMiddleware(/*?*/callable $callback = null)
     {
         $this->app->afterResolving(HttpKernel::class, function ($kernel) use ($callback) {
             $middleware = (new Middleware)
-                ->redirectTo(function () { return route('login'); });
+                ->redirectGuestsTo(function () { return route('login'); });
 
-            $callback($middleware);
+            if (! is_null($callback)) {
+                $callback($middleware);
+            }
 
             $this->pageMiddleware = $middleware->getPageMiddleware();
             $kernel->setGlobalMiddleware($middleware->getGlobalMiddleware());
             $kernel->setMiddlewareGroups($middleware->getMiddlewareGroups());
             $kernel->setMiddlewareAliases($middleware->getMiddlewareAliases());
+
+            if ($priorities = $middleware->getMiddlewarePriority()) {
+                $kernel->setMiddlewarePriority($priorities);
+            }
         });
 
         return $this;
