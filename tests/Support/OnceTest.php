@@ -295,12 +295,12 @@ class OnceTest extends TestCase
 
     public function testMemoizationWithinEvals()
     {
-        $firstResolver = eval('return fn () => once( function () { return random_int(1, PHP_INT_MAX); } ) ;');
+        $firstResolver = eval('return function () { return once( function () { return random_int(1, PHP_INT_MAX); } ); } ;');
 
         $firstA = $firstResolver();
         $firstB = $firstResolver();
 
-        $secondResolver = eval('return fn () => fn () => once( function () { return random_int(1, PHP_INT_MAX); } ) ;');
+        $secondResolver = eval('return function () { return function () { return once( function () { return random_int(1, PHP_INT_MAX); } ); }; } ;');
 
         $secondA = call_user_func($secondResolver());
         $secondB = call_user_func($secondResolver());

@@ -495,7 +495,13 @@ abstract class ServiceProvider
             return false;
         }
 
-        $providers = collect(require $path)
+        $pathContent = require $path;
+
+        if (! \is_array($pathContent)) {
+            return false;
+        }
+
+        $providers = collect($pathContent)
             ->merge([$provider])
             ->unique()
             ->sort()

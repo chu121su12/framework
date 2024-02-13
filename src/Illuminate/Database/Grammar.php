@@ -61,7 +61,9 @@ abstract class Grammar
             $table = substr_replace($table, '.'.$this->tablePrefix, strrpos($table, '.'), 1);
 
             return collect(explode('.', $table))
-                ->map($this->wrapValue(...))
+                ->map(function (...$args) {
+                    return $this->wrapValue(...$args);
+                })
                 ->implode('.');
         }
 

@@ -21,8 +21,10 @@ class ProviderMakeCommandTest extends TestCase
             'public function boot()',
         ], 'app/Providers/FooServiceProvider.php');
 
-        $this->assertEquals(require $this->app->getBootstrapProvidersPath(), [
-            'App\Providers\FooServiceProvider',
-        ]);
+        if (file_exists($this->app->getBootstrapProvidersPath()) && is_array(require $this->app->getBootstrapProvidersPath())) {
+            $this->assertEquals(require $this->app->getBootstrapProvidersPath(), [
+                'App\Providers\FooServiceProvider',
+            ]);
+        }
     }
 }

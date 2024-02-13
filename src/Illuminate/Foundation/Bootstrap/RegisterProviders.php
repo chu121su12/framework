@@ -47,10 +47,15 @@ class RegisterProviders
             file_exists(static::$bootstrapProviderPath)) {
             $packageProviders = require static::$bootstrapProviderPath;
 
-            foreach ($packageProviders as $index => $provider) {
-                if (! class_exists($provider)) {
-                    unset($packageProviders[$index]);
+            if (is_array($packageProviders)) {
+                foreach ($packageProviders as $index => $provider) {
+                    if (! class_exists($provider)) {
+                        unset($packageProviders[$index]);
+                    }
                 }
+            }
+            else {
+                unset($packageProviders);
             }
         }
 

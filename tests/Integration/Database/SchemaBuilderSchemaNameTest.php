@@ -34,6 +34,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $app['config']->set('database.connections.with-prefix.prefix', 'example_');
     }
 
+    /**
+     * @dataProvider connectionProvider
+     */
     #[DataProvider('connectionProvider')]
     public function testCreate($connection)
     {
@@ -47,6 +50,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $this->assertFalse($schema->hasTable('table'));
     }
 
+    /**
+     * @dataProvider connectionProvider
+     */
     #[DataProvider('connectionProvider')]
     public function testRename($connection)
     {
@@ -73,6 +79,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $this->assertFalse($schema->hasTable('table'));
     }
 
+    /**
+     * @dataProvider connectionProvider
+     */
     #[DataProvider('connectionProvider')]
     public function testDrop($connection)
     {
@@ -94,6 +103,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $this->assertTrue($schema->hasTable('table'));
     }
 
+    /**
+     * @dataProvider connectionProvider
+     */
     #[DataProvider('connectionProvider')]
     public function testDropIfExists($connection)
     {
@@ -117,6 +129,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $this->assertTrue($schema->hasTable('table'));
     }
 
+    /**
+     * @dataProvider connectionProvider
+     */
     #[DataProvider('connectionProvider')]
     public function testAddColumns($connection)
     {
@@ -151,6 +166,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $this->assertStringContainsString('default title', collect($schema->getColumns('my_table'))->firstWhere('name', 'title')['default']);
     }
 
+    /**
+     * @dataProvider connectionProvider
+     */
     #[DataProvider('connectionProvider')]
     public function testRenameColumns($connection)
     {
@@ -183,6 +201,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $this->assertStringContainsString('default name', collect($schema->getColumns('table'))->firstWhere('name', 'new_name')['default']);
     }
 
+    /**
+     * @dataProvider connectionProvider
+     */
     #[DataProvider('connectionProvider')]
     public function testModifyColumns($connection)
     {
@@ -216,6 +237,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $this->assertEquals($this->driver === 'pgsql' ? 'int8' : 'bigint', $schema->getColumnType('my_table', 'count'));
     }
 
+    /**
+     * @dataProvider connectionProvider
+     */
     #[DataProvider('connectionProvider')]
     public function testDropColumns($connection)
     {
@@ -250,6 +274,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $this->assertStringContainsString('10', collect($schema->getColumns('table'))->firstWhere('name', 'count')['default']);
     }
 
+    /**
+     * @dataProvider connectionProvider
+     */
     #[DataProvider('connectionProvider')]
     public function testIndexes($connection)
     {
@@ -307,6 +334,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $this->assertEmpty($schema->getIndexListing('my_table'));
     }
 
+    /**
+     * @dataProvider connectionProvider
+     */
     #[DataProvider('connectionProvider')]
     public function testForeignKeys($connection)
     {
@@ -328,15 +358,15 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $tableName = $connection === 'with-prefix' ? 'example_my_tables' : 'my_tables';
 
         $this->assertTrue(collect($schema->getForeignKeys('my_schema.table'))->contains(
-            fn ($foreign) => $foreign['columns'] === ['my_table_id']
+            function ($foreign) use ($tableName) { return $foreign['columns'] === ['my_table_id']
                 && $foreign['foreign_table'] === $tableName && in_array($foreign['foreign_schema'], ['public', 'dbo'])
-                && $foreign['foreign_columns'] === ['id']
+                && $foreign['foreign_columns'] === ['id']; }
         ));
 
         $this->assertTrue(collect($schema->getForeignKeys('table'))->contains(
-            fn ($foreign) => $foreign['columns'] === ['table_id']
+            function ($foreign) use ($schemaTableName) { return $foreign['columns'] === ['table_id']
                 && $foreign['foreign_table'] === $schemaTableName && $foreign['foreign_schema'] === 'my_schema'
-                && $foreign['foreign_columns'] === ['id']
+                && $foreign['foreign_columns'] === ['id']; }
         ));
 
         $schema->table('my_schema.table', function (Blueprint $table) {
@@ -350,6 +380,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $this->assertEmpty($schema->getForeignKeys('table'));
     }
 
+    /**
+     * @dataProvider connectionProvider
+     */
     #[DataProvider('connectionProvider')]
     public function testHasView($connection)
     {
@@ -371,6 +404,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $this->assertFalse($schema->hasView('my_view'));
     }
 
+    /**
+     * @dataProvider connectionProvider
+     */
     #[DataProvider('connectionProvider')]
     public function testComment($connection)
     {
@@ -393,10 +429,10 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $tableName = $connection === 'with-prefix' ? 'example_table' : 'table';
 
         $this->assertEquals('comment on schema table',
-            $tables->first(fn ($table) => $table['name'] === $tableName && $table['schema'] === 'my_schema')['comment']
+            $tables->first(function ($table) use ($tableName) { return $table['name'] === $tableName && $table['schema'] === 'my_schema'; })['comment']
         );
         $this->assertEquals('comment on table',
-            $tables->first(fn ($table) => $table['name'] === $tableName && $table['schema'] === 'public')['comment']
+            $tables->first(function ($table) use ($tableName) { return $table['name'] === $tableName && $table['schema'] === 'public'; })['comment']
         );
         $this->assertEquals('comment on schema column',
             collect($schema->getColumns('my_schema.table'))->firstWhere('name', 'name')['comment']
@@ -406,6 +442,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         );
     }
 
+    /**
+     * @dataProvider connectionProvider
+     */
     #[DataProvider('connectionProvider')]
     public function testAutoIncrementStartingValue($connection)
     {
@@ -425,7 +464,7 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         });
     }
 
-    public static function connectionProvider(): array
+    public static function connectionProvider()/*: array*/
     {
         return [
             'without prefix' => ['without-prefix'],
