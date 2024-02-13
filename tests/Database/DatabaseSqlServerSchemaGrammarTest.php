@@ -85,14 +85,14 @@ class DatabaseSqlServerSchemaGrammarTest extends TestCase
         $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
         $this->assertCount(1, $statements);
-        $this->assertSame('if object_id(N\'users\', \'U\') is not null drop table "users"', $statements[0]);
+        $this->assertSame('if object_id(N\'"users"\', \'U\') is not null drop table "users"', $statements[0]);
 
         $blueprint = new Blueprint('users');
         $blueprint->dropIfExists();
         $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar()->setTablePrefix('prefix_'));
 
         $this->assertCount(1, $statements);
-        $this->assertSame('if object_id(N\'prefix_users\', \'U\') is not null drop table "prefix_users"', $statements[0]);
+        $this->assertSame('if object_id(N\'"prefix_users"\', \'U\') is not null drop table "prefix_users"', $statements[0]);
     }
 
     public function testDropColumn()
@@ -126,7 +126,7 @@ class DatabaseSqlServerSchemaGrammarTest extends TestCase
         $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
         $this->assertCount(1, $statements);
-        $this->assertSame("DECLARE @sql NVARCHAR(MAX) = '';SELECT @sql += 'ALTER TABLE \"foo\" DROP CONSTRAINT ' + OBJECT_NAME([default_object_id]) + ';' FROM sys.columns WHERE [object_id] = OBJECT_ID(N'foo') AND [name] in ('bar') AND [default_object_id] <> 0;EXEC(@sql);alter table \"foo\" drop column \"bar\"", $statements[0]);
+        $this->assertSame("DECLARE @sql NVARCHAR(MAX) = '';SELECT @sql += 'ALTER TABLE \"foo\" DROP CONSTRAINT ' + OBJECT_NAME([default_object_id]) + ';' FROM sys.columns WHERE [object_id] = OBJECT_ID(N'\"foo\"') AND [name] in ('bar') AND [default_object_id] <> 0;EXEC(@sql);alter table \"foo\" drop column \"bar\"", $statements[0]);
     }
 
     public function testDropPrimary()
@@ -187,7 +187,7 @@ class DatabaseSqlServerSchemaGrammarTest extends TestCase
 
         $this->assertCount(2, $statements);
         $this->assertSame('alter table "users" drop constraint "users_foo_foreign"', $statements[0]);
-        $this->assertSame('DECLARE @sql NVARCHAR(MAX) = \'\';SELECT @sql += \'ALTER TABLE "users" DROP CONSTRAINT \' + OBJECT_NAME([default_object_id]) + \';\' FROM sys.columns WHERE [object_id] = OBJECT_ID(N\'users\') AND [name] in (\'foo\') AND [default_object_id] <> 0;EXEC(@sql);alter table "users" drop column "foo"', $statements[1]);
+        $this->assertSame('DECLARE @sql NVARCHAR(MAX) = \'\';SELECT @sql += \'ALTER TABLE "users" DROP CONSTRAINT \' + OBJECT_NAME([default_object_id]) + \';\' FROM sys.columns WHERE [object_id] = OBJECT_ID(N\'"users"\') AND [name] in (\'foo\') AND [default_object_id] <> 0;EXEC(@sql);alter table "users" drop column "foo"', $statements[1]);
     }
 
     public function testDropTimestamps()
@@ -228,7 +228,7 @@ class DatabaseSqlServerSchemaGrammarTest extends TestCase
         $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
         $this->assertCount(1, $statements);
-        $this->assertSame('sp_rename "users", "foo"', $statements[0]);
+        $this->assertSame('sp_rename N\'"users"\', "foo"', $statements[0]);
     }
 
     public function testRenameIndex()

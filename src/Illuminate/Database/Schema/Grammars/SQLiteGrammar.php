@@ -298,8 +298,8 @@ class SQLiteGrammar extends Grammar
             ->map(function ($index, $blueprint) { return $this->{'compile'.ucfirst($index->name)}($blueprint, $index); })
             ->all();
 
-        $tempTable = $this->wrap('__temp__'.$this->getTablePrefix().$table);
-        $table = $this->wrap($this->getTablePrefix().$table);
+        $tempTable = $this->wrap('__temp__'.$blueprint->getPrefix().$table);
+        $table = $this->wrapTable($blueprint);
         $columnNames = implode(', ', $columnNames);
 
         $foreignKeyConstraintsEnabled = $connection->scalar('pragma foreign_keys');
