@@ -620,19 +620,19 @@ class PendingRequest
     /**
      * Specify the number of times the request should be attempted.
      *
-     * @param  int  $times
+     * @param  array|int  $times
      * @param  Closure|int  $sleepMilliseconds
      * @param  callable|null  $when
      * @param  bool  $throw
      * @return $this
      */
-    public function retry(/*int */$times, /*Closure|int */$sleepMilliseconds = 0, /*?*/callable $when = null, /*bool */$throw = true)
+    public function retry(/*array|int */$times, /*Closure|int */$sleepMilliseconds = 0, /*?*/callable $when = null, /*bool */$throw = true)
     {
         $throw = backport_type_check('bool', $throw);
 
         $sleepMilliseconds = backport_type_check('Closure|int', $sleepMilliseconds);
 
-        $times = backport_type_check('int', $times);
+        $times = backport_type_check('array|int', $times);
 
         $this->tries = $times;
         $this->retryDelay = $sleepMilliseconds;

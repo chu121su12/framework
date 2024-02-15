@@ -992,19 +992,13 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
                 }
             } else {
                 foreach ($this as $item) {
-                    $itemKeys = array_flip($keys);
-
                     $result = [];
 
-                    foreach ($item as $key => $value) {
-                        if (array_key_exists($key, $itemKeys)) {
-                            $result[$key] = $value;
-
-                            unset($itemKeys[$key]);
-
-                            if (empty($itemKeys)) {
-                                continue;
-                            }
+                    foreach ($keys as $key) {
+                        if (Arr::accessible($item) && Arr::exists($item, $key)) {
+                            $result[$key] = $item[$key];
+                        } elseif (is_object($item) && isset($item->{$key})) {
+                            $result[$key] = $item->{$key};
                         }
                     }
 
