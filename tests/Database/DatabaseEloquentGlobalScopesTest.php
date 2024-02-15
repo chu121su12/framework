@@ -52,6 +52,9 @@ class DatabaseEloquentGlobalScopesTest extends TestCase
         $this->assertEquals([1], $query->getBindings());
     }
 
+    /**
+     * @requires PHP 8
+     */
     public function testGlobalScopeInAttributeIsApplied()
     {
         $model = new EloquentGlobalScopeInAttributeTestModel;

@@ -2064,9 +2064,9 @@ class HttpClientTest extends TestCase
         Sleep::assertSleptTimes(3);
 
         Sleep::assertSequence([
-            Sleep::usleep(50_000),
-            Sleep::usleep(100_000),
-            Sleep::usleep(200_000),
+            Sleep::usleep(50000),
+            Sleep::usleep(100000),
+            Sleep::usleep(200000),
         ]);
     }
 

@@ -46,10 +46,14 @@ trait HasEvents
      */
     public static function resolveObserveAttributes()
     {
+        if (version_compare(PHP_VERSION, '8.0.0', '<')) {
+            return [];
+        }
+
         $reflectionClass = new ReflectionClass(static::class);
 
         return collect($reflectionClass->getAttributes(ObservedBy::class))
-            ->map(fn ($attribute) => $attribute->getArguments())
+            ->map(function ($attribute) { return $attribute->getArguments(); })
             ->flatten()
             ->all();
     }

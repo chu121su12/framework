@@ -2011,6 +2011,9 @@ class DatabaseEloquentModelTest extends TestCase
         EloquentModelStub::flushEventListeners();
     }
 
+    /**
+     * @requires PHP 8
+     */
     public function testModelObserversCanBeAttachedToModelsWithStringUsingAttribute()
     {
         EloquentModelWithObserveAttributeStub::setEventDispatcher($events = m::mock(Dispatcher::class));
@@ -2021,6 +2024,9 @@ class DatabaseEloquentModelTest extends TestCase
         EloquentModelWithObserveAttributeStub::flushEventListeners();
     }
 
+    /**
+     * @requires PHP 8
+     */
     public function testModelObserversCanBeAttachedToModelsThroughAnArrayUsingAttribute()
     {
         EloquentModelWithObserveAttributeUsingArrayStub::setEventDispatcher($events = m::mock(Dispatcher::class));

@@ -31,7 +31,9 @@ trait InteractsWithSignals
             );
 
             collect(Arr::wrap(value($signals)))
-                ->each(fn ($signal) => $this->signals->register($signal, $callback));
+                ->each(function ($signal) use ($callback) {
+                    return $this->signals->register($signal, $callback);
+                });
         });
     }
 

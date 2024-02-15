@@ -4077,6 +4077,7 @@ class SupportCollectionTest extends TestCase
         ], $data->select(collect(['first', 'email']))->all());
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testSelectWithObjects($collection)
     {
@@ -4106,6 +4107,7 @@ class SupportCollectionTest extends TestCase
         ], $data->select(collect(['first', 'email']))->all());
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testGettingAvgItemsFromCollection($collection)
     {

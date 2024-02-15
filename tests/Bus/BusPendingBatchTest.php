@@ -43,6 +43,11 @@ class BusPendingBatchTest_test_batch_is_not_dispatched_when_dispatchunless_is_tr
             use Batchable;
         }
 
+class BusPendingBatchTest_test_batch_before_event_is_called_class
+        {
+            use Batchable;
+        }
+
 class BusPendingBatchTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -213,10 +218,7 @@ class BusPendingBatchTest extends TestCase
 
         $container->instance(Dispatcher::class, $eventDispatcher);
 
-        $job = new class
-        {
-            use Batchable;
-        };
+        $job = new BusPendingBatchTest_test_batch_before_event_is_called_class;
 
         $beforeCalled = false;
 

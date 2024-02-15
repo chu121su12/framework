@@ -85,8 +85,10 @@ class ComponentSlot implements Htmlable, Stringable
      * @param  callable|string|null  $callable
      * @return bool
      */
-    public function hasActualContent(callable|string|null $callable = null)
+    public function hasActualContent(/*callable|string|null */$callable = null)
     {
+        $callable = backport_type_check('callable|string|null', $callable);
+
         if (is_string($callable) && ! function_exists($callable)) {
             throw new InvalidArgumentException('Callable does not exist.');
         }
@@ -94,7 +96,7 @@ class ComponentSlot implements Htmlable, Stringable
         return filter_var(
             $this->contents,
             FILTER_CALLBACK,
-            ['options' => $callable ?? fn ($input) => trim(preg_replace("/<!--([\s\S]*?)-->/", '', $input))]
+            ['options' => isset($callable) ? $callable : function ($input) { return trim(preg_replace("/<!--([\s\S]*?)-->/", '', $input)); }]
         ) !== '';
     }
 

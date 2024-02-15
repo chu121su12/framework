@@ -96,7 +96,7 @@ class PendingBatch
      */
     public function beforeCallbacks()
     {
-        return $this->options['before'] ?? [];
+        return isset($this->options['before']) ? $this->options['before'] : [];
     }
 
     /**
@@ -423,7 +423,12 @@ class PendingBatch
         collect($this->beforeCallbacks())->each(function ($handler) use ($batch) {
             try {
                 return $handler($batch);
+            } catch (\Exception $e) {
+            } catch (\ErrorException $e) {
             } catch (Throwable $e) {
+            }
+
+            if (isset($e)) {
                 if (function_exists('report')) {
                     report($e);
                 }
