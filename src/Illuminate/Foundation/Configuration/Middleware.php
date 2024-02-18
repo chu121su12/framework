@@ -2,11 +2,16 @@
 
 namespace Illuminate\Foundation\Configuration;
 
+use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use Illuminate\Foundation\Http\Middleware\TrimStrings;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Illuminate\Http\Middleware\TrustHosts;
+use Illuminate\Http\Middleware\TrustProxies;
 use Illuminate\Routing\Middleware\ValidateSignature;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Arr;
@@ -272,8 +277,8 @@ class Middleware
         $middleware = backport_type_check('array|string', $middleware);
 
         $this->groupAppends[$group] = array_merge(
-            Arr::wrap($middleware),
-            isset($this->groupAppends[$group]) ? $this->groupAppends[$group] : []
+            $this->groupAppends[$group] ?? [],
+            Arr::wrap($middleware)
         );
 
         return $this;
@@ -563,6 +568,19 @@ class Middleware
     }
 
     /**
+     * Configure the cookie encryption middleware.
+     *
+     * @param  array<int, string>  $except
+     * @return $this
+     */
+    public function encryptCookies(array $except = [])
+    {
+        EncryptCookies::except($except);
+
+        return $this;
+    }
+
+    /**
      * Configure the CSRF token validation middleware.
      *
      * @param  array  $except
@@ -589,14 +607,31 @@ class Middleware
     }
 
     /**
+     * Configure the empty string conversion middleware.
+     *
+     * @param  array<int, (\Closure(\Illuminate\Http\Request): bool)>  $except
+     * @return $this
+     */
+    public function convertEmptyStringsToNull(array $except = [])
+    {
+        collect($except)->each(fn (Closure $callback) => ConvertEmptyStringsToNull::skipWhen($callback));
+
+        return $this;
+    }
+
+    /**
      * Configure the string trimming middleware.
      *
-     * @param  array  $except
+     * @param  array<int, (\Closure(\Illuminate\Http\Request): bool)|string>  $except
      * @return $this
      */
     public function trimStrings(array $except = [])
     {
-        TrimStrings::except($except);
+        [$skipWhen, $except] = collect($except)->partition(fn ($value) => $value instanceof Closure);
+
+        $skipWhen->each(fn (Closure $callback) => TrimStrings::skipWhen($callback));
+
+        TrimStrings::except($except->all());
 
         return $this;
     }
@@ -604,11 +639,37 @@ class Middleware
     /**
      * Indicate that the trusted host middleware should be enabled.
      *
+     * @param  array<int, string>|null  $at
+     * @param  bool  $subdomains
      * @return $this
      */
-    public function trustHosts()
+    public function trustHosts(array $at = null, bool $subdomains = true)
     {
         $this->trustHosts = true;
+
+        if (is_array($at)) {
+            TrustHosts::at($at, $subdomains);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Configure the trusted proxies for the application.
+     *
+     * @param  array<int, string>|string|null  $at
+     * @param  int|null  $headers
+     * @return $this
+     */
+    public function trustProxies(array|string $at = null, int $headers = null)
+    {
+        if (! is_null($at)) {
+            TrustProxies::at($at);
+        }
+
+        if (! is_null($headers)) {
+            TrustProxies::withHeaders($headers);
+        }
 
         return $this;
     }

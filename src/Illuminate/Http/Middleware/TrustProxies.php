@@ -15,14 +15,7 @@ class TrustProxies
     protected $proxies;
 
     /**
-     * The proxies that have been configured to always be trusted.
-     *
-     * @var array<int, string>|string|null
-     */
-    protected static $alwaysTrust;
-
-    /**
-     * The proxy header mappings.
+     * The trusted proxies headers for the application.
      *
      * @var int
      */
@@ -31,6 +24,20 @@ class TrustProxies
                          Request::HEADER_X_FORWARDED_PORT |
                          Request::HEADER_X_FORWARDED_PROTO |
                          Request::HEADER_X_FORWARDED_AWS_ELB;
+
+    /**
+     * The proxies that have been configured to always be trusted.
+     *
+     * @var array<int, string>|string|null
+     */
+    protected static $alwaysTrustProxies;
+
+    /**
+     * The proxies headers that have been configured to always be trusted.
+     *
+     * @var int|null
+     */
+    protected static $alwaysTrustHeaders;
 
     /**
      * Handle an incoming request.
@@ -103,65 +110,32 @@ class TrustProxies
      */
     protected function getTrustedHeaderNames()
     {
-        if (is_int($this->headers)) {
-            return $this->headers;
+        $headers = $this->headers();
+
+        if (is_int($headers)) {
+            return $headers;
         }
 
-        switch ($this->headers) {
-            case 'HEADER_X_FORWARDED_AWS_ELB':
-            case Request::HEADER_X_FORWARDED_AWS_ELB:
-                return Request::HEADER_X_FORWARDED_AWS_ELB;
-
-            case 'HEADER_FORWARDED':
-            case Request::HEADER_FORWARDED:
-                return Request::HEADER_FORWARDED;
-
-            case 'HEADER_X_FORWARDED_FOR':
-            case Request::HEADER_X_FORWARDED_FOR:
-                return Request::HEADER_X_FORWARDED_FOR;
-
-            case 'HEADER_X_FORWARDED_HOST':
-            case Request::HEADER_X_FORWARDED_HOST:
-                return Request::HEADER_X_FORWARDED_HOST;
-
-            case 'HEADER_X_FORWARDED_PORT':
-            case Request::HEADER_X_FORWARDED_PORT:
-                return Request::HEADER_X_FORWARDED_PORT;
-
-            case 'HEADER_X_FORWARDED_PROTO':
-            case Request::HEADER_X_FORWARDED_PROTO:
-                return Request::HEADER_X_FORWARDED_PROTO;
-
-            case 'HEADER_X_FORWARDED_PREFIX':
-            case Request::HEADER_X_FORWARDED_PREFIX:
-                return Request::HEADER_X_FORWARDED_PREFIX;
-
-            default:
-                return Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_X_FORWARDED_PREFIX | Request::HEADER_X_FORWARDED_AWS_ELB;
-        }
+        return match ($headers) {
+            'HEADER_X_FORWARDED_AWS_ELB' => Request::HEADER_X_FORWARDED_AWS_ELB,
+            'HEADER_FORWARDED' => Request::HEADER_FORWARDED,
+            'HEADER_X_FORWARDED_FOR' => Request::HEADER_X_FORWARDED_FOR,
+            'HEADER_X_FORWARDED_HOST' => Request::HEADER_X_FORWARDED_HOST,
+            'HEADER_X_FORWARDED_PORT' => Request::HEADER_X_FORWARDED_PORT,
+            'HEADER_X_FORWARDED_PROTO' => Request::HEADER_X_FORWARDED_PROTO,
+            'HEADER_X_FORWARDED_PREFIX' => Request::HEADER_X_FORWARDED_PREFIX,
+            default => Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_X_FORWARDED_PREFIX | Request::HEADER_X_FORWARDED_AWS_ELB,
+        };
     }
 
     /**
-     * Specify that all proxies should be trusted.
+     * Get the trusted headers.
      *
-     * @return void
+     * @return int
      */
-    public static function all()
+    protected function headers()
     {
-        return static::at('*');
-    }
-
-    /**
-     * Specify IP addresses of proxies that should always be trusted.
-     *
-     * @param  array|string  $proxies
-     * @return void
-     */
-    public static function at(/*array|string */$proxies)
-    {
-        $proxies = backport_type_check('array|string', $proxies);
-
-        static::$alwaysTrust = $proxies;
+        return static::$alwaysTrustHeaders ?: $this->headers;
     }
 
     /**
@@ -171,8 +145,39 @@ class TrustProxies
      */
     protected function proxies()
     {
-        $p = static::$alwaysTrust ?: $this->proxies;
+        return static::$alwaysTrustProxies ?: $this->proxies;
+    }
 
-        return $p === null ? '*' : $p;
+    /**
+     * Specify the IP addresses of proxies that should always be trusted.
+     *
+     * @param  array|string  $proxies
+     * @return void
+     */
+    public static function at(/*array|string */$proxies)
+    {
+        static::$alwaysTrustProxies = $proxies;
+    }
+
+    /**
+     * Specify the proxy headers that should always be trusted.
+     *
+     * @param  int  $headers
+     * @return void
+     */
+    public static function withHeaders(int $headers)
+    {
+        static::$alwaysTrustHeaders = $headers;
+    }
+
+    /**
+     * Flush the state of the middleware.
+     *
+     * @return void
+     */
+    public static function flushState()
+    {
+        static::$alwaysTrustHeaders = null;
+        static::$alwaysTrustProxies = null;
     }
 }

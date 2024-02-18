@@ -101,6 +101,8 @@ class TrimStrings extends TransformsRequest
      */
     public static function flushState()
     {
+        static::$neverTrim = [];
+
         static::$skipCallbacks = [];
     }
 }
