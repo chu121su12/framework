@@ -67,8 +67,10 @@ class TrustHosts
      * @param  bool  $subdomains
      * @return void
      */
-    public static function at(array $hosts, bool $subdomains = true)
+    public static function at(array $hosts, /*bool */$subdomains = true)
     {
+        $subdomains = backport_type_check('bool', $subdomains);
+
         if ($subdomains) {
             if ($host = parse_url(config('app.url'), PHP_URL_HOST)) {
                 $hosts[] = '^(.+\.)?'.preg_quote($host).'$';

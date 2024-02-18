@@ -277,7 +277,7 @@ class Middleware
         $middleware = backport_type_check('array|string', $middleware);
 
         $this->groupAppends[$group] = array_merge(
-            $this->groupAppends[$group] ?? [],
+            isset($this->groupAppends[$group]) ? $this->groupAppends[$group] : [],
             Arr::wrap($middleware)
         );
 
@@ -614,7 +614,7 @@ class Middleware
      */
     public function convertEmptyStringsToNull(array $except = [])
     {
-        collect($except)->each(fn (Closure $callback) => ConvertEmptyStringsToNull::skipWhen($callback));
+        collect($except)->each(function (Closure $callback) { return ConvertEmptyStringsToNull::skipWhen($callback); });
 
         return $this;
     }
@@ -627,9 +627,9 @@ class Middleware
      */
     public function trimStrings(array $except = [])
     {
-        [$skipWhen, $except] = collect($except)->partition(fn ($value) => $value instanceof Closure);
+        list($skipWhen, $except) = collect($except)->partition(function ($value) { return $value instanceof Closure; });
 
-        $skipWhen->each(fn (Closure $callback) => TrimStrings::skipWhen($callback));
+        $skipWhen->each(function (Closure $callback) { return TrimStrings::skipWhen($callback); });
 
         TrimStrings::except($except->all());
 
@@ -643,8 +643,10 @@ class Middleware
      * @param  bool  $subdomains
      * @return $this
      */
-    public function trustHosts(array $at = null, bool $subdomains = true)
+    public function trustHosts(array $at = null, /*bool */$subdomains = true)
     {
+        $subdomains = backport_type_check('bool', $subdomains);
+
         $this->trustHosts = true;
 
         if (is_array($at)) {
@@ -661,8 +663,12 @@ class Middleware
      * @param  int|null  $headers
      * @return $this
      */
-    public function trustProxies(array|string $at = null, int $headers = null)
+    public function trustProxies(/*array|string */$at = null, /*int */$headers = null)
     {
+        $headers = backport_type_check('int', $headers);
+
+        $at = backport_type_check('array|string', $at);
+
         if (! is_null($at)) {
             TrustProxies::at($at);
         }

@@ -235,7 +235,7 @@ trait InteractsWithTestCaseLifecycle
      */
     public static function tearDownAfterClassUsingTestCase()
     {
-        (function () {
+        backport_function_call_able(function () {
             $this->classDocBlocks = [];
             $this->methodDocBlocks = [];
         })->call(PHPUnitRegistry::getInstance());
