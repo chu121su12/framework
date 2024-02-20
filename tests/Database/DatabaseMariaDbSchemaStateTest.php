@@ -11,9 +11,12 @@ use ReflectionMethod;
 
 class DatabaseMariaDbSchemaStateTest extends TestCase
 {
+    /** @dataProvider provider */
     #[DataProvider('provider')]
-    public function testConnectionString(string $expectedConnectionString, array $expectedVariables, array $dbConfig): void
+    public function testConnectionString(/*string */$expectedConnectionString, array $expectedVariables, array $dbConfig)/*: void*/
     {
+        $expectedConnectionString = backport_type_check('string', $expectedConnectionString);
+
         $connection = $this->createMock(MariaDbConnection::class);
         $connection->method('getConfig')->willReturn($dbConfig);
 
@@ -21,18 +24,20 @@ class DatabaseMariaDbSchemaStateTest extends TestCase
 
         // test connectionString
         $method = new ReflectionMethod(get_class($schemaState), 'connectionString');
+        $method->setAccessible(true);
         $connString = $method->invoke($schemaState);
 
         self::assertEquals($expectedConnectionString, $connString);
 
         // test baseVariables
         $method = new ReflectionMethod(get_class($schemaState), 'baseVariables');
+        $method->setAccessible(true);
         $variables = $method->invoke($schemaState, $dbConfig);
 
         self::assertEquals($expectedVariables, $variables);
     }
 
-    public static function provider(): Generator
+    public static function provider()/*: Generator*/
     {
         yield 'default' => [
             ' --user="${:LARAVEL_LOAD_USER}" --password="${:LARAVEL_LOAD_PASSWORD}" --host="${:LARAVEL_LOAD_HOST}" --port="${:LARAVEL_LOAD_PORT}"', [

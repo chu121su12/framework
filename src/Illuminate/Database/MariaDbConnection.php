@@ -27,7 +27,7 @@ class MariaDbConnection extends MySqlConnection
      *
      * @return string
      */
-    public function getServerVersion(): string
+    public function getServerVersion()/*: string*/
     {
         return Str::between(parent::getServerVersion(), '5.5.5-', '-MariaDB');
     }
@@ -39,7 +39,7 @@ class MariaDbConnection extends MySqlConnection
      */
     protected function getDefaultQueryGrammar()
     {
-        ($grammar = new QueryGrammar)->setConnection($this);
+        with($grammar = new QueryGrammar)->setConnection($this);
 
         return $this->withTablePrefix($grammar);
     }
@@ -65,7 +65,7 @@ class MariaDbConnection extends MySqlConnection
      */
     protected function getDefaultSchemaGrammar()
     {
-        ($grammar = new SchemaGrammar)->setConnection($this);
+        with($grammar = new SchemaGrammar)->setConnection($this);
 
         return $this->withTablePrefix($grammar);
     }

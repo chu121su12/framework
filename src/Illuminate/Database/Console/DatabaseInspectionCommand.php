@@ -23,15 +23,15 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function getConnectionName(ConnectionInterface $connection, $database)
     {
-        return match (true) {
-            $connection instanceof MySqlConnection && $connection->isMaria() => 'MariaDB',
-            $connection instanceof MySqlConnection => 'MySQL',
-            $connection instanceof MariaDbConnection => 'MariaDB',
-            $connection instanceof PostgresConnection => 'PostgreSQL',
-            $connection instanceof SQLiteConnection => 'SQLite',
-            $connection instanceof SqlServerConnection => 'SQL Server',
-            default => $database,
-        };
+        switch (true) {
+            case $connection instanceof MySqlConnection && $connection->isMaria(): return 'MariaDB';
+            case $connection instanceof MySqlConnection: return 'MySQL';
+            case $connection instanceof MariaDbConnection: return 'MariaDB';
+            case $connection instanceof PostgresConnection: return 'PostgreSQL';
+            case $connection instanceof SQLiteConnection: return 'SQLite';
+            case $connection instanceof SqlServerConnection: return 'SQL Server';
+            default: return $database;
+        }
     }
 
     /**

@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
+/**
+ * @requires extension pdo_mysql
+ * @requires OS Linux|Darwin
+ */
 #[RequiresOperatingSystem('Linux|Darwin')]
 #[RequiresPhpExtension('pdo_mysql')]
 class DatabaseMariaDbSchemaBuilderAlterTableWithEnumTest extends MariaDbTestCase

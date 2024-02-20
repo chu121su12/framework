@@ -18,9 +18,18 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
+
+class MiddlewareTest_testTrustHosts_class extends TrustHosts
+        {
+            protected function allSubdomainsOfApplicationUrl()
+            {
+                return '^(.+\.)?laravel\.test$';
+            }
+        }
+
 class MiddlewareTest extends TestCase
 {
-    public function tearDown(): void
+    public function tearDown()/*: void*/
     {
         parent::tearDown();
 
@@ -38,9 +47,9 @@ class MiddlewareTest extends TestCase
         $configuration = new Middleware();
         $middleware = new ConvertEmptyStringsToNull();
 
-        $configuration->convertEmptyStringsToNull(except: [
-            fn (Request $request) => $request->has('skip-all-1'),
-            fn (Request $request) => $request->has('skip-all-2'),
+        $configuration->convertEmptyStringsToNull(/*except: */[
+            function (Request $request) { return $request->has('skip-all-1'); },
+            function (Request $request) { return $request->has('skip-all-2'); },
         ]);
 
         $symfonyRequest = new SymfonyRequest([
@@ -51,7 +60,7 @@ class MiddlewareTest extends TestCase
         $symfonyRequest->server->set('REQUEST_METHOD', 'GET');
         $request = Request::createFromBase($symfonyRequest);
 
-        $request = $middleware->handle($request, fn (Request $request) => $request);
+        $request = $middleware->handle($request, function (Request $request) { return $request; });
 
         $this->assertSame('  123  ', $request->get('aaa'));
         $this->assertNull($request->get('bbb'));
@@ -64,7 +73,7 @@ class MiddlewareTest extends TestCase
         $symfonyRequest->server->set('REQUEST_METHOD', 'GET');
         $request = Request::createFromBase($symfonyRequest);
 
-        $request = $middleware->handle($request, fn (Request $request) => $request);
+        $request = $middleware->handle($request, function (Request $request) { return $request; });
 
         $this->assertSame('  123  ', $request->get('aaa'));
         $this->assertSame('', $request->get('bbb'));
@@ -77,7 +86,7 @@ class MiddlewareTest extends TestCase
         $symfonyRequest->server->set('REQUEST_METHOD', 'GET');
         $request = Request::createFromBase($symfonyRequest);
 
-        $request = $middleware->handle($request, fn (Request $request) => $request);
+        $request = $middleware->handle($request, function (Request $request) { return $request; });
 
         $this->assertSame('  123  ', $request->get('aaa'));
         $this->assertSame('', $request->get('bbb'));
@@ -88,9 +97,9 @@ class MiddlewareTest extends TestCase
         $configuration = new Middleware();
         $middleware = new TrimStrings();
 
-        $configuration->trimStrings(except: [
+        $configuration->trimStrings(/*except: */[
             'aaa',
-            fn (Request $request) => $request->has('skip-all'),
+            function (Request $request) { return $request->has('skip-all'); },
         ]);
 
         $symfonyRequest = new SymfonyRequest([
@@ -101,7 +110,7 @@ class MiddlewareTest extends TestCase
         $symfonyRequest->server->set('REQUEST_METHOD', 'GET');
         $request = Request::createFromBase($symfonyRequest);
 
-        $request = $middleware->handle($request, fn (Request $request) => $request);
+        $request = $middleware->handle($request, function (Request $request) { return $request; });
 
         $this->assertSame('  123  ', $request->get('aaa'));
         $this->assertSame('456', $request->get('bbb'));
@@ -116,7 +125,7 @@ class MiddlewareTest extends TestCase
         $symfonyRequest->server->set('REQUEST_METHOD', 'GET');
         $request = Request::createFromBase($symfonyRequest);
 
-        $request = $middleware->handle($request, fn (Request $request) => $request);
+        $request = $middleware->handle($request, function (Request $request) { return $request; });
 
         $this->assertSame('  123  ', $request->get('aaa'));
         $this->assertSame('  456  ', $request->get('bbb'));
@@ -147,10 +156,10 @@ class MiddlewareTest extends TestCase
             '192.168.1.2',
         ], $method->invoke($middleware));
 
-        $configuration->trustProxies(at: '*');
+        $configuration->trustProxies(/*at: */'*');
         $this->assertEquals('*', $method->invoke($middleware));
 
-        $configuration->trustProxies(at: [
+        $configuration->trustProxies(/*at: */[
             '192.168.1.3',
             '192.168.1.4',
         ]);
@@ -182,7 +191,7 @@ class MiddlewareTest extends TestCase
 
         $this->assertEquals(Request::HEADER_X_FORWARDED_AWS_ELB, $method->invoke($middleware));
 
-        $configuration->trustProxies(headers: Request::HEADER_X_FORWARDED_FOR);
+        $configuration->trustProxies(/*$at = */null, /*headers: */Request::HEADER_X_FORWARDED_FOR);
 
         $this->assertEquals(Request::HEADER_X_FORWARDED_FOR, $method->invoke($middleware));
 
@@ -203,13 +212,7 @@ class MiddlewareTest extends TestCase
     {
         $app = Mockery::mock(Application::class);
         $configuration = new Middleware();
-        $middleware = new class($app) extends TrustHosts
-        {
-            protected function allSubdomainsOfApplicationUrl()
-            {
-                return '^(.+\.)?laravel\.test$';
-            }
-        };
+        $middleware = new MiddlewareTest_testTrustHosts_class($app);
 
         $this->assertEquals(['^(.+\.)?laravel\.test$'], $middleware->hosts());
 
@@ -219,19 +222,19 @@ class MiddlewareTest extends TestCase
         app()['config'] = Mockery::mock(Repository::class);
         app()['config']->shouldReceive('get')->with('app.url', null)->times(3)->andReturn('http://laravel.test');
 
-        $configuration->trustHosts(at: ['my.test']);
+        $configuration->trustHosts(/*at: */['my.test']);
         $this->assertEquals(['my.test', '^(.+\.)?laravel\.test$'], $middleware->hosts());
 
-        $configuration->trustHosts(at: ['my.test']);
+        $configuration->trustHosts(/*at: */['my.test']);
         $this->assertEquals(['my.test', '^(.+\.)?laravel\.test$'], $middleware->hosts());
 
-        $configuration->trustHosts(at: ['my.test'], subdomains: false);
+        $configuration->trustHosts(/*at: */['my.test'], /*subdomains: */false);
         $this->assertEquals(['my.test'], $middleware->hosts());
 
-        $configuration->trustHosts(at: []);
+        $configuration->trustHosts(/*at: */[]);
         $this->assertEquals(['^(.+\.)?laravel\.test$'], $middleware->hosts());
 
-        $configuration->trustHosts(at: [], subdomains: false);
+        $configuration->trustHosts(/*at: */[], /*subdomains: */false);
         $this->assertEquals([], $middleware->hosts());
     }
 
@@ -244,7 +247,7 @@ class MiddlewareTest extends TestCase
         $this->assertFalse($middleware->isDisabled('aaa'));
         $this->assertFalse($middleware->isDisabled('bbb'));
 
-        $configuration->encryptCookies(except: [
+        $configuration->encryptCookies(/*except: */[
             'aaa',
             'bbb',
         ]);

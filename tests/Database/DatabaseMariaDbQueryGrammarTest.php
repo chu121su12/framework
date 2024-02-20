@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseMariaDbQueryGrammarTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
@@ -23,7 +23,7 @@ class DatabaseMariaDbQueryGrammarTest extends TestCase
 
         $query = $grammar->substituteBindingsIntoRawSql(
             'select * from "users" where \'Hello\\\'World?\' IS NOT NULL AND "email" = ?',
-            ['foo'],
+            ['foo']
         );
 
         $this->assertSame('select * from "users" where \'Hello\\\'World?\' IS NOT NULL AND "email" = \'foo\'', $query);

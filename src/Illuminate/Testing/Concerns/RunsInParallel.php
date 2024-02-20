@@ -6,7 +6,6 @@ use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\ParallelTesting;
 use Illuminate\Testing\ParallelConsoleOutput;
-use PHPUnit\TextUI\Configuration\PhpHandler;
 use RuntimeException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -114,7 +113,11 @@ trait RunsInParallel
             ? $this->options->configuration
             : $this->options->configuration();
 
-        (new PhpHandler())->handle($configuration->php());
+        $phpHandlerClass = class_exists(\PHPUnit\TextUI\Configuration\PhpHandler::class)
+            ? \PHPUnit\TextUI\Configuration\PhpHandler::class
+            : \PHPUnit\TextUI\XmlConfiguration\PhpHandler::class;
+
+        (new $phpHandlerClass)->handle($configuration->php());
 
         $this->forEachProcess(function () {
             ParallelTesting::callSetUpProcessCallbacks();

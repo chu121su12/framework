@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
+/**
+ * @requires extension pdo_mysql
+ * @requires OS Linux|Darwin
+ */
 #[RequiresOperatingSystem('Linux|Darwin')]
 #[RequiresPhpExtension('pdo_mysql')]
 class FulltextTest extends MariaDbTestCase
@@ -27,7 +31,7 @@ class FulltextTest extends MariaDbTestCase
         Schema::drop('articles');
     }
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

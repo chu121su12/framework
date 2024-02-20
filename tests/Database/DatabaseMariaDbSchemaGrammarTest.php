@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseMariaDbSchemaGrammarTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
@@ -513,7 +513,7 @@ class DatabaseMariaDbSchemaGrammarTest extends TestCase
     public function testAddingForeignIdSpecifyingIndexNameInConstraint()
     {
         $blueprint = new Blueprint('users');
-        $blueprint->foreignId('company_id')->constrained(indexName: 'my_index');
+        $blueprint->foreignId('company_id')->constrained(/*$table = */null, /*$column = */'id', /*indexName: */'my_index');
         $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
         $this->assertSame([
             'alter table `users` add `company_id` bigint unsigned not null',
@@ -648,7 +648,13 @@ class DatabaseMariaDbSchemaGrammarTest extends TestCase
 
         $this->assertCount(1, $statements);
         $this->assertSame('alter table `users` add `foo` varchar(100) null default CURRENT TIMESTAMP', $statements[0]);
+    }
 
+    /**
+     * @requires PHP >= 8.1
+     */
+    public function testAddingString2()
+    {
         $blueprint = new Blueprint('users');
         $blueprint->string('foo', 100)->nullable()->default(Foo::BAR);
         $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
@@ -1445,12 +1451,13 @@ class DatabaseMariaDbSchemaGrammarTest extends TestCase
 
     public function testGrammarsAreMacroable()
     {
+        $grammar = $this->getGrammar();
         // compileReplace macro.
-        $this->getGrammar()::macro('compileReplace', function () {
+        $grammar::macro('compileReplace', function () {
             return true;
         });
 
-        $c = $this->getGrammar()::compileReplace();
+        $c = $grammar::compileReplace();
 
         $this->assertTrue($c);
     }

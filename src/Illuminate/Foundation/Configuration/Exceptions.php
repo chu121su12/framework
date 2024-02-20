@@ -154,8 +154,10 @@ class Exceptions
      * @param  array<int, class-string<\Throwable>>|class-string<\Throwable>  $class
      * @return $this
      */
-    public function stopIgnoring(array|string $class)
+    public function stopIgnoring(/*array|string */$class)
     {
+        $class = backport_type_check('array|string', $class);
+
         $this->handler->stopIgnoring($class);
 
         return $this;

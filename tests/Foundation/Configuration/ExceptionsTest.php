@@ -9,9 +9,17 @@ use Illuminate\Foundation\Exceptions\Handler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+class ExceptionsTest_testStopIgnoring_class extends Handler
+        {
+            public function getDontReport()/*: array*/
+            {
+                return array_merge($this->dontReport, $this->internalDontReport);
+            }
+        }
+
 class ExceptionsTest extends TestCase
 {
-    public function tearDown(): void
+    public function tearDown()/*: void*/
     {
         parent::tearDown();
     }
@@ -19,13 +27,7 @@ class ExceptionsTest extends TestCase
     public function testStopIgnoring()
     {
         $container = new Container;
-        $exceptions = new Exceptions($handler = new class($container) extends Handler
-        {
-            public function getDontReport(): array
-            {
-                return array_merge($this->dontReport, $this->internalDontReport);
-            }
-        });
+        $exceptions = new Exceptions($handler = new ExceptionsTest_testStopIgnoring_class($container));
 
         $this->assertContains(HttpException::class, $handler->getDontReport());
         $exceptions = $exceptions->stopIgnoring(HttpException::class);

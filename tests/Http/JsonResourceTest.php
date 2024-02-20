@@ -7,11 +7,13 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
 use PHPUnit\Framework\TestCase;
 
+class JsonResourceTest_testJsonResourceNullAttributes_class extends Model {};
+
 class JsonResourceTest extends TestCase
 {
     public function testJsonResourceNullAttributes()
     {
-        $model = new class extends Model {};
+        $model = new JsonResourceTest_testJsonResourceNullAttributes_class;
 
         $model->setAttribute('relation_sum_column', null);
         $model->setAttribute('relation_count', null);
