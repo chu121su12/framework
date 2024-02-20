@@ -5,6 +5,7 @@ namespace Illuminate\Database\Console;
 use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Database\ConnectionInterface;
+use Illuminate\Database\MariaDbConnection;
 use Illuminate\Database\MySqlConnection;
 use Illuminate\Database\PostgresConnection;
 use Illuminate\Database\SQLiteConnection;
@@ -22,14 +23,15 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function getConnectionName(ConnectionInterface $connection, $database)
     {
-        switch (true) {
-            case $connection instanceof MySqlConnection && $connection->isMaria(): return 'MariaDB';
-            case $connection instanceof MySqlConnection: return 'MySQL';
-            case $connection instanceof PostgresConnection: return 'PostgreSQL';
-            case $connection instanceof SQLiteConnection: return 'SQLite';
-            case $connection instanceof SqlServerConnection: return 'SQL Server';
-            default: return $database;
-        }
+        return match (true) {
+            $connection instanceof MySqlConnection && $connection->isMaria() => 'MariaDB',
+            $connection instanceof MySqlConnection => 'MySQL',
+            $connection instanceof MariaDbConnection => 'MariaDB',
+            $connection instanceof PostgresConnection => 'PostgreSQL',
+            $connection instanceof SQLiteConnection => 'SQLite',
+            $connection instanceof SqlServerConnection => 'SQL Server',
+            default => $database,
+        };
     }
 
     /**
