@@ -37,7 +37,7 @@ class MailLogTransportTest extends TestCase
             'path' => 'mail.log',
         ]);
 
-        $transport = app('mailer')->getSwiftMailer()->getTransport();
+        $transport = app('mailer')->getSymfonyTransport();
         $this->assertInstanceOf(LogTransport::class, $transport);
 
         $logger = $transport->logger();
@@ -50,8 +50,6 @@ class MailLogTransportTest extends TestCase
 
     public function testItDecodesTheMessageBeforeLogging()
     {
-        $this->markTestSkipped('Uses Symfony Mail');
-
         $htmlBody = <<<'BODY'
 Hi,
 
@@ -78,8 +76,6 @@ BODY;
 
     public function testItOnlyDecodesQuotedPrintablePartsOfTheMessageBeforeLogging()
     {
-        $this->markTestSkipped('Uses Symfony Mail');
-
         $htmlBody = <<<'BODY'
             Hi,
 
@@ -112,7 +108,7 @@ BODY;
 
         $logger = $this->app->instance('log', new NullLogger);
 
-        $transportLogger = app('mailer')->getSwiftMailer()->getTransport()->logger();
+        $transportLogger = app('mailer')->getSymfonyTransport()->logger();
 
         $this->assertEquals($logger, $transportLogger);
     }

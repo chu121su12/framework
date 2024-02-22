@@ -25,7 +25,7 @@ class SentMessage
      * @param  \Symfony\Component\Mailer\SentMessage  $sentMessage
      * @return void
      */
-    public function __construct(/*SymfonySentMessage */$sentMessage)
+    public function __construct(SymfonySentMessage $sentMessage)
     {
         $this->sentMessage = $sentMessage;
     }

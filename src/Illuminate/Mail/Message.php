@@ -2,13 +2,16 @@
 
 namespace Illuminate\Mail;
 
+use Illuminate\Contracts\Mail\Attachable;
+use Illuminate\Support\Str;
 use Illuminate\Support\Traits\ForwardsCalls;
-use Swift_Attachment;
-use Swift_Image;
-use Swift_Message as Email;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\File;
 
 /**
- * @mixin \Swift_Message
+ * @mixin \Symfony\Component\Mime\Email
  */
 class Message
 {
@@ -17,7 +20,7 @@ class Message
     /**
      * The Symfony Email instance.
      *
-     * @var \Swift_Message
+     * @var \Symfony\Component\Mime\Email
      */
     protected $message;
 
@@ -33,10 +36,10 @@ class Message
     /**
      * Create a new message instance.
      *
-     * @param  \Swift_Message  $message
+     * @param  \Symfony\Component\Mime\Email  $message
      * @return void
      */
-    public function __construct($message)
+    public function __construct(Email $message)
     {
         $this->message = $message;
     }
@@ -50,18 +53,9 @@ class Message
      */
     public function from($address, $name = null)
     {
-        if ($this->message instanceof Email) {
-            is_array($address)
-                ? $this->message->setFrom(...$address)
-                : $this->message->setFrom($address, (string) $name);
-        }
-        else {
-
         is_array($address)
             ? $this->message->from(...$address)
-            : $this->message->from(\sprintf('%s <%s>', (string) $name, $address));
-
-        }
+            : $this->message->from(new Address($address, (string) $name));
 
         return $this;
     }
@@ -76,8 +70,8 @@ class Message
     public function sender($address, $name = null)
     {
         is_array($address)
-            ? $this->message->setSender(...$address)
-            : $this->message->setSender($address, (string) $name);
+            ? $this->message->sender(...$address)
+            : $this->message->sender(new Address($address, (string) $name));
 
         return $this;
     }
@@ -90,7 +84,7 @@ class Message
      */
     public function returnPath($address)
     {
-        $this->message->setReturnPath($address);
+        $this->message->returnPath($address);
 
         return $this;
     }
@@ -106,18 +100,9 @@ class Message
     public function to($address, $name = null, $override = false)
     {
         if ($override) {
-            if ($this->message instanceof Email) {
-                is_array($address)
-                    ? $this->message->setTo(...$address)
-                    : $this->message->setTo($address, (string) $name);
-            }
-            else {
-
             is_array($address)
                 ? $this->message->to(...$address)
-                : $this->message->to(\sprintf('%s <%s>', (string) $name, $address));
-
-            }
+                : $this->message->to(new Address($address, (string) $name));
 
             return $this;
         }
@@ -153,8 +138,8 @@ class Message
     {
         if ($override) {
             is_array($address)
-                ? $this->message->setCc(...$address)
-                : $this->message->setCc($address, (string) $name);
+                ? $this->message->cc(...$address)
+                : $this->message->cc(new Address($address, (string) $name));
 
             return $this;
         }
@@ -190,8 +175,8 @@ class Message
     {
         if ($override) {
             is_array($address)
-                ? $this->message->setBcc(...$address)
-                : $this->message->setBcc($address, (string) $name);
+                ? $this->message->bcc(...$address)
+                : $this->message->bcc(new Address($address, (string) $name));
 
             return $this;
         }
@@ -237,49 +222,36 @@ class Message
      */
     protected function addAddresses($address, $name, $type)
     {
-        if ($this->message instanceof Email) {
-            if (is_array($address)) {
-                $type = ucfirst($type);
-
-                $addresses = collect($address)->each(function (/*string|array */$address) use ($type) {
-                    // if (is_string($key) && is_string($address)) {
-                    //     return new Address($key, $address);
-                    // }
-
-                    if (is_array($address)) {
-                        $this->message->{"set{$type}"}(isset($address['email']) ? $address['email'] : $address['address'], isset($address['name']) ? $address['name'] : null);
-                    } else {
-                        $this->message->{"set{$type}"}($address);
-                    }
-                });
-            } else {
-                $this->message->{"add{$type}"}($address, (string) $name);
-            }
-        }
-        else {
-
         if (is_array($address)) {
-            $type = strtolower($type);
+            $type = lcfirst($type);
 
-            $addresses = collect($address)->each(function (/*string|array */$address) use ($type) {
-                // if (is_string($key) && is_string($address)) {
-                //     return new Address($key, $address);
-                // }
+            $addresses = collect($address)->map(function ($address, $key) {
+                if (is_string($key) && is_string($address)) {
+                    return new Address($key, $address);
+                }
 
                 if (is_array($address)) {
-                    $this->message->{$type}(\sprintf(
-                        '%s <%s>',
-                        (string) (isset($address['name']) ? $address['name'] : null),
-                        isset($address['email']) ? $address['email'] : $address['address']
-                    ));
-                } else {
-                    $this->message->{$type}($address);
+                    return new Address(
+                        isset($address['email']) ? $address['email'] : $address['address'],
+                        isset($address['name']) ? $address['name'] : null
+                    );
                 }
-            });
-        } else {
-            $this->message->{$type}(\sprintf('%s <%s>', (string) $name, $address));
-        }
 
+                if (is_null($address)) {
+                    return new Address($key);
+                }
+
+                return $address;
+            })->all();
+
+            if (version_compare(PHP_VERSION, '8.1', '>=') || \array_is_list($addresses)) {
+                $this->message->{"{$type}"}(...$addresses);
+            }
+            else {
+                $this->message->{"{$type}"}(...\array_values($addresses));
+            }
+        } else {
+            $this->message->{"add{$type}"}(new Address($address, (string) $name));
         }
 
         return $this;
@@ -312,7 +284,7 @@ class Message
      */
     public function subject($subject)
     {
-        $this->message->setSubject($subject);
+        $this->message->subject($subject);
 
         return $this;
     }
@@ -325,7 +297,7 @@ class Message
      */
     public function priority($level)
     {
-        $this->message->setPriority($level);
+        $this->message->priority($level);
 
         return $this;
     }
@@ -339,7 +311,19 @@ class Message
      */
     public function attach($file, array $options = [])
     {
-        $this->prepAttachment($this->createAttachmentFromPath($file), $options);
+        if ($file instanceof Attachable) {
+            $file = $file->toMailAttachment();
+        }
+
+        if ($file instanceof Attachment) {
+            return $file->attachTo($this);
+        }
+
+        $this->message->attachFromPath(
+            $file,
+            isset($options['as']) ? $options['as'] : null,
+            isset($options['mime']) ? $options['mime'] : null
+        );
 
         return $this;
     }
@@ -354,7 +338,7 @@ class Message
      */
     public function attachData($data, $name, array $options = [])
     {
-        $this->prepAttachment($this->createAttachmentFromData($data, $name), $options);
+        $this->message->attach($data, $name, isset($options['mime']) ? $options['mime'] : null);
 
         return $this;
     }
@@ -367,13 +351,38 @@ class Message
      */
     public function embed($file)
     {
-        if (isset($this->embeddedFiles[$file])) {
-            return $this->embeddedFiles[$file];
+        if ($file instanceof Attachable) {
+            $file = $file->toMailAttachment();
         }
 
-        return $this->embeddedFiles[$file] = $this->message->embed(
-            Swift_Image::fromPath($file)
+        if ($file instanceof Attachment) {
+            return $file->attachWith(
+                function ($path) use ($file) {
+                    $cid = isset($file->as) ? $file->as : Str::random();
+
+                    $this->message->addPart(
+                        (new DataPart(new File($path), $cid, $file->mime))->asInline()
+                    );
+
+                    return "cid:{$cid}";
+                },
+                function ($data) use ($file) {
+                    $this->message->addPart(
+                        (new DataPart($data(), $file->as, $file->mime))->asInline()
+                    );
+
+                    return "cid:{$file->as}";
+                }
+            );
+        }
+
+        $cid = Str::random(10);
+
+        $this->message->addPart(
+            (new DataPart(new File($file), $cid))->asInline()
         );
+
+        return "cid:$cid";
     }
 
     /**
@@ -386,15 +395,17 @@ class Message
      */
     public function embedData($data, $name, $contentType = null)
     {
-        $image = new Swift_Image($data, $name, $contentType);
+        $this->message->addPart(
+            (new DataPart($data, $name, $contentType))->asInline()
+        );
 
-        return $this->message->embed($image);
+        return "cid:$name";
     }
 
     /**
      * Get the underlying Symfony Email instance.
      *
-     * @return \Swift_Message
+     * @return \Symfony\Component\Mime\Email
      */
     public function getSymfonyMessage()
     {
@@ -411,96 +422,5 @@ class Message
     public function __call($method, $parameters)
     {
         return $this->forwardDecoratedCallTo($this->message, $method, $parameters);
-    }
-
-    /**
-     * Create a Swift Attachment instance.
-     *
-     * @param  string  $file
-     * @return \Swift_Mime_Attachment
-     */
-    protected function createAttachmentFromPath($file)
-    {
-        return Swift_Attachment::fromPath($file);
-    }
-
-    /**
-     * Create a Swift Attachment instance from data.
-     *
-     * @param  string  $data
-     * @param  string  $name
-     * @return \Swift_Attachment
-     */
-    protected function createAttachmentFromData($data, $name)
-    {
-        return new Swift_Attachment($data, $name);
-    }
-
-    /**
-     * Prepare and attach the given attachment.
-     *
-     * @param  \Swift_Attachment  $attachment
-     * @param  array  $options
-     * @return $this
-     */
-    protected function prepAttachment($attachment, $options = [])
-    {
-        // First we will check for a MIME type on the message, which instructs the
-        // mail client on what type of attachment the file is so that it may be
-        // downloaded correctly by the user. The MIME option is not required.
-        if (isset($options['mime'])) {
-            $attachment->setContentType($options['mime']);
-        }
-
-        // If an alternative name was given as an option, we will set that on this
-        // attachment so that it will be downloaded with the desired names from
-        // the developer, otherwise the default file names will get assigned.
-        if (isset($options['as'])) {
-            $attachment->setFilename($options['as']);
-        }
-
-        $this->message->attach($attachment);
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function html($content)
-    {
-        $this->setBody($content, 'text/html');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function text($content, $addPart = false)
-    {
-        $method = $addPart ? 'addPart' : 'setBody';
-
-        $this->$method($content, 'text/plain');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addContent($message, $view, $plain, $raw, $data)
-    {
-        if (isset($view)) {
-            $message->setBody($this->renderView($view, $data) ?: ' ', 'text/html');
-        }
-
-        if (isset($plain)) {
-            $method = isset($view) ? 'addPart' : 'setBody';
-
-            $message->$method($this->renderView($plain, $data) ?: ' ', 'text/plain');
-        }
-
-        if (isset($raw)) {
-            $method = (isset($view) || isset($plain)) ? 'addPart' : 'setBody';
-
-            $message->$method($raw, 'text/plain');
-        }
     }
 }

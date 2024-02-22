@@ -202,6 +202,8 @@ class MailMailableTest_testAssertHasSubject_class_3 extends Mailable
 
 class MailMailableTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     protected function tearDown()/*: void*/
     {
         m::close();
@@ -765,8 +767,6 @@ class MailMailableTest extends TestCase
 
     public function testMailablePriorityGetsSent()
     {
-        $this->markTestSkipped('Wait for mail port.');
-
         $view = m::mock(Factory::class);
 
         $mailer = new Mailer('array', $view, new ArrayTransport);
@@ -786,8 +786,6 @@ class MailMailableTest extends TestCase
 
     public function testMailableMetadataGetsSent()
     {
-        $this->markTestSkipped('Wait for mail port.');
-
         Container::getInstance()->instance('mailer', new MailMailableTest__render__class);
 
         $view = m::mock(Factory::class);
@@ -823,8 +821,6 @@ class MailMailableTest extends TestCase
 
     public function testMailableTagGetsSent()
     {
-        $this->markTestSkipped('Wait for mail port.');
-
         Container::getInstance()->instance('mailer', new MailMailableTest__render__class);
 
         $view = m::mock(Factory::class);
@@ -1195,8 +1191,6 @@ class MailMailableTest extends TestCase
 
     public function testMailableHeadersGetSent()
     {
-        $this->markTestSkipped('@TODO: fix mailer');
-
         $view = m::mock(Factory::class);
 
         $mailer = new Mailer('array', $view, new ArrayTransport);

@@ -28,8 +28,6 @@ class SendingMailableNotificationsTest extends TestCase
 
     protected function setUp()/*: void*/
     {
-        $this->markTestSkipped('@TODO: fix mailer');
-
         parent::setUp();
 
         Schema::create('users', function (Blueprint $table) {

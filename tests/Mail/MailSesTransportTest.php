@@ -2,16 +2,17 @@
 
 namespace Illuminate\Tests\Mail;
 
-use Aws\SesV2\SesV2Client;
+use Aws\Command;
+use Aws\Exception\AwsException;
+use Aws\Ses\SesClient;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Mail\MailManager;
 use Illuminate\Mail\Transport\SesTransport;
-use Illuminate\Support\Str;
 use Illuminate\View\Factory;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Swift_Message;
+use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mailer\Header\MetadataHeader;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
@@ -47,41 +48,11 @@ class MailSesTransportTest extends TestCase
         $ses = $transport->ses();
 
         $this->assertSame('us-east-1', $ses->getRegion());
+
+        $this->assertSame('ses', (string) $transport);
     }
 
     public function testSend()
-    {
-        $message = new Swift_Message('Foo subject', 'Bar body');
-        $message->setSender('myself@example.com');
-        $message->setTo('me@example.com');
-        $message->setBcc('you@example.com');
-
-        $client = $this->getMockBuilder(SesV2Client::class)
-            ->addMethods(['sendEmail'])
-            ->disableOriginalConstructor()
-            ->getMock();
-        $transport = new SesTransport($client);
-
-        // Generate a messageId for our mock to return to ensure that the post-sent message
-        // has X-Message-ID in its headers
-        $messageId = Str::random(32);
-        $sendRawEmailMock = new SendRawEmailMock($messageId);
-        $client->expects($this->once())
-            ->method('sendEmail')
-            ->with($this->equalTo([
-                'Content' => [
-                    'Raw' => ['Data' => (string) $message],
-                ],
-            ]))
-            ->willReturn($sendRawEmailMock);
-
-        $transport->send($message);
-
-        $this->assertEquals($messageId, $message->getHeaders()->get('X-Message-ID')->getFieldBody());
-        $this->assertEquals($messageId, $message->getHeaders()->get('X-SES-Message-ID')->getFieldBody());
-    }
-
-    public function _testSend8()
     {
         $message = new Email();
         $message->subject('Foo subject');
@@ -110,24 +81,22 @@ class MailSesTransportTest extends TestCase
         (new SesTransport($client))->send($message);
     }
 
-    // public function testSendError()
-    // {
-    //     $this->markTestSkipped('Needs symfony/mailer 6');
+    public function testSendError()
+    {
+        $message = new Email();
+        $message->subject('Foo subject');
+        $message->text('Bar body');
+        $message->sender('myself@example.com');
+        $message->to('me@example.com');
 
-    //     $message = new Email();
-    //     $message->subject('Foo subject');
-    //     $message->text('Bar body');
-    //     $message->sender('myself@example.com');
-    //     $message->to('me@example.com');
+        $client = m::mock(SesClient::class);
+        $client->shouldReceive('sendRawEmail')->once()
+            ->andThrow(new AwsException('Email address is not verified.', new Command('sendRawEmail')));
 
-    //     $client = m::mock(SesClient::class);
-    //     $client->shouldReceive('sendRawEmail')->once()
-    //         ->andThrow(new AwsException('Email address is not verified.', new Command('sendRawEmail')));
+        $this->expectException(TransportException::class);
 
-    //     $this->expectException(TransportException::class);
-
-    //     (new SesTransport($client))->send($message);
-    // }
+        (new SesTransport($client))->send($message);
+    }
 
     public function testSesLocalConfiguration()
     {
@@ -142,7 +111,7 @@ class MailSesTransportTest extends TestCase
                             'region' => 'eu-west-1',
                             'options' => [
                                 'ConfigurationSetName' => 'Laravel',
-                                'EmailTags' => [
+                                'Tags' => [
                                     ['Name' => 'Laravel', 'Value' => 'Framework'],
                                 ],
                             ],
@@ -169,30 +138,15 @@ class MailSesTransportTest extends TestCase
         $mailer = $manager->mailer('ses');
 
         /** @var \Illuminate\Mail\Transport\SesTransport $transport */
-        $transport = $mailer->getSwiftMailer()->getTransport();
+        $transport = $mailer->getSymfonyTransport();
 
         $this->assertSame('eu-west-1', $transport->ses()->getRegion());
 
         $this->assertSame([
             'ConfigurationSetName' => 'Laravel',
-            'EmailTags' => [
+            'Tags' => [
                 ['Name' => 'Laravel', 'Value' => 'Framework'],
             ],
         ], $transport->getOptions());
-    }
-}
-
-class SendRawEmailMock
-{
-    protected $getResponse;
-
-    public function __construct($responseValue)
-    {
-        $this->getResponse = $responseValue;
-    }
-
-    public function get($key)
-    {
-        return $this->getResponse;
     }
 }

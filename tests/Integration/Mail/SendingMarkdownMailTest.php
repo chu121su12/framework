@@ -43,8 +43,6 @@ class SendingMarkdownMailTest extends TestCase
 
     public function testEmbed()
     {
-        $this->markTestSkipped('Needs mailer to be ported to symfony/mailer');
-
         Mail::to('test@mail.com')->send($mailable = new EmbedMailable());
 
         $mailable->assertSeeInHtml('Embed content: cid:');
@@ -67,8 +65,6 @@ EOT;
 
     public function testEmbedData()
     {
-        $this->markTestSkipped('Needs mailer to be ported to symfony/mailer');
-
         Mail::to('test@mail.com')->send($mailable = new EmbedDataMailable());
 
         $mailable->assertSeeInHtml('Embed data content: cid:foo.jpg');
@@ -88,8 +84,6 @@ EOT;
 
     public function testMessageAsPublicPropertyMayBeDefinedAsViewData()
     {
-        $this->markTestSkipped('Needs mailer to be ported to symfony/mailer');
-
         Mail::to('test@mail.com')->send($mailable = new MessageAsPublicPropertyMailable());
 
         $mailable
@@ -103,8 +97,6 @@ EOT;
 
     public function testMessageAsWithNamedParameterMayBeDefinedAsViewData()
     {
-        $this->markTestSkipped('Needs mailer to be ported to symfony/mailer');
-
         Mail::to('test@mail.com')->send($mailable = new MessageAsWithNamedParameterMailable());
 
         $mailable
@@ -305,7 +297,7 @@ class MessageAsWithNamedParameterMailable extends Mailable
             /*string */$view = null,
             /*string */$html = null,
             /*string */$text = null,
-            /*markdown: */'basic',
+            /*markdown: */'message',
             /*with: */[
                 'message' => 'My message',
             ]

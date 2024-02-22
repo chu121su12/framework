@@ -17,8 +17,9 @@ use Illuminate\Mail\Mailables\Address;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
-use Swift_Mailer;
-use Swift_Transport as TransportInterface;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\Transport\TransportInterface;
+use Symfony\Component\Mime\Email;
 
 class Mailer implements MailerContract, MailQueueContract
 {
@@ -41,7 +42,7 @@ class Mailer implements MailerContract, MailQueueContract
     /**
      * The Symfony Transport instance.
      *
-     * @var \Swift_Transport
+     * @var \Symfony\Component\Mailer\Transport\TransportInterface
      */
     protected $transport;
 
@@ -92,11 +93,11 @@ class Mailer implements MailerContract, MailQueueContract
      *
      * @param  string  $name
      * @param  \Illuminate\Contracts\View\Factory  $views
-     * @param  \Swift_Transport  $transport
+     * @param  \Symfony\Component\Mailer\Transport\TransportInterface  $transport
      * @param  \Illuminate\Contracts\Events\Dispatcher|null  $events
      * @return void
      */
-    public function __construct(/*string */$name, Factory $views, TransportInterface $transport = null, Dispatcher $events = null, Swift_Mailer $swift = null)
+    public function __construct(/*string */$name, Factory $views, TransportInterface $transport, Dispatcher $events = null)
     {
         $name = backport_type_check('string', $name);
 
@@ -104,7 +105,6 @@ class Mailer implements MailerContract, MailQueueContract
         $this->views = $views;
         $this->events = $events;
         $this->transport = $transport;
-        $this->swift = $swift;
     }
 
     /**
@@ -255,9 +255,6 @@ class Mailer implements MailerContract, MailQueueContract
 
         $data['message'] = $this->createMessage();
 
-        return $this->renderView($view ?: $plain, $data);
-
-        // TODO: fix error
         return $this->replaceEmbeddedAttachments(
             $this->renderView($view ?: $plain, $data),
             $data['message']->getSymfonyMessage()->getAttachments()
@@ -324,7 +321,7 @@ class Mailer implements MailerContract, MailQueueContract
             $callback($message);
         }
 
-        $this->{$message instanceof Message ? 'addContent' : 'addContentSwift'}($message, $view, $plain, $raw, $data);
+        $this->addContent($message, $view, $plain, $raw, $data);
 
         // If a global "to" address has been set, we will set that address on the mail
         // message. This is primarily useful during local development in which each
@@ -336,7 +333,7 @@ class Mailer implements MailerContract, MailQueueContract
         // Next we will determine if the message should be sent. We give the developer
         // one final chance to stop this message and then we will send it to all of
         // its recipients. We will then fire the sent event for the sent message.
-        $symfonyMessage = $message->{$message instanceof Message ? 'getSymfonyMessage' : 'getSwiftMessage'}();
+        $symfonyMessage = $message->getSymfonyMessage();
 
         if ($this->shouldSendMessage($symfonyMessage, $data)) {
             $symfonySentMessage = $this->sendSymfonyMessage($symfonyMessage);
@@ -431,11 +428,11 @@ class Mailer implements MailerContract, MailQueueContract
         }
 
         if (isset($plain)) {
-            $message->text($this->renderView($plain, $data) ?: ' ', isset($view));
+            $message->text($this->renderView($plain, $data) ?: ' ');
         }
 
         if (isset($raw)) {
-            $message->text($raw, isset($view) || isset($plain));
+            $message->text($raw);
         }
     }
 
@@ -560,7 +557,7 @@ class Mailer implements MailerContract, MailQueueContract
      */
     protected function createMessage()
     {
-        $message = new Message($this->swift->createMessage('message'));
+        $message = new Message(new Email());
 
         // If a global from address has been specified we will set it on every message
         // instance so the developer does not have to repeat themselves every time
@@ -586,24 +583,22 @@ class Mailer implements MailerContract, MailQueueContract
     /**
      * Send a Symfony Email instance.
      *
-     * @param  \Swift_Message  $message
-     * @return int|null
+     * @param  \Symfony\Component\Mime\Email  $message
+     * @return \Symfony\Component\Mailer\SentMessage|null
      */
-    protected function sendSymfonyMessage(/*Email */$message)
+    protected function sendSymfonyMessage(Email $message)
     {
-        $this->failedRecipients = [];
-
         try {
-            return $this->swift->send($message, $this->failedRecipients);
+            return $this->transport->send($message, Envelope::create($message));
         } finally {
-            $this->forceReconnection();
+            //
         }
     }
 
     /**
      * Determines if the email can be sent.
      *
-     * @param  \Swift_Message  $message
+     * @param  \Symfony\Component\Mime\Email  $message
      * @param  array  $data
      * @return bool
      */
@@ -676,81 +671,5 @@ class Mailer implements MailerContract, MailQueueContract
         $this->queue = $queue;
 
         return $this;
-    }
-
-    /**
-     * The Swift Mailer instance.
-     *
-     * @var \Swift_Mailer
-     */
-    protected $swift;
-
-    /**
-     * Array of failed recipients.
-     *
-     * @var array
-     */
-    protected $failedRecipients = [];
-
-    protected function addContentSwift($message, $view, $plain, $raw, $data)
-    {
-        if (isset($view)) {
-            $message->setBody($this->renderView($view, $data) ?: ' ', 'text/html');
-        }
-
-        if (isset($plain)) {
-            $method = isset($view) ? 'addPart' : 'setBody';
-
-            $message->$method($this->renderView($plain, $data) ?: ' ', 'text/plain');
-        }
-
-        if (isset($raw)) {
-            $method = (isset($view) || isset($plain)) ? 'addPart' : 'setBody';
-
-            $message->$method($raw, 'text/plain');
-        }
-    }
-
-    /**
-     * Force the transport to re-connect.
-     *
-     * This will prevent errors in daemon queue situations.
-     *
-     * @return void
-     */
-    protected function forceReconnection()
-    {
-        $this->getSwiftMailer()->getTransport()->stop();
-    }
-
-    /**
-     * Get the array of failed recipients.
-     *
-     * @return array
-     */
-    public function failures()
-    {
-        return $this->failedRecipients;
-    }
-
-    /**
-     * Get the Swift Mailer instance.
-     *
-     * @return \Swift_Mailer
-     */
-    public function getSwiftMailer()
-    {
-        return $this->swift;
-    }
-
-    /**
-     * Set the Swift Mailer instance.
-     *
-     * @param  \Swift_Mailer  $swift
-     * @return void
-     */
-    public function setSwiftMailer($swift)
-    {
-        $this->swift = $swift;
     }
 }

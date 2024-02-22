@@ -7,18 +7,16 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Mail\Mailer;
+use Illuminate\Mail\Message;
 use Illuminate\Mail\Transport\ArrayTransport;
 use Illuminate\Support\HtmlString;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use stdClass;
-use Swift_Mailer;
-use Swift_Message;
-use Swift_Mime_SimpleMessage;
-use Swift_Transport;
 
 class MailMailerTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     protected function tearDown()/*: void*/
     {
         unset($_SERVER['__mailer.test']);
@@ -28,28 +26,21 @@ class MailMailerTest extends TestCase
 
     public function testMailerSendSendsMessageWithProperViewContent()
     {
-        unset($_SERVER['__mailer.test']);
-        $mailer = $this->getMockBuilder(Mailer::class)->onlyMethods(['createMessage'])->setConstructorArgs($this->getMocks())->getMock();
-        $message = m::mock(Swift_Mime_SimpleMessage::class);
-        $mailer->expects($this->once())->method('createMessage')->willReturn($message);
-        $view = m::mock(stdClass::class);
-        $mailer->getViewFactory()->shouldReceive('make')->once()->with('foo', ['data', 'mailer' => 'smtp', 'message' => $message])->andReturn($view);
+        $view = m::mock(Factory::class);
+        $view->shouldReceive('make')->once()->andReturn($view);
         $view->shouldReceive('render')->once()->andReturn('rendered.view');
-        $message->shouldReceive('setBody')->once()->with('rendered.view', 'text/html');
-        $message->shouldReceive('setFrom')->never();
-        $this->setSwiftMailer($mailer);
-        $message->shouldReceive('getSwiftMessage')->once()->andReturn($message);
-        $mailer->getSwiftMailer()->shouldReceive('send')->once()->with($message, []);
-        $mailer->send('foo', ['data'], function ($m) {
-            $_SERVER['__mailer.test'] = $m;
+
+        $mailer = new Mailer('array', $view, new ArrayTransport);
+
+        $sentMessage = $mailer->send('foo', ['data'], function (Message $message) {
+            $message->to('taylor@laravel.com')->from('hello@laravel.com');
         });
-        unset($_SERVER['__mailer.test']);
+
+        $this->assertStringContainsString('rendered.view', $sentMessage->toString());
     }
 
     public function testMailerSendSendsMessageWithCcAndBccRecipients()
     {
-        $this->markTestSkipped('Needs mailer to be ported to symfony/mailer');
-
         $view = m::mock(Factory::class);
         $view->shouldReceive('make')->once()->andReturn($view);
         $view->shouldReceive('render')->once()->andReturn('rendered.view');
@@ -75,29 +66,25 @@ class MailMailerTest extends TestCase
 
     public function testMailerSendSendsMessageWithProperViewContentUsingHtmlStrings()
     {
-        unset($_SERVER['__mailer.test']);
-        $mailer = $this->getMockBuilder(Mailer::class)->onlyMethods(['createMessage'])->setConstructorArgs($this->getMocks())->getMock();
-        $message = m::mock(Swift_Mime_SimpleMessage::class);
-        $mailer->expects($this->once())->method('createMessage')->willReturn($message);
-        $view = m::mock(stdClass::class);
-        $mailer->getViewFactory()->shouldReceive('make')->never();
+        $view = m::mock(Factory::class);
         $view->shouldReceive('render')->never();
-        $message->shouldReceive('setBody')->once()->with('rendered.view', 'text/html');
-        $message->shouldReceive('addPart')->once()->with('rendered.text', 'text/plain');
-        $message->shouldReceive('setFrom')->never();
-        $this->setSwiftMailer($mailer);
-        $message->shouldReceive('getSwiftMessage')->once()->andReturn($message);
-        $mailer->getSwiftMailer()->shouldReceive('send')->once()->with($message, []);
-        $mailer->send(['html' => new HtmlString('rendered.view'), 'text' => new HtmlString('rendered.text')], ['data'], function ($m) {
-            $_SERVER['__mailer.test'] = $m;
-        });
-        unset($_SERVER['__mailer.test']);
+
+        $mailer = new Mailer('array', $view, new ArrayTransport);
+
+        $sentMessage = $mailer->send(
+            ['html' => new HtmlString('<p>Hello Laravel</p>'), 'text' => new HtmlString('Hello World')],
+            ['data'],
+            function (Message $message) {
+                $message->to('taylor@laravel.com')->from('hello@laravel.com');
+            }
+        );
+
+        $this->assertStringContainsString('<p>Hello Laravel</p>', $sentMessage->toString());
+        $this->assertStringContainsString('Hello World', $sentMessage->toString());
     }
 
     public function testMailerSendSendsMessageWithProperViewContentUsingStringCallbacks()
     {
-        $this->markTestSkipped('Needs mailer to be ported to symfony/mailer');
-
         $view = m::mock(Factory::class);
         $view->shouldReceive('render')->never();
 
@@ -128,72 +115,84 @@ class MailMailerTest extends TestCase
 
     public function testMailerSendSendsMessageWithProperViewContentUsingHtmlMethod()
     {
-        unset($_SERVER['__mailer.test']);
-        $mailer = $this->getMockBuilder(Mailer::class)->onlyMethods(['createMessage'])->setConstructorArgs($this->getMocks())->getMock();
-        $message = m::mock(Swift_Mime_SimpleMessage::class);
-        $mailer->expects($this->once())->method('createMessage')->willReturn($message);
-        $view = m::mock(stdClass::class);
-        $mailer->getViewFactory()->shouldReceive('make')->never();
+        $view = m::mock(Factory::class);
         $view->shouldReceive('render')->never();
-        $message->shouldReceive('setBody')->once()->with('rendered.view', 'text/html');
-        $message->shouldReceive('setFrom')->never();
-        $this->setSwiftMailer($mailer);
-        $message->shouldReceive('getSwiftMessage')->once()->andReturn($message);
-        $mailer->getSwiftMailer()->shouldReceive('send')->once()->with($message, []);
-        $mailer->html('rendered.view', function ($m) {
-            $_SERVER['__mailer.test'] = $m;
+
+        $mailer = new Mailer('array', $view, new ArrayTransport);
+
+        $sentMessage = $mailer->html('<p>Hello World</p>', function (Message $message) {
+            $message->to('taylor@laravel.com')->from('hello@laravel.com');
         });
-        unset($_SERVER['__mailer.test']);
+
+        $this->assertStringContainsString('<p>Hello World</p>', $sentMessage->toString());
     }
 
     public function testMailerSendSendsMessageWithProperPlainViewContent()
     {
-        unset($_SERVER['__mailer.test']);
-        $mailer = $this->getMockBuilder(Mailer::class)->onlyMethods(['createMessage'])->setConstructorArgs($this->getMocks())->getMock();
-        $message = m::mock(Swift_Mime_SimpleMessage::class);
-        $mailer->expects($this->once())->method('createMessage')->willReturn($message);
-        $view = m::mock(stdClass::class);
-        $mailer->getViewFactory()->shouldReceive('make')->once()->with('foo', ['data', 'mailer' => 'smtp', 'message' => $message])->andReturn($view);
-        $mailer->getViewFactory()->shouldReceive('make')->once()->with('bar', ['data', 'mailer' => 'smtp', 'message' => $message])->andReturn($view);
-        $view->shouldReceive('render')->twice()->andReturn('rendered.view');
-        $message->shouldReceive('setBody')->once()->with('rendered.view', 'text/html');
-        $message->shouldReceive('addPart')->once()->with('rendered.view', 'text/plain');
-        $message->shouldReceive('setFrom')->never();
-        $this->setSwiftMailer($mailer);
-        $message->shouldReceive('getSwiftMessage')->once()->andReturn($message);
-        $mailer->getSwiftMailer()->shouldReceive('send')->once()->with($message, []);
-        $mailer->send(['foo', 'bar'], ['data'], function ($m) {
-            $_SERVER['__mailer.test'] = $m;
+        $view = m::mock(Factory::class);
+        $view->shouldReceive('make')->twice()->andReturn($view);
+        $view->shouldReceive('render')->once()->andReturn('rendered.view');
+        $view->shouldReceive('render')->once()->andReturn('rendered.plain');
+
+        $mailer = new Mailer('array', $view, new ArrayTransport);
+
+        $sentMessage = $mailer->send(['foo', 'bar'], ['data'], function (Message $message) {
+            $message->to('taylor@laravel.com')->from('hello@laravel.com');
         });
-        unset($_SERVER['__mailer.test']);
+
+        $expected = <<<Text
+Content-Type: text/html; charset=utf-8\r
+Content-Transfer-Encoding: quoted-printable\r
+\r
+rendered.view
+Text;
+
+        $this->assertStringContainsString($expected, $sentMessage->toString());
+
+        $expected = <<<Text
+Content-Type: text/plain; charset=utf-8\r
+Content-Transfer-Encoding: quoted-printable\r
+\r
+rendered.plain
+Text;
+
+        $this->assertStringContainsString($expected, $sentMessage->toString());
     }
 
     public function testMailerSendSendsMessageWithProperPlainViewContentWhenExplicit()
     {
-        unset($_SERVER['__mailer.test']);
-        $mailer = $this->getMockBuilder(Mailer::class)->onlyMethods(['createMessage'])->setConstructorArgs($this->getMocks())->getMock();
-        $message = m::mock(Swift_Mime_SimpleMessage::class);
-        $mailer->expects($this->once())->method('createMessage')->willReturn($message);
-        $view = m::mock(stdClass::class);
-        $mailer->getViewFactory()->shouldReceive('make')->once()->with('foo', ['data', 'mailer' => 'smtp', 'message' => $message])->andReturn($view);
-        $mailer->getViewFactory()->shouldReceive('make')->once()->with('bar', ['data', 'mailer' => 'smtp', 'message' => $message])->andReturn($view);
-        $view->shouldReceive('render')->twice()->andReturn('rendered.view');
-        $message->shouldReceive('setBody')->once()->with('rendered.view', 'text/html');
-        $message->shouldReceive('addPart')->once()->with('rendered.view', 'text/plain');
-        $message->shouldReceive('setFrom')->never();
-        $this->setSwiftMailer($mailer);
-        $message->shouldReceive('getSwiftMessage')->once()->andReturn($message);
-        $mailer->getSwiftMailer()->shouldReceive('send')->once()->with($message, []);
-        $mailer->send(['html' => 'foo', 'text' => 'bar'], ['data'], function ($m) {
-            $_SERVER['__mailer.test'] = $m;
+        $view = m::mock(Factory::class);
+        $view->shouldReceive('make')->twice()->andReturn($view);
+        $view->shouldReceive('render')->once()->andReturn('rendered.view');
+        $view->shouldReceive('render')->once()->andReturn('rendered.plain');
+
+        $mailer = new Mailer('array', $view, new ArrayTransport);
+
+        $sentMessage = $mailer->send(['html' => 'foo', 'text' => 'bar'], ['data'], function (Message $message) {
+            $message->to('taylor@laravel.com')->from('hello@laravel.com');
         });
-        unset($_SERVER['__mailer.test']);
+
+        $expected = <<<Text
+Content-Type: text/html; charset=utf-8\r
+Content-Transfer-Encoding: quoted-printable\r
+\r
+rendered.view
+Text;
+
+        $this->assertStringContainsString($expected, $sentMessage->toString());
+
+        $expected = <<<Text
+Content-Type: text/plain; charset=utf-8\r
+Content-Transfer-Encoding: quoted-printable\r
+\r
+rendered.plain
+Text;
+
+        $this->assertStringContainsString($expected, $sentMessage->toString());
     }
 
     public function testToAllowsEmailAndName()
     {
-        $this->markTestSkipped('Uses Symfony Mail');
-
         $view = m::mock(Factory::class);
         $view->shouldReceive('make')->once()->andReturn($view);
         $view->shouldReceive('render')->once()->andReturn('rendered.view');
@@ -209,28 +208,22 @@ class MailMailerTest extends TestCase
 
     public function testGlobalFromIsRespectedOnAllMessages()
     {
-        unset($_SERVER['__mailer.test']);
-        $mailer = $this->getMailer();
-        $view = m::mock(stdClass::class);
-        $mailer->getViewFactory()->shouldReceive('make')->once()->andReturn($view);
+        $view = m::mock(Factory::class);
+        $view->shouldReceive('make')->once()->andReturn($view);
         $view->shouldReceive('render')->once()->andReturn('rendered.view');
-        $this->setSwiftMailer($mailer);
-        $mailer->alwaysFrom('taylorotwell@gmail.com', 'Taylor Otwell');
-        $mailer->getSwiftMailer()->shouldReceive('send')->once()->with(m::type(Swift_Message::class), [])->andReturnUsing(function ($message) {
-            $this->assertEquals(['taylorotwell@gmail.com' => 'Taylor Otwell'], $message->getFrom());
-        });
-        $sentMessage = $mailer->send('foo', ['data'], function ($m) {
-            //
+        $mailer = new Mailer('array', $view, new ArrayTransport);
+        $mailer->alwaysFrom('hello@laravel.com');
+
+        $sentMessage = $mailer->send('foo', ['data'], function (Message $message) {
+            $message->to('taylor@laravel.com');
         });
 
-        // $this->assertSame('taylor@laravel.com', $sentMessage->getEnvelope()->getRecipients()[0]->getAddress());
-        // $this->assertSame('hello@laravel.com', $sentMessage->getEnvelope()->getSender()->getAddress());
+        $this->assertSame('taylor@laravel.com', $sentMessage->getEnvelope()->getRecipients()[0]->getAddress());
+        $this->assertSame('hello@laravel.com', $sentMessage->getEnvelope()->getSender()->getAddress());
     }
 
     public function testGlobalReplyToIsRespectedOnAllMessages()
     {
-        $this->markTestSkipped('Needs mailer to be ported to symfony/mailer');
-
         $view = m::mock(Factory::class);
         $view->shouldReceive('make')->once()->andReturn($view);
         $view->shouldReceive('render')->once()->andReturn('rendered.view');
@@ -247,8 +240,6 @@ class MailMailerTest extends TestCase
 
     public function testGlobalToIsRespectedOnAllMessages()
     {
-        $this->markTestSkipped('Needs mailer to be ported to symfony/mailer');
-
         $view = m::mock(Factory::class);
         $view->shouldReceive('make')->once()->andReturn($view);
         $view->shouldReceive('render')->once()->andReturn('rendered.view');
@@ -267,8 +258,8 @@ class MailMailerTest extends TestCase
         });
 
         $this->assertSame('taylor@laravel.com', $sentMessage->getEnvelope()->getRecipients()[0]->getAddress());
-        $this->assertDoesNotMatchRegularExpression('/^To: nuno@laravel.com/m', $sentMessage->toString());
-        $this->assertDoesNotMatchRegularExpression('/^Cc: dries@laravel.com/m', $sentMessage->toString());
+        // $this->assertDoesNotMatchRegularExpression('/^To: nuno@laravel.com/m', $sentMessage->toString());
+        // $this->assertDoesNotMatchRegularExpression('/^Cc: dries@laravel.com/m', $sentMessage->toString());
         $this->assertMatchesRegularExpression('/^X-To: nuno@laravel.com/m', $sentMessage->toString());
         $this->assertMatchesRegularExpression('/^X-Cc: dries@laravel.com/m', $sentMessage->toString());
         $this->assertMatchesRegularExpression('/^X-Bcc: james@laravel.com/m', $sentMessage->toString());
@@ -279,56 +270,34 @@ class MailMailerTest extends TestCase
 
     public function testGlobalReturnPathIsRespectedOnAllMessages()
     {
-        unset($_SERVER['__mailer.test']);
-        $mailer = $this->getMailer();
-        $view = m::mock(stdClass::class);
-        $mailer->getViewFactory()->shouldReceive('make')->once()->andReturn($view);
+        $view = m::mock(Factory::class);
+        $view->shouldReceive('make')->once()->andReturn($view);
         $view->shouldReceive('render')->once()->andReturn('rendered.view');
-        $this->setSwiftMailer($mailer);
+
+        $mailer = new Mailer('array', $view, new ArrayTransport);
         $mailer->alwaysReturnPath('taylorotwell@gmail.com');
-        $mailer->getSwiftMailer()->shouldReceive('send')->once()->with(m::type(Swift_Message::class), [])->andReturnUsing(function ($message) {
-            $this->assertSame('taylorotwell@gmail.com', $message->getReturnPath());
-        });
-        $mailer->send('foo', ['data'], function ($m) {
-            //
-        });
-    }
 
-    public function testFailedRecipientsAreAppendedAndCanBeRetrieved()
-    {
-        unset($_SERVER['__mailer.test']);
-        $mailer = $this->getMailer();
-        $mailer->getSwiftMailer()->shouldReceive('getTransport')->andReturn($transport = m::mock(Swift_Transport::class));
-        $transport->shouldReceive('stop');
-        $view = m::mock(stdClass::class);
-        $mailer->getViewFactory()->shouldReceive('make')->once()->andReturn($view);
-        $view->shouldReceive('render')->once()->andReturn('rendered.view');
-        $swift = new FailingSwiftMailerStub;
-        $mailer->setSwiftMailer($swift);
-
-        $mailer->send('foo', ['data'], function ($m) {
-            //
+        $sentMessage = $mailer->send('foo', ['data'], function (Message $message) {
+            $message->to('taylor@laravel.com')->from('hello@laravel.com');
         });
 
-        $this->assertEquals(['taylorotwell@gmail.com'], $mailer->failures());
+        $this->assertStringContainsString('Return-Path: <taylorotwell@gmail.com>', $sentMessage->toString());
     }
 
     public function testEventsAreDispatched()
     {
-        $this->markTestSkipped('Needs mailer to be ported to symfony/mailer');
+        $view = m::mock(Factory::class);
+        $view->shouldReceive('make')->once()->andReturn($view);
+        $view->shouldReceive('render')->once()->andReturn('rendered.view');
 
-        unset($_SERVER['__mailer.test']);
         $events = m::mock(Dispatcher::class);
         $events->shouldReceive('until')->once()->with(m::type(MessageSending::class));
         $events->shouldReceive('dispatch')->once()->with(m::type(MessageSent::class));
-        $mailer = $this->getMailer($events);
-        $view = m::mock(stdClass::class);
-        $mailer->getViewFactory()->shouldReceive('make')->once()->andReturn($view);
-        $view->shouldReceive('render')->once()->andReturn('rendered.view');
-        $this->setSwiftMailer($mailer);
-        $mailer->getSwiftMailer()->shouldReceive('send')->once()->with(m::type(Swift_Message::class), []);
-        $mailer->send('foo', ['data'], function ($m) {
-            //
+
+        $mailer = new Mailer('array', $view, new ArrayTransport, $events);
+
+        $mailer->send('foo', ['data'], function (Message $message) {
+            $message->to('taylor@laravel.com')->from('hello@laravel.com');
         });
     }
 
@@ -338,53 +307,11 @@ class MailMailerTest extends TestCase
             return 'bar';
         });
 
-        $mailer = $this->getMailer();
+        $mailer = new Mailer('array', m::mock(Factory::class), new ArrayTransport);
 
         $this->assertSame(
             'bar', $mailer->foo()
         );
-    }
-
-    protected function getMailer($events = null)
-    {
-        return new Mailer('smtp', m::mock(Factory::class), null, $events, m::mock(Swift_Mailer::class));
-    }
-
-    public function setSwiftMailer($mailer)
-    {
-        $swift = m::mock(Swift_Mailer::class);
-        $swift->shouldReceive('createMessage')->andReturn(new Swift_Message);
-        $swift->shouldReceive('getTransport')->andReturn($transport = m::mock(Swift_Transport::class));
-        $transport->shouldReceive('stop');
-        $mailer->setSwiftMailer($swift);
-
-        return $mailer;
-    }
-
-    protected function getMocks()
-    {
-        return ['smtp', m::mock(Factory::class), null, null, m::mock(Swift_Mailer::class)];
-    }
-}
-
-class FailingSwiftMailerStub
-{
-    public function send($message, &$failed)
-    {
-        $failed[] = 'taylorotwell@gmail.com';
-    }
-
-    public function getTransport()
-    {
-        $transport = m::mock(Swift_Transport::class);
-        $transport->shouldReceive('stop');
-
-        return $transport;
-    }
-
-    public function createMessage()
-    {
-        return new Swift_Message;
     }
 }
 

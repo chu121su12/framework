@@ -2,14 +2,13 @@
 
 namespace Illuminate\Mail;
 
+use Aws\Ses\SesClient;
 use Aws\SesV2\SesV2Client;
 use Closure;
-use GuzzleHttp\Client as HttpClient;
 use Illuminate\Contracts\Mail\Factory as FactoryContract;
 use Illuminate\Log\LogManager;
 use Illuminate\Mail\Transport\ArrayTransport;
 use Illuminate\Mail\Transport\LogTransport;
-use Illuminate\Mail\Transport\MailgunTransport;
 use Illuminate\Mail\Transport\ResendTransport;
 use Illuminate\Mail\Transport\SesTransport;
 use Illuminate\Mail\Transport\SesV2Transport;
@@ -17,15 +16,18 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\ConfigurationUrlParser;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-use Postmark\ThrowExceptionOnFailurePlugin;
-use Postmark\Transport as PostmarkTransport;
 use Psr\Log\LoggerInterface;
 use Resend;
-use Swift_DependencyContainer;
-use Swift_FailoverTransport as FailoverTransport;
-use Swift_Mailer;
-use Swift_SendmailTransport as SendmailTransport;
-use Swift_SmtpTransport as SmtpTransport;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Mailer\Bridge\Mailgun\Transport\MailgunTransportFactory;
+use Symfony\Component\Mailer\Bridge\Postmark\Transport\PostmarkTransportFactory;
+use Symfony\Component\Mailer\Transport\Dsn;
+use Symfony\Component\Mailer\Transport\FailoverTransport;
+use Symfony\Component\Mailer\Transport\RoundRobinTransport;
+use Symfony\Component\Mailer\Transport\SendmailTransport;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransportFactory;
+use Symfony\Component\Mailer\Transport\Smtp\Stream\SocketStream;
 
 /**
  * @mixin \Illuminate\Mail\Mailer
@@ -118,14 +120,11 @@ class MailManager implements FactoryContract
         // Once we have created the mailer instance we will set a container instance
         // on the mailer. This allows us to resolve mailer classes via containers
         // for maximum testability on said classes instead of passing Closures.
-        $swift = $this->createSwiftMailer($config);
-
         $mailer = new Mailer(
             $name,
             $this->app['view'],
-            $swift->getTransport(),
-            $this->app['events'],
-            $swift
+            $this->createSymfonyTransport($config),
+            $this->app['events']
         );
 
         if ($this->app->bound('queue')) {
@@ -146,7 +145,7 @@ class MailManager implements FactoryContract
      * Create a new transport instance.
      *
      * @param  array  $config
-     * @return \Swift_Transport
+     * @return \Symfony\Component\Mailer\Transport\TransportInterface
      *
      * @throws \InvalidArgumentException
      */
@@ -173,30 +172,28 @@ class MailManager implements FactoryContract
      * Create an instance of the Symfony SMTP Transport driver.
      *
      * @param  array  $config
-     * @return \Swift_SmtpTransport
+     * @return \Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport
      */
     protected function createSmtpTransport(array $config)
     {
-        // The Swift SMTP transport instance will allow us to use any SMTP backend
-        // for delivering mail such as Sendgrid, Amazon SES, or a custom server
-        // a developer has available. We will just pass this configured host.
-        $transport = new SmtpTransport(
+        $factory = new EsmtpTransportFactory;
+
+        $scheme = isset($config['scheme']) ? $config['scheme'] : null;
+
+        if (! $scheme) {
+            $scheme = ! empty($config['encryption']) && $config['encryption'] === 'tls'
+                ? (($config['port'] == 465) ? 'smtps' : 'smtp')
+                : '';
+        }
+
+        $transport = $factory->create(new Dsn(
+            $scheme,
             $config['host'],
-            $config['port']
-        );
-
-        if (! empty($config['encryption'])) {
-            $transport->setEncryption($config['encryption']);
-        }
-
-        // Once we have the transport we will check for the presence of a username
-        // and password. If we have it we will set the credentials on the Swift
-        // transporter instance so that we'll properly authenticate delivery.
-        if (isset($config['username'])) {
-            $transport->setUsername($config['username']);
-
-            $transport->setPassword($config['password']);
-        }
+            isset($config['username']) ? $config['username'] : null,
+            isset($config['password']) ? $config['password'] : null,
+            isset($config['port']) ? $config['port'] : null,
+            $config
+        ));
 
         return $this->configureSmtpTransport($transport, $config);
     }
@@ -204,30 +201,22 @@ class MailManager implements FactoryContract
     /**
      * Configure the additional SMTP driver options.
      *
-     * @param  \Swift_SmtpTransport  $transport
+     * @param  \Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport  $transport
      * @param  array  $config
-     * @return \Swift_SmtpTransport
+     * @return \Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport
      */
-    protected function configureSmtpTransport(/*EsmtpTransport */$transport, array $config)
+    protected function configureSmtpTransport(EsmtpTransport $transport, array $config)
     {
-        if (isset($config['stream'])) {
-            $transport->setStreamOptions($config['stream']);
-        }
+        $stream = $transport->getStream();
 
-        if (isset($config['source_ip'])) {
-            $transport->setSourceIp($config['source_ip']);
-        }
+        if ($stream instanceof SocketStream) {
+            if (isset($config['source_ip'])) {
+                $stream->setSourceIp($config['source_ip']);
+            }
 
-        if (isset($config['local_domain'])) {
-            $transport->setLocalDomain($config['local_domain']);
-        }
-
-        if (isset($config['timeout'])) {
-            $transport->setTimeout($config['timeout']);
-        }
-
-        if (isset($config['auth_mode'])) {
-            $transport->setAuthMode($config['auth_mode']);
+            if (isset($config['timeout'])) {
+                $stream->setTimeout($config['timeout']);
+            }
         }
 
         return $transport;
@@ -237,7 +226,7 @@ class MailManager implements FactoryContract
      * Create an instance of the Symfony Sendmail Transport driver.
      *
      * @param  array  $config
-     * @return \Swift_SendmailTransport
+     * @return \Symfony\Component\Mailer\Transport\SendmailTransport
      */
     protected function createSendmailTransport(array $config)
     {
@@ -263,7 +252,7 @@ class MailManager implements FactoryContract
         $config = Arr::except($config, ['transport']);
 
         return new SesTransport(
-            new SesV2Client($this->addSesCredentials($config)),
+            new SesClient($this->addSesCredentials($config)),
             isset($config['options']) ? $config['options'] : []
         );
     }
@@ -298,10 +287,6 @@ class MailManager implements FactoryContract
      */
     protected function addSesCredentials(array $config)
     {
-        if (! isset($config['session_token']) && isset($config['token'])) {
-            $config['session_token'] = $config['token'];
-        }
-
         if (! empty($config['key']) && ! empty($config['secret'])) {
             $config['credentials'] = Arr::only($config, ['key', 'secret', 'token']);
         }
@@ -325,7 +310,7 @@ class MailManager implements FactoryContract
     /**
      * Create an instance of the Symfony Mail Transport driver.
      *
-     * @return \Swift_SendmailTransport
+     * @return \Symfony\Component\Mailer\Transport\SendmailTransport
      */
     protected function createMailTransport()
     {
@@ -336,58 +321,53 @@ class MailManager implements FactoryContract
      * Create an instance of the Symfony Mailgun Transport driver.
      *
      * @param  array  $config
-     * @return \Illuminate\Mail\Transport\MailgunTransport
+     * @return \Symfony\Component\Mailer\Transport\TransportInterface
      */
     protected function createMailgunTransport(array $config)
     {
-        // $factory = new MailgunTransportFactory(null, $this->getHttpClient($config));
+        $factory = new MailgunTransportFactory(null, $this->getHttpClient($config));
 
         if (! isset($config['secret'])) {
             $config = $this->app['config']->get('services.mailgun', []);
         }
 
-        return new MailgunTransport(
-            $this->guzzle($config),
+        return $factory->create(new Dsn(
+            'mailgun+'.(isset($config['scheme']) ? $config['scheme'] : 'https'),
+            isset($config['endpoint']) ? $config['endpoint'] : 'default',
             $config['secret'],
-            $config['domain'],
-            isset($config['endpoint']) ? $config['endpoint'] : null
-        );
-
-        // return $factory->create(new Dsn(
-        //     'mailgun+'.($config['scheme'] ?? 'https'),
-        //     $config['endpoint'] ?? 'default',
-        //     $config['secret'],
-        //     $config['domain']
-        // ));
+            $config['domain']
+        ));
     }
 
     /**
      * Create an instance of the Symfony Postmark Transport driver.
      *
      * @param  array  $config
-     * @return \Swift_Transport
+     * @return \Symfony\Component\Mailer\Bridge\Postmark\Transport\PostmarkApiTransport
      */
     protected function createPostmarkTransport(array $config)
     {
-        // $factory = new PostmarkTransportFactory(null, $this->getHttpClient($config));
+        $factory = new PostmarkTransportFactory(null, $this->getHttpClient($config));
 
-        $headers = isset($config['message_stream_id']) ? [
-            'X-PM-Message-Stream' => $config['message_stream_id'],
-        ] : [];
+        $options = isset($config['message_stream_id'])
+                    ? ['message_stream' => $config['message_stream_id']]
+                    : [];
 
-        return tap(new PostmarkTransport(
+        return $factory->create(new Dsn(
+            'postmark+api',
+            'default',
             isset($config['token']) ? $config['token'] : $this->app['config']->get('services.postmark.token'),
-            $headers
-        ), function ($transport) {
-            $transport->registerPlugin(new ThrowExceptionOnFailurePlugin);
-        });
+            null,
+            null,
+            $options
+        ));
     }
 
     /**
      * Create an instance of the Symfony Failover Transport driver.
      *
      * @param  array  $config
-     * @return \Swift_FailoverTransport
+     * @return \Symfony\Component\Mailer\Transport\FailoverTransport
      */
     protected function createFailoverTransport(array $config)
     {
@@ -631,37 +611,5 @@ class MailManager implements FactoryContract
     public function __call($method, $parameters)
     {
         return $this->mailer()->$method(...$parameters);
-    }
-
-    /**
-     * Create the SwiftMailer instance for the given configuration.
-     *
-     * @param  array  $config
-     * @return \Swift_Mailer
-     */
-    protected function createSwiftMailer(array $config)
-    {
-        if (isset($config['domain']) ? $config['domain'] : false) {
-            Swift_DependencyContainer::getInstance()
-                ->register('mime.idgenerator.idright')
-                ->asValue($config['domain']);
-        }
-
-        return new Swift_Mailer($this->createSymfonyTransport($config));
-    }
-
-    /**
-     * Get a fresh Guzzle HTTP client instance.
-     *
-     * @param  array  $config
-     * @return \GuzzleHttp\Client
-     */
-    protected function guzzle(array $config)
-    {
-        return new HttpClient(Arr::add(
-            isset($config['guzzle']) ? $config['guzzle'] : [],
-            'connect_timeout',
-            60
-        ));
     }
 }

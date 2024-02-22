@@ -2,19 +2,15 @@
 
 namespace Illuminate\Mail\Transport;
 
-use Illuminate\Mail\SentMessage;
 use Illuminate\Support\Str;
 use Psr\Log\LoggerInterface;
 use Stringable;
-use Swift_Mime_Message as RawMessage;
-use Swift_Mime_SimpleMimeEntity;
 use Symfony\Component\Mailer\Envelope;
-// use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\TransportInterface;
-// use Symfony\Component\Mime\RawMessage;
+use Symfony\Component\Mime\RawMessage;
 
-// class LogTransport implements Stringable, TransportInterface
-class LogTransport extends Transport implements Stringable
+class LogTransport implements Stringable, TransportInterface
 {
     /**
      * The Logger instance.
@@ -37,7 +33,7 @@ class LogTransport extends Transport implements Stringable
     /**
      * {@inheritdoc}
      */
-    public function send(RawMessage $message, /*Envelope */&$failedRecipients = null)/*: ?SentMessage*/
+    public function send(RawMessage $message, Envelope $envelope = null)/*: ?SentMessage*/
     {
         $string = Str::of($message->toString());
 
@@ -58,9 +54,7 @@ class LogTransport extends Transport implements Stringable
 
         $this->logger->debug((string) $string);
 
-        $this->numberOfRecipients($message);
-
-        return $sentMessage;
+        return new SentMessage($message, isset($envelope) ? $envelope : Envelope::create($message));
     }
 
     /**
@@ -89,7 +83,6 @@ class LogTransport extends Transport implements Stringable
      * Get the logger for the LogTransport instance.
      *
      * @return \Psr\Log\LoggerInterface
-
      */
     public function logger()
     {
@@ -104,22 +97,5 @@ class LogTransport extends Transport implements Stringable
     public function __toString()/*: string*/
     {
         return 'log';
-    }
-
-    /**
-     * Get a loggable string out of a Swiftmailer entity.
-     *
-     * @param  \Swift_Mime_SimpleMimeEntity  $entity
-     * @return string
-     */
-    protected function getMimeEntityString(Swift_Mime_SimpleMimeEntity $entity)
-    {
-        $string = (string) $entity->getHeaders().PHP_EOL.$entity->getBody();
-
-        foreach ($entity->getChildren() as $children) {
-            $string .= PHP_EOL.PHP_EOL.$this->getMimeEntityString($children);
-        }
-
-        return $string;
     }
 }

@@ -2,7 +2,8 @@
 
 namespace Illuminate\Mail\Events;
 
-use Swift_Attachment;
+use Exception;
+use Illuminate\Mail\SentMessage;
 
 /**
  * @property \Symfony\Component\Mime\Email $message
@@ -12,7 +13,7 @@ class MessageSent
     /**
      * The message that was sent.
      *
-     * @var \Swift_Message
+     * @var \Illuminate\Mail\SentMessage
      */
     public $sent;
 
@@ -26,11 +27,11 @@ class MessageSent
     /**
      * Create a new event instance.
      *
-     * @param  \Swift_Message  $message
+     * @param  \Illuminate\Mail\SentMessage  $message
      * @param  array  $data
      * @return void
      */
-    public function __construct(/*Email */$message, array $data = [])
+    public function __construct(SentMessage $message, array $data = [])
     {
         $this->sent = $message;
         $this->data = $data;
@@ -43,9 +44,7 @@ class MessageSent
      */
     public function __serialize()
     {
-        $hasAttachments = collect($this->message->getChildren())
-            ->whereInstanceOf(Swift_Attachment::class)
-            ->isNotEmpty();
+        $hasAttachments = collect($this->message->getAttachments())->isNotEmpty();
 
         return [
             'sent' => $this->sent,

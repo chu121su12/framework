@@ -71,9 +71,7 @@ class Markdown
                 : 'mail::themes.'.$this->theme;
         }
 
-        $inlinerObject = $inliner ?: new CssToInlineStyles;
-
-        return new HtmlString($inlinerObject->convert(
+        return new HtmlString(with($inliner ?: new CssToInlineStyles)->convert(
             $contents, $this->view->make($theme, $data)->render()
         ));
     }

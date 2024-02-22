@@ -2,26 +2,21 @@
 
 namespace Illuminate\Mail\Transport;
 
-use Aws\SesV2\SesV2Client;
-use Illuminate\Mail\SentMessage;
-use Swift_Mime_SimpleMessage as SwiftMimeSimpleMessage;
-use Swift_Mime_Message as Swift_Mime_SimpleMessage;
 use Aws\Exception\AwsException;
 use Aws\Ses\SesClient;
 use Stringable;
 use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mailer\Header\MetadataHeader;
-// use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\AbstractTransport;
 use Symfony\Component\Mime\Message;
 
-// class SesTransport extends AbstractTransport implements Stringable
-class SesTransport extends Transport implements Stringable
+class SesTransport extends AbstractTransport implements Stringable
 {
     /**
      * The Amazon SES instance.
      *
-     * @var \Aws\SesV2\SesV2Client
+     * @var \Aws\Ses\SesClient
      */
     protected $ses;
 
@@ -35,45 +30,16 @@ class SesTransport extends Transport implements Stringable
     /**
      * Create a new SES transport instance.
      *
-     * @param  \Aws\SesV2\SesV2Client  $ses
+     * @param  \Aws\Ses\SesClient  $ses
      * @param  array  $options
      * @return void
      */
-    public function __construct(SesV2Client $ses, $options = [])
+    public function __construct(SesClient $ses, $options = [])
     {
         $this->ses = $ses;
         $this->options = $options;
-    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function send(Swift_Mime_SimpleMessage $message, &$failedRecipients = null)
-    {
-        $this->beforeSendPerformed($message);
-
-        $result = $this->ses->sendEmail(
-            array_merge(
-                $this->options, [
-                    'Content' => [
-                        'Raw' => ['Data' => $message->toString()],
-                    ],
-                ]
-            )
-        );
-
-        $messageId = $result->get('MessageId');
-
-        $message->getHeaders()->addTextHeader('X-Message-ID', $messageId);
-        $message->getHeaders()->addTextHeader('X-SES-Message-ID', $messageId);
-
-        $this->sendPerformed($message);
-
-        $sentMessage = new SentMessage($message);
-
-        $this->numberOfRecipients($message);
-
-        return $sentMessage;
+        parent::__construct();
     }
 
     /**
@@ -127,7 +93,7 @@ class SesTransport extends Transport implements Stringable
     /**
      * Get the Amazon SES client for the SesTransport instance.
      *
-     * @return \Aws\SesV2\SesV2Client
+     * @return \Aws\Ses\SesClient
      */
     public function ses()
     {
