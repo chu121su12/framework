@@ -146,6 +146,7 @@
         "symfony/uid": "^5.4.21",
         "voku/portable-ascii": "^2.0.1",
 
+        "psr/event-dispatcher": "^1",
         "psr/clock-implementation": "1.0",
         "psr/container-implementation": "1.0|2.0",
         "psr/simple-cache-implementation": "1.0|2.0|3.0"
@@ -221,6 +222,7 @@
             "Termwind\\": "cr/ext/nunomaduro/termwind/src/",
             "voku\\": "cr/ext/voku/portable-ascii/src/voku/",
 
+            "Psr\\EventDispatcher\\": "cr/ext/psr/event-dispatcher/src/",
             "Psr\\Clock\\": "cr/ext/psr/clock/src/",
             "Illuminate\\Support\\": [
                 "src/Illuminate/Macroable/",
