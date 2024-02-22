@@ -218,6 +218,7 @@
             "Symfony\\Component\\Mime\\": "cr/ext/symfony/mime/",
             "Symfony\\Component\\Routing\\": "cr/ext/symfony/routing/",
             "Symfony\\Component\\Uid\\": "cr/ext/symfony/uid/",
+            "Symfony\\Contracts\\": "cr/ext/symfony/contracts/",
             "Symfony\\Polyfill\\": "cr/patch/symfony/polyfill/src/",
             "Termwind\\": "cr/ext/nunomaduro/termwind/src/",
             "voku\\": "cr/ext/voku/portable-ascii/src/voku/",
