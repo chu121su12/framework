@@ -29,12 +29,15 @@ class {{ class }} extends Mailable
     public function envelope()/*: Envelope*/
     {
         return new Envelope(
-            null,
-            [],
-            [],
-            [],
-            [],
-            /*subject: */'{{ subject }}'
+            $from = null,
+            $to = [],
+            $cc = [],
+            $bcc = [],
+            $replyTo = [],
+            $subject = '{{ subject }}',
+            $tags = [],
+            $metadata = [],
+            $using = []
         );
     }
 
@@ -46,10 +49,12 @@ class {{ class }} extends Mailable
     public function content()/*: Content*/
     {
         return new Content(
-            null,
-            null,
-            null,
-            /*markdown: */'{{ view }}'
+            $view = null,
+            $html = null,
+            $text = null,
+            $markdown = '{{ view }}',
+            $with = [],
+            $htmlString = null
         );
     }
 
