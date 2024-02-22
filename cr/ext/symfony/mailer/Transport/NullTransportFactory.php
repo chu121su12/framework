@@ -18,7 +18,7 @@ use Symfony\Component\Mailer\Exception\UnsupportedSchemeException;
  */
 final class NullTransportFactory extends AbstractTransportFactory
 {
-    public function create(Dsn $dsn): TransportInterface
+    public function create(Dsn $dsn)/*: TransportInterface*/
     {
         if ('null' === $dsn->getScheme()) {
             return new NullTransport($this->dispatcher, $this->logger);
@@ -27,7 +27,7 @@ final class NullTransportFactory extends AbstractTransportFactory
         throw new UnsupportedSchemeException($dsn, 'null', $this->getSupportedSchemes());
     }
 
-    protected function getSupportedSchemes(): array
+    protected function getSupportedSchemes()/*: array*/
     {
         return ['null'];
     }

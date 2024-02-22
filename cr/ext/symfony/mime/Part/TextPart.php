@@ -54,8 +54,15 @@ class TextPart extends AbstractPart
 
         parent::__construct();
 
-        if (!\is_string($body) && !\is_resource($body)) {
-            throw new \TypeError(sprintf('The body of "%s" must be a string or a resource (got "%s").', self::class, get_debug_type($body)));
+        if (!\is_string($body) && !\is_resource($body) && !$body instanceof File) {
+            throw new \TypeError(sprintf('The body of "%s" must be a string, a resource, or an instance of "%s" (got "%s").', self::class, File::class, get_debug_type($body)));
+        }
+
+        if ($body instanceof File) {
+            $path = $body->getPath();
+            if ((is_file($path) && !is_readable($path)) || is_dir($path)) {
+                throw new InvalidArgumentException(sprintf('Path "%s" is not readable.', $path));
+            }
         }
 
         $this->body = $body;
@@ -113,6 +120,10 @@ class TextPart extends AbstractPart
 
     public function getBody() //// string
     {
+        if ($this->body instanceof File) {
+            return file_get_contents($this->body->getPath());
+        }
+
         if (null === $this->seekable) {
             return $this->body;
         }
@@ -131,7 +142,17 @@ class TextPart extends AbstractPart
 
     public function bodyToIterable() //// iterable
     {
-        if (null !== $this->seekable) {
+        if ($this->body instanceof File) {
+            $path = $this->body->getPath();
+            if (false === $handle = @fopen($path, 'r', false)) {
+                throw new InvalidArgumentException(sprintf('Unable to open path "%s".', $path));
+            }
+
+            /*yield from $this->getEncoder()->encodeByteStream($handle);*/
+            foreach ($this->getEncoder()->encodeByteStream($handle) as $yieldKey => $yieldValue) {
+                yield $yieldKey => $yieldValue;
+            }
+        } elseif (null !== $this->seekable) {
             if ($this->seekable) {
                 rewind($this->body);
             }

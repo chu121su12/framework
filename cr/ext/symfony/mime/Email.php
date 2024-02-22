@@ -521,7 +521,7 @@ class Email extends Message
         $otherParts = $relatedParts = [];
         foreach ($this->attachments as $attachment) {
             $part = $this->createDataPart($attachment);
-            if (isset($attachment['part'])) {
+            if (\is_array($attachment) && isset($attachment['part'])) {
                 $attachment['name'] = $nameRef->getValue($part);
             }
 
@@ -556,8 +556,12 @@ class Email extends Message
         return [$htmlPart, $otherParts, array_values($relatedParts)];
     }
 
-    private function createDataPart(array $attachment) // DataPart
+    private function createDataPart(/*array */$attachment) // DataPart
     {
+        if ($attachment instanceof DataPart) {
+            return $attachment;
+        }
+
         if (isset($attachment['part'])) {
             return $attachment['part'];
         }
@@ -658,5 +662,13 @@ class Email extends Message
         list($this->text, $this->textCharset, $this->html, $this->htmlCharset, $this->attachments, $parentData) = $data;
 
         parent::__unserialize($parentData);
+    }
+
+    public function addPart(DataPart $part)
+    {
+        $this->cachedBody = null;
+        $this->attachments[] = $part;
+
+        return $this;
     }
 }

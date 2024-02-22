@@ -18,13 +18,15 @@ class TransportException extends RuntimeException implements TransportExceptionI
 {
     private $debug = '';
 
-    public function getDebug(): string
+    public function getDebug()/*: string*/
     {
         return $this->debug;
     }
 
-    public function appendDebug(string $debug): void
+    public function appendDebug(/*string */$debug)/*: void*/
     {
+        $debug = backport_type_check('string', $debug);
+
         $this->debug .= $debug;
     }
 }

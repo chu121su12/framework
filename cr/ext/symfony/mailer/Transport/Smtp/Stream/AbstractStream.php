@@ -30,8 +30,12 @@ abstract class AbstractStream
 
     private $debug = '';
 
-    public function write(string $bytes, bool $debug = true): void
+    public function write(/*string */$bytes, /*bool */$debug = true)/*: void*/
     {
+        $debug = backport_type_check('bool', $debug);
+
+        $bytes = backport_type_check('string', $bytes);
+
         if ($debug) {
             foreach (explode("\n", trim($bytes)) as $line) {
                 $this->debug .= sprintf("> %s\n", $line);
@@ -53,7 +57,7 @@ abstract class AbstractStream
     /**
      * Flushes the contents of the stream (empty it) and set the internal pointer to the beginning.
      */
-    public function flush(): void
+    public function flush()/*: void*/
     {
         fflush($this->in);
     }
@@ -61,14 +65,14 @@ abstract class AbstractStream
     /**
      * Performs any initialization needed.
      */
-    abstract public function initialize(): void;
+    abstract public function initialize()/*: void*/;
 
-    public function terminate(): void
+    public function terminate()/*: void*/
     {
         $this->stream = $this->out = $this->in = null;
     }
 
-    public function readLine(): string
+    public function readLine()/*: string*/
     {
         if (feof($this->out)) {
             return '';
@@ -93,7 +97,7 @@ abstract class AbstractStream
         return $line;
     }
 
-    public function getDebug(): string
+    public function getDebug()/*: string*/
     {
         $debug = $this->debug;
         $this->debug = '';
@@ -101,10 +105,17 @@ abstract class AbstractStream
         return $debug;
     }
 
-    public static function replace(string $from, string $to, iterable $chunks): \Generator
+    public static function replace(/*string */$from, /*string */$to, iterable $chunks)/*: \Generator*/
     {
+        $to = backport_type_check('string', $to);
+
+        $from = backport_type_check('string', $from);
+
         if ('' === $from) {
-            yield from $chunks;
+            /*yield from $chunks;*/
+            foreach ($chunks as $yieldKey => $yieldValue) {
+                yield $yieldKey => $yieldValue;
+            }
 
             return;
         }
@@ -137,5 +148,5 @@ abstract class AbstractStream
         }
     }
 
-    abstract protected function getReadConnectionDescription(): string;
+    abstract protected function getReadConnectionDescription()/*: string*/;
 }

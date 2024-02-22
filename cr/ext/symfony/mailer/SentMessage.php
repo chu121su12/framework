@@ -48,47 +48,51 @@ class SentMessage
         }
     }
 
-    public function getMessage(): RawMessage
+    public function getMessage()/*: RawMessage*/
     {
         return $this->raw;
     }
 
-    public function getOriginalMessage(): RawMessage
+    public function getOriginalMessage()/*: RawMessage*/
     {
         return $this->original;
     }
 
-    public function getEnvelope(): Envelope
+    public function getEnvelope()/*: Envelope*/
     {
         return $this->envelope;
     }
 
-    public function setMessageId(string $id): void
+    public function setMessageId(/*string */$id)/*: void*/
     {
+        $id = backport_type_check('string', $id);
+
         $this->messageId = $id;
     }
 
-    public function getMessageId(): string
+    public function getMessageId()/*: string*/
     {
         return $this->messageId;
     }
 
-    public function getDebug(): string
+    public function getDebug()/*: string*/
     {
         return $this->debug;
     }
 
-    public function appendDebug(string $debug): void
+    public function appendDebug(/*string */$debug)/*: void*/
     {
+        $debug = backport_type_check('string', $debug);
+
         $this->debug .= $debug;
     }
 
-    public function toString(): string
+    public function toString()/*: string*/
     {
         return $this->raw->toString();
     }
 
-    public function toIterable(): iterable
+    public function toIterable()/*: iterable*/
     {
         return $this->raw->toIterable();
     }

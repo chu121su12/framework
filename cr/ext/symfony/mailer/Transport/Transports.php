@@ -44,7 +44,7 @@ final class Transports implements TransportInterface
         }
     }
 
-    public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
+    public function send(RawMessage $message, /*?*/Envelope $envelope = null)/*: ?SentMessage*/
     {
         /** @var Message $message */
         if (RawMessage::class === \get_class($message) || !$message->getHeaders()->has('X-Transport')) {
@@ -68,7 +68,7 @@ final class Transports implements TransportInterface
         }
     }
 
-    public function __toString(): string
+    public function __toString()/*: string*/
     {
         return '['.implode(',', array_keys($this->transports)).']';
     }

@@ -28,7 +28,7 @@ abstract class AbstractHttpTransport extends AbstractTransport
     protected $port;
     protected $client;
 
-    public function __construct(?HttpClientInterface $client = null, ?EventDispatcherInterface $dispatcher = null, ?LoggerInterface $logger = null)
+    public function __construct(/*?*/HttpClientInterface $client = null, /*?*/EventDispatcherInterface $dispatcher = null, /*?*/LoggerInterface $logger = null)
     {
         $this->client = $client;
         if (null === $client) {
@@ -69,9 +69,11 @@ abstract class AbstractHttpTransport extends AbstractTransport
         $response = null;
         try {
             $response = $this->doSendHttp($message);
-            $message->appendDebug($response->getInfo('debug') ?? '');
+            $debugInfo = $response->getInfo('debug');
+            $message->appendDebug(isset($debugInfo) ? $debugInfo : '');
         } catch (HttpTransportException $e) {
-            $e->appendDebug($e->getResponse()->getInfo('debug') ?? '');
+            $debugInfo = $e->getResponse()->getInfo('debug');
+            $e->appendDebug(isset($debugInfo) ? $debugInfo : '');
 
             throw $e;
         }

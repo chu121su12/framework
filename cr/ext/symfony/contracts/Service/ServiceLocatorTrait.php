@@ -24,6 +24,18 @@ class_exists(NotFoundExceptionInterface::class);
  * @author Robin Chalas <robin.chalas@gmail.com>
  * @author Nicolas Grekas <p@tchwork.com>
  */
+class ServiceLocatorTrait_createNotFoundException_class extends \InvalidArgumentException implements NotFoundExceptionInterface {
+        }
+
+class ServiceLocatorTrait_createCircularReferenceException_class extends \RuntimeException implements ContainerExceptionInterface {
+        }
+
+/**
+ * A trait to help implement ServiceProviderInterface.
+ *
+ * @author Robin Chalas <robin.chalas@gmail.com>
+ * @author Nicolas Grekas <p@tchwork.com>
+ */
 trait ServiceLocatorTrait
 {
     private $factories;
@@ -78,7 +90,7 @@ trait ServiceLocatorTrait
     /**
      * {@inheritdoc}
      */
-    public function getProvidedServices(): array
+    public function getProvidedServices()/*: array*/
     {
         if (null === $this->providedTypes) {
             $this->providedTypes = [];
@@ -97,8 +109,10 @@ trait ServiceLocatorTrait
         return $this->providedTypes;
     }
 
-    private function createNotFoundException(string $id): NotFoundExceptionInterface
+    private function createNotFoundException(/*string */$id)/*: NotFoundExceptionInterface*/
     {
+        $id = backport_type_check('string', $id);
+
         if (!$alternatives = array_keys($this->factories)) {
             $message = 'is empty...';
         } else {
@@ -116,13 +130,13 @@ trait ServiceLocatorTrait
             $message = sprintf('Service "%s" not found: the current service locator %s', $id, $message);
         }
 
-        return new class($message) extends \InvalidArgumentException implements NotFoundExceptionInterface {
-        };
+        return new ServiceLocatorTrait_createNotFoundException_class($message);
     }
 
-    private function createCircularReferenceException(string $id, array $path): ContainerExceptionInterface
+    private function createCircularReferenceException(/*string */$id, array $path)/*: ContainerExceptionInterface*/
     {
-        return new class(sprintf('Circular reference detected for service "%s", path: "%s".', $id, implode(' -> ', $path))) extends \RuntimeException implements ContainerExceptionInterface {
-        };
+        $id = backport_type_check('string', $id);
+
+        return new ServiceLocatorTrait_createCircularReferenceException_class(sprintf('Circular reference detected for service "%s", path: "%s".', $id, implode(' -> ', $path)));
     }
 }

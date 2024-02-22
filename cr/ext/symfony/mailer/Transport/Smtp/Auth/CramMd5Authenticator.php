@@ -20,7 +20,7 @@ use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
  */
 class CramMd5Authenticator implements AuthenticatorInterface
 {
-    public function getAuthKeyword(): string
+    public function getAuthKeyword()/*: string*/
     {
         return 'CRAM-MD5';
     }
@@ -30,7 +30,7 @@ class CramMd5Authenticator implements AuthenticatorInterface
      *
      * @see https://www.ietf.org/rfc/rfc4954.txt
      */
-    public function authenticate(EsmtpTransport $client): void
+    public function authenticate(EsmtpTransport $client)/*: void*/
     {
         $challenge = $client->executeCommand("AUTH CRAM-MD5\r\n", [334]);
         $challenge = base64_decode(substr($challenge, 4));
@@ -41,8 +41,12 @@ class CramMd5Authenticator implements AuthenticatorInterface
     /**
      * Generates a CRAM-MD5 response from a server challenge.
      */
-    private function getResponse(string $secret, string $challenge): string
+    private function getResponse(/*string */$secret, /*string */$challenge)/*: string*/
     {
+        $challenge = backport_type_check('string', $challenge);
+
+        $secret = backport_type_check('string', $secret);
+
         if (\strlen($secret) > 64) {
             $secret = pack('H32', md5($secret));
         }

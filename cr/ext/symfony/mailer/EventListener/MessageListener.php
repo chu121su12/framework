@@ -27,10 +27,10 @@ use Symfony\Component\Mime\Message;
  */
 class MessageListener implements EventSubscriberInterface
 {
-    public const HEADER_SET_IF_EMPTY = 1;
-    public const HEADER_ADD = 2;
-    public const HEADER_REPLACE = 3;
-    public const DEFAULT_RULES = [
+    /*public */const HEADER_SET_IF_EMPTY = 1;
+    /*public */const HEADER_ADD = 2;
+    /*public */const HEADER_REPLACE = 3;
+    /*public */const DEFAULT_RULES = [
         'from' => self::HEADER_SET_IF_EMPTY,
         'return-path' => self::HEADER_SET_IF_EMPTY,
         'reply-to' => self::HEADER_ADD,
@@ -43,7 +43,7 @@ class MessageListener implements EventSubscriberInterface
     private $headerRules = [];
     private $renderer;
 
-    public function __construct(?Headers $headers = null, ?BodyRendererInterface $renderer = null, array $headerRules = self::DEFAULT_RULES)
+    public function __construct(/*?*/Headers $headers = null, /*?*/BodyRendererInterface $renderer = null, array $headerRules = self::DEFAULT_RULES)
     {
         $this->headers = $headers;
         $this->renderer = $renderer;
@@ -52,8 +52,12 @@ class MessageListener implements EventSubscriberInterface
         }
     }
 
-    public function addHeaderRule(string $headerName, int $rule): void
+    public function addHeaderRule(/*string */$headerName, /*int */$rule)/*: void*/
     {
+        $rule = backport_type_check('int', $rule);
+
+        $headerName = backport_type_check('string', $headerName);
+
         if ($rule < 1 || $rule > 3) {
             throw new InvalidArgumentException(sprintf('The "%d" rule is not supported.', $rule));
         }
@@ -61,7 +65,7 @@ class MessageListener implements EventSubscriberInterface
         $this->headerRules[strtolower($headerName)] = $rule;
     }
 
-    public function onMessage(MessageEvent $event): void
+    public function onMessage(MessageEvent $event)/*: void*/
     {
         $message = $event->getMessage();
         if (!$message instanceof Message) {
@@ -72,7 +76,7 @@ class MessageListener implements EventSubscriberInterface
         $this->renderMessage($message);
     }
 
-    private function setHeaders(Message $message): void
+    private function setHeaders(Message $message)/*: void*/
     {
         if (!$this->headers) {
             return;
@@ -86,7 +90,7 @@ class MessageListener implements EventSubscriberInterface
                 continue;
             }
 
-            switch ($this->headerRules[$name] ?? self::HEADER_SET_IF_EMPTY) {
+            switch (isset($this->headerRules[$name]) ? $this->headerRules[$name] : self::HEADER_SET_IF_EMPTY) {
                 case self::HEADER_SET_IF_EMPTY:
                     break;
 
@@ -116,7 +120,7 @@ class MessageListener implements EventSubscriberInterface
         }
     }
 
-    private function renderMessage(Message $message): void
+    private function renderMessage(Message $message)/*: void*/
     {
         if (!$this->renderer) {
             return;

@@ -32,14 +32,14 @@ final class DelayedEnvelope extends Envelope
         $this->message = $message;
     }
 
-    public function setSender(Address $sender): void
+    public function setSender(Address $sender)/*: void*/
     {
         parent::setSender($sender);
 
         $this->senderSet = true;
     }
 
-    public function getSender(): Address
+    public function getSender()/*: Address*/
     {
         if (!$this->senderSet) {
             parent::setSender(self::getSenderFromHeaders($this->message->getHeaders()));
@@ -48,7 +48,7 @@ final class DelayedEnvelope extends Envelope
         return parent::getSender();
     }
 
-    public function setRecipients(array $recipients): void
+    public function setRecipients(array $recipients)/*: void*/
     {
         parent::setRecipients($recipients);
 
@@ -58,7 +58,7 @@ final class DelayedEnvelope extends Envelope
     /**
      * @return Address[]
      */
-    public function getRecipients(): array
+    public function getRecipients()/*: array*/
     {
         if ($this->recipientsSet) {
             return parent::getRecipients();
@@ -67,7 +67,7 @@ final class DelayedEnvelope extends Envelope
         return self::getRecipientsFromHeaders($this->message->getHeaders());
     }
 
-    private static function getRecipientsFromHeaders(Headers $headers): array
+    private static function getRecipientsFromHeaders(Headers $headers)/*: array*/
     {
         $recipients = [];
         foreach (['to', 'cc', 'bcc'] as $name) {
@@ -81,7 +81,7 @@ final class DelayedEnvelope extends Envelope
         return $recipients;
     }
 
-    private static function getSenderFromHeaders(Headers $headers): Address
+    private static function getSenderFromHeaders(Headers $headers)/*: Address*/
     {
         if ($sender = $headers->get('Sender')) {
             return $sender->getAddress();

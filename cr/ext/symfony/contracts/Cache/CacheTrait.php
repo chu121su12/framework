@@ -30,22 +30,32 @@ trait CacheTrait
      *
      * @return mixed
      */
-    public function get(string $key, callable $callback, float $beta = null, array &$metadata = null)
+    public function get(/*string */$key, callable $callback, /*float */$beta = null, array &$metadata = null)
     {
+        $beta = backport_type_check('float', $beta);
+
+        $key = backport_type_check('string', $key);
+
         return $this->doGet($this, $key, $callback, $beta, $metadata);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function delete(string $key): bool
+    public function delete(/*string */$key)/*: bool*/
     {
+        $key = backport_type_check('string', $key);
+
         return $this->deleteItem($key);
     }
 
-    private function doGet(CacheItemPoolInterface $pool, string $key, callable $callback, ?float $beta, array &$metadata = null, LoggerInterface $logger = null)
+    private function doGet(CacheItemPoolInterface $pool, /*string */$key, callable $callback, /*?float */$beta, array &$metadata = null, LoggerInterface $logger = null)
     {
-        if (0 > $beta = $beta ?? 1.0) {
+        $beta = backport_type_check('?float', $beta);
+
+        $key = backport_type_check('string', $key);
+
+        if (0 > $beta = (isset($beta) ? $beta : 1.0)) {
             throw new class(sprintf('Argument "$beta" provided to "%s::get()" must be a positive number, %f given.', static::class, $beta)) extends \InvalidArgumentException implements InvalidArgumentException { };
         }
 
@@ -54,8 +64,8 @@ trait CacheTrait
         $metadata = $item instanceof ItemInterface ? $item->getMetadata() : [];
 
         if (!$recompute && $metadata) {
-            $expiry = $metadata[ItemInterface::METADATA_EXPIRY] ?? false;
-            $ctime = $metadata[ItemInterface::METADATA_CTIME] ?? false;
+            $expiry = isset($metadata[ItemInterface::METADATA_EXPIRY]) ? $metadata[ItemInterface::METADATA_EXPIRY] : false;
+            $ctime = isset($metadata[ItemInterface::METADATA_CTIME]) ? $metadata[ItemInterface::METADATA_CTIME] : false;
 
             if ($recompute = $ctime && $expiry && $expiry <= ($now = microtime(true)) - $ctime / 1000 * $beta * log(random_int(1, \PHP_INT_MAX) / \PHP_INT_MAX)) {
                 // force applying defaultLifetime to expiry

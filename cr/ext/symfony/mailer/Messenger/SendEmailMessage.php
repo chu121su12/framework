@@ -22,18 +22,18 @@ class SendEmailMessage
     private $message;
     private $envelope;
 
-    public function __construct(RawMessage $message, ?Envelope $envelope = null)
+    public function __construct(RawMessage $message, /*?*/Envelope $envelope = null)
     {
         $this->message = $message;
         $this->envelope = $envelope;
     }
 
-    public function getMessage(): RawMessage
+    public function getMessage()/*: RawMessage*/
     {
         return $this->message;
     }
 
-    public function getEnvelope(): ?Envelope
+    public function getEnvelope()/*: ?Envelope*/
     {
         return $this->envelope;
     }

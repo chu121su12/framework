@@ -22,5 +22,5 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
  */
 interface HttpExceptionInterface extends ExceptionInterface
 {
-    public function getResponse(): ResponseInterface;
+    public function getResponse()/*: ResponseInterface*/;
 }

@@ -20,8 +20,14 @@ final class EmailCount extends Constraint
     private $transport;
     private $queued;
 
-    public function __construct(int $expectedValue, ?string $transport = null, bool $queued = false)
+    public function __construct(/*int */$expectedValue, /*?string */$transport = null, /*bool */$queued = false)
     {
+        $queued = backport_type_check('bool', $queued);
+
+        $transport = backport_type_check('?string', $transport);
+
+        $expectedValue = backport_type_check('int', $expectedValue);
+
         $this->expectedValue = $expectedValue;
         $this->transport = $transport;
         $this->queued = $queued;
@@ -30,7 +36,7 @@ final class EmailCount extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function toString(): string
+    public function toString()/*: string*/
     {
         return sprintf('%shas %s "%d" emails', $this->transport ? $this->transport.' ' : '', $this->queued ? 'queued' : 'sent', $this->expectedValue);
     }
@@ -40,7 +46,7 @@ final class EmailCount extends Constraint
      *
      * {@inheritdoc}
      */
-    protected function matches($events): bool
+    protected function matches($events)/*: bool*/
     {
         return $this->expectedValue === $this->countEmails($events);
     }
@@ -50,12 +56,12 @@ final class EmailCount extends Constraint
      *
      * {@inheritdoc}
      */
-    protected function failureDescription($events): string
+    protected function failureDescription($events)/*: string*/
     {
         return sprintf('the Transport %s (%d %s)', $this->toString(), $this->countEmails($events), $this->queued ? 'queued' : 'sent');
     }
 
-    private function countEmails(MessageEvents $events): int
+    private function countEmails(MessageEvents $events)/*: int*/
     {
         $count = 0;
         foreach ($events->getEvents($this->transport) as $event) {

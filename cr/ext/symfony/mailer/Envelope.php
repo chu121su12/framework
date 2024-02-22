@@ -33,7 +33,7 @@ class Envelope
         $this->setRecipients($recipients);
     }
 
-    public static function create(RawMessage $message): self
+    public static function create(RawMessage $message)/*: self*/
     {
         if (RawMessage::class === \get_class($message)) {
             throw new LogicException('Cannot send a RawMessage instance without an explicit Envelope.');
@@ -42,7 +42,7 @@ class Envelope
         return new DelayedEnvelope($message);
     }
 
-    public function setSender(Address $sender): void
+    public function setSender(Address $sender)/*: void*/
     {
         // to ensure deliverability of bounce emails independent of UTF-8 capabilities of SMTP servers
         if (!preg_match('/^[^@\x80-\xFF]++@/', $sender->getAddress())) {
@@ -55,7 +55,7 @@ class Envelope
      * @return Address Returns a "mailbox" as specified by RFC 2822
      *                 Must be converted to an "addr-spec" when used as a "MAIL FROM" value in SMTP (use getAddress())
      */
-    public function getSender(): Address
+    public function getSender()/*: Address*/
     {
         return $this->sender;
     }
@@ -63,7 +63,7 @@ class Envelope
     /**
      * @param Address[] $recipients
      */
-    public function setRecipients(array $recipients): void
+    public function setRecipients(array $recipients)/*: void*/
     {
         if (!$recipients) {
             throw new InvalidArgumentException('An envelope must have at least one recipient.');
@@ -81,7 +81,7 @@ class Envelope
     /**
      * @return Address[]
      */
-    public function getRecipients(): array
+    public function getRecipients()/*: array*/
     {
         return $this->recipients;
     }

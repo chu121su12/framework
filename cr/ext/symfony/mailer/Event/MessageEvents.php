@@ -21,13 +21,13 @@ class MessageEvents
     private $events = [];
     private $transports = [];
 
-    public function add(MessageEvent $event): void
+    public function add(MessageEvent $event)/*: void*/
     {
         $this->events[] = $event;
         $this->transports[$event->getTransport()] = true;
     }
 
-    public function getTransports(): array
+    public function getTransports()/*: array*/
     {
         return array_keys($this->transports);
     }
@@ -35,8 +35,10 @@ class MessageEvents
     /**
      * @return MessageEvent[]
      */
-    public function getEvents(?string $name = null): array
+    public function getEvents(/*?string */$name = null)/*: array*/
     {
+        $name = backport_type_check('?string', $name);
+
         if (null === $name) {
             return $this->events;
         }
@@ -54,8 +56,10 @@ class MessageEvents
     /**
      * @return RawMessage[]
      */
-    public function getMessages(?string $name = null): array
+    public function getMessages(/*?string */$name = null)/*: array*/
     {
+        $name = backport_type_check('?string', $name);
+
         $events = $this->getEvents($name);
         $messages = [];
         foreach ($events as $event) {

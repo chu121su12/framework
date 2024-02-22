@@ -18,6 +18,15 @@ namespace Symfony\Contracts\HttpClient\Exception;
  *
  * @experimental in 1.1
  */
-interface ExceptionInterface extends \Throwable
+if (interface_exists('Throwable'))
 {
+    interface ExceptionInterface extends \Throwable
+    {
+    }
+}
+else
+{
+    interface ExceptionInterface
+    {
+    }
 }

@@ -20,8 +20,14 @@ class HttpTransportException extends TransportException
 {
     private $response;
 
-    public function __construct(?string $message, ResponseInterface $response, int $code = 0, ?\Throwable $previous = null)
+    public function __construct(/*?string */$message, ResponseInterface $response, /*int */$code = 0, /*?\Throwable */$previous = null)
     {
+        $code = backport_type_check('int', $code);
+
+        $message = backport_type_check('?string', $message);
+
+        backport_type_throwable($previous);
+
         if (null === $message) {
             trigger_deprecation('symfony/mailer', '5.3', 'Passing null as $message to "%s()" is deprecated, pass an empty string instead.', __METHOD__);
 
@@ -33,7 +39,7 @@ class HttpTransportException extends TransportException
         $this->response = $response;
     }
 
-    public function getResponse(): ResponseInterface
+    public function getResponse()/*: ResponseInterface*/
     {
         return $this->response;
     }

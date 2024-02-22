@@ -26,10 +26,10 @@ interface AuthenticatorInterface
      *
      * @throws TransportExceptionInterface
      */
-    public function authenticate(EsmtpTransport $client): void;
+    public function authenticate(EsmtpTransport $client)/*: void*/;
 
     /**
      * Gets the name of the AUTH mechanism this Authenticator handles.
      */
-    public function getAuthKeyword(): string;
+    public function getAuthKeyword()/*: string*/;
 }

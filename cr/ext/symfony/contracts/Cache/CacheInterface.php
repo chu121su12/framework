@@ -42,7 +42,7 @@ interface CacheInterface
      *
      * @throws InvalidArgumentException When $key is not valid or when $beta is negative
      */
-    public function get(string $key, callable $callback, float $beta = null, array &$metadata = null);
+    public function get(/*string */$key, callable $callback, /*float */$beta = null, array &$metadata = null);
 
     /**
      * Removes an item from the pool.
@@ -53,5 +53,5 @@ interface CacheInterface
      *
      * @return bool True if the item was successfully removed, false if there was any error
      */
-    public function delete(string $key): bool;
+    public function delete(/*string */$key)/*: bool*/;
 }

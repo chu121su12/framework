@@ -18,8 +18,10 @@ use Symfony\Component\Mime\Header\UnstructuredHeader;
  */
 final class TagHeader extends UnstructuredHeader
 {
-    public function __construct(string $value)
+    public function __construct(/*string */$value)
     {
+        $value = backport_type_check('string', $value);
+
         parent::__construct('X-Tag', $value);
     }
 }

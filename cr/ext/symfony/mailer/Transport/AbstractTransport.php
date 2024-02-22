@@ -33,10 +33,10 @@ abstract class AbstractTransport implements TransportInterface
     private $rate = 0;
     private $lastSent = 0;
 
-    public function __construct(?EventDispatcherInterface $dispatcher = null, ?LoggerInterface $logger = null)
+    public function __construct(/*?*/EventDispatcherInterface $dispatcher = null, /*?*/LoggerInterface $logger = null)
     {
         $this->dispatcher = class_exists(Event::class) && $dispatcher instanceof SymfonyEventDispatcherInterface ? LegacyEventDispatcherProxy::decorate($dispatcher) : $dispatcher;
-        $this->logger = $logger ?? new NullLogger();
+        $this->logger = isset($logger) ? $logger : new NullLogger();
     }
 
     /**
@@ -44,8 +44,10 @@ abstract class AbstractTransport implements TransportInterface
      *
      * @return $this
      */
-    public function setMaxPerSecond(float $rate): self
+    public function setMaxPerSecond(/*float */$rate)/*: self*/
     {
+        $rate = backport_type_check('float', $rate);
+
         if (0 >= $rate) {
             $rate = 0;
         }
@@ -56,7 +58,7 @@ abstract class AbstractTransport implements TransportInterface
         return $this;
     }
 
-    public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
+    public function send(RawMessage $message, /*?*/Envelope $envelope = null)/*: ?SentMessage*/
     {
         $message = clone $message;
         $envelope = null !== $envelope ? clone $envelope : Envelope::create($message);
@@ -76,21 +78,21 @@ abstract class AbstractTransport implements TransportInterface
         return $message;
     }
 
-    abstract protected function doSend(SentMessage $message): void;
+    abstract protected function doSend(SentMessage $message)/*: void*/;
 
     /**
      * @param Address[] $addresses
      *
      * @return string[]
      */
-    protected function stringifyAddresses(array $addresses): array
+    protected function stringifyAddresses(array $addresses)/*: array*/
     {
         return array_map(function (Address $a) {
             return $a->toString();
         }, $addresses);
     }
 
-    protected function getLogger(): LoggerInterface
+    protected function getLogger()/*: LoggerInterface*/
     {
         return $this->logger;
     }

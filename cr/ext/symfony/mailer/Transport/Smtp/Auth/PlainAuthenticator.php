@@ -20,7 +20,7 @@ use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
  */
 class PlainAuthenticator implements AuthenticatorInterface
 {
-    public function getAuthKeyword(): string
+    public function getAuthKeyword()/*: string*/
     {
         return 'PLAIN';
     }
@@ -30,7 +30,7 @@ class PlainAuthenticator implements AuthenticatorInterface
      *
      * @see https://www.ietf.org/rfc/rfc4954.txt
      */
-    public function authenticate(EsmtpTransport $client): void
+    public function authenticate(EsmtpTransport $client)/*: void*/
     {
         $client->executeCommand(sprintf("AUTH PLAIN %s\r\n", base64_encode($client->getUsername().\chr(0).$client->getUsername().\chr(0).$client->getPassword())), [235]);
     }

@@ -26,7 +26,7 @@ class MessageHandler
         $this->transport = $transport;
     }
 
-    public function __invoke(SendEmailMessage $message): ?SentMessage
+    public function __invoke(SendEmailMessage $message)/*: ?SentMessage*/
     {
         return $this->transport->send($message->getMessage(), $message->getEnvelope());
     }

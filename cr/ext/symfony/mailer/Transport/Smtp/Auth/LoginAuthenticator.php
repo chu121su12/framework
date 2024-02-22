@@ -20,7 +20,7 @@ use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
  */
 class LoginAuthenticator implements AuthenticatorInterface
 {
-    public function getAuthKeyword(): string
+    public function getAuthKeyword()/*: string*/
     {
         return 'LOGIN';
     }
@@ -30,7 +30,7 @@ class LoginAuthenticator implements AuthenticatorInterface
      *
      * @see https://www.ietf.org/rfc/rfc4954.txt
      */
-    public function authenticate(EsmtpTransport $client): void
+    public function authenticate(EsmtpTransport $client)/*: void*/
     {
         $client->executeCommand("AUTH LOGIN\r\n", [334]);
         $client->executeCommand(sprintf("%s\r\n", base64_encode($client->getUsername())), [334]);

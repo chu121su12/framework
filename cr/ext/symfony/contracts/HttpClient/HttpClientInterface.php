@@ -25,7 +25,7 @@ use Symfony\Contracts\HttpClient\Test\HttpClientTestCase;
  */
 interface HttpClientInterface
 {
-    public const OPTIONS_DEFAULTS = [
+    /*public */const OPTIONS_DEFAULTS = [
         'auth_basic' => null,   // array|string - an array containing the username as first value, and optionally the
                                 //   password as the second one; or string like username:password - enabling HTTP Basic
                                 //   authentication (RFC 7617)
@@ -83,7 +83,7 @@ interface HttpClientInterface
      *
      * @throws TransportExceptionInterface When an unsupported option is passed
      */
-    public function request(string $method, string $url, array $options = []): ResponseInterface;
+    public function request(/*string */$method, /*string */$url, array $options = [])/*: ResponseInterface*/;
 
     /**
      * Yields responses chunk by chunk as they complete.
@@ -91,5 +91,5 @@ interface HttpClientInterface
      * @param ResponseInterface|ResponseInterface[]|iterable $responses One or more responses created by the current HTTP client
      * @param float|null                                     $timeout   The idle timeout before yielding timeout chunks
      */
-    public function stream($responses, float $timeout = null): ResponseStreamInterface;
+    public function stream($responses, /*float */$timeout = null)/*: ResponseStreamInterface*/;
 }

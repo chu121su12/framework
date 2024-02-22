@@ -25,8 +25,18 @@ final class Dsn
     private $port;
     private $options;
 
-    public function __construct(string $scheme, string $host, ?string $user = null, ?string $password = null, ?int $port = null, array $options = [])
+    public function __construct(/*string */$scheme, /*string */$host, /*?string */$user = null, /*?string */$password = null, /*?int */$port = null, array $options = [])
     {
+        $port = backport_type_check('?int', $port);
+
+        $password = backport_type_check('?string', $password);
+
+        $user = backport_type_check('?string', $user);
+
+        $host = backport_type_check('string', $host);
+
+        $scheme = backport_type_check('string', $scheme);
+
         $this->scheme = $scheme;
         $this->host = $host;
         $this->user = $user;
@@ -35,8 +45,10 @@ final class Dsn
         $this->options = $options;
     }
 
-    public static function fromString(string $dsn): self
+    public static function fromString(/*string */$dsn)/*: self*/
     {
+        $dsn = backport_type_check('string', $dsn);
+
         if (false === $params = parse_url($dsn)) {
             throw new InvalidArgumentException('The mailer DSN is invalid.');
         }
@@ -49,41 +61,45 @@ final class Dsn
             throw new InvalidArgumentException('The mailer DSN must contain a host (use "default" by default).');
         }
 
-        $user = '' !== ($params['user'] ?? '') ? rawurldecode($params['user']) : null;
-        $password = '' !== ($params['pass'] ?? '') ? rawurldecode($params['pass']) : null;
-        $port = $params['port'] ?? null;
-        parse_str($params['query'] ?? '', $query);
+        $user = '' !== (isset($params['user']) ? $params['user'] : '') ? rawurldecode($params['user']) : null;
+        $password = '' !== (isset($params['pass']) ? $params['pass'] : '') ? rawurldecode($params['pass']) : null;
+        $port = isset($params['port']) ? $params['port'] : null;
+        parse_str(isset($params['query']) ? $params['query'] : '', $query);
 
         return new self($params['scheme'], $params['host'], $user, $password, $port, $query);
     }
 
-    public function getScheme(): string
+    public function getScheme()/*: string*/
     {
         return $this->scheme;
     }
 
-    public function getHost(): string
+    public function getHost()/*: string*/
     {
         return $this->host;
     }
 
-    public function getUser(): ?string
+    public function getUser()/*: ?string*/
     {
         return $this->user;
     }
 
-    public function getPassword(): ?string
+    public function getPassword()/*: ?string*/
     {
         return $this->password;
     }
 
-    public function getPort(?int $default = null): ?int
+    public function getPort(/*?int */$default = null)/*: ?int*/
     {
-        return $this->port ?? $default;
+        $default = backport_type_check('?int', $default);
+
+        return isset($this->port) ? $this->port : $default;
     }
 
-    public function getOption(string $key, $default = null)
+    public function getOption(/*string*/$key, $default = null)
     {
-        return $this->options[$key] ?? $default;
+        $key = backport_type_check('string', $key);
+
+        return isset($this->options[$key]) ? $this->options[$key] : $default;
     }
 }

@@ -27,40 +27,44 @@ final class MessageEvent extends Event
     private $transport;
     private $queued;
 
-    public function __construct(RawMessage $message, Envelope $envelope, string $transport, bool $queued = false)
+    public function __construct(RawMessage $message, Envelope $envelope, /*string */$transport, /*bool */$queued = false)
     {
+        $queued = backport_type_check('bool', $queued);
+
+        $transport = backport_type_check('string', $transport);
+
         $this->message = $message;
         $this->envelope = $envelope;
         $this->transport = $transport;
         $this->queued = $queued;
     }
 
-    public function getMessage(): RawMessage
+    public function getMessage()/*: RawMessage*/
     {
         return $this->message;
     }
 
-    public function setMessage(RawMessage $message): void
+    public function setMessage(RawMessage $message)/*: void*/
     {
         $this->message = $message;
     }
 
-    public function getEnvelope(): Envelope
+    public function getEnvelope()/*: Envelope*/
     {
         return $this->envelope;
     }
 
-    public function setEnvelope(Envelope $envelope): void
+    public function setEnvelope(Envelope $envelope)/*: void*/
     {
         $this->envelope = $envelope;
     }
 
-    public function getTransport(): string
+    public function getTransport()/*: string*/
     {
         return $this->transport;
     }
 
-    public function isQueued(): bool
+    public function isQueued()/*: bool*/
     {
         return $this->queued;
     }

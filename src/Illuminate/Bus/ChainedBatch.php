@@ -2,6 +2,7 @@
 
 namespace Illuminate\Bus;
 
+use CR\LaravelBackport\ChainedBatchContainer;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Bus\Dispatcher as DispatcherContract;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -132,7 +133,7 @@ class ChainedBatch implements ShouldQueue
             $next->chainQueue = $this->chainQueue;
             $next->chainCatchCallbacks = $this->chainCatchCallbacks;
 
-            $batch->finally_(new Patch\ChainedBatchContainer($next));
+            $batch->finally_(new ChainedBatchContainer($next));
             // $batch->finally_(function (Batch $batch) use ($next) {
             //     if (! $batch->cancelled()) {
             //         Container::getInstance()->make(DispatcherContract::class)->dispatch($next);

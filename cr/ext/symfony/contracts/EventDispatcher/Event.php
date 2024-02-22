@@ -36,7 +36,7 @@ if (interface_exists(StoppableEventInterface::class)) {
         /**
          * Returns whether further event listeners should be triggered.
          */
-        public function isPropagationStopped(): bool
+        public function isPropagationStopped()/*: bool*/
         {
             return $this->propagationStopped;
         }
@@ -48,7 +48,7 @@ if (interface_exists(StoppableEventInterface::class)) {
          * further event listener will be triggered once any trigger calls
          * stopPropagation().
          */
-        public function stopPropagation(): void
+        public function stopPropagation()/*: void*/
         {
             $this->propagationStopped = true;
         }
@@ -76,7 +76,7 @@ if (interface_exists(StoppableEventInterface::class)) {
         /**
          * Returns whether further event listeners should be triggered.
          */
-        public function isPropagationStopped(): bool
+        public function isPropagationStopped()/*: bool*/
         {
             return $this->propagationStopped;
         }
@@ -88,7 +88,7 @@ if (interface_exists(StoppableEventInterface::class)) {
          * further event listener will be triggered once any trigger calls
          * stopPropagation().
          */
-        public function stopPropagation(): void
+        public function stopPropagation()/*: void*/
         {
             $this->propagationStopped = true;
         }

@@ -21,7 +21,7 @@ use Symfony\Component\Mailer\Transport\TransportInterface;
  */
 final class EsmtpTransportFactory extends AbstractTransportFactory
 {
-    public function create(Dsn $dsn): TransportInterface
+    public function create(Dsn $dsn)/*: TransportInterface*/
     {
         $tls = 'smtps' === $dsn->getScheme() ? true : null;
         $port = $dsn->getPort(0);
@@ -63,7 +63,7 @@ final class EsmtpTransportFactory extends AbstractTransportFactory
         return $transport;
     }
 
-    protected function getSupportedSchemes(): array
+    protected function getSupportedSchemes()/*: array*/
     {
         return ['smtp', 'smtps'];
     }

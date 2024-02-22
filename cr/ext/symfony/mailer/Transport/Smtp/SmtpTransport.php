@@ -40,14 +40,14 @@ class SmtpTransport extends AbstractTransport
     private $stream;
     private $domain = '[127.0.0.1]';
 
-    public function __construct(?AbstractStream $stream = null, ?EventDispatcherInterface $dispatcher = null, ?LoggerInterface $logger = null)
+    public function __construct(/*?*/AbstractStream $stream = null, /*?*/EventDispatcherInterface $dispatcher = null, /*?*/LoggerInterface $logger = null)
     {
         parent::__construct($dispatcher, $logger);
 
-        $this->stream = $stream ?? new SocketStream();
+        $this->stream = isset($stream) ? $stream : new SocketStream();
     }
 
-    public function getStream(): AbstractStream
+    public function getStream()/*: AbstractStream*/
     {
         return $this->stream;
     }
@@ -62,8 +62,12 @@ class SmtpTransport extends AbstractTransport
      *
      * @return $this
      */
-    public function setRestartThreshold(int $threshold, int $sleep = 0): self
+    public function setRestartThreshold(/*int */$threshold, /*int */$sleep = 0)/*: self*/
     {
+        $sleep = backport_type_check('int', $sleep);
+
+        $threshold = backport_type_check('int', $threshold);
+
         $this->restartThreshold = $threshold;
         $this->restartThresholdSleep = $sleep;
 
@@ -85,8 +89,10 @@ class SmtpTransport extends AbstractTransport
      *
      * @return $this
      */
-    public function setPingThreshold(int $seconds): self
+    public function setPingThreshold(/*int */$seconds)/*: self*/
     {
+        $seconds = backport_type_check('int', $seconds);
+
         $this->pingThreshold = $seconds;
 
         return $this;
@@ -104,8 +110,10 @@ class SmtpTransport extends AbstractTransport
      *
      * @return $this
      */
-    public function setLocalDomain(string $domain): self
+    public function setLocalDomain(/*string */$domain)/*: self*/
     {
+        $domain = backport_type_check('string', $domain);
+
         if ('' !== $domain && '[' !== $domain[0]) {
             if (filter_var($domain, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4)) {
                 $domain = '['.$domain.']';
@@ -125,12 +133,12 @@ class SmtpTransport extends AbstractTransport
      * If an IP address was specified, this will be returned wrapped in square
      * brackets as described in RFC 5321, section 4.1.3.
      */
-    public function getLocalDomain(): string
+    public function getLocalDomain()/*: string*/
     {
         return $this->domain;
     }
 
-    public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
+    public function send(RawMessage $message, /*?*/Envelope $envelope = null)/*: ?SentMessage*/
     {
         try {
             $message = parent::send($message, $envelope);
@@ -151,7 +159,7 @@ class SmtpTransport extends AbstractTransport
         return $message;
     }
 
-    public function __toString(): string
+    public function __toString()/*: string*/
     {
         if ($this->stream instanceof SocketStream) {
             $name = sprintf('smtp%s://%s', ($tls = $this->stream->isTLS()) ? 's' : '', $this->stream->getHost());
@@ -175,8 +183,10 @@ class SmtpTransport extends AbstractTransport
      *
      * @internal
      */
-    public function executeCommand(string $command, array $codes): string
+    public function executeCommand(/*string */$command, array $codes)/*: string*/
     {
+        $command = backport_type_check('string', $command);
+
         $this->stream->write($command);
         $response = $this->getFullResponse();
         $this->assertResponseCode($response, $codes);
@@ -184,7 +194,7 @@ class SmtpTransport extends AbstractTransport
         return $response;
     }
 
-    protected function doSend(SentMessage $message): void
+    protected function doSend(SentMessage $message)/*: void*/
     {
         if (microtime(true) - $this->lastMessageTime > $this->pingThreshold) {
             $this->ping();
@@ -225,22 +235,26 @@ class SmtpTransport extends AbstractTransport
         }
     }
 
-    protected function doHeloCommand(): void
+    protected function doHeloCommand()/*: void*/
     {
         $this->executeCommand(sprintf("HELO %s\r\n", $this->domain), [250]);
     }
 
-    private function doMailFromCommand(string $address): void
+    private function doMailFromCommand(/*string */$address)/*: void*/
     {
+        $address = backport_type_check('string', $address);
+
         $this->executeCommand(sprintf("MAIL FROM:<%s>\r\n", $address), [250]);
     }
 
-    private function doRcptToCommand(string $address): void
+    private function doRcptToCommand(/*string */$address)/*: void*/
     {
+        $address = backport_type_check('string', $address);
+
         $this->executeCommand(sprintf("RCPT TO:<%s>\r\n", $address), [250, 251, 252]);
     }
 
-    private function start(): void
+    private function start()/*: void*/
     {
         if ($this->started) {
             return;
@@ -257,7 +271,7 @@ class SmtpTransport extends AbstractTransport
         $this->getLogger()->debug(sprintf('Email transport "%s" started', __CLASS__));
     }
 
-    private function stop(): void
+    private function stop()/*: void*/
     {
         if (!$this->started) {
             return;
@@ -275,7 +289,7 @@ class SmtpTransport extends AbstractTransport
         }
     }
 
-    private function ping(): void
+    private function ping()/*: void*/
     {
         if (!$this->started) {
             return;
@@ -291,13 +305,15 @@ class SmtpTransport extends AbstractTransport
     /**
      * @throws TransportException if a response code is incorrect
      */
-    private function assertResponseCode(string $response, array $codes): void
+    private function assertResponseCode(/*string */$response, array $codes)/*: void*/
     {
+        $response = backport_type_check('string', $response);
+
         if (!$codes) {
             throw new LogicException('You must set the expected response code.');
         }
 
-        [$code] = sscanf($response, '%3d');
+        list($code) = sscanf($response, '%3d');
         $valid = \in_array($code, $codes);
 
         if (!$valid || !$response) {
@@ -308,7 +324,7 @@ class SmtpTransport extends AbstractTransport
         }
     }
 
-    private function getFullResponse(): string
+    private function getFullResponse()/*: string*/
     {
         $response = '';
         do {
@@ -319,7 +335,7 @@ class SmtpTransport extends AbstractTransport
         return $response;
     }
 
-    private function checkRestartThreshold(): void
+    private function checkRestartThreshold()/*: void*/
     {
         // when using sendmail via non-interactive mode, the transport is never "started"
         if (!$this->started) {

@@ -136,8 +136,12 @@ EOF;
      * which is subject to the new BSD license (http://framework.zend.com/license/new-bsd).
      * Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
      */
-    private function getPluralizationRule(float $number, string $locale): int
+    private function getPluralizationRule(/*float */$number, /*string */$locale)/*: int*/
     {
+        $locale = backport_type_check('string', $locale);
+
+        $number = backport_type_check('float', $number);
+
         $number = abs($number);
 
         switch ('pt_BR' !== $locale && 'en_US_POSIX' !== $locale && \strlen($locale) > 3 ? substr($locale, 0, strrpos($locale, '_')) : $locale) {

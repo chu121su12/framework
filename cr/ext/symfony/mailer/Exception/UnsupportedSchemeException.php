@@ -19,7 +19,7 @@ use Symfony\Component\Mailer\Transport\Dsn;
  */
 class UnsupportedSchemeException extends LogicException
 {
-    private const SCHEME_TO_PACKAGE_MAP = [
+    /*private */const SCHEME_TO_PACKAGE_MAP = [
         'gmail' => [
             'class' => Bridge\Google\Transport\GmailTransportFactory::class,
             'package' => 'symfony/google-mailer',
@@ -58,13 +58,15 @@ class UnsupportedSchemeException extends LogicException
         ],
     ];
 
-    public function __construct(Dsn $dsn, ?string $name = null, array $supported = [])
+    public function __construct(Dsn $dsn, /*?string */$name = null, array $supported = [])
     {
+        $name = backport_type_check('?string', $name);
+
         $provider = $dsn->getScheme();
         if (false !== $pos = strpos($provider, '+')) {
             $provider = substr($provider, 0, $pos);
         }
-        $package = self::SCHEME_TO_PACKAGE_MAP[$provider] ?? null;
+        $package = isset(self::SCHEME_TO_PACKAGE_MAP[$provider]) ? self::SCHEME_TO_PACKAGE_MAP[$provider] : null;
         if ($package && !class_exists($package['class'])) {
             parent::__construct(sprintf('Unable to send emails via "%s" as the bridge is not installed; try running "composer require %s".', $provider, $package['package']));
 

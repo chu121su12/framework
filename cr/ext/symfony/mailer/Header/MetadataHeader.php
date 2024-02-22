@@ -20,14 +20,18 @@ final class MetadataHeader extends UnstructuredHeader
 {
     private $key;
 
-    public function __construct(string $key, string $value)
+    public function __construct(/*string */$key, /*string */$value)
     {
+        $value = backport_type_check('string', $value);
+
+        $key = backport_type_check('string', $key);
+
         $this->key = $key;
 
         parent::__construct('X-Metadata-'.$key, $value);
     }
 
-    public function getKey(): string
+    public function getKey()/*: string*/
     {
         return $this->key;
     }

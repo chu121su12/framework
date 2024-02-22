@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Bus\Patch;
+namespace CR\LaravelBackport;
 
 use Illuminate\Bus\Batch;
 use Illuminate\Contracts\Bus\Dispatcher as DispatcherContract;

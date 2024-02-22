@@ -23,7 +23,7 @@ interface TransportFactoryInterface
      * @throws UnsupportedSchemeException
      * @throws IncompleteDsnException
      */
-    public function create(Dsn $dsn): TransportInterface;
+    public function create(Dsn $dsn)/*: TransportInterface*/;
 
-    public function supports(Dsn $dsn): bool;
+    public function supports(Dsn $dsn)/*: bool*/;
 }

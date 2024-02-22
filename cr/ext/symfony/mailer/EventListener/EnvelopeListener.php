@@ -30,7 +30,7 @@ class EnvelopeListener implements EventSubscriberInterface
      * @param Address|string        $sender
      * @param array<Address|string> $recipients
      */
-    public function __construct($sender = null, ?array $recipients = null)
+    public function __construct($sender = null, /*?*/array $recipients = null)
     {
         if (null !== $sender) {
             $this->sender = Address::create($sender);
@@ -40,7 +40,7 @@ class EnvelopeListener implements EventSubscriberInterface
         }
     }
 
-    public function onMessage(MessageEvent $event): void
+    public function onMessage(MessageEvent $event)/*: void*/
     {
         if ($this->sender) {
             $event->getEnvelope()->setSender($this->sender);

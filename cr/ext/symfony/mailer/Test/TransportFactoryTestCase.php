@@ -28,25 +28,25 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 abstract class TransportFactoryTestCase extends TestCase
 {
-    protected const USER = 'u$er';
-    protected const PASSWORD = 'pa$s';
+    /*protected */const USER = 'u$er';
+    /*protected */const PASSWORD = 'pa$s';
 
     protected $dispatcher;
     protected $client;
     protected $logger;
 
-    abstract public function getFactory(): TransportFactoryInterface;
+    abstract public function getFactory()/*: TransportFactoryInterface*/;
 
-    abstract public static function supportsProvider(): iterable;
+    abstract public static function supportsProvider()/*: iterable*/;
 
-    abstract public static function createProvider(): iterable;
+    abstract public static function createProvider()/*: iterable*/;
 
-    public static function unsupportedSchemeProvider(): iterable
+    public static function unsupportedSchemeProvider()/*: iterable*/
     {
         return [];
     }
 
-    public static function incompleteDsnProvider(): iterable
+    public static function incompleteDsnProvider()/*: iterable*/
     {
         return [];
     }
@@ -54,8 +54,10 @@ abstract class TransportFactoryTestCase extends TestCase
     /**
      * @dataProvider supportsProvider
      */
-    public function testSupports(Dsn $dsn, bool $supports)
+    public function testSupports(Dsn $dsn, /*bool */$supports)
     {
+        $supports = backport_type_check('bool', $supports);
+
         $factory = $this->getFactory();
 
         $this->assertSame($supports, $factory->supports($dsn));
@@ -77,8 +79,10 @@ abstract class TransportFactoryTestCase extends TestCase
     /**
      * @dataProvider unsupportedSchemeProvider
      */
-    public function testUnsupportedSchemeException(Dsn $dsn, ?string $message = null)
+    public function testUnsupportedSchemeException(Dsn $dsn, /*?string */$message = null)
     {
+        $message = backport_type_check('?string', $message);
+
         $factory = $this->getFactory();
 
         $this->expectException(UnsupportedSchemeException::class);
@@ -100,18 +104,18 @@ abstract class TransportFactoryTestCase extends TestCase
         $factory->create($dsn);
     }
 
-    protected function getDispatcher(): EventDispatcherInterface
+    protected function getDispatcher()/*: EventDispatcherInterface*/
     {
-        return $this->dispatcher ?? $this->dispatcher =  $this->createMock(EventDispatcherInterface::class);
+        return isset($this->dispatcher) ? $this->dispatcher : ($this->dispatcher =  $this->createMock(EventDispatcherInterface::class));
     }
 
-    protected function getClient(): HttpClientInterface
+    protected function getClient()/*: HttpClientInterface*/
     {
-        return $this->client ?? $this->client = $this->createMock(HttpClientInterface::class);
+        return isset($this->client) ? $this->client : ($this->client = $this->createMock(HttpClientInterface::class));
     }
 
-    protected function getLogger(): LoggerInterface
+    protected function getLogger()/*: LoggerInterface*/
     {
-        return $this->logger ?? $this->logger = $this->createMock(LoggerInterface::class);
+        return isset($this->logger) ? $this->logger : ($this->logger = $this->createMock(LoggerInterface::class));
     }
 }

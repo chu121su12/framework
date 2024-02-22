@@ -19,7 +19,7 @@ final class EmailIsQueued extends Constraint
     /**
      * {@inheritdoc}
      */
-    public function toString(): string
+    public function toString()/*: string*/
     {
         return 'is queued';
     }
@@ -29,7 +29,7 @@ final class EmailIsQueued extends Constraint
      *
      * {@inheritdoc}
      */
-    protected function matches($event): bool
+    protected function matches($event)/*: bool*/
     {
         return $event->isQueued();
     }
@@ -39,7 +39,7 @@ final class EmailIsQueued extends Constraint
      *
      * {@inheritdoc}
      */
-    protected function failureDescription($event): string
+    protected function failureDescription($event)/*: string*/
     {
         return 'the Email '.$this->toString();
     }

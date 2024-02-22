@@ -43,8 +43,12 @@ class DataPart extends TextPart
 
         unset($this->_parent);
 
-        if (null === $contentType) {
-            $contentType = 'application/octet-stream';
+        if ($body instanceof File && !$filename) {
+            $filename = $body->getFilename();
+        }
+
+        if (! isset($contentType)) {
+            $contentType = $body instanceof File ? $body->getContentType() : 'application/octet-stream';
         }
         list($this->mediaType, $subtype) = explode('/', $contentType);
 
@@ -64,6 +68,8 @@ class DataPart extends TextPart
         $contentType = backport_type_check('?string', $contentType);
 
         $name = backport_type_check('?string', $name);
+
+        return new self(new File($path), $name, $contentType);
 
         if (null === $contentType) {
             $ext = strtolower(substr($path, strrpos($path, '.') + 1));
@@ -177,7 +183,7 @@ class DataPart extends TextPart
             throw new \BadMethodCallException('Cannot unserialize '.__CLASS__);
         }
         foreach (['body', 'charset', 'subtype', 'disposition', 'name', 'encoding'] as $name) {
-            if (null !== $this->_parent[$name] && !\is_string($this->_parent[$name])) {
+            if (null !== $this->_parent[$name] && !\is_string($this->_parent[$name]) && !$this->_parent[$name] instanceof File) {
                 throw new \BadMethodCallException('Cannot unserialize '.__CLASS__);
             }
             $r = new \ReflectionProperty(TextPart::class, $name);

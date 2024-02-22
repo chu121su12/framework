@@ -25,12 +25,14 @@ final class ProcessStream extends AbstractStream
 {
     private $command;
 
-    public function setCommand(string $command)
+    public function setCommand(/*string */$command)
     {
+        $command = backport_type_check('string', $command);
+
         $this->command = $command;
     }
 
-    public function initialize(): void
+    public function initialize()/*: void*/
     {
         $descriptorSpec = [
             0 => ['pipe', 'r'],
@@ -47,7 +49,7 @@ final class ProcessStream extends AbstractStream
         $this->out = &$pipes[1];
     }
 
-    public function terminate(): void
+    public function terminate()/*: void*/
     {
         if (null !== $this->stream) {
             fclose($this->in);
@@ -58,7 +60,7 @@ final class ProcessStream extends AbstractStream
         parent::terminate();
     }
 
-    protected function getReadConnectionDescription(): string
+    protected function getReadConnectionDescription()/*: string*/
     {
         return 'process '.$this->command;
     }

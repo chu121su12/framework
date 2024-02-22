@@ -35,8 +35,10 @@ class RoundRobinTransport implements TransportInterface
     /**
      * @param TransportInterface[] $transports
      */
-    public function __construct(array $transports, int $retryPeriod = 60)
+    public function __construct(array $transports, /*int */$retryPeriod = 60)
     {
+        $retryPeriod = backport_type_check('int', $retryPeriod);
+
         if (!$transports) {
             throw new TransportException(sprintf('"%s" must have at least one transport configured.', static::class));
         }
@@ -46,7 +48,7 @@ class RoundRobinTransport implements TransportInterface
         $this->retryPeriod = $retryPeriod;
     }
 
-    public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
+    public function send(RawMessage $message, /*?*/Envelope $envelope = null)/*: ?SentMessage*/
     {
         $exception = null;
 
@@ -54,16 +56,16 @@ class RoundRobinTransport implements TransportInterface
             try {
                 return $transport->send($message, $envelope);
             } catch (TransportExceptionInterface $e) {
-                $exception = $exception ?? new TransportException('All transports failed.');
+                $exception = isset($exception) ? $exception : new TransportException('All transports failed.');
                 $exception->appendDebug(sprintf("Transport \"%s\": %s\n", $transport, $e->getDebug()));
                 $this->deadTransports[$transport] = microtime(true);
             }
         }
 
-        throw $exception ?? new TransportException('No transports found.');
+        throw isset($exception) ? $exception : new TransportException('No transports found.');
     }
 
-    public function __toString(): string
+    public function __toString()/*: string*/
     {
         return $this->getNameSymbol().'('.implode(' ', array_map('strval', $this->transports)).')';
     }
@@ -71,7 +73,7 @@ class RoundRobinTransport implements TransportInterface
     /**
      * Rotates the transport list around and returns the first instance.
      */
-    protected function getNextTransport(): ?TransportInterface
+    protected function getNextTransport()/*: ?TransportInterface*/
     {
         if (-1 === $this->cursor) {
             $this->cursor = $this->getInitialCursor();
@@ -101,25 +103,27 @@ class RoundRobinTransport implements TransportInterface
         return $transport;
     }
 
-    protected function isTransportDead(TransportInterface $transport): bool
+    protected function isTransportDead(TransportInterface $transport)/*: bool*/
     {
         return $this->deadTransports->contains($transport);
     }
 
-    protected function getInitialCursor(): int
+    protected function getInitialCursor()/*: int*/
     {
         // the cursor initial value is randomized so that
         // when are not in a daemon, we are still rotating the transports
         return mt_rand(0, \count($this->transports) - 1);
     }
 
-    protected function getNameSymbol(): string
+    protected function getNameSymbol()/*: string*/
     {
         return 'roundrobin';
     }
 
-    private function moveCursor(int $cursor): int
+    private function moveCursor(/*int */$cursor)/*: int*/
     {
+        $cursor = backport_type_check('int', $cursor);
+
         return ++$cursor >= \count($this->transports) ? 0 : $cursor;
     }
 }

@@ -20,7 +20,7 @@ class FailoverTransport extends RoundRobinTransport
 {
     private $currentTransport;
 
-    protected function getNextTransport(): ?TransportInterface
+    protected function getNextTransport()/*: ?TransportInterface*/
     {
         if (null === $this->currentTransport || $this->isTransportDead($this->currentTransport)) {
             $this->currentTransport = parent::getNextTransport();
@@ -29,12 +29,12 @@ class FailoverTransport extends RoundRobinTransport
         return $this->currentTransport;
     }
 
-    protected function getInitialCursor(): int
+    protected function getInitialCursor()/*: int*/
     {
         return 0;
     }
 
-    protected function getNameSymbol(): string
+    protected function getNameSymbol()/*: string*/
     {
         return 'failover';
     }

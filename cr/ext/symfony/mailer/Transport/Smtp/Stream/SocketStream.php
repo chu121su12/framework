@@ -34,16 +34,18 @@ final class SocketStream extends AbstractStream
     /**
      * @return $this
      */
-    public function setTimeout(float $timeout): self
+    public function setTimeout(/*float */$timeout)/*: self*/
     {
+        $timeout = backport_type_check('float', $timeout);
+
         $this->timeout = $timeout;
 
         return $this;
     }
 
-    public function getTimeout(): float
+    public function getTimeout()/*: float*/
     {
-        return $this->timeout ?? (float) \ini_get('default_socket_timeout');
+        return isset($this->timeout) ? $this->timeout : (float) \ini_get('default_socket_timeout');
     }
 
     /**
@@ -51,14 +53,16 @@ final class SocketStream extends AbstractStream
      *
      * @return $this
      */
-    public function setHost(string $host): self
+    public function setHost(/*string */$host)/*: self*/
     {
+        $host = backport_type_check('string', $host);
+
         $this->host = $host;
 
         return $this;
     }
 
-    public function getHost(): string
+    public function getHost()/*: string*/
     {
         return $this->host;
     }
@@ -66,14 +70,16 @@ final class SocketStream extends AbstractStream
     /**
      * @return $this
      */
-    public function setPort(int $port): self
+    public function setPort(/*int */$port)/*: self*/
     {
+        $port = backport_type_check('int', $port);
+
         $this->port = $port;
 
         return $this;
     }
 
-    public function getPort(): int
+    public function getPort()/*: int*/
     {
         return $this->port;
     }
@@ -83,14 +89,14 @@ final class SocketStream extends AbstractStream
      *
      * @return $this
      */
-    public function disableTls(): self
+    public function disableTls()/*: self*/
     {
         $this->tls = false;
 
         return $this;
     }
 
-    public function isTLS(): bool
+    public function isTLS()/*: bool*/
     {
         return $this->tls;
     }
@@ -98,14 +104,14 @@ final class SocketStream extends AbstractStream
     /**
      * @return $this
      */
-    public function setStreamOptions(array $options): self
+    public function setStreamOptions(array $options)/*: self*/
     {
         $this->streamContextOptions = $options;
 
         return $this;
     }
 
-    public function getStreamOptions(): array
+    public function getStreamOptions()/*: array*/
     {
         return $this->streamContextOptions;
     }
@@ -117,8 +123,10 @@ final class SocketStream extends AbstractStream
      *
      * @return $this
      */
-    public function setSourceIp(string $ip): self
+    public function setSourceIp(/*string */$ip)/*: self*/
     {
+        $ip = backport_type_check('string', $ip);
+
         $this->sourceIp = $ip;
 
         return $this;
@@ -127,12 +135,12 @@ final class SocketStream extends AbstractStream
     /**
      * Returns the IP used to connect to the destination.
      */
-    public function getSourceIp(): ?string
+    public function getSourceIp()/*: ?string*/
     {
         return $this->sourceIp;
     }
 
-    public function initialize(): void
+    public function initialize()/*: void*/
     {
         $this->url = $this->host.':'.$this->port;
         if ($this->tls) {
@@ -146,7 +154,7 @@ final class SocketStream extends AbstractStream
             $options = array_merge($options, $this->streamContextOptions);
         }
         // do it unconditionally as it will be used by STARTTLS as well if supported
-        $options['ssl']['crypto_method'] = $options['ssl']['crypto_method'] ?? \STREAM_CRYPTO_METHOD_TLS_CLIENT | \STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT | \STREAM_CRYPTO_METHOD_TLSv1_1_CLIENT;
+        $options['ssl']['crypto_method'] = isset($options['ssl']) && isset($options['ssl']['crypto_method']) ? $options['ssl']['crypto_method'] : \STREAM_CRYPTO_METHOD_TLS_CLIENT | \STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT | \STREAM_CRYPTO_METHOD_TLSv1_1_CLIENT;
         $streamContext = stream_context_create($options);
 
         $timeout = $this->getTimeout();
@@ -165,7 +173,7 @@ final class SocketStream extends AbstractStream
         $this->out = &$this->stream;
     }
 
-    public function startTLS(): bool
+    public function startTLS()/*: bool*/
     {
         set_error_handler(function ($type, $msg) {
             throw new TransportException('Unable to connect with STARTTLS: '.$msg);
@@ -177,7 +185,7 @@ final class SocketStream extends AbstractStream
         }
     }
 
-    public function terminate(): void
+    public function terminate()/*: void*/
     {
         if (null !== $this->stream) {
             fclose($this->stream);
@@ -186,7 +194,7 @@ final class SocketStream extends AbstractStream
         parent::terminate();
     }
 
-    protected function getReadConnectionDescription(): string
+    protected function getReadConnectionDescription()/*: string*/
     {
         return $this->url;
     }

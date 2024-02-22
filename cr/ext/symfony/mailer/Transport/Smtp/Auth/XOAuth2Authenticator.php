@@ -22,7 +22,7 @@ use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
  */
 class XOAuth2Authenticator implements AuthenticatorInterface
 {
-    public function getAuthKeyword(): string
+    public function getAuthKeyword()/*: string*/
     {
         return 'XOAUTH2';
     }
@@ -32,7 +32,7 @@ class XOAuth2Authenticator implements AuthenticatorInterface
      *
      * @see https://developers.google.com/google-apps/gmail/xoauth2_protocol#the_sasl_xoauth2_mechanism
      */
-    public function authenticate(EsmtpTransport $client): void
+    public function authenticate(EsmtpTransport $client)/*: void*/
     {
         $client->executeCommand('AUTH XOAUTH2 '.base64_encode('user='.$client->getUsername()."\1auth=Bearer ".$client->getPassword()."\1\1")."\r\n", [235]);
     }

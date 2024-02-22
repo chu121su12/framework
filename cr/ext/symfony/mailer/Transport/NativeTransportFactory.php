@@ -23,7 +23,7 @@ use Symfony\Component\Mailer\Transport\Smtp\Stream\SocketStream;
  */
 final class NativeTransportFactory extends AbstractTransportFactory
 {
-    public function create(Dsn $dsn): TransportInterface
+    public function create(Dsn $dsn)/*: TransportInterface*/
     {
         if (!\in_array($dsn->getScheme(), $this->getSupportedSchemes(), true)) {
             throw new UnsupportedSchemeException($dsn, 'native', $this->getSupportedSchemes());
@@ -56,7 +56,7 @@ final class NativeTransportFactory extends AbstractTransportFactory
         return new SmtpTransport($socketStream, $this->dispatcher, $this->logger);
     }
 
-    protected function getSupportedSchemes(): array
+    protected function getSupportedSchemes()/*: array*/
     {
         return ['native'];
     }

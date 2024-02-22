@@ -30,8 +30,14 @@ class EsmtpTransport extends SmtpTransport
     private $username = '';
     private $password = '';
 
-    public function __construct(string $host = 'localhost', int $port = 0, ?bool $tls = null, ?EventDispatcherInterface $dispatcher = null, ?LoggerInterface $logger = null)
+    public function __construct(/*string */$host = 'localhost', /*int */$port = 0, /*?bool */$tls = null, /*?*/EventDispatcherInterface $dispatcher = null, /*?*/LoggerInterface $logger = null)
     {
+        $tls = backport_type_check('?bool', $tls);
+
+        $port = backport_type_check('int', $port);
+
+        $host = backport_type_check('string', $host);
+
         parent::__construct(null, $dispatcher, $logger);
 
         // order is important here (roughly most secure and popular first)
@@ -66,14 +72,16 @@ class EsmtpTransport extends SmtpTransport
     /**
      * @return $this
      */
-    public function setUsername(string $username): self
+    public function setUsername(/*string */$username)/*: self*/
     {
+        $username = backport_type_check('string', $username);
+
         $this->username = $username;
 
         return $this;
     }
 
-    public function getUsername(): string
+    public function getUsername()/*: string*/
     {
         return $this->username;
     }
@@ -81,24 +89,26 @@ class EsmtpTransport extends SmtpTransport
     /**
      * @return $this
      */
-    public function setPassword(string $password): self
+    public function setPassword(/*string */$password)/*: self*/
     {
+        $password = backport_type_check('string', $password);
+
         $this->password = $password;
 
         return $this;
     }
 
-    public function getPassword(): string
+    public function getPassword()/*: string*/
     {
         return $this->password;
     }
 
-    public function addAuthenticator(AuthenticatorInterface $authenticator): void
+    public function addAuthenticator(AuthenticatorInterface $authenticator)/*: void*/
     {
         $this->authenticators[] = $authenticator;
     }
 
-    protected function doHeloCommand(): void
+    protected function doHeloCommand()/*: void*/
     {
         if (!$capabilities = $this->callHeloCommand()) {
             return;
@@ -124,7 +134,7 @@ class EsmtpTransport extends SmtpTransport
         }
     }
 
-    private function callHeloCommand(): array
+    private function callHeloCommand()/*: array*/
     {
         try {
             $response = $this->executeCommand(sprintf("EHLO %s\r\n", $this->getLocalDomain()), [250]);
@@ -155,7 +165,7 @@ class EsmtpTransport extends SmtpTransport
         return $capabilities;
     }
 
-    private function handleAuth(array $modes): void
+    private function handleAuth(array $modes)/*: void*/
     {
         if (!$this->username) {
             return;

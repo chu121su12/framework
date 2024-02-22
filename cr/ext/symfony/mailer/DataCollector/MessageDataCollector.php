@@ -32,12 +32,14 @@ final class MessageDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, ?\Throwable $exception = null)
+    public function collect(Request $request, Response $response, /*?\Throwable */$exception = null)
     {
+        backport_type_throwable($exception);
+
         $this->data['events'] = $this->events;
     }
 
-    public function getEvents(): MessageEvents
+    public function getEvents()/*: MessageEvents*/
     {
         return $this->data['events'];
     }
@@ -45,8 +47,10 @@ final class MessageDataCollector extends DataCollector
     /**
      * @internal
      */
-    public function base64Encode(string $data): string
+    public function base64Encode(/*string */$data)/*: string*/
     {
+        $data = backport_type_check('string', $data);
+
         return base64_encode($data);
     }
 
@@ -61,7 +65,7 @@ final class MessageDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public function getName()/*: string*/
     {
         return 'mailer';
     }
