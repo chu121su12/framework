@@ -272,6 +272,7 @@ class MiddlewareTest extends TestCase
 
         $reflection = new ReflectionClass($middleware);
         $method = $reflection->getMethod('inExceptArray');
+        $method->setAccessible(true);
 
         $symfonyRequest = new SymfonyRequest();
         $symfonyRequest->server->set('REQUEST_METHOD', 'GET');

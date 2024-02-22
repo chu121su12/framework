@@ -177,17 +177,18 @@ class ApplicationBuilder
     protected function buildRoutingCallback(/*?string */$web = null,
         /*?string */$api = null,
         /*?string */$pages = null,
-        /*?string */$health,
+        /*?string */$health = null,
         /*string */$apiPrefix = 'api',
         /*?*/callable $then = null)
     {
         $web = backport_type_check('?string', $web);
         $api = backport_type_check('?string', $api);
         $pages = backport_type_check('?string', $pages);
+        $health = backport_type_check('?string', $health);
         $apiPrefix = backport_type_check('string', $apiPrefix);
         $then = backport_type_check('?callable', $then);
 
-        return function () use ($web, $api, $pages, $apiPrefix, $then) {
+        return function () use ($web, $api, $pages, $health, $apiPrefix, $then) {
             if (is_string($api) && realpath($api) !== false) {
                 Route::middleware('api')->prefix($apiPrefix)->group($api);
             }

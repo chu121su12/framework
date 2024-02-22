@@ -2,4 +2,4 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/{user}', fn () => response('', 404));
+Route::get('/{user}', function () { return response('', 404); });
