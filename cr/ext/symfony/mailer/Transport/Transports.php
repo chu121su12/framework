@@ -29,8 +29,10 @@ final class Transports implements TransportInterface
     /**
      * @param TransportInterface[] $transports
      */
-    public function __construct(iterable $transports)
+    public function __construct(/*iterable */$transports)
     {
+        $transports = backport_type_check('iterable', $transports);
+
         $this->transports = [];
         foreach ($transports as $name => $transport) {
             if (null === $this->default) {

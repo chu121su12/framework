@@ -239,7 +239,7 @@ abstract class Prompt
         }
 
         if ($this->state === 'initial') {
-            static::output()->write($frame);
+            static::outputWrite($frame);
 
             $this->state = 'active';
             $this->prevFrame = $frame;
@@ -252,7 +252,7 @@ abstract class Prompt
         // Ensure that the full frame is buffered so subsequent output can see how many trailing newlines were written.
         if ($this->state === 'submit') {
             $this->eraseDown();
-            static::output()->write($frame);
+            self::outputWrite($frame);
 
             $this->prevFrame = '';
 
@@ -424,5 +424,10 @@ abstract class Prompt
         $this->restoreCursor();
 
         static::terminal()->restoreTty();
+    }
+
+    protected static function outputWrite($prompt, $output = null)
+    {
+        return with($output ?: static::output())->write(\is_object($prompt) && \method_exists($prompt, '__toString') ? $prompt->__toString() : $prompt);
     }
 }

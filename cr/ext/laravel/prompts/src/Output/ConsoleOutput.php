@@ -52,4 +52,13 @@ class ConsoleOutput extends SymfonyConsoleOutput
 
         parent::doWrite($message, false);
     }
+
+    public function write($messages, $newline = false, $options = self::OUTPUT_NORMAL)
+    {
+        return parent::write(
+            \is_object($messages) && \method_exists($messages, '__toString') ? $messages->__toString() : $messages,
+            $newline,
+            $options
+        );
+    }
 }

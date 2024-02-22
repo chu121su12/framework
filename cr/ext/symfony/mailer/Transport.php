@@ -95,8 +95,10 @@ class Transport
     /**
      * @param TransportFactoryInterface[] $factories
      */
-    public function __construct(iterable $factories)
+    public function __construct(/*iterable */$factories)
     {
+        $factories = backport_type_check('iterable', $factories);
+
         $this->factories = $factories;
     }
 

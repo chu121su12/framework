@@ -105,8 +105,10 @@ abstract class AbstractStream
         return $debug;
     }
 
-    public static function replace(/*string */$from, /*string */$to, iterable $chunks)/*: \Generator*/
+    public static function replace(/*string */$from, /*string */$to, /*iterable */$chunks)/*: \Generator*/
     {
+        $chunks = backport_type_check('iterable', $chunks);
+
         $to = backport_type_check('string', $to);
 
         $from = backport_type_check('string', $from);

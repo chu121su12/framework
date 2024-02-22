@@ -93,7 +93,7 @@ class Terminal
     /**
      * Execute the given command and return the output.
      */
-    protected function exec(string $command)/*: string*/
+    protected function exec(/*string */$command)/*: string*/
     {
         $command = backport_type_check('string', $command);
 
