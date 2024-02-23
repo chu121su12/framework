@@ -128,7 +128,7 @@ abstract class Prompt
                         if (isset(static::$cancelUsing)) {
                             return \call_user_func(static::$cancelUsing);
                         } else {
-                            static::terminal()->exit();
+                            static::terminal()->exit_();
                         }
                     }
 

@@ -8,6 +8,7 @@ use Illuminate\Contracts\Console\Application as ApplicationContract;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\ProcessUtils;
+use RuntimeException;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
@@ -16,6 +17,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\SignalRegistry\SignalRegistry;
 use Symfony\Component\Process\PhpExecutableFinder;
 
 class Application extends SymfonyApplication implements ApplicationContract
@@ -75,6 +77,11 @@ class Application extends SymfonyApplication implements ApplicationContract
         $this->events->dispatch(new ArtisanStarting($this));
 
         $this->bootstrap();
+
+        if (\defined('SIGINT') && \function_exists('pcntl_signal')) {
+            $this->signalRegistry = new SignalRegistry;
+            $this->signalsToDispatchEvent = [\SIGINT, \SIGTERM, \SIGUSR1, \SIGUSR2];
+        }
     }
 
     /**
@@ -384,5 +391,18 @@ class Application extends SymfonyApplication implements ApplicationContract
                 });
             }
         }
+    }
+
+    private $signalRegistry = null;
+
+    private $signalsToDispatchEvent = [];
+
+    public function getSignalRegistry()
+    {
+        if (!$this->signalRegistry) {
+            throw new RuntimeException('Signals are not supported. Make sure that the "pcntl" extension is installed and that "pcntl_*" functions are not disabled by your php.ini\'s "disable_functions" directive.');
+        }
+
+        return $this->signalRegistry;
     }
 }

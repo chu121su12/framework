@@ -36,7 +36,7 @@ class ApiInstallCommand extends Command
      */
     public function handle()
     {
-        $this->installSanctum();
+        $hasSanctum = $this->installSanctum();
 
         if (file_exists($apiRoutesPath = $this->laravel->basePath('routes/api.php')) &&
             ! $this->option('force')) {
@@ -49,7 +49,12 @@ class ApiInstallCommand extends Command
             $this->uncommentApiRoutesFile();
         }
 
-        $this->components->info('API scaffolding installed. Please add the "Laravel\Sanctum\HasApiTokens" trait to your User model.');
+        if ($hasSanctum) {
+            $this->components->info('API scaffolding installed. Please add the "Laravel\Sanctum\HasApiTokens" trait to your User model.');
+        }
+        else {
+            $this->components->info('API scaffolding installed.');
+        }
     }
 
     /**
@@ -85,13 +90,17 @@ class ApiInstallCommand extends Command
     /**
      * Install Laravel Sanctum into the application.
      *
-     * @return void
+     * @return bool
      */
     protected function installSanctum()
     {
-        $this->requireComposerPackages($this->option('composer'), [
+        $success = $this->requireComposerPackages($this->option('composer'), [
             'laravel/sanctum:^4.0',
         ]);
+
+        if (! $success) {
+            return false;
+        }
 
         $php = (new PhpExecutableFinder())->find(false) ?: 'php';
 
@@ -102,5 +111,7 @@ class ApiInstallCommand extends Command
             '--provider',
             'Laravel\\Sanctum\\SanctumServiceProvider',
         ]);
+
+        return $result->successful();
     }
 }
