@@ -23,7 +23,7 @@ class ApplicationBuilder
      *
      * @var array
      */
-    protected array $pendingProviders = [];
+    protected /*array */$pendingProviders = [];
 
     /**
      * The Folio / page middleware that have been defined by the user.
