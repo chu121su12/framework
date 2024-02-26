@@ -256,14 +256,14 @@ class RepositoryTest extends TestCase
         $this->assertSame('macroable', $this->repository->foo());
     }
 
-    public function testItGetsAsString(): void
+    public function testItGetsAsString()/*: void*/
     {
         $this->assertSame(
             $this->repository->string('a.b'), 'c'
         );
     }
 
-    public function testItThrowsAnExceptionWhenTryingToGetNonStringValueAsString(): void
+    public function testItThrowsAnExceptionWhenTryingToGetNonStringValueAsString()/*: void*/
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('#^Configuration value for key \[a\] must be a string, (.*) given.#');
@@ -271,14 +271,14 @@ class RepositoryTest extends TestCase
         $this->repository->string('a');
     }
 
-    public function testItGetsAsArray(): void
+    public function testItGetsAsArray()/*: void*/
     {
         $this->assertSame(
             $this->repository->array('array'), ['aaa', 'zzz']
         );
     }
 
-    public function testItThrowsAnExceptionWhenTryingToGetNonArrayValueAsArray(): void
+    public function testItThrowsAnExceptionWhenTryingToGetNonArrayValueAsArray()/*: void*/
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('#Configuration value for key \[a.b\] must be an array, (.*) given.#');
@@ -286,14 +286,14 @@ class RepositoryTest extends TestCase
         $this->repository->array('a.b');
     }
 
-    public function testItGetsAsBoolean(): void
+    public function testItGetsAsBoolean()/*: void*/
     {
         $this->assertTrue(
             $this->repository->boolean('boolean')
         );
     }
 
-    public function testItThrowsAnExceptionWhenTryingToGetNonBooleanValueAsBoolean(): void
+    public function testItThrowsAnExceptionWhenTryingToGetNonBooleanValueAsBoolean()/*: void*/
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('#Configuration value for key \[a.b\] must be a boolean, (.*) given.#');
@@ -301,14 +301,14 @@ class RepositoryTest extends TestCase
         $this->repository->boolean('a.b');
     }
 
-    public function testItGetsAsInteger(): void
+    public function testItGetsAsInteger()/*: void*/
     {
         $this->assertSame(
             $this->repository->integer('integer'), 1
         );
     }
 
-    public function testItThrowsAnExceptionWhenTryingToGetNonIntegerValueAsInteger(): void
+    public function testItThrowsAnExceptionWhenTryingToGetNonIntegerValueAsInteger()/*: void*/
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('#Configuration value for key \[a.b\] must be an integer, (.*) given.#');
@@ -316,14 +316,14 @@ class RepositoryTest extends TestCase
         $this->repository->integer('a.b');
     }
 
-    public function testItGetsAsFloat(): void
+    public function testItGetsAsFloat()/*: void*/
     {
         $this->assertSame(
             $this->repository->float('float'), 1.1
         );
     }
 
-    public function testItThrowsAnExceptionWhenTryingToGetNonFloatValueAsFloat(): void
+    public function testItThrowsAnExceptionWhenTryingToGetNonFloatValueAsFloat()/*: void*/
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('#^Configuration value for key \[a.b\] must be a float, (.*) given.#');

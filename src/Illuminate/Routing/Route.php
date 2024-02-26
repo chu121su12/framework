@@ -1122,6 +1122,10 @@ class Route
      */
     protected function staticallyProvidedControllerMiddleware(/*string */$class, /*string */$method)
     {
+        $class = backport_type_check('string', $class);
+
+        $method = backport_type_check('string', $method);
+
         return collect($class::middleware())->map(function ($middleware) {
             return $middleware instanceof Middleware
                 ? $middleware

@@ -85,8 +85,10 @@ class Repository implements ArrayAccess, ConfigContract
      * @param  mixed  $default
      * @return string
      */
-    public function string(string $key, $default = null): string
+    public function string(/*string */$key, $default = null)/*: string*/
     {
+        $key = backport_type_check('string', $key);
+
         $value = $this->get($key, $default);
 
         if (! is_string($value)) {
@@ -105,8 +107,10 @@ class Repository implements ArrayAccess, ConfigContract
      * @param  mixed  $default
      * @return int
      */
-    public function integer(string $key, $default = null): int
+    public function integer(/*string */$key, $default = null)/*: int*/
     {
+        $key = backport_type_check('string', $key);
+
         $value = $this->get($key, $default);
 
         if (! is_int($value)) {
@@ -125,8 +129,10 @@ class Repository implements ArrayAccess, ConfigContract
      * @param  mixed  $default
      * @return float
      */
-    public function float(string $key, $default = null): float
+    public function float(/*string */$key, $default = null)/*: float*/
     {
+        $key = backport_type_check('string', $key);
+
         $value = $this->get($key, $default);
 
         if (! is_float($value)) {
@@ -145,8 +151,10 @@ class Repository implements ArrayAccess, ConfigContract
      * @param  mixed  $default
      * @return bool
      */
-    public function boolean(string $key, $default = null): bool
+    public function boolean(/*string */$key, $default = null)/*: bool*/
     {
+        $key = backport_type_check('string', $key);
+
         $value = $this->get($key, $default);
 
         if (! is_bool($value)) {
@@ -165,8 +173,10 @@ class Repository implements ArrayAccess, ConfigContract
      * @param  mixed  $default
      * @return array<array-key, mixed>
      */
-    public function array(string $key, $default = null): array
+    public function array_(/*string */$key, $default = null)/*: array*/
     {
+        $key = backport_type_check('string', $key);
+
         $value = $this->get($key, $default);
 
         if (! is_array($value)) {
