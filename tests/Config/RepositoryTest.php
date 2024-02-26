@@ -274,7 +274,7 @@ class RepositoryTest extends TestCase
     public function testItGetsAsArray()/*: void*/
     {
         $this->assertSame(
-            $this->repository->array('array'), ['aaa', 'zzz']
+            $this->repository->array_('array'), ['aaa', 'zzz']
         );
     }
 
@@ -283,7 +283,7 @@ class RepositoryTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('#Configuration value for key \[a.b\] must be an array, (.*) given.#');
 
-        $this->repository->array('a.b');
+        $this->repository->array_('a.b');
     }
 
     public function testItGetsAsBoolean()/*: void*/
