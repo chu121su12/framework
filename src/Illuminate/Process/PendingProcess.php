@@ -279,8 +279,10 @@ class PendingProcess
      * Start the process in the background.
      *
      * @param  array<array-key, string>|string|null  $command
-     * @param  callable  $output
+     * @param  callable|null  $output
      * @return \Illuminate\Process\InvokedProcess
+     *
+     * @throws \RuntimeException
      */
     public function start(/*array|string */$command = null, callable $output = null)
     {
@@ -367,7 +369,7 @@ class PendingProcess
         $command = backport_type_check('string', $command);
 
         return collect($this->fakeHandlers)
-                ->first(function ($handler, $pattern) use ($command) { return Str::is($pattern, $command); });
+                ->first(fn ($handler, $pattern) => $pattern === '*' || Str::is($pattern, $command));
     }
 
     /**
@@ -411,6 +413,8 @@ class PendingProcess
      * @param  callable|null  $output
      * @param  \Closure  $fake
      * @return \Illuminate\Process\FakeInvokedProcess
+     *
+     * @throw \LogicException
      */
     protected function resolveAsynchronousFake(/*string */$command, /*?callable */$output, Closure $fake)
     {

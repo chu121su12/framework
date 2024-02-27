@@ -5,6 +5,7 @@ namespace Illuminate\Validation\Rules;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Contracts\Validation\ValidatorAwareRule;
+use Illuminate\Support\Arr;
 use TypeError;
 
 class Enum implements Rule, ValidatorAwareRule
@@ -22,6 +23,20 @@ class Enum implements Rule, ValidatorAwareRule
      * @var \Illuminate\Validation\Validator
      */
     protected $validator;
+
+    /**
+     * The cases that should be considered valid.
+     *
+     * @var array
+     */
+    protected $only = [];
+
+    /**
+     * The cases that should be considered invalid.
+     *
+     * @var array
+     */
+    protected $except = [];
 
     /**
      * Create a new rule instance.
@@ -44,7 +59,7 @@ class Enum implements Rule, ValidatorAwareRule
     public function passes($attribute, $value)
     {
         if ($value instanceof $this->type) {
-            return true;
+            return $this->isDesirable($value);
         }
 
         if (is_null($value) || ! enum_exists($this->type) || ! method_exists($this->type, 'tryFrom')) {
@@ -52,12 +67,53 @@ class Enum implements Rule, ValidatorAwareRule
         }
 
         try {
-            $type = $this->type;
+            $value = $this->type::tryFrom($value);
 
-            return ! is_null($type::tryFrom($value));
-        } catch (TypeError $e) {
+            return ! is_null($value) && $this->isDesirable($value);
+        } catch (TypeError) {
             return false;
         }
+    }
+
+    /**
+     * Specify the cases that should be considered valid.
+     *
+     * @param  \UnitEnum[]|\UnitEnum  $values
+     * @return $this
+     */
+    public function only($values)
+    {
+        $this->only = Arr::wrap($values);
+
+        return $this;
+    }
+
+    /**
+     * Specify the cases that should be considered invalid.
+     *
+     * @param  \UnitEnum[]|\UnitEnum  $values
+     * @return $this
+     */
+    public function except($values)
+    {
+        $this->except = Arr::wrap($values);
+
+        return $this;
+    }
+
+    /**
+     * Determine if the given case is a valid case based on the only / except values.
+     *
+     * @param  mixed  $value
+     * @return bool
+     */
+    protected function isDesirable($value)
+    {
+        return match (true) {
+            ! empty($this->only) => in_array(needle: $value, haystack: $this->only, strict: true),
+            ! empty($this->except) => ! in_array(needle: $value, haystack: $this->except, strict: true),
+            default => true,
+        };
     }
 
     /**
