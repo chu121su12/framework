@@ -158,12 +158,14 @@ class ProcessTest extends TestCase
             '*' => 'The output',
         ]);
 
-        $result = $factory->run(<<<'COMMAND'
-        git clone --depth 1 \
-              --single-branch \
-              --branch main \
-              git://some-url .
-        COMMAND);
+        $command = <<<'COMMAND'
+git clone --depth 1 \
+      --single-branch \
+      --branch main \
+      git://some-url .
+COMMAND;
+
+        $result = $factory->run($command);
 
         $this->assertSame(0, $result->exitCode());
     }

@@ -50,7 +50,7 @@ class MySqlGrammar extends Grammar
         if (! $charset || ! $collation) {
             return sprintf(
                 'create database %s',
-                $this->wrapValue($name),
+                $this->wrapValue($name)
             );
         }
 
@@ -58,7 +58,7 @@ class MySqlGrammar extends Grammar
             'create database %s default character set %s default collate %s',
             $this->wrapValue($name),
             $this->wrapValue($charset),
-            $this->wrapValue($collation),
+            $this->wrapValue($collation)
         );
     }
 

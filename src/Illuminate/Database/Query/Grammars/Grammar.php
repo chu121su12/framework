@@ -211,8 +211,10 @@ class Grammar extends BaseGrammar
      *
      * @throws \RuntimeException
      */
-    public function compileJoinLateral(JoinLateralClause $join, string $expression): string
+    public function compileJoinLateral(JoinLateralClause $join, /*string */$expression)/*: string*/
     {
+        $expression = backport_type_check('string', $expression);
+
         throw new RuntimeException('This database engine does not support lateral joins.');
     }
 

@@ -34,7 +34,7 @@ class JoinLateralTest extends MySqlTestCase
         Schema::drop('users');
     }
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -54,7 +54,8 @@ class JoinLateralTest extends MySqlTestCase
 
     protected function checkMySqlVersion()
     {
-        $mySqlVersion = DB::select('select version()')[0]->{'version()'} ?? '';
+        $mySqlVersion = DB::scalar('select version()');
+        $mySqlVersion = isset($mySqlVersion) ? $mySqlVersion : '';
 
         if (strpos($mySqlVersion, 'Maria') !== false) {
             $this->markTestSkipped('Lateral joins are not supported on MariaDB'.__CLASS__);

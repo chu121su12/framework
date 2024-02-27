@@ -353,8 +353,10 @@ class MySqlGrammar extends Grammar
      * @param  string  $expression
      * @return string
      */
-    public function compileJoinLateral(JoinLateralClause $join, string $expression): string
+    public function compileJoinLateral(JoinLateralClause $join, /*string */$expression)/*: string*/
     {
+        $expression = backport_type_check('string', $expression);
+
         return trim("{$join->type} join lateral {$expression} on true");
     }
 

@@ -35,7 +35,9 @@ trait Batchable
         }
 
         if ($this->batchId) {
-            return Container::getInstance()->make(BatchRepository::class)?->find($this->batchId);
+            $batchRepository = Container::getInstance()->make(BatchRepository::class);
+
+            return isset($batchRepository) ? $batchRepository->find($this->batchId) : null;
         }
     }
 
@@ -88,9 +90,9 @@ trait Batchable
                                   /*int */$failedJobs = 0,
                                   array $failedJobIds = [],
                                   array $options = [],
-                                  ?CarbonImmutable $createdAt = null,
-                                  ?CarbonImmutable $cancelledAt = null,
-                                  ?CarbonImmutable $finishedAt = null)
+                                  /*?*/CarbonImmutable $createdAt = null,
+                                  /*?*/CarbonImmutable $cancelledAt = null,
+                                  /*?*/CarbonImmutable $finishedAt = null)
     {
         $id = backport_type_check('string', $id);
         $name = backport_type_check('string', $name);

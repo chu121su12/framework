@@ -602,9 +602,13 @@ class Builder implements BuilderContract
      * @param  string  $type
      * @return $this
      */
-    public function joinLateral($query, string $as, string $type = 'inner')
+    public function joinLateral($query, /*string */$as, /*string */$type = 'inner')
     {
-        [$query, $bindings] = $this->createSub($query);
+        $type = backport_type_check('string', $type);
+
+        $as = backport_type_check('string', $as);
+
+        list($query, $bindings) = $this->createSub($query);
 
         $expression = '('.$query.') as '.$this->grammar->wrapTable($as);
 
@@ -622,8 +626,10 @@ class Builder implements BuilderContract
      * @param  string  $as
      * @return $this
      */
-    public function leftJoinLateral($query, string $as)
+    public function leftJoinLateral($query, /*string */$as)
     {
+        $as = backport_type_check('string', $as);
+
         return $this->joinLateral($query, $as, 'left');
     }
 

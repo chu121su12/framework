@@ -34,7 +34,7 @@ class JoinLateralTest extends PostgresTestCase
         Schema::drop('users');
     }
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

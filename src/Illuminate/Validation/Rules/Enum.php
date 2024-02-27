@@ -67,10 +67,12 @@ class Enum implements Rule, ValidatorAwareRule
         }
 
         try {
-            $value = $this->type::tryFrom($value);
+            $typeClass = $this->type;
+
+            $value = $typeClass::tryFrom($value);
 
             return ! is_null($value) && $this->isDesirable($value);
-        } catch (TypeError) {
+        } catch (TypeError $_e) {
             return false;
         }
     }
@@ -109,11 +111,11 @@ class Enum implements Rule, ValidatorAwareRule
      */
     protected function isDesirable($value)
     {
-        return match (true) {
-            ! empty($this->only) => in_array(needle: $value, haystack: $this->only, strict: true),
-            ! empty($this->except) => ! in_array(needle: $value, haystack: $this->except, strict: true),
-            default => true,
-        };
+        switch (true) {
+            case ! empty($this->only): return in_array($value, $this->only, true);
+            case ! empty($this->except): return ! in_array($value, $this->except, true);
+            default: return true;
+        }
     }
 
     /**

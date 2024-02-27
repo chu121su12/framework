@@ -468,8 +468,10 @@ class SqlServerGrammar extends Grammar
      * @param  string  $expression
      * @return string
      */
-    public function compileJoinLateral(JoinLateralClause $join, string $expression): string
+    public function compileJoinLateral(JoinLateralClause $join, /*string */$expression)/*: string*/
     {
+        $expression = backport_type_check('string', $expression);
+
         $type = $join->type == 'left' ? 'outer' : 'cross';
 
         return trim("{$type} apply {$expression}");

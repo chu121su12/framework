@@ -90,13 +90,13 @@ class ValidationEnumRuleTest extends TestCase
             [
                 'status_1' => PureEnum::one,
                 'status_2' => PureEnum::two,
-                'status_3' => IntegerStatus::done->value,
+                'status_3' => with(IntegerStatus::done)->value,
             ],
             [
                 'status_1' => new Enum(PureEnum::class),
                 'status_2' => (new Enum(PureEnum::class))->only([])->except([]),
                 'status_3' => new Enum(IntegerStatus::class),
-            ],
+            ]
         );
 
         $this->assertTrue($v->passes());
@@ -106,10 +106,16 @@ class ValidationEnumRuleTest extends TestCase
      * @dataProvider conditionalCasesDataProvider
      */
     public function testValidationPassesWhenOnlyCasesProvided(
-        IntegerStatus|int $enum,
-        array|IntegerStatus $only,
-        bool $expected
+        /*IntegerStatus|int */$enum,
+        /*array|IntegerStatus */$only,
+        /*bool */$expected
     ) {
+        $expected = backport_type_check('bool', $expected);
+
+        $only = backport_type_check(['array', IntegerStatus::class], $only);
+
+        $enum = backport_type_check([IntegerStatus::class, 'int'], $enum);
+
         $v = new Validator(
             resolve('translator'),
             [
@@ -117,7 +123,7 @@ class ValidationEnumRuleTest extends TestCase
             ],
             [
                 'status' => (new Enum(IntegerStatus::class))->only($only),
-            ],
+            ]
         );
 
         $this->assertSame($expected, $v->passes());
@@ -127,10 +133,16 @@ class ValidationEnumRuleTest extends TestCase
      * @dataProvider conditionalCasesDataProvider
      */
     public function testValidationPassesWhenExceptCasesProvided(
-        int|IntegerStatus $enum,
-        array|IntegerStatus $except,
-        bool $expected
+        /*int|IntegerStatus */$enum,
+        /*array|IntegerStatus */$except,
+        /*bool */$expected
     ) {
+        $expected = backport_type_check('bool', $expected);
+
+        $only = backport_type_check(['array', IntegerStatus::class], $only);
+
+        $enum = backport_type_check([IntegerStatus::class, 'int'], $enum);
+
         $v = new Validator(
             resolve('translator'),
             [
@@ -138,7 +150,7 @@ class ValidationEnumRuleTest extends TestCase
             ],
             [
                 'status' => (new Enum(IntegerStatus::class))->except($except),
-            ],
+            ]
         );
 
         $this->assertSame($expected, $v->fails());
@@ -155,7 +167,7 @@ class ValidationEnumRuleTest extends TestCase
                 'status' => (new Enum(PureEnum::class))
                     ->only(PureEnum::one)
                     ->except(PureEnum::one),
-            ],
+            ]
         );
 
         $this->assertTrue($v->passes());
@@ -254,17 +266,21 @@ class ValidationEnumRuleTest extends TestCase
         $this->assertEquals(['The selected status is invalid.'], $v->messages()->get('status'));
     }
 
-    public static function conditionalCasesDataProvider(): array
+    public static function conditionalCasesDataProvider()/*: array*/
     {
+        if (! \class_exists(IntegerStatus::class)) {
+            return [];
+        }
+
         return [
             [IntegerStatus::done, IntegerStatus::done, true],
             [IntegerStatus::done, [IntegerStatus::done, IntegerStatus::pending], true],
-            [IntegerStatus::pending->value, [IntegerStatus::done, IntegerStatus::pending], true],
-            [IntegerStatus::done->value, IntegerStatus::pending, false],
+            [with(IntegerStatus::pending)->value, [IntegerStatus::done, IntegerStatus::pending], true],
+            [with(IntegerStatus::done)->value, IntegerStatus::pending, false],
         ];
     }
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $container = Container::getInstance();
 
