@@ -622,20 +622,20 @@ class SchemaBuilderTest extends DatabaseTestCase
         $columns = Schema::getColumns('test');
 
         $this->assertTrue(collect($columns)->contains(
-            fn ($column) => $column['name'] === 'virtual_price' && $column['generation']['type'] === 'virtual'
-                && $column['generation']['expression'] === 'price - 2'
+            function ($column) { return $column['name'] === 'virtual_price' && $column['generation']['type'] === 'virtual'
+                && $column['generation']['expression'] === 'price - 2'; }
         ));
         $this->assertTrue(collect($columns)->contains(
-            fn ($column) => $column['name'] === 'stored_price' && $column['generation']['type'] === 'stored'
-                && $column['generation']['expression'] === 'price - 4'
+            function ($column) { return $column['name'] === 'stored_price' && $column['generation']['type'] === 'stored'
+                && $column['generation']['expression'] === 'price - 4'; }
         ));
         $this->assertTrue(collect($columns)->contains(
-            fn ($column) => $column['name'] === 'virtual_price_changed' && $column['generation']['type'] === 'virtual'
-                && $column['generation']['expression'] === 'price - 5'
+            function ($column) { return $column['name'] === 'virtual_price_changed' && $column['generation']['type'] === 'virtual'
+                && $column['generation']['expression'] === 'price - 5'; }
         ));
         $this->assertTrue(collect($columns)->contains(
-            fn ($column) => $column['name'] === 'stored_price_changed' && $column['generation']['type'] === 'stored'
-                && $column['generation']['expression'] === 'price - 7'
+            function ($column) { return $column['name'] === 'stored_price_changed' && $column['generation']['type'] === 'stored'
+                && $column['generation']['expression'] === 'price - 7'; }
         ));
     }
 
@@ -658,30 +658,36 @@ class SchemaBuilderTest extends DatabaseTestCase
         $columns = Schema::getColumns('test');
 
         $this->assertTrue(collect($columns)->contains(
-            fn ($column) => $column['name'] === 'price' && is_null($column['generation'])
+            function ($column) { return $column['name'] === 'price' && is_null($column['generation']); }
         ));
         if ($this->driver !== 'pgsql') {
             $this->assertTrue(collect($columns)->contains(
-                fn ($column) => $column['name'] === 'virtual_price'
+                function ($column) { return $column['name'] === 'virtual_price'
                     && $column['generation']['type'] === 'virtual'
-                    && match ($this->driver) {
-                        'mysql' => $column['generation']['expression'] === '(`price` - 5)',
-                        'mariadb' => $column['generation']['expression'] === '`price` - 5',
-                        'sqlsrv' => $column['generation']['expression'] === '([price]-(5))',
-                        default => $column['generation']['expression'] === 'price - 5',
-                    }
+                    && value(function () use ($column) {
+                        switch ($this->driver) {
+                            case 'mysql': return $column['generation']['expression'] === '(`price` - 5)';
+                            case 'mariadb': return $column['generation']['expression'] === '`price` - 5';
+                            case 'sqlsrv': return $column['generation']['expression'] === '([price]-(5))';
+                            default: return $column['generation']['expression'] === 'price - 5';
+                        }
+                    });
+                }
             ));
         }
         $this->assertTrue(collect($columns)->contains(
-            fn ($column) => $column['name'] === 'stored_price'
+            function ($column) { return $column['name'] === 'stored_price'
                 && $column['generation']['type'] === 'stored'
-                && match ($this->driver) {
-                    'mysql' => $column['generation']['expression'] === '(`price` - 10)',
-                    'mariadb' => $column['generation']['expression'] === '`price` - 10',
-                    'sqlsrv' => $column['generation']['expression'] === '([price]-(10))',
-                    'pgsql' => $column['generation']['expression'] === '(price - 10)',
-                    default => $column['generation']['expression'] === 'price - 10',
-                }
+                && value(function () use ($column) {
+                        switch ($this->driver) {
+                            case 'mysql': return $column['generation']['expression'] === '(`price` - 10)';
+                            case 'mariadb': return $column['generation']['expression'] === '`price` - 10';
+                            case 'sqlsrv': return $column['generation']['expression'] === '([price]-(10))';
+                            case 'pgsql': return $column['generation']['expression'] === '(price - 10)';
+                            default: return $column['generation']['expression'] === 'price - 10';
+                        }
+                });
+            }
         ));
     }
 

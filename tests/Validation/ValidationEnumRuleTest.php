@@ -103,6 +103,9 @@ class ValidationEnumRuleTest extends TestCase
         $this->assertTrue($v->passes());
     }
 
+    /**
+     * @dataProvider conditionalCasesDataProvider
+     */
     #[DataProvider('conditionalCasesDataProvider')]
     public function testValidationPassesWhenOnlyCasesProvided(
         /*IntegerStatus|int */$enum,
@@ -128,6 +131,9 @@ class ValidationEnumRuleTest extends TestCase
         $this->assertSame($expected, $v->passes());
     }
 
+    /**
+     * @dataProvider conditionalCasesDataProvider
+     */
     #[DataProvider('conditionalCasesDataProvider')]
     public function testValidationPassesWhenExceptCasesProvided(
         /*int|IntegerStatus */$enum,

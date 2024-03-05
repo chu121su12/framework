@@ -22,6 +22,10 @@ class SQLiteProcessor extends Processor
         return array_map(function ($result) use ($hasPrimaryKey, $sql) {
             $result = (object) $result;
 
+            if (! isset($result->extra)) {
+                $result->extra = null;
+            }
+
             $type = strtolower($result->type);
 
             $collation = preg_match(
@@ -38,6 +42,12 @@ class SQLiteProcessor extends Processor
                 $matches
             ) === 1 ? $matches[1] : null;
 
+            switch ((int) $result->extra) {
+                case 3: $extraType = 'stored'; break;
+                case 2: $extraType = 'virtual'; break;
+                default: $extraType = null; break;
+            }
+
             return [
                 'name' => $result->name,
                 'type_name' => strtok($type, '(') ?: '',
@@ -48,11 +58,7 @@ class SQLiteProcessor extends Processor
                 'auto_increment' => $hasPrimaryKey && $result->primary && $type === 'integer',
                 'comment' => null,
                 'generation' => $isGenerated ? [
-                    'type' => match ((int) $result->extra) {
-                        3 => 'stored',
-                        2 => 'virtual',
-                        default => null,
-                    },
+                    'type' => $extraType,
                     'expression' => $expression,
                 ] : null,
             ];

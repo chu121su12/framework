@@ -15,6 +15,16 @@ class MySqlProcessor extends Processor
         return array_map(function ($result) {
             $result = (object) $result;
 
+            if (! isset($result->expression)) {
+                $result->expression = null;
+            }
+
+            switch ($result->extra) {
+                case 'STORED GENERATED': $extraType = 'stored'; break;
+                case 'VIRTUAL GENERATED': $extraType = 'virtual'; break;
+                default: $extraType = null; break;
+            }
+
             return [
                 'name' => $result->name,
                 'type_name' => $result->type_name,
@@ -25,11 +35,7 @@ class MySqlProcessor extends Processor
                 'auto_increment' => $result->extra === 'auto_increment',
                 'comment' => $result->comment ?: null,
                 'generation' => $result->expression ? [
-                    'type' => match ($result->extra) {
-                        'STORED GENERATED' => 'stored',
-                        'VIRTUAL GENERATED' => 'virtual',
-                        default => null,
-                    },
+                    'type' => $extraType,
                     'expression' => $result->expression,
                 ] : null,
             ];

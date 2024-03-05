@@ -9,6 +9,10 @@ use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\RequiresOperatingSystemFamily;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
+/**
+ * @requires extension pdo_pgsql
+ * @requires OS Linux|Darwin
+ */
 #[RequiresPhpExtension('pdo_pgsql')]
 #[RequiresOperatingSystemFamily('Linux|Darwin')]
 class JoinLateralTest extends PostgresTestCase

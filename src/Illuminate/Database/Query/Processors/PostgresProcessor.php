@@ -89,7 +89,16 @@ class PostgresProcessor extends Processor
         return array_map(function ($result) {
             $result = (object) $result;
 
+            if (! isset($result->generated)) {
+                $result->generated = null;
+            }
+
             $autoincrement = $result->default !== null && str_starts_with($result->default, 'nextval(');
+
+            switch ($result->generated) {
+                case 's': $extraType = 'stored'; break;
+                default: $extraType = null; break;
+            }
 
             return [
                 'name' => $result->name,
@@ -101,10 +110,7 @@ class PostgresProcessor extends Processor
                 'auto_increment' => $autoincrement,
                 'comment' => $result->comment,
                 'generation' => $result->generated ? [
-                    'type' => match ($result->generated) {
-                        's' => 'stored',
-                        default => null,
-                    },
+                    'type' => $extraType,
                     'expression' => $result->default,
                 ] : null,
             ];

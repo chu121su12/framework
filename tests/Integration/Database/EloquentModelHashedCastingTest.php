@@ -20,8 +20,6 @@ class EloquentModelHashedCastingTest extends DatabaseTestCase
 
     public function testHashedWithBcrypt()
     {
-        $this->markTestSkipped('@TODO: BUGFIX');
-
         Config::set('hashing.driver', 'bcrypt');
         Config::set('hashing.bcrypt.rounds', 13);
 
@@ -30,7 +28,8 @@ class EloquentModelHashedCastingTest extends DatabaseTestCase
         ]);
 
         $this->assertTrue(password_verify('password', $subject->password));
-        $this->assertSame('2y', password_get_info($subject->password)['algo']);
+
+        $this->assertSame(\version_compare(PHP_VERSION, '7.4.0', '<') ? 1 : '2y', password_get_info($subject->password)['algo']);
         $this->assertSame(13, password_get_info($subject->password)['options']['cost']);
         $this->assertDatabaseHas('hashed_casts', [
             'id' => $subject->id,
@@ -87,8 +86,6 @@ class EloquentModelHashedCastingTest extends DatabaseTestCase
 
     public function testPassingHashWithLowerCostDoesNotThrowExceptionWithBcrypt()
     {
-        $this->markTestSkipped('@TODO: BUGFIX');
-
         Config::set('hashing.driver', 'bcrypt');
         Config::set('hashing.bcrypt.rounds', 13);
 
@@ -106,7 +103,9 @@ class EloquentModelHashedCastingTest extends DatabaseTestCase
 
     public function testPassingDifferentHashAlgorithmThrowsExceptionWithBcrypt()
     {
-        $this->markTestSkipped('@TODO: BUGFIX');
+        if (! defined('PASSWORD_ARGON2I')) {
+            $this->markTestSkipped('PHP not compiled with Argon2i hashing support.');
+        }
 
         Config::set('hashing.driver', 'bcrypt');
         Config::set('hashing.bcrypt.rounds', 13);

@@ -115,7 +115,7 @@ class LoadConfiguration
      */
     protected function mergeableOptions($name)
     {
-        return [
+        return data_get([
             'broadcasting' => ['connections'],
             'cache' => ['stores'],
             'database' => ['connections'],
@@ -123,7 +123,7 @@ class LoadConfiguration
             'logging' => ['channels'],
             'mail' => ['mailers'],
             'queue' => ['connections'],
-        ][$name] ?? [];
+        ], $name, []);
     }
 
     /**
