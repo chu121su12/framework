@@ -191,6 +191,7 @@ class DatabaseSchemaBlueprintTest extends TestCase
         $blueprint = new Blueprint('users', function ($table) {
             $table->renameColumn('name', 'title');
             $table->renameColumn('id', 'key');
+            $table->renameColumn('generated', 'new_generated');
         });
 
         $connection = m::mock(Connection::class);
@@ -199,11 +200,13 @@ class DatabaseSchemaBlueprintTest extends TestCase
         $connection->shouldReceive('getSchemaBuilder->getColumns')->andReturn([
             ['name' => 'name', 'type' => 'varchar(255)', 'type_name' => 'varchar', 'nullable' => true, 'collation' => 'utf8mb4_unicode_ci', 'default' => 'foo', 'comment' => null, 'auto_increment' => false],
             ['name' => 'id', 'type' => 'bigint unsigned', 'type_name' => 'bigint', 'nullable' => false, 'collation' => null, 'default' => null, 'comment' => 'lorem ipsum', 'auto_increment' => true],
+            ['name' => 'generated', 'type' => 'int', 'type_name' => 'int', 'nullable' => false, 'collation' => null, 'default' => null, 'comment' => null, 'auto_increment' => false, 'generation' => ['type' => 'stored', 'expression' => 'expression']],
         ]);
 
         $this->assertEquals([
             "alter table `users` change `name` `title` varchar(255) collate 'utf8mb4_unicode_ci' null default 'foo'",
             "alter table `users` change `id` `key` bigint unsigned not null auto_increment comment 'lorem ipsum'",
+            'alter table `users` change `generated` `new_generated` int as (expression) stored not null',
         ], $blueprint->toSql($connection, new MySqlGrammar));
     }
 
@@ -212,6 +215,7 @@ class DatabaseSchemaBlueprintTest extends TestCase
         $blueprint = new Blueprint('users', function ($table) {
             $table->renameColumn('name', 'title');
             $table->renameColumn('id', 'key');
+            $table->renameColumn('generated', 'new_generated');
         });
 
         $connection = m::mock(Connection::class);
@@ -220,11 +224,13 @@ class DatabaseSchemaBlueprintTest extends TestCase
         $connection->shouldReceive('getSchemaBuilder->getColumns')->andReturn([
             ['name' => 'name', 'type' => 'varchar(255)', 'type_name' => 'varchar', 'nullable' => true, 'collation' => 'utf8mb4_unicode_ci', 'default' => 'foo', 'comment' => null, 'auto_increment' => false],
             ['name' => 'id', 'type' => 'bigint unsigned', 'type_name' => 'bigint', 'nullable' => false, 'collation' => null, 'default' => null, 'comment' => 'lorem ipsum', 'auto_increment' => true],
+            ['name' => 'generated', 'type' => 'int', 'type_name' => 'int', 'nullable' => false, 'collation' => null, 'default' => null, 'comment' => null, 'auto_increment' => false, 'generation' => ['type' => 'stored', 'expression' => 'expression']],
         ]);
 
         $this->assertEquals([
             "alter table `users` change `name` `title` varchar(255) collate 'utf8mb4_unicode_ci' null default 'foo'",
             "alter table `users` change `id` `key` bigint unsigned not null auto_increment comment 'lorem ipsum'",
+            'alter table `users` change `generated` `new_generated` int as (expression) stored not null',
         ], $blueprint->toSql($connection, new MySqlGrammar));
     }
 

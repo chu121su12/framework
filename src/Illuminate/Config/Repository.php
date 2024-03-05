@@ -82,7 +82,7 @@ class Repository implements ArrayAccess, ConfigContract
      * Get the specified string configuration value.
      *
      * @param  string  $key
-     * @param  mixed  $default
+     * @param  (\Closure():(string|null))|string|null  $default
      * @return string
      */
     public function string(/*string */$key, $default = null)/*: string*/
@@ -104,7 +104,7 @@ class Repository implements ArrayAccess, ConfigContract
      * Get the specified integer configuration value.
      *
      * @param  string  $key
-     * @param  mixed  $default
+     * @param  (\Closure():(int|null))|int|null  $default
      * @return int
      */
     public function integer(/*string */$key, $default = null)/*: int*/
@@ -126,7 +126,7 @@ class Repository implements ArrayAccess, ConfigContract
      * Get the specified float configuration value.
      *
      * @param  string  $key
-     * @param  mixed  $default
+     * @param  (\Closure():(float|null))|float|null  $default
      * @return float
      */
     public function float(/*string */$key, $default = null)/*: float*/
@@ -148,7 +148,7 @@ class Repository implements ArrayAccess, ConfigContract
      * Get the specified boolean configuration value.
      *
      * @param  string  $key
-     * @param  mixed  $default
+     * @param  (\Closure():(bool|null))|bool|null  $default
      * @return bool
      */
     public function boolean(/*string */$key, $default = null)/*: bool*/
@@ -170,7 +170,7 @@ class Repository implements ArrayAccess, ConfigContract
      * Get the specified array configuration value.
      *
      * @param  string  $key
-     * @param  mixed  $default
+     * @param  (\Closure():(array<array-key, mixed>|null))|array<array-key, mixed>|null  $default
      * @return array<array-key, mixed>
      */
     public function array_(/*string */$key, $default = null)/*: array*/
