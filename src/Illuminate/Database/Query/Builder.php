@@ -2128,7 +2128,7 @@ class Builder implements BuilderContract
      */
     public function whereAll($columns, $operator = null, $value = null, $boolean = 'and')
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 
@@ -2165,7 +2165,7 @@ class Builder implements BuilderContract
      */
     public function whereAny($columns, $operator = null, $value = null, $boolean = 'and')
     {
-        [$value, $operator] = $this->prepareValueAndOperator(
+        list($value, $operator) = $this->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
 

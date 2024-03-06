@@ -2054,6 +2054,7 @@ class SupportCollectionTest extends TestCase
         $this->assertEquals($data->pluck('item')->toArray(), $expected);
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testSortKeys($collection)
     {

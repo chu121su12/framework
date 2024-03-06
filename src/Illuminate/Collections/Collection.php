@@ -1456,8 +1456,10 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      * @param  int  $options
      * @return static
      */
-    protected function sortByMany(array $comparisons = [], int $options = SORT_REGULAR)
+    protected function sortByMany(array $comparisons = [], /*int */$options = SORT_REGULAR)
     {
+        $options = backport_type_check('int', $options);
+
         $items = $this->items;
 
         uasort($items, function ($a, $b) use ($comparisons, $options) {
@@ -1485,13 +1487,13 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
                             $result = strcasecmp($values[0], $values[1]);
                         }
                     } else {
-                        $result = match ($options) {
-                            SORT_NUMERIC => intval($values[0]) <=> intval($values[1]),
-                            SORT_STRING => strcmp($values[0], $values[1]),
-                            SORT_NATURAL => strnatcmp($values[0], $values[1]),
-                            SORT_LOCALE_STRING => strcoll($values[0], $values[1]),
-                            default => $values[0] <=> $values[1],
-                        };
+                        switch ($options) {
+                            case SORT_NUMERIC: $result = backport_spaceship_operator(intval($values[0]), /*<=> */intval($values[1])); break;
+                            case SORT_STRING: $result = strcmp($values[0], $values[1]); break;
+                            case SORT_NATURAL: $result = strnatcmp($values[0], $values[1]); break;
+                            case SORT_LOCALE_STRING: $result = strcoll($values[0], $values[1]); break;
+                            default: $result = backport_spaceship_operator($values[0], /*<=> */$values[1]); break;
+                        }
                     }
                 }
 

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Bootstrap\RegisterFacades;
 use Illuminate\Foundation\Events\LocaleUpdated;
 use Illuminate\Support\ServiceProvider;
 use Mockery as m;
+use PHPUnit\Framework\PhpUnit8Assert;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -29,6 +30,8 @@ class FoundationApplicationTest_testSingletonsAreCreatedWhenServiceProviderIsReg
 
 class FoundationApplicationTest extends TestCase
 {
+    use PhpUnit8Assert;
+
     protected function tearDown()/*: void*/
     {
         m::close();
@@ -533,7 +536,7 @@ class FoundationApplicationTest extends TestCase
         $this->assertSame('bar', $app->make('config')->get('app.foo'));
     }
 
-    public function testMergingConfig(): void
+    public function testMergingConfig()/*: void*/
     {
         $app = new Application;
         $app->useConfigPath(__DIR__.'/fixtures/config');
