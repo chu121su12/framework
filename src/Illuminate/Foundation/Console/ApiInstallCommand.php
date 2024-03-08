@@ -55,7 +55,7 @@ class ApiInstallCommand extends Command
                 (new Filesystem)->replaceInFile(
                     'auth:sanctum',
                     'auth:api',
-                    $apiRoutesPath,
+                    $apiRoutesPath
                 );
             }
 
