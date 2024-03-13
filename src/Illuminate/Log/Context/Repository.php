@@ -102,7 +102,7 @@ class Repository
      */
     public function get($key)
     {
-        return $this->data[$key] ?? null;
+        return isset($this->data[$key]) ? $this->data[$key] : null;
     }
 
     /**
@@ -113,7 +113,7 @@ class Repository
      */
     public function getHidden($key)
     {
-        return $this->hidden[$key] ?? null;
+        return isset($this->hidden[$key]) ? $this->hidden[$key] : null;
     }
 
     /**
@@ -247,10 +247,10 @@ class Repository
             throw new RuntimeException("Unable to push value onto context stack for key [{$key}].");
         }
 
-        $this->data[$key] = [
-            ...$this->data[$key] ?? [],
-            ...$values,
-        ];
+        $this->data[$key] = \array_merge(
+            isset($this->data[$key]) ? $this->data[$key] : [],
+            $values
+        );
 
         return $this;
     }
@@ -268,10 +268,10 @@ class Repository
             throw new RuntimeException("Unable to push value onto hidden context stack for key [{$key}].");
         }
 
-        $this->hidden[$key] = [
-            ...$this->hidden[$key] ?? [],
-            ...$values,
-        ];
+        $this->hidden[$key] = \array_merge(
+            isset($this->hidden[$key]) ? $this->hidden[$key] : [],
+            $values
+        );
 
         return $this;
     }
@@ -318,7 +318,7 @@ class Repository
      */
     public function dehydrating($callback)
     {
-        $this->events->listen(fn (Dehydrating $event) => $callback($event->context));
+        $this->events->listen(function (Dehydrating $event) use ($callback) { return $callback($event->context); });
 
         return $this;
     }
@@ -331,7 +331,7 @@ class Repository
      */
     public function hydrated($callback)
     {
-        $this->events->listen(fn (Hydrated $event) => $callback($event->context));
+        $this->events->listen(function (Hydrated $event) use ($callback) { return $callback($event->context); });
 
         return $this;
     }
@@ -377,7 +377,9 @@ class Repository
 
         $instance->events->dispatch(new Dehydrating($instance));
 
-        $serialize = fn ($value) => serialize($instance->getSerializedPropertyValue($value, withRelations: false));
+        $serialize = function ($value) use ($instance) {
+            return serialize($instance->getSerializedPropertyValue($value, /*withRelations: */false));
+        };
 
         return $instance->isEmpty() ? null : [
             'data' => array_map($serialize, $instance->all()),
@@ -402,9 +404,16 @@ class Repository
                         throw new RuntimeException('Value is incomplete class: '.json_encode($value));
                     }
                 });
+            } catch (\Exception $e) {
+            } catch (\Error $e) {
             } catch (Throwable $e) {
+            }
+
+            if (isset($e)) {
                 if (static::$handleUnserializeExceptionsUsing !== null) {
-                    return (static::$handleUnserializeExceptionsUsing)($e, $key, $value, $hidden);
+                    $callback = static::$handleUnserializeExceptionsUsing;
+
+                    return $callback($e, $key, $value, $hidden);
                 }
 
                 if ($e instanceof ModelNotFoundException) {
@@ -419,9 +428,9 @@ class Repository
             }
         };
 
-        [$data, $hidden] = [
-            collect($context['data'] ?? [])->map(fn ($value, $key) => $unserialize($value, $key, false))->all(),
-            collect($context['hidden'] ?? [])->map(fn ($value, $key) => $unserialize($value, $key, true))->all(),
+        list($data, $hidden) = [
+            collect(isset($context['data']) ? $context['data'] : [])->map(function ($value, $key) use ($unserialize) { return $unserialize($value, $key, false); })->all(),
+            collect(isset($context['hidden']) ? $context['hidden'] : [])->map(function ($value, $key) use ($unserialize) { return $unserialize($value, $key, true); })->all(),
         ];
 
         $this->events->dispatch(new Hydrated(

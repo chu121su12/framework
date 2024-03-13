@@ -55,6 +55,8 @@ trait ManagesTransactions
                 }
 
                 $this->transactions = max(0, $this->transactions - 1);
+            } catch (\Exception $e) {
+            } catch (\Error $e) {
             } catch (Throwable $e) {
             }
 
@@ -66,11 +68,13 @@ trait ManagesTransactions
                 continue;
             }
 
-            $this->transactionsManager?->commit(
-                $this->getName(),
-                $levelBeingCommitted,
-                $this->transactions
-            );
+            if (isset($this->transactionsManager)) {
+                $this->transactionsManager->commit(
+                    $this->getName(),
+                    $levelBeingCommitted,
+                    $this->transactions
+                );
+            }
 
             $this->fireConnectionEvent('committed');
 

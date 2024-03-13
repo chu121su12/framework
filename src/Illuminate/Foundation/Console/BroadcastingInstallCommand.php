@@ -145,7 +145,7 @@ class BroadcastingInstallCommand extends Command
      */
     protected function installNodeDependencies()
     {
-        if (! confirm('Would you like to install and build the Node dependencies required for broadcasting?', default: true)) {
+        if (! confirm('Would you like to install and build the Node dependencies required for broadcasting?', /*default: */true)) {
             return;
         }
 

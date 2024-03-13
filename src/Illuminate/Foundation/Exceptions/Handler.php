@@ -612,12 +612,12 @@ class Handler implements ExceptionHandlerContract
             return $this->finalizeRenderedResponse($request, $response, $e);
         }
 
-        return $this->finalizeRenderedResponse($request, match (true) {
-            $e instanceof HttpResponseException => $e->getResponse(),
-            $e instanceof AuthenticationException => $this->unauthenticated($request, $e),
-            $e instanceof ValidationException => $this->convertValidationExceptionToResponse($e, $request),
-            default => $this->renderExceptionResponse($request, $e),
-        }, $e);
+        return $this->finalizeRenderedResponse($request, value(function () use ($e, $request) { switch (true) {
+            case $e instanceof HttpResponseException: return $e->getResponse();
+            case $e instanceof AuthenticationException: return $this->unauthenticated($request, $e);
+            case $e instanceof ValidationException: return $this->convertValidationExceptionToResponse($e, $request);
+            default: return $this->renderExceptionResponse($request, $e);
+        }}), $e);
     }
 
     /**
@@ -628,8 +628,10 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function finalizeRenderedResponse($request, $response, Throwable $e)
+    protected function finalizeRenderedResponse($request, $response, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return $this->finalizeResponseCallback
             ? call_user_func($this->finalizeResponseCallback, $response, $e, $request)
             : $response;
@@ -824,6 +826,8 @@ class Handler implements ExceptionHandlerContract
      */
     protected function shouldReturnJson($request, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return $this->shouldRenderJsonWhenCallback
             ? call_user_func($this->shouldRenderJsonWhenCallback, $request, $e)
             : $request->expectsJson();

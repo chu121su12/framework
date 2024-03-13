@@ -573,11 +573,11 @@ class SleepTest extends TestCase
         Carbon::setTestNow('2000-01-01 00:00:00');
         Sleep::fake();
 
-        Sleep::for(5)->minutes()
-            ->and(3)->seconds();
+        Sleep::for_(5)->minutes()
+            ->and_(3)->seconds();
 
         Sleep::assertSequence([
-            Sleep::for(303)->seconds(),
+            Sleep::for_(303)->seconds(),
         ]);
         $this->assertSame('2000-01-01 00:00:00', Date::now()->toDateTimeString());
     }
@@ -588,35 +588,38 @@ class SleepTest extends TestCase
         Sleep::fake();
         Sleep::syncWithCarbon();
 
-        Sleep::for(5)->minutes()
-            ->and(3)->seconds();
+        Sleep::for_(5)->minutes()
+            ->and_(3)->seconds();
 
         Sleep::assertSequence([
-            Sleep::for(303)->seconds(),
+            Sleep::for_(303)->seconds(),
         ]);
         $this->assertSame('2000-01-01 00:05:03', Date::now()->toDateTimeString());
     }
 
-    #[TestWith([
-        'syncWithCarbon' => true,
-        'datetime' => '2000-01-01 00:05:03',
-    ])]
-    #[TestWith([
-        'syncWithCarbon' => false,
-        'datetime' => '2000-01-01 00:00:00',
-    ])]
-    public function testFakeCanSetSyncWithCarbon(bool $syncWithCarbon, string $datetime)
+    /** @dataProvider providerFakeCanSetSyncWithCarbon */
+    #[TestWith(['syncWithCarbon' => true, 'datetime' => '2000-01-01 00:05:03'])]
+    #[TestWith(['syncWithCarbon' => false, 'datetime' => '2000-01-01 00:00:00'])]
+    public function testFakeCanSetSyncWithCarbon(/*bool */$syncWithCarbon, /*string */$datetime)
     {
         Carbon::setTestNow('2000-01-01 00:00:00');
-        Sleep::fake(syncWithCarbon: $syncWithCarbon);
+        Sleep::fake(/*$value = */true, /*syncWithCarbon: */$syncWithCarbon);
 
-        Sleep::for(5)->minutes()
-            ->and(3)->seconds();
+        Sleep::for_(5)->minutes()
+            ->and_(3)->seconds();
 
         Sleep::assertSequence([
-            Sleep::for(303)->seconds(),
+            Sleep::for_(303)->seconds(),
         ]);
         $this->assertSame($datetime, Date::now()->toDateTimeString());
+    }
+
+    public static function providerFakeCanSetSyncWithCarbon()
+    {
+        return [
+            [ true, '2000-01-01 00:05:03' ],
+            [ false, '2000-01-01 00:00:00' ],
+        ];
     }
 
     public function testFakeDoesNotNeedToSyncWithCarbon()
@@ -624,11 +627,11 @@ class SleepTest extends TestCase
         Carbon::setTestNow('2000-01-01 00:00:00');
         Sleep::fake();
 
-        Sleep::for(5)->minutes()
-            ->and(3)->seconds();
+        Sleep::for_(5)->minutes()
+            ->and_(3)->seconds();
 
         Sleep::assertSequence([
-            Sleep::for(303)->seconds(),
+            Sleep::for_(303)->seconds(),
         ]);
         $this->assertSame('2000-01-01 00:00:00', Date::now()->toDateTimeString());
     }

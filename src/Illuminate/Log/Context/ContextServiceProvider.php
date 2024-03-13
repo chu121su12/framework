@@ -29,14 +29,16 @@ class ContextServiceProvider extends ServiceProvider
         Queue::createPayloadUsing(function ($connection, $queue, $payload) {
             $context = Context::dehydrate();
 
-            return $context === null ? $payload : [
-                ...$payload,
-                'illuminate:log:context' => $context,
-            ];
+            return $context === null ? $payload : \array_merge(
+                $payload,
+                ['illuminate:log:context' => $context]
+            );
         });
 
         $this->app['events']->listen(function (JobProcessing $event) {
-            Context::hydrate($event->job->payload()['illuminate:log:context'] ?? null);
+            $payload = $event->job->payload();
+
+            Context::hydrate(isset($payload['illuminate:log:context']) ? $payload['illuminate:log:context'] : null);
         });
     }
 }

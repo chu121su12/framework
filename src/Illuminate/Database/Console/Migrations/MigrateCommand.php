@@ -83,7 +83,12 @@ class MigrateCommand extends BaseCommand implements Isolatable
 
         try {
             $this->runMigrations();
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             if ($this->option('graceful')) {
                 $this->components->warn($e->getMessage());
 

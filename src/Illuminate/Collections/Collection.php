@@ -1390,8 +1390,8 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
         $items = $this->items;
 
         $callback && is_callable($callback)
-            ? uasort($items, $callback)
-            : asort($items, isset($callback) ? $callback : SORT_REGULAR);
+            ? StableSort::uasort($items, $callback)
+            : StableSort::asort($items, isset($callback) ? $callback : SORT_REGULAR);
 
         return new static($items);
     }
@@ -1462,7 +1462,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
 
         $items = $this->items;
 
-        uasort($items, function ($a, $b) use ($comparisons, $options) {
+        StableSort::uasort($items, function ($a, $b) use ($comparisons, $options) {
             foreach ($comparisons as $comparison) {
                 $comparison = Arr::wrap($comparison);
 

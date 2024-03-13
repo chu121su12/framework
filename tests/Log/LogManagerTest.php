@@ -272,6 +272,7 @@ class LogManagerTest extends TestCase
         $this->assertInstanceOf(PsrLogMessageProcessor::class, $processors[2]);
 
         $removeUsedContextFields = new ReflectionProperty(get_class($processors[2]), 'removeUsedContextFields');
+        $removeUsedContextFields->setAccessible(true);
 
         $this->assertTrue($removeUsedContextFields->getValue($processors[2]));
     }

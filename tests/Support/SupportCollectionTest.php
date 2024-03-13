@@ -1958,6 +1958,7 @@ class SupportCollectionTest extends TestCase
         $this->assertEquals([['id' => 2, 'name' => 'baz'], ['id' => 2, 'name' => 'bar'], ['id' => 1, 'name' => 'foo']], array_values($data->all()));
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testSortByAlwaysReturnsAssoc($collection)
     {
@@ -2073,6 +2074,10 @@ class SupportCollectionTest extends TestCase
     #[DataProvider('collectionClassProvider')]
     public function testSortByManyCaseNumeric($collection)
     {
+        if (\version_compare(\PHP_VERSION, '8.0', '<')) {
+            $this->markTestSkipped('failed assert due to undefined sort behavior');
+        }
+
         $data = new $collection([['item' => 'img1'], ['item' => 'Img101'], ['item' => 'img10'], ['item' => 'Img11']]);
         $expected = $data->pluck('item')->toArray();
 

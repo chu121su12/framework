@@ -314,12 +314,12 @@ class FoundationExceptionsHandlerTest extends TestCase
 
         $request = $this->request;
 
-        $shouldReturnJson = (fn () => $this->shouldReturnJson($request, $e))->call($this->handler);
+        $shouldReturnJson = backport_function_call_able(function () use ($request, $e) { return $this->shouldReturnJson($request, $e); })->call($this->handler);
         $this->assertTrue($shouldReturnJson);
 
         $this->request->shouldReceive('expectsJson')->once()->andReturn(false);
 
-        $shouldReturnJson = (fn () => $this->shouldReturnJson($request, $e))->call($this->handler);
+        $shouldReturnJson = backport_function_call_able(function () use ($request, $e) { return $this->shouldReturnJson($request, $e); })->call($this->handler);
         $this->assertFalse($shouldReturnJson);
     }
 
@@ -337,7 +337,7 @@ class FoundationExceptionsHandlerTest extends TestCase
             return true;
         });
 
-        $shouldReturnJson = (fn () => $this->shouldReturnJson($request, $exception))->call($this->handler);
+        $shouldReturnJson = backport_function_call_able(function () use ($request, $exception) { return $this->shouldReturnJson($request, $exception); })->call($this->handler);
         $this->assertTrue($shouldReturnJson);
 
         $this->handler->shouldRenderJsonWhen(function ($r, $e) use ($request, $exception) {
@@ -347,7 +347,7 @@ class FoundationExceptionsHandlerTest extends TestCase
             return false;
         });
 
-        $shouldReturnJson = (fn () => $this->shouldReturnJson($request, $exception))->call($this->handler);
+        $shouldReturnJson = backport_function_call_able(function () use ($request, $exception) { return $this->shouldReturnJson($request, $exception); })->call($this->handler);
         $this->assertFalse($shouldReturnJson);
 
         $this->assertSame(6, Assert::getCount());

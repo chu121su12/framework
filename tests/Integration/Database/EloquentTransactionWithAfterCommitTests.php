@@ -111,7 +111,7 @@ trait EloquentTransactionWithAfterCommitTests
 
     public function testTransactionCallbackExceptions()
     {
-        [$firstObject, $secondObject] = [
+        list($firstObject, $secondObject) = [
             new EloquentTransactionWithAfterCommitTestsTestObjectForTransactions(),
             new EloquentTransactionWithAfterCommitTestsTestObjectForTransactions(),
         ];
@@ -136,8 +136,8 @@ trait EloquentTransactionWithAfterCommitTests
 
                 $this->assertSame($rootTransactionLevel + 1, DB::transactionLevel());
 
-                DB::afterCommit(fn () => throw new \RuntimeException());
-                DB::afterCommit(fn () => $secondObject->handle());
+                DB::afterCommit(function () { throw new \RuntimeException(); });
+                DB::afterCommit(function () use ($secondObject) { return $secondObject->handle(); });
             });
         }, \RuntimeException::class);
 

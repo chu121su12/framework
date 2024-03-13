@@ -3103,13 +3103,13 @@ class HttpClientTest extends TestCase
         $this->assertFalse($allowRedirects);
         $this->assertSame(['true'], $headers['X-Foo']);
 
-        $factory->globalOptions(fn () => [
+        $factory->globalOptions(function () { return [
             'timeout' => 10,
             'headers' => [
                 'X-Foo' => 'false',
                 'X-Bar' => 'true',
             ],
-        ]);
+        ]; });
 
         $factory->get('https://laravel.com');
         $this->assertSame(10, $timeout);

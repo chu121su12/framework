@@ -56,10 +56,10 @@ class EnumMakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return match (true) {
-            is_dir(app_path('Enums')) => $rootNamespace.'\\Enums',
-            is_dir(app_path('Enumerations')) => $rootNamespace.'\\Enumerations',
-            default => $rootNamespace,
+        switch (true) {
+            case is_dir(app_path('Enums')): return $rootNamespace.'\\Enums';
+            case is_dir(app_path('Enumerations')): return $rootNamespace.'\\Enumerations';
+            default: return $rootNamespace;
         };
     }
 

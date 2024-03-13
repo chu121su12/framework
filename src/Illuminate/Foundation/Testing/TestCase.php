@@ -62,7 +62,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function transformException(/*Throwable */$error)/*: Throwable*/
     {
-        $error = backport_type_throwable($error);
+        backport_type_throwable($error);
 
         $response = isset(static::$latestResponse) ? static::$latestResponse : null;
 

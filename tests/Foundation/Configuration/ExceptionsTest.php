@@ -45,15 +45,15 @@ class ExceptionsTest extends TestCase
     {
         $exceptions = new Exceptions(new Handler(new Container));
 
-        $shouldReturnJson = (fn () => $this->shouldReturnJson(new Request, new Exception()))->call($exceptions->handler);
+        $shouldReturnJson = backport_function_call_able(function () { return $this->shouldReturnJson(new Request, new Exception()); })->call($exceptions->handler);
         $this->assertFalse($shouldReturnJson);
 
-        $exceptions->shouldRenderJsonWhen(fn () => true);
-        $shouldReturnJson = (fn () => $this->shouldReturnJson(new Request, new Exception()))->call($exceptions->handler);
+        $exceptions->shouldRenderJsonWhen(function () { return true; });
+        $shouldReturnJson = backport_function_call_able(function () { return $this->shouldReturnJson(new Request, new Exception()); })->call($exceptions->handler);
         $this->assertTrue($shouldReturnJson);
 
-        $exceptions->shouldRenderJsonWhen(fn () => false);
-        $shouldReturnJson = (fn () => $this->shouldReturnJson(new Request, new Exception()))->call($exceptions->handler);
+        $exceptions->shouldRenderJsonWhen(function () { return false; });
+        $shouldReturnJson = backport_function_call_able(function () { return $this->shouldReturnJson(new Request, new Exception()); })->call($exceptions->handler);
         $this->assertFalse($shouldReturnJson);
     }
 }

@@ -17,6 +17,11 @@ class ContextIntegrationTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
+    protected function attributeBpWithMigration()
+    {
+        return [];
+    }
+
     public function test_it_can_hydrate_null()
     {
         Context::hydrate(null);
@@ -25,7 +30,7 @@ class ContextIntegrationTest extends TestCase
 
     public function test_it_handles_eloquent()
     {
-        $user = UserFactory::new()->create(['name' => 'Tim']);
+        $user = UserFactory::new_()->create(['name' => 'Tim']);
 
         Context::add('model', $user);
         Context::add('number', 55);
@@ -51,7 +56,7 @@ class ContextIntegrationTest extends TestCase
 
     public function test_it_ignores_deleted_models_when_hydrating()
     {
-        $user = UserFactory::new()->create(['name' => 'Tim']);
+        $user = UserFactory::new_()->create(['name' => 'Tim']);
 
         Context::add('model', $user);
         Context::add('number', 55);
@@ -70,7 +75,7 @@ class ContextIntegrationTest extends TestCase
 
     public function test_it_ignores_deleted_models_within_collections_when_hydrating()
     {
-        $user = UserFactory::new()->create(['name' => 'Tim']);
+        $user = UserFactory::new_()->create(['name' => 'Tim']);
 
         Context::add('models', User::all());
         Context::add('number', 55);

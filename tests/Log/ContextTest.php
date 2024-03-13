@@ -16,11 +16,40 @@ use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
 use RuntimeException;
 
+if (PHP_VERSION_ID >= 80100) {
+    include_once 'Enums.php';
+}
+
 class ContextTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
     public function test_it_can_set_values()
+    {
+        $values = [
+            'string' => 'string',
+            'bool' => false,
+            'int' => 5,
+            'float' => 5.5,
+            'null' => null,
+            'array' => [1, 2, 3],
+            'hash' => ['foo' => 'bar'],
+            'object' => (object) ['foo' => 'bar'],
+        ];
+
+        foreach ($values as $type => $value) {
+            Context::add($type, $value);
+        }
+
+        foreach ($values as $type => $value) {
+            $this->assertSame($value, Context::get($type));
+        }
+    }
+
+    /**
+     * @requires PHP 8.1
+     */
+    public function test_it_can_set_values2()
     {
         $values = [
             'string' => 'string',
@@ -115,6 +144,58 @@ class ContextTest extends TestCase
     }
 
     public function test_it_can_serilize_values()
+    {
+        Context::add([
+            'string' => 'string',
+            'bool' => false,
+            'int' => 5,
+            'float' => 5.5,
+            'null' => null,
+            'array' => [1, 2, 3],
+            'hash' => ['foo' => 'bar'],
+            'object' => (object) ['foo' => 'bar'],
+        ]);
+        Context::addHidden('number', 55);
+
+        $dehydrated = Context::dehydrate();
+
+        $this->assertSame([
+            'data' => [
+                'string' => 's:6:"string";',
+                'bool' => 'b:0;',
+                'bool' => 'b:0;',
+                'int' => 'i:5;',
+                'float' => 'd:5.5;',
+                'null' => 'N;',
+                'array' => 'a:3:{i:0;i:1;i:1;i:2;i:2;i:3;}',
+                'hash' => 'a:1:{s:3:"foo";s:3:"bar";}',
+                'object' => 'O:8:"stdClass":1:{s:3:"foo";s:3:"bar";}',
+            ],
+            'hidden' => [
+                'number' => 'i:55;',
+            ],
+        ], $dehydrated);
+
+        Context::flush();
+        $this->assertNull(Context::get('string'));
+
+        Context::hydrate($dehydrated);
+
+        $this->assertSame(Context::get('string'), 'string');
+        $this->assertSame(Context::get('bool'), false);
+        $this->assertSame(Context::get('int'), 5);
+        $this->assertSame(Context::get('float'), 5.5);
+        $this->assertSame(Context::get('null'), null);
+        $this->assertSame(Context::get('array'), [1, 2, 3]);
+        $this->assertSame(Context::get('hash'), ['foo' => 'bar']);
+        $this->assertEquals(Context::get('object'), (object) ['foo' => 'bar']);
+        $this->assertSame(Context::getHidden('number'), 55);
+    }
+
+    /**
+     * @requires PHP 8.1
+     */
+    public function test_it_can_serilize_values2()
     {
         Context::add([
             'string' => 'string',
@@ -373,22 +454,6 @@ class ContextTest extends TestCase
         file_put_contents($path, '');
         Str::createUuidsNormally();
     }
-}
-
-enum Suit
-{
-    case Hearts;
-    case Diamonds;
-    case Clubs;
-    case Spades;
-}
-
-enum StringBackedSuit: string
-{
-    case Hearts = 'hearts';
-    case Diamonds = 'diamonds';
-    case Clubs = 'clubs';
-    case Spades = 'spades';
 }
 
 class ContextModel extends Model

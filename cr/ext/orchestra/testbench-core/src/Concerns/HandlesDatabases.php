@@ -58,7 +58,7 @@ trait HandlesDatabases
             });
 
             if (! $hasMigration && \method_exists($this, 'attributeBpWithMigration')) {
-                $types = $this->attributeBpWithMigration();
+                $types = (array) $this->attributeBpWithMigration() ?: ['laravel'];
                 after_resolving($app, 'migrator', static function ($migrator) use ($types) {
                     /** @var \Illuminate\Database\Migrations\Migrator $migrator */
                     Collection::make($types)
