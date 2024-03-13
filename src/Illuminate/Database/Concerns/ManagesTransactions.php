@@ -45,6 +45,8 @@ trait ManagesTransactions
                 continue;
             }
 
+            $levelBeingCommitted = $this->transactions;
+
             try {
                 $e = null;
                 if ($this->transactions == 1) {
@@ -52,20 +54,7 @@ trait ManagesTransactions
                     $this->getPdo()->commit();
                 }
 
-                list($levelBeingCommitted, $this->transactions) = [
-                    $this->transactions,
-                    max(0, $this->transactions - 1),
-                ];
-
-                if (isset($this->transactionsManager)) {
-                    $this->transactionsManager->commit(
-                        $this->getName(),
-                        $levelBeingCommitted,
-                        $this->transactions
-                    );
-                }
-            } catch (\Exception $e) {
-            } catch (\Error $e) {
+                $this->transactions = max(0, $this->transactions - 1);
             } catch (Throwable $e) {
             }
 
@@ -76,6 +65,12 @@ trait ManagesTransactions
 
                 continue;
             }
+
+            $this->transactionsManager?->commit(
+                $this->getName(),
+                $levelBeingCommitted,
+                $this->transactions
+            );
 
             $this->fireConnectionEvent('committed');
 

@@ -106,7 +106,7 @@ class LogManagerTest extends TestCase
         $this->assertInstanceOf(Logger::class, $logger);
         $this->assertCount(2, $handlers);
         $this->assertInstanceOf(StreamHandler::class, $handlers[0]);
-        $this->assertInstanceOf(PsrLogMessageProcessor::class, $logger->getLogger()->getProcessors()[0]);
+        $this->assertInstanceOf(PsrLogMessageProcessor::class, $logger->getLogger()->getProcessors()[2]);
         $this->assertInstanceOf(StreamHandler::class, $handlers[1]);
         $this->assertEquals(Monolog::NOTICE, $handlers[0]->getLevel());
         $this->assertEquals(Monolog::INFO, $handlers[1]->getLevel());
@@ -268,13 +268,12 @@ class LogManagerTest extends TestCase
         $processors = $logger->getLogger()->getProcessors();
 
         $this->assertInstanceOf(StreamHandler::class, $handler);
-        $this->assertInstanceOf(MemoryUsageProcessor::class, $processors[0]);
-        $this->assertInstanceOf(PsrLogMessageProcessor::class, $processors[1]);
+        $this->assertInstanceOf(MemoryUsageProcessor::class, $processors[1]);
+        $this->assertInstanceOf(PsrLogMessageProcessor::class, $processors[2]);
 
-        $removeUsedContextFields = new ReflectionProperty(get_class($processors[1]), 'removeUsedContextFields');
-        $removeUsedContextFields->setAccessible(true);
+        $removeUsedContextFields = new ReflectionProperty(get_class($processors[2]), 'removeUsedContextFields');
 
-        $this->assertTrue($removeUsedContextFields->getValue($processors[1]));
+        $this->assertTrue($removeUsedContextFields->getValue($processors[2]));
     }
 
     public function testItUtilisesTheNullDriverDuringTestsWhenNullDriverUsed()
@@ -325,7 +324,7 @@ class LogManagerTest extends TestCase
 
         $this->assertInstanceOf(StreamHandler::class, $handler);
         $this->assertInstanceOf(LineFormatter::class, $formatter);
-        $this->assertInstanceOf(PsrLogMessageProcessor::class, $logger->getLogger()->getProcessors()[0]);
+        $this->assertInstanceOf(PsrLogMessageProcessor::class, $logger->getLogger()->getProcessors()[1]);
 
         $config->set('logging.channels.formattedsingle', [
             'driver' => 'single',
@@ -344,7 +343,7 @@ class LogManagerTest extends TestCase
 
         $this->assertInstanceOf(StreamHandler::class, $handler);
         $this->assertInstanceOf(HtmlFormatter::class, $formatter);
-        $this->assertEmpty($logger->getLogger()->getProcessors());
+        $this->assertCount(1, $logger->getLogger()->getProcessors());
 
         $dateFormat = new ReflectionProperty(get_class($formatter), 'dateFormat');
         $dateFormat->setAccessible(true);
@@ -371,7 +370,7 @@ class LogManagerTest extends TestCase
 
         $this->assertInstanceOf(StreamHandler::class, $handler);
         $this->assertInstanceOf(LineFormatter::class, $formatter);
-        $this->assertInstanceOf(PsrLogMessageProcessor::class, $logger->getLogger()->getProcessors()[0]);
+        $this->assertInstanceOf(PsrLogMessageProcessor::class, $logger->getLogger()->getProcessors()[1]);
 
         $config->set('logging.channels.formatteddaily', [
             'driver' => 'daily',
@@ -390,7 +389,7 @@ class LogManagerTest extends TestCase
 
         $this->assertInstanceOf(StreamHandler::class, $handler);
         $this->assertInstanceOf(HtmlFormatter::class, $formatter);
-        $this->assertEmpty($logger->getLogger()->getProcessors());
+        $this->assertCount(1, $logger->getLogger()->getProcessors());
 
         $dateFormat = new ReflectionProperty(get_class($formatter), 'dateFormat');
         $dateFormat->setAccessible(true);
@@ -416,7 +415,7 @@ class LogManagerTest extends TestCase
 
         $this->assertInstanceOf(SyslogHandler::class, $handler);
         $this->assertInstanceOf(LineFormatter::class, $formatter);
-        $this->assertInstanceOf(PsrLogMessageProcessor::class, $logger->getLogger()->getProcessors()[0]);
+        $this->assertInstanceOf(PsrLogMessageProcessor::class, $logger->getLogger()->getProcessors()[1]);
 
         $config->set('logging.channels.formattedsyslog', [
             'driver' => 'syslog',
@@ -434,7 +433,7 @@ class LogManagerTest extends TestCase
 
         $this->assertInstanceOf(SyslogHandler::class, $handler);
         $this->assertInstanceOf(HtmlFormatter::class, $formatter);
-        $this->assertEmpty($logger->getLogger()->getProcessors());
+        $this->assertCount(1, $logger->getLogger()->getProcessors());
 
         $dateFormat = new ReflectionProperty(get_class($formatter), 'dateFormat');
         $dateFormat->setAccessible(true);
@@ -490,7 +489,7 @@ class LogManagerTest extends TestCase
         $logger = $manager->stack(['test', $channel]);
 
         $handler = $logger->getLogger()->getHandlers()[1];
-        $processor = $logger->getLogger()->getProcessors()[0];
+        $processor = $logger->getLogger()->getProcessors()[1];
 
         $this->assertInstanceOf(StreamHandler::class, $handler);
         $this->assertInstanceOf(UidProcessor::class, $processor);

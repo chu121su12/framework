@@ -19,7 +19,7 @@ class AsEnumCollection_castUsing_class implements CastsAttributes
 
             public function get(Model $model, $key, $value, array $attributes)
             {
-                if (! isset($attributes[$key]) || is_null($attributes[$key])) {
+                if (! isset($attributes[$key])) {
                     return;
                 }
 

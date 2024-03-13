@@ -94,6 +94,7 @@
         "symfony/cache": "^3.4"
     },
     "conflict": {
+        "mockery/mockery": "1.6.8",
         "tightenco/collect": "<5.5.33"
     },
     "provide": {

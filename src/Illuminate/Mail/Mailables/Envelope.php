@@ -77,10 +77,10 @@ class Envelope
      * Create a new message envelope instance.
      *
      * @param  \Illuminate\Mail\Mailables\Address|string|null  $from
-     * @param  array  $to
-     * @param  array  $cc
-     * @param  array  $bcc
-     * @param  array  $replyTo
+     * @param  array<int, \Illuminate\Mail\Mailables\Address|string>  $to
+     * @param  array<int, \Illuminate\Mail\Mailables\Address|string>  $cc
+     * @param  array<int, \Illuminate\Mail\Mailables\Address|string>  $bcc
+     * @param  array<int, \Illuminate\Mail\Mailables\Address|string>  $replyTo
      * @param  string|null  $subject
      * @param  array  $tags
      * @param  array  $metadata
@@ -111,8 +111,8 @@ class Envelope
     /**
      * Normalize the given array of addresses.
      *
-     * @param  array  $addresses
-     * @return array
+     * @param  array<int, \Illuminate\Mail\Mailables\Address|string>  $addresses
+     * @return array<int, \Illuminate\Mail\Mailables\Address>
      */
     protected function normalizeAddresses($addresses)
     {
@@ -140,7 +140,7 @@ class Envelope
     /**
      * Add a "to" recipient to the message envelope.
      *
-     * @param  \Illuminate\Mail\Mailables\Address|array|string  $address
+     * @param  \Illuminate\Mail\Mailables\Address|array<int, \Illuminate\Mail\Mailables\Address|string>|string  $address
      * @param  string|null  $name
      * @return $this
      */
@@ -158,7 +158,7 @@ class Envelope
     /**
      * Add a "cc" recipient to the message envelope.
      *
-     * @param  \Illuminate\Mail\Mailables\Address|array|string  $address
+     * @param  \Illuminate\Mail\Mailables\Address|array<int, \Illuminate\Mail\Mailables\Address|string>|string  $address
      * @param  string|null  $name
      * @return $this
      */
@@ -176,7 +176,7 @@ class Envelope
     /**
      * Add a "bcc" recipient to the message envelope.
      *
-     * @param  \Illuminate\Mail\Mailables\Address|array|string  $address
+     * @param  \Illuminate\Mail\Mailables\Address|array<int, \Illuminate\Mail\Mailables\Address|string>|string  $address
      * @param  string|null  $name
      * @return $this
      */
@@ -194,7 +194,7 @@ class Envelope
     /**
      * Add a "reply to" recipient to the message envelope.
      *
-     * @param  \Illuminate\Mail\Mailables\Address|array|string  $address
+     * @param  \Illuminate\Mail\Mailables\Address|array<int, \Illuminate\Mail\Mailables\Address|string>|string  $address
      * @param  string|null  $name
      * @return $this
      */
