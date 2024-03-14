@@ -5549,6 +5549,7 @@ class SupportCollectionTest extends TestCase
 
         $data = $collection::make([1, 2, 3, 'foo']);
         $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage("Collection should only include [int] items, but 'string' found at position 3.");
         $data->ensure('int');
     }
 
@@ -5561,6 +5562,7 @@ class SupportCollectionTest extends TestCase
 
         $data = $collection::make([new stdClass, new stdClass, new stdClass, $collection]);
         $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage(sprintf('Collection should only include [%s] items, but \'%s\' found at position %d.', class_basename(new stdClass()), gettype($collection), 3));
         $data->ensure(stdClass::class);
     }
 
@@ -5575,8 +5577,10 @@ class SupportCollectionTest extends TestCase
             $data->ensure(\Exception::class);
         }
 
-        $data = $collection::make([new \Error, new \Error, new $collection]);
+        $wrongType = new $collection;
+        $data = $collection::make([new \Error, new \Error, $wrongType]);
         $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage(sprintf("Collection should only include [%s] items, but '%s' found at position %d.", \Throwable::class, get_class($wrongType), 2));
         if (interface_exists('Throwable')) {
             $data->ensure(\Throwable::class);
         } else {
@@ -5591,9 +5595,11 @@ class SupportCollectionTest extends TestCase
         $data = $collection::make([new \RuntimeException(), 123]);
         $data->ensure([\Exception::class, 'int']);
 
-        $data = $collection::make([new \RuntimeException(), new \RuntimeException(), new $collection]);
+        $wrongType = new $collection;
+        $data = $collection::make([new \Error, new \Error, $wrongType]);
         $this->expectException(UnexpectedValueException::class);
-        $data->ensure([\Exception::class, 'int']);
+        $this->expectExceptionMessage(sprintf('Collection should only include [%s] items, but \'%s\' found at position %d.', implode(', ', [\Throwable::class, 'int']), get_class($wrongType), 2));
+        $data->ensure([\Throwable::class, 'int']);
     }
 
     /** @dataProvider collectionClassProvider */
