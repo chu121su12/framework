@@ -2021,9 +2021,9 @@ class SupportCollectionTest extends TestCase
         $data = new $collection([['item' => 'img1'], ['item' => 'img101'], ['item' => 'img10'], ['item' => 'img11']]);
         $expected = $data->pluck('item')->toArray();
 
-        sort($expected, SORT_NUMERIC);
-        $data = $data->sortBy(['item'], SORT_NUMERIC);
-        $this->assertEquals($data->pluck('item')->toArray(), $expected);
+        // sort($expected, SORT_NUMERIC);
+        // $data = $data->sortBy(['item'], SORT_NUMERIC);
+        // $this->assertEquals($data->pluck('item')->toArray(), $expected);
 
         sort($expected);
         $data = $data->sortBy(['item']);
@@ -2072,7 +2072,7 @@ class SupportCollectionTest extends TestCase
 
     /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
-    public function testSortByManyCaseNumeric($collection)
+    public function testSortByMany2($collection)
     {
         if (\version_compare(\PHP_VERSION, '8.0', '<')) {
             $this->markTestSkipped('failed assert due to undefined sort behavior');
@@ -2092,6 +2092,23 @@ class SupportCollectionTest extends TestCase
 
         sort($expected, SORT_FLAG_CASE | SORT_NUMERIC);
         $data = $data->sortBy(['item'], SORT_FLAG_CASE | SORT_NUMERIC);
+
+        $this->assertEquals($data->pluck('item')->toArray(), $expected);
+    }
+
+    /** @dataProvider collectionClassProvider */
+    #[DataProvider('collectionClassProvider')]
+    public function testSortByMany3($collection)
+    {
+        if (\version_compare(\PHP_VERSION, '8.0', '<')) {
+            $this->markTestSkipped('failed assert due to undefined sort behavior');
+        }
+
+        $data = new $collection([['item' => 'img1'], ['item' => 'img101'], ['item' => 'img10'], ['item' => 'img11']]);
+        $expected = $data->pluck('item')->toArray();
+
+        sort($expected, SORT_NUMERIC);
+        $data = $data->sortBy(['item'], SORT_NUMERIC);
 
         $this->assertEquals($data->pluck('item')->toArray(), $expected);
     }
@@ -5580,10 +5597,11 @@ class SupportCollectionTest extends TestCase
         $wrongType = new $collection;
         $data = $collection::make([new \Error, new \Error, $wrongType]);
         $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage(sprintf("Collection should only include [%s] items, but '%s' found at position %d.", \Throwable::class, get_class($wrongType), 2));
         if (interface_exists('Throwable')) {
+            $this->expectExceptionMessage(sprintf("Collection should only include [%s] items, but '%s' found at position %d.", \Throwable::class, get_class($wrongType), 2));
             $data->ensure(\Throwable::class);
         } else {
+            $this->expectExceptionMessage(sprintf("Collection should only include [%s] items, but '%s' found at position %d.", \Exception::class, get_class($wrongType), 2));
             $data->ensure(\Exception::class);
         }
     }
@@ -5598,8 +5616,13 @@ class SupportCollectionTest extends TestCase
         $wrongType = new $collection;
         $data = $collection::make([new \Error, new \Error, $wrongType]);
         $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage(sprintf('Collection should only include [%s] items, but \'%s\' found at position %d.', implode(', ', [\Throwable::class, 'int']), get_class($wrongType), 2));
-        $data->ensure([\Throwable::class, 'int']);
+        if (interface_exists('Throwable')) {
+            $this->expectExceptionMessage(sprintf('Collection should only include [%s] items, but \'%s\' found at position %d.', implode(', ', [\Throwable::class, 'int']), get_class($wrongType), 2));
+            $data->ensure([\Throwable::class, 'int']);
+        } else {
+            $this->expectExceptionMessage(sprintf('Collection should only include [%s] items, but \'%s\' found at position %d.', implode(', ', [\Exception::class, 'int']), get_class($wrongType), 2));
+            $data->ensure([\Exception::class, 'int']);
+        }
     }
 
     /** @dataProvider collectionClassProvider */
