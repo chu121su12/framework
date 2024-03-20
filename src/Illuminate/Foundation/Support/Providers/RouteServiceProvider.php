@@ -88,7 +88,7 @@ class RouteServiceProvider extends ServiceProvider
      * @param  \Closure|null  $routesCallback
      * @return void
      */
-    public static function loadRoutesUsing(?Closure $routesCallback)
+    public static function loadRoutesUsing(/*?*/Closure $routesCallback = null)
     {
         self::$alwaysLoadRoutesUsing = $routesCallback;
     }

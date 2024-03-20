@@ -109,13 +109,13 @@ class BroadcastingInstallCommand extends Command
      */
     protected function enableBroadcastServiceProvider()
     {
-        $config = ($filesystem = new Filesystem)->get(app()->configPath('app.php'));
+        $config = with($filesystem = new Filesystem)->get(app()->configPath('app.php'));
 
         if (str_contains($config, '// App\Providers\BroadcastServiceProvider::class')) {
             $filesystem->replaceInFile(
                 '// App\Providers\BroadcastServiceProvider::class',
                 'App\Providers\BroadcastServiceProvider::class',
-                app()->configPath('app.php'),
+                app()->configPath('app.php')
             );
         }
     }

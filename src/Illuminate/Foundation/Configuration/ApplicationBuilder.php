@@ -113,8 +113,10 @@ class ApplicationBuilder
      * @param  array  $attributes
      * @return $this
      */
-    public function withBroadcasting(string $channels, array $attributes = [])
+    public function withBroadcasting(/*string */$channels, array $attributes = [])
     {
+        $channels = backport_type_check('string', $channels);
+
         $this->app->booted(function () use ($channels, $attributes) {
             Broadcast::routes(! empty($attributes) ? $attributes : null);
 

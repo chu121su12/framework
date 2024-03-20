@@ -173,14 +173,18 @@ class ValidationExceptionTest extends TestCase
 
     protected function getValidator($data = [], $rules = [], $translator = null)
     {
-        $translator ??= $this->getTranslator();
+        if (! isset($translator)) {
+            $translator = $this->getTranslator();
+        }
 
         return new Validator($translator, $data, $rules);
     }
 
     protected function getTranslator($locale = 'en', $loaded = [])
     {
-        $translator ??= new Translator(new ArrayLoader, $locale);
+        if (! isset($translator)) {
+            $translator = new Translator(new ArrayLoader, $locale);
+        }
 
         $translator->setLoaded($loaded);
 
