@@ -5,9 +5,11 @@ namespace Illuminate\Database\Console;
 use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Support\ConfigurationUrlParser;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Process\Process;
 use UnexpectedValueException;
 
+#[AsCommand(name: 'db')]
 class DbCommand extends Command
 {
     /**

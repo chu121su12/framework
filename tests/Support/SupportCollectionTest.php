@@ -1991,6 +1991,8 @@ class SupportCollectionTest extends TestCase
     #[DataProvider('collectionClassProvider')]
     public function testSortByMany($collection)
     {
+        $defaultLocale = setlocale(LC_ALL, 0);
+
         $data = new $collection([['item' => '1'], ['item' => '10'], ['item' => 5], ['item' => 20]]);
         $expected = $data->pluck('item')->toArray();
 
@@ -2068,6 +2070,8 @@ class SupportCollectionTest extends TestCase
         sort($expected, SORT_LOCALE_STRING);
         $data = $data->sortBy(['item'], SORT_LOCALE_STRING);
         $this->assertEquals($data->pluck('item')->toArray(), $expected);
+
+        setlocale(LC_ALL, $defaultLocale);
     }
 
     /** @dataProvider collectionClassProvider */

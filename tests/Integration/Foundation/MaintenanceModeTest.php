@@ -175,8 +175,6 @@ class MaintenanceModeTest extends TestCase
 
         Carbon::setTestNow(now()->addMonths(6));
         $this->assertFalse(MaintenanceModeBypassCookie::isValid($cookie->getValue(), 'test-key'));
-
-        Carbon::setTestNow(null);
     }
 
     public function testDispatchEventWhenMaintenanceModeIsEnabled()

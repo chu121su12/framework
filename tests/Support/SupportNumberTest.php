@@ -3,14 +3,14 @@
 namespace Illuminate\Tests\Support;
 
 use Illuminate\Support\Number;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 
 class SupportNumberTest extends TestCase
 {
+    #[RequiresPhpExtension('intl')]
     public function testFormat()
     {
-        $this->needsIntlExtension();
-
         $this->assertSame('0', Number::format(0));
         $this->assertSame('0', Number::format(0.0));
         $this->assertSame('0', Number::format(0.00));
@@ -40,24 +40,19 @@ class SupportNumberTest extends TestCase
         $this->assertSame('NaN', Number::format(NAN));
     }
 
-    /**
-     * @requires OS Linux|Darwin
-     */
+    #[RequiresPhpExtension('intl')]
     public function testFormatWithDifferentLocale()
     {
-        $this->needsIntlExtension();
-
-        $this->assertSame('123,456,789', Number::format(123456789, /*$precision = */null, /*$maxPrecision = */null, /*locale: */'en'));
-        $this->assertSame('123.456.789', Number::format(123456789, /*$precision = */null, /*$maxPrecision = */null, /*locale: */'de'));
-        $this->assertSame('123 456 789', Number::format(123456789, /*$precision = */null, /*$maxPrecision = */null, /*locale: */'fr'));
-        $this->assertSame('123 456 789', Number::format(123456789, /*$precision = */null, /*$maxPrecision = */null, /*locale: */'ru'));
-        $this->assertSame('123 456 789', Number::format(123456789, /*$precision = */null, /*$maxPrecision = */null, /*locale: */'sv'));
+        $this->assertSame('123,456,789', Number::format(123456789, locale: 'en'));
+        $this->assertSame('123.456.789', Number::format(123456789, locale: 'de'));
+        $this->assertSame('123 456 789', Number::format(123456789, locale: 'fr'));
+        $this->assertSame('123 456 789', Number::format(123456789, locale: 'ru'));
+        $this->assertSame('123 456 789', Number::format(123456789, locale: 'sv'));
     }
 
+    #[RequiresPhpExtension('intl')]
     public function testFormatWithAppLocale()
     {
-        $this->needsIntlExtension();
-
         $this->assertSame('123,456,789', Number::format(123456789));
 
         Number::useLocale('de');
@@ -76,20 +71,18 @@ class SupportNumberTest extends TestCase
         $this->assertSame('one point two', Number::spell(1.2));
     }
 
+    #[RequiresPhpExtension('intl')]
     public function testSpelloutWithLocale()
     {
-        $this->needsIntlExtension();
-
         $this->assertSame('trois', Number::spell(3, 'fr'));
     }
 
+    #[RequiresPhpExtension('intl')]
     public function testSpelloutWithThreshold()
     {
-        $this->needsIntlExtension();
-
-        $this->assertSame('9', Number::spell(9, $locale = null, /*after: */10));
-        $this->assertSame('10', Number::spell(10, $locale = null, /*after: */10));
-        $this->assertSame('eleven', Number::spell(11, $locale = null, /*after: */10));
+        $this->assertSame('9', Number::spell(9, after: 10));
+        $this->assertSame('10', Number::spell(10, after: 10));
+        $this->assertSame('eleven', Number::spell(11, after: 10));
 
         $this->assertSame('nine', Number::spell(9, $locale = null, $after = null, /*until: */10));
         $this->assertSame('10', Number::spell(10, $locale = null, $after = null, /*until: */10));
@@ -109,14 +102,10 @@ class SupportNumberTest extends TestCase
         $this->assertSame('3rd', Number::ordinal(3));
     }
 
-    /**
-     * @requires OS Linux|Darwin
-     */
+    #[RequiresPhpExtension('intl')]
     public function testToPercent()
     {
-        $this->needsIntlExtension();
-
-        $this->assertSame('0%', Number::percentage(0, /*precision: */0));
+        $this->assertSame('0%', Number::percentage(0, precision: 0));
         $this->assertSame('0%', Number::percentage(0));
         $this->assertSame('1%', Number::percentage(1));
         $this->assertSame('10.00%', Number::percentage(10, /*precision: */2));
@@ -136,10 +125,9 @@ class SupportNumberTest extends TestCase
         $this->assertSame('0.1235%', Number::percentage(0.12345, /*precision: */4));
     }
 
+    #[RequiresPhpExtension('intl')]
     public function testToCurrency()
     {
-        $this->needsIntlExtension();
-
         $this->assertSame('$0.00', Number::currency(0));
         $this->assertSame('$1.00', Number::currency(1));
         $this->assertSame('$10.00', Number::currency(10));
@@ -153,13 +141,9 @@ class SupportNumberTest extends TestCase
         $this->assertSame('$5.32', Number::currency(5.325));
     }
 
-    /**
-     * @requires OS Linux|Darwin
-     */
+    #[RequiresPhpExtension('intl')]
     public function testToCurrencyWithDifferentLocale()
     {
-        $this->needsIntlExtension();
-
         $this->assertSame('1,00 €', Number::currency(1, 'EUR', 'de'));
         $this->assertSame('1,00 $', Number::currency(1, 'USD', 'de'));
         $this->assertSame('1,00 £', Number::currency(1, 'GBP', 'de'));
@@ -313,12 +297,5 @@ class SupportNumberTest extends TestCase
         $this->assertSame('-1.1T', Number::abbreviate(-1100000000000, /*$precision = */null, /*maxPrecision: */1));
         $this->assertSame('-1Q', Number::abbreviate(-1000000000000000));
         $this->assertSame('-1KQ', Number::abbreviate(-1000000000000000000));
-    }
-
-    protected function needsIntlExtension()
-    {
-        if (! extension_loaded('intl')) {
-            $this->markTestSkipped('The intl extension is not installed. Please install the extension to enable '.__CLASS__);
-        }
     }
 }

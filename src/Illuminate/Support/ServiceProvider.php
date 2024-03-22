@@ -495,13 +495,11 @@ abstract class ServiceProvider
             return false;
         }
 
-        $pathContent = require $path;
-
-        if (! \is_array($pathContent)) {
-            return false;
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate($path, true);
         }
 
-        $providers = collect($pathContent)
+        $providers = collect(require $path)
             ->merge([$provider])
             ->unique()
             ->sort()
