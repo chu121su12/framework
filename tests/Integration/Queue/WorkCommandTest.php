@@ -14,12 +14,14 @@ use Orchestra\Testbench\Attributes\WithMigration;
 #[WithMigration('queue')]
 class WorkCommandTest extends QueueTestCase
 {
-    use DatabaseMigrations;
-
-    protected function attributeBpWithMigration()
+    protected function attributeBp()
     {
-        return ['queue'];
+        return [
+            'migration' => ['laravel', 'queue'],
+        ];
     }
+
+    use DatabaseMigrations;
 
     protected function setUp()/*: void*/
     {

@@ -57,17 +57,21 @@ trait HandlesDatabases
                 });
             });
 
-            if (! $hasMigration && \method_exists($this, 'attributeBpWithMigration')) {
-                $types = (array) $this->attributeBpWithMigration() ?: ['laravel'];
-                after_resolving($app, 'migrator', static function ($migrator) use ($types) {
-                    /** @var \Illuminate\Database\Migrations\Migrator $migrator */
-                    Collection::make($types)
-                        ->transform(static function ($type) {
-                            return laravel_migration_path($type !== 'laravel' ? $type : null);
-                        })->each(static function ($migration) use ($migrator) {
-                            $migrator->path($migration);
-                        });
-                });
+            if (! $hasMigration && \method_exists($this, 'attributeBp')) {
+                $values = (array) $this->attributeBp();
+                if ($values && isset($values['migration'])) {
+                    $types = (array) ($values['migration'] === true || $values['migration'] === [] ? ['laravel'] : $values['migration']);
+                    $hasMigration = true;
+                    after_resolving($app, 'migrator', static function ($migrator) use ($types) {
+                        /** @var \Illuminate\Database\Migrations\Migrator $migrator */
+                        Collection::make($types)
+                            ->transform(static function ($type) {
+                                return laravel_migration_path($type !== 'laravel' ? $type : null);
+                            })->each(static function ($migration) use ($migrator) {
+                                $migrator->path($migration);
+                            });
+                    });
+                }
             }
         }
 

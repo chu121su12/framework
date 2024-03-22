@@ -18,6 +18,15 @@ use Throwable;
 #[WithConfig('hashing.driver', 'bcrypt')]
 class ThrottleRequestsTest extends TestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'config' => [
+                ['hashing.driver', 'bcrypt'],
+            ],
+        ];
+    }
+
     public function testLockOpensImmediatelyAfterDecay()
     {
         Carbon::setTestNow(Carbon::create(2018, 1, 1, 0, 0, 0));

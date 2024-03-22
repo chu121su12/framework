@@ -56,6 +56,9 @@ class ConsoleApplicationTest extends TestCase
         $this->assertEquals($command, $result);
     }
 
+    /**
+     * @requires PHP 8
+     */
     public function testResolvingCommandsWithAliasViaAttribute()
     {
         $container = new FoundationApplication();
@@ -82,6 +85,9 @@ class ConsoleApplicationTest extends TestCase
         $this->assertArrayHasKey('command-alias', $app->all());
     }
 
+    /**
+     * @requires PHP 8
+     */
     public function testResolvingCommandsWithNoAliasViaAttribute()
     {
         $container = new FoundationApplication();
@@ -100,6 +106,9 @@ class ConsoleApplicationTest extends TestCase
         $this->assertArrayNotHasKey('command-alias', $app->all());
     }
 
+    /**
+     * @requires PHP 8
+     */
     public function testResolvingCommandsWithNoAliasViaProperty()
     {
         $container = new FoundationApplication();

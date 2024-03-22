@@ -2,3 +2,6 @@
 
 testbench.yaml
 testbench.yaml.backup
+
+app/*.php
+storage/app

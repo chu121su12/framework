@@ -14,6 +14,13 @@ use Orchestra\Testbench\Attributes\WithMigration;
 #[WithMigration('queue')]
 class JobDispatchingTest extends QueueTestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'migration' => ['laravel', 'queue'],
+        ];
+    }
+
     protected function setUp()/*: void*/
     {
         $this->beforeApplicationDestroyed(function () {

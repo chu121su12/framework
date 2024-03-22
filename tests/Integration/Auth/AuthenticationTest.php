@@ -27,6 +27,13 @@ use Orchestra\Testbench\TestCase;
 #[WithMigration]
 class AuthenticationTest extends TestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'migration' => true,
+        ];
+    }
+
     use RefreshDatabase;
 
     protected function defineEnvironment($app)

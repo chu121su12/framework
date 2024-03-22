@@ -13,6 +13,13 @@ use Orchestra\Testbench\TestCase;
 #[RequiresEnv('DYNAMODB_CACHE_TABLE')]
 class DynamoDbStoreTest extends TestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'requires-env' => ['DYNAMODB_CACHE_TABLE'],
+        ];
+    }
+
     public function testItemsCanBeStoredAndRetrieved()
     {
         Cache::driver('dynamodb')->put('name', 'Taylor', 10);

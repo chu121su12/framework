@@ -14,6 +14,15 @@ use Predis\Command\Argument\Search\SearchArguments;
 #[WithConfig('database.redis.client', 'predis')]
 class PredisConnectionTest extends TestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'config' => [
+                ['database.redis.client', 'predis'],
+            ],
+        ];
+    }
+
     public function testPredisCanEmitEventWithArrayableArgumentObject()
     {
         if (! class_exists(SearchArguments::class)) {

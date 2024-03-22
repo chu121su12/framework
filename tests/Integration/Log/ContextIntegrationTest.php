@@ -15,12 +15,14 @@ use RuntimeException;
 #[WithMigration]
 class ContextIntegrationTest extends TestCase
 {
-    use LazilyRefreshDatabase;
-
-    protected function attributeBpWithMigration()
+    protected function attributeBp()
     {
-        return [];
+        return [
+            'migration' => true,
+        ];
     }
+
+    use LazilyRefreshDatabase;
 
     public function test_it_can_hydrate_null()
     {

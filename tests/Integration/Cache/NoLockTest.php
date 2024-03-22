@@ -10,6 +10,16 @@ use Orchestra\Testbench\TestCase;
 #[WithConfig('cache.stores.null', ['driver' => 'null'])]
 class NoLockTest extends TestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'config' => [
+                ['cache.default', 'null'],
+                ['cache.stores.null', ['driver' => 'null']],
+            ],
+        ];
+    }
+
     public function testLocksCanAlwaysBeAcquiredAndReleased()
     {
         Cache::lock('foo')->forceRelease();

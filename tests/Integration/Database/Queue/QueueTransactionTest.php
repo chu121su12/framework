@@ -19,12 +19,14 @@ use function Orchestra\Testbench\remote;
 #[WithMigration('laravel', 'queue')]
 class QueueTransactionTest extends DatabaseTestCase
 {
-    use DatabaseMigrations;
-
-    protected function attributeBpWithMigration()
+    protected function attributeBp()
     {
-        return ['laravel', 'queue'];
+        return [
+            'migration' => ['laravel', 'queue'],
+        ];
     }
+
+    use DatabaseMigrations;
 
     protected function defineEnvironment($app)
     {

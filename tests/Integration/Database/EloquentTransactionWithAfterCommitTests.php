@@ -13,12 +13,14 @@ use Orchestra\Testbench\Factories\UserFactory;
 
 trait EloquentTransactionWithAfterCommitTests
 {
-    use WithLaravelMigrationsForTestCase;
-
-    protected function attributeBpWithMigration()
+    protected function attributeBp()
     {
-        return ['laravel'];
+        return [
+            'migration' => true,
+        ];
     }
+
+    use WithLaravelMigrationsForTestCase;
 
     protected function setUpEloquentTransactionWithAfterCommitTests()/*: void*/
     {

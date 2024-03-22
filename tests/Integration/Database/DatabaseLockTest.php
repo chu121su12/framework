@@ -9,9 +9,11 @@ use Orchestra\Testbench\Attributes\WithMigration;
 #[WithMigration('cache')]
 class DatabaseLockTest extends DatabaseTestCase
 {
-    protected function attributeBpWithMigration()
+    protected function attributeBp()
     {
-        return ['cache'];
+        return [
+            'migration' => ['cache'],
+        ];
     }
 
     public function testLockCanHaveASeparateConnection()

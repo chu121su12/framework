@@ -13,6 +13,15 @@ use Throwable;
 #[WithConfig('hashing.driver', 'bcrypt')]
 class ThrottleRequestsWithRedisTest extends TestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'config' => [
+                ['hashing.driver', 'bcrypt'],
+            ],
+        ];
+    }
+
     use InteractsWithRedis;
 
     public function testLockOpensImmediatelyAfterDecay()

@@ -11,9 +11,11 @@ use Orchestra\Testbench\Attributes\WithMigration;
 #[WithMigration('cache')]
 class DatabaseCacheStoreTest extends DatabaseTestCase
 {
-    protected function attributeBpWithMigration()
+    protected function attributeBp()
     {
-        return ['cache'];
+        return [
+            'migration' => ['cache'],
+        ];
     }
 
     public function testValueCanStoreNewCache()

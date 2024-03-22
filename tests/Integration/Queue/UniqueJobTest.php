@@ -21,9 +21,11 @@ use Orchestra\Testbench\Attributes\WithMigration;
 #[WithMigration('queue')]
 class UniqueJobTest extends QueueTestCase
 {
-    protected function attributeBpWithMigration()
+    protected function attributeBp()
     {
-        return ['queue', 'cache'];
+        return [
+            'migration' => ['laravel', 'queue', 'cache'],
+        ];
     }
 
     protected function defineEnvironment($app)

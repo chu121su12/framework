@@ -10,6 +10,15 @@ use RuntimeException;
 #[WithConfig('app.key', 'base64:IUHRqAQ99pZ0A1MPjbuv1D6ff3jxv0GIvS2qIW4JNU4=')]
 class EncryptionTest extends TestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'config' => [
+                ['app.key', 'base64:IUHRqAQ99pZ0A1MPjbuv1D6ff3jxv0GIvS2qIW4JNU4='],
+            ],
+        ];
+    }
+
     public function testEncryptionProviderBind()
     {
         $this->assertInstanceOf(Encrypter::class, $this->app->make('encrypter'));

@@ -16,9 +16,16 @@ use Orchestra\Testbench\TestCase;
 #[WithMigration]
 class ForgotPasswordTest extends TestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'migration' => true,
+        ];
+    }
+
     use RefreshDatabase;
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         ResetPassword::$createUrlCallback = null;
         ResetPassword::$toMailCallback = null;

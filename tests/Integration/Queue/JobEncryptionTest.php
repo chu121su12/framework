@@ -19,12 +19,14 @@ use Orchestra\Testbench\Attributes\WithMigration;
 #[WithMigration('queue')]
 class JobEncryptionTest extends DatabaseTestCase
 {
-    use DatabaseMigrations;
-
-    protected function attributeBpWithMigration()
+    protected function attributeBp()
     {
-        return ['queue'];
+        return [
+            'migration' => ['laravel', 'queue'],
+        ];
     }
+
+    use DatabaseMigrations;
 
     protected function getEnvironmentSetUp($app)
     {

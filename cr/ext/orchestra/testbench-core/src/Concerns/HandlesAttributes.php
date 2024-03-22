@@ -41,6 +41,24 @@ trait HandlesAttributes
                     $attributes->each($callback);
                 }
             );
+
+        if (\method_exists($this, 'attributeBp')) {
+            $values = (array) $this->attributeBp();
+
+            if (isset($values['config'])) {
+                foreach ($values['config'] as $config) {
+                    $app['config']->set(...$config);
+                }
+            }
+
+            if (isset($values['requires-env'])) {
+                foreach ($values['requires-env'] as $env) {
+                    if (! env($env)) {
+                        $this->markTestSkipped('Required env '.$env.' not configured.');
+                    }
+                }
+            }
+        }
     }
 
     /**

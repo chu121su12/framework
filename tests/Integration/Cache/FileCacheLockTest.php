@@ -10,6 +10,15 @@ use Orchestra\Testbench\TestCase;
 #[WithConfig('cache.default', 'file')]
 class FileCacheLockTest extends TestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'config' => [
+                ['cache.default', 'file'],
+            ],
+        ];
+    }
+
     public function testLocksCanBeAcquiredAndReleased()
     {
         Cache::lock('foo')->forceRelease();
