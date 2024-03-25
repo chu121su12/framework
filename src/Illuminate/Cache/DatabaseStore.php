@@ -274,7 +274,7 @@ class DatabaseStore implements LockProvider, Store
      */
     public function forever($key, $value)
     {
-        return $this->put($key, $value, 315360000);
+        return $this->put($key, $value, CacheManager::FOREVER_SECONDS);
     }
 
     /**

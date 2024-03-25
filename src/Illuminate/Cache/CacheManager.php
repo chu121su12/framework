@@ -17,6 +17,15 @@ use InvalidArgumentException;
 class CacheManager implements FactoryContract
 {
     /**
+     * Seconds of forever cache duration.
+     *
+     * @see \Illuminate\Cookie\CookieJar::forever().
+     *
+     * @var int
+     */
+    const FOREVER_SECONDS = 60 * 60 * 24 * 400;
+
+    /**
      * The application instance.
      *
      * @var \Illuminate\Contracts\Foundation\Application
