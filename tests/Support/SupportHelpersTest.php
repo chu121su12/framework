@@ -5,6 +5,7 @@ namespace Illuminate\Tests\Support;
 use ArrayAccess;
 use ArrayIterator;
 use Countable;
+use Error;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Env;
 use Illuminate\Support\Optional;
@@ -1026,6 +1027,29 @@ class SupportHelpersTest extends TestCase
             Sleep::usleep(50000),
             Sleep::usleep(100000),
             Sleep::usleep(200000),
+        ]);
+    }
+
+    public function testRetryWithAThrowableBase()
+    {
+        Sleep::fake();
+
+        $attempts = retry(2, function ($attempts) {
+            if ($attempts > 1) {
+                return $attempts;
+            }
+
+            throw new Error('This is an error');
+        }, 100);
+
+        // Make sure we made two attempts
+        $this->assertEquals(2, $attempts);
+
+        // Make sure we waited 100ms for the first attempt
+        Sleep::assertSleptTimes(1);
+
+        Sleep::assertSequence([
+            Sleep::usleep(100_000),
         ]);
     }
 

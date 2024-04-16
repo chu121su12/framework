@@ -1162,7 +1162,7 @@ class Container implements ArrayAccess, ContainerContract
      * @param  \Closure|null  $callback
      * @return void
      */
-    public function beforeResolving($abstract, Closure $callback = null)
+    public function beforeResolving($abstract, ?Closure $callback = null)
     {
         if (is_string($abstract)) {
             $abstract = $this->getAlias($abstract);
@@ -1182,7 +1182,7 @@ class Container implements ArrayAccess, ContainerContract
      * @param  \Closure|null  $callback
      * @return void
      */
-    public function resolving($abstract, Closure $callback = null)
+    public function resolving($abstract, ?Closure $callback = null)
     {
         if (is_string($abstract)) {
             $abstract = $this->getAlias($abstract);
@@ -1202,7 +1202,7 @@ class Container implements ArrayAccess, ContainerContract
      * @param  \Closure|null  $callback
      * @return void
      */
-    public function afterResolving($abstract, Closure $callback = null)
+    public function afterResolving($abstract, ?Closure $callback = null)
     {
         if (is_string($abstract)) {
             $abstract = $this->getAlias($abstract);
@@ -1443,7 +1443,7 @@ class Container implements ArrayAccess, ContainerContract
      * @param  \Illuminate\Contracts\Container\Container|null  $container
      * @return \Illuminate\Contracts\Container\Container|static
      */
-    public static function setInstance(ContainerContract $container = null)
+    public static function setInstance(?ContainerContract $container = null)
     {
         return static::$instance = $container;
     }

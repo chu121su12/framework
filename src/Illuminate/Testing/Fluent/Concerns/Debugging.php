@@ -14,7 +14,7 @@ trait Debugging
      * @param  string|null  $prop
      * @return $this
      */
-    public function dump(/*string */$prop = null)/*: self*/
+    public function dump(?string $prop = null): self
     {
         $prop = backport_type_check('?string', $prop);
 
@@ -29,5 +29,5 @@ trait Debugging
      * @param  string|null  $key
      * @return mixed
      */
-    abstract protected function prop(/*string */$key = null);
+    abstract protected function prop(?string $key = null);
 }

@@ -5,7 +5,8 @@ namespace Illuminate\Tests\Integration\Queue;
 use Exception;
 use Illuminate\Bus\Dispatcher;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\Job as JobContract;
+use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Contracts\Queue\Job;
 use Illuminate\Queue\CallQueuedHandler;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\Middleware\ThrottlesExceptions;
@@ -267,6 +268,36 @@ class ThrottlesExceptionsTest extends TestCase
         $this->assertSame($job, $result);
         $this->assertTrue($job->released);
         $this->assertTrue($job->handled);
+    }
+
+    public function testReportingExceptions()
+    {
+        $this->spy(ExceptionHandler::class)
+            ->shouldReceive('report')
+            ->twice()
+            ->with(m::type(RuntimeException::class));
+
+        $job = new class
+        {
+            public function release()
+            {
+                return $this;
+            }
+        };
+        $next = function () {
+            throw new RuntimeException('Whoops!');
+        };
+
+        $middleware = new ThrottlesExceptions();
+
+        $middleware->report();
+        $middleware->handle($job, $next);
+
+        $middleware->report(fn () => true);
+        $middleware->handle($job, $next);
+
+        $middleware->report(fn () => false);
+        $middleware->handle($job, $next);
     }
 }
 

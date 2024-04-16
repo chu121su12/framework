@@ -123,7 +123,7 @@ class HasManyThrough extends Relation
      * @param  \Illuminate\Database\Eloquent\Builder|null  $query
      * @return void
      */
-    protected function performJoin(Builder $query = null)
+    protected function performJoin(?Builder $query = null)
     {
         $query = $query ?: $this->query;
 
@@ -370,7 +370,7 @@ class HasManyThrough extends Relation
      * @param  \Closure|null  $callback
      * @return \Illuminate\Database\Eloquent\Model|static|mixed
      */
-    public function firstOr($columns = ['*'], Closure $callback = null)
+    public function firstOr($columns = ['*'], ?Closure $callback = null)
     {
         if ($columns instanceof Closure) {
             $callback = $columns;
@@ -457,7 +457,7 @@ class HasManyThrough extends Relation
      * @param  \Closure|null  $callback
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|mixed
      */
-    public function findOr($id, $columns = ['*'], Closure $callback = null)
+    public function findOr($id, $columns = ['*'], ?Closure $callback = null)
     {
         if ($columns instanceof Closure) {
             $callback = $columns;
@@ -608,6 +608,24 @@ class HasManyThrough extends Relation
     }
 
     /**
+     * Chunk the results of a query by comparing IDs in descending order.
+     *
+     * @param  int  $count
+     * @param  callable  $callback
+     * @param  string|null  $column
+     * @param  string|null  $alias
+     * @return bool
+     */
+    public function chunkByIdDesc($count, callable $callback, $column = null, $alias = null)
+    {
+        $column ??= $this->getRelated()->getQualifiedKeyName();
+
+        $alias ??= $this->getRelated()->getKeyName();
+
+        return $this->prepareQueryBuilder()->chunkByIdDesc($count, $callback, $column, $alias);
+    }
+
+    /**
      * Execute a callback over each item while chunking by ID.
      *
      * @param  callable  $callback
@@ -683,6 +701,23 @@ class HasManyThrough extends Relation
         $alias = isset($alias) ? $alias : $this->getRelated()->getKeyName();
 
         return $this->prepareQueryBuilder()->lazyById($chunkSize, $column, $alias);
+    }
+
+    /**
+     * Query lazily, by chunking the results of a query by comparing IDs in descending order.
+     *
+     * @param  int  $chunkSize
+     * @param  string|null  $column
+     * @param  string|null  $alias
+     * @return \Illuminate\Support\LazyCollection
+     */
+    public function lazyByIdDesc($chunkSize = 1000, $column = null, $alias = null)
+    {
+        $column ??= $this->getRelated()->getQualifiedKeyName();
+
+        $alias ??= $this->getRelated()->getKeyName();
+
+        return $this->prepareQueryBuilder()->lazyByIdDesc($chunkSize, $column, $alias);
     }
 
     /**

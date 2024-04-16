@@ -433,7 +433,7 @@ class TestResponse implements ArrayAccess
             "Cookie [{$cookieName}] not present on response."
         );
 
-        $expiresAt = Carbon::createFromTimestamp($cookie->getExpiresTime());
+        $expiresAt = Carbon::createFromTimestamp($cookie->getExpiresTime(), date_default_timezone_get());
 
         PHPUnit::assertTrue(
             $cookie->getExpiresTime() !== 0 && $expiresAt->lessThan(Carbon::now()),
@@ -456,7 +456,7 @@ class TestResponse implements ArrayAccess
             "Cookie [{$cookieName}] not present on response."
         );
 
-        $expiresAt = Carbon::createFromTimestamp($cookie->getExpiresTime());
+        $expiresAt = Carbon::createFromTimestamp($cookie->getExpiresTime(), date_default_timezone_get());
 
         PHPUnit::assertTrue(
             $cookie->getExpiresTime() === 0 || $expiresAt->greaterThan(Carbon::now()),
@@ -813,7 +813,7 @@ class TestResponse implements ArrayAccess
      * @param  array|null  $responseData
      * @return $this
      */
-    public function assertJsonStructure(array $structure = null, $responseData = null)
+    public function assertJsonStructure(?array $structure = null, $responseData = null)
     {
         $this->decodeResponseJson()->assertStructure($structure, $responseData);
 

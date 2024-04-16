@@ -223,7 +223,7 @@ class PendingRequest
      * @param  array  $middleware
      * @return void
      */
-    public function __construct(Factory $factory = null, $middleware = [])
+    public function __construct(?Factory $factory = null, $middleware = [])
     {
         $this->factory = $factory;
         $this->middleware = new Collection($middleware);
@@ -716,7 +716,7 @@ class PendingRequest
      * @param  callable|null  $callback
      * @return $this
      */
-    public function throw_(callable $callback = null)
+    public function throw(?callable $callback = null)
     {
         $this->throwCallback = $callback ?: function () { return null; };
 
@@ -727,7 +727,6 @@ class PendingRequest
      * Throw an exception if a server or client error occurred and the given condition evaluates to true.
      *
      * @param  callable|bool  $condition
-     * @param  callable|null  $throwCallback
      * @return $this
      */
     public function throwIf($condition)
@@ -1132,7 +1131,11 @@ class PendingRequest
         }
 
         if ($attempt < $this->tries && $shouldRetry) {
-            $options['delay'] = value($this->retryDelay, $attempt, $response->toException());
+            $options['delay'] = value(
+                $this->retryDelay,
+                $attempt,
+                $response instanceof Response ? $response->toException() : $response
+            );
 
             return $this->makePromise($method, $url, $options, $attempt + 1);
         }

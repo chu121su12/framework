@@ -434,10 +434,10 @@ class DynamoBatchRepository implements BatchRepository
             (int) $batch->pending_jobs,
             (int) $batch->failed_jobs,
             $batch->failed_job_ids,
-            isset($unserialied) ? $unserialied : [],
-            CarbonImmutable::createFromTimestamp($batch->created_at),
-            $batch->cancelled_at ? CarbonImmutable::createFromTimestamp($batch->cancelled_at) : $batch->cancelled_at,
-            $batch->finished_at ? CarbonImmutable::createFromTimestamp($batch->finished_at) : $batch->finished_at
+            $this->unserialize($batch->options) ?? [],
+            CarbonImmutable::createFromTimestamp($batch->created_at, date_default_timezone_get()),
+            $batch->cancelled_at ? CarbonImmutable::createFromTimestamp($batch->cancelled_at, date_default_timezone_get()) : $batch->cancelled_at,
+            $batch->finished_at ? CarbonImmutable::createFromTimestamp($batch->finished_at, date_default_timezone_get()) : $batch->finished_at
         );
     }
 
@@ -549,7 +549,7 @@ class DynamoBatchRepository implements BatchRepository
     }
 
     /**
-     * The the name of the table that contains the batch records.
+     * The name of the table that contains the batch records.
      *
      * @return string
      */

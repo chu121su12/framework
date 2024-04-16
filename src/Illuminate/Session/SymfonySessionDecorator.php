@@ -79,7 +79,7 @@ class SymfonySessionDecorator implements SessionInterface
     /**
      * {@inheritdoc}
      */
-    public function invalidate(/*int */$lifetime = null)/*: bool*/
+    public function invalidate(?int $lifetime = null): bool
     {
         $lifetime = backport_type_check('?int', $lifetime);
 
@@ -91,7 +91,7 @@ class SymfonySessionDecorator implements SessionInterface
     /**
      * {@inheritdoc}
      */
-    public function migrate(/*bool */$destroy = false, /*int */$lifetime = null)/*: bool*/
+    public function migrate(bool $destroy = false, ?int $lifetime = null): bool
     {
         $destroy = backport_type_check('bool', $destroy);
 

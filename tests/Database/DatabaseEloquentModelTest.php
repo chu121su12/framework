@@ -2932,6 +2932,7 @@ class DatabaseEloquentModelTest extends TestCase
         $resolver->shouldReceive('connection')->andReturn($connection = m::mock(Connection::class));
         $connection->shouldReceive('getQueryGrammar')->andReturn($grammar = m::mock(Grammar::class));
         $grammar->shouldReceive('getBitwiseOperators')->andReturn([]);
+        $grammar->shouldReceive('isExpression')->andReturnFalse();
         $connection->shouldReceive('getPostProcessor')->andReturn($processor = m::mock(Processor::class));
         $connection->shouldReceive('query')->andReturnUsing(function () use ($connection, $grammar, $processor) {
             return new BaseBuilder($connection, $grammar, $processor);
@@ -3094,6 +3095,19 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertEmpty($user->isDirty());
         $this->assertNull($user->getOriginal('name'));
         $this->assertNull($user->getAttribute('name'));
+    }
+
+    public function testHasAttribute()
+    {
+        $user = new EloquentModelStub([
+            'name' => 'Mateus',
+        ]);
+
+        $this->assertTrue($user->hasAttribute('name'));
+        $this->assertTrue($user->hasAttribute('password'));
+        $this->assertTrue($user->hasAttribute('castedFloat'));
+        $this->assertFalse($user->hasAttribute('nonexistent'));
+        $this->assertFalse($user->hasAttribute('belongsToStub'));
     }
 }
 
@@ -3286,6 +3300,7 @@ class EloquentModelSaveStub extends Model
         $mock = m::mock(Connection::class);
         $mock->shouldReceive('getQueryGrammar')->andReturn($grammar = m::mock(Grammar::class));
         $grammar->shouldReceive('getBitwiseOperators')->andReturn([]);
+        $grammar->shouldReceive('isExpression')->andReturnFalse();
         $mock->shouldReceive('getPostProcessor')->andReturn($processor = m::mock(Processor::class));
         $mock->shouldReceive('getName')->andReturn('name');
         $mock->shouldReceive('query')->andReturnUsing(function () use ($mock, $grammar, $processor) {

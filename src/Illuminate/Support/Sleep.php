@@ -93,7 +93,7 @@ class Sleep
     public static function until($timestamp)
     {
         if (is_numeric($timestamp)) {
-            $timestamp = BaseCarbon::createFromTimestamp($timestamp);
+            $timestamp = Carbon::createFromTimestamp($timestamp, date_default_timezone_get());
         }
 
         return new static(BaseCarbon::now()->diff($timestamp));

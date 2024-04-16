@@ -3117,6 +3117,13 @@ class HttpClientTest extends TestCase
         $this->assertSame(['false'], $headers['X-Foo']);
         $this->assertSame(['true'], $headers['X-Bar']);
     }
+
+    public function testItCanCreatePendingRequest()
+    {
+        $factory = new Factory();
+
+        $this->assertInstanceOf(PendingRequest::class, $factory->createPendingRequest());
+    }
 }
 
 class CustomFactory_newPendingRequest_class extends PendingRequest

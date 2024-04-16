@@ -1747,7 +1747,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @param  array|null  $except
      * @return static
      */
-    public function replicate(array $except = null)
+    public function replicate(?array $except = null)
     {
         $defaults = array_values(array_filter(\array_merge([
             $this->getKeyName(),
@@ -1774,7 +1774,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @param  array|null  $except
      * @return static
      */
-    public function replicateQuietly(array $except = null)
+    public function replicateQuietly(?array $except = null)
     {
         return static::withoutEvents(function () use ($except) {
             return $this->replicate($except);

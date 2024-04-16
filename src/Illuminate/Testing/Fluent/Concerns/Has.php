@@ -15,7 +15,7 @@ trait Has
      * @param  int|null  $length
      * @return $this
      */
-    public function count($key, /*int */$length = null)/*: self*/
+    public function count($key, ?int $length = null): self
     {
         $length = backport_type_check('?int', $length, true);
 
@@ -50,7 +50,7 @@ trait Has
      * @param  \Closure|null  $callback
      * @return $this
      */
-    public function has($key, $length = null, Closure $callback = null)/*: self*/
+    public function has($key, $length = null, ?Closure $callback = null): self
     {
         $prop = $this->prop();
 
@@ -189,7 +189,7 @@ trait Has
      * @param  string|null  $key
      * @return mixed
      */
-    abstract protected function prop(/*string */$key = null);
+    abstract protected function prop(?string $key = null);
 
     /**
      * Instantiate a new "scope" at the path of the given key.

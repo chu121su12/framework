@@ -30,21 +30,7 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
 
-class DatabaseQueryBuilderTest_testHavingExpression_class implements ConditionExpression
-            {
-                public function getValue(\Illuminate\Database\Grammar $grammar)
-                {
-                    return '1 = 1';
-                }
-            }
-
-class DatabaseQueryBuilderTest_testWhereExpression_class implements ConditionExpression
-            {
-                public function getValue(\Illuminate\Database\Grammar $grammar)
-                {
-                    return '1 = 1';
-                }
-            }
+include_once 'Enums.php';
 
 class DatabaseQueryBuilderTest extends TestCase
 {
@@ -785,17 +771,17 @@ class DatabaseQueryBuilderTest extends TestCase
         $this->assertEquals([], $builder->getBindings());
 
         $builder = $this->getBuilder();
-        $period = now()->toPeriod(now()->addDay());
+        $period = now()->startOfDay()->toPeriod(now()->addDay()->startOfDay());
         $builder->select('*')->from('users')->whereBetween('created_at', $period);
         $this->assertSame('select * from "users" where "created_at" between ? and ?', $builder->toSql());
-        $this->assertEquals([$period->start, $period->end], $builder->getBindings());
+        $this->assertEquals([now()->startOfDay(), now()->addDay()->startOfDay()], $builder->getBindings());
 
         // custom long carbon period date
         $builder = $this->getBuilder();
-        $period = now()->toPeriod(now()->addMonth());
+        $period = now()->startOfDay()->toPeriod(now()->addMonth()->startOfDay());
         $builder->select('*')->from('users')->whereBetween('created_at', $period);
         $this->assertSame('select * from "users" where "created_at" between ? and ?', $builder->toSql());
-        $this->assertEquals([$period->start, $period->end], $builder->getBindings());
+        $this->assertEquals([now()->startOfDay(), now()->addMonth()->startOfDay()], $builder->getBindings());
 
         $builder = $this->getBuilder();
         $builder->select('*')->from('users')->whereBetween('id', collect([1, 2]));
@@ -4505,6 +4491,14 @@ SQL;
         $builder->addBinding(['bar', 'baz'], 'having');
         $builder->addBinding(['foo'], 'where');
         $this->assertEquals(['foo', 'bar', 'baz'], $builder->getBindings());
+    }
+
+    public function testAddBindingWithEnum()
+    {
+        $builder = $this->getBuilder();
+        $builder->addBinding(IntegerStatus::done);
+        $builder->addBinding([NonBackedStatus::done]);
+        $this->assertEquals([2, 'done'], $builder->getBindings());
     }
 
     public function testMergeBuilders()

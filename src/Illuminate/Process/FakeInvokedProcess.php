@@ -264,7 +264,7 @@ class FakeInvokedProcess implements InvokedProcessContract
      * @param  callable|null  $output
      * @return \Illuminate\Contracts\Process\ProcessResult
      */
-    public function wait(callable $output = null)
+    public function wait(?callable $output = null)
     {
         $this->outputHandler = $output ?: $this->outputHandler;
 

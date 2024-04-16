@@ -40,7 +40,7 @@ class Headers
      *
      * @named-arguments-supported
      */
-    public function __construct(/*string */$messageId = null, array $references = [], array $text = [])
+    public function __construct(?string $messageId = null, array $references = [], array $text = [])
     {
         $messageId = backport_type_check('string', $messageId);
 
@@ -80,7 +80,7 @@ class Headers
     /**
      * Set the headers for this message.
      *
-     * @param  array  $references
+     * @param  array  $text
      * @return $this
      */
     public function text(/*string */$text)

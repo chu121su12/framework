@@ -431,7 +431,7 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
      * @param  (callable(TValue, TKey): bool)|null  $callback
      * @return static
      */
-    public function filter(callable $callback = null)
+    public function filter(?callable $callback = null)
     {
         if (is_null($callback)) {
             $callback = function ($value) {
@@ -457,7 +457,7 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
      * @param  TFirstDefault|(\Closure(): TFirstDefault)  $default
      * @return TValue|TFirstDefault
      */
-    public function first(callable $callback = null, $default = null)
+    public function first(?callable $callback = null, $default = null)
     {
         $iterator = $this->getIterator();
 
@@ -743,7 +743,7 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
      * @param  TLastDefault|(\Closure(): TLastDefault)  $default
      * @return TValue|TLastDefault
      */
-    public function last(callable $callback = null, $default = null)
+    public function last(?callable $callback = null, $default = null)
     {
         $needle = $placeholder = new stdClass;
 

@@ -89,7 +89,7 @@ class Envelope
      *
      * @named-arguments-supported
      */
-    public function __construct(/*Address|string */$from = null, $to = [], $cc = [], $bcc = [], $replyTo = [], /*string */$subject = null, array $tags = [], array $metadata = [], /*Closure|array */$using = [])
+    public function __construct(Address|string|null $from = null, $to = [], $cc = [], $bcc = [], $replyTo = [], ?string $subject = null, array $tags = [], array $metadata = [], Closure|array $using = [])
     {
         $from = backport_type_check([Address::class, 'string'], $from);
 
@@ -290,7 +290,7 @@ class Envelope
      * @param  string|null  $name
      * @return bool
      */
-    public function isFrom(/*string */$address, /*string */$name = null)
+    public function isFrom(string $address, ?string $name = null)
     {
         $address = backport_type_check('string', $address);
 
@@ -311,7 +311,7 @@ class Envelope
      * @param  string|null  $name
      * @return bool
      */
-    public function hasTo(/*string */$address, /*string */$name = null)
+    public function hasTo(string $address, ?string $name = null)
     {
         $address = backport_type_check('string', $address);
 
@@ -327,7 +327,7 @@ class Envelope
      * @param  string|null  $name
      * @return bool
      */
-    public function hasCc(/*string */$address, /*string */$name = null)
+    public function hasCc(string $address, ?string $name = null)
     {
         $address = backport_type_check('string', $address);
 
@@ -343,7 +343,7 @@ class Envelope
      * @param  string|null  $name
      * @return bool
      */
-    public function hasBcc(/*string */$address, /*string */$name = null)
+    public function hasBcc(string $address, ?string $name = null)
     {
         $address = backport_type_check('string', $address);
 
@@ -359,7 +359,7 @@ class Envelope
      * @param  string|null  $name
      * @return bool
      */
-    public function hasReplyTo(/*string */$address, /*string */$name = null)
+    public function hasReplyTo(string $address, ?string $name = null)
     {
         $address = backport_type_check('string', $address);
 

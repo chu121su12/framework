@@ -120,7 +120,7 @@ class ProcessResult implements ProcessResultContract
      *
      * @throws \Illuminate\Process\Exceptions\ProcessFailedException
      */
-    public function throw_(callable $callback = null)
+    public function throw(?callable $callback = null)
     {
         if ($this->successful()) {
             return $this;
@@ -144,7 +144,7 @@ class ProcessResult implements ProcessResultContract
      *
      * @throws \Throwable
      */
-    public function throwIf(/*bool */$condition, callable $callback = null)
+    public function throwIf(bool $condition, ?callable $callback = null)
     {
         $condition = backport_type_check('bool', $condition);
 
