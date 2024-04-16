@@ -1876,7 +1876,7 @@ class RoutingRouteTest extends TestCase
         $router = $this->getRouter();
         $router->get('foo/{bar?}', [
             'middleware' => SubstituteBindings::class,
-            'uses' => function (?RoutingTestUserModel $bar = null) {
+            'uses' => function (/*?*/RoutingTestUserModel $bar = null) {
                 $this->assertInstanceOf(RoutingTestUserModel::class, $bar);
 
                 return $bar->value;
@@ -1890,7 +1890,7 @@ class RoutingRouteTest extends TestCase
         $router = $this->getRouter();
         $router->get('foo/{bar}', [
             'middleware' => SubstituteBindings::class,
-            'uses' => function (?RouteModelBindingNullStub $bar = null) {
+            'uses' => function (/*?*/RouteModelBindingNullStub $bar = null) {
                 $this->assertInstanceOf(RouteModelBindingNullStub::class, $bar);
 
                 return $bar->first();
@@ -1914,7 +1914,7 @@ class RoutingRouteTest extends TestCase
             ->group(function () use ($router) {
                 $router->get('foo/{bar}', [
                     'middleware' => SubstituteBindings::class,
-                    'uses' => function (?RouteModelBindingNullStub $bar = null) {
+                    'uses' => function (/*?*/RouteModelBindingNullStub $bar = null) {
                         $this->assertInstanceOf(RouteModelBindingNullStub::class, $bar);
 
                         return $bar->first();
@@ -1934,7 +1934,7 @@ class RoutingRouteTest extends TestCase
         $router = $this->getRouter();
         $router->get('foo/{bar?}', [
             'middleware' => SubstituteBindings::class,
-            'uses' => function (?RoutingTestUserModel $bar = null) {
+            'uses' => function (/*?*/RoutingTestUserModel $bar = null) {
                 $this->assertNull($bar);
             },
         ]);
@@ -1967,7 +1967,7 @@ class RoutingRouteTest extends TestCase
         $router = $this->getRouter();
         $router->get('foo/{bar?}', [
             'middleware' => SubstituteBindings::class,
-            'uses' => function (?RoutingTestNonExistingUserModel $bar = null) {
+            'uses' => function (/*?*/RoutingTestNonExistingUserModel $bar = null) {
                 $this->fail('ModelNotFoundException was expected.');
             },
         ]);
@@ -2347,7 +2347,7 @@ class RouteTestAnotherControllerWithParameterStub extends Controller
         //
     }
 
-    public function withModels(Request $request, RoutingTestUserModel $user, $defaultNull = null, ?RoutingTestTeamModel $team = null)
+    public function withModels(Request $request, RoutingTestUserModel $user, $defaultNull = null, /*?*/RoutingTestTeamModel $team = null)
     {
         //
     }

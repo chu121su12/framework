@@ -464,6 +464,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         });
     }
 
+    /**
+     * @dataProvider connectionProvider
+     */
     #[DataProvider('connectionProvider')]
     public function testHasTable($connection)
     {
@@ -501,7 +504,7 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
         $this->assertFalse($schema->hasTable('dbo.table'));
     }
 
-    public static function connectionProvider(): array
+    public static function connectionProvider()/*: array*/
     {
         return [
             'without prefix' => ['without-prefix'],

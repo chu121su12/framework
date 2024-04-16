@@ -160,11 +160,15 @@ class Schedule
 
         $name = method_exists($instance, 'displayName')
             ? $instance->displayName()
-            : $instance::class;
+            : get_class($instance);
 
         return $this->call(function () use ($instance, $queue, $connection) {
             $instance instanceof ShouldQueue
-                ? $this->dispatchToQueue($instance, $queue ?? $instance->queue, $connection ?? $instance->connection)
+                ? $this->dispatchToQueue(
+                    $instance,
+                    isset($queue) ? $queue : $instance->queue,
+                    isset($connection) ? $connection : $instance->connection
+                )
                 : $this->dispatchNow($instance);
         })->name($name);
     }

@@ -90,9 +90,9 @@ class Factory
      * @param  \Closure|array|null  $callback
      * @return $this
      */
-    public function fake(Closure|array|null $callback = null)
+    public function fake(/*Closure|array|null */$callback = null)
     {
-        $callback = backport_type_check('Closure|array', $callback);
+        $callback = backport_type_check('Closure|array|null', $callback);
 
         $this->recording = true;
 

@@ -15,6 +15,7 @@ use Symfony\Component\Uid\Ulid;
 use Symfony\Polyfill\Mbstring\Mbstring;
 use Throwable;
 use Traversable;
+use ValueError;
 use voku\helper\ASCII;
 
 class Str
@@ -1000,7 +1001,7 @@ class Str
      * @param  callable|null  $factory
      * @return void
      */
-    public static function createRandomStringsUsing(?callable $factory = null)
+    public static function createRandomStringsUsing(/*?*/callable $factory = null)
     {
         static::$randomStringFactory = $factory;
     }
@@ -1061,6 +1062,10 @@ class Str
         $times = backport_type_check('int', $times);
 
         $string = backport_type_check('string', $string);
+
+        if ($times < 0) {
+            throw new ValueError('Argument #2 ($times) must be greater than or equal to 0');
+        }
 
         return str_repeat($string, $times);
     }
@@ -1475,7 +1480,9 @@ class Str
     public static function trim($value, $charlist = null)
     {
         if ($charlist === null) {
-            return preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}]+|[\s\x{FEFF}\x{200B}\x{200E}]+$~u', '', $value) ?? trim($value);
+            $replaced = preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}]+|[\s\x{FEFF}\x{200B}\x{200E}]+$~u', '', $value);
+
+            return isset($replaced) ? $replaced : trim($value);
         }
 
         return trim($value, $charlist);
@@ -1491,7 +1498,9 @@ class Str
     public static function ltrim($value, $charlist = null)
     {
         if ($charlist === null) {
-            return preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}]+~u', '', $value) ?? ltrim($value);
+            $replaced = preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}]+~u', '', $value);
+
+            return isset($replaced) ? $replaced : ltrim($value);
         }
 
         return ltrim($value, $charlist);
@@ -1507,7 +1516,9 @@ class Str
     public static function rtrim($value, $charlist = null)
     {
         if ($charlist === null) {
-            return preg_replace('~[\s\x{FEFF}\x{200B}\x{200E}]+$~u', '', $value) ?? rtrim($value);
+            $replaced = preg_replace('~[\s\x{FEFF}\x{200B}\x{200E}]+$~u', '', $value);
+
+            return isset($replaced) ? $replaced : rtrim($value);
         }
 
         return rtrim($value, $charlist);
@@ -1772,7 +1783,7 @@ class Str
      * @param  callable|null  $factory
      * @return void
      */
-    public static function createUuidsUsing(?callable $factory = null)
+    public static function createUuidsUsing(/*?*/callable $factory = null)
     {
         static::$uuidFactory = $factory;
     }
@@ -1817,7 +1828,7 @@ class Str
      * @param  \Closure|null  $callback
      * @return \Ramsey\Uuid\UuidInterface
      */
-    public static function freezeUuids(?Closure $callback = null)
+    public static function freezeUuids(/*?*/Closure $callback = null)
     {
         $uuid = Str::uuid();
 
@@ -1879,7 +1890,7 @@ class Str
      * @param  callable|null  $factory
      * @return void
      */
-    public static function createUlidsUsing(?callable $factory = null)
+    public static function createUlidsUsing(/*?*/callable $factory = null)
     {
         static::$ulidFactory = $factory;
     }
@@ -1926,7 +1937,7 @@ class Str
      * @param  Closure|null  $callback
      * @return Ulid
      */
-    public static function freezeUlids(?Closure $callback = null)
+    public static function freezeUlids(/*?*/Closure $callback = null)
     {
         $ulid = Str::ulid();
 

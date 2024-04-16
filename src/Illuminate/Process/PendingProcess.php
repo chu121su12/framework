@@ -252,9 +252,9 @@ class PendingProcess
      * @throws \Illuminate\Process\Exceptions\ProcessTimedOutException
      * @throws \RuntimeException
      */
-    public function run(array|string|null $command = null, ?callable $output = null)
+    public function run(/*array|string|null */$command = null, /*?*/callable $output = null)
     {
-        $command = backport_type_check('array|string', $command);
+        $command = backport_type_check('array|string|null', $command);
 
         $this->command = $command ?: $this->command;
 
@@ -284,9 +284,9 @@ class PendingProcess
      *
      * @throws \RuntimeException
      */
-    public function start(array|string|null $command = null, ?callable $output = null)
+    public function start(/*array|string|null */$command = null, /*?*/callable $output = null)
     {
-        $command = backport_type_check('array|string', $command);
+        $command = backport_type_check('array|string|null', $command);
 
         $this->command = $command ?: $this->command;
 

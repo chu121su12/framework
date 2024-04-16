@@ -3,6 +3,7 @@
 namespace Illuminate\Tests\Cache;
 
 use Closure;
+use Illuminate\Cache\CacheManager;
 use Illuminate\Cache\DatabaseStore;
 use Illuminate\Database\Connection;
 use Illuminate\Database\PostgresConnection;
@@ -89,7 +90,7 @@ class CacheDatabaseStoreTest extends TestCase
     public function testForeverCallsStoreItemWithReallyLongTime()
     {
         $store = $this->getMockBuilder(DatabaseStore::class)->onlyMethods(['put'])->setConstructorArgs($this->getMocks())->getMock();
-        $store->expects($this->once())->method('put')->with($this->equalTo('foo'), $this->equalTo('bar'), $this->equalTo(315360000))->willReturn(true);
+        $store->expects($this->once())->method('put')->with($this->equalTo('foo'), $this->equalTo('bar'), $this->equalTo(CacheManager::FOREVER_SECONDS))->willReturn(true);
         $result = $store->forever('foo', 'bar');
         $this->assertTrue($result);
     }

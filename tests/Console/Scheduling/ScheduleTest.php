@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Illuminate\Tests\Console\Scheduling;
 
@@ -16,14 +16,22 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+class ScheduleTest_jobHonoursDisplayNameIfMethodExistsProvider_class implements ShouldQueue
+        {
+            public function displayName()/*: string*/
+            {
+                return 'testJob-123';
+            }
+        }
+
 #[CoversClass(Schedule::class)]
 final class ScheduleTest extends TestCase
 {
-    private Container $container;
-    private EventMutex&MockInterface $eventMutex;
-    private SchedulingMutex&MockInterface $schedulingMutex;
+    private /*Container */$container;
+    private /*EventMutex&MockInterface */$eventMutex;
+    private /*SchedulingMutex&MockInterface */$schedulingMutex;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -35,23 +43,24 @@ final class ScheduleTest extends TestCase
         $this->container->instance(SchedulingMutex::class, $this->schedulingMutex);
     }
 
+    /**
+     * @dataProvider jobHonoursDisplayNameIfMethodExistsProvider
+     */
     #[DataProvider('jobHonoursDisplayNameIfMethodExistsProvider')]
-    public function testJobHonoursDisplayNameIfMethodExists(string|object $job, string $jobName): void
+    public function testJobHonoursDisplayNameIfMethodExists(/*string|object */$job, /*string */$jobName)/*: void*/
     {
+        $job = backport_type_check('string|object', $job);
+
+        $jobName = backport_type_check('string', $jobName);
+
         $schedule = new Schedule();
         $scheduledJob = $schedule->job($job);
         self::assertSame($jobName, $scheduledJob->description);
     }
 
-    public static function jobHonoursDisplayNameIfMethodExistsProvider(): array
+    public static function jobHonoursDisplayNameIfMethodExistsProvider()/*: array*/
     {
-        $job = new class implements ShouldQueue
-        {
-            public function displayName(): string
-            {
-                return 'testJob-123';
-            }
-        };
+        $job = new ScheduleTest_jobHonoursDisplayNameIfMethodExistsProvider_class;
 
         return [
             [JobToTestWithSchedule::class, JobToTestWithSchedule::class],

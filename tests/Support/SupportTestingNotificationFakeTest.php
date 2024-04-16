@@ -275,16 +275,19 @@ class NotificationWithSerialization extends NotificationStub implements ShouldQu
 {
     use Queueable;
 
-    public function __construct(public $value)
+    public $value;
+
+    public function __construct(/*public */$value)
     {
+        $this->value = $value;
     }
 
-    public function __serialize(): array
+    public function __serialize()/*: array*/
     {
         return ['value' => $this->value.'-serialized'];
     }
 
-    public function __unserialize(array $data): void
+    public function __unserialize(array $data)/*: void*/
     {
         $this->value = $data['value'].'-unserialized';
     }

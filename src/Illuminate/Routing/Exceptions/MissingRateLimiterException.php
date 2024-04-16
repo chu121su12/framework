@@ -12,8 +12,10 @@ class MissingRateLimiterException extends Exception
      * @param  string  $limiter
      * @return static
      */
-    public static function forLimiter(string $limiter)
+    public static function forLimiter(/*string */$limiter)
     {
+        $limiter = backport_type_check('string', $limiter);
+
         return new static("Rate limiter [{$limiter}] is not defined.");
     }
 
@@ -24,8 +26,12 @@ class MissingRateLimiterException extends Exception
      * @param  class-string  $model
      * @return static
      */
-    public static function forLimiterAndUser(string $limiter, string $model)
+    public static function forLimiterAndUser(/*string */$limiter, /*string */$model)
     {
+        $limiter = backport_type_check('string', $limiter);
+
+        $model = backport_type_check('string', $model);
+
         return new static("Rate limiter [{$model}::{$limiter}] is not defined.");
     }
 }

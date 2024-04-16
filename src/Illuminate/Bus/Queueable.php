@@ -5,7 +5,7 @@ namespace Illuminate\Bus;
 use Closure;
 use Illuminate\Queue\CallQueuedClosure;
 use Illuminate\Support\Arr;
-use PHPUnit\Framework\Assert as PHPUnit;
+use Illuminate\Testing\Assert as PHPUnit;
 use RuntimeException;
 
 trait Queueable
@@ -288,14 +288,14 @@ trait Queueable
             'The expected chain can not be empty.'
         );
 
-        if (collect($expectedChain)->contains(fn ($job) => is_object($job))) {
-            $expectedChain = collect($expectedChain)->map(fn ($job) => serialize($job))->all();
+        if (collect($expectedChain)->contains(function ($job) { return is_object($job); })) {
+            $expectedChain = collect($expectedChain)->map(function ($job) { return serialize($job); })->all();
         } else {
-            $chain = collect($this->chained)->map(fn ($job) => get_class(unserialize($job)))->all();
+            $chain = collect($this->chained)->map(function ($job) { return get_class(unserialize($job)); })->all();
         }
 
         PHPUnit::assertTrue(
-            $expectedChain === ($chain ?? $this->chained),
+            $expectedChain === (isset($chain) ? $chain : $this->chained),
             'The job does not have the expected chain.'
         );
     }

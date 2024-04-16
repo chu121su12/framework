@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Bus\Dispatcher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
-use Illuminate\Contracts\Queue\Job;
+use Illuminate\Contracts\Queue\Job as JobContract;
 use Illuminate\Queue\CallQueuedHandler;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\Middleware\ThrottlesExceptions;
@@ -53,6 +53,14 @@ class ThrottlesExceptionsTest_testLimitingWithDefaultValues_class
             {
                 $this->released = true;
 
+                return $this;
+            }
+        }
+
+class ThrottlesExceptionsTest_testReportingExceptions_class
+        {
+            public function release()
+            {
                 return $this;
             }
         }
@@ -277,13 +285,8 @@ class ThrottlesExceptionsTest extends TestCase
             ->twice()
             ->with(m::type(RuntimeException::class));
 
-        $job = new class
-        {
-            public function release()
-            {
-                return $this;
-            }
-        };
+        $job = new ThrottlesExceptionsTest_testReportingExceptions_class;
+
         $next = function () {
             throw new RuntimeException('Whoops!');
         };
@@ -293,10 +296,10 @@ class ThrottlesExceptionsTest extends TestCase
         $middleware->report();
         $middleware->handle($job, $next);
 
-        $middleware->report(fn () => true);
+        $middleware->report(function () { return true; });
         $middleware->handle($job, $next);
 
-        $middleware->report(fn () => false);
+        $middleware->report(function () { return false; });
         $middleware->handle($job, $next);
     }
 }

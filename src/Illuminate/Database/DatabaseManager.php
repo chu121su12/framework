@@ -83,7 +83,7 @@ class DatabaseManager implements ConnectionResolverInterface
     {
         $name = $name ?: $this->getDefaultConnection();
 
-        [$database, $type] = $this->parseConnectionName($name);
+        list($database, $type) = $this->parseConnectionName($name);
 
         // If we haven't created this connection, we'll create it based on the config
         // provided in the application. Once we've created the connections we will

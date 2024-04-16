@@ -13,7 +13,7 @@ use stdClass;
 
 class DatabaseEloquentMorphToManyTest extends TestCase
 {
-    public function testEagerConstraintsAreProperlyAdded(): void
+    public function testEagerConstraintsAreProperlyAdded()/*: void*/
     {
         $relation = $this->getRelation();
         $relation->getParent()->shouldReceive('getKeyName')->andReturn('id');
@@ -27,7 +27,7 @@ class DatabaseEloquentMorphToManyTest extends TestCase
         $relation->addEagerConstraints([$model1, $model2]);
     }
 
-    public function testAttachInsertsPivotTableRecord(): void
+    public function testAttachInsertsPivotTableRecord()/*: void*/
     {
         $relation = $this->getMockBuilder(MorphToMany::class)->onlyMethods(['touchIfTouching'])->setConstructorArgs($this->getRelationArguments())->getMock();
         $query = m::mock(stdClass::class);
@@ -39,7 +39,7 @@ class DatabaseEloquentMorphToManyTest extends TestCase
         $relation->attach(2, ['foo' => 'bar']);
     }
 
-    public function testDetachRemovesPivotTableRecord(): void
+    public function testDetachRemovesPivotTableRecord()/*: void*/
     {
         $relation = $this->getMockBuilder(MorphToMany::class)->onlyMethods(['touchIfTouching'])->setConstructorArgs($this->getRelationArguments())->getMock();
         $query = m::mock(stdClass::class);
@@ -54,7 +54,7 @@ class DatabaseEloquentMorphToManyTest extends TestCase
         $this->assertTrue($relation->detach([1, 2, 3]));
     }
 
-    public function testDetachMethodClearsAllPivotRecordsWhenNoIDsAreGiven(): void
+    public function testDetachMethodClearsAllPivotRecordsWhenNoIDsAreGiven()/*: void*/
     {
         $relation = $this->getMockBuilder(MorphToMany::class)->onlyMethods(['touchIfTouching'])->setConstructorArgs($this->getRelationArguments())->getMock();
         $query = m::mock(stdClass::class);
@@ -69,7 +69,7 @@ class DatabaseEloquentMorphToManyTest extends TestCase
         $this->assertTrue($relation->detach());
     }
 
-    public function testQueryExpressionCanBePassedToDifferentPivotQueryBuilderClauses(): void
+    public function testQueryExpressionCanBePassedToDifferentPivotQueryBuilderClauses()/*: void*/
     {
         $value = 'pivot_value';
         $column = new Expression("CONCAT(foo, '_', bar)");
@@ -94,14 +94,14 @@ class DatabaseEloquentMorphToManyTest extends TestCase
         $relation->orderByPivot($column);
     }
 
-    public function getRelation(): MorphToMany
+    public function getRelation()/*: MorphToMany*/
     {
         list($builder, $parent) = $this->getRelationArguments();
 
         return new MorphToMany($builder, $parent, 'taggable', 'taggables', 'taggable_id', 'tag_id', 'id', 'id');
     }
 
-    public function getRelationArguments(): array
+    public function getRelationArguments()/*: array*/
     {
         $parent = m::mock(Model::class);
         $parent->shouldReceive('getMorphClass')->andReturn(get_class($parent));

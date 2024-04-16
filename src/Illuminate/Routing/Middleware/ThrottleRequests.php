@@ -186,17 +186,21 @@ class ThrottleRequests
             $maxAttempts = explode('|', $maxAttempts, 2)[$request->user() ? 1 : 0];
         }
 
-        if (! is_numeric($maxAttempts) &&
-            $request->user()?->hasAttribute($maxAttempts)
-        ) {
-            $maxAttempts = $request->user()->{$maxAttempts};
+        if (! is_numeric($maxAttempts)) {
+            $user = $request->user();
+
+            if (isset($user) && $user->hasAttribute($maxAttempts)) {
+                $maxAttempts = $request->user()->{$maxAttempts};
+            }
         }
 
         // If we still don't have a numeric value, there was no matching rate limiter...
         if (! is_numeric($maxAttempts)) {
-            is_null($request->user())
-                ? throw MissingRateLimiterException::forLimiter($maxAttempts)
-                : throw MissingRateLimiterException::forLimiterAndUser($maxAttempts, get_class($request->user()));
+            if (is_null($request->user())) {
+                throw MissingRateLimiterException::forLimiter($maxAttempts);
+            }
+
+            throw MissingRateLimiterException::forLimiterAndUser($maxAttempts, get_class($request->user()));
         }
 
         return (int) $maxAttempts;
@@ -286,7 +290,7 @@ class ThrottleRequests
     protected function getHeaders($maxAttempts,
         $remainingAttempts,
         $retryAfter = null,
-        ?Response $response = null)
+        /*?*/Response $response = null)
     {
         if ($response &&
             ! is_null($response->headers->get('X-RateLimit-Remaining')) &&

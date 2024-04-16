@@ -30,7 +30,25 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
 
-include_once 'Enums.php';
+if (PHP_VERSION_ID >= 80100) {
+    include_once 'Enums.php';
+}
+
+class DatabaseQueryBuilderTest_testHavingExpression_class implements ConditionExpression
+            {
+                public function getValue(\Illuminate\Database\Grammar $grammar)
+                {
+                    return '1 = 1';
+                }
+            }
+
+class DatabaseQueryBuilderTest_testWhereExpression_class implements ConditionExpression
+            {
+                public function getValue(\Illuminate\Database\Grammar $grammar)
+                {
+                    return '1 = 1';
+                }
+            }
 
 class DatabaseQueryBuilderTest extends TestCase
 {
@@ -4493,6 +4511,9 @@ SQL;
         $this->assertEquals(['foo', 'bar', 'baz'], $builder->getBindings());
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testAddBindingWithEnum()
     {
         $builder = $this->getBuilder();

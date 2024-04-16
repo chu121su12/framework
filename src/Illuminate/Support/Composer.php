@@ -63,10 +63,11 @@ class Composer
      * @param  string|null  $composerBinary
      * @return bool
      */
-    public function requirePackages(array $packages, bool $dev = false, Closure|OutputInterface|null $output = null, $composerBinary = null)
+    public function requirePackages(array $packages, /*bool */$dev = false, /*Closure|OutputInterface|null */$output = null, $composerBinary = null)
     {
         $dev = backport_type_check('bool', $dev);
-        $output = backport_type_check([Closure::class, OutputInterface::class], $output);
+
+        $output = backport_type_check([Closure::class, OutputInterface::class, 'null'], $output);
 
         $command = collect(\array_merge(...[
             $this->findComposer($composerBinary),
@@ -95,10 +96,11 @@ class Composer
      * @param  string|null  $composerBinary
      * @return bool
      */
-    public function removePackages(array $packages, bool $dev = false, Closure|OutputInterface|null $output = null, $composerBinary = null)
+    public function removePackages(array $packages, /*bool */$dev = false, /*Closure|OutputInterface|null */$output = null, $composerBinary = null)
     {
         $dev = backport_type_check('bool', $dev);
-        $output = backport_type_check([Closure::class, OutputInterface::class], $output);
+
+        $output = backport_type_check([Closure::class, OutputInterface::class, 'null'], $output);
 
         $command = collect(\array_merge(...[
             $this->findComposer($composerBinary),

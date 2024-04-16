@@ -104,7 +104,7 @@ class Repository
      */
     public function get($key, $default = null)
     {
-        return $this->data[$key] ?? value($default);
+        return isset($this->data[$key]) ? $this->data[$key] : value($default);
     }
 
     /**
@@ -116,7 +116,7 @@ class Repository
      */
     public function getHidden($key, $default = null)
     {
-        return $this->hidden[$key] ?? value($default);
+        return isset($this->hidden[$key]) ? $this->hidden[$key] : value($default);
     }
 
     /**

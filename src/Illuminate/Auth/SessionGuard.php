@@ -132,9 +132,9 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
     public function __construct($name,
                                 UserProvider $provider,
                                 Session $session,
-                                ?Request $request = null,
-                                ?Timebox $timebox = null,
-                                bool $rehashOnLogin = true)
+                                /*?*/Request $request = null,
+                                /*?*/Timebox $timebox = null,
+                                /*bool */$rehashOnLogin = true)
     {
         $rehashOnLogin = backport_type_check('bool', $rehashOnLogin);
 

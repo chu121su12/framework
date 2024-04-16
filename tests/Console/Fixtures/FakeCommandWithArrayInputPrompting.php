@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Console\Fixtures;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Laravel\Prompts\Prompt;
@@ -26,8 +27,8 @@ class FakeCommandWithArrayInputPrompting extends Command implements PromptsForMi
         });
     }
 
-    public function handle(): int
+    public function handle()/*: int*/
     {
-        return self::SUCCESS;
+        return SymfonyHelper::CONSOLE_SUCCESS;
     }
 }

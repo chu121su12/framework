@@ -427,6 +427,9 @@ COMMAND;
         $this->assertTrue(true);
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|DAR')]
     public function testRealProcessesCanHaveErrorOutput()
     {
@@ -459,6 +462,9 @@ EOT;
         $result->throw_();
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|DAR')]
     public function testRealProcessesCanThrowWithoutOutput()
     {
@@ -503,6 +509,9 @@ EOT;
         $result->throw_();
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|DAR')]
     public function testRealProcessesCanThrowWithErrorOutput()
     {
@@ -551,6 +560,9 @@ EOT;
         $result->throw_();
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|DAR')]
     public function testRealProcessesCanThrowWithOutput()
     {
@@ -574,6 +586,9 @@ EOT;
         $result->throw_();
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|DAR')]
     public function testRealProcessesCanTimeout()
     {
@@ -588,6 +603,9 @@ EOT;
         $result->throw_();
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|DAR')]
     public function testRealProcessesCanThrowIfTrue()
     {
@@ -599,6 +617,9 @@ EOT;
         $result->throwIf(true);
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|DAR')]
     public function testRealProcessesDoesntThrowIfFalse()
     {
@@ -610,6 +631,9 @@ EOT;
         $this->assertTrue(true);
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|DAR')]
     public function testRealProcessesCanUseStandardInput()
     {
@@ -619,6 +643,9 @@ EOT;
         $this->assertSame('foobar', $result->output());
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|DAR')]
     public function testProcessPipe()
     {
@@ -635,6 +662,9 @@ EOT;
         $this->assertSame("foo\n", $pipe->output());
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|DAR')]
     public function testProcessPipeFailed()
     {
@@ -651,6 +681,9 @@ EOT;
         $this->assertTrue($pipe->failed());
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|DAR')]
     public function testProcessSimplePipe()
     {
@@ -667,6 +700,9 @@ EOT;
         $this->assertSame("foo\n", $pipe->output());
     }
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|DAR')]
     public function testProcessSimplePipeFailed()
     {

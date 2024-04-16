@@ -91,8 +91,10 @@ class ApplicationBuilder
      * @param  array|bool  $discover
      * @return $this
      */
-    public function withEvents(array|bool $discover = [])
+    public function withEvents(/*array|bool*/ $discover = [])
     {
+        $discover = backport_type_check('arra|bool', $discover);
+
         if (is_array($discover) && count($discover) > 0) {
             AppEventServiceProvider::setEventDiscoveryPaths($discover);
         }
@@ -304,7 +306,7 @@ class ApplicationBuilder
     protected function withCommandRouting(array $paths)
     {
         $this->app->afterResolving(ConsoleKernel::class, function ($kernel) use ($paths) {
-            $this->app->booted(fn () => $kernel->addCommandRoutePaths($paths));
+            $this->app->booted(function () use ($kernel, $paths) { return $kernel->addCommandRoutePaths($paths); });
         });
     }
 
@@ -316,7 +318,7 @@ class ApplicationBuilder
      */
     public function withSchedule(callable $callback)
     {
-        Artisan::starting(fn () => $callback($this->app->make(Schedule::class)));
+        Artisan::starting(function () use ($callback) { return $callback($this->app->make(Schedule::class)); });
 
         return $this;
     }

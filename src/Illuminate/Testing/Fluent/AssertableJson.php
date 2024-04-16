@@ -42,7 +42,7 @@ class AssertableJson implements Arrayable
      * @param  string|null  $path
      * @return void
      */
-    protected function __construct(array $props, ?string $path = null)
+    protected function __construct(array $props, /*?string */$path = null)
     {
         $path = backport_type_check('?string', $path);
 
@@ -73,7 +73,7 @@ class AssertableJson implements Arrayable
      * @param  string|null  $key
      * @return mixed
      */
-    protected function prop(?string $key = null)
+    protected function prop(/*?string */$key = null)
     {
         $key = backport_type_check('?string', $key);
 

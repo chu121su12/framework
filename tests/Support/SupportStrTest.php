@@ -1232,6 +1232,7 @@ class SupportStrTest extends TestCase
         Str::repeat('Hello', -2);
     }
 
+    /** @dataProvider specialCharacterProvider */
     #[DataProvider('specialCharacterProvider')]
     public function testTransliterate(/*string */$value, /*string */$expected)/*: void*/
     {

@@ -110,7 +110,7 @@ class InvokedProcess implements InvokedProcessContract
      *
      * @throws \Illuminate\Process\Exceptions\ProcessTimedOutException
      */
-    public function wait(?callable $output = null)
+    public function wait(/*?*/callable $output = null)
     {
         try {
             $this->process->wait($output);

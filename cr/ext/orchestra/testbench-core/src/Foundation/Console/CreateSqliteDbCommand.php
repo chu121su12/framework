@@ -51,6 +51,6 @@ class CreateSqliteDbCommand extends Command
             /*workingPath: */$workingPath
         ))->handle($from, $to);
 
-        return SymfonyHelper::COMMAND_SUCCESS;
+        return SymfonyHelper::CONSOLE_SUCCESS;
     }
 }

@@ -50,7 +50,7 @@ class ArtisanCommandTest extends TestCase
             $this->confirm('Do you want to continue?', true);
         });
 
-        Artisan::command('exit {code}', fn () => (int) $this->argument('code'));
+        Artisan::command('exit {code}', function () { return (int) $this->argument('code'); });
 
         Artisan::command('contains', function () {
             $this->line('My name is Taylor Otwell');

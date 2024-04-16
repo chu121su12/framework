@@ -139,6 +139,9 @@ class ExceptionHandlerTest extends TestCase
             ]);
     }
 
+    /**
+     * @dataProvider exitCodesProvider
+     */
     #[DataProvider('exitCodesProvider')]
     public function testItReturnsNonZeroExitCodesForUncaughtExceptions($providers, $successful)
     {

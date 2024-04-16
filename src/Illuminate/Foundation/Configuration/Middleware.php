@@ -558,10 +558,10 @@ class Middleware
      * @param  callable|string  $users
      * @return $this
      */
-    public function redirectTo(callable|string|null $guests = null, callable|string|null $users = null)
+    public function redirectTo(/*callable|string|null */$guests = null, /*callable|string|null */$users = null)
     {
-        $guests = backport_type_check('callable|string', $guests);
-        $users = backport_type_check('callable|string', $users);
+        $guests = backport_type_check('callable|string|null', $guests);
+        $users = backport_type_check('callable|string|null', $users);
 
         $guests = is_string($guests) ? function () use ($guests) { return $guests; } : $guests;
         $users = is_string($users) ? function () use ($users) { return $users; } : $users;
@@ -655,8 +655,10 @@ class Middleware
      * @param  bool  $subdomains
      * @return $this
      */
-    public function trustHosts(array|callable|null $at = null, bool $subdomains = true)
+    public function trustHosts(/*array|callable|null */$at = null, /*bool */$subdomains = true)
     {
+        $at = backport_type_check('array|callable|null', $at);
+
         $subdomains = backport_type_check('bool', $subdomains);
 
         $this->trustHosts = true;
@@ -675,11 +677,11 @@ class Middleware
      * @param  int|null  $headers
      * @return $this
      */
-    public function trustProxies(array|string|null $at = null, ?int $headers = null)
+    public function trustProxies(/*array|string|null */$at = null, /*?int */$headers = null)
     {
-        $headers = backport_type_check('int', $headers);
+        $headers = backport_type_check('?int', $headers);
 
-        $at = backport_type_check('array|string', $at);
+        $at = backport_type_check('array|string|null', $at);
 
         if (! is_null($at)) {
             TrustProxies::at($at);

@@ -659,18 +659,32 @@ class Handler implements ExceptionHandlerContract
      */
     protected function prepareException(/*Throwable */$e)
     {
-        return match (true) {
-            $e instanceof BackedEnumCaseNotFoundException => new NotFoundHttpException($e->getMessage(), $e),
-            $e instanceof ModelNotFoundException => new NotFoundHttpException($e->getMessage(), $e),
-            $e instanceof AuthorizationException && $e->hasStatus() => new HttpException(
-                $e->status(), $e->response()?->message() ?: (Response::$statusTexts[$e->status()] ?? 'Whoops, looks like something went wrong.'), $e
-            ),
-            $e instanceof AuthorizationException && ! $e->hasStatus() => new AccessDeniedHttpException($e->getMessage(), $e),
-            $e instanceof TokenMismatchException => new HttpException(419, $e->getMessage(), $e),
-            $e instanceof RequestExceptionInterface => new BadRequestHttpException('Bad request.', $e),
-            $e instanceof RecordsNotFoundException => new NotFoundHttpException('Not found.', $e),
-            default => $e,
-        };
+        switch (true) {
+            case $e instanceof BackedEnumCaseNotFoundException: return new NotFoundHttpException($e->getMessage(), $e);
+            case $e instanceof ModelNotFoundException: return new NotFoundHttpException($e->getMessage(), $e);
+
+            case $e instanceof AuthorizationException && $e->hasStatus(): return new HttpException(
+                $e->status(),
+                value(function () use ($e) {
+                    $response = $e->response();
+
+                    if ($message = isset($response) ? $response->message() : null) {
+                        return $message;
+                    }
+
+                    $status = $e->status();
+
+                    return isset(Response::$statusTexts[$status]) ? Response::$statusTexts[$status] : 'Whoops, looks like something went wrong.';
+                }),
+                $e
+            );
+
+            case $e instanceof AuthorizationException && ! $e->hasStatus(): return new AccessDeniedHttpException($e->getMessage(), $e);
+            case $e instanceof TokenMismatchException: return new HttpException(419, $e->getMessage(), $e);
+            case $e instanceof RequestExceptionInterface: return new BadRequestHttpException('Bad request.', $e);
+            case $e instanceof RecordsNotFoundException: return new NotFoundHttpException('Not found.', $e);
+            default: return $e;
+        }
     }
 
     /**

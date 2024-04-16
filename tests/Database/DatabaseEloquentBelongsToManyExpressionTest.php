@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentBelongsToManyExpressionTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $db = new DB;
 
@@ -27,7 +27,7 @@ class DatabaseEloquentBelongsToManyExpressionTest extends TestCase
         $this->createSchema();
     }
 
-    public function testAmbiguousColumnsExpression(): void
+    public function testAmbiguousColumnsExpression()/*: void*/
     {
         $this->seedData();
 
@@ -40,7 +40,7 @@ class DatabaseEloquentBelongsToManyExpressionTest extends TestCase
         $this->assertEquals(2, $tags->first()->getKey());
     }
 
-    public function testQualifiedColumnExpression(): void
+    public function testQualifiedColumnExpression()/*: void*/
     {
         $this->seedData();
 
@@ -53,26 +53,26 @@ class DatabaseEloquentBelongsToManyExpressionTest extends TestCase
         $this->assertEquals(3, $tags->first()->getKey());
     }
 
-    public function testGlobalScopesAreAppliedToBelongsToManyRelation(): void
+    public function testGlobalScopesAreAppliedToBelongsToManyRelation()/*: void*/
     {
         $this->seedData();
         $post = DatabaseEloquentBelongsToManyExpressionTestTestPost::query()->firstOrFail();
         DatabaseEloquentBelongsToManyExpressionTestTestTag::addGlobalScope(
             'default',
-            static fn () => throw new Exception('Default global scope.')
+            static function () { throw new Exception('Default global scope.'); }
         );
 
         $this->expectExceptionMessage('Default global scope.');
         $post->tags()->get();
     }
 
-    public function testGlobalScopesCanBeRemovedFromBelongsToManyRelation(): void
+    public function testGlobalScopesCanBeRemovedFromBelongsToManyRelation()/*: void*/
     {
         $this->seedData();
         $post = DatabaseEloquentBelongsToManyExpressionTestTestPost::query()->firstOrFail();
         DatabaseEloquentBelongsToManyExpressionTestTestTag::addGlobalScope(
             'default',
-            static fn () => throw new Exception('Default global scope.')
+            static function () { throw new Exception('Default global scope.'); }
         );
 
         $this->assertNotEmpty($post->tags()->withoutGlobalScopes()->get());
@@ -85,8 +85,8 @@ class DatabaseEloquentBelongsToManyExpressionTest extends TestCase
      */
     public function createSchema()
     {
-        $this->schema()->create('posts', fn (Blueprint $t) => $t->id());
-        $this->schema()->create('tags', fn (Blueprint $t) => $t->id());
+        $this->schema()->create('posts', function (Blueprint $t) { return $t->id(); });
+        $this->schema()->create('tags', function (Blueprint $t) { return $t->id(); });
         $this->schema()->create('taggables', function (Blueprint $t) {
             $t->unsignedBigInteger('tag_id');
             $t->unsignedBigInteger('taggable_id');
@@ -101,7 +101,7 @@ class DatabaseEloquentBelongsToManyExpressionTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         $this->schema()->drop('posts');
         $this->schema()->drop('tags');
@@ -111,7 +111,7 @@ class DatabaseEloquentBelongsToManyExpressionTest extends TestCase
     /**
      * Helpers...
      */
-    protected function seedData(): void
+    protected function seedData()/*: void*/
     {
         $p1 = DatabaseEloquentBelongsToManyExpressionTestTestPost::query()->create();
         $p2 = DatabaseEloquentBelongsToManyExpressionTestTestPost::query()->create();
@@ -156,7 +156,7 @@ class DatabaseEloquentBelongsToManyExpressionTestTestPost extends Eloquent
     protected $fillable = ['id'];
     public $timestamps = false;
 
-    public function tags(): MorphToMany
+    public function tags()/*: MorphToMany*/
     {
         return  $this->morphToMany(
             DatabaseEloquentBelongsToManyExpressionTestTestTag::class,
@@ -165,7 +165,7 @@ class DatabaseEloquentBelongsToManyExpressionTestTestPost extends Eloquent
             'taggable_id',
             'tag_id',
             'id',
-            'id',
+            'id'
         );
     }
 }

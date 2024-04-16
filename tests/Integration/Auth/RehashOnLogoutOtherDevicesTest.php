@@ -14,6 +14,17 @@ use Orchestra\Testbench\TestCase;
 #[WithConfig('app.key', 'base64:IUHRqAQ99pZ0A1MPjbuv1D6ff3jxv0GIvS2qIW4JNU4=')]
 class RehashOnLogoutOtherDevicesTest extends TestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'config' => [
+                ['hashing.bcrypt.rounds', 12], // env
+                ['app.key', 'base64:IUHRqAQ99pZ0A1MPjbuv1D6ff3jxv0GIvS2qIW4JNU4'],
+            ],
+            'migration' => true,
+        ];
+    }
+    
     use RefreshDatabase;
 
     protected function defineRoutes($router)
@@ -29,7 +40,7 @@ class RehashOnLogoutOtherDevicesTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $user = UserFactory::new()->create();
+        $user = UserFactory::new_()->create();
 
         $password = $user->password;
 

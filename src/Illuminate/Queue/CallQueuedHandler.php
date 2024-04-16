@@ -222,9 +222,11 @@ class CallQueuedHandler
         try {
             $reflectionClass = new ReflectionClass($class);
 
-            $shouldDelete = $reflectionClass->getDefaultProperties()['deleteWhenMissingModels']
-                ?? count($reflectionClass->getAttributes(DeleteWhenMissingModels::class)) !== 0;
-        } catch (Exception) {
+            $defaultProperties = $reflectionClass->getDefaultProperties();
+
+            $shouldDelete = isset($defaultProperties['deleteWhenMissingModels']) ? $defaultProperties['deleteWhenMissingModels']
+                : \method_exists($reflectionClass, 'getAttributes') && count($reflectionClass->getAttributes(DeleteWhenMissingModels::class)) !== 0;
+        } catch (Exception $_e) {
             $shouldDelete = false;
         }
 

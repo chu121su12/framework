@@ -64,15 +64,15 @@ class Content
      *
      * @named-arguments-supported
      */
-    public function __construct(?string $view = null, ?string $html = null, ?string $text = null, $markdown = null, array $with = [], ?string $htmlString = null)
+    public function __construct(/*?string*/ $view = null, /*?string */$html = null, /*?string */$text = null, $markdown = null, array $with = [], /*?string */$htmlString = null)
     {
-        $view = backport_type_check('string', $view);
+        $view = backport_type_check('?string', $view);
 
-        $html = backport_type_check('string', $html);
+        $html = backport_type_check('?string', $html);
 
-        $text = backport_type_check('string', $text);
+        $text = backport_type_check('?string', $text);
 
-        $htmlString = backport_type_check('string', $htmlString);
+        $htmlString = backport_type_check('string?', $htmlString);
 
         $this->view = $view;
         $this->html = $html;

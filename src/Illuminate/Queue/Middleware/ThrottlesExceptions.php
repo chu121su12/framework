@@ -212,9 +212,9 @@ class ThrottlesExceptions
      * @param  callable|null  $callback
      * @return $this
      */
-    public function report(?callable $callback = null)
+    public function report(/*?*/callable $callback = null)
     {
-        $this->reportCallback = $callback ?? fn () => true;
+        $this->reportCallback = isset($callback) ? $callback : function () { return true; };
 
         return $this;
     }

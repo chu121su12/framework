@@ -221,28 +221,28 @@ class MiddlewareTest extends TestCase
         $configuration->trustHosts();
         $this->assertEquals(['^(.+\.)?laravel\.test$'], $middleware->hosts());
 
-        $configuration->trustHosts(at: ['my.test']);
+        $configuration->trustHosts(/*at: */['my.test']);
         $this->assertEquals(['my.test', '^(.+\.)?laravel\.test$'], $middleware->hosts());
 
-        $configuration->trustHosts(at: static fn () => ['my.test']);
+        $configuration->trustHosts(/*at: */static function () { return ['my.test']; });
         $this->assertEquals(['my.test', '^(.+\.)?laravel\.test$'], $middleware->hosts());
 
         $configuration->trustHosts(/*at: */['my.test'], /*subdomains: */false);
         $this->assertEquals(['my.test'], $middleware->hosts());
 
-        $configuration->trustHosts(at: static fn () => ['my.test'], subdomains: false);
+        $configuration->trustHosts(/*at: */static function () { return ['my.test']; }, /*subdomains: */false);
         $this->assertEquals(['my.test'], $middleware->hosts());
 
-        $configuration->trustHosts(at: []);
+        $configuration->trustHosts(/*at: */[]);
         $this->assertEquals(['^(.+\.)?laravel\.test$'], $middleware->hosts());
 
-        $configuration->trustHosts(at: static fn () => []);
+        $configuration->trustHosts(/*at: */static function () { return []; });
         $this->assertEquals(['^(.+\.)?laravel\.test$'], $middleware->hosts());
 
-        $configuration->trustHosts(at: [], subdomains: false);
+        $configuration->trustHosts(/*at: */[], /*subdomains: */false);
         $this->assertEquals([], $middleware->hosts());
 
-        $configuration->trustHosts(at: static fn () => [], subdomains: false);
+        $configuration->trustHosts(/*at: */static function () { return []; }, /*subdomains: */false);
         $this->assertEquals([], $middleware->hosts());
     }
 

@@ -272,7 +272,7 @@ class ServeCommand extends Command
         $this->outputBuffer = (string) $lines->pop();
 
         $lines
-            ->map(fn ($line) => trim($line))
+            ->map(function ($line) { return trim($line); })
             ->filter()
             ->each(function ($line) {
                 if (str($line)->contains('Development Server (http')) {
@@ -309,13 +309,13 @@ class ServeCommand extends Command
                         ];
                     }
 
-                    [$startDate, $file] = $this->requestsPool[$requestPort];
+                    list($startDate, $file) = $this->requestsPool[$requestPort];
 
                     $formattedStartedAt = $startDate->format('Y-m-d H:i:s');
 
                     unset($this->requestsPool[$requestPort]);
 
-                    [$date, $time] = explode(' ', $formattedStartedAt);
+                    list($date, $time) = explode(' ', $formattedStartedAt);
 
                     $this->output->write("  <fg=gray>$date</> $time");
 

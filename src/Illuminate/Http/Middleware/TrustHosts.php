@@ -50,10 +50,10 @@ class TrustHosts
             return [$this->allSubdomainsOfApplicationUrl()];
         }
 
-        $hosts = match (true) {
-            is_array(static::$alwaysTrust) => static::$alwaysTrust,
-            is_callable(static::$alwaysTrust) => call_user_func(static::$alwaysTrust),
-            default => [],
+        switch (true) {
+            case is_array(static::$alwaysTrust): $hosts = static::$alwaysTrust; break;
+            case is_callable(static::$alwaysTrust): $hosts = call_user_func(static::$alwaysTrust); break;
+            default: $hosts = [];
         };
 
         if (static::$subdomains) {
@@ -86,8 +86,12 @@ class TrustHosts
      * @param  bool  $subdomains
      * @return void
      */
-    public static function at(array|callable $hosts, bool $subdomains = true)
+    public static function at(/*array|callable */$hosts, /*bool */$subdomains = true)
     {
+        $hosts = backport_type_check('array|callable', $hosts);
+
+        $subdomains = backport_type_check('bool', $subdomains);
+
         static::$alwaysTrust = $hosts;
         static::$subdomains = $subdomains;
     }

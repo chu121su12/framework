@@ -213,7 +213,7 @@ class MigrateCommand extends BaseCommand implements Isolatable
 
         $this->components->warn('The SQLite database configured for this application does not exist: '.$path);
 
-        if (! confirm('Would you like to create it?', default: true)) {
+        if (! confirm('Would you like to create it?', /*default: */true)) {
             $this->components->info('Operation cancelled. No database was created.');
 
             throw new RuntimeException('Database was not created. Aborting migration.');
@@ -242,7 +242,7 @@ class MigrateCommand extends BaseCommand implements Isolatable
         if (! $this->option('force') && ! $this->option('no-interaction')) {
             $this->components->warn("The database '{$connection->getDatabaseName()}' does not exist on the '{$connection->getName()}' connection.");
 
-            if (! confirm('Would you like to create it?', default: true)) {
+            if (! confirm('Would you like to create it?', /*default: */true)) {
                 $this->components->info('Operation cancelled. No database was created.');
 
                 throw new RuntimeException('Database was not created. Aborting migration.');

@@ -1049,7 +1049,7 @@ class SupportHelpersTest extends TestCase
         Sleep::assertSleptTimes(1);
 
         Sleep::assertSequence([
-            Sleep::usleep(100_000),
+            Sleep::usleep(100000),
         ]);
     }
 

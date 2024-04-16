@@ -812,7 +812,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      * @param  string|null  $prefix
      * @return void
      */
-    public function anonymousComponentPath(string $path, ?string $prefix = null)
+    public function anonymousComponentPath(/*string */$path, /*?string */$prefix = null)
     {
         $path = backport_type_check('string', $path);
 
@@ -838,7 +838,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      * @param  string|null  $prefix
      * @return void
      */
-    public function anonymousComponentNamespace(string $directory, ?string $prefix = null)
+    public function anonymousComponentNamespace(/*string */$directory, /*?string */$prefix = null)
     {
         $directory = backport_type_check('string', $directory);
 

@@ -42,7 +42,10 @@ class SqlServerBuilder extends Builder
     {
         list($schema, $table) = $this->parseSchemaAndTable($table);
 
-        $schema ??= $this->getDefaultSchema();
+        if (! isset($schema)) {
+            $schema = $this->getDefaultSchema();
+        }
+
         $table = $this->connection->getTablePrefix().$table;
 
         foreach ($this->getTables() as $value) {
@@ -65,7 +68,10 @@ class SqlServerBuilder extends Builder
     {
         list($schema, $view) = $this->parseSchemaAndTable($view);
 
-        $schema ??= $this->getDefaultSchema();
+        if (! isset($schema)) {
+            $schema = $this->getDefaultSchema();
+        }
+
         $view = $this->connection->getTablePrefix().$view;
 
         foreach ($this->getViews() as $value) {

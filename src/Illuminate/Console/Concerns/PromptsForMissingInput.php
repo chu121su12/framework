@@ -39,13 +39,22 @@ trait PromptsForMissingInput
     protected function promptForMissingArguments(InputInterface $input, OutputInterface $output)
     {
         $prompted = collect($this->getDefinition()->getArguments())
-            ->reject(fn (InputArgument $argument) => $argument->getName() === 'command')
-            ->filter(fn (InputArgument $argument) => $argument->isRequired() && match (true) {
-                $argument->isArray() => empty($input->getArgument($argument->getName())),
-                default => is_null($input->getArgument($argument->getName())),
+            ->reject(function (InputArgument $argument) { return $argument->getName() === 'command'; })
+            ->filter(function (InputArgument $argument) use ($input) {
+                if (! $argument->isRequired()) {
+                    return false;
+                }
+
+                switch (true) {
+                    case $argument->isArray(): return empty($input->getArgument($argument->getName()));
+                    default: return is_null($input->getArgument($argument->getName()));
+                }
             })
             ->each(function (InputArgument $argument) use ($input) {
-                $label = $this->promptForMissingArgumentsUsing()[$argument->getName()] ??
+                $prompts = $this->promptForMissingArgumentsUsing();
+                $argumentName = $argument->getName();
+
+                $label = isset($prompts[$argumentName]) ? $prompts[$argumentName] :
                     'What is '.lcfirst($argument->getDescription() ?: ('the '.$argument->getName())).'?';
 
                 if ($label instanceof Closure) {
@@ -57,9 +66,13 @@ trait PromptsForMissingInput
                 }
 
                 $answer = text(
-                    label: $label,
-                    placeholder: $placeholder ?? '',
-                    validate: fn ($value) => empty($value) ? "The {$argument->getName()} is required." : null,
+                    /*label: */$label,
+                    /*placeholder: */isset($placeholder) ? $placeholder : '',
+                    /*$default = */'',
+                    /*$required = */false,
+                    /*validate: */function ($value) use ($argument) {
+                        return empty($value) ? "The {$argument->getName()} is required." : null;
+                    }
                 );
 
                 $input->setArgument($argument->getName(), $argument->isArray() ? [$answer] : $answer);

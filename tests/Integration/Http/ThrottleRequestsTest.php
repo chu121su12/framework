@@ -24,6 +24,16 @@ use Throwable;
 #[WithMigration]
 class ThrottleRequestsTest extends TestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'config' => [
+                ['hashing.driver', 'bcrypt'],
+            ],
+            'migration' => true,
+        ];
+    }
+
     use RefreshDatabase;
 
     public function testLockOpensImmediatelyAfterDecay()
@@ -260,7 +270,7 @@ class ThrottleRequestsTest extends TestCase
         $this->expectException(MissingRateLimiterException::class);
         $this->expectExceptionMessage('Rate limiter [test] is not defined.');
 
-        Route::get('/', fn () => 'ok')->middleware(ThrottleRequests::using('test'));
+        Route::get('/', function () { return 'ok'; })->middleware(ThrottleRequests::using('test'));
 
         $this->withoutExceptionHandling()->get('/');
     }
@@ -270,7 +280,7 @@ class ThrottleRequestsTest extends TestCase
         $this->expectException(MissingRateLimiterException::class);
         $this->expectExceptionMessage('Rate limiter ['.User::class.'::rateLimiting] is not defined.');
 
-        Route::get('/', fn () => 'ok')->middleware(['auth', ThrottleRequests::using('rateLimiting')]);
+        Route::get('/', function () { return 'ok'; })->middleware(['auth', ThrottleRequests::using('rateLimiting')]);
 
         // The reason we're enabling strict mode and actually creating a user is to ensure we never even try to access
         // a property within the user model that does not exist. If an application is in strict mode and there is
@@ -295,7 +305,7 @@ class ThrottleRequestsTest extends TestCase
 
         // The `rateLimiting` named limiter does not exist, but the `rateLimiting` property on the
         // User model does, so it should fallback to that property within the authenticated model.
-        Route::get('/', fn () => 'yes')->middleware(['auth', ThrottleRequests::using('rateLimiting')]);
+        Route::get('/', function () { return 'yes'; })->middleware(['auth', ThrottleRequests::using('rateLimiting')]);
 
         $response = $this->withoutExceptionHandling()->actingAs($user)->get('/');
         $this->assertSame('yes', $response->getContent());
@@ -306,7 +316,12 @@ class ThrottleRequestsTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()->actingAs($user)->get('/');
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             $this->assertInstanceOf(ThrottleRequestsException::class, $e);
             $this->assertEquals(429, $e->getStatusCode());
             $this->assertEquals(1, $e->getHeaders()['X-RateLimit-Limit']);
@@ -324,7 +339,7 @@ class ThrottleRequestsTest extends TestCase
 
         // The `rateLimiting` named limiter does not exist, but the `rateLimiting` accessor (not property!)
         // on the User model does, so it should fallback to that accessor within the authenticated model.
-        Route::get('/', fn () => 'yes')->middleware(['auth', ThrottleRequests::using('rateLimiting')]);
+        Route::get('/', function () { return 'yes'; })->middleware(['auth', ThrottleRequests::using('rateLimiting')]);
 
         $response = $this->withoutExceptionHandling()->actingAs($user)->get('/');
         $this->assertSame('yes', $response->getContent());
@@ -335,7 +350,12 @@ class ThrottleRequestsTest extends TestCase
 
         try {
             $this->withoutExceptionHandling()->actingAs($user)->get('/');
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             $this->assertInstanceOf(ThrottleRequestsException::class, $e);
             $this->assertEquals(429, $e->getStatusCode());
             $this->assertEquals(1, $e->getHeaders()['X-RateLimit-Limit']);
@@ -348,7 +368,7 @@ class ThrottleRequestsTest extends TestCase
 
 class UserWithAcessor extends User
 {
-    public function getRateLimitingAttribute(): int
+    public function getRateLimitingAttribute()/*: int*/
     {
         return 1;
     }

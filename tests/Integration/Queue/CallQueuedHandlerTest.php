@@ -108,6 +108,9 @@ class CallQueuedHandlerTest extends TestCase
         ]);
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testJobIsDeletedIfHasDeleteProperty()
     {
         Event::fake();
@@ -129,6 +132,9 @@ class CallQueuedHandlerTest extends TestCase
         Event::assertNotDispatched(JobFailed::class);
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testJobIsDeletedIfHasDeleteAttribute()
     {
         Event::fake();

@@ -305,7 +305,7 @@ class NotificationFake implements Fake, NotificationDispatcher, NotificationFact
      * @param  array|null  $channels
      * @return void
      */
-    public function sendNow($notifiables, $notification, ?array $channels = null)
+    public function sendNow($notifiables, $notification, /*?*/array $channels = null)
     {
         if (! $notifiables instanceof Collection && ! is_array($notifiables)) {
             $notifiables = [$notifiables];
@@ -384,8 +384,10 @@ class NotificationFake implements Fake, NotificationDispatcher, NotificationFact
      * @param  bool  $serializeAndRestore
      * @return $this
      */
-    public function serializeAndRestore(bool $serializeAndRestore = true)
+    public function serializeAndRestore(/*bool */$serializeAndRestore = true)
     {
+        $serializeAndRestore = backport_type_check('bool', $serializeAndRestore);
+
         $this->serializeAndRestore = $serializeAndRestore;
 
         return $this;
@@ -399,7 +401,7 @@ class NotificationFake implements Fake, NotificationDispatcher, NotificationFact
      */
     protected function serializeAndRestoreNotification($notification)
     {
-        return unserialize(serialize($notification));
+        return backport_unserialize(backport_serialize($notification));
     }
 
     /**

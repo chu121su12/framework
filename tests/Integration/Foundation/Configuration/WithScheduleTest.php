@@ -9,15 +9,15 @@ use Orchestra\Testbench\TestCase;
 
 class WithScheduleTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
         Carbon::setTestNow('2023-01-01');
-        ScheduleListCommand::resolveTerminalWidthUsing(fn () => 80);
+        ScheduleListCommand::resolveTerminalWidthUsing(function () { return 80; });
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         ScheduleListCommand::resolveTerminalWidthUsing(null);
 

@@ -300,11 +300,11 @@ if (! function_exists('context')) {
      */
     function context($key, $default = null)
     {
-        return match (true) {
-            is_null($key) => app(ContextRepository::class),
-            is_array($key) => app(ContextRepository::class)->add($key),
-            default => app(ContextRepository::class)->get($key, $default),
-        };
+        switch (true) {
+            case is_null($key): return app(ContextRepository::class);
+            case is_array($key): return app(ContextRepository::class)->add($key);
+            default: return app(ContextRepository::class)->get($key, $default);
+        }
     }
 }
 

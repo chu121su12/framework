@@ -485,8 +485,12 @@ abstract class ServiceProvider
      * @param  string  $path
      * @return bool
      */
-    public static function addProviderToBootstrapFile(string $provider, ?string $path = null)
+    public static function addProviderToBootstrapFile(/*string */$provider, /*?string */$path = null)
     {
+        $provider = backport_type_check('string', $provider);
+
+        $path = backport_type_check('?string', $path);
+
         if (! isset($path)) {
             $path = app()->getBootstrapProvidersPath();
         }

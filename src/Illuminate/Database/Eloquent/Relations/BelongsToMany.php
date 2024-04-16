@@ -772,7 +772,7 @@ class BelongsToMany extends Relation
      * @param  \Closure|null  $callback
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|mixed
      */
-    public function findOr($id, $columns = ['*'], ?Closure $callback = null)
+    public function findOr($id, $columns = ['*'], /*?*/Closure $callback = null)
     {
         if ($columns instanceof Closure) {
             $callback = $columns;
@@ -846,7 +846,7 @@ class BelongsToMany extends Relation
      * @param  \Closure|null  $callback
      * @return \Illuminate\Database\Eloquent\Model|static|mixed
      */
-    public function firstOr($columns = ['*'], ?Closure $callback = null)
+    public function firstOr($columns = ['*'], /*?*/Closure $callback = null)
     {
         if ($columns instanceof Closure) {
             $callback = $columns;
@@ -1030,7 +1030,7 @@ class BelongsToMany extends Relation
      */
     public function chunkByIdDesc($count, callable $callback, $column = null, $alias = null)
     {
-        return $this->orderedChunkById($count, $callback, $column, $alias, descending: true);
+        return $this->orderedChunkById($count, $callback, $column, $alias, /*descending: */true);
     }
 
     /**
@@ -1065,9 +1065,11 @@ class BelongsToMany extends Relation
      */
     public function orderedChunkById($count, callable $callback, $column = null, $alias = null, $descending = false)
     {
-        $column ??= $this->getRelated()->qualifyColumn(
-            $this->getRelatedKeyName()
-        );
+        if (! isset($column)) {
+            $column = $this->getRelated()->qualifyColumn(
+                $this->getRelatedKeyName()
+            );
+        }
 
         $alias = isset($alias) ? $alias : $this->getRelatedKeyName();
 
@@ -1144,11 +1146,15 @@ class BelongsToMany extends Relation
      */
     public function lazyByIdDesc($chunkSize = 1000, $column = null, $alias = null)
     {
-        $column ??= $this->getRelated()->qualifyColumn(
-            $this->getRelatedKeyName()
-        );
+        if (! isset($column)) {
+            $column = $this->getRelated()->qualifyColumn(
+                $this->getRelatedKeyName()
+            );
+        }
 
-        $alias ??= $this->getRelatedKeyName();
+        if (! isset($alias)) {
+            $alias = $this->getRelatedKeyName();
+        }
 
         return $this->prepareQueryBuilder()->lazyByIdDesc($chunkSize, $column, $alias)->map(function ($model) {
             $this->hydratePivotRelation([$model]);
