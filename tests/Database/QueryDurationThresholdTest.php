@@ -17,7 +17,7 @@ class QueryDurationThresholdTest extends TestCase
      */
     protected $now;
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         Carbon::setTestNow(null);
 

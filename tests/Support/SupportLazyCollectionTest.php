@@ -14,6 +14,8 @@ use PHPUnit\Framework\TestCase;
 
 class SupportLazyCollectionTest extends TestCase
 {
+    use \PHPUnit\Framework\PhpUnit8Assert;
+
     public function testCanCreateEmptyCollection()
     {
         $this->assertSame([], LazyCollection::make()->all());
@@ -242,11 +244,11 @@ class SupportLazyCollectionTest extends TestCase
 
         Sleep::assertSlept(function (Duration $duration) {
             $this->assertEqualsWithDelta(
-                2_000_000, $duration->totalMicroseconds, 1_000
+                2000000, $duration->totalMicroseconds, 1000
             );
 
             return true;
-        }, times: 3);
+        }, /*times: */3);
 
         $this->assertSame([1, 2, 3], $data);
 
@@ -268,15 +270,17 @@ class SupportLazyCollectionTest extends TestCase
             })
             ->all();
 
-        Sleep::assertSlept(function (Duration $duration, int $index) {
-            $expectation = $index == 1 ? 2_000_000 : 3_000_000;
+        Sleep::assertSlept(function (Duration $duration, /*int */$index) {
+            $index = backport_type_check('int', $index);
+
+            $expectation = $index == 1 ? 2000000 : 3000000;
 
             $this->assertEqualsWithDelta(
-                $expectation, $duration->totalMicroseconds, 1_000
+                $expectation, $duration->totalMicroseconds, 1000
             );
 
             return true;
-        }, times: 3);
+        }, /*times: */3);
 
         $this->assertSame([1, 2, 3], $data);
 

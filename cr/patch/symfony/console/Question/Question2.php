@@ -11,9 +11,26 @@
 
 namespace Symfony\Component\Console\Question;
 
+use InvalidArgumentException;
+use LogicException;
+
 class Question2 extends Question
 {
-	private $autocompleterCallback;	
+	private $autocompleterCallback;
+
+    private $multiline = false;
+
+    public function isMultiline()
+    {
+        return $this->multiline;
+    }
+
+    public function setMultiline($multiline)
+    {
+        $this->multiline = $multiline;
+
+        return $this;
+    }
 
     public function setHidden($hidden)
     {

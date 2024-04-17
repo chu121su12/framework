@@ -911,7 +911,7 @@ class Builder implements BuilderContract
             $model = $this->newModelInstance()->newFromBuilder($record);
 
             return $this->applyAfterQueryCallbacks($this->newModelInstance()->newCollection([$model]))->first();
-        })->reject(fn ($model) => is_null($model));
+        })->reject(function ($model) { return is_null($model); });
     }
 
     /**

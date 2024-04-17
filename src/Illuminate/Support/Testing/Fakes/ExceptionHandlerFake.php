@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\Concerns\WithoutExceptionHandlingHandler;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\ReflectsClosures;
 use Illuminate\Testing\Assert;
-use PHPUnit\Framework\Assert as PHPUnit;
+use Illuminate\Testing\Assert as PHPUnit;
 use PHPUnit\Framework\ExpectationFailedException;
 use Throwable;
 
@@ -33,6 +33,9 @@ class ExceptionHandlerFake implements ExceptionHandler, Fake
      */
     protected $throwOnReport = false;
 
+    protected /*ExceptionHandler */$handler;
+    protected /*array */$exceptions;
+
     /**
      * Create a new exception handler fake.
      *
@@ -41,9 +44,13 @@ class ExceptionHandlerFake implements ExceptionHandler, Fake
      * @return void
      */
     public function __construct(
-        protected ExceptionHandler $handler,
-        protected array $exceptions = [],
+        /*protected */ExceptionHandler $handler,
+        /*protected */array $exceptions = []
     ) {
+        $this->handler = $handler;
+
+        $this->exceptions = $exceptions;
+
         //
     }
 
@@ -63,8 +70,10 @@ class ExceptionHandlerFake implements ExceptionHandler, Fake
      * @param  \Closure|string  $exception
      * @return void
      */
-    public function assertReported(Closure|string $exception)
+    public function assertReported(/*Closure|string */$exception)
     {
+        $exception = backport_type_check('Closure|string', $exception);
+
         $message = sprintf(
             'The expected [%s] exception was not reported.',
             is_string($exception) ? $exception : $this->firstClosureParameterType($exception)
@@ -73,7 +82,7 @@ class ExceptionHandlerFake implements ExceptionHandler, Fake
         if (is_string($exception)) {
             Assert::assertTrue(
                 in_array($exception, array_map('get_class', $this->reported), true),
-                $message,
+                $message
             );
 
             return;
@@ -81,9 +90,13 @@ class ExceptionHandlerFake implements ExceptionHandler, Fake
 
         Assert::assertTrue(
             collect($this->reported)->contains(
-                fn (Throwable $e) => $this->firstClosureParameterType($exception) === get_class($e)
-                    && $exception($e) === true,
-            ), $message,
+                function (/*Throwable */$e) use ($exception) {
+                    backport_type_throwable($e);
+
+                    return $this->firstClosureParameterType($exception) === get_class($e)
+                        && $exception($e) === true;
+                }
+            ), $message
         );
     }
 
@@ -93,8 +106,10 @@ class ExceptionHandlerFake implements ExceptionHandler, Fake
      * @param  int  $count
      * @return void
      */
-    public function assertReportedCount(int $count)
+    public function assertReportedCount(/*int */$count)
     {
+        $count = backport_type_check('int', $count);
+
         $total = collect($this->reported)->count();
 
         PHPUnit::assertSame(
@@ -109,8 +124,10 @@ class ExceptionHandlerFake implements ExceptionHandler, Fake
      * @param  \Closure|string  $exception
      * @return void
      */
-    public function assertNotReported(Closure|string $exception)
+    public function assertNotReported(/*Closure|string */$exception)
     {
+        $exception = backport_type_check('Closure|string', $exception);
+
         try {
             $this->assertReported($exception);
         } catch (ExpectationFailedException $e) {
@@ -134,8 +151,8 @@ class ExceptionHandlerFake implements ExceptionHandler, Fake
             $this->reported,
             sprintf(
                 'The following exceptions were reported: %s.',
-                implode(', ', array_map('get_class', $this->reported)),
-            ),
+                implode(', ', array_map('get_class', $this->reported))
+            )
         );
     }
 
@@ -170,8 +187,10 @@ class ExceptionHandlerFake implements ExceptionHandler, Fake
      * @param  \Throwable  $e
      * @return bool
      */
-    protected function isFakedException(Throwable $e)
+    protected function isFakedException(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return count($this->exceptions) === 0 || in_array(get_class($e), $this->exceptions, true);
     }
 
@@ -215,8 +234,10 @@ class ExceptionHandlerFake implements ExceptionHandler, Fake
      * @param  \Throwable  $e
      * @return void
      */
-    public function renderForConsole($output, Throwable $e)
+    public function renderForConsole($output, /*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         $this->handler->renderForConsole($output, $e);
     }
 
@@ -268,8 +289,10 @@ class ExceptionHandlerFake implements ExceptionHandler, Fake
      * @param  array<string, mixed>  $parameters
      * @return mixed
      */
-    public function __call(string $method, array $parameters)
+    public function __call(/*string */$method, array $parameters)
     {
+        $method = backport_type_check('string', $method);
+
         return $this->forwardCallTo($this->handler, $method, $parameters);
     }
 }

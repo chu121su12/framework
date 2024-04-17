@@ -4,6 +4,14 @@ namespace Illuminate\Console\View\Components;
 
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
+class Choice_getChoiceQuestion_class extends ChoiceQuestion
+        {
+            protected function isAssoc(/*array */$array)/*: bool*/
+            {
+                return ! array_is_list($array);
+            }
+        }
+
 class Choice extends Component
 {
     /**
@@ -19,7 +27,7 @@ class Choice extends Component
     public function render($question, $choices, $default = null, $attempts = null, $multiple = false)
     {
         return $this->usingQuestionHelper(
-            fn () => $this->output->askQuestion(
+            function () use ($question, $choices, $default, $attempts, $multiple) { return $this->output->askQuestion(
                 $this->getChoiceQuestion($question, $choices, $default)
                     ->setMaxAttempts($attempts)
                     ->setMultiselect($multiple)
@@ -37,12 +45,6 @@ class Choice extends Component
      */
     protected function getChoiceQuestion($question, $choices, $default)
     {
-        return new class($question, $choices, $default) extends ChoiceQuestion
-        {
-            protected function isAssoc(array $array): bool
-            {
-                return ! array_is_list($array);
-            }
-        };
+        return new Choice_getChoiceQuestion_class($question, $choices, $default);
     }
 }

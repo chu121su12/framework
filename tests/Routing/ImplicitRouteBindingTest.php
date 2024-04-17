@@ -38,6 +38,9 @@ class ImplicitRouteBindingTest extends TestCase
         $this->assertSame('fruits', $route->parameter('category')->value);
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function test_it_can_resolve_the_implicit_int_backed_enum_route_bindings_for_the_given_route()
     {
         $action = ['uses' => function (CategoryIntBackedEnum $category) {
@@ -56,6 +59,9 @@ class ImplicitRouteBindingTest extends TestCase
         $this->assertSame(1, $route->parameter('category')->value);
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function test_it_can_resolve_the_implicit_backed_enum_route_bindings_for_the_given_route_with_optional_parameter()
     {
         $action = ['uses' => function (/*?*/CategoryBackedEnum $category = null) {
@@ -122,6 +128,9 @@ class ImplicitRouteBindingTest extends TestCase
         ImplicitRouteBinding::resolveForRoute($container, $route);
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function test_implicit_int_backed_enum_internal_exception()
     {
         $action = ['uses' => function (CategoryIntBackedEnum $category) {
@@ -139,7 +148,7 @@ class ImplicitRouteBindingTest extends TestCase
         $this->expectExceptionMessage(sprintf(
             'Case [%s] not found on Backed Enum [%s].',
             ' 00001.',
-            CategoryIntBackedEnum::class,
+            CategoryIntBackedEnum::class
         ));
 
         ImplicitRouteBinding::resolveForRoute($container, $route);

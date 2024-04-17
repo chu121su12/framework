@@ -27,8 +27,8 @@ class ExceptionsFacadeTest extends TestCase
         report(new RuntimeException('test 2'));
 
         Exceptions::assertReported(RuntimeException::class);
-        Exceptions::assertReported(fn (RuntimeException $e) => $e->getMessage() === 'test 1');
-        Exceptions::assertReported(fn (RuntimeException $e) => $e->getMessage() === 'test 2');
+        Exceptions::assertReported(function (RuntimeException $e) { return $e->getMessage() === 'test 1'; });
+        Exceptions::assertReported(function (RuntimeException $e) { return $e->getMessage() === 'test 2'; });
         Exceptions::assertReportedCount(2);
     }
 
@@ -66,8 +66,8 @@ class ExceptionsFacadeTest extends TestCase
         report(new InvalidArgumentException('test 3'));
 
         Exceptions::assertReported(RuntimeException::class);
-        Exceptions::assertReported(fn (RuntimeException $e) => $e->getMessage() === 'test 1');
-        Exceptions::assertReported(fn (RuntimeException $e) => $e->getMessage() === 'test 2');
+        Exceptions::assertReported(function (RuntimeException $e) { return $e->getMessage() === 'test 1'; });
+        Exceptions::assertReported(function (RuntimeException $e) { return $e->getMessage() === 'test 2'; });
 
         Exceptions::assertNotReported(InvalidArgumentException::class);
         Exceptions::assertReportedCount(2);
@@ -96,7 +96,7 @@ class ExceptionsFacadeTest extends TestCase
         Exceptions::report(new RuntimeException('test 1'));
 
         Exceptions::assertReportedCount(1);
-        Exceptions::assertReported(fn (InvalidArgumentException $e) => $e->getMessage() === 'test 2');
+        Exceptions::assertReported(function (InvalidArgumentException $e) { return $e->getMessage() === 'test 2'; });
     }
 
     public function testFakeAssertReportedWithFakedExceptionsMayFail()
@@ -121,10 +121,10 @@ class ExceptionsFacadeTest extends TestCase
         report(new RuntimeException('test 2'));
 
         Exceptions::assertNotReported(InvalidArgumentException::class);
-        Exceptions::assertNotReported(fn (InvalidArgumentException $e) => $e->getMessage() === 'test 1');
-        Exceptions::assertNotReported(fn (InvalidArgumentException $e) => $e->getMessage() === 'test 2');
-        Exceptions::assertNotReported(fn (InvalidArgumentException $e) => $e->getMessage() === 'test 3');
-        Exceptions::assertNotReported(fn (InvalidArgumentException $e) => $e->getMessage() === 'test 4');
+        Exceptions::assertNotReported(function (InvalidArgumentException $e) { return $e->getMessage() === 'test 1'; });
+        Exceptions::assertNotReported(function (InvalidArgumentException $e) { return $e->getMessage() === 'test 2'; });
+        Exceptions::assertNotReported(function (InvalidArgumentException $e) { return $e->getMessage() === 'test 3'; });
+        Exceptions::assertNotReported(function (InvalidArgumentException $e) { return $e->getMessage() === 'test 4'; });
 
         Exceptions::assertReportedCount(2);
     }
@@ -162,7 +162,7 @@ class ExceptionsFacadeTest extends TestCase
 
         Exceptions::report(new RuntimeException('test 1'));
 
-        Exceptions::assertNotReported(fn (RuntimeException $e) => $e->getMessage() === 'test 1');
+        Exceptions::assertNotReported(function (RuntimeException $e) { return $e->getMessage() === 'test 1'; });
     }
 
     public function testResolvesExceptionHandler()
@@ -314,7 +314,7 @@ class ExceptionsFacadeTest extends TestCase
             ->withoutExceptionHandling();
 
         Route::get('/', function () {
-            rescue(fn () => throw new Exception('Test exception'));
+            rescue(function () { throw new Exception('Test exception'); });
         });
 
         $this->expectException(Exception::class);
@@ -333,7 +333,7 @@ class ExceptionsFacadeTest extends TestCase
             ->withExceptionHandling();
 
         Route::get('/', function () {
-            rescue(fn () => throw new Exception('Test exception'));
+            rescue(function () { throw new Exception('Test exception'); });
         });
 
         $this->expectException(Exception::class);
@@ -368,9 +368,15 @@ class ExceptionsFacadeTest extends TestCase
 
     public function testThrowOnReporEvenWhenAppReportablesReturnFalse()
     {
-        app(ExceptionHandler::class)->reportable(function (Throwable $e) {
-            return false;
-        });
+        if (interface_exists('Throwable')) {
+            app(ExceptionHandler::class)->reportable(function (Throwable $e) {
+                return false;
+            });
+        } else {
+            app(ExceptionHandler::class)->reportable(function (\Exception $e) {
+                return false;
+            });
+        }
 
         Exceptions::fake()->throwOnReport();
 
@@ -382,9 +388,15 @@ class ExceptionsFacadeTest extends TestCase
 
     public function testAppReportablesAreNotCalledIfExceptionIsNotFaked()
     {
-        app(ExceptionHandler::class)->reportable(function (Throwable $e) {
-            throw new InvalidArgumentException($e->getMessage());
-        });
+        if (interface_exists('Throwable')) {
+            app(ExceptionHandler::class)->reportable(function (Throwable $e) {
+                throw new InvalidArgumentException($e->getMessage());
+            });
+        } else {
+            app(ExceptionHandler::class)->reportable(function (\Exception $e) {
+                throw new InvalidArgumentException($e->getMessage());
+            });
+        }
 
         Exceptions::fake([RuntimeException::class, Exception::class]);
 
@@ -395,9 +407,16 @@ class ExceptionsFacadeTest extends TestCase
 
     public function testThrowOnReportLeaveAppReportablesUntouched()
     {
-        app(ExceptionHandler::class)->reportable(function (Throwable $e) {
-            throw new InvalidArgumentException($e->getMessage());
-        });
+        if (interface_exists('Throwable')) {
+            app(ExceptionHandler::class)->reportable(function (Throwable $e) {
+                throw new InvalidArgumentException($e->getMessage());
+            });
+        } else {
+            app(ExceptionHandler::class)->reportable(function (\Exception $e) {
+                throw new InvalidArgumentException($e->getMessage());
+            });
+        }
+
 
         Exceptions::fake([RuntimeException::class])->throwOnReport();
 
@@ -475,18 +494,18 @@ class ExceptionsFacadeTest extends TestCase
         $this->withoutExceptionHandling();
 
         Route::get('/validation', function () {
-            rescue(fn () => Validator::validate(['name' => ''], ['name' => 'required']));
+            rescue(function () { Validator::validate(['name' => ''], ['name' => 'required']); });
         });
 
         $this->get('/validation')->assertStatus(200);
 
         Route::get('/model', function () {
-            rescue(fn () => throw new ModelNotFoundException());
+            rescue(function () { throw new ModelNotFoundException(); });
         });
 
         $this->get('/model')->assertStatus(200);
 
-        rescue(fn () => throw new ModelNotFoundException());
+        rescue(function () { throw new ModelNotFoundException(); });
 
         Exceptions::assertReportedCount(3);
     }
@@ -495,7 +514,7 @@ class ExceptionsFacadeTest extends TestCase
     {
         Exceptions::fake();
 
-        rescue(fn () => throw new Exception('Test exception'));
+        rescue(function () { throw new Exception('Test exception'); });
 
         Exceptions::assertReported(Exception::class);
     }
@@ -504,9 +523,23 @@ class ExceptionsFacadeTest extends TestCase
     {
         Exceptions::fake();
 
-        rescue(fn () => throw new Exception('Test exception'), null, false);
+        rescue(function () { throw new Exception('Test exception'); }, null, false);
 
         Exceptions::assertNothingReported();
+    }
+
+    protected function assertFakedExceptionHandlerAnonymous($isFalse)
+    {
+        if (\version_compare(\PHP_VERSION, '7.0', '>=')) {
+            if ($isFalse) {
+                $this->assertFalse((new \ReflectionClass(Exceptions::fake()->handler()))->isAnonymous());
+            }
+            else {
+                $this->assertTrue((new \ReflectionClass(Exceptions::fake()->handler()))->isAnonymous());
+            }
+        }
+
+        // none
     }
 
     public function testFlowBetweenFakeAndTestExceptionHandling()
@@ -516,48 +549,48 @@ class ExceptionsFacadeTest extends TestCase
         Exceptions::fake();
         $this->assertInstanceOf(ExceptionHandlerFake::class, app(ExceptionHandler::class));
         $this->assertInstanceOf(Handler::class, Exceptions::fake()->handler());
-        $this->assertFalse((new \ReflectionClass(Exceptions::fake()->handler()))->isAnonymous());
+        $this->assertFakedExceptionHandlerAnonymous(false);
 
         Exceptions::fake();
         $this->assertInstanceOf(ExceptionHandlerFake::class, app(ExceptionHandler::class));
         $this->assertInstanceOf(Handler::class, Exceptions::fake()->handler());
-        $this->assertFalse((new \ReflectionClass(Exceptions::fake()->handler()))->isAnonymous());
+        $this->assertFakedExceptionHandlerAnonymous(false);
 
         $this->withoutExceptionHandling();
         $this->assertInstanceOf(ExceptionHandlerFake::class, app(ExceptionHandler::class));
         $this->assertInstanceOf(ExceptionHandler::class, Exceptions::fake()->handler());
-        $this->assertTrue((new \ReflectionClass(Exceptions::fake()->handler()))->isAnonymous());
+        $this->assertFakedExceptionHandlerAnonymous(true);
 
         $this->withExceptionHandling();
         $this->assertInstanceOf(ExceptionHandlerFake::class, app(ExceptionHandler::class));
         $this->assertInstanceOf(ExceptionHandler::class, Exceptions::fake()->handler());
-        $this->assertFalse((new \ReflectionClass(Exceptions::fake()->handler()))->isAnonymous());
+        $this->assertFakedExceptionHandlerAnonymous(false);
 
         Exceptions::fake();
         $this->assertInstanceOf(ExceptionHandlerFake::class, app(ExceptionHandler::class));
         $this->assertInstanceOf(Handler::class, Exceptions::fake()->handler());
-        $this->assertFalse((new \ReflectionClass(Exceptions::fake()->handler()))->isAnonymous());
+        $this->assertFakedExceptionHandlerAnonymous(false);
     }
 
     public function testFlowBetweenTestExceptionHandlingAndFake()
     {
         $this->withoutExceptionHandling();
-        $this->assertTrue((new \ReflectionClass(app(ExceptionHandler::class)))->isAnonymous());
+        $this->assertFakedExceptionHandlerAnonymous(true);
 
         Exceptions::fake();
         $this->assertInstanceOf(ExceptionHandlerFake::class, app(ExceptionHandler::class));
         $this->assertInstanceOf(ExceptionHandler::class, Exceptions::fake()->handler());
-        $this->assertTrue((new \ReflectionClass(Exceptions::fake()->handler()))->isAnonymous());
+        $this->assertFakedExceptionHandlerAnonymous(true);
 
         Exceptions::fake();
         $this->assertInstanceOf(ExceptionHandlerFake::class, app(ExceptionHandler::class));
         $this->assertInstanceOf(ExceptionHandler::class, Exceptions::fake()->handler());
-        $this->assertTrue((new \ReflectionClass(Exceptions::fake()->handler()))->isAnonymous());
+        $this->assertFakedExceptionHandlerAnonymous(true);
 
         $this->withExceptionHandling();
         $this->assertInstanceOf(ExceptionHandlerFake::class, app(ExceptionHandler::class));
         $this->assertInstanceOf(Handler::class, Exceptions::fake()->handler());
-        $this->assertFalse((new \ReflectionClass(Exceptions::fake()->handler()))->isAnonymous());
+        $this->assertFakedExceptionHandlerAnonymous(false);
     }
 
     public function testWithDeprecationHandling()
@@ -579,9 +612,15 @@ class ExceptionsFacadeTest extends TestCase
 
         $this->withoutDeprecationHandling();
 
-        Route::get('/', function () {
-            str_contains(null, null);
-        });
+        if (interface_exists('Throwable')) {
+            Route::get('/', function () {
+                str_contains(null, null);
+            });
+        } else {
+            Route::get('/', function () {
+                throw new \ErrorException('str_contains(): Passing null to parameter #1 ($haystack) of type string is deprecated');
+            });
+        }
 
         $this->get('/')->assertStatus(500);
 

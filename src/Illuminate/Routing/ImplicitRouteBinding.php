@@ -91,9 +91,12 @@ class ImplicitRouteBinding
 
             $reflectionEnum = new ReflectionEnum($backedEnumClass);
 
-            match ($reflectionEnum->getBackingType()->getName()) {
-                'int' => $backedEnum = collect($backedEnumClass::cases())->first(fn ($case) => (string) $case->value === (string) $parameterValue),
-                'string' => $backedEnum = $backedEnumClass::tryFrom((string) $parameterValue),
+            switch ($reflectionEnum->getBackingType()->getName()) {
+                case 'int': $backedEnum = collect($backedEnumClass::cases())->first(function ($case) use ($parameterValue) { return (string) $case->value === (string) $parameterValue; }); break;
+                case 'string': $backedEnum = $backedEnumClass::tryFrom((string) $parameterValue); break;
+                default: throw \class_exists('UnhandledMatchError')
+                    ? new \UnhandledMatchError
+                    : new \Exception;
             };
 
             if (is_null($backedEnum)) {

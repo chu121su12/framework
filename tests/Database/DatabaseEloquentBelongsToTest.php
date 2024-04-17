@@ -46,6 +46,25 @@ class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_class_
             }
         }
 
+if (version_compare(PHP_VERSION, '8.1', '>=')) {
+class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_class_4 extends Model
+        {
+            protected $casts = [
+                'id' => Bar::class,
+            ];
+
+            protected $attributes = ['id' => 5];
+        }
+}
+
+class DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_class_5
+        {
+            public function __toString()
+            {
+                return '3';
+            }
+        }
+
 class DatabaseEloquentBelongsToTest extends TestCase
 {
     protected $builder;
@@ -128,6 +147,9 @@ class DatabaseEloquentBelongsToTest extends TestCase
         $relation->addEagerConstraints($models);
     }
 
+    /**
+     * @requires PHP >= 8.1
+     */
     public function testIdsInEagerConstraintsCanBeBackedEnum()
     {
         $relation = $this->getRelation();
@@ -158,41 +180,48 @@ class DatabaseEloquentBelongsToTest extends TestCase
 
         $result3 = new DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_class_3;
 
-        $result4 = new class extends Model
-        {
-            protected $casts = [
-                'id' => Bar::class,
-            ];
-
-            protected $attributes = ['id' => 5];
-        };
+        // $result4 = new DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_class_4;
 
         $model1 = new EloquentBelongsToModelStub;
         $model1->foreign_key = 1;
         $model2 = new EloquentBelongsToModelStub;
         $model2->foreign_key = 2;
         $model3 = new EloquentBelongsToModelStub;
-        $model3->foreign_key = new class
-        {
-            public function __toString()
-            {
-                return '3';
-            }
-        };
-        $model4 = new EloquentBelongsToModelStub;
-        $model4->foreign_key = 5;
+        $model3->foreign_key = new DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_class_5;
+        // $model4 = new EloquentBelongsToModelStub;
+        // $model4->foreign_key = 5;
         $models = $relation->match(
-            [$model1, $model2, $model3, $model4],
-            new Collection([$result1, $result2, $result3, $result4]),
+            [$model1, $model2, $model3/*, $model4*/],
+            new Collection([$result1, $result2, $result3/*, $result4*/]),
             'foo'
         );
 
         $this->assertEquals(1, $models[0]->foo->getAttribute('id'));
         $this->assertEquals(2, $models[1]->foo->getAttribute('id'));
         $this->assertSame('3', (string) $models[2]->foo->getAttribute('id'));
-        $this->assertEquals(5, $models[3]->foo->getAttribute('id')->value);
+        // $this->assertEquals(5, $models[3]->foo->getAttribute('id')->value);
     }
 
+    /**
+     * @requires PHP >= 8.1
+     */
+    public function testModelsAreProperlyMatchedToParents_BackedEnum()
+    {
+        $relation = $this->getRelation();
+
+        $result4 = new DatabaseEloquentBelongsToTest_testModelsAreProperlyMatchedToParents_class_4;
+
+        $model4 = new EloquentBelongsToModelStub;
+        $model4->foreign_key = 5;
+        $models = $relation->match(
+            [$model4],
+            new Collection([$result4]),
+            'foo'
+        );
+
+        $this->assertEquals(5, $models[3]->foo->getAttribute('id')->value);
+    }
+ 
     public function testAssociateMethodSetsForeignKeyOnModel()
     {
         $parent = m::mock(Model::class);
@@ -459,6 +488,7 @@ class MissingEloquentBelongsToModelStub extends Model
     public $foreign_key;
 }
 
+if (version_compare(PHP_VERSION, '8.1', '>=')) {
 class EloquentBelongsToModelStubWithBackedEnumCast extends Model
 {
     protected $casts = [
@@ -468,4 +498,5 @@ class EloquentBelongsToModelStubWithBackedEnumCast extends Model
     public $attributes = [
         'foreign_key' => 5,
     ];
+}
 }

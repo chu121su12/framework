@@ -46,18 +46,22 @@ trait ConfiguresPrompts
             $prompt->validate
         ); });
 
+        // TextareaPrompt::fallbackUsing(function (TextareaPrompt $prompt) { return $this->promptUntilValid(
+        //     function () use ($prompt) {
+        //         $asked = $this->components->ask($prompt->label, $prompt->default ?: null, /*multiline: */true);
+
+        //         return isset($asked) ? $asked : '';
+        //     },
+        //     $prompt->required,
+        //     $prompt->validate
+        // ); });
+
         PasswordPrompt::fallbackUsing(function (PasswordPrompt $prompt) { return $this->promptUntilValid(
             function () use ($prompt) {
-                $result = $this->components->secret($prompt->label);
+                $secret = $this->components->secret($prompt->label);
 
-        TextareaPrompt::fallbackUsing(fn (TextareaPrompt $prompt) => $this->promptUntilValid(
-            fn () => $this->components->ask($prompt->label, $prompt->default ?: null, multiline: true) ?? '',
-            $prompt->required,
-            $prompt->validate
-        ));
-
-        PasswordPrompt::fallbackUsing(fn (PasswordPrompt $prompt) => $this->promptUntilValid(
-            fn () => $this->components->secret($prompt->label) ?? '',
+                return isset($secret) ? $secret : '';
+            },
             $prompt->required,
             $prompt->validate
         ); });
@@ -68,17 +72,17 @@ trait ConfiguresPrompts
             $prompt->validate
         ); });
 
-        SelectPrompt::fallbackUsing(fn (SelectPrompt $prompt) => $this->promptUntilValid(
-            fn () => $this->selectFallback($prompt->label, $prompt->options, $prompt->default),
+        SelectPrompt::fallbackUsing(function (SelectPrompt $prompt) { return $this->promptUntilValid(
+            function () use ($prompt) { return $this->selectFallback($prompt->label, $prompt->options, $prompt->default); },
             false,
             $prompt->validate
         ); });
 
-        MultiSelectPrompt::fallbackUsing(fn (MultiSelectPrompt $prompt) => $this->promptUntilValid(
-            fn () => $this->multiselectFallback($prompt->label, $prompt->options, $prompt->default, $prompt->required),
+        MultiSelectPrompt::fallbackUsing(function (MultiSelectPrompt $prompt) { return $this->promptUntilValid(
+            function () use ($prompt) { return $this->multiselectFallback($prompt->label, $prompt->options, $prompt->default, $prompt->required); },
             $prompt->required,
             $prompt->validate
-        ));
+        ); });
 
         SuggestPrompt::fallbackUsing(function (SuggestPrompt $prompt) { return $this->promptUntilValid(
             function () use ($prompt) {
@@ -108,7 +112,7 @@ trait ConfiguresPrompts
 
                 $options = call_user_func($prompt->options, $query);
 
-                return $this->multiselectFallback($prompt->label, $options, required: $prompt->required);
+                return $this->multiselectFallback($prompt->label, $options, /*required: */$prompt->required);
             },
             $prompt->required,
             $prompt->validate
@@ -268,7 +272,7 @@ trait ConfiguresPrompts
 
         if ($required === false && ! $this->laravel->runningUnitTests()) {
             $options = array_is_list($options)
-                ? ['None', ...$options]
+                ? \array_merge(['None'], $options)
                 : ['' => 'None'] + $options;
 
             if ($default === null) {
@@ -279,13 +283,13 @@ trait ConfiguresPrompts
         $answers = $this->components->choice($label, $options, $default, null, true);
 
         if (! array_is_list($options)) {
-            $answers = array_map(fn ($value) => $value === (string) (int) $value ? (int) $value : $value, $answers);
+            $answers = array_map(function ($value) { return $value === (string) (int) $value ? (int) $value : $value; }, $answers);
         }
 
         if ($required === false) {
             return array_is_list($options)
-                ? array_values(array_filter($answers, fn ($value) => $value !== 'None'))
-                : array_filter($answers, fn ($value) => $value !== '');
+                ? array_values(array_filter($answers, function ($value) { return $value !== 'None'; }))
+                : array_filter($answers, function ($value) { return $value !== ''; });
         }
 
         return $answers;

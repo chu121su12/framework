@@ -159,14 +159,14 @@ class Schedule
         if (! is_string($job)) {
             $jobName = method_exists($job, 'displayName')
                 ? $job->displayName()
-                : $job::class;
+                : \get_class($job);
         }
 
         return $this->call(function () use ($job, $queue, $connection) {
             $job = is_string($job) ? Container::getInstance()->make($job) : $job;
 
             if ($job instanceof ShouldQueue) {
-                $this->dispatchToQueue($job, $queue ?? $job->queue, $connection ?? $job->connection);
+                $this->dispatchToQueue($job, isset($queue) ? $queue : $job->queue, isset($connection) ? $connection : $job->connection);
             } else {
                 $this->dispatchNow($job);
             }

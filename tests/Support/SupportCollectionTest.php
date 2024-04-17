@@ -3213,7 +3213,10 @@ class SupportCollectionTest extends TestCase
         $this->assertSame('second', $data->get(1)->value);
     }
 
-    /** @dataProvider collectionClassProvider */
+    /**
+     * @requires PHP 8.1
+     * @dataProvider collectionClassProvider
+     */
     #[DataProvider('collectionClassProvider')]
     public function testMapIntoWithIntBackedEnums($collection)
     {
@@ -3227,6 +3230,10 @@ class SupportCollectionTest extends TestCase
         $this->assertSame(TestBackedEnum::B, $data->get(1));
     }
 
+    /**
+     * @requires PHP 8.1
+     * @dataProvider collectionClassProvider
+     */
     #[DataProvider('collectionClassProvider')]
     public function testMapIntoWithStringBackedEnums($collection)
     {
@@ -3240,6 +3247,7 @@ class SupportCollectionTest extends TestCase
         $this->assertSame(TestStringBackedEnum::B, $data->get(1));
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testNth($collection)
     {

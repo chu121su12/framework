@@ -3171,12 +3171,16 @@ class Builder implements BuilderContract
         }
 
         return (new LazyCollection(function () {
-            yield from $this->connection->cursor(
+            $cursorToYield = $this->connection->cursor(
                 $this->toSql(), $this->getBindings(), ! $this->useWritePdo
             );
+
+            foreach ($cursorToYield as $yieldKey => $yieldValue) {
+                yield $yieldKey => $yieldValue;
+            }
         }))->map(function ($item) {
             return $this->applyAfterQueryCallbacks(collect([$item]))->first();
-        })->reject(fn ($item) => is_null($item));
+        })->reject(function ($item) { return is_null($item); });
     }
 
     /**

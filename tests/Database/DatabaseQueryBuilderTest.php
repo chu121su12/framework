@@ -1062,6 +1062,28 @@ class DatabaseQueryBuilderTest extends TestCase
     {
         $builder = $this->getBuilder();
         $builder->select('*')->from('users')->whereIntegerInRaw('id', [
+            '1a', 2,
+        ]);
+        $this->assertSame('select * from "users" where "id" in (1, 2)', $builder->toSql());
+        $this->assertEquals([], $builder->getBindings());
+
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users')->whereIntegerInRaw('id', [
+            ['id' => '1a'],
+            ['id' => 2],
+            ['any' => '3'],
+        ]);
+        $this->assertSame('select * from "users" where "id" in (1, 2, 3)', $builder->toSql());
+        $this->assertEquals([], $builder->getBindings());
+    }
+
+    /**
+     * @requires PHP >= 8.1
+     */
+    public function testWhereIntegerInRaw_BackedEnum()
+    {
+        $builder = $this->getBuilder();
+        $builder->select('*')->from('users')->whereIntegerInRaw('id', [
             '1a', 2, Bar::FOO,
         ]);
         $this->assertSame('select * from "users" where "id" in (1, 2, 5)', $builder->toSql());

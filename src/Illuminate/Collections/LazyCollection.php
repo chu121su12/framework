@@ -1603,10 +1603,12 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
      *
      * @return static<TKey, TValue>
      */
-    public function throttle(float $seconds)
+    public function throttle(/*float */$seconds)
     {
+        $seconds = backport_type_check('float', $seconds);
+
         return new static(function () use ($seconds) {
-            $microseconds = $seconds * 1_000_000;
+            $microseconds = $seconds * 1000000;
 
             foreach ($this as $key => $value) {
                 $fetchedAt = $this->preciseNow();
@@ -1846,7 +1848,7 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
     {
         return class_exists(Carbon::class)
             ? Carbon::now()->getPreciseTimestamp()
-            : microtime(true) * 1_000_000;
+            : microtime(true) * 1000000;
     }
 
     /**
@@ -1854,8 +1856,10 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
      *
      * @return void
      */
-    protected function usleep(int $microseconds)
+    protected function usleep(/*int */$microseconds)
     {
+        $microseconds = backport_type_check('int', $microseconds);
+
         if ($microseconds <= 0) {
             return;
         }

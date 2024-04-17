@@ -45,8 +45,10 @@ class Exceptions extends Facade
      * @param  array<int, class-string<\Throwable>>|class-string<\Throwable>  $exceptions
      * @return \Illuminate\Support\Testing\Fakes\ExceptionHandlerFake
      */
-    public static function fake(array|string $exceptions = [])
+    public static function fake(/*array|string */$exceptions = [])
     {
+        $exceptions = backport_type_check('array|string', $exceptions);
+
         $exceptionHandler = static::isFake()
             ? static::getFacadeRoot()->handler()
             : static::getFacadeRoot();

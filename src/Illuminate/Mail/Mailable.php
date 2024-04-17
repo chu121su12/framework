@@ -839,7 +839,9 @@ class Mailable implements MailableContract, Renderable
             case 'cc': return (bool) $this->envelope()->hasCc($address, $name);
             case 'bcc': return (bool) $this->envelope()->hasBcc($address, $name);
             case 'replyTo': return (bool) $this->envelope()->hasReplyTo($address, $name);
-            default: throw new \Exception('MATCH not found');
+            default: throw \class_exists('UnhandledMatchError')
+                ? new \UnhandledMatchError
+                : new \Exception;;
         }
     }
 

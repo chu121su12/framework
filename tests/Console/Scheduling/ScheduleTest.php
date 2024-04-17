@@ -47,9 +47,9 @@ final class ScheduleTest extends TestCase
      * @dataProvider jobHonoursDisplayNameIfMethodExistsProvider
      */
     #[DataProvider('jobHonoursDisplayNameIfMethodExistsProvider')]
-    public function testJobHonoursDisplayNameIfMethodExists(object $job, string $jobName): void
+    public function testJobHonoursDisplayNameIfMethodExists(/*object */$job, /*string */$jobName)/*: void*/
     {
-        $job = backport_type_check('string|object', $job);
+        $job = backport_type_check('object', $job);
 
         $jobName = backport_type_check('string', $jobName);
 
@@ -69,7 +69,7 @@ final class ScheduleTest extends TestCase
         ];
     }
 
-    public function testJobIsNotInstantiatedIfSuppliedAsClassname(): void
+    public function testJobIsNotInstantiatedIfSuppliedAsClassname()/*: void*/
     {
         $schedule = new Schedule();
         $scheduledJob = $schedule->job(JobToTestWithSchedule::class);

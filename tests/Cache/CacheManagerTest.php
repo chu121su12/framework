@@ -294,7 +294,7 @@ class CacheManagerTest extends TestCase
         ];
 
         $app = $this->getApp($userConfig);
-        $app->bind(Dispatcher::class, fn () => new Event);
+        $app->bind(Dispatcher::class, function () { return new Event; });
 
         $cacheManager = new CacheManager($app);
 
