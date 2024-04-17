@@ -174,24 +174,18 @@ class Encrypter implements EncrypterContract, StringEncrypter
             $tag = empty($payload['tag']) ? null : base64_decode($payload['tag'])
         );
 
+        $foundValidMac = false;
+
         // Here we will decrypt the value. If we are able to successfully decrypt it
         // we will then unserialize it and return it out to the caller. If we are
         // unable to decrypt this value we will throw out an exception message.
         foreach ($this->getAllKeys() as $key) {
-            if (version_compare(PHP_VERSION, '7.1.0', '<')) {
-                try {
-                    $decrypted = \openssl_decrypt(
-                        $payload['value'], strtolower($this->cipher), $key, 0, $iv
-                    );
-                } catch (\Exception $e) {
-                    if ($e->getMessage() !== 'openssl_decrypt(): Failed to base64 decode the input') {
-                        throw $e;
-                    }
-
-                    throw new DecryptException('The payload is invalid.');
-                }
-
-            } else {
+            if (
+                $this->shouldValidateMac() &&
+                ! ($foundValidMac = $foundValidMac || $this->validMacForKey($payload, $key))
+            ) {
+                continue;
+            }
 
             $decrypted = \openssl_decrypt(
                 $payload['value'], strtolower($this->cipher), $key, 0, $iv, isset($tag) ? $tag : ''
@@ -204,7 +198,11 @@ class Encrypter implements EncrypterContract, StringEncrypter
             }
         }
 
-        if ($decrypted === false) {
+        if ($this->shouldValidateMac() && ! $foundValidMac) {
+            throw new DecryptException('The MAC is invalid.');
+        }
+
+        if (($decrypted ?? false) === false) {
             throw new DecryptException('Could not decrypt the data.');
         }
 
@@ -260,10 +258,6 @@ class Encrypter implements EncrypterContract, StringEncrypter
             throw new DecryptException('The payload is invalid.');
         }
 
-        if (! self::$supportedCiphers[strtolower($this->cipher)]['aead'] && ! $this->validMac($payload)) {
-            throw new DecryptException('The MAC is invalid.');
-        }
-
         return $payload;
     }
 
@@ -293,24 +287,28 @@ class Encrypter implements EncrypterContract, StringEncrypter
     }
 
     /**
-     * Determine if the MAC for the given payload is valid.
+     * Determine if the MAC for the given payload is valid for the primary key.
      *
      * @param  array  $payload
      * @return bool
      */
     protected function validMac(array $payload)
     {
-        foreach ($this->getAllKeys() as $key) {
-            $valid = hash_equals(
-                $this->hash($payload['iv'], $payload['value'], $key), $payload['mac']
-            );
+        return $this->validMacForKey($payload, $this->key);
+    }
 
-            if ($valid === true) {
-                return true;
-            }
-        }
-
-        return false;
+    /**
+     * Determine if the MAC is valid for the given payload and key.
+     *
+     * @param  array  $payload
+     * @param  string  $key
+     * @return bool
+     */
+    protected function validMacForKey($payload, $key)
+    {
+        return hash_equals(
+            $this->hash($payload['iv'], $payload['value'], $key), $payload['mac']
+        );
     }
 
     /**
@@ -328,6 +326,16 @@ class Encrypter implements EncrypterContract, StringEncrypter
         if (! self::$supportedCiphers[strtolower($this->cipher)]['aead'] && is_string($tag)) {
             throw new DecryptException('Unable to use tag because the cipher algorithm does not support AEAD.');
         }
+    }
+
+    /**
+     * Determine if we should validate the MAC while decrypting.
+     *
+     * @return bool
+     */
+    protected function shouldValidateMac()
+    {
+        return ! self::$supportedCiphers[strtolower($this->cipher)]['aead'];
     }
 
     /**

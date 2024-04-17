@@ -149,12 +149,12 @@ class Reflector
     }
 
     /**
-     * Determine if the parameter's type is a Backed Enum with a string backing type.
+     * Determine if the parameter's type is a Backed Enum with a string or int backing type.
      *
      * @param  \ReflectionParameter  $parameter
      * @return bool
      */
-    public static function isParameterBackedEnumWithStringBackingType($parameter)
+    public static function isParameterBackedEnumWithValidBackingType($parameter)
     {
         if (version_compare(PHP_VERSION, '7.0.0', '<')) {
             return false;
@@ -180,7 +180,7 @@ class Reflector
             $reflectionBackedEnum = new ReflectionEnum($backedEnumClass);
 
             return $reflectionBackedEnum->isBacked()
-                && $reflectionBackedEnum->getBackingType()->getName() == 'string';
+                && in_array($reflectionBackedEnum->getBackingType()->getName(), ['int', 'string']);
         }
 
         return false;

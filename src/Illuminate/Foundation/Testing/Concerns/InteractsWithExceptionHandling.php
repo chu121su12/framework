@@ -5,13 +5,79 @@ namespace Illuminate\Foundation\Testing\Concerns;
 use Closure;
 use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Support\Facades\Exceptions;
+use Illuminate\Support\Testing\Fakes\ExceptionHandlerFake;
 use Illuminate\Testing\Assert;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
-class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements ExceptionHandler 
+trait InteractsWithExceptionHandling
+{
+    /**
+     * The original exception handler.
+     *
+     * @var \Illuminate\Contracts\Debug\ExceptionHandler|null
+     */
+    protected $originalExceptionHandler;
+
+    /**
+     * Restore exception handling.
+     *
+     * @return $this
+     */
+    protected function withExceptionHandling()
+    {
+        if ($this->originalExceptionHandler) {
+            $currentExceptionHandler = app(ExceptionHandler::class);
+
+            $currentExceptionHandler instanceof ExceptionHandlerFake
+                ? $currentExceptionHandler->setHandler($this->originalExceptionHandler)
+                : $this->app->instance(ExceptionHandler::class, $this->originalExceptionHandler);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Only handle the given exceptions via the exception handler.
+     *
+     * @param  array  $exceptions
+     * @return $this
+     */
+    protected function handleExceptions(array $exceptions)
+    {
+        return $this->withoutExceptionHandling($exceptions);
+    }
+
+    /**
+     * Only handle validation exceptions via the exception handler.
+     *
+     * @return $this
+     */
+    protected function handleValidationExceptions()
+    {
+        return $this->handleExceptions([ValidationException::class]);
+    }
+
+    /**
+     * Disable exception handling for the test.
+     *
+     * @param  array  $except
+     * @return $this
+     */
+    protected function withoutExceptionHandling(array $except = [])
+    {
+        if ($this->originalExceptionHandler == null) {
+            $currentExceptionHandler = app(ExceptionHandler::class);
+
+            $this->originalExceptionHandler = $currentExceptionHandler instanceof ExceptionHandlerFake
+                ? $currentExceptionHandler->handler()
+                : $currentExceptionHandler;
+        }
+
+        $exceptionHandler = new class($this->originalExceptionHandler, $except) implements ExceptionHandler, WithoutExceptionHandlingHandler
         {
             protected $except;
             protected $originalHandler;
@@ -98,67 +164,13 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_Class implements E
 
                 SymfonyHelper::consoleApplicationRenderThrowable(null, $e, $output);
             }
-        }
+        };
 
-trait InteractsWithExceptionHandling
-{
-    /**
-     * The original exception handler.
-     *
-     * @var \Illuminate\Contracts\Debug\ExceptionHandler|null
-     */
-    protected $originalExceptionHandler;
+        $currentExceptionHandler = app(ExceptionHandler::class);
 
-    /**
-     * Restore exception handling.
-     *
-     * @return $this
-     */
-    protected function withExceptionHandling()
-    {
-        if ($this->originalExceptionHandler) {
-            $this->app->instance(ExceptionHandler::class, $this->originalExceptionHandler);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Only handle the given exceptions via the exception handler.
-     *
-     * @param  array  $exceptions
-     * @return $this
-     */
-    protected function handleExceptions(array $exceptions)
-    {
-        return $this->withoutExceptionHandling($exceptions);
-    }
-
-    /**
-     * Only handle validation exceptions via the exception handler.
-     *
-     * @return $this
-     */
-    protected function handleValidationExceptions()
-    {
-        return $this->handleExceptions([ValidationException::class]);
-    }
-
-    /**
-     * Disable exception handling for the test.
-     *
-     * @param  array  $except
-     * @return $this
-     */
-    protected function withoutExceptionHandling(array $except = [])
-    {
-        if ($this->originalExceptionHandler == null) {
-            $this->originalExceptionHandler = app(ExceptionHandler::class);
-        }
-
-        $this->app->instance(ExceptionHandler::class,
-            new InteractsWithExceptionHandling_withoutExceptionHandling_Class($this->originalExceptionHandler, $except)
-        );
+        $currentExceptionHandler instanceof ExceptionHandlerFake
+            ? $currentExceptionHandler->setHandler($exceptionHandler)
+            : $this->app->instance(ExceptionHandler::class, $exceptionHandler);
 
         return $this;
     }

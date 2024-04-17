@@ -791,6 +791,8 @@ class PendingRequest
      * @param  string  $url
      * @param  array|string|null  $query
      * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function get(/*string */$url, $query = null)
     {
@@ -807,6 +809,8 @@ class PendingRequest
      * @param  string  $url
      * @param  array|string|null  $query
      * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function head(/*string */$url, $query = null)
     {
@@ -823,6 +827,8 @@ class PendingRequest
      * @param  string  $url
      * @param  array  $data
      * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function post(/*string */$url, $data = [])
     {
@@ -839,6 +845,8 @@ class PendingRequest
      * @param  string  $url
      * @param  array  $data
      * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function patch(/*string */$url, $data = [])
     {
@@ -855,6 +863,8 @@ class PendingRequest
      * @param  string  $url
      * @param  array  $data
      * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function put(/*string */$url, $data = [])
     {
@@ -871,6 +881,8 @@ class PendingRequest
      * @param  string  $url
      * @param  array  $data
      * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function delete(/*string */$url, $data = [])
     {
@@ -909,6 +921,7 @@ class PendingRequest
      * @return \Illuminate\Http\Client\Response
      *
      * @throws \Exception
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function send(/*string */$method, /*string */$url, array $options = [])
     {
