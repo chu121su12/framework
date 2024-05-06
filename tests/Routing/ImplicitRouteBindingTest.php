@@ -38,33 +38,9 @@ class ImplicitRouteBindingTest extends TestCase
         $this->assertSame('fruits', $route->parameter('category')->value);
     }
 
-    /**
-     * @requires PHP 8.1
-     */
-    public function test_it_can_resolve_the_implicit_int_backed_enum_route_bindings_for_the_given_route()
-    {
-        $action = ['uses' => function (CategoryIntBackedEnum $category) {
-            return $category->value;
-        }];
-
-        $route = new Route('GET', '/test', $action);
-        $route->parameters = ['category' => '1'];
-
-        $route->prepareForSerialization();
-
-        $container = Container::getInstance();
-
-        ImplicitRouteBinding::resolveForRoute($container, $route);
-
-        $this->assertSame(1, $route->parameter('category')->value);
-    }
-
-    /**
-     * @requires PHP 8.1
-     */
     public function test_it_can_resolve_the_implicit_backed_enum_route_bindings_for_the_given_route_with_optional_parameter()
     {
-        $action = ['uses' => function (/*?*/CategoryBackedEnum $category = null) {
+        $action = ['uses' => function (?CategoryBackedEnum $category = null) {
             return $category->value;
         }];
 
@@ -78,6 +54,24 @@ class ImplicitRouteBindingTest extends TestCase
         ImplicitRouteBinding::resolveForRoute($container, $route);
 
         $this->assertSame('fruits', $route->parameter('category')->value);
+    }
+
+    public function test_it_handles_optional_implicit_backed_enum_route_bindings_for_the_given_route_with_optional_parameter()
+    {
+        $action = ['uses' => function (/*?*/CategoryBackedEnum $category = null) {
+            return $category->value;
+        }];
+
+        $route = new Route('GET', '/test', $action);
+        $route->parameters = ['category' => null];
+
+        $route->prepareForSerialization();
+
+        $container = Container::getInstance();
+
+        ImplicitRouteBinding::resolveForRoute($container, $route);
+
+        $this->assertNull($route->parameter('category'));
     }
 
     /**
@@ -123,32 +117,6 @@ class ImplicitRouteBindingTest extends TestCase
             'Case [%s] not found on Backed Enum [%s].',
             'cars',
             CategoryBackedEnum::class
-        ));
-
-        ImplicitRouteBinding::resolveForRoute($container, $route);
-    }
-
-    /**
-     * @requires PHP 8.1
-     */
-    public function test_implicit_int_backed_enum_internal_exception()
-    {
-        $action = ['uses' => function (CategoryIntBackedEnum $category) {
-            return $category->value;
-        }];
-
-        $route = new Route('GET', '/test', $action);
-        $route->parameters = ['category' => ' 00001.'];
-
-        $route->prepareForSerialization();
-
-        $container = Container::getInstance();
-
-        $this->expectException(BackedEnumCaseNotFoundException::class);
-        $this->expectExceptionMessage(sprintf(
-            'Case [%s] not found on Backed Enum [%s].',
-            ' 00001.',
-            CategoryIntBackedEnum::class
         ));
 
         ImplicitRouteBinding::resolveForRoute($container, $route);

@@ -802,7 +802,7 @@ class BelongsToMany extends Relation
      * @param  mixed  $operator
      * @param  mixed  $value
      * @param  string  $boolean
-     * @return \Illuminate\Database\Eloquent\Model|static
+     * @return \Illuminate\Database\Eloquent\Model|static|null
      */
     public function firstWhere($column, $operator = null, $value = null, $boolean = 'and')
     {
@@ -813,7 +813,7 @@ class BelongsToMany extends Relation
      * Execute the query and get the first result.
      *
      * @param  array  $columns
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Model|static|null
      */
     public function first($columns = ['*'])
     {

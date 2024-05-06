@@ -44,6 +44,24 @@ class RoutingUrlGeneratorTest extends TestCase
         $this->assertSame('https://www.foo.com/foo/bar', $url->to('foo/bar'));
     }
 
+    public function testQueryGeneration()
+    {
+        $url = new UrlGenerator(
+            new RouteCollection,
+            Request::create('http://www.foo.com/')
+        );
+
+        $this->assertSame('http://www.foo.com/foo/bar', $url->query('foo/bar'));
+        $this->assertSame('http://www.foo.com/foo/bar?0=foo', $url->query('foo/bar', ['foo']));
+        $this->assertSame('http://www.foo.com/foo/bar?baz=boom', $url->query('foo/bar', ['baz' => 'boom']));
+        $this->assertSame('http://www.foo.com/foo/bar?baz=zee&zal=bee', $url->query('foo/bar?baz=boom&zal=bee', ['baz' => 'zee']));
+        $this->assertSame('http://www.foo.com/foo/bar?zal=bee', $url->query('foo/bar?baz=boom&zal=bee', ['baz' => null]));
+        $this->assertSame('http://www.foo.com/foo/bar?baz=boom', $url->query('foo/bar?baz=boom', ['nonexist' => null]));
+        $this->assertSame('http://www.foo.com/foo/bar', $url->query('foo/bar?baz=boom', ['baz' => null]));
+        $this->assertSame('https://www.foo.com/foo/bar/baz?foo=bar&zal=bee', $url->query('foo/bar?foo=bar', ['zal' => 'bee'], ['baz'], true));
+        $this->assertSame('http://www.foo.com/foo/bar?baz[0]=boom&baz[1]=bam&baz[2]=bim', urldecode($url->query('foo/bar', ['baz' => ['boom', 'bam', 'bim']])));
+    }
+
     public function testAssetGeneration()
     {
         $url = new UrlGenerator(
@@ -765,7 +783,7 @@ class RoutingUrlGeneratorTest extends TestCase
 
         $this->assertTrue($url->hasValidSignature($request));
 
-        $request = Request::create($url->signedRoute('foo').'?tempered=true');
+        $request = Request::create($url->signedRoute('foo').'?tampered=true');
 
         $this->assertFalse($url->hasValidSignature($request));
     }
@@ -813,7 +831,7 @@ class RoutingUrlGeneratorTest extends TestCase
 
         $this->assertTrue($url->hasValidSignature($request, false));
 
-        $request = Request::create($url->signedRoute('foo', [], null, false).'?tempered=true');
+        $request = Request::create($url->signedRoute('foo', [], null, false).'?tampered=true');
 
         $this->assertFalse($url->hasValidSignature($request, false));
     }
@@ -895,7 +913,7 @@ class RoutingUrlGeneratorTest extends TestCase
 
         $this->assertTrue($url->hasValidSignature($request));
 
-        $request = Request::create($url->signedRoute('foo').'?tempered=true');
+        $request = Request::create($url->signedRoute('foo').'?tampered=true');
 
         $this->assertFalse($url->hasValidSignature($request));
 

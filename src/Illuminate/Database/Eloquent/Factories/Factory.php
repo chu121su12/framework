@@ -242,11 +242,9 @@ abstract class Factory
      */
     public function createMany(/*int|iterable|null */$records = null)
     {
-        $records = backport_type_check('int|iterable|null', $records);
+        $records ??= ($this->count ?? 1);
 
-        if (is_null($records)) {
-            $records = isset($this->count) ? $this->count : 1;
-        }
+        $this->count = null;
 
         if (is_numeric($records)) {
             $records = array_fill(0, $records, []);

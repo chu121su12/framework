@@ -318,7 +318,7 @@ class DynamoDbStore implements LockProvider, Store
      *
      * @param  string  $key
      * @param  mixed  $value
-     * @return int|bool
+     * @return int|false
      */
     public function increment($key, $value = 1)
     {
@@ -363,7 +363,7 @@ class DynamoDbStore implements LockProvider, Store
      *
      * @param  string  $key
      * @param  mixed  $value
-     * @return int|bool
+     * @return int|false
      */
     public function decrement($key, $value = 1)
     {

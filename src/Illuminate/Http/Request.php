@@ -382,7 +382,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     }
 
     /**
-     * Replace the input for the current request.
+     * Replace the input values for the current request.
      *
      * @param  array  $input
      * @return $this

@@ -14,11 +14,13 @@ class SupportStrTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
 
-    public function testStringCanBeLimitedByWords()
+    public function testStringCanBeLimitedByWords(): void
     {
         $this->assertSame('Taylor...', Str::words('Taylor Otwell', 1));
         $this->assertSame('Taylor___', Str::words('Taylor Otwell', 1, '___'));
         $this->assertSame('Taylor Otwell', Str::words('Taylor Otwell', 3));
+        $this->assertSame('Taylor Otwell', Str::words('Taylor Otwell', -1, '...'));
+        $this->assertSame('', Str::words('', 3, '...'));
     }
 
     public function testStringCanBeLimitedByWordsNonAscii()
@@ -116,11 +118,13 @@ class SupportStrTest extends TestCase
         $this->assertSame('   ', Str::apa('   '));
     }
 
-    public function testStringWithoutWordsDoesntProduceError()
+    public function testStringWithoutWordsDoesntProduceError(): void
     {
         $nbsp = chr(0xC2).chr(0xA0);
         $this->assertSame(' ', Str::words(' '));
         $this->assertEquals($nbsp, Str::words($nbsp));
+        $this->assertSame('   ', Str::words('   '));
+        $this->assertSame("\t\t\t", Str::words("\t\t\t"));
     }
 
     public function testStringAscii()
@@ -267,7 +271,7 @@ class SupportStrTest extends TestCase
         $this->assertSame('han', Str::before('han2nah', 2));
     }
 
-    public function testStrBeforeLast()
+    public function testStrBeforeLast(): void
     {
         $this->assertSame('yve', Str::beforeLast('yvette', 'tte'));
         $this->assertSame('yvet', Str::beforeLast('yvette', 't'));
@@ -278,6 +282,10 @@ class SupportStrTest extends TestCase
         $this->assertSame('yv0et', Str::beforeLast('yv0et0te', '0'));
         $this->assertSame('yv0et', Str::beforeLast('yv0et0te', 0));
         $this->assertSame('yv2et', Str::beforeLast('yv2et2te', 2));
+        $this->assertSame('', Str::beforeLast('', 'test'));
+        $this->assertSame('', Str::beforeLast('yvette', 'yvette'));
+        $this->assertSame('laravel', Str::beforeLast('laravel framework', ' '));
+        $this->assertSame('yvette', Str::beforeLast("yvette\tyv0et0te", "\t"));
     }
 
     public function testStrBetween()
@@ -490,6 +498,52 @@ class SupportStrTest extends TestCase
         $this->assertFalse(Str::is('', 0));
         $this->assertFalse(Str::is([null], 0));
         $this->assertTrue(Str::is([null], null));
+    }
+
+    public function testIsWithMultilineStrings()
+    {
+        $this->assertFalse(Str::is('/', "/\n"));
+        $this->assertTrue(Str::is('/*', "/\n"));
+        $this->assertTrue(Str::is('*/*', "/\n"));
+        $this->assertTrue(Str::is('*/*', "\n/\n"));
+
+        $this->assertTrue(Str::is('*', "\n"));
+        $this->assertTrue(Str::is('*', "\n\n"));
+        $this->assertFalse(Str::is('', "\n"));
+        $this->assertFalse(Str::is('', "\n\n"));
+
+        $multilineValue = <<<'VALUE'
+        <?php
+
+        namespace Illuminate\Tests\Support;
+
+        use Exception;
+        VALUE;
+
+        $this->assertTrue(Str::is($multilineValue, $multilineValue));
+        $this->assertTrue(Str::is('*', $multilineValue));
+        $this->assertTrue(Str::is("*namespace Illuminate\Tests\*", $multilineValue));
+        $this->assertFalse(Str::is("namespace Illuminate\Tests\*", $multilineValue));
+        $this->assertFalse(Str::is("*namespace Illuminate\Tests", $multilineValue));
+        $this->assertTrue(Str::is('<?php*', $multilineValue));
+        $this->assertTrue(Str::is("<?php*namespace Illuminate\Tests\*", $multilineValue));
+        $this->assertFalse(Str::is('use Exception;', $multilineValue));
+        $this->assertFalse(Str::is('use Exception;*', $multilineValue));
+        $this->assertTrue(Str::is('*use Exception;', $multilineValue));
+
+        $this->assertTrue(Str::is("<?php\n\nnamespace Illuminate\Tests\*", $multilineValue));
+
+        $this->assertTrue(Str::is(<<<'PATTERN'
+        <?php
+        *
+        namespace Illuminate\Tests\*
+        PATTERN, $multilineValue));
+
+        $this->assertTrue(Str::is(<<<'PATTERN'
+        <?php
+
+        namespace Illuminate\Tests\*
+        PATTERN, $multilineValue));
     }
 
     public function testIsUrl()
