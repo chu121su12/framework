@@ -242,7 +242,9 @@ abstract class Factory
      */
     public function createMany(/*int|iterable|null */$records = null)
     {
-        $records ??= ($this->count ?? 1);
+        if (! isset($records)) {
+            $records = (isset($this->count) ? $this->count : 1);
+        }
 
         $this->count = null;
 

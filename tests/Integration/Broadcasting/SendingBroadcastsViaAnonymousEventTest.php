@@ -18,11 +18,14 @@ class SendingBroadcastsViaAnonymousEventTest extends TestCase
 
         BroadcastFacade::on('test-channel')
             ->with(['some' => 'data'])
-            ->as('test-event')
+            ->as_('test-event')
             ->send();
 
         EventFacade::assertDispatched(AnonymousEvent::class, function ($event) {
-            return (new ReflectionClass($event))->getProperty('connection')->getValue($event) === null &&
+            $property = (new ReflectionClass($event))->getProperty('connection');
+            $property->setAccessible(true);
+
+            return $property->getValue($event) === null &&
                 $event->broadcastOn() === ['test-channel'] &&
                 $event->broadcastAs() === 'test-event' &&
                 $event->broadcastWith() === ['some' => 'data'];
@@ -35,11 +38,14 @@ class SendingBroadcastsViaAnonymousEventTest extends TestCase
 
         BroadcastFacade::on('test-channel')
             ->with(['some' => 'data'])
-            ->as('test-event')
+            ->as_('test-event')
             ->sendNow();
 
         EventFacade::assertDispatched(AnonymousEvent::class, function ($event) {
-            return (new ReflectionClass($event))->getProperty('connection')->getValue($event) === null &&
+            $property = (new ReflectionClass($event))->getProperty('connection');
+            $property->setAccessible(true);
+
+            return $property->getValue($event) === null &&
                 $event->shouldBroadcastNow();
         });
     }
@@ -79,7 +85,7 @@ class SendingBroadcastsViaAnonymousEventTest extends TestCase
         ])->send();
 
         EventFacade::assertDispatched(AnonymousEvent::class, function ($event) {
-            [$one, $two, $three] = $event->broadcastOn();
+            list($one, $two, $three) = $event->broadcastOn();
 
             return $one === 'test-channel' &&
                 $two instanceof PrivateChannel &&
@@ -97,7 +103,10 @@ class SendingBroadcastsViaAnonymousEventTest extends TestCase
             ->send();
 
         EventFacade::assertDispatched(AnonymousEvent::class, function ($event) {
-            return (new ReflectionClass($event))->getProperty('connection')->getValue($event) === 'pusher';
+            $property = (new ReflectionClass($event))->getProperty('connection');
+            $property->setAccessible(true);
+
+            return $property->getValue($event) === 'pusher';
         });
     }
 
@@ -126,7 +135,7 @@ class SendingBroadcastsViaAnonymousEventTest extends TestCase
     {
         EventFacade::fake();
 
-        BroadcastFacade::private('test-channel')->send();
+        BroadcastFacade::private_('test-channel')->send();
 
         EventFacade::assertDispatched(AnonymousEvent::class, function ($event) {
             $channel = $event->broadcastOn()[0];

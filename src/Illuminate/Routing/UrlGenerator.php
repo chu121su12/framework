@@ -243,7 +243,7 @@ class UrlGenerator implements UrlGeneratorContract
      */
     public function query($path, $query = [], $extra = [], $secure = null)
     {
-        [$path, $existingQueryString] = $this->extractQueryString($path);
+        list($path, $existingQueryString) = $this->extractQueryString($path);
 
         parse_str(Str::after($existingQueryString, '?'), $existingQueryArray);
 

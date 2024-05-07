@@ -813,12 +813,12 @@ class SupportStringableTest extends TestCase
         $this->assertFalse($this->stringable("\n\n")->is(''));
 
         $multilineValue = <<<'VALUE'
-        <?php
+<?php
 
-        namespace Illuminate\Tests\Support;
+namespace Illuminate\Tests\Support;
 
-        use Exception;
-        VALUE;
+use Exception;
+VALUE;
 
         $this->assertTrue($this->stringable($multilineValue)->is($multilineValue));
         $this->assertTrue($this->stringable($multilineValue)->is('*'));

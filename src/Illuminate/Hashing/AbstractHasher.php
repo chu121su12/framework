@@ -12,7 +12,18 @@ abstract class AbstractHasher
      */
     public function info($hashedValue)
     {
-        return password_get_info($hashedValue);
+        $info = password_get_info($hashedValue);
+
+        if (version_compare(PHP_VERSION, '8.2.0', '<')
+            && $info['algoName'] === 'unknown'
+            && $info['algo'] === 0
+            && $info['options'] === []) {
+            return \array_merge($info, [
+                'algo' => null,
+            ]);
+        }
+
+        return $info;
     }
 
     /**

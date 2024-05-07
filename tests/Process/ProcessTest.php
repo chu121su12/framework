@@ -183,12 +183,14 @@ COMMAND;
             '*--branch develop*' => $expectedOutput = 'yes thank you',
         ]);
 
-        $result = $factory->run(<<<'COMMAND'
+        $command = <<<'COMMAND'
         git clone --depth 1 \
               --single-branch \
               --branch develop \
               git://some-url .
-        COMMAND);
+COMMAND;
+
+        $result = $factory->run($command);
 
         $this->assertSame(0, $result->exitCode());
         $this->assertSame("$expectedOutput\n", $result->output());

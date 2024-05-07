@@ -42,7 +42,9 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UnexpectedValueException;
 
-include_once __DIR__.'/Enums.php';
+if (PHP_VERSION_ID >= 80100) {
+    include_once 'Enums.php';
+}
 
 class RoutingRouteTest extends TestCase
 {
@@ -1887,12 +1889,15 @@ class RoutingRouteTest extends TestCase
         $this->assertSame('taylor', $router->dispatch(Request::create('foo/taylor', 'GET'))->getContent());
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testOptionalBackedEnumsReturnNullWhenMissing()
     {
         $router = $this->getRouter();
         $router->get('foo/{bar?}', [
             'middleware' => SubstituteBindings::class,
-            'uses' => function (?CategoryBackedEnum $bar = null) {
+            'uses' => function (/*?*/CategoryBackedEnum $bar = null) {
                 $this->assertNull($bar);
 
                 return 'bar';
@@ -1963,10 +1968,6 @@ class RoutingRouteTest extends TestCase
      */
     public function testImplicitBindingsWithOptionalParameterUsingEnumIsAlwaysCastedToEnum()
     {
-        if (PHP_VERSION_ID >= 80100) {
-            include_once 'Enums.php';
-        }
-
         $router = $this->getRouter();
         $router->get('foo/{bar?}', [
             'middleware' => SubstituteBindings::class,

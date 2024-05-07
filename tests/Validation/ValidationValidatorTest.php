@@ -435,7 +435,7 @@ class ValidationValidatorTest extends TestCase
         $v->validated();
     }
 
-    public function testValidatedDoesntThrowOnPass(): void
+    public function testValidatedDoesntThrowOnPass()/*: void*/
     {
         $trans = $this->getIlluminateArrayTranslator();
 

@@ -261,7 +261,11 @@ class Factory implements FactoryContract
      */
     protected function normalizeName($name)
     {
-        return $this->normalizedNameCache[$name] ??= ViewName::normalize($name);
+        if (! isset($this->normalizedNameCache[$name])) {
+            $this->normalizedNameCache[$name] = ViewName::normalize($name);
+        }
+
+        return $this->normalizedNameCache[$name];
     }
 
     /**

@@ -74,7 +74,9 @@ trait CreatesRegularExpressionRouteConstraints
         return $this->assignExpressionToParameters(
             $parameters,
             collect($values)
-                ->map(fn ($value) => $value instanceof BackedEnum ? $value->value : $value)
+                ->map(function ($value) {
+                    return $value instanceof BackedEnum ? $value->value : $value;
+                })
                 ->implode('|')
         );
     }

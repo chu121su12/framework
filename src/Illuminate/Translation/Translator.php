@@ -277,7 +277,7 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
             if ($value instanceof Closure) {
                 $line = preg_replace_callback(
                     '/<'.$key.'>(.*?)<\/'.$key.'>/',
-                    fn ($args) => $value($args[1]),
+                    function ($args) use ($value) { return $value($args[1]); },
                     $line
                 );
 

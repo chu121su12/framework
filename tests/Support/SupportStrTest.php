@@ -14,7 +14,7 @@ class SupportStrTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
 
-    public function testStringCanBeLimitedByWords(): void
+    public function testStringCanBeLimitedByWords()/*: void*/
     {
         $this->assertSame('Taylor...', Str::words('Taylor Otwell', 1));
         $this->assertSame('Taylor___', Str::words('Taylor Otwell', 1, '___'));
@@ -118,7 +118,7 @@ class SupportStrTest extends TestCase
         $this->assertSame('   ', Str::apa('   '));
     }
 
-    public function testStringWithoutWordsDoesntProduceError(): void
+    public function testStringWithoutWordsDoesntProduceError()/*: void*/
     {
         $nbsp = chr(0xC2).chr(0xA0);
         $this->assertSame(' ', Str::words(' '));
@@ -271,7 +271,7 @@ class SupportStrTest extends TestCase
         $this->assertSame('han', Str::before('han2nah', 2));
     }
 
-    public function testStrBeforeLast(): void
+    public function testStrBeforeLast()/*: void*/
     {
         $this->assertSame('yve', Str::beforeLast('yvette', 'tte'));
         $this->assertSame('yvet', Str::beforeLast('yvette', 't'));
@@ -513,12 +513,12 @@ class SupportStrTest extends TestCase
         $this->assertFalse(Str::is('', "\n\n"));
 
         $multilineValue = <<<'VALUE'
-        <?php
+<?php
 
-        namespace Illuminate\Tests\Support;
+namespace Illuminate\Tests\Support;
 
-        use Exception;
-        VALUE;
+use Exception;
+VALUE;
 
         $this->assertTrue(Str::is($multilineValue, $multilineValue));
         $this->assertTrue(Str::is('*', $multilineValue));
@@ -533,17 +533,21 @@ class SupportStrTest extends TestCase
 
         $this->assertTrue(Str::is("<?php\n\nnamespace Illuminate\Tests\*", $multilineValue));
 
-        $this->assertTrue(Str::is(<<<'PATTERN'
-        <?php
-        *
-        namespace Illuminate\Tests\*
-        PATTERN, $multilineValue));
+        $pattern = <<<'PATTERN'
+<?php
+*
+namespace Illuminate\Tests\*
+PATTERN;
 
-        $this->assertTrue(Str::is(<<<'PATTERN'
-        <?php
+        $this->assertTrue(Str::is($pattern, $multilineValue));
 
-        namespace Illuminate\Tests\*
-        PATTERN, $multilineValue));
+        $pattern = <<<'PATTERN'
+<?php
+
+namespace Illuminate\Tests\*
+PATTERN;
+
+        $this->assertTrue(Str::is($pattern, $multilineValue));
     }
 
     public function testIsUrl()

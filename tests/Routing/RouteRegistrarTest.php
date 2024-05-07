@@ -12,7 +12,9 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Stringable;
 
-include_once 'Enums.php';
+if (PHP_VERSION_ID >= 80100) {
+    include_once 'Enums.php';
+}
 
 class RouteRegistrarTest_testMiddlewareStringableObject_class implements Stringable
         {
@@ -924,6 +926,9 @@ class RouteRegistrarTest extends TestCase
         }
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testWhereInEnumRegistration()
     {
         $this->router->get('/posts/{category}')->whereIn('category', CategoryBackedEnum::cases());

@@ -369,7 +369,9 @@ class PendingProcess
         $command = backport_type_check('string', $command);
 
         return collect($this->fakeHandlers)
-                ->first(fn ($handler, $pattern) => Str::is($pattern, $command));
+                ->first(function ($handler, $pattern) use ($command) {
+                    return Str::is($pattern, $command);
+                });
     }
 
     /**

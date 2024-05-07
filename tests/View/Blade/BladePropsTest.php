@@ -8,14 +8,14 @@ class BladePropsTest extends AbstractBladeTestCase
 {
     public function testPropsAreCompiled()
     {
-        $this->assertSame('<?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
+        $this->assertSame('<?php $attributes = isset($attributes) ? $attributes : new \Illuminate\View\ComponentAttributeBag;
 
 $__newAttributes = [];
 $__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames(([\'one\' => true, \'two\' => \'string\']));
 
 foreach ($attributes->all() as $__key => $__value) {
     if (in_array($__key, $__propNames)) {
-        $$__key = $$__key ?? $__value;
+        $$__key = isset($$__key) ? $$__key : $__value;
     } else {
         $__newAttributes[$__key] = $__value;
     }
@@ -27,7 +27,7 @@ unset($__propNames);
 unset($__newAttributes);
 
 foreach (array_filter(([\'one\' => true, \'two\' => \'string\']), \'is_string\', ARRAY_FILTER_USE_KEY) as $__key => $__value) {
-    $$__key = $$__key ?? $__value;
+    $$__key = isset($$__key) ? $$__key : $__value;
 }
 
 $__defined_vars = get_defined_vars();

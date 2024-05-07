@@ -13,7 +13,7 @@ class EncrypterTest_provideTamperedData_class_2 {}
 
 class EncrypterTest extends TestCase
 {
-    public function testEncryption(): void
+    public function testEncryption()/*: void*/
     {
         $e = new Encrypter(str_repeat('a', 16));
         $encrypted = $e->encrypt('foo');
