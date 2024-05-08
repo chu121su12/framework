@@ -25,7 +25,7 @@ class NativeCalculator extends Calculator
      *
      * @var int
      */
-    private /*int */$maxDigits;
+    private /*readonly *//*int */$maxDigits;
 
     /**
      * @codeCoverageIgnore
@@ -33,22 +33,12 @@ class NativeCalculator extends Calculator
     public function __construct()
     {
         switch (PHP_INT_SIZE) {
-            case 4:
-                $this->maxDigits = 9;
-                break;
-
-            case 8:
-                $this->maxDigits = 18;
-                break;
-
-            default:
-                throw new \RuntimeException('The platform is not 32-bit or 64-bit as expected.');
+            case 4: $this->maxDigits = 9; break;
+            case 8: $this->maxDigits = 18; break;
+            default: throw new \RuntimeException('The platform is not 32-bit or 64-bit as expected.');
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function add(/*string */$a, /*string */$b)/* : string*/
     {
         $a = backport_type_check('string', $a);
@@ -84,9 +74,6 @@ class NativeCalculator extends Calculator
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function sub(/*string */$a, /*string */$b)/* : string*/
     {
         $a = backport_type_check('string', $a);
@@ -96,9 +83,6 @@ class NativeCalculator extends Calculator
         return $this->add($a, $this->neg($b));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function mul(/*string */$a, /*string */$b)/* : string*/
     {
         $a = backport_type_check('string', $a);
@@ -146,9 +130,6 @@ class NativeCalculator extends Calculator
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function divQ(/*string */$a, /*string */$b)/* : string*/
     {
         $a = backport_type_check('string', $a);
@@ -158,9 +139,6 @@ class NativeCalculator extends Calculator
         return $this->divQR($a, $b)[0];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function divR(/*string */$a, /*string */$b)/*: string*/
     {
         $a = backport_type_check('string', $a);
@@ -170,9 +148,6 @@ class NativeCalculator extends Calculator
         return $this->divQR($a, $b)[1];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function divQR(/*string */$a, /*string */$b)/* : array*/
     {
         $a = backport_type_check('string', $a);
@@ -205,10 +180,8 @@ class NativeCalculator extends Calculator
             if (is_int($nb)) {
                 // the only division that may overflow is PHP_INT_MIN / -1,
                 // which cannot happen here as we've already handled a divisor of -1 above.
+                $q = intdiv($na, $nb);
                 $r = $na % $nb;
-                $q = ($na - $r) / $nb;
-
-                assert(is_int($q));
 
                 return [
                     (string) $q,
@@ -232,9 +205,6 @@ class NativeCalculator extends Calculator
         return [$q, $r];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function pow(/*string */$a, /*int */$e)/* : string*/
     {
         $a = backport_type_check('string', $a);
@@ -266,8 +236,6 @@ class NativeCalculator extends Calculator
 
     /**
      * Algorithm from: https://www.geeksforgeeks.org/modular-exponentiation-power-in-modular-arithmetic/
-     *
-     * {@inheritdoc}
      */
     public function modPow(/*string */$base, /*string */$exp, /*string */$mod)/* : string*/
     {
@@ -308,8 +276,6 @@ class NativeCalculator extends Calculator
 
     /**
      * Adapted from https://cp-algorithms.com/num_methods/roots_newton.html
-     *
-     * {@inheritDoc}
      */
     public function sqrt(/*string */$n)/* : string*/
     {
@@ -636,6 +602,8 @@ class NativeCalculator extends Calculator
      * @param string $a The first operand.
      * @param string $b The second operand.
      *
+     * @psalm-return -1|0|1
+     *
      * @return int [-1, 0, 1]
      */
     private function doCmp(/*string */$a, /*string */$b)/* : int*/
@@ -653,7 +621,7 @@ class NativeCalculator extends Calculator
             return $cmp;
         }
 
-        return backport_spaceship_operator(\strcmp($a, $b), 0); // enforce [-1, 0, 1]
+        return backport_spaceship_operator(\strcmp($a, $b), 0); // enforce -1|0|1
     }
 
     /**

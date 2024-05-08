@@ -9,6 +9,16 @@ namespace Brick\Math\Exception;
  */
 class NumberFormatException extends MathException
 {
+    public static function invalidFormat(/*string */$value)/* : self*/
+    {
+        $value = backport_type_check('string', $value);
+
+        return new self(\sprintf(
+            'The given value "%s" does not represent a valid number.',
+            $value
+        ));
+    }
+
     /**
      * @param string $char The failing character.
      *
