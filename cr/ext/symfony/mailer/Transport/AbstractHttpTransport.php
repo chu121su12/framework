@@ -45,8 +45,10 @@ abstract class AbstractHttpTransport extends AbstractTransport
     /**
      * @return $this
      */
-    public function setHost(?string $host)
+    public function setHost(/*?string */$host = null)
     {
+        $host = backport_type_check('?string', $host);
+
         $this->host = $host;
 
         return $this;
@@ -55,16 +57,18 @@ abstract class AbstractHttpTransport extends AbstractTransport
     /**
      * @return $this
      */
-    public function setPort(?int $port)
+    public function setPort(/*?int */$port = null)
     {
+        $port = backport_type_check('?int', $port);
+
         $this->port = $port;
 
         return $this;
     }
 
-    abstract protected function doSendHttp(SentMessage $message): ResponseInterface;
+    abstract protected function doSendHttp(SentMessage $message)/*: ResponseInterface*/;
 
-    protected function doSend(SentMessage $message): void
+    protected function doSend(SentMessage $message)/*: void*/
     {
         $response = null;
         try {

@@ -104,7 +104,7 @@ class SesTransport extends AbstractTransport implements Stringable
     {
         if ($header = $message->getOriginalMessage()->getHeaders()->get('X-SES-LIST-MANAGEMENT-OPTIONS')) {
             if (preg_match("/^(contactListName=)*(?<ContactListName>[^;]+)(;\s?topicName=(?<TopicName>.+))?$/ix", $header->getBodyAsString(), $listManagementOptions)) {
-                return array_filter($listManagementOptions, function ($e) { return in_array($e, ['ContactListName', 'TopicName']); }, ARRAY_FILTER_USE_KEY);
+                return array_filter($listManagementOptions, function ($e) { return in_array($e, ['ContactListName', 'TopicName'], true); }, ARRAY_FILTER_USE_KEY);
             }
         }
     }

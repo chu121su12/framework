@@ -12,11 +12,11 @@ class TimeOutJobWithTransaction implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, Batchable;
 
-    public int $tries = 1;
-    public int $timeout = 2;
+    public /*int */$tries = 1;
+    public /*int */$timeout = 2;
 
-    public function handle(): void
+    public function handle()/*: void*/
     {
-        DB::transaction(fn () => sleep(20));
+        DB::transaction(function () { return sleep(20); });
     }
 }

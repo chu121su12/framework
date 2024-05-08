@@ -66,7 +66,9 @@ class UnsupportedSchemeException extends LogicException
         if (false !== $pos = strpos($provider, '+')) {
             $provider = substr($provider, 0, $pos);
         }
-        $package = isset(self::SCHEME_TO_PACKAGE_MAP[$provider]) ? self::SCHEME_TO_PACKAGE_MAP[$provider] : null;
+
+        $SCHEME_TO_PACKAGE_MAP = self::SCHEME_TO_PACKAGE_MAP;
+        $package = isset($SCHEME_TO_PACKAGE_MAP[$provider]) ? $SCHEME_TO_PACKAGE_MAP[$provider] : null;
         if ($package && !class_exists($package['class'])) {
             parent::__construct(sprintf('Unable to send emails via "%s" as the bridge is not installed; try running "composer require %s".', $provider, $package['package']));
 

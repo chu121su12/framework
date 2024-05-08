@@ -18,6 +18,8 @@ use Psr\Log\LoggerInterface;
 // Help opcache.preload discover always-needed symbols
 class_exists(InvalidArgumentException::class);
 
+class CacheTrait_doGet_class extends \InvalidArgumentException implements InvalidArgumentException { }
+        
 /**
  * An implementation of CacheInterface for PSR-6 CacheItemPoolInterface classes.
  *
@@ -56,7 +58,9 @@ trait CacheTrait
         $key = backport_type_check('string', $key);
 
         if (0 > $beta = (isset($beta) ? $beta : 1.0)) {
-            throw new class(sprintf('Argument "$beta" provided to "%s::get()" must be a positive number, %f given.', static::class, $beta)) extends \InvalidArgumentException implements InvalidArgumentException { };
+            throw new CacheTrait_doGet_class(
+                sprintf('Argument "$beta" provided to "%s::get()" must be a positive number, %f given.', static::class, $beta)
+            );
         }
 
         $item = $pool->getItem($key);
