@@ -18,7 +18,7 @@ class ServerStateFile
      *
      * @return array
      */
-    public function read() ////: array
+    public function read()/*: array*/
     {
         $state = is_readable($this->path)
                     ? backport_json_decode(file_get_contents($this->path), true)
@@ -38,11 +38,11 @@ class ServerStateFile
      * @param  int  $managerProcessId
      * @return void
      */
-    public function writeProcessIds(/*int */$masterProcessId, /*int */$managerProcessId) ////: void
+    public function writeProcessIds(/*int */$masterProcessId, /*int */$managerProcessId)/*: void*/
     {
-        $masterProcessId = backport_type_check('int', $masterProcessId);
-
         $managerProcessId = backport_type_check('int', $managerProcessId);
+
+        $masterProcessId = backport_type_check('int', $masterProcessId);
 
         if (! is_writable($this->path) && ! is_writable(dirname($this->path))) {
             throw new RuntimeException('Unable to write to process ID file.');
@@ -60,10 +60,9 @@ class ServerStateFile
     /**
      * Write the given state array to the server state file.
      *
-     * @param  array  $newState
      * @return void
      */
-    public function writeState(array $newState) ////: void
+    public function writeState(array $newState)/*: void*/
     {
         if (! is_writable($this->path) && ! is_writable(dirname($this->path))) {
             throw new RuntimeException('Unable to write to process ID file.');
@@ -80,7 +79,7 @@ class ServerStateFile
      *
      * @return bool
      */
-    public function delete() ////: bool
+    public function delete()/*: bool*/
     {
         if (is_writable($this->path)) {
             return unlink($this->path);
@@ -94,7 +93,7 @@ class ServerStateFile
      *
      * @return string
      */
-    public function path() ////: string
+    public function path()/*: string*/
     {
         return $this->path;
     }

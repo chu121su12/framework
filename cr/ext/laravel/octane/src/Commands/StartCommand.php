@@ -2,9 +2,11 @@
 
 namespace Laravel\Octane\Commands;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
 
-class StartCommand extends Command/* implements SignalableCommandInterface*/
+#[AsCommand(name: 'octane:start')]
+class StartCommand extends Command implements SignalableCommandInterface
 {
     use Concerns\InteractsWithServers;
 
@@ -15,15 +17,21 @@ class StartCommand extends Command/* implements SignalableCommandInterface*/
      */
     public $signature = 'octane:start
                     {--server= : The server that should be used to serve the application}
-                    {--host=127.0.0.1 : The IP address the server should bind to}
-                    {--port=8000 : The port the server should be available on}
+                    {--host= : The IP address the server should bind to}
+                    {--port= : The port the server should be available on [default: "8000"]}
+                    {--admin-port= : The port the admin server should be available on [FrankenPHP only]}
+                    {--rpc-host= : The RPC IP address the server should bind to}
                     {--rpc-port= : The RPC port the server should be available on}
                     {--workers=auto : The number of workers that should be available to handle requests}
                     {--task-workers=auto : The number of task workers that should be available to handle tasks}
                     {--max-requests=500 : The number of requests to process before reloading the server}
                     {--rr-config= : The path to the RoadRunner .rr.yaml file}
+                    {--caddyfile= : The path to the FrankenPHP Caddyfile file}
+                    {--https : Enable HTTPS, HTTP/2, and HTTP/3, and automatically generate and renew certificates [FrankenPHP only]}
+                    {--http-redirect : Enable HTTP to HTTPS redirection (only enabled if --https is passed) [FrankenPHP only]}
                     {--watch : Automatically reload the server when the application is modified}
-                    {--poll : Use file system polling while watching in order to watch files over a network}';
+                    {--poll : Use file system polling while watching in order to watch files over a network}
+                    {--log-level= : Log messages at or above the specified log level}';
 
     /**
      * The command's description.
@@ -41,11 +49,12 @@ class StartCommand extends Command/* implements SignalableCommandInterface*/
     {
         $server = $this->option('server') ?: config('octane.server');
 
-        return backport_match ($server,
-            ['swoole', function () { return $this->startSwooleServer(); }],
-            ['roadrunner', function () { return $this->startRoadRunnerServer(); }],
-            [__BACKPORT_MATCH_DEFAULT_CASE__, function () use ($server) { return $this->invalidServer($server); }]
-        );
+        switch ($server) {
+            case 'swoole': return $this->startSwooleServer();
+            case 'roadrunner': return $this->startRoadRunnerServer();
+            case 'frankenphp': return $this->startFrankenPhpServer();
+            default: return $this->invalidServer($server);
+        }
     }
 
     /**
@@ -56,8 +65,8 @@ class StartCommand extends Command/* implements SignalableCommandInterface*/
     protected function startSwooleServer()
     {
         return $this->call('octane:swoole', [
-            '--host' => $this->option('host'),
-            '--port' => $this->option('port'),
+            '--host' => $this->getHost(),
+            '--port' => $this->getPort(),
             '--workers' => $this->option('workers'),
             '--task-workers' => $this->option('task-workers'),
             '--max-requests' => $this->option('max-requests'),
@@ -74,14 +83,38 @@ class StartCommand extends Command/* implements SignalableCommandInterface*/
     protected function startRoadRunnerServer()
     {
         return $this->call('octane:roadrunner', [
-            '--host' => $this->option('host'),
-            '--port' => $this->option('port'),
+            '--host' => $this->getHost(),
+            '--port' => $this->getPort(),
+            '--rpc-host' => $this->option('rpc-host'),
             '--rpc-port' => $this->option('rpc-port'),
             '--workers' => $this->option('workers'),
             '--max-requests' => $this->option('max-requests'),
             '--rr-config' => $this->option('rr-config'),
             '--watch' => $this->option('watch'),
             '--poll' => $this->option('poll'),
+            '--log-level' => $this->option('log-level'),
+        ]);
+    }
+
+    /**
+     * Start the FrankenPHP server for Octane.
+     *
+     * @return int
+     */
+    protected function startFrankenPhpServer()
+    {
+        return $this->call('octane:frankenphp', [
+            '--host' => $this->getHost(),
+            '--port' => $this->getPort(),
+            '--admin-port' => $this->option('admin-port'),
+            '--workers' => $this->option('workers'),
+            '--max-requests' => $this->option('max-requests'),
+            '--caddyfile' => $this->option('caddyfile'),
+            '--https' => $this->option('https'),
+            '--http-redirect' => $this->option('http-redirect'),
+            '--watch' => $this->option('watch'),
+            '--poll' => $this->option('poll'),
+            '--log-level' => $this->option('log-level'),
         ]);
     }
 

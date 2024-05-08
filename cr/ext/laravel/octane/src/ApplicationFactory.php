@@ -24,15 +24,20 @@ class ApplicationFactory
      * @param  array  $initialInstances
      * @return \Illuminate\Foundation\Application
      */
-    public function createApplication(array $initialInstances = []) ///: Application
+    public function createApplication(array $initialInstances = [])/*: Application*/
     {
-        $path = $this->basePath.'/bootstrap/app.php';
+        $paths = [
+            $this->basePath.'/.laravel/app.php',
+            $this->basePath.'/bootstrap/app.php',
+        ];
 
-        if (! file_exists($path)) {
-            throw new RuntimeException("Application bootstrap file not found [{$path}].");
+        foreach ($paths as $path) {
+            if (file_exists($path)) {
+                return $this->warm($this->bootstrap(require $path, $initialInstances));
+            }
         }
 
-        return $this->warm($this->bootstrap(require $path, $initialInstances));
+        throw new RuntimeException("Application bootstrap file not found in 'bootstrap' or '.laravel' directory.");
     }
 
     /**
@@ -42,7 +47,7 @@ class ApplicationFactory
      * @param  array  $initialInstances
      * @return \Illuminate\Foundation\Application
      */
-    public function bootstrap(Application $app, array $initialInstances = []) ///: Application
+    public function bootstrap(Application $app, array $initialInstances = [])/*: Application*/
     {
         foreach ($initialInstances as $key => $value) {
             $app->instance($key, $value);
@@ -61,7 +66,7 @@ class ApplicationFactory
      * @param  \Illuminate\Foundation\Application  $app
      * @return array
      */
-    protected function getBootstrappers(Application $app) ////: array
+    protected function getBootstrappers(Application $app)/*: array*/
     {
         $method = (new ReflectionObject(
             $kernel = $app->make(HttpKernelContract::class)
@@ -84,7 +89,7 @@ class ApplicationFactory
      * @param  array  $bootstrappers
      * @return array
      */
-    protected function injectBootstrapperBefore(/*string */$before, /*string */$inject, array $bootstrappers) ////: array
+    protected function injectBootstrapperBefore(/*string */$before, /*string */$inject, array $bootstrappers)/*: array*/
     {
         $before = backport_type_check('string', $before);
 
@@ -106,7 +111,7 @@ class ApplicationFactory
      * @param  array  $services
      * @return \Illuminate\Foundation\Application
      */
-    public function warm(Application $app, array $services = []) ///: Application
+    public function warm(Application $app, array $services = [])/*: Application*/
     {
         foreach ($services ?: $app->make('config')->get('octane.warm', []) as $service) {
             if (is_string($service) && $app->bound($service)) {

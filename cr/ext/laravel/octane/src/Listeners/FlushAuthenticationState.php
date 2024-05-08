@@ -10,7 +10,7 @@ class FlushAuthenticationState
      * @param  mixed  $event
      * @return void
      */
-    public function handle($event) ////: void
+    public function handle($event)/*: void*/
     {
         if ($event->sandbox->resolved('auth.driver')) {
             $event->sandbox->forgetInstance('auth.driver');

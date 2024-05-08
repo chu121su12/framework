@@ -12,7 +12,7 @@ class GiveNewApplicationInstanceToAuthorizationGate
      * @param  mixed  $event
      * @return void
      */
-    public function handle($event) ////: void
+    public function handle($event)/*: void*/
     {
         if (! $event->sandbox->resolved(Gate::class)) {
             return;

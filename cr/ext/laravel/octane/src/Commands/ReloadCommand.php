@@ -2,9 +2,12 @@
 
 namespace Laravel\Octane\Commands;
 
+use Laravel\Octane\FrankenPhp\ServerProcessInspector as FrankenPhpServerProcessInspector;
 use Laravel\Octane\RoadRunner\ServerProcessInspector as RoadRunnerServerProcessInspector;
 use Laravel\Octane\Swoole\ServerProcessInspector as SwooleServerProcessInspector;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'octane:reload')]
 class ReloadCommand extends Command
 {
     /**
@@ -30,11 +33,12 @@ class ReloadCommand extends Command
     {
         $server = $this->option('server') ?: config('octane.server');
 
-        return backport_match ($server,
-            ['swoole', function () { return $this->reloadSwooleServer(); }],
-            ['roadrunner', function () { return $this->reloadRoadRunnerServer(); }],
-            [__BACKPORT_MATCH_DEFAULT_CASE__, function () use ($server) { return $this->invalidServer($server); }]
-        );
+        switch ($server) {
+            case 'swoole': return $this->reloadSwooleServer();
+            case 'roadrunner': return $this->reloadRoadRunnerServer();
+            case 'frankenphp': return $this->reloadFrankenPhpServer();
+            default: return $this->invalidServer($server);
+        }
     }
 
     /**
@@ -67,6 +71,28 @@ class ReloadCommand extends Command
     protected function reloadRoadRunnerServer()
     {
         $inspector = app(RoadRunnerServerProcessInspector::class);
+
+        if (! $inspector->serverIsRunning()) {
+            $this->error('Octane server is not running.');
+
+            return 1;
+        }
+
+        $this->info('Reloading workers...');
+
+        $inspector->reloadServer();
+
+        return 0;
+    }
+
+    /**
+     * Reload the FrankenPHP server for Octane.
+     *
+     * @return int
+     */
+    protected function reloadFrankenPhpServer()
+    {
+        $inspector = app(FrankenPhpServerProcessInspector::class);
 
         if (! $inspector->serverIsRunning()) {
             $this->error('Octane server is not running.');

@@ -13,6 +13,8 @@ class WorkerExceptionInspector extends Inspector
 
     public function __construct(/*Throwable */$throwable, /*protected string */$class, /*protected array */$trace)
     {
+        backport_type_throwable($throwable);
+
         $this->class = backport_type_check('string', $class);
 
         $this->trace = $trace;

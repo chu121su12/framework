@@ -5,6 +5,7 @@ namespace Laravel\Octane;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Laravel\Octane\Events\RequestHandled;
 use Laravel\Octane\Events\RequestReceived;
 use Laravel\Octane\Events\RequestTerminated;
@@ -32,8 +33,10 @@ class ApplicationGateway
      * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handle(Request $request) ///: Response
+    public function handle(Request $request)/*: Response*/
     {
+        $request->enableHttpMethodParameterOverride();
+
         $this->dispatchEvent($this->sandbox, new RequestReceived($this->app, $this->sandbox, $request));
 
         if (Octane::hasRouteFor($request->getMethod(), '/'.$request->path())) {
@@ -52,10 +55,16 @@ class ApplicationGateway
      * @param  \Symfony\Component\HttpFoundation\Response  $response
      * @return void
      */
-    public function terminate(Request $request, Response $response) ////: void
+    public function terminate(Request $request, Response $response)/*: void*/
     {
         $this->sandbox->make(Kernel::class)->terminate($request, $response);
 
         $this->dispatchEvent($this->sandbox, new RequestTerminated($this->app, $this->sandbox, $request, $response));
+
+        $route = $request->route();
+
+        if ($route instanceof Route && method_exists($route, 'flushController')) {
+            $route->flushController();
+        }
     }
 }

@@ -2,9 +2,10 @@
 
 namespace Laravel\Octane\Swoole;
 
+use Laravel\Octane\Contracts\ServerProcessInspector as ServerProcessInspectorContract;
 use Laravel\Octane\Exec;
 
-class ServerProcessInspector
+class ServerProcessInspector implements ServerProcessInspectorContract
 {
     protected $dispatcher;
     protected $serverStateFile;
@@ -25,12 +26,11 @@ class ServerProcessInspector
      *
      * @return bool
      */
-    public function serverIsRunning() ////: bool
+    public function serverIsRunning()/*: bool*/
     {
         $serverStateFile = $this->serverStateFile->read();
 
         $masterProcessId = $serverStateFile['masterProcessId'];
-
         $managerProcessId = $serverStateFile['managerProcessId'];
 
         return $managerProcessId
@@ -43,11 +43,9 @@ class ServerProcessInspector
      *
      * @return void
      */
-    public function reloadServer() ////: void
+    public function reloadServer()/*: void*/
     {
-        $serverStateFile = $this->serverStateFile->read();
-
-        $masterProcessId = $serverStateFile['masterProcessId'];
+        $masterProcessId = $this->serverStateFile->read()['masterProcessId'];
 
         $this->dispatcher->signal((int) $masterProcessId, SIGUSR1);
     }
@@ -57,17 +55,16 @@ class ServerProcessInspector
      *
      * @return bool
      */
-    public function stopServer() ////: bool
+    public function stopServer()/*: bool*/
     {
         $serverStateFile = $this->serverStateFile->read();
 
         $masterProcessId = $serverStateFile['masterProcessId'];
-
         $managerProcessId = $serverStateFile['managerProcessId'];
 
         $workerProcessIds = $this->exec->run('pgrep -P '.$managerProcessId);
 
-        foreach (array_merge([$masterProcessId], [$managerProcessId], $workerProcessIds) as $processId) {
+        foreach (\array_merge([$masterProcessId], [$managerProcessId], $workerProcessIds) as $processId) {
             $this->dispatcher->signal((int) $processId, SIGKILL);
         }
 

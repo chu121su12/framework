@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Laravel\Octane\Exceptions\DdException;
 use Laravel\Octane\Exceptions\ServerShutdownException;
 use Laravel\Octane\Exceptions\WorkerException;
+use Laravel\Octane\Octane;
 use Laravel\Octane\WorkerExceptionInspector;
 use NunoMaduro\Collision\Writer;
 use Symfony\Component\VarDumper\VarDumper;
@@ -21,7 +22,10 @@ trait InteractsWithIO
      * @var array
      */
     protected $ignoreMessages = [
+        'destroy signal received',
+        'req-resp mode',
         'scan command',
+        'sending stop request to the worker',
         'stop signal received, grace timeout is: ',
         'exit forced',
         'worker allocated',
@@ -30,6 +34,13 @@ trait InteractsWithIO
         'worker destructed',
         'worker destroyed',
         '[INFO] RoadRunner server started; version:',
+        '[INFO] sdnotify: not notified',
+        'exiting; byeee!!',
+        'storage cleaning happened too recently',
+        'write error',
+        'unable to determine directory for user configuration; falling back to current directory',
+        '$HOME environment variable is empty',
+        'unable to get instance ID',
     ];
 
     /**
@@ -42,7 +53,7 @@ trait InteractsWithIO
     {
         if (! Str::startsWith($string, $this->ignoreMessages)) {
             $this->output instanceof OutputStyle
-                ? fwrite(STDERR, $string."\n")
+                ? Octane::writeError($string)
                 : $this->output->writeln($string);
         }
     }
@@ -56,7 +67,7 @@ trait InteractsWithIO
      */
     public function info($string, $verbosity = null)
     {
-        $this->label($string, $verbosity, 'INFO', 'cyan', 'black');
+        $this->label($string, $verbosity, 'INFO', 'blue', 'white');
     }
 
     /**
@@ -133,20 +144,22 @@ trait InteractsWithIO
         }
 
         $this->output->writeln(sprintf(
-           '  <fg=%s;options=bold>%s </>   <fg=cyan;options=bold>%s</> <options=bold>%s</><fg=#6C7280> %s%s%s ms</>',
-            backport_match (true,
-                [$statusCode >= 500, 'red'],
-                [$statusCode >= 400, 'yellow'],
-                [$statusCode >= 300, 'cyan'],
-                [$statusCode >= 100, 'green'],
-                [__BACKPORT_MATCH_DEFAULT_CASE__, 'white']
-            ),
-           $statusCode,
-           $method,
-           $url,
-           $dots,
-           $memory,
-           $duration
+            '  <fg=%s;options=bold>%s </>   <fg=cyan;options=bold>%s</> <options=bold>%s</><fg=#6C7280> %s%s%s ms</>',
+            value(function () use ($statusCode) {
+                switch (true) {
+                    case $statusCode >= 500: return 'red';
+                    case $statusCode >= 400: return 'yellow';
+                    case $statusCode >= 300: return 'cyan';
+                    case $statusCode >= 100: return 'green';
+                    default: return 'white';
+                }
+            }),
+            $statusCode,
+            $method,
+            $url,
+            $dots,
+            $memory,
+            $duration
         ), $this->parseVerbosity($verbosity));
     }
 
@@ -184,10 +197,12 @@ trait InteractsWithIO
             $outputTrace = function ($trace, $number) {
                 $number++;
 
-                $line = $trace['line'];
-                $file = $trace['file'];
+                if (isset($trace['line'])) {
+                    $line = $trace['line'];
+                    $file = $trace['file'];
 
-                $this->line("  <fg=yellow>$number</>   $file:$line");
+                    $this->line("  <fg=yellow>$number</>   $file:$line");
+                }
             };
 
             $outputTrace($throwable, -1);
@@ -232,11 +247,12 @@ trait InteractsWithIO
      */
     public function handleStream($stream, $verbosity = null)
     {
-        backport_match (isset($stream['type']) ? $stream['type'] : null,
-            ['request', function () use ($stream, $verbosity) { return $this->requestInfo($stream, $verbosity); }],
-            ['throwable', function () use ($stream, $verbosity) { return $this->throwableInfo($stream, $verbosity); }],
-            ['shutdown', function () use ($stream, $verbosity) { return $this->shutdownInfo($stream, $verbosity); }],
-            [__BACKPORT_MATCH_DEFAULT_CASE__, function () use ($stream, $verbosity) { return $this->info(json_encode($stream, $verbosity)); }]
-        );
+        switch (isset($stream['type']) ? $stream['type'] : null) {
+            case 'request': $this->requestInfo($stream, $verbosity); break;
+            case 'throwable': $this->throwableInfo($stream, $verbosity); break;
+            case 'shutdown': $this->shutdownInfo($stream, $verbosity); break;
+            case 'raw': $this->raw(json_encode($stream)); break;
+            default: $this->info(json_encode($stream), $verbosity);
+        }
     }
 }

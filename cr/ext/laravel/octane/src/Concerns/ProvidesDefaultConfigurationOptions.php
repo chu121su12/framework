@@ -9,7 +9,7 @@ trait ProvidesDefaultConfigurationOptions
      *
      * @return array
      */
-    public static function prepareApplicationForNextRequest() ////: array
+    public static function prepareApplicationForNextRequest()/*: array*/
     {
         return [
             \Laravel\Octane\Listeners\FlushLocaleState::class,
@@ -28,7 +28,7 @@ trait ProvidesDefaultConfigurationOptions
      *
      * @return array
      */
-    public static function prepareApplicationForNextOperation() ////: array
+    public static function prepareApplicationForNextOperation()/*: array*/
     {
         return [
             \Laravel\Octane\Listeners\CreateConfigurationSandbox::class,
@@ -41,6 +41,8 @@ trait ProvidesDefaultConfigurationOptions
             \Laravel\Octane\Listeners\GiveNewApplicationInstanceToMailManager::class,
             \Laravel\Octane\Listeners\GiveNewApplicationInstanceToNotificationChannelManager::class,
             \Laravel\Octane\Listeners\GiveNewApplicationInstanceToPipelineHub::class,
+            \Laravel\Octane\Listeners\GiveNewApplicationInstanceToCacheManager::class,
+            \Laravel\Octane\Listeners\GiveNewApplicationInstanceToSessionManager::class,
             \Laravel\Octane\Listeners\GiveNewApplicationInstanceToQueueManager::class,
             \Laravel\Octane\Listeners\GiveNewApplicationInstanceToRouter::class,
             \Laravel\Octane\Listeners\GiveNewApplicationInstanceToValidationFactory::class,
@@ -67,7 +69,7 @@ trait ProvidesDefaultConfigurationOptions
      *
      * @return array
      */
-    public static function defaultServicesToWarm() ////: array
+    public static function defaultServicesToWarm()/*: array*/
     {
         return [
             'auth',

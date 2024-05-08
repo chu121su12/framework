@@ -3,7 +3,6 @@
 namespace Laravel\Octane;
 
 use Closure;
-use Illuminate\Container\Container;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Laravel\Octane\Contracts\Client;
@@ -49,10 +48,9 @@ class Worker implements WorkerContract
     /**
      * Boot / initialize the Octane worker.
      *
-     * @param  array  $initialInstances
      * @return void
      */
-    public function boot(array $initialInstances = []) ////: void
+    public function boot(array $initialInstances = [])/*: void*/
     {
         // First we will create an instance of the Laravel application that can serve as
         // the base container instance we will clone from on every request. This will
@@ -70,11 +68,9 @@ class Worker implements WorkerContract
     /**
      * Handle an incoming request and send the response to the client.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Laravel\Octane\RequestContext  $context
      * @return void
      */
-    public function handle(Request $request, RequestContext $context) ////: void
+    public function handle(Request $request, RequestContext $context)/*: void*/
     {
         if ($this->client instanceof ServesStaticFiles &&
             $this->client->canServeRequestAsStaticFile($request, $context)) {
@@ -187,7 +183,7 @@ class Worker implements WorkerContract
      *
      * @return void
      */
-    public function handleTick() ////: void
+    public function handleTick()/*: void*/
     {
         CurrentApplication::set($sandbox = clone $this->app);
 
@@ -213,9 +209,6 @@ class Worker implements WorkerContract
      * Handle an uncaught exception from the worker.
      *
      * @param  \Throwable  $e
-     * @param  \Illuminate\Foundation\Application  $app
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Laravel\Octane\RequestContext  $context
      * @param  bool  $hasResponded
      * @return void
      */
@@ -225,8 +218,9 @@ class Worker implements WorkerContract
         Request $request,
         RequestContext $context,
         /*bool */$hasResponded
-    ) ////: void
-    {
+    )/*: void */{
+        backport_type_throwable($e);
+
         $hasResponded = backport_type_check('bool', $hasResponded);
 
         if (! $hasResponded) {
@@ -244,7 +238,7 @@ class Worker implements WorkerContract
      * @param  \Illuminate\Foundation\Application  $sandbox
      * @return void
      */
-    protected function invokeRequestHandledCallbacks($request, $response, $sandbox) ////: void
+    protected function invokeRequestHandledCallbacks($request, $response, $sandbox)/*: void*/
     {
         foreach ($this->requestHandledCallbacks as $callback) {
             $callback($request, $response, $sandbox);
@@ -254,7 +248,6 @@ class Worker implements WorkerContract
     /**
      * Register a closure to be invoked when requests are handled.
      *
-     * @param  \Closure  $callback
      * @return $this
      */
     public function onRequestHandled(Closure $callback)
@@ -269,7 +262,7 @@ class Worker implements WorkerContract
      *
      * @return \Illuminate\Foundation\Application
      */
-    public function application() ///: Application
+    public function application()/*: Application*/
     {
         if (! $this->app) {
             throw new RuntimeException('Worker has not booted. Unable to access application.');
@@ -283,7 +276,7 @@ class Worker implements WorkerContract
      *
      * @return void
      */
-    public function terminate() ////: void
+    public function terminate()/*: void*/
     {
         $this->dispatchEvent($this->app, new WorkerStopping($this->app));
     }

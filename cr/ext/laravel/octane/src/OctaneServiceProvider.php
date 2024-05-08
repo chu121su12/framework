@@ -18,6 +18,8 @@ use Laravel\Octane\Exceptions\DdException;
 use Laravel\Octane\Exceptions\TaskException;
 use Laravel\Octane\Exceptions\TaskTimeoutException;
 use Laravel\Octane\Facades\Octane as OctaneFacade;
+use Laravel\Octane\FrankenPhp\ServerProcessInspector as FrankenPhpServerProcessInspector;
+use Laravel\Octane\FrankenPhp\ServerStateFile as FrankenPhpServerStateFile;
 use Laravel\Octane\RoadRunner\ServerProcessInspector as RoadRunnerServerProcessInspector;
 use Laravel\Octane\RoadRunner\ServerStateFile as RoadRunnerServerStateFile;
 use Laravel\Octane\Swoole\ServerProcessInspector as SwooleServerProcessInspector;
@@ -66,6 +68,19 @@ class OctaneServiceProvider extends ServiceProvider
 
         $this->app->bind(SwooleServerStateFile::class, function ($app) {
             return new SwooleServerStateFile($app['config']->get(
+                'octane.state_file',
+                storage_path('logs/octane-server-state.json')
+            ));
+        });
+
+        $this->app->bind(FrankenPhpServerProcessInspector::class, function ($app) {
+            return new FrankenPhpServerProcessInspector(
+                $app->make(FrankenPhpServerStateFile::class)
+            );
+        });
+
+        $this->app->bind(FrankenPhpServerStateFile::class, function ($app) {
+            return new FrankenPhpServerStateFile($app['config']->get(
                 'octane.state_file',
                 storage_path('logs/octane-server-state.json')
             ));
@@ -170,6 +185,7 @@ class OctaneServiceProvider extends ServiceProvider
                 Commands\StartCommand::class,
                 Commands\StartRoadRunnerCommand::class,
                 Commands\StartSwooleCommand::class,
+                Commands\StartFrankenPhpCommand::class,
                 Commands\ReloadCommand::class,
                 Commands\StatusCommand::class,
                 Commands\StopCommand::class,
@@ -190,13 +206,13 @@ class OctaneServiceProvider extends ServiceProvider
                     backport_unserialize(Crypt::decryptString($request->input('tasks'))),
                     $request->input('wait')
                 )), 200);
-            } catch (DecryptException $e) {
+            } catch (DecryptException $_e) {
                 return new Response('', 403);
-            } catch (TaskException $e) {
+            } catch (TaskException $_e) {
                 return new Response('', 500);
-            } catch (DdException $e) {
+            } catch (DdException $_e) {
                 return new Response('', 500);
-            } catch (TaskTimeoutException $e) {
+            } catch (TaskTimeoutException $_e) {
                 return new Response('', 504);
             }
         });
@@ -206,7 +222,7 @@ class OctaneServiceProvider extends ServiceProvider
                 (new SwooleTaskDispatcher)->dispatch(
                     backport_unserialize(Crypt::decryptString($request->input('tasks')))
                 );
-            } catch (DecryptException $e) {
+            } catch (DecryptException $_e) {
                 return new Response('', 403);
             }
 

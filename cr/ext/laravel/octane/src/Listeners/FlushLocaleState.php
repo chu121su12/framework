@@ -12,7 +12,7 @@ class FlushLocaleState
      * @param  mixed  $event
      * @return void
      */
-    public function handle($event) ////: void
+    public function handle($event)/*: void*/
     {
         $config = $event->sandbox->make('config');
 
@@ -21,6 +21,12 @@ class FlushLocaleState
             $translator->setFallback($config->get('app.fallback_locale'));
         });
 
-        (new CarbonServiceProvider($event->app))->updateLocale();
+        $provider = tap(new CarbonServiceProvider($event->app))->updateLocale();
+
+        collect($event->sandbox->getProviders($provider))
+            ->values()
+            ->whenNotEmpty(function ($providers) use ($event) {
+                return $providers->first()->setAppGetter(function () use ($event) { return $event->sandbox; });
+            });
     }
 }

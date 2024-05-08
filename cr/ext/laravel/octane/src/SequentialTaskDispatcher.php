@@ -13,14 +13,13 @@ class SequentialTaskDispatcher implements DispatchesTasks
      *
      * Results will be keyed by their given keys - if a task did not finish, the tasks value will be "false".
      *
-     * @param  array  $tasks
      * @param  int  $waitMilliseconds
      * @return array
      *
      * @throws \Laravel\Octane\Exceptions\TaskException
      * @throws \Laravel\Octane\Exceptions\TaskTimeoutException
      */
-    public function resolve(array $tasks, /*int */$waitMilliseconds = 1) ////: array
+    public function resolve(array $tasks, /*int */$waitMilliseconds = 1)/*: array*/
     {
         $waitMilliseconds = backport_type_check('int', $waitMilliseconds);
 
@@ -53,10 +52,9 @@ class SequentialTaskDispatcher implements DispatchesTasks
     /**
      * Concurrently dispatch the given callbacks via background tasks.
      *
-     * @param  array  $tasks
      * @return void
      */
-    public function dispatch(array $tasks) ////: void
+    public function dispatch(array $tasks)/*: void*/
     {
         try {
             $this->resolve($tasks);

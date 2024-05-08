@@ -16,7 +16,6 @@ trait ProvidesConcurrencySupport
      *
      * Results will be keyed by their given keys - if a task did not finish, the tasks value will be "false".
      *
-     * @param  array  $tasks
      * @param  int  $waitMilliseconds
      * @return array
      *
@@ -37,19 +36,15 @@ trait ProvidesConcurrencySupport
      */
     public function tasks()
     {
-        return backport_match (true,
-            [function () { return app()->bound(DispatchesTasks::class); }, function () { return app(DispatchesTasks::class); }],
-            [function () { return app()->bound(Server::class); }, function () { return new SwooleTaskDispatcher; }],
-            [function () { return class_exists(Server::class); }, function () {
-                $serverState = app(ServerStateFile::class)->read();
-
-                return new SwooleHttpTaskDispatcher(
-                    isset($serverState['state']) && isset($serverState['state']['host']) ? $serverState['state']['host'] : '127.0.0.1',
-                    isset($serverState['state']) && isset($serverState['state']['port']) ? $serverState['state']['port'] : '8000',
-                    new SequentialTaskDispatcher
-                );
-            }],
-            [__BACKPORT_MATCH_DEFAULT_CASE__, function () { return new SequentialTaskDispatcher; }]
-        );
+        switch (true) {
+            case app()->bound(DispatchesTasks::class): return app(DispatchesTasks::class);
+            case app()->bound(Server::class): return new SwooleTaskDispatcher;
+            case class_exists(Server::class): return \call_user_func(function (array $serverState) { return new SwooleHttpTaskDispatcher(
+                isset($serverState['state']) && isset($serverState['state']['host']) ? $serverState['state']['host'] : '127.0.0.1',
+                isset($serverState['state']) && isset($serverState['state']['port']) ? $serverState['state']['port'] : '8000',
+                new SequentialTaskDispatcher
+            ); }, app(ServerStateFile::class)->read());
+            default: return new SequentialTaskDispatcher;
+        };
     }
 }

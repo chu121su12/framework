@@ -1,6 +1,7 @@
 <?php
 
 use Laravel\Octane\Exceptions\DdException;
+use Laravel\Octane\Octane;
 
 ini_set('display_errors', 'stderr');
 
@@ -24,7 +25,7 @@ $basePath = isset($_SERVER['APP_BASE_PATH']) ? $_SERVER['APP_BASE_PATH'] : (
             : null));
 
 if (! is_string($basePath)) {
-    fwrite(STDERR, 'Cannot find application base path.'.PHP_EOL);
+    Octane::writeError('Cannot find application base path.');
 
     exit(11);
 }
@@ -49,7 +50,7 @@ if (! function_exists('dd')) {
 */
 
 if (! is_file($autoload_file = $basePath.'/vendor/autoload.php')) {
-    fwrite(STDERR, "Composer autoload file was not found. Did you install the project's dependencies?".PHP_EOL);
+    Octane::writeError("Composer autoload file was not found. Did you install the project's dependencies?");
 
     exit(10);
 }

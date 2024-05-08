@@ -62,14 +62,14 @@ $server->on('start', function (Server $server) use ($bootstrap, $serverState) {
     return $basePath && $onServerStart($server);
 });
 
-$server->on('managerstart', function () use ($bootstrap, $serverState) {
-    $basePath = $bootstrap($serverState);
+$server->on('managerstart', function () use ($serverState) {
+    // Don't bootstrap entire application before server / worker start. Otherwise, files can't be gracefully reloaded... #632
+    require_once __DIR__.'/../src/Swoole/Handlers/OnManagerStart.php';
+    require_once __DIR__.'/../src/Swoole/SwooleExtension.php';
 
-    $onManagerStart = new OnManagerStart(
-        new SwooleExtension, $serverState['appName']
-    );
-
-    return $basePath && $onManagerStart();
+    \call_user_func(new OnManagerStart(
+         new SwooleExtension, $serverState['appName']
+    ));
 });
 
 /*

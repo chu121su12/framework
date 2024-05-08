@@ -2,13 +2,14 @@
 
 namespace Laravel\Octane\RoadRunner;
 
+use Laravel\Octane\Contracts\ServerProcessInspector as ServerProcessInspectorContract;
 use Laravel\Octane\PosixExtension;
 use Laravel\Octane\RoadRunner\Concerns\FindsRoadRunnerBinary;
 use Laravel\Octane\SymfonyProcessFactory;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
-class ServerProcessInspector
+class ServerProcessInspector implements ServerProcessInspectorContract
 {
     use FindsRoadRunnerBinary;
 
@@ -31,11 +32,9 @@ class ServerProcessInspector
      *
      * @return bool
      */
-    public function serverIsRunning() ////: bool
+    public function serverIsRunning()/*: bool*/
     {
-        $serverStateFile = $this->serverStateFile->read();
-
-        $masterProcessId = $serverStateFile['masterProcessId'];
+        $masterProcessId = $this->serverStateFile->read()['masterProcessId'];
 
         return $masterProcessId && $this->posix->kill($masterProcessId, 0);
     }
@@ -45,12 +44,11 @@ class ServerProcessInspector
      *
      * @return void
      */
-    public function reloadServer() ////: void
+    public function reloadServer()/*: void*/
     {
         $serverStateFile = $this->serverStateFile->read();
 
         $host = $serverStateFile['state']['host'];
-
         $rpcPort = $serverStateFile['state']['rpcPort'];
 
         tap($this->processFactory->createProcess([
@@ -72,11 +70,9 @@ class ServerProcessInspector
      *
      * @return bool
      */
-    public function stopServer() ////: bool
+    public function stopServer()/*: bool*/
     {
-        $serverStateFile = $this->serverStateFile->read();
-
-        $masterProcessId = $serverStateFile['masterProcessId'];
+        $masterProcessId = $this->serverStateFile->read()['masterProcessId'];
 
         return (bool) $this->posix->kill($masterProcessId, SIGTERM);
     }

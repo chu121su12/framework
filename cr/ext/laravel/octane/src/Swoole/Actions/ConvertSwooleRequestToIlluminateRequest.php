@@ -3,7 +3,7 @@
 namespace Laravel\Octane\Swoole\Actions;
 
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class ConvertSwooleRequestToIlluminateRequest
@@ -15,22 +15,22 @@ class ConvertSwooleRequestToIlluminateRequest
      * @param  string  $phpSapi
      * @return \Illuminate\Http\Request
      */
-    public function __invoke($swooleRequest, /*string */$phpSapi) ///: Request
+    public function __invoke($swooleRequest, /*string */$phpSapi)/*: Request*/
     {
         $phpSapi = backport_type_check('string', $phpSapi);
 
         $serverVariables = $this->prepareServerVariables(
-            isset($swooleRequest) && isset($swooleRequest->server) ? $swooleRequest->server : [],
-            isset($swooleRequest) && isset($swooleRequest->header) ? $swooleRequest->header : [],
+            isset($swooleRequest->server) ? $swooleRequest->server : [],
+            isset($swooleRequest->header) ? $swooleRequest->header : [],
             $phpSapi
         );
 
         $request = new SymfonyRequest(
-            isset($swooleRequest) && isset($swooleRequest->get) ? $swooleRequest->get : [],
-            isset($swooleRequest) && isset($swooleRequest->post) ? $swooleRequest->post : [],
+            isset($swooleRequest->get) ? $swooleRequest->get : [],
+            isset($swooleRequest->post) ? $swooleRequest->post : [],
             [],
-            isset($swooleRequest) && isset($swooleRequest->cookie) ? $swooleRequest->cookie : [],
-            isset($swooleRequest) && isset($swooleRequest->files) ? $swooleRequest->files : [],
+            isset($swooleRequest->cookie) ? $swooleRequest->cookie : [],
+            isset($swooleRequest->files) ? $swooleRequest->files : [],
             $serverVariables,
             $swooleRequest->rawContent()
         );
@@ -39,7 +39,7 @@ class ConvertSwooleRequestToIlluminateRequest
             in_array(strtoupper($request->server->get('REQUEST_METHOD', 'GET')), ['PUT', 'PATCH', 'DELETE'])) {
             parse_str($request->getContent(), $data);
 
-            $request->request = new ParameterBag($data);
+            $request->request = new InputBag($data);
         }
 
         return Request::createFromBase($request);
@@ -48,12 +48,10 @@ class ConvertSwooleRequestToIlluminateRequest
     /**
      * Parse the "server" variables and headers into a single array of $_SERVER variables.
      *
-     * @param  array  $server
-     * @param  array  $headers
      * @param  string  $phpSapi
      * @return array
      */
-    protected function prepareServerVariables(array $server, array $headers, /*string */$phpSapi) ////: array
+    protected function prepareServerVariables(array $server, array $headers, /*string */$phpSapi)/*: array*/
     {
         $phpSapi = backport_type_check('string', $phpSapi);
 
@@ -82,10 +80,9 @@ class ConvertSwooleRequestToIlluminateRequest
     /**
      * Format the given HTTP headers into properly formatted $_SERVER variables.
      *
-     * @param  array  $headers
      * @return array
      */
-    protected function formatHttpHeadersIntoServerVariables(array $headers) ////: array
+    protected function formatHttpHeadersIntoServerVariables(array $headers)/*: array*/
     {
         $results = [];
 
@@ -105,10 +102,9 @@ class ConvertSwooleRequestToIlluminateRequest
     /**
      * Correct headers set incorrectly by built-in PHP development server.
      *
-     * @param  array  $headers
      * @return array
      */
-    protected function correctHeadersSetIncorrectlyByPhpDevServer(array $headers) ////: array
+    protected function correctHeadersSetIncorrectlyByPhpDevServer(array $headers)/*: array*/
     {
         if (array_key_exists('HTTP_CONTENT_LENGTH', $headers)) {
             $headers['CONTENT_LENGTH'] = $headers['HTTP_CONTENT_LENGTH'];

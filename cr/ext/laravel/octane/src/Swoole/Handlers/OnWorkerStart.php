@@ -72,7 +72,7 @@ class OnWorkerStart
      * Boot the Octane worker and application.
      *
      * @param  \Swoole\Http\Server  $server
-     * @return \Laravel\Octane\Worker
+     * @return \Laravel\Octane\Worker|null
      */
     protected function bootWorker($server)
     {
@@ -87,7 +87,7 @@ class OnWorkerStart
             ]);
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {
@@ -105,12 +105,7 @@ class OnWorkerStart
      */
     protected function dispatchServerTickTaskEverySecond($server)
     {
-        // if ($this->workerState->workerId === 0 &&
-        //     ($this->serverState['octaneConfig']['tick'] ?? true)) {
-        //     $this->workerState->tickTimerId = $server->tick(1000, function () use ($server) {
-        //         $server->task('octane-tick');
-        //     });
-        // }
+        // ...
     }
 
     /**

@@ -29,10 +29,9 @@ class RoadRunnerClient implements Client, StoppableClient
     /**
      * Marshal the given request context into an Illuminate request.
      *
-     * @param  \Laravel\Octane\RequestContext  $context
      * @return array
      */
-    public function marshalRequest(RequestContext $context) ////: array
+    public function marshalRequest(RequestContext $context)/*: array*/
     {
         return [
             $this->toHttpFoundationRequest($context->psr7Request),
@@ -43,11 +42,9 @@ class RoadRunnerClient implements Client, StoppableClient
     /**
      * Send the response to the server.
      *
-     * @param  \Laravel\Octane\RequestContext  $context
-     * @param  \Laravel\Octane\OctaneResponse  $octaneResponse
      * @return void
      */
-    public function respond(RequestContext $context, OctaneResponse $octaneResponse) ////: void
+    public function respond(RequestContext $context, OctaneResponse $octaneResponse)/*: void*/
     {
         if ($octaneResponse->outputBuffer &&
             ! $octaneResponse->response instanceof StreamedResponse &&
@@ -64,13 +61,12 @@ class RoadRunnerClient implements Client, StoppableClient
      * Send an error message to the server.
      *
      * @param  \Throwable  $e
-     * @param  \Illuminate\Foundation\Application  $app
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Laravel\Octane\RequestContext  $context
      * @return void
      */
-    public function error(/*Throwable */$e, Application $app, Request $request, RequestContext $context) ////: void
+    public function error(/*Throwable */$e, Application $app, Request $request, RequestContext $context)/*: void*/
     {
+        backport_type_throwable($e);
+
         $this->client->getWorker()->error(Octane::formatExceptionForClient(
             $e,
             $app->make('config')->get('app.debug')
@@ -82,7 +78,7 @@ class RoadRunnerClient implements Client, StoppableClient
      *
      * @return void
      */
-    public function stop() ////: void
+    public function stop()/*: void*/
     {
         $this->client->getWorker()->stop();
     }

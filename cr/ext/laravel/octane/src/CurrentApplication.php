@@ -11,10 +11,9 @@ class CurrentApplication
     /**
      * Set the current application in the container.
      *
-     * @param  \Illuminate\Foundation\Application  $app
      * @return void
      */
-    public static function set(Application $app) ////: void
+    public static function set(Application $app)/*: void*/
     {
         $app->instance('app', $app);
         $app->instance(Container::class, $app);

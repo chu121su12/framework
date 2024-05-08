@@ -26,30 +26,31 @@ if (SWOOLE_VERSION_ID === 40804 || SWOOLE_VERSION_ID >= 50000) {
          */
         public function column(/*string */$name, /*int */$type, /*int */$size = 0)/*: bool*/
         {
-            $name = backport_type_check('string', $name);
-            $type = backport_type_check('int', $type);
             $size = backport_type_check('int', $size);
+
+            $type = backport_type_check('int', $type);
+
+            $name = backport_type_check('string', $name);
 
             $this->columns[$name] = [$type, $size];
 
-            parent::column($name, $type, $size);
+            return parent::column($name, $type, $size);
         }
 
         /**
          * Update a row of the table.
          *
          * @param  string  $key
-         * @param  array  $values
          * @return void
          */
         public function set(/*string */$key, array $values)/*: bool*/
         {
-            $key = backport_type_check('int', $key);
+            $key = backport_type_check('string', $key);
 
             collect($values)
                 ->each($this->ensureColumnsSize());
 
-            parent::set($key, $values);
+            return parent::set($key, $values);
         }
     }
 } else {
@@ -83,7 +84,6 @@ if (SWOOLE_VERSION_ID === 40804 || SWOOLE_VERSION_ID >= 50000) {
          * Update a row of the table.
          *
          * @param  string  $key
-         * @param  array  $values
          * @return void
          */
         public function set($key, array $values)

@@ -13,7 +13,7 @@ trait InteractsWithServers
      * Run the given server process.
      *
      * @param  \Symfony\Component\Process\Process  $server
-     * @param  \Laravel\Octane\Swoole\ServerProcessInspector|\Laravel\Octane\RoadRunner\ServerProcessInspector  $inspector
+     * @param  \Laravel\Octane\Contracts\ServerProcessInspector  $inspector
      * @param  string  $type
      * @return int
      */
@@ -49,7 +49,7 @@ trait InteractsWithServers
             }
 
             $this->writeServerOutput($server);
-        } catch (ServerShutdownException $e) {
+        } catch (ServerShutdownException $_e) {
             return 1;
         } finally {
             $this->stopServer();
@@ -77,7 +77,7 @@ trait InteractsWithServers
 
         return tap(new Process([
             (new ExecutableFinder)->find('node'),
-            'file-watcher.js',
+            'file-watcher.cjs',
             json_encode(collect(config('octane.watch'))->map(function ($path) { return base_path($path); })),
             $this->option('poll'),
         ], realpath(__DIR__.'/../../../bin'), null, null, null))->start();
@@ -94,7 +94,7 @@ trait InteractsWithServers
 
         $this->output->writeln([
             '',
-            '  Local: <fg=white;options=bold>http://'.$this->option('host').':'.$this->option('port').' </>',
+            '  Local: <fg=white;options=bold>'.($this->hasOption('https') && $this->option('https') ? 'https://' : 'http://').$this->getHost().':'.$this->getPort().' </>',
             '',
             '  <fg=yellow>Press Ctrl+C to stop the server</>',
             '',
@@ -108,34 +108,93 @@ trait InteractsWithServers
      */
     protected function getServerOutput($server)
     {
-        return tap([
+        $output = [
             $server->getIncrementalOutput(),
             $server->getIncrementalErrorOutput(),
-        ], function () use ($server) {
-            return $server->clearOutput()->clearErrorOutput();
-        });
+        ];
+
+        $server->clearOutput()->clearErrorOutput();
+
+        return $output;
+    }
+
+    /**
+     * Get the Octane HTTP server host IP to bind on.
+     *
+     * @return string
+     */
+    protected function getHost()
+    {
+        $value = $this->option('host');
+        if (isset($value)) {
+            return $value;
+        }
+
+        $value = config('octane.host');
+        if (isset($value)) {
+            return $value;
+        }
+
+        return isset($_ENV['OCTANE_HOST']) ? $_ENV['OCTANE_HOST'] : '127.0.0.1';
+    }
+
+    /**
+     * Get the Octane HTTP server port.
+     *
+     * @return string
+     */
+    protected function getPort()
+    {
+        $value = $this->option('port');
+        if (isset($value)) {
+            return $value;
+        }
+
+        $value = config('octane.port');
+        if (isset($value)) {
+            return $value;
+        }
+
+        return isset($_ENV['OCTANE_PORT']) ? $_ENV['OCTANE_PORT'] : '8000';
+    }
+
+    /**
+     * Ensure the Octane HTTP server port is available.
+     */
+    protected function ensurePortIsAvailable()/*: void*/
+    {
+        $host = $this->getHost();
+
+        $port = $this->getPort();
+
+        $connection = @fsockopen($host, $port);
+
+        if (is_resource($connection)) {
+            @fclose($connection);
+
+            throw new InvalidArgumentException("Unable to start server. Port {$port} is already in use.");
+        }
     }
 
     /**
      * Returns the list of signals to subscribe.
-     *
-     * @return array
      */
-    public function getSubscribedSignals() ////: array
+    public function getSubscribedSignals()/*: array*/
     {
-        return [SIGINT, SIGTERM];
+        return [SIGINT, SIGTERM, SIGHUP];
     }
 
     /**
      * The method will be called when the application is signaled.
-     *
-     * @param  int  $signal
-     * @return void
      */
-    public function handleSignal(/*int */$signal) ////: void
+    public function handleSignal(/*int */$signal, /*int|false */$previousExitCode = 0)/*: int|false*/
     {
-        // $signal = backport_type_check('int', $signal);
+        $signal = backport_type_check('int', $signal);
+
+        $previousExitCode = backport_type_check('int|false', $previousExitCode);
 
         $this->stopServer();
+
+        exit(0);
     }
 }

@@ -36,12 +36,19 @@ class EnsureRequestsDontExceedMaxExecutionTime
             if ((time() - $row['time']) > $this->maxExecutionTime) {
                 $this->timerTable->del($workerId);
 
+                if ($this->server instanceof Server && ! $this->server->exists($row['fd'])) {
+                    continue;
+                }
+
                 $this->extension->dispatchProcessSignal($row['worker_pid'], SIGKILL);
 
                 if ($this->server instanceof Server) {
                     $response = Response::create($this->server, $row['fd']);
-                    $response->status(408);
-                    $response->end();
+
+                    if ($response) {
+                        $response->status(408);
+                        $response->end();
+                    }
                 }
             }
         }

@@ -55,7 +55,7 @@ class InvokeTickCallable
             call_user_func($this->callback);
         } catch (\Exception $e) {
         } catch (\Error $e) {
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         if (isset($e)) {

@@ -6,15 +6,17 @@ use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Laravel\Octane\RoadRunner\ServerProcessInspector;
 use Laravel\Octane\RoadRunner\ServerStateFile;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-class StartRoadRunnerCommand extends Command/* implements SignalableCommandInterface*/
+#[AsCommand(name: 'octane:roadrunner')]
+class StartRoadRunnerCommand extends Command implements SignalableCommandInterface
 {
     use Concerns\InstallsRoadRunnerDependencies,
-        Concerns\InteractsWithServers,
-        Concerns\InteractsWithEnvironmentVariables;
+        Concerns\InteractsWithEnvironmentVariables,
+        Concerns\InteractsWithServers;
 
     /**
      * The command's signature.
@@ -22,14 +24,16 @@ class StartRoadRunnerCommand extends Command/* implements SignalableCommandInter
      * @var string
      */
     public $signature = 'octane:roadrunner
-                    {--host=127.0.0.1 : The IP address the server should bind to}
-                    {--port=8000 : The port the server should be available on}
+                    {--host= : The IP address the server should bind to}
+                    {--port= : The port the server should be available on}
+                    {--rpc-host= : The RPC IP address the server should bind to}
                     {--rpc-port= : The RPC port the server should be available on}
                     {--workers=auto : The number of workers that should be available to handle requests}
                     {--max-requests=500 : The number of requests to process before reloading the server}
                     {--rr-config= : The path to the RoadRunner .rr.yaml file}
                     {--watch : Automatically reload the server when the application is modified}
-                    {--poll : Use file system polling while watching in order to watch files over a network}';
+                    {--poll : Use file system polling while watching in order to watch files over a network}
+                    {--log-level= : Log messages at or above the specified log level}';
 
     /**
      * The command's description.
@@ -48,8 +52,6 @@ class StartRoadRunnerCommand extends Command/* implements SignalableCommandInter
     /**
      * Handle the command.
      *
-     * @param  \Laravel\Octane\RoadRunner\ServerProcessInspector  $inspector
-     * @param  \Laravel\Octane\RoadRunner\ServerStateFile  $serverStateFile
      * @return int
      */
     public function handle(ServerProcessInspector $inspector, ServerStateFile $serverStateFile)
@@ -61,6 +63,8 @@ class StartRoadRunnerCommand extends Command/* implements SignalableCommandInter
         }
 
         $roadRunnerBinary = $this->ensureRoadRunnerBinaryIsInstalled();
+
+        $this->ensurePortIsAvailable();
 
         if ($inspector->serverIsRunning()) {
             $this->error('RoadRunner server is already running.');
@@ -77,17 +81,17 @@ class StartRoadRunnerCommand extends Command/* implements SignalableCommandInter
         $server = tap(new Process(array_filter([
             $roadRunnerBinary,
             '-c', $this->configPath(),
-            '-o', 'version=2.7',
-            '-o', 'http.address='.$this->option('host').':'.$this->option('port'),
-            '-o', 'server.command='.(new PhpExecutableFinder)->find().' '.base_path(config('octane.roadrunner.command', 'vendor/bin/roadrunner-worker')),
+            '-o', 'version=3',
+            '-o', 'http.address='.$this->option('host').':'.$this->getPort(),
+            '-o', 'server.command='.(new PhpExecutableFinder)->find().','.base_path(config('octane.roadrunner.command', 'vendor/bin/roadrunner-worker')),
             '-o', 'http.pool.num_workers='.$this->workerCount(),
             '-o', 'http.pool.max_jobs='.$this->option('max-requests'),
-            '-o', 'rpc.listen=tcp://'.$this->option('host').':'.$this->rpcPort(),
+            '-o', 'rpc.listen=tcp://'.$this->rpcHost().':'.$this->rpcPort(),
             '-o', 'http.pool.supervisor.exec_ttl='.$this->maxExecutionTime(),
-            '-o', 'http.static.dir='.base_path('public'),
+            '-o', 'http.static.dir='.public_path(),
             '-o', 'http.middleware='.config('octane.roadrunner.http_middleware', 'static'),
             '-o', 'logs.mode=production',
-            '-o', app()->environment('local') ? 'logs.level=debug' : 'logs.level=warn',
+            '-o', 'logs.level='.($this->option('log-level') ?: (app()->environment('local') ? 'debug' : 'warn')),
             '-o', 'logs.output=stdout',
             '-o', 'logs.encoding=json',
             'serve',
@@ -105,7 +109,6 @@ class StartRoadRunnerCommand extends Command/* implements SignalableCommandInter
     /**
      * Write the RoadRunner server state file.
      *
-     * @param  \Laravel\Octane\RoadRunner\ServerStateFile  $serverStateFile
      * @return void
      */
     protected function writeServerStateFile(
@@ -113,8 +116,8 @@ class StartRoadRunnerCommand extends Command/* implements SignalableCommandInter
     ) {
         $serverStateFile->writeState([
             'appName' => config('app.name', 'Laravel'),
-            'host' => $this->option('host'),
-            'port' => $this->option('port'),
+            'host' => $this->getHost(),
+            'port' => $this->getPort(),
             'rpcPort' => $this->rpcPort(),
             'workers' => $this->workerCount(),
             'maxRequests' => $this->option('max-requests'),
@@ -167,13 +170,23 @@ class StartRoadRunnerCommand extends Command/* implements SignalableCommandInter
     }
 
     /**
+     * Get the RPC IP address the server should be available on.
+     *
+     * @return string
+     */
+    protected function rpcHost()
+    {
+        return $this->option('rpc-host') ?: $this->getHost();
+    }
+
+    /**
      * Get the RPC port the server should be available on.
      *
      * @return int
      */
     protected function rpcPort()
     {
-        return $this->option('rpc-port') ?: $this->option('port') - 1999;
+        return $this->option('rpc-port') ?: $this->getPort() - 1999;
     }
 
     /**
@@ -236,7 +249,7 @@ class StartRoadRunnerCommand extends Command/* implements SignalableCommandInter
      * @param  string  $elapsed
      * @return float
      */
-    protected function calculateElapsedTime(/*string */$elapsed) ////: float
+    protected function calculateElapsedTime(/*string */$elapsed)/*: float*/
     {
         $elapsed = backport_type_check('string', $elapsed);
 
@@ -246,6 +259,10 @@ class StartRoadRunnerCommand extends Command/* implements SignalableCommandInter
 
         if (Str::endsWith($elapsed, 'µs')) {
             return mb_substr($elapsed, 0, -2) * 0.001;
+        }
+
+        if (filter_var($elapsed, FILTER_VALIDATE_INT) !== false) {
+            return $elapsed;
         }
 
         return (float) $elapsed * 1000;

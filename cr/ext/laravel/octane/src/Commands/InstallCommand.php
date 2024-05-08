@@ -5,10 +5,14 @@ namespace Laravel\Octane\Commands;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Laravel\Octane\Swoole\SwooleExtension;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Throwable;
 
+#[AsCommand(name: 'octane:install')]
 class InstallCommand extends Command
 {
-    use Concerns\InstallsRoadRunnerDependencies;
+    use Concerns\InstallsFrankenPhpDependencies,
+        Concerns\InstallsRoadRunnerDependencies;
 
     /**
      * The command's signature.
@@ -34,20 +38,24 @@ class InstallCommand extends Command
     {
         $server = $this->option('server') ?: $this->choice(
             'Which application server you would like to use?',
-            ['roadrunner', 'swoole']
+            ['roadrunner', 'swoole', 'frankenphp']
         );
 
-        return (int) ! tap(backport_match ($server,
-            ['swoole', function () { return $this->installSwooleServer(); }],
-            ['roadrunner', function () { return $this->installRoadRunnerServer(); }],
-            [__BACKPORT_MATCH_DEFAULT_CASE__, function () use ($server) { return $this->invalidServer($server); }]
-        ), function ($installed) use ($server) {
+        return (int) ! tap(value(function () use ($server) {
+            switch ($server) {
+                case 'swoole': return $this->installSwooleServer();
+                case 'roadrunner': return $this->installRoadRunnerServer();
+                case 'frankenphp': return $this->installFrankenPhpServer();
+                default: return $this->invalidServer($server);
+            }
+        }), function ($installed) use ($server) {
             if ($installed) {
                 $this->updateEnvironmentFile($server);
 
                 $this->callSilent('vendor:publish', ['--tag' => 'octane-config', '--force' => true]);
 
                 $this->info('Octane installed successfully.');
+                $this->newLine();
             }
         });
     }
@@ -110,6 +118,47 @@ class InstallCommand extends Command
     {
         if (! resolve(SwooleExtension::class)->isInstalled()) {
             $this->warn('The Swoole extension is missing.');
+        }
+
+        return true;
+    }
+
+    /**
+     * Install the FrankenPHP server.
+     *
+     * @return bool
+     */
+    public function installFrankenPhpServer()
+    {
+        $gitIgnorePath = base_path('.gitignore');
+
+        if (File::exists($gitIgnorePath)) {
+            $contents = File::get($gitIgnorePath);
+
+            $filesToAppend = collect(['/caddy', 'frankenphp', 'frankenphp-worker.php'])
+                ->filter(function ($file) use ($contents) {
+                    return ! str_contains($contents, $file.PHP_EOL);
+                })
+                ->implode(PHP_EOL);
+
+            if ($filesToAppend !== '') {
+                File::append($gitIgnorePath, PHP_EOL.$filesToAppend.PHP_EOL);
+            }
+        }
+
+        $this->ensureFrankenPhpWorkerIsInstalled();
+
+        try {
+            $this->ensureFrankenPhpBinaryIsInstalled();
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
+        } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
+            $this->error($e->getMessage());
+
+            return false;
         }
 
         return true;

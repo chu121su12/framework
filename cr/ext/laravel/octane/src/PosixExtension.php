@@ -13,9 +13,9 @@ class PosixExtension
      */
     public function kill(/*int */$processId, /*int */$signal)
     {
-        $processId = backport_type_check('int', $processId);
-
         $signal = backport_type_check('int', $signal);
+
+        $processId = backport_type_check('int', $processId);
 
         return posix_kill($processId, $signal);
     }

@@ -18,13 +18,13 @@ class Stream
      */
     public static function request(/*string */$method, /*string */$url, /*int */$statusCode, /*float */$duration)
     {
-        $method = backport_type_check('string', $method);
-
-        $url = backport_type_check('string', $url);
+        $duration = backport_type_check('float', $duration);
 
         $statusCode = backport_type_check('int', $statusCode);
 
-        $duration = backport_type_check('float', $duration);
+        $url = backport_type_check('string', $url);
+
+        $method = backport_type_check('string', $method);
 
         fwrite(STDOUT, json_encode([
             'type' => 'request',
@@ -44,11 +44,13 @@ class Stream
      */
     public static function throwable(/*Throwable */$throwable)
     {
+        backport_type_throwable($throwable);
+
         $fallbackTrace = str_starts_with($throwable->getFile(), ClosureStream::STREAM_PROTO.'://')
             ? collect($throwable->getTrace())->whereNotNull('file')->first()
             : null;
 
-        fwrite(STDERR, json_encode([
+        Octane::writeError(json_encode([
             'type' => 'throwable',
             'class' => get_class($throwable),
             'code' => $throwable->getCode(),
@@ -56,7 +58,7 @@ class Stream
             'line' => isset($fallbackTrace) && isset($fallbackTrace['line']) ? $fallbackTrace['line'] : (int) $throwable->getLine(),
             'message' => $throwable->getMessage(),
             'trace' => array_slice($throwable->getTrace(), 0, 2),
-        ])."\n");
+        ]));
     }
 
     /**
@@ -67,7 +69,9 @@ class Stream
      */
     public static function shutdown(/*Throwable */$throwable)
     {
-        fwrite(STDERR, json_encode([
+        backport_type_throwable($throwable);
+
+        Octane::writeError(json_encode([
             'type' => 'shutdown',
             'class' => get_class($throwable),
             'code' => $throwable->getCode(),
@@ -75,6 +79,6 @@ class Stream
             'line' => $throwable->getLine(),
             'message' => $throwable->getMessage(),
             'trace' => array_slice($throwable->getTrace(), 0, 2),
-        ])."\n");
+        ]));
     }
 }

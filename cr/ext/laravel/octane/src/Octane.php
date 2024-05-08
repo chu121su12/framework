@@ -21,7 +21,7 @@ class Octane
      * @param  string  $table
      * @return \Swoole\Table
      */
-    public function table(/*string */$table) ///: Table
+    public function table(/*string */$table)/*: Table*/
     {
         $table = backport_type_check('string', $table);
 
@@ -45,10 +45,28 @@ class Octane
      * @param  bool  $debug
      * @return string
      */
-    public static function formatExceptionForClient(/*Throwable */$e, /*bool */$debug = false) ////: string
+    public static function formatExceptionForClient(/*Throwable */$e, /*bool */$debug = false)/*: string*/
     {
+        backport_type_throwable($e);
+
         $debug = backport_type_check('bool', $debug);
 
         return $debug ? (string) $e : 'Internal server error.';
+    }
+
+    /**
+     * Write an error message to STDERR or to the SAPI logger if not in CLI mode.
+     */
+    public static function writeError(/*string */$message)/*: void*/
+    {
+        $message = backport_type_check('string', $message);
+
+        if (defined('STDERR')) {
+            fwrite(STDERR, $message.PHP_EOL);
+
+            return;
+        }
+
+        error_log($message, 4);
     }
 }

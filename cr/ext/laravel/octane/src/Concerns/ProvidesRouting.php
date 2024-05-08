@@ -20,14 +20,13 @@ trait ProvidesRouting
      *
      * @param  string  $method
      * @param  string  $uri
-     * @param  \Closure  $callback
      * @return void
      */
-    public function route(/*string */$method, /*string */$uri, Closure $callback) ////: void
+    public function route(/*string */$method, /*string */$uri, Closure $callback)/*: void*/
     {
-        $method = backport_type_check('string', $method);
-
         $uri = backport_type_check('string', $uri);
+
+        $method = backport_type_check('string', $method);
 
         $this->routes[$method.$uri] = $callback;
     }
@@ -39,11 +38,11 @@ trait ProvidesRouting
      * @param  string  $uri
      * @return bool
      */
-    public function hasRouteFor(/*string */$method, /*string */$uri) ////: bool
+    public function hasRouteFor(/*string */$method, /*string */$uri)/*: bool*/
     {
-        $method = backport_type_check('string', $method);
-
         $uri = backport_type_check('string', $uri);
+
+        $method = backport_type_check('string', $method);
 
         return isset($this->routes[$method.$uri]);
     }
@@ -51,17 +50,24 @@ trait ProvidesRouting
     /**
      * Invoke the route for the given method and URI.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  string  $method
      * @param  string  $uri
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function invokeRoute(Request $request, /*string */$method, /*string */$uri) ////: Response
+    public function invokeRoute(Request $request, /*string */$method, /*string */$uri)/*: Response*/
     {
-        $method = backport_type_check('string', $method);
-
         $uri = backport_type_check('string', $uri);
 
+        $method = backport_type_check('string', $method);
+
         return call_user_func($this->routes[$method.$uri], $request);
+    }
+
+    /**
+     * Get the registered Octane routes.
+     */
+    public function getRoutes()/*: array*/
+    {
+        return $this->routes;
     }
 }

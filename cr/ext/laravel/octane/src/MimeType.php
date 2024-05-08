@@ -796,7 +796,7 @@ class MimeType
      * @param  string  $extension
      * @return string
      */
-    protected static function getMimeTypeFromExtension(/*string */$extension) ////: string
+    protected static function getMimeTypeFromExtension(/*string */$extension)/*: string*/
     {
         $extension = backport_type_check('string', $extension);
 
