@@ -2,6 +2,7 @@
 
 namespace Laravel\Octane\Commands\Concerns;
 
+use Dotenv\Dotenv;
 use Dotenv\Exception\InvalidPathException;
 use Dotenv\Parser\Parser;
 use Dotenv\Store\StoreBuilder;
@@ -19,15 +20,11 @@ trait InteractsWithEnvironmentVariables
         $variables = collect();
 
         try {
-            $content = StoreBuilder::createWithNoNames()
-                ->addPath(app()->environmentPath())
-                ->addName(app()->environmentFile())
-                ->make()
-                ->read();
-
-            foreach ((new Parser())->parse($content) as $entry) {
-                $variables->push($entry->getName());
-            }
+            $content = Dotenv::create(
+                Env::getRepository(),
+                app()->environmentPath(),
+                app()->environmentFile()
+            );
         } catch (InvalidPathException $e) {
             // ..
         }
