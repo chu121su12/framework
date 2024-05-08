@@ -187,7 +187,7 @@ class EsmtpTransport extends SmtpTransport
             } catch (TransportExceptionInterface $e) {
                 try {
                     $this->executeCommand("RSET\r\n", [250]);
-                } catch (TransportExceptionInterface $_) {
+                } catch (TransportExceptionInterface $_e) {
                     // ignore this exception as it probably means that the server error was final
                 }
 

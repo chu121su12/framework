@@ -218,7 +218,7 @@ abstract class Prompt
                 break;
 
             default:
-                static::output()->write($message);
+                static::outputWrite($message);
         };
     }
 

@@ -146,7 +146,7 @@ class SmtpTransport extends AbstractTransport
             if ($this->started) {
                 try {
                     $this->executeCommand("RSET\r\n", [250]);
-                } catch (TransportExceptionInterface $_) {
+                } catch (TransportExceptionInterface $_e) {
                     // ignore this exception as it probably means that the server error was final
                 }
             }
