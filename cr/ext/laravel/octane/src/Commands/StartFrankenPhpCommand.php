@@ -95,7 +95,11 @@ class StartFrankenPhpCommand extends Command implements SignalableCommandInterfa
             'LARAVEL_OCTANE' => 1,
             'MAX_REQUESTS' => $this->option('max-requests'),
             'REQUEST_MAX_EXECUTION_TIME' => $this->maxExecutionTime(),
-            'CADDY_GLOBAL_OPTIONS' => ($https && $this->option('http-redirect')) ? '' : 'auto_https disable_redirects',
+            'CADDY_GLOBAL_OPTIONS' => sprintf(
+                '%s %s',
+                (isset($debug['level']) ? $debug['level'] : '') === 'debug' ? 'debug' : '',
+                ($https && $this->option('http-redirect')) ? '' : 'auto_https disable_redirects'
+            ),
             'CADDY_SERVER_ADMIN_PORT' => $this->adminPort(),
             'CADDY_SERVER_LOG_LEVEL' => $this->option('log-level') ?: (app()->environment('local') ? 'INFO' : 'WARN'),
             'CADDY_SERVER_LOGGER' => 'json',
