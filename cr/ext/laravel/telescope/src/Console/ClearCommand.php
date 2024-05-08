@@ -4,7 +4,9 @@ namespace Laravel\Telescope\Console;
 
 use Illuminate\Console\Command;
 use Laravel\Telescope\Contracts\ClearableRepository;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'telescope:clear')]
 class ClearCommand extends Command
 {
     /**
@@ -19,7 +21,7 @@ class ClearCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Clear all entries from Telescope';
+    protected $description = 'Delete all Telescope data from storage';
 
     /**
      * Execute the console command.

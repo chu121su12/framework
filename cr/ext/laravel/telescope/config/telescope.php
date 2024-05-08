@@ -7,6 +7,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Telescope Master Switch
+    |--------------------------------------------------------------------------
+    |
+    | This option may be used to disable all Telescope watchers regardless
+    | of their individual configuration, which simply provides a single
+    | and convenient way to enable or disable Telescope data storage.
+    |
+    */
+
+    // 'enabled' => env('TELESCOPE_ENABLED', true),
+    'enabled' => env(
+        'TELESCOPE_ENABLED',
+        config('app.debug') && isset(config('database.connections')[env('TELESCOPE_CONNECTION', 'app-telescope')])
+    ),
+
+    /*
+    |--------------------------------------------------------------------------
     | Telescope Domain
     |--------------------------------------------------------------------------
     |
@@ -54,20 +71,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Telescope Master Switch
+    | Telescope Queue
     |--------------------------------------------------------------------------
     |
-    | This option may be used to disable all Telescope watchers regardless
-    | of their individual configuration, which simply provides a single
-    | and convenient way to enable or disable Telescope data storage.
+    | This configuration options determines the queue connection and queue
+    | which will be used to process ProcessPendingUpdate jobs. This can
+    | be changed if you would prefer to use a non-default connection.
     |
     */
 
-    // 'enabled' => env('TELESCOPE_ENABLED', false),
-    'enabled' => env(
-        'TELESCOPE_ENABLED',
-        config('app.debug') && isset(config('database.connections')[env('TELESCOPE_CONNECTION', 'app-telescope')])
-    ),
+    'queue' => [
+        'connection' => env('TELESCOPE_QUEUE_CONNECTION', null),
+        'queue' => env('TELESCOPE_QUEUE', null),
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -101,7 +117,9 @@ return [
     ],
 
     'ignore_paths' => [
+        'livewire*',
         'nova-api*',
+        'pulse*',
     ],
 
     'ignore_commands' => [

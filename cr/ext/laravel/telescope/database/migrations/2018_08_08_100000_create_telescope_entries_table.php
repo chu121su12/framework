@@ -12,7 +12,7 @@ class CreateTelescopeEntriesTable extends Migration
      *
      * @return string|null
      */
-    public function getConnection()/*: string|null*/
+    public function getConnection()/*: ?string*/
     {
         return config('telescope.storage.database.connection');
     }
@@ -47,17 +47,17 @@ class CreateTelescopeEntriesTable extends Migration
             $table->uuid('entry_uuid');
             $table->string('tag');
 
-            $table->index(['entry_uuid', 'tag']);
+            $table->primary(['entry_uuid', 'tag']);
             $table->index('tag');
 
             $table->foreign('entry_uuid')
-                  ->references('uuid')
-                  ->on('telescope_entries')
-                  ->onDelete('cascade');
+                ->references('uuid')
+                ->on('telescope_entries')
+                ->onDelete('cascade');
         });
 
         $schema->create('telescope_monitoring', function (Blueprint $table) {
-            $table->string('tag');
+            $table->string('tag')->primary();
         });
     }
 
