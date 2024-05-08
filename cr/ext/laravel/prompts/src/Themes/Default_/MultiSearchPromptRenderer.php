@@ -31,7 +31,7 @@ class MultiSearchPromptRenderer extends Renderer implements Scrolling
                     /*$footer = */'',
                     /*color: */'red'
                 )
-                ->error('Cancelled.');
+                ->error($prompt->cancelMessage);
 
             case 'error': return $this
                 ->box(
@@ -73,8 +73,10 @@ class MultiSearchPromptRenderer extends Renderer implements Scrolling
     /**
      * Render the value with the cursor and a search icon.
      */
-    protected function valueWithCursorAndSearchIcon(MultiSearchPrompt $prompt, int $maxWidth)/*: string*/
+    protected function valueWithCursorAndSearchIcon(MultiSearchPrompt $prompt, /*int */$maxWidth)/*: string*/
     {
+        $maxWidth = backport_type_check('int', $maxWidth);
+
         return preg_replace(
             '/\s$/',
             $this->cyan('…'),
@@ -114,11 +116,11 @@ class MultiSearchPromptRenderer extends Renderer implements Scrolling
 
         return $this->scrollbar(
             collect($prompt->visible())
-                ->map(function ($label) use ($prompt) { return $this->truncate($label, $prompt->terminal()->cols() - 10); })
+                ->map(function ($label) use ($prompt) { return $this->truncate($label, $prompt->terminal()->cols() - 12); })
                 ->map(function ($label, $key) use ($prompt) {
                     $index = array_search($key, array_keys($prompt->matches()));
                     $active = $index === $prompt->highlighted;
-                    $selected = array_is_list($prompt->visible())
+                    $selected = $prompt->isList()
                         ? in_array($label, $prompt->value())
                         : in_array($key, $prompt->value());
 
@@ -159,7 +161,7 @@ class MultiSearchPromptRenderer extends Renderer implements Scrolling
         $info = count($prompt->value()).' selected';
 
         $hiddenCount = count($prompt->value()) - collect($prompt->matches())
-            ->filter(function ($label, $key) use ($prompt) { return in_array(array_is_list($prompt->matches()) ? $label : $key, $prompt->value()); })
+            ->filter(function ($label, $key) use ($prompt) { return in_array($prompt->isList() ? $label : $key, $prompt->value()); })
             ->count();
 
         if ($hiddenCount > 0) {

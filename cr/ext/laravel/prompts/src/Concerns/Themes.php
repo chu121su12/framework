@@ -8,24 +8,28 @@ use Laravel\Prompts\MultiSearchPrompt;
 use Laravel\Prompts\MultiSelectPrompt;
 use Laravel\Prompts\Note;
 use Laravel\Prompts\PasswordPrompt;
+use Laravel\Prompts\PausePrompt;
 use Laravel\Prompts\Progress;
 use Laravel\Prompts\SearchPrompt;
 use Laravel\Prompts\SelectPrompt;
 use Laravel\Prompts\Spinner;
 use Laravel\Prompts\SuggestPrompt;
 use Laravel\Prompts\Table;
+use Laravel\Prompts\TextareaPrompt;
 use Laravel\Prompts\TextPrompt;
 use Laravel\Prompts\Themes\Default_\ConfirmPromptRenderer;
 use Laravel\Prompts\Themes\Default_\MultiSearchPromptRenderer;
 use Laravel\Prompts\Themes\Default_\MultiSelectPromptRenderer;
 use Laravel\Prompts\Themes\Default_\NoteRenderer;
 use Laravel\Prompts\Themes\Default_\PasswordPromptRenderer;
+use Laravel\Prompts\Themes\Default_\PausePromptRenderer;
 use Laravel\Prompts\Themes\Default_\ProgressRenderer;
 use Laravel\Prompts\Themes\Default_\SearchPromptRenderer;
 use Laravel\Prompts\Themes\Default_\SelectPromptRenderer;
 use Laravel\Prompts\Themes\Default_\SpinnerRenderer;
 use Laravel\Prompts\Themes\Default_\SuggestPromptRenderer;
 use Laravel\Prompts\Themes\Default_\TableRenderer;
+use Laravel\Prompts\Themes\Default_\TextareaPromptRenderer;
 use Laravel\Prompts\Themes\Default_\TextPromptRenderer;
 
 trait Themes
@@ -43,10 +47,12 @@ trait Themes
     protected static /*array */$themes = [
         'default' => [
             TextPrompt::class => TextPromptRenderer::class,
+            TextareaPrompt::class => TextareaPromptRenderer::class,
             PasswordPrompt::class => PasswordPromptRenderer::class,
             SelectPrompt::class => SelectPromptRenderer::class,
             MultiSelectPrompt::class => MultiSelectPromptRenderer::class,
             ConfirmPrompt::class => ConfirmPromptRenderer::class,
+            PausePrompt::class => PausePromptRenderer::class,
             SearchPrompt::class => SearchPromptRenderer::class,
             MultiSearchPrompt::class => MultiSearchPromptRenderer::class,
             SuggestPrompt::class => SuggestPromptRenderer::class,

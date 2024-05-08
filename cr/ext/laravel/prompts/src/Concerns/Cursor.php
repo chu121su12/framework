@@ -64,4 +64,24 @@ trait Cursor
 
         static::writeDirectly($sequence);
     }
+
+    /**
+     * Move the cursor to the given column.
+     */
+    public function moveCursorToColumn(/*int */$column)/*: void*/
+    {
+        $column = backport_type_check('int', $column);
+
+        static::writeDirectly("\e[{$column}G");
+    }
+
+    /**
+     * Move the cursor up by the given number of lines.
+     */
+    public function moveCursorUp(/*int */$lines)/*: void*/
+    {
+        $lines = backport_type_check('int', $lines);
+
+        static::writeDirectly("\e[{$lines}A");
+    }
 }

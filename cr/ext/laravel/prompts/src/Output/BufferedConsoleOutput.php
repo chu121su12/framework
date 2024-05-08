@@ -47,8 +47,10 @@ class BufferedConsoleOutput extends ConsoleOutput
     /**
      * Write output directly, bypassing newline capture.
      */
-    public function writeDirectly(string $message)/*: void*/
+    public function writeDirectly(/*string */$message)/*: void*/
     {
+        $message = backport_type_check('string', $message);
+
         $this->doWrite($message, false);
     }
 }

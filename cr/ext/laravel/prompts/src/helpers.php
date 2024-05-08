@@ -28,6 +28,30 @@ function text(
 }
 
 /**
+ * Prompt the user for multiline text input.
+ */
+function textarea(
+    /*string */$label,
+    /*string */$placeholder = '',
+    /*string */$default = '',
+    /*bool|string */$required = false,
+    /*?Closure */$validate = null,
+    /*string */$hint = '',
+    /*int */$rows = 5
+)/*: string*/
+{
+    $label = backport_type_check('string', $label);
+    $placeholder = backport_type_check('string', $placeholder);
+    $default = backport_type_check('string', $default);
+    $required = backport_type_check('bool|string', $required);
+    $validate = backport_type_check('?Closure', $validate);
+    $hint = backport_type_check('string', $hint);
+    $rows = backport_type_check('int', $rows);
+
+    return (new TextareaPrompt($label, $placeholder, $default, $required, $validate, $hint, $rows))->prompt();
+}
+
+/**
  * Prompt the user for input, hiding the value.
  */
 function password(
@@ -123,6 +147,16 @@ function confirm(
     $hint = backport_type_check('string', $hint);
 
     return (new ConfirmPrompt(...func_get_args()))->prompt();
+}
+
+/**
+ * Prompt the user to continue or cancel after pausing.
+ */
+function pause(/*string */$message = 'Press enter to continue...')/*: bool*/
+{
+    $message = backport_type_check('string', $message);
+
+    return (new PausePrompt(...func_get_args()))->prompt();
 }
 
 /**
@@ -338,4 +372,9 @@ function progress(
     }
 
     return $progress;
+}
+
+function form()/*: FormBuilder*/
+{
+    return new FormBuilder();
 }

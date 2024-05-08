@@ -49,7 +49,7 @@ class ProgressRenderer extends Renderer
                     /*color: */'red',
                     /*info: */$progress->progress.'/'.$progress->total
                 )
-                ->error('Cancelled.');
+                ->error($progress->cancelMessage);
 
             default: return $this
                 ->box(

@@ -46,15 +46,15 @@ trait ConfiguresPrompts
             $prompt->validate
         ); });
 
-        // TextareaPrompt::fallbackUsing(function (TextareaPrompt $prompt) { return $this->promptUntilValid(
-        //     function () use ($prompt) {
-        //         $asked = $this->components->ask($prompt->label, $prompt->default ?: null, /*multiline: */true);
+        TextareaPrompt::fallbackUsing(function (TextareaPrompt $prompt) { return $this->promptUntilValid(
+            function () use ($prompt) {
+                $asked = $this->components->ask($prompt->label, $prompt->default ?: null, /*multiline: */true);
 
-        //         return isset($asked) ? $asked : '';
-        //     },
-        //     $prompt->required,
-        //     $prompt->validate
-        // ); });
+                return isset($asked) ? $asked : '';
+            },
+            $prompt->required,
+            $prompt->validate
+        ); });
 
         PasswordPrompt::fallbackUsing(function (PasswordPrompt $prompt) { return $this->promptUntilValid(
             function () use ($prompt) {
