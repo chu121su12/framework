@@ -993,7 +993,7 @@ PATTERN;
         $this->assertSame('***************', Str::mask('maria@email.com', '*', 0));
     }
 
-    public function testMatch()
+    public function testMatch(): void
     {
         $this->assertSame('bar', Str::match('/bar/', 'foo bar'));
         $this->assertSame('bar', Str::match('/foo (.*)/', 'foo bar'));
@@ -1003,9 +1003,12 @@ PATTERN;
 
         $this->assertEquals(['un', 'ly'], Str::matchAll('/f(\w*)/', 'bar fun bar fly')->all());
         $this->assertEmpty(Str::matchAll('/nothing/', 'bar fun bar fly'));
+
+        $this->assertEmpty(Str::match('/pattern/', ''));
+        $this->assertEmpty(Str::matchAll('/pattern/', ''));
     }
 
-    public function testCamel()
+    public function testCamel(): void
     {
         $this->assertSame('laravelPHPFramework', Str::camel('Laravel_p_h_p_framework'));
         $this->assertSame('laravelPhpFramework', Str::camel('Laravel_php_framework'));
@@ -1017,6 +1020,13 @@ PATTERN;
         $this->assertSame('fooBar', Str::camel('foo_bar')); // test cache
         $this->assertSame('fooBarBaz', Str::camel('Foo-barBaz'));
         $this->assertSame('fooBarBaz', Str::camel('foo-bar_baz'));
+
+        $this->assertSame('', Str::camel(''));
+        $this->assertSame('lARAVELPHPFRAMEWORK', Str::camel('LARAVEL_PHP_FRAMEWORK'));
+        $this->assertSame('laravelPhpFramework', Str::camel('   laravel   php   framework   '));
+
+        $this->assertSame('foo1Bar', Str::camel('foo1_bar'));
+        $this->assertSame('1FooBar', Str::camel('1 foo bar'));
     }
 
     public function testCharAt()

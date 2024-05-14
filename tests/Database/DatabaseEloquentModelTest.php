@@ -3683,7 +3683,12 @@ class EloquentModelWithPrimitiveCasts extends Model
         'address' => Address::class,
     ];
 
-    public static function makePrimitiveCastsArray()/*: array*/
+    public $attributes = [
+        'address_line_one' => null,
+        'address_line_two' => null,
+    ];
+
+    public static function makePrimitiveCastsArray(): array
     {
         $toReturn = [];
 
@@ -3762,8 +3767,8 @@ class Address_castUsing_class implements CastsAttributes
             public function set(Model $model, /*string */$key, /*mixed */$value, array $attributes)/*: array*/
             {
                 return [
-                    'address_line_one' => $value->lineOne,
-                    'address_line_two' => $value->lineTwo,
+                    'address_line_one' => $value->lineOne ?? null,
+                    'address_line_two' => $value->lineTwo ?? null,
                 ];
             }
         }

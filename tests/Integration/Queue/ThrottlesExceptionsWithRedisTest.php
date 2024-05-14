@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Mockery as m;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use RuntimeException;
 
 class ThrottlesExceptionsWithRedisTest_testReportingExceptions_class
@@ -25,6 +26,7 @@ class ThrottlesExceptionsWithRedisTest_testReportingExceptions_class
             }
         }
 
+#[RequiresPhpExtension('redis')]
 class ThrottlesExceptionsWithRedisTest extends TestCase
 {
     use InteractsWithRedis;
