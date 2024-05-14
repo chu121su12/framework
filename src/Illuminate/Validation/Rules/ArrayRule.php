@@ -43,12 +43,12 @@ class ArrayRule implements Stringable
         }
 
         $keys = array_map(
-            static fn ($key) => match (true) {
-                $key instanceof BackedEnum => $key->value,
-                $key instanceof UnitEnum => $key->name,
-                default => $key,
-            },
-            $this->keys,
+            static function ($key) { switch (true) {
+                case $key instanceof BackedEnum: return $key->value;
+                case $key instanceof UnitEnum: return $key->name;
+                default: return $key;
+            } },
+            $this->keys
         );
 
         return 'array:'.implode(',', $keys);

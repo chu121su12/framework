@@ -77,9 +77,11 @@ class ForgotPasswordTest extends TestCase
 
     public function testItCanTriggerPasswordResetSentEvent()
     {
+        Notification::fake();
+
         Event::fake([PasswordResetLinkSent::class]);
 
-        UserFactory::new()->create();
+        UserFactory::new_()->create();
 
         $user = AuthenticationTestUser::first();
 

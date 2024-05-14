@@ -1027,7 +1027,9 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      */
     public function unshift(...$values)
     {
-        array_unshift($this->items, ...$values);
+        if (count($values) !== 0) {
+            array_unshift($this->items, ...$values);
+        }
 
         return $this;
     }

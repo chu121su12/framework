@@ -149,16 +149,24 @@ class ApplicationBuilder
      * @param  callable|null  $then
      * @return $this
      */
-    public function withRouting(?Closure $using = null,
-        array|string|null $web = null,
-        array|string|null $api = null,
-        ?string $commands = null,
-        ?string $channels = null,
-        ?string $pages = null,
-        ?string $health = null,
-        string $apiPrefix = 'api',
-        ?callable $then = null)
+    public function withRouting(/*?*/Closure $using = null,
+        /*array|string|null */$web = null,
+        /*array|string|null */$api = null,
+        /*?string */$commands = null,
+        /*?string */$channels = null,
+        /*?string */$pages = null,
+        /*?string */$health = null,
+        /*string */$apiPrefix = 'api',
+        /*?*/callable $then = null)
     {
+        $web = backport_type_check('array|string|null', $web);
+        $api = backport_type_check('array|string|null', $api);
+        $commands = backport_type_check('?string', $commands);
+        $channels = backport_type_check('?string', $channels);
+        $pages = backport_type_check('?string', $pages);
+        $apiPrefix = backport_type_check('string', $apiPrefix);
+        $then = backport_type_check('?callable', $then);
+
         if (is_null($using) && (is_string($web) || is_array($web) || is_string($api) || is_array($api) || is_string($pages) || is_string($health)) || is_callable($then)) {
             $using = $this->buildRoutingCallback($web, $api, $pages, $health, $apiPrefix, $then);
         }
@@ -191,15 +199,15 @@ class ApplicationBuilder
      * @param  callable|null  $then
      * @return \Closure
      */
-    protected function buildRoutingCallback(array|string|null $web = null,
-        array|string|null $api = null,
-        ?string $pages,
-        ?string $health,
-        string $apiPrefix,
-        ?callable $then)
+    protected function buildRoutingCallback(/*array|string|null */$web = null,
+        /*array|string|null */$api = null,
+        /*?string */$pages = null,
+        /*?string */$health = null,
+        /*string */$apiPrefix = 'api',
+        /*?*/callable $then = null)
     {
-        $web = backport_type_check('?string', $web);
-        $api = backport_type_check('?string', $api);
+        $web = backport_type_check('array|string|null', $web);
+        $api = backport_type_check('array|string|null', $api);
         $pages = backport_type_check('?string', $pages);
         $health = backport_type_check('?string', $health);
         $apiPrefix = backport_type_check('string', $apiPrefix);

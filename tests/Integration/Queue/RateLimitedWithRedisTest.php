@@ -17,6 +17,9 @@ use Mockery as m;
 use Orchestra\Testbench\TestCase;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
+/**
+ * @requires extension redis
+ */
 #[RequiresPhpExtension('redis')]
 class RateLimitedWithRedisTest extends TestCase
 {

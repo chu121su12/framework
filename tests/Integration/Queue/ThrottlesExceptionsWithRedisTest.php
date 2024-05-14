@@ -26,6 +26,9 @@ class ThrottlesExceptionsWithRedisTest_testReportingExceptions_class
             }
         }
 
+/**
+ * @requires extension redis
+ */
 #[RequiresPhpExtension('redis')]
 class ThrottlesExceptionsWithRedisTest extends TestCase
 {

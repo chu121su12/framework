@@ -60,7 +60,7 @@ class ViewComponentTest extends TestCase
         }
     }
 
-    public function testAttributeParentInheritance(): void
+    public function testAttributeParentInheritance()/*: void*/
     {
         $component = new TestViewComponent;
         $attributes = new ComponentAttributeBag(['class' => 'bar', 'type' => 'button']);

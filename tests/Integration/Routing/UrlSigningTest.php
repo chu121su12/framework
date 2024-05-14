@@ -377,15 +377,15 @@ class UrlSigningTest extends TestCase
         config(['app.key' => 'new-key']);
         $newUrl = URL::signedRoute('foo', ['id' => 1]);
 
-        tap($this->get($oldestURL), fn ($response) => $this->assertSame('invalid', $response->original));
-        tap($this->get($oldURL), fn ($response) => $this->assertSame('invalid', $response->original));
-        tap($this->get($newUrl), fn ($response) => $this->assertSame('valid', $response->original));
+        tap($this->get($oldestURL), function ($response) { return $this->assertSame('invalid', $response->original); });
+        tap($this->get($oldURL), function ($response) { return $this->assertSame('invalid', $response->original); });
+        tap($this->get($newUrl), function ($response) { return $this->assertSame('valid', $response->original); });
 
         config(['app.previous_keys' => ['old-key', 'oldest-key']]);
 
-        tap($this->get($oldestURL), fn ($response) => $this->assertSame('valid', $response->original));
-        tap($this->get($oldURL), fn ($response) => $this->assertSame('valid', $response->original));
-        tap($this->get($newUrl), fn ($response) => $this->assertSame('valid', $response->original));
+        tap($this->get($oldestURL), function ($response) { return $this->assertSame('valid', $response->original); });
+        tap($this->get($oldURL), function ($response) { return $this->assertSame('valid', $response->original); });
+        tap($this->get($newUrl), function ($response) { return $this->assertSame('valid', $response->original); });
     }
 
     protected function createValidateSignatureMiddleware(array $ignore)

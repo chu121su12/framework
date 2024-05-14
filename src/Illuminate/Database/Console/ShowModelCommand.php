@@ -91,7 +91,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
             $this->getAttributes($model),
             $this->getRelations($model),
             $this->getEvents($model),
-            $this->getObservers($model),
+            $this->getObservers($model)
         );
 
         return 0;
@@ -237,10 +237,10 @@ class ShowModelCommand extends DatabaseInspectionCommand
     protected function getEvents($model)
     {
         return collect($model->dispatchesEvents())
-            ->map(fn (string $class, string $event) => [
+            ->map(function (/*string */$class, /*string */$event) { return [
                 'event' => $event,
                 'class' => $class,
-            ])->values();
+            ]; })->values();
     }
 
     /**
@@ -402,7 +402,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
             foreach ($events as $event) {
                 $this->components->twoColumnDetail(
                     sprintf('%s', $event['event']),
-                    sprintf('%s', $event['class']),
+                    sprintf('%s', $event['class'])
                 );
             }
         }

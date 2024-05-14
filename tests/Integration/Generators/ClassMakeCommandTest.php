@@ -4,7 +4,7 @@ namespace Illuminate\Tests\Integration\Generators;
 
 class ClassMakeCommandTest extends TestCase
 {
-    protected array $files = [
+    protected /*array */$files = [
         'app/Reverb.php',
         'app/Notification.php',
     ];

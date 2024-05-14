@@ -78,8 +78,12 @@ class RoutingServiceProvider extends ServiceProvider
 
             $url->setKeyResolver(function () {
                 $config = $this->app->make('config');
+                $previousKeys = $config->get('app.previous_keys');
 
-                return [$config->get('app.key'), ...($config->get('app.previous_keys') ?? [])];
+                return \array_merge(
+                    [$config->get('app.key')],
+                    isset($previousKeys) ? $previousKeys : []
+                );
             });
 
             // If the route collection is "rebound", for example, when the routes stay

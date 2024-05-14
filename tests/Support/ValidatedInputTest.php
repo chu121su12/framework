@@ -464,6 +464,9 @@ class ValidatedInputTest extends TestCase
         $this->assertTrue($input->date('as_time')->isSameSecond('16:30:25'));
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function test_enum_method()
     {
         $input = new ValidatedInput([

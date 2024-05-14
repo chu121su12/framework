@@ -131,7 +131,7 @@ trait RunsInParallel
             });
         }
 
-        return $potentialExitCode ?? $this->getExitCode();
+        return isset($potentialExitCode) ? $potentialExitCode : $this->getExitCode();
     }
 
     /**

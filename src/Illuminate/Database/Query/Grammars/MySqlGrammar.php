@@ -221,7 +221,7 @@ class MySqlGrammar extends Grammar
      */
     protected function compileJsonOverlaps($column, $value)
     {
-        [$field, $path] = $this->wrapJsonFieldAndPath($column);
+        list($field, $path) = $this->wrapJsonFieldAndPath($column);
 
         return 'json_overlaps('.$field.', '.$value.$path.')';
     }

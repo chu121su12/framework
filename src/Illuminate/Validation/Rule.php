@@ -66,7 +66,7 @@ class Rule
      * @param  array|null  $keys
      * @return \Illuminate\Validation\Rules\ArrayRule
      */
-    public static function array($keys = null)
+    public static function array_($keys = null)
     {
         return new ArrayRule(...func_get_args());
     }

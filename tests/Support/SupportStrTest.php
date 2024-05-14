@@ -993,7 +993,7 @@ PATTERN;
         $this->assertSame('***************', Str::mask('maria@email.com', '*', 0));
     }
 
-    public function testMatch(): void
+    public function testMatch()/*: void*/
     {
         $this->assertSame('bar', Str::match('/bar/', 'foo bar'));
         $this->assertSame('bar', Str::match('/foo (.*)/', 'foo bar'));
@@ -1008,7 +1008,7 @@ PATTERN;
         $this->assertEmpty(Str::matchAll('/pattern/', ''));
     }
 
-    public function testCamel(): void
+    public function testCamel()/*: void*/
     {
         $this->assertSame('laravelPHPFramework', Str::camel('Laravel_p_h_p_framework'));
         $this->assertSame('laravelPhpFramework', Str::camel('Laravel_php_framework'));
