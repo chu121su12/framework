@@ -164,6 +164,7 @@ class ApplicationBuilder
         $commands = backport_type_check('?string', $commands);
         $channels = backport_type_check('?string', $channels);
         $pages = backport_type_check('?string', $pages);
+        $health = backport_type_check('?string', $health);
         $apiPrefix = backport_type_check('string', $apiPrefix);
         $then = backport_type_check('?callable', $then);
 
