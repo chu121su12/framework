@@ -58,6 +58,9 @@ if (! is_file($autoload_file = $basePath.'/vendor/autoload.php')) {
 if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'production') {
     error_reporting(~E_ALL);
 }
+else {
+    error_reporting(error_reporting() & ~\E_DEPRECATED);
+}
 
 require_once $autoload_file;
 
