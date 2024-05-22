@@ -4373,6 +4373,9 @@ class SupportCollectionTest extends TestCase
             (object) ['foo' => 6],
         ]);
         $this->assertEquals(3, $c->avg('foo'));
+
+        $c = new $collection([0]);
+        $this->assertEquals(0, $c->avg());
     }
 
     /** @dataProvider collectionClassProvider */
