@@ -167,7 +167,7 @@ class ViewServiceProvider extends ServiceProvider
 
             $compiler = new CompilerEngine(
                 $app->make('blade.compiler'),
-                $app->make('files'),
+                $app->make('files')
             );
 
             $app->terminating(static function () use ($compiler) {

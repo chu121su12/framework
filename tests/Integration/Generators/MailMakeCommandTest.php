@@ -56,7 +56,7 @@ class MailMakeCommandTest extends TestCase
             'use Illuminate\Mail\Mailable;',
             'class FooMail extends Mailable',
             'return new Content(',
-            "view: 'foo-mail',",
+            "/*view: */'foo-mail'",
         ], 'app/Mail/FooMail.php');
 
         $this->assertFilenameExists('resources/views/foo-mail.blade.php');

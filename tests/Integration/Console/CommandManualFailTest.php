@@ -2,6 +2,7 @@
 
 namespace Illuminate\Tests\Integration\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Application as Artisan;
 use Illuminate\Console\Command;
 use Illuminate\Console\ManuallyFailedException;
@@ -9,7 +10,7 @@ use Orchestra\Testbench\TestCase;
 
 class CommandManualFailTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         Artisan::starting(function ($artisan) {
             $artisan->resolveCommands([
@@ -49,7 +50,8 @@ class FailingCommandStub extends Command
         $this->trigger_failure();
 
         // This should never be reached.
-        return static::SUCCESS;
+        // return static::SUCCESS;
+        return SymfonyHelper::CONSOLE_SUCCESS;
     }
 
     protected function trigger_failure()

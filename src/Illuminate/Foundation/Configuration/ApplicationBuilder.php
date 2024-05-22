@@ -200,12 +200,12 @@ class ApplicationBuilder
      * @param  callable|null  $then
      * @return \Closure
      */
-    protected function buildRoutingCallback(array|string|null $web,
-        array|string|null $api,
-        ?string $pages,
-        ?string $health,
-        string $apiPrefix,
-        ?callable $then)
+    protected function buildRoutingCallback(/*array|string|null */$web = null,
+        /*array|string|null */$api = null,
+        /*?string */$pages = null,
+        /*?string */$health = null,
+        /*string */$apiPrefix = 'api',
+        /*?*/callable $then = null)
     {
         $web = backport_type_check('array|string|null', $web);
         $api = backport_type_check('array|string|null', $api);

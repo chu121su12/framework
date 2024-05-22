@@ -3,6 +3,7 @@
 namespace Illuminate\Foundation\Console;
 
 use Closure;
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Console\ManuallyFailedException;
 use Illuminate\Support\Facades\Schedule;
@@ -66,7 +67,8 @@ class ClosureCommand extends Command
         } catch (ManuallyFailedException $e) {
             $this->components->error($e->getMessage());
 
-            return static::FAILURE;
+            // return static::FAILURE;
+            return SymfonyHelper::CONSOLE_FAILURE;
         }
     }
 

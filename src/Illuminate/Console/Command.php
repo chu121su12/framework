@@ -216,7 +216,8 @@ class Command extends SymfonyCommand
         } catch (ManuallyFailedException $e) {
             $this->components->error($e->getMessage());
 
-            return static::FAILURE;
+            // return static::FAILURE;
+            return SymfonyHelper::CONSOLE_FAILURE;
         } finally {
             if ($this instanceof Isolatable && $this->option('isolated') !== false) {
                 $this->commandIsolationMutex()->forget($this);
@@ -267,8 +268,10 @@ class Command extends SymfonyCommand
      * @param  \Throwable|string|null  $exception
      * @return void
      */
-    public function fail(Throwable|string|null $exception = null)
+    public function fail(/*Throwable|string|null */$exception = null)
     {
+        $exception = backport_type_check('Throwable|string|null', $exception);
+
         if (is_null($exception)) {
             $exception = 'Command failed manually.';
         }

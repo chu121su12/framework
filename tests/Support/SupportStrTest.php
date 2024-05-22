@@ -139,7 +139,7 @@ class SupportStrTest extends TestCase
         $this->assertSame("\t\t\t", Str::words("\t\t\t"));
     }
 
-    public function testStringAscii(): void
+    public function testStringAscii()/*: void*/
     {
         $this->assertSame('@', Str::ascii('@'));
         $this->assertSame('u', Str::ascii('ü'));
@@ -273,7 +273,7 @@ class SupportStrTest extends TestCase
         $this->assertNull(Str::excerpt('', '/'));
     }
 
-    public function testStrBefore(): void
+    public function testStrBefore()/*: void*/
     {
         $this->assertSame('han', Str::before('hannah', 'nah'));
         $this->assertSame('ha', Str::before('hannah', 'n'));
@@ -308,7 +308,7 @@ class SupportStrTest extends TestCase
         $this->assertSame('yvette', Str::beforeLast("yvette\tyv0et0te", "\t"));
     }
 
-    public function testStrBetween(): void
+    public function testStrBetween()/*: void*/
     {
         $this->assertSame('abc', Str::between('abc', '', 'c'));
         $this->assertSame('abc', Str::between('abc', 'a', ''));

@@ -420,7 +420,12 @@ if (! \function_exists('backport_type_assert')) {
             case 'string': return \is_string($value);
             case 'stdObject': return \is_object($value);
             case 'true': return $value === true;
-            default: return \class_exists($type) && $value instanceof $type;
+            default:
+                if ($type === 'Throwable' && ! \class_exists('Throwable')) {
+                    return $value instanceof Exception;
+                }
+
+                return \class_exists($type) && $value instanceof $type;
         }
     }
 }
