@@ -19,6 +19,7 @@ use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\MultipleRecordsFoundException;
 use Illuminate\Database\RecordsNotFoundException;
+use Illuminate\Foundation\Exceptions\Renderer\Renderer;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -899,11 +900,13 @@ class Handler implements ExceptionHandlerContract
         backport_type_throwable($e);
 
         try {
-            return config('app.debug') && app()->has(ExceptionRenderer::class)
-                        ? $this->renderExceptionWithCustomRenderer($e)
-                        : $this->renderExceptionWithSymfony($e, config('app.debug'));
-        } catch (\Exception $e) {
-        } catch (\Error $e) {
+            if (config('app.debug')) {
+                return app()->has(ExceptionRenderer::class)
+                    ? $this->renderExceptionWithCustomRenderer($e)
+                    : $this->container->make(Renderer::class)->render(request(), $e);
+            }
+
+            return $this->renderExceptionWithSymfony($e, config('app.debug'));
         } catch (Throwable $e) {
         }
 

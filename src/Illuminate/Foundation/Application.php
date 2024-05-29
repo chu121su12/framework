@@ -99,7 +99,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
     /**
      * All of the registered service providers.
      *
-     * @var \Illuminate\Support\ServiceProvider[]
+     * @var array<string, \Illuminate\Support\ServiceProvider>
      */
     protected $serviceProviders = [];
 
@@ -904,9 +904,9 @@ class Application extends Container implements ApplicationContract, CachesConfig
      */
     public function getProvider($provider)
     {
-        $providerValues = array_values($this->getProviders($provider));
+        $name = is_string($provider) ? $provider : get_class($provider);
 
-        return isset($providerValues[0]) ? $providerValues[0] : null;
+        return $this->serviceProviders[$name] ?? null;
     }
 
     /**
@@ -943,9 +943,11 @@ class Application extends Container implements ApplicationContract, CachesConfig
      */
     protected function markAsRegistered($provider)
     {
-        $this->serviceProviders[] = $provider;
+        $class = get_class($provider);
 
-        $this->loadedProviders[get_class($provider)] = true;
+        $this->serviceProviders[$class] = $provider;
+
+        $this->loadedProviders[$class] = true;
     }
 
     /**
@@ -1403,7 +1405,7 @@ class Application extends Container implements ApplicationContract, CachesConfig
     /**
      * Get the service providers that have been loaded.
      *
-     * @return array
+     * @return array<string, boolean>
      */
     public function getLoadedProviders()
     {

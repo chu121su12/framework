@@ -10,6 +10,7 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
 use Mockery;
 use Mockery\Exception\NoMatchingExpectationException;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
@@ -21,6 +22,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 class PendingCommand
 {
     use Conditionable;
+    use Macroable;
 
     /**
      * The test being run.
