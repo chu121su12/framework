@@ -97,7 +97,11 @@ class BladeMapper
                 return $frame;
             })->toArray();
 
-        return tap($exception, fn () => (fn () => $this->trace = $trace)->call($exception));
+        return tap($exception, function () use ($trace, $exception) {
+            $callback = function () use ($trace) { $this->trace = $trace; };
+
+            return backport_function_call_able($callback)->call($exception);
+        });
     }
 
     /**
@@ -106,9 +110,15 @@ class BladeMapper
      * @param  string  $compiledPath
      * @return string|null
      */
-    protected function findCompiledView(string $compiledPath)
+    protected function findCompiledView(/*string */$compiledPath)
     {
-        return once(fn () => $this->getKnownPaths())[$compiledPath] ?? null;
+        $compiledPath = backport_type_check('string', $compiledPath);
+
+        $once = once(function () {
+            return $this->getKnownPaths();
+        });
+
+        return isset($once[$compiledPath]) ? $once[$compiledPath] : null;
     }
 
     /**
@@ -119,7 +129,7 @@ class BladeMapper
     protected function getKnownPaths()
     {
         $compilerEngineReflection = new ReflectionClass(
-            $bladeCompilerEngine = $this->factory->getEngineResolver()->resolve('blade'),
+            $bladeCompilerEngine = $this->factory->getEngineResolver()->resolve('blade')
         );
 
         if (! $compilerEngineReflection->hasProperty('lastCompiled') && $compilerEngineReflection->hasProperty('engine')) {
@@ -139,7 +149,7 @@ class BladeMapper
         foreach ($lastCompiled as $lastCompiledPath) {
             $compiledPath = $bladeCompilerEngine->getCompiler()->getCompiledPath($lastCompiledPath);
 
-            $knownPaths[realpath($compiledPath ?? $lastCompiledPath)] = realpath($lastCompiledPath);
+            $knownPaths[realpath(isset($compiledPath) ? $compiledPath : $lastCompiledPath)] = realpath($lastCompiledPath);
         }
 
         return $knownPaths;
@@ -169,8 +179,12 @@ class BladeMapper
      * @param  int  $compiledLineNumber
      * @return int
      */
-    protected function detectLineNumber(string $filename, int $compiledLineNumber)
+    protected function detectLineNumber(/*string */$filename, /*int */$compiledLineNumber)
     {
+        $filename = backport_type_check('string', $filename);
+
+        $compiledLineNumber = backport_type_check('int', $compiledLineNumber);
+
         $map = $this->compileSourcemap((string) file_get_contents($filename));
 
         return $this->findClosestLineNumberMapping($map, $compiledLineNumber);
@@ -182,8 +196,10 @@ class BladeMapper
      * @param  string  $value
      * @return string
      */
-    protected function compileSourcemap(string $value)
+    protected function compileSourcemap(/*string */$value)
     {
+        $value = backport_type_check('string', $value);
+
         try {
             $value = $this->addEchoLineNumbers($value);
             $value = $this->addStatementLineNumbers($value);
@@ -205,8 +221,10 @@ class BladeMapper
      * @param  string  $value
      * @return string
      */
-    protected function addEchoLineNumbers(string $value)
+    protected function addEchoLineNumbers(/*string */$value)
     {
+        $value = backport_type_check('string', $value);
+
         $echoPairs = [['{{', '}}'], ['{{{', '}}}'], ['{!!', '!!}']];
 
         foreach ($echoPairs as $pair) {
@@ -231,8 +249,10 @@ class BladeMapper
      * @param  string  $value
      * @return string
      */
-    protected function addStatementLineNumbers(string $value)
+    protected function addStatementLineNumbers(/*string */$value)
     {
+        $value = backport_type_check('string', $value);
+
         $shouldInsertLineNumbers = preg_match_all(
             '/\B@(@?\w+(?:::\w+)?)([ \t]*)(\( ( (?>[^()]+) | (?3) )* \))?/x',
             $value,
@@ -257,8 +277,10 @@ class BladeMapper
      * @param  string  $value
      * @return string
      */
-    protected function addBladeComponentLineNumbers(string $value)
+    protected function addBladeComponentLineNumbers(/*string */$value)
     {
+        $value = backport_type_check('string', $value);
+
         $shouldInsertLineNumbers = preg_match_all(
             '/<\s*x[-:]([\w\-:.]*)/mx',
             $value,
@@ -284,8 +306,12 @@ class BladeMapper
      * @param  string  $value
      * @return string
      */
-    protected function insertLineNumberAtPosition(int $position, string $value)
+    protected function insertLineNumberAtPosition(/*int */$position, /*string */$value)
     {
+        $position = backport_type_check('int', $position);
+
+        $value = backport_type_check('string', $value);
+
         $before = mb_substr($value, 0, $position);
 
         $lineNumber = count(explode("\n", $before));
@@ -299,8 +325,10 @@ class BladeMapper
      * @param  string  $value
      * @return string
      */
-    protected function trimEmptyLines(string $value)
+    protected function trimEmptyLines(/*string */$value)
     {
+        $value = backport_type_check('string', $value);
+
         $value = preg_replace('/^\|---LINE:([0-9]+)---\|$/m', '', $value);
 
         return ltrim((string) $value, PHP_EOL);
@@ -313,8 +341,12 @@ class BladeMapper
      * @param  int  $compiledLineNumber
      * @return int
      */
-    protected function findClosestLineNumberMapping(string $map, int $compiledLineNumber)
+    protected function findClosestLineNumberMapping(/*string */$map, /*int */$compiledLineNumber)
     {
+        $map = backport_type_check('string', $map);
+
+        $compiledLineNumber = backport_type_check('int', $compiledLineNumber);
+
         $map = explode("\n", $map);
 
         $maxDistance = 20;
@@ -328,7 +360,7 @@ class BladeMapper
                 return min($compiledLineNumber, count($map));
             }
 
-            if (preg_match($pattern, $map[$lineNumberToCheck] ?? '', $matches)) {
+            if (preg_match($pattern, isset($map[$lineNumberToCheck]) ? $map[$lineNumberToCheck] : '', $matches)) {
                 return (int) $matches['line'];
             }
 

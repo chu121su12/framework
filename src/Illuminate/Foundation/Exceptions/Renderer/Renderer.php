@@ -15,7 +15,7 @@ class Renderer
      *
      * @var string
      */
-    protected const DIST = __DIR__.'/../../resources/exceptions/renderer/dist/';
+    /*protected */const DIST = __DIR__.'/../../resources/exceptions/renderer/dist/';
 
     /**
      * The view factory instance.
@@ -67,8 +67,10 @@ class Renderer
         Listener $listener,
         HtmlErrorRenderer $htmlErrorRenderer,
         BladeMapper $bladeMapper,
-        string $basePath
+        /*string */$basePath
     ) {
+        $basePath = backport_type_check('string', $basePath);
+
         $this->viewFactory = $viewFactory;
         $this->listener = $listener;
         $this->htmlErrorRenderer = $htmlErrorRenderer;
@@ -83,10 +85,12 @@ class Renderer
      * @param  \Throwable  $throwable
      * @return string
      */
-    public function render(Request $request, Throwable $throwable)
+    public function render(Request $request, /*Throwable */$throwable)
     {
+        backport_type_throwable($throwable, null);
+
         $flattenException = $this->bladeMapper->map(
-            $this->htmlErrorRenderer->render($throwable),
+            $this->htmlErrorRenderer->render($throwable)
         );
 
         return $this->viewFactory->make('laravel-exceptions-renderer::show', [
@@ -106,7 +110,7 @@ class Renderer
             ['light-mode.css', ['data-theme' => 'light']],
             ['dark-mode.css', ['data-theme' => 'dark']],
         ])->map(function ($fileAndAttributes) {
-            [$filename, $attributes] = $fileAndAttributes;
+            list($filename, $attributes) = $fileAndAttributes;
 
             return '<style '.collect($attributes)->map(function ($value, $attribute) {
                 return $attribute.'="'.$value.'"';

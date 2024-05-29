@@ -379,8 +379,12 @@ class DatabaseBatchRepository implements PrunableBatchRepository
         }
 
         try {
-            return unserialize($serialized);
-        } catch (Throwable) {
+            return backport_unserialize($serialized);
+        } catch (\Exception $_e) {
+            return [];
+        } catch (\Error $_e) {
+            return [];
+        } catch (Throwable $_e) {
             return [];
         }
     }

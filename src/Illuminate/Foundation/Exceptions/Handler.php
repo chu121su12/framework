@@ -907,6 +907,8 @@ class Handler implements ExceptionHandlerContract
             }
 
             return $this->renderExceptionWithSymfony($e, config('app.debug'));
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (Throwable $e) {
         }
 

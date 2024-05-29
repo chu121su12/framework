@@ -46,8 +46,10 @@ class Exception
      * @param  string  $basePath
      * @return void
      */
-    public function __construct(FlattenException $exception, Request $request, Listener $listener, string $basePath)
+    public function __construct(FlattenException $exception, Request $request, Listener $listener, /*string */$basePath)
     {
+        $basePath = backport_type_check('string', $basePath);
+
         $this->exception = $exception;
         $this->request = $request;
         $this->listener = $listener;
@@ -79,7 +81,7 @@ class Exception
      *
      * @return string
      */
-    public function class()
+    public function class_()
     {
         return $this->exception->getClass();
     }
@@ -105,21 +107,23 @@ class Exception
      */
     public function frames()
     {
-        $classMap = once(fn () => array_map(function ($path) {
+        $classMap = once(function () { return array_map(function ($path) {
             return (string) realpath($path);
-        }, array_values(ClassLoader::getRegisteredLoaders())[0]->getClassMap()));
+        }, array_values(ClassLoader::getRegisteredLoaders())[0]->getClassMap()); });
 
         $trace = array_values(array_filter(
-            $this->exception->getTrace(), fn ($trace) => isset($trace['file']),
+            $this->exception->getTrace(), function ($trace) { return isset($trace['file']); }
         ));
 
-        if (($trace[1]['class'] ?? '') === HandleExceptions::class) {
+        if ((isset($trace[1]) && isset($trace[1]['class']) ? $trace[1]['class'] : '') === HandleExceptions::class) {
             array_shift($trace);
             array_shift($trace);
         }
 
         return collect(array_map(
-            fn (array $trace) => new Frame($this->exception, $classMap, $trace, $this->basePath), $trace,
+            function (array $trace) use ($classMap) {
+                return new Frame($this->exception, $classMap, $trace, $this->basePath);
+            }, $trace
         ));
     }
 
@@ -187,7 +191,7 @@ class Exception
         $parameters = $this->request()->route()->parameters();
 
         return $parameters ? json_encode(array_map(
-            fn ($value) => $value instanceof Model ? $value->withoutRelations() : $value,
+            function ($value) { return $value instanceof Model ? $value->withoutRelations() : $value; },
             $parameters
         ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : null;
     }
@@ -203,10 +207,18 @@ class Exception
             $sql = $query['sql'];
 
             foreach ($query['bindings'] as $binding) {
-                $sql = match (gettype($binding)) {
-                    'integer', 'double' => preg_replace('/\?/', $binding, $sql, 1),
-                    'NULL' => preg_replace('/\?/', 'NULL', $sql, 1),
-                    default => preg_replace('/\?/', "'$binding'", $sql, 1),
+                switch (gettype($binding)) {
+                    case 'integer':
+                    case 'double':
+                        $sql = preg_replace('/\?/', $binding, $sql, 1);
+                        break;
+
+                    case 'NULL':
+                        $sql = preg_replace('/\?/', 'NULL', $sql, 1);
+                        break;
+
+                    default:
+                        $sql = preg_replace('/\?/', "'$binding'", $sql, 1);
                 };
             }
 

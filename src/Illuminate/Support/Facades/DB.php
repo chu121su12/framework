@@ -122,8 +122,10 @@ class DB extends Facade
      * @param  bool  $prohibit
      * @return void
      */
-    public static function prohibitDestructiveCommands(bool $prohibit = true)
+    public static function prohibitDestructiveCommands(/*bool */$prohibit = true)
     {
+        $prohibit = backport_type_check('bool', $prohibit);
+
         FreshCommand::prohibit($prohibit);
         RefreshCommand::prohibit($prohibit);
         ResetCommand::prohibit($prohibit);

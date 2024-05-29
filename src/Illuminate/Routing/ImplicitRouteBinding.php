@@ -90,9 +90,15 @@ class ImplicitRouteBinding
 
             $parameterType = $parameter->getType();
 
-            $backedEnum = $parameterValue instanceof $backedEnumClass
-                ? $parameterValue
-                : $backedEnumClass::tryFrom((string) $parameterValue);
+            if ($parameterValue instanceof $backedEnumClass) {
+                $backedEnum = $parameterValue;
+            }
+            elseif (\method_exists($backedEnumClass, 'tryFrom')) {
+                $backedEnum = $backedEnumClass::tryFrom((string) $parameterValue);
+            }
+            else {
+                $backedEnum = null;
+            }
 
             if (is_null($backedEnum)) {
                 throw new BackedEnumCaseNotFoundException($backedEnumClass, $parameterValue);

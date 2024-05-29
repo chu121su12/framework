@@ -28,8 +28,10 @@ trait Prohibitable
      * @param  bool  $quiet
      * @return bool
      */
-    protected function isProhibited(bool $quiet = false)
+    protected function isProhibited(/*bool */$quiet = false)
     {
+        $quiet = backport_type_check('bool', $quiet);
+
         if (! static::$prohibitedFromRunning) {
             return false;
         }

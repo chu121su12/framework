@@ -46,8 +46,10 @@ class Frame
      * @param  string  $basePath
      * @return void
      */
-    public function __construct(FlattenException $exception, array $classMap, array $frame, string $basePath)
+    public function __construct(FlattenException $exception, array $classMap, array $frame, /*string */$basePath)
     {
+        $basePath = backport_type_check('string', $basePath);
+
         $this->exception = $exception;
         $this->classMap = $classMap;
         $this->frame = $frame;
@@ -61,10 +63,10 @@ class Frame
      */
     public function source()
     {
-        return match (true) {
-            is_string($this->class()) => $this->class(),
-            default => $this->file(),
-        };
+        switch (true) {
+            case is_string($this->class_()): return $this->class_();
+            default: return $this->file();
+        }
     }
 
     /**
@@ -82,7 +84,7 @@ class Frame
      *
      * @return string|null
      */
-    public function class()
+    public function class_()
     {
         $class = array_search((string) realpath($this->frame['file']), $this->classMap, true);
 
@@ -118,10 +120,10 @@ class Frame
      */
     public function callable()
     {
-        return match (true) {
-            ! empty($this->frame['function']) => $this->frame['function'],
-            default => 'throw',
-        };
+        switch (true) {
+            case ! empty($this->frame['function']): return $this->frame['function'];
+            default: return 'throw';
+        }
     }
 
     /**

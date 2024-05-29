@@ -906,7 +906,7 @@ class RoutingUrlGeneratorTest extends TestCase
 
         $this->assertSame(
             'http://www.foo.com/foo?filter%5B0%5D=people&filter%5B1%5D=fruits',
-            $url->route('foo', ['filter' => [CategoryBackedEnum::People, CategoryBackedEnum::Fruits]]),
+            $url->route('foo', ['filter' => [CategoryBackedEnum::People, CategoryBackedEnum::Fruits]])
         );
     }
 

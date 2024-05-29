@@ -3,10 +3,10 @@
         <div>
             <div class="inline-block rounded-full bg-red-500/20 px-3 py-2 dark:bg-red-500/20">
                 <span class="hidden text-sm font-bold leading-5 text-red-500 md:inline-block lg:text-base">
-                    {{ $exception->class() }}
+                    {{ $exception->class_() }}
                 </span>
                 <span class="text-sm font-bold leading-5 text-red-500 md:hidden lg:text-base">
-                    {{ implode(' ', array_slice(explode('\\', $exception->class()), -1)) }}
+                    {{ implode(' ', array_slice(explode('\\', $exception->class_()), -1)) }}
                 </span>
             </div>
             <div class="mt-4 text-lg font-semibold text-gray-900 dark:text-white lg:text-2xl">{{ $exception->message() }}</div>

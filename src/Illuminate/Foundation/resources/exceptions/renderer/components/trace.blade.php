@@ -31,7 +31,7 @@
             @foreach ($exception->frames() as $frame)
                 @if (! $frame->isFromVendor())
                     @php
-                        $vendorFramesCollapsed = $exception->frames()->take($loop->index)->reverse()->takeUntil(fn ($frame) => ! $frame->isFromVendor());
+                        $vendorFramesCollapsed = $exception->frames()->take($loop->index)->reverse()->takeUntil(function ($frame) { return ! $frame->isFromVendor(); });
                     @endphp
 
                     <div x-show="! includeVendorFrames">
@@ -69,7 +69,7 @@
                     </div>
                 </button>
 
-                @if (! $frame->isFromVendor() && $exception->frames()->slice($loop->index + 1)->filter(fn ($frame) => ! $frame->isFromVendor())->isEmpty())
+                @if (! $frame->isFromVendor() && $exception->frames()->slice($loop->index + 1)->filter(function ($frame) { return ! $frame->isFromVendor(); })->isEmpty())
                     @if ($exception->frames()->slice($loop->index + 1)->count())
                         <div x-show="! includeVendorFrames">
                             <div class="text-gray-500">

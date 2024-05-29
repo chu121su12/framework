@@ -250,7 +250,7 @@ class FoundationServiceProvider extends AggregateServiceProvider
 
         $this->app->singleton(Renderer::class, function (Application $app) {
             $errorRenderer = new HtmlErrorRenderer(
-                $app['config']->get('app.debug'),
+                $app['config']->get('app.debug')
             );
 
             return new Renderer(
@@ -258,7 +258,7 @@ class FoundationServiceProvider extends AggregateServiceProvider
                 $app->make(Listener::class),
                 $errorRenderer,
                 $app->make(BladeMapper::class),
-                $app->basePath(),
+                $app->basePath()
             );
         });
 

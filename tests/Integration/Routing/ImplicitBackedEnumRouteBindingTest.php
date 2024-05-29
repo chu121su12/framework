@@ -68,7 +68,13 @@ PHP;
             return $category->value;
         })->middleware('web');
 
-        Route::bind('categoryCode', fn (string $categoryCode) => CategoryBackedEnum::fromCode($categoryCode) ?? abort(404));
+        Route::bind('categoryCode', function (/*string */$categoryCode) {
+            $categoryCode = backport_type_check('string', $categoryCode);
+
+            $enum = CategoryBackedEnum::fromCode($categoryCode);
+
+            return isset($enum) ? $enum : abort(404);
+        });
 
         Route::post('/categories-code/{categoryCode}', function (CategoryBackedEnum $categoryCode) {
             return $categoryCode->value;
