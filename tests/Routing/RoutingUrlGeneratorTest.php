@@ -894,6 +894,9 @@ class RoutingUrlGeneratorTest extends TestCase
         $this->assertSame('http://www.foo.com/foo/fruits', $url->route('foo.bar', CategoryBackedEnum::Fruits));
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testRouteGenerationWithNestedBackedEnums()
     {
         $url = new UrlGenerator(
