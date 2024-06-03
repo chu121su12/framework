@@ -6,6 +6,7 @@ use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Env;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -121,6 +122,12 @@ class ServeCommand extends Command
                 $process = $this->startProcess($hasEnvironment);
             }
 
+            if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+                foreach ((array) (Cache::store('internal')->pull('rhs-data') ?: []) as $line) {
+                    $this->flushServeEventCache($line);
+                }
+            }
+
             usleep(500 * 1000);
         }
 
@@ -133,6 +140,26 @@ class ServeCommand extends Command
         }
 
         return $status;
+    }
+
+    protected function flushServeEventCache(array $line)
+    {
+        $heading = "$line[6]  $line[3]  $line[4]";
+
+        $startDate = Carbon::createFromFormat('U', $line[1]);
+
+        $formattedStartedAt = $startDate->format('Y-m-d H:i:s');
+
+        list($date, $time) = explode(' ', $formattedStartedAt);
+
+        $this->output->write("  <fg=gray>$date</> $time  $heading");
+
+        $runTime = '?';
+
+        $dots = max(terminal()->width() - mb_strlen($formattedStartedAt) - mb_strlen($heading) - mb_strlen($runTime) - 8, 0);
+
+        $this->output->write(' '.str_repeat('<fg=gray>.</>', $dots));
+        $this->output->writeln(" <fg=gray>~ {$runTime}s</>");
     }
 
     /**
@@ -159,7 +186,12 @@ class ServeCommand extends Command
             exit;
         });
 
-        $process->start($this->handleProcessOutput());
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            $process->start();
+        }
+        else {
+            $process->start($this->handleProcessOutput());
+        }
 
         return $process;
     }
