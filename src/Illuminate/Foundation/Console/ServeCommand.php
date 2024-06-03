@@ -6,6 +6,7 @@ use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Env;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -100,6 +101,13 @@ class ServeCommand extends Command
 
         $process = $this->startProcess($hasEnvironment);
 
+        if ($this->option('access')) {
+            $this->components->info("Server running on [http://{$this->host()}:{$this->port()}].");
+            $this->comment('  <fg=yellow;options=bold>Press Ctrl+C to stop the server</>');
+
+            $this->newLine();
+        }
+
         while ($process->isRunning()) {
             if ($hasEnvironment) {
                 clearstatcache(false, $environmentFile);
@@ -121,6 +129,12 @@ class ServeCommand extends Command
                 $process = $this->startProcess($hasEnvironment);
             }
 
+            foreach ((array) (Cache::store('internal')->pull('rhs-data') ?: []) as $line) {
+                if ($this->option('access')) {
+                    $this->displayServeEventCache($line);
+                }
+            }
+
             usleep(500 * 1000);
         }
 
@@ -133,6 +147,28 @@ class ServeCommand extends Command
         }
 
         return $status;
+    }
+
+    protected function displayServeEventCache(array $line)
+    {
+        $method = str_pad($line[3], 7);
+
+        $heading = "$line[6] $method  $line[4]";
+
+        $startDate = Carbon::createFromFormat('U', $line[1])->setTimezone(date_default_timezone_get());
+
+        $formattedStartedAt = $startDate->format('Y-m-d H:i:s');
+
+        list($date, $time) = explode(' ', $formattedStartedAt);
+
+        $this->output->write("  <fg=gray>$date</> $time  $heading");
+
+        $runTime = '?';
+
+        $dots = max(terminal()->width() - mb_strlen($formattedStartedAt) - mb_strlen($heading) - mb_strlen($runTime) - 11, 0);
+
+        $this->output->write(' '.str_repeat('<fg=gray>.</>', $dots));
+        $this->output->writeln(" <fg=gray>~ {$runTime}s</>");
     }
 
     /**
@@ -159,7 +195,12 @@ class ServeCommand extends Command
             exit;
         });
 
-        $process->start($this->handleProcessOutput());
+        if ($this->option('access')) {
+            $process->start();
+        }
+        else {
+            $process->start($this->handleProcessOutput());
+        }
 
         return $process;
     }
@@ -385,6 +426,7 @@ class ServeCommand extends Command
             ['port', null, InputOption::VALUE_OPTIONAL, 'The port to serve the application on', Env::get('SERVER_PORT')],
             ['tries', null, InputOption::VALUE_OPTIONAL, 'The max number of ports to attempt to serve from', 10],
             ['no-reload', null, InputOption::VALUE_NONE, 'Do not reload the development server on .env file changes'],
+            ['access', null, InputOption::VALUE_NONE, 'Try to resolve request lines'],
         ];
     }
 }
