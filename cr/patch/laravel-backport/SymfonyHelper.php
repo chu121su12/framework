@@ -347,6 +347,8 @@ class SymfonyHelper
 
     public static function normalizeRequestPreCreateFromGlobals()
     {
+        $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
+
         if (version_compare(PHP_VERSION, '8.1', '>=')) {
             foreach ($_FILES as $key => $value) {
                 unset($value['full_path']);

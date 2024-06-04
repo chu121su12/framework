@@ -102,10 +102,14 @@ class ServeCommand extends Command
         $process = $this->startProcess($hasEnvironment);
 
         if ($this->option('access')) {
-            $this->components->info("Server running on [http://{$this->host()}:{$this->port()}].");
-            $this->comment('  <fg=yellow;options=bold>Press Ctrl+C to stop the server</>');
+            if ($this->serverRunningHasBeenDisplayed === false) {
+                $this->serverRunningHasBeenDisplayed = true;
 
-            $this->newLine();
+                $this->components->info("Server running on [http://{$this->host()}:{$this->port()}].");
+                $this->comment('  <fg=yellow;options=bold>Press Ctrl+C to stop the server</>');
+
+                $this->newLine();
+            }
         }
 
         while ($process->isRunning()) {
@@ -151,11 +155,11 @@ class ServeCommand extends Command
 
     protected function displayServeEventCache(array $line)
     {
-        $method = str_pad($line[3], 7);
+        $heading = sprintf('%s %s %s', $line[6], str_pad($line[3], strlen('options')), $line[4]);
 
-        $heading = "$line[6] $method  $line[4]";
+        $startDate = Carbon::createFromTimestampUTC($line[1])->setTimezone(date_default_timezone_get());
 
-        $startDate = Carbon::createFromFormat('U', $line[1])->setTimezone(date_default_timezone_get());
+        $endDate = Carbon::createFromTimestampUTC($line[2])->setTimezone(date_default_timezone_get());
 
         $formattedStartedAt = $startDate->format('Y-m-d H:i:s');
 
@@ -163,12 +167,12 @@ class ServeCommand extends Command
 
         $this->output->write("  <fg=gray>$date</> $time  $heading");
 
-        $runTime = '?';
+        $runTime = $endDate->diffInMilliseconds($startDate);
 
-        $dots = max(terminal()->width() - mb_strlen($formattedStartedAt) - mb_strlen($heading) - mb_strlen($runTime) - 11, 0);
+        $dots = max(terminal()->width() - mb_strlen($formattedStartedAt) - mb_strlen($heading) - mb_strlen($runTime) - 12, 0);
 
         $this->output->write(' '.str_repeat('<fg=gray>.</>', $dots));
-        $this->output->writeln(" <fg=gray>~ {$runTime}s</>");
+        $this->output->writeln(" <fg=gray>~ {$runTime}ms</>");
     }
 
     /**
