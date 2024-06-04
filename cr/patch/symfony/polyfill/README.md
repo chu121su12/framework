@@ -18,21 +18,6 @@ Polyfills are provided for:
 - the `intl_error_name`, `intl_get_error_code`, `intl_get_error_message` and
   `intl_is_failure` functions;
 - the `idn_to_ascii` and `idn_to_utf8` functions;
-- the `hex2bin` function, the `CallbackFilterIterator`,
-  `RecursiveCallbackFilterIterator` and `SessionHandlerInterface` classes
-  introduced in PHP 5.4;
-- the `array_column`, `boolval`, `json_last_error_msg` and `hash_pbkdf2`
-  functions introduced in PHP 5.5;
-- the `password_hash` and `password_*` related functions introduced in PHP 5.5,
-  provided by the `ircmaxell/password-compat` package;
-- the `hash_equals` and `ldap_escape` functions introduced in PHP 5.6;
-- the `*Error` classes, the `error_clear_last`, `preg_replace_callback_array` and
-  `intdiv` functions introduced in PHP 7.0;
-- the `random_bytes` and `random_int` functions introduced in PHP 7.0,
-  provided by the `paragonie/random_compat` package;
-- the `PHP_INT_MIN` constant introduced in PHP 7.0,
-- the `SessionUpdateTimestampHandlerInterface` interface introduced in PHP 7.0,
-- the `is_iterable` function introduced in PHP 7.1;
 - a `Binary` utility class to be used when compatibility with
   `mbstring.func_overload` is required;
 - the `spl_object_id` and `stream_isatty` functions introduced in PHP 7.2;
@@ -79,7 +64,9 @@ Polyfills are provided for:
 - the `ldap_exop_sync` function introduced in PHP 8.3;
 - the `ldap_connect_wallet` function introduced in PHP 8.3;
 - the `stream_context_set_options` function introduced in PHP 8.3;
+- the `str_increment` and `str_decrement` functions introduced in PHP 8.3;
 - the `Date*Exception/Error` classes introduced in PHP 8.3;
+- the `SQLite3Exception` class introduced in PHP 8.3;
 
 It is strongly recommended to upgrade your PHP version and/or install the missing
 extensions whenever possible. This polyfill should be used only when there is no
@@ -112,6 +99,7 @@ should **not** `require` the `symfony/polyfill` package, but the standalone ones
 - `symfony/polyfill-php81` for using the PHP 8.1 functions,
 - `symfony/polyfill-php82` for using the PHP 8.2 functions,
 - `symfony/polyfill-php83` for using the PHP 8.3 functions,
+- `symfony/polyfill-php84` for using the PHP 8.4 functions,
 - `symfony/polyfill-iconv` for using the iconv functions,
 - `symfony/polyfill-intl-grapheme` for using the `grapheme_*` functions,
 - `symfony/polyfill-intl-idn` for using the `idn_to_ascii` and `idn_to_utf8` functions,

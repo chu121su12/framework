@@ -2,7 +2,7 @@
     "name": "symfony/polyfill",
     "type": "library",
     "description": "Symfony polyfills backporting features to lower PHP versions",
-    "keywords": ["polyfill", "shim", "compat", "compatibility"],
+    "keywords": ["polyfill", "shim", "compat", "compatibility", "dev"],
     "homepage": "https://symfony.com",
     "license": "MIT",
     "authors": [
@@ -26,11 +26,6 @@
     "replace": {
         "symfony/polyfill-apcu": "self.version",
         "symfony/polyfill-ctype": "self.version",
-        "symfony/polyfill-php54": "self.version",
-        "symfony/polyfill-php55": "self.version",
-        "symfony/polyfill-php56": "self.version",
-        "symfony/polyfill-php70": "self.version",
-        "symfony/polyfill-php71": "self.version",
         "symfony/polyfill-php72": "self.version",
         "symfony/polyfill-php73": "self.version",
         "symfony/polyfill-php74": "self.version",
@@ -38,6 +33,7 @@
         "symfony/polyfill-php81": "self.version",
         "symfony/polyfill-php82": "self.version",
         "symfony/polyfill-php83": "self.version",
+        "symfony/polyfill-php84": "self.version",
         "symfony/polyfill-iconv": "self.version",
         "symfony/polyfill-intl-grapheme": "self.version",
         "symfony/polyfill-intl-icu": "self.version",
@@ -55,14 +51,6 @@
             "src/bootstrap.php",
             "src/Apcu/bootstrap.php",
             "src/Ctype/bootstrap.php",
-            "src/Php54/bootstrap.php",
-            "src/Php55/bootstrap.php",
-            "src/Php56/bootstrap.php",
-            "src/Php70/bootstrap.php",
-            "src/Php71/bootstrap.php",
-            "src/Php72/bootstrap.php",
-            "src/Php73/bootstrap.php",
-            "src/Php74/bootstrap.php",
             "src/Uuid/bootstrap.php",
             "src/Iconv/bootstrap.php",
             "src/Intl/Grapheme/bootstrap.php",
@@ -80,9 +68,7 @@
             "src/Php82/Resources/stubs",
             "src/Php81/Resources/stubs",
             "src/Php80/Resources/stubs",
-            "src/Php73/Resources/stubs",
-            "src/Php70/Resources/stubs",
-            "src/Php54/Resources/stubs"
+            "src/Php73/Resources/stubs"
         ]
     },
     "minimum-stability": "dev"

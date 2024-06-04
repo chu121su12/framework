@@ -20,19 +20,17 @@ if (\PHP_VERSION_ID >= 80000) {
 }
 
 if (!extension_loaded('odbc')) {
-    return;
-}
+    if (!function_exists('odbc_connection_string_is_quoted')) {
+        function odbc_connection_string_is_quoted(/*string */$str)/*: bool */{ $str = backport_type_check('string', $str); return p\Php82::odbc_connection_string_is_quoted($str); }
+    }
 
-if (!function_exists('odbc_connection_string_is_quoted')) {
-    function odbc_connection_string_is_quoted(/*string */$str)/*: bool */{ $str = backport_type_check('string', $str); return p\Php82::odbc_connection_string_is_quoted($str); }
-}
+    if (!function_exists('odbc_connection_string_should_quote')) {
+        function odbc_connection_string_should_quote(/*string */$str)/*: bool */{ $str = backport_type_check('string', $str); return p\Php82::odbc_connection_string_should_quote($str); }
+    }
 
-if (!function_exists('odbc_connection_string_should_quote')) {
-    function odbc_connection_string_should_quote(/*string */$str)/*: bool */{ $str = backport_type_check('string', $str); return p\Php82::odbc_connection_string_should_quote($str); }
-}
-
-if (!function_exists('odbc_connection_string_quote')) {
-    function odbc_connection_string_quote(/*string */$str)/*: string */{ $str = backport_type_check('string', $str); return p\Php82::odbc_connection_string_quote($str); }
+    if (!function_exists('odbc_connection_string_quote')) {
+        function odbc_connection_string_quote(/*string */$str)/*: string */{ $str = backport_type_check('string', $str); return p\Php82::odbc_connection_string_quote($str); }
+    }
 }
 
 if (!function_exists('ini_parse_quantity')) {

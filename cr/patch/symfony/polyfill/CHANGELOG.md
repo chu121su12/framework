@@ -1,3 +1,9 @@
+# 1.29.0
+
+  * Fix the `ini_parse_quantity()` polyfill
+  * Add `str_increment` and `str_decrement` functions
+  * Add `SQLite3Exception` class
+
 # 1.28.0
 
   * Polyfill `ldap_exop_sync()`

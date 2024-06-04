@@ -182,6 +182,42 @@ class Php82
 
                 return 0;
             }
+
+            $digits_consumed = $digits;
+            /* Ignore leading whitespace. */
+            while ($digits_consumed < $str_end && false !== strpos($ctype_space, $value[$digits_consumed])) {
+                ++$digits_consumed;
+            }
+            if ($digits_consumed !== $str_end && ($value[$digits_consumed] === '+' || $value[$digits_consumed] === '-')) {
+                ++$digits_consumed;
+            }
+
+            if ($value[$digits_consumed] === '0') {
+                /* Value is just 0 */
+                if ($digits_consumed + 1 === $str_end) {
+                    goto evaluation;
+                }
+                switch ($value[$digits_consumed + 1]) {
+                    case 'x':
+                    case 'X':
+                    case 'o':
+                    case 'O':
+                    case 'b':
+                    case 'B':
+                        $digits_consumed += 2;
+                    break;
+                }
+            }
+
+            if ($digits !== $digits_consumed) {
+                $message = sprintf(
+                    'Invalid quantity "%s": no digits after base prefix, interpreting as "0" for backwards compatibility',
+                    self::escapeString($value)
+                );
+                trigger_error($message, \E_USER_WARNING);
+
+                return 0;
+            }
         }
 
         evaluation:
