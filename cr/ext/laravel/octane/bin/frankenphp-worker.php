@@ -85,4 +85,6 @@ try {
     if (isset($worker)) {
         $worker->terminate();
     }
+
+    gc_collect_cycles();
 }

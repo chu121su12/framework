@@ -123,6 +123,7 @@ class OctaneServiceProvider extends ServiceProvider
     {
         $this->app->singleton(Listeners\CollectGarbage::class);
         $this->app->singleton(Listeners\CreateConfigurationSandbox::class);
+        $this->app->singleton(Listeners\CreateUrlGeneratorSandbox::class);
         $this->app->singleton(Listeners\DisconnectFromDatabases::class);
         $this->app->singleton(Listeners\EnforceRequestScheme::class);
         $this->app->singleton(Listeners\EnsureRequestServerPortMatchesScheme::class);
