@@ -1216,7 +1216,7 @@ class Validator implements ValidatorContract
                             ->explode(ValidationRuleParser::filterConditionalRules($rules, $this->data));
 
         foreach ($response->rules as $key => $rule) {
-            $this->rules[$key] = array_merge($this->rules[$key] ?? [], $rule);
+            $this->rules[$key] = array_merge(isset($this->rules[$key]) ? $this->rules[$key] : [], $rule);
         }
 
         $this->implicitAttributes = array_merge(
