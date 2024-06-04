@@ -417,7 +417,7 @@ if (! function_exists('\Laravel\Prompts\progress')) {
 }
 
 if (! function_exists('\Laravel\Prompts\form')) {
-    function form(): FormBuilder
+    function form()/*: FormBuilder*/
     {
         return new FormBuilder();
     }

@@ -100,8 +100,10 @@ final class Php83
         }
     }
 
-    public static function str_increment(string $string): string
+    public static function str_increment(/*string */$string)/*: string*/
     {
+        $string = backport_type_check('string', $string);
+
         if ('' === $string) {
             throw new \ValueError('str_increment(): Argument #1 ($string) cannot be empty');
         }
@@ -140,8 +142,10 @@ final class Php83
         return ++$string;
     }
 
-    public static function str_decrement(string $string): string
+    public static function str_decrement(/*string */$string)/*: string*/
     {
+        $string = backport_type_check('string', $string);
+
         if ('' === $string) {
             throw new \ValueError('str_decrement(): Argument #1 ($string) cannot be empty');
         }
