@@ -86,10 +86,11 @@ class MultiSelectPrompt extends Prompt
             case 'j':
             case 'l': return $this->highlightNext(count($this->options));
 
-            case Key::oneOf([Key::HOME, Key::CTRL_A], $key): return $this->highlight(0);
-            case Key::oneOf([Key::END, Key::CTRL_E], $key): return $this->highlight(count($this->options) - 1);
+            case Key::oneOf([Key::HOME], $key): return $this->highlight(0);
+            case Key::oneOf([Key::END], $key): return $this->highlight(count($this->options) - 1);
 
             case Key::SPACE: return $this->toggleHighlighted();
+            case Key::CTRL_A: return $this->toggleAll();
             case Key::ENTER: return $this->submit();
             default: return null;
         } });
@@ -156,6 +157,20 @@ class MultiSelectPrompt extends Prompt
         $value = backport_type_check('string', $value);
 
         return in_array($value, $this->values);
+    }
+
+    /**
+     * Toggle all options.
+     */
+    protected function toggleAll()/*: void*/
+    {
+        if (count($this->values) === count($this->options)) {
+            $this->values = [];
+        } else {
+            $this->values = array_is_list($this->options)
+                ? array_values($this->options)
+                : array_keys($this->options);
+        }
     }
 
     /**

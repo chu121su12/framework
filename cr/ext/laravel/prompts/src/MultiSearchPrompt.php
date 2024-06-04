@@ -78,11 +78,13 @@ class MultiSearchPrompt extends Prompt
             case Key::DOWN_ARROW:
             case Key::TAB: return $this->highlightNext(count($this->matches), true);
 
-            case Key::oneOf([Key::HOME, Key::CTRL_A], $key): return $this->highlighted !== null ? $this->highlight(0) : null;
+            case Key::oneOf(Key::HOME, $key): return $this->highlighted !== null ? $this->highlight(0) : null;
 
-            case Key::oneOf([Key::END, Key::CTRL_E], $key): return $this->highlighted !== null ? $this->highlight(count($this->matches()) - 1) : null;
+            case Key::oneOf(Key::END, $key): return $this->highlighted !== null ? $this->highlight(count($this->matches()) - 1) : null;
 
             case Key::SPACE: return $this->highlighted !== null ? $this->toggleHighlighted() : null;
+            case Key::CTRL_A: return $this->highlighted !== null ? $this->toggleAll() : null;
+            case Key::CTRL_E: return null;
             case Key::ENTER: return $this->submit();
 
             case Key::LEFT:
@@ -167,6 +169,27 @@ class MultiSearchPrompt extends Prompt
     public function visible()/*: array*/
     {
         return array_slice($this->matches(), $this->firstVisible, $this->scroll, /*preserve_keys: */true);
+    }
+
+    /**
+     * Toggle all options.
+     */
+    protected function toggleAll()/*: void*/
+    {
+        $allMatchesSelected = collect($this->matches)->every(function ($label, $key) { return $this->isList()
+            ? array_key_exists($label, $this->values)
+            : array_key_exists($key, $this->values); });
+
+        if ($allMatchesSelected) {
+            $this->values = array_filter($this->values, function ($value) { return $this->isList()
+                ? ! in_array($value, $this->matches)
+                : ! array_key_exists(array_search($value, $this->matches), $this->matches)
+            ; });
+        } else {
+            $this->values = $this->isList()
+                ? array_merge($this->values, array_combine(array_values($this->matches), array_values($this->matches)))
+                : array_merge($this->values, array_combine(array_keys($this->matches), array_values($this->matches)));
+        }
     }
 
     /**
