@@ -106,7 +106,7 @@
         "laravel/telescope": "^5.0.5",
         "laravel/tinker": "^2.9.0",
         "league/flysystem": "^1.0.70",
-        "nesbot/carbon": "^2.72.3",
+        "nesbot/carbon": "^2.72.5",
         "nunomaduro/collision": "^7.10.0",
         "nunomaduro/termwind": "^1.15.1",
         "spatie/backtrace": "^1.5.3",
