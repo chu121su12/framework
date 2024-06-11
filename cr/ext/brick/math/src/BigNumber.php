@@ -53,7 +53,7 @@ abstract class BigNumber implements \JsonSerializable
      *
      * @param BigNumber|int|float|string $value
      *
-     * @return BigNumber
+     * @return static
      *
      * @throws NumberFormatException   If the format of the number is not valid.
      * @throws DivisionByZeroException If the value represents a rational number with a denominator of zero.
