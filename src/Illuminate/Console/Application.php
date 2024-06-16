@@ -326,6 +326,9 @@ class Application extends SymfonyApplication implements ApplicationContract
     }
 
     // override
+    /**
+     * @deprecated
+     */
     protected function doRunCommand_($command, $input, $output)
     {
         // $this->trySignals($command, $input, $output);

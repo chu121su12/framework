@@ -288,6 +288,7 @@ class Response implements ArrayAccess, Stringable
      * @return $this
      *
      * @throws \Illuminate\Http\Client\RequestException
+     * @deprecated
      */
     public function throw_()
     {

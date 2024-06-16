@@ -708,6 +708,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      * @param  string  $name
      * @param  callable  $callback
      * @return void
+     * @deprecated
      */
     public function if_($name, callable $callback)
     {
@@ -922,6 +923,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      * @param  string  $path
      * @param  string|null  $alias
      * @return void
+     * @deprecated
      */
     public function include_($path, $alias = null)
     {

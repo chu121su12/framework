@@ -863,6 +863,7 @@ final class BigInteger extends BigNumber
      * @param BigNumber|int|float|string $that The operand. Must be convertible to an integer number.
      *
      * @return BigInteger
+     * @deprecated
      */
     public function and_(/*BigNumber|int|float|string */$that)/* : BigInteger*/
     {
@@ -886,6 +887,7 @@ final class BigInteger extends BigNumber
      * @param BigNumber|int|float|string $that The operand. Must be convertible to an integer number.
      *
      * @return BigInteger
+     * @deprecated
      */
     public function or_(/*BigNumber|int|float|string */$that)/* : BigInteger*/
     {
@@ -909,6 +911,7 @@ final class BigInteger extends BigNumber
      * @param BigNumber|int|float|string $that The operand. Must be convertible to an integer number.
      *
      * @return BigInteger
+     * @deprecated
      */
     public function xor_(/*BigNumber|int|float|string */$that)/* : BigInteger*/
     {

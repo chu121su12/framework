@@ -385,6 +385,9 @@ class HtmlErrorRenderer implements ErrorRendererInterface
         return '<path d="'.self::GHOST_ADDONS[$monthDateDate].'" fill="#fff" fill-opacity="0.6"></path>';
     }
 
+    /**
+     * @deprecated
+     */
     private function include_(/*string */$name, array $context = [])/*: string*/
     {
         $name = backport_type_check('string', $name);

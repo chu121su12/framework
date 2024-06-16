@@ -80,6 +80,7 @@ class Exception
      * Get the exception class name.
      *
      * @return string
+     * @deprecated
      */
     public function class_()
     {

@@ -136,6 +136,9 @@ class GmpCalculator extends Calculator
         return \gmp_strval($number, $base);
     }
 
+    /**
+     * @deprecated
+     */
     public function and_(/*string */$a, /*string */$b)/* : string*/
     {
         $a = backport_type_check('string', $a);
@@ -145,6 +148,9 @@ class GmpCalculator extends Calculator
         return \gmp_strval(\gmp_and($a, $b));
     }
 
+    /**
+     * @deprecated
+     */
     public function or_(/*string */$a, /*string */$b)/* : string*/
     {
         $a = backport_type_check('string', $a);
@@ -154,6 +160,9 @@ class GmpCalculator extends Calculator
         return \gmp_strval(\gmp_or($a, $b));
     }
 
+    /**
+     * @deprecated
+     */
     public function xor_(/*string */$a, /*string */$b)/* : string*/
     {
         $a = backport_type_check('string', $a);

@@ -11,6 +11,7 @@ class PendingClosureDispatch extends PendingDispatch
      *
      * @param  \Closure  $callback
      * @return $this
+     * @deprecated
      */
     public function catch_(Closure $callback)
     {

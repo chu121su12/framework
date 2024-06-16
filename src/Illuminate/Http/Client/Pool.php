@@ -50,6 +50,7 @@ class Pool
      *
      * @param  string  $key
      * @return \Illuminate\Http\Client\PendingRequest
+     * @deprecated
      */
     public function as_(/*string */$key)
     {

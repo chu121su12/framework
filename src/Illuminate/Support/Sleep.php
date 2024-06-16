@@ -78,6 +78,7 @@ class Sleep
      *
      * @param  \DateInterval|int|float  $duration
      * @return static
+     * @deprecated
      */
     public static function for_($duration)
     {
@@ -240,6 +241,7 @@ class Sleep
      *
      * @param  int|float  $duration
      * @return $this
+     * @deprecated
      */
     public function and_($duration)
     {

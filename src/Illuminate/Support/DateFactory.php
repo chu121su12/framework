@@ -118,6 +118,7 @@ class DateFactory
      * @return mixed
      *
      * @throws \InvalidArgumentException
+     * @deprecated
      */
     public static function use_($handler)
     {

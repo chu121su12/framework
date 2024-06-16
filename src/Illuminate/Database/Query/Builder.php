@@ -4216,6 +4216,7 @@ class Builder implements BuilderContract
      * Clone the query.
      *
      * @return static
+     * @deprecated
      */
     public function clone_()
     {

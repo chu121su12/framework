@@ -83,6 +83,7 @@ class Frame
      * Get the frame's class, if any.
      *
      * @return string|null
+     * @deprecated
      */
     public function class_()
     {

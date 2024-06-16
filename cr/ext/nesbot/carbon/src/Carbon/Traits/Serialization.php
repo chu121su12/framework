@@ -101,6 +101,7 @@ trait Serialization
      * @param string|array $dump
      *
      * @return static
+     * @deprecated
      */
     #[ReturnTypeWillChange]
     public static function __set_state_($dump) // moved as trait
@@ -142,6 +143,7 @@ trait Serialization
      * Only used by PHP >= 7.4.
      *
      * @return array
+     * @deprecated
      */
     public function __serialize_()/*: array*/
     {
@@ -223,6 +225,7 @@ trait Serialization
      * Only used by PHP >= 7.4.
      *
      * @return void
+     * @deprecated
      */
     public function __unserialize_(array $data)/*: void*/
     {

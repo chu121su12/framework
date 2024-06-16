@@ -686,6 +686,7 @@ trait Date
      * Get a copy of the instance.
      *
      * @return static
+     * @deprecated
      */
     public function clone_()
     {
@@ -1577,6 +1578,7 @@ trait Date
      * @param int $microseconds
      *
      * @return static
+     * @deprecated
      */
     #[ReturnTypeWillChange]
     public function setTime_($hour, $minute, $second = 0, $microseconds = 0)

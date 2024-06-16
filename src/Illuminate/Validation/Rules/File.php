@@ -105,6 +105,7 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
      * Get the default configuration of the file rule.
      *
      * @return static
+     * @deprecated
      */
     public static function default_()
     {

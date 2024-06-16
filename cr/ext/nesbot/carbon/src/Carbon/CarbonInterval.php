@@ -756,6 +756,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
      * Get a copy of the instance.
      *
      * @return static
+     * @deprecated
      */
     public function clone_()
     {
@@ -804,6 +805,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
      * @param array $dump data as exported by var_export()
      *
      * @return static
+     * @deprecated
      */
     #[ReturnTypeWillChange]
     public static function __set_state_($dump)

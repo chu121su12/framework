@@ -23,6 +23,7 @@ trait Interactivity
 
     /**
      * Return the default value if it passes validation.
+     * @deprecated
      */
     protected function default_()/*: mixed*/
     {

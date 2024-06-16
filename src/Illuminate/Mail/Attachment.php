@@ -113,6 +113,7 @@ class Attachment
      *
      * @param  string|null  $name
      * @return $this
+     * @deprecated
      */
     public function as_($name)
     {

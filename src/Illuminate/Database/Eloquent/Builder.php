@@ -2116,6 +2116,7 @@ class Builder implements BuilderContract
      * Clone the Eloquent query builder.
      *
      * @return static
+     * @deprecated
      */
     public function clone_()
     {

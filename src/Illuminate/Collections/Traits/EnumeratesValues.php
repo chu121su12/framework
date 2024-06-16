@@ -149,6 +149,7 @@ trait EnumeratesValues
      * Create a new instance with no items.
      *
      * @return static
+     * @deprecated
      */
     public static function empty_()
     {

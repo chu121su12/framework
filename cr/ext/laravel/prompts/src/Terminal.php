@@ -93,6 +93,7 @@ class Terminal
 
     /**
      * Exit the interactive session.
+     * @deprecated
      */
     public function exit_()/*: void*/
     {

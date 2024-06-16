@@ -205,6 +205,9 @@ class BeanstalkdQueue extends Queue implements QueueContract
         }
     }
 
+    /**
+     * @deprecated
+     */
     private function pop_($queue)
     {
         $queue = $this->getQueue($queue);

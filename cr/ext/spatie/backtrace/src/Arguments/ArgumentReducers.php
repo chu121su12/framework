@@ -34,6 +34,9 @@ class ArgumentReducers
         ));
     }
 
+    /**
+     * @deprecated
+     */
     public static function default_(array $extra = [])/*: self*/
     {
         return new self(static::defaultReducers($extra));

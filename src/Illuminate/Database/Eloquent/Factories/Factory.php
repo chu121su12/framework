@@ -165,6 +165,7 @@ abstract class Factory
      *
      * @param  (callable(array<string, mixed>): array<string, mixed>)|array<string, mixed>  $attributes
      * @return static
+     * @deprecated
      */
     public static function new_($attributes = [])
     {
@@ -636,6 +637,7 @@ abstract class Factory
      * @param  \Illuminate\Database\Eloquent\Factories\Factory|\Illuminate\Database\Eloquent\Model  $factory
      * @param  string|null  $relationship
      * @return static
+     * @deprecated
      */
     public function for_($factory, $relationship = null)
     {

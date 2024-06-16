@@ -1210,6 +1210,9 @@ class ReflectionClosure extends ReflectionFunction
         return [$id_start, $id_start_ci, $id_name];
     }
 
+    /**
+     * @deprecated
+     */
     public function getClosureUsedVariables_()
     {
         return $this->getUseVariables();

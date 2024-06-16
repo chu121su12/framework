@@ -49,6 +49,7 @@ class Pool
      *
      * @param  string  $key
      * @return \Illuminate\Process\PendingProcess
+     * @deprecated
      */
     public function as_(/*string */$key)
     {

@@ -238,6 +238,7 @@ class ComponentAttributeBag implements ArrayAccess, IteratorAggregate, JsonSeria
      *
      * @param  mixed|array  $classList
      * @return static
+     * @deprecated
      */
     public function class_($classList)
     {

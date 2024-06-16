@@ -345,6 +345,7 @@ class BelongsToMany extends Relation
      *
      * @param  string  $accessor
      * @return $this
+     * @deprecated
      */
     public function as_($accessor)
     {

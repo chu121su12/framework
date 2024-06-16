@@ -221,6 +221,7 @@ class Middleware
      *
      * @param  array  $middleware
      * @return $this
+     * @deprecated
      */
     public function use_(array $middleware)
     {

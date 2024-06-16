@@ -630,6 +630,7 @@ abstract class Calculator
      * @param string $b
      *
      * @return string
+     * @deprecated
      */
     public function and_(/*string */$a, /*string */$b)/* : string*/
     {
@@ -650,6 +651,7 @@ abstract class Calculator
      * @param string $b
      *
      * @return string
+     * @deprecated
      */
     public function or_(/*string */$a, /*string */$b)/* : string*/
     {
@@ -670,6 +672,7 @@ abstract class Calculator
      * @param string $b
      *
      * @return string
+     * @deprecated
      */
     public function xor_(/*string */$a, /*string */$b)/* : string*/
     {

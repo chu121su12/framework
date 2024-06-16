@@ -144,6 +144,7 @@ class BroadcastManager implements FactoryContract
 
     /**
      * Begin sending an anonymous broadcast to the given private channels.
+     * @deprecated
      */
     public function private_(/*string */$channel)/*: AnonymousEvent*/
     {

@@ -772,6 +772,7 @@ final class Styles
 
     /**
      * Prepends the list style type to the content.
+     * @deprecated
      */
     final public function list_(/*string */$type, /*int */$index = 0)/*: self*/
     {

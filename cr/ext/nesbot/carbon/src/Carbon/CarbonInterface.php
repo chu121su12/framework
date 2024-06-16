@@ -757,6 +757,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      * @param bool|null                                            $overflow
      *
      * @return static
+     * @deprecated
      */
     // public function add($unit, $value = 1, $overflow = null);
     #[ReturnTypeWillChange]
@@ -1010,6 +1011,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      * Get a copy of the instance.
      *
      * @return static
+     * @deprecated
      */
     // public function clone();
     public function clone_();
@@ -3949,6 +3951,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      * @param int $microseconds
      *
      * @return static
+     * @deprecated
      */
     // public function setTime($hour, $minute, $second = 0, $microseconds = 0);
     #[ReturnTypeWillChange]
@@ -4332,6 +4335,7 @@ interface CarbonInterface extends Patch\CarbonSetStateInterface, DateTimeInterfa
      * @param bool|null                                            $overflow
      *
      * @return static
+     * @deprecated
      */
     // public function sub($unit, $value = 1, $overflow = null);
     #[ReturnTypeWillChange]

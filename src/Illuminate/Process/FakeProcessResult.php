@@ -187,6 +187,7 @@ class FakeProcessResult implements ProcessResultContract
      * @return $this
      *
      * @throws \Illuminate\Process\Exceptions\ProcessFailedException
+     * @deprecated
      */
     public function throw_(/*?*/callable $callback = null)
     {

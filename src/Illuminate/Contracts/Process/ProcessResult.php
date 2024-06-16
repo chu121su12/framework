@@ -67,6 +67,7 @@ interface ProcessResult
      *
      * @param  callable|null  $callback
      * @return $this
+     * @deprecated
      */
     public function throw_(/*?*/callable $callback = null);
 

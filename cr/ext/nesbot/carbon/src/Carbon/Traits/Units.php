@@ -181,6 +181,9 @@ trait Units
         return $this->addInterval_($interval);
     }
 
+    /**
+     * @deprecated
+     */
     public function addInterval_(DateInterval $interval)
     {
         $updated = parent::add($interval);
@@ -204,6 +207,7 @@ trait Units
      * @param bool|null                                            $overflow
      *
      * @return static
+     * @deprecated
      */
     #[ReturnTypeWillChange]
     public function add_($unit, $value = 1, $overflow = null)
@@ -362,6 +366,9 @@ trait Units
         return $this->subInterval_($interval);
     }
 
+    /**
+     * @deprecated
+     */
     public function subInterval_(DateInterval $interval)
     {
         $updated = parent::sub($interval);
@@ -385,6 +392,7 @@ trait Units
      * @param bool|null                                            $overflow
      *
      * @return static
+     * @deprecated
      */
     #[ReturnTypeWillChange]
     public function sub_($unit, $value = 1, $overflow = null)

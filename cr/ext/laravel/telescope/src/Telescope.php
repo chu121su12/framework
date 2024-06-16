@@ -572,6 +572,7 @@ class Telescope
      * @param  \Throwable|\Exception  $e
      * @param  array  $tags
      * @return void
+     * @deprecated
      */
     public static function catch_($e, $tags = [])
     {

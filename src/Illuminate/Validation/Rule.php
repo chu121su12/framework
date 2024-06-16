@@ -65,6 +65,7 @@ class Rule
      *
      * @param  array|null  $keys
      * @return \Illuminate\Validation\Rules\ArrayRule
+     * @deprecated
      */
     public static function array_($keys = null)
     {
@@ -76,6 +77,7 @@ class Rule
      *
      * @param  callable  $callback
      * @return \Illuminate\Validation\NestedRules
+     * @deprecated
      */
     public static function forEach_($callback)
     {

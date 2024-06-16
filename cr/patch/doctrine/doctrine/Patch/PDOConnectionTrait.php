@@ -15,6 +15,9 @@ trait PDOConnectionTrait
 {
     use PDOConnectionComplianceTrait;
 
+    /**
+     * @deprecated
+     */
     protected function query_()
     {
         $args = func_get_args();

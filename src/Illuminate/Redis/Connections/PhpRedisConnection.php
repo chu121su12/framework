@@ -441,6 +441,7 @@ class PhpRedisConnection extends Connection implements ConnectionContract
      * @param  int  $numberOfKeys
      * @param  mixed  ...$arguments
      * @return mixed
+     * @deprecated
      */
     public function eval_($script, $numberOfKeys, ...$arguments)
     {

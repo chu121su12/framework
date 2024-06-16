@@ -144,6 +144,7 @@ class Password implements Rule, DataAwareRule, ValidatorAwareRule
      * Get the default configuration of the password rule.
      *
      * @return static
+     * @deprecated
      */
     public static function default_()
     {

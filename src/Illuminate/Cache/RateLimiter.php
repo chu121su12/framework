@@ -41,6 +41,7 @@ class RateLimiter
      * @param  string  $name
      * @param  \Closure  $callback
      * @return $this
+     * @deprecated
      */
     public function for_(/*string */$name, Closure $callback)
     {

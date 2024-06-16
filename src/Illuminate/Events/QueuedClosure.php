@@ -97,6 +97,7 @@ class QueuedClosure
      *
      * @param  \Closure  $closure
      * @return $this
+     * @deprecated
      */
     public function catch_(Closure $closure)
     {

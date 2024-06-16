@@ -15,6 +15,9 @@ trait PDOStatementTrait
 {
     use PDOStatementComplianceTrait;
 
+    /**
+     * @deprecated
+     */
     protected function setFetchMode_($fetchMode, $arg2 = null, $arg3 = null)
     {
         // This thin wrapper is necessary to shield against the weird signature
@@ -36,6 +39,9 @@ trait PDOStatementTrait
         }
     }
 
+    /**
+     * @deprecated
+     */
     protected function fetchAll_($fetchMode = null, $fetchArgument = null, $ctorArgs = null)
     {
         try {

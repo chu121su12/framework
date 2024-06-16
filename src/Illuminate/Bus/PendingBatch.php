@@ -154,6 +154,7 @@ class PendingBatch
      *
      * @param  callable  $callback
      * @return $this
+     * @deprecated
      */
     public function catch_($callback)
     {
@@ -179,6 +180,7 @@ class PendingBatch
      *
      * @param  callable  $callback
      * @return $this
+     * @deprecated
      */
     public function finally_($callback)
     {

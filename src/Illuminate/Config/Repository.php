@@ -172,6 +172,7 @@ class Repository implements ArrayAccess, ConfigContract
      * @param  string  $key
      * @param  (\Closure():(array<array-key, mixed>|null))|array<array-key, mixed>|null  $default
      * @return array<array-key, mixed>
+     * @deprecated
      */
     public function array_(/*string */$key, $default = null)/*: array*/
     {

@@ -111,6 +111,7 @@ class PendingChain
      *
      * @param  callable  $callback
      * @return $this
+     * @deprecated
      */
     public function catch_($callback)
     {

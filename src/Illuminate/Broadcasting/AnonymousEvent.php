@@ -64,6 +64,7 @@ class AnonymousEvent implements ShouldBroadcast
 
     /**
      * Set the name the event should be broadcast as.
+     * @deprecated
      */
     public function as_(/*string */$name)/*: static*/
     {

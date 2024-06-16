@@ -59,6 +59,9 @@ class SupportHelpersTest extends TestCase
 {
     use \PHPUnit\Framework\PhpUnit8Assert;
 
+    /**
+     * @deprecated
+     */
     protected function assertEqualsWithDelta_($expected, $actual, $delta, $message = '')
     {
         return $this->assertEqualsWithDelta(

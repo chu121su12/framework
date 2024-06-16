@@ -715,6 +715,7 @@ class PendingRequest
      *
      * @param  callable|null  $callback
      * @return $this
+     * @deprecated
      */
     public function throw_(/*?*/callable $callback = null)
     {
