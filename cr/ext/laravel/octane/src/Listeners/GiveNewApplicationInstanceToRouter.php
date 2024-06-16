@@ -2,6 +2,8 @@
 
 namespace Laravel\Octane\Listeners;
 
+use Illuminate\Routing\RouteCollection;
+
 class GiveNewApplicationInstanceToRouter
 {
     /**
@@ -17,5 +19,11 @@ class GiveNewApplicationInstanceToRouter
         }
 
         $event->sandbox->make('router')->setContainer($event->sandbox);
+
+        if ($event->sandbox->resolved('routes') && $event->sandbox->make('routes') instanceof RouteCollection) {
+            foreach ($event->sandbox->make('routes') as $route) {
+                $route->setContainer($event->sandbox);
+            }
+        }
     }
 }

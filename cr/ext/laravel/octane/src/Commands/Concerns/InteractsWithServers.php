@@ -28,6 +28,10 @@ trait InteractsWithServers
         $watcher = $this->startServerWatcher();
 
         try {
+            $usleepBetweenIterations = isset(config('octane.usleep_between_writing_server_output')) ? config('octane.usleep_between_writing_server_output') : (
+                isset($_ENV['LARAVEL_OCTANE_USLEEP_BETWEEN_WRITING_SERVER_OUTPUT']) ? $_ENV['LARAVEL_OCTANE_USLEEP_BETWEEN_WRITING_SERVER_OUTPUT'] :
+                (10 * 1000));
+
             while ($server->isRunning()) {
                 $this->writeServerOutput($server);
 
@@ -45,7 +49,7 @@ trait InteractsWithServers
                     return 1;
                 }
 
-                usleep(500 * 1000);
+                usleep($usleepBetweenIterations);
             }
 
             $this->writeServerOutput($server);
