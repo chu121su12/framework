@@ -106,10 +106,6 @@
         "laravel/tinker": "^2.9.0",
         "nunomaduro/collision": "^8.1.1",
         "nunomaduro/termwind": "^2.0.1",
-        "spatie/backtrace": "^1.5.3",
-        "spatie/flare-client-php": "^1.4.3",
-        "spatie/ignition": "^1.11.3",
-        "spatie/laravel-ignition": "^2.3.1",
         "symfony/deprecation-contracts": "^3.2.1",
         "symfony/error-handler": "^5.4.26",
         "symfony/mailer": "^5.4.35",
@@ -161,7 +157,6 @@
 
             "cr/ext/laravel/prompts/src/helpers.php",
             "cr/ext/nunomaduro/termwind/src/Functions.php",
-            "cr/ext/spatie/flare-client-php/src/helpers.php",
             "cr/ext/symfony/deprecation-contracts/function.php",
             "cr/patch/symfony/polyfill/src/Apcu/bootstrap.php",
             "cr/patch/symfony/polyfill/src/Ctype/bootstrap.php",
@@ -197,10 +192,6 @@
             "Laravel\\Tinker\\": "cr/ext/laravel/tinker/src/",
             "League\\Flysystem\\": "cr/ext/league/flysystem/src/",
             "NunoMaduro\\Collision\\": "cr/ext/nunomaduro/collision/src/",
-            "Spatie\\Backtrace\\": "cr/ext/spatie/backtrace/src/",
-            "Spatie\\FlareClient\\": "cr/ext/spatie/flare-client-php/src/",
-            "Spatie\\Ignition\\": "cr/ext/spatie/ignition/src/",
-            "Spatie\\LaravelIgnition\\": "cr/ext/spatie/laravel-ignition/src/",
             "Symfony\\Component\\Cache\\": "cr/patch/symfony/cache/",
             "Symfony\\Component\\Console\\": "cr/patch/symfony/console/",
             "Symfony\\Component\\ErrorHandler\\": "cr/ext/symfony/error-handler/",
@@ -252,6 +243,7 @@
     },
     "extra": {
         "branch-alias": {
+            "dev-ignition": "ignition",
             "dev-merge": "merge"
         },
         "laravel": {
@@ -260,7 +252,6 @@
                 "Laravel\\Octane\\OctaneServiceProvider"
             ],
             "aliases": {
-                "Flare": "Spatie\\LaravelIgnition\\Facades\\Flare",
                 "Octane": "Laravel\\Octane\\Facades\\Octane"
             }
         }
