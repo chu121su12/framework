@@ -5,7 +5,7 @@
 
     <div class="mt-2">
         <span>{{ $exception->request()->method() }}</span>
-        <span class="text-gray-500">{{ $exception->request()->httpHost() }}</span>
+        <span class="text-gray-500">/{{ $exception->request()->path() }}</span>
     </div>
 
     <div class="mt-4">
@@ -120,11 +120,11 @@
     </div>
 
     <dl class="mt-1 grid grid-cols-1 rounded border dark:border-gray-800">
-        @forelse ($exception->applicationQueries() as ['connectionName' => $connectionName, 'sql' => $sql, 'time' => $time])
+        @forelse ($exception->applicationQueries() as $query)
             <div class="flex items-center gap-2 {{ $loop->first ? '' : 'border-t' }} dark:border-gray-800">
                 <div class="lg:text-md w-[8rem] flex-none truncate border-r px-5 py-3 text-sm dark:border-gray-800 lg:w-[12rem]">
-                    <span>{{ $connectionName }}</span>
-                    <span class="hidden text-xs text-gray-500 lg:inline-block">({{ $time }} ms)</span>
+                    <span>{{ $query['connectionName'] }}</span>
+                    <span class="hidden text-xs text-gray-500 lg:inline-block">({{ $query['time'] }} ms)</span>
                 </div>
                 <span
                     class="min-w-0 flex-grow"
@@ -132,7 +132,7 @@
                         -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 1rem, #000 calc(100% - 3rem), transparent calc(100% - 1rem));
                     "
                 >
-                    <pre class="scrollbar-hidden overflow-y-hidden text-xs lg:text-sm"><code class="px-5 py-3 overflow-y-hidden scrollbar-hidden max-h-32 overflow-x-scroll scrollbar-hidden-x">{{ $sql }}</code></pre>
+                    <pre class="scrollbar-hidden overflow-y-hidden text-xs lg:text-sm"><code class="px-5 py-3 overflow-y-hidden scrollbar-hidden max-h-32 overflow-x-scroll scrollbar-hidden-x">{{ $query['sql'] }}</code></pre>
                 </span>
             </div>
         @empty

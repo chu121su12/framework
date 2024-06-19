@@ -119,7 +119,7 @@ class Frame
      *
      * @return string
      */
-    public function callable()
+    public function callable_()
     {
         switch (true) {
             case ! empty($this->frame['function']): return $this->frame['function'];

@@ -359,11 +359,11 @@ class TestResponse implements ArrayAccess
             if (! isset($contentDisposition[1])) {
                 PHPUnit::fail($message);
             } else {
+                $exploded = explode('=', $contentDisposition[1]);
+
                 PHPUnit::assertSame(
                     $filename,
-                    isset(explode('=', $contentDisposition[1])[1])
-                        ? trim(explode('=', $contentDisposition[1])[1], " \"'")
-                        : '',
+                    isset($exploded[1]) ? trim($exploded[1], " \"'") : '',
                     $message
                 );
 

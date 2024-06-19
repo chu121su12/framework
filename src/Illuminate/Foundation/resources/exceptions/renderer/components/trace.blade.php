@@ -63,7 +63,7 @@
                                 </span>
                             </div>
                             <div class="text-gray-500 dark:text-gray-400">
-                                {{ $exception->frames()->get($loop->index + 1)?->callable() }}
+                                {{ optional($exception->frames()->get($loop->index + 1))->callable_() }}
                             </div>
                         </div>
                     </div>
