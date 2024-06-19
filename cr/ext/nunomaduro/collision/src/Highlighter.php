@@ -82,7 +82,7 @@ final class Highlighter
     /**
      * Creates an instance of the Highlighter.
      */
-    public function __construct(ConsoleColor $color = null, /*bool */$UTF8 = true)
+    public function __construct(/*?*/ConsoleColor $color = null, /*bool */$UTF8 = true)
     {
         $UTF8 = backport_type_check('bool', $UTF8);
 
