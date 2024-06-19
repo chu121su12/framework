@@ -24,7 +24,7 @@ final class Styles
      * @param  (Closure(StylesValueObject $element, string|int ...$arguments): StylesValueObject)|null  $callback
      * @return Style
      */
-    public static function create(/*string */$name, Closure $callback = null)/*: Style*/
+    public static function create(/*string */$name, /*?*/Closure $callback = null)/*: Style*/
     {
         $name = backport_type_check('string', $name);
 

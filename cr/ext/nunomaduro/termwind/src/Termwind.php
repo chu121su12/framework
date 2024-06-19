@@ -331,7 +331,7 @@ final class Termwind
      * @param  array<int, string|Element>|string  $elements
      * @return array<int, string|Element>
      */
-    private static function prepareElements($elements, /*string */$styles = '', Closure $callback = null)/*: array*/
+    private static function prepareElements($elements, /*string */$styles = '', /*?*/Closure $callback = null)/*: array*/
     {
         $styles = backport_type_check('string', $styles);
 

@@ -82,6 +82,6 @@ final class Style
 
         $callback = $this->callback;
 
-        return $this->callback($styles, ...$arguments);
+        return $callback($styles, ...$arguments);
     }
 }

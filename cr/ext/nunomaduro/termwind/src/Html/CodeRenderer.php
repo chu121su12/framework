@@ -171,7 +171,7 @@ final class CodeRenderer
 
     private function matchTokenType($type)
     {
-        switch ($token[0]) {
+        switch ($type) {
             case T_OPEN_TAG:
             case T_OPEN_TAG_WITH_ECHO:
             case T_CLOSE_TAG:

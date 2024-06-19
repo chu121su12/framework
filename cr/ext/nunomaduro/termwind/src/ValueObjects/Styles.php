@@ -1052,7 +1052,7 @@ final class Styles
     /**
      * Get the length of the text provided without the styling tags.
      */
-    public function getLength(/*string */$text = null)/*: int*/
+    public function getLength(/*?string */$text = null)/*: int*/
     {
         $text = backport_type_check('?string', $text);
 

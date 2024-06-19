@@ -26,7 +26,7 @@ if (! function_exists('Termwind\style')) {
      *
      * @param  (Closure(Styles $renderable, string|int ...$arguments): Styles)|null  $callback
      */
-    function style(/*string */$name, Closure $callback = null)/*: Style*/
+    function style(/*string */$name, /*?*/Closure $callback = null)/*: Style*/
     {
         $name = backport_type_check('string', $name);
 
@@ -64,7 +64,7 @@ if (! function_exists('Termwind\ask')) {
      *
      * @param  iterable<array-key, string>|null  $autocomplete
      */
-    function ask(/*string */$question, /*iterable */$autocomplete = null)/*: mixed*/
+    function ask(/*string */$question, /*?iterable */$autocomplete = null)/*: mixed*/
     {
         $question = backport_type_check('string', $question);
         $autocomplete = backport_type_check('?iterable', $autocomplete);
