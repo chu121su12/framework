@@ -228,6 +228,8 @@ class Application extends Container implements ApplicationContract, CachesConfig
     {
         $basePath = backport_type_check('?string', $basePath);
 
+        date_default_timezone_set('UTC');
+
         switch (true) {
             case is_string($basePath): $basePath = $basePath; break;
             default: $basePath = static::inferBasePath(); break;
