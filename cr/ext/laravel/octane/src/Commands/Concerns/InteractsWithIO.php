@@ -252,7 +252,7 @@ trait InteractsWithIO
             case 'throwable': $this->throwableInfo($stream, $verbosity); break;
             case 'shutdown': $this->shutdownInfo($stream, $verbosity); break;
             case 'raw': $this->raw(json_encode($stream)); break;
-            default: $this->info(json_encode($stream), $verbosity);
+            default: $this->components->info(json_encode($stream), $this->parseVerbosity($verbosity));
         }
     }
 }

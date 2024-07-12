@@ -13,6 +13,8 @@ use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Throwable;
 
+use function Laravel\Prompts\confirm;
+
 trait InstallsRoadRunnerDependencies
 {
     use FindsRoadRunnerBinary;
@@ -45,8 +47,8 @@ trait InstallsRoadRunnerDependencies
             return true;
         }
 
-        if (! $this->confirm('Octane requires "spiral/roadrunner-http:^3.3.0" and "spiral/roadrunner-cli:^2.6.0". Do you wish to install them as a dependencies?')) {
-            $this->error('Octane requires "spiral/roadrunner-http" and "spiral/roadrunner-cli".');
+        if (! confirm('Octane requires "spiral/roadrunner-http:^3.3.0" and "spiral/roadrunner-cli:^2.6.0". Do you wish to install them as a dependencies?')) {
+            $this->components->error('Octane requires "spiral/roadrunner-http" and "spiral/roadrunner-cli".');
 
             return false;
         }
@@ -105,7 +107,7 @@ trait InstallsRoadRunnerDependencies
             return $roadRunnerBinary;
         }
 
-        if ($this->confirm('Unable to locate RoadRunner binary. Should Octane download the binary for your operating system?', true)) {
+        if (confirm('Unable to locate RoadRunner binary. Should Octane download the binary for your operating system?', true)) {
             $this->downloadRoadRunnerBinary();
 
             copy(__DIR__.'/../stubs/rr.yaml', base_path('.rr.yaml'));
@@ -127,7 +129,7 @@ trait InstallsRoadRunnerDependencies
             ->getOutput();
 
         if (! Str::startsWith($version, 'rr version')) {
-            return $this->warn(
+            return $this->components->warn(
                 'Unable to determine the current RoadRunner binary version. Please report this issue: https://github.com/laravel/octane/issues/new.'
             );
         }
@@ -138,9 +140,9 @@ trait InstallsRoadRunnerDependencies
             return;
         }
 
-        $this->warn("Your RoadRunner binary version (<fg=red>$version</>) may be incompatible with Octane.");
+        $this->components->warn("Your RoadRunner binary version (<fg=red>$version</>) may be incompatible with Octane.");
 
-        if ($this->confirm('Should Octane download the latest RoadRunner binary version for your operating system?', true)) {
+        if (confirm('Should Octane download the latest RoadRunner binary version for your operating system?', true)) {
             rename($roadRunnerBinary, "$roadRunnerBinary.backup");
 
             try {
@@ -155,7 +157,7 @@ trait InstallsRoadRunnerDependencies
 
                 rename("$roadRunnerBinary.backup", $roadRunnerBinary);
 
-                return $this->warn('Unable to download RoadRunner binary. The HTTP request exception has been logged.');
+                return $this->components->warn('Unable to download RoadRunner binary. The HTTP request exception has been logged.');
             }
 
             unlink("$roadRunnerBinary.backup");

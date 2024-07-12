@@ -128,7 +128,7 @@ class StartCommand extends Command implements SignalableCommandInterface
     {
         $server = backport_type_check('string', $server);
 
-        $this->error("Invalid server: {$server}.");
+        $this->components->error("Invalid server: {$server}.");
 
         return 1;
     }
