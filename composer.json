@@ -107,7 +107,7 @@
         "nunomaduro/collision": "^8.1.1",
         "nunomaduro/termwind": "^2.0.1",
         "symfony/deprecation-contracts": "^3.5.0",
-        "symfony/error-handler": "^5.4.26",
+        "symfony/error-handler": "^5.4.41",
         "symfony/mailer": "^5.4.35",
         "symfony/mime": "^5.4.26",
         "symfony/polyfill": "^1.30.0",

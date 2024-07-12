@@ -63,7 +63,7 @@ class FlattenException
     /**
      * @return static
      */
-    public static function create(\Exception $exception, /*int */$statusCode = null, array $headers = [])/*: self*/
+    public static function create(\Exception $exception, /*?int */$statusCode = null, array $headers = [])/*: self*/
     {
         $statusCode = backport_type_check('?int', $statusCode);
 
@@ -73,7 +73,7 @@ class FlattenException
     /**
      * @return static
      */
-    public static function createFromThrowable(/*\Throwable */$exception, /*int */$statusCode = null, array $headers = [])/*: self*/
+    public static function createFromThrowable(/*\Throwable */$exception, /*?int */$statusCode = null, array $headers = [])/*: self*/
     {
         backport_type_throwable($exception);
 

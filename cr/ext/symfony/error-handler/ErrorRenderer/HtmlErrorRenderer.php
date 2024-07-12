@@ -47,7 +47,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      * @param string|FileLinkFormatter|null $fileLinkFormat
      * @param bool|callable                 $outputBuffer   The output buffer as a string or a callable that should return it
      */
-    public function __construct($debug = false, /*string */$charset = null, $fileLinkFormat = null, /*string */$projectDir = null, $outputBuffer = '', LoggerInterface $logger = null)
+    public function __construct($debug = false, /*?string */$charset = null, $fileLinkFormat = null, /*?string */$projectDir = null, $outputBuffer = '', /*?*/LoggerInterface $logger = null)
     {
         $projectDir = backport_type_check('?string', $projectDir);
 
@@ -183,6 +183,8 @@ class HtmlErrorRenderer implements ErrorRendererInterface
                 $formattedValue = '<em>'.strtolower(var_export($item[1], true)).'</em>';
             } elseif ('resource' === $item[0]) {
                 $formattedValue = '<em>resource</em>';
+            } elseif (preg_match('/[^\x07-\x0D\x1B\x20-\xFF]/', $item[1])) {
+                $formattedValue = '<em>binary string</em>';
             } else {
                 $formattedValue = str_replace("\n", '', $this->escape(var_export($item[1], true)));
             }
@@ -253,7 +255,7 @@ class HtmlErrorRenderer implements ErrorRendererInterface
      * @param int    $line The line number
      * @param string $text Use this text for the link rather than the file path
      */
-    private function formatFile(/*string */$file, /*int */$line, /*string */$text = null)/*: string*/
+    private function formatFile(/*string */$file, /*int */$line, /*?string */$text = null)/*: string*/
     {
         $line = backport_type_check('int', $line);
 
@@ -301,13 +303,23 @@ class HtmlErrorRenderer implements ErrorRendererInterface
             // highlight_file could throw warnings
             // see https://bugs.php.net/25725
             $code = @highlight_file($file, true);
-            // remove main code/span tags
-            $code = preg_replace('#^<code.*?>\s*<span.*?>(.*)</span>\s*</code>#s', '\\1', $code);
-            // split multiline spans
-            $code = preg_replace_callback('#<span ([^>]++)>((?:[^<]*+<br \/>)++[^<]*+)</span>#', function ($m) {
-                return "<span $m[1]>".str_replace('<br />', "</span><br /><span $m[1]>", $m[2]).'</span>';
-            }, $code);
-            $content = explode('<br />', $code);
+            if (\PHP_VERSION_ID >= 80300) {
+                // remove main pre/code tags
+                $code = preg_replace('#^<pre.*?>\s*<code.*?>(.*)</code>\s*</pre>#s', '\\1', $code);
+                // split multiline span tags
+                $code = preg_replace_callback('#<span ([^>]++)>((?:[^<\\n]*+\\n)++[^<]*+)</span>#', function ($m) {
+                    return "<span $m[1]>".str_replace("\n", "</span>\n<span $m[1]>", $m[2]).'</span>';
+                }, $code);
+                $content = explode("\n", $code);
+            } else {
+                // remove main code/span tags
+                $code = preg_replace('#^<code.*?>\s*<span.*?>(.*)</span>\s*</code>#s', '\\1', $code);
+                // split multiline spans
+                $code = preg_replace_callback('#<span ([^>]++)>((?:[^<]*+<br \/>)++[^<]*+)</span>#', function ($m) {
+                    return "<span $m[1]>".str_replace('<br />', "</span><br /><span $m[1]>", $m[2]).'</span>';
+                }, $code);
+                $content = explode('<br />', $code);
+            }
 
             $lines = [];
             if (0 > $srcContext) {
@@ -349,9 +361,11 @@ class HtmlErrorRenderer implements ErrorRendererInterface
     {
         $text = backport_type_check('string', $text);
 
-        return preg_replace_callback('/in ("|&quot;)?(.+?)\1(?: +(?:on|at))? +line (\d+)/s', function ($match) {
+        $callbacked = preg_replace_callback('/in ("|&quot;)?(.+?)\1(?: +(?:on|at))? +line (\d+)/s', function ($match) {
             return 'in '.$this->formatFile($match[2], $match[3]);
         }, $text);
+
+        return isset($callbacked) ? $callbacked : $text;
     }
 
     private function formatLogMessage(/*string */$message, array $context)

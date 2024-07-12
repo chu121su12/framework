@@ -21,9 +21,6 @@ use Symfony\Component\ErrorHandler\Error\FatalError;
  */
 class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function enhance(/*\Throwable */$error)/*: ?\Throwable*/
     {
         backport_type_throwable($error);
@@ -120,7 +117,8 @@ class ClassNotFoundErrorEnhancer implements ErrorEnhancerInterface
 
         $path = backport_type_check('string', $path);
 
-        if (!$path = realpath($path.'/'.strtr($prefix, '\\_', '//')) ?: realpath($path.'/'.\dirname(strtr($prefix, '\\_', '//'))) ?: realpath($path)) {
+        $path = realpath($path.'/'.strtr($prefix, '\\_', '//')) ?: realpath($path.'/'.\dirname(strtr($prefix, '\\_', '//'))) ?: realpath($path);
+        if (!$path || !is_dir($path)) {
             return [];
         }
 

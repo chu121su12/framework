@@ -318,7 +318,7 @@ class DebugClassLoader
         $this->checkClass($class, $file);
     }
 
-    private function checkClass(/*string */$class, /*string */$file = null)/*: void*/
+    private function checkClass(/*string */$class, /*?string */$file = null)/*: void*/
     {
         $class = backport_type_check('string', $class);
 
@@ -803,7 +803,7 @@ class DebugClassLoader
         return $ownInterfaces;
     }
 
-    private function setReturnType(/*string */$types, /*string */$class, /*string */$method, /*string */$filename, /*?string */$parent = null, \ReflectionType $returnType = null)/*: void*/
+    private function setReturnType(/*string */$types, /*string */$class, /*string */$method, /*string */$filename, /*?string */$parent = null, /*?*/\ReflectionType $returnType = null)/*: void*/
     {
         $filename = backport_type_check('string', $filename);
 
@@ -1167,7 +1167,7 @@ EOTXT;
         $braces = 0;
         for (; $i < $end; ++$i) {
             if (!$inClosure) {
-                $inClosure = str_contains($code[$i], 'function (');
+                $inClosure = false !== strpos($code[$i], 'function (');
             }
 
             if ($inClosure) {
