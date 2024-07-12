@@ -1,3 +1,10 @@
+# 1.30.0
+
+  * Polyfill `array_find`, `array_find_key`, `array_any` and `array_all`
+  * Polyfill `mb_ucfirst` and `mb_lcfirst`
+  * Fix `mb_convert_encoding` to accept an array of strings
+  * Update nullable types for PHP 8.4
+
 # 1.29.0
 
   * Fix the `ini_parse_quantity()` polyfill

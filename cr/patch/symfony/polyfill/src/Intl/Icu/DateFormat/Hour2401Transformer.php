@@ -36,7 +36,7 @@ class Hour2401Transformer extends HourTransformer
     /**
      * {@inheritdoc}
      */
-    public function normalizeHour(/*int */$hour, /*string */$marker = null)/*: int*/
+    public function normalizeHour(/*int */$hour, /*?string */$marker = null)/*: int*/
     {
         $hour = backport_type_check('int', $hour);
 

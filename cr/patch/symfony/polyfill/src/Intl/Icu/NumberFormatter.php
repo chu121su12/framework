@@ -254,7 +254,7 @@ abstract class NumberFormatter
      * @throws MethodArgumentValueNotImplementedException When the $style is not supported
      * @throws MethodArgumentNotImplementedException      When the pattern value is different than null
      */
-    public function __construct(/*?string */$locale = 'en', /*int */$style = null, /*string */$pattern = null)
+    public function __construct(/*?string */$locale = 'en', /*?int */$style = null, /*?string */$pattern = null)
     {
         $pattern = backport_type_check('?string', $pattern);
 
@@ -299,7 +299,7 @@ abstract class NumberFormatter
      * @throws MethodArgumentValueNotImplementedException When the $style is not supported
      * @throws MethodArgumentNotImplementedException      When the pattern value is different than null
      */
-    public static function create(/*?string */$locale = 'en', /*int */$style = null, /*string */$pattern = null)
+    public static function create(/*?string */$locale = 'en', /*?int */$style = null, /*?string */$pattern = null)
     {
         $pattern = backport_type_check('?string', $pattern);
 

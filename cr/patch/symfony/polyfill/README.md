@@ -67,6 +67,9 @@ Polyfills are provided for:
 - the `str_increment` and `str_decrement` functions introduced in PHP 8.3;
 - the `Date*Exception/Error` classes introduced in PHP 8.3;
 - the `SQLite3Exception` class introduced in PHP 8.3;
+- the `mb_ucfirst` and `mb_lcfirst` functions introduced in PHP 8.4;
+- the `array_find`, `array_find_key`, `array_any` and `array_all` functions introduced in PHP 8.4;
+- the `Deprecated` attribute introduced in PHP 8.4;
 
 It is strongly recommended to upgrade your PHP version and/or install the missing
 extensions whenever possible. This polyfill should be used only when there is no

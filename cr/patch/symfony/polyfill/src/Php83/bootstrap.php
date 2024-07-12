@@ -68,10 +68,10 @@ if (\PHP_VERSION_ID >= 80100) {
 }
 
 if (!function_exists('ldap_exop_sync') && function_exists('ldap_exop')) {
-    function ldap_exop_sync($ldap, /*string */$request_oid, /*string */$request_data = null, array $controls = null, &$response_data = null, &$response_oid = null)/*: bool */{
+    function ldap_exop_sync($ldap, /*string */$request_oid, /*?string */$request_data = null, /*?*/array $controls = null, &$response_data = null, &$response_oid = null)/*: bool */{
         $request_oid = backport_type_check('string', $request_oid);
 
-        $request_data = backport_type_check('string', $request_data);
+        $request_data = backport_type_check('?string', $request_data);
 
         return ldap_exop($ldap, $request_oid, $request_data, $controls, $response_data, $response_oid);
     }

@@ -152,6 +152,26 @@ if (!function_exists('mb_str_pad')) {
     }
 }
 
+if (!function_exists('mb_ucfirst')) {
+    function mb_ucfirst(/*string */$string, /*?string */$encoding = null)/*: string*/ {
+        $encoding = backport_type_check('?string', $encoding);
+
+        $string = backport_type_check('string', $string);
+
+        return p\Mbstring::mb_ucfirst($string, $encoding);
+    }
+}
+
+if (!function_exists('mb_lcfirst')) {
+    function mb_lcfirst(/*string */$string, /*?string */$encoding = null)/*: string*/ {
+        $encoding = backport_type_check('?string', $encoding);
+
+        $string = backport_type_check('string', $string);
+
+        return p\Mbstring::mb_lcfirst($string, $encoding);
+    }
+}
+
 if (extension_loaded('mbstring')) {
     return;
 }
