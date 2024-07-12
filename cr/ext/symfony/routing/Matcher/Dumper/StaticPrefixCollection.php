@@ -212,6 +212,7 @@ class StaticPrefixCollection
 
         $msg = backport_type_check('string', $msg);
 
-        return str_contains($msg, 'Compilation failed: lookbehind assertion is not fixed length');
+        return str_contains($msg, 'Compilation failed: lookbehind assertion is not fixed length')
+            || str_contains($msg, 'Compilation failed: length of lookbehind assertion is not limited');
     }
 }

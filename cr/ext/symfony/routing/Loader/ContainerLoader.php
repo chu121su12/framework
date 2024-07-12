@@ -22,7 +22,7 @@ class ContainerLoader extends ObjectLoader
 {
     private $container;
 
-    public function __construct(ContainerInterface $container, /*string */$env = null)
+    public function __construct(ContainerInterface $container, /*?string */$env = null)
     {
         $env = backport_type_check('?string', $env);
 
@@ -33,7 +33,7 @@ class ContainerLoader extends ObjectLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, /*?string */$type = null)
     {
         $type = backport_type_check('?string', $type);
 

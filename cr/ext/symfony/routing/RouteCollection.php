@@ -165,8 +165,23 @@ class RouteCollection implements \IteratorAggregate, \Countable
      */
     public function remove($name)
     {
+        $routes = [];
         foreach ((array) $name as $n) {
+            if (isset($this->routes[$n])) {
+                $routes[] = $n;
+            }
+
             unset($this->routes[$n], $this->priorities[$n], $this->aliases[$n]);
+        }
+
+        if (!$routes) {
+            return;
+        }
+
+        foreach ($this->aliases as $k => $alias) {
+            if (\in_array($alias->getId(), $routes, true)) {
+                unset($this->aliases[$k]);
+            }
         }
     }
 
@@ -400,5 +415,12 @@ class RouteCollection implements \IteratorAggregate, \Countable
         $name = backport_type_check('string', $name);
 
         return isset($this->aliases[$name]) ? $this->aliases[$name] : null;
+    }
+
+    public function getPriority(/*string */$name)/*: ?int*/
+    {
+        $name = backport_type_check('string', $name);
+ 
+        return isset($this->priorities[$name]) ? $this->priorities[$name] : null;
     }
 }

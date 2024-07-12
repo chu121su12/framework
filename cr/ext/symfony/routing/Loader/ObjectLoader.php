@@ -40,7 +40,7 @@ abstract class ObjectLoader extends Loader
      *
      * @return RouteCollection
      */
-    public function load($resource, $type = null)
+    public function load($resource, /*?string */$type = null)
     {
         $id = backport_type_check('string', $id);
 

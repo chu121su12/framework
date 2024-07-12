@@ -48,20 +48,20 @@ class Route
     public function __construct(
         $data = [],
         $path = null,
-        $name = null,
+        /*?string */$name = null,
         array $requirements = [],
         array $options = [],
         array $defaults = [],
-        $host = null,
+        /*?string */$host = null,
         $methods = [],
         $schemes = [],
-        $condition = null,
-        $priority = null,
-        $locale = null,
-        $format = null,
-        $utf8 = null,
-        $stateless = null,
-        /*string */$env = null
+        /*?string */$condition = null,
+        /*?int */$priority = null,
+        /*?string */$locale = null,
+        /*?string */$format = null,
+        /*?bool */$utf8 = null,
+        /*?bool */$stateless = null,
+        /*?string */$env = null
     ) {
         $name = backport_type_check('?string', $name);
 
@@ -77,7 +77,7 @@ class Route
 
         $utf8 = backport_type_check('?bool', $utf8);
 
-        $stateless = backport_type_check('bool', $stateless, nul);
+        $stateless = backport_type_check('?bool', $stateless, nul);
 
         $env = backport_type_check('?string', $env);
 

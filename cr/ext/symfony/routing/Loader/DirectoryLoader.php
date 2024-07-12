@@ -20,7 +20,7 @@ class DirectoryLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function load($file, $type = null)
+    public function load($file, /*?string */$type = null)
     {
         $type = backport_type_check('?string', $type);
 
@@ -51,7 +51,7 @@ class DirectoryLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, /*?string */$type = null)
     {
         $type = backport_type_check('?string', $type);
 

@@ -37,7 +37,7 @@ class CompiledRoute implements \Serializable
      * @param array       $hostVariables An array of host variables
      * @param array       $variables     An array of variables (variables defined in the path and in the host patterns)
      */
-    public function __construct($staticPrefix, $regex, array $tokens, array $pathVariables, $hostRegex = null, array $hostTokens = [], array $hostVariables = [], array $variables = [])
+    public function __construct(/*string */$staticPrefix, /*string */$regex, array $tokens, array $pathVariables, /*?string */$hostRegex = null, array $hostTokens = [], array $hostVariables = [], array $variables = [])
     {
         $regex = backport_type_check('string', $regex);
 

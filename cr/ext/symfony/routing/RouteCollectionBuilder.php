@@ -43,7 +43,7 @@ class RouteCollectionBuilder
     private $methods;
     private $resources = [];
 
-    public function __construct(LoaderInterface $loader = null)
+    public function __construct(/*?*/LoaderInterface $loader = null)
     {
         $this->loader = $loader;
     }
@@ -59,7 +59,7 @@ class RouteCollectionBuilder
      *
      * @throws LoaderLoadException
      */
-    public function import($resource, $prefix = '/', $type = null)
+    public function import($resource, /*string */$prefix = '/', /*?string */$type = null)
     {
         $prefix = backport_type_check('string', $prefix);
 
@@ -96,7 +96,7 @@ class RouteCollectionBuilder
      *
      * @return Route
      */
-    public function add($path, $controller, $name = null)
+    public function add(/*string */$path, /*string */$controller, /*?string */$name = null)
     {
         $controller = backport_type_check('string', $controller);
 
@@ -137,7 +137,7 @@ class RouteCollectionBuilder
      *
      * @return $this
      */
-    public function addRoute(Route $route, $name = null)
+    public function addRoute(Route $route, /*?string */$name = null)
     {
         $name = backport_type_check('?string', $name);
 
@@ -361,7 +361,7 @@ class RouteCollectionBuilder
      *
      * @throws LoaderLoadException If no loader is found
      */
-    private function load($resource, $type = null) //// array
+    private function load($resource, /*?string */$type = null)/*: array*/
     {
         $type = backport_type_check('?string', $type);
 

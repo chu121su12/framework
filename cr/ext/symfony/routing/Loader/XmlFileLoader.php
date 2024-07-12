@@ -45,7 +45,7 @@ class XmlFileLoader extends FileLoader
      * @throws \InvalidArgumentException when the file cannot be loaded or when the XML cannot be
      *                                   parsed because it does not validate against the scheme
      */
-    public function load($file, $type = null)
+    public function load($file, /*?string */$type = null)
     {
         $type = backport_type_check('?string', $type);
 
@@ -108,7 +108,7 @@ class XmlFileLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, /*?string */$type = null)
     {
         $type = backport_type_check('?string', $type);
 

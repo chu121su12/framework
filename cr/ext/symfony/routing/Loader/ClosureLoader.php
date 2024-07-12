@@ -31,7 +31,7 @@ class ClosureLoader extends Loader
      *
      * @return RouteCollection
      */
-    public function load($closure, $type = null)
+    public function load($closure, /*?string */$type = null)
     {
         $type = backport_type_check('?string', $type);
 
@@ -41,7 +41,7 @@ class ClosureLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, /*?string */$type = null)
     {
         $type = backport_type_check('?string', $type);
 

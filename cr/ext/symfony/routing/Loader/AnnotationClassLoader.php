@@ -84,7 +84,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
      */
     protected $defaultRouteIndex = 0;
 
-    public function __construct(Reader $reader = null, /*string */$env = null)
+    public function __construct(/*?*/Reader $reader = null, /*?string */$env = null)
     {
         $env = backport_type_check('?string', $env);
 
@@ -111,7 +111,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
      *
      * @throws \InvalidArgumentException When route can't be parsed
      */
-    public function load($class, $type = null)
+    public function load($class, /*?string */$type = null)
     {
         $type = backport_type_check('?string', $type);
 
@@ -249,7 +249,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, /*?string */$type = null)
     {
         $type = backport_type_check('?string', $type);
 

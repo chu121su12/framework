@@ -97,7 +97,7 @@ class Router implements RouterInterface, RequestMatcherInterface
     /**
      * @param mixed $resource The main resource to load
      */
-    public function __construct(LoaderInterface $loader, $resource, array $options = [], RequestContext $context = null, LoggerInterface $logger = null, $defaultLocale = null)
+    public function __construct(LoaderInterface $loader, $resource, array $options = [], /*?*/RequestContext $context = null, /*?*/LoggerInterface $logger = null, /*?string */$defaultLocale = null)
     {
         $defaultLocale = backport_type_check('?string', $defaultLocale);
 

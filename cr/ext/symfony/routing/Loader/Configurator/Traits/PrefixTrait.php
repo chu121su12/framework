@@ -31,6 +31,8 @@ trait PrefixTrait
             }
             foreach ($routes->all() as $name => $route) {
                 if (null === $locale = $route->getDefault('_locale')) {
+                    $priority = $routes->getPriority($name);
+                    $priority = isset($priority) ? $priority : 0;
                     $routes->remove($name);
                     foreach ($prefix as $locale => $localePrefix) {
                         $localizedRoute = clone $route;
@@ -38,13 +40,14 @@ trait PrefixTrait
                         $localizedRoute->setRequirement('_locale', preg_quote($locale));
                         $localizedRoute->setDefault('_canonical_route', $name);
                         $localizedRoute->setPath($localePrefix.(!$trailingSlashOnRoot && '/' === $route->getPath() ? '' : $route->getPath()));
-                        $routes->add($name.'.'.$locale, $localizedRoute);
+                        $routes->add($name.'.'.$locale, $localizedRoute, $priority);
                     }
                 } elseif (!isset($prefix[$locale])) {
                     throw new \InvalidArgumentException(sprintf('Route "%s" with locale "%s" is missing a corresponding prefix in its parent collection.', $name, $locale));
                 } else {
                     $route->setPath($prefix[$locale].(!$trailingSlashOnRoot && '/' === $route->getPath() ? '' : $route->getPath()));
-                    $routes->add($name, $route);
+                    $priority = $routes->getPriority($name);
+                    $routes->add($name, $route, isset($priority) ? $priority : 0);
                 }
             }
 

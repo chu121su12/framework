@@ -26,7 +26,7 @@ class RoutingConfigurator
     private $file;
     private $env;
 
-    public function __construct(RouteCollection $collection, PhpFileLoader $loader, /*string */$path, /*string */$file, /*string */$env = null)
+    public function __construct(RouteCollection $collection, PhpFileLoader $loader, /*string */$path, /*string */$file, /*?string */$env = null)
     {
         $file = backport_type_check('string', $file);
 
@@ -44,7 +44,7 @@ class RoutingConfigurator
     /**
      * @param string|string[]|null $exclude Glob patterns to exclude from the import
      */
-    final public function import($resource, $type = null, $ignoreErrors = false, $exclude = null) // ImportConfigurator
+    final public function import($resource, /*?string */$type = null, $ignoreErrors = false, $exclude = null) // ImportConfigurator
     {
         $ignoreErrors = backport_type_check('bool', $ignoreErrors);
 

@@ -28,7 +28,7 @@ class CollectionConfigurator
     private $parentPrefixes;
     private $host;
 
-    public function __construct(RouteCollection $parent, $name, self $parentConfigurator = null, array $parentPrefixes = null)
+    public function __construct(RouteCollection $parent, /*string */$name, /*?*/self $parentConfigurator = null, /*?*/array $parentPrefixes = null)
     {
         $name = backport_type_check('string', $name);
 
