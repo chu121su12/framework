@@ -123,6 +123,10 @@ class Email extends Message
      */
     public function from(...$addresses)
     {
+        if (!$addresses) {
+            throw new LogicException('"from()" must be called with at least one address.');
+        }
+
         return $this->setListAddressHeaderBody('From', $addresses);
     }
 
@@ -344,7 +348,7 @@ class Email extends Message
      *
      * @return $this
      */
-    public function attach($body, $name = null, $contentType = null)
+    public function attach($body, /*?string */$name = null, /*?string */$contentType = null)
     {
         $contentType = backport_type_check('?string', $contentType);
 
@@ -359,7 +363,7 @@ class Email extends Message
     /**
      * @return $this
      */
-    public function attachFromPath($path, $name = null, $contentType = null)
+    public function attachFromPath($path, /*?string */$name = null, /*?string */$contentType = null)
     {
         $path = backport_type_check('string', $path);
 
@@ -378,7 +382,7 @@ class Email extends Message
      *
      * @return $this
      */
-    public function embed($body, $name = null, $contentType = null)
+    public function embed($body, /*?string */$name = null, /*?string */$contentType = null)
     {
         $contentType = backport_type_check('?string', $contentType);
 
@@ -393,7 +397,7 @@ class Email extends Message
     /**
      * @return $this
      */
-    public function embedFromPath($path, $name = null, $contentType = null)
+    public function embedFromPath($path, /*?string */$name = null, /*?string */$contentType = null)
     {
         $path = backport_type_check('string', $path);
 

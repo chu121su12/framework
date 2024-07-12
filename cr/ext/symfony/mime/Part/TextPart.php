@@ -42,13 +42,13 @@ class TextPart extends AbstractPart
     /**
      * @param resource|string $body
      */
-    public function __construct($body, $charset = 'utf-8', $subtype = 'plain', $encoding = null)
+    public function __construct($body, /*?string */$charset = 'utf-8', /*string */$subtype = 'plain', /*?string */$encoding = null)
     {
         $encoding = backport_type_check('?string', $encoding);
 
         $charset = backport_type_check('?string', $charset);
 
-        $subtype = backport_type_check('?string', $subtype);
+        $subtype = backport_type_check('string', $subtype);
 
         unset($this->_headers);
 

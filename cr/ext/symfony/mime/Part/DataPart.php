@@ -33,7 +33,7 @@ class DataPart extends TextPart
     /**
      * @param resource|string $body
      */
-    public function __construct($body, $filename = null, $contentType = null, $encoding = null)
+    public function __construct($body, /*?string */$filename = null, /*?string */$contentType = null, /*?string */$encoding = null)
     {
         $encoding = backport_type_check('?string', $encoding);
 
@@ -61,7 +61,7 @@ class DataPart extends TextPart
         $this->setDisposition('attachment');
     }
 
-    public static function fromPath($path, $name = null, $contentType = null) /// self
+    public static function fromPath(/*string */$path, /*?string */$name = null, /*?string */$contentType = null) /// self
     {
         $path = backport_type_check('string', $path);
 

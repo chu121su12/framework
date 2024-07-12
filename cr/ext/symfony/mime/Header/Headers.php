@@ -220,7 +220,7 @@ final class Headers
         return array_shift($values);
     }
 
-    public function all($name = null) //// iterable
+    public function all(/*?string */$name = null) //// iterable
     {
         $name = backport_type_check('?string', $name);
 

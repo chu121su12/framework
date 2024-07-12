@@ -28,7 +28,7 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * @see http://www.php.net/manual/en/function.finfo-open.php
      */
-    public function __construct($magicFile = null)
+    public function __construct(/*?string */$magicFile = null)
     {
         $magicFile = backport_type_check('?string', $magicFile);
 
