@@ -22,7 +22,7 @@ class UuidV1 extends Uuid
 
     private static $clockSeq;
 
-    public function __construct(/*string */$uuid = null)
+    public function __construct(/*?string */$uuid = null)
     {
         $uuid = backport_type_check('?string', $uuid);
 
@@ -43,7 +43,7 @@ class UuidV1 extends Uuid
         return uuid_mac($this->uid);
     }
 
-    public static function generate(\DateTimeInterface $time = null, Uuid $node = null)/*: string*/
+    public static function generate(/*?*/\DateTimeInterface $time = null, Uuid $node = null)/*: string*/
     {
         $uuid = !$time || !$node ? uuid_create(static::TYPE) : parent::NIL;
 

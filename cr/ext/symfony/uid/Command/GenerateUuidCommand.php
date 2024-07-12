@@ -29,7 +29,7 @@ class GenerateUuidCommand extends Command
 
     private $factory;
 
-    public function __construct(UuidFactory $factory = null)
+    public function __construct(/*?*/UuidFactory $factory = null)
     {
         $this->factory = isset($factory) ? $factory : new UuidFactory();
 

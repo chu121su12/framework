@@ -25,7 +25,7 @@ class Ulid extends AbstractUid
     private static $time = '';
     private static $rand = [];
 
-    public function __construct(/*string */$ulid = null)
+    public function __construct(/*?string */$ulid = null)
     {
         $ulid = backport_type_check('?string', $ulid);
 
@@ -150,7 +150,7 @@ class Ulid extends AbstractUid
         return \Carbon\CarbonImmutable::createFromFormat('U.u', substr_replace($time, '.', -3, 0));
     }
 
-    public static function generate(\DateTimeInterface $time = null)/*: string*/
+    public static function generate(/*?*/\DateTimeInterface $time = null)/*: string*/
     {
         if (null === $time) {
             return self::doGenerate();
