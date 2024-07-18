@@ -77,6 +77,10 @@ class QueueBeanstalkdQueueTest extends TestCase
 
     public function testPopProperlyPopsJobOffOfBeanstalkd()
     {
+        if (! \class_exists(TubeName::class)) {
+            $this->markTestSkipped('Uses pheanstalk > 3');
+        }
+
         $this->setQueue('default', 60);
         $tube = new TubeName('default');
 
@@ -96,6 +100,10 @@ class QueueBeanstalkdQueueTest extends TestCase
 
     public function testBlockingPopProperlyPopsJobOffOfBeanstalkd()
     {
+        if (! \class_exists(TubeName::class)) {
+            $this->markTestSkipped('Uses pheanstalk > 3');
+        }
+
         $this->setQueue('default', 60, 60);
         $tube = new TubeName('default');
 

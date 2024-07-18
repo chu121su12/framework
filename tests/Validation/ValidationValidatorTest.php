@@ -813,7 +813,7 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator($trans, [
             'users' => [['name' => 'Taylor']],
         ], [
-            'users.*' => ValidationRule::forEach(fn () => ['id' => 'required']),
+            'users.*' => ValidationRule::forEach_(function () { return ['id' => 'required']; }),
         ], [], [
             'users.*.id' => 'User ID',
         ]);
@@ -832,7 +832,7 @@ class ValidationValidatorTest extends TestCase
         $v = new Validator($trans, [
             'users' => [['name' => 'Taylor']],
         ], [
-            'users.*' => ValidationRule::forEach(fn () => ['id' => 'required']),
+            'users.*' => ValidationRule::forEach_(function () { return ['id' => 'required']; }),
         ]);
         $this->assertFalse($v->passes());
         $v->messages()->setFormat(':message');

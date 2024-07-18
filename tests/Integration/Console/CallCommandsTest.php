@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\TestWith;
 
 class CallCommandsTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $this->afterApplicationCreated(function () {
             Artisan::command('test:a', function () {
@@ -28,11 +28,23 @@ class CallCommandsTest extends TestCase
         parent::setUp();
     }
 
+    /**
+     * @dataProvider getCommands
+     */
     #[TestWith(['test:a'])]
     #[TestWith(['test:b'])]
     #[TestWith(['test:c'])]
-    public function testItCanCallCommands(string $command)
+    public function testItCanCallCommands(/*string */$command)
     {
         $this->artisan($command)->assertSuccessful();
+    }
+
+    public function getCommands()
+    {
+        return [
+            ['test:a'],
+            ['test:b'],
+            ['test:c'],
+        ];
     }
 }

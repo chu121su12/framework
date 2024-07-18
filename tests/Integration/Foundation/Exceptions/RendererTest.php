@@ -11,7 +11,7 @@ class RendererTest extends TestCase
 {
     protected function defineRoutes($router)
     {
-        $router->get('failed', fn () => throw new RuntimeException('Bad route!'));
+        $router->get('failed', function () { throw new RuntimeException('Bad route!'); });
     }
 
     #[WithConfig('app.debug', true)]

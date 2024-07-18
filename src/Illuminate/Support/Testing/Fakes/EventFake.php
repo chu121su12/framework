@@ -193,12 +193,14 @@ class EventFake implements Dispatcher, Fake
         $count = count(Arr::flatten($this->events));
 
         $eventNames = collect($this->events)
-            ->map(fn ($events, $eventName) => sprintf(
-                '%s dispatched %s %s',
-                $eventName,
-                count($events),
-                Str::plural('time', count($events)),
-            ))
+            ->map(function ($events, $eventName) {
+                return sprintf(
+                    '%s dispatched %s %s',
+                    $eventName,
+                    count($events),
+                    Str::plural('time', count($events))
+                );
+            })
             ->join("\n- ");
 
         PHPUnit::assertSame(

@@ -208,7 +208,12 @@ class BladeMapper
             $value = $this->bladeCompiler->compileString($value);
 
             return $this->trimEmptyLines($value);
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             report($e);
 
             return $value;

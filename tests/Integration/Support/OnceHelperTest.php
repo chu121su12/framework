@@ -17,8 +17,8 @@ class OnceHelperTest extends TestCase
 
     protected function afterRefreshingDatabase()
     {
-        UserFactory::new()->times(3)->create();
-        UserFactory::new()->times(2)->unverified()->create();
+        UserFactory::new_()->times(3)->create();
+        UserFactory::new_()->times(2)->unverified()->create();
     }
 
     public function testItCanCacheStaticMethodWithoutParameters()
@@ -66,22 +66,23 @@ class OnceHelperTest extends TestCase
 
 class User extends Authenticatable
 {
-    public static function verified(): Collection
+    public static function verified()/*: Collection*/
     {
-        return once(fn () => self::whereNotNull('email_verified_at')->get());
+        return once(function () { return self::whereNotNull('email_verified_at')->get(); });
     }
 
-    public static function unverified(): Collection
+    public static function unverified()/*: Collection*/
     {
-        return once(fn () => self::whereNull('email_verified_at')->get());
+        return once(function () { return self::whereNull('email_verified_at')->get(); });
     }
 
-    public static function getByType(string $type): Collection
+    public static function getByType(/*string */$type)/*: Collection*/
     {
         return once(function () use ($type) {
-            return match ($type) {
-                'verified' => self::whereNotNull('email_verified_at')->get(),
-                'unverified' => self::whereNull('email_verified_at')->get()
+            switch ($type) {
+                case 'verified': return self::whereNotNull('email_verified_at')->get();
+                case 'unverified': return self::whereNull('email_verified_at')->get();
+                default: throw new \Exception('Unhandled match');
             };
         });
     }

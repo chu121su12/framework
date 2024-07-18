@@ -29,7 +29,7 @@ class SupportArrTest extends TestCase
         $this->assertFalse(Arr::accessible(12.34));
         $this->assertFalse(Arr::accessible(true));
         $this->assertFalse(Arr::accessible(new \DateTime));
-        $this->assertFalse(Arr::accessible(static fn () => null));
+        $this->assertFalse(Arr::accessible(static function () { return null; }));
     }
 
     public function testAdd()
@@ -115,37 +115,37 @@ class SupportArrTest extends TestCase
     public function testDivide()/*: void*/
     {
         // Test dividing an empty array
-        [$keys, $values] = Arr::divide([]);
+        list($keys, $values) = Arr::divide([]);
         $this->assertEquals([], $keys);
         $this->assertEquals([], $values);
 
         // Test dividing an array with a single key-value pair
-        [$keys, $values] = Arr::divide(['name' => 'Desk']);
+        list($keys, $values) = Arr::divide(['name' => 'Desk']);
         $this->assertEquals(['name'], $keys);
         $this->assertEquals(['Desk'], $values);
 
         // Test dividing an array with multiple key-value pairs
-        [$keys, $values] = Arr::divide(['name' => 'Desk', 'price' => 100, 'available' => true]);
+        list($keys, $values) = Arr::divide(['name' => 'Desk', 'price' => 100, 'available' => true]);
         $this->assertEquals(['name', 'price', 'available'], $keys);
         $this->assertEquals(['Desk', 100, true], $values);
 
         // Test dividing an array with numeric keys
-        [$keys, $values] = Arr::divide([0 => 'first', 1 => 'second']);
+        list($keys, $values) = Arr::divide([0 => 'first', 1 => 'second']);
         $this->assertEquals([0, 1], $keys);
         $this->assertEquals(['first', 'second'], $values);
 
         // Test dividing an array with null key
-        [$keys, $values] = Arr::divide([null => 'Null', 1 => 'one']);
+        list($keys, $values) = Arr::divide([null => 'Null', 1 => 'one']);
         $this->assertEquals([null, 1], $keys);
         $this->assertEquals(['Null', 'one'], $values);
 
         // Test dividing an array where the keys are arrays
-        [$keys, $values] = Arr::divide([['one' => 1, 2 => 'second'], 1 => 'one']);
+        list($keys, $values) = Arr::divide([['one' => 1, 2 => 'second'], 1 => 'one']);
         $this->assertEquals([0, 1], $keys);
         $this->assertEquals([['one' => 1, 2 => 'second'], 'one'], $values);
 
         // Test dividing an array where the values are arrays
-        [$keys, $values] = Arr::divide([null => ['one' => 1, 2 => 'second'], 1 => 'one']);
+        list($keys, $values) = Arr::divide([null => ['one' => 1, 2 => 'second'], 1 => 'one']);
         $this->assertEquals([null, 1], $keys);
         $this->assertEquals([['one' => 1, 2 => 'second'], 'one'], $values);
     }
@@ -251,7 +251,7 @@ class SupportArrTest extends TestCase
         $this->assertFalse(Arr::exists(new Collection(['a' => null]), 'b'));
     }
 
-    public function testWhereNotNull(): void
+    public function testWhereNotNull()/*: void*/
     {
         $array = array_values(Arr::whereNotNull([null, 0, false, '', null, []]));
         $this->assertEquals([0, false, '', []], $array);
@@ -265,8 +265,8 @@ class SupportArrTest extends TestCase
         $array = array_values(Arr::whereNotNull(['a', null, 'b', null, 'c']));
         $this->assertEquals(['a', 'b', 'c'], $array);
 
-        $array = array_values(Arr::whereNotNull([null, 1, 'string', 0.0, false, [], new stdClass(), fn () => null]));
-        $this->assertEquals([1, 'string', 0.0, false, [], new stdClass(), fn () => null], $array);
+        $array = array_values(Arr::whereNotNull([null, 1, 'string', 0.0, false, [], new stdClass(), function () { return null; }]));
+        $this->assertEquals([1, 'string', 0.0, false, [], new stdClass(), function () { return null; }], $array);
     }
 
     public function testFirst()
@@ -1449,7 +1449,7 @@ class SupportArrTest extends TestCase
         ], Arr::prependKeysWith($array, 'test.'));
     }
 
-    public function testTake(): void
+    public function testTake()/*: void*/
     {
         $array = [1, 2, 3, 4, 5, 6];
 

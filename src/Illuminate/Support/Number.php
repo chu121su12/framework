@@ -310,8 +310,14 @@ class Number
      * @param  int|float  $offset
      * @return array
      */
-    public static function pairs(int|float $to, int|float $by, int|float $offset = 1)
+    public static function pairs(/*int|float */$to, /*int|float */$by, /*int|float */$offset = 1)
     {
+        $offset = backport_type_check('int|float', $offset);
+
+        $by = backport_type_check('int|float', $by);
+
+        $to = backport_type_check('int|float', $to);
+
         $output = [];
 
         for ($lower = 0; $lower < $to; $lower += $by) {

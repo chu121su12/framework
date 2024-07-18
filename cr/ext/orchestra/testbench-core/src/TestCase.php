@@ -48,7 +48,9 @@ abstract class TestCase extends PHPUnit\TestCase implements Contracts\TestCase
      */
     protected function setUp()/*: void*/
     {
-        static::$latestResponse = null;
+        if (isset(static::$latestResponse)) {
+            static::$latestResponse = null;
+        }
 
         $this->setUpTheTestEnvironment();
     }
@@ -144,7 +146,9 @@ abstract class TestCase extends PHPUnit\TestCase implements Contracts\TestCase
      */
     public static function tearDownAfterClass()/*: void*/
     {
-        static::$latestResponse = null;
+        if (isset(static::$latestResponse)) {
+            static::$latestResponse = null;
+        }
 
         static::teardownAfterClassUsingWorkbench();
         static::teardownAfterClassUsingPHPUnit();

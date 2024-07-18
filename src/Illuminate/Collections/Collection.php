@@ -859,8 +859,10 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      * @param  int  $multiplier
      * @return static
      */
-    public function multiply(int $multiplier)
+    public function multiply(/*int */$multiplier)
     {
+        $multiplier = backport_type_check('int', $multiplier);
+
         $new = new static;
 
         for ($i = 0; $i < $multiplier; $i++) {
@@ -1170,7 +1172,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
             return null;
         }
 
-        $position = ($keys = $this->keys())->search($key);
+        $position = with($keys = $this->keys())->search($key);
 
         if ($position === 0) {
             return null;
@@ -1194,7 +1196,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
             return null;
         }
 
-        $position = ($keys = $this->keys())->search($key);
+        $position = with($keys = $this->keys())->search($key);
 
         if ($position === $keys->count() - 1) {
             return null;

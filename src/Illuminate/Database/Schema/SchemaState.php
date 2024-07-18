@@ -100,7 +100,7 @@ abstract class SchemaState
      *
      * @return bool
      */
-    public function hasMigrationTable(): bool
+    public function hasMigrationTable()/*: bool*/
     {
         return $this->connection->getSchemaBuilder()->hasTable($this->migrationTable);
     }

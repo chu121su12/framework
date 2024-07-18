@@ -16,6 +16,18 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
+class FoundationHelpersTest_testAbortReceivesCodeAsResponableImplementation_class implements Responsable
+            {
+                public $request;
+
+                public function toResponse($request)
+                {
+                    $this->request = $request;
+
+                    return new SymfonyResponse();
+                }
+            }
+
 class FoundationHelpersTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -264,17 +276,7 @@ class FoundationHelpersTest extends TestCase
         app()->instance('request', $request = Request::create('/'));
 
         try {
-            abort($code = new class implements Responsable
-            {
-                public $request;
-
-                public function toResponse($request)
-                {
-                    $this->request = $request;
-
-                    return new SymfonyResponse();
-                }
-            });
+            abort($code = new FoundationHelpersTest_testAbortReceivesCodeAsResponableImplementation_class);
 
             $this->fail(
                 sprintf('abort function must throw %s when receiving code as Responable implementation.', HttpResponseException::class)

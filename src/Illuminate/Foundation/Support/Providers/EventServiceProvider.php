@@ -176,8 +176,10 @@ class EventServiceProvider extends ServiceProvider
      * @param  string|array  $paths
      * @return void
      */
-    public static function addEventDiscoveryPaths(array|string $paths)
+    public static function addEventDiscoveryPaths(/*array|string */$paths)
     {
+        $paths = backport_type_check('array|string', $paths);
+
         static::$eventDiscoveryPaths = array_values(array_unique(
             array_merge(static::$eventDiscoveryPaths, Arr::wrap($paths))
         ));

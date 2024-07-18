@@ -426,8 +426,8 @@ class SupportCollectionTest extends TestCase
         $foo = $items->shift();
         $bar = $items->shift();
 
-        $this->assertSame('f', $foo?->text);
-        $this->assertSame('x', $bar?->text);
+        $this->assertSame('f', optional($foo)->text);
+        $this->assertSame('x', optional($bar)->text);
         $this->assertNull($items->shift());
     }
 
@@ -1363,6 +1363,7 @@ class SupportCollectionTest extends TestCase
         );
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testReplaceNull($collection)
     {
@@ -4053,6 +4054,7 @@ class SupportCollectionTest extends TestCase
         }));
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testBeforeInStrictMode($collection)
     {
@@ -4066,6 +4068,7 @@ class SupportCollectionTest extends TestCase
         $this->assertEquals([], $c->before('', true));
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testBeforeReturnsNullWhenItemIsNotFound($collection)
     {
@@ -4081,6 +4084,7 @@ class SupportCollectionTest extends TestCase
         }));
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testBeforeReturnsNullWhenItemOnTheFirstitem($collection)
     {
@@ -4095,6 +4099,7 @@ class SupportCollectionTest extends TestCase
         $this->assertNull($c->before('bar'));
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testAfterReturnsItemAfterTheGivenItem($collection)
     {
@@ -4115,6 +4120,7 @@ class SupportCollectionTest extends TestCase
         }));
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testAfterInStrictMode($collection)
     {
@@ -4128,6 +4134,7 @@ class SupportCollectionTest extends TestCase
         $this->assertEquals('', $c->after([], true));
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testAfterReturnsNullWhenItemIsNotFound($collection)
     {
@@ -4143,6 +4150,7 @@ class SupportCollectionTest extends TestCase
         }));
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testAfterReturnsNullWhenItemOnTheLastItem($collection)
     {
@@ -4157,6 +4165,7 @@ class SupportCollectionTest extends TestCase
         $this->assertNull($c->after(5));
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testKeys($collection)
     {

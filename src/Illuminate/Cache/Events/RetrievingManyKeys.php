@@ -21,7 +21,7 @@ class RetrievingManyKeys extends CacheEvent
      */
     public function __construct($storeName, $keys, array $tags = [])
     {
-        parent::__construct($storeName, $keys[0] ?? '', $tags);
+        parent::__construct($storeName, isset($keys[0]) ? $keys[0] : '', $tags);
 
         $this->keys = $keys;
     }

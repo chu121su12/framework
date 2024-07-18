@@ -7,6 +7,7 @@ use CR\Extra\Uuid7;
 use Illuminate\Support\Traits\Macroable;
 use JsonException;
 use League\CommonMark\CommonMarkConverter as GithubFlavoredMarkdownConverter;
+use League\CommonMark\Environment;
 use Ramsey\Uuid\Codec\TimestampFirstCombCodec;
 use Ramsey\Uuid\Generator\CombGenerator;
 use Ramsey\Uuid\Uuid;
@@ -699,6 +700,18 @@ class Str
      */
     public static function markdown($string, array $options = [], array $extensions = [])
     {
+        if (\method_exists(GithubFlavoredMarkdownConverter::class, 'convertToHtml')) {
+            $environment = Environment::createCommonMarkEnvironment();
+
+            foreach ($extensions as $extension) {
+                $environment->addExtension($extension);
+            }
+    
+            $converter = new GithubFlavoredMarkdownConverter($options, $environment);
+
+            return (string) $converter->convertToHtml($string);
+        }
+
         $converter = new GithubFlavoredMarkdownConverter($options);
 
         $environment = $converter->getEnvironment();

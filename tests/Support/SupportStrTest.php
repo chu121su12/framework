@@ -1627,7 +1627,7 @@ PATTERN;
             '🌊✋' => ['🌊', '✋'],
             '🌊✋' => ['✋', '🌊✋'],
         ] as $subject => $value) {
-            [$needle, $expected] = $value;
+            list($needle, $expected) = $value;
 
             $this->assertSame($expected, Str::chopStart($subject, $needle));
         }
@@ -1647,7 +1647,7 @@ PATTERN;
             '✋🌊' => ['🌊', '✋'],
             '✋🌊' => ['✋', '✋🌊'],
         ] as $subject => $value) {
-            [$needle, $expected] = $value;
+            list($needle, $expected) = $value;
 
             $this->assertSame($expected, Str::chopEnd($subject, $needle));
         }

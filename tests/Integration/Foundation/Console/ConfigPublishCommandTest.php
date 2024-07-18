@@ -14,12 +14,12 @@ class ConfigPublishCommandTest extends TestCase
 {
     use InteractsWithPublishedFiles;
 
-    protected array $files = [
+    protected /*array */$files = [
         'config-stubs/*.php',
     ];
 
     #[\Override]
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $files = new Filesystem();
 

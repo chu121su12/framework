@@ -14,18 +14,22 @@ use ReflectionProperty;
  */
 class TestResponseAssert
 {
+    protected /*TestResponse */$response;
+
     /**
      * Create a new TestResponse assertion helper.
      */
-    private function __construct(protected TestResponse $response)
+    private function __construct(/*protected */TestResponse $response)
     {
+        $this->response = $response;
+
         //
     }
 
     /**
      * Create a new TestResponse assertion helper.
      */
-    public static function withResponse(TestResponse $response): self
+    public static function withResponse(TestResponse $response)/*: self*/
     {
         return new static($response);
     }
@@ -107,14 +111,14 @@ class TestResponseAssert
         $exceptionToAppend = (string) $exceptionToAppend;
 
         $message = <<<"EOF"
-            The following exception occurred during the last request:
+The following exception occurred during the last request:
 
-            $exceptionToAppend
+$exceptionToAppend
 
-            ----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 
-            $exceptionMessage
-            EOF;
+$exceptionMessage
+EOF;
 
         return $this->appendMessageToException($message, $exception);
     }
@@ -139,10 +143,10 @@ class TestResponseAssert
         }
 
         $message = <<<"EOF"
-            The following errors occurred during the last request:
+The following errors occurred during the last request:
 
-            $errors
-            EOF;
+$errors
+EOF;
 
         return $this->appendMessageToException($message, $exception);
     }

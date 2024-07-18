@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class SupportHtmlStringTest extends TestCase
 {
-    public function testToHtml(): void
+    public function testToHtml()/*: void*/
     {
         // Check if HtmlString correctly converts a basic HTML string
         $str = '<h1>foo</h1>';
@@ -41,7 +41,7 @@ class SupportHtmlStringTest extends TestCase
         $this->assertEquals($str, (string) $html);
     }
 
-    public function testIsEmpty(): void
+    public function testIsEmpty()/*: void*/
     {
         // Check if HtmlString correctly identifies an empty string as empty
         $this->assertTrue((new HtmlString(''))->isEmpty());

@@ -861,8 +861,10 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
      * @param  int  $multiplier
      * @return static
      */
-    public function multiply(int $multiplier)
+    public function multiply(/*int */$multiplier)
     {
+        $multiplier = backport_type_check('int', $multiplier);
+
         return $this->passthru('multiply', func_get_args());
     }
 

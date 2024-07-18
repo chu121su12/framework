@@ -499,7 +499,9 @@ class BusFake implements Fake, QueueingDispatcher
     public function assertNothingBatched()
     {
         $jobNames = collect($this->batches)
-            ->map(fn ($batch) => $batch->jobs->map(fn ($job) => get_class($job)))
+            ->map(function ($batch) {
+                return $batch->jobs->map(function ($job) { return get_class($job); });
+            })
             ->flatten()
             ->join("\n- ");
 

@@ -848,7 +848,7 @@ if (! function_exists('response')) {
             return $factory;
         }
 
-        return $factory->make($content ?? '', $status, $headers);
+        return $factory->make(isset($content) ? $content : '', $status, $headers);
     }
 }
 
@@ -1043,7 +1043,7 @@ if (! function_exists('validator')) {
      * @param  array  $attributes
      * @return ($data is null ? \Illuminate\Contracts\Validation\Factory : \Illuminate\Contracts\Validation\Validator)
      */
-    function validator(?array $data = null, array $rules = [], array $messages = [], array $attributes = [])
+    function validator(/*?*/array $data = null, array $rules = [], array $messages = [], array $attributes = [])
     {
         $factory = app(ValidationFactory::class);
 
@@ -1051,7 +1051,7 @@ if (! function_exists('validator')) {
             return $factory;
         }
 
-        return $factory->make($data ?? [], $rules, $messages, $attributes);
+        return $factory->make(isset($data) ? $data : [], $rules, $messages, $attributes);
     }
 }
 

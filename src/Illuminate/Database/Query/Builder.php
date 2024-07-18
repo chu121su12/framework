@@ -3777,7 +3777,7 @@ class Builder implements BuilderContract
      * @param  array|callable  $values
      * @return bool
      */
-    public function updateOrInsert(array $attributes, array|callable $values = [])
+    public function updateOrInsert(array $attributes, /*array|callable */$values = [])
     {
         $exists = $this->where($attributes)->exists();
 

@@ -261,9 +261,11 @@ class HttpClientTest extends TestCase
 
     public function testUnprocessableContentRequest()
     {
+        $factory = $this->factory;
+
         $this->factory->fake([
-            'vapor.laravel.com' => $this->factory::response('', HttpResponse::HTTP_UNPROCESSABLE_ENTITY),
-            'forge.laravel.com' => $this->factory::response('', HttpResponse::HTTP_OK),
+            'vapor.laravel.com' => $factory::response('', HttpResponse::HTTP_UNPROCESSABLE_ENTITY),
+            'forge.laravel.com' => $factory::response('', HttpResponse::HTTP_OK),
         ]);
 
         $response = $this->factory->post('http://vapor.laravel.com');
