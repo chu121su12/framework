@@ -117,9 +117,11 @@ abstract class Connection
 
         $time = round((microtime(true) - $start) * 1000, 2);
 
-        $this->events?->dispatch(new CommandExecuted(
-            $method, $this->parseParametersForEvent($parameters), $time, $this
-        ));
+        if (isset($this->events)) {
+            $this->events->dispatch(new CommandExecuted(
+                $method, $this->parseParametersForEvent($parameters), $time, $this
+            ));
+        }
 
         return $result;
     }

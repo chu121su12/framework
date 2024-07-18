@@ -197,8 +197,10 @@ class Container implements ArrayAccess, ContainerContract
      * @param  \Closure  $handler
      * @return void
      */
-    public function whenHasAttribute(string $attribute, Closure $handler)
+    public function whenHasAttribute(/*string */$attribute, Closure $handler)
     {
+        $attribute = backport_type_check('string', $attribute);
+
         $this->contextualAttributes[$attribute] = $handler;
     }
 
@@ -977,9 +979,13 @@ class Container implements ArrayAccess, ContainerContract
         if (is_null($constructor)) {
             array_pop($this->buildStack);
 
-            $this->fireAfterResolvingAttributeCallbacks(
-                $reflector->getAttributes(), $instance = new $concrete
-            );
+            $instance = new $concrete;
+
+            if (\method_exists($reflector, 'getAttributes')) {
+                $this->fireAfterResolvingAttributeCallbacks(
+                    $reflector->getAttributes(), $instance
+                );
+            }
 
             return $instance;
         }
@@ -999,9 +1005,13 @@ class Container implements ArrayAccess, ContainerContract
 
         array_pop($this->buildStack);
 
-        $this->fireAfterResolvingAttributeCallbacks(
-            $reflector->getAttributes(), $instance = $reflector->newInstanceArgs($instances)
-        );
+        $instance = $reflector->newInstanceArgs($instances);
+
+        if (\method_exists($reflector, 'getAttributes')) {
+            $this->fireAfterResolvingAttributeCallbacks(
+                $reflector->getAttributes(), $instance
+            );
+        }
 
         return $instance;
     }
@@ -1037,11 +1047,15 @@ class Container implements ArrayAccess, ContainerContract
             // If the class is null, it means the dependency is a string or some other
             // primitive type which we can not resolve since it is not a class and
             // we will just bomb out with an error since we have no-where to go.
-            $result ??= is_null(Util::getParameterClassName($dependency))
-                            ? $this->resolvePrimitive($dependency)
-                            : $this->resolveClass($dependency);
+            if (! isset($result)) {
+                $result = is_null(Util::getParameterClassName($dependency))
+                    ? $this->resolvePrimitive($dependency)
+                    : $this->resolveClass($dependency);
+            }
 
-            $this->fireAfterResolvingAttributeCallbacks($dependency->getAttributes(), $result);
+            if (\method_exists($dependency, 'getAttributes')) {
+                $this->fireAfterResolvingAttributeCallbacks($dependency->getAttributes(), $result);
+            }
 
             if ($dependency->isVariadic()) {
                 $results = array_merge($results, $result);
@@ -1095,7 +1109,14 @@ class Container implements ArrayAccess, ContainerContract
      */
     protected function getContextualAttributeFromDependency($dependency)
     {
-        return $dependency->getAttributes(ContextualAttribute::class, ReflectionAttribute::IS_INSTANCEOF)[0] ?? null;
+        if (! class_exists(ReflectionAttribute::class)) {
+            return null;
+
+        }
+
+        $attribute = $dependency->getAttributes(ContextualAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
+
+        return isset($attribute[0]) ? $attribute[0] : null;
     }
 
     /**
@@ -1188,12 +1209,14 @@ class Container implements ArrayAccess, ContainerContract
      */
     protected function resolveFromAttribute(ReflectionAttribute $attribute)
     {
-        $handler = $this->contextualAttributes[$attribute->getName()] ?? null;
+        $namedAttribute = $this->contextualAttributes[$attribute->getName()];
+
+        $handler = isset($namedAttribute) ? $namedAttribute : null;
 
         $instance = $attribute->newInstance();
 
         if (is_null($handler) && method_exists($instance, 'resolve')) {
-            $handler = $instance->resolve(...);
+            $handler = function (...$args) { return $instance->resolve(...$args); };
         }
 
         if (is_null($handler)) {
@@ -1306,8 +1329,10 @@ class Container implements ArrayAccess, ContainerContract
      * @param  \Closure  $callback
      * @return void
      */
-    public function afterResolvingAttribute(string $attribute, \Closure $callback)
+    public function afterResolvingAttribute(/*string */$attribute, \Closure $callback)
     {
+        $attribute = backport_type_check('string', $attribute);
+
         $this->afterResolvingAttributeCallbacks[$attribute][] = $callback;
     }
 

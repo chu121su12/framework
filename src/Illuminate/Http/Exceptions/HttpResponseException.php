@@ -22,9 +22,15 @@ class HttpResponseException extends RuntimeException
      * @param  \Throwable  $previous
      * @return void
      */
-    public function __construct(Response $response, ?Throwable $previous = null)
+    public function __construct(Response $response, /*?Throwable */$previous = null)
     {
-        parent::__construct($previous?->getMessage() ?? '', $previous?->getCode() ?? 0, $previous);
+        backport_type_throwable($previous, null);
+
+        $previousMessage = optional($previous)->getMessage();
+
+        $previousCode = optional($previous)->getCode();
+
+        parent::__construct(isset($previousMessage) ? $previousMessage : '', isset($previousCode) ? $previousCode : 0, $previous);
 
         $this->response = $response;
     }

@@ -110,7 +110,7 @@ abstract class SchemaState
      *
      * @return string
      */
-    protected function getMigrationTable(): string
+    protected function getMigrationTable()/*: string*/
     {
         return $this->connection->getTablePrefix().$this->migrationTable;
     }

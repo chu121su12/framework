@@ -113,7 +113,7 @@ abstract class HasOneOrManyThrough extends Relation
      * @param  \Illuminate\Database\Eloquent\Builder<TRelatedModel>|null  $query
      * @return void
      */
-    protected function performJoin(?Builder $query = null)
+    protected function performJoin(/*?*/Builder $query = null)
     {
         $query = $query ?: $this->query;
 
@@ -217,7 +217,7 @@ abstract class HasOneOrManyThrough extends Relation
      */
     public function firstOrCreate(array $attributes = [], array $values = [])
     {
-        if (! is_null($instance = (clone $this)->where($attributes)->first())) {
+        if (! is_null($instance = with(clone $this)->where($attributes)->first())) {
             return $instance;
         }
 
@@ -234,9 +234,17 @@ abstract class HasOneOrManyThrough extends Relation
     public function createOrFirst(array $attributes = [], array $values = [])
     {
         try {
-            return $this->getQuery()->withSavepointIfNeeded(fn () => $this->create(array_merge($attributes, $values)));
+            return $this->getQuery()->withSavepointIfNeeded(function () use ($attributes, $values) {
+                return $this->create(array_merge($attributes, $values));
+            });
         } catch (UniqueConstraintViolationException $exception) {
-            return $this->where($attributes)->first() ?? throw $exception;
+            $first = $this->where($attributes)->first();
+
+            if (isset($first)) {
+                return $first;
+            }
+
+            throw $exception;
         }
     }
 
@@ -309,7 +317,7 @@ abstract class HasOneOrManyThrough extends Relation
      * @param  (\Closure(): TValue)|null  $callback
      * @return TRelatedModel|TValue
      */
-    public function firstOr($columns = ['*'], ?Closure $callback = null)
+    public function firstOr($columns = ['*'], /*?*/Closure $callback = null)
     {
         if ($columns instanceof Closure) {
             $callback = $columns;
@@ -402,7 +410,7 @@ abstract class HasOneOrManyThrough extends Relation
      *     : TRelatedModel|TValue
      * )
      */
-    public function findOr($id, $columns = ['*'], ?Closure $callback = null)
+    public function findOr($id, $columns = ['*'], /*?*/Closure $callback = null)
     {
         if ($columns instanceof Closure) {
             $callback = $columns;
@@ -530,9 +538,13 @@ abstract class HasOneOrManyThrough extends Relation
      */
     public function chunkById($count, callable $callback, $column = null, $alias = null)
     {
-        $column ??= $this->getRelated()->getQualifiedKeyName();
+        if (! isset($column)) {
+            $column = $this->getRelated()->getQualifiedKeyName();
+        }
 
-        $alias ??= $this->getRelated()->getKeyName();
+        if (! isset($alias)) {
+            $alias = $this->getRelated()->getKeyName();
+        }
 
         return $this->prepareQueryBuilder()->chunkById($count, $callback, $column, $alias);
     }
@@ -548,9 +560,13 @@ abstract class HasOneOrManyThrough extends Relation
      */
     public function chunkByIdDesc($count, callable $callback, $column = null, $alias = null)
     {
-        $column ??= $this->getRelated()->getQualifiedKeyName();
+        if (! isset($column)) {
+            $column = $this->getRelated()->getQualifiedKeyName();
+        }
 
-        $alias ??= $this->getRelated()->getKeyName();
+        if (! isset($alias)) {
+            $alias = $this->getRelated()->getKeyName();
+        }
 
         return $this->prepareQueryBuilder()->chunkByIdDesc($count, $callback, $column, $alias);
     }
@@ -566,9 +582,13 @@ abstract class HasOneOrManyThrough extends Relation
      */
     public function eachById(callable $callback, $count = 1000, $column = null, $alias = null)
     {
-        $column = $column ?? $this->getRelated()->getQualifiedKeyName();
+        if (! isset($column)) {
+            $column = $this->getRelated()->getQualifiedKeyName();
+        }
 
-        $alias = $alias ?? $this->getRelated()->getKeyName();
+        if (! isset($alias)) {
+            $alias = $this->getRelated()->getKeyName();
+        }
 
         return $this->prepareQueryBuilder()->eachById($callback, $count, $column, $alias);
     }
@@ -622,9 +642,13 @@ abstract class HasOneOrManyThrough extends Relation
      */
     public function lazyById($chunkSize = 1000, $column = null, $alias = null)
     {
-        $column ??= $this->getRelated()->getQualifiedKeyName();
+        if (! isset($column)) {
+            $column = $this->getRelated()->getQualifiedKeyName();
+        }
 
-        $alias ??= $this->getRelated()->getKeyName();
+        if (! isset($alias)) {
+            $alias = $this->getRelated()->getKeyName();
+        }
 
         return $this->prepareQueryBuilder()->lazyById($chunkSize, $column, $alias);
     }
@@ -639,9 +663,13 @@ abstract class HasOneOrManyThrough extends Relation
      */
     public function lazyByIdDesc($chunkSize = 1000, $column = null, $alias = null)
     {
-        $column ??= $this->getRelated()->getQualifiedKeyName();
+        if (! isset($column)) {
+            $column = $this->getRelated()->getQualifiedKeyName();
+        }
 
-        $alias ??= $this->getRelated()->getKeyName();
+        if (! isset($alias)) {
+            $alias = $this->getRelated()->getKeyName();
+        }
 
         return $this->prepareQueryBuilder()->lazyByIdDesc($chunkSize, $column, $alias);
     }

@@ -5,6 +5,7 @@ namespace Illuminate\Testing;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
 use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit_Framework_ExpectationFailedException;
 use ReflectionProperty;
 
 /**
@@ -46,7 +47,15 @@ class TestResponseAssert
     public function __call($name, $arguments)
     {
         try {
-            Assert::$name(...$arguments);
+            try {
+                Assert::$name(...$arguments);
+            } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+                throw new ExpectationFailedException(
+                    $e->getMessage(),
+                    $e->getComparisonFailure(),
+                    $e->getPrevious()
+                );
+            }
         } catch (ExpectationFailedException $e) {
             throw $this->injectResponseContext($e);
         }
@@ -161,6 +170,8 @@ EOF;
     protected function appendMessageToException($message, $exception)
     {
         $property = new ReflectionProperty($exception, 'message');
+
+        $property->setAccessible(true);
 
         $property->setValue(
             $exception,

@@ -49,7 +49,12 @@ class CommandManualFailTest extends TestCase
             $command->fail($original = new \RuntimeException('Something went wrong.'));
 
             $this->fail('Command::fail() method must throw the original throwable instance.');
+        } catch (\Exception $e) {
+        } catch (\Error $e) {
         } catch (\Throwable $e) {
+        }
+
+        if (isset($e)) {
             $this->assertSame($original, $e);
         }
     }

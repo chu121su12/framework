@@ -799,8 +799,12 @@ class SchemaBuilderTest extends DatabaseTestCase
 
         $foreignKeys = Schema::getForeignKeys('posts');
         $this->assertCount(2, $foreignKeys);
-        $this->assertTrue(collect($foreignKeys)->contains(fn ($foreign) => $foreign['columns'] === ['user_id'] && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['id']));
-        $this->assertTrue(collect($foreignKeys)->contains(fn ($foreign) => $foreign['columns'] === ['user_name'] && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['name']));
+        $this->assertTrue(collect($foreignKeys)->contains(function ($foreign) {
+            return $foreign['columns'] === ['user_id'] && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['id'];
+        }));
+        $this->assertTrue(collect($foreignKeys)->contains(function ($foreign) {
+            return $foreign['columns'] === ['user_name'] && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['name'];
+        }));
         $this->assertTrue(Schema::hasColumns('posts', ['title', 'user_id', 'user_name']));
         $this->assertTrue(Schema::hasIndex('posts', ['user_id']));
         $this->assertTrue(Schema::hasIndex('posts', ['title'], 'unique'));
@@ -826,8 +830,12 @@ class SchemaBuilderTest extends DatabaseTestCase
 
         $foreignKeys = Schema::getForeignKeys('posts');
         $this->assertCount(2, $foreignKeys);
-        $this->assertTrue(collect($foreignKeys)->contains(fn ($foreign) => $foreign['columns'] === ['user_id'] && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['id']));
-        $this->assertTrue(collect($foreignKeys)->contains(fn ($foreign) => $foreign['columns'] === ['user_name'] && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['name']));
+        $this->assertTrue(collect($foreignKeys)->contains(function ($foreign) {
+            return $foreign['columns'] === ['user_id'] && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['id'];
+        }));
+        $this->assertTrue(collect($foreignKeys)->contains(function ($foreign) {
+            return $foreign['columns'] === ['user_name'] && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['name'];
+        }));
         $this->assertTrue(Schema::hasIndex('posts', ['id'], 'primary'));
 
         Schema::table('posts', function (Blueprint $table) {
@@ -839,7 +847,9 @@ class SchemaBuilderTest extends DatabaseTestCase
 
         $foreignKeys = Schema::getForeignKeys('posts');
         $this->assertCount(1, $foreignKeys);
-        $this->assertTrue(collect($foreignKeys)->contains(fn ($foreign) => $foreign['columns'] === ['user_name'] && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['name']));
+        $this->assertTrue(collect($foreignKeys)->contains(function ($foreign) {
+            return $foreign['columns'] === ['user_name'] && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['name'];
+        }));
         $this->assertTrue(Schema::hasColumns('posts', ['user_name', 'title']));
         $this->assertTrue(Schema::hasIndex('posts', ['id'], 'primary'));
         $this->assertTrue(Schema::hasIndex('posts', ['title'], 'unique'));
@@ -874,7 +884,9 @@ class SchemaBuilderTest extends DatabaseTestCase
 
         $foreignKeys = Schema::getForeignKeys('posts');
         $this->assertCount(1, $foreignKeys);
-        $this->assertTrue(collect($foreignKeys)->contains(fn ($foreign) => $foreign['columns'] === ['user_name'] && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['name']));
+        $this->assertTrue(collect($foreignKeys)->contains(function ($foreign) {
+            return $foreign['columns'] === ['user_name'] && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['name'];
+        }));
         $this->assertTrue(Schema::hasColumns('posts', ['user_name', 'title']));
         $this->assertTrue(Schema::hasIndex('posts', ['title'], 'primary'));
         $this->assertTrue(Schema::hasIndex('posts', ['user_name'], 'unique'));
@@ -888,7 +900,9 @@ class SchemaBuilderTest extends DatabaseTestCase
 
         $foreignKeys = Schema::getForeignKeys('posts');
         $this->assertCount(1, $foreignKeys);
-        $this->assertTrue(collect($foreignKeys)->contains(fn ($foreign) => $foreign['columns'] === ['user_name'] && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['name']));
+        $this->assertTrue(collect($foreignKeys)->contains(function ($foreign) {
+            return $foreign['columns'] === ['user_name'] && $foreign['foreign_table'] === 'users' && $foreign['foreign_columns'] === ['name'];
+        }));
         $this->assertTrue(Schema::hasColumns('posts', ['user_name', 'title', 'votes']));
         $this->assertFalse(Schema::hasIndex('posts', ['title'], 'primary'));
         $this->assertTrue(Schema::hasIndex('posts', ['user_name'], 'unique'));

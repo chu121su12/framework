@@ -341,7 +341,7 @@ class ServeCommand extends Command
 
                     $this->requestsPool[$requestPort] = [
                         $this->getDateFromLine($line),
-                        $this->requestsPool[$requestPort][1] ?? false,
+                        isset($this->requestsPool[$requestPort][1]) ? $this->requestsPool[$requestPort][1] : false,
                         microtime(true),
                     ];
                 } elseif (str($line)->contains([' [200]: GET '])) {

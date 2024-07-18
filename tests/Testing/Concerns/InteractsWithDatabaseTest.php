@@ -144,21 +144,27 @@ TEXT;
     {
         $grammar = new MariaDbGrammar();
 
-        $this->assertEquals(<<<'TEXT'
-        json_query('["foo","bar"]', '$')
-        TEXT,
+        $text1 = <<<'TEXT'
+json_query('["foo","bar"]', '$')
+TEXT;
+
+        $text2 = <<<'TEXT'
+json_query('["foo","bar"]', '$')
+TEXT;
+
+        $text3 = <<<'TEXT'
+json_query('{"foo":"bar"}', '$')
+TEXT;
+
+        $this->assertEquals($text1,
             $this->castAsJson(['foo', 'bar'], $grammar)
         );
 
-        $this->assertEquals(<<<'TEXT'
-        json_query('["foo","bar"]', '$')
-        TEXT,
+        $this->assertEquals($text2,
             $this->castAsJson(collect(['foo', 'bar']), $grammar)
         );
 
-        $this->assertEquals(<<<'TEXT'
-        json_query('{"foo":"bar"}', '$')
-        TEXT,
+        $this->assertEquals($text3,
             $this->castAsJson((object) ['foo' => 'bar'], $grammar)
         );
     }

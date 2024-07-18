@@ -16,7 +16,9 @@ trait HasFactory
      */
     public static function factory($count = null, $state = [])
     {
-        $factory = static::newFactory() ?? Factory::factoryForModel(get_called_class());
+        $factory = static::newFactory();
+
+        $factory = isset($factory) ? $factory : Factory::factoryForModel(get_called_class());
 
         return $factory
                     ->count(backport_is_numeric($count) ? $count : null)
@@ -31,7 +33,9 @@ trait HasFactory
     protected static function newFactory()
     {
         if (isset(static::$factory)) {
-            return static::$factory::new();
+            $factory = static::$factory;
+
+            return $factory::new_();
         }
 
         return null;

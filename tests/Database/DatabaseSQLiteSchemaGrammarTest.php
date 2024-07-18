@@ -358,7 +358,11 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
     public function testAddingForeignIdSpecifyingIndexNameInConstraint()
     {
         $blueprint = new Blueprint('users');
-        $blueprint->foreignId('company_id')->constrained(indexName: 'my_index');
+        $blueprint->foreignId('company_id')->constrained(
+            /*$table = */null,
+            /*$column = */'id',
+            /*indexName: */'my_index'
+        );
 
         $grammar = $this->getGrammar();
         $connection = $this->getConnection();
@@ -1012,6 +1016,7 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
     {
         $connection = m::mock(Connection::class);
         $connection->shouldReceive('getServerVersion')->andReturn('3.35');
+        $connection->shouldReceive('isLegacyDb')->andReturn(true);
 
         return $connection;
     }

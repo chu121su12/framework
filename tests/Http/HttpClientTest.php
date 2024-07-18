@@ -1887,7 +1887,12 @@ class HttpClientTest extends TestCase
         ]);
 
         $response = $this->factory
-            ->retry([1, 2], throw: false)
+            ->retry(
+                [1, 2],
+                /*$sleepMilliseconds = */0,
+                /*$when = */null,
+                /*throw: */false
+            )
             ->get('http://foo.com/get');
 
         $this->assertTrue($response->failed());
@@ -1975,13 +1980,18 @@ class HttpClientTest extends TestCase
         ]);
 
         $response = $this->factory
-            ->retry([2], when: function ($exception, $request) {
-                $this->assertInstanceOf(PendingRequest::class, $request);
+            ->retry(
+                [2],
+                /*$sleepMilliseconds = */0,
+                /*when: */function ($exception, $request) {
+                    $this->assertInstanceOf(PendingRequest::class, $request);
 
-                $request->withHeaders(['Foo' => 'Bar']);
+                    $request->withHeaders(['Foo' => 'Bar']);
 
-                return true;
-            }, throw: false)
+                    return true;
+                },
+                /*throw: */false
+            )
             ->get('http://foo.com/get');
 
         $this->assertTrue($response->successful());
@@ -2026,9 +2036,14 @@ class HttpClientTest extends TestCase
 
         try {
             $this->factory
-                ->retry([1, 2, 3], when: function ($exception) use (&$whenAttempts) {
-                    throw new Exception('Foo bar');
-                }, throw: false)
+                ->retry(
+                    [1, 2, 3],
+                    /*$sleepMilliseconds = */0,
+                    /*when: */function ($exception) use (&$whenAttempts) {
+                        throw new Exception('Foo bar');
+                    },
+                    /*throw: */false
+                )
                 ->get('http://foo.com/get');
         } catch (Exception $e) {
             $exception = $e;

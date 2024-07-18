@@ -56,9 +56,9 @@ class PostgresSchemaState extends SchemaState
      *
      * @return string
      */
-    protected function getMigrationTable(): string
+    protected function getMigrationTable()/*: string*/
     {
-        [$schema, $table] = $this->connection->getSchemaBuilder()->parseSchemaAndTable($this->migrationTable);
+        list($schema, $table) = $this->connection->getSchemaBuilder()->parseSchemaAndTable($this->migrationTable);
 
         return $schema.'.'.$this->connection->getTablePrefix().$table;
     }

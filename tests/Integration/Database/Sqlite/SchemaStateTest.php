@@ -14,10 +14,20 @@ class SchemaStateTest extends DatabaseTestCase
 {
     use InteractsWithPublishedFiles;
 
+    protected function attributeBp()
+    {
+        return [
+            'migration' => true,
+        ];
+    }
+    
     protected $files = [
         'database/schema',
     ];
 
+    /**
+     * @requires OS Linux|Darwin
+     */
     #[RequiresOperatingSystem('Linux|Darwin')]
     public function testSchemaDumpOnSqlite()
     {
@@ -25,7 +35,7 @@ class SchemaStateTest extends DatabaseTestCase
             $this->markTestSkipped('Test requires a SQLite connection.');
         }
 
-        UserFactory::new()->create();
+        UserFactory::new_()->create();
 
         $connection = DB::connection();
         $connection->statement('PRAGMA optimize;');

@@ -62,7 +62,7 @@ class SQLiteConnection extends Connection
      *
      * @return void
      */
-    protected function configureForeignKeyConstraints(): void
+    protected function configureForeignKeyConstraints()/*: void*/
     {
         $enableForeignKeyConstraints = $this->getConfig('foreign_key_constraints');
 
@@ -88,7 +88,7 @@ class SQLiteConnection extends Connection
      *
      * @return void
      */
-    protected function configureBusyTimeout(): void
+    protected function configureBusyTimeout()/*: void*/
     {
         $milliseconds = $this->getConfig('busy_timeout');
 
@@ -110,7 +110,7 @@ class SQLiteConnection extends Connection
      *
      * @return void
      */
-    protected function configureJournalMode(): void
+    protected function configureJournalMode()/*: void*/
     {
         $mode = $this->getConfig('journal_mode');
 
@@ -132,7 +132,7 @@ class SQLiteConnection extends Connection
      *
      * @return void
      */
-    protected function configureSynchronous(): void
+    protected function configureSynchronous()/*: void*/
     {
         $mode = $this->getConfig('synchronous');
 

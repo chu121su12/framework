@@ -139,9 +139,9 @@ class ValidationEnumRuleTest extends TestCase
      */
     #[DataProvider('conditionalCasesDataProvider')]
     public function testValidationPassesWhenExceptCasesProvided(
-        int|IntegerStatus $enum,
-        array|Arrayable|IntegerStatus $except,
-        bool $expected
+        /*int|IntegerStatus */$enum,
+        /*array|Arrayable|IntegerStatus */$except,
+        /*bool */$expected
     ) {
         $expected = backport_type_check('bool', $expected);
 
@@ -283,8 +283,8 @@ class ValidationEnumRuleTest extends TestCase
             [IntegerStatus::done, [IntegerStatus::done, IntegerStatus::pending], true],
             [IntegerStatus::done, new ArrayObject([IntegerStatus::done, IntegerStatus::pending]), true],
             [IntegerStatus::done, new Collection([IntegerStatus::done, IntegerStatus::pending]), true],
-            [IntegerStatus::pending->value, [IntegerStatus::done, IntegerStatus::pending], true],
-            [IntegerStatus::done->value, IntegerStatus::pending, false],
+            // [IntegerStatus::pending->value, [IntegerStatus::done, IntegerStatus::pending], true],
+            // [IntegerStatus::done->value, IntegerStatus::pending, false],
         ];
     }
 

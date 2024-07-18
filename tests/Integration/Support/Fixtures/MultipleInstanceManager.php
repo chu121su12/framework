@@ -25,6 +25,16 @@ class MultipleInstanceManager_createBarDriver_class
             }
         }
 
+class MultipleInstanceManager_createMysqlDatabaseConnectionDriver_class
+        {
+            public $config;
+
+            public function __construct($config)
+            {
+                $this->config = $config;
+            }
+        }
+
 class MultipleInstanceManager extends BaseMultipleInstanceManager
 {
     protected $defaultInstance = 'foo';
@@ -41,12 +51,7 @@ class MultipleInstanceManager extends BaseMultipleInstanceManager
 
     protected function createMysqlDatabaseConnectionDriver(array $config)
     {
-        return new class($config)
-        {
-            public function __construct(public $config)
-            {
-            }
-        };
+        return new MultipleInstanceManager_createMysqlDatabaseConnectionDriver_class($config);
     }
 
     /**

@@ -249,7 +249,7 @@ class SqlServerGrammar extends Grammar
             $this->compileDropDefaultConstraint($blueprint, $command),
             sprintf('alter table %s alter column %s',
                 $this->wrapTable($blueprint),
-                $this->getColumn($blueprint, $command->column),
+                $this->getColumn($blueprint, $command->column)
             ),
         ];
     }

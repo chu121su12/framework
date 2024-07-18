@@ -76,7 +76,9 @@ class MailFake implements Factory, Fake, Mailer, MailQueue
 
         if (is_array($callback) || is_string($callback)) {
             foreach (Arr::wrap($callback) as $address) {
-                $callback = fn ($mail) => $mail->hasTo($address);
+                $callback = function ($mail) use ($address) {
+                    return $mail->hasTo($address);
+                };
 
                 PHPUnit::assertTrue(
                     $this->sent($mailable, $callback)->count() > 0,
@@ -134,7 +136,9 @@ class MailFake implements Factory, Fake, Mailer, MailQueue
     {
         if (is_string($callback) || is_array($callback)) {
             foreach (Arr::wrap($callback) as $address) {
-                $callback = fn ($mail) => $mail->hasTo($address);
+                $callback = function ($mail) use ($address) {
+                    return $mail->hasTo($address);
+                };
 
                 PHPUnit::assertCount(
                     0, $this->sent($mailable, $callback),
@@ -195,7 +199,9 @@ class MailFake implements Factory, Fake, Mailer, MailQueue
 
         if (is_string($callback) || is_array($callback)) {
             foreach (Arr::wrap($callback) as $address) {
-                $callback = fn ($mail) => $mail->hasTo($address);
+                $callback = function ($mail) use ($address) {
+                    return $mail->hasTo($address);
+                };
 
                 PHPUnit::assertTrue(
                     $this->queued($mailable, $callback)->count() > 0,
@@ -240,7 +246,9 @@ class MailFake implements Factory, Fake, Mailer, MailQueue
     {
         if (is_string($callback) || is_array($callback)) {
             foreach (Arr::wrap($callback) as $address) {
-                $callback = fn ($mail) => $mail->hasTo($address);
+                $callback = function ($mail) use ($address) {
+                    return $mail->hasTo($address);
+                };
 
                 PHPUnit::assertCount(
                     0, $this->queued($mailable, $callback),

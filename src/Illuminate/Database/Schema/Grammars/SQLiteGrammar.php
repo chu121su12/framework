@@ -266,15 +266,19 @@ class SQLiteGrammar extends Grammar
                 }
 
                 return $this->addModifiers(
-                    $this->wrap($column).' '.($column->full_type_definition ?? $this->getType($column)),
+                    $this->wrap($column).' '.(isset($column->full_type_definition) ? $column->full_type_definition : $this->getType($column)),
                     $blueprint,
                     $column
                 );
             })->all();
 
         $indexes = collect($blueprint->getState()->getIndexes())
-            ->reject(fn ($index) => str_starts_with('sqlite_', $index->index))
-            ->map(fn ($index) => $this->{'compile'.ucfirst($index->name)}($blueprint, $index))
+            ->reject(function ($index) {
+                return str_starts_with('sqlite_', $index->index);
+            })
+            ->map(function ($index) use ($blueprint) {
+                return $this->{'compile'.ucfirst($index->name)}($blueprint, $index);
+            })
             ->all();
 
         $tempTable = $this->wrap('__temp__'.$blueprint->getPrefix().$blueprint->getTable());
@@ -664,8 +668,12 @@ class SQLiteGrammar extends Grammar
      * @param  mixed  $value
      * @return string
      */
-    protected function pragma(string $name, mixed $value): string
+    protected function pragma(/*string */$name, /*mixed */$value)/*: string*/
     {
+        $value = backport_type_check('mixed', $value);
+
+        $name = backport_type_check('string', $name);
+
         return sprintf('PRAGMA %s = %s;', $name, $value);
     }
 

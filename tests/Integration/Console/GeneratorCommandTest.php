@@ -48,6 +48,7 @@ class GeneratorCommandTest extends TestCase
         ], 'tests/Feature/fixtures.php/SomeTest.php');
     }
 
+    /** @dataProvider reservedNamesDataProvider */
     #[DataProvider('reservedNamesDataProvider')]
     public function testItCannotGenerateClassUsingReservedName($given)
     {

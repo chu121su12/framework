@@ -156,9 +156,9 @@ class DatabaseConnectionFactoryTest extends TestCase
         ], 'busy_timeout_set');
 
         // Can't compare to 0, default value may be something else
-        $this->assertNotSame(1234, $this->db->getConnection()->select('PRAGMA busy_timeout')[0]->timeout);
+        $this->assertNotSame(1234, (int) $this->db->getConnection()->select('PRAGMA busy_timeout')[0]->timeout);
 
-        $this->assertSame(1234, $this->db->getConnection('busy_timeout_set')->select('PRAGMA busy_timeout')[0]->timeout);
+        $this->assertSame(1234, (int) $this->db->getConnection('busy_timeout_set')->select('PRAGMA busy_timeout')[0]->timeout);
     }
 
     public function testSqliteSynchronous()
@@ -167,8 +167,8 @@ class DatabaseConnectionFactoryTest extends TestCase
             'url' => 'sqlite:///:memory:?synchronous=NORMAL',
         ], 'synchronous_set');
 
-        $this->assertSame(2, $this->db->getConnection()->select('PRAGMA synchronous')[0]->synchronous);
+        $this->assertSame(2, (int) $this->db->getConnection()->select('PRAGMA synchronous')[0]->synchronous);
 
-        $this->assertSame(1, $this->db->getConnection('synchronous_set')->select('PRAGMA synchronous')[0]->synchronous);
+        $this->assertSame(1, (int) $this->db->getConnection('synchronous_set')->select('PRAGMA synchronous')[0]->synchronous);
     }
 }

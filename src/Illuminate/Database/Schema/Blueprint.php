@@ -200,9 +200,10 @@ class Blueprint
 
         if (! $this->creating()) {
             $this->commands = array_map(
-                fn ($command) => $command instanceof ColumnDefinition
+                function ($command) { return $command instanceof ColumnDefinition
                     ? $this->createCommand($command->change ? 'change' : 'add', ['column' => $command])
-                    : $command,
+                    : $command
+                ; },
                 $this->commands
             );
 
@@ -292,7 +293,7 @@ class Blueprint
 
         $alterCommands = $grammar->getAlterCommands($connection);
 
-        [$commands, $lastCommandWasAlter, $hasAlterCommand] = [
+        list($commands, $lastCommandWasAlter, $hasAlterCommand) = [
             [], false, false,
         ];
 
@@ -1813,7 +1814,7 @@ class Blueprint
      * @param  mixed  $name
      * @return bool
      */
-    private function hasState(): bool
+    private function hasState()/*: bool*/
     {
         return ! is_null($this->state);
     }
