@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\InteractsWithTime;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -17,6 +18,8 @@ use function Termwind\terminal;
 #[AsCommand(name: 'serve')]
 class ServeCommand extends Command
 {
+    use InteractsWithTime;
+
     /**
      * The console command name.
      *
@@ -90,14 +93,14 @@ class ServeCommand extends Command
     public function handle()
     {
         $environmentFile = $this->option('env')
-                            ? base_path('.env').'.'.$this->option('env')
-                            : base_path('.env');
+            ? base_path('.env').'.'.$this->option('env')
+            : base_path('.env');
 
         $hasEnvironment = file_exists($environmentFile);
 
         $environmentLastModified = $hasEnvironment
-                            ? filemtime($environmentFile)
-                            : now()->addDays(30)->getTimestamp();
+            ? filemtime($environmentFile)
+            : now()->addDays(30)->getTimestamp();
 
         $process = $this->startProcess($hasEnvironment);
 
@@ -288,7 +291,7 @@ class ServeCommand extends Command
     protected function canTryAnotherPort()
     {
         return is_null($this->input->getOption('port')) &&
-               ($this->input->getOption('tries') > $this->portOffset);
+            ($this->input->getOption('tries') > $this->portOffset);
     }
 
     /**
@@ -338,12 +341,17 @@ class ServeCommand extends Command
 
                     $this->requestsPool[$requestPort] = [
                         $this->getDateFromLine($line),
-                        false,
+                        $this->requestsPool[$requestPort][1] ?? false,
+                        microtime(true),
                     ];
                 } elseif (str($line)->contains([' [200]: GET '])) {
                     $requestPort = $this->getRequestPortFromLine($line);
 
                     $this->requestsPool[$requestPort][1] = trim(explode('[200]: GET', $line)[1]);
+                } elseif (str($line)->contains('URI:')) {
+                    $requestPort = $this->getRequestPortFromLine($line);
+
+                    $this->requestsPool[$requestPort][1] = trim(explode('URI: ', $line)[1]);
                 } elseif (str($line)->contains(' Closing')) {
                     $requestPort = $this->getRequestPortFromLine($line);
 
@@ -351,10 +359,11 @@ class ServeCommand extends Command
                         $this->requestsPool[$requestPort] = [
                             $this->getDateFromLine($line),
                             false,
+                            microtime(true),
                         ];
                     }
 
-                    list($startDate, $file) = $this->requestsPool[$requestPort];
+                    list($startDate, $file, $startMicrotime) = $this->requestsPool[$requestPort];
 
                     $formattedStartedAt = $startDate->format('Y-m-d H:i:s');
 
@@ -364,7 +373,7 @@ class ServeCommand extends Command
 
                     $this->output->write("  <fg=gray>$date</> $time");
 
-                    $runTime = $this->getDateFromLine($line)->diffInSeconds($startDate);
+                    $runTime = $this->runTimeForHumans($startMicrotime);
 
                     if ($file) {
                         $this->output->write($file = " $file");
@@ -373,7 +382,7 @@ class ServeCommand extends Command
                     $dots = max(terminal()->width() - mb_strlen($formattedStartedAt) - mb_strlen($file) - mb_strlen($runTime) - 9, 0);
 
                     $this->output->write(' '.str_repeat('<fg=gray>.</>', $dots));
-                    $this->output->writeln(" <fg=gray>~ {$runTime}s</>");
+                    $this->output->writeln(" <fg=gray>~ {$runTime}</>");
                 } elseif (str($line)->contains(['Closed without sending a request', 'Failed to poll event'])) {
                     // ...
                 } elseif (! empty($line)) {

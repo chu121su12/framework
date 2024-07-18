@@ -27,7 +27,7 @@ class EloquentUserProvider implements UserProvider
     /**
      * The callback that may modify the user retrieval queries.
      *
-     * @var (\Closure(\Illuminate\Database\Eloquent\Builder):mixed)|null
+     * @var (\Closure(\Illuminate\Database\Eloquent\Builder<*>):mixed)|null
      */
     protected $queryCallback;
 
@@ -195,8 +195,10 @@ class EloquentUserProvider implements UserProvider
     /**
      * Get a new query builder for the model instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|null  $model
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @template TModel of \Illuminate\Database\Eloquent\Model
+     *
+     * @param  TModel|null  $model
+     * @return \Illuminate\Database\Eloquent\Builder<TModel>
      */
     protected function newModelQuery($model = null)
     {
@@ -274,7 +276,7 @@ class EloquentUserProvider implements UserProvider
     /**
      * Get the callback that modifies the query before retrieving users.
      *
-     * @return \Closure|null
+     * @return (\Closure(\Illuminate\Database\Eloquent\Builder<*>):mixed)|null
      */
     public function getQueryCallback()
     {
@@ -284,7 +286,7 @@ class EloquentUserProvider implements UserProvider
     /**
      * Sets the callback to modify the query before retrieving users.
      *
-     * @param  (\Closure(\Illuminate\Database\Eloquent\Builder):mixed)|null  $queryCallback
+     * @param  (\Closure(\Illuminate\Database\Eloquent\Builder<*>):mixed)|null  $queryCallback
      * @return $this
      */
     public function withQuery($queryCallback = null)

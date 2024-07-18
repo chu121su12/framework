@@ -3,6 +3,9 @@
 namespace Illuminate\Tests\Validation;
 
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Casts\ArrayObject;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Translation\ArrayLoader;
 use Illuminate\Translation\Translator;
@@ -109,12 +112,12 @@ class ValidationEnumRuleTest extends TestCase
     #[DataProvider('conditionalCasesDataProvider')]
     public function testValidationPassesWhenOnlyCasesProvided(
         /*IntegerStatus|int */$enum,
-        /*array|IntegerStatus */$only,
+        /*array|Arrayable|IntegerStatus */$only,
         /*bool */$expected
     ) {
         $expected = backport_type_check('bool', $expected);
 
-        $only = backport_type_check(['array', IntegerStatus::class], $only);
+        $only = backport_type_check(['array', Arrayable::class, IntegerStatus::class], $only);
 
         $enum = backport_type_check([IntegerStatus::class, 'int'], $enum);
 
@@ -136,13 +139,13 @@ class ValidationEnumRuleTest extends TestCase
      */
     #[DataProvider('conditionalCasesDataProvider')]
     public function testValidationPassesWhenExceptCasesProvided(
-        /*int|IntegerStatus */$enum,
-        /*array|IntegerStatus */$except,
-        /*bool */$expected
+        int|IntegerStatus $enum,
+        array|Arrayable|IntegerStatus $except,
+        bool $expected
     ) {
         $expected = backport_type_check('bool', $expected);
 
-        $only = backport_type_check(['array', IntegerStatus::class], $only);
+        $only = backport_type_check(['array', Arrayable::class, IntegerStatus::class], $except);
 
         $enum = backport_type_check([IntegerStatus::class, 'int'], $enum);
 
@@ -278,8 +281,10 @@ class ValidationEnumRuleTest extends TestCase
         return [
             [IntegerStatus::done, IntegerStatus::done, true],
             [IntegerStatus::done, [IntegerStatus::done, IntegerStatus::pending], true],
-            [with(IntegerStatus::pending)->value, [IntegerStatus::done, IntegerStatus::pending], true],
-            [with(IntegerStatus::done)->value, IntegerStatus::pending, false],
+            [IntegerStatus::done, new ArrayObject([IntegerStatus::done, IntegerStatus::pending]), true],
+            [IntegerStatus::done, new Collection([IntegerStatus::done, IntegerStatus::pending]), true],
+            [IntegerStatus::pending->value, [IntegerStatus::done, IntegerStatus::pending], true],
+            [IntegerStatus::done->value, IntegerStatus::pending, false],
         ];
     }
 

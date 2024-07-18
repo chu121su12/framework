@@ -73,7 +73,7 @@ class ClosureValidationRule implements RuleContract, ValidatorAwareRule
     /**
      * Get the validation error messages.
      *
-     * @return string
+     * @return array
      */
     public function message()
     {

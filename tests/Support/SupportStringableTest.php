@@ -6,7 +6,10 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Stringable;
+use League\CommonMark\Environment\EnvironmentBuilderInterface;
+use League\CommonMark\Extension\ExtensionInterface;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class SupportStringableTest extends TestCase
 {
@@ -1172,6 +1175,18 @@ VALUE;
     {
         $this->assertEquals("<p><em>hello world</em></p>\n", $this->stringable('*hello world*')->markdown());
         $this->assertEquals("<h1>hello world</h1>\n", $this->stringable('# hello world')->markdown());
+
+        $extension = new class implements ExtensionInterface
+        {
+            public bool $configured = false;
+
+            public function register(EnvironmentBuilderInterface $environment): void
+            {
+                $this->configured = true;
+            }
+        };
+        $this->stringable('# hello world')->markdown([], [$extension]);
+        $this->assertTrue($extension->configured);
     }
 
     public function testInlineMarkdown()

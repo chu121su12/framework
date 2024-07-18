@@ -122,6 +122,7 @@ class DatabaseSchemaBlueprintTest extends TestCase
         $this->assertEquals(['alter table "users" add column "created" timestamp(0) without time zone not null default CURRENT_TIMESTAMP'], $blueprint->toSql($connection, new PostgresGrammar));
 
         $blueprint = clone $base;
+        $connection->shouldReceive('getServerVersion')->andReturn('3.35');
         $this->assertEquals(['alter table "users" add column "created" datetime not null default CURRENT_TIMESTAMP'], $blueprint->toSql($connection, new SQLiteGrammar));
 
         $blueprint = clone $base;
@@ -143,6 +144,7 @@ class DatabaseSchemaBlueprintTest extends TestCase
         $this->assertEquals(['alter table "users" add column "created" timestamp(0) without time zone not null default CURRENT_TIMESTAMP'], $blueprint->toSql($connection, new PostgresGrammar));
 
         $blueprint = clone $base;
+        $connection->shouldReceive('getServerVersion')->andReturn('3.35');
         $this->assertEquals(['alter table "users" add column "created" datetime not null default CURRENT_TIMESTAMP'], $blueprint->toSql($connection, new SQLiteGrammar));
 
         $blueprint = clone $base;
@@ -253,6 +255,7 @@ class DatabaseSchemaBlueprintTest extends TestCase
         $this->assertEquals(['alter table "users" drop column "foo"'], $blueprint->toSql($connection, new PostgresGrammar));
 
         $blueprint = clone $base;
+        $connection->shouldReceive('getServerVersion')->andReturn('3.35');
         $this->assertEquals(['alter table "users" drop column "foo"'], $blueprint->toSql($connection, new SQLiteGrammar));
 
         $blueprint = clone $base;
@@ -289,7 +292,8 @@ class DatabaseSchemaBlueprintTest extends TestCase
         $blueprint = clone $base;
 
         $this->assertEquals([
-            'alter table `comments` add `commentable_type` varchar(255) not null, add `commentable_id` bigint unsigned not null',
+            'alter table `comments` add `commentable_type` varchar(255) not null',
+            'alter table `comments` add `commentable_id` bigint unsigned not null',
             'alter table `comments` add index `comments_commentable_type_commentable_id_index`(`commentable_type`, `commentable_id`)',
         ], $blueprint->toSql($connection, new MySqlGrammar));
     }
@@ -305,7 +309,8 @@ class DatabaseSchemaBlueprintTest extends TestCase
         $blueprint = clone $base;
 
         $this->assertEquals([
-            'alter table `comments` add `commentable_type` varchar(255) null, add `commentable_id` bigint unsigned null',
+            'alter table `comments` add `commentable_type` varchar(255) null',
+            'alter table `comments` add `commentable_id` bigint unsigned null',
             'alter table `comments` add index `comments_commentable_type_commentable_id_index`(`commentable_type`, `commentable_id`)',
         ], $blueprint->toSql($connection, new MySqlGrammar));
     }
@@ -323,7 +328,8 @@ class DatabaseSchemaBlueprintTest extends TestCase
         $blueprint = clone $base;
 
         $this->assertEquals([
-            'alter table `comments` add `commentable_type` varchar(255) not null, add `commentable_id` char(36) not null',
+            'alter table `comments` add `commentable_type` varchar(255) not null',
+            'alter table `comments` add `commentable_id` char(36) not null',
             'alter table `comments` add index `comments_commentable_type_commentable_id_index`(`commentable_type`, `commentable_id`)',
         ], $blueprint->toSql($connection, new MySqlGrammar));
     }
@@ -341,7 +347,8 @@ class DatabaseSchemaBlueprintTest extends TestCase
         $blueprint = clone $base;
 
         $this->assertEquals([
-            'alter table `comments` add `commentable_type` varchar(255) null, add `commentable_id` char(36) null',
+            'alter table `comments` add `commentable_type` varchar(255) null',
+            'alter table `comments` add `commentable_id` char(36) null',
             'alter table `comments` add index `comments_commentable_type_commentable_id_index`(`commentable_type`, `commentable_id`)',
         ], $blueprint->toSql($connection, new MySqlGrammar));
     }
@@ -359,7 +366,8 @@ class DatabaseSchemaBlueprintTest extends TestCase
         $blueprint = clone $base;
 
         $this->assertEquals([
-            'alter table `comments` add `commentable_type` varchar(255) not null, add `commentable_id` char(26) not null',
+            'alter table `comments` add `commentable_type` varchar(255) not null',
+            'alter table `comments` add `commentable_id` char(26) not null',
             'alter table `comments` add index `comments_commentable_type_commentable_id_index`(`commentable_type`, `commentable_id`)',
         ], $blueprint->toSql($connection, new MySqlGrammar));
     }
@@ -377,7 +385,8 @@ class DatabaseSchemaBlueprintTest extends TestCase
         $blueprint = clone $base;
 
         $this->assertEquals([
-            'alter table `comments` add `commentable_type` varchar(255) null, add `commentable_id` char(26) null',
+            'alter table `comments` add `commentable_type` varchar(255) null',
+            'alter table `comments` add `commentable_id` char(26) null',
             'alter table `comments` add index `comments_commentable_type_commentable_id_index`(`commentable_type`, `commentable_id`)',
         ], $blueprint->toSql($connection, new MySqlGrammar));
     }
@@ -517,6 +526,7 @@ class DatabaseSchemaBlueprintTest extends TestCase
         ], $blueprint->toSql($connection, new MySqlGrammar));
 
         $blueprint = clone $base;
+        $connection->shouldReceive('getServerVersion')->andReturn('3.35');
         $this->assertEquals([
             'alter table "posts" add column "note" text not null',
         ], $blueprint->toSql($connection, new SQLiteGrammar));
@@ -546,6 +556,7 @@ class DatabaseSchemaBlueprintTest extends TestCase
         ], $blueprint->toSql($connection, new MySqlGrammar));
 
         $blueprint = clone $base;
+        $connection->shouldReceive('getServerVersion')->andReturn('3.35');
         $this->assertEquals([
             'alter table "posts" add column "note" text',
         ], $blueprint->toSql($connection, new SQLiteGrammar));
