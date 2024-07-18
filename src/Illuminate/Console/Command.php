@@ -245,11 +245,13 @@ class Command extends SymfonyCommand
      */
     protected function resolveCommand($command)
     {
-        if (! class_exists($command)) {
-            return $this->getApplication()->find($command);
-        }
+        if (is_string($command)) {
+            if (! class_exists($command)) {
+                return $this->getApplication()->find($command);
+            }
 
-        $command = $this->laravel->make($command);
+            $command = $this->laravel->make($command);
+        }
 
         if ($command instanceof SymfonyCommand) {
             $command->setApplication($this->getApplication());
@@ -267,6 +269,8 @@ class Command extends SymfonyCommand
      *
      * @param  \Throwable|string|null  $exception
      * @return void
+     *
+     * @throws \Illuminate\Console\ManuallyFailedException|\Throwable
      */
     public function fail(/*Throwable|string|null */$exception = null)
     {

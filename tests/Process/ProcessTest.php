@@ -797,7 +797,7 @@ EOT;
         });
     }
 
-    public function testAsssertingThatNothingRan()
+    public function testAssertingThatNothingRan()
     {
         $factory = new Factory;
 

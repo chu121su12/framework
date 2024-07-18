@@ -12,6 +12,8 @@ use Mockery as m;
 use PHPUnit\Framework\PhpUnit8Assert;
 use PHPUnit\Framework\TestCase;
 use stdClass;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class FoundationApplicationTest_testClassesAreBoundWhenServiceProviderIsRegistered_class extends ServiceProvider 
         {
@@ -588,6 +590,35 @@ class FoundationApplicationTest extends TestCase
         $this->assertIsArray($config->get('queue.connections.redis'));
         $this->assertSame(['overwrite' => true], $config->get('queue.connections.database'));
         $this->assertSame(['merge' => true], $config->get('queue.connections.new'));
+    }
+
+    public function testAbortThrowsNotFoundHttpException()
+    {
+        $this->expectException(NotFoundHttpException::class);
+        $this->expectExceptionMessage('Page was not found');
+
+        $app = new Application();
+        $app->abort(404, 'Page was not found');
+    }
+
+    public function testAbortThrowsHttpException()
+    {
+        $this->expectException(HttpException::class);
+        $this->expectExceptionMessage('Request is bad');
+
+        $app = new Application();
+        $app->abort(400, 'Request is bad');
+    }
+
+    public function testAbortAcceptsHeaders()
+    {
+        try {
+            $app = new Application();
+            $app->abort(400, 'Bad request', ['X-FOO' => 'BAR']);
+            $this->fail(sprintf('abort must throw an %s.', HttpException::class));
+        } catch (HttpException $exception) {
+            $this->assertSame(['X-FOO' => 'BAR'], $exception->getHeaders());
+        }
     }
 }
 

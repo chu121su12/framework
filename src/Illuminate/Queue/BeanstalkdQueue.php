@@ -192,9 +192,15 @@ class BeanstalkdQueue extends Queue implements QueueContract
             return $this->pop_($queue);
         }
 
-        $queue = $this->getQueue($queue);
+        $this->pheanstalk->watch(
+            $tube = new TubeName($queue = $this->getQueue($queue))
+        );
 
-        $this->pheanstalk->watch(new TubeName($queue));
+        foreach ($this->pheanstalk->listTubesWatched() as $watched) {
+            if ($watched->value !== $tube->value) {
+                $this->pheanstalk->ignore($watched);
+            }
+        }
 
         $job = $this->pheanstalk->reserveWithTimeout($this->blockFor);
 

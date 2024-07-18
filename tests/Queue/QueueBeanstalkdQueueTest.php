@@ -9,6 +9,9 @@ use Illuminate\Support\Str;
 use Mockery as m;
 use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
+use Pheanstalk\Values\Job as PVJob;
+use Pheanstalk\Values\TubeList;
+use Pheanstalk\Values\TubeName;
 use PHPUnit\Framework\TestCase;
 
 class QueueBeanstalkdQueueTest extends TestCase
@@ -75,10 +78,15 @@ class QueueBeanstalkdQueueTest extends TestCase
     public function testPopProperlyPopsJobOffOfBeanstalkd()
     {
         $this->setQueue('default', 60);
+        $tube = new TubeName('default');
 
         $pheanstalk = $this->queue->getPheanstalk();
-        $pheanstalk->shouldReceive('watchOnly')->once()->with('default')->andReturn($pheanstalk);
-        $job = m::mock(Job::class);
+        $pheanstalk->shouldReceive('watch')->once()->with(m::type(TubeName::class))
+            ->shouldReceive('listTubesWatched')->once()->andReturn(new TubeList($tube));
+
+        $jobId = m::mock(JobIdInterface::class);
+        $jobId->shouldReceive('getId')->once();
+        $job = new Job($jobId, '');
         $pheanstalk->shouldReceive('reserveWithTimeout')->once()->with(0)->andReturn($job);
 
         $result = $this->queue->pop();
@@ -89,10 +97,15 @@ class QueueBeanstalkdQueueTest extends TestCase
     public function testBlockingPopProperlyPopsJobOffOfBeanstalkd()
     {
         $this->setQueue('default', 60, 60);
+        $tube = new TubeName('default');
 
         $pheanstalk = $this->queue->getPheanstalk();
-        $pheanstalk->shouldReceive('watchOnly')->once()->with('default')->andReturn($pheanstalk);
-        $job = m::mock(Job::class);
+        $pheanstalk->shouldReceive('watch')->once()->with(m::type(TubeName::class))
+            ->shouldReceive('listTubesWatched')->once()->andReturn(new TubeList($tube));
+
+        $jobId = m::mock(JobIdInterface::class);
+        $jobId->shouldReceive('getId')->once();
+        $job = new Job($jobId, '');
         $pheanstalk->shouldReceive('reserveWithTimeout')->once()->with(60)->andReturn($job);
 
         $result = $this->queue->pop();

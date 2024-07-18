@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionNamedType;
 use SplFileObject;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -195,9 +196,15 @@ class ShowModelCommand extends DatabaseInspectionCommand
             ->reject(function (ReflectionMethod $method) use ($model) {
                 return $method->isStatic()
                     || $method->isAbstract()
-                    || $method->getDeclaringClass()->getName() === Model::class;
+                    || $method->getDeclaringClass()->getName() === Model::class
+                    || $method->getNumberOfParameters() > 0;
             })
             ->filter(function (ReflectionMethod $method) {
+                if ($method->getReturnType() instanceof ReflectionNamedType
+                    && is_subclass_of($method->getReturnType()->getName(), Relation::class)) {
+                    return true;
+                }
+
                 $file = new SplFileObject($method->getFileName());
                 $file->seek($method->getStartLine() - 1);
                 $code = '';

@@ -248,6 +248,42 @@ class Str
     }
 
     /**
+     * Remove the given string(s) if it exists at the start of the haystack.
+     *
+     * @param  string  $subject
+     * @param  string|array  $needle
+     * @return string
+     */
+    public static function chopStart($subject, $needle)
+    {
+        foreach ((array) $needle as $n) {
+            if (str_starts_with($subject, $n)) {
+                return substr($subject, strlen($n));
+            }
+        }
+
+        return $subject;
+    }
+
+    /**
+     * Remove the given string(s) if it exists at the end of the haystack.
+     *
+     * @param  string  $subject
+     * @param  string|array  $needle
+     * @return string
+     */
+    public static function chopEnd($subject, $needle)
+    {
+        foreach ((array) $needle as $n) {
+            if (str_ends_with($subject, $n)) {
+                return substr($subject, 0, -strlen($n));
+            }
+        }
+
+        return $subject;
+    }
+
+    /**
      * Determine if a given string contains a given substring.
      *
      * @param  string  $haystack
@@ -658,13 +694,20 @@ class Str
      *
      * @param  string  $string
      * @param  array  $options
+     * @param  array  $extensions
      * @return string
      */
-    public static function markdown($string, array $options = [])
+    public static function markdown($string, array $options = [], array $extensions = [])
     {
         $converter = new GithubFlavoredMarkdownConverter($options);
 
-        return (string) $converter->convertToHtml($string);
+        $environment = $converter->getEnvironment();
+
+        foreach ($extensions as $extension) {
+            $environment->addExtension($extension);
+        }
+
+        return (string) $converter->convert($string);
     }
 
     /**

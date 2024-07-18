@@ -221,9 +221,9 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
 
         switch (true) {
             case Str::endsWith($size, 'kb'): return round($value * 1);
-            case Str::endsWith($size, 'mb'): return round($value * 1000);
-            case Str::endsWith($size, 'gb'): return round($value * 1000000);
-            case Str::endsWith($size, 'tb'): return round($value * 1000000000);
+            case Str::endsWith($size, 'mb'): return round($value * 1 * 1000);
+            case Str::endsWith($size, 'gb'): return round($value * 1 * 1000 * 1000);
+            case Str::endsWith($size, 'tb'): return round($value * 1 * 1000 * 1000 * 1000);
             default: throw new InvalidArgumentException('Invalid file size suffix.');
         }
     }

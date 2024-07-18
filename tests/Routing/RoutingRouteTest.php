@@ -496,9 +496,7 @@ class RoutingRouteTest extends TestCase
     {
         $container = new Container;
         $router = new Router(new Dispatcher, $container);
-        $container->singleton(Registrar::class, function () use ($router) {
-            return $router;
-        });
+        $container->instance(Registrar::class, $router);
 
         $container->bind(RoutingTestUserModel::class, function () {
         });
@@ -1103,9 +1101,7 @@ class RoutingRouteTest extends TestCase
     {
         $container = new Container;
         $router = new Router(new Dispatcher, $container);
-        $container->singleton(Registrar::class, function () use ($router) {
-            return $router;
-        });
+        $container->instance(Registrar::class, $router);
         $container->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
         $container->bind(RouteModelInterface::class, RouteModelBindingStub::class);
         $router->get('foo/{bar}', ['middleware' => SubstituteBindings::class, 'uses' => function ($name) {
@@ -1602,9 +1598,7 @@ class RoutingRouteTest extends TestCase
     {
         $container = new Container;
         $router = new Router(new Dispatcher, $container);
-        $container->singleton(Registrar::class, function () use ($router) {
-            return $router;
-        });
+        $container->instance(Registrar::class, $router);
         $router->get('foo/bar', function () {
             return '';
         });
@@ -1638,9 +1632,7 @@ class RoutingRouteTest extends TestCase
     {
         $container = new Container;
         $router = new Router($events = new Dispatcher, $container);
-        $container->singleton(Registrar::class, function () use ($router) {
-            return $router;
-        });
+        $container->instance(Registrar::class, $router);
         $container->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
         $router->get('foo/bar', function () {
             return '';
@@ -1996,9 +1988,7 @@ class RoutingRouteTest extends TestCase
     {
         $container = new Container;
         $router = new Router(new Dispatcher, $container);
-        $container->singleton(Registrar::class, function () use ($router) {
-            return $router;
-        });
+        $container->instance(Registrar::class, $router);
         $container->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
 
         $container->bind(RoutingTestUserModel::class, RoutingTestExtendedUserModel::class);
@@ -2075,17 +2065,11 @@ class RoutingRouteTest extends TestCase
     {
         $container = new Container;
         $router = new Router(new Dispatcher, $container);
-        $container->singleton(Registrar::class, function () use ($router) {
-            return $router;
-        });
+        $container->instance(Registrar::class, $router);
         $request = Request::create('contact_us', 'GET');
-        $container->singleton(Request::class, function () use ($request) {
-            return $request;
-        });
+        $container->instance(Request::class, $request);
         $urlGenerator = new UrlGenerator(new RouteCollection, $request);
-        $container->singleton(UrlGenerator::class, function () use ($urlGenerator) {
-            return $urlGenerator;
-        });
+        $container->instance(UrlGenerator::class, $urlGenerator);
         $router->get('contact_us', function () {
             throw new Exception('Route should not be reachable.');
         });
@@ -2100,17 +2084,11 @@ class RoutingRouteTest extends TestCase
     {
         $container = new Container;
         $router = new Router(new Dispatcher, $container);
-        $container->singleton(Registrar::class, function () use ($router) {
-            return $router;
-        });
+        $container->instance(Registrar::class, $router);
         $request = Request::create('contact_us', 'GET');
-        $container->singleton(Request::class, function () use ($request) {
-            return $request;
-        });
+        $container->instance(Request::class, $request);
         $urlGenerator = new UrlGenerator(new RouteCollection, $request);
-        $container->singleton(UrlGenerator::class, function () use ($urlGenerator) {
-            return $urlGenerator;
-        });
+        $container->instance(UrlGenerator::class, $urlGenerator);
         $router->get('contact_us', function () {
             throw new Exception('Route should not be reachable.');
         });
@@ -2125,17 +2103,11 @@ class RoutingRouteTest extends TestCase
     {
         $container = new Container;
         $router = new Router(new Dispatcher, $container);
-        $container->singleton(Registrar::class, function () use ($router) {
-            return $router;
-        });
+        $container->instance(Registrar::class, $router);
         $request = Request::create('contact_us', 'GET');
-        $container->singleton(Request::class, function () use ($request) {
-            return $request;
-        });
+        $container->instance(Request::class, $request);
         $urlGenerator = new UrlGenerator(new RouteCollection, $request);
-        $container->singleton(UrlGenerator::class, function () use ($urlGenerator) {
-            return $urlGenerator;
-        });
+        $container->instance(UrlGenerator::class, $urlGenerator);
         $router->get('contact_us', function () {
             throw new Exception('Route should not be reachable.');
         });
@@ -2153,17 +2125,11 @@ class RoutingRouteTest extends TestCase
 
         $container = new Container;
         $router = new Router(new Dispatcher, $container);
-        $container->singleton(Registrar::class, function () use ($router) {
-            return $router;
-        });
+        $container->instance(Registrar::class, $router);
         $request = Request::create('users', 'GET');
-        $container->singleton(Request::class, function () use ($request) {
-            return $request;
-        });
+        $container->instance(Request::class, $request);
         $urlGenerator = new UrlGenerator(new RouteCollection, $request);
-        $container->singleton(UrlGenerator::class, function () use ($urlGenerator) {
-            return $urlGenerator;
-        });
+        $container->instance(UrlGenerator::class, $urlGenerator);
         $router->get('users', function () {
             throw new Exception('Route should not be reachable.');
         });
@@ -2176,17 +2142,11 @@ class RoutingRouteTest extends TestCase
     {
         $container = new Container;
         $router = new Router(new Dispatcher, $container);
-        $container->singleton(Registrar::class, function () use ($router) {
-            return $router;
-        });
+        $container->instance(Registrar::class, $router);
         $request = Request::create('contact_us', 'GET');
-        $container->singleton(Request::class, function () use ($request) {
-            return $request;
-        });
+        $container->instance(Request::class, $request);
         $urlGenerator = new UrlGenerator(new RouteCollection, $request);
-        $container->singleton(UrlGenerator::class, function () use ($urlGenerator) {
-            return $urlGenerator;
-        });
+        $container->instance(UrlGenerator::class, $urlGenerator);
         $router->get('contact_us', function () {
             throw new Exception('Route should not be reachable.');
         });
@@ -2201,17 +2161,11 @@ class RoutingRouteTest extends TestCase
     {
         $container = new Container;
         $router = new Router(new Dispatcher, $container);
-        $container->singleton(Registrar::class, function () use ($router) {
-            return $router;
-        });
+        $container->instance(Registrar::class, $router);
         $request = Request::create('contact_us', 'GET');
-        $container->singleton(Request::class, function () use ($request) {
-            return $request;
-        });
+        $container->instance(Request::class, $request);
         $urlGenerator = new UrlGenerator(new RouteCollection, $request);
-        $container->singleton(UrlGenerator::class, function () use ($urlGenerator) {
-            return $urlGenerator;
-        });
+        $container->instance(UrlGenerator::class, $urlGenerator);
         $router->get('contact_us', function () {
             throw new Exception('Route should not be reachable.');
         });
@@ -2282,9 +2236,7 @@ class RoutingRouteTest extends TestCase
 
         $router = new Router($container->make(Dispatcher::class), $container);
 
-        $container->singleton(Registrar::class, function () use ($router) {
-            return $router;
-        });
+        $container->instance(Registrar::class, $router);
 
         $container->bind(ControllerDispatcherContract::class, function ($app) { return new ControllerDispatcher($app); });
         $container->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });

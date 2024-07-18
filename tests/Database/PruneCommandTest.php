@@ -215,7 +215,7 @@ class PruneCommandTest extends TestCase
         });
         $dispatcher->shouldReceive('forget')->once()->with(ModelsPruned::class);
 
-        Application::getInstance()->singleton(DispatcherContract::class, function () use ($dispatcher) { return $dispatcher; });
+        Application::getInstance()->instance(DispatcherContract::class, $dispatcher);
 
         $this->artisan(['--model' => PrunableTestModelWithPrunableRecords::class]);
     }
