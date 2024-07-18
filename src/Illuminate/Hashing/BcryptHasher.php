@@ -42,7 +42,11 @@ class BcryptHasher extends AbstractHasher implements HasherContract
      *
      * @throws \RuntimeException
      */
-    public function make(#[\SensitiveParameter] $value, array $options = [])
+    public function make(
+        #[\SensitiveParameter]
+        $value,
+        array $options = []
+    )
     {
         $hash = password_hash($value, PASSWORD_BCRYPT, [
             'cost' => $this->cost($options),
@@ -65,7 +69,13 @@ class BcryptHasher extends AbstractHasher implements HasherContract
      *
      * @throws \RuntimeException
      */
-    public function check(#[\SensitiveParameter] $value, $hashedValue, array $options = [])
+    public function check(
+        #[\SensitiveParameter]
+        $value,
+
+        $hashedValue,
+        array $options = []
+    )
     {
         if ($this->verifyAlgorithm && ! $this->isUsingCorrectAlgorithm($hashedValue)) {
             throw new RuntimeException('This password does not use the Bcrypt algorithm.');
