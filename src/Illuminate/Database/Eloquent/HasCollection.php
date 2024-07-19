@@ -15,6 +15,8 @@ trait HasCollection
      */
     public function newCollection(array $models = [])
     {
-        return new static::$collectionClass($models);
+        $collectionClass = static::$collectionClass;
+
+        return new $collectionClass($models);
     }
 }

@@ -24,14 +24,14 @@ class SchemaStateTest extends TestCase
         'database/schema',
     ];
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 
         remote('migrate:install')->mustRun();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         remote('db:wipe')->mustRun();
 

@@ -751,7 +751,7 @@ class LogManagerTest extends TestCase
         $manager = new LogManager($this->app);
 
         $loggerSpy = new LoggerSpy();
-        $manager->extend('spy', fn () => $loggerSpy);
+        $manager->extend('spy', function () use ($loggerSpy) { return $loggerSpy; });
 
         // When
         $logger = $manager->channel('spy');
@@ -779,9 +779,9 @@ class LoggerSpy implements LoggerInterface
 {
     use LoggerTrait;
 
-    public array $logs = [];
+    public /*array */$logs = [];
 
-    public function log($level, \Stringable|string $message, array $context = []): void
+    public function log($level, /*\Stringable|string */$message, array $context = [])/*: void*/
     {
         $this->logs[] = [
             'level' => $level,

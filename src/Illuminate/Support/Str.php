@@ -1819,7 +1819,7 @@ class Str
     {
         return static::$uuidFactory
                     ? call_user_func(static::$uuidFactory)
-                    : Uuid::uuid7($time);
+                    : Uuid7::make($time);
     }
 
     /**

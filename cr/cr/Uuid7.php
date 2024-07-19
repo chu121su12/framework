@@ -8,6 +8,7 @@ use DateTimeInterface;
 use Moontoast\Math\BigNumber;
 use phpseclib3\Math\BigInteger as Psl3BigInteger;
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 class Uuid7
 {
@@ -15,20 +16,23 @@ class Uuid7
 
     const UUID_TYPE_UNIX_TIME = 7;
 
+    /**
+     * @return UuidInterface
+     */
     public static function make(DateTimeInterface $dateTime = null)
     {
-        $random = random_bytes(10);
+        $random = \random_bytes(10);
 
         if ($dateTime) {
             $unixTime = self::calculateTime($dateTime->format('U'), $dateTime->format('u'));
         }
         else {
-            $time = gettimeofday();
+            $time = \gettimeofday();
 
             $unixTime = self::calculateTime($time['sec'], $time['usec']);
         }
 
-        $bytes = hex2bin($unixTime) . $random;
+        $bytes = \hex2bin($unixTime) . $random;
 
         $uuid = self::uuidFromBytesAndVersion($bytes, self::UUID_TYPE_UNIX_TIME);
 
@@ -56,17 +60,17 @@ class Uuid7
         if (\strlen(\decbin(~0)) >= 64) {
             $hex = self::calculateHexTime64Bit($seconds, $microseconds);
         }
-        elseif (class_exists(Psl3BigInteger::class)) {
+        elseif (\class_exists(Psl3BigInteger::class)) {
             $hex = self::calculateHexTimePhpseclib3($seconds, $microseconds);
         }
-        elseif (class_exists(BrickBigInteger::class)) {
+        elseif (\class_exists(BrickBigInteger::class)) {
             $hex = self::calculateHexTimeBrick($seconds, $microseconds);
         }
         else {
             $hex = self::calculateHexTimeMoontoast($seconds, $microseconds);
         }
 
-        return str_pad($hex, 12, '0', STR_PAD_LEFT);
+        return \str_pad($hex, 12, '0', STR_PAD_LEFT);
     }
 
     private static function calculateHexTime64Bit($seconds, $microseconds)
@@ -80,7 +84,7 @@ class Uuid7
 
         $unixTime = $sec + $usec;
 
-        return (string) dechex($unixTime);
+        return (string) \dechex($unixTime);
     }
 
     private static function calculateHexTimePhpseclib3($seconds, $microseconds)
@@ -129,23 +133,23 @@ class Uuid7
         $clockSeqHi = (int) $unpackedClockSeq[1];
         $clockSeqHiAndReserved = pack('n*', self::applyVariant($clockSeqHi));
 
-        $bytes = substr_replace($bytes, $timeHiAndVersion, 6, 2);
-        $bytes = substr_replace($bytes, $clockSeqHiAndReserved, 8, 2);
+        $bytes = \substr_replace($bytes, $timeHiAndVersion, 6, 2);
+        $bytes = \substr_replace($bytes, $clockSeqHiAndReserved, 8, 2);
 
         return self::uuidStringFromBytes($bytes);
     }
 
     private static function uuidStringFromBytes($bytes)
     {
-        $base16Uuid = bin2hex($bytes);
+        $base16Uuid = \bin2hex($bytes);
 
-        return sprintf(
+        return \sprintf(
             '%s-%s-%s-%s-%s',
-            substr($base16Uuid, 0, 8),
-            substr($base16Uuid, 8, 4),
-            substr($base16Uuid, 12, 4),
-            substr($base16Uuid, 16, 4),
-            substr($base16Uuid, 20, 12)
+            \substr($base16Uuid, 0, 8),
+            \substr($base16Uuid, 8, 4),
+            \substr($base16Uuid, 12, 4),
+            \substr($base16Uuid, 16, 4),
+            \substr($base16Uuid, 20, 12)
         );
     }
 }

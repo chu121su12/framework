@@ -2,6 +2,7 @@
 
 namespace Illuminate\Database\Console;
 
+use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Illuminate\Console\Prohibitable;
@@ -36,7 +37,8 @@ class WipeCommand extends Command
     {
         if ($this->isProhibited() ||
             ! $this->confirmToProceed()) {
-            return Command::FAILURE;
+            // return Command::FAILURE;
+            return SymfonyHelper::CONSOLE_FAILURE;
         }
 
         $database = $this->input->getOption('database');

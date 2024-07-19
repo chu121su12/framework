@@ -135,7 +135,7 @@ class LogManager implements LoggerInterface
     protected function get($name, /*?*/array $config = null)
     {
         try {
-            return $this->channels[$name] ?? with($this->resolve($name, $config), function ($logger) use ($name) {
+            return isset($this->channels[$name]) ? $this->channels[$name] : with($this->resolve($name, $config), function ($logger) use ($name) {
                 $loggerWithContext = $this->tap(
                     $name,
                     new Logger($logger, $this->app['events'])
