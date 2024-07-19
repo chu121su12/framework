@@ -23,6 +23,8 @@ abstract class Renderer
      */
     public function __construct(/*protected */Prompt $prompt)
     {
+        $this->prompt = $prompt;
+
         //
     }
 

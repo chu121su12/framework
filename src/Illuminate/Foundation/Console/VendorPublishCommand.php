@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Events\VendorTagPublished;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use League\Flysystem\Adapter\Local as LocalAdapter;
@@ -310,7 +311,7 @@ class VendorPublishCommand extends Command
      */
     protected function moveManagedFiles($from, $manager)
     {
-        foreach ($manager->listContents('from://', true)->sortByPath() as $file) {
+        foreach ((new Collection($manager->listContents('from://', true)))->sortBy('path') as $file) {
             $path = Str::after($file['path'], 'from://');
 
             if (
