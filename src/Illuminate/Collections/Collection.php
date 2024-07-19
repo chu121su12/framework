@@ -687,7 +687,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
      *
      * @phpstan-assert-if-true null $this->first()
      *
-     * @phpstan-assert-if-false !null $this->first()
+     * @phpstan-assert-if-false TValue $this->first()
      *
      * @return bool
      */

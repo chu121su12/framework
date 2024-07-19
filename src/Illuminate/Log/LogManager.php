@@ -135,10 +135,14 @@ class LogManager implements LoggerInterface
     protected function get($name, /*?*/array $config = null)
     {
         try {
-            return isset($this->channels[$name]) ? $this->channels[$name] : with($this->resolve($name, $config), function ($logger) use ($name) {
-                return $this->channels[$name] = tap($this->tap($name, new Logger($logger, $this->app['events']))
-                    ->withContext($this->sharedContext))
-                    ->pushProcessor(function ($record) {
+            return $this->channels[$name] ?? with($this->resolve($name, $config), function ($logger) use ($name) {
+                $loggerWithContext = $this->tap(
+                    $name,
+                    new Logger($logger, $this->app['events'])
+                )->withContext($this->sharedContext);
+
+                if (method_exists($loggerWithContext->getLogger(), 'pushProcessor')) {
+                    $loggerWithContext->pushProcessor(function ($record) {
                         if (! $this->app->bound(ContextRepository::class)) {
                             return $record;
                         }
@@ -157,6 +161,9 @@ class LogManager implements LoggerInterface
                             $this->app[ContextRepository::class]->all()
                         ));
                     });
+                }
+
+                return $this->channels[$name] = $loggerWithContext;
             });
         } catch (\Exception $e) {
         } catch (\Error $e) {

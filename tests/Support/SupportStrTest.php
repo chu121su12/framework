@@ -1168,6 +1168,7 @@ PATTERN;
     {
         $this->assertInstanceOf(UuidInterface::class, Str::uuid());
         $this->assertInstanceOf(UuidInterface::class, Str::orderedUuid());
+        $this->assertInstanceOf(UuidInterface::class, Str::uuid7());
     }
 
     public function testAsciiNull()
@@ -1434,7 +1435,7 @@ PATTERN;
     {
         Str::createUuidsUsingSequence([
             0 => ($zeroth = Str::uuid()),
-            1 => ($first = Str::uuid()),
+            1 => ($first = Str::uuid7()),
             // just generate a random one here...
             3 => ($third = Str::uuid()),
             // continue to generate random uuids...
