@@ -3110,7 +3110,7 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertFalse($user->hasAttribute('belongsToStub'));
     }
 
-    public function testModelToJsonSucceedsWithPriorErrors(): void
+    public function testModelToJsonSucceedsWithPriorErrors()/*: void*/
     {
         $user = new EloquentModelStub(['name' => 'Mateus']);
 

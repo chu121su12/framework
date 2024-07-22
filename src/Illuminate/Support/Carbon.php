@@ -13,6 +13,19 @@ class Carbon extends BaseCarbon
 {
     use Conditionable, Dumpable;
 
+    public static function now($tz = null)
+    {
+        if (BaseCarbon::hasTestNow()) {
+            return new static(BaseCarbon::now($tz));
+        }
+
+        if (BaseCarbonImmutable::hasTestNow()) {
+            return new static(BaseCarbonImmutable::now($tz));
+        }
+
+        return parent::now($tz);
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 
 class JsonResourceTest_testJsonResourceNullAttributes_class extends Model {};
 
+class JsonResourceTest_testJsonResourceToJsonSucceedsWithPriorErrors_class extends Model {};
+
 class JsonResourceTest extends TestCase
 {
     public function testJsonResourceNullAttributes()
@@ -28,9 +30,9 @@ class JsonResourceTest extends TestCase
         $this->assertNull($resource->whenCounted('relation'));
     }
 
-    public function testJsonResourceToJsonSucceedsWithPriorErrors(): void
+    public function testJsonResourceToJsonSucceedsWithPriorErrors()/*: void*/
     {
-        $model = new class extends Model {};
+        $model = new JsonResourceTest_testJsonResourceToJsonSucceedsWithPriorErrors_class;
 
         $resource = m::mock(JsonResource::class, ['resource' => $model])
             ->makePartial()

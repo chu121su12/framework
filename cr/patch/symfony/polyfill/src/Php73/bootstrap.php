@@ -15,6 +15,10 @@ if (\PHP_VERSION_ID >= 70300) {
     return;
 }
 
+if (!defined('JSON_THROW_ON_ERROR')) {
+    define('JSON_THROW_ON_ERROR', (int) (1 << 22));
+}
+
 if (!function_exists('is_countable')) {
     function is_countable($value) { return is_array($value) || $value instanceof Countable || $value instanceof ResourceBundle || $value instanceof SimpleXmlElement; }
 }

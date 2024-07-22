@@ -5,7 +5,7 @@ namespace Illuminate\Tests\Container;
 use PHPUnit\Framework\TestCase;
 
 if (\version_compare(\PHP_VERSION, '7.0', '>=')) {
-    require_once __DIR__.'/../../tests-stubs/AfterResolvingAttributeCallbackTest.php';
+    include_once __DIR__.'/../../tests-stubs/AfterResolvingAttributeCallbackTest.php';
 }
 else
 {

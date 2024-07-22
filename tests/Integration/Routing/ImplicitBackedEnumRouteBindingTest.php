@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Orchestra\Testbench\TestCase;
 
 if (PHP_VERSION_ID >= 80100) {
-    include_once 'Enums.php';
+    include_once __DIR__.'/../../Routing/Enums.php';
 }
 
 /**

@@ -64,6 +64,10 @@ if (! \function_exists('backport_json_encode')) {
             return \json_encode($value, $throw ? ($options | JSON_THROW_ON_ERROR) : $options, $depth);
         }
 
+        if (!$throw && defined('JSON_THROW_ON_ERROR') && ($options & ((int) JSON_THROW_ON_ERROR)) !== 0) {
+            $throw = true;
+        }
+
         $output = \json_encode($value, $options, $depth);
 
         if (JSON_ERROR_NONE === json_last_error()) {

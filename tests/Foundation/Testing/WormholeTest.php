@@ -49,7 +49,7 @@ class WormholeTest extends TestCase
 
     public function testItCanTravelByMicroseconds()
     {
-        Date::use(CarbonImmutable::class);
+        Date::use_(CarbonImmutable::class);
         Date::setTestNow(Date::parse('2000-01-01 00:00:00')->startOfSecond());
 
         (new Wormhole(1))->microsecond();

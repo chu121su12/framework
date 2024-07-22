@@ -146,7 +146,7 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
     public function toJson($options = 0)
     {
         try {
-            $json = json_encode($this->jsonSerialize(), $options | JSON_THROW_ON_ERROR);
+            $json = backport_json_encode($this->jsonSerialize(), $options, 512, true);
         } catch (JsonException $e) {
             throw JsonEncodingException::forResource($this, $e->getMessage());
         }
