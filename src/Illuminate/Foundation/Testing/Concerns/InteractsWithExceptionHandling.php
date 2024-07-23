@@ -6,6 +6,7 @@ use Closure;
 use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\Testing\Fakes\ExceptionHandlerFake;
+use Illuminate\Support\Traits\ReflectsClosures;
 use Illuminate\Testing\Assert;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Console\Application as ConsoleApplication;
@@ -103,6 +104,8 @@ class InteractsWithExceptionHandling_withoutExceptionHandling_class implements E
 
 trait InteractsWithExceptionHandling
 {
+    use ReflectsClosures;
+
     /**
      * The original exception handler.
      *
@@ -180,21 +183,15 @@ trait InteractsWithExceptionHandling
      * Assert that the given callback throws an exception with the given message when invoked.
      *
      * @param  \Closure  $test
-     * @param  class-string<\Throwable>  $expectedClass
+     * @param  \Closure|class-string<\Throwable>  $expectedClass
      * @param  string|null  $expectedMessage
      * @return $this
      */
-    protected function assertThrows(Closure $test, /*string */$expectedClass = \Exception::class, /*?string */$expectedMessage = null)
+    protected function assertThrows(Closure $test, string|Closure $expectedClass = Throwable::class, ?string $expectedMessage = null)
     {
-        if (func_num_args() === 1 && class_exists('Throwable')) {
-            $expectedClass = Throwable::class;
-        } elseif ($expectedClass === null) {
-            $expectedClass = class_exists('Throwable') ? Throwable::class : \Exception::class;
-        }
-
-        $expectedClass = backport_type_check('string', $expectedClass);
-
-        $expectedMessage = backport_type_check('?string', $expectedMessage);
+        [$expectedClass, $expectedClassCallback] = $expectedClass instanceof Closure
+            ? [$this->firstClosureParameterType($expectedClass), $expectedClass]
+            : [$expectedClass, null];
 
         try {
             $test();
@@ -206,7 +203,7 @@ trait InteractsWithExceptionHandling
         }
 
         if (isset($exception)) {
-            $thrown = $exception instanceof $expectedClass;
+            $thrown = $exception instanceof $expectedClass && ($expectedClassCallback === null || $expectedClassCallback($exception));
 
             $actualMessage = $exception->getMessage();
         }

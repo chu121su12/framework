@@ -518,7 +518,7 @@ class DatabaseSchemaBlueprintTest extends TestCase
         });
 
         Schema::table('users', function (Blueprint $table) {
-            $table->string('create');
+            $table->string('create')->nullable();
         });
 
         $this->assertTrue(Schema::hasColumn('users', 'create'));
