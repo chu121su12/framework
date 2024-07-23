@@ -24,7 +24,7 @@ trait SerializesModels
         list($class, $properties, $classLevelWithoutRelations) = [
             get_class($this),
             $reflectionClass->getProperties(),
-            method_exists($reflectionClass, 'getAttributes')
+            \method_exists($reflectionClass, 'getAttributes')
                 ? ! empty($reflectionClass->getAttributes(WithoutRelations::class))
                 : false,
         ];
@@ -57,7 +57,7 @@ trait SerializesModels
                 $name = "\0*\0{$name}";
             }
 
-            if (method_exists($property, 'getAttributes')) {
+            if (\method_exists($property, 'getAttributes')) {
 
             $values[$name] = $this->getSerializedPropertyValue(
                 $value,

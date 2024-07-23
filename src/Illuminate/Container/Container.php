@@ -1111,7 +1111,6 @@ class Container implements ArrayAccess, ContainerContract
     {
         if (! class_exists(ReflectionAttribute::class)) {
             return null;
-
         }
 
         $attribute = $dependency->getAttributes(ContextualAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
@@ -1413,6 +1412,8 @@ class Container implements ArrayAccess, ContainerContract
     protected function fireAfterResolvingAttributeCallbacks(array $attributes, $object)
     {
         foreach ($attributes as $attribute) {
+            try {
+
             if (method_exists($instance = $attribute->newInstance(), 'after')) {
                 $instance->after($instance, $object, $this);
             }
@@ -1423,6 +1424,10 @@ class Container implements ArrayAccess, ContainerContract
 
             foreach ($callbacks as $callback) {
                 $callback($attribute->newInstance(), $object, $this);
+            }
+
+            }
+            catch (\Error $_e) {
             }
         }
     }
