@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseIntegrationTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $db = new DB;
         $db->addConnection([
@@ -20,11 +20,11 @@ class DatabaseIntegrationTest extends TestCase
         $db->setEventDispatcher(new Dispatcher);
     }
 
-    public function testQueryExecutedToRawSql(): void
+    public function testQueryExecutedToRawSql()/*: void*/
     {
         $connection = DB::connection();
 
-        $connection->listen(function (QueryExecuted $query) use (&$queryExecuted): void {
+        $connection->listen(function (QueryExecuted $query) use (&$queryExecuted)/*: void*/ {
             $queryExecuted = $query;
         });
 

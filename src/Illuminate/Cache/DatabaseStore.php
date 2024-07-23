@@ -134,12 +134,12 @@ class DatabaseStore implements LockProvider, Store
         // If this cache expiration date is past the current time, we will remove this
         // item from the cache. Then we will return a null value since the cache is
         // expired. We will use "Carbon" to make this comparison with the column.
-        [$values, $expired] = $values->partition(function ($cache) use ($currentTime) {
+        list($values, $expired) = $values->partition(function ($cache) use ($currentTime) {
             return $cache->expiration > $currentTime;
         });
 
         if ($expired->isNotEmpty()) {
-            $this->forgetManyIfExpired($expired->pluck('key')->all(), prefixed: true);
+            $this->forgetManyIfExpired($expired->pluck('key')->all(), /*prefixed: */true);
         }
 
         return Arr::map($results, function ($value, $key) use ($values) {
@@ -392,8 +392,10 @@ class DatabaseStore implements LockProvider, Store
      * @param  bool  $prefixed
      * @return bool
      */
-    protected function forgetManyIfExpired(array $keys, bool $prefixed = false)
+    protected function forgetManyIfExpired(array $keys, /*bool */$prefixed = false)
     {
+        $prefixed = backport_type_check('?string', $prefixed);
+
         $this->table()
             ->whereIn('key', $prefixed ? $keys : array_map(function ($key) {
                 return $this->prefix.$key;

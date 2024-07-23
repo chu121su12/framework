@@ -660,7 +660,7 @@ class FoundationExceptionsHandlerTest extends TestCase
                 return false;
             });
             $testFailed = true;
-        } catch (AssertionFailedError) {
+        } catch (AssertionFailedError $_e) {
             $testFailed = false;
         }
 
@@ -675,7 +675,7 @@ class FoundationExceptionsHandlerTest extends TestCase
                 return true;
             });
             $testFailed = true;
-        } catch (AssertionFailedError) {
+        } catch (AssertionFailedError $_e) {
             $testFailed = false;
         }
 

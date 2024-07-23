@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class WormholeTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         parent::tearDown();
 

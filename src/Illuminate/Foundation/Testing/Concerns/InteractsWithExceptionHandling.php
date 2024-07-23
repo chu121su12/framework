@@ -187,9 +187,19 @@ trait InteractsWithExceptionHandling
      * @param  string|null  $expectedMessage
      * @return $this
      */
-    protected function assertThrows(Closure $test, string|Closure $expectedClass = Throwable::class, ?string $expectedMessage = null)
+    protected function assertThrows(Closure $test, /*string|Closure */$expectedClass = \Exception::class, /*?string */$expectedMessage = null)
     {
-        [$expectedClass, $expectedClassCallback] = $expectedClass instanceof Closure
+        if (func_num_args() === 1 && class_exists('Throwable')) {
+            $expectedClass = Throwable::class;
+        } elseif ($expectedClass === null) {
+            $expectedClass = class_exists('Throwable') ? Throwable::class : \Exception::class;
+        }
+
+        $expectedClass = backport_type_check('string|Closure', $expectedClass);
+
+        $expectedMessage = backport_type_check('?string', $expectedMessage);
+
+        list($expectedClass, $expectedClassCallback) = $expectedClass instanceof Closure
             ? [$this->firstClosureParameterType($expectedClass), $expectedClass]
             : [$expectedClass, null];
 
