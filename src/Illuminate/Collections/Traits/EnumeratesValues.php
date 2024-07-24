@@ -230,9 +230,7 @@ trait EnumeratesValues
      */
     public function dd(...$args)
     {
-        $this->dump(...$args);
-
-        dd();
+        dd($this->all(), ...$args);
     }
 
     /**
