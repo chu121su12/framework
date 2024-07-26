@@ -11,6 +11,28 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
 use PHPUnit\Framework\TestCase;
 
+class KernelTest_testItTriggersTerminatingEvent_class
+        {
+            private $called;
+
+            public function __construct(/*private */&$called)
+            {
+                $this->called = &$called;
+
+                //
+            }
+
+            public function handle($request, $next)
+            {
+                return $next($request);
+            }
+
+            public function terminate($request, $response)
+            {
+                $this->called[] = 'terminating middleware';
+            }
+        }
+
 class KernelTest extends TestCase
 {
     public function testGetMiddlewareGroups()
@@ -53,23 +75,9 @@ class KernelTest extends TestCase
         $events = new Dispatcher($app);
         $app->instance('events', $events);
         $kernel = new Kernel($app, $this->getRouter());
-        $app->instance('terminating-middleware', new class($called)
-        {
-            public function __construct(private &$called)
-            {
-                //
-            }
-
-            public function handle($request, $next)
-            {
-                return $next($response);
-            }
-
-            public function terminate($request, $response)
-            {
-                $this->called[] = 'terminating middleware';
-            }
-        });
+        $app->instance('terminating-middleware',
+            new KernelTest_testItTriggersTerminatingEvent_class($called)
+        );
         $kernel->setGlobalMiddleware([
             'terminating-middleware',
         ]);
