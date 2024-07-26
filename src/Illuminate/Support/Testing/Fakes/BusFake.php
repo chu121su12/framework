@@ -887,4 +887,14 @@ class BusFake implements Fake, QueueingDispatcher
 
         return $this;
     }
+
+    /**
+     * Get the batches that have been dispatched.
+     *
+     * @return array
+     */
+    public function dispatchedBatches()
+    {
+        return $this->batches;
+    }
 }

@@ -1414,8 +1414,12 @@ class Container implements ArrayAccess, ContainerContract
         foreach ($attributes as $attribute) {
             try {
 
-            if (method_exists($instance = $attribute->newInstance(), 'after')) {
-                $instance->after($instance, $object, $this);
+            if (is_a($attribute->getName(), ContextualAttribute::class, true)) {
+                $instance = $attribute->newInstance();
+
+                if (method_exists($instance, 'after')) {
+                    $instance->after($instance, $object, $this);
+                }
             }
 
             $callbacks = $this->getCallbacksForType(

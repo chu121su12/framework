@@ -1808,7 +1808,7 @@ class Blueprint
         return $this->commands;
     }
 
-    /*
+    /**
      * Determine if the blueprint has state.
      *
      * @param  mixed  $name
