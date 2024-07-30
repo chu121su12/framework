@@ -10,6 +10,10 @@ use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Database\Eloquent\Factory as ModelFactory;
 use Illuminate\View\Compilers\BladeCompiler;
 
+/**
+ * @property array<class-string, class-string> $bindings All of the container bindings that should be registered.
+ * @property array<class-string, class-string> $singletons All of the singletons that should be registered.
+ */
 abstract class ServiceProvider
 {
     /**
@@ -18,20 +22,6 @@ abstract class ServiceProvider
      * @var \Illuminate\Contracts\Foundation\Application
      */
     protected $app;
-
-    /**
-     * All of the container bindings that should be registered.
-     *
-     * @var array
-     */
-    public $bindings = [];
-
-    /**
-     * All of the singletons that should be registered.
-     *
-     * @var array
-     */
-    public $singletons = [];
 
     /**
      * All of the registered booting callbacks.

@@ -1130,7 +1130,7 @@ class Builder implements BuilderContract
     /**
      * Add a "where like" clause to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $value
      * @param  bool  $caseSensitive
      * @param  string  $boolean
@@ -1155,7 +1155,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where like" clause to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $value
      * @param  bool  $caseSensitive
      * @return $this
@@ -1168,7 +1168,7 @@ class Builder implements BuilderContract
     /**
      * Add a "where not like" clause to the query.
      *
-     * @param  string  $column
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $value
      * @param  bool  $caseSensitive
      * @param  string  $boolean
@@ -1182,7 +1182,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where not like" clause to the query.
      *
-     * @param  string  $columns
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
      * @param  string  $value
      * @param  bool  $caseSensitive
      * @return $this
@@ -2287,7 +2287,7 @@ class Builder implements BuilderContract
     }
 
     /**
-     * Add an "where" clause to the query for multiple columns with "or" conditions between them.
+     * Add a "where" clause to the query for multiple columns with "or" conditions between them.
      *
      * @param  string[]  $columns
      * @param  string  $operator
@@ -2321,6 +2321,33 @@ class Builder implements BuilderContract
     public function orWhereAny($columns, $operator = null, $value = null)
     {
         return $this->whereAny($columns, $operator, $value, 'or');
+    }
+
+    /**
+     * Add a "where not" clause to the query for multiple columns where none of the conditions should be true.
+     *
+     * @param  string[]  $columns
+     * @param  string  $operator
+     * @param  mixed  $value
+     * @param  string  $boolean
+     * @return $this
+     */
+    public function whereNone($columns, $operator = null, $value = null, $boolean = 'and')
+    {
+        return $this->whereAny($columns, $operator, $value, $boolean.' not');
+    }
+
+    /**
+     * Add an "or where not" clause to the query for multiple columns where none of the conditions should be true.
+     *
+     * @param  string[]  $columns
+     * @param  string  $operator
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function orWhereNone($columns, $operator = null, $value = null)
+    {
+        return $this->whereNone($columns, $operator, $value, 'or');
     }
 
     /**

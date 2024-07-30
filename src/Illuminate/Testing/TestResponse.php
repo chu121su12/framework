@@ -573,6 +573,17 @@ class TestResponse implements ArrayAccess
     }
 
     /**
+     * Assert that the given HTML string or array of HTML strings are contained within the response.
+     *
+     * @param  array|string  $value
+     * @return $this
+     */
+    public function assertSeeHtml($value)
+    {
+        return $this->assertSee($value, false);
+    }
+
+    /**
      * Assert that the given strings are contained in order within the response.
      *
      * @param  array  $values
@@ -586,6 +597,17 @@ class TestResponse implements ArrayAccess
         PHPUnit::withResponse($this)->assertThat($values, new SeeInOrder($this->getContent()));
 
         return $this;
+    }
+
+    /**
+     * Assert that the given HTML strings are contained in order within the response.
+     *
+     * @param  array  $values
+     * @return $this
+     */
+    public function assertSeeHtmlInOrder(array $values)
+    {
+        return $this->assertSeeInOrder($values, false);
     }
 
     /**
@@ -644,6 +666,17 @@ class TestResponse implements ArrayAccess
         }
 
         return $this;
+    }
+
+    /**
+     * Assert that the given HTML string or array of HTML strings are not contained within the response.
+     *
+     * @param  array|string  $value
+     * @return $this
+     */
+    public function assertDontSeeHtml($value)
+    {
+        return $this->assertDontSee($value, false);
     }
 
     /**
