@@ -366,7 +366,9 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
         return tap($this, function (Request $request) use ($input) {
             $request->getInputSource()
                     ->replace(collect($input)->reduce(
-                        fn ($requestInput, $value, $key) => data_set($requestInput, $key, $value),
+                        function ($requestInput, $value, $key) {
+                            return data_set($requestInput, $key, $value);
+                        },
                         $this->getInputSource()->all()
                     ));
         });

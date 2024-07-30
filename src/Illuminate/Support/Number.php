@@ -339,8 +339,10 @@ class Number
      * @param  int|float  $number
      * @return int|float
      */
-    public static function trim(int|float $number)
+    public static function trim(/*int|float */$number)
     {
+        $number = backport_type_check('int|float', $number);
+
         return json_decode(json_encode($number));
     }
 
