@@ -270,8 +270,10 @@ class AssertableJsonString implements ArrayAccess, Countable
      * @param  bool  $exact
      * @return $this
      */
-    public function assertStructure(?array $structure = null, $responseData = null, bool $exact = false)
+    public function assertStructure(/*?*/array $structure = null, $responseData = null, /*bool */$exact = false)
     {
+        $exact = backport_type_check('bool', $exact);
+
         if (is_null($structure)) {
             return $this->assertSimilar($this->decoded);
         }
@@ -283,7 +285,9 @@ class AssertableJsonString implements ArrayAccess, Countable
         if ($exact) {
             PHPUnit::assertIsArray($this->decoded);
 
-            $keys = collect($structure)->map(fn ($value, $key) => is_array($value) ? $key : $value)->values();
+            $keys = collect($structure)->map(function ($value, $key) {
+                return is_array($value) ? $key : $value;
+            })->values();
 
             if ($keys->all() !== ['*']) {
                 PHPUnit::assertEquals($keys->sort()->values()->all(), collect($this->decoded)->keys()->sort()->values()->all());

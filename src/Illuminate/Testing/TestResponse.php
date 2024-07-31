@@ -857,7 +857,7 @@ class TestResponse implements ArrayAccess
      * @param  array|null  $responseData
      * @return $this
      */
-    public function assertExactJsonStructure(?array $structure = null, $responseData = null)
+    public function assertExactJsonStructure(/*?*/array $structure = null, $responseData = null)
     {
         $this->decodeResponseJson()->assertStructure($structure, $responseData, true);
 

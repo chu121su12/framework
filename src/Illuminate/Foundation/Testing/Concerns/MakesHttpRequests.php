@@ -110,6 +110,8 @@ trait MakesHttpRequests
      */
     public function withoutHeader(string $name)
     {
+        $name = backport_type_check('string', $name);
+
         unset($this->defaultHeaders[$name]);
 
         return $this;
