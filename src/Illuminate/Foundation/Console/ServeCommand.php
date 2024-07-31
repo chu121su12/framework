@@ -109,10 +109,14 @@ class ServeCommand extends Command
                 $this->serverRunningHasBeenDisplayed = true;
 
                 $this->components->info("Server running on [http://{$this->host()}:{$this->port()}].");
+                $this->showIps();
                 $this->comment('  <fg=yellow;options=bold>Press Ctrl+C to stop the server</>');
 
                 $this->newLine();
             }
+        }
+        elseif (\version_compare(\PHP_VERSION, '7.4', '<')) {
+            $this->components->info('Recommended to use <fg=default;options=bold>--access</> option on PHP < 7.4');
         }
 
         while ($process->isRunning()) {
@@ -328,6 +332,7 @@ class ServeCommand extends Command
                         $this->serverRunningHasBeenDisplayed = true;
 
                         $this->components->info("Server running on [http://{$this->host()}:{$this->port()}].");
+                        $this->showIps();
                         $this->comment('  <fg=yellow;options=bold>Press Ctrl+C to stop the server</>');
 
                         $this->newLine();
@@ -441,5 +446,48 @@ class ServeCommand extends Command
             ['no-reload', null, InputOption::VALUE_NONE, 'Do not reload the development server on .env file changes'],
             ['access', null, InputOption::VALUE_NONE, 'Try to resolve request lines'],
         ];
+    }
+
+    protected function showIps()
+    {
+        if ($this->host() === '0.0.0.0' || $this->host() === '::') {
+            $hostnames = collect(\function_exists('net_get_interfaces') ? net_get_interfaces() : [])
+                ->pluck('*.*.address')
+                ->flatten()
+                ->add(\getHostName())
+                ->add(\getHostByName(\getHostName()))
+                ->merge($this->getIps())
+                ->reject(static function ($x) { return in_array($x, ['localhost', '::1', '127.0.0.1'], true); })
+                ->filter()
+                ->sort()
+                ->unique()
+                ->map(static function ($hostname) {
+                    return "<fg=default;options=bold>$hostname</> ";
+                })
+                ->join(', ');
+
+            $this->components->info('Available hosts: ' . $hostnames);
+        }
+    }
+
+    protected function getIps()
+    {
+        if (windows_os()) {
+            return collect(\preg_split('/[\r\n]+/', \exec('ipconfig /all')))
+                ->filter(static function ($line) {
+                    return \str_contains($line, 'IPv4 Address') || \str_contains($line, 'IPv6 Address');
+                })
+                ->map(static function ($line) {
+                    return \trim(\preg_replace('/.*:(.+\w.+)(\(.*)?$/', '$1', $line));
+                })
+                ->all();
+        }
+
+        try {
+            return \explode(' ', \exec('hostname --all-ip-addresses')) ?: [];
+        }
+        catch (\Exception $_e) {
+            return [];
+        }
     }
 }
