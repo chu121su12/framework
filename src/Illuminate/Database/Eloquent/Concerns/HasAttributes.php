@@ -395,7 +395,7 @@ trait HasAttributes
             // list for returning. If it was not arrayable or null, we'll not set
             // the value on the array because it is some type of invalid value.
             if (array_key_exists('relation', get_defined_vars())) { // check if $relation is in scope (could be null)
-                $attributes[$key] = $relation ?? null;
+                $attributes[$key] = isset($relation) ? $relation : null;
             }
 
             unset($relation);

@@ -328,8 +328,14 @@ class Repository
      *
      * @throws \RuntimeException
      */
-    public function stackContains(string $key, mixed $value, bool $strict = false): bool
+    public function stackContains(/*string */$key, /*mixed */$value, /*bool */$strict = false)/*: bool*/
     {
+        $key = backport_type_check('string', $key);
+
+        $value = backport_type_check('mixed', $value);
+
+        $strict = backport_type_check('bool', $strict);
+
         if (! $this->isStackable($key)) {
             throw new RuntimeException("Given key [{$key}] is not a stack.");
         }
@@ -355,8 +361,14 @@ class Repository
      *
      * @throws \RuntimeException
      */
-    public function hiddenStackContains(string $key, mixed $value, bool $strict = false): bool
+    public function hiddenStackContains(/*string */$key, /*mixed */$value, /*bool */$strict = false)/*: bool*/
     {
+        $key = backport_type_check('string', $key);
+
+        $value = backport_type_check('mixed', $value);
+
+        $strict = backport_type_check('bool', $strict);
+
         if (! $this->isHiddenStackable($key)) {
             throw new RuntimeException("Given key [{$key}] is not a stack.");
         }

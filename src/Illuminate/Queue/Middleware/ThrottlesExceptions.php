@@ -178,7 +178,7 @@ class ThrottlesExceptions
             return $this->prefix.$job->job->uuid();
         }
 
-        return $this->prefix.hash('xxh128', get_class($job));
+        return $this->prefix.hash(BACKPORT_HASH_xxh128, get_class($job));
     }
 
     /**

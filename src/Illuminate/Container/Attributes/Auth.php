@@ -9,11 +9,14 @@ use Illuminate\Contracts\Container\ContextualAttribute;
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class Auth implements ContextualAttribute
 {
+    public $guard;
+
     /**
      * Create a new class instance.
      */
-    public function __construct(public ?string $guard = null)
+    public function __construct(/*public ?string */$guard = null)
     {
+        $this->guard = backport_type_check('?string', $guard);
     }
 
     /**

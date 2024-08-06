@@ -81,13 +81,15 @@ class DownCommand extends Command
      */
     protected function getDownFilePayload()
     {
+        $status = $this->option('status');
+
         return [
             'except' => $this->excludedPaths(),
             'redirect' => $this->redirectPath(),
             'retry' => $this->getRetryTime(),
             'refresh' => $this->option('refresh'),
             'secret' => $this->getSecret(),
-            'status' => (int) ($this->option('status') ?? 503),
+            'status' => (int) (isset($status) ? $status : 503),
             'template' => $this->option('render') ? $this->prerenderView() : null,
         ];
     }

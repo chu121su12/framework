@@ -9,11 +9,14 @@ use Illuminate\Contracts\Container\ContextualAttribute;
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class Log implements ContextualAttribute
 {
+    public $channel;
+
     /**
      * Create a new class instance.
      */
-    public function __construct(public ?string $channel = null)
+    public function __construct(/*public ?string */$channel = null)
     {
+        $this->channel = backport_type_check('?string', $channel);
     }
 
     /**

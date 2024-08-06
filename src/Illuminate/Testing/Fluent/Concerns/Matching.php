@@ -179,7 +179,9 @@ trait Matching
         );
 
         $missing = Collection::make($expected)
-            ->map(fn ($search) => $search instanceof BackedEnum ? $search->value : $search)
+            ->map(function ($search) {
+                return $search instanceof BackedEnum ? $search->value : $search;
+            })
             ->reject(function ($search) use ($key, $actual) {
                 if ($actual->containsStrict($key, $search)) {
                     return true;

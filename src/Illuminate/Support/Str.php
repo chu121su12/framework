@@ -362,8 +362,12 @@ class Str
      * @param  string  $character
      * @return string
      */
-    public static function deduplicate(string $string, string $character = ' ')
+    public static function deduplicate(/*string */$string, /*string */$character = ' ')
     {
+        $string = backport_type_check('string', $string);
+
+        $character = backport_type_check('string', $character);
+
         return preg_replace('/'.preg_quote($character, '/').'+/u', $character, $string);
     }
 

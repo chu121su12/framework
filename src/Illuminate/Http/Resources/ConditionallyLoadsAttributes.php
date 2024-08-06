@@ -277,7 +277,7 @@ trait ConditionallyLoadsAttributes
         }
 
         if ($value === null) {
-            $value = value(...);
+            $value = function (...$args) { return value(...$args); };
         }
 
         return value($value, $loadedValue);
@@ -312,7 +312,7 @@ trait ConditionallyLoadsAttributes
         }
 
         if ($value === null) {
-            $value = value(...);
+            $value = function (...$args) { return value(...$args); };
         }
 
         return value($value, $this->resource->{$attribute});
@@ -349,7 +349,7 @@ trait ConditionallyLoadsAttributes
         }
 
         if ($value === null) {
-            $value = value(...);
+            $value = function (...$args) { return value(...$args); };
         }
 
         return value($value, $this->resource->{$attribute});

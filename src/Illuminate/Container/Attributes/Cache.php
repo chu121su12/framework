@@ -9,11 +9,14 @@ use Illuminate\Contracts\Container\ContextualAttribute;
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class Cache implements ContextualAttribute
 {
+    public $store;
+
     /**
      * Create a new class instance.
      */
-    public function __construct(public ?string $store = null)
+    public function __construct(/*public ?string */$store = null)
     {
+        $this->store = backport_type_check('?string', $store);
     }
 
     /**

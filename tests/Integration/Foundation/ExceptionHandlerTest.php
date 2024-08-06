@@ -14,6 +14,14 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Process\PhpProcess;
 use Throwable;
 
+class ExceptionHandlerTest_testItDoesntReportExceptionsWithShouldntReportInterface_class extends \Exception implements ShouldntReport, Responsable
+        {
+            public function toResponse($request)
+            {
+                return response('shouldnt report', 500);
+            }
+        }
+
 class ExceptionHandlerTest extends TestCase
 {
     /**
@@ -52,15 +60,9 @@ class ExceptionHandlerTest extends TestCase
             $reported[] = $e;
         });
 
-        $exception = new class extends \Exception implements ShouldntReport, Responsable
-        {
-            public function toResponse($request)
-            {
-                return response('shouldnt report', 500);
-            }
-        };
+        $exception = new ExceptionHandlerTest_testItDoesntReportExceptionsWithShouldntReportInterface_class;
 
-        Route::get('test-route', fn () => throw $exception);
+        Route::get('test-route', function () use ($exception) { throw $exception; });
 
         $this->getJson('test-route')
             ->assertStatus(500)

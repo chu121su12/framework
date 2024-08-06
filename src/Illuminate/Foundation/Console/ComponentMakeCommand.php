@@ -122,15 +122,15 @@ class ComponentMakeCommand extends GeneratorCommand
 
         $path = is_string($this->option('path'))
             ? explode('/', trim($this->option('path'), '/'))
-            : [
-                'components',
-                ...$segments,
-            ];
+            : \array_merge(
+                ['components'],
+                $segments
+            );
 
         $path[] = $name;
 
         return collect($path)
-            ->map(fn ($segment) => Str::kebab($segment))
+            ->map(function ($segment) { return Str::kebab($segment); })
             ->implode('.');
     }
 

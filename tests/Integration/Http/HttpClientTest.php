@@ -11,12 +11,14 @@ use Orchestra\Testbench\TestCase;
 
 class HttpClientTest extends TestCase
 {
-    public function testGlobalMiddlewarePersistsBeforeWeDispatchEvent(): void
+    public function testGlobalMiddlewarePersistsBeforeWeDispatchEvent()/*: void*/
     {
         Event::fake();
         Http::fake();
 
-        Http::globalRequestMiddleware(fn ($request) => $request->withHeader('User-Agent', 'Facade/1.0'));
+        Http::globalRequestMiddleware(function ($request) {
+            return $request->withHeader('User-Agent', 'Facade/1.0');
+        });
 
         Http::get('laravel.com');
 

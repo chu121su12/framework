@@ -244,8 +244,10 @@ class Stringable implements JsonSerializable, ArrayAccess, BaseStringable
      * @param  string  $character
      * @return static
      */
-    public function deduplicate(string $character = ' ')
+    public function deduplicate(/*string */$character = ' ')
     {
+        $character = backport_type_check('string', $character);
+
         return new static(Str::deduplicate($this->value, $character));
     }
 

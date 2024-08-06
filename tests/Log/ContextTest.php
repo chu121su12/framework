@@ -300,8 +300,8 @@ class ContextTest extends TestCase
         Context::push('foo', 'bar', ['lorem'], 123);
         Context::pushHidden('baz');
 
-        $this->assertTrue(Context::stackContains('foo', fn ($value) => $value === 'bar'));
-        $this->assertFalse(Context::stackContains('foo', fn ($value) => $value === 'baz'));
+        $this->assertTrue(Context::stackContains('foo', function ($value) { return $value === 'bar'; }));
+        $this->assertFalse(Context::stackContains('foo', function ($value) { return $value === 'baz'; }));
     }
 
     public function test_it_can_check_if_value_is_in_hidden_context_stack()
@@ -318,8 +318,8 @@ class ContextTest extends TestCase
         Context::pushHidden('foo', 'baz');
         Context::push('foo', 'bar', ['lorem'], 123);
 
-        $this->assertTrue(Context::hiddenStackContains('foo', fn ($value) => $value === 'baz'));
-        $this->assertFalse(Context::hiddenStackContains('foo', fn ($value) => $value === 'bar'));
+        $this->assertTrue(Context::hiddenStackContains('foo', function ($value) { return $value === 'baz'; }));
+        $this->assertFalse(Context::hiddenStackContains('foo', function ($value) { return $value === 'bar'; }));
     }
 
     public function test_it_cannot_check_if_hidden_value_is_in_non_hidden_context_stack()

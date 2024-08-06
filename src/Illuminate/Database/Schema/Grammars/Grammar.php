@@ -337,7 +337,7 @@ abstract class Grammar extends BaseGrammar
     public function wrap($value)
     {
         return parent::wrap(
-            $value instanceof Fluent ? $value->name : $value,
+            $value instanceof Fluent ? $value->name : $value
         );
     }
 

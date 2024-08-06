@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 class DatabaseConcernsHasAttributesTest extends TestCase
 {
     /**
-     * @requires PHP 7
+     * @requires PHP 8
      */
     public function testWithoutConstructor()
     {
@@ -23,7 +23,7 @@ class DatabaseConcernsHasAttributesTest extends TestCase
     }
 
     /**
-     * @requires PHP 7
+     * @requires PHP 8
      */
     public function testWithConstructorArguments()
     {
@@ -35,7 +35,7 @@ class DatabaseConcernsHasAttributesTest extends TestCase
     }
 
     /**
-     * @requires PHP 7
+     * @requires PHP 8
      */
     public function testRelationsToArray()
     {

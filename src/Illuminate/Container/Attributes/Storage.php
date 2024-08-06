@@ -9,11 +9,14 @@ use Illuminate\Contracts\Container\ContextualAttribute;
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class Storage implements ContextualAttribute
 {
+    public $disk;
+
     /**
      * Create a new class instance.
      */
-    public function __construct(public ?string $disk = null)
+    public function __construct(/*public ?string */$disk = null)
     {
+        $this->disk = backport_type_check('?string', $disk);
     }
 
     /**

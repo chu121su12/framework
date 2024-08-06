@@ -819,7 +819,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
 
         $prefix = backport_type_check('?string', $prefix);
 
-        $prefixHash = hash('xxh128', $prefix ?: $path);
+        $prefixHash = hash(BACKPORT_HASH_xxh128, $prefix ?: $path);
 
         $this->anonymousComponentPaths[] = [
             'path' => $path,

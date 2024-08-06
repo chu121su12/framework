@@ -1853,6 +1853,7 @@ class SupportCollectionTest extends TestCase
         $this->assertEquals([1 => 'a', 3 => 'c', 2 => 'b'], $data->collapseWithKeys()->all());
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testCollapseWithKeysOnNestedCollections($collection)
     {
@@ -1860,6 +1861,7 @@ class SupportCollectionTest extends TestCase
         $this->assertEquals(['a' => '1a', 'b' => '2b', 'c' => '2c'], $data->collapseWithKeys()->all());
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
     public function testJoin($collection)
     {

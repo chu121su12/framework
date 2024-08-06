@@ -7,7 +7,7 @@ use Laravel\SerializableClosure\SerializableClosure;
 use Opis\Closure\SerializableClosure as OpisSerializableClosure;
 
 if (! \defined('BACKPORT_HASH_xxh128')) {
-    define('BACKPORT_HASH_xxh128', 'md5');
+    define('BACKPORT_HASH_xxh128', 'sha1');
 }
 
 if (! \function_exists('backport_instanceof_throwable')) {

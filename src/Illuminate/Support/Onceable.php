@@ -77,7 +77,7 @@ class Onceable
             $callable instanceof Closure ? (new ReflectionClosure($callable))->getClosureUsedVariables() : []
         );
 
-        return hash('xxh128', sprintf(
+        return hash(BACKPORT_HASH_xxh128, sprintf(
             '%s@%s%s:%s (%s)',
             $trace[0]['file'],
             isset($trace[1]['class']) ? ($trace[1]['class'].'@') : '',

@@ -443,7 +443,7 @@ class Handler implements ExceptionHandlerContract
             }
 
             return ! $this->container->make(RateLimiter::class)->attempt(
-                with($throttle->key ?: 'illuminate:foundation:exceptions:'.backport_get_class($e), function ($key) { return $this->hashThrottleKeys ? hash('xxh128', $key) : $key; }),
+                with($throttle->key ?: 'illuminate:foundation:exceptions:'.backport_get_class($e), function ($key) { return $this->hashThrottleKeys ? hash(BACKPORT_HASH_xxh128, $key) : $key; }),
                 $throttle->maxAttempts,
                 function () { return true; },
                 $throttle->decaySeconds

@@ -108,7 +108,7 @@ trait MakesHttpRequests
      * @param  string  $name
      * @return $this
      */
-    public function withoutHeader(string $name)
+    public function withoutHeader(/*string */$name)
     {
         $name = backport_type_check('string', $name);
 

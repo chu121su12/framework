@@ -9,11 +9,14 @@ use Illuminate\Contracts\Container\ContextualAttribute;
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class Database implements ContextualAttribute
 {
+    public $connection;
+
     /**
      * Create a new class instance.
      */
-    public function __construct(public ?string $connection = null)
+    public function __construct(/*public ?string */$connection = null)
     {
+        $this->connection = backport_type_check('?string', $connection);
     }
 
     /**
