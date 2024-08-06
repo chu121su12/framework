@@ -4845,9 +4845,13 @@ SQL;
         $chunk1 = collect(['foo1', 'foo2']);
         $chunk2 = collect(['foo3', 'foo4']);
         $chunk3 = collect([]);
-        $builder->shouldReceive('forPage')->once()->with(1, 2)->andReturnSelf();
-        $builder->shouldReceive('forPage')->once()->with(2, 2)->andReturnSelf();
-        $builder->shouldReceive('forPage')->once()->with(3, 2)->andReturnSelf();
+
+        $builder->shouldReceive('getOffset')->once()->andReturnNull();
+        $builder->shouldReceive('getLimit')->once()->andReturnNull();
+        $builder->shouldReceive('offset')->once()->with(0)->andReturnSelf();
+        $builder->shouldReceive('offset')->once()->with(2)->andReturnSelf();
+        $builder->shouldReceive('offset')->once()->with(4)->andReturnSelf();
+        $builder->shouldReceive('limit')->times(3)->with(2)->andReturnSelf();
         $builder->shouldReceive('get')->times(3)->andReturn($chunk1, $chunk2, $chunk3);
 
         $callbackAssertor = m::mock(stdClass::class);
@@ -4867,8 +4871,12 @@ SQL;
 
         $chunk1 = collect(['foo1', 'foo2']);
         $chunk2 = collect(['foo3']);
-        $builder->shouldReceive('forPage')->once()->with(1, 2)->andReturnSelf();
-        $builder->shouldReceive('forPage')->once()->with(2, 2)->andReturnSelf();
+
+        $builder->shouldReceive('getOffset')->once()->andReturnNull();
+        $builder->shouldReceive('getLimit')->once()->andReturnNull();
+        $builder->shouldReceive('offset')->once()->with(0)->andReturnSelf();
+        $builder->shouldReceive('offset')->once()->with(2)->andReturnSelf();
+        $builder->shouldReceive('limit')->twice()->with(2)->andReturnSelf();
         $builder->shouldReceive('get')->times(2)->andReturn($chunk1, $chunk2);
 
         $callbackAssertor = m::mock(stdClass::class);
@@ -4887,8 +4895,10 @@ SQL;
 
         $chunk1 = collect(['foo1', 'foo2']);
         $chunk2 = collect(['foo3']);
-        $builder->shouldReceive('forPage')->once()->with(1, 2)->andReturnSelf();
-        $builder->shouldReceive('forPage')->never()->with(2, 2);
+        $builder->shouldReceive('getOffset')->once()->andReturnNull();
+        $builder->shouldReceive('getLimit')->once()->andReturnNull();
+        $builder->shouldReceive('offset')->once()->with(0)->andReturnSelf();
+        $builder->shouldReceive('limit')->once()->with(2)->andReturnSelf();
         $builder->shouldReceive('get')->times(1)->andReturn($chunk1);
 
         $callbackAssertor = m::mock(stdClass::class);
@@ -4907,15 +4917,14 @@ SQL;
         $builder = $this->getMockQueryBuilder();
         $builder->orders[] = ['column' => 'foobar', 'direction' => 'asc'];
 
-        $chunk = collect([]);
-        $builder->shouldReceive('forPage')->once()->with(1, 0)->andReturnSelf();
-        $builder->shouldReceive('get')->times(1)->andReturn($chunk);
+        $builder->shouldReceive('getOffset')->once()->andReturnNull();
+        $builder->shouldReceive('getLimit')->once()->andReturnNull();
+        $builder->shouldReceive('offset')->never();
+        $builder->shouldReceive('limit')->never();
+        $builder->shouldReceive('get')->never();
 
-        $callbackAssertor = m::mock(stdClass::class);
-        $callbackAssertor->shouldReceive('doSomething')->never();
-
-        $builder->chunk(0, function ($results) use ($callbackAssertor) {
-            $callbackAssertor->doSomething($results);
+        $builder->chunk(0, function () {
+            $this->fail('Should never be called.');
         });
     }
 
@@ -4990,15 +4999,11 @@ SQL;
         $builder = $this->getMockQueryBuilder();
         $builder->orders[] = ['column' => 'foobar', 'direction' => 'asc'];
 
-        $chunk = collect([]);
-        $builder->shouldReceive('forPageAfterId')->once()->with(0, 0, 'someIdField')->andReturnSelf();
-        $builder->shouldReceive('get')->times(1)->andReturn($chunk);
+        $builder->shouldReceive('forPageAfterId')->never();
+        $builder->shouldReceive('get')->never();
 
-        $callbackAssertor = m::mock(stdClass::class);
-        $callbackAssertor->shouldReceive('doSomething')->never();
-
-        $builder->chunkById(0, function ($results) use ($callbackAssertor) {
-            $callbackAssertor->doSomething($results);
+        $builder->chunkById(0, function () {
+            $this->fail('Should never be called.');
         }, 'someIdField');
     }
 
