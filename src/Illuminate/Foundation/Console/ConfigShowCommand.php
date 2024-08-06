@@ -34,9 +34,7 @@ class ConfigShowCommand extends Command
         $config = $this->argument('config');
 
         if (! config()->has($config)) {
-            $this->components->error("Configuration file or key <comment>{$config}</comment> does not exist.");
-
-            return SymfonyHelper::CONSOLE_FAILURE;
+            $this->fail("Configuration file or key <comment>{$config}</comment> does not exist.");
         }
 
         $this->newLine();

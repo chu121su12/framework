@@ -76,17 +76,11 @@ class EnvironmentEncryptCommand extends Command
         }
 
         if (! $this->files->exists($environmentFile)) {
-            $this->components->error('Environment file not found.');
-
-            // return Command::FAILURE;
-            return SymfonyHelper::CONSOLE_FAILURE;
+            $this->fail('Environment file not found.');
         }
 
         if ($this->files->exists($encryptedFile) && ! $this->option('force')) {
-            $this->components->error('Encrypted environment file already exists.');
-
-            // return Command::FAILURE;
-            return SymfonyHelper::CONSOLE_FAILURE;
+            $this->fail('Encrypted environment file already exists.');
         }
 
         try {
@@ -97,10 +91,7 @@ class EnvironmentEncryptCommand extends Command
                 $encrypter->encrypt($this->files->get($environmentFile))
             );
         } catch (Exception $e) {
-            $this->components->error($e->getMessage());
-
-            // return Command::FAILURE;
-            return SymfonyHelper::CONSOLE_FAILURE;
+            $this->fail($e->getMessage());
         }
 
         if ($this->option('prune')) {

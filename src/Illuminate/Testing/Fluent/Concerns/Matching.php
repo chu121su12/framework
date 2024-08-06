@@ -2,6 +2,7 @@
 
 namespace Illuminate\Testing\Fluent\Concerns;
 
+use BackedEnum;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
@@ -35,6 +36,10 @@ trait Matching
 
         if ($expected instanceof Arrayable) {
             $expected = $expected->toArray();
+        }
+
+        if ($expected instanceof BackedEnum) {
+            $expected = $expected->value;
         }
 
         $this->ensureSorted($expected);
@@ -75,6 +80,10 @@ trait Matching
 
         if ($expected instanceof Arrayable) {
             $expected = $expected->toArray();
+        }
+
+        if ($expected instanceof BackedEnum) {
+            $expected = $expected->value;
         }
 
         $this->ensureSorted($expected);
@@ -169,13 +178,15 @@ trait Matching
             isset($keyedProp) ? $keyedProp : $this->prop()
         );
 
-        $missing = Collection::make($expected)->reject(function ($search) use ($key, $actual) {
-            if ($actual->containsStrict($key, $search)) {
-                return true;
-            }
+        $missing = Collection::make($expected)
+            ->map(fn ($search) => $search instanceof BackedEnum ? $search->value : $search)
+            ->reject(function ($search) use ($key, $actual) {
+                if ($actual->containsStrict($key, $search)) {
+                    return true;
+                }
 
-            return $actual->containsStrict($search);
-        });
+                return $actual->containsStrict($search);
+            });
 
         if ($missing->whereInstanceOf('Closure')->isNotEmpty()) {
             PHPUnit::assertEmpty(

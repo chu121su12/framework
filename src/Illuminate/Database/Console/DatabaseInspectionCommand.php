@@ -4,12 +4,8 @@ namespace Illuminate\Database\Console;
 
 use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
+use Illuminate\Database\Connection;
 use Illuminate\Database\ConnectionInterface;
-use Illuminate\Database\MariaDbConnection;
-use Illuminate\Database\MySqlConnection;
-use Illuminate\Database\PostgresConnection;
-use Illuminate\Database\SQLiteConnection;
-use Illuminate\Database\SqlServerConnection;
 use Illuminate\Support\Arr;
 
 abstract class DatabaseInspectionCommand extends Command
@@ -20,18 +16,12 @@ abstract class DatabaseInspectionCommand extends Command
      * @param  \Illuminate\Database\ConnectionInterface  $connection
      * @param  string  $database
      * @return string
+     *
+     * @deprecated
      */
     protected function getConnectionName(ConnectionInterface $connection, $database)
     {
-        switch (true) {
-            case $connection instanceof MySqlConnection && $connection->isMaria(): return 'MariaDB';
-            case $connection instanceof MySqlConnection: return 'MySQL';
-            case $connection instanceof MariaDbConnection: return 'MariaDB';
-            case $connection instanceof PostgresConnection: return 'PostgreSQL';
-            case $connection instanceof SQLiteConnection: return 'SQLite';
-            case $connection instanceof SqlServerConnection: return 'SQL Server';
-            default: return $database;
-        }
+        return $connection->getDriverTitle();
     }
 
     /**
@@ -39,27 +29,18 @@ abstract class DatabaseInspectionCommand extends Command
      *
      * @param  \Illuminate\Database\ConnectionInterface  $connection
      * @return int|null
+     *
+     * @deprecated
      */
     protected function getConnectionCount(ConnectionInterface $connection)
     {
-        switch (true) {
-            case $connection instanceof MySqlConnection: $result = $connection->selectOne('show status where variable_name = "threads_connected"'); break;
-            case $connection instanceof PostgresConnection: $result = $connection->selectOne('select count(*) as "Value" from pg_stat_activity'); break;
-            case $connection instanceof SqlServerConnection: $result = $connection->selectOne('select count(*) Value from sys.dm_exec_sessions where status = ?', ['running']); break;
-            default: $result = null;
-        }
-
-        if (! $result) {
-            return null;
-        }
-
-        return Arr::wrap((array) $result)['Value'];
+        return $connection->threadCount();
     }
 
     /**
      * Get the connection configuration details for the given connection.
      *
-     * @param  string  $database
+     * @param  string|null  $database
      * @return array
      */
     protected function getConfigFromDatabase($database)

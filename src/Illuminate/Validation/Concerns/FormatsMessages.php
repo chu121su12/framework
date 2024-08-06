@@ -221,7 +221,7 @@ trait FormatsMessages
         // list doesn't have it we'll just consider it a string by elimination.
         switch (true) {
             case $this->hasRule($attribute, $this->numericRules): return 'numeric';
-            case $this->hasRule($attribute, ['Array']): return 'array';
+            case $this->hasRule($attribute, ['Array', 'List']): return 'array';
             case $this->getValue($attribute) instanceof UploadedFile:
             case $this->getValue($attribute) instanceof File: return 'file';
             default: return 'string';

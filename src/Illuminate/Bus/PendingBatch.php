@@ -378,9 +378,7 @@ class PendingBatch
         }
 
         if (isset($e)) {
-            if (isset($batch)) {
-                $batch->delete();
-            }
+            $batch->delete();
 
             throw $e;
         }
