@@ -389,6 +389,12 @@ class FilesystemAdapter implements CloudFilesystemContract
             $headers['Content-Disposition'] = $disposition;
         }
 
+        if (isset($headers['Last-Modified']) && $headers['Last-Modified'] === true) {
+            if ($lastModified = $this->lastModified($path)) {
+                $headers['Last-Modified'] = gmdate('D, d M Y H:i:s \G\M\T', $lastModified);
+            }
+        }
+
         $response->headers->replace($headers);
 
         $response->setCallback(function () use ($path) {
