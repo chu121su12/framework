@@ -1095,7 +1095,7 @@ class PendingRequest
             ->otherwise(function (/*OutOfBoundsException|TransferException */$e) {
                 backport_type_check([OutOfBoundsException::class, TransferException::class], $e);
 
-                if ($e instanceof ConnectException) {
+                if ($e instanceof ConnectException || ($e instanceof RequestException && ! $e->hasResponse())) {
                     $exception = new ConnectionException($e->getMessage(), 0, $e);
 
                     $this->dispatchConnectionFailedEvent(new Request($e->getRequest()), $exception);
@@ -1106,6 +1106,8 @@ class PendingRequest
                 return $e instanceof RequestException && $e->hasResponse() ? $this->populateResponse($this->newResponse($e->getResponse())) : $e;
             })
             ->then(function (/*Response|ConnectionException|TransferException */$response) use ($method, $url, $options, $attempt) {
+                backport_type_check([Response::class, ConnectionException::class, TransferException::class], $response);
+
                 $response = backport_type_check([
                     Response::class,
                     ConnectionException::class,
