@@ -193,7 +193,8 @@ class Exception
      */
     public function applicationRouteParametersContext()
     {
-        $parameters = $this->request()->route()?->parameters();
+        $route = $this->request()->route();
+        $parameters = $route ? $route->parameters() : null;
 
         return $parameters ? json_encode(array_map(
             function ($value) { return $value instanceof Model ? $value->withoutRelations() : $value; },
