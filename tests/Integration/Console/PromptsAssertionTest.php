@@ -100,8 +100,8 @@ class PromptsAssertionTest_testAssertionForSelectPromptWithAnAssociativeArray_cl
                 public function handle()
                 {
                     $name = select(
-                        label: 'What is your name?',
-                        options: ['john' => 'John', 'jane' => 'Jane']
+                        /*label: */'What is your name?',
+                        /*options: */['john' => 'John', 'jane' => 'Jane']
                     );
 
                     $this->line("Your name is $name.");
@@ -115,8 +115,8 @@ class PromptsAssertionTest_testAlternativeAssertionForSelectPromptWithAnAssociat
                 public function handle()
                 {
                     $name = select(
-                        label: 'What is your name?',
-                        options: ['john' => 'John', 'jane' => 'Jane']
+                        /*label: */'What is your name?',
+                        /*options: */['john' => 'John', 'jane' => 'Jane']
                     );
 
                     $this->line("Your name is $name.");
@@ -130,9 +130,11 @@ class PromptsAssertionTest_testAssertionForRequiredMultiselectPrompt_class exten
                 public function handle()
                 {
                     $names = multiselect(
-                        label: 'Which names do you like?',
-                        options: ['John', 'Jane', 'Sally', 'Jack'],
-                        required: true
+                        /*label: */'Which names do you like?',
+                        /*options: */['John', 'Jane', 'Sally', 'Jack'],
+                        $default = [],
+                        $scroll = 5,
+                        /*required: */true
                     );
 
                     $this->line(sprintf('You like %s.', implode(', ', $names)));
@@ -146,8 +148,8 @@ class PromptsAssertionTest_testAssertionForOptionalMultiselectPrompt_class exten
                 public function handle()
                 {
                     $names = multiselect(
-                        label: 'Which names do you like?',
-                        options: ['John', 'Jane', 'Sally', 'Jack'],
+                        /*label: */'Which names do you like?',
+                        /*options: */['John', 'Jane', 'Sally', 'Jack']
                     );
 
                     if (empty($names)) {

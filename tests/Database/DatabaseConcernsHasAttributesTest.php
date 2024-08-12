@@ -55,6 +55,9 @@ class DatabaseConcernsHasAttributesTest extends TestCase
         ], $mock->relationsToArray());
     }
 
+    /**
+     * @requires PHP 8
+     */
     public function testCastingEmptyStringToArrayDoesNotError()
     {
         $instance = new HasAttributesWithArrayCast();

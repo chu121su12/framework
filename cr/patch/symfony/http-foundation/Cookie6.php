@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 class Cookie6 extends Cookie
 {
     private $partitioned = false;
+    private $secureDefault = false;
 
     public function __construct(
         $name,
@@ -33,6 +34,7 @@ class Cookie6 extends Cookie
             $sameSite
         );
 
+        $this->secure = $secure;
         $this->partitioned = $partitioned;
     }
 
@@ -49,5 +51,31 @@ class Cookie6 extends Cookie
     public function isPartitioned()
     {
         return $this->partitioned;
+    }
+
+    public function isSecure()
+    {
+        return (bool) (isset($this->secure) ? $this->secure : $this->secureDefault);
+    }
+
+    public function setSecureDefault($default)
+    {
+        $this->secureDefault = (bool) $default;
+    }
+
+    public static function cloneWithNewValue(Cookie $cookie, $value)
+    {
+        return new Cookie6(
+            $cookie->name,
+            $value,
+            $cookie->expire,
+            $cookie->path,
+            $cookie->domain,
+            $cookie->secure,
+            $cookie->httpOnly,
+            $cookie->isRaw(),
+            $cookie->getSameSite(),
+            \method_exists($cookie, 'isPartitioned') ? $cookie->isPartitioned() : false
+        );
     }
 }

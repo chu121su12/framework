@@ -4,6 +4,7 @@ namespace PHPUnit\Framework\Patch;
 
 use PHPUnit\Framework\Constraint\DirectoryExists;
 use PHPUnit\Framework\Constraint\FileExists;
+use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\Constraint\LogicalNot;
 use PHPUnit\Framework\Constraint\RegularExpression;
 use PHPUnit\Framework\InvalidArgumentException;
@@ -59,5 +60,14 @@ trait LaravelAssertBackport
         $pattern = backport_type_check('string', $pattern);
 
         static::assertThat($string, new RegularExpression($pattern), $message);
+    }
+
+    public static function assertIsResource($actual, $message = '')
+    {
+        static::assertThat(
+            $actual,
+            new IsType(IsType::TYPE_RESOURCE),
+            $message
+        );
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 use JsonSerializable;
+use Symfony\Component\HttpFoundation\Cookie6;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag5 as ResponseHeaderBag;
@@ -139,6 +140,16 @@ class Response extends SymfonyResponse
             && 1 == preg_match('/MSIE (.*?);/i', isset($htpUserAgent) ? $htpUserAgent : '', $match) && true === $request->isSecure()) {
             if ((int) preg_replace('/(MSIE )(.*?);/', '$2', $match[0]) < 9) {
                 $this->headers->remove('Cache-Control');
+            }
+        }
+
+        if ($request->isSecure()) {
+            $headers = $this->headers;
+
+            foreach ($headers->getCookies() as $cookie) {
+                if ($cookie instanceof Cookie6) {
+                    $cookie->setSecureDefault(true);
+                }
             }
         }
     }

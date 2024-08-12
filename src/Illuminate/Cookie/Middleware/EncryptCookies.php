@@ -208,18 +208,7 @@ class EncryptCookies
      */
     protected function duplicate(Cookie $cookie, $value)
     {
-        return new Cookie6(
-            $cookie->getName(),
-            $value,
-            $cookie->getExpiresTime(),
-            $cookie->getPath(),
-            $cookie->getDomain(),
-            $cookie->isSecure(),
-            $cookie->isHttpOnly(),
-            $cookie->isRaw(),
-            $cookie->getSameSite(),
-            \method_exists($cookie, 'isPartitioned') ? $cookie->isPartitioned() : false
-        );
+        return Cookie6::cloneWithNewValue($cookie, $value);
     }
 
     /**

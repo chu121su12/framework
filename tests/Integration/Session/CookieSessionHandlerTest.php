@@ -22,7 +22,7 @@ class CookieSessionHandlerTest extends TestCase
 
     public function testCookieSessionInheritsRequestSecureState()
     {
-        Route::get('/', fn () => '')->middleware('web');
+        Route::get('/', function () { return ''; })->middleware('web');
 
         $unsecureResponse = $this->get('/');
         $unsecureSessionIdCookie = $unsecureResponse->getCookie('laravel_session');
