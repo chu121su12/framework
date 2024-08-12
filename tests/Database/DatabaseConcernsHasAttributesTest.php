@@ -54,4 +54,12 @@ class DatabaseConcernsHasAttributesTest extends TestCase
             'null_relation' => null,
         ], $mock->relationsToArray());
     }
+
+    public function testCastingEmptyStringToArrayDoesNotError()
+    {
+        $instance = new HasAttributesWithArrayCast();
+        $this->assertEquals(['foo' => null], $instance->attributesToArray());
+
+        $this->assertTrue(json_last_error() === JSON_ERROR_NONE);
+    }
 }
