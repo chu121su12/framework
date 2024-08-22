@@ -1040,7 +1040,7 @@ class Container implements ArrayAccess, ContainerContract
 
             $result = null;
 
-            if (! is_null($attribute = $this->getContextualAttributeFromDependency($dependency))) {
+            if (! is_null($attribute = Util::getContextualAttributeFromDependency($dependency))) {
                 $result = $this->resolveFromAttribute($attribute);
             }
 
@@ -1099,23 +1099,6 @@ class Container implements ArrayAccess, ContainerContract
     protected function getLastParameterOverride()
     {
         return count($this->with) ? end($this->with) : [];
-    }
-
-    /**
-     * Get a contextual attribute from a dependency.
-     *
-     * @param  ReflectionParameter  $dependency
-     * @return \ReflectionAttribute|null
-     */
-    protected function getContextualAttributeFromDependency($dependency)
-    {
-        if (! class_exists(ReflectionAttribute::class)) {
-            return null;
-        }
-
-        $attribute = $dependency->getAttributes(ContextualAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
-
-        return isset($attribute[0]) ? $attribute[0] : null;
     }
 
     /**
@@ -1206,7 +1189,7 @@ class Container implements ArrayAccess, ContainerContract
      * @param  \ReflectionAttribute  $attribute
      * @return mixed
      */
-    protected function resolveFromAttribute(ReflectionAttribute $attribute)
+    public function resolveFromAttribute(ReflectionAttribute $attribute)
     {
         $namedAttribute = $this->contextualAttributes[$attribute->getName()];
 
@@ -1409,7 +1392,7 @@ class Container implements ArrayAccess, ContainerContract
      * @param  mixed  $object
      * @return void
      */
-    protected function fireAfterResolvingAttributeCallbacks(array $attributes, $object)
+    public function fireAfterResolvingAttributeCallbacks(array $attributes, $object)
     {
         foreach ($attributes as $attribute) {
             try {
