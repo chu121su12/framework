@@ -1363,49 +1363,52 @@ class FoundationViteTest extends TestCase
             ['rel' => 'prefetch', 'href' => "https://example.com/{$buildDir}/assets/UpdateProfileInformationForm-CJwkYwQQ.js", 'fetchpriority' => 'low'],
             ['rel' => 'prefetch', 'href' => "https://example.com/{$buildDir}/assets/Welcome-D_7l79PQ.js", 'fetchpriority' => 'low'],
         ]);
-        $this->assertSame(<<<HTML
-        <link rel="preload" as="style" href="https://example.com/{$buildDir}/assets/index-B3s1tYeC.css" /><link rel="modulepreload" href="https://example.com/{$buildDir}/assets/app-lliD09ip.js" /><link rel="modulepreload" href="https://example.com/{$buildDir}/assets/index-BSdK3M0e.js" /><link rel="stylesheet" href="https://example.com/{$buildDir}/assets/index-B3s1tYeC.css" /><script type="module" src="https://example.com/{$buildDir}/assets/app-lliD09ip.js"></script>
-        <script>
-             window.addEventListener('load', () => window.setTimeout(() => {
-                const makeLink = (asset) => {
-                    const link = document.createElement('link')
 
-                    Object.keys(asset).forEach((attribute) => {
-                        link.setAttribute(attribute, asset[attribute])
-                    })
+        $expected = <<<HTML
+<link rel="preload" as="style" href="https://example.com/{$buildDir}/assets/index-B3s1tYeC.css" /><link rel="modulepreload" href="https://example.com/{$buildDir}/assets/app-lliD09ip.js" /><link rel="modulepreload" href="https://example.com/{$buildDir}/assets/index-BSdK3M0e.js" /><link rel="stylesheet" href="https://example.com/{$buildDir}/assets/index-B3s1tYeC.css" /><script type="module" src="https://example.com/{$buildDir}/assets/app-lliD09ip.js"></script>
+<script>
+        window.addEventListener('load', () => window.setTimeout(() => {
+        const makeLink = (asset) => {
+            const link = document.createElement('link')
 
-                    return link
+            Object.keys(asset).forEach((attribute) => {
+                link.setAttribute(attribute, asset[attribute])
+            })
+
+            return link
+        }
+
+        const loadNext = (assets, count) => window.setTimeout(() => {
+            if (count > assets.length) {
+                count = assets.length
+
+                if (count === 0) {
+                    return
                 }
+            }
 
-                const loadNext = (assets, count) => window.setTimeout(() => {
-                    if (count > assets.length) {
-                        count = assets.length
+            const fragment = new DocumentFragment
 
-                        if (count === 0) {
-                            return
-                        }
-                    }
+            while (count > 0) {
+                const link = makeLink(assets.shift())
+                fragment.append(link)
+                count--
 
-                    const fragment = new DocumentFragment
+                if (assets.length) {
+                    link.onload = () => loadNext(assets, 1)
+                    link.error = () => loadNext(assets, 1)
+                }
+            }
 
-                    while (count > 0) {
-                        const link = makeLink(assets.shift())
-                        fragment.append(link)
-                        count--
+            document.head.append(fragment)
+        })
 
-                        if (assets.length) {
-                            link.onload = () => loadNext(assets, 1)
-                            link.error = () => loadNext(assets, 1)
-                        }
-                    }
+        loadNext({$expectedAssets}, 3)
+    }))
+</script>
+HTML;
 
-                    document.head.append(fragment)
-                })
-
-                loadNext({$expectedAssets}, 3)
-            }))
-        </script>
-        HTML, $html);
+        $this->assertSame($expected, $html);
 
         $this->cleanViteManifest($buildDir);
     }
@@ -1433,9 +1436,12 @@ class FoundationViteTest extends TestCase
             ['rel' => 'prefetch', 'href' => "https://example.com/{$buildDir}/assets/UpdateProfileInformationForm-CJwkYwQQ.js", 'fetchpriority' => 'low'],
             ['rel' => 'prefetch', 'href' => "https://example.com/{$buildDir}/assets/Welcome-D_7l79PQ.js", 'fetchpriority' => 'low'],
         ]);
-        $this->assertStringContainsString(<<<JAVASCRIPT
-                loadNext({$expectedAssets}, 3)
-            JAVASCRIPT, $html);
+
+        $expected = <<<JAVASCRIPT
+    loadNext({$expectedAssets}, 3)
+JAVASCRIPT;
+
+        $this->assertStringContainsString($expected, $html);
 
         $this->cleanViteManifest($buildDir);
     }
@@ -1447,7 +1453,7 @@ class FoundationViteTest extends TestCase
         $this->makeViteManifest($manifest, $buildDir);
         app()->usePublicPath(__DIR__);
 
-        $html = (string) ViteFacade::withEntryPoints(['resources/js/app.js'])->useBuildDirectory($buildDir)->useWaterfallPrefetching(concurrency: 10)->toHtml();
+        $html = (string) ViteFacade::withEntryPoints(['resources/js/app.js'])->useBuildDirectory($buildDir)->useWaterfallPrefetching(/*concurrency: */10)->toHtml();
 
         $expectedAssets = Js::from([
             ['rel' => 'prefetch', 'href' => "https://example.com/{$buildDir}/assets/ConfirmPassword-CDwcgU8E.js", 'fetchpriority' => 'low'],
@@ -1469,9 +1475,12 @@ class FoundationViteTest extends TestCase
             ['rel' => 'prefetch', 'href' => "https://example.com/{$buildDir}/assets/UpdateProfileInformationForm-CJwkYwQQ.js", 'fetchpriority' => 'low'],
             ['rel' => 'prefetch', 'href' => "https://example.com/{$buildDir}/assets/Welcome-D_7l79PQ.js", 'fetchpriority' => 'low'],
         ]);
-        $this->assertStringContainsString(<<<JAVASCRIPT
-                loadNext({$expectedAssets}, 10)
-            JAVASCRIPT, $html);
+
+        $expected = <<<JAVASCRIPT
+    loadNext({$expectedAssets}, 10)
+JAVASCRIPT;
+
+        $this->assertStringContainsString($expected, $html);
 
         $this->cleanViteManifest($buildDir);
     }
@@ -1506,26 +1515,28 @@ class FoundationViteTest extends TestCase
             ['rel' => 'prefetch', 'href' => "https://example.com/{$buildDir}/assets/Welcome-D_7l79PQ.js", 'fetchpriority' => 'low'],
         ]);
 
-        $this->assertSame(<<<HTML
-        <link rel="preload" as="style" href="https://example.com/{$buildDir}/assets/index-B3s1tYeC.css" /><link rel="modulepreload" href="https://example.com/{$buildDir}/assets/app-lliD09ip.js" /><link rel="modulepreload" href="https://example.com/{$buildDir}/assets/index-BSdK3M0e.js" /><link rel="stylesheet" href="https://example.com/{$buildDir}/assets/index-B3s1tYeC.css" /><script type="module" src="https://example.com/{$buildDir}/assets/app-lliD09ip.js"></script>
-        <script>
-             window.addEventListener('load', () => window.setTimeout(() => {
-                const makeLink = (asset) => {
-                    const link = document.createElement('link')
+        $expected = <<<HTML
+<link rel="preload" as="style" href="https://example.com/{$buildDir}/assets/index-B3s1tYeC.css" /><link rel="modulepreload" href="https://example.com/{$buildDir}/assets/app-lliD09ip.js" /><link rel="modulepreload" href="https://example.com/{$buildDir}/assets/index-BSdK3M0e.js" /><link rel="stylesheet" href="https://example.com/{$buildDir}/assets/index-B3s1tYeC.css" /><script type="module" src="https://example.com/{$buildDir}/assets/app-lliD09ip.js"></script>
+<script>
+        window.addEventListener('load', () => window.setTimeout(() => {
+        const makeLink = (asset) => {
+            const link = document.createElement('link')
 
-                    Object.keys(asset).forEach((attribute) => {
-                        link.setAttribute(attribute, asset[attribute])
-                    })
+            Object.keys(asset).forEach((attribute) => {
+                link.setAttribute(attribute, asset[attribute])
+            })
 
-                    return link
-                }
+            return link
+        }
 
-                const fragment = new DocumentFragment
-                {$expectedAssets}.forEach((asset) => fragment.append(makeLink(asset)))
-                document.head.append(fragment)
-             }))
-        </script>
-        HTML, $html);
+        const fragment = new DocumentFragment
+        {$expectedAssets}.forEach((asset) => fragment.append(makeLink(asset)))
+        document.head.append(fragment)
+        }))
+</script>
+HTML;
+
+        $this->assertSame($expected, $html);
 
         $this->cleanViteManifest($buildDir);
     }
@@ -1559,9 +1570,12 @@ class FoundationViteTest extends TestCase
             ['rel' => 'prefetch', 'href' => "https://example.com/{$buildDir}/assets/UpdateProfileInformationForm-CJwkYwQQ.js", 'nonce' => 'abc123', 'fetchpriority' => 'low'],
             ['rel' => 'prefetch', 'href' => "https://example.com/{$buildDir}/assets/Welcome-D_7l79PQ.js", 'nonce' => 'abc123', 'fetchpriority' => 'low'],
         ]);
-        $this->assertStringContainsString(<<<JAVASCRIPT
-                loadNext({$expectedAssets}, 3)
-        JAVASCRIPT, $html);
+
+        $expected = <<<JAVASCRIPT
+    loadNext({$expectedAssets}, 3)
+JAVASCRIPT;
+
+        $this->assertStringContainsString($expected, $html);
 
         $this->cleanViteManifest($buildDir);
     }
@@ -1602,9 +1616,11 @@ class FoundationViteTest extends TestCase
             ['rel' => 'prefetch', 'href' => "https://example.com/{$buildDir}/assets/Welcome-D_7l79PQ.js", 'key' => 'value', 'key-only' => 'key-only', 'true-value' => 'true-value', 'fetchpriority' => 'low'],
         ]);
 
-        $this->assertStringContainsString(<<<JAVASCRIPT
-                loadNext({$expectedAssets}, 3)
-        JAVASCRIPT, $html);
+        $expected = <<<JAVASCRIPT
+    loadNext({$expectedAssets}, 3)
+JAVASCRIPT;
+
+        $this->assertStringContainsString($expected, $html);
 
         $this->cleanViteManifest($buildDir);
     }
@@ -1641,49 +1657,52 @@ class FoundationViteTest extends TestCase
             ['rel' => 'prefetch', 'href' => "https://example.com/{$buildDir}/assets/admin-runtime-import-import-DKMIaPXC.js", 'fetchpriority' => 'low'],
             ['rel' => 'prefetch', 'as' => 'style', 'href' => "https://example.com/{$buildDir}/assets/admin-runtime-import-BlmN0T4U.css", 'fetchpriority' => 'low'],
         ]);
-        $this->assertSame(<<<HTML
-        <link rel="preload" as="style" href="https://example.com/{$buildDir}/assets/index-B3s1tYeC.css" /><link rel="preload" as="style" href="https://example.com/{$buildDir}/assets/admin-BctAalm_.css" /><link rel="modulepreload" href="https://example.com/{$buildDir}/assets/admin-Sefg0Q45.js" /><link rel="modulepreload" href="https://example.com/{$buildDir}/assets/index-BSdK3M0e.js" /><link rel="stylesheet" href="https://example.com/{$buildDir}/assets/index-B3s1tYeC.css" /><link rel="stylesheet" href="https://example.com/{$buildDir}/assets/admin-BctAalm_.css" /><script type="module" src="https://example.com/{$buildDir}/assets/admin-Sefg0Q45.js"></script>
-        <script>
-             window.addEventListener('load', () => window.setTimeout(() => {
-                const makeLink = (asset) => {
-                    const link = document.createElement('link')
 
-                    Object.keys(asset).forEach((attribute) => {
-                        link.setAttribute(attribute, asset[attribute])
-                    })
+        $expected = <<<HTML
+<link rel="preload" as="style" href="https://example.com/{$buildDir}/assets/index-B3s1tYeC.css" /><link rel="preload" as="style" href="https://example.com/{$buildDir}/assets/admin-BctAalm_.css" /><link rel="modulepreload" href="https://example.com/{$buildDir}/assets/admin-Sefg0Q45.js" /><link rel="modulepreload" href="https://example.com/{$buildDir}/assets/index-BSdK3M0e.js" /><link rel="stylesheet" href="https://example.com/{$buildDir}/assets/index-B3s1tYeC.css" /><link rel="stylesheet" href="https://example.com/{$buildDir}/assets/admin-BctAalm_.css" /><script type="module" src="https://example.com/{$buildDir}/assets/admin-Sefg0Q45.js"></script>
+<script>
+        window.addEventListener('load', () => window.setTimeout(() => {
+        const makeLink = (asset) => {
+            const link = document.createElement('link')
 
-                    return link
+            Object.keys(asset).forEach((attribute) => {
+                link.setAttribute(attribute, asset[attribute])
+            })
+
+            return link
+        }
+
+        const loadNext = (assets, count) => window.setTimeout(() => {
+            if (count > assets.length) {
+                count = assets.length
+
+                if (count === 0) {
+                    return
                 }
+            }
 
-                const loadNext = (assets, count) => window.setTimeout(() => {
-                    if (count > assets.length) {
-                        count = assets.length
+            const fragment = new DocumentFragment
 
-                        if (count === 0) {
-                            return
-                        }
-                    }
+            while (count > 0) {
+                const link = makeLink(assets.shift())
+                fragment.append(link)
+                count--
 
-                    const fragment = new DocumentFragment
+                if (assets.length) {
+                    link.onload = () => loadNext(assets, 1)
+                    link.error = () => loadNext(assets, 1)
+                }
+            }
 
-                    while (count > 0) {
-                        const link = makeLink(assets.shift())
-                        fragment.append(link)
-                        count--
+            document.head.append(fragment)
+        })
 
-                        if (assets.length) {
-                            link.onload = () => loadNext(assets, 1)
-                            link.error = () => loadNext(assets, 1)
-                        }
-                    }
+        loadNext({$expectedAssets}, 3)
+    }))
+</script>
+HTML;
 
-                    document.head.append(fragment)
-                })
-
-                loadNext({$expectedAssets}, 3)
-            }))
-        </script>
-        HTML, $html);
+        $this->assertSame($expected, $html);
 
         $this->cleanViteManifest($buildDir);
     }

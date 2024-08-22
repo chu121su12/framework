@@ -40,7 +40,9 @@ class TableCommand extends DatabaseInspectionCommand
         $connection = $connections->connection($this->input->getOption('database'));
         $schema = $connection->getSchemaBuilder();
         $tables = collect($schema->getTables())
-            ->keyBy(fn ($table) => $table['schema'] ? $table['schema'].'.'.$table['name'] : $table['name'])
+            ->keyBy(function ($table) {
+                return $table['schema'] ? $table['schema'].'.'.$table['name'] : $table['name'];
+            })
             ->all();
 
         $tableName = $this->argument('table') ?: select(
@@ -48,7 +50,9 @@ class TableCommand extends DatabaseInspectionCommand
             array_keys($tables)
         );
 
-        $table = $tables[$tableName] ?? Arr::first($tables, fn ($table) => $table['name'] === $tableName);
+        $table = isset($tables[$tableName]) ? $tables[$tableName] : Arr::first($tables, function ($table) use ($tableName) {
+            return $table['name'] === $tableName;
+        });
 
         if (! $table) {
             $this->components->warn("Table [{$tableName}] doesn't exist.");

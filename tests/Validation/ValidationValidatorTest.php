@@ -1240,7 +1240,7 @@ class ValidationValidatorTest extends TestCase
         $trans = $this->getIlluminateArrayTranslator();
         $validator = new Validator($trans,
             ['foo' => true],
-            ['foo' => function (string $attribute, mixed $value, \Closure $fail) {
+            ['foo' => function (/*string */$attribute, /*mixed */$value, \Closure $fail) {
                 $fail(':attribute must be false');
             },
             ], ['foo' => ['required' => 'Foo is required']]);

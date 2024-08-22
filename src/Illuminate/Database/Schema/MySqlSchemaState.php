@@ -155,8 +155,10 @@ class MySqlSchemaState extends SchemaState
      * @param  int  $depth
      * @return \Symfony\Component\Process\Process
      */
-    protected function executeDumpProcess(Process $process, $output, array $variables, int $depth = 0)
+    protected function executeDumpProcess(Process $process, $output, array $variables, /*int */$depth = 0)
     {
+        $depth = backport_type_check('int', $depth);
+
         if ($depth > 30) {
             throw new Exception('Dump execution exceeded maximum depth of 30.');
         }

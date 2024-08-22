@@ -27,10 +27,10 @@ trait InteractsWithDatabase
     protected function assertDatabaseHas($table, array $data = [], $connection = null)
     {
         if ($table instanceof Model) {
-            $data = [
-                $table->getKeyName() => $table->getKey(),
-                ...$data,
-            ];
+            $data = \array_merge(
+                [$table->getKeyName() => $table->getKey()],
+                $data
+            );
         }
 
         $this->assertThat(
@@ -51,10 +51,10 @@ trait InteractsWithDatabase
     protected function assertDatabaseMissing($table, array $data = [], $connection = null)
     {
         if ($table instanceof Model) {
-            $data = [
-                $table->getKeyName() => $table->getKey(),
-                ...$data,
-            ];
+            $data = \array_merge(
+                [$table->getKeyName() => $table->getKey()],
+                $data
+            );
         }
 
         $constraint = new ReverseConstraint(

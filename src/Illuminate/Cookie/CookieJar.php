@@ -2,6 +2,7 @@
 
 namespace Illuminate\Cookie;
 
+use ArgumentCountError;
 use Illuminate\Contracts\Cookie\QueueingFactory as JarContract;
 use Illuminate\Support\Arr;
 use Illuminate\Support\InteractsWithTime;
@@ -143,6 +144,8 @@ class CookieJar implements JarContract
     {
         if (isset($parameters[0]) && $parameters[0] instanceof Cookie) {
             $cookie = $parameters[0];
+        } elseif (count($parameters) < 2) {
+            throw new ArgumentCountError();
         } else {
             $cookie = $this->make(...array_values($parameters));
         }

@@ -1114,20 +1114,28 @@ class RoutingRouteTest extends TestCase
         $this->assertSame('TAYLOR', $router->dispatch(Request::create('foo/taylor', 'GET'))->getContent());
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testRouteDependenciesCanBeResolvedThroughAttributes()
     {
         $container = new Container;
-        $container->singleton('config', fn () => new Repository([
+        $container->singleton('config', function () { return new Repository([
             'app' => [
                 'timezone' => 'Europe/Paris',
             ],
-        ]));
+        ]); });
         $router = new Router(new Dispatcher, $container);
         $container->instance(Registrar::class, $router);
-        $container->bind(CallableDispatcherContract::class, fn ($app) => new CallableDispatcher($app));
+        $container->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
         $router->get('foo', [
             'middleware' => SubstituteBindings::class,
-            'uses' => function (#[Config('app.timezone')] string $value) {
+            'uses' => function (
+                #[Config('app.timezone')] 
+                /*string */$value
+            ) {
+                $value = backport_type_check('string', $value);
+
                 return $value;
             },
         ]);
@@ -1135,12 +1143,15 @@ class RoutingRouteTest extends TestCase
         $this->assertSame('Europe/Paris', $router->dispatch(Request::create('foo', 'GET'))->getContent());
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testAfterResolvingAttributeCallbackIsCalledOnRouteDependenciesResolution()
     {
         $container = new Container();
         $router = new Router(new Dispatcher, $container);
         $container->instance(Registrar::class, $router);
-        $container->bind(CallableDispatcherContract::class, fn ($app) => new CallableDispatcher($app));
+        $container->bind(CallableDispatcherContract::class, function ($app) { return new CallableDispatcher($app); });
 
         $container->afterResolvingAttribute(RoutingTestOnTenant::class, function (RoutingTestOnTenant $attribute, RoutingTestHasTenantImpl $hasTenantImpl, Container $container) {
             $hasTenantImpl->onTenant($attribute->tenant);
@@ -1148,7 +1159,10 @@ class RoutingRouteTest extends TestCase
 
         $router->get('foo', [
             'middleware' => SubstituteBindings::class,
-            'uses' => function (#[RoutingTestOnTenant(RoutingTestTenant::TenantA)] RoutingTestHasTenantImpl $property) {
+            'uses' => function (
+                #[RoutingTestOnTenant(RoutingTestTenant::TenantA)]
+                RoutingTestHasTenantImpl $property
+            ) {
                 return $property->tenant->name;
             },
         ]);
@@ -2692,30 +2706,5 @@ class ExampleMiddleware implements ExampleMiddlewareContract
     public function handle($request, Closure $next)
     {
         return $next($request);
-    }
-}
-
-#[Attribute(Attribute::TARGET_PARAMETER)]
-final class RoutingTestOnTenant
-{
-    public function __construct(
-        public readonly RoutingTestTenant $tenant
-    ) {
-    }
-}
-
-enum RoutingTestTenant
-{
-    case TenantA;
-    case TenantB;
-}
-
-final class RoutingTestHasTenantImpl
-{
-    public ?RoutingTestTenant $tenant = null;
-
-    public function onTenant(RoutingTestTenant $tenant): void
-    {
-        $this->tenant = $tenant;
     }
 }

@@ -49,8 +49,12 @@ trait Has
      * @param  int|string  $max
      * @return $this
      */
-    public function countBetween(int|string $min, int|string $max): self
+    public function countBetween(/*int|string */$min, /*int|string */$max)/*: self*/
     {
+        $max = backport_type_check('int|string', $max, true);
+
+        $min = backport_type_check('int|string', $min, true);
+
         $path = $this->dotPath();
 
         $prop = $this->prop();

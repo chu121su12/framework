@@ -92,6 +92,12 @@ class Util
      */
     public static function getContextualAttributeFromDependency($dependency)
     {
-        return $dependency->getAttributes(ContextualAttribute::class, ReflectionAttribute::IS_INSTANCEOF)[0] ?? null;
+        if (! class_exists(ReflectionAttribute::class)) {
+            return null;
+        }
+
+        $attribute = $dependency->getAttributes(ContextualAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
+
+        return isset($attribute[0]) ? $attribute[0] : null;
     }
 }

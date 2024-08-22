@@ -287,10 +287,12 @@ class Vite implements Htmlable
      * @param  int|null  $concurrency
      * @return $this
      */
-    public function useWaterfallPrefetching(?int $concurrency = null)
+    public function useWaterfallPrefetching(/*?int */$concurrency = null)
     {
+        $concurrency = backport_type_check('?int', $concurrency);
+
         return $this->usePrefetchStrategy('waterfall', [
-            'concurrency' => $concurrency ?? $this->prefetchConcurrently,
+            'concurrency' => isset($concurrency) ? $concurrency : $this->prefetchConcurrently,
         ]);
     }
 
@@ -316,7 +318,7 @@ class Vite implements Htmlable
         $this->prefetchStrategy = $strategy;
 
         if ($strategy === 'waterfall') {
-            $this->prefetchConcurrently = $config['concurrency'] ?? $this->prefetchConcurrently;
+            $this->prefetchConcurrently = isset($config['concurrency']) ? $config['concurrency'] : $this->prefetchConcurrently;
         }
 
         return $this;
@@ -430,11 +432,14 @@ class Vite implements Htmlable
         $discoveredImports = [];
 
         return collect($entrypoints)
-            ->flatMap(fn ($entrypoint) => collect($manifest[$entrypoint]['dynamicImports'] ?? [])
-                ->map(fn ($import) => $manifest[$import])
-                ->filter(fn ($chunk) => str_ends_with($chunk['file'], '.js') || str_ends_with($chunk['file'], '.css'))
+            ->flatMap(function ($entrypoint) use ($manifest, $buildDirectory, &$discoveredImports) { return collect(isset($manifest[$entrypoint]) && isset($manifest[$entrypoint]['dynamicImports']) ? $manifest[$entrypoint]['dynamicImports'] : [])
+                ->map(function ($import) use ($manifest) { return $manifest[$import]; })
+                ->filter(function ($chunk) { return str_ends_with($chunk['file'], '.js') || str_ends_with($chunk['file'], '.css'); })
                 ->flatMap($f = function ($chunk) use (&$f, $manifest, &$discoveredImports) {
-                    return collect([...$chunk['imports'] ?? [], ...$chunk['dynamicImports'] ?? []])
+                    return collect(\array_merge(
+                            isset($chunk['imports']) ? $chunk['imports'] : [],
+                            isset($chunk['dynamicImports']) ? $chunk['dynamicImports'] : []
+                        ))
                         ->reject(function ($import) use (&$discoveredImports) {
                             if (isset($discoveredImports[$import])) {
                                 return true;
@@ -443,100 +448,114 @@ class Vite implements Htmlable
                             return ! $discoveredImports[$import] = true;
                         })
                         ->reduce(
-                            fn ($chunks, $import) => $chunks->merge(
+                            function ($chunks, $import) use ($f, $manifest) { return $chunks->merge(
                                 $f($manifest[$import])
-                            ), collect([$chunk]))
-                        ->merge(collect($chunk['css'] ?? [])->map(
-                            fn ($css) => collect($manifest)->first(fn ($chunk) => $chunk['file'] === $css) ?? [
-                                'file' => $css,
-                            ],
+                            ); }, collect([$chunk]))
+                        ->merge(collect(isset($chunk['css']) ? $chunk['css'] : [])->map(
+                            function ($css) use ($manifest) {
+                                $first = collect($manifest)->first(function ($chunk) use ($css) { return $chunk['file'] === $css; });
+
+                                return isset($first) ? $first : [
+                                    'file' => $css,
+                                ];
+                            }
                         ));
                 })
                 ->map(function ($chunk) use ($buildDirectory, $manifest) {
-                    return collect([
-                        ...$this->resolvePreloadTagAttributes(
-                            $chunk['src'] ?? null,
+                    return collect(\array_merge(
+                        $this->resolvePreloadTagAttributes(
+                            isset($chunk['src']) ? $chunk['src'] : null,
                             $url = $this->assetPath("{$buildDirectory}/{$chunk['file']}"),
                             $chunk,
-                            $manifest,
+                            $manifest
                         ),
-                        'rel' => 'prefetch',
-                        'fetchpriority' => 'low',
-                        'href' => $url,
-                    ])->reject(
-                        fn ($value) => in_array($value, [null, false], true)
-                    )->mapWithKeys(fn ($value, $key) => [
+                        ['rel' => 'prefetch'],
+                        ['fetchpriority' => 'low'],
+                        ['href' => $url]
+                    ))->reject(
+                        function ($value) { return in_array($value, [null, false], true); }
+                    )->mapWithKeys(function ($value, $key) { return [
                         $key = (is_int($key) ? $value : $key) => $value === true ? $key : $value,
-                    ])->all();
+                    ]; })->all();
                 })
-                ->reject(fn ($attributes) => isset($this->preloadedAssets[$attributes['href']])))
+                ->reject(function ($attributes) {
+                    return isset($this->preloadedAssets[$attributes['href']]);
+                }) ;})
             ->unique('href')
             ->values()
-            ->pipe(fn ($assets) => with(Js::from($assets), fn ($assets) => match ($this->prefetchStrategy) {
-                'waterfall' => new HtmlString($base.<<<HTML
+            ->pipe(function ($assets) use ($base) { return with(Js::from($assets), function ($assets) use ($base) { switch ($this->prefetchStrategy) {
+                case 'waterfall':
+                    $html = <<<HTML
 
-                    <script>
-                         window.addEventListener('load', () => window.setTimeout(() => {
-                            const makeLink = (asset) => {
-                                const link = document.createElement('link')
+<script>
+        window.addEventListener('load', () => window.setTimeout(() => {
+        const makeLink = (asset) => {
+            const link = document.createElement('link')
 
-                                Object.keys(asset).forEach((attribute) => {
-                                    link.setAttribute(attribute, asset[attribute])
-                                })
+            Object.keys(asset).forEach((attribute) => {
+                link.setAttribute(attribute, asset[attribute])
+            })
 
-                                return link
-                            }
+            return link
+        }
 
-                            const loadNext = (assets, count) => window.setTimeout(() => {
-                                if (count > assets.length) {
-                                    count = assets.length
+        const loadNext = (assets, count) => window.setTimeout(() => {
+            if (count > assets.length) {
+                count = assets.length
 
-                                    if (count === 0) {
-                                        return
-                                    }
-                                }
+                if (count === 0) {
+                    return
+                }
+            }
 
-                                const fragment = new DocumentFragment
+            const fragment = new DocumentFragment
 
-                                while (count > 0) {
-                                    const link = makeLink(assets.shift())
-                                    fragment.append(link)
-                                    count--
+            while (count > 0) {
+                const link = makeLink(assets.shift())
+                fragment.append(link)
+                count--
 
-                                    if (assets.length) {
-                                        link.onload = () => loadNext(assets, 1)
-                                        link.error = () => loadNext(assets, 1)
-                                    }
-                                }
+                if (assets.length) {
+                    link.onload = () => loadNext(assets, 1)
+                    link.error = () => loadNext(assets, 1)
+                }
+            }
 
-                                document.head.append(fragment)
-                            })
+            document.head.append(fragment)
+        })
 
-                            loadNext({$assets}, {$this->prefetchConcurrently})
-                        }))
-                    </script>
-                    HTML),
-                'aggressive' => new HtmlString($base.<<<HTML
+        loadNext({$assets}, {$this->prefetchConcurrently})
+    }))
+</script>
+HTML;
 
-                    <script>
-                         window.addEventListener('load', () => window.setTimeout(() => {
-                            const makeLink = (asset) => {
-                                const link = document.createElement('link')
+                    return new HtmlString($base.$html);
 
-                                Object.keys(asset).forEach((attribute) => {
-                                    link.setAttribute(attribute, asset[attribute])
-                                })
+                case 'aggressive':
+                    $html = <<<HTML
 
-                                return link
-                            }
+<script>
+        window.addEventListener('load', () => window.setTimeout(() => {
+        const makeLink = (asset) => {
+            const link = document.createElement('link')
 
-                            const fragment = new DocumentFragment
-                            {$assets}.forEach((asset) => fragment.append(makeLink(asset)))
-                            document.head.append(fragment)
-                         }))
-                    </script>
-                    HTML),
-            }));
+            Object.keys(asset).forEach((attribute) => {
+                link.setAttribute(attribute, asset[attribute])
+            })
+
+            return link
+        }
+
+        const fragment = new DocumentFragment
+        {$assets}.forEach((asset) => fragment.append(makeLink(asset)))
+        document.head.append(fragment)
+        }))
+</script>
+HTML;
+
+                    return new HtmlString($base.$html);
+
+            }}) ;});
     }
 
     /**

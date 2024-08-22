@@ -38,7 +38,7 @@ class CookieTest extends TestCase
         $this->assertTrue($c3->getExpiresTime() < time());
     }
 
-    public function testCookiesAreCreatedWithProperOptionsUsingDefaultPathAndDomain(): void
+    public function testCookiesAreCreatedWithProperOptionsUsingDefaultPathAndDomain()/*: void*/
     {
         $cookie = $this->getCreator();
         $cookie->setDefaultPathAndDomain('/path', '/domain', true, 'lax');
@@ -63,7 +63,7 @@ class CookieTest extends TestCase
         $this->assertSame('lax', $c->getSameSite());
     }
 
-    public function testQueuedCookiesWithoutName(): void
+    public function testQueuedCookiesWithoutName()/*: void*/
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -71,7 +71,7 @@ class CookieTest extends TestCase
         $cookie->queue($cookie->make('', 'bar'));
     }
 
-    public function testQueuedCookiesWithInvalidParameter(): void
+    public function testQueuedCookiesWithInvalidParameter()/*: void*/
     {
         $this->expectException(ArgumentCountError::class);
 
@@ -79,7 +79,7 @@ class CookieTest extends TestCase
         $cookie->queue('invalidCookie');
     }
 
-    public function testQueuedCookiesWithHandlingEmptyValues(): void
+    public function testQueuedCookiesWithHandlingEmptyValues()/*: void*/
     {
         $cookie = $this->getCreator();
         $cookie->queue($cookie->make('foo', ''));
@@ -87,7 +87,7 @@ class CookieTest extends TestCase
         $this->assertEquals('', $cookie->queued('foo')->getValue());
     }
 
-    public function testQueuedCookiesWithRepeatedValue(): void
+    public function testQueuedCookiesWithRepeatedValue()/*: void*/
     {
         $cookie = $this->getCreator();
         $cookie->queue($cookie->make('foo', 'newBar'));
@@ -98,7 +98,7 @@ class CookieTest extends TestCase
         $cookie->queue('invalidCookie');
     }
 
-    public function testQueuedCookies(): void
+    public function testQueuedCookies()/*: void*/
     {
         $cookie = $this->getCreator();
         $this->assertEmpty($cookie->getQueuedCookies());
@@ -172,7 +172,7 @@ class CookieTest extends TestCase
         $this->assertCount(1, $cookieJar->getQueuedCookies());
     }
 
-    public function testUnqueue(): void
+    public function testUnqueue()/*: void*/
     {
         $cookie = $this->getCreator();
 
@@ -184,7 +184,7 @@ class CookieTest extends TestCase
         $this->assertEmpty($cookie->getQueuedCookies());
     }
 
-    public function testUnqueueMultipleCookies(): void
+    public function testUnqueueMultipleCookies()/*: void*/
     {
         $cookie = $this->getCreator();
         $cookie->queue($cookie->make('foo', 'bar'));
@@ -194,7 +194,7 @@ class CookieTest extends TestCase
         $this->assertFalse($cookie->hasQueued('foo'));
     }
 
-    public function testUnqueueWithPath(): void
+    public function testUnqueueWithPath()/*: void*/
     {
         $cookieJar = $this->getCreator();
         $cookieOne = $cookieJar->make('foo', 'bar', 0, '/path');

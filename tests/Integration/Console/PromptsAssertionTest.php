@@ -17,150 +17,233 @@ use function Laravel\Prompts\text;
 use function Laravel\Prompts\textarea;
 
 class PromptsAssertionTest_testAssertionForTextPrompt_class extends Command
-            {
-                protected $signature = 'test:text';
+                    {
+                        protected $signature = 'test:text';
 
-                public function handle()
-                {
-                    $name = text('What is your name?', 'John');
+                        public function handle()
+                        {
+                            $name = text('What is your name?', 'John');
 
-                    $this->line($name);
-                }
-            }
+                            $this->line($name);
+                        }
+                    }
 
 class PromptsAssertionTest_testAssertionForTextareaPrompt_class extends Command
-            {
-                protected $signature = 'test:textarea';
+                    {
+                        protected $signature = 'test:textarea';
 
-                public function handle()
-                {
-                    $name = textarea('What is your name?', 'John');
+                        public function handle()
+                        {
+                            $name = textarea('What is your name?', 'John');
 
-                    $this->line($name);
-                }
-            }
+                            $this->line($name);
+                        }
+                    }
 
 class PromptsAssertionTest_testAssertionForSuggestPrompt_class extends Command
-            {
-                protected $signature = 'test:suggest';
+                    {
+                        protected $signature = 'test:suggest';
 
-                public function handle()
-                {
-                    $name = suggest('What is your name?', ['John', 'Jane']);
+                        public function handle()
+                        {
+                            $name = suggest('What is your name?', ['John', 'Jane']);
 
-                    $this->line($name);
-                }
-            }
+                            $this->line($name);
+                        }
+                    }
 
 class PromptsAssertionTest_testAssertionForPasswordPrompt_class extends Command
-            {
-                protected $signature = 'test:password';
+                    {
+                        protected $signature = 'test:password';
 
-                public function handle()
-                {
-                    $name = password('What is your password?');
+                        public function handle()
+                        {
+                            $name = password('What is your password?');
 
-                    $this->line($name);
-                }
-            }
+                            $this->line($name);
+                        }
+                    }
 
 class PromptsAssertionTest_testAssertionForConfirmPrompt_class extends Command
-            {
-                protected $signature = 'test:confirm';
+                    {
+                        protected $signature = 'test:confirm';
 
-                public function handle()
-                {
-                    $confirmed = confirm('Is your name John?');
+                        public function handle()
+                        {
+                            $confirmed = confirm('Is your name John?');
 
-                    if ($confirmed) {
-                        $this->line('Your name is John.');
-                    } else {
-                        $this->line('Your name is not John.');
+                            if ($confirmed) {
+                                $this->line('Your name is John.');
+                            } else {
+                                $this->line('Your name is not John.');
+                            }
+                        }
                     }
-                }
-            }
 
 class PromptsAssertionTest_testAssertionForSelectPromptWithAList_class extends Command
-            {
-                protected $signature = 'test:select';
+                    {
+                        protected $signature = 'test:select';
 
-                public function handle()
-                {
-                    $name = select(
-                        /*label: */'What is your name?',
-                        /*options: */['John', 'Jane']
-                    );
+                        public function handle()
+                        {
+                            $name = select(
+                                /*label: */'What is your name?',
+                                /*options: */['John', 'Jane']
+                            );
 
-                    $this->line("Your name is $name.");
-                }
-            }
+                            $this->line("Your name is $name.");
+                        }
+                    }
 
 class PromptsAssertionTest_testAssertionForSelectPromptWithAnAssociativeArray_class extends Command
-            {
-                protected $signature = 'test:select';
+                    {
+                        protected $signature = 'test:select';
 
-                public function handle()
-                {
-                    $name = select(
-                        /*label: */'What is your name?',
-                        /*options: */['john' => 'John', 'jane' => 'Jane']
-                    );
+                        public function handle()
+                        {
+                            $name = select(
+                                /*label: */'What is your name?',
+                                /*options: */['john' => 'John', 'jane' => 'Jane']
+                            );
 
-                    $this->line("Your name is $name.");
-                }
-            }
+                            $this->line("Your name is $name.");
+                        }
+                    }
 
 class PromptsAssertionTest_testAlternativeAssertionForSelectPromptWithAnAssociativeArray_class extends Command
-            {
-                protected $signature = 'test:select';
+                    {
+                        protected $signature = 'test:select';
 
-                public function handle()
-                {
-                    $name = select(
-                        /*label: */'What is your name?',
-                        /*options: */['john' => 'John', 'jane' => 'Jane']
-                    );
+                        public function handle()
+                        {
+                            $name = select(
+                                /*label: */'What is your name?',
+                                /*options: */['john' => 'John', 'jane' => 'Jane']
+                            );
 
-                    $this->line("Your name is $name.");
-                }
-            }
+                            $this->line("Your name is $name.");
+                        }
+                    }
 
 class PromptsAssertionTest_testAssertionForRequiredMultiselectPrompt_class extends Command
-            {
-                protected $signature = 'test:multiselect';
+                    {
+                        protected $signature = 'test:multiselect';
 
-                public function handle()
-                {
-                    $names = multiselect(
-                        /*label: */'Which names do you like?',
-                        /*options: */['John', 'Jane', 'Sally', 'Jack'],
-                        $default = [],
-                        $scroll = 5,
-                        /*required: */true
-                    );
+                        public function handle()
+                        {
+                            $names = multiselect(
+                                /*label: */'Which names do you like?',
+                                /*options: */['John', 'Jane', 'Sally', 'Jack'],
+                                $default = [],
+                                $scroll = 5,
+                                /*required: */true
+                            );
 
-                    $this->line(sprintf('You like %s.', implode(', ', $names)));
-                }
-            }
+                            $this->line(sprintf('You like %s.', implode(', ', $names)));
+                        }
+                    }
 
 class PromptsAssertionTest_testAssertionForOptionalMultiselectPrompt_class extends Command
-            {
-                protected $signature = 'test:multiselect';
+                    {
+                        protected $signature = 'test:multiselect';
 
-                public function handle()
-                {
-                    $names = multiselect(
-                        /*label: */'Which names do you like?',
-                        /*options: */['John', 'Jane', 'Sally', 'Jack']
-                    );
+                        public function handle()
+                        {
+                            $names = multiselect(
+                                /*label: */'Which names do you like?',
+                                /*options: */['John', 'Jane', 'Sally', 'Jack']
+                            );
 
-                    if (empty($names)) {
-                        $this->line('You like nobody.');
-                    } else {
-                        $this->line(sprintf('You like %s.', implode(', ', $names)));
+                            if (empty($names)) {
+                                $this->line('You like nobody.');
+                            } else {
+                                $this->line(sprintf('You like %s.', implode(', ', $names)));
+                            }
+                        }
                     }
-                }
-            }
+
+class PromptAssertionTest_testAssertionForSearchPrompt_class extends Command
+                    {
+                        protected $signature = 'test:search';
+        
+                        public function handle()
+                        {
+                            $options = collect(['John', 'Jane', 'Sally', 'Jack']);
+        
+                            $name = search(
+                                /*label: */'What is your name?',
+                                /*options: */function (/*string */$value) use ($options) {
+                                    $value = backport_type_check('string', $value);
+
+                                    return strlen($value) > 0
+                                        ? $options->filter(function ($title) use ($value) {
+                                            return str_contains($title, $value);
+                                        })->values()->toArray()
+                                        : [];
+                                }
+                            );
+        
+                            $this->line("Your name is $name.");
+                        }
+                    }
+        
+class PromptAssertionTest_testAssertionForMultisearchPrompt_class extends Command
+                    {
+                        protected $signature = 'test:multisearch';
+        
+                        public function handle()
+                        {
+                            $options = collect(['John', 'Jane', 'Sally', 'Jack']);
+        
+                            $names = multisearch(
+                                /*label: */'Which names do you like?',
+                                /*options: */function (/*string */$value) use ($options) {
+                                    $value = backport_type_check('string', $value);
+
+                                    return strlen($value) > 0
+                                        ? $options->filter(function ($title) use ($value) {
+                                            return str_contains($title, $value);
+                                        })->values()->toArray()
+                                        : [];
+                                }
+                            );
+        
+                            if (empty($names)) {
+                                $this->line('You like nobody.');
+                            } else {
+                                $this->line(sprintf('You like %s.', implode(', ', $names)));
+                            }
+                        }
+                    }
+        
+class PromptAssertionTest_testAssertionForSelectPromptFollowedByMultisearchPrompt_class extends Command
+                    {
+                        protected $signature = 'test:select';
+        
+                        public function handle()
+                        {
+                            $name = select(
+                                /*label: */'What is your name?',
+                                /*options: */['John', 'Jane']
+                            );
+        
+                            $titles = collect(['Mr', 'Mrs', 'Ms', 'Dr']);
+                            $title = multisearch(
+                                /*label: */'What is your title?',
+                                /*options: */function (/*string */$value) use ($titles) {
+                                    $value = backport_type_check('string', $value);
+
+                                    return strlen($value) > 0
+                                        ? $titles->filter(function ($title) use ($value) {
+                                            return str_contains($title, $value);
+                                        })->values()->toArray()
+                                        : [];
+                                }
+                            );
+        
+                            $this->line('I will refer to you '.$title[0].' '.$name.'.');
+                        }
+                    }
 
 class PromptsAssertionTest extends TestCase
 {
@@ -297,24 +380,7 @@ class PromptsAssertionTest extends TestCase
     public function testAssertionForSearchPrompt()
     {
         $this->app[Kernel::class]->registerCommand(
-            new class extends Command
-            {
-                protected $signature = 'test:search';
-
-                public function handle()
-                {
-                    $options = collect(['John', 'Jane', 'Sally', 'Jack']);
-
-                    $name = search(
-                        label: 'What is your name?',
-                        options: fn (string $value) => strlen($value) > 0
-                            ? $options->filter(fn ($title) => str_contains($title, $value))->values()->toArray()
-                            : []
-                    );
-
-                    $this->line("Your name is $name.");
-                }
-            }
+            new PromptAssertionTest_testAssertionForSearchPrompt_class
         );
 
         $this
@@ -326,28 +392,7 @@ class PromptsAssertionTest extends TestCase
     public function testAssertionForMultisearchPrompt()
     {
         $this->app[Kernel::class]->registerCommand(
-            new class extends Command
-            {
-                protected $signature = 'test:multisearch';
-
-                public function handle()
-                {
-                    $options = collect(['John', 'Jane', 'Sally', 'Jack']);
-
-                    $names = multisearch(
-                        label: 'Which names do you like?',
-                        options: fn (string $value) => strlen($value) > 0
-                            ? $options->filter(fn ($title) => str_contains($title, $value))->values()->toArray()
-                            : []
-                    );
-
-                    if (empty($names)) {
-                        $this->line('You like nobody.');
-                    } else {
-                        $this->line(sprintf('You like %s.', implode(', ', $names)));
-                    }
-                }
-            }
+            new PromptAssertionTest_testAssertionForMultisearchPrompt_class
         );
 
         $this
@@ -364,28 +409,7 @@ class PromptsAssertionTest extends TestCase
     public function testAssertionForSelectPromptFollowedByMultisearchPrompt()
     {
         $this->app[Kernel::class]->registerCommand(
-            new class extends Command
-            {
-                protected $signature = 'test:select';
-
-                public function handle()
-                {
-                    $name = select(
-                        label: 'What is your name?',
-                        options: ['John', 'Jane']
-                    );
-
-                    $titles = collect(['Mr', 'Mrs', 'Ms', 'Dr']);
-                    $title = multisearch(
-                        label: 'What is your title?',
-                        options: fn (string $value) => strlen($value) > 0
-                            ? $titles->filter(fn ($title) => str_contains($title, $value))->values()->toArray()
-                            : []
-                    );
-
-                    $this->line('I will refer to you '.$title[0].' '.$name.'.');
-                }
-            }
+            new PromptAssertionTest_testAssertionForSelectPromptFollowedByMultisearchPrompt_class
         );
 
         $this

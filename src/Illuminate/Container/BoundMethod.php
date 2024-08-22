@@ -205,8 +205,10 @@ class BoundMethod
             throw new BindingResolutionException($message);
         }
 
-        foreach ($pendingDependencies as $dependency) {
-            $container->fireAfterResolvingAttributeCallbacks($parameter->getAttributes(), $dependency);
+        if (\method_exists($parameter, 'getAttributes')) {
+            foreach ($pendingDependencies as $dependency) {
+                $container->fireAfterResolvingAttributeCallbacks($parameter->getAttributes(), $dependency);
+            }
         }
 
         $dependencies = array_merge($dependencies, $pendingDependencies);

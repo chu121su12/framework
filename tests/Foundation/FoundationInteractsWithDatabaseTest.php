@@ -118,10 +118,10 @@ class FoundationInteractsWithDatabaseTest extends TestCase
     {
         $data = $this->data;
 
-        $this->data = [
-            'id' => 1,
-            ...$this->data,
-        ];
+        $this->data = \array_merge(
+            ['id' => 1],
+            $this->data
+        );
 
         $this->mockCountBuilder(1);
 
@@ -189,10 +189,10 @@ class FoundationInteractsWithDatabaseTest extends TestCase
     {
         $data = $this->data;
 
-        $this->data = [
-            'id' => 1,
-            ...$this->data,
-        ];
+        $this->data = \array_merge(
+            ['id' => 1],
+            $this->data
+        );
 
         $this->mockCountBuilder(0);
 

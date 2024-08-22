@@ -115,6 +115,7 @@ class DatabaseMySqlSchemaStateTest extends TestCase
 
         // test executeDumpProcess
         $method = new ReflectionMethod(get_class($schemaState), 'executeDumpProcess');
+        $method->setAccessible(true);
         $method->invoke($schemaState, $mockProcess, $mockOutput, $mockVariables, 31);
     }
 }

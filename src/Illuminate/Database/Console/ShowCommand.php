@@ -103,7 +103,7 @@ class ShowCommand extends DatabaseInspectionCommand
                 'view' => $view['name'],
                 'schema' => $view['schema'],
                 'rows' => $connection->table($view['schema'] ? $view['schema'].'.'.$view['name'] : $view['name'])->count(),
-            ]);
+            ]; });
     }
 
     /**
@@ -190,7 +190,7 @@ class ShowCommand extends DatabaseInspectionCommand
 
                 $this->components->twoColumnDetail(
                     ($table['schema'] ? $table['schema'].' <fg=gray;options=bold>/</> ' : '').$table['table'].($this->output->isVerbose() ? ' <fg=gray>'.$table['engine'].'</>' : null),
-                    ($tableSize ?? '—').($this->option('counts') ? ' <fg=gray;options=bold>/</> <fg=yellow;options=bold>'.Number::format($table['rows']).'</>' : '')
+                    (isset($tableSize) ? $tableSize : '—').($this->option('counts') ? ' <fg=gray;options=bold>/</> <fg=yellow;options=bold>'.Number::format($table['rows']).'</>' : '')
                 );
 
                 if ($this->output->isVerbose()) {

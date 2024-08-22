@@ -127,7 +127,7 @@ trait FormatsMessages
                     $message = $source[$sourceKey];
 
                     if ($sourceKey === $attribute && is_array($message)) {
-                        return $message[$lowerRule] ?? null;
+                        return isset($message[$lowerRule]) ? $message[$lowerRule] : null;
                     }
 
                     return $message;

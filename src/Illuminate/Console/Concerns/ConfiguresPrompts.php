@@ -268,7 +268,7 @@ trait ConfiguresPrompts
      */
     private function multiselectFallback($label, $options, $default = [], $required = false)
     {
-        $default = $default !== [] ? implode(',', $default) : null;
+        $default = \is_array($default) && $default !== [] ? implode(',', $default) : null;
 
         if ($required === false && ! $this->laravel->runningUnitTests()) {
             $options = array_is_list($options)

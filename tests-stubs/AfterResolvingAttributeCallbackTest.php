@@ -66,7 +66,10 @@ class AfterResolvingAttributeCallbackTest extends TestCase
             $hasTenantImpl->onTenant($attribute->tenant);
         });
 
-        $tenant = $container->call(function (#[ContainerTestOnTenant(Tenant::TenantA)] HasTenantImpl $property) {
+        $tenant = $container->call(function (
+            #[ContainerTestOnTenant(Tenant::TenantA)]
+            HasTenantImpl $property
+        ) {
             return $property->tenant;
         });
 

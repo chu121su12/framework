@@ -59,7 +59,9 @@ trait ResolvesRouteDependencies
                 $this->spliceIntoParameters($parameters, $key, $parameter->getDefaultValue());
             }
 
-            $this->container->fireAfterResolvingAttributeCallbacks($parameter->getAttributes(), $instance);
+            if (\method_exists($parameter, 'getAttributes')) {
+                $this->container->fireAfterResolvingAttributeCallbacks($parameter->getAttributes(), $instance);
+            }
         }
 
         return $parameters;
