@@ -2252,7 +2252,7 @@ class Builder implements BuilderContract
     /**
      * Add a "where" clause to the query for multiple columns with "and" conditions between them.
      *
-     * @param  \Illuminate\Contracts\Database\Query\Expression[]|string[]  $columns
+     * @param  \Illuminate\Contracts\Database\Query\Expression[]|\Closure[]|string[]  $columns
      * @param  mixed  $operator
      * @param  mixed  $value
      * @param  string  $boolean
@@ -2276,7 +2276,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where" clause to the query for multiple columns with "and" conditions between them.
      *
-     * @param  \Illuminate\Contracts\Database\Query\Expression[]|string[]  $columns
+     * @param  \Illuminate\Contracts\Database\Query\Expression[]|\Closure[]|string[]  $columns
      * @param  mixed  $operator
      * @param  mixed  $value
      * @return $this
@@ -2289,7 +2289,7 @@ class Builder implements BuilderContract
     /**
      * Add a "where" clause to the query for multiple columns with "or" conditions between them.
      *
-     * @param  \Illuminate\Contracts\Database\Query\Expression[]|string[]  $columns
+     * @param  \Illuminate\Contracts\Database\Query\Expression[]|\Closure[]|string[]  $columns
      * @param  mixed  $operator
      * @param  mixed  $value
      * @param  string  $boolean
@@ -2313,7 +2313,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where" clause to the query for multiple columns with "or" conditions between them.
      *
-     * @param  \Illuminate\Contracts\Database\Query\Expression[]|string[]  $columns
+     * @param  \Illuminate\Contracts\Database\Query\Expression[]|\Closure[]|string[]  $columns
      * @param  mixed  $operator
      * @param  mixed  $value
      * @return $this
@@ -2326,7 +2326,7 @@ class Builder implements BuilderContract
     /**
      * Add a "where not" clause to the query for multiple columns where none of the conditions should be true.
      *
-     * @param  \Illuminate\Contracts\Database\Query\Expression[]|string[]  $columns
+     * @param  \Illuminate\Contracts\Database\Query\Expression[]|\Closure[]|string[]  $columns
      * @param  mixed  $operator
      * @param  mixed  $value
      * @param  string  $boolean
@@ -2340,7 +2340,7 @@ class Builder implements BuilderContract
     /**
      * Add an "or where not" clause to the query for multiple columns where none of the conditions should be true.
      *
-     * @param  \Illuminate\Contracts\Database\Query\Expression[]|string[]  $columns
+     * @param  \Illuminate\Contracts\Database\Query\Expression[]|\Closure[]|string[]  $columns
      * @param  mixed  $operator
      * @param  mixed  $value
      * @return $this
