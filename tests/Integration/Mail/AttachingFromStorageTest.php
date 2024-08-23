@@ -46,7 +46,7 @@ class AttachingFromStorageTest extends TestCase
                 // when using "prefer-lowest" the local filesystem driver will
                 // not detect the mime type based on the extension and will
                 // instead fallback to "text/plain".
-                'mime' => class_exists(\League\Flysystem\Local\FallbackMimeTypeDetector::class)
+                'mime' => class_exists(\League\Flysystem\Local\FallbackMimeTypeDetector::class) || class_exists(\League\Flysystem\Util\MimeType::class)
                     ? 'image/png'
                     : 'text/plain',
             ],

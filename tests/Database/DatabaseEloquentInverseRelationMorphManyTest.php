@@ -19,7 +19,7 @@ class DatabaseEloquentInverseRelationMorphManyTest extends TestCase
      *
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $db = new DB;
 
@@ -52,7 +52,7 @@ class DatabaseEloquentInverseRelationMorphManyTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         $this->schema()->drop('test_posts');
         $this->schema()->drop('test_comments');
@@ -301,27 +301,27 @@ class MorphManyInversePostModel extends Model
         return new MorphManyInversePostModelFactory();
     }
 
-    public function comments(): MorphMany
+    public function comments()/*: MorphMany*/
     {
         return $this->morphMany(MorphManyInverseCommentModel::class, 'commentable')->inverse('commentable');
     }
 
-    public function guessedComments(): MorphMany
+    public function guessedComments()/*: MorphMany*/
     {
         return $this->morphMany(MorphManyInverseCommentModel::class, 'commentable')->inverse();
     }
 
-    public function lastComment(): MorphOne
+    public function lastComment()/*: MorphOne*/
     {
         return $this->morphOne(MorphManyInverseCommentModel::class, 'commentable')->latestOfMany()->inverse('commentable');
     }
 
-    public function guessedLastComment(): MorphOne
+    public function guessedLastComment()/*: MorphOne*/
     {
         return $this->morphOne(MorphManyInverseCommentModel::class, 'commentable')->latestOfMany()->inverse();
     }
 
-    public function firstComment(): MorphOne
+    public function firstComment()/*: MorphOne*/
     {
         return $this->comments()->one();
     }
@@ -336,7 +336,7 @@ class MorphManyInversePostModelFactory extends Factory
         return [];
     }
 
-    public function withComments(int $count = 3)
+    public function withComments(/*int */$count = 3)
     {
         return $this->afterCreating(function (MorphManyInversePostModel $model) use ($count) {
             MorphManyInverseCommentModel::factory()->recycle($model)->count($count)->create();
@@ -356,7 +356,7 @@ class MorphManyInverseCommentModel extends Model
         return new MorphManyInverseCommentModelFactory();
     }
 
-    public function commentable(): MorphTo
+    public function commentable()/*: MorphTo*/
     {
         return $this->morphTo('commentable');
     }

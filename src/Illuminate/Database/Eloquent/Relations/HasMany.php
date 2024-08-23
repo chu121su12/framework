@@ -19,7 +19,7 @@ class HasMany extends HasOneOrMany
      */
     public function one()
     {
-        return HasOne::noConstraints(fn () => tap(
+        return HasOne::noConstraints(function () { return tap(
             new HasOne(
                 $this->getQuery(),
                 $this->parent,
@@ -31,7 +31,7 @@ class HasMany extends HasOneOrMany
                     $hasOne->inverse($inverse);
                 }
             }
-        ));
+        ); });
     }
 
     /** @inheritDoc */

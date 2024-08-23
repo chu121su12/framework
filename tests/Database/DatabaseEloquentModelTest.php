@@ -3891,7 +3891,7 @@ class EloquentModelWithRecursiveRelationshipsStub extends Model
 {
     public $fillable = ['id', 'parent_id'];
 
-    protected static \WeakMap $recursionDetectionCache;
+    protected static /*\WeakMap */$recursionDetectionCache;
 
     public function getQueueableRelations()
     {
@@ -3931,34 +3931,38 @@ class EloquentModelWithRecursiveRelationshipsStub extends Model
         }
     }
 
-    public function parent(): BelongsTo
+    public function parent()/*: BelongsTo*/
     {
         return $this->belongsTo(static::class, 'parent_id');
     }
 
-    public function children(): HasMany
+    public function children()/*: HasMany*/
     {
         return $this->hasMany(static::class, 'parent_id');
     }
 
-    public function self(): BelongsTo
+    public function self()/*: BelongsTo*/
     {
         return $this->belongsTo(static::class, 'id');
     }
 
     protected static function getRecursionDetectionCache()
     {
-        return static::$recursionDetectionCache ??= new \WeakMap;
+        if (! isset(static::$recursionDetectionCache)) {
+            static::$recursionDetectionCache = new \WeakMap;
+        }
+
+        return static::$recursionDetectionCache;
     }
 
-    protected function getRecursionDepth(): int
+    protected function getRecursionDepth()/*: int*/
     {
         $cache = static::getRecursionDetectionCache();
 
         return $cache->offsetExists($this) ? $cache->offsetGet($this) : 0;
     }
 
-    protected function stepIn(): void
+    protected function stepIn()/*: void*/
     {
         $depth = $this->getRecursionDepth();
 
@@ -3968,7 +3972,7 @@ class EloquentModelWithRecursiveRelationshipsStub extends Model
         static::getRecursionDetectionCache()->offsetSet($this, $depth + 1);
     }
 
-    protected function stepOut(): void
+    protected function stepOut()/*: void*/
     {
         $cache = static::getRecursionDetectionCache();
         if ($depth = $this->getRecursionDepth()) {

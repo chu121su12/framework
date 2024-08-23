@@ -51,8 +51,10 @@ trait PreventsCircularRecursion
      * @param  object  $object
      * @param  string  $hash
      */
-    protected static function clearRecursiveCallValue($object, string $hash)
+    protected static function clearRecursiveCallValue($object, /*string */$hash)
     {
+        $hash = backport_type_check('string', $hash);
+
         if ($stack = Arr::except(static::getRecursiveCallStack($object), $hash)) {
             static::getRecursionCache()->offsetSet($object, $stack);
         } elseif (static::getRecursionCache()->offsetExists($object)) {
@@ -66,7 +68,7 @@ trait PreventsCircularRecursion
      * @param  object  $object
      * @return array
      */
-    protected static function getRecursiveCallStack($object): array
+    protected static function getRecursiveCallStack($object)/*: array*/
     {
         return static::getRecursionCache()->offsetExists($object)
             ? static::getRecursionCache()->offsetGet($object)
@@ -80,7 +82,11 @@ trait PreventsCircularRecursion
      */
     protected static function getRecursionCache()
     {
-        return static::$recursionCache ??= new WeakMap();
+        if (! isset(static::$recursionCache)) {
+            static::$recursionCache = new WeakMap();
+        }
+
+        return static::$recursionCache;
     }
 
     /**
@@ -91,11 +97,15 @@ trait PreventsCircularRecursion
      * @param  mixed  $value
      * @return mixed
      */
-    protected static function setRecursiveCallValue($object, string $hash, $value)
+    protected static function setRecursiveCallValue($object, /*string */$hash, $value)
     {
+        $hash = backport_type_check('string', $hash);
+
         static::getRecursionCache()->offsetSet(
             $object,
-            tap(static::getRecursiveCallStack($object), fn (&$stack) => $stack[$hash] = $value),
+            tap(static::getRecursiveCallStack($object), function (&$stack) use ($hash, $value) {
+                return $stack[$hash] = $value;
+            })
         );
 
         return static::getRecursiveCallStack($object)[$hash];

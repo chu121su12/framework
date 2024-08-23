@@ -1687,8 +1687,8 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     public function toArray()
     {
         return $this->withoutRecursion(
-            fn () => array_merge($this->attributesToArray(), $this->relationsToArray()),
-            fn () => $this->attributesToArray(),
+            function () { return array_merge($this->attributesToArray(), $this->relationsToArray()); },
+            function () { return $this->attributesToArray(); }
         );
     }
 

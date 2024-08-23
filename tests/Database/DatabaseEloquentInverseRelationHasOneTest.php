@@ -18,7 +18,7 @@ class DatabaseEloquentInverseRelationHasOneTest extends TestCase
      *
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $db = new DB;
 
@@ -51,7 +51,7 @@ class DatabaseEloquentInverseRelationHasOneTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         $this->schema()->drop('test_parent');
         $this->schema()->drop('test_child');
@@ -199,7 +199,7 @@ class HasOneInverseParentModel extends Model
         return new HasOneInverseParentModelFactory();
     }
 
-    public function child(): HasOne
+    public function child()/*: HasOne*/
     {
         return $this->hasOne(HasOneInverseChildModel::class, 'parent_id')->inverse('parent');
     }
@@ -227,7 +227,7 @@ class HasOneInverseChildModel extends Model
         return new HasOneInverseChildModelFactory();
     }
 
-    public function parent(): BelongsTo
+    public function parent()/*: BelongsTo*/
     {
         return $this->belongsTo(HasOneInverseParentModel::class, 'parent_id');
     }

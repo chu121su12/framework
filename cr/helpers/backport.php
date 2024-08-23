@@ -6,6 +6,10 @@ use Illuminate\Support\Str;
 use Laravel\SerializableClosure\SerializableClosure;
 use Opis\Closure\SerializableClosure as OpisSerializableClosure;
 
+if (! \class_exists('WeakMap')) {
+    require_once __DIR__.'/classes/WeakMap.php';
+}
+
 if (! \defined('BACKPORT_HASH_xxh128')) {
     define('BACKPORT_HASH_xxh128', 'sha1');
 }
@@ -617,12 +621,5 @@ if (! \function_exists('backport_get_class')) {
     function backport_get_class($class)
     {
         return \is_object($class) ? get_class($class) : $class;
-    }
-}
-
-if (! \function_exists('backport_weakmap_object')) {
-    function backport_weakmap_object($object)
-    {
-        return class_exists(\WeakMap::class) ? $object : \spl_object_id($object);
     }
 }

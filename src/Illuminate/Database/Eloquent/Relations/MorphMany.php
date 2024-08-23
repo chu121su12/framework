@@ -19,7 +19,7 @@ class MorphMany extends MorphOneOrMany
      */
     public function one()
     {
-        return MorphOne::noConstraints(fn () => tap(
+        return MorphOne::noConstraints(function () { return tap(
             new MorphOne(
                 $this->getQuery(),
                 $this->getParent(),
@@ -32,7 +32,7 @@ class MorphMany extends MorphOneOrMany
                     $morphOne->inverse($inverse);
                 }
             }
-        ));
+        ); });
     }
 
     /** @inheritDoc */

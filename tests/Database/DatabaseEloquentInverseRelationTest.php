@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseEloquentInverseRelationTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
@@ -181,11 +181,12 @@ class DatabaseEloquentInverseRelationTest extends TestCase
         $this->assertTrue(in_array('parent', $relation->exposeGetPossibleInverseRelations()));
     }
 
+    /** @dataProvider guessedParentRelationsDataProvider */
     #[DataProvider('guessedParentRelationsDataProvider')]
     public function testGuessesInverseRelationBasedOnParent($guessedRelation)
     {
         $related = m::mock(Model::class);
-        $related->shouldReceive('isRelation')->andReturnUsing(fn ($relation) => $relation === $guessedRelation);
+        $related->shouldReceive('isRelation')->andReturnUsing(function ($relation) use ($guessedRelation) { return $relation === $guessedRelation; });
 
         $builder = m::mock(Builder::class);
         $builder->shouldReceive('getModel')->andReturn($related);
@@ -198,7 +199,7 @@ class DatabaseEloquentInverseRelationTest extends TestCase
     public function testGuessesPossibleInverseRelationBasedOnForeignKey()
     {
         $related = m::mock(Model::class);
-        $related->shouldReceive('isRelation')->andReturnUsing(fn ($relation) => $relation === 'test');
+        $related->shouldReceive('isRelation')->andReturnUsing(function ($relation) { return $relation === 'test'; });
 
         $builder = m::mock(Builder::class);
         $builder->shouldReceive('getModel')->andReturn($related);
@@ -211,7 +212,7 @@ class DatabaseEloquentInverseRelationTest extends TestCase
     public function testGuessesRecursiveInverseRelationsIfRelatedIsSameClassAsParent()
     {
         $related = m::mock(Model::class);
-        $related->shouldReceive('isRelation')->andReturnUsing(fn ($relation) => $relation === 'parent');
+        $related->shouldReceive('isRelation')->andReturnUsing(function ($relation) { return $relation === 'parent'; });
 
         $parent = clone $related;
         $parent->shouldReceive('getForeignKey')->andReturn('recursive_parent_id');
@@ -225,11 +226,12 @@ class DatabaseEloquentInverseRelationTest extends TestCase
         $this->assertSame('parent', $relation->exposeGuessInverseRelation());
     }
 
+    /** @dataProvider guessedParentRelationsDataProvider */
     #[DataProvider('guessedParentRelationsDataProvider')]
     public function testSetsGuessedInverseRelationBasedOnParent($guessedRelation)
     {
         $related = m::mock(Model::class);
-        $related->shouldReceive('isRelation')->andReturnUsing(fn ($relation) => $relation === $guessedRelation);
+        $related->shouldReceive('isRelation')->andReturnUsing(function ($relation) use ($guessedRelation) { return $relation === $guessedRelation; });
 
         $builder = m::mock(Builder::class);
         $builder->shouldReceive('getModel')->andReturn($related);
@@ -243,7 +245,7 @@ class DatabaseEloquentInverseRelationTest extends TestCase
     public function testSetsRecursiveInverseRelationsIfRelatedIsSameClassAsParent()
     {
         $related = m::mock(Model::class);
-        $related->shouldReceive('isRelation')->andReturnUsing(fn ($relation) => $relation === 'parent');
+        $related->shouldReceive('isRelation')->andReturnUsing(function ($relation) { return $relation === 'parent'; });
 
         $parent = clone $related;
         $parent->shouldReceive('getForeignKey')->andReturn('recursive_parent_id');
@@ -261,7 +263,7 @@ class DatabaseEloquentInverseRelationTest extends TestCase
     public function testSetsGuessedInverseRelationBasedOnForeignKey()
     {
         $related = m::mock(Model::class);
-        $related->shouldReceive('isRelation')->andReturnUsing(fn ($relation) => $relation === 'test');
+        $related->shouldReceive('isRelation')->andReturnUsing(function ($relation) { return $relation === 'test'; });
 
         $builder = m::mock(Builder::class);
         $builder->shouldReceive('getModel')->andReturn($related);
@@ -301,7 +303,7 @@ class HasInverseRelationRelatedStub extends Model
         return 'child_stub_id';
     }
 
-    public function test(): BelongsTo
+    public function test()/*: BelongsTo*/
     {
         return $this->belongsTo(HasInverseRelationParentStub::class);
     }
@@ -311,13 +313,16 @@ class HasInverseRelationStub extends Relation
 {
     use SupportsInverseRelations;
 
+    protected $foreignKey = null;
+
     public function __construct(
         Builder $query,
         Model $parent,
-        protected ?string $foreignKey = null,
+        /*protected *//*?string */$foreignKey = null
     ) {
         parent::__construct($query, $parent);
-        $this->foreignKey ??= Str::of(class_basename($parent))->snake()->finish('_id')->toString();
+
+        $this->foreignKey = isset($foreignKey) ? $foreignKey : Str::of(class_basename($parent))->snake()->finish('_id')->toString();
     }
 
     public function getForeignKeyName()
@@ -352,12 +357,12 @@ class HasInverseRelationStub extends Relation
     }
 
     // Expose access to protected methods for testing
-    public function exposeGetPossibleInverseRelations(): array
+    public function exposeGetPossibleInverseRelations()/*: array*/
     {
         return $this->getPossibleInverseRelations();
     }
 
-    public function exposeGuessInverseRelation(): string|null
+    public function exposeGuessInverseRelation()/*: string|null*/
     {
         return $this->guessInverseRelation();
     }

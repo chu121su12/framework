@@ -19,7 +19,7 @@ class DatabaseEloquentInverseRelationHasManyTest extends TestCase
      *
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $db = new DB;
 
@@ -52,7 +52,7 @@ class DatabaseEloquentInverseRelationHasManyTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         $this->schema()->drop('test_users');
         $this->schema()->drop('test_posts');
@@ -245,17 +245,17 @@ class HasManyInverseUserModel extends Model
         return new HasManyInverseUserModelFactory();
     }
 
-    public function posts(): HasMany
+    public function posts()/*: HasMany*/
     {
         return $this->hasMany(HasManyInversePostModel::class, 'user_id')->inverse('user');
     }
 
-    public function lastPost(): HasOne
+    public function lastPost()/*: HasOne*/
     {
         return $this->hasOne(HasManyInversePostModel::class, 'user_id')->latestOfMany()->inverse('user');
     }
 
-    public function firstPost(): HasOne
+    public function firstPost()/*: HasOne*/
     {
         return $this->posts()->one();
     }
@@ -270,7 +270,7 @@ class HasManyInverseUserModelFactory extends Factory
         return [];
     }
 
-    public function withPosts(int $count = 3)
+    public function withPosts(/*int */$count = 3)
     {
         return $this->afterCreating(function (HasManyInverseUserModel $model) use ($count) {
             HasManyInversePostModel::factory()->recycle($model)->count($count)->create();
@@ -290,7 +290,7 @@ class HasManyInversePostModel extends Model
         return new HasManyInversePostModelFactory();
     }
 
-    public function user(): BelongsTo
+    public function user()/*: BelongsTo*/
     {
         return $this->belongsTo(HasManyInverseUserModel::class, 'user_id');
     }

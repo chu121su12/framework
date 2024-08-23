@@ -163,11 +163,11 @@ abstract class MorphOneOrMany extends HasOneOrMany
      *
      * @return array<non-empty-string>
      */
-    protected function getPossibleInverseRelations(): array
+    protected function getPossibleInverseRelations()/*: array*/
     {
-        return array_unique([
-            Str::beforeLast($this->getMorphType(), '_type'),
-            ...parent::getPossibleInverseRelations(),
-        ]);
+        return array_unique(\array_merge(
+            [Str::beforeLast($this->getMorphType(), '_type')],
+            parent::getPossibleInverseRelations()
+        ));
     }
 }

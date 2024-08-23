@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseConcernsPreventsCircularRecursionTest extends TestCase
 {
-    public function setUp(): void
+    public function setUp()/*: void*/
     {
         parent::setUp();
 
@@ -63,7 +63,7 @@ class DatabaseConcernsPreventsCircularRecursionTest extends TestCase
                 ['instance' => 1, 'default' => 0],
                 ['instance' => 1, 'default' => 0],
             ],
-            $instance->callCallableDefaultStackRepeatedly(),
+            $instance->callCallableDefaultStackRepeatedly()
         );
         $this->assertEquals(1, PreventsCircularRecursionWithRecursiveMethod::$globalStack);
         $this->assertEquals(1, $instance->instanceStack);
@@ -75,7 +75,7 @@ class DatabaseConcernsPreventsCircularRecursionTest extends TestCase
                 ['instance' => 2, 'default' => 1],
                 ['instance' => 2, 'default' => 1],
             ],
-            $instance->callCallableDefaultStackRepeatedly(),
+            $instance->callCallableDefaultStackRepeatedly()
         );
         $this->assertEquals(2, PreventsCircularRecursionWithRecursiveMethod::$globalStack);
         $this->assertEquals(2, $instance->instanceStack);
@@ -178,17 +178,19 @@ class PreventsCircularRecursionWithRecursiveMethod
 {
     use PreventsCircularRecursion;
 
+    public $other = null;
+
     public function __construct(
-        public ?PreventsCircularRecursionWithRecursiveMethod $other = null,
+        /*public *//*?*/PreventsCircularRecursionWithRecursiveMethod $other = null
     ) {
-        $this->other ??= new PreventsCircularRecursionWithRecursiveMethod($this);
+        $this->other = isset($other) ? $other : new PreventsCircularRecursionWithRecursiveMethod($this);
     }
 
-    public static int $globalStack = 0;
-    public int $instanceStack = 0;
-    public int $defaultStack = 0;
+    public static /*int */$globalStack = 0;
+    public /*int */$instanceStack = 0;
+    public /*int */$defaultStack = 0;
 
-    public function callStack(): int
+    public function callStack()/*: int*/
     {
         return $this->withoutRecursion(
             function () {
@@ -197,11 +199,11 @@ class PreventsCircularRecursionWithRecursiveMethod
 
                 return $this->callStack();
             },
-            $this->instanceStack,
+            $this->instanceStack
         );
     }
 
-    public function callCallableDefaultStack(): array
+    public function callCallableDefaultStack()/*: array*/
     {
         return $this->withoutRecursion(
             function () {
@@ -210,14 +212,14 @@ class PreventsCircularRecursionWithRecursiveMethod
 
                 return $this->callCallableDefaultStack();
             },
-            fn () => [
+            function () { return [
                 'instance' => $this->instanceStack,
                 'default' => $this->defaultStack++,
-            ],
+            ]; }
         );
     }
 
-    public function callCallableDefaultStackRepeatedly(): array
+    public function callCallableDefaultStackRepeatedly()/*: array*/
     {
         return $this->withoutRecursion(
             function () {
@@ -230,14 +232,14 @@ class PreventsCircularRecursionWithRecursiveMethod
                     $this->callCallableDefaultStackRepeatedly(),
                 ];
             },
-            fn () => [
+            function () { return [
                 'instance' => $this->instanceStack,
                 'default' => $this->defaultStack++,
-            ],
+            ]; }
         );
     }
 
-    public function callOtherStack(): int
+    public function callOtherStack()/*: int*/
     {
         return $this->withoutRecursion(
             function () {
@@ -245,7 +247,7 @@ class PreventsCircularRecursionWithRecursiveMethod
 
                 return $this->other->callOtherStack();
             },
-            $this->instanceStack,
+            $this->instanceStack
         );
     }
 }

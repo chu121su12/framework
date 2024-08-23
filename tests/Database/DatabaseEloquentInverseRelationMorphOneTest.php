@@ -18,7 +18,7 @@ class DatabaseEloquentInverseRelationMorphOneTest extends TestCase
      *
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $db = new DB;
 
@@ -51,7 +51,7 @@ class DatabaseEloquentInverseRelationMorphOneTest extends TestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         $this->schema()->drop('test_posts');
         $this->schema()->drop('test_images');
@@ -223,12 +223,12 @@ class MorphOneInversePostModel extends Model
         return new MorphOneInversePostModelFactory();
     }
 
-    public function image(): MorphOne
+    public function image()/*: MorphOne*/
     {
         return $this->morphOne(MorphOneInverseImageModel::class, 'imageable')->inverse('imageable');
     }
 
-    public function guessedImage(): MorphOne
+    public function guessedImage()/*: MorphOne*/
     {
         return $this->morphOne(MorphOneInverseImageModel::class, 'imageable')->inverse();
     }
@@ -256,7 +256,7 @@ class MorphOneInverseImageModel extends Model
         return new MorphOneInverseImageModelFactory();
     }
 
-    public function imageable(): MorphTo
+    public function imageable()/*: MorphTo*/
     {
         return $this->morphTo('imageable');
     }

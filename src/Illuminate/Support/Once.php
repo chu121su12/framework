@@ -43,7 +43,7 @@ class Once
     public static function instance()
     {
         if (! isset(static::$instance)) {
-            static::$instance = new static([]);
+            static::$instance = new static(new WeakMap);
         }
 
         return static::$instance;
@@ -62,19 +62,18 @@ class Once
         }
 
         $object = $onceable->object ?: $this;
-        $objectId = backport_weakmap_object($object);
 
         $hash = $onceable->hash;
 
-        if (isset($this->values[$objectId][$hash])) {
-            return $this->values[$objectId][$hash];
+        if (isset($this->values[$object][$hash])) {
+            return $this->values[$object][$hash];
         }
 
-        if (! isset($this->values[$objectId])) {
-            $this->values[$objectId] = [];
+        if (! isset($this->values[$object])) {
+            $this->values[$object] = [];
         }
 
-        return $this->values[$objectId][$hash] = call_user_func($onceable->callable);
+        return $this->values[$object][$hash] = call_user_func($onceable->callable);
     }
 
     /**

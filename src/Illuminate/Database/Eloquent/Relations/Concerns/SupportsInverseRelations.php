@@ -14,7 +14,7 @@ trait SupportsInverseRelations
      *
      * @var string|null
      */
-    protected string|null $inverseRelationship = null;
+    protected /*string|null */$inverseRelationship = null;
 
     /**
      * Instruct Eloquent to link the related models back to the parent after the relationship query has run.
@@ -24,8 +24,10 @@ trait SupportsInverseRelations
      * @param  string|null  $relation
      * @return $this
      */
-    public function inverse(?string $relation = null)
+    public function inverse(/*?string */$relation = null)
     {
+        $relation = backport_type_check('?string', $relation);
+
         return $this->chaperone($relation);
     }
 
@@ -35,9 +37,13 @@ trait SupportsInverseRelations
      * @param  string|null  $relation
      * @return $this
      */
-    public function chaperone(?string $relation = null)
+    public function chaperone(/*?string */$relation = null)
     {
-        $relation ??= $this->guessInverseRelation();
+        $relation = backport_type_check('?string', $relation);
+
+        if (! isset($relation)) {
+            $relation = $this->guessInverseRelation();
+        }
 
         if (! $relation || ! $this->getModel()->isRelation($relation)) {
             throw RelationNotFoundException::make($this->getModel(), $relation ?: 'null');
@@ -61,11 +67,11 @@ trait SupportsInverseRelations
      *
      * @return string|null
      */
-    protected function guessInverseRelation(): string|null
+    protected function guessInverseRelation()/*: string|null*/
     {
         return Arr::first(
             $this->getPossibleInverseRelations(),
-            fn ($relation) => $relation && $this->getModel()->isRelation($relation)
+            function ($relation) { return $relation && $this->getModel()->isRelation($relation); }
         );
     }
 
@@ -74,7 +80,7 @@ trait SupportsInverseRelations
      *
      * @return array<non-empty-string>
      */
-    protected function getPossibleInverseRelations(): array
+    protected function getPossibleInverseRelations()/*: array*/
     {
         return array_filter(array_unique([
             Str::camel(Str::beforeLast($this->getForeignKeyName(), $this->getParent()->getKeyName())),
@@ -92,9 +98,11 @@ trait SupportsInverseRelations
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    protected function applyInverseRelationToCollection($models, ?Model $parent = null)
+    protected function applyInverseRelationToCollection($models, /*?*/Model $parent = null)
     {
-        $parent ??= $this->getParent();
+        if (! isset($parent)) {
+            $parent = $this->getParent();
+        }
 
         foreach ($models as $model) {
             $this->applyInverseRelationToModel($model, $parent);
@@ -110,10 +118,12 @@ trait SupportsInverseRelations
      * @param  \Illuminate\Database\Eloquent\Model|null  $parent
      * @return \Illuminate\Database\Eloquent\Model
      */
-    protected function applyInverseRelationToModel(Model $model, ?Model $parent = null)
+    protected function applyInverseRelationToModel(Model $model, /*?*/Model $parent = null)
     {
         if ($inverse = $this->getInverseRelationship()) {
-            $parent ??= $this->getParent();
+            if (! isset($parent)) {
+                $parent = $this->getParent();
+            }
 
             $model->setRelation($inverse, $parent);
         }
