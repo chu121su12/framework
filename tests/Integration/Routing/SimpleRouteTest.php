@@ -24,6 +24,9 @@ class SimpleRouteTest extends TestCase
         $this->assertSame('bar', $response->baseRequest->query('foo'));
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testSimpleRouteWitStringBackedEnumRouteNameThroughTheFramework()
     {
         Route::get('/', function () {

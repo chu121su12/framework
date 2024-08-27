@@ -1098,32 +1098,44 @@ class RouteRegistrarTest extends TestCase
         $this->assertSame('users.index', $this->getRoute()->getName());
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testCanSetRouteNameUsingStringBackedEnum()
     {
-        $this->router->name(RouteNameEnum::UserIndex)->get('users', fn () => 'all-users');
+        $this->router->name(RouteNameEnum::UserIndex)->get('users', function () { return 'all-users'; });
 
         $this->assertSame('users.index', $this->getRoute()->getName());
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testCannotSetRouteNameUsingIntegerBackedEnum()
     {
         $this->expectExceptionObject(new \InvalidArgumentException('Attribute [name] expects a string backed enum.'));
 
-        $this->router->name(IntegerEnum::One)->get('users', fn () => 'all-users');
+        $this->router->name(IntegerEnum::One)->get('users', function () { return 'all-users'; });
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testCanSetRouteDomainUsingStringBackedEnum()
     {
-        $this->router->domain(RouteDomainEnum::DashboardDomain)->get('users', fn () => 'all-users');
+        $this->router->domain(RouteDomainEnum::DashboardDomain)->get('users', function () { return 'all-users'; });
 
         $this->assertSame('dashboard.myapp.com', $this->getRoute()->getDomain());
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testCannotSetRouteDomainUsingIntegerBackedEnum()
     {
         $this->expectExceptionObject(new \InvalidArgumentException('Attribute [domain] expects a string backed enum.'));
 
-        $this->router->domain(IntegerEnum::One)->get('users', fn () => 'all-users');
+        $this->router->domain(IntegerEnum::One)->get('users', function () { return 'all-users'; });
     }
 
     public function testPushMiddlewareToGroup()

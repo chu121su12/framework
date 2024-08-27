@@ -2183,9 +2183,6 @@ class SupportCollectionTest extends TestCase
 
     /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
-    /**
-     * @dataProvider collectionClassProvider
-     */
     public function testNaturalSortByManyWithNull($collection)
     {
         $itemFoo = new \stdClass();
@@ -2205,10 +2202,8 @@ class SupportCollectionTest extends TestCase
         $this->assertEquals($itemFoo, $data->skip(1)->first());
     }
 
+    /** @dataProvider collectionClassProvider */
     #[DataProvider('collectionClassProvider')]
-    /**
-     * @dataProvider collectionClassProvider
-     */
     public function testSortKeys($collection)
     {
         $data = new $collection(['b' => 'dayle', 'a' => 'taylor']);
