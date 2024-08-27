@@ -112,6 +112,13 @@ class Vite implements Htmlable
     protected $prefetchConcurrently = 3;
 
     /**
+     * The name of the event that should trigger prefetching. The event must be dispatched on the `window`.
+     *
+     * @var string
+     */
+    protected $prefetchEvent = 'load';
+
+    /**
      * Get the preloaded assets.
      *
      * @return array
@@ -285,10 +292,13 @@ class Vite implements Htmlable
      * Eagerly prefetch assets.
      *
      * @param  int|null  $concurrency
+     * @param  string  $event
      * @return $this
      */
-    public function prefetch($concurrency = null)
+    public function prefetch($concurrency = null, $event = 'load')
     {
+        $this->prefetchEvent = $event;
+
         return $concurrency === null
             ? $this->usePrefetchStrategy('aggressive')
             : $this->usePrefetchStrategy('waterfall', ['concurrency' => $concurrency]);
@@ -499,8 +509,8 @@ class Vite implements Htmlable
                 case 'waterfall':
                     $html = <<<HTML
 
-<script>
-        window.addEventListener('load', () => window.setTimeout(() => {
+<script{$this->nonceAttribute()}>
+    window.addEventListener('{$this->prefetchEvent}', () => window.setTimeout(() => {
         const makeLink = (asset) => {
             const link = document.createElement('link')
 
@@ -546,8 +556,8 @@ HTML;
                 case 'aggressive':
                     $html = <<<HTML
 
-<script>
-        window.addEventListener('load', () => window.setTimeout(() => {
+<script{$this->nonceAttribute()}>
+    window.addEventListener('{$this->prefetchEvent}', () => window.setTimeout(() => {
         const makeLink = (asset) => {
             const link = document.createElement('link')
 
@@ -561,7 +571,7 @@ HTML;
         const fragment = new DocumentFragment
         {$assets}.forEach((asset) => fragment.append(makeLink(asset)))
         document.head.append(fragment)
-        }))
+    }))
 </script>
 HTML;
 
@@ -999,6 +1009,20 @@ HTML;
         }
 
         return $manifest[$file];
+    }
+
+    /**
+     * Get the nonce attribute for the prefetch script tags.
+     *
+     * @return \Illuminate\Support\HtmlString
+     */
+    protected function nonceAttribute()
+    {
+        if ($this->cspNonce() === null) {
+            return new HtmlString('');
+        }
+
+        return new HtmlString(' nonce="'.$this->cspNonce().'"');
     }
 
     /**

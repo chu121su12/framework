@@ -1588,13 +1588,13 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
                             $result = strcasecmp($values[0], $values[1]);
                         }
                     } else {
-                        switch ($options) {
-                            case SORT_NUMERIC: $result = backport_spaceship_operator(intval($values[0]), /*<=> */intval($values[1])); break;
-                            case SORT_STRING: $result = strcmp($values[0], $values[1]); break;
-                            case SORT_NATURAL: $result = strnatcmp($values[0], $values[1]); break;
-                            case SORT_LOCALE_STRING: $result = strcoll($values[0], $values[1]); break;
-                            default: $result = backport_spaceship_operator($values[0], /*<=> */$values[1]); break;
-                        }
+                        $result = match ($options) {
+                            SORT_NUMERIC => intval($values[0]) <=> intval($values[1]),
+                            SORT_STRING => strcmp($values[0], $values[1]),
+                            SORT_NATURAL => strnatcmp((string) $values[0], (string) $values[1]),
+                            SORT_LOCALE_STRING => strcoll($values[0], $values[1]),
+                            default => $values[0] <=> $values[1],
+                        };
                     }
                 }
 
