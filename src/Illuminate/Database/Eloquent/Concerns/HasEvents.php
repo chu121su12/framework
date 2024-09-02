@@ -403,7 +403,7 @@ trait HasEvents
     /**
      * Get the event dispatcher instance.
      *
-     * @return \Illuminate\Contracts\Events\Dispatcher
+     * @return \Illuminate\Contracts\Events\Dispatcher|null
      */
     public static function getEventDispatcher()
     {

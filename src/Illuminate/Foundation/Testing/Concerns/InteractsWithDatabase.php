@@ -274,13 +274,11 @@ trait InteractsWithDatabase
      */
     protected function getTable($table)
     {
-        $newModel = $this->newModelFor($table);
-
-        if (isset($newModel)) {
-            $newModel = $newModel->getTable();
+        if ($table instanceof Model) {
+            return $table->getTable();
         }
 
-        return $newModel ?: $table;
+        return $this->newModelFor($table)?->getTable() ?: $table;
     }
 
     /**
@@ -291,13 +289,11 @@ trait InteractsWithDatabase
      */
     protected function getTableConnection($table)
     {
-        $newModel = $this->newModelFor($table);
-
-        if (isset($newModel)) {
-            $newModel = $newModel->getConnectionName();
+        if ($table instanceof Model) {
+            return $table->getConnectionName();
         }
 
-        return $newModel;
+        return $this->newModelFor($table)?->getConnectionName();
     }
 
     /**
