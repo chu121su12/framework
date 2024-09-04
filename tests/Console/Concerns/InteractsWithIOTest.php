@@ -15,11 +15,12 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class InteractsWithIOTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function tearDown()/*: void*/
     {
         m::close();
     }
 
+    /** @dataProvider iterableDataProvider */
     #[DataProvider('iterableDataProvider')]
     public function testWithProgressBarIterable($iterable)
     {
@@ -48,7 +49,7 @@ class InteractsWithIOTest extends TestCase
         $this->assertSame($iterable, $result);
     }
 
-    public static function iterableDataProvider(): Generator
+    public static function iterableDataProvider()/*: Generator*/
     {
         yield [['a', 'b', 'c']];
 
@@ -84,5 +85,5 @@ class InteractsWithIOTest extends TestCase
 
 class CommandInteractsWithIO extends Command
 {
-    use InteractsWithIO;
+    // use InteractsWithIO;
 }

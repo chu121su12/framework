@@ -1143,9 +1143,9 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
                 ],
             ],
             array_map(
-                fn (ColumnDefinition $definition) => array_replace($definition->toArray(), [
+                function (ColumnDefinition $definition) use ($grammar) { return array_replace($definition->toArray(), [
                     'default' => $definition->value('default') ? $definition->value('default')->getValue($grammar) : $definition->value('default'),
-                ]),
+                ]); },
                 $state->getColumns()
             )
         );
@@ -1157,7 +1157,7 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
                     'columns' => ['parent_id'],
                 ],
             ],
-            array_map(fn (IndexDefinition $definition) => $definition->toArray(), $state->getIndexes())
+            array_map(function (IndexDefinition $definition) { return $definition->toArray(); }, $state->getIndexes())
         );
         $this->assertSame(
             [
@@ -1169,7 +1169,7 @@ class DatabaseSQLiteSchemaGrammarTest extends TestCase
                     'onDelete' => 'cascade',
                 ],
             ],
-            array_map(fn (ForeignKeyDefinition $definition) => $definition->toArray(), $state->getForeignKeys())
+            array_map(function (ForeignKeyDefinition $definition) { return $definition->toArray(); }, $state->getForeignKeys())
         );
     }
 

@@ -268,8 +268,10 @@ class BlueprintState
      * @param  string  $table
      * @return string
      */
-    protected function withoutTablePrefix(string $table)
+    protected function withoutTablePrefix(/*string */$table)
     {
+        $table = backport_type_check('string', $table);
+
         $prefix = $this->connection->getTablePrefix();
 
         return str_starts_with($table, $prefix)
