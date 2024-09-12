@@ -105,7 +105,7 @@ trait SupportsInverseRelations
         }
 
         foreach ($models as $model) {
-            $this->applyInverseRelationToModel($model, $parent);
+            $model instanceof Model && $this->applyInverseRelationToModel($model, $parent);
         }
 
         return $models;

@@ -19,6 +19,7 @@ use Illuminate\Contracts\Foundation\ExceptionRenderer;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\MultipleRecordsFoundException;
+use Illuminate\Database\RecordNotFoundException;
 use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Foundation\Exceptions\Renderer\Renderer;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -146,6 +147,7 @@ class Handler implements ExceptionHandlerContract
         HttpResponseException::class,
         ModelNotFoundException::class,
         MultipleRecordsFoundException::class,
+        RecordNotFoundException::class,
         RecordsNotFoundException::class,
         RequestExceptionInterface::class,
         TokenMismatchException::class,
@@ -381,11 +383,7 @@ class Handler implements ExceptionHandlerContract
             throw $e;
         }
 
-        $level = Arr::first(
-            $this->levels, function ($level, $type) use ($e) {
-                return $e instanceof $type;
-            }, LogLevel::ERROR
-        );
+        $level = $this->mapLogLevel($e);
 
         $context = $this->buildExceptionContext($e);
 
@@ -686,6 +684,7 @@ class Handler implements ExceptionHandlerContract
             case $e instanceof AuthorizationException && ! $e->hasStatus(): return new AccessDeniedHttpException($e->getMessage(), $e);
             case $e instanceof TokenMismatchException: return new HttpException(419, $e->getMessage(), $e);
             case $e instanceof RequestExceptionInterface: return new BadRequestHttpException('Bad request.', $e);
+            case $e instanceof RecordNotFoundException: return new NotFoundHttpException('Not found.', $e);
             case $e instanceof RecordsNotFoundException: return new NotFoundHttpException('Not found.', $e);
             default: return $e;
         }
@@ -1139,6 +1138,19 @@ class Handler implements ExceptionHandlerContract
         backport_type_throwable($e);
 
         return $e instanceof HttpExceptionInterface;
+    }
+
+    /**
+     * Map the exception to a log level.
+     *
+     * @param  \Throwable  $e
+     * @return \Psr\Log\LogLevel::*
+     */
+    protected function mapLogLevel(Throwable $e)
+    {
+        return Arr::first(
+            $this->levels, fn ($level, $type) => $e instanceof $type, LogLevel::ERROR
+        );
     }
 
     /**

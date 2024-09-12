@@ -1566,9 +1566,9 @@ class Str
     public static function trim($value, $charlist = null)
     {
         if ($charlist === null) {
-            $replaced = preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}]+|[\s\x{FEFF}\x{200B}\x{200E}]+$~u', '', $value);
+            $trimDefaultCharacters = " \n\r\t\v\0";
 
-            return isset($replaced) ? $replaced : trim($value);
+            return preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}'.$trimDefaultCharacters.']+|[\s\x{FEFF}\x{200B}\x{200E}'.$trimDefaultCharacters.']+$~u', '', $value) ?? trim($value);
         }
 
         return trim($value, $charlist);
@@ -1584,9 +1584,9 @@ class Str
     public static function ltrim($value, $charlist = null)
     {
         if ($charlist === null) {
-            $replaced = preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}]+~u', '', $value);
+            $ltrimDefaultCharacters = " \n\r\t\v\0";
 
-            return isset($replaced) ? $replaced : ltrim($value);
+            return preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}'.$ltrimDefaultCharacters.']+~u', '', $value) ?? ltrim($value);
         }
 
         return ltrim($value, $charlist);
@@ -1602,9 +1602,9 @@ class Str
     public static function rtrim($value, $charlist = null)
     {
         if ($charlist === null) {
-            $replaced = preg_replace('~[\s\x{FEFF}\x{200B}\x{200E}]+$~u', '', $value);
+            $rtrimDefaultCharacters = " \n\r\t\v\0";
 
-            return isset($replaced) ? $replaced : rtrim($value);
+            return preg_replace('~[\s\x{FEFF}\x{200B}\x{200E}'.$rtrimDefaultCharacters.']+$~u', '', $value) ?? rtrim($value);
         }
 
         return rtrim($value, $charlist);

@@ -3,6 +3,7 @@
 namespace Illuminate\Tests\Bus;
 
 use Illuminate\Bus\Queueable;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 if (PHP_VERSION_ID >= 80100) {
@@ -28,9 +29,8 @@ class QueueableTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider connectionDataProvider
-     */
+    /** @dataProvider connectionDataProvider */
+    #[DataProvider('connectionDataProvider')]
     public function testOnConnection(/*mixed */$connection, /*?string */$expected)/*: void*/
     {
         $connection = backport_type_check('mixed', $connection);
@@ -43,9 +43,8 @@ class QueueableTest extends TestCase
         $this->assertSame($job->connection, $expected);
     }
 
-    /**
-     * @dataProvider connectionDataProvider
-     */
+    /** @dataProvider connectionDataProvider */
+    #[DataProvider('connectionDataProvider')]
     public function testAllOnConnection(/*mixed */$connection, /*?string */$expected)/*: void*/
     {
         $connection = backport_type_check('mixed', $connection);
@@ -76,9 +75,8 @@ class QueueableTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider queuesDataProvider
-     */
+    /** @dataProvider queuesDataProvider */
+    #[DataProvider('queuesDataProvider')]
     public function testOnQueue(/*mixed */$queue, /*?string */$expected)/*: void*/
     {
         $queue = backport_type_check('mixed', $queue);
@@ -91,9 +89,8 @@ class QueueableTest extends TestCase
         $this->assertSame($job->queue, $expected);
     }
 
-    /**
-     * @dataProvider queuesDataProvider
-     */
+    /** @dataProvider queuesDataProvider */
+    #[DataProvider('queuesDataProvider')]
     public function testAllOnQueue(/*mixed */$queue, /*?string */$expected)/*: void*/
     {
         $queue = backport_type_check('mixed', $queue);

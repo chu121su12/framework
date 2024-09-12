@@ -141,10 +141,7 @@ class MiddlewareTest extends TestCase
 
         $reflection = new ReflectionClass($middleware);
         $method = $reflection->getMethod('proxies');
-        $method->setAccessible(true);
-
         $property = $reflection->getProperty('proxies');
-        $property->setAccessible(true);
 
         $this->assertNull($method->invoke($middleware));
 
@@ -178,10 +175,7 @@ class MiddlewareTest extends TestCase
 
         $reflection = new ReflectionClass($middleware);
         $method = $reflection->getMethod('headers');
-        $method->setAccessible(true);
-
         $property = $reflection->getProperty('headers');
-        $property->setAccessible(true);
 
         $this->assertEquals(Request::HEADER_X_FORWARDED_FOR |
             Request::HEADER_X_FORWARDED_HOST |

@@ -2,6 +2,7 @@
 
 namespace Illuminate\Auth\Middleware;
 
+use BackedEnum;
 use Closure;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Database\Eloquent\Model;
@@ -29,13 +30,15 @@ class Authorize
     /**
      * Specify the ability and models for the middleware.
      *
-     * @param  string  $ability
+     * @param  \BackedEnum|string  $ability
      * @param  string  ...$models
      * @return string
      */
     public static function using($ability, ...$models)
     {
-        return static::class.':'.implode(',', array_merge([$ability], $models));
+        $ability = $ability instanceof BackedEnum ? $ability->value : $ability;
+
+        return static::class.':'.implode(',', [$ability, ...$models]);
     }
 
     /**

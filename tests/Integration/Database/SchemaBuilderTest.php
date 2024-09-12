@@ -379,7 +379,12 @@ class SchemaBuilderTest extends DatabaseTestCase
 
         $types = Schema::getTypes();
 
-        $this->assertCount(13, $types);
+        if (version_compare($this->getConnection()->getServerVersion(), '14.0', '<')) {
+            $this->assertCount(10, $types);
+        } else {
+            $this->assertCount(13, $types);
+        }
+
         $this->assertTrue(collect($types)->contains(function ($type) { return $type['name'] === 'pseudo_foo' && $type['type'] === 'pseudo' && ! $type['implicit']; }));
         $this->assertTrue(collect($types)->contains(function ($type) { return $type['name'] === 'comp_foo' && $type['type'] === 'composite' && ! $type['implicit']; }));
         $this->assertTrue(collect($types)->contains(function ($type) { return $type['name'] === 'enum_foo' && $type['type'] === 'enum' && ! $type['implicit']; }));
@@ -726,6 +731,10 @@ class SchemaBuilderTest extends DatabaseTestCase
 
     public function testGettingGeneratedColumns()
     {
+        if ($this->driver === 'pgsql' && version_compare($this->getConnection()->getServerVersion(), '12.0', '<')) {
+            $this->markTestSkipped('Test requires a PostgreSQL connection >= 12.0');
+        }
+
         Schema::create('test', function (Blueprint $table) {
             $table->integer('price');
 
