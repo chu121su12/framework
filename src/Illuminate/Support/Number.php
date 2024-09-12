@@ -311,9 +311,11 @@ class Number
      * @param  int|float  $offset
      * @return array
      */
-    public static function pairs(int|float $to, int|float $by, int|float $start = 0, int|float $offset = 1)
+    public static function pairs(/*int|float */$to, /*int|float */$by, /*int|float */$start = 0, /*int|float */$offset = 1)
     {
         $offset = backport_type_check('int|float', $offset);
+
+        $start = backport_type_check('int|float', $start);
 
         $by = backport_type_check('int|float', $by);
 
