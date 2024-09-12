@@ -42,11 +42,13 @@ class InvokeSerializedClosureCommand extends Command
     {
         try {
             switch (true) {
-                case ! is_null($source = $this->argument('code')):
+                case ! is_null($this->argument('code')):
+                    $source = $this->argument('code');
                     $toCall = backport_unserialize($this->option('base64') ? \base64_decode($source, true) : $source);
                     break;
 
-                case isset($source = $_SERVER['LARAVEL_INVOKABLE_CLOSURE']):
+                case isset($_SERVER['LARAVEL_INVOKABLE_CLOSURE']):
+                    $source = $_SERVER['LARAVEL_INVOKABLE_CLOSURE'];
                     $toCall = backport_unserialize($this->option('base64') ? \base64_decode($source, true) : $source);
                     break;
 
