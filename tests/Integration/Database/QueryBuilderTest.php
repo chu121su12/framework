@@ -311,6 +311,8 @@ class QueryBuilderTest extends DatabaseTestCase
     #[DefineEnvironment('defineEnvironmentWouldThrowsPDOException')]
     public function testWhereDateWithInvalidOperator()
     {
+        $this->defineEnvironmentWouldThrowsPDOException(null);
+
         $sql = DB::table('posts')->whereDate('created_at', '? OR 1=1', '2018-01-02');
 
         PHPUnit::assertArraySubset([
@@ -334,6 +336,8 @@ class QueryBuilderTest extends DatabaseTestCase
     #[DefineEnvironment('defineEnvironmentWouldThrowsPDOException')]
     public function testOrWhereDateWithInvalidOperator()
     {
+        $this->defineEnvironmentWouldThrowsPDOException(null);
+
         $sql = DB::table('posts')->where('id', 1)->orWhereDate('created_at', '? OR 1=1', '2018-01-02');
 
         PHPUnit::assertArraySubset([
@@ -468,6 +472,8 @@ class QueryBuilderTest extends DatabaseTestCase
     #[DefineEnvironment('defineEnvironmentWouldThrowsPDOException')]
     public function testWhereYearWithInvalidOperator()
     {
+        $this->defineEnvironmentWouldThrowsPDOException(null);
+
         $sql = DB::table('posts')->whereYear('created_at', '? OR 1=1', '2018');
 
         PHPUnit::assertArraySubset([
@@ -492,6 +498,8 @@ class QueryBuilderTest extends DatabaseTestCase
     #[DefineEnvironment('defineEnvironmentWouldThrowsPDOException')]
     public function testOrWhereYearWithInvalidOperator()
     {
+        $this->defineEnvironmentWouldThrowsPDOException(null);
+
         $sql = DB::table('posts')->where('id', 1)->orWhereYear('created_at', '? OR 1=1', '2018');
 
         PHPUnit::assertArraySubset([
@@ -521,6 +529,8 @@ class QueryBuilderTest extends DatabaseTestCase
     #[DefineEnvironment('defineEnvironmentWouldThrowsPDOException')]
     public function testWhereTimeWithInvalidOperator()
     {
+        $this->defineEnvironmentWouldThrowsPDOException(null);
+
         $sql = DB::table('posts')->whereTime('created_at', '? OR 1=1', '03:04:05');
 
         PHPUnit::assertArraySubset([
@@ -544,6 +554,8 @@ class QueryBuilderTest extends DatabaseTestCase
     #[DefineEnvironment('defineEnvironmentWouldThrowsPDOException')]
     public function testOrWhereTimeWithInvalidOperator()
     {
+        $this->defineEnvironmentWouldThrowsPDOException(null);
+
         $sql = DB::table('posts')->where('id', 1)->orWhereTime('created_at', '? OR 1=1', '03:04:05');
 
         PHPUnit::assertArraySubset([
