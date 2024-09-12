@@ -14,7 +14,8 @@ class InvokeSerializedClosureCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'invoke-serialized-closure {code? : The serialized closure}';
+    protected $signature = 'invoke-serialized-closure {code? : The serialized closure}
+        {--base64 : Do base64 decoding}';
 
     /**
      * The console command description.
@@ -41,9 +42,16 @@ class InvokeSerializedClosureCommand extends Command
     {
         try {
             switch (true) {
-                case ! is_null($this->argument('code')): $toCall = backport_unserialize($this->argument('code')); break;
-                case isset($_SERVER['LARAVEL_INVOKABLE_CLOSURE']): $toCall = backport_unserialize($_SERVER['LARAVEL_INVOKABLE_CLOSURE']); break;
-                default: $toCall = function () { return null; };
+                case ! is_null($source = $this->argument('code')):
+                    $toCall = backport_unserialize($this->option('base64') ? \base64_decode($source, true) : $source);
+                    break;
+
+                case isset($source = $_SERVER['LARAVEL_INVOKABLE_CLOSURE']):
+                    $toCall = backport_unserialize($this->option('base64') ? \base64_decode($source, true) : $source);
+                    break;
+
+                default:
+                    $toCall = function () { return null; };
             }
 
             $this->output->write(backport_json_encode([

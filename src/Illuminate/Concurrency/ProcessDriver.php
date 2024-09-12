@@ -36,8 +36,8 @@ class ProcessDriver
         $results = $this->processFactory->pool(function (Pool $pool) use ($tasks, $php) {
             foreach (Arr::wrap($tasks) as $task) {
                 $pool->path(base_path())->env([
-                    'LARAVEL_INVOKABLE_CLOSURE' => backport_serialize(new SerializableClosure($task)),
-                ])->command($php.' artisan invoke-serialized-closure');
+                    'LARAVEL_INVOKABLE_CLOSURE' => \base64_encode(backport_serialize(new SerializableClosure($task))),
+                ])->command($php.' artisan invoke-serialized-closure --base64');
             }
         })->start()->wait();
 
