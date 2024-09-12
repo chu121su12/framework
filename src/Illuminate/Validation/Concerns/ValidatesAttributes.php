@@ -517,7 +517,7 @@ trait ValidatesAttributes
      */
     public function validateConfirmed($attribute, $value, $parameters)
     {
-        return $this->validateSame($attribute, $value, [$parameters[0] ?? $attribute.'_confirmation']);
+        return $this->validateSame($attribute, $value, [isset($parameters[0]) ? $parameters[0] : $attribute.'_confirmation']);
     }
 
     /**
@@ -823,7 +823,7 @@ trait ValidatesAttributes
             return false;
         }
 
-        [$minNumerator, $minDenominator] = array_replace(
+        list($minNumerator, $minDenominator) = array_replace(
             [1, 1], array_filter(sscanf($parameters['min_ratio'], '%f/%d'))
         );
 
@@ -844,7 +844,7 @@ trait ValidatesAttributes
             return false;
         }
 
-        [$maxNumerator, $maxDenominator] = array_replace(
+        list($maxNumerator, $maxDenominator) = array_replace(
             [1, 1], array_filter(sscanf($parameters['max_ratio'], '%f/%d'))
         );
 

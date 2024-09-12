@@ -55,7 +55,8 @@ class LocalFilesystemAdapter extends FilesystemAdapter
     public function temporaryUrl($path, $expiration, array $options = [])
     {
         if ($this->temporaryUrlCallback) {
-            return $this->temporaryUrlCallback->bindTo($this, static::class)(
+            $tucInstance = $this->temporaryUrlCallback->bindTo($this, static::class);
+            return $tucInstance(
                 $path, $expiration, $options
             );
         }
@@ -70,7 +71,7 @@ class LocalFilesystemAdapter extends FilesystemAdapter
             'storage.'.$this->disk,
             $expiration,
             ['path' => $path],
-            absolute: false
+            /*absolute: */false
         ));
     }
 
@@ -80,8 +81,10 @@ class LocalFilesystemAdapter extends FilesystemAdapter
      * @param  string  $disk
      * @return $this
      */
-    public function diskName(string $disk)
+    public function diskName(/*string */$disk)
     {
+        $disk = backport_type_check('string', $disk);
+
         $this->disk = $disk;
 
         return $this;
@@ -94,8 +97,10 @@ class LocalFilesystemAdapter extends FilesystemAdapter
      * @param  \Closure|null  $urlGeneratorResolver
      * @return $this
      */
-    public function shouldServeSignedUrls(bool $serve = true, ?Closure $urlGeneratorResolver = null)
+    public function shouldServeSignedUrls(/*bool */$serve = true, /*?*/Closure $urlGeneratorResolver = null)
     {
+        $serve = backport_type_check('bool', $serve);
+
         $this->shouldServeSignedUrls = $serve;
         $this->urlGeneratorResolver = $urlGeneratorResolver;
 

@@ -410,15 +410,21 @@ if (! function_exists('defer')) {
      * @param  bool  $always
      * @return \Illuminate\Foundation\Defer\DeferredCallback
      */
-    function defer(?callable $callback = null, ?string $name = null, bool $always = false)
+    function defer(/*?*/callable $callback = null, /*?*//*string */$name = null, /*bool */$always = false)
     {
+        $name = backport_type_check('?string', $name);
+
+        $always = backport_type_check('bool', $always);
+
         if ($callback === null) {
             return app(DeferredCallbackCollection::class);
         }
 
         return tap(
             new DeferredCallback($callback, $name, $always),
-            fn ($deferred) => app(DeferredCallbackCollection::class)[] = $deferred
+            function ($deferred) {
+                return app(DeferredCallbackCollection::class)[] = $deferred;
+            }
         );
     }
 }

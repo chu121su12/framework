@@ -270,8 +270,9 @@ class Sleep
      *
      * @param  \Closure  $callback
      * @return $this
+     * @deprecated
      */
-    public function while(Closure $callback)
+    public function while_(Closure $callback)
     {
         $this->while = $callback;
 

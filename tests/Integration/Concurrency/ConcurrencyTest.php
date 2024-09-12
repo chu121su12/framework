@@ -5,23 +5,28 @@ namespace Illuminate\Tests\Integration\Console;
 use Orchestra\Testbench\TestCase;
 use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
 
+/**
+ * @requires OS Linux|Darwin
+ */
 #[RequiresOperatingSystem('Linux|DAR')]
 class ConcurrencyTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
-        $this->defineCacheRoutes(<<<PHP
+        $route = <<<PHP
 <?php
 use Illuminate\Support\Facades\Concurrency;
 use Illuminate\Support\Facades\Route;
 
 Route::any('/concurrency', function () {
     return Concurrency::run([
-        fn () => 1 + 1,
-        fn () => 2 + 2,
+        function () { return 1 + 1; },
+        function () { return 2 + 2; },
     ]);
 });
-PHP);
+PHP;
+
+        $this->defineCacheRoutes($route);
 
         parent::setUp();
     }
@@ -31,7 +36,7 @@ PHP);
         $response = $this->get('concurrency')
             ->assertOk();
 
-        [$first, $second] = $response->original;
+        list($first, $second) = $response->original;
 
         $this->assertEquals(2, $first);
         $this->assertEquals(4, $second);

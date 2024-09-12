@@ -12,8 +12,10 @@ class ForkDriver
     /**
      * Run the given tasks concurrently and return an array containing the results.
      */
-    public function run(Closure|array $tasks): array
+    public function run(/*Closure|array */$tasks)/*: array*/
     {
+        $tasks = backport_type_check('Closure|array', $tasks);
+
         /** @phpstan-ignore class.notFound */
         return Fork::new()->run(...Arr::wrap($tasks));
     }
@@ -21,8 +23,10 @@ class ForkDriver
     /**
      * Start the given tasks in the background after the current task has finished.
      */
-    public function defer(Closure|array $tasks): DeferredCallback
+    public function defer(/*Closure|array */$tasks)/*: DeferredCallback*/
     {
-        return defer(fn () => $this->run($tasks));
+        $tasks = backport_type_check('Closure|array', $tasks);
+
+        return defer(function () use ($tasks) { return $this->run($tasks); });
     }
 }

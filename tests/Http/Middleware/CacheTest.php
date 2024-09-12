@@ -108,7 +108,7 @@ class CacheTest extends TestCase
             return new Response('some content');
         }, 'etag;max_age=100;s_maxage=200');
 
-        $this->assertSame('"94e66df8cd09d410c62d9e0dc59d3a884e458e05"', $response->getEtag());
+        $this->assertSame('"9893532233caff98cd083a116b013c0b"', $response->getEtag());
         $this->assertSame('max-age=100, public, s-maxage=200', $response->headers->get('Cache-Control'));
     }
 
@@ -124,7 +124,7 @@ class CacheTest extends TestCase
     public function testIsNotModified()
     {
         $request = new Request;
-        $request->headers->set('If-None-Match', '"94e66df8cd09d410c62d9e0dc59d3a884e458e05"');
+        $request->headers->set('If-None-Match', '"9893532233caff98cd083a116b013c0b"');
 
         $response = (new Cache)->handle($request, function () {
             return new Response('some content');

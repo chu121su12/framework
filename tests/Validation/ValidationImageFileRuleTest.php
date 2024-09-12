@@ -49,12 +49,12 @@ class ValidationImageFileRuleTest extends TestCase
         $this->fails(
             File::image()->dimensions(Rule::dimensions()->ratio(1)),
             UploadedFile::fake()->image('foo.png', 105, 100),
-            ['validation.dimensions'],
+            ['validation.dimensions']
         );
 
         $this->passes(
             File::image()->dimensions(Rule::dimensions()->ratio(1)),
-            UploadedFile::fake()->image('foo.png', 100, 100),
+            UploadedFile::fake()->image('foo.png', 100, 100)
         );
     }
 
@@ -63,12 +63,12 @@ class ValidationImageFileRuleTest extends TestCase
         $this->fails(
             File::image()->dimensions(Rule::dimensions()->minRatio(1 / 2)),
             UploadedFile::fake()->image('foo.png', 100, 100),
-            ['validation.dimensions'],
+            ['validation.dimensions']
         );
 
         $this->passes(
             File::image()->dimensions(Rule::dimensions()->minRatio(1 / 2)),
-            UploadedFile::fake()->image('foo.png', 100, 200),
+            UploadedFile::fake()->image('foo.png', 100, 200)
         );
     }
 
@@ -77,12 +77,12 @@ class ValidationImageFileRuleTest extends TestCase
         $this->fails(
             File::image()->dimensions(Rule::dimensions()->maxRatio(1 / 2)),
             UploadedFile::fake()->image('foo.png', 100, 300),
-            ['validation.dimensions'],
+            ['validation.dimensions']
         );
 
         $this->passes(
             File::image()->dimensions(Rule::dimensions()->maxRatio(1 / 2)),
-            UploadedFile::fake()->image('foo.png', 100, 100),
+            UploadedFile::fake()->image('foo.png', 100, 100)
         );
     }
 
@@ -91,12 +91,12 @@ class ValidationImageFileRuleTest extends TestCase
         $this->fails(
             File::image()->dimensions(Rule::dimensions()->ratioBetween(1 / 2, 1 / 3)),
             UploadedFile::fake()->image('foo.png', 100, 100),
-            ['validation.dimensions'],
+            ['validation.dimensions']
         );
 
         $this->passes(
             File::image()->dimensions(Rule::dimensions()->ratioBetween(1 / 2, 1 / 3)),
-            UploadedFile::fake()->image('foo.png', 100, 200),
+            UploadedFile::fake()->image('foo.png', 100, 200)
         );
     }
 

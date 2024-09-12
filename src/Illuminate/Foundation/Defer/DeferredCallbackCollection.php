@@ -14,7 +14,7 @@ class DeferredCallbackCollection implements ArrayAccess, Countable
      *
      * @var array
      */
-    protected array $callbacks = [];
+    protected /*array */$callbacks = [];
 
     /**
      * Get the first callback in the collection.
@@ -31,9 +31,9 @@ class DeferredCallbackCollection implements ArrayAccess, Countable
      *
      * @return void
      */
-    public function invoke(): void
+    public function invoke()/*: void*/
     {
-        $this->invokeWhen(fn () => true);
+        $this->invokeWhen(function () { return true; });
     }
 
     /**
@@ -42,9 +42,11 @@ class DeferredCallbackCollection implements ArrayAccess, Countable
      * @param  \Closure  $when
      * @return void
      */
-    public function invokeWhen(?Closure $when = null): void
+    public function invokeWhen(/*?*/Closure $when = null)/*: void*/
     {
-        $when ??= fn () => true;
+        if (! isset($when)) {
+            $when = function () { return true; };
+        }
 
         $this->forgetDuplicates();
 
@@ -63,10 +65,12 @@ class DeferredCallbackCollection implements ArrayAccess, Countable
      * @param  string  $name
      * @return void
      */
-    public function forget(string $name): void
+    public function forget(/*string */$name)/*: void*/
     {
+        $name = backport_type_check('string', $name);
+
         $this->callbacks = collect($this->callbacks)
-            ->reject(fn ($callback) => $callback->name === $name)
+            ->reject(function ($callback) use ($name) { return $callback->name === $name; })
             ->values()
             ->all();
     }
@@ -76,11 +80,11 @@ class DeferredCallbackCollection implements ArrayAccess, Countable
      *
      * @return $this
      */
-    protected function forgetDuplicates(): self
+    protected function forgetDuplicates()/*: self*/
     {
         $this->callbacks = collect($this->callbacks)
             ->reverse()
-            ->unique(fn ($c) => $c->name)
+            ->unique(function ($c) { return $c->name; })
             ->reverse()
             ->values()
             ->all();
@@ -94,8 +98,11 @@ class DeferredCallbackCollection implements ArrayAccess, Countable
      * @param  mixed  $offset
      * @return bool
      */
-    public function offsetExists(mixed $offset): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists(/*mixed */$offset)/*: bool*/
     {
+        $offset = backport_type_check('mixed', $offset);
+
         $this->forgetDuplicates();
 
         return isset($this->callbacks[$offset]);
@@ -107,8 +114,11 @@ class DeferredCallbackCollection implements ArrayAccess, Countable
      * @param  mixed  $offset
      * @return mixed
      */
-    public function offsetGet(mixed $offset): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet(/*mixed */$offset)/*: mixed*/
     {
+        $offset = backport_type_check('mixed', $offset);
+
         $this->forgetDuplicates();
 
         return $this->callbacks[$offset];
@@ -121,8 +131,13 @@ class DeferredCallbackCollection implements ArrayAccess, Countable
      * @param  mixed  $value
      * @return void
      */
-    public function offsetSet(mixed $offset, mixed $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet(/*mixed */$offset, /*mixed */$value)/*: void*/
     {
+        $offset = backport_type_check('mixed', $offset);
+
+        $value = backport_type_check('mixed', $value);
+
         if (is_null($offset)) {
             $this->callbacks[] = $value;
         } else {
@@ -136,8 +151,11 @@ class DeferredCallbackCollection implements ArrayAccess, Countable
      * @param  mixed  $offset
      * @return void
      */
-    public function offsetUnset(mixed $offset): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset(/*mixed */$offset)/*: void*/
     {
+        $offset = backport_type_check('mixed', $offset);
+
         $this->forgetDuplicates();
 
         unset($this->callbacks[$offset]);
@@ -148,7 +166,8 @@ class DeferredCallbackCollection implements ArrayAccess, Countable
      *
      * @return int
      */
-    public function count(): int
+    #[\ReturnTypeWillChange]
+    public function count()/*: int*/
     {
         $this->forgetDuplicates();
 

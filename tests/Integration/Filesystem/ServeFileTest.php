@@ -7,7 +7,7 @@ use Orchestra\Testbench\TestCase;
 
 class ServeFileTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         $this->afterApplicationCreated(function () {
             Storage::put('serve-file-test.txt', 'Hello World');

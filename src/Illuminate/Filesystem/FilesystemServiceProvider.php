@@ -82,7 +82,7 @@ class FilesystemServiceProvider extends ServiceProvider
             return;
         }
 
-        foreach ($this->app['config']['filesystems.disks'] ?? [] as $disk => $config) {
+        foreach (isset($this->app['config']['filesystems.disks']) ? $this->app['config']['filesystems.disks'] : [] as $disk => $config) {
             if (! $this->shouldServeFiles($config)) {
                 continue;
             }
@@ -92,12 +92,14 @@ class FilesystemServiceProvider extends ServiceProvider
                     ? rtrim(parse_url($config['url'])['path'], '/')
                     : '/storage';
 
-                Route::get($uri.'/{path}', function (Request $request, string $path) use ($disk, $config) {
-                    return (new ServeFile(
+                Route::get($uri.'/{path}', function (Request $request, /*string */$path) use ($disk, $config) {
+                    $path = backport_type_check('string', $path);
+                    $serveFileInstance = new ServeFile(
                         $disk,
                         $config,
                         $this->app->isProduction()
-                    ))($request, $path);
+                    );
+                    return $serveFileInstance($request, $path);
                 })->where('path', '.*')->name('storage.'.$disk);
             });
         }
@@ -111,7 +113,7 @@ class FilesystemServiceProvider extends ServiceProvider
      */
     protected function shouldServeFiles(array $config)
     {
-        return $config['driver'] === 'local' && ($config['serve'] ?? false);
+        return $config['driver'] === 'local' && (isset($config['serve']) ? $config['serve'] : false);
     }
 
     /**

@@ -459,13 +459,12 @@ class Worker
         } catch (Throwable $e) {
         }
 
-        if (isset($e)) {
-            $exceptionOccurred = true;
+        if ($exceptionOccurred = isset($e)) {
             $this->handleJobException($connectionName, $job, $options, $e);
         }
 
         $this->events->dispatch(new JobAttempted(
-            $connectionName, $job, $exceptionOccurred ?? false
+            $connectionName, $job, $exceptionOccurred
         ));
     }
 

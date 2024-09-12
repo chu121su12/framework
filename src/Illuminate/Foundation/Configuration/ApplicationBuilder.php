@@ -32,7 +32,7 @@ class ApplicationBuilder
      *
      * @var array
      */
-    protected array $additionalRoutingCallbacks = [];
+    protected /*array */$additionalRoutingCallbacks = [];
 
     /**
      * The Folio / page middleware that have been defined by the user.

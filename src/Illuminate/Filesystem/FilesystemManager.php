@@ -171,8 +171,10 @@ class FilesystemManager implements FactoryContract
      * @param  string  $name
      * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
-    public function createLocalDriver(array $config, string $name = 'local')
+    public function createLocalDriver(array $config, /*string */$name = 'local')
     {
+        $name = backport_type_check('string', $name);
+
         // $visibility = PortableVisibilityConverter::fromArray(
         //     $config['permissions'] ?? [],
         //     $config['directory_visibility'] ?? $config['visibility'] ?? Visibility::PRIVATE
@@ -193,8 +195,8 @@ class FilesystemManager implements FactoryContract
         ))->diskName(
             $name
         )->shouldServeSignedUrls(
-            $config['serve'] ?? false,
-            fn () => $this->app['url'],
+            isset($config['serve']) ? $config['serve'] : false,
+            function () { return $this->app['url']; }
         );
     }
 

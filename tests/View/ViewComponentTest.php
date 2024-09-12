@@ -50,6 +50,7 @@ class ViewComponentTest extends TestCase
         $this->assertArrayNotHasKey('goodbye', $data);
 
         $reflectionMethod = new ReflectionMethod($component, 'ignoredMethods');
+        $reflectionMethod->setAccessible(true);
 
         $ignoredMethods = $reflectionMethod->invoke($component);
 

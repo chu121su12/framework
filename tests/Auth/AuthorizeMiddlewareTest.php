@@ -19,7 +19,9 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-include_once 'Enums.php';
+if (PHP_VERSION_ID >= 80100) {
+    include_once 'Enums.php';
+}
 
 class AuthorizeMiddlewareTest extends TestCase
 {
@@ -124,6 +126,9 @@ class AuthorizeMiddlewareTest extends TestCase
         $this->assertSame('success', $response->content());
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testSimpleAbilityWithBackedEnumParameter()
     {
         $this->gate()->define('view-dashboard', function ($user) {

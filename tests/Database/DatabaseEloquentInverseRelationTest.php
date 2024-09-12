@@ -14,6 +14,8 @@ use Mockery as m;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+class DatabaseEloquentInverseRelationTest_testOnlyHydratesInverseRelationOnModels_class {}
+
 class DatabaseEloquentInverseRelationTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -290,7 +292,7 @@ class DatabaseEloquentInverseRelationTest extends TestCase
             [],
             new HasInverseRelationRelatedStub(),
             'foo',
-            new class() {},
+            new DatabaseEloquentInverseRelationTest_testOnlyHydratesInverseRelationOnModels_class,
             new HasInverseRelationRelatedStub(),
         ]);
     }
@@ -388,7 +390,7 @@ class HasInverseRelationStub extends Relation
         return $this->guessInverseRelation();
     }
 
-    public function exposeApplyInverseRelationToCollection($models, ?Model $parent = null)
+    public function exposeApplyInverseRelationToCollection($models, /*?*/Model $parent = null)
     {
         return $this->applyInverseRelationToCollection($models, $parent);
     }

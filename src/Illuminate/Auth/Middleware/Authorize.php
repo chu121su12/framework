@@ -38,7 +38,7 @@ class Authorize
     {
         $ability = $ability instanceof BackedEnum ? $ability->value : $ability;
 
-        return static::class.':'.implode(',', [$ability, ...$models]);
+        return static::class.':'.implode(',', \array_merge([$ability], $models));
     }
 
     /**

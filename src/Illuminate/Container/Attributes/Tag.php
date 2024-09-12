@@ -11,9 +11,11 @@ use Illuminate\Contracts\Container\ContextualAttribute;
 #[Attribute(Attribute::TARGET_PARAMETER)]
 final class Tag implements ContextualAttribute
 {
+    public $tag;
     public function __construct(
-        public string $tag,
+        /*public string */$tag
     ) {
+        $this->tag = backport_type_check('string', $tag);
     }
 
     /**

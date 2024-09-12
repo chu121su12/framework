@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 if (PHP_VERSION_ID >= 80100) {
-    include_once 'Enums.php';
+    include_once 'Enum.php';
 }
 
 class QueueableTest extends TestCase

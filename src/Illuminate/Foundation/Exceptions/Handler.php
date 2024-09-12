@@ -1146,10 +1146,12 @@ class Handler implements ExceptionHandlerContract
      * @param  \Throwable  $e
      * @return \Psr\Log\LogLevel::*
      */
-    protected function mapLogLevel(Throwable $e)
+    protected function mapLogLevel(/*Throwable */$e)
     {
+        backport_type_throwable($e);
+
         return Arr::first(
-            $this->levels, fn ($level, $type) => $e instanceof $type, LogLevel::ERROR
+            $this->levels, function ($level, $type) use ($e) { return $e instanceof $type; }, LogLevel::ERROR
         );
     }
 

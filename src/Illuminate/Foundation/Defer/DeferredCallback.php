@@ -6,15 +6,22 @@ use Illuminate\Support\Str;
 
 class DeferredCallback
 {
+    public $callback;
+    public $name;
+    public $always;
+
     /**
      * Create a new deferred callback instance.
      *
      * @param  callable  $callback
      * @return void
      */
-    public function __construct(public $callback, public ?string $name = null, public bool $always = false)
+    public function __construct(/*public */$callback, /*public ?string */$name = null, /*public bool */$always = false)
     {
-        $this->name = $name ?? (string) Str::uuid();
+        $this->callback = $callback;
+        $this->always = backport_type_check('bool', $always);
+
+        $this->name = isset($name) ? backport_type_check('?string', $name) : (string) Str::uuid();
     }
 
     /**
@@ -23,8 +30,10 @@ class DeferredCallback
      * @param  string  $name
      * @return $this
      */
-    public function name(string $name): self
+    public function name(/*string */$name)/*: self*/
     {
+        $name = backport_type_check('string', $name);
+
         $this->name = $name;
 
         return $this;
@@ -36,8 +45,10 @@ class DeferredCallback
      * @param  bool  $always
      * @return $this
      */
-    public function always(bool $always = true): self
+    public function always(/*bool */$always = true)/*: self*/
     {
+        $always = backport_type_check('bool', $always);
+
         $this->always = $always;
 
         return $this;
@@ -48,7 +59,7 @@ class DeferredCallback
      *
      * @return void
      */
-    public function __invoke(): void
+    public function __invoke()/*: void*/
     {
         call_user_func($this->callback);
     }

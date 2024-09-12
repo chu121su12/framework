@@ -12,7 +12,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-include_once 'Enums.php';
+if (PHP_VERSION_ID >= 80100) {
+    include_once 'Enums.php';
+}
 
 class AuthAccessGateTest extends TestCase
 {
@@ -328,6 +330,9 @@ class AuthAccessGateTest extends TestCase
         $this->assertTrue($gate->denies('deny'));
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testCanDefineGatesUsingBackedEnum()
     {
         $gate = $this->getBasicGate();
@@ -339,6 +344,9 @@ class AuthAccessGateTest extends TestCase
         $this->assertTrue($gate->allows('view-dashboard'));
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testBackedEnumInAllows()
     {
         $gate = $this->getBasicGate();
@@ -350,6 +358,9 @@ class AuthAccessGateTest extends TestCase
         $this->assertTrue($gate->allows(AbilitiesEnum::VIEW_DASHBOARD));
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testBackedEnumInDenies()
     {
         $gate = $this->getBasicGate();
@@ -371,17 +382,27 @@ class AuthAccessGateTest extends TestCase
         $gate->define('allow_2', function ($user) {
             return true;
         });
-        $gate->define(AbilitiesEnum::VIEW_DASHBOARD, function ($user) {
-            return true;
-        });
         $gate->define('deny', function ($user) {
             return false;
         });
 
         $this->assertTrue($gate->allows(['allow_1']));
-        $this->assertTrue($gate->allows(['allow_1', 'allow_2', AbilitiesEnum::VIEW_DASHBOARD]));
         $this->assertFalse($gate->allows(['allow_1', 'allow_2', 'deny']));
         $this->assertFalse($gate->allows(['deny', 'allow_1', 'allow_2']));
+    }
+
+    /**
+     * @requires PHP 8.1
+     */
+    public function testArrayAbilitiesInAllowsBe()
+    {
+        $gate = $this->getBasicGate();
+
+        $gate->define(AbilitiesEnum::VIEW_DASHBOARD, function ($user) {
+            return true;
+        });
+
+        $this->assertTrue($gate->allows(['allow_1', 'allow_2', AbilitiesEnum::VIEW_DASHBOARD]));
     }
 
     public function testArrayAbilitiesInDenies()
@@ -394,18 +415,28 @@ class AuthAccessGateTest extends TestCase
         $gate->define('deny_2', function ($user) {
             return false;
         });
-        $gate->define(AbilitiesEnum::VIEW_DASHBOARD, function ($user) {
-            return false;
-        });
         $gate->define('allow', function ($user) {
             return true;
         });
 
         $this->assertTrue($gate->denies(['deny_1']));
-        $this->assertTrue($gate->denies(['deny_1', 'deny_2', AbilitiesEnum::VIEW_DASHBOARD]));
         $this->assertTrue($gate->denies(['deny_1', 'allow']));
         $this->assertTrue($gate->denies(['allow', 'deny_1']));
         $this->assertFalse($gate->denies(['allow']));
+    }
+
+    /**
+     * @requires PHP 8.1
+     */
+    public function testArrayAbilitiesInDeniesBe()
+    {
+        $gate = $this->getBasicGate();
+
+        $gate->define(AbilitiesEnum::VIEW_DASHBOARD, function ($user) {
+            return false;
+        });
+
+        $this->assertTrue($gate->denies(['deny_1', 'deny_2', AbilitiesEnum::VIEW_DASHBOARD]));
     }
 
     public function testCurrentUserThatIsOnGateAlwaysInjectedIntoClosureCallbacks()
@@ -1117,6 +1148,9 @@ class AuthAccessGateTest extends TestCase
         $this->assertFalse($gate->check(['edit', 'update'], new AccessGateTestDummy));
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testAnyAbilitiesCheckUsingBackedEnum()
     {
         $gate = $this->getBasicGate();
@@ -1126,6 +1160,9 @@ class AuthAccessGateTest extends TestCase
         $this->assertTrue($gate->any(['edit', AbilitiesEnum::UPDATE], new AccessGateTestDummy));
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testNoneAbilitiesCheckUsingBackedEnum()
     {
         $gate = $this->getBasicGate();
@@ -1135,6 +1172,9 @@ class AuthAccessGateTest extends TestCase
         $this->assertTrue($gate->none(['edit', AbilitiesEnum::UPDATE], new AccessGateTestDummy));
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testAbilitiesCheckUsingBackedEnum()
     {
         $gate = $this->getBasicGate();

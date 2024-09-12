@@ -8,7 +8,7 @@ use Orchestra\Testbench\TestCase;
 
 class RepositoryTest extends TestCase
 {
-    public function testStaleWhileRevalidate(): void
+    public function testStaleWhileRevalidate()/*: void*/
     {
         Carbon::setTestNow('2000-01-01 00:00:00');
         $cache = Cache::driver('array');
@@ -103,7 +103,8 @@ class RepositoryTest extends TestCase
         $lock = $cache->lock('illuminate:cache:refresh:lock:foo');
 
         $this->assertTrue($lock->acquire());
-        defer()->first()();
+        $deferFirst = defer()->first();
+        $deferFirst();
         $this->assertSame(3, $value);
         $this->assertCount(1, defer());
         $this->assertSame(3, $cache->get('foo'));

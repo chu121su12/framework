@@ -45,7 +45,7 @@ class JobAttempted
      *
      * @return bool
      */
-    public function successful(): bool
+    public function successful()/*: bool*/
     {
         return ! $this->job->hasFailed() && ! $this->exceptionOccurred;
     }

@@ -40,18 +40,25 @@ class InvokeSerializedClosureCommand extends Command
     public function handle()
     {
         try {
-            $this->output->write(json_encode([
+            switch (true) {
+                case ! is_null($this->argument('code')): $toCall = backport_unserialize($this->argument('code')); break;
+                case isset($_SERVER['LARAVEL_INVOKABLE_CLOSURE']): $toCall = backport_unserialize($_SERVER['LARAVEL_INVOKABLE_CLOSURE']); break;
+                default: $toCall = function () { return null; };
+            }
+
+            $this->output->write(backport_json_encode([
                 'successful' => true,
-                'result' => serialize($this->laravel->call(match (true) {
-                    ! is_null($this->argument('code')) => unserialize($this->argument('code')),
-                    isset($_SERVER['LARAVEL_INVOKABLE_CLOSURE']) => unserialize($_SERVER['LARAVEL_INVOKABLE_CLOSURE']),
-                    default => fn () => null,
-                })),
+                'result' => backport_serialize($this->laravel->call($toCall)),
             ]));
+        } catch (\Exception $e) {
+        } catch (\ErrorException $e) {
         } catch (Throwable $e) {
+        }
+
+        if (isset($e)) {
             report($e);
 
-            $this->output->write(json_encode([
+            $this->output->write(backport_json_encode([
                 'successful' => false,
                 'exception' => get_class($e),
                 'message' => $e->getMessage(),

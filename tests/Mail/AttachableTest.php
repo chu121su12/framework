@@ -60,6 +60,25 @@ class AttachableTest_testItCanUtiliseExistingApisOnNonMailBasedResourcesWithArgs
             }
         }
 
+
+class AttachableTest_testFromUrlMethod_build_class implements Attachable
+            {
+                public function toMailAttachment()
+                {
+                    return Attachment::fromUrl('https://example.com/file.pdf')
+                        ->as_('example.pdf')
+                        ->withMime('application/pdf');
+                }
+            }
+
+class AttachableTest_testFromUrlMethod_class extends Mailable
+                {
+                    public function build()
+                    {
+                        $this->attach(new AttachableTest_testFromUrlMethod_build_class);
+                    }
+                }
+
 class AttachableTest extends TestCase
 {
     public function testItCanHaveMacroConstructors()
@@ -128,21 +147,7 @@ class AttachableTest extends TestCase
 
     public function testFromUrlMethod()
     {
-        $mailable = new class extends Mailable
-        {
-            public function build()
-            {
-                $this->attach(new class implements Attachable
-                {
-                    public function toMailAttachment()
-                    {
-                        return Attachment::fromUrl('https://example.com/file.pdf')
-                            ->as('example.pdf')
-                            ->withMime('application/pdf');
-                    }
-                });
-            }
-        };
+        $mailable = new AttachableTest_testFromUrlMethod_class;
 
         $mailable->build();
 
