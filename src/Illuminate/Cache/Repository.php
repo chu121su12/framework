@@ -477,6 +477,23 @@ class Repository implements ArrayAccess, CacheContract
      * @template TCacheValue
      *
      * @param  string  $key
+     * @param  int  $ttlFresh
+     * @param  int  $ttlStale
+     * @param  (callable(): TCacheValue)  $callback
+     * @param  array{ seconds?: int, owner?: string }|null  $lock
+     * @return TCacheValue
+     */
+    public function rememberStaleable($key, $ttlFresh, $ttlStale, $callback, $lock = null)
+    {
+        return $this->flexible($key, [$ttlFresh, $ttlStale], $callback, $lock);
+    }
+
+    /**
+     * Retrieve an item from the cache by key, refreshing it in the background if it is stale.
+     *
+     * @template TCacheValue
+     *
+     * @param  string  $key
      * @param  array{ 0: int, 1: int }  $ttl
      * @param  (callable(): TCacheValue)  $callback
      * @param  array{ seconds?: int, owner?: string }|null  $lock
