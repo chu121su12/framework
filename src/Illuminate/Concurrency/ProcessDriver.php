@@ -66,8 +66,8 @@ class ProcessDriver
         return defer(function () use ($tasks) {
             foreach (Arr::wrap($tasks) as $task) {
                 $this->processFactory->path(base_path())->env([
-                    'LARAVEL_INVOKABLE_CLOSURE' => backport_serialize(new SerializableClosure($task)),
-                ])->run('php artisan invoke-serialized-closure 2>&1 &');
+                    'LARAVEL_INVOKABLE_CLOSURE' => \base64_encode(backport_serialize(new SerializableClosure($task))),
+                ])->run('php artisan invoke-serialized-closure --base64 2>&1 &');
             }
         });
     }
