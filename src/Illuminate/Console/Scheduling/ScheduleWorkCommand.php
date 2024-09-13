@@ -5,6 +5,7 @@ namespace Illuminate\Console\Scheduling;
 use CR\LaravelBackport\SymfonyHelper;
 use Cron\CronExpression;
 use DateTimeZone;
+use Illuminate\Console\Application;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\ProcessUtils;
@@ -44,11 +45,7 @@ class ScheduleWorkCommand extends Command
 
         list($lastExecutionStartedAt, $executions) = [Carbon::now()->subMinutes(10), []];
 
-        $command = implode(' ', array_map(function ($arg) { return ProcessUtils::escapeArgument($arg); }, [
-            PHP_BINARY,
-            defined('ARTISAN_BINARY') ? ARTISAN_BINARY : 'artisan',
-            'schedule:run',
-        ]));
+        $command = Application::formatCommandString('schedule:run');
 
         if ($this->option('run-output-file')) {
             $command .= ' >> '.ProcessUtils::escapeArgument($this->option('run-output-file')).' 2>&1';
