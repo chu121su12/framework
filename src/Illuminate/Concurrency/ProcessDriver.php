@@ -30,17 +30,20 @@ class ProcessDriver implements Driver
      */
     public function run(/*Closure|array */$tasks)/*: array*/
     {
+        $tasks = backport_type_check('Closure|array', $tasks);
+
         $php = $this->phpBinary();
         $artisan = $this->artisanBinary();
 
         $results = $this->processFactory->pool(function (Pool $pool) use ($tasks, $php, $artisan) {
             foreach (Arr::wrap($tasks) as $task) {
                 $pool->path(base_path())->env([
-                    'LARAVEL_INVOKABLE_CLOSURE' => serialize(new SerializableClosure($task)),
+                    'LARAVEL_INVOKABLE_CLOSURE' => \base64_encode(backport_serialize(new SerializableClosure($task))),
                 ])->command([
                     $php,
                     $artisan,
                     'invoke-serialized-closure',
+                    '--base64',
                 ]);
             }
         })->start()->wait();
@@ -65,17 +68,20 @@ class ProcessDriver implements Driver
      */
     public function defer(/*Closure|array */$tasks)/*: DeferredCallback*/
     {
+        $tasks = backport_type_check('Closure|array', $tasks);
+
         $php = $this->phpBinary();
         $artisan = $this->artisanBinary();
 
         return defer(function () use ($tasks, $php, $artisan) {
             foreach (Arr::wrap($tasks) as $task) {
                 $this->processFactory->path(base_path())->env([
-                    'LARAVEL_INVOKABLE_CLOSURE' => serialize(new SerializableClosure($task)),
+                    'LARAVEL_INVOKABLE_CLOSURE' => \base64_encode(backport_serialize(new SerializableClosure($task))),
                 ])->run([
                     $php,
                     $artisan,
-                    'invoke-serialized-closure 2>&1 &',
+                    'invoke-serialized-closure',
+                    '--base64 2>&1 &',
                 ]);
             }
         });
@@ -84,7 +90,7 @@ class ProcessDriver implements Driver
     /**
      * Get the PHP binary.
      */
-    protected function phpBinary(): string
+    protected function phpBinary()/*: string*/
     {
         return (new PhpExecutableFinder)->find(false) ?: 'php';
     }
@@ -92,7 +98,7 @@ class ProcessDriver implements Driver
     /**
      * Get the Artisan binary.
      */
-    protected function artisanBinary(): string
+    protected function artisanBinary()/*: string*/
     {
         return defined('ARTISAN_BINARY') ? ARTISAN_BINARY : 'artisan';
     }

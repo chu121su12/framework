@@ -151,19 +151,19 @@ class SupportHelpersTest extends TestCase
         $this->assertEquals('There', when(1 === 1, 'There')); // strict types
         $this->assertEquals('There', when(1 == '1', 'There')); // loose types
         $this->assertNull(when(1 == 2, 'There'));
-        $this->assertNull(when('1', fn () => null));
-        $this->assertNull(when(0, fn () => null));
+        $this->assertNull(when('1', function () { return null; }));
+        $this->assertNull(when(0, function () { return null; }));
         $this->assertEquals('True', when([1, 2, 3, 4], 'True')); // Array
         $this->assertNull(when([], 'True')); // Empty Array = Falsy
-        $this->assertEquals('True', when(new StdClass, fn () => 'True')); // Object
+        $this->assertEquals('True', when(new StdClass, function () { return 'True'; })); // Object
         $this->assertEquals('World', when(false, 'Hello', 'World'));
         $this->assertEquals('World', when(1 === 0, 'Hello', 'World')); // strict types
         $this->assertEquals('World', when(1 == '0', 'Hello', 'World')); // loose types
-        $this->assertNull(when('', fn () => 'There', fn () => null));
-        $this->assertNull(when(0, fn () => 'There', fn () => null));
+        $this->assertNull(when('', function () { return 'There'; }, function () { return null; }));
+        $this->assertNull(when(0, function () { return 'There'; }, function () { return null; }));
         $this->assertEquals('False', when([], 'True', 'False'));  // Empty Array = Falsy
-        $this->assertTrue(when(true, fn ($value) => $value, fn ($value) => ! $value)); // lazy evaluation
-        $this->assertTrue(when(false, fn ($value) => $value, fn ($value) => ! $value)); // lazy evaluation
+        $this->assertTrue(when(true, function ($value) { return $value; }, function ($value) { return ! $value; })); // lazy evaluation
+        $this->assertTrue(when(false, function ($value) { return $value; }, function ($value) { return ! $value; })); // lazy evaluation
     }
 
     public function testFilled()
