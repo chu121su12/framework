@@ -676,11 +676,11 @@ class Connection implements ConnectionInterface
 
         $this->pretending = false;
 
-        $result = $callback();
-
-        $this->pretending = true;
-
-        return $result;
+        try {
+            return $callback();
+        } finally {
+            $this->pretending = true;
+        }
     }
 
     /**
