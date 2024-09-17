@@ -30,12 +30,14 @@ class ProcessDriver implements Driver
      */
     public function run(/*Closure|array */$tasks)/*: array*/
     {
-        $command = Application::formatCommandString('invoke-serialized-closure');
+        $tasks = backport_type_check('Closure|array', $tasks);
+
+        $command = Application::formatCommandString('invoke-serialized-closure --base64');
 
         $results = $this->processFactory->pool(function (Pool $pool) use ($tasks, $command) {
             foreach (Arr::wrap($tasks) as $task) {
                 $pool->path(base_path())->env([
-                    'LARAVEL_INVOKABLE_CLOSURE' => serialize(new SerializableClosure($task)),
+                    'LARAVEL_INVOKABLE_CLOSURE' => \base64_encode(backport_serialize(new SerializableClosure($task))),
                 ])->command($command);
             }
         })->start()->wait();
@@ -60,12 +62,14 @@ class ProcessDriver implements Driver
      */
     public function defer(/*Closure|array */$tasks)/*: DeferredCallback*/
     {
-        $command = Application::formatCommandString('invoke-serialized-closure');
+        $tasks = backport_type_check('Closure|array', $tasks);
+
+        $command = Application::formatCommandString('invoke-serialized-closure --base64');
 
         return defer(function () use ($tasks, $command) {
             foreach (Arr::wrap($tasks) as $task) {
                 $this->processFactory->path(base_path())->env([
-                    'LARAVEL_INVOKABLE_CLOSURE' => serialize(new SerializableClosure($task)),
+                    'LARAVEL_INVOKABLE_CLOSURE' => \base64_encode(backport_serialize(new SerializableClosure($task))),
                 ])->run($command.' 2>&1 &');
             }
         });

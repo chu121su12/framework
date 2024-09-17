@@ -95,12 +95,14 @@ class FilesystemServiceProvider extends ServiceProvider
 
                 $isProduction = $app->isProduction();
 
-                Route::get($uri.'/{path}', function (Request $request, string $path) use ($disk, $config, $isProduction) {
-                    return (new ServeFile(
+                Route::get($uri.'/{path}', function (Request $request, /*string */$path) use ($disk, $config, $isProduction) {
+                    $path = backport_type_check('string', $path);
+                    $serveFileInstance = new ServeFile(
                         $disk,
                         $config,
                         $isProduction
-                    ))($request, $path);
+                    );
+                    return $serveFileInstance($request, $path);
                 })->where('path', '.*')->name('storage.'.$disk);
             });
         }

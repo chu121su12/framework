@@ -9,9 +9,12 @@ use User;
 
 class RouteCanBackedEnumTest extends TestCase
 {
+    /**
+     * @requires PHP 8.1
+     */
     public function testSimpleRouteWithStringBackedEnumCanAbilityGuestForbiddenThroughTheFramework()
     {
-        $gate = Gate::define(AbilityBackedEnum::NotAccessRoute, fn (?User $user) => false);
+        $gate = Gate::define(AbilityBackedEnum::NotAccessRoute, function (/*?*/User $user = null) { return false; });
         $this->assertArrayHasKey('not-access-route', $gate->abilities());
 
         $route = Route::get('/', function () {
@@ -23,9 +26,12 @@ class RouteCanBackedEnumTest extends TestCase
         $response->assertForbidden();
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testSimpleRouteWithStringBackedEnumCanAbilityGuestAllowedThroughTheFramework()
     {
-        $gate = Gate::define(AbilityBackedEnum::AccessRoute, fn (?User $user) => true);
+        $gate = Gate::define(AbilityBackedEnum::AccessRoute, function (/*?*/User $user = null) { return true; });
         $this->assertArrayHasKey('access-route', $gate->abilities());
 
         $route = Route::get('/', function () {

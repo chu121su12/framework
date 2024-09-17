@@ -26,6 +26,16 @@ class VitePreloadingTest_testItAddsPreloadLinkHeader_class extends Vite
             ];
         }
 
+class VitePreloadingTest_testItDoesNotAttachHeadersToNonIlluminateResponses_class extends Vite
+        {
+            protected $preloadedAssets = [
+                'https://laravel.com/app.js' => [
+                    'rel="modulepreload"',
+                    'foo="bar"',
+                ],
+            ];
+        }
+
 class VitePreloadingTest extends TestCase
 {
     protected function tearDown()/*: void*/
@@ -37,10 +47,7 @@ class VitePreloadingTest extends TestCase
     public function testItDoesNotSetLinkTagWhenNoTagsHaveBeenPreloaded()
     {
         $app = new Container;
-        $app->instance(Vite::class, new class extends Vite
-        {
-            protected $preloadedAssets = [];
-        });
+        $app->instance(Vite::class, new VitePreloadingTest_testItDoesNotSetLinkTagWhenNoTagsHaveBeenPreloaded_class);
         Facade::setFacadeApplication($app);
 
         $response = (new AddLinkHeadersForPreloadedAssets)->handle(new Request, function () {
@@ -53,15 +60,7 @@ class VitePreloadingTest extends TestCase
     public function testItAddsPreloadLinkHeader()
     {
         $app = new Container;
-        $app->instance(Vite::class, new class extends Vite
-        {
-            protected $preloadedAssets = [
-                'https://laravel.com/app.js' => [
-                    'rel="modulepreload"',
-                    'foo="bar"',
-                ],
-            ];
-        });
+        $app->instance(Vite::class, new VitePreloadingTest_testItAddsPreloadLinkHeader_class);
         Facade::setFacadeApplication($app);
 
         $response = (new AddLinkHeadersForPreloadedAssets)->handle(new Request, function () {
@@ -77,15 +76,7 @@ class VitePreloadingTest extends TestCase
     public function testItDoesNotAttachHeadersToNonIlluminateResponses()
     {
         $app = new Container;
-        $app->instance(Vite::class, new class extends Vite
-        {
-            protected $preloadedAssets = [
-                'https://laravel.com/app.js' => [
-                    'rel="modulepreload"',
-                    'foo="bar"',
-                ],
-            ];
-        });
+        $app->instance(Vite::class, new VitePreloadingTest_testItDoesNotAttachHeadersToNonIlluminateResponses_class);
         Facade::setFacadeApplication($app);
 
         $response = (new AddLinkHeadersForPreloadedAssets)->handle(new Request, function () {
