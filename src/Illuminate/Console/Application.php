@@ -17,8 +17,8 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\SignalRegistry\SignalRegistry;
-use Symfony\Component\Process\PhpExecutableFinder;
+
+use function Illuminate\Support\php_binary;
 
 class Application extends SymfonyApplication implements ApplicationContract
 {
@@ -91,7 +91,7 @@ class Application extends SymfonyApplication implements ApplicationContract
      */
     public static function phpBinary()
     {
-        return ProcessUtils::escapeArgument((new PhpExecutableFinder)->find(false) ?: 'php');
+        return ProcessUtils::escapeArgument(php_binary());
     }
 
     /**
