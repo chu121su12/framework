@@ -10,8 +10,10 @@ class PhpExecutableFinder extends SymfonyPhpExecutableFinder
      * Finds The PHP executable.
      */
     #[\Override]
-    public function find(bool $includeArgs = true): string|false
+    public function find(/*bool */$includeArgs = true)/*: string|false*/
     {
+        $includeArgs = backport_type_check('bool', $includeArgs);
+
         if ($herdPath = getenv('HERD_HOME')) {
             return (new ExecutableFinder)->find('php', false, [implode(DIRECTORY_SEPARATOR, [$herdPath, 'bin'])]);
         }
