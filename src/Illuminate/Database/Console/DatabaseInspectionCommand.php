@@ -4,7 +4,6 @@ namespace Illuminate\Database\Console;
 
 use CR\LaravelBackport\SymfonyHelper;
 use Illuminate\Console\Command;
-use Illuminate\Database\Connection;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Arr;
 

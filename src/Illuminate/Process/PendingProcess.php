@@ -387,6 +387,10 @@ class PendingProcess
 
         $result = $fake($this);
 
+        if (is_int($result)) {
+            return (new FakeProcessResult(exitCode: $result))->withCommand($command);
+        }
+
         if (is_string($result) || is_array($result)) {
             return (new FakeProcessResult(
                 '',
@@ -403,6 +407,8 @@ class PendingProcess
             return $result->toProcessResult($command);
         } elseif ($result instanceof FakeProcessSequence) {
             return $this->resolveSynchronousFake($command, function () use ($result) { return $result(); });
+        } elseif ($result instanceof \Throwable) {
+            throw $result;
         }
 
         throw new LogicException('Unsupported synchronous process fake result provided.');
