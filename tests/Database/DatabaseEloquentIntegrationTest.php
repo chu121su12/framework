@@ -2454,8 +2454,8 @@ class DatabaseEloquentIntegrationTest extends TestCase
         ]);
 
         $one = EloquentTouchingCategory::find(1);
-        [$two, $three] = $one->children;
-        [$four] = $two->children;
+        list($two, $three) = $one->children;
+        list($four) = $two->children;
 
         $this->assertTrue($before->isSameDay($one->updated_at));
         $this->assertTrue($before->isSameDay($two->updated_at));
@@ -2465,7 +2465,7 @@ class DatabaseEloquentIntegrationTest extends TestCase
         Carbon::setTestNow($future = $before->copy()->addDays(3));
 
         // Touch a random model and check that all of the others have been updated
-        $models = tap([$one, $two, $three, $four], shuffle(...));
+        $models = tap([$one, $two, $three, $four], function (...$args) { return shuffle(...$args); });
         $target = array_shift($models);
         $target->touch();
 

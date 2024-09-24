@@ -16,21 +16,3 @@ else
         }
     }
 }
-
-final class TimezoneObject
-{
-    public function __construct(
-        #[Config('app.timezone')] public readonly ?string $timezone
-    ) {
-        //
-    }
-}
-
-final class LocaleObject
-{
-    public function __construct(
-        #[Config('app.locale')] public readonly ?string $locale
-    ) {
-        //
-    }
-}

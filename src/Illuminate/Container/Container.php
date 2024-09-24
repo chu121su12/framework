@@ -1123,7 +1123,7 @@ class Container implements ArrayAccess, ContainerContract
             return [];
         }
 
-        if ($parameter->hasType() && $parameter->allowsNull()) {
+        if (\method_exists($parameter, 'hasType') && $parameter->hasType() && $parameter->allowsNull()) {
             return null;
         }
 
