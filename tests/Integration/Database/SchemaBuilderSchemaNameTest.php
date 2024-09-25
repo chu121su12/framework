@@ -5,16 +5,14 @@ namespace Illuminate\Tests\Integration\Database;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Orchestra\Testbench\Attributes\RequiresDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[RequiresDatabase(['pgsql', 'sqlsrv'])]
 class SchemaBuilderSchemaNameTest extends DatabaseTestCase
 {
     protected function defineDatabaseMigrations()
     {
-        if (! in_array($this->driver, ['pgsql', 'sqlsrv'])) {
-            $this->markTestSkipped('Test requires a PostgreSQL or SQL Server connection.');
-        }
-
         if ($this->driver === 'pgsql') {
             DB::connection('without-prefix')->statement('create schema if not exists my_schema');
             DB::connection('with-prefix')->statement('create schema if not exists my_schema');
@@ -408,12 +406,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
      * @dataProvider connectionProvider
      */
     #[DataProvider('connectionProvider')]
+    #[RequiresDatabase('pgsql')]
     public function testComment($connection)
     {
-        if ($this->driver !== 'pgsql') {
-            $this->markTestSkipped('Test requires a PostgreSQL connection.');
-        }
-
         $schema = Schema::connection($connection);
 
         $schema->create('my_schema.table', function (Blueprint $table) {
@@ -446,12 +441,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
      * @dataProvider connectionProvider
      */
     #[DataProvider('connectionProvider')]
+    #[RequiresDatabase('pgsql')]
     public function testAutoIncrementStartingValue($connection)
     {
-        if ($this->driver !== 'pgsql') {
-            $this->markTestSkipped('Test requires a PostgreSQL connection.');
-        }
-
         $this->expectNotToPerformAssertions();
 
         $schema = Schema::connection($connection);
@@ -468,12 +460,9 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
      * @dataProvider connectionProvider
      */
     #[DataProvider('connectionProvider')]
+    #[RequiresDatabase('sqlsrv')]
     public function testHasTable($connection)
     {
-        if ($this->driver !== 'sqlsrv') {
-            $this->markTestSkipped('Test requires a SQL Server connection.');
-        }
-
         $db = DB::connection($connection);
         $schema = $db->getSchemaBuilder();
 

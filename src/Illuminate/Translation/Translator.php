@@ -117,7 +117,16 @@ class Translator extends NamespacedItemResolver implements TranslatorContract
     {
         $locale = $locale ?: $this->locale;
 
+        // We should temporarily disable the handling of missing translation keys
+        // while perfroming the existence check. After the check, we will turn
+        // the missing translation keys handling back to its original value.
+        $handleMissingTranslationKeys = $this->handleMissingTranslationKeys;
+
+        $this->handleMissingTranslationKeys = false;
+
         $line = $this->get($key, [], $locale, $fallback);
+
+        $this->handleMissingTranslationKeys = $handleMissingTranslationKeys;
 
         $loadedLine = isset($this->loaded['*'])
                 && isset($this->loaded['*']['*'])

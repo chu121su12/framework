@@ -6,14 +6,18 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Queue\Attributes\WithoutRelations;
 use Illuminate\Queue\SerializesModels;
 use LogicException;
+use Orchestra\Testbench\Attributes\WithConfig;
 use Orchestra\Testbench\TestCase;
 use Schema;
 
 class ModelSerializationTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function getEnvironmentSetUp($app)
     {
         $app['config']->set('database.connections.custom', [
@@ -63,6 +67,8 @@ class ModelSerializationTest extends TestCase
 
     public function testItSerializeUserOnDefaultConnection()
     {
+        $defaultConnection = config('database.default');
+
         $user = ModelSerializationTestUser::create([
             'email' => 'mohamed@laravel.com',
         ]);
@@ -75,16 +81,16 @@ class ModelSerializationTest extends TestCase
 
         $unSerialized = backport_unserialize($serialized);
 
-        $this->assertSame('testing', $unSerialized->user->getConnectionName());
+        $this->assertSame($defaultConnection, $unSerialized->user->getConnectionName());
         $this->assertSame('mohamed@laravel.com', $unSerialized->user->email);
 
-        $serialized = backport_serialize(new CollectionSerializationTestClass(ModelSerializationTestUser::on('testing')->get()));
+        $serialized = backport_serialize(new CollectionSerializationTestClass(ModelSerializationTestUser::on($defaultConnection)->get()));
 
         $unSerialized = backport_unserialize($serialized);
 
-        $this->assertSame('testing', $unSerialized->users[0]->getConnectionName());
+        $this->assertSame($defaultConnection, $unSerialized->users[0]->getConnectionName());
         $this->assertSame('mohamed@laravel.com', $unSerialized->users[0]->email);
-        $this->assertSame('testing', $unSerialized->users[1]->getConnectionName());
+        $this->assertSame($defaultConnection, $unSerialized->users[1]->getConnectionName());
         $this->assertSame('taylor@laravel.com', $unSerialized->users[1]->email);
     }
 
@@ -282,6 +288,8 @@ class ModelSerializationTest extends TestCase
     {
         require_once __DIR__.'/typed-properties.php';
 
+        $defaultConnection = config('database.default');
+
         $user = ModelSerializationTestUser::create([
             'email' => 'mohamed@laravel.com',
         ]);
@@ -294,21 +302,22 @@ class ModelSerializationTest extends TestCase
 
         $unSerialized = backport_unserialize($serialized);
 
-        $this->assertSame('testing', $unSerialized->user->getConnectionName());
+        $this->assertSame($defaultConnection, $unSerialized->user->getConnectionName());
         $this->assertSame('mohamed@laravel.com', $unSerialized->user->email);
         $this->assertSame(5, $unSerialized->getId());
         $this->assertSame(['James', 'Taylor', 'Mohamed'], $unSerialized->getNames());
 
-        $serialized = backport_serialize(new TypedPropertyCollectionTestClass(ModelSerializationTestUser::on('testing')->get()));
+        $serialized = backport_serialize(new TypedPropertyCollectionTestClass(ModelSerializationTestUser::on($defaultConnection)->get()));
 
         $unSerialized = backport_unserialize($serialized);
 
-        $this->assertSame('testing', $unSerialized->users[0]->getConnectionName());
+        $this->assertSame($defaultConnection, $unSerialized->users[0]->getConnectionName());
         $this->assertSame('mohamed@laravel.com', $unSerialized->users[0]->email);
-        $this->assertSame('testing', $unSerialized->users[1]->getConnectionName());
+        $this->assertSame($defaultConnection, $unSerialized->users[1]->getConnectionName());
         $this->assertSame('taylor@laravel.com', $unSerialized->users[1]->email);
     }
 
+    #[WithConfig('database.default', 'testing')]
     public function test_model_serialization_structure()
     {
         $user = ModelSerializationTestUser::create([
@@ -335,6 +344,7 @@ class ModelSerializationTest extends TestCase
     /**
      * @requires PHP 8.0
      */
+    #[WithConfig('database.default', 'testing')]
     public function test_it_respects_without_relations_attribute()
     {
         $user = User::create([
@@ -351,6 +361,7 @@ class ModelSerializationTest extends TestCase
     /**
      * @requires PHP 8.0
      */
+    #[WithConfig('database.default', 'testing')]
     public function test_it_respects_without_relations_attribute_applied_to_class()
     {
         $user = User::create([
