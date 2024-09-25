@@ -59,6 +59,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase('sqlite')]
     public function testChangeToTinyInteger()
     {
+        $this->attributeRequiresDatabase('sqlite');
+
         Schema::create('test', function (Blueprint $table) {
             $table->string('test_column');
         });
@@ -75,6 +77,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase(['mysql', 'mariadb'])]
     public function testChangeToTextColumn()
     {
+        $this->attributeRequiresDatabase(['mysql', 'mariadb']);
+
         Schema::create('test', function (Blueprint $table) {
             $table->integer('test_column');
         });
@@ -97,6 +101,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase(['mysql', 'mariadb'])]
     public function testChangeTextColumnToTextColumn()
     {
+        $this->attributeRequiresDatabase(['mysql', 'mariadb']);
+
         Schema::create('test', static function (Blueprint $table) {
             $table->text('test_column');
         });
@@ -119,6 +125,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase(['mysql', 'mariadb'])]
     public function testModifyNullableColumn()
     {
+        $this->attributeRequiresDatabase(['mysql', 'mariadb']);
+
         Schema::create('test', static function (Blueprint $table) {
             $table->string('not_null_column_to_not_null');
             $table->string('not_null_column_to_nullable');
@@ -199,6 +207,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase('sqlite')]
     public function testModifyColumnWithZeroDefaultOnSqlite()
     {
+        $this->attributeRequiresDatabase('sqlite');
+
         Schema::create('test', static function (Blueprint $table) {
             $table->integer('column_default_zero')->default(new Expression('0'));
             $table->integer('column_to_change');
@@ -346,6 +356,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase('pgsql')]
     public function testGetAndDropTypes()
     {
+        $this->attributeRequiresDatabase('pgsql');
+
         DB::statement('create type pseudo_foo');
         DB::statement('create type comp_foo as (f1 int, f2 text)');
         DB::statement("create type enum_foo as enum ('new', 'open', 'closed')");
@@ -496,6 +508,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase(['mysql', 'mariadb', 'pgsql'])]
     public function testGetFullTextIndexes()
     {
+        $this->attributeRequiresDatabase(['mysql', 'mariadb', 'pgsql']);
+
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->string('title', 200);
@@ -623,6 +637,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase('mariadb')]
     public function testSystemVersionedTables()
     {
+        $this->attributeRequiresDatabase('mariadb');
+
         DB::statement('create table `test` (`foo` int) WITH system versioning;');
 
         $this->assertTrue(Schema::hasTable('test'));
@@ -637,6 +653,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase('sqlite')]
     public function testAddingStoredColumnOnSqlite()
     {
+        $this->attributeRequiresDatabase('sqlite');
+
         Schema::create('test', function (Blueprint $table) {
             $table->integer('price');
         });
@@ -652,6 +670,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase('sqlite')]
     public function testModifyingStoredColumnOnSqlite()
     {
+        $this->attributeRequiresDatabase('sqlite');
+
         Schema::create('test', function (Blueprint $table) {
             $table->integer('price');
             $table->integer('virtual_price')->virtualAs('price - 2');
@@ -695,6 +715,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase('pgsql', '>=12.0')]
     public function testGettingGeneratedColumns()
     {
+        $this->attributeRequiresDatabase('pgsql', '>=12.0');
+
         Schema::create('test', function (Blueprint $table) {
             $table->integer('price');
 
@@ -748,6 +770,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase('sqlite')]
     public function testAddForeignKeysOnSqlite()
     {
+        $this->attributeRequiresDatabase('sqlite');
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -779,6 +803,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase('sqlite')]
     public function testDropForeignKeysOnSqlite()
     {
+        $this->attributeRequiresDatabase('sqlite');
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -824,6 +850,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase('sqlite')]
     public function testAddAndDropPrimaryOnSqlite()
     {
+        $this->attributeRequiresDatabase('sqlite');
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -871,6 +899,8 @@ class SchemaBuilderTest extends DatabaseTestCase
     #[RequiresDatabase('sqlite')]
     public function testSetJournalModeOnSqlite()
     {
+        $this->attributeRequiresDatabase('sqlite');
+
         file_put_contents(DB::connection('sqlite')->getConfig('database'), '');
 
         $this->assertSame('delete', DB::connection('sqlite')->select('PRAGMA journal_mode')[0]->journal_mode);

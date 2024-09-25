@@ -10,6 +10,26 @@ use Illuminate\Support\Collection;
  */
 trait HandlesAttributes
 {
+    protected function attributeRequiresDatabase($database, $version = null)/*: void*/
+    {
+        $database = is_array($database) ? $database : [$database];
+
+        $driver = $this->getConnection()->getDriverName();
+
+        if (! \in_array($driver, $database, true)) {
+            $this->markTestSkipped('Test requires connections of any: '.implode(', ', $database) . '.');
+        }
+
+        if ($version !== null && version_compare($this->getConnection()->getServerVersion(), $version, '<')) {
+            $this->markTestSkipped('Test requires a '.$driver.' connection >= ' . $version);
+        }
+    }
+
+    protected function attributeWithConfig($config, $value)/*: void*/
+    {
+        $this->app['config']->set($config, $value);
+    }
+
     /**
      * Parse test method attributes.
      *
@@ -56,6 +76,16 @@ trait HandlesAttributes
                     if (! env($env)) {
                         $this->markTestSkipped('Required env '.$env.' not configured.');
                     }
+                }
+            }
+
+            if (isset($values['database'])) {
+                $connection = $app['config']->get('database.default');
+
+                $driver = $app['config']->get("database.connections.$connection.driver");
+
+                if (! \in_array($driver, $values['database'], true)) {
+                    $this->markTestSkipped('Test requires connections of any: '.implode(', ', $values['database']) . '.');
                 }
             }
         }

@@ -8,5 +8,12 @@ use Orchestra\Testbench\Attributes\RequiresDatabase;
 #[RequiresDatabase('pgsql')]
 abstract class PostgresTestCase extends DatabaseTestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'database' => ['pgsql'],
+        ];
+    }
+
     //
 }

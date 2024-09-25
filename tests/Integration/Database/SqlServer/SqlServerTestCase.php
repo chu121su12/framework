@@ -8,5 +8,12 @@ use Orchestra\Testbench\Attributes\RequiresDatabase;
 #[RequiresDatabase('sqlsrv')]
 abstract class SqlServerTestCase extends DatabaseTestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'database' => ['sqlsrv'],
+        ];
+    }
+
     //
 }

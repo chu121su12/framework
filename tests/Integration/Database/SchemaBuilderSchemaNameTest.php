@@ -11,6 +11,13 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[RequiresDatabase(['pgsql', 'sqlsrv'])]
 class SchemaBuilderSchemaNameTest extends DatabaseTestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'database' => ['pgsql', 'sqlsrv'],
+        ];
+    }
+
     protected function defineDatabaseMigrations()
     {
         if ($this->driver === 'pgsql') {
@@ -409,6 +416,8 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
     #[RequiresDatabase('pgsql')]
     public function testComment($connection)
     {
+        $this->attributeRequiresDatabase('pgsql');
+
         $schema = Schema::connection($connection);
 
         $schema->create('my_schema.table', function (Blueprint $table) {
@@ -444,6 +453,8 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
     #[RequiresDatabase('pgsql')]
     public function testAutoIncrementStartingValue($connection)
     {
+        $this->attributeRequiresDatabase('pgsql');
+
         $this->expectNotToPerformAssertions();
 
         $schema = Schema::connection($connection);
@@ -463,6 +474,8 @@ class SchemaBuilderSchemaNameTest extends DatabaseTestCase
     #[RequiresDatabase('sqlsrv')]
     public function testHasTable($connection)
     {
+        $this->attributeRequiresDatabase('pgsql');
+
         $db = DB::connection($connection);
         $schema = $db->getSchemaBuilder();
 

@@ -8,5 +8,12 @@ use Orchestra\Testbench\Attributes\RequiresDatabase;
 #[RequiresDatabase('mysql')]
 abstract class MySqlTestCase extends DatabaseTestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'database' => ['mysql'],
+        ];
+    }
+
     //
 }

@@ -15,6 +15,13 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[RequiresDatabase('sqlite')]
 class DatabaseSqliteConnectionTest extends DatabaseTestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'database' => ['sqlite'],
+        ];
+    }
+
     protected function defineEnvironment($app)
     {
         parent::defineEnvironment($app);

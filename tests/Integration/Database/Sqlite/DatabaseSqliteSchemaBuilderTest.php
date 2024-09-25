@@ -11,6 +11,13 @@ use Orchestra\Testbench\Attributes\RequiresDatabase;
 #[RequiresDatabase('sqlite')]
 class DatabaseSqliteSchemaBuilderTest extends DatabaseTestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'database' => ['sqlite'],
+        ];
+    }
+
     protected function defineEnvironment($app)
     {
         parent::defineEnvironment($app);

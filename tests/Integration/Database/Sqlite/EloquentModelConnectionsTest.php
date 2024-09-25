@@ -12,6 +12,13 @@ use Orchestra\Testbench\TestCase;
 #[RequiresDatabase('sqlite')]
 class EloquentModelConnectionsTest extends TestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'database' => ['sqlite'],
+        ];
+    }
+
     protected function defineEnvironment($app)
     {
         $app['config']->set('database.default', 'conn1');

@@ -8,5 +8,12 @@ use Orchestra\Testbench\Attributes\RequiresDatabase;
 #[RequiresDatabase('mariadb')]
 abstract class MariaDbTestCase extends DatabaseTestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'database' => ['mariadb'],
+        ];
+    }
+
     //
 }

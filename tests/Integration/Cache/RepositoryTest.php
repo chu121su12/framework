@@ -11,6 +11,13 @@ use Orchestra\Testbench\TestCase;
 #[WithMigration('cache')]
 class RepositoryTest extends TestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'migration' => ['cache'],
+        ];
+    }
+
     use LazilyRefreshDatabase;
 
     public function testStaleWhileRevalidate()/*: void*/
@@ -183,7 +190,7 @@ class RepositoryTest extends TestCase
         $this->freezeTime();
         $cache = Cache::driver('database');
 
-        $cache->flexible('count', [5, 10], fn () => 1);
+        $cache->flexible('count', [5, 10], function () { return 1; });
 
         $this->assertTrue($cache->has('count'));
         $this->assertTrue($cache->has('illuminate:cache:flexible:created:count'));
@@ -194,7 +201,7 @@ class RepositoryTest extends TestCase
         $this->assertTrue($cache->missing('count'));
         $this->assertTrue($cache->missing('illuminate:cache:flexible:created:count'));
 
-        $cache->flexible('count', [5, 10], fn () => 1);
+        $cache->flexible('count', [5, 10], function () { return 1; });
 
         $this->assertTrue($cache->has('count'));
         $this->assertTrue($cache->has('illuminate:cache:flexible:created:count'));
@@ -212,7 +219,7 @@ class RepositoryTest extends TestCase
         $this->freezeTime();
         $cache = Cache::driver('file');
 
-        $cache->flexible('count', [5, 10], fn () => 1);
+        $cache->flexible('count', [5, 10], function () { return 1; });
 
         $this->assertTrue($cache->has('count'));
         $this->assertTrue($cache->has('illuminate:cache:flexible:created:count'));
@@ -224,7 +231,7 @@ class RepositoryTest extends TestCase
         $this->assertTrue($cache->missing('count'));
         $this->assertTrue($cache->missing('illuminate:cache:flexible:created:count'));
 
-        $cache->flexible('count', [5, 10], fn () => 1);
+        $cache->flexible('count', [5, 10], function () { return 1; });
 
         $this->assertTrue($cache->has('count'));
         $this->assertTrue($cache->has('illuminate:cache:flexible:created:count'));

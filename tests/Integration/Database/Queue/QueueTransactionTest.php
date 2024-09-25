@@ -25,12 +25,15 @@ class QueueTransactionTest extends DatabaseTestCase
     {
         return [
             'migration' => ['laravel', 'queue'],
+            'config' => [
+                ['queue.default', 'database'],
+            ],
         ];
     }
 
     use DatabaseMigrations;
 
-    protected function setUp(): void
+    protected function setUp()/*: void*/
     {
         parent::setUp();
 

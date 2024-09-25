@@ -173,6 +173,8 @@ class PostgresSchemaBuilderTest extends PostgresTestCase
     #[RequiresDatabase('pgsql', '>=11.0')]
     public function testDropPartitionedTables()
     {
+        $this->attributeRequiresDatabase('pgsql', '>=11.0');
+
         DB::statement('create table groups (id bigserial, tenant_id bigint, name varchar, primary key (id, tenant_id)) partition by hash (tenant_id)');
         DB::statement('create table groups_1 partition of groups for values with (modulus 2, remainder 0)');
         DB::statement('create table groups_2 partition of groups for values with (modulus 2, remainder 1)');

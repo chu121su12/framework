@@ -378,10 +378,10 @@ class DatabaseStore implements LockProvider, Store
      */
     protected function forgetMany(array $keys)
     {
-        $this->table()->whereIn('key', collect($keys)->flatMap(fn ($key) => [
+        $this->table()->whereIn('key', collect($keys)->flatMap(function ($key) { return [
             $this->prefix.$key,
             "{$this->prefix}illuminate:cache:flexible:created:{$key}",
-        ])->all())->delete();
+        ]; })->all())->delete();
 
         return true;
     }
@@ -398,13 +398,13 @@ class DatabaseStore implements LockProvider, Store
         $prefixed = backport_type_check('?string', $prefixed);
 
         $this->table()
-            ->whereIn('key', collect($keys)->flatMap(fn ($key) => $prefixed ? [
+            ->whereIn('key', collect($keys)->flatMap(function ($key) use ($prefixed) { return $prefixed ? [
                 $key,
                 $this->prefix.'illuminate:cache:flexible:created:'.Str::chopStart($key, $this->prefix),
             ] : [
                 "{$this->prefix}{$key}",
                 "{$this->prefix}illuminate:cache:flexible:created:{$key}",
-            ])->all())
+            ]; })->all())
             ->where('expiration', '<=', $this->getTime())
             ->delete();
 

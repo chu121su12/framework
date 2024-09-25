@@ -19,6 +19,7 @@ class SchemaStateTest extends TestCase
     {
         return [
             'migration' => true,
+            'database' => ['sqlite'],
         ];
     }
     

@@ -9,6 +9,13 @@ use RuntimeException;
 #[RequiresDatabase('sqlite')]
 class EscapeTest extends DatabaseTestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'database' => ['sqlite'],
+        ];
+    }
+
     protected function defineEnvironment($app)
     {
         parent::defineEnvironment($app);

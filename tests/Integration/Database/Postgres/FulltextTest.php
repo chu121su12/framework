@@ -58,6 +58,8 @@ class FulltextTest extends PostgresTestCase
     #[RequiresDatabase('pgsql', '>=11.0')]
     public function testWhereFulltextWithWebsearch()
     {
+        $this->attributeRequiresDatabase('pgsql', '>=11.0');
+
         $articles = DB::table('articles')->whereFulltext(['title', 'body'], '+PostgreSQL -YourSQL', ['mode' => 'websearch'])->get();
 
         $this->assertCount(5, $articles);

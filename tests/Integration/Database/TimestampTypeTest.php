@@ -59,6 +59,8 @@ class TimestampTypeTest extends DatabaseTestCase
     #[RequiresDatabase(['mysql', 'mariadb'])]
     public function testChangeStringColumnToTimestampColumn()
     {
+        $this->attributeRequiresDatabase(['mysql', 'mariadb']);
+
         Schema::create('test', function (Blueprint $table) {
             $table->string('string_to_timestamp');
         });

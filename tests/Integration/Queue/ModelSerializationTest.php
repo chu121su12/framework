@@ -320,6 +320,8 @@ class ModelSerializationTest extends TestCase
     #[WithConfig('database.default', 'testing')]
     public function test_model_serialization_structure()
     {
+        $this->attributeWithConfig('database.default', 'testing');
+
         $user = ModelSerializationTestUser::create([
             'email' => 'taylor@laravel.com',
         ]);
@@ -347,6 +349,8 @@ class ModelSerializationTest extends TestCase
     #[WithConfig('database.default', 'testing')]
     public function test_it_respects_without_relations_attribute()
     {
+        $this->attributeWithConfig('database.default', 'testing');
+
         $user = User::create([
             'email' => 'taylor@laravel.com',
         ])->load(['roles']);
@@ -364,6 +368,8 @@ class ModelSerializationTest extends TestCase
     #[WithConfig('database.default', 'testing')]
     public function test_it_respects_without_relations_attribute_applied_to_class()
     {
+        $this->attributeWithConfig('database.default', 'testing');
+
         $user = User::create([
             'email' => 'taylor@laravel.com',
         ])->load(['roles']);

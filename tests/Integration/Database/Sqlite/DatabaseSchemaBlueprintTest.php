@@ -16,6 +16,13 @@ use RuntimeException;
 #[RequiresDatabase('sqlite')]
 class DatabaseSchemaBlueprintTest extends TestCase
 {
+    protected function attributeBp()
+    {
+        return [
+            'database' => ['sqlite'],
+        ];
+    }
+
     protected function setUp()/*: void*/
     {
         parent::setUp();

@@ -486,16 +486,15 @@ class Repository implements ArrayAccess, CacheContract
      */
     public function flexible($key, $ttl, $callback, $lock = null)
     {
-        [
-            $key => $value,
-            "illuminate:cache:flexible:created:{$key}" => $created,
-        ] = $this->many([$key, "illuminate:cache:flexible:created:{$key}"]);
+        $many = $this->many([$key, "illuminate:cache:flexible:created:{$key}"]);
+        $value = $many[$key];
+        $created = $many["illuminate:cache:flexible:created:{$key}"];
 
         if (in_array(null, [$value, $created], true)) {
-            return tap(value($callback), fn ($value) => $this->putMany([
+            return tap(value($callback), function ($value) use ($key, $ttl) { return $this->putMany([
                 $key => $value,
                 "illuminate:cache:flexible:created:{$key}" => Carbon::now()->getTimestamp(),
-            ], $ttl[1]));
+            ], $ttl[1]); });
         }
 
         if (($created + $this->getSeconds($ttl[0])) > Carbon::now()->getTimestamp()) {
@@ -505,8 +504,8 @@ class Repository implements ArrayAccess, CacheContract
         $refresh = function () use ($key, $ttl, $callback, $lock, $created) {
             $this->store->lock(
                 "illuminate:cache:flexible:lock:{$key}",
-                $lock['seconds'] ?? 0,
-                $lock['owner'] ?? null,
+                isset($lock['seconds']) ? $lock['seconds'] : 0,
+                isset($lock['owner']) ? $lock['owner'] : null
             )->get(function () use ($key, $callback, $created, $ttl) {
                 if ($created !== $this->get("illuminate:cache:flexible:created:{$key}")) {
                     return;
