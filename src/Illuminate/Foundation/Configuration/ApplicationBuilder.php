@@ -313,7 +313,7 @@ class ApplicationBuilder
             }
 
             if (is_dir($this->app->path('Console/Commands'))) {
-                $commands = [...$commands, $this->app->path('Console/Commands')];
+                $commands = \array_merge($commands, [$this->app->path('Console/Commands')]);
             }
         }
 
