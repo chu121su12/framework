@@ -168,9 +168,45 @@ if (!function_exists('mb_lcfirst')) {
 
         $string = backport_type_check('string', $string);
 
-        return p\Mbstring::mb_lcfirst($string, $encoding);
+        return p\Mbstring::mb_lcfirst($string, $encoding); }
+}
+
+if (!function_exists('mb_trim')) {
+    function mb_trim(/*string */$string, /*?string */$characters = null, /*?string */$encoding = null)/*: string*/ {
+        $encoding = backport_type_check('?string', $encoding);
+
+        $characters = backport_type_check('?string', $characters);
+
+        $string = backport_type_check('string', $string);
+
+        return p\Mbstring::mb_trim($string, $characters, $encoding);
     }
 }
+
+if (!function_exists('mb_ltrim')) {
+    function mb_ltrim(/*string */$string, /*?string */$characters = null, /*?string */$encoding = null)/*: string*/ {
+        $encoding = backport_type_check('?string', $encoding);
+
+        $characters = backport_type_check('?string', $characters);
+
+        $string = backport_type_check('string', $string);
+
+        return p\Mbstring::mb_ltrim($string, $characters, $encoding);
+    }
+}
+
+if (!function_exists('mb_rtrim')) {
+    function mb_rtrim(/*string */$string, /*?string */$characters = null, /*?string */$encoding = null)/*: string*/ {
+        $encoding = backport_type_check('?string', $encoding);
+
+        $characters = backport_type_check('?string', $characters);
+
+        $string = backport_type_check('string', $string);
+
+        return p\Mbstring::mb_rtrim($string, $characters, $encoding);
+    }
+}
+
 
 if (extension_loaded('mbstring')) {
     return;

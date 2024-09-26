@@ -35,19 +35,21 @@ if (!function_exists('json_validate')) {
     }
 }
 
-if (!function_exists('mb_str_pad') && function_exists('mb_substr')) {
-    function mb_str_pad(/*string */$string, /*int */$length, /*string */$pad_string = ' ', /*int */$pad_type = STR_PAD_RIGHT, /*?string */$encoding = null)/*: string */{
-        $pad_type = backport_type_check('int', $pad_type);
+if (extension_loaded('mbstring')) {
+    if (!function_exists('mb_str_pad')) {
+        function mb_str_pad(/*string */$string, /*int */$length, /*string */$pad_string = ' ', /*int */$pad_type = STR_PAD_RIGHT, /*?string */$encoding = null)/*: string */{
+            $pad_type = backport_type_check('int', $pad_type);
 
-        $pad_string = backport_type_check('string', $pad_string);
+            $pad_string = backport_type_check('string', $pad_string);
 
-        $length = backport_type_check('int', $length);
+            $length = backport_type_check('int', $length);
 
-        $string = backport_type_check('string', $string);
+            $string = backport_type_check('string', $string);
 
-        $encoding = backport_type_check('?string', $encoding);
+            $encoding = backport_type_check('?string', $encoding);
 
-        return p\Php83::mb_str_pad($string, $length, $pad_string, $pad_type, $encoding);
+            return p\Php83::mb_str_pad($string, $length, $pad_string, $pad_type, $encoding);
+        }
     }
 }
 

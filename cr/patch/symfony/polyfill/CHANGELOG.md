@@ -1,3 +1,9 @@
+# 1.31.0
+
+  * Bump minimum PHP version to 7.2
+  * Polyfill `mb_trim`, `mb_ltrim` and `mb_rtrim`
+  * Polyfill `CURL_HTTP_VERSION_3(ONLY)` constants
+
 # 1.30.0
 
   * Polyfill `array_find`, `array_find_key`, `array_any` and `array_all`
