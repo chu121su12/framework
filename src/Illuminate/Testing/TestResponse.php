@@ -29,6 +29,8 @@ use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
+ * @template TResponse of \Symfony\Component\HttpFoundation\Response
+ *
  * @mixin \Illuminate\Http\Response
  */
 class TestResponse implements ArrayAccess
@@ -47,7 +49,7 @@ class TestResponse implements ArrayAccess
     /**
      * The response to delegate to.
      *
-     * @var \Illuminate\Http\Response
+     * @var TResponse
      */
     public $baseResponse;
 
@@ -68,7 +70,7 @@ class TestResponse implements ArrayAccess
     /**
      * Create a new test response instance.
      *
-     * @param  \Illuminate\Http\Response  $response
+     * @param  TResponse  $response
      * @param  \Illuminate\Http\Request|null  $request
      * @return void
      */
@@ -82,9 +84,11 @@ class TestResponse implements ArrayAccess
     /**
      * Create a new TestResponse from another response.
      *
-     * @param  \Illuminate\Http\Response  $response
+     * @template R of TResponse
+     *
+     * @param  R  $response
      * @param  \Illuminate\Http\Request|null  $request
-     * @return static
+     * @return static<R>
      */
     public static function fromBaseResponse($response, $request = null)
     {
