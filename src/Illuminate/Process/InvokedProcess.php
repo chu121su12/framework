@@ -59,8 +59,12 @@ class InvokedProcess implements InvokedProcessContract
      * @param  int|null  $signal
      * @return int|null
      */
-    public function stop(float $timeout = 10, ?int $signal = null)
+    public function stop(/*float */$timeout = 10, /*?int */$signal = null)
     {
+        $timeout = backport_type_check('float', $timeout);
+
+        $signal = backport_type_check('?int', $signal);
+
         return $this->process->stop($timeout, $signal);
     }
 

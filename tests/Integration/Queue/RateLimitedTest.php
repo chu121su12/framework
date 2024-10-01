@@ -18,6 +18,10 @@ use Illuminate\Support\Carbon;
 use Mockery as m;
 use Orchestra\Testbench\TestCase;
 
+if (PHP_VERSION_ID >= 80100) {
+    include_once 'Enums.php';
+}
+
 class RateLimitedTest_testItCanLimitPerMinute_class
         {
             public $released = false;
@@ -52,11 +56,14 @@ class RateLimitedTest extends TestCase
         $this->assertJobRanSuccessfully(RateLimitedTestJob::class);
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testUnlimitedJobsAreExecutedUsingBackedEnum()
     {
         $rateLimiter = $this->app->make(RateLimiter::class);
 
-        $rateLimiter->for(BackedEnumNamedRateLimited::FOO, function ($job) {
+        $rateLimiter->for_(BackedEnumNamedRateLimited::FOO, function ($job) {
             return Limit::none();
         });
 
@@ -64,6 +71,9 @@ class RateLimitedTest extends TestCase
         $this->assertJobRanSuccessfully(RateLimitedTestJobUsingBackedEnum::class);
     }
 
+    /**
+     * @requires PHP 8.1
+     */
     public function testUnlimitedJobsAreExecutedUsingUnitEnum()
     {
         $rateLimiter = $this->app->make(RateLimiter::class);
@@ -346,16 +356,6 @@ class RateLimitedDontReleaseTestJob extends RateLimitedTestJob
     {
         return [(new RateLimited('test'))->dontRelease()];
     }
-}
-
-enum BackedEnumNamedRateLimited: string
-{
-    case FOO = 'bar';
-}
-
-enum UnitEnumNamedRateLimited
-{
-    case LARAVEL;
 }
 
 class RateLimitedTestJobUsingBackedEnum

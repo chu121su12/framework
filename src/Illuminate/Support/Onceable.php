@@ -65,7 +65,7 @@ class Onceable
      */
     protected static function hashFromTrace(array $trace, callable $callable)
     {
-        if (str_contains(isset($trace[0]) && isset($trace[0]['file']) ? $trace[0]['file'] :'', 'eval()\'d code')) {
+        if (str_contains(isset($trace[0]) && isset($trace[0]['file']) ? $trace[0]['file'] : '', 'eval()\'d code')) {
             return null;
         }
 
@@ -79,10 +79,10 @@ class Onceable
 
         return hash(BACKPORT_HASH_xxh128, sprintf(
             '%s@%s%s:%s (%s)',
-            $trace[0]['file'],
-            isset($trace[1]['class']) ? ($trace[1]['class'].'@') : '',
-            $trace[1]['function'],
-            $trace[0]['line'],
+            isset($trace[0]) && isset($trace[0]['file']) ? $trace[0]['file'] : '',
+            isset($trace[1]) && isset($trace[1]['class']) ? ($trace[1]['class'].'@') : '',
+            isset($trace[1]) && isset($trace[1]['function']) ? $trace[1]['function'] : '',
+            isset($trace[0]) && isset($trace[0]['line']) ? $trace[0]['line'] : '',
             serialize($uses)
         ));
     }

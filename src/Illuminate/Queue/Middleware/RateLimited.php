@@ -42,11 +42,11 @@ class RateLimited
     {
         $this->limiter = Container::getInstance()->make(RateLimiter::class);
 
-        $this->limiterName = match (true) {
-            $limiterName instanceof BackedEnum => $limiterName->value,
-            $limiterName instanceof UnitEnum => $limiterName->name,
-            default => (string) $limiterName,
-        };
+        switch (true) {
+            case $limiterName instanceof BackedEnum: $this->limiterName = $limiterName->value; break;
+            case $limiterName instanceof UnitEnum: $this->limiterName = $limiterName->name; break;
+            default: $this->limiterName = (string) $limiterName; break;
+        }
     }
 
     /**

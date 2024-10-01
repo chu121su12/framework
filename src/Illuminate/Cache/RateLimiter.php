@@ -262,12 +262,12 @@ class RateLimiter
      * @param  \BackedEnum|\UnitEnum|string  $name
      * @return string
      */
-    private function resolveLimiterName($name): string
+    private function resolveLimiterName($name)/*: string*/
     {
-        return match (true) {
-            $name instanceof BackedEnum => $name->value,
-            $name instanceof UnitEnum => $name->name,
-            default => (string) $name,
-        };
+        switch (true) {
+            case $name instanceof BackedEnum: return $name->value;
+            case $name instanceof UnitEnum: return $name->name;
+            default: return (string) $name;
+        }
     }
 }

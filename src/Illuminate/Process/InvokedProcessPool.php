@@ -44,8 +44,12 @@ class InvokedProcessPool implements Countable
      * @param  int|null  $signal
      * @return \Illuminate\Support\Collection
      */
-    public function stop(float $timeout = 10, ?int $signal = null)
+    public function stop(/*float */$timeout = 10, /*?int */$signal = null)
     {
+        $timeout = backport_type_check('float', $timeout);
+
+        $signal = backport_type_check('?int', $signal);
+
         return $this->running()->each->stop($timeout, $signal);
     }
 

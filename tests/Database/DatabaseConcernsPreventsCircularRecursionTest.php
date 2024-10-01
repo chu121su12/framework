@@ -174,14 +174,14 @@ class DatabaseConcernsPreventsCircularRecursionTest extends TestCase
         $this->assertEquals(3, $third->instanceStack);
     }
 
-    public function testMockedModelCallToWithoutRecursionMethodWorks(): void
+    public function testMockedModelCallToWithoutRecursionMethodWorks()/*: void*/
     {
         $mock = Mockery::mock(TestModel::class)->makePartial();
 
         // Model toArray method implementation
         $toArray = $mock->withoutRecursion(
-            fn () => array_merge($mock->attributesToArray(), $mock->relationsToArray()),
-            fn () => $mock->attributesToArray(),
+            function () use ($mock) { return array_merge($mock->attributesToArray(), $mock->relationsToArray()); },
+            function () use ($mock) { return $mock->attributesToArray(); }
         );
         $this->assertEquals([], $toArray);
     }

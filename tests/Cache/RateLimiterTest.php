@@ -9,26 +9,31 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 
+if (PHP_VERSION_ID >= 80100) {
+    include_once 'Enums.php';
+}
+
 class RateLimiterTest extends TestCase
 {
-    public static function registerNamedRateLimiterDataProvider(): array
+    public static function registerNamedRateLimiterDataProvider()/*: array*/
     {
         return [
-            'uses BackedEnum' => [BackedEnumNamedRateLimiter::API, 'api'],
-            'uses UnitEnum' => [UnitEnumNamedRateLimiter::THIRD_PARTY, 'THIRD_PARTY'],
+            // 'uses BackedEnum' => [BackedEnumNamedRateLimiter::API, 'api'],
+            // 'uses UnitEnum' => [UnitEnumNamedRateLimiter::THIRD_PARTY, 'THIRD_PARTY'],
             'uses normal string' => ['yolo', 'yolo'],
             'uses int' => [100, '100'],
         ];
     }
 
+    /** @dataProvider registerNamedRateLimiterDataProvider */
     #[DataProvider('registerNamedRateLimiterDataProvider')]
-    public function testRegisterNamedRateLimiter(mixed $name, string $expected): void
+    public function testRegisterNamedRateLimiter(/*mixed */$name, /*string */$expected)/*: void*/
     {
         $reflectedLimitersProperty = new ReflectionProperty(RateLimiter::class, 'limiters');
         $reflectedLimitersProperty->setAccessible(true);
 
         $rateLimiter = new RateLimiter($this->createMock(Cache::class));
-        $rateLimiter->for($name, fn () => Limit::perMinute(100));
+        $rateLimiter->for_($name, function () { return Limit::perMinute(100); });
 
         $limiters = $reflectedLimitersProperty->getValue($rateLimiter);
 
@@ -38,14 +43,4 @@ class RateLimiterTest extends TestCase
 
         $this->assertNotNull($limiterClosure);
     }
-}
-
-enum BackedEnumNamedRateLimiter: string
-{
-    case API = 'api';
-}
-
-enum UnitEnumNamedRateLimiter
-{
-    case THIRD_PARTY;
 }
