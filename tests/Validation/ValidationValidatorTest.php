@@ -4707,6 +4707,9 @@ class ValidationValidatorTest extends TestCase
         // Test with a standard protocol
         $v = new Validator($trans, ['x' => 'http://laravel.com'], ['x' => 'url:https']);
         $this->assertFalse($v->passes());
+
+        $v = new Validator($trans, ['x' => 'http://localhost'], ['x' => 'url']);
+        $this->assertTrue($v->passes());
     }
 
     /** @dataProvider validUrls */

@@ -590,7 +590,7 @@ trait QueriesRelationships
     }
 
     /**
-     * Add an "BelongsTo" relationship with an "or where" clause to the query.
+     * Add a "BelongsTo" relationship with an "or where" clause to the query.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $related
      * @param  string|null  $relationshipName
