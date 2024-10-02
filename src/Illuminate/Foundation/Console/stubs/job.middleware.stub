@@ -11,7 +11,7 @@ class {{ class }}
      *
      * @param  \Closure(object): void  $next
      */
-    public function handle(object $job, Closure $next): void
+    public function handle(/*object */$job, Closure $next)/*: void*/
     {
         $next($job);
     }

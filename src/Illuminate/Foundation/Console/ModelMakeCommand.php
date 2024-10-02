@@ -237,9 +237,11 @@ class ModelMakeCommand extends GeneratorCommand
     {
         $factoryNamespace = '\\Database\\Factories\\'.Str::studly($this->argument('name')).'Factory';
 
-        return <<<EOT
-        /** @use HasFactory<$factoryNamespace> */
-        EOT;
+        $use = <<<EOT
+/** @use HasFactory<$factoryNamespace> */
+EOT;
+
+        return $use;
     }
 
     /**

@@ -3216,6 +3216,9 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertSame('{"name":"Mateus"}', $user->toJson(JSON_THROW_ON_ERROR));
     }
 
+    /**
+     * @requires PHP >= 7.1
+     */
     public function testFillableWithMutators()
     {
         $model = new EloquentModelWithMutators;
@@ -3229,6 +3232,9 @@ class DatabaseEloquentModelTest extends TestCase
         $this->assertSame('Anytown', $model->address_line_two);
     }
 
+    /**
+     * @requires PHP >= 7.1
+     */
     public function testGuardedWithMutators()
     {
         $model = new EloquentModelWithMutators;
@@ -4018,11 +4024,12 @@ class EloquentModelWithMutators extends Model
         'address_line_two' => null,
     ];
 
-    protected function fullName(): Attribute
+    protected function fullName()/*: Attribute*/
     {
         return Attribute::make(
-            set: function (string $fullName) {
-                [$firstName, $lastName] = explode(' ', $fullName);
+            null,
+            /*set: */function (/*string */$fullName) {
+                list($firstName, $lastName) = explode(' ', $fullName);
 
                 return [
                     'first_name' => $firstName,
@@ -4034,7 +4041,7 @@ class EloquentModelWithMutators extends Model
 
     public function setFullAddressAttribute($fullAddress)
     {
-        [$addressLineOne, $addressLineTwo] = explode(', ', $fullAddress);
+        list($addressLineOne, $addressLineTwo) = explode(', ', $fullAddress);
 
         $this->attributes['address_line_one'] = $addressLineOne;
         $this->attributes['address_line_two'] = $addressLineTwo;
