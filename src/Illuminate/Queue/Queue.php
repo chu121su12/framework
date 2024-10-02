@@ -197,7 +197,9 @@ abstract class Queue
             return;
         }
 
-        if (is_null($tries = $job->tries ?? $job->tries())) {
+        $tries = isset($job->tries) ? $job->tries : $job->tries();
+
+        if (is_null($tries)) {
             return;
         }
 
